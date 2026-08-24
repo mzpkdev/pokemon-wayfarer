@@ -8,11 +8,11 @@ The initial import from upstream `master` is already present in `game/`.
 
 ## Upstream remote
 
-The main project repository retains its existing `origin` remote. Each clone that will
-pull game updates also needs this local remote:
+The root `package.json` adds this local remote during `npm install`. If npm lifecycle
+scripts are skipped, add it manually before pulling game updates:
 
 ```sh
-git remote add game-upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git
+git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git
 ```
 
 The upstream repository's default branch is `master`.
@@ -23,8 +23,8 @@ The subtree has already been imported. Do not run this command again unless you 
 recreating the repository from scratch.
 
 ```sh
-git fetch game-upstream master
-git subtree add --prefix=game game-upstream master --squash
+git fetch upstream master
+git subtree add --prefix=game upstream master --squash
 ```
 
 ## Pulling upstream changes
@@ -32,8 +32,8 @@ git subtree add --prefix=game game-upstream master --squash
 Commit any local changes to `game/` first, then run:
 
 ```sh
-git fetch game-upstream master
-git subtree pull --prefix=game game-upstream master --squash
+git fetch upstream master
+git subtree pull --prefix=game upstream master --squash
 ```
 
 Resolve any conflicts in `game/`, test the integrated game, then commit the resulting
