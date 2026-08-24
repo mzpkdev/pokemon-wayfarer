@@ -3,7 +3,7 @@
 ## TypeScript E2E workspace
 
 The repository uses pnpm and Turborepo for the TypeScript E2E workspace. The
-E2E suite stays in `e2e/`; `packages/static-skyemu/` provides its pinned
+E2E suite stays in `e2e/`; the `static-skyemu` dependency provides its pinned
 SkyEmu binary.
 
 ```sh

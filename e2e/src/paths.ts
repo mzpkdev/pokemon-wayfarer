@@ -1,4 +1,4 @@
-import { skyEmuBinary as staticSkyEmuBinary } from "@wayfarer/static-skyemu"
+import { skyEmuBinary as staticSkyEmuBinary } from "static-skyemu"
 
 export const skyEmuBinary = process.env.SKYEMU_BIN ?? staticSkyEmuBinary
 

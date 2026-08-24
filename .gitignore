@@ -134,9 +134,6 @@ dist
 # WebAnvil
 **/.webanvil/
 
-# Local SkyEmu release binary
-/packages/static-skyemu/vendor/
-
 # yarn v3
 .pnp.*
 .yarn/*

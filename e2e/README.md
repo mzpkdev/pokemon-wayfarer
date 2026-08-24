@@ -12,10 +12,9 @@ Install the workspace dependencies:
 pnpm install
 ```
 
-The local `@wayfarer/static-skyemu` package provisions SkyEmu during install.
-It downloads the official SkyEmu v5 Linux x64 archive, verifies the archive's
-published SHA-256, and stores the binary in `packages/static-skyemu/vendor/`.
-Subsequent installs reuse that binary.
+The `static-skyemu` dependency provisions SkyEmu during install. It downloads
+the official SkyEmu v5 Linux x64 archive, verifies the archive's published
+SHA-256, and stores the binary with the package. Subsequent installs reuse it.
 
 Installation needs `unzip`. The test runner needs Xvfb on Linux when there is
 no active `DISPLAY`, and starts SkyEmu through `xvfb-run` in that case.

@@ -1,10 +1,10 @@
 packages:
   - e2e
-  - packages/*
 
 allowBuilds:
   "@playwright/browser-chromium": true
   esbuild: true
+  "static-skyemu@git+https://github.com/mzpkdev/static-skyemu.git#b76e8aa71ff5c7a19df1b3bcdb9148e5e38ed926": true
 
 minimumReleaseAgeExclude:
   - webanvil@0.0.17
