@@ -14,10 +14,8 @@ pnpm install
 pnpm run setup:skyemu
 ```
 
-`setup:skyemu` checks out SkyEmu at a fixed revision under `e2e/.skyemu/`,
-applies the HTTP-mode patch used by the project smoke test, and builds it with
-CMake. The patch is checked before it is applied so an upstream source change
-cannot silently change the test target.
+`setup:skyemu` checks out SkyEmu at a fixed revision under `e2e/.skyemu/` and
+builds it with CMake. It leaves the pinned SkyEmu source unmodified.
 
 The SkyEmu build needs CMake, a C/C++ toolchain, SDL2, OpenGL, curl, OpenSSL,
 and Xvfb on Linux. If there is no active `DISPLAY`, the test runner starts
