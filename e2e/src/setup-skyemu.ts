@@ -1,6 +1,5 @@
-import { existsSync } from "node:fs"
-import { mkdir } from "node:fs/promises"
-import { spawnSync } from "node:child_process"
+import * as childProcess from "node:child_process"
+import * as fs from "node:fs"
 
 import { skyEmuDirectory } from "./paths.js"
 
@@ -8,13 +7,13 @@ const revision = "46efbcbdb3b902373a09f4724e6d3b1a5acc4af3"
 const repository = "https://github.com/skylersaleh/SkyEmu.git"
 
 const run = (command: string, args: string[]): void => {
-  const result = spawnSync(command, args, { cwd: skyEmuDirectory, encoding: "utf8" })
+  const result = childProcess.spawnSync(command, args, { cwd: skyEmuDirectory, encoding: "utf8" })
   if (result.status === 0) return
   throw new Error([result.error?.message, result.stdout, result.stderr].filter(Boolean).join("\n"))
 }
 
-await mkdir(skyEmuDirectory, { recursive: true })
-if (!existsSync(`${skyEmuDirectory}/.git`)) {
+await fs.promises.mkdir(skyEmuDirectory, { recursive: true })
+if (!fs.existsSync(`${skyEmuDirectory}/.git`)) {
   run("git", ["init"])
   run("git", ["remote", "add", "origin", repository])
 }

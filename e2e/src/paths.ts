@@ -1,10 +1,10 @@
-import { join } from "node:path"
-import { fileURLToPath } from "node:url"
+import * as path from "node:path"
+import * as url from "node:url"
 
-export const e2eRoot = fileURLToPath(new URL("..", import.meta.url))
-export const skyEmuDirectory = process.env.SKYEMU_DIR ?? join(e2eRoot, ".skyemu")
+export const e2eRoot = url.fileURLToPath(new URL("..", import.meta.url))
+export const skyEmuDirectory = process.env.SKYEMU_DIR ?? path.join(e2eRoot, ".skyemu")
 export const skyEmuBinary =
-  process.env.SKYEMU_BIN ?? join(skyEmuDirectory, "build", "bin", "SkyEmu")
+  process.env.SKYEMU_BIN ?? path.join(skyEmuDirectory, "build", "bin", "SkyEmu")
 
 export const requireRomPath = (): string => {
   const romPath = process.env.SKYEMU_ROM

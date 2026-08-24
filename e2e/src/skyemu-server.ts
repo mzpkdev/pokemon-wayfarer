@@ -1,6 +1,6 @@
-import { createServer } from "node:net"
-import { access } from "node:fs/promises"
-import { spawn, type ChildProcess } from "node:child_process"
+import * as childProcess from "node:child_process"
+import * as fs from "node:fs"
+import * as net from "node:net"
 
 import { requireRomPath, skyEmuBinary } from "./paths.js"
 import { SkyEmuClient } from "./skyemu.js"
@@ -16,7 +16,7 @@ const waitFor = async (condition: () => Promise<boolean>, timeoutMs: number): Pr
 
 const reservePort = async (): Promise<number> =>
   new Promise((resolve, reject) => {
-    const server = createServer()
+    const server = net.createServer()
     server.once("error", reject)
     server.listen(0, "127.0.0.1", () => {
       const address = server.address()
@@ -44,14 +44,14 @@ export type RunningSkyEmu = {
 }
 
 export const startSkyEmu = async (): Promise<RunningSkyEmu> => {
-  await access(skyEmuBinary)
+  await fs.promises.access(skyEmuBinary)
   const port = await configuredPort()
   const romPath = requireRomPath()
   const command = process.env.DISPLAY ? skyEmuBinary : "xvfb-run"
   const args = process.env.DISPLAY
     ? ["http_server", `${port}`, romPath]
     : ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath]
-  const child = spawn(command, args, { stdio: "inherit" })
+  const child = childProcess.spawn(command, args, { stdio: "inherit" })
   const client = new SkyEmuClient(port)
 
   try {
@@ -73,7 +73,7 @@ export const startSkyEmu = async (): Promise<RunningSkyEmu> => {
   return { client, stop: () => stopProcess(child) }
 }
 
-const stopProcess = async (child: ChildProcess): Promise<void> => {
+const stopProcess = async (child: childProcess.ChildProcess): Promise<void> => {
   if (child.exitCode !== null) return
   child.kill()
   await new Promise<void>((resolve) => child.once("exit", () => resolve()))
