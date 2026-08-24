@@ -2,13 +2,16 @@ import * as childProcess from "node:child_process"
 import * as crypto from "node:crypto"
 import * as fs from "node:fs"
 import * as path from "node:path"
-
-import { skyEmuBinary, skyEmuDirectory } from "./paths"
+import * as url from "node:url"
 
 const releaseUrl = "https://github.com/skylersaleh/SkyEmu/releases/download/v5/SkyEmu-v5-Linux.zip"
 const releaseSha256 = "f3904c4be148a5115ddb427356857d6b7c3cefb1843d488cbe9147a92905547f"
 const archiveName = "SkyEmu-v5-Linux.zip"
 const binaryName = "SkyEmu"
+const packageRoot = url.fileURLToPath(new URL("..", import.meta.url))
+
+export const skyEmuDirectory = process.env.STATIC_SKYEMU_DIR ?? path.join(packageRoot, "vendor")
+export const skyEmuBinary = path.join(skyEmuDirectory, binaryName)
 
 const run = (command: string, args: string[], cwd: string): void => {
   const result = childProcess.spawnSync(command, args, { cwd, encoding: "utf8" })
@@ -22,7 +25,7 @@ const sha256 = (contents: Uint8Array): string =>
 const requireLinuxX64 = (): void => {
   if (process.platform !== "linux" || process.arch !== "x64") {
     throw new Error(
-      "SkyEmu setup downloads the official Linux x64 release. Set SKYEMU_BIN to use a binary for another platform or architecture.",
+      "Static SkyEmu downloads the official Linux x64 release. Use SKYEMU_BIN to provide a binary for another platform or architecture.",
     )
   }
 }
@@ -36,12 +39,7 @@ const hasExecutable = async (filePath: string): Promise<boolean> => {
   }
 }
 
-const installSkyEmu = async (): Promise<void> => {
-  if (process.env.SKYEMU_BIN) {
-    await fs.promises.access(skyEmuBinary, fs.constants.X_OK)
-    return
-  }
-
+export const setupSkyEmu = async (): Promise<void> => {
   requireLinuxX64()
   await fs.promises.mkdir(skyEmuDirectory, { recursive: true })
   if (await hasExecutable(skyEmuBinary)) return
@@ -73,5 +71,3 @@ const installSkyEmu = async (): Promise<void> => {
     await fs.promises.rm(temporaryDirectory, { recursive: true, force: true })
   }
 }
-
-await installSkyEmu()

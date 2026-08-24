@@ -1,6 +1,17 @@
 import { defineConfig } from "webanvil"
 
 export default defineConfig({
+  build: {
+    mode: "node",
+    entries: {
+      "./index": "src/index.ts",
+      "./cli": "src/cli.ts",
+    },
+    outDir: "dist",
+    bundle: true,
+    platform: "node",
+    target: "node24",
+  },
   format: {
     semi: false,
   },
@@ -17,17 +28,11 @@ export default defineConfig({
             "node:child_process": { default: false, named: false, namespace: true },
             "node:crypto": { default: false, named: false, namespace: true },
             "node:fs": { default: false, named: false, namespace: true },
-            "node:net": { default: false, named: false, namespace: true },
             "node:path": { default: false, named: false, namespace: true },
             "node:url": { default: false, named: false, namespace: true },
           },
         },
       ],
     },
-  },
-  test: {
-    fileParallelism: false,
-    hookTimeout: 60_000,
-    testTimeout: 60_000,
   },
 })

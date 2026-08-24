@@ -1,22 +1,22 @@
 # SkyEmu tests
 
-This directory is a standalone TypeScript test workspace. It does not run the
-ROM Makefile or assume a `game/` directory. Give the suite a ROM with
-`SKYEMU_ROM`.
+This is a package in the repository's pnpm and Turborepo workspace. It does
+not run the ROM Makefile or assume a `game/` directory. Give the suite a ROM
+with `SKYEMU_ROM`.
 
 ## Setup
 
-Install the Node dependencies, then download the pinned SkyEmu release:
+Install the workspace dependencies, then download the pinned SkyEmu release:
 
 ```sh
-cd e2e
 pnpm install
 pnpm run setup:skyemu
 ```
 
-`setup:skyemu` downloads the official SkyEmu v5 Linux x64 archive into
-`e2e/.skyemu/`. It verifies the archive's published SHA-256 before extracting
-the `SkyEmu` binary. Subsequent runs reuse that binary.
+`setup:skyemu` runs the local `@wayfarer/static-skyemu` package. It downloads
+the official SkyEmu v5 Linux x64 archive, verifies the archive's published
+SHA-256, and stores the binary in `packages/static-skyemu/vendor/`. Subsequent
+runs reuse that binary.
 
 The setup command needs `unzip`. The test runner needs Xvfb on Linux when there
 is no active `DISPLAY`, and starts SkyEmu through `xvfb-run` in that case.
@@ -24,19 +24,17 @@ is no active `DISPLAY`, and starts SkyEmu through `xvfb-run` in that case.
 ## Run tests
 
 ```sh
-cd e2e
-SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm test
+SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run test:skyemu
 ```
 
 The suite boots the ROM through SkyEmu's HTTP server, checks that it reports a
 loaded ROM, and advances 60 frames. Tests run in one process because one
 SkyEmu instance owns the selected port.
 
-`SKYEMU_BIN` skips the release download and uses an already-installed emulator.
-Use it on macOS, Windows, or a non-x64 Linux machine. `SKYEMU_DIR` changes the
-download directory, and `SKYEMU_PORT` chooses a fixed HTTP port. The ROM path
-is always explicit; the tests never build, scan, or otherwise depend on the
-game source tree.
+`SKYEMU_BIN` skips the local package binary and uses an already-installed
+emulator. Use it on macOS, Windows, or a non-x64 Linux machine.
+`SKYEMU_PORT` chooses a fixed HTTP port. The ROM path is always explicit; the
+tests never build, scan, or otherwise depend on the game source tree.
 
 ## Add a scenario
 

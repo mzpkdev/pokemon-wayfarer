@@ -6,10 +6,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "skipLibCheck": true,
-    "verbatimModuleSyntax": true,
-    "paths": {
-      "@wayfarer/static-skyemu": ["../packages/static-skyemu/src/index.ts"]
-    }
+    "verbatimModuleSyntax": true
   },
   "include": ["src", "webanvil.config.ts"]
 }

@@ -1,14 +1,29 @@
 {
-  "name": "pokemon-wayfarer-v2",
+  "name": "pokemon-wayfarer",
   "version": "1.0.0",
+  "private": true,
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "git remote get-url upstream >/dev/null 2>&1 || git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git"
+    "build": "turbo run build",
+    "check": "turbo run check",
+    "format": "turbo run format",
+    "lint": "turbo run lint",
+    "postinstall": "git remote get-url upstream >/dev/null 2>&1 || git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git",
+    "setup:skyemu": "turbo run setup:skyemu --filter=@wayfarer/skyemu-e2e",
+    "test": "turbo run test",
+    "test:skyemu": "turbo run test:skyemu --filter=@wayfarer/skyemu-e2e",
+    "typecheck": "turbo run typecheck"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "turbo": "2.10.11"
+  },
+  "engines": {
+    "node": ">=24.11.0 <25"
+  },
+  "packageManager": "pnpm@11.9.0"
 }

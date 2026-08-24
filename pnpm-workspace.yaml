@@ -1,3 +1,7 @@
+packages:
+  - e2e
+  - packages/*
+
 allowBuilds:
   "@playwright/browser-chromium": true
   esbuild: true
