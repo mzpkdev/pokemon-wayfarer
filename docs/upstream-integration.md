@@ -1,6 +1,6 @@
-# Upstream integration
+# Upstream Integration
 
-## Game subtree
+## Game Subtree
 
 `game/` is a local Git subtree of
 [`PokemonHnS-Development/pokehns-expansion`](https://github.com/PokemonHnS-Development/pokehns-expansion).
