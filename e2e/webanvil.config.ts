@@ -23,6 +23,7 @@ export default defineConfig({
         {
           styles: {
             "node:child_process": { default: false, named: false, namespace: true },
+            "node:crypto": { default: false, named: false, namespace: true },
             "node:fs": { default: false, named: false, namespace: true },
             "node:net": { default: false, named: false, namespace: true },
             "node:path": { default: false, named: false, namespace: true },

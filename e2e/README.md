@@ -6,7 +6,7 @@ ROM Makefile or assume a `game/` directory. Give the suite a ROM with
 
 ## Setup
 
-Install the Node dependencies, then build the pinned SkyEmu source:
+Install the Node dependencies, then download the pinned SkyEmu release:
 
 ```sh
 cd e2e
@@ -14,12 +14,12 @@ pnpm install
 pnpm run setup:skyemu
 ```
 
-`setup:skyemu` checks out SkyEmu at a fixed revision under `e2e/.skyemu/` and
-builds it with CMake. It leaves the pinned SkyEmu source unmodified.
+`setup:skyemu` downloads the official SkyEmu v5 Linux x64 archive into
+`e2e/.skyemu/`. It verifies the archive's published SHA-256 before extracting
+the `SkyEmu` binary. Subsequent runs reuse that binary.
 
-The SkyEmu build needs CMake, a C/C++ toolchain, SDL2, OpenGL, curl, OpenSSL,
-and Xvfb on Linux. If there is no active `DISPLAY`, the test runner starts
-SkyEmu through `xvfb-run`.
+The setup command needs `unzip`. The test runner needs Xvfb on Linux when there
+is no active `DISPLAY`, and starts SkyEmu through `xvfb-run` in that case.
 
 ## Run tests
 
@@ -32,10 +32,11 @@ The suite boots the ROM through SkyEmu's HTTP server, checks that it reports a
 loaded ROM, and advances 60 frames. Tests run in one process because one
 SkyEmu instance owns the selected port.
 
-Use `SKYEMU_BIN` to test an already-built emulator instead of
-`e2e/.skyemu/build/bin/SkyEmu`. `SKYEMU_DIR` changes the checkout directory,
-and `SKYEMU_PORT` chooses a fixed HTTP port. The ROM path is always explicit;
-the tests never build, scan, or otherwise depend on the game source tree.
+`SKYEMU_BIN` skips the release download and uses an already-installed emulator.
+Use it on macOS, Windows, or a non-x64 Linux machine. `SKYEMU_DIR` changes the
+download directory, and `SKYEMU_PORT` chooses a fixed HTTP port. The ROM path
+is always explicit; the tests never build, scan, or otherwise depend on the
+game source tree.
 
 ## Add a scenario
 
