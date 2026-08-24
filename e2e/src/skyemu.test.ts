@@ -1,6 +1,6 @@
 import { describe, expect, it } from "webanvil/test"
 
-import { SkyEmuClient } from "./skyemu.js"
+import { SkyEmuClient } from "./skyemu"
 
 describe("SkyEmu HTTP client", () => {
   it("uses the local HTTP endpoint", () => {

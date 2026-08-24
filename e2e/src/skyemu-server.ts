@@ -1,9 +1,9 @@
 import * as childProcess from "node:child_process"
 import * as fs from "node:fs"
 
-import { requireRomPath, skyEmuBinary } from "./paths.js"
-import { SkyEmuClient } from "./skyemu.js"
-import { choosePort, stopProcess, waitFor } from "./utils.js"
+import { requireRomPath, skyEmuBinary } from "./paths"
+import { SkyEmuClient } from "./skyemu"
+import { choosePort, stopProcess, waitFor } from "./utils"
 
 export type RunningSkyEmu = {
   client: SkyEmuClient

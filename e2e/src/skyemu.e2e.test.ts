@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from "webanvil/test"
 
-import { startSkyEmu, type RunningSkyEmu } from "./skyemu-server.js"
+import { startSkyEmu, type RunningSkyEmu } from "./skyemu-server"
 
 describe.sequential("SkyEmu", () => {
   let skyEmu: RunningSkyEmu

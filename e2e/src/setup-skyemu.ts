@@ -1,7 +1,7 @@
 import * as childProcess from "node:child_process"
 import * as fs from "node:fs"
 
-import { skyEmuDirectory } from "./paths.js"
+import { skyEmuDirectory } from "./paths"
 
 const revision = "46efbcbdb3b902373a09f4724e6d3b1a5acc4af3"
 const repository = "https://github.com/skylersaleh/SkyEmu.git"
