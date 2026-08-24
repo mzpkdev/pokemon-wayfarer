@@ -7,7 +7,6 @@
     "check": "wa check",
     "format": "wa format",
     "lint": "wa lint",
-    "setup:skyemu": "pnpm --filter @wayfarer/static-skyemu run setup",
     "test": "wa test",
     "test:skyemu": "wa test src/skyemu.e2e.test.ts",
     "typecheck": "wa typecheck"

@@ -9,8 +9,7 @@
     "check": "turbo run check",
     "format": "turbo run format",
     "lint": "turbo run lint",
-    "postinstall": "git remote get-url upstream >/dev/null 2>&1 || git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git",
-    "setup:skyemu": "turbo run setup:skyemu --filter=@wayfarer/skyemu-e2e",
+    "postinstall": "(git remote get-url upstream >/dev/null 2>&1 || git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git) && pnpm --filter @wayfarer/static-skyemu run postinstall",
     "test": "turbo run test",
     "test:skyemu": "turbo run test:skyemu --filter=@wayfarer/skyemu-e2e",
     "typecheck": "turbo run typecheck"

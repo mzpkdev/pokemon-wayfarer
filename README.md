@@ -9,7 +9,6 @@ SkyEmu binary.
 ```sh
 pnpm install
 pnpm run check
-pnpm run setup:skyemu
 ```
 
 See [e2e/README.md](e2e/README.md) for the ROM-backed test command.

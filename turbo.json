@@ -16,10 +16,6 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "setup:skyemu": {
-      "dependsOn": ["^build"],
-      "cache": false
-    },
     "test": {
       "dependsOn": ["^build"],
       "outputs": []

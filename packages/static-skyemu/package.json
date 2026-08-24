@@ -12,7 +12,7 @@
     "check": "wa check",
     "format": "wa format",
     "lint": "wa lint",
-    "setup": "pnpm run build && node dist/cli.js",
+    "postinstall": "pnpm run build && node dist/cli.js",
     "typecheck": "wa typecheck"
   },
   "devDependencies": {
