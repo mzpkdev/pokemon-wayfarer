@@ -1,0 +1,25 @@
+{
+  "name": "@wayfarer/skyemu-e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "wa build",
+    "check": "wa check",
+    "format": "wa format",
+    "lint": "wa lint",
+    "setup:skyemu": "pnpm run build && node dist/setup-skyemu.js",
+    "test": "wa test",
+    "test:skyemu": "wa test src/skyemu.e2e.test.ts",
+    "typecheck": "wa typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "typescript": "7.0.2",
+    "webanvil": "0.0.17"
+  },
+  "engines": {
+    "node": ">=24.11.0 <25"
+  },
+  "packageManager": "pnpm@11.9.0"
+}
