@@ -1,7 +1,7 @@
 # Pokemon Wayfarer
 
 Pokemon Wayfarer keeps its project-specific setup at the repository root. The game
-source will be imported into `game/` as a local Git subtree copy that tracks upstream.
+source is included in `game/` as a local Git subtree copy that tracks upstream.
 
 The planned upstream is
 [`PokemonHnS-Development/pokehns-expansion`](https://github.com/PokemonHnS-Development/pokehns-expansion).
@@ -11,7 +11,7 @@ The planned upstream is
 | Path | Purpose |
 | --- | --- |
 | `docs/` | Project documentation and the subtree integration guide. |
-| `game/` | The upstream game subtree. This directory is intentionally absent until the subtree is added. |
+| `game/` | The upstream game subtree, tracked locally in this repository. |
 
 ## Working in the repository
 

@@ -4,13 +4,12 @@ The game source belongs in `game/`. It is a local copy of
 [`PokemonHnS-Development/pokehns-expansion`](https://github.com/PokemonHnS-Development/pokehns-expansion)
 managed as a Git subtree. No separate GitHub fork is needed.
 
-Do not add placeholder files to `game/` before importing the subtree. Git requires the
-target directory to be absent or empty when the subtree is first added.
+The initial import from upstream `master` is already present in `game/`.
 
 ## Upstream remote
 
-The main project repository retains its existing `origin` remote. Add the upstream
-remote before importing the subtree:
+The main project repository retains its existing `origin` remote. Each clone that will
+pull game updates also needs this local remote:
 
 ```sh
 git remote add game-upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git
@@ -18,7 +17,10 @@ git remote add game-upstream git@github.com:PokemonHnS-Development/pokehns-expan
 
 The upstream repository's default branch is `master`.
 
-## First import
+## Initial import
+
+The subtree has already been imported. Do not run this command again unless you are
+recreating the repository from scratch.
 
 ```sh
 git fetch game-upstream master
