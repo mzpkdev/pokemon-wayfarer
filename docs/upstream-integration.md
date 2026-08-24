@@ -8,6 +8,10 @@ Changes inside it are regular `pokemon-wayfarer` commits and appear in its PRs.
 
 `npm install` adds the `upstream` remote. If lifecycle scripts are disabled, add it yourself:
 
+```sh
+git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git
+```
+
 To bring in upstream `master`, commit your local work first, then run:
 
 ```sh
