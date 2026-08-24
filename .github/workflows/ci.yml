@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi \
+            build-essential \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libpng-dev \
+            pkg-config \
+            python3
+
+      - name: Build Wayfarer ROM
+        working-directory: game
+        env:
+          UNUSED_ERROR: 1
+          DEPRECATED_ERROR: 1
+        run: make -j"$(nproc)" hns release
+
+  static-analysis:
+    name: Static Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi \
+            build-essential \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libpng-dev \
+            pkg-config \
+            python3
+
+      - name: Analyze Wayfarer ROM source
+        working-directory: game
+        env:
+          ANALYZE: 1
+        run: make -j"$(nproc)" hns debug
+
+  expansion-suite:
+    name: Expansion Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi \
+            build-essential \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libpng-dev \
+            pkg-config \
+            python3
+
+      - name: Cache build tools
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: |
+            game/tools/bin2c/bin2c
+            game/tools/gbafix/gbafix
+            game/tools/gbagfx/gbagfx
+            game/tools/jsonproc/jsonproc
+            game/tools/mapjson/mapjson
+            game/tools/mid2agb/mid2agb
+            game/tools/preproc/preproc
+            game/tools/ramscrgen/ramscrgen
+            game/tools/rsfont/rsfont
+            game/tools/scaninc/scaninc
+            game/tools/trainerproc/trainerproc
+            game/tools/compresSmol/compresSmol
+            game/tools/compresSmol/compresSmolTilemap
+            game/tools/wav2agb/wav2agb
+            game/tools/patchelf/patchelf
+            game/tools/mgba-rom-test-hydra/mgba-rom-test-hydra
+          key: tools-check-${{ runner.os }}-${{ hashFiles('game/tools/*/Makefile', 'game/tools/**/*.c', 'game/tools/**/*.cpp', 'game/tools/**/*.h') }}
+
+      - name: Run mechanics tests
+        working-directory: game
+        env:
+          TEST: 1
+          UNUSED_ERROR: 1
+          DEPRECATED_ERROR: 1
+        run: make -j"$(nproc)" hns check
