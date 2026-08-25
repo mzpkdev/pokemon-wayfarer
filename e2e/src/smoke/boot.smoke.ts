@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "webanvil/test"
+import { beforeAll, context, describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
 
@@ -10,17 +10,19 @@ describe.sequential("SkyEmu", () => {
     return () => game.close()
   })
 
-  it("boots the supplied ROM", async () => {
-    const state = await game.state.read()
-    expect(state.frame).toBeGreaterThan(0)
-  })
+  context("with the supplied ROM", () => {
+    it("boots it", async () => {
+      const state = await game.state.read()
+      expect(state.frame).toBeGreaterThan(0)
+    })
 
-  it("advances emulation frames", async () => {
-    const before = await game.state.read()
+    it("advances emulation frames", async () => {
+      const before = await game.state.read()
 
-    await game.wait.frames(60)
+      await game.wait.frames(60)
 
-    const after = await game.state.read()
-    expect(after.frame).toBeGreaterThan(before.frame)
+      const after = await game.state.read()
+      expect(after.frame).toBeGreaterThan(before.frame)
+    })
   })
 })
