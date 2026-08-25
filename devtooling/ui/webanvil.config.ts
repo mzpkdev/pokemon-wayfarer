@@ -23,8 +23,21 @@ const catalogFile = (requestUrl: string | undefined): string | null => {
   }
 }
 
-const contentType = (file: string): string => {
-  return path.extname(file) === ".json" ? "application/json; charset=utf-8" : "image/png"
+export const generatedCatalogContentType = (file: string): string => {
+  switch (path.extname(file)) {
+    case ".css":
+      return "text/css; charset=utf-8"
+    case ".html":
+      return "text/html; charset=utf-8"
+    case ".js":
+      return "text/javascript; charset=utf-8"
+    case ".json":
+      return "application/json; charset=utf-8"
+    case ".png":
+      return "image/png"
+    default:
+      return "application/octet-stream"
+  }
 }
 
 type MiddlewareServer = Pick<ViteDevServer, "middlewares">
@@ -41,7 +54,7 @@ const registerGeneratedCatalog = (server: MiddlewareServer) => {
 
       response.setHeader("Cache-Control", "no-cache")
       response.setHeader("Content-Length", stats.size)
-      response.setHeader("Content-Type", contentType(file))
+      response.setHeader("Content-Type", generatedCatalogContentType(file))
       if (request.method === "HEAD") return response.end()
       return fs.createReadStream(file).on("error", next).pipe(response)
     } catch (error) {
