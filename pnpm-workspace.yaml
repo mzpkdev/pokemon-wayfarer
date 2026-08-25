@@ -1,0 +1,10 @@
+packages:
+  - e2e
+
+allowBuilds:
+  "@playwright/browser-chromium": true
+  esbuild: true
+
+minimumReleaseAgeExclude:
+  - webanvil@0.0.17
+  - skyemu-static@0.0.2

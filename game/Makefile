@@ -41,6 +41,8 @@ BUILD_DIR := build
 COMPARE     ?= 0
 # Executes the Test Runner System that checks that all mechanics work as expected
 TEST         ?= 0
+# Builds the playable test ROM used by the external SkyEmu suite.
+E2E          ?= 0
 # Enables -fanalyzer C flag to analyze in depth potential UBs
 ANALYZE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
@@ -103,10 +105,14 @@ CPP := $(PREFIX)cpp
 ifeq ($(RELEASE),1)
 	FILE_NAME := $(FILE_NAME)-release
 endif
+ifeq ($(E2E),1)
+	FILE_NAME := pokemon-wayfarer-e2e
+endif
 
 ROM_NAME := $(FILE_NAME).gba
 OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)
 OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)-test
+OBJ_DIR_NAME_E2E := $(BUILD_DIR)/$(BUILD_NAME)-e2e
 OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/$(BUILD_NAME)-debug
 OBJ_DIR_NAME_RELEASE := $(BUILD_DIR)/$(BUILD_NAME)-release
 
@@ -125,6 +131,9 @@ ifeq ($(TEST), 0)
 else
   OBJ_DIR := $(OBJ_DIR_NAME_TEST)
 endif
+ifeq ($(E2E),1)
+  OBJ_DIR := $(OBJ_DIR_NAME_E2E)
+endif
 ifeq ($(DEBUG),1)
   OBJ_DIR := $(OBJ_DIR_NAME_DEBUG)
 endif
@@ -134,6 +143,8 @@ endif
 ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
 SYM := $(ROM:.gba=.sym)
+E2E_ROM := pokemon-wayfarer-e2e.gba
+E2E_SYM := pokemon-wayfarer-e2e.sym
 
 # Commonly used directories
 C_SUBDIR = src
@@ -166,6 +177,9 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
+ifeq ($(E2E),1)
+  override CPPFLAGS += -DE2E_TESTING=1
+endif
 ifeq ($(RELEASE),1)
 	override CPPFLAGS += -DRELEASE
 	ifeq ($(USE_LTO_ON_RELEASE),1)
@@ -402,7 +416,7 @@ clean-assets:
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 
-tidy: tidymodern tidycheck tidydebug tidyrelease
+tidy: tidymodern tidycheck tidye2e tidydebug tidyrelease
 
 tidymodern:
 	rm -f poke*.gba poke*.elf poke*.map
@@ -411,6 +425,10 @@ tidymodern:
 tidycheck:
 	rm -f $(TESTELF) $(HEADLESSELF)
 	rm -rf $(OBJ_DIR_NAME_TEST)
+
+tidye2e:
+	rm -f $(E2E_ROM) $(E2E_ROM:.gba=.elf) $(E2E_ROM:.gba=.map) $(E2E_SYM)
+	rm -rf $(OBJ_DIR_NAME_E2E)
 
 tidydebug:
 	rm -rf $(OBJ_DIR_NAME_DEBUG)
@@ -620,6 +638,11 @@ emerald: all
 firered: all
 leafgreen: all
 hns: all
+
+.PHONY: e2e
+e2e:
+	+$(MAKE) BUILD=hns E2E=1 $(E2E_ROM) $(E2E_SYM)
+
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
