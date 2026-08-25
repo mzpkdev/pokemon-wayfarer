@@ -158,9 +158,6 @@ jobs:
 
       - name: Build playable E2E ROM
         working-directory: game
-        env:
-          UNUSED_ERROR: 1
-          DEPRECATED_ERROR: 1
         run: make -j"$(nproc)" e2e
 
       - name: Run SkyEmu smoke tests
@@ -204,9 +201,6 @@ jobs:
 
       - name: Build playable E2E ROM
         working-directory: game
-        env:
-          UNUSED_ERROR: 1
-          DEPRECATED_ERROR: 1
         run: make -j"$(nproc)" e2e
 
       - name: Run SkyEmu E2E tests

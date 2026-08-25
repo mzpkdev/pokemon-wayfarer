@@ -17,15 +17,19 @@
       "outputs": []
     },
     "test": {
+      "cache": false,
       "dependsOn": ["^build"],
+      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
       "outputs": []
     },
     "e2e": {
+      "cache": false,
       "dependsOn": ["^build"],
       "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
       "outputs": []
     },
     "smoke": {
+      "cache": false,
       "dependsOn": ["^build"],
       "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
       "outputs": []

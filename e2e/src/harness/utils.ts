@@ -48,7 +48,7 @@ export const reserveTcpPort = async (): Promise<number> =>
   })
 
 export const stopProcess = async (child: childProcess.ChildProcess): Promise<void> => {
-  if (child.exitCode !== null) return
+  if (child.exitCode !== null || child.signalCode !== null) return
   child.kill()
   await new Promise<void>((resolve) => child.once("exit", () => resolve()))
 }
