@@ -1,0 +1,1 @@
+export { buildMetatileCatalog } from "./build"

@@ -1,0 +1,40 @@
+{
+  "name": "@wayfarer/cartographer",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "wcartographer": "./dist/index.js"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./renderer": {
+      "types": "./dist/renderer.d.ts",
+      "default": "./dist/renderer.js"
+    }
+  },
+  "scripts": {
+    "build": "wa build",
+    "check": "wa check",
+    "clean": "wa clean",
+    "dev": "wa dev",
+    "format": "wa format",
+    "lint": "wa lint",
+    "render": "node .",
+    "test": "wa test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cmdore": "0.4.1"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "webanvil": "^0.0.17"
+  }
+}

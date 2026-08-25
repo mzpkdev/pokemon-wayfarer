@@ -1,0 +1,127 @@
+@import "tailwindcss";
+
+@theme {
+  /* Raw palette. Tailwind exposes these as bg/text/border-cartographer-*. */
+  --color-cartographer-slate-950: #111315;
+  --color-cartographer-slate-900: #14171a;
+  --color-cartographer-slate-850: #191c20;
+  --color-cartographer-slate-800: #22262b;
+  --color-cartographer-slate-750: #252a30;
+  --color-cartographer-slate-700: #303942;
+  --color-cartographer-slate-600: #383e46;
+  --color-cartographer-slate-500: #747b84;
+  --color-cartographer-slate-400: #9aa9b5;
+  --color-cartographer-slate-300: #a4abb4;
+  --color-cartographer-slate-200: #cbd5df;
+  --color-cartographer-slate-100: #d7e0e7;
+  --color-cartographer-slate-50: #e5e7eb;
+  --color-cartographer-blue-500: #8fa7bd;
+  --color-cartographer-amber-400: #f0c36d;
+  --color-cartographer-amber-500: #c0a778;
+  --color-cartographer-moss-500: #7f9875;
+  --color-cartographer-garnet-950: #4e121d;
+  --color-cartographer-garnet-900: #501722;
+  --color-cartographer-garnet-700: #9f5d68;
+  --color-cartographer-garnet-600: #b86f7c;
+  --color-cartographer-garnet-500: #d23b52;
+  --color-cartographer-garnet-400: #e7a1a9;
+  --color-cartographer-garnet-300: #f4b4be;
+  --color-cartographer-garnet-200: #f5c7ce;
+  --color-cartographer-rose-500: #a86772;
+  --color-cartographer-rose-400: #f29aaa;
+  --color-cartographer-sand-500: #b19a6a;
+  --color-cartographer-shadow: #020611;
+
+  /* Semantic aliases used by UI utilities and OpenLayers style adapters. */
+  --color-cartographer-ink: var(--color-cartographer-slate-50);
+  --color-cartographer-canvas: var(--color-cartographer-slate-950);
+  --color-cartographer-field: var(--color-cartographer-slate-900);
+  --color-cartographer-panel: var(--color-cartographer-slate-850);
+  --color-cartographer-panel-raised: var(--color-cartographer-slate-800);
+  --color-cartographer-border-strong: var(--color-cartographer-slate-700);
+  --color-cartographer-border: var(--color-cartographer-slate-600);
+  --color-cartographer-muted: var(--color-cartographer-slate-300);
+  --color-cartographer-muted-soft: var(--color-cartographer-slate-400);
+  --color-cartographer-signal: var(--color-cartographer-blue-500);
+  --color-cartographer-signal-soft: var(--color-cartographer-slate-200);
+  --color-cartographer-signal-strong: var(--color-cartographer-slate-100);
+  --color-cartographer-amber: var(--color-cartographer-amber-500);
+  --color-cartographer-layout-overlap: var(--color-cartographer-amber-400);
+  --color-cartographer-habitat-land: var(--color-cartographer-moss-500);
+  --color-cartographer-habitat-water: var(--color-cartographer-blue-500);
+  --color-cartographer-diagnostic: var(--color-cartographer-garnet-500);
+  --color-cartographer-diagnostic-line: var(--color-cartographer-garnet-600);
+  --color-cartographer-diagnostic-border: var(--color-cartographer-garnet-700);
+  --color-cartographer-diagnostic-panel: var(--color-cartographer-garnet-950);
+  --color-cartographer-diagnostic-ink: var(--color-cartographer-garnet-300);
+  --color-cartographer-object-stateful: var(--color-cartographer-moss-500);
+  --color-cartographer-object-variable: var(--color-cartographer-blue-500);
+  --color-cartographer-object-expression: var(--color-cartographer-sand-500);
+  --color-cartographer-object-unresolved: var(--color-cartographer-rose-500);
+  --font-cartographer-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --shadow-cartographer-panel: 0 1.5rem 4rem
+    color-mix(in srgb, var(--color-cartographer-shadow) 60%, transparent);
+  --shadow-cartographer-float: 0 1.5rem 3rem
+    color-mix(in srgb, var(--color-cartographer-shadow) 80%, transparent);
+  --shadow-cartographer-error: 0 0 0 1px
+    color-mix(in srgb, var(--color-cartographer-diagnostic-border) 20%, transparent);
+}
+
+@layer base {
+  :root {
+    /* OpenLayers resolves these at runtime, so retain them even without Tailwind utilities. */
+    --color-cartographer-signal-strong: var(--color-cartographer-slate-100);
+    --color-cartographer-habitat-land: var(--color-cartographer-moss-500);
+    --color-cartographer-habitat-water: var(--color-cartographer-blue-500);
+    color: var(--color-cartographer-ink);
+    background: var(--color-cartographer-canvas);
+    font-family:
+      "Instrument Sans", "Avenir Next", Avenir, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply m-0 min-w-80 bg-cartographer-canvas;
+    background-image: radial-gradient(
+      circle at 78% -10%,
+      var(--color-cartographer-slate-750) 0,
+      transparent 29rem
+    );
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-cartographer-signal) 33%, transparent);
+    color: var(--color-cartographer-ink);
+  }
+}
+
+@layer utilities {
+  .cartographer-scrollbar {
+    scrollbar-color: var(--color-cartographer-border-strong) var(--color-cartographer-field);
+    scrollbar-width: thin;
+  }
+
+  .cartographer-scrollbar::-webkit-scrollbar {
+    height: 0.5rem;
+    width: 0.5rem;
+  }
+
+  .cartographer-scrollbar::-webkit-scrollbar-track {
+    background: var(--color-cartographer-field);
+  }
+
+  .cartographer-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--color-cartographer-border-strong);
+    border: 2px solid var(--color-cartographer-field);
+  }
+
+  .cartographer-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-cartographer-signal);
+  }
+}

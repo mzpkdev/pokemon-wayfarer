@@ -12,3 +12,15 @@ pnpm run check
 ```
 
 See [e2e/README.md](e2e/README.md) for the ROM-backed test command.
+
+## Developer tooling
+
+The source-driven Cartographer and Metatiles tools live in their own
+[devtooling workspace](devtooling/README.md). Its commands read the `game/`
+source tree and keep generated catalogs in the repository-level `build/`
+directory:
+
+```sh
+pnpm install
+pnpm --dir devtooling run check
+```

@@ -1,0 +1,30 @@
+{
+  "name": "@wayfarer/metatiles",
+  "version": "0.0.0",
+  "private": true,
+  "bin": {
+    "wmetatiles": "./dist/index.js"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "scripts": {
+    "build": "wa build",
+    "catalog": "node .",
+    "check": "wa check",
+    "clean": "wa clean",
+    "dev": "wa dev",
+    "format": "wa format",
+    "lint": "wa lint",
+    "test": "wa test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@wayfarer/cartographer": "workspace:*",
+    "cmdore": "0.4.1"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "webanvil": "^0.0.17"
+  }
+}
