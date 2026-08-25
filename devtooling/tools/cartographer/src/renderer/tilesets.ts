@@ -90,7 +90,7 @@ export const resolveTilesetAssets = (root: string, symbol: string): TilesetAsset
     for (const [field, [source, pattern]] of Object.entries(patterns)) {
       const resource = fields.get(field)
       const match = resource
-        ? new RegExp(`${resource}${pattern.source}`, pattern.flags).exec(source)
+        ? new RegExp(`${resource}\\b${pattern.source}`, pattern.flags).exec(source)
         : null
       if (match?.[1]) {
         files.set(field, path.join(root, match[1]))

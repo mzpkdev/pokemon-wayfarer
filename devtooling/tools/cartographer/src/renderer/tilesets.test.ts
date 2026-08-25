@@ -33,6 +33,9 @@ describe("Wayfarer layout formats", () => {
   })
 
   it("uses the actual attribute table width and graphics declaration for Wayfarer tilesets", () => {
+    const general = resolveTilesetAssets(sourceRoot, "gTileset_General")
+    expect(general.palettes).toBe(path.join(sourceRoot, "data/tilesets/primary/general/palettes"))
+
     const lab = resolveTilesetAssets(sourceRoot, "gTileset_Lab_Frlg")
     const labMetatileCount = fs.readFileSync(lab.metatiles).length / 16
     expect(metatileAttributeSize(fs.readFileSync(lab.metatileAttributes), labMetatileCount)).toBe(2)
