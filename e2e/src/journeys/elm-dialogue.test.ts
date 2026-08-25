@@ -4,15 +4,18 @@ import { advance, walk } from "../actions/input"
 import { readMapLocation, readPlayerPosition } from "../actions/map"
 import { createIsolatedRom, type IsolatedRom } from "../harness/isolated-rom"
 import { startSkyEmu, type RunningSkyEmu } from "../harness/skyemu-server"
-import { requireRomPath } from "../harness/utils"
+import { readSkyEmuSymbols, type SkyEmuSymbols } from "../harness/symbols"
+import { requireRomPath, requireSymbolsPath } from "../harness/utils"
 import { startNewGame } from "../playbooks/new-game"
 
 describe.sequential("Elm dialogue journey", () => {
   let rom: IsolatedRom | undefined
   let skyEmu: RunningSkyEmu | undefined
+  let symbols: SkyEmuSymbols | undefined
 
   beforeAll(async () => {
     rom = await createIsolatedRom(requireRomPath())
+    symbols = await readSkyEmuSymbols(requireSymbolsPath())
     skyEmu = await startSkyEmu(rom.path)
   })
 
@@ -23,18 +26,22 @@ describe.sequential("Elm dialogue journey", () => {
 
   it("sets the clock", async () => {
     if (!skyEmu) throw new Error("SkyEmu did not start")
+    if (!symbols) throw new Error("SkyEmu symbols did not load")
 
     await startNewGame(skyEmu.client)
     await advance(skyEmu.client, 600)
 
-    await expect(readMapLocation(skyEmu.client)).resolves.toEqual({ mapGroup: 1, mapNum: 4 })
-    await expect(readPlayerPosition(skyEmu.client)).resolves.toEqual({ x: 8, y: 13 })
+    await expect(readMapLocation(skyEmu.client, symbols)).resolves.toEqual({
+      mapGroup: 1,
+      mapNum: 4,
+    })
+    await expect(readPlayerPosition(skyEmu.client, symbols)).resolves.toEqual({ x: 8, y: 13 })
 
     await walk(skyEmu.client, "Right", 5)
     await walk(skyEmu.client, "Up", 1)
     await walk(skyEmu.client, "Right", 4)
     await walk(skyEmu.client, "Up", 2)
-    await expect(readPlayerPosition(skyEmu.client)).resolves.toEqual({ x: 17, y: 10 })
+    await expect(readPlayerPosition(skyEmu.client, symbols)).resolves.toEqual({ x: 17, y: 10 })
 
     await walk(skyEmu.client, "Left", 1)
     await advance(skyEmu.client, 600)
@@ -69,6 +76,9 @@ describe.sequential("Elm dialogue journey", () => {
     await skyEmu.client.input({ Up: 0 })
     await advance(skyEmu.client, 600)
 
-    await expect(readMapLocation(skyEmu.client)).resolves.toEqual({ mapGroup: 1, mapNum: 3 })
+    await expect(readMapLocation(skyEmu.client, symbols)).resolves.toEqual({
+      mapGroup: 1,
+      mapNum: 3,
+    })
   })
 })

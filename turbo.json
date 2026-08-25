@@ -22,12 +22,12 @@
     },
     "e2e": {
       "dependsOn": ["^build"],
-      "env": ["SKYEMU_ROM"],
+      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
       "outputs": []
     },
     "smoke": {
       "dependsOn": ["^build"],
-      "env": ["SKYEMU_ROM"],
+      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
       "outputs": []
     },
     "typecheck": {

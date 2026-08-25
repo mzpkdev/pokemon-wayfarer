@@ -2,7 +2,7 @@
 
 This is a package in the repository's pnpm and Turborepo workspace. It does
 not run the ROM Makefile or assume a `game/` directory. Give the suite a ROM
-with `SKYEMU_ROM`.
+and matching symbol file through `SKYEMU_ROM` and `SKYEMU_SYMS`.
 
 ## Setup
 
@@ -17,16 +17,31 @@ The `skyemu-static` dependency bundles the patched SkyEmu v5 Linux x64 binary.
 The test runner starts SkyEmu through Xvfb, so it does not open a visible
 emulator window. Install Xvfb on Linux before running the suite.
 
+Build the playable test ROM from the repository root before running the suite:
+
+```sh
+make -C game -j"$(nproc)" e2e
+```
+
+This produces `game/pokemon-wayfarer-e2e.gba` with `E2E_TESTING=1`, plus
+matching ELF, map, and symbol files. It is a normal playable game ROM. It is
+separate from `make -C game check`, which builds and runs the mechanics-test
+runner with `TESTING=1`.
+
 ## Run tests
 
 ```sh
-SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run smoke
+SKYEMU_ROM="$PWD/game/pokemon-wayfarer-e2e.gba" \
+SKYEMU_SYMS="$PWD/game/pokemon-wayfarer-e2e.sym" \
+pnpm run smoke
 ```
 
 Run every E2E tier with:
 
 ```sh
-SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run e2e
+SKYEMU_ROM="$PWD/game/pokemon-wayfarer-e2e.gba" \
+SKYEMU_SYMS="$PWD/game/pokemon-wayfarer-e2e.sym" \
+pnpm run e2e
 ```
 
 The suite boots the ROM through SkyEmu's HTTP server, checks that it reports a
@@ -36,8 +51,8 @@ challenge settings, and verifies that it reaches the player's bedroom in New
 Bark Town. Each test starts SkyEmu on a reserved port and uses its own temporary
 ROM copy, so test files can run in parallel.
 
-The ROM path is always explicit; the tests never build, scan, or otherwise
-depend on the game source tree.
+The ROM and matching symbol paths are always explicit. The tests never build,
+scan, or otherwise depend on the game source tree.
 
 ## Layout
 

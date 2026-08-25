@@ -11,6 +11,16 @@ export const requireRomPath = (): string => {
   return romPath
 }
 
+export const requireSymbolsPath = (): string => {
+  const symbolsPath = process.env.SKYEMU_SYMS
+  if (!symbolsPath) {
+    throw new Error(
+      "SKYEMU_SYMS is required. Point it at the symbol file that matches SKYEMU_ROM, for example: SKYEMU_SYMS=/path/to/game.sym pnpm test",
+    )
+  }
+  return symbolsPath
+}
+
 export const waitFor = async (
   condition: () => Promise<boolean>,
   timeoutMs: number,

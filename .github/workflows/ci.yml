@@ -156,16 +156,17 @@ jobs:
       - name: Install E2E workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Wayfarer ROM
+      - name: Build playable E2E ROM
         working-directory: game
         env:
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" BUILD=hns release
+        run: make -j"$(nproc)" e2e
 
       - name: Run SkyEmu smoke tests
         env:
-          SKYEMU_ROM: ${{ github.workspace }}/game/pokehns-release.gba
+          SKYEMU_ROM: ${{ github.workspace }}/game/pokemon-wayfarer-e2e.gba
+          SKYEMU_SYMS: ${{ github.workspace }}/game/pokemon-wayfarer-e2e.sym
         run: pnpm run smoke
 
   e2e:
@@ -201,14 +202,15 @@ jobs:
       - name: Install E2E workspace dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build Wayfarer ROM
+      - name: Build playable E2E ROM
         working-directory: game
         env:
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" BUILD=hns release
+        run: make -j"$(nproc)" e2e
 
       - name: Run SkyEmu E2E tests
         env:
-          SKYEMU_ROM: ${{ github.workspace }}/game/pokehns-release.gba
+          SKYEMU_ROM: ${{ github.workspace }}/game/pokemon-wayfarer-e2e.gba
+          SKYEMU_SYMS: ${{ github.workspace }}/game/pokemon-wayfarer-e2e.sym
         run: pnpm run e2e

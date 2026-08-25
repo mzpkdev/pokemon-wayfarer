@@ -1,8 +1,7 @@
 import { type SkyEmuClient } from "../harness/skyemu"
+import { type SkyEmuSymbols } from "../harness/symbols"
 
-const saveBlock1PointerAddress = 0x03002ef4
 const saveBlock1LocationOffset = 0x8
-const objectEventsAddress = 0x020009a0
 const objectEventSize = 0x24
 const objectEventPlayerFlagOffset = 0x2
 const objectEventElevationOffset = 0xb
@@ -21,15 +20,24 @@ export type PlayerPosition = {
   y: number
 }
 
-export const readMapLocation = async (client: SkyEmuClient): Promise<MapLocation> => {
-  const saveBlock1Address = await client.readUint32LE(saveBlock1PointerAddress)
+export const readMapLocation = async (
+  client: SkyEmuClient,
+  symbols: SkyEmuSymbols,
+): Promise<MapLocation> => {
+  const saveBlock1Address = await client.readUint32LE(symbols.address("gSaveBlock1Ptr"))
   const location = await client.readBytes(saveBlock1Address + saveBlock1LocationOffset, 2)
 
   return { mapGroup: location[0]!, mapNum: location[1]! }
 }
 
-const readPlayerObjectEvent = async (client: SkyEmuClient): Promise<Uint8Array> => {
-  const objectEvents = await client.readBytes(objectEventsAddress, objectEventSize * objectEventsCount)
+const readPlayerObjectEvent = async (
+  client: SkyEmuClient,
+  symbols: SkyEmuSymbols,
+): Promise<Uint8Array> => {
+  const objectEvents = await client.readBytes(
+    symbols.address("gObjectEvents"),
+    objectEventSize * objectEventsCount,
+  )
 
   for (let index = 0; index < objectEventsCount; index++) {
     const offset = index * objectEventSize
@@ -41,8 +49,11 @@ const readPlayerObjectEvent = async (client: SkyEmuClient): Promise<Uint8Array> 
   throw new Error("SkyEmu did not expose the player object event")
 }
 
-export const readPlayerPosition = async (client: SkyEmuClient): Promise<PlayerPosition> => {
-  const objectEvent = await readPlayerObjectEvent(client)
+export const readPlayerPosition = async (
+  client: SkyEmuClient,
+  symbols: SkyEmuSymbols,
+): Promise<PlayerPosition> => {
+  const objectEvent = await readPlayerObjectEvent(client, symbols)
   const position = objectEvent.slice(objectEventPositionOffset, objectEventPositionOffset + 4)
 
   return {
@@ -51,8 +62,11 @@ export const readPlayerPosition = async (client: SkyEmuClient): Promise<PlayerPo
   }
 }
 
-export const readPlayerElevation = async (client: SkyEmuClient): Promise<number> => {
-  const objectEvent = await readPlayerObjectEvent(client)
+export const readPlayerElevation = async (
+  client: SkyEmuClient,
+  symbols: SkyEmuSymbols,
+): Promise<number> => {
+  const objectEvent = await readPlayerObjectEvent(client, symbols)
 
   return objectEvent[objectEventElevationOffset]! & 0x0f
 }
