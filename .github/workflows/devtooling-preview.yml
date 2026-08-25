@@ -8,6 +8,8 @@ on:
       - synchronize
       - labeled
       - unlabeled
+      - ready_for_review
+      - converted_to_draft
       - closed
 
 concurrency:
@@ -21,13 +23,16 @@ jobs:
       github.event.pull_request.head.repo.full_name == github.repository &&
       (
         (
-          github.event.action != 'labeled' &&
-          github.event.action != 'unlabeled' &&
+          (github.event.action == 'labeled' || github.event.action == 'unlabeled') &&
+          github.event.label.name == 'preview'
+        ) ||
+        (
+          (github.event.action == 'converted_to_draft' || github.event.action == 'closed') &&
           contains(github.event.pull_request.labels.*.name, 'preview')
         ) ||
         (
-          (github.event.action == 'labeled' || github.event.action == 'unlabeled') &&
-          github.event.label.name == 'preview'
+          github.event.pull_request.draft == false &&
+          contains(github.event.pull_request.labels.*.name, 'preview')
         )
       )
     runs-on: ubuntu-latest
@@ -61,7 +66,7 @@ jobs:
         run: |
           gh api --paginate \
             "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" \
-            --jq '.[] | select(.head.repo.full_name == env.GITHUB_REPOSITORY) | select(any(.labels[]; .name == env.PREVIEW_LABEL)) | [.number, .head.sha] | @tsv' \
+            --jq '.[] | select(.head.repo.full_name == env.GITHUB_REPOSITORY) | select(.draft == false) | select(any(.labels[]; .name == env.PREVIEW_LABEL)) | [.number, .head.sha] | @tsv' \
             > "$RUNNER_TEMP/wayfarer-preview-refs.tsv"
 
       - name: Build every open preview
@@ -71,6 +76,7 @@ jobs:
           EVENT_ACTION: ${{ github.event.action }}
           EVENT_LABEL: ${{ github.event.label.name }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_DRAFT: ${{ github.event.pull_request.draft }}
           PREVIEW_LABEL: preview
           PREVIEW_SITE: ${{ runner.temp }}/wayfarer-preview-site
           PREVIEW_REFS: ${{ runner.temp }}/wayfarer-preview-refs.tsv
@@ -114,6 +120,8 @@ jobs:
             status=closed
           elif [ "$EVENT_ACTION" = unlabeled ] && [ "$EVENT_LABEL" = "$PREVIEW_LABEL" ]; then
             status=removed
+          elif [ "$PR_DRAFT" = true ]; then
+            status=draft
           elif awk -F '\t' -v number="$PR_NUMBER" '$1 == number { found = 1 } END { exit !found }' "$SUCCESSFUL_PREVIEW_REFS"; then
             status=ready
           else
@@ -184,6 +192,8 @@ jobs:
             body="${marker}"$'\n'"This pull request is closed, but preview removal is pending because the Pages deployment did not complete."
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = removed ]; then
             body="${marker}"$'\n'"This devtooling preview was removed because the preview label was removed."
+          elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = draft ]; then
+            body="${marker}"$'\n'"### Devtooling"$'\n\n'"The preview will be available when this PR is ready for review."
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = ready ]; then
             body="${marker}"$'\n'"### Devtooling"$'\n\n'"[Open the preview for this PR](${preview_url})"
           else

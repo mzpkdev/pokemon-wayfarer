@@ -27,14 +27,15 @@ pnpm --dir devtooling run check
 
 ## Pull request previews
 
-Same-repository pull requests labeled `preview` publish their generated
-devtooling site at
+Same-repository, non-draft pull requests labeled `preview` publish their
+generated devtooling site at
 `https://mzpkdev.github.io/pokemon-wayfarer/preview/pr-<number>/`. Adding the
-label publishes the preview, and new commits refresh it. Removing the label or
-closing the pull request removes its preview on the next deployment. The
-workflow rebuilds every open labeled pull request into one GitHub Pages
-artifact. Fork pull requests are deliberately excluded because their workflow
-tokens cannot safely publish Pages content.
+label to a PR that is ready for review publishes the preview, and new commits
+refresh it. Marking a labeled draft as ready publishes it. Converting it back to
+a draft, removing the label, or closing the pull request removes its preview on
+the next deployment. The workflow rebuilds every eligible pull request into one
+GitHub Pages artifact. Fork pull requests are deliberately excluded because
+their workflow tokens cannot safely publish Pages content.
 
 Before the first deployment, set the repository's Pages source to **GitHub
 Actions**. The preview workflow keeps the published artifact under 950 MiB and
