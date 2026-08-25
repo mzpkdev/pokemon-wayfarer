@@ -1,7 +1,7 @@
 import { beforeAll, context, describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
-import { startNewGame } from "../playbooks/new-game"
+import { playThroughNewGameIntro } from "../playbooks/new-game-intro"
 
 describe.sequential("a new game", () => {
   let game: GameSession
@@ -13,7 +13,7 @@ describe.sequential("a new game", () => {
 
   context("when started from the title screen", () => {
     it("reaches the player's bedroom in New Bark Town", async () => {
-      await startNewGame(game)
+      await playThroughNewGameIntro(game)
       await game.wait.forMap("players-bedroom")
 
       await expect(game.state.read()).resolves.toMatchObject({
