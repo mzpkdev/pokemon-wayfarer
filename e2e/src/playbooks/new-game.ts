@@ -1,25 +1,24 @@
-import { advance, press } from "../actions/input"
-import { type SkyEmuClient } from "../harness/skyemu"
+import { type TestRom } from "../harness/test-rom"
 
-export const startNewGame = async (client: SkyEmuClient): Promise<void> => {
-  await advance(client, 3_600)
-  await press(client, "Start")
-  await advance(client, 240)
-  await press(client, "A")
+export const startNewGame = async (game: TestRom): Promise<void> => {
+  await game.wait.frames(3_600)
+  await game.player.press("start")
+  await game.wait.frames(240)
+  await game.player.press("a")
 
-  await advance(client, 4_800)
+  await game.wait.frames(4_800)
   for (let interaction = 0; interaction < 32; interaction++) {
-    await press(client, "A")
-    await advance(client, 180)
+    await game.player.press("a")
+    await game.wait.frames(180)
   }
   for (let tab = 0; tab < 6; tab++) {
-    await press(client, "R")
-    await advance(client, 30)
+    await game.player.press("r")
+    await game.wait.frames(30)
   }
-  await press(client, "A")
-  await advance(client, 1_200)
+  await game.player.press("a")
+  await game.wait.frames(1_200)
   for (let interaction = 0; interaction < 24; interaction++) {
-    await press(client, "A")
-    await advance(client, 300)
+    await game.player.press("a")
+    await game.wait.frames(300)
   }
 }

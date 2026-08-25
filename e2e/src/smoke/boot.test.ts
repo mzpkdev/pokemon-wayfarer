@@ -1,28 +1,32 @@
 import { afterAll, beforeAll, describe, expect, it } from "webanvil/test"
 
-import { createIsolatedRom, type IsolatedRom } from "../harness/isolated-rom"
-import { startSkyEmu, type RunningSkyEmu } from "../harness/skyemu-server"
-import { requireRomPath } from "../harness/utils"
+import { TestRom } from "../harness/test-rom"
 
 describe.sequential("SkyEmu", () => {
-  let rom: IsolatedRom | undefined
-  let skyEmu: RunningSkyEmu | undefined
+  let game: TestRom | undefined
 
   beforeAll(async () => {
-    rom = await createIsolatedRom(requireRomPath())
-    skyEmu = await startSkyEmu(rom.path)
+    game = await TestRom.launch()
   })
 
   afterAll(async () => {
-    if (skyEmu) await skyEmu.stop()
-    if (rom) await rom.cleanup()
+    if (game) await game.close()
   })
 
   it("boots the supplied ROM", async () => {
-    await expect(skyEmu?.client.health()).resolves.toEqual({ ready: true, romLoaded: true })
+    if (!game) throw new Error("Test ROM did not start")
+
+    const state = await game.state.read()
+    expect(state.frame).toBeGreaterThan(0)
   })
 
   it("advances emulation frames", async () => {
-    await expect(skyEmu?.client.step(60)).resolves.toBe("ok")
+    if (!game) throw new Error("Test ROM did not start")
+    const before = await game.state.read()
+
+    await game.wait.frames(60)
+
+    const after = await game.state.read()
+    expect(after.frame).toBeGreaterThan(before.frame)
   })
 })

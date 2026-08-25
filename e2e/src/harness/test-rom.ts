@@ -1,5 +1,5 @@
-import { advance, press } from "../actions/input"
 import { createIsolatedRom, type IsolatedRom } from "./isolated-rom"
+import { advance, press } from "./input"
 import { type SkyEmuButton, type SkyEmuClient } from "./skyemu"
 import { startSkyEmu, type RunningSkyEmu } from "./skyemu-server"
 import { readSkyEmuSymbols, type SkyEmuSymbols } from "./symbols"
@@ -57,6 +57,7 @@ const buttons = {
   b: "B",
   down: "Down",
   left: "Left",
+  r: "R",
   right: "Right",
   start: "Start",
   up: "Up",
@@ -267,6 +268,18 @@ export class TestRom {
   }
 
   readonly wait = {
+    frames: async (frames: number) => advance(this.client, frames),
+    forMap: async (map: TestMap, maxFrames = 1_200) => {
+      const expected = maps[map]
+      await this.wait.until(
+        (state) =>
+          state.ready &&
+          state.map.mapGroup === expected.mapGroup &&
+          state.map.mapNum === expected.mapNum,
+        `ready map ${map}`,
+        maxFrames,
+      )
+    },
     forReady: async (maxFrames = 1_200) =>
       this.wait.until((state) => state.ready, "ready overworld", maxFrames),
     until: async (
@@ -286,7 +299,7 @@ export class TestRom {
   private requestId = 0
 
   private constructor(
-    readonly client: SkyEmuClient,
+    private readonly client: SkyEmuClient,
     private readonly symbols: SkyEmuSymbols,
     private readonly abi: TestRomAbi,
     private readonly running: RunningSkyEmu,

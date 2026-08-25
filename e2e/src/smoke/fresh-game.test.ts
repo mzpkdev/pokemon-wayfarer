@@ -1,34 +1,28 @@
 import { afterAll, beforeAll, describe, expect, it } from "webanvil/test"
 
-import { newBarkPlayersHouse2F, readMapLocation } from "../actions/map"
-import { createIsolatedRom, type IsolatedRom } from "../harness/isolated-rom"
-import { startSkyEmu, type RunningSkyEmu } from "../harness/skyemu-server"
-import { readSkyEmuSymbols, type SkyEmuSymbols } from "../harness/symbols"
-import { requireRomPath, requireSymbolsPath } from "../harness/utils"
+import { TestRom } from "../harness/test-rom"
 import { startNewGame } from "../playbooks/new-game"
 
 describe.sequential("fresh-game smoke test", () => {
-  let rom: IsolatedRom | undefined
-  let skyEmu: RunningSkyEmu | undefined
-  let symbols: SkyEmuSymbols | undefined
+  let game: TestRom | undefined
 
   beforeAll(async () => {
-    rom = await createIsolatedRom(requireRomPath())
-    symbols = await readSkyEmuSymbols(requireSymbolsPath())
-    skyEmu = await startSkyEmu(rom.path)
+    game = await TestRom.launch()
   })
 
   afterAll(async () => {
-    if (skyEmu) await skyEmu.stop()
-    if (rom) await rom.cleanup()
+    if (game) await game.close()
   })
 
   it("reaches the New Bark Town overworld from a new game", async () => {
-    if (!skyEmu) throw new Error("SkyEmu did not start")
-    if (!symbols) throw new Error("SkyEmu symbols did not load")
+    if (!game) throw new Error("Test ROM did not start")
 
-    await startNewGame(skyEmu.client)
+    await startNewGame(game)
+    await game.wait.forMap("players-bedroom")
 
-    await expect(readMapLocation(skyEmu.client, symbols)).resolves.toEqual(newBarkPlayersHouse2F)
+    await expect(game.state.read()).resolves.toMatchObject({
+      ready: true,
+      map: { mapGroup: 1, mapNum: 4 },
+    })
   })
 })

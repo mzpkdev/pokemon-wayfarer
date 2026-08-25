@@ -1,4 +1,4 @@
-import { type SkyEmuButton, type SkyEmuClient } from "../harness/skyemu"
+import { type SkyEmuButton, type SkyEmuClient } from "./skyemu"
 
 export const advance = async (client: SkyEmuClient, frames: number): Promise<void> => {
   const result = await client.step(frames)
@@ -17,19 +17,4 @@ export const press = async (
   const released = await client.input({ [button]: 0 })
   if (released !== "ok") throw new Error(`SkyEmu failed to release ${button}: ${released}`)
   await advance(client, releaseFrames)
-}
-
-export const walk = async (
-  client: SkyEmuClient,
-  direction: Extract<SkyEmuButton, "Up" | "Down" | "Left" | "Right">,
-  steps: number,
-): Promise<void> => {
-  for (let step = 0; step < steps; step++) {
-    const pressed = await client.input({ [direction]: 1 })
-    if (pressed !== "ok") throw new Error(`SkyEmu failed to press ${direction}: ${pressed}`)
-    await advance(client, 16)
-    const released = await client.input({ [direction]: 0 })
-    if (released !== "ok") throw new Error(`SkyEmu failed to release ${direction}: ${released}`)
-    await advance(client, 2)
-  }
 }

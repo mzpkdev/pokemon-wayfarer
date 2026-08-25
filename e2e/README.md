@@ -104,9 +104,10 @@ release ROMs do not compile them.
 
 ## Layout
 
-`src/harness/` owns the emulator, ROM, and process mechanics. `src/actions/`
-contains small reusable inputs and game-state reads. `src/playbooks/` composes
-actions into player flows such as starting a new game.
+`src/harness/` owns the emulator, ROM, process mechanics, and the public
+`TestRom` API. Raw controller and memory operations stay private to the harness.
+Tests use `TestRom` directly, while `src/playbooks/` composes it into reusable
+player flows such as starting a new game.
 
 `src/smoke/` contains fast tests that run for every pull request. `src/journeys/`
 contains longer player flows. The E2E tier currently covers the opening through
