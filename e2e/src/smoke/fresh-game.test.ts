@@ -1,22 +1,17 @@
-import { afterAll, beforeAll, describe, expect, it } from "webanvil/test"
+import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { TestRom } from "../harness/test-rom"
 import { startNewGame } from "../playbooks/new-game"
 
 describe.sequential("fresh-game smoke test", () => {
-  let game: TestRom | undefined
+  let game: TestRom
 
   beforeAll(async () => {
     game = await TestRom.launch()
-  })
-
-  afterAll(async () => {
-    if (game) await game.close()
+    return () => game.close()
   })
 
   it("reaches the New Bark Town overworld from a new game", async () => {
-    if (!game) throw new Error("Test ROM did not start")
-
     await startNewGame(game)
     await game.wait.forMap("players-bedroom")
 

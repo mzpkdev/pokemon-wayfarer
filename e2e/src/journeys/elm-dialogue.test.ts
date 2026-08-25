@@ -1,21 +1,16 @@
-import { afterAll, beforeAll, describe, expect, it } from "webanvil/test"
+import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { TestRom } from "../harness/test-rom"
 
 describe.sequential("Elm dialogue journey", () => {
-  let game: TestRom | undefined
+  let game: TestRom
 
   beforeAll(async () => {
     game = await TestRom.launch()
-  })
-
-  afterAll(async () => {
-    if (game) await game.close()
+    return () => game.close()
   })
 
   it("triggers Elm's opening dialogue", async () => {
-    if (!game) throw new Error("Test ROM did not start")
-
     await game.arrange({
       checkpoint: "elm-lab-before-intro",
       player: {
