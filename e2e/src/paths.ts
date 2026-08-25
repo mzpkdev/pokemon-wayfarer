@@ -1,6 +1,6 @@
-import { skyEmuBinary as staticSkyEmuBinary } from "static-skyemu"
+import { skyEmuBinary as skyEmuStaticBinary } from "skyemu-static"
 
-export const skyEmuBinary = process.env.SKYEMU_BIN ?? staticSkyEmuBinary
+export const skyEmuBinary = process.env.SKYEMU_BIN ?? skyEmuStaticBinary
 
 export const requireRomPath = (): string => {
   const romPath = process.env.SKYEMU_ROM

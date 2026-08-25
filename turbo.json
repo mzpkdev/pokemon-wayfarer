@@ -22,6 +22,7 @@
     },
     "test:skyemu": {
       "dependsOn": ["^build"],
+      "env": ["SKYEMU_BIN", "SKYEMU_PORT", "SKYEMU_ROM", "SKYEMU_USE_DISPLAY"],
       "outputs": []
     },
     "typecheck": {

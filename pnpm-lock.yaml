@@ -14,9 +14,9 @@ importers:
 
   e2e:
     dependencies:
-      static-skyemu:
-        specifier: github:mzpkdev/static-skyemu#b76e8aa
-        version: https://codeload.github.com/mzpkdev/static-skyemu/tar.gz/b76e8aa71ff5c7a19df1b3bcdb9148e5e38ed926
+      skyemu-static:
+        specifier: 0.0.1
+        version: 0.0.1
     devDependencies:
       '@types/node':
         specifier: 24.10.1
@@ -1739,6 +1739,10 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  adm-zip@0.6.0:
+    resolution: {integrity: sha512-XleryMhbuksdKtofnWZ9Sk+4CUTbms4Mb/EU32SZwToAyZ5RgVos/ki8n+yr0LWHOGKuakbXTuuYNHLQjhddgg==}
+    engines: {node: '>=14.0'}
+
   alien-signals@3.2.1:
     resolution: {integrity: sha512-I8FjmltrfnDFoZedi5CG8DghVYNhzb/Ijluz7tCSJH0xpd0484Kowhbb1XDYOxfJpU1p5wnM2X54dA+IfGyD1g==}
 
@@ -2690,6 +2694,12 @@ packages:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
     engines: {node: '>=18'}
 
+  skyemu-static@0.0.1:
+    resolution: {integrity: sha512-RInfBB7uu+ljXUW6hlISoWqtFE67baqQTfA9efy4l821Yan9r0yV5AKrktbD52KwYKyv/5jwpRstkIlWD+dzyg==}
+    engines: {node: '>=24.11.0 <25'}
+    cpu: [x64]
+    os: [linux]
+
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
@@ -2700,11 +2710,6 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
-
-  static-skyemu@https://codeload.github.com/mzpkdev/static-skyemu/tar.gz/b76e8aa71ff5c7a19df1b3bcdb9148e5e38ed926:
-    resolution: {gitHosted: true, integrity: sha512-qeEvdvw0LWF5Ee3T4SiQAtLaOwq6/pRKvVJXUVyt4lvqXIkd5nf8QRMQDA91MKZujA8J0J/de5+CMz3u1Lde6g==, tarball: https://codeload.github.com/mzpkdev/static-skyemu/tar.gz/b76e8aa71ff5c7a19df1b3bcdb9148e5e38ed926}
-    version: 0.0.0
-    engines: {node: '>=24.11.0 <25'}
 
   std-env@4.2.0:
     resolution: {integrity: sha512-oCUKSupKTHX53EyjDtuZQ64pjLJ6yYCtpmEw0goYxtjG9KpbRe8KAsl2tBUGU9DyMcJ0RwJ8GqJAFzMXcXW1Rw==}
@@ -2866,6 +2871,10 @@ packages:
   undici@7.29.0:
     resolution: {integrity: sha512-IDxfleLmmbSskfWSUATiN1nfn2rDuvnMOqb5CWR92iIfojA0Ud+ulOAAEQ57LPr9rWmsreUyf5lwyao+7GNNVw==}
     engines: {node: '>=20.18.1'}
+
+  undici@8.10.0:
+    resolution: {integrity: sha512-HvltHd7avK13QIw/oLe4qoOLyoVSoafqJ2jYOrtMRBkbYT31eiBQ8O0ehRKZiEZCMEyLFQNIADpgCWC5fALvYQ==}
+    engines: {node: '>=22.19.0'}
 
   unicorn-magic@0.3.0:
     resolution: {integrity: sha512-+QBBXBCvifc56fsbuxZQ6Sic3wqqc3WWaqxs58gvJrcOuN83HGTCwz3oS5phzU9LthRNE9VrJCFCLUgHeeFnfA==}
@@ -4421,6 +4430,8 @@ snapshots:
 
   acorn@8.18.0: {}
 
+  adm-zip@0.6.0: {}
+
   alien-signals@3.2.1: {}
 
   ansi-regex@5.0.1: {}
@@ -5410,13 +5421,16 @@ snapshots:
       mrmime: 2.0.1
       totalist: 3.0.1
 
+  skyemu-static@0.0.1:
+    dependencies:
+      adm-zip: 0.6.0
+      undici: 8.10.0
+
   source-map-js@1.2.1: {}
 
   source-map@0.6.1: {}
 
   stackback@0.0.2: {}
-
-  static-skyemu@https://codeload.github.com/mzpkdev/static-skyemu/tar.gz/b76e8aa71ff5c7a19df1b3bcdb9148e5e38ed926: {}
 
   std-env@4.2.0: {}
 
@@ -5588,6 +5602,8 @@ snapshots:
   undici-types@8.3.0: {}
 
   undici@7.29.0: {}
+
+  undici@8.10.0: {}
 
   unicorn-magic@0.3.0: {}
 

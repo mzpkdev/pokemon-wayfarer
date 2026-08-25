@@ -14,8 +14,9 @@ export const startSkyEmu = async (): Promise<RunningSkyEmu> => {
   await fs.promises.access(skyEmuBinary)
   const port = await choosePort(process.env.SKYEMU_PORT)
   const romPath = requireRomPath()
-  const command = process.env.DISPLAY ? skyEmuBinary : "xvfb-run"
-  const args = process.env.DISPLAY
+  const useDisplay = process.env.SKYEMU_USE_DISPLAY === "1"
+  const command = useDisplay ? skyEmuBinary : "xvfb-run"
+  const args = useDisplay
     ? ["http_server", `${port}`, romPath]
     : ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath]
   const child = childProcess.spawn(command, args, { stdio: "inherit" })

@@ -12,13 +12,13 @@ export class SkyEmuClient {
   async ping(): Promise<string> {
     const response = await fetch(`${this.baseUrl}/ping`)
     if (!response.ok) throw new Error(`SkyEmu ping failed with HTTP ${response.status}`)
-    return response.text()
+    return (await response.text()).replaceAll("\0", "")
   }
 
   async step(frames: number): Promise<string> {
     const response = await fetch(`${this.baseUrl}/step?frames=${frames}`)
     if (!response.ok) throw new Error(`SkyEmu step failed with HTTP ${response.status}`)
-    return response.text()
+    return (await response.text()).replaceAll("\0", "")
   }
 
   async status(): Promise<SkyEmuStatus> {

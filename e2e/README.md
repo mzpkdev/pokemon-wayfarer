@@ -12,12 +12,13 @@ Install the workspace dependencies:
 pnpm install
 ```
 
-The `static-skyemu` dependency provisions SkyEmu during install. It downloads
-the official SkyEmu v5 Linux x64 archive, verifies the archive's published
-SHA-256, and stores the binary with the package. Subsequent installs reuse it.
+The `skyemu-static` dependency provisions SkyEmu during install. It downloads
+the package's patched SkyEmu v5 Linux x64 archive, verifies its SHA-256, and
+stores the binary with the package. Subsequent installs reuse it.
 
-Installation needs `unzip`. The test runner needs Xvfb on Linux when there is
-no active `DISPLAY`, and starts SkyEmu through `xvfb-run` in that case.
+The test runner uses Xvfb and starts SkyEmu through `xvfb-run` by default, so
+it does not open a visible emulator window. Set `SKYEMU_USE_DISPLAY=1` when you
+want to use the current display while debugging.
 
 ## Run tests
 
@@ -33,6 +34,7 @@ SkyEmu instance owns the selected port.
 emulator. Use it on macOS, Windows, or a non-x64 Linux machine.
 `SKYEMU_PORT` chooses a fixed HTTP port. The ROM path is always explicit; the
 tests never build, scan, or otherwise depend on the game source tree.
+`SKYEMU_USE_DISPLAY=1` runs SkyEmu in the current display instead of Xvfb.
 
 ## Add a scenario
 
