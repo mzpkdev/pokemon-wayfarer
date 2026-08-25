@@ -1,5 +1,5 @@
-import { type SkyEmuButton, type SkyEmuClient } from "../skyemu"
-import { type SkyEmuSymbols } from "../symbols"
+import { type SkyEmuButton, type SkyEmuClient } from "../skyemu/client"
+import { type SkyEmuSymbols } from "../skyemu/symbols"
 import { type SessionAbi } from "./protocol"
 
 export type SessionRuntime = {

@@ -2,7 +2,7 @@ import * as childProcess from "node:child_process"
 import * as fs from "node:fs"
 import { skyEmuBinary } from "skyemu-static"
 
-import { SkyEmuClient } from "./skyemu"
+import { SkyEmuClient } from "./client"
 import { captureOutputTail, reserveTcpPort, stopProcess, waitFor } from "./utils"
 
 export type RunningSkyEmu = {

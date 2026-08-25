@@ -1,4 +1,4 @@
-import { type SkyEmuButton } from "../skyemu"
+import { type SkyEmuButton } from "../skyemu/client"
 
 export const checkpoints = {
   "bedroom-before-clock": 1,
