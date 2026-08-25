@@ -147,6 +147,7 @@ jobs:
             build-essential \
             gcc-arm-none-eabi \
             libnewlib-arm-none-eabi \
+            libopengl0 \
             libpng-dev \
             pkg-config \
             python3 \
@@ -190,6 +191,7 @@ jobs:
             build-essential \
             gcc-arm-none-eabi \
             libnewlib-arm-none-eabi \
+            libopengl0 \
             libpng-dev \
             pkg-config \
             python3 \

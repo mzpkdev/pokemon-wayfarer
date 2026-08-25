@@ -15,7 +15,14 @@ pnpm install
 The `skyemu-static` dependency bundles the patched SkyEmu v5 Linux x64 binary.
 
 The test runner starts SkyEmu through Xvfb, so it does not open a visible
-emulator window. Install Xvfb on Linux before running the suite.
+emulator window. On Ubuntu 24.04, install the required runtime packages with:
+
+```sh
+sudo apt install libasound2t64 libxcursor1 libxi6 libopengl0 xvfb
+```
+
+Other Linux distributions provide equivalent ALSA, Xcursor, Xi, OpenGL, and
+Xvfb packages.
 
 Build the playable test ROM from the repository root before running the suite:
 
