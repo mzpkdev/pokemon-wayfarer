@@ -4,8 +4,7 @@ packages:
 allowBuilds:
   "@playwright/browser-chromium": true
   esbuild: true
-  skyemu-static: true
 
 minimumReleaseAgeExclude:
   - webanvil@0.0.17
-  - skyemu-static@0.0.0 || 0.0.1
+  - skyemu-static@0.0.2

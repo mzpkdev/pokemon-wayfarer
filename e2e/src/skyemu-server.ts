@@ -1,9 +1,9 @@
 import * as childProcess from "node:child_process"
 import * as fs from "node:fs"
+import { skyEmuBinary } from "skyemu-static"
 
-import { requireRomPath, skyEmuBinary } from "./paths"
 import { SkyEmuClient } from "./skyemu"
-import { choosePort, stopProcess, waitFor } from "./utils"
+import { requireRomPath, reserveTcpPort, stopProcess, waitFor } from "./utils"
 
 export type RunningSkyEmu = {
   client: SkyEmuClient
@@ -12,14 +12,13 @@ export type RunningSkyEmu = {
 
 export const startSkyEmu = async (): Promise<RunningSkyEmu> => {
   await fs.promises.access(skyEmuBinary)
-  const port = await choosePort(process.env.SKYEMU_PORT)
+  const port = await reserveTcpPort()
   const romPath = requireRomPath()
-  const useDisplay = process.env.SKYEMU_USE_DISPLAY === "1"
-  const command = useDisplay ? skyEmuBinary : "xvfb-run"
-  const args = useDisplay
-    ? ["http_server", `${port}`, romPath]
-    : ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath]
-  const child = childProcess.spawn(command, args, { stdio: "inherit" })
+  const child = childProcess.spawn(
+    "xvfb-run",
+    ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath],
+    { stdio: "inherit" },
+  )
   const client = new SkyEmuClient(port)
 
   try {

@@ -1,6 +1,16 @@
 import * as childProcess from "node:child_process"
 import * as net from "node:net"
 
+export const requireRomPath = (): string => {
+  const romPath = process.env.SKYEMU_ROM
+  if (!romPath) {
+    throw new Error(
+      "SKYEMU_ROM is required. Point it at a ROM file, for example: SKYEMU_ROM=/path/to/game.gba pnpm test",
+    )
+  }
+  return romPath
+}
+
 export const waitFor = async (
   condition: () => Promise<boolean>,
   timeoutMs: number,
@@ -13,7 +23,7 @@ export const waitFor = async (
   throw new Error(`SkyEmu did not become ready within ${timeoutMs / 1000} seconds`)
 }
 
-const reserveTcpPort = async (): Promise<number> =>
+export const reserveTcpPort = async (): Promise<number> =>
   new Promise((resolve, reject) => {
     const server = net.createServer()
     server.once("error", reject)
@@ -26,15 +36,6 @@ const reserveTcpPort = async (): Promise<number> =>
       server.close((error) => (error ? reject(error) : resolve(address.port)))
     })
   })
-
-export const choosePort = async (value: string | undefined): Promise<number> => {
-  if (!value) return reserveTcpPort()
-  const port = Number(value)
-  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
-    throw new Error(`SKYEMU_PORT must be an integer between 1 and 65535, received ${value}`)
-  }
-  return port
-}
 
 export const stopProcess = async (child: childProcess.ChildProcess): Promise<void> => {
   if (child.exitCode !== null) return

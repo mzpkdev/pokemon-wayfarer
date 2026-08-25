@@ -12,7 +12,7 @@
     "typecheck": "wa typecheck"
   },
   "dependencies": {
-    "skyemu-static": "0.0.1"
+    "skyemu-static": "0.0.2"
   },
   "devDependencies": {
     "@types/node": "24.10.1",
