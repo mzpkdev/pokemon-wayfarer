@@ -24,14 +24,17 @@ SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run test:skyemu
 ```
 
 The suite boots the ROM through SkyEmu's HTTP server, checks that it reports a
-loaded ROM, and advances 60 frames. Tests run in one process because one
-SkyEmu instance owns the selected port.
+loaded ROM, and advances 60 frames. Its smoke test copies the supplied ROM to a
+temporary directory, starts a fresh game, accepts the default character and
+challenge settings, and verifies that it reaches the player's bedroom in New
+Bark Town. Tests run in one process because one SkyEmu instance owns the
+selected port.
 
 The ROM path is always explicit; the tests never build, scan, or otherwise
 depend on the game source tree.
 
 ## Add a scenario
 
-Add a `*.e2e.test.ts` file under `src/`, import `startSkyEmu`, and test the
-documented HTTP endpoints. Keep scenario data and generated artifacts in this
-directory so the harness remains portable.
+Add a test file under `src/`, import `startSkyEmu`, and test the documented HTTP
+endpoints. Keep scenario data and generated artifacts in this directory so the
+harness remains portable.

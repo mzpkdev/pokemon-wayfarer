@@ -1,12 +1,15 @@
 import { afterAll, beforeAll, describe, expect, it } from "webanvil/test"
 
 import { startSkyEmu, type RunningSkyEmu } from "./skyemu-server"
+import { requireRomPath } from "./utils"
+
+import "./smoke"
 
 describe.sequential("SkyEmu", () => {
   let skyEmu: RunningSkyEmu | undefined
 
   beforeAll(async () => {
-    skyEmu = await startSkyEmu()
+    skyEmu = await startSkyEmu(requireRomPath())
   })
 
   afterAll(async () => {

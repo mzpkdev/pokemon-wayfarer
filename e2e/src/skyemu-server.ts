@@ -3,21 +3,20 @@ import * as fs from "node:fs"
 import { skyEmuBinary } from "skyemu-static"
 
 import { SkyEmuClient } from "./skyemu"
-import { requireRomPath, reserveTcpPort, stopProcess, waitFor } from "./utils"
+import { reserveTcpPort, stopProcess, waitFor } from "./utils"
 
 export type RunningSkyEmu = {
   client: SkyEmuClient
   stop: () => Promise<void>
 }
 
-export const startSkyEmu = async (): Promise<RunningSkyEmu> => {
+export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
   await fs.promises.access(skyEmuBinary)
   const port = await reserveTcpPort()
-  const romPath = requireRomPath()
   const child = childProcess.spawn(
     "xvfb-run",
     ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath],
-    { stdio: "inherit" },
+    { stdio: "ignore" },
   )
   const client = new SkyEmuClient(port)
 
