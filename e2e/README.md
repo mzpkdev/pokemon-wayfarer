@@ -54,6 +54,54 @@ ROM copy, so test files can run in parallel.
 The ROM and matching symbol paths are always explicit. The tests never build,
 scan, or otherwise depend on the game source tree.
 
+## Test ROM API
+
+`TestRom` uses the `E2E_TESTING=1` ROM hook to arrange gameplay state before a
+test starts. `arrange()` creates a clean new game, applies a named checkpoint
+and its overrides as one request, then resolves after the normal map loader has
+returned control to the player.
+
+```ts
+const game = await TestRom.launch()
+
+await game.arrange({
+  checkpoint: "elm-lab-before-intro",
+  player: {
+    facing: "up",
+    position: { map: "elm-lab", x: 6, y: 8 },
+  },
+  story: {
+    flags: { hideSilverInNewBark: true },
+    vars: {
+      newBarkTownLabState: 0,
+      newBarkTownState: 2,
+    },
+  },
+  determinism: {
+    rngSeed: 1,
+    textSpeed: "instant",
+  },
+})
+
+await game.player.move("up")
+await game.dialogue.waitForOpen()
+```
+
+The current checkpoints are `bedroom-before-clock`,
+`new-bark-after-intro`, and `elm-lab-before-intro`. A test can override the
+map, coordinates, facing direction, supported story vars and flags, RNG seed,
+and text speed. One request can patch up to eight vars and eight flags.
+
+`game.state.read()` returns the current game phase, map, player position and
+facing direction, control lock, script activity, and dialogue state.
+`game.story.var()` and `game.story.flag()` read semantic story values through
+layout offsets published by the ROM ABI. `game.player` supplies real controller
+actions, while `game.wait` and `game.dialogue` synchronize against ROM state
+instead of fixed frame delays.
+
+The mailbox, checkpoints, and telemetry only exist in the E2E ROM. Normal and
+release ROMs do not compile them.
+
 ## Layout
 
 `src/harness/` owns the emulator, ROM, and process mechanics. `src/actions/`

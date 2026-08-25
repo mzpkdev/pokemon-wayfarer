@@ -94,6 +94,24 @@ export class SkyEmuClient {
     return bytes[0]! | (bytes[1]! << 8)
   }
 
+  async writeBytes(address: number, bytes: Uint8Array): Promise<void> {
+    if (!Number.isSafeInteger(address) || bytes.length < 1) {
+      throw new Error("SkyEmu memory writes require a valid address and at least one byte")
+    }
+
+    const parameters = new URLSearchParams()
+    for (const [offset, value] of bytes.entries()) {
+      parameters.append(
+        (address + offset).toString(16).padStart(8, "0"),
+        value.toString(16).padStart(2, "0"),
+      )
+    }
+    const response = await fetch(`${this.baseUrl}/write_byte?${parameters}`)
+    if (!response.ok) throw new Error(`SkyEmu memory write failed with HTTP ${response.status}`)
+    const result = (await response.text()).replaceAll("\0", "")
+    if (result !== "ok") throw new Error(`SkyEmu memory write failed: ${result}`)
+  }
+
   async status(): Promise<SkyEmuStatus> {
     const response = await fetch(`${this.baseUrl}/status`)
     if (!response.ok) throw new Error(`SkyEmu status failed with HTTP ${response.status}`)
