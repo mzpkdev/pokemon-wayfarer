@@ -52,6 +52,15 @@ export class SkyEmuClient {
     return (await response.text()).replaceAll("\0", "")
   }
 
+  async loadRom(path: string, pause = true): Promise<string> {
+    const parameters = new URLSearchParams({ path })
+    if (pause) parameters.set("pause", "1")
+
+    const response = await fetch(`${this.baseUrl}/load_rom?${parameters}`)
+    if (!response.ok) throw new Error(`SkyEmu ROM load failed with HTTP ${response.status}`)
+    return (await response.text()).replaceAll("\0", "")
+  }
+
   async readBytes(address: number, length: number): Promise<Uint8Array> {
     if (!Number.isSafeInteger(address) || !Number.isSafeInteger(length) || length < 1) {
       throw new Error("SkyEmu memory reads require a valid address and positive length")
@@ -78,6 +87,11 @@ export class SkyEmuClient {
   async readUint32LE(address: number): Promise<number> {
     const bytes = await this.readBytes(address, 4)
     return (bytes[0]! | (bytes[1]! << 8) | (bytes[2]! << 16) | (bytes[3]! << 24)) >>> 0
+  }
+
+  async readUint16LE(address: number): Promise<number> {
+    const bytes = await this.readBytes(address, 2)
+    return bytes[0]! | (bytes[1]! << 8)
   }
 
   async status(): Promise<SkyEmuStatus> {

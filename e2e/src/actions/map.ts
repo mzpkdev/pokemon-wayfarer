@@ -2,6 +2,9 @@ import { type SkyEmuClient } from "../harness/skyemu"
 import { type SkyEmuSymbols } from "../harness/symbols"
 
 const saveBlock1LocationOffset = 0x8
+const saveBlock1VarsOffset = 0x1abc
+const varsStart = 0x4000
+const varsEnd = 0x40ff
 const objectEventSize = 0x24
 const objectEventPlayerFlagOffset = 0x2
 const objectEventElevationOffset = 0xb
@@ -69,4 +72,19 @@ export const readPlayerElevation = async (
   const objectEvent = await readPlayerObjectEvent(client, symbols)
 
   return objectEvent[objectEventElevationOffset]! & 0x0f
+}
+
+export const readSavedVar = async (
+  client: SkyEmuClient,
+  symbols: SkyEmuSymbols,
+  id: number,
+): Promise<number> => {
+  if (!Number.isInteger(id) || id < varsStart || id > varsEnd) {
+    throw new Error(
+      `SkyEmu saved variable ID must be between 0x${varsStart.toString(16)} and 0x${varsEnd.toString(16)}`,
+    )
+  }
+
+  const saveBlock1Address = await client.readUint32LE(symbols.address("gSaveBlock1Ptr"))
+  return client.readUint16LE(saveBlock1Address + saveBlock1VarsOffset + (id - varsStart) * 2)
 }

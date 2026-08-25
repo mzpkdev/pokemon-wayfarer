@@ -31,6 +31,21 @@ export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
         return false
       }
     }, 30_000)
+    const loaded = await client.loadRom(romPath)
+    if (loaded !== "ok") throw new Error(`SkyEmu failed to load the ROM paused: ${loaded}`)
+    const released = await client.input({
+      A: 0,
+      B: 0,
+      Down: 0,
+      L: 0,
+      Left: 0,
+      R: 0,
+      Right: 0,
+      Select: 0,
+      Start: 0,
+      Up: 0,
+    })
+    if (released !== "ok") throw new Error(`SkyEmu failed to clear controller input: ${released}`)
   } catch (error) {
     child.kill()
     throw error

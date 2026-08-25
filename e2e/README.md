@@ -61,6 +61,7 @@ contains small reusable inputs and game-state reads. `src/playbooks/` composes
 actions into player flows such as starting a new game.
 
 `src/smoke/` contains fast tests that run for every pull request. `src/journeys/`
-is reserved for longer flows that can run in the nightly workflow. Each test
-must use its own temporary ROM copy so suites can run in parallel without
-sharing a save file. Until journeys are added, `e2e` runs the smoke tier.
+contains longer player flows. The E2E tier currently covers the opening through
+Elm's first dialogue; future journeys can move to a nightly workflow as they
+become more expensive. Each test must use its own temporary ROM copy so suites
+can run in parallel without sharing a save file.
