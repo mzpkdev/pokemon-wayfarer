@@ -1,4 +1,4 @@
-import { maps, type GameMap } from "../catalog"
+import { type GameMap } from "../catalog"
 import { type SessionRuntime } from "../runtime"
 import { describeState, type GameState, type StateApi } from "./state"
 
@@ -28,12 +28,8 @@ export const createWaitApi = (runtime: SessionRuntime, state: StateApi): WaitApi
   return {
     frames: (frames) => runtime.advance(frames),
     forMap: async (map, maxFrames = 1_200) => {
-      const expected = maps[map]
       await until(
-        (current) =>
-          current.ready &&
-          current.map.mapGroup === expected.mapGroup &&
-          current.map.mapNum === expected.mapNum,
+        (current) => current.ready && current.map.name === map,
         `ready map ${map}`,
         maxFrames,
       )

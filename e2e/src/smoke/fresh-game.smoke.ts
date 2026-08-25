@@ -18,7 +18,7 @@ describe.sequential("a new game", () => {
 
       await expect(game.state.read()).resolves.toMatchObject({
         ready: true,
-        map: { mapGroup: 1, mapNum: 4 },
+        map: { name: "players-bedroom" },
       })
     })
   })

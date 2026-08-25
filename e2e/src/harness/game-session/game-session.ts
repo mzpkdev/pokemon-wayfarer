@@ -3,6 +3,7 @@ import { startSkyEmu, type RunningSkyEmu } from "../skyemu-server"
 import { readSkyEmuSymbols } from "../symbols"
 import { requireRomPath, requireSymbolsPath } from "../utils"
 import { createArrangeApi, type ArrangeApi } from "./features/arrange"
+import { createControlsApi, type ControlsApi } from "./features/controls"
 import { createDialogueApi, type DialogueApi } from "./features/dialogue"
 import { createPlayerApi, type PlayerApi } from "./features/player"
 import { createStateApi, type StateApi } from "./features/state"
@@ -14,6 +15,7 @@ import { createSessionRuntime, type SessionRuntime } from "./runtime"
 export class GameSession {
   readonly arrange: ArrangeApi["arrange"]
   readonly checkpoint: ArrangeApi["checkpoint"]
+  readonly controls: ControlsApi
   readonly dialogue: DialogueApi
   readonly player: PlayerApi
   readonly state: StateApi
@@ -31,6 +33,7 @@ export class GameSession {
 
     this.arrange = arrange.arrange
     this.checkpoint = arrange.checkpoint
+    this.controls = createControlsApi(runtime)
     this.dialogue = createDialogueApi(state, wait)
     this.player = createPlayerApi(runtime)
     this.state = state

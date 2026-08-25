@@ -36,7 +36,7 @@ describe.sequential("Elm's opening dialogue", () => {
       await expect(game.state.read()).resolves.toMatchObject({
         phase: "overworld",
         ready: true,
-        map: { mapGroup: 1, mapNum: 0 },
+        map: { name: "elm-lab" },
         player: { x: 6, y: 8, facing: "up" },
       })
 
@@ -45,9 +45,9 @@ describe.sequential("Elm's opening dialogue", () => {
 
       await expect(game.state.read()).resolves.toMatchObject({
         phase: "dialogue",
-        dialogueOpen: true,
         controlsLocked: true,
       })
+      await expect(game.dialogue.isOpen()).resolves.toBe(true)
       await expect(game.story.flag("hideSilverInNewBark")).resolves.toBe(true)
       await expect(game.story.var("newBarkTownLabState")).resolves.toBe(0)
     })

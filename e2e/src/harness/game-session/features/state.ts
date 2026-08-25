@@ -1,4 +1,4 @@
-import { directions, type Direction } from "../catalog"
+import { directions, maps, type Direction, type GameMap } from "../catalog"
 import { gamePhases, parseStateSnapshot } from "../protocol"
 import { type SessionRuntime } from "../runtime"
 
@@ -7,6 +7,7 @@ export type GameState = {
   phase: (typeof gamePhases)[number]
   ready: boolean
   map: {
+    name: GameMap | "unknown"
     mapGroup: number
     mapNum: number
   }
@@ -29,8 +30,13 @@ const facingName = (facing: number): Direction | "unknown" =>
     | Direction
     | undefined) ?? "unknown"
 
+const mapName = (mapGroup: number, mapNum: number): GameMap | "unknown" =>
+  (Object.entries(maps).find(
+    ([, map]) => map.mapGroup === mapGroup && map.mapNum === mapNum,
+  )?.[0] as GameMap | undefined) ?? "unknown"
+
 export const describeState = (state: GameState): string =>
-  `phase=${state.phase}, map=${state.map.mapGroup}:${state.map.mapNum}, position=${state.player.x}:${state.player.y}, facing=${state.player.facing}, ready=${state.ready}, controlsLocked=${state.controlsLocked}, scriptActive=${state.scriptActive}, dialogueOpen=${state.dialogueOpen}`
+  `phase=${state.phase}, map=${state.map.name}(${state.map.mapGroup}:${state.map.mapNum}), position=${state.player.x}:${state.player.y}, facing=${state.player.facing}, ready=${state.ready}, controlsLocked=${state.controlsLocked}, scriptActive=${state.scriptActive}, dialogueOpen=${state.dialogueOpen}`
 
 export const createStateApi = (runtime: SessionRuntime): StateApi => ({
   read: async () => {
@@ -39,7 +45,11 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
     )
     return {
       frame: snapshot.frame,
-      map: { mapGroup: snapshot.mapGroup, mapNum: snapshot.mapNum },
+      map: {
+        name: mapName(snapshot.mapGroup, snapshot.mapNum),
+        mapGroup: snapshot.mapGroup,
+        mapNum: snapshot.mapNum,
+      },
       player: {
         x: snapshot.x,
         y: snapshot.y,
