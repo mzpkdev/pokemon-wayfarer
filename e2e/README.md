@@ -20,7 +20,13 @@ emulator window. Install Xvfb on Linux before running the suite.
 ## Run tests
 
 ```sh
-SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run test:smoke
+SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run smoke
+```
+
+Run every E2E tier with:
+
+```sh
+SKYEMU_ROM=/absolute/path/to/wayfarer.gba pnpm run e2e
 ```
 
 The suite boots the ROM through SkyEmu's HTTP server, checks that it reports a
@@ -39,7 +45,7 @@ depend on the game source tree.
 contains small reusable inputs and game-state reads. `src/playbooks/` composes
 actions into player flows such as starting a new game.
 
-`src/smoke/` contains fast tests that run for every pull request. `src/journey/`
+`src/smoke/` contains fast tests that run for every pull request. `src/journeys/`
 is reserved for longer flows that can run in the nightly workflow. Each test
 must use its own temporary ROM copy so suites can run in parallel without
-sharing a save file.
+sharing a save file. Until journeys are added, `e2e` runs the smoke tier.

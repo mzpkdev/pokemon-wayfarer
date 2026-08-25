@@ -8,8 +8,8 @@
     "format": "wa format",
     "lint": "wa lint",
     "test": "wa test",
-    "test:skyemu": "pnpm run test:smoke",
-    "test:smoke": "wa test src/smoke/boot.test.ts src/smoke/fresh-game.test.ts",
+    "e2e": "pnpm run smoke",
+    "smoke": "wa test src/smoke/boot.test.ts src/smoke/fresh-game.test.ts",
     "typecheck": "wa typecheck"
   },
   "dependencies": {

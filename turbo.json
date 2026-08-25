@@ -20,7 +20,12 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "test:smoke": {
+    "e2e": {
+      "dependsOn": ["^build"],
+      "env": ["SKYEMU_ROM"],
+      "outputs": []
+    },
+    "smoke": {
       "dependsOn": ["^build"],
       "env": ["SKYEMU_ROM"],
       "outputs": []

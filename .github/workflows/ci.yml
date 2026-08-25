@@ -123,6 +123,51 @@ jobs:
           DEPRECATED_ERROR: 1
         run: make -j"$(nproc)" hns check
 
+  smoke:
+    name: Smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24.11.0
+
+      - name: Install build and E2E dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            binutils-arm-none-eabi \
+            build-essential \
+            gcc-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libpng-dev \
+            pkg-config \
+            python3 \
+            xvfb
+          npm install --global pnpm@11.9.0
+
+      - name: Install E2E workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build Wayfarer ROM
+        working-directory: game
+        env:
+          UNUSED_ERROR: 1
+          DEPRECATED_ERROR: 1
+        run: make -j"$(nproc)" BUILD=hns release
+
+      - name: Run SkyEmu smoke tests
+        env:
+          SKYEMU_ROM: ${{ github.workspace }}/game/pokehns-release.gba
+        run: pnpm run smoke
+
   e2e:
     name: E2E
     runs-on: ubuntu-latest
@@ -166,4 +211,4 @@ jobs:
       - name: Run SkyEmu E2E tests
         env:
           SKYEMU_ROM: ${{ github.workspace }}/game/pokehns-release.gba
-        run: pnpm run test:smoke
+        run: pnpm run e2e
