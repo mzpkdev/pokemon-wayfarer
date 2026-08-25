@@ -6,6 +6,8 @@ on:
       - opened
       - reopened
       - synchronize
+      - labeled
+      - unlabeled
       - closed
 
 concurrency:
@@ -15,7 +17,19 @@ concurrency:
 jobs:
   build:
     name: Build preview site
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      (
+        (
+          github.event.action != 'labeled' &&
+          github.event.action != 'unlabeled' &&
+          contains(github.event.pull_request.labels.*.name, 'preview')
+        ) ||
+        (
+          (github.event.action == 'labeled' || github.event.action == 'unlabeled') &&
+          github.event.label.name == 'preview'
+        )
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -43,10 +57,11 @@ jobs:
       - name: List open same-repository pull requests
         env:
           GH_TOKEN: ${{ github.token }}
+          PREVIEW_LABEL: preview
         run: |
           gh api --paginate \
             "/repos/${GITHUB_REPOSITORY}/pulls?state=open&per_page=100" \
-            --jq '.[] | select(.head.repo.full_name == env.GITHUB_REPOSITORY) | [.number, .head.sha] | @tsv' \
+            --jq '.[] | select(.head.repo.full_name == env.GITHUB_REPOSITORY) | select(any(.labels[]; .name == env.PREVIEW_LABEL)) | [.number, .head.sha] | @tsv' \
             > "$RUNNER_TEMP/wayfarer-preview-refs.tsv"
 
       - name: Build every open preview
@@ -54,7 +69,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           EVENT_ACTION: ${{ github.event.action }}
+          EVENT_LABEL: ${{ github.event.label.name }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_LABEL: preview
           PREVIEW_SITE: ${{ runner.temp }}/wayfarer-preview-site
           PREVIEW_REFS: ${{ runner.temp }}/wayfarer-preview-refs.tsv
           SUCCESSFUL_PREVIEW_REFS: ${{ runner.temp }}/wayfarer-successful-preview-refs.tsv
@@ -95,6 +112,8 @@ jobs:
 
           if [ "$EVENT_ACTION" = closed ]; then
             status=closed
+          elif [ "$EVENT_ACTION" = unlabeled ] && [ "$EVENT_LABEL" = "$PREVIEW_LABEL" ]; then
+            status=removed
           elif awk -F '\t' -v number="$PR_NUMBER" '$1 == number { found = 1 } END { exit !found }' "$SUCCESSFUL_PREVIEW_REFS"; then
             status=ready
           else
@@ -139,7 +158,10 @@ jobs:
     needs:
       - build
       - deploy
-    if: always() && github.event.pull_request.head.repo.full_name == github.repository
+    if: >-
+      always() &&
+      needs.build.result != 'skipped' &&
+      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -160,6 +182,8 @@ jobs:
             body="${marker}"$'\n'"This devtooling preview was removed because the pull request is closed."
           elif [ "$EVENT_ACTION" = closed ]; then
             body="${marker}"$'\n'"This pull request is closed, but preview removal is pending because the Pages deployment did not complete."
+          elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = removed ]; then
+            body="${marker}"$'\n'"This devtooling preview was removed because the preview label was removed."
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = ready ]; then
             body="${marker}"$'\n'"### Devtooling"$'\n\n'"[Open the preview for this PR](${preview_url})"
           else
