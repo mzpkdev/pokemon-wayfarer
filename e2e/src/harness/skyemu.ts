@@ -1,5 +1,6 @@
 export type SkyEmuStatus = {
   "rom-loaded"?: boolean
+  inputs?: Record<string, number>
 }
 
 export type SkyEmuHealth = {
