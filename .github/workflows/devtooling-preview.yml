@@ -161,7 +161,7 @@ jobs:
           elif [ "$EVENT_ACTION" = closed ]; then
             body="${marker}"$'\n'"This pull request is closed, but preview removal is pending because the Pages deployment did not complete."
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = ready ]; then
-            body="${marker}"$'\n'"Devtooling preview: ${preview_url}"
+            body="${marker}"$'\n'"### Devtooling"$'\n\n'"[Open the preview for this PR](${preview_url})"
           else
             body="${marker}"$'\n'"Devtooling preview is unavailable because its Pages build did not complete."
           fi
