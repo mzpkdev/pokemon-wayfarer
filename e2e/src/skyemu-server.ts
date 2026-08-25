@@ -27,7 +27,7 @@ export const startSkyEmu = async (): Promise<RunningSkyEmu> => {
         throw new Error(`SkyEmu exited with code ${child.exitCode} before becoming ready`)
       }
       try {
-        return (await client.ping()) === "pong"
+        return (await client.health()).ready
       } catch {
         return false
       }

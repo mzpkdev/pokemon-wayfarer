@@ -14,8 +14,7 @@ describe.sequential("SkyEmu", () => {
   })
 
   it("boots the supplied ROM", async () => {
-    await expect(skyEmu?.client.ping()).resolves.toBe("pong")
-    await expect(skyEmu?.client.status()).resolves.toMatchObject({ "rom-loaded": true })
+    await expect(skyEmu?.client.health()).resolves.toEqual({ ready: true, romLoaded: true })
   })
 
   it("advances emulation frames", async () => {
