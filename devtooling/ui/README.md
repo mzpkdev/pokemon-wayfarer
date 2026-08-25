@@ -15,9 +15,10 @@ pnpm run e2e
 the app. Use `pnpm run catalog` when you need to refresh the generated data
 without starting the development server.
 
-`wa build` writes a compact client bundle to `ui/dist`. The generated catalogs
-stay in `build/cartographer/map-catalog/` and the local dev or preview server
-serves them, so `ui/dist` is not a standalone static-host deployment artifact.
+`wa build` writes a compact client bundle to `ui/dist`. `pnpm run build` from
+the parent `devtooling/` directory stages that bundle alongside the generated
+catalog in `build/cartographer/map-catalog/`, which is the standalone
+static-host deployment artifact. `ui/dist` remains a bundle only.
 
 The cartographer provides region selection, map and map-section search, URL-persisted
 map selection and camera state, native and overview image switching, map facts,

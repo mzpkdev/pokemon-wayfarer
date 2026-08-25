@@ -33,6 +33,8 @@ import type {
   SourceMap,
 } from "./types"
 
+export const compactJson = (value: unknown): string => `${JSON.stringify(value)}\n`
+
 const createCatalogMap = (
   root: string,
   output: string,
@@ -193,6 +195,6 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
     maps,
   }
   fs.mkdirSync(output, { recursive: true })
-  fs.writeFileSync(path.join(output, "catalog.json"), `${JSON.stringify(catalog, null, 2)}\n`)
+  fs.writeFileSync(path.join(output, "catalog.json"), compactJson(catalog))
   return { mapCount: maps.length, output }
 }

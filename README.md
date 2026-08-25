@@ -24,3 +24,16 @@ directory:
 pnpm install
 pnpm --dir devtooling run check
 ```
+
+## Pull request previews
+
+Same-repository pull requests publish their generated devtooling site at
+`https://mzpkdev.github.io/pokemon-wayfarer/preview/pr-<number>/`. The workflow
+rebuilds every open same-repository pull request into one GitHub Pages artifact,
+so closing a pull request removes its preview on the next deployment. Fork pull
+requests are deliberately excluded because their workflow tokens cannot safely
+publish Pages content.
+
+Before the first deployment, set the repository's Pages source to **GitHub
+Actions**. The preview workflow keeps the published artifact under 950 MiB and
+fails before GitHub Pages' 1 GiB site limit.

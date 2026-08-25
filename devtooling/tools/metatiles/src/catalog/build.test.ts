@@ -43,18 +43,22 @@ describe("metatile catalog decoding", () => {
 
   it("builds every source-backed context without resolving the unused sentinel layout", () => {
     const result = buildMetatileCatalog(sourceRoot, output)
-    const catalog = JSON.parse(fs.readFileSync(path.join(output, "catalog.json"), "utf8")) as {
+    const catalogFile = fs.readFileSync(path.join(output, "catalog.json"), "utf8")
+    const catalog = JSON.parse(catalogFile) as {
       contexts: Array<{ path: string; secondaryTileset: string }>
     }
 
     expect(result.contextCount).toBeGreaterThan(0)
     expect(result.metatileCount).toBeGreaterThan(0)
     expect(catalog).not.toHaveProperty("$schema")
+    expect(catalogFile).toBe(`${JSON.stringify(catalog)}\n`)
     expect(catalog.contexts.some((context) => context.secondaryTileset === "0")).toBe(false)
 
     const firstContext = catalog.contexts[0]
     if (!firstContext) throw new Error("Expected at least one generated metatile context")
-    const contextCatalog = JSON.parse(fs.readFileSync(path.join(output, firstContext.path), "utf8"))
+    const contextCatalogFile = fs.readFileSync(path.join(output, firstContext.path), "utf8")
+    const contextCatalog = JSON.parse(contextCatalogFile)
     expect(contextCatalog).not.toHaveProperty("$schema")
+    expect(contextCatalogFile).toBe(`${JSON.stringify(contextCatalog)}\n`)
   }, 30_000)
 })

@@ -60,8 +60,10 @@ starting the Svelte app. Restart it after changing map source files so the UI
 serves current map images.
 
 `pnpm run e2e` and `pnpm run build` likewise regenerate a fresh catalog before
-running their respective UI commands. CI follows the same path from a clean
-catalog directory.
+running their respective UI commands. `pnpm run build` then stages the compact
+UI bundle beside that catalog, making `build/cartographer/map-catalog/` a
+self-contained static site. It copies only the small UI bundle, not the catalog
+itself. CI follows the same path from a clean catalog directory.
 
 `pnpm run clean` removes package build output and the generated Cartographer and
 metatile catalogs under the repository's `build/` directory. It does not touch
@@ -70,6 +72,8 @@ the ROM build output.
 `pnpm run catalog` recreates both catalog types in
 `build/cartographer/map-catalog/`. `pnpm run cartographer:catalog` and
 `pnpm run metatiles:catalog` are aliases for that complete refresh.
+Catalog JSON is compact in every command, including local development, to keep
+the generated site practical to serve and publish.
 `pnpm run cartographer:ui` then starts the Svelte cartographer.
 
 The metatile refresh writes palette-correct context atlases with the map catalog.

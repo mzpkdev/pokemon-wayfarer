@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "pnpm run catalog && pnpm --filter @wayfarer/ui run build",
+    "build": "pnpm run catalog && pnpm --filter @wayfarer/ui run build && node scripts/site.mjs",
     "check": "pnpm run tools:build && pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run check",
     "clean": "node scripts/clean.mjs && pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run clean",
     "dev": "pnpm run catalog && pnpm --filter @wayfarer/ui run dev",
@@ -16,7 +16,7 @@
     "cartographer": "pnpm --filter @wayfarer/cartographer run build && node tools/cartographer/dist/index.js --repo ../game --output ../build/cartographer/map-renders",
     "metatiles:catalog": "pnpm run catalog",
     "metatiles": "pnpm --filter @wayfarer/metatiles run build && node tools/metatiles/dist/index.js --repo ../game",
-    "test": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run test",
+    "test": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run test && node --test scripts/*.test.mjs",
     "tools:build": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles run build",
     "typecheck": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run typecheck"
   },

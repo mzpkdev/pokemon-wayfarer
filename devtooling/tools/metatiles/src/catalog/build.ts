@@ -630,10 +630,7 @@ export const buildMetatileCatalog = (root: string, output: string): MetatileCata
       source: catalog.source,
       context,
     }
-    fs.writeFileSync(
-      path.join(directory, "catalog.json"),
-      `${JSON.stringify(contextCatalog, null, 2)}\n`,
-    )
+    fs.writeFileSync(path.join(directory, "catalog.json"), `${JSON.stringify(contextCatalog)}\n`)
     catalog.contexts.push({
       id: context.id,
       format: context.format,
@@ -653,7 +650,7 @@ export const buildMetatileCatalog = (root: string, output: string): MetatileCata
     metatileCount += context.primary.metatiles.length + context.secondary.metatiles.length
   }
   fs.mkdirSync(output, { recursive: true })
-  fs.writeFileSync(path.join(output, "catalog.json"), `${JSON.stringify(catalog, null, 2)}\n`)
+  fs.writeFileSync(path.join(output, "catalog.json"), `${JSON.stringify(catalog)}\n`)
   return {
     contextCount: catalog.contexts.length,
     metatileCount,
