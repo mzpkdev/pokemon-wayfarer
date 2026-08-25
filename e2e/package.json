@@ -8,8 +8,8 @@
     "format": "wa format",
     "lint": "wa lint",
     "test": "wa test",
-    "e2e": "wa test src/smoke/boot.test.ts src/smoke/fresh-game.test.ts src/journeys/elm-dialogue.test.ts",
-    "smoke": "wa test src/smoke/boot.test.ts src/smoke/fresh-game.test.ts",
+    "e2e": "wa test src/smoke src/journeys",
+    "smoke": "wa test src/smoke",
     "typecheck": "wa typecheck"
   },
   "dependencies": {

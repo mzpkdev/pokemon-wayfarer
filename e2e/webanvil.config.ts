@@ -28,6 +28,7 @@ export default defineConfig({
   test: {
     fileParallelism: true,
     hookTimeout: 60_000,
+    include: ["src/**/*.test.ts", "src/**/*.smoke.ts", "src/**/*.e2e.ts"],
     testTimeout: 120_000,
   },
 })
