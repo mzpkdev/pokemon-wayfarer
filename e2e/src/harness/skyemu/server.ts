@@ -16,7 +16,7 @@ export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
   const child = childProcess.spawn(
     "xvfb-run",
     ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath],
-    { stdio: ["ignore", "pipe", "pipe"] },
+    { detached: true, stdio: ["ignore", "pipe", "pipe"] },
   )
   let launchError: Error | undefined
   child.once("error", (error) => {

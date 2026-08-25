@@ -74,6 +74,18 @@ export const reserveTcpPort = async (): Promise<number> =>
 
 export const stopProcess = async (child: childProcess.ChildProcess): Promise<void> => {
   if (child.exitCode !== null || child.signalCode !== null) return
-  child.kill()
-  await new Promise<void>((resolve) => child.once("exit", () => resolve()))
+
+  const exited = new Promise<void>((resolve) => child.once("exit", () => resolve()))
+  if (child.pid === undefined) {
+    child.kill()
+    return
+  }
+
+  try {
+    process.kill(-child.pid, "SIGTERM")
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ESRCH") return
+    throw error
+  }
+  await exited
 }
