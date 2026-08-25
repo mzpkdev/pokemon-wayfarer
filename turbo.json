@@ -20,7 +20,7 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "test:skyemu": {
+    "test:smoke": {
       "dependsOn": ["^build"],
       "env": ["SKYEMU_ROM"],
       "outputs": []

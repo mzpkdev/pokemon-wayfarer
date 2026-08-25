@@ -11,7 +11,8 @@
     "lint": "turbo run lint",
     "postinstall": "git remote get-url upstream >/dev/null 2>&1 || git remote add upstream git@github.com:PokemonHnS-Development/pokehns-expansion.git",
     "test": "turbo run test",
-    "test:skyemu": "turbo run test:skyemu --filter=@wayfarer/skyemu-e2e",
+    "test:skyemu": "pnpm run test:smoke",
+    "test:smoke": "turbo run test:smoke --filter=@wayfarer/skyemu-e2e",
     "typecheck": "turbo run typecheck"
   },
   "keywords": [],

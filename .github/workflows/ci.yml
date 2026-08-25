@@ -166,4 +166,4 @@ jobs:
       - name: Run SkyEmu E2E tests
         env:
           SKYEMU_ROM: ${{ github.workspace }}/game/pokehns-release.gba
-        run: pnpm run test:skyemu
+        run: pnpm run test:smoke
