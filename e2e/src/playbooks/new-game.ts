@@ -1,6 +1,6 @@
-import { type TestRom } from "../harness/test-rom"
+import { type GameSession } from "../harness/game-session"
 
-export const startNewGame = async (game: TestRom): Promise<void> => {
+export const startNewGame = async (game: GameSession): Promise<void> => {
   await game.wait.frames(3_600)
   await game.player.press("start")
   await game.wait.frames(240)

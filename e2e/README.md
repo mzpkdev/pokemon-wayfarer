@@ -54,15 +54,15 @@ ROM copy, so test files can run in parallel.
 The ROM and matching symbol paths are always explicit. The tests never build,
 scan, or otherwise depend on the game source tree.
 
-## Test ROM API
+## Game session API
 
-`TestRom` uses the `E2E_TESTING=1` ROM hook to arrange gameplay state before a
+`GameSession` uses the `E2E_TESTING=1` ROM hook to arrange gameplay state before a
 test starts. `arrange()` creates a clean new game, applies a named checkpoint
 and its overrides as one request, then resolves after the normal map loader has
 returned control to the player.
 
 ```ts
-const game = await TestRom.launch()
+const game = await GameSession.launch()
 
 await game.arrange({
   checkpoint: "elm-lab-before-intro",
@@ -105,9 +105,13 @@ release ROMs do not compile them.
 ## Layout
 
 `src/harness/` owns the emulator, ROM, process mechanics, and the public
-`TestRom` API. Raw controller and memory operations stay private to the harness.
-Tests use `TestRom` directly, while `src/playbooks/` composes it into reusable
+`GameSession` API. Raw controller and memory operations stay private to the harness.
+Tests use `GameSession` directly, while `src/playbooks/` composes it into reusable
 player flows such as starting a new game.
+
+Inside `harness/game-session/`, the facade owns launch and cleanup, `protocol.ts`
+owns the mailbox wire format, `catalog.ts` owns semantic names, and `runtime.ts`
+owns raw emulator access. Each fluent namespace lives in `features/`.
 
 `src/smoke/` contains fast tests that run for every pull request. `src/journeys/`
 contains longer player flows. The E2E tier currently covers the opening through

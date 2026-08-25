@@ -1,13 +1,13 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
-import { TestRom } from "../harness/test-rom"
+import { GameSession } from "../harness/game-session"
 import { startNewGame } from "../playbooks/new-game"
 
 describe.sequential("fresh-game smoke test", () => {
-  let game: TestRom
+  let game: GameSession
 
   beforeAll(async () => {
-    game = await TestRom.launch()
+    game = await GameSession.launch()
     return () => game.close()
   })
 
