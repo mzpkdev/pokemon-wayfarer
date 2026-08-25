@@ -3,10 +3,31 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", ".webanvil/buildinfo.json"]
+    },
+    "pokemon-wayfarer-devtooling#build": {
+      "dependsOn": ["^build"],
+      "outputs": [
+        "../build/cartographer/map-catalog/**",
+        "ui/.webanvil/buildinfo.json",
+        "ui/dist/**"
+      ]
     },
     "check": {
+      "dependsOn": ["^build", "^check"],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "e2e": {
+      "cache": false,
       "dependsOn": ["^build"],
+      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
       "outputs": []
     },
     "format": {
@@ -16,19 +37,13 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
-    "test": {
-      "cache": false,
-      "dependsOn": ["^build"],
-      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
-      "outputs": []
-    },
-    "e2e": {
-      "cache": false,
-      "dependsOn": ["^build"],
-      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
-      "outputs": []
-    },
     "smoke": {
+      "cache": false,
+      "dependsOn": ["^build"],
+      "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],
+      "outputs": []
+    },
+    "test": {
       "cache": false,
       "dependsOn": ["^build"],
       "env": ["SKYEMU_ROM", "SKYEMU_SYMS"],

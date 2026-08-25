@@ -1,0 +1,35 @@
+{
+  "name": "pokemon-wayfarer-devtooling",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "pnpm run catalog && pnpm --filter @wayfarer/ui run build && node scripts/site.mjs",
+    "check": "pnpm run tools:build && pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run check",
+    "clean": "node scripts/clean.mjs && pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run clean",
+    "dev": "pnpm run catalog && pnpm --filter @wayfarer/ui run dev",
+    "e2e": "pnpm run catalog && pnpm --filter @wayfarer/ui run e2e",
+    "format": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run format",
+    "lint": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run lint",
+    "catalog": "pnpm run tools:build && node scripts/catalog.mjs",
+    "cartographer:ui": "pnpm run dev",
+    "cartographer:catalog": "pnpm run catalog",
+    "cartographer": "pnpm --filter @wayfarer/cartographer run build && node tools/cartographer/dist/index.js --repo ../game --output ../build/cartographer/map-renders",
+    "metatiles:catalog": "pnpm run catalog",
+    "metatiles": "pnpm --filter @wayfarer/metatiles run build && node tools/metatiles/dist/index.js --repo ../game",
+    "test": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run test && node --test scripts/*.test.mjs",
+    "tools:build": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles run build",
+    "typecheck": "pnpm --filter @wayfarer/cartographer --filter @wayfarer/metatiles --filter @wayfarer/ui run typecheck"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@wayfarer/cartographer": "workspace:*",
+    "@wayfarer/metatiles": "workspace:*",
+    "turbo": "2.10.11",
+    "typescript": "7.0.2",
+    "webanvil": "^0.0.17"
+  },
+  "engines": {
+    "node": ">=24.11.0 <25"
+  },
+  "packageManager": "pnpm@11.9.0"
+}

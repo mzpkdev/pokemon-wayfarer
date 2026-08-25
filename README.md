@@ -12,3 +12,31 @@ pnpm run check
 ```
 
 See [e2e/README.md](e2e/README.md) for the ROM-backed test command.
+
+## Developer tooling
+
+The source-driven Cartographer and Metatiles tools live in their own
+[devtooling workspace](devtooling/README.md). Its commands read the `game/`
+source tree and keep generated catalogs in the repository-level `build/`
+directory:
+
+```sh
+pnpm install
+pnpm --dir devtooling run check
+```
+
+## Pull request previews
+
+Same-repository, non-draft pull requests labeled `preview` publish their
+generated devtooling site at
+`https://mzpkdev.github.io/pokemon-wayfarer/preview/pr-<number>/`. Adding the
+label to a PR that is ready for review publishes the preview, and new commits
+refresh it. Marking a labeled draft as ready publishes it. Converting it back to
+a draft, removing the label, or closing the pull request removes its preview on
+the next deployment. The workflow rebuilds every eligible pull request into one
+GitHub Pages artifact. Fork pull requests are deliberately excluded because
+their workflow tokens cannot safely publish Pages content.
+
+Before the first deployment, set the repository's Pages source to **GitHub
+Actions**. The preview workflow keeps the published artifact under 950 MiB and
+fails before GitHub Pages' 1 GiB site limit.

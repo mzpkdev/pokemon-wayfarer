@@ -1,5 +1,8 @@
 packages:
   - e2e
+  - devtooling
+  - devtooling/tools/*
+  - devtooling/ui
 
 allowBuilds:
   "@playwright/browser-chromium": true
