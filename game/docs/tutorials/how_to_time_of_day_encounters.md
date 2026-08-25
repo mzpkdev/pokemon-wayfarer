@@ -5,8 +5,6 @@
   - [Sounds rad, how do I add it to my romhack?](#sounds-rad-how-do-i-add-it-to-my-romhack)
   - [I've never added one by hand, but I want to!](#ive-never-added-one-by-hand-but-i-want-to)
   - [What are "supported suffixes?"](#what-are-supported-suffixes)
-  - [That's a lot of manual editing.](#thats-a-lot-of-manual-editing)
-  - [That's *still* a lot of editing.](#thats-still-a-lot-of-editing)
 - [So what are the `#define` options in `overworld.h`?](#so-what-are-the-define-options-in-overworldh)
 - [Examples](#examples)
 
@@ -383,25 +381,7 @@ So, the "supported suffixes" are just:
 - `_Night`
 
 
-> **NOTE**: You can add more than just these by changing the `TimeOfDay` `enum` in [`rtc.h`](../../include/rtc.h). If you'd like to do this, I'd recommend making a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) somewhere outside your project folder, just so you can have a baseline to return to if something goes wrong. The [migration script](../../migration_scripts/add_time_based_encounters.py) makes a backup of the file ***each time it runs***, so it's essentially a one step undo button- if you plan on or think you might make lots of edits to [`wild_encounters.json`](../../src/data/wild_encounters.json), ***it is a very good idea to make a baseline backup***.
-
-
-### That's a lot of manual editing.
-You're so right bestie! Luckily for you, there's a python script that can help you out!
-The script is at [`migration_scripts/add_time_based_encounters.py`](../../migration_scripts/add_time_based_encounters.py). It, in order:
-1. Checks to make sure you're running it from the [root folder](../../) of your expansion project (specifically, wherever the project's [`Makefile`](../../Makefile) is)
-2. Makes a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) file called `wild_encounters.json.bak`
-3. Runs through `wild_encounters.json` and adds dummy encounter groups for each time denomination to each group
-    - ie, `gRoute101` becomes `gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`
-
-This script works kind of like a "template" feature- when you open it up to edit either in Porymap or a text editor, you will see the encounter groups, but they won't be filled out with encounters. This lets you add Pokémon with your own encounter rates however you want.
-
-### That's *still* a lot of editing.
-You're *still* so right bestie! Luckily for you, there's an optional argument you can add when you run the script: `--copy`.
-This duplicates the encounter group's encounters as well as their labels/map group values. When you open [`wild_encounters.json`](../../src/data/wild_encounters.json) for editing either in Porymap or a text editor, you'll notice that each group (`gRoute101_Morning`, `gRoute101_Day`, `gRoute101_Evening`, and `gRoute101_Night`) now all have the same encounters as `gRoute101` did. If you only want to add a couple of Pokémon here and there for each time of day, this is probably the easier option.
-
-
-> **NOTE**: the `--copy` option will use up at least an additional 9kb of ROM space. Obviously that's not much even for a GBA ROM, but it's something to keep in mind.
+> **NOTE**: You can add more than just these by changing the `TimeOfDay` `enum` in [`rtc.h`](../../include/rtc.h). If you'd like to do this, make a backup of your [`wild_encounters.json`](../../src/data/wild_encounters.json) somewhere outside your project folder so you have a baseline to return to if something goes wrong.
 
 
 ## So what are the `#define` options in [`overworld.h`](../../include/config/overworld.h)?
@@ -427,12 +407,7 @@ OW_TIME_OF_DAY_FALLBACK              TIME_MORNING
 
 ## Examples
 
-### Running the [migration script](../../migration_scripts/add_time_based_encounters.py) without the `--copy` option
-**Make sure you run this from the [root folder](../../) of your project!**
-
-```
-python3 migration_scripts/add_time_based_encounters.py
-```
+### Example without copying existing encounters
 
 #### Result:
 ```json
@@ -522,12 +497,7 @@ python3 migration_scripts/add_time_based_encounters.py
 ```
 As you can see, the names change, but the encounters aren't touched, so you're free to add your own, piecemeal style. If you don't have any encounters for a map and time, the game will use `OW_TIME_OF_DAY_FALLBACK` *if* `OW_TIME_OF_DAY_DISABLE_FALLBACK` is `FALSE`; otherwise, you won't encounter anything.
 
-### Running the [migration script](../../migration_scripts/add_time_based_encounters.py) with the `--copy` option
-**Make sure you run this from the [root folder](../../) of your project!**
-
-```
-python3 migration_scripts/add_time_based_encounters.py --copy
-```
+### Example with copied existing encounters
 
 #### Result:
 ```json

@@ -2,7 +2,7 @@
 Install instructions for each supported operating system can be found in their respective directories under `docs/install/`.
 Lines to those can be found under each heading.
 This file only contains a short introduction to each supported system.
-If you run into trouble, ask for help on Discord (see [README.md](README.md)).
+If you run into trouble, ask for help on Discord.
 
 After completing the install instructions for your OS, proceed to [Building pokehns-expansion](#building-pokehns-expansion).
 
@@ -154,10 +154,7 @@ If you are not on the latest version of pret's pokeemerald, you should expect so
 git remote add RHH https://github.com/rh-hideout/pokeemerald-expansion
 ```
 
-2. Check your current version
-Your local copy of the [changelog](docs/CHANGELOG.md) will be updated with the version your repo is on.
-
-3. Select a target version
+2. Select a target version
 We recommend incrementally updating to the next version using the following order below.
 If you are on a version older than 1.6.2, you should target 1.6.2..
     * 1.6.2
@@ -168,14 +165,14 @@ If you are on a version older than 1.6.2, you should target 1.6.2..
 
 For example, if your version is 1.7.0, you should update to 1.7.4.
 
-4. Pull the target version
+3. Pull the target version
 ```console
 git pull RHH expansion/X.Y.Z # Replace X, Y and Z with the target version, such as `1.9.3`, `master`, or `upcoming`.
 ```
 
 You may have merge conflicts that you need to resolve.
 
-If you targeted a specific version that is not the latest version listed on the [tags](https://github.com/rh-hideout/pokeemerald-expansion/tags) page, you should repeat steps 3 and 4 until you are.
+If you targeted a specific version that is not the latest version listed on the [tags](https://github.com/rh-hideout/pokeemerald-expansion/tags) page, you should repeat steps 2 and 3 until you are.
 
 # Useful additional tools
 

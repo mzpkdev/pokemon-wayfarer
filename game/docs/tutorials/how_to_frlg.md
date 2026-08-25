@@ -40,7 +40,3 @@ map.json:
 Porymap:
 
 ![porymap_region_attribute](./img/frlg/porymap_region_attribute.png)
-
-## Migrating FRLG tilesets
-To migrate tilesets that have been previously created for pokefirered you can use [this script](/migration_scripts/frlg_metatile_behavior_converter.py).<br>
-Instructions are in the script.
