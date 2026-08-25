@@ -2301,7 +2301,10 @@ static u16 GetFrontierStreakInfo(u16 facilityId, u32 *topicTextId)
 void BufferPokedexRatingForMatchCall(u8 *destStr)
 {
     int numSeen, numCaught;
-    u8 *str, *str2;
+    u8 *str;
+#if IS_HNS
+    u8 *str2;
+#endif
 
 #if IS_HNS
     if (VarGet(VAR_NEWBARKTOWN_LABSTATE) == 3)

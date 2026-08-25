@@ -40,11 +40,11 @@
 #include "constants/metatile_behaviors.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#define INCLUDE_BP_SHOP_ENTRIES
 #include "data/battle_frontier/battle_frontier_exchange_corner.h"
-#if IS_HNS
+#undef INCLUDE_BP_SHOP_ENTRIES
 #include "constants/flags.h"
 #include "event_data.h"
-#endif
 
 #define TAG_SCROLL_ARROW   2100
 #define TAG_ITEM_ICON_BASE 9110 // immune to time blending

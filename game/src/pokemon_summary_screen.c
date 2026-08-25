@@ -5075,14 +5075,3 @@ static inline bool32 ShouldShowRename(void)
          && !InSlateportBattleTent()
          && GetPlayerIDAsU32() == sMonSummaryScreen->summary.OTID);
 }
-
-static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
-{
-    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
-    ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gPlayerParty, gSpecialVar_0x8004, gPlayerPartyCount - 1, gInitialSummaryScreenCallback);
-}
-
-static void CB2_PssChangePokemonNickname(void)
-{
-    ChangePokemonNicknameWithCallback(CB2_ReturnToSummaryScreenFromNamingScreen);
-}

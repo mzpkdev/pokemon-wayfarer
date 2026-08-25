@@ -352,7 +352,6 @@ void NuzlockeDeleteFaintedPartyPokemon(void)
     u8 i;
     struct Pokemon *pokemon;
     u16 item = ITEM_NONE;
-    struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
 
     for (i = 0; i < PARTY_SIZE; i++)
     {

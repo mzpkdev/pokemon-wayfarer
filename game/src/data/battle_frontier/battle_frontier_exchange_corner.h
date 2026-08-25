@@ -1,3 +1,4 @@
+#ifdef INCLUDE_BP_SHOP_ENTRIES
 struct BPShopEntry
 {
     u16 item;
@@ -116,6 +117,7 @@ static const struct BPShopEntry sBPPokeBallShopEntries[] = {
     { ITEM_LUXURY_BALL,  1 },
     { ITEM_NONE,         0 },
 };
+#endif
 
 static const u16 sFrontierExchangeCorner_Decor1[] =
 {

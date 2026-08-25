@@ -2650,8 +2650,14 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
     // If we have not gotten a pokemon yet, assume this is the starter preview
     if (!FlagGet(FLAG_SYS_POKEMON_GET))
     {
+#if IS_FRLG
+        // FRLG's starter scripts use VAR_TEMP_1 for PLAYER_STARTER_NUM until the choice is confirmed.
+        u8 starter = VarGet(VAR_TEMP_1);
+#else
         u8 starter = VarGet(VAR_STARTER_MON);
+#endif
 
+#if IS_HNS
         u32 flagPreviewChecked = 0;
         u32 flagShinyPreview = 0;
 
@@ -2712,6 +2718,7 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
             DebugPrintfLevel(MGBA_LOG_DEBUG, "******** Flag Values: %d, %d ********", FlagGet(flagPreviewChecked), FlagGet(flagShinyPreview));
             DebugPrintfLevel(MGBA_LOG_DEBUG, "******** Preview Should be Shiny: %d ********", shinyStarter);
         #endif
+#endif
 
         #if RANDOMIZER_AVAILABLE
         if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
@@ -2724,7 +2731,7 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
 
         if (IsOneTypeChallengeActive())
         {
-            species = GetStarterPokemon(VarGet(VAR_STARTER_MON));
+            species = GetStarterPokemon(starter);
             if (varId >= VARS_START)
                 VarSet(varId, species);
         }
