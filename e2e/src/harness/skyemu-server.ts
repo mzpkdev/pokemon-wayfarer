@@ -3,7 +3,7 @@ import * as fs from "node:fs"
 import { skyEmuBinary } from "skyemu-static"
 
 import { SkyEmuClient } from "./skyemu"
-import { reserveTcpPort, stopProcess, waitFor } from "./utils"
+import { captureOutputTail, reserveTcpPort, stopProcess, waitFor } from "./utils"
 
 export type RunningSkyEmu = {
   client: SkyEmuClient
@@ -16,14 +16,28 @@ export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
   const child = childProcess.spawn(
     "xvfb-run",
     ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath],
-    { stdio: "ignore" },
+    { stdio: ["ignore", "pipe", "pipe"] },
   )
+  let launchError: Error | undefined
+  child.once("error", (error) => {
+    launchError = error
+  })
+  const output = captureOutputTail([child.stdout, child.stderr])
   const client = new SkyEmuClient(port)
 
   try {
     await waitFor(async () => {
-      if (child.exitCode !== null) {
-        throw new Error(`SkyEmu exited with code ${child.exitCode} before becoming ready`)
+      if (launchError) {
+        throw new Error(`Could not launch SkyEmu: ${launchError.message}`, { cause: launchError })
+      }
+      if (child.exitCode !== null || child.signalCode !== null) {
+        await output.closed
+        const result =
+          child.exitCode !== null ? `code ${child.exitCode}` : `signal ${child.signalCode}`
+        const diagnostic = output.read()
+        throw new Error(
+          `SkyEmu exited with ${result} before becoming ready${diagnostic ? `:\n${diagnostic}` : ""}`,
+        )
       }
       try {
         return (await client.health()).ready
@@ -47,7 +61,7 @@ export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
     })
     if (released !== "ok") throw new Error(`SkyEmu failed to clear controller input: ${released}`)
   } catch (error) {
-    child.kill()
+    await stopProcess(child)
     throw error
   }
 

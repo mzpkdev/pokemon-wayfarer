@@ -1,6 +1,31 @@
 import * as childProcess from "node:child_process"
 import * as net from "node:net"
 
+export type OutputTail = {
+  closed: Promise<void>
+  read: () => string
+}
+
+export const captureOutputTail = (
+  streams: NodeJS.ReadableStream[],
+  maxLength = 8_192,
+): OutputTail => {
+  let tail = ""
+  const closed = Promise.all(
+    streams.map(
+      (stream) =>
+        new Promise<void>((resolve) => {
+          stream.on("data", (chunk) => {
+            tail = `${tail}${String(chunk)}`.slice(-maxLength)
+          })
+          stream.once("close", resolve)
+        }),
+    ),
+  ).then(() => undefined)
+
+  return { closed, read: () => tail.trim() }
+}
+
 export const requireRomPath = (): string => {
   const romPath = process.env.SKYEMU_ROM
   if (!romPath) {
