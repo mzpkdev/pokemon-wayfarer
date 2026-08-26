@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Quick Draw has a 30% chance of going first")
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_QUICK_DRAW);
-        MESSAGE("Slowbro used Scratch!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("SLOWBRO-G used SCRATCH!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     }
 }
 

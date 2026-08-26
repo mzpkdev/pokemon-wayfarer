@@ -100,15 +100,23 @@ case-only pair, correcting an earlier count of 78. Iterating through newly
 exposed assertions updates 144 exact expectations across 53 test files,
 including generic stat labels already rendered by the game. Three complete
 reruns moved 71 more tests from `FAIL` to `PASS` with no reverse transitions.
-The latest complete run recorded 2,803 `PASS`, 1,653 `FAIL`, 46
+That complete run recorded 2,803 `PASS`, 1,653 `FAIL`, 46
 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
 Pending-message context fell to 1,647 records. Its final two retained case-only
 pairs were aligned afterward, and both exact focused tests pass.
 
+A separate presentation-only pilot aligns three Galar form scenarios and 11
+directly observed Red Card messages. All three Galar targets pass. Nine Red
+Card scenarios pass, while the rooted and Suction Cups scenarios advance to
+their next independent message assertions. A complete run after the two final
+case-only updates and this pilot recorded 2,817 `PASS`, 1,639 `FAIL`, 46
+`ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
+
 Exact expectation updates are gameplay-neutral. Reverting the production names
 would change visible gameplay, and case-insensitive matching would weaken the
-assertions, so neither is part of this triage work. Records without a retained
-case-only pair remain unresolved.
+assertions, so neither is part of this triage work. Automatic line wrapping is
+accepted only for directly decoded message pairs with otherwise exact content.
+Records without direct presentation-only evidence remain unresolved.
 
 Earlier local pre-fix evidence used:
 

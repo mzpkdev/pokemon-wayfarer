@@ -130,7 +130,7 @@ SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison")
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        MESSAGE("2 sent out Ponyta!");
+        MESSAGE("2 sent out PONYTA-G!");
         NOT STATUS_ICON(opponent, poison: TRUE);
     }
 }

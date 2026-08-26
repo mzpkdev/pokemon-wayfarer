@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Aromatic Mist fails in Single Battles")
     } WHEN {
         TURN { MOVE(player, MOVE_AROMATIC_MIST); }
     } SCENE {
-        MESSAGE("Weezing used Aromatic Mist!");
+        MESSAGE("WEEZING-G used AROMATIC MIST!");
         MESSAGE("But it failed!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
