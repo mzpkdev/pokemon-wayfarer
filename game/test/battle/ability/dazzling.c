@@ -187,6 +187,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block a move
     PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMoveZEffect(MOVE_BABY_DOLL_EYES) == Z_EFFECT_DEF_UP_1);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FAIRIUM_Z); }
         OPPONENT(species) { Ability(ability); }

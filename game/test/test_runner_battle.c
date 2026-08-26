@@ -3128,11 +3128,12 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     s32 i;
     enum BattlerId battlerId = battler - gBattleMons;
     enum ItemType ctxItemType = GetItemType(ctx.itemId);
-    bool32 requirePartyIndex = ctxItemType == ITEM_USE_PARTY_MENU
-                            || ctxItemType == ITEM_USE_PARTY_MENU_MOVES
-                            || (ctxItemType == ITEM_USE_BATTLER
-                                 && !IsAIDoublesTest()
-                                 && STATE->battlersCount > 2);
+    bool32 requirePartyIndex = GetItemBattleUsage(ctx.itemId) != EFFECT_ITEM_THROW_BALL
+                            && (ctxItemType == ITEM_USE_PARTY_MENU
+                             || ctxItemType == ITEM_USE_PARTY_MENU_MOVES
+                             || (ctxItemType == ITEM_USE_BATTLER
+                                  && !IsAIDoublesTest()
+                                  && STATE->battlersCount > 2));
     // Check general bad use.
     INVALID_IF(DATA.turnState == TURN_CLOSED, "USE_ITEM outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");

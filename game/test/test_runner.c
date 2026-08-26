@@ -13,6 +13,9 @@
 #include "test/battle.h"
 
 #define TIMEOUT_SECONDS 60
+// SaveBlock3 is zeroed before every test, but zero enables the one-type challenge
+// with TYPE_NONE, causing species to be rejected.
+#define TEST_ONE_TYPE_CHALLENGE_DISABLED 31
 
 void CB2_TestRunner(void);
 
@@ -200,6 +203,7 @@ static void ClearSaveBlocks(void)
     ClearSav1();
     ClearSav2();
     ClearSav3();
+    gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge = TEST_ONE_TYPE_CHALLENGE_DISABLED;
 }
 
 void CB2_TestRunner(void)
