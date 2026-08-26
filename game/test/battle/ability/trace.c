@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Trace copies opponents ability")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TRACE);
-        MESSAGE("It traced the opposing Torchic's Blaze!");
+        MESSAGE("It traced the opposing TORCHIC's BLAZE!");
     }
 }
 

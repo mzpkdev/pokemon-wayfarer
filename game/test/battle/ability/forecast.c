@@ -128,7 +128,7 @@ DOUBLE_BATTLE_TEST("Forecast transforms all Castforms present in weather")
         MESSAGE("CASTFORM transformed!");
         ABILITY_POPUP(opponentLeft, ABILITY_FORECAST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, opponentLeft);
-        MESSAGE("The opposing Castform transformed!");
+        MESSAGE("The opposing CASTFORM transformed!");
         ABILITY_POPUP(playerRight, ABILITY_FORECAST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, playerRight);
         MESSAGE("Castform transformed!");
@@ -250,7 +250,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal when weather exp
         // back to normal
         ABILITY_POPUP(player, ABILITY_FORECAST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Castform transformed!");
+        MESSAGE("CASTFORM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CASTFORM_NORMAL);
     }
@@ -272,7 +272,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal when Sandstorm i
         // back to normal
         ABILITY_POPUP(player, ABILITY_FORECAST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Castform transformed!");
+        MESSAGE("CASTFORM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CASTFORM_NORMAL);
     }

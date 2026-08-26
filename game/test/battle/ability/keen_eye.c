@@ -188,7 +188,7 @@ SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief fro
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HONE_CLAWS, opponent);
         if (species == SPECIES_HITMONCHAN)
         {
-            MESSAGE("The opposing Hitmonchan's Attack rose!");
+            MESSAGE("The opposing HITMONCHAN's ATTACK rose!");
             MESSAGE("The opposing Hitmonchan's accuracy rose!");
         }
         else

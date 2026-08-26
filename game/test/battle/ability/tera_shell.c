@@ -89,7 +89,7 @@ DOUBLE_BATTLE_TEST("Tera Shell only makes the first hit against Terapagos from a
         TURN { MOVE(opponentLeft, MOVE_BLIZZARD); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_TERA_SHELL);
-        MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
+        MESSAGE("TERAPAGOS made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BLIZZARD, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(playerRight);

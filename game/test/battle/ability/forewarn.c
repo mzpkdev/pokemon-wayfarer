@@ -12,7 +12,7 @@ DOUBLE_BATTLE_TEST("Forewarn warns about the highest power move among all opposi
         TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_FOREWARN);
-        MESSAGE("Forewarn alerted Musharna to the opposing Excadrill's Fissure!");
+        MESSAGE("FOREWARN alerted MUSHARNA to the opposing EXCADRILL's FISSURE!");
     }
 }
 

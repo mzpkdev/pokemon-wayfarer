@@ -23,7 +23,7 @@ DOUBLE_BATTLE_TEST("Supreme Overlord boosts Attack by an additive 10% per fainte
     } SCENE {
         if (switchMon) {
             ABILITY_POPUP(playerLeft, ABILITY_SUPREME_OVERLORD);
-            MESSAGE("Kingambit gained strength from the fallen!");
+            MESSAGE("KINGAMBIT gained strength from the fallen!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
@@ -56,7 +56,7 @@ DOUBLE_BATTLE_TEST("Supreme Overlord's boost caps at a 1.5x multipler", s16 dama
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_SUPREME_OVERLORD);
-        MESSAGE("Kingambit gained strength from the fallen!");
+        MESSAGE("KINGAMBIT gained strength from the fallen!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {

@@ -175,7 +175,7 @@ DOUBLE_BATTLE_TEST("Dancer still triggers if another dancer flinches")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         }
         ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
-        MESSAGE("The opposing Oricorio used Dragon Dance!");
+        MESSAGE("The opposing ORICORIO used DRAGON DANCE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
     }
@@ -777,7 +777,7 @@ SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
-        MESSAGE("The opposing Oricorio must do an encore!");
+        MESSAGE("The opposing ORICORIO must do an encore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ABILITY_POPUP(opponent, ABILITY_DANCER);
@@ -848,7 +848,7 @@ DOUBLE_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, bu
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         ABILITY_POPUP(playerRight, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerRight);
         HP_BAR(playerRight, hp: 0);

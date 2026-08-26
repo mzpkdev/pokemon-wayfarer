@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Frisk triggers in a Single Battle")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_FRISK);
-        MESSAGE("Furret frisked the opposing Sentret and found its Potion!");
+        MESSAGE("FURRET frisked the opposing SENTRET and found its POTION!");
         ABILITY_POPUP(opponent, ABILITY_FRISK);
         MESSAGE("The opposing Sentret frisked Furret and found its Potion!");
     }

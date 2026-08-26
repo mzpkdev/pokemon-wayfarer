@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents Intimidate but no other stat down changes
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);
-        MESSAGE("The opposing Slowpoke's Own Tempo prevents stat loss!");
+        MESSAGE("The opposing SLOWPOKE's OWN TEMPO prevents stat loss!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCARY_FACE, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);

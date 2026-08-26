@@ -411,7 +411,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas doesn't reactivate Beads of Ruin after Chi-
         MESSAGE("Neutralizing gas filled the area!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The opposing Chi-Yu fainted!");
+        MESSAGE("The opposing CHI-YU fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         HP_BAR(opponentLeft);
         MESSAGE("The effects of the neutralizing gas wore off!");

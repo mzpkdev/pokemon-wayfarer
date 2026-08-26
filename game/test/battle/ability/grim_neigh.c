@@ -18,7 +18,7 @@ DOUBLE_BATTLE_TEST("Grim Neigh raises Sp. Attack by one stage after directly cau
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
-        MESSAGE("The opposing Glalie fainted!");
+        MESSAGE("The opposing GLALIE fainted!");
         MESSAGE("Snorunt fainted!");
         MESSAGE("The opposing Abra fainted!");
         ABILITY_POPUP(playerLeft, abilityPopUp);

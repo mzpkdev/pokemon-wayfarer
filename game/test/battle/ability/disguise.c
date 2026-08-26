@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and c
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         MESSAGE("MIMIKYU became confused!");
-        MESSAGE("Mimikyu is confused!");
+        MESSAGE("MIMIKYU is confused!");
         MESSAGE("It hurt itself in its confusion!");
         NOT HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_DISGUISE);

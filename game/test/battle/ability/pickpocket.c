@@ -22,7 +22,7 @@ DOUBLE_BATTLE_TEST("Pickpocket checks contact/effect per target for spread moves
         TURN { MOVE(playerLeft, MOVE_BREAKING_SWIPE); }
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Wobbuffet's Magost Berry!");
+        MESSAGE("The opposing SNEASEL stole WOBBUFFET's MAGOST BERRY!");
     } THEN {
         EXPECT(opponentLeft->item == ITEM_MAGOST_BERRY);
         EXPECT(playerLeft->item == ITEM_NONE);

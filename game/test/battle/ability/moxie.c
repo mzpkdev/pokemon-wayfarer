@@ -19,7 +19,7 @@ DOUBLE_BATTLE_TEST("Moxie/Chilling Neigh raises Attack by one stage after direct
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
-        MESSAGE("The opposing Glalie fainted!");
+        MESSAGE("The opposing GLALIE fainted!");
         MESSAGE("Snorunt fainted!");
         MESSAGE("The opposing Abra fainted!");
         ABILITY_POPUP(playerLeft, abilityPopUp);
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger when already at maximu
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         if (species == SPECIES_SALAMENCE)
-            MESSAGE("Salamence cut its own HP and maximized its Attack!");
+            MESSAGE("SALAMENCE cut its own HP and maximized its ATTACK!");
         else if (species == SPECIES_GLASTRIER)
             MESSAGE("Glastrier cut its own HP and maximized its Attack!");
         else

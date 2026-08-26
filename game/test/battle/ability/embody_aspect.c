@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by o
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         if (ability == ABILITY_EMBODY_ASPECT_TEAL_MASK)
-            MESSAGE("The opposing Ogerpon's Embody Aspect raised its Speed!");
+            MESSAGE("The opposing OGERPON's EMBODY ASPECT raised its SPEED!");
         else if (ability == ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK)
             MESSAGE("The opposing Ogerpon's Embody Aspect raised its Attack!");
         else if (ability == ABILITY_EMBODY_ASPECT_WELLSPRING_MASK)
@@ -71,7 +71,7 @@ SINGLE_BATTLE_TEST("Embody Aspect does not reactivate after Neutralizing Gas end
     } SCENE {
         ABILITY_POPUP(player, ABILITY_EMBODY_ASPECT_TEAL_MASK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Ogerpon's Embody Aspect raised its Speed!");
+        MESSAGE("OGERPON's EMBODY ASPECT raised its SPEED!");
 
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");

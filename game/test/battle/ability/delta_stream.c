@@ -40,7 +40,7 @@ DOUBLE_BATTLE_TEST("Strong winds continue as long as there's a Pokémon with Del
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Rayquaza fainted!");
+        MESSAGE("RAYQUAZA fainted!");
         SEND_IN_MESSAGE("Wobbuffet");
         NOT MESSAGE("The mysterious strong winds have dissipated!");
     } THEN {

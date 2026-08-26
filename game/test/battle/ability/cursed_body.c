@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_BLAST, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Rock Blast was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("WOBBUFFET's ROCK BLAST was disabled by the opposing FRILLISH's CURSED BODY!");
         HP_BAR(opponent);
     }
 }

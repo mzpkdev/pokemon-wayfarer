@@ -54,7 +54,7 @@ DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of
         HP_BAR(opponentLeft);
         HP_BAR(playerLeft);
         MESSAGE("WOBBUFFET sucked up the liquid ooze!");
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Liquid Ooze will faint Matcha Gatcha users if it deals enoug
         HP_BAR(opponentLeft);
         HP_BAR(playerLeft);
         MESSAGE("WOBBUFFET sucked up the liquid ooze!");
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

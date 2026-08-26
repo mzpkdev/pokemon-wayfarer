@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Effect Spore only inflicts status on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-            MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Effect Spore!");
+            MESSAGE("WOBBUFFET was poisoned by the opposing BRELOOM's EFFECT SPORE!");
             STATUS_ICON(player, poison: TRUE);
         } else {
             NONE_OF {

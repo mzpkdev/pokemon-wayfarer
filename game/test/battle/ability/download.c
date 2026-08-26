@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Download raises Sp.Attack if enemy has lower Sp. Def than De
         {
             ABILITY_POPUP(player, ABILITY_DOWNLOAD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Porygon's Download raised its Sp. Atk!");
+            MESSAGE("PORYGON's DOWNLOAD raised its SP. ATK!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -112,7 +112,7 @@ DOUBLE_BATTLE_TEST("Download raises Sp.Attack if enemies have lower total Sp. De
         {
             ABILITY_POPUP(playerLeft, ABILITY_DOWNLOAD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-            MESSAGE("Porygon's Download raised its Sp. Atk!");
+            MESSAGE("PORYGON's DOWNLOAD raised its SP. ATK!");
         }
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {

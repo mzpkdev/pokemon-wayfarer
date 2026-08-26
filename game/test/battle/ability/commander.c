@@ -13,7 +13,7 @@ DOUBLE_BATTLE_TEST("Commander will activate once Dondozo switches in")
         TURN { SWITCH(playerLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
     }
 }
 
@@ -28,7 +28,7 @@ DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is trigger
         TURN {  }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Dondozo's Attack sharply rose!");
         MESSAGE("Dondozo's Defense sharply rose!");
@@ -49,7 +49,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri avoids moves targetted towards it")
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(opponentRight, MOVE_POUND, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         MESSAGE("Tatsugiri avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentRight);
@@ -68,7 +68,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a f
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Dondozo is buffeted by the sandstorm!");
         MESSAGE("Tatsugiri is buffeted by the sandstorm!");
         MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
@@ -86,7 +86,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take poison damage if while i
         TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri was hurt by its poisoning!");
     }
 }
@@ -102,7 +102,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacke
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         MESSAGE("Tatsugiri avoided the attack!");
     }
@@ -121,7 +121,7 @@ DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affect
         TURN { MOVE(playerRight, MOVE_CELEBRATE); SWITCH(playerLeft, 2); SEND_OUT(playerLeft, 3); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri was hurt by its poisoning!");
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
@@ -144,7 +144,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or
         TURN { MOVE(opponentRight, MOVE_WHIRLWIND, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("The opposing Wobbuffet used Whirlwind!");
         MESSAGE("Tatsugiri avoided the attack!");
         MESSAGE("The opposing Wobbuffet used Whirlwind!");
@@ -165,7 +165,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
     } THEN {
         EXPECT(opponentLeft->item == ITEM_NONE);
@@ -187,7 +187,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move i
         TURN { MOVE(opponentLeft, MOVE_SURF); SEND_OUT(playerLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         HP_BAR(playerLeft);
         HP_BAR(opponentRight);
         NOT HP_BAR(playerRight);
@@ -207,7 +207,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damagi
         TURN { MOVE(opponentLeft, MOVE_SURF); MOVE(opponentRight, MOVE_SURF); SWITCH(playerLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
         HP_BAR(playerLeft);
@@ -233,7 +233,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Transform from working on a Comman
         TURN { MOVE(opponentRight, MOVE_TRANSFORM, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponentRight);
     }
 }
@@ -251,7 +251,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Command
         TURN { SWITCH(opponentLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ABILITY_POPUP(opponentLeft, ABILITY_IMPOSTER);
         MESSAGE("The opposing Ditto transformed into Tatsugiri using Imposter!");
     }
@@ -275,7 +275,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri faints from Perish Song if it heard the 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PERISH_SONG, opponentLeft);
         MESSAGE("All Pokémon that heard the song will faint in three turns!");
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
     } THEN {
         EXPECT_GT(playerLeft->hp, 0);
         EXPECT_EQ(playerRight->hp, 0);
@@ -298,7 +298,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controll
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerRight);
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, opponentRight);
     } THEN {
         EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -320,7 +320,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
         HP_BAR(playerLeft);
@@ -343,7 +343,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
         HP_BAR(playerRight);
@@ -370,7 +370,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not attack if Dondozo faints the sa
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft);
-        MESSAGE("Dondozo fainted!");
+        MESSAGE("DONDOZO fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         HP_BAR(playerRight);
         NOT MESSAGE("Tatsugiri used Celebrate!");
@@ -497,7 +497,7 @@ DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can 
         }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, opponentRight);
         MESSAGE("Dondozo fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_BOMB, opponentLeft);
@@ -525,7 +525,7 @@ DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugi
         }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("Tatsugiri fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
@@ -557,7 +557,7 @@ DOUBLE_BATTLE_TEST("Commander still blocks forced switch after swallowed Tatsugi
         TURN { MOVE(playerLeft, move, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(opponentRight, ABILITY_COMMANDER);
-        MESSAGE("The opposing Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("The opposing TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("The opposing Tatsugiri fainted!");
         if (move == MOVE_DRAGON_TAIL)
         {
@@ -588,7 +588,7 @@ DOUBLE_BATTLE_TEST("Red Card is still consumed but cannot force out Dondozo afte
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ABILITY_POPUP(opponentRight, ABILITY_COMMANDER);
-        MESSAGE("The opposing Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("The opposing TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("The opposing Tatsugiri fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);

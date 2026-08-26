@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Flame Body inflicts burn on contact")
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-            MESSAGE("The opposing Magmar's Flame Body burned Wobbuffet!");
+            MESSAGE("The opposing MAGMAR's FLAME BODY burned WOBBUFFET!");
             STATUS_ICON(player, burn: TRUE);
         } else {
             NONE_OF {
