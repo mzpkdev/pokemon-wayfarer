@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
             MESSAGE("The opposing WYNAUT's SP. ATK fell!");
             break;
         case STAT_SPDEF:
-            MESSAGE("The opposing Wynaut's Sp. Def harshly fell!");
+            MESSAGE("The opposing WYNAUT's SP. DEF harshly fell!");
             break;
         }
     } THEN {

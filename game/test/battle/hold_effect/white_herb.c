@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
         MESSAGE("SLUGMA's WEAK ARMOR lowered its DEFENSE!");
         MESSAGE("SLUGMA's WEAK ARMOR sharply raised its SPEED!");
         if (move == MOVE_KNOCK_OFF) {
-            MESSAGE("The opposing Wobbuffet knocked off Slugma's White Herb!");
+            MESSAGE("The opposing WOBBUFFET knocked off SLUGMA's WHITE HERB!");
         } else if (move == MOVE_THIEF) {
             MESSAGE("The opposing WOBBUFFET stole SLUGMA's WHITE HERB!");
         }
