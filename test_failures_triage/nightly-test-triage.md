@@ -50,12 +50,23 @@ target.
 Current strict test objects compile and link, and Hydra starts. Neither the
 `CheckTogepi` missing-flag error nor the unused Frontier healthbox-helper
 error appears in the current strict build. The completed
-[PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32975432374)
-against `fb4ad1f2c5` is the latest full-suite aggregate for this triage. It
-reported 5,113 total tests: 2,553 `PASS`, 1,884
-`FAIL`, 31 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6
+[PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32980328525)
+against `5993e0982b` is the latest comparable full-suite aggregate while
+the [current-head attempt](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32984211294)
+was cancelled before any job acquired a hosted runner. It reported 5,113 total
+tests: 2,556 `PASS`, 1,884
+`FAIL`, 28 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6
 `EXPECT_FAILING`. The process exited 2 because tests failed. The job completed
 without hitting the runner timeout.
+
+Hydra can now write an uncapped NDJSON ledger with schema
+`mgba-rom-test-hydra/v1`. A local current-head `-j22` run recorded all 5,149
+terminal results, 26 diagnostics, and a final summary: 2,564 `PASS`, 1,892
+`FAIL`, 46 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6
+`EXPECT_FAILING`. File-level assumptions execute once per Hydra worker, so
+those local totals are worker-count-dependent and are not directly comparable
+to CI. The ledger is useful as complete per-result evidence, not as a
+replacement CI baseline.
 
 Earlier local pre-fix evidence used:
 
@@ -118,6 +129,13 @@ with 1 `PASS`, with no timeout or `INVALID` result. The Poké Ball runner
 exception used by those checks is committed in `fb4ad1f2c5`. Broader capture
 and Ball Fetch observations remain incomplete.
 
+Additional Fairy, modern Sturdy, and modern Sitrus settings are enabled only
+inside fixtures that require them. Focused checks confirm that Inverse Battle,
+AI Encore, both Whimsicott immunity cases, Aura Break, Filter, type-power
+items, and Z-Nature Power now execute with valid setup. Roost, Mimicry, Sturdy,
+Sitrus, and related fixtures that still report ordinary battle failures remain
+open. Their expectations and production mechanics were not changed.
+
 ## Reproduction and follow-up
 
 Use the CI-equivalent command for CI verification:
@@ -132,7 +150,8 @@ For the historical Emerald-focused reproductions, use:
 UNUSED_ERROR=1 DEPRECATED_ERROR=1 GAME_VERSION=EMERALD TEST=1 make -j22 TESTS="<prefix>" check
 ```
 
-The PR #7 CI evidence proves full-suite completion without a runner timeout. It
+The completed PR #7 CI evidence proves full-suite completion without a runner
+timeout. The local NDJSON report provides an uncapped current result ledger, but it
 does not validate the original PR #6 log range, runtime environment, or repeat
-count. The inventory rows remain historical until a focused current run records
-evidence for an individual row.
+count. The inventory rows remain historical until a focused current run
+records evidence for an individual row.

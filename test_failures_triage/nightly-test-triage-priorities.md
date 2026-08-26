@@ -16,9 +16,11 @@ Earlier local evidence used the Emerald variant:
 UNUSED_ERROR=1 DEPRECATED_ERROR=1 GAME_VERSION=EMERALD TEST=1 make -j22 check
 ```
 
-The completed [PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32975432374) against `fb4ad1f2c5` is the latest full-suite aggregate for this triage. It reported 5,113 total tests: 2,553 `PASS`, 1,884 `FAIL`, 31 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6 `EXPECT_FAILING`. The process exited 2 because tests failed. The job completed without hitting the runner timeout. Focused results below may include later worktree changes.
+The completed [PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32980328525) against `5993e0982b` is the latest comparable full-suite aggregate because the [current-head attempt](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32984211294) was cancelled before any job acquired a hosted runner. It reported 5,113 total tests: 2,556 `PASS`, 1,884 `FAIL`, 28 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6 `EXPECT_FAILING`. The process exited 2 because tests failed. The job completed without hitting the runner timeout. Focused results below may include later worktree changes.
 
 The local `game/build/triage-evidence/full-strict-final.log` is a 4,676-line, 378,565-byte pre-fix artifact. It compiled and started Hydra but stopped before a final summary. Its partial counts remain useful for comparison, but the completed PR #7 run supersedes it as the current aggregate.
+
+Hydra can write a complete `mgba-rom-test-hydra/v1` NDJSON ledger. A local current-head `-j22` report contains 5,149 results and 26 diagnostics. Of its 1,892 failures, 1,756 have the `Unmatched MESSAGE` signature. Its largest source groups are Dynamax (67), Sleep Clause (52), Pursuit (30), Terastal (28), Commander (24), Cure Status (19), and Pledge (19). Worker-derived assumption repetition makes the local aggregate non-comparable to CI, but the failure distribution identifies message observability as the first shared investigation target. It does not justify relaxing message expectations or changing battle behavior.
 
 ## Immediate focused work
 
@@ -53,9 +55,10 @@ Goal: find one cause that explains multiple failures before inspecting individua
 
 Investigate in this order:
 
-1. Daycare regional forms, because the shared SaveBlock3 baseline, all `givemon` paths, and Pokérus now pass focused checks. The Daycare macro is not the defect. Defer its egg-species policy discrepancy rather than changing live breeding behavior or its expectation.
-2. Sleep Clause, because it has many related failures and a small number of `ASSUMPTION_FAIL` rows.
+1. Message observability, because `Unmatched MESSAGE` dominates the complete local ledger. Add diagnostic visibility for the actual event stream and classify one representative mismatch before changing any expectation or mechanic.
+2. Sleep Clause, because it is the second-largest local source group and still contains setup and behavior failures that need separation.
 3. Hazards and switch-in effects, including ordering, forced switches, Sticky Web, and Toxic Spikes.
+4. Daycare regional forms remain deferred. The Daycare macro is not the defect, and changing live breeding behavior or its expectation requires a gameplay-policy decision.
 
 Exit criteria: each cluster has a written classification, a representative focused reproduction, and a list of inventory rows covered by that conclusion.
 
