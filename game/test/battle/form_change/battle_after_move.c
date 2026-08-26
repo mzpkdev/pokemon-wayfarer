@@ -123,7 +123,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
         HP_BAR(opponent);
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
-        MESSAGE("Meloetta stole the opposing Delphox's Potion!");
+        MESSAGE("MELOETTA stole the opposing DELPHOX's POTION!");
         MESSAGE("MELOETTA transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);

@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack")
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_THUNDERBOLT, target: playerLeft); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Thunderbolt!");
+        MESSAGE("The opposing WOBBUFFET used THUNDERBOLT!");
         if (B_REDIRECT_ABILITY_ALLIES >= GEN_4)
         {
             NOT HP_BAR(playerLeft);

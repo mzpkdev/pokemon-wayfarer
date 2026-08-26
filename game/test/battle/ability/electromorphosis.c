@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
         if (move == MOVE_SCRATCH) {
-            MESSAGE("Being hit by Scratch charged Bellibolt with power!");
+            MESSAGE("Being hit by SCRATCH charged BELLIBOLT with power!");
         }
         else {
             MESSAGE("Being hit by Gust charged Bellibolt with power!");
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Electromorphosis displays its message before fainting when t
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Scratch charged Bellibolt with power!");
+        MESSAGE("Being hit by SCRATCH charged BELLIBOLT with power!");
         MESSAGE("Bellibolt fainted!");
     }
 }

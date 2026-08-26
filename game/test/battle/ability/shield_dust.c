@@ -140,7 +140,7 @@ DOUBLE_BATTLE_TEST("Shield Dust does or does not block Sparkling Aria depending 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
         if (moveToUse == MOVE_SCRATCH) {
-            MESSAGE("The opposing Vivillon's burn was cured!");
+            MESSAGE("The opposing VIVILLON's burn was cured!");
             STATUS_ICON(opponentLeft, none: TRUE);
         } else {
             NONE_OF {

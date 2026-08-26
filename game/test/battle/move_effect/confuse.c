@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Teeter Dance confuses target")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-        MESSAGE("The opposing Wobbuffet became confused!");
+        MESSAGE("The opposing WOBBUFFET became confused!");
     }
 }
 

@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Stone Axe sets up hazards after hitting the target")
         MESSAGE("Pointed stones float in the air around the opposing team!");
         MESSAGE("2 sent out WOBBUFFET!");
         HP_BAR(opponent, damage: maxHP / 8);
-        MESSAGE("Pointed stones dug into the opposing Wobbuffet!");
+        MESSAGE("Pointed stones dug into the opposing WOBBUFFET!");
     }
 }
 

@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Immunity prevents Toxic bad poison")
     } SCENE {
         MESSAGE("WOBBUFFET used TOXIC!");
         ABILITY_POPUP(opponent, ABILITY_IMMUNITY);
-        MESSAGE("It doesn't affect the opposing Snorlax…");
+        MESSAGE("It doesn't affect the opposing SNORLAX…");
         NOT STATUS_ICON(opponent, poison: TRUE);
     }
 }

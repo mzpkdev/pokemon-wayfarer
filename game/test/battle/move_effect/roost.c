@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Roost fails if the user is under the effects of Heal Block")
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_ROOST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
-        MESSAGE("Wobbuffet was prevented from healing!"); // Message when Heal Block is applied
+        MESSAGE("WOBBUFFET was prevented from healing!"); // Message when Heal Block is applied
         MESSAGE("Wobbuffet was prevented from healing!"); // Message when trying to heal under Heal Block
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
@@ -364,7 +364,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
         MESSAGE("FLYGON used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("FLYGON's HP was restored.");
-        MESSAGE("The opposing Wobbuffet used Earthquake!");
+        MESSAGE("The opposing WOBBUFFET used EARTHQUAKE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
@@ -383,7 +383,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon
         MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("WOBBUFFET's HP was restored.");
-        MESSAGE("The opposing Wobbuffet used Earthquake!");
+        MESSAGE("The opposing WOBBUFFET used EARTHQUAKE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);

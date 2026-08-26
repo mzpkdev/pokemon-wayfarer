@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Refresh cures the user of burn, frostbite, poison, and paral
     } WHEN {
         TURN { MOVE(player, MOVE_REFRESH); }
     } SCENE {
-        MESSAGE("Wobbuffet's status returned to normal!");
+        MESSAGE("WOBBUFFET's status returned to normal!");
         STATUS_ICON(player, none: TRUE);
     }
 }

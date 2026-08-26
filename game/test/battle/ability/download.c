@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Download raises Attack if player has lower Def than Sp. Def"
         {
             ABILITY_POPUP(opponent, ABILITY_DOWNLOAD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Porygon's Download raised its Attack!");
+            MESSAGE("The opposing PORYGON's DOWNLOAD raised its ATTACK!");
         }
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {

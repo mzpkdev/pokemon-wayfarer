@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over False Swipe (Gen 5+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, player);
-        MESSAGE("The opposing Wobbuffet endured the hit!");
+        MESSAGE("The opposing WOBBUFFET endured the hit!");
         // No message for False Swipe, but Endure message should still happen
     }
 }
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over Focus Sash/Focus Band")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("The opposing Wobbuffet endured the hit!");
+        MESSAGE("The opposing WOBBUFFET endured the hit!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }

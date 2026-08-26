@@ -72,7 +72,7 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerLeft);
-        MESSAGE("The opposing Grimer flinched and couldn't move!");
+        MESSAGE("The opposing GRIMER flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         NOT MESSAGE("Wynaut flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);

@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Supreme Overlord's message displays correctly after all batt
         SEND_IN_MESSAGE("KINGAMBIT");
         MESSAGE("2 sent out WOBBUFFET!");
         ABILITY_POPUP(player, ABILITY_SUPREME_OVERLORD);
-        MESSAGE("Kingambit gained strength from the fallen!");
+        MESSAGE("KINGAMBIT gained strength from the fallen!");
     }
 }
 
@@ -130,6 +130,6 @@ SINGLE_BATTLE_TEST("Supreme Overlord's message displays correctly after all batt
         SEND_IN_MESSAGE("WOBBUFFET");
         MESSAGE("2 sent out KINGAMBIT!");
         ABILITY_POPUP(opponent, ABILITY_SUPREME_OVERLORD);
-        MESSAGE("The opposing Kingambit gained strength from the fallen!");
+        MESSAGE("The opposing KINGAMBIT gained strength from the fallen!");
     }
 }

@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Belly Drum's HP cost doesn't trigger effects that trigger on
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
-        MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");
+        MESSAGE("WOBBUFFET cut its own HP and maximized its ATTACK!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat, even when below
         if (raiseAttack) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");
+            MESSAGE("WOBBUFFET cut its own HP and maximized its ATTACK!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);

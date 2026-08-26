@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Transform fails when the user is already transformed in Gen5
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
     } SCENE {
-        MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+        MESSAGE("The opposing DITTO transformed into WOBBUFFET!");
         if (expectFail)
             MESSAGE("But it failed!");
         else
@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Transform fails on target behind substitute in Gen5+")
         if (expectFail)
             MESSAGE("But it failed!");
         else
-            MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+            MESSAGE("The opposing DITTO transformed into WOBBUFFET!");
     }
 }
 
@@ -152,7 +152,7 @@ SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and i
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         // turn 3
         MESSAGE("WOBBUFFET used EARTHQUAKE!");
-        MESSAGE("It doesn't affect the opposing Ditto…");
+        MESSAGE("It doesn't affect the opposing DITTO…");
         NOT { HP_BAR(opponent); }
     }
 }

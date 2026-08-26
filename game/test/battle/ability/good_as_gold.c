@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Good as Gold protects from status moves")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
         ABILITY_POPUP(opponent, ABILITY_GOOD_AS_GOLD);
-        MESSAGE("It doesn't affect the opposing Gholdengo…");
+        MESSAGE("It doesn't affect the opposing GHOLDENGO…");
     }
 }
 

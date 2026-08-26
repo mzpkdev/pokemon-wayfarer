@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Instruct causes the target to use its last used move again")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, opponent);
-        MESSAGE("Wobbuffet followed the opposing Wynaut's instructions!");
+        MESSAGE("WOBBUFFET followed the opposing WYNAUT's instructions!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
     }
 }
@@ -388,7 +388,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         HP_BAR(moveTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, opponentRight);
-        MESSAGE("Treecko transformed into the Water type!");
+        MESSAGE("TREECKO transformed into the WATER type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         HP_BAR(opponentLeft);

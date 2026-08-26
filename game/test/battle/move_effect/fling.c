@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing WOBBUFFET's TAUNT wore off!");
     }
 }
 
@@ -588,7 +588,7 @@ SINGLE_BATTLE_TEST("Fling - Mental Herb effect should not remove the target's he
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing WOBBUFFET's TAUNT wore off!");
     } THEN {
         EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);
     }

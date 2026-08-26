@@ -189,7 +189,7 @@ SINGLE_BATTLE_TEST("Recycle cannot recover an item removed by Knock Off")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Leftovers!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
 
         MESSAGE("The opposing Wobbuffet used Recycle!");
         MESSAGE("But it failed!");
@@ -262,7 +262,7 @@ DOUBLE_BATTLE_TEST("Knock Off does not trigger the opposing ally's Symbiosis")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("The opposing Wobbuffet knocked off Wobbuffet's Leftovers!");
+        MESSAGE("The opposing WOBBUFFET knocked off WOBBUFFET's LEFTOVERS!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT);
             MESSAGE("Wobbuffet restored its health using its Leftovers!");
@@ -280,7 +280,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Mega Stones from Pokemon that don't
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Absolite!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's ABSOLITE!");
     }
 }
 
@@ -431,7 +431,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consu
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
-        MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
+        MESSAGE("The opposing WOBBUFFET's Air Balloon popped!");
         NOT MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Air Balloon!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);

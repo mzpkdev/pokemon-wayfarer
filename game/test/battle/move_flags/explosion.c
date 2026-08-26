@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it has no effect"
         TURN { MOVE(player, MOVE_EXPLOSION); }
     } SCENE {
         HP_BAR(player, hp: 0);
-        MESSAGE("It doesn't affect the opposing Gastly…");
+        MESSAGE("It doesn't affect the opposing GASTLY…");
         NOT HP_BAR(opponent);
         MESSAGE("Wobbuffet fainted!");
     }
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp")
             HP_BAR(player, hp: 0);
         }
         ABILITY_POPUP(opponent, ABILITY_DAMP);
-        MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Explosion!");
+        MESSAGE("The opposing GOLDUCK's DAMP prevents WOBBUFFET from using EXPLOSION!");
     }
 }
 

@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Rototiller doesn't affect Pokémon that are semi-invulnerabl
         TURN { MOVE(opponent, MOVE_DIG); MOVE(player, MOVE_ROTOTILLER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
-        MESSAGE("The opposing Tangela avoided the attack!");
+        MESSAGE("The opposing TANGELA avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROTOTILLER, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {

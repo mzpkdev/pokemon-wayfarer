@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant deal 1/4 of damage oppos
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
         HP_BAR(opponent, captureDamage: &gulpMissileDamage);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Defense fell!");
+        MESSAGE("The opposing WOBBUFFET's DEFENSE fell!");
     } THEN {
         EXPECT_EQ(gulpMissileDamage, opponent->maxHP / 4);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
@@ -211,7 +211,7 @@ SINGLE_BATTLE_TEST("Gulp Missile: Transformed Cramorant Gulping lowers defense a
         HP_BAR(opponent);
         if (ability == ABILITY_INFILTRATOR) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Dragapult's Defense fell!");
+            MESSAGE("The opposing DRAGAPULT's DEFENSE fell!");
         } else {
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
         }

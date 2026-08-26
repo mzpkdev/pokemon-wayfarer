@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
             MESSAGE("The opposing SPINDA's ATTACK rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("MIGHTYENA's INTIMIDATE cuts the opposing SPINDA's ATTACK!");
         }
         HP_BAR(player, captureDamage: &results[i].damage);
     } THEN {
@@ -207,7 +207,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
 
         if (ability == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda cut its own HP and maximized its Attack!"); //Message stays the same
+            MESSAGE("The opposing SPINDA cut its own HP and maximized its ATTACK!"); //Message stays the same
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);

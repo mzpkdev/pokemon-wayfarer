@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Sappy Seed can seed the target")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SAPPY_SEED, player);
         MESSAGE("The opposing WOBBUFFET was seeded!");
-        MESSAGE("The opposing Wobbuffet's health is sapped by Leech Seed!");
+        MESSAGE("The opposing WOBBUFFET's health is sapped by Leech Seed!");
     }
 }
 

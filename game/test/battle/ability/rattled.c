@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("The opposing SUDOWOODO's SPEED rose!");
         }
-        MESSAGE("The opposing Sudowoodo used Celebrate!");
+        MESSAGE("The opposing SUDOWOODO used CELEBRATE!");
         // Sudowoodo is now faster
         if (move != MOVE_SCRATCH){
             MESSAGE("The opposing Sudowoodo used Celebrate!");

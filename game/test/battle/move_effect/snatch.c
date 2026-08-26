@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_SWORDS_DANCE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         MESSAGE("Wobbuffet snatched the opposing Wynaut's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
         MESSAGE("Wobbuffet's Attack sharply rose!");
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Snatch does not steal non-snatchable moves")
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         HP_BAR(player);
     }

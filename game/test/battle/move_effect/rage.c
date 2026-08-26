@@ -130,7 +130,7 @@ SINGLE_BATTLE_TEST("Rage volatile behavior on Protect depends on generation")
         TURN { MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_RAGE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         if (config == GEN_3) {
             MESSAGE("WOBBUFFET's rage is building!");

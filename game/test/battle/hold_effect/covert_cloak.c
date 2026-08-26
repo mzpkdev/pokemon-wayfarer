@@ -143,7 +143,7 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
         if (moveToUse == MOVE_SCRATCH) {
-            MESSAGE("The opposing Wobbuffet's burn was cured!");
+            MESSAGE("The opposing WOBBUFFET's burn was cured!");
             STATUS_ICON(opponentLeft, none: TRUE);
         } else {
             NONE_OF {

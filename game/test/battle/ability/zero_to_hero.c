@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Zero to Hero can't be suppressed by Neutralizing Gas")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
 
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Zero to Hero will activate if a switch move is used")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLIP_TURN, player);
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
 

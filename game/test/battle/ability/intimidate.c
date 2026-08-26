@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after KO", s16 
         {
             ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The opposing Arbok's Intimidate cuts Wobbuffet's Attack!");
+            MESSAGE("The opposing ARBOK's INTIMIDATE cuts WOBBUFFET's ATTACK!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

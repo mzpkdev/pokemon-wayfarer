@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates only if not damaged")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
             HP_BAR(opponent);
         } else {
-            MESSAGE("Wobbuffet lost its focus and couldn't move!");
+            MESSAGE("WOBBUFFET lost its focus and couldn't move!");
             NONE_OF {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
                 HP_BAR(opponent);
@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
             HP_BAR(opponent);
         } else {
-            MESSAGE("Mimikyu lost its focus and couldn't move!");
+            MESSAGE("MIMIKYU lost its focus and couldn't move!");
             NONE_OF {
                 MESSAGE("Mimikyu used Focus Punch!");
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
@@ -268,7 +268,7 @@ SINGLE_BATTLE_TEST("Focus Punch failing occurs before flinching (Gen 5+)")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
         MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
-        MESSAGE("Wobbuffet lost its focus and couldn't move!");
+        MESSAGE("WOBBUFFET lost its focus and couldn't move!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
     }
 }

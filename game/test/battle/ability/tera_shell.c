@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Tera Shell makes all moves against Terapagos not very effect
         if (hp == 100) {
             MESSAGE("The opposing WOBBUFFET used SCRATCH!");
             ABILITY_POPUP(player, ABILITY_TERA_SHELL);
-            MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
+            MESSAGE("TERAPAGOS made its shell gleam! It's distorting type matchups!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
             HP_BAR(player);
             MESSAGE("It's not very effective…");
@@ -66,7 +66,7 @@ DOUBLE_BATTLE_TEST("Tera Shell only makes the first hit of a double battle turn 
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_TERA_SHELL);
-        MESSAGE("Terapagos made its shell gleam! It's distorting type matchups!");
+        MESSAGE("TERAPAGOS made its shell gleam! It's distorting type matchups!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, captureDamage: &firstHit);
         MESSAGE("It's not very effective…");

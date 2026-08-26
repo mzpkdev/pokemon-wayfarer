@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Wish is blocked by Heal Block")
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
-        MESSAGE("Wobbuffet was prevented from healing!");
+        MESSAGE("WOBBUFFET was prevented from healing!");
         NOT HP_BAR(player);
     }
 }

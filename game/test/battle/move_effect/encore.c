@@ -197,7 +197,7 @@ DOUBLE_BATTLE_TEST("Encore works even if the target's last move failed")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentRight);
         MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
-        MESSAGE("The opposing Wobbuffet must do an encore!");
+        MESSAGE("The opposing WOBBUFFET must do an encore!");
     }
 }
 

@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Psychic Noise heal block effect is blocked by Aroma Veil")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_NOISE, player);
         ABILITY_POPUP(opponent, ABILITY_AROMA_VEIL);
-        MESSAGE("The opposing Milcery is protected by an aromatic veil!");
+        MESSAGE("The opposing MILCERY is protected by an aromatic veil!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
     }
 }

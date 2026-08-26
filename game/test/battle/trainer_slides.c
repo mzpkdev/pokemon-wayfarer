@@ -195,7 +195,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Z Move")
         TURN { EXPECT_MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
+        MESSAGE("The opposing WOBBUFFET surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
     }
@@ -791,7 +791,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
             EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
+        MESSAGE("The opposing WOBBUFFET surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentLeft);
         MESSAGE("Trainer Partner: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");

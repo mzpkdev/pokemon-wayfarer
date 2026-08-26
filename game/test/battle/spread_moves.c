@@ -384,7 +384,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both player mons")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
-        MESSAGE("It's super effective on Golem and Onix!");
+        MESSAGE("It's super effective on GOLEM and ONIX!");
     }
 }
 
@@ -420,7 +420,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective message on both player mons
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(playerRight);
-        MESSAGE("It's not very effective on Chikorita and Treecko!");
+        MESSAGE("It's not very effective on CHIKORITA and TREECKO!");
     }
 }
 
@@ -458,7 +458,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It's super effective on the opposing Torkoal and Torkoal!");
+        MESSAGE("It's super effective on the opposing TORKOAL and TORKOAL!");
     }
 }
 

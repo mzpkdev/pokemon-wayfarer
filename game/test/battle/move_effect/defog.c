@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+        MESSAGE("The opposing WOBBUFFET's evasiveness fell!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
     }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)"
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Substitute!");
+        MESSAGE("The opposing WOBBUFFET used SUBSTITUTE!");
         NOT MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Substitute!");
+        MESSAGE("The opposing WOBBUFFET used SUBSTITUTE!");
         if (move == MOVE_CELEBRATE)
         {
             MESSAGE("But it failed!");
@@ -405,7 +405,7 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from target's side")
         } else {
             NOT MESSAGE("The spikes disappeared from the ground around the opposing team!");
             HP_BAR(opponent);
-            MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+            MESSAGE("The opposing WOBBUFFET was hurt by the spikes!");
         }
     }
 }

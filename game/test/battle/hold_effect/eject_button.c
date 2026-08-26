@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Eject Button will not activate under Substitute")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        MESSAGE("The opposing Raichu put in a substitute!");
+        MESSAGE("The opposing RAICHU put in a substitute!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         MESSAGE("The substitute took damage for the opposing Raichu!");
         NONE_OF {
@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after High Jump Kick crash dam
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
-        MESSAGE("The opposing Wobbuffet kept going and crashed!");
+        MESSAGE("The opposing WOBBUFFET kept going and crashed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
