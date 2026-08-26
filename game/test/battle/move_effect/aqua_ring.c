@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Aqua Ring fails if already active")
         TURN { MOVE(player, MOVE_AQUA_RING); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_RING, player);
-        MESSAGE("Wobbuffet surrounded itself with a veil of water!");
+        MESSAGE("WOBBUFFET surrounded itself with a veil of water!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_RING, player);
         MESSAGE("But it failed!");
     }

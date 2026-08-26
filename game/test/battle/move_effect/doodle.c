@@ -17,7 +17,7 @@ DOUBLE_BATTLE_TEST("Doodle gives the target's ability to user and ally")
         TURN { MOVE(playerLeft, MOVE_DOODLE, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOODLE, playerLeft);
-        MESSAGE("Wynaut copied the opposing Torchic's Ability!");
+        MESSAGE("WYNAUT copied the opposing TORCHIC's Ability!");
         MESSAGE("Wynaut copied the opposing Torchic's Ability!");
     } THEN {
         EXPECT(playerLeft->ability == ABILITY_BLAZE);

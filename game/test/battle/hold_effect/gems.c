@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
+        MESSAGE("The NORMAL GEM strengthened WOBBUFFET's power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent, captureDamage: &boostedHit);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);

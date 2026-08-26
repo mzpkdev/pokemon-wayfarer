@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Hazards are applied correctly after a battler faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         MESSAGE("Pointed stones dug into Wobbuffet!");
         MESSAGE("Wobbuffet fainted!");
         MESSAGE("Pointed stones dug into Wynaut!");

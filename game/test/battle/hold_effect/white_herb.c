@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
+        MESSAGE("WOBBUFFET returned its stats to normal using its WHITE HERB!");
     } THEN {
         EXPECT(player->item == ITEM_NONE);
         EXPECT(player->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);
@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet returned its stats to normal using its White Herb!");
+        MESSAGE("The opposing WOBBUFFET returned its stats to normal using its WHITE HERB!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         MESSAGE("The opposing Wynaut returned its stats to normal using its White Herb!");
     } THEN {
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
+        MESSAGE("WOBBUFFET returned its stats to normal using its WHITE HERB!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CLOSE_COMBAT, player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move
         MESSAGE("WOBBUFFET's SPEED fell!");
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Speed fell!");
+        MESSAGE("WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
     } THEN {
@@ -204,7 +204,7 @@ SINGLE_BATTLE_TEST("White Herb has correct interactions with Intimidate triggere
         // Defiant activates first, so White Herb doesn't have a chance to trigger.
         if (ability == ABILITY_COMPETITIVE) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Igglybuff returned its stats to normal using its White Herb!");
+            MESSAGE("IGGLYBUFF returned its stats to normal using its WHITE HERB!");
         }
     } THEN {
         if (ability == ABILITY_COMPETITIVE) {
@@ -228,7 +228,7 @@ DOUBLE_BATTLE_TEST("White Herb is correctly displayed")
         TURN { MOVE(playerRight, MOVE_SUPERPOWER, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        MESSAGE("Wynaut returned its stats to normal using its White Herb!");
+        MESSAGE("WYNAUT returned its stats to normal using its WHITE HERB!");
     } THEN {
         EXPECT(playerLeft->item == ITEM_NONE);
         EXPECT(playerLeft->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);

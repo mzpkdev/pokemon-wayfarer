@@ -49,7 +49,7 @@ DOUBLE_BATTLE_TEST("Teeter Dance can confuse foes and allies")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponentLeft);
-        MESSAGE("The opposing Wobbuffet became confused!");
+        MESSAGE("The opposing WOBBUFFET became confused!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerRight);
         MESSAGE("Wynaut became confused!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponentRight);

@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Battle Bond Greninja returns to base form upon battle end af
         TURN { MOVE(player, MOVE_WATER_GUN); SEND_OUT(opponent, 1); }
     } SCENE {
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         ABILITY_POPUP(player, ABILITY_BATTLE_BOND);
         MESSAGE("Greninja became fully charged due to its bond with its trainer!");
         MESSAGE("Greninja became Ash-Greninja!");

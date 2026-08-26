@@ -210,7 +210,7 @@ SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another it
         // turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Leftovers!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
         // turn 2
         if (B_KNOCK_OFF_REMOVAL >= GEN_5) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
@@ -241,7 +241,7 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
         // turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Leftovers!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
         // turn 2
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         MESSAGE("Wobbuffet used Celebrate!");

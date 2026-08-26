@@ -62,7 +62,7 @@ DOUBLE_BATTLE_TEST("Magic Coat fails when the only slower battler is a fainted a
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);

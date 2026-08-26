@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Lunar Dance causes the user to faint and heals the replaceme
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         MESSAGE("Wynaut became cloaked in mystical moonlight!");
         HP_BAR(player, hp: 100);
         STATUS_ICON(player, none: TRUE);
@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("Lunar Dance causes the user to faint and heals the replaceme
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         MESSAGE("Wynaut became cloaked in mystical moonlight!");
         HP_BAR(playerLeft, hp: 100);
         STATUS_ICON(playerLeft, none: TRUE);
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Lunar Dance effect activates even if the the switched Pokém
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         MESSAGE("Ninjask became cloaked in mystical moonlight!");
         MESSAGE("Ninjask regained health!");
     }
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Lunar Dance effect activates only if the switched Pokémon c
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         NONE_OF {
             MESSAGE("Ninjask became cloaked in mystical moonlight!");
             MESSAGE("Ninjask regained health!");

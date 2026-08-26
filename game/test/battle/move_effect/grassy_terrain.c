@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Grassy Terrain recovers 1/16th HP at end of turn")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("WOBBUFFET is healed by the grassy terrain!");
         HP_BAR(player, damage: -maxHPPlayer / 16);
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
         HP_BAR(opponent, damage: -maxHPOpponent / 16);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);

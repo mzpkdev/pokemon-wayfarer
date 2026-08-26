@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Mirror Move's called multi-hit move hits multiple times")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
         HP_BAR(opponent);
         MESSAGE("The Pokémon was hit 5 time(s)!");
-        MESSAGE("The opposing Wobbuffet used Mirror Move!");
+        MESSAGE("The opposing WOBBUFFET used MIRROR MOVE!");
         MESSAGE("The opposing Wobbuffet used Bullet Seed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
         HP_BAR(player);

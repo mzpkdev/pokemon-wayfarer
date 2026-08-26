@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness harshly fell!");
+        MESSAGE("The opposing WOBBUFFET's evasiveness harshly fell!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 6);
@@ -252,7 +252,7 @@ DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SAFEGUARD, opponentRight);
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
-            MESSAGE("The opposing team's Mist wore off!");
+            MESSAGE("The opposing team's MIST wore off!");
             MESSAGE("The opposing team's Safeguard wore off!");
         }
         MESSAGE("Wobbuffet used Screech!");
@@ -590,7 +590,7 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Aurora Veil from the user's side", s16 
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Glalie's evasiveness fell!");
+            MESSAGE("The opposing GLALIE's evasiveness fell!");
         }
         NOT MESSAGE("Your team's Aurora Veil wore off!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
@@ -633,7 +633,7 @@ DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhy
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
             MESSAGE("GLALIE's evasiveness fell!");
-            MESSAGE("Your team's Aurora Veil wore off!");
+            MESSAGE("Your team's AURORA VEIL wore off!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].damagePhysical);

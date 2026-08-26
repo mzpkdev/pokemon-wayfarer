@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single 
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
             MESSAGE("Wobbuffet became confused!");
         }
@@ -48,7 +48,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double 
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerRight);
             MESSAGE("Wobbuffet became confused!");
         }
@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
             MESSAGE("Wobbuffet became confused!");
         }
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Berserk Gene, the Attack of Slowbro sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of SLOWBRO sharply rose!");
             ABILITY_POPUP(player, ABILITY_OWN_TEMPO);
             MESSAGE("Slowbro's Own Tempo prevents confusion!");
         }
@@ -140,7 +140,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, (positionLeft != 0) ? playerLeft : playerRight);
-            MESSAGE("Using Berserk Gene, the Attack of Slowbro sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of SLOWBRO sharply rose!");
             ABILITY_POPUP((positionLeft != 0) ? playerLeft : playerRight, ABILITY_OWN_TEMPO);
             MESSAGE("Slowbro's Own Tempo prevents confusion!");
         }

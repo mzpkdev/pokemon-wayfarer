@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacem
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEALING_WISH, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         MESSAGE("The healing wish came true for Wynaut!");
         HP_BAR(player, hp: 100);
         STATUS_ICON(player, none: TRUE);
@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacem
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEALING_WISH, playerLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         MESSAGE("The healing wish came true for Wynaut!");
         HP_BAR(playerLeft, hp: 100);
         STATUS_ICON(playerLeft, none: TRUE);
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Healing Wish effect activates even if the the switched Poké
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEALING_WISH, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         MESSAGE("The healing wish came true for Ninjask!");
         MESSAGE("Ninjask regained health!");
     }
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Healing Wish effect activates only if the switched Pokémon 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEALING_WISH, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Gardevoir fainted!");
+        MESSAGE("GARDEVOIR fainted!");
         NONE_OF {
             MESSAGE("The healing wish came true for Ninjask!");
             MESSAGE("Ninjask regained health!");

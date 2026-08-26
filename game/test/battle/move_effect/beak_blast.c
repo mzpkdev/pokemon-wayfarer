@@ -20,7 +20,7 @@ DOUBLE_BATTLE_TEST("Beak Blast's charging message is shown before other moves ar
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, playerLeft);
         MESSAGE("WYNAUT started heating up its beak!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
@@ -48,7 +48,7 @@ DOUBLE_BATTLE_TEST("Beak Blast burns all who make contact with the Pokémon")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, playerLeft);
         MESSAGE("WYNAUT started heating up its beak!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
 
         MESSAGE("The opposing Wobbuffet used Scratch!");
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
         TURN { MOVE(opponent, move); MOVE(player, MOVE_BEAK_BLAST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, player);
-        MESSAGE("Wobbuffet started heating up its beak!");
+        MESSAGE("WOBBUFFET started heating up its beak!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         if (burn) {
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn when charging a two turn move")
         TURN { MOVE(opponent, move); MOVE(player, MOVE_BEAK_BLAST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, player);
-        MESSAGE("Wobbuffet started heating up its beak!");
+        MESSAGE("WOBBUFFET started heating up its beak!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         NONE_OF {

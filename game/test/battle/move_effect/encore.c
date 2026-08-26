@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Encore forces the last move used before the target flinched"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        MESSAGE("The opposing WOBBUFFET flinched and couldn't move!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);

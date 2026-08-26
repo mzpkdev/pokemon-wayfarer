@@ -49,7 +49,7 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
     }
     SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, opponentRight);
-        MESSAGE("The opposing Wynaut is tightening its focus!");
+        MESSAGE("The opposing WYNAUT is tightening its focus!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, playerRight);
         MESSAGE("Wynaut is tightening its focus!");

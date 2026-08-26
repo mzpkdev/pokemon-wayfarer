@@ -46,6 +46,6 @@ SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out
         TURN { SWITCH(opponent, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Regirock can act faster than normal, thanks to its Custap Berry!");
+        MESSAGE("REGIROCK can act faster than normal, thanks to its CUSTAP BERRY!");
     }
 }

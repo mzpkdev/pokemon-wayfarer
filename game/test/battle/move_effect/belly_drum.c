@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Belly Drum maximizes the user's Attack stat", s16 damage)
         if (raiseAttack) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");
+            MESSAGE("WOBBUFFET cut its own HP and maximized its ATTACK!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6")
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("WOBBUFFET's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Wobbuffet's Attack sharply rose!");
@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Belly Drum minimizes the user's Attack stat with Contrary", 
         if (raiseAttack) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet cut its own HP and maximized its Attack!");  // Message unaffected by Contrary
+            MESSAGE("WOBBUFFET cut its own HP and maximized its ATTACK!");  // Message unaffected by Contrary
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -170,7 +170,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("SERPERIOR's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Serperior's Attack sharply rose!");
@@ -200,7 +200,7 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6"
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack harshly fell!");
+        MESSAGE("SERPERIOR's ATTACK harshly fell!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Serperior's Attack harshly fell!");

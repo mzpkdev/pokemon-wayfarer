@@ -240,7 +240,7 @@ DOUBLE_BATTLE_TEST("Red Card activates for only the fastest target")
         // Fastest target's Red Card activates.
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
-        MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
+        MESSAGE("WOBBUFFET held up its Red Card against the opposing WOBBUFFET!");
         MESSAGE("The opposing Unown was dragged out!");
 
         // Slower target's Red Card still able to activate on other battler.
@@ -427,7 +427,7 @@ SINGLE_BATTLE_TEST("Red Card is consumed after dragged out replacement has its S
         // 2nd turn Red Card activation
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("The opposing WOBBUFFET held up its Red Card against WOBBUFFET!");
         MESSAGE("Wynaut was dragged out!");
         MESSAGE("Wynaut was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -453,7 +453,7 @@ SINGLE_BATTLE_TEST("Red Card does not cause the dragged out mon to lose hp due t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("The opposing WOBBUFFET held up its Red Card against WOBBUFFET!");
         MESSAGE("Wynaut was dragged out!");
         NOT HP_BAR(player);
     }

@@ -32,7 +32,7 @@ DOUBLE_BATTLE_TEST("Life Dew recovers 25% of hp for both user and partner")
         HP_BAR(playerLeft, captureDamage: &healing[0]);
         MESSAGE("WOBBUFFET's HP was restored.");
         HP_BAR(playerRight, captureDamage: &healing[1]);
-        MESSAGE("Wynaut's HP was restored.");
+        MESSAGE("WYNAUT's HP was restored.");
     } THEN {
         EXPECT_EQ(playerLeft->maxHP / 4, -healing[0]);
         EXPECT_EQ(playerRight->maxHP / 4, -healing[1]);
