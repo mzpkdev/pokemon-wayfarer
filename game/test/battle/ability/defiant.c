@@ -268,7 +268,7 @@ SINGLE_BATTLE_TEST("Defiant activates before White Herb")
 
         if (move == MOVE_LEER) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Mankey returned its stats to normal using its White Herb!");
+            MESSAGE("MANKEY returned its stats to normal using its WHITE HERB!");
         } else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
@@ -304,7 +304,7 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered")
         MESSAGE("MANKEY's DEFENSE fell!");
         ABILITY_POPUP(player, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Mankey's Attack sharply rose!");
+        MESSAGE("MANKEY's ATTACK sharply rose!");
 
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 3);

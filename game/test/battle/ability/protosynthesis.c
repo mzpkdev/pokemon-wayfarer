@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Protosynthesis uses Wonder Room swapped defenses when choosi
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated ROARING MOON's Protosynthesis!");
-        MESSAGE("Roaring Moon's Sp. Def was heightened!");
+        MESSAGE("ROARING MOON's SP. DEF was heightened!");
     }
 }
 

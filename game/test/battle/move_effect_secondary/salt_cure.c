@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Salt Cure does not get applied if hitting a Substitute")
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SALT_CURE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
-        MESSAGE("The substitute took damage for the opposing Wobbuffet!");
+        MESSAGE("The substitute took damage for the opposing WOBBUFFET!");
         NOT MESSAGE("The opposing Wobbuffet is being salt cured!");
     }
 }

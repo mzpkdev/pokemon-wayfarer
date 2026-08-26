@@ -84,6 +84,6 @@ DOUBLE_BATTLE_TEST("Salac Berry does not miss timing miss timing")
         MESSAGE("The opposing WYNAUT was hurt by the sea of fire!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("Using SALAC BERRY, the SPEED of the opposing WYNAUT rose!");
-        MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
+        MESSAGE("The opposing WOBBUFFET was hurt by the sea of fire!");
     }
 }

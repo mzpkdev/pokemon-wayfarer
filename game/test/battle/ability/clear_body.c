@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
         }
         ABILITY_POPUP(opponent, ability);
         if (ability == ABILITY_FULL_METAL_BODY)
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
         else
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
         }
         ABILITY_POPUP(opponent, ability);
         if (ability == ABILITY_FULL_METAL_BODY)
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
         else
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
         }
         ABILITY_POPUP(opponent, ability);
         if (ability == ABILITY_FULL_METAL_BODY)
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
         else

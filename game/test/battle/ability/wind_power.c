@@ -272,7 +272,7 @@ SINGLE_BATTLE_TEST("Wind Power displays its message before fainting when trigger
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_WIND_POWER);
         MESSAGE("Being hit by AIR CUTTER charged WATTREL with power!");
-        MESSAGE("Wattrel fainted!");
+        MESSAGE("WATTREL fainted!");
     }
 }
 

@@ -143,7 +143,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("SLUGMA's WEAK ARMOR lowered its DEFENSE!");
-        MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
+        MESSAGE("SLUGMA's WEAK ARMOR sharply raised its SPEED!");
         if (move == MOVE_KNOCK_OFF) {
             MESSAGE("The opposing Wobbuffet knocked off Slugma's White Herb!");
         } else if (move == MOVE_THIEF) {
@@ -171,7 +171,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if Magician steals it"
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("SLUGMA's WEAK ARMOR lowered its DEFENSE!");
-        MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
+        MESSAGE("SLUGMA's WEAK ARMOR sharply raised its SPEED!");
         ABILITY_POPUP(opponent, ABILITY_MAGICIAN);
         MESSAGE("The opposing Fennekin stole Slugma's White Herb!");
         NONE_OF {

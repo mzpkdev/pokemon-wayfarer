@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Quark Drive boosts the highest stat")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
         MESSAGE("The Electric Terrain activated IRON MOTH's Quark Drive!");
-        MESSAGE("Iron Moth's Sp. Atk was heightened!");
+        MESSAGE("IRON MOTH's SP. ATK was heightened!");
     }
 }
 
@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates on switch-in")
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
         MESSAGE("The Electric Terrain activated IRON MOTH's Quark Drive!");
-        MESSAGE("Iron Moth's Sp. Atk was heightened!");
+        MESSAGE("IRON MOTH's SP. ATK was heightened!");
     }
 }
 
@@ -214,7 +214,7 @@ SINGLE_BATTLE_TEST("Quark Drive uses Wonder Room swapped defenses when choosing 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, opponent);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
         MESSAGE("The Electric Terrain activated IRON LEAVES's Quark Drive!");
-        MESSAGE("Iron Leaves's Sp. Def was heightened!");
+        MESSAGE("IRON LEAVES's SP. DEF was heightened!");
     }
 }
 

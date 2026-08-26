@@ -209,7 +209,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Volt Absorb if it has been affected by Elec
         if (shouldTriggerAbility) {
             NOT MESSAGE("Using Liechi Berry, the Attack of Jolteon rose!");
         } else {
-            MESSAGE("Using Liechi Berry, the Attack of Jolteon rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of JOLTEON rose!");
         }
     }
 }
@@ -251,7 +251,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Lightning Rod if it has been affected by El
         if (shouldTriggerAbility) {
             NOT MESSAGE("Using Liechi Berry, the Attack of Pikachu rose!");
         } else {
-            MESSAGE("Using Liechi Berry, the Attack of Pikachu rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of PIKACHU rose!");
         }
     }
 }
@@ -292,7 +292,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
         if (shouldTriggerAbility) {
             NOT MESSAGE("Using Liechi Berry, the Attack of Electivire rose!");
         } else {
-            MESSAGE("Using Liechi Berry, the Attack of Electivire rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of ELECTIVIRE rose!");
         }
     }
 }

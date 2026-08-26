@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Roost fails if the user is under the effects of Heal Block")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
         MESSAGE("WOBBUFFET was prevented from healing!"); // Message when Heal Block is applied
-        MESSAGE("Wobbuffet was prevented from healing!"); // Message when trying to heal under Heal Block
+        MESSAGE("WOBBUFFET was prevented from healing!"); // Message when trying to heal under Heal Block
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
             HP_BAR(player);

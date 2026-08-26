@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Battle Bond transforms player's Greninja - Singles")
         MESSAGE("The opposing WOBBUFFET fainted!");
         if (monsCountOpponent != 1) {
             ABILITY_POPUP(player, ABILITY_BATTLE_BOND);
-            MESSAGE("Greninja became fully charged due to its bond with its trainer!");
+            MESSAGE("GRENINJA became fully charged due to its bond with its trainer!");
             MESSAGE("Greninja became Ash-Greninja!");
         } else {
             NONE_OF {
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Battle Bond transforms opponent's Greninja - Singles")
         MESSAGE("WOBBUFFET fainted!");
         if (monsCountPlayer != 1) {
             ABILITY_POPUP(opponent, ABILITY_BATTLE_BOND);
-            MESSAGE("The opposing Greninja became fully charged due to its bond with its trainer!");
+            MESSAGE("The opposing GRENINJA became fully charged due to its bond with its trainer!");
             MESSAGE("The opposing Greninja became Ash-Greninja!");
         } else {
             NONE_OF {

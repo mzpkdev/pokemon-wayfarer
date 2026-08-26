@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when u
         MESSAGE("WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("WOBBUFFET's ATTACK rose!");
-        MESSAGE("Wobbuffet's Defense rose!");
+        MESSAGE("WOBBUFFET's DEFENSE rose!");
     }
 }
 

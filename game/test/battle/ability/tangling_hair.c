@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Tangling Hair Speed stat drop triggers defiant and keeps ori
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         MESSAGE("The opposing PAWNIARD's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("The opposing Pawniard was hurt by Dugtrio's Rocky Helmet!");
+        MESSAGE("The opposing PAWNIARD was hurt by DUGTRIO's ROCKY HELMET!");
     }
 }
 

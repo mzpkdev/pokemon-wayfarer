@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens aft
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_COTTON_DOWN);
         MESSAGE("MELOETTA's SPEED fell!");
-        MESSAGE("The opposing Gossifleur fainted!");
+        MESSAGE("The opposing GOSSIFLEUR fainted!");
         MESSAGE("MELOETTA transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);

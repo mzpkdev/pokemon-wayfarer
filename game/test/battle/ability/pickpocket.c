@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after Magician steals an item")
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
         MESSAGE("DELPHOX stole the opposing SNEASEL's MAGOST BERRY!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Delphox's Magost Berry!");
+        MESSAGE("The opposing SNEASEL stole DELPHOX's MAGOST BERRY!");
     } THEN {
         EXPECT(opponent->item == ITEM_MAGOST_BERRY);
         EXPECT(player->item == ITEM_NONE);
@@ -228,7 +228,7 @@ SINGLE_BATTLE_TEST("Pickpocket activates after Focus Sash is consumed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, player);
         MESSAGE("The opposing SNEASEL hung on using its FOCUS SASH!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Wobbuffet's Magost Berry!");
+        MESSAGE("The opposing SNEASEL stole WOBBUFFET's MAGOST BERRY!");
     } THEN {
         EXPECT(opponent->item == ITEM_MAGOST_BERRY);
         EXPECT(player->item == ITEM_NONE);
@@ -305,7 +305,7 @@ SINGLE_BATTLE_TEST("Pickpocket does not prevent King's Rock or Razor Fang flinch
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
         MESSAGE("The opposing SNEASEL stole WOBBUFFET's KING'S ROCK!");
-        MESSAGE("The opposing Sneasel flinched and couldn't move!");
+        MESSAGE("The opposing SNEASEL flinched and couldn't move!");
     } THEN {
         EXPECT(opponent->item == ITEM_KINGS_ROCK);
         EXPECT(player->item == ITEM_NONE);
