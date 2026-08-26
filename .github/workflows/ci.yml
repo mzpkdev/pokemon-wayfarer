@@ -121,7 +121,7 @@ jobs:
           TEST: 1
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" hns check
+        run: make -j"$(nproc)" check
 
   emerald-mechanics-build:
     name: Emerald Mechanics Test Build
