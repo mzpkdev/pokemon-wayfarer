@@ -7,7 +7,7 @@ OPTIONAL when they do not help define the behavior.
 
 # [Spec name]
 
-PRD: [Parent PRD](example.md)
+PRD: [Parent PRD](../prds/example.md)
 Implemented: No
 
 <!--
