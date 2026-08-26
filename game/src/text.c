@@ -782,7 +782,7 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, 
     if (width <= 0)
         return;
 
-    u32 widthMask = (1 << (width * 4)) - 1;
+    u32 widthMask = width == 8 ? UINT32_MAX : (1 << (width * 4)) - 1;
 
     u32 shift0 = (x0 % 8) * 4, shift8 = 32 - shift0;
 

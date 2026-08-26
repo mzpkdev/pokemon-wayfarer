@@ -129,7 +129,7 @@ dist
 .pnpm-store
 
 # Turborepo
-.turbo/
+**/.turbo/
 
 # WebAnvil
 **/.webanvil/
@@ -147,6 +147,20 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Editor files
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+*.sw?
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
 
 # Generated developer-tool catalogs
 /build/

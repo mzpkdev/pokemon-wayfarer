@@ -1573,6 +1573,8 @@ static const u32 GetBitfieldValue(u32 value, u32 currBit, u32 bitsCount)
 static void UpdateBattlerValue(struct BattleDebugMenu *data)
 {
     u32 i;
+    u16 *sideStatusValue;
+
     switch (data->modifyArrows.typeOfVal)
     {
     case VAL_U8:
@@ -1608,7 +1610,9 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         ChangeHazardsValue(data);
         break;
     case VAR_SIDE_STATUS:
-        *GetSideStatusValue(data, TRUE, data->modifyArrows.currValue != 0) = data->modifyArrows.currValue;
+        sideStatusValue = GetSideStatusValue(data, TRUE, data->modifyArrows.currValue != 0);
+        if (sideStatusValue != NULL)
+            *sideStatusValue = data->modifyArrows.currValue;
         break;
     case VAR_SHOW_HP:
         (*(struct BattleSpriteInfo*)(data->modifyArrows.modifiedValPtr)).hpNumbersNoBars = data->modifyArrows.currValue;
@@ -1874,6 +1878,8 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
 
 static void SetUpModifyArrows(struct BattleDebugMenu *data)
 {
+    u16 *sideStatusValue;
+
     LoadSpritePalette(&gSpritePalette_Arrow);
     data->modifyArrows.arrowSpriteId[0] = CreateSprite(&gSpriteTemplate_Arrow, 207, 12, 0);
     data->modifyArrows.arrowSpriteId[1] = CreateSprite(&gSpriteTemplate_Arrow, 207, 36, 0);
@@ -2064,7 +2070,8 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.maxDigits = 2;
         data->modifyArrows.modifiedValPtr = &gSideStatuses[GetBattlerSide(data->battlerId)];
         data->modifyArrows.typeOfVal = VAR_SIDE_STATUS;
-        data->modifyArrows.currValue = *GetSideStatusValue(data, FALSE, FALSE);
+        sideStatusValue = GetSideStatusValue(data, FALSE, FALSE);
+        data->modifyArrows.currValue = sideStatusValue != NULL ? *sideStatusValue : 0;
         break;
     }
 

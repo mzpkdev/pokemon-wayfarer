@@ -67,6 +67,7 @@ void FakeRtc_ForwardTimeTo(u32 hour, u32 minute, u32 second)
     struct Time diff, target;
     struct SiiRtcInfo *fakeRtc = FakeRtc_GetCurrentTime();
 
+    target.days = fakeRtc->day;
     target.hours = hour;
     target.minutes = minute;
     target.seconds = second;

@@ -1,4 +1,4 @@
-# Pokémon Wayfarer developer tooling
+# Pokémon Wayfarer Devtools
 
 This is an isolated Node 24 workspace for tools that support Pokémon Wayfarer.
 It does not participate in the ROM's Makefile build.
@@ -33,7 +33,7 @@ UI for stateful controls so cartographer components can stay focused on map beha
 ## Commands
 
 Install dependencies once from the repository root with `pnpm install`. Then run
-these commands from `devtooling/`:
+these commands from `devtools/`:
 
 ```sh
 pnpm run build

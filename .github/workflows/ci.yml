@@ -39,7 +39,7 @@ jobs:
         env:
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" hns release
+        run: make -j"$(nproc)" BUILD=hns release
 
   static-analysis:
     name: Static Analysis
@@ -68,7 +68,7 @@ jobs:
         working-directory: game
         env:
           ANALYZE: 1
-        run: make -j"$(nproc)" hns debug
+        run: make -j"$(nproc)" BUILD=hns debug
 
   expansion-suite:
     name: Expansion Suite
@@ -121,7 +121,7 @@ jobs:
           TEST: 1
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" hns check
+        run: make -j"$(nproc)" check
 
   smoke:
     name: Smoke

@@ -4121,7 +4121,7 @@ static void HandleEndTurn_ContinueBattle(void)
         gBattleMainFunc = BattleTurnPassed;
         for (u32 i = 0; i < BATTLE_COMMUNICATION_ENTRIES_COUNT; i++)
             gBattleCommunication[i] = 0;
-        for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+        for (enum BattlerId battler = 0; battler < gBattlersCount && battler < MAX_BATTLERS_COUNT; battler++)
         {
             gBattleMons[battler].volatiles.flinched = FALSE;
             if ((gBattleMons[battler].status1 & STATUS1_SLEEP) && (gBattleMons[battler].volatiles.multipleTurns))
@@ -4172,7 +4172,7 @@ void BattleTurnPassed(void)
         gBattleStruct->eventState.arenaTurn++;
     }
 
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
+    for (enum BattlerId battler = 0; battler < gBattlersCount && battler < MAX_BATTLERS_COUNT; battler++)
     {
         gChosenActionByBattler[battler] = B_ACTION_NONE;
         gChosenMoveByBattler[battler] = MOVE_NONE;

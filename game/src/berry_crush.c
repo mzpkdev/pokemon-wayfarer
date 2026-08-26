@@ -993,9 +993,9 @@ void StartBerryCrush(MainCallback exitCallback)
 
     playerCount = GetLinkPlayerCount();
     multiplayerId = GetMultiplayerId();
-    if (playerCount < 2 || multiplayerId >= playerCount)
+    if (playerCount < 2 || playerCount > MAX_RFU_PLAYERS || multiplayerId >= playerCount)
     {
-        // Too few players, or invalid id
+        // Invalid player count or id
         ERROR_EXIT(exitCallback);
         return;
     }
@@ -2360,7 +2360,7 @@ static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
             return 0;
 
         // Read partners chosen berries
-        for (i = 0; i < game->playerCount; i++)
+        for (i = 0; i < game->playerCount && i < MAX_RFU_PLAYERS; i++)
         {
             game->players[i].berryId = gBlockRecvBuffer[i][0];
             if (game->players[i].berryId > LAST_BERRY_INDEX + 1)
@@ -2982,7 +2982,7 @@ static u32 Cmd_TabulateResults(struct BerryCrushGame *game, u8 *args)
     case 2:
         if (GetBlockReceivedStatus() != sReceivedPlayerBitmasks[game->playerCount - 2])
             return 0;
-        for (i = 0; i < game->playerCount; i++)
+        for (i = 0; i < game->playerCount && i < MAX_RFU_PLAYERS; i++)
             game->players[i].timePressingA = gBlockRecvBuffer[i][0];
 
         game->cmdTimer = 0;

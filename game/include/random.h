@@ -66,10 +66,18 @@ static inline u16 LocalRandom(rng_value_t *val)
 u32 Random32(void);
 u32 Random2_32(void);
 
+#if MODERN
+// Random32 is implemented as naked assembly, so GCC's analyzer cannot see its r0 result.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wanalyzer-use-of-uninitialized-value"
+#endif
 static inline u16 Random(void)
 {
     return Random32() >> 16;
 }
+#if MODERN
+#pragma GCC diagnostic pop
+#endif
 
 void SeedRng(u32 seed);
 void SeedRng2(u32 seed);

@@ -143,7 +143,7 @@ static u8 GetLetterTableId(u8 letter)
 static bool32 TryCalculateWallpaper(u16 *backgroundClr, u16 *foregroundClr, u8 *iconId, u8 *patternId, u16 trainerId, u8 *phrase)
 {
     s32 i;
-    ALIGNED(2) u8 data[NUM_WALLPAPER_DATA_BYTES];
+    ALIGNED(2) u8 data[NUM_WALLPAPER_DATA_BYTES] = {0};
     u8 charsByTableId[WALDA_PHRASE_LENGTH];
     u16 *ptr;
 

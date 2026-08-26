@@ -370,6 +370,9 @@ struct ListMenuItem *MultichoiceDynamic_PeekElementAt(u32 index)
 
 void MultichoiceDynamic_DestroyStack(void)
 {
+    if (sDynamicMultiChoiceStack == NULL)
+        return;
+
     TRY_FREE_AND_SET_NULL(sDynamicMultiChoiceStack->elements);
     TRY_FREE_AND_SET_NULL(sDynamicMultiChoiceStack);
 }

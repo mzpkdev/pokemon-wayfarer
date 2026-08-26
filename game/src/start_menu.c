@@ -132,7 +132,9 @@ static u8 SaveYesNoCallback(void);
 static u8 SaveConfirmInputCallback(void);
 static u8 SaveFileExistsCallback(void);
 static u8 SaveConfirmOverwriteDefaultNoCallback(void);
+#if !IS_HNS
 static u8 SaveConfirmOverwriteCallback(void);
+#endif
 static u8 SaveOverwriteInputCallback(void);
 static u8 SaveSavingMessageCallback(void);
 static u8 SaveDoSaveCallback(void);
@@ -1235,12 +1237,14 @@ static u8 SaveConfirmOverwriteDefaultNoCallback(void)
     return SAVE_IN_PROGRESS;
 }
 
+#if !IS_HNS
 static u8 SaveConfirmOverwriteCallback(void)
 {
     DisplayYesNoMenuDefaultYes(); // Show Yes/No menu
     sSaveDialogCallback = SaveOverwriteInputCallback;
     return SAVE_IN_PROGRESS;
 }
+#endif
 
 static u8 SaveOverwriteInputCallback(void)
 {
@@ -1620,8 +1624,10 @@ void HideStartMenu(void)
     // WARNING: VAR_TEMP_MTSILVER_RESUME_BLIZZARD_SE should not be used for anything else
     // in MAPSEC_MT_SILVER, as it will be set to 0 when the start menu is opened and closed.
     // Check variable aliases in vars_hns.h to ensire temporary variable is not used for anything else.
+#if IS_HNS
     if (gMapHeader.regionMapSectionId == MAPSEC_MT_SILVER && (gMapHeader.mapLayoutId == LAYOUT_MT_SILVER_SUMMIT_DAY_HNS || gMapHeader.mapLayoutId == LAYOUT_MT_SILVER_SUMMIT_NIGHT_HNS))
         VarSet(VAR_TEMP_MTSILVER_RESUME_BLIZZARD_SE, 0);
+#endif
     HideStartMenuWindow();
 }
 

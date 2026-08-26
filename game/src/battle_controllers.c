@@ -3252,14 +3252,8 @@ void BtlController_HandleSwitchInTryShinyAnim(enum BattlerId battler)
 void UpdateFriendshipFromXItem(enum BattlerId battler)
 {
     struct Pokemon *party = GetBattlerParty(battler);
-
-    u8 friendship;
-    gBattleResources->bufferA[battler][1] = REQUEST_FRIENDSHIP_BATTLE;
-    GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &friendship);
-
-    u16 heldItem;
-    gBattleResources->bufferA[battler][1] = REQUEST_HELDITEM_BATTLE;
-    GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], (u8*)&heldItem);
+    u8 friendship = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_FRIENDSHIP);
+    u16 heldItem = GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_HELD_ITEM);
 
     if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {

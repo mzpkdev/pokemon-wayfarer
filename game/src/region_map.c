@@ -96,7 +96,9 @@ static void RegionMap_InitializeStateBasedOnSSTidalLocation(void);
 static u8 GetMapsecType(mapsec_u16_t mapSecId);
 static mapsec_u16_t CorrectSpecialMapSecId_Internal(mapsec_u16_t mapSecId);
 static mapsec_u16_t GetTerraOrMarineCaveMapSecId(void);
+#if !IS_HNS
 static void GetMarineCaveCoords(u16 *x, u16 *y);
+#endif
 static bool32 IsPlayerInAquaHideout(mapsec_u8_t mapSecId);
 static void GetPositionOfCursorWithinMapSec(void);
 static bool8 RegionMap_IsMapSecIdInNextRow(u16 y);
@@ -233,7 +235,9 @@ static const struct RegionMapLocation sRegionMapEntries_Johto[] = {
     [MAPSEC_VIRIDIAN_FOREST]   = { 19, 4,  1, 2, COMPOUND_STRING("VIRIDIAN FOREST") },
     [MAPSEC_MT_MOON]           = { 22, 2,  1, 1, COMPOUND_STRING("MT. MOON") },
     [MAPSEC_DIGLETTS_CAVE]     = { 20, 3,  6, 4, COMPOUND_STRING("DIGLETT'S CAVE") },
+#if IS_HNS
     [MAPSEC_ROCKET_HIDEOUT_HNS] = { 9,  3,  1, 1, COMPOUND_STRING("ROCKET HIDEOUT") },
+#endif
     [MAPSEC_ROCK_TUNNEL]       = { 27, 3,  1, 1, COMPOUND_STRING("ROCK TUNNEL") },
     [MAPSEC_SEAFOAM_ISLANDS]   = { 22, 13, 1, 1, COMPOUND_STRING("SEAFOAM ISLANDS") },
     [MAPSEC_CERULEAN_CAVE]     = { 23, 1,  1, 1, COMPOUND_STRING("CERULEAN CAVE") },
@@ -250,7 +254,9 @@ static const struct RegionMapLocation sRegionMapEntries_Johto[] = {
     [MAPSEC_MT_SILVER]         = { 14, 7,  1, 1, COMPOUND_STRING("MT. SILVER") },
     [MAPSEC_SNOWSWEPT_CAVERN]  = { 14, 6,  1, 1, COMPOUND_STRING("SNOWSWEPT CAVERN") },
     [MAPSEC_ROUTE_49]          = { 14, 6,  1, 1, COMPOUND_STRING("ROUTE 49") },
+#if IS_HNS
     [MAPSEC_NEW_SINJOH]        = { 14, 5,  1, 1, COMPOUND_STRING("NEW SINJOH") },
+#endif
     [MAPSEC_ROUTE_50]          = { 14, 4,  1, 1, COMPOUND_STRING("ROUTE 50") },
     [MAPSEC_SINJOH_RUINS]      = { 14, 3,  1, 1, COMPOUND_STRING("SINJOH RUINS") },
     [MAPSEC_TOHJO_FALLS]       = { 14, 10, 1, 1, COMPOUND_STRING("TOHJO FALLS") },
@@ -710,7 +716,9 @@ static const u8 sMapHealLocations[][3] =
     [MAPSEC_UNDERGROUND_PATH_2] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_DIGLETTS_CAVE] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_KANTO_VICTORY_ROAD] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
+#if IS_HNS
     [MAPSEC_ROCKET_HIDEOUT_HNS] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
+#endif
     [MAPSEC_SILPH_CO] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_POKEMON_MANSION] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_KANTO_SAFARI_ZONE] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
@@ -1560,7 +1568,9 @@ static void InitMapBasedOnPlayerLocation(void)
     u16 x;
     u16 y;
     u16 dimensionScale;
+#if !IS_HNS
     u16 xOnMap;
+#endif
     struct WarpData *warp;
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SS_TIDAL_CORRIDOR)
@@ -1646,7 +1656,9 @@ static void InitMapBasedOnPlayerLocation(void)
         break;
     }
 
+#if !IS_HNS
     xOnMap = x;
+#endif
 
     dimensionScale = mapWidth / GetActiveRegionMapEntries()[sRegionMap->mapSecId].width;
     if (dimensionScale == 0)
@@ -1968,6 +1980,7 @@ static mapsec_u16_t GetTerraOrMarineCaveMapSecId(void)
     return sTerraOrMarineCaveMapSecIds[idx];
 }
 
+#if !IS_HNS
 static void GetMarineCaveCoords(u16 *x, u16 *y)
 {
     u16 idx;
@@ -1982,6 +1995,7 @@ static void GetMarineCaveCoords(u16 *x, u16 *y)
     *x = sMarineCaveLocationCoords[idx].x + MAPCURSOR_X_MIN;
     *y = sMarineCaveLocationCoords[idx].y + MAPCURSOR_Y_MIN;
 }
+#endif
 
 // Probably meant to be an "IsPlayerInIndoorDungeon" function, but in practice it only has the one mapsec
 // Additionally, because the mapsec doesnt exist in Emerald, this function always returns FALSE
@@ -2909,7 +2923,11 @@ static void TryCreateRedOutlineFlyDestIcons(void)
             GetMapSecDimensions(mapSecId, &x, &y, &width, &height);
             x = (x + MAPCURSOR_X_MIN) * 8;
             y = (y + MAPCURSOR_Y_MIN) * 8;
+#if IS_HNS
             spriteId = CreateSprite(mapSecId == MAPSEC_NEW_SINJOH ? &sFlyDestIconBlueSpriteTemplate : mapSecId == MAPSEC_MELEMELE_ISLAND ? &sFlyDestIconGreenSpriteTemplate : &sFlyDestIconSpriteTemplate, x, y, 10);
+#else
+            spriteId = CreateSprite(&sFlyDestIconSpriteTemplate, x, y, 10);
+#endif
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
@@ -3012,7 +3030,7 @@ static void CB_ExitFlyMap(void)
             {
                 SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
             }
-            TRY_FREE_AND_SET_NULL(sFlyMap);
+            FREE_AND_SET_NULL(sFlyMap);
             FreeAllWindowBuffers();
         }
         break;

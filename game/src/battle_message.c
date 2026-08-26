@@ -3038,7 +3038,7 @@ static const u8 *BattleStringGetOpponentName(u8 *text, u8 multiplayerId, enum Ba
         break;
     }
 
-    return toCpy;
+    return toCpy != NULL ? toCpy : gText_EmptyString2;
 }
 
 static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
@@ -3077,7 +3077,7 @@ static const u8 *BattleStringGetPlayerName(u8 *text, enum BattlerId battler)
         break;
     }
 
-    return toCpy;
+    return toCpy != NULL ? toCpy : gText_EmptyString2;
 }
 
 static const u8 *BattleStringGetTrainerName(u8 *text, u8 multiplayerId, enum BattlerId battler)
@@ -3604,7 +3604,7 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                 }
                 else
                 {
-                    classString = NULL;
+                    classString = gText_EmptyString2;
                     switch (GetBattlerPosition(gBattlerAttacker))
                     {
                     case B_POSITION_PLAYER_RIGHT:

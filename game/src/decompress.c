@@ -265,6 +265,13 @@ void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, s32 species, u
 void DecompressDataWithHeaderVram(const u32 *src, void *dest)
 {
     union CompressionHeader header;
+
+    if (src == NULL)
+    {
+        DecompressionError(src, HEADER_ERROR);
+        return;
+    }
+
     CpuCopy32(src, &header, 8);
     switch (header.smol.mode)
     {
@@ -293,6 +300,13 @@ void DecompressDataWithHeaderVram(const u32 *src, void *dest)
 void DecompressDataWithHeaderWram(const u32 *src, void *dest)
 {
     union CompressionHeader header;
+
+    if (src == NULL)
+    {
+        DecompressionError(src, HEADER_ERROR);
+        return;
+    }
+
     CpuCopy32(src, &header, 8);
     switch (header.smol.mode)
     {
@@ -982,11 +996,21 @@ static void SmolDecompressData(const struct SmolHeader *header, const u32 *data,
         pSymFreqs = &data[3];
         sDataPtr = &data[6];
         break;
+    default:
+        DecompressionError(data - 2, HEADER_ERROR);
+        return;
     }
 
     bool32 loEncoded = isModeLoEncoded(header->mode);
     bool32 symEncoded = isModeSymEncoded(header->mode);
     bool32 symDelta = isModeSymDelta(header->mode);
+
+    // Keep the selected mode and its frequency-table pointer consistent.
+    if ((loEncoded && pLoFreqs == NULL) || (symEncoded && pSymFreqs == NULL))
+    {
+        DecompressionError(data - 2, HEADER_ERROR);
+        return;
+    }
 
     // Everything needs to be aligned.
     u32 alignedLoSize = header->loSize % 2 == 1 ? headerLoSize + 1 : headerLoSize;

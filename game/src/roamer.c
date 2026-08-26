@@ -231,6 +231,7 @@ void DeactivateAllRoamers(void)
         SetRoamerInactive(i);
 }
 
+#if IS_HNS
 static void DeactivateRoamersByLocationTable(u8 locationTableId)
 {
     u32 i;
@@ -241,6 +242,7 @@ static void DeactivateRoamersByLocationTable(u8 locationTableId)
             SetRoamerInactive(i);
     }
 }
+#endif
 
 static void ClearRoamerLocationHistory(u32 roamerIndex)
 {

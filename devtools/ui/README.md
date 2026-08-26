@@ -4,7 +4,7 @@ Cartographer is a local developer tool for a Pokémon Wayfarer source checkout.
 It reads the checkout's generated catalog and image assets, then places
 default-visible exterior maps from their cardinal source connections.
 
-Run these commands from `devtooling/`:
+Run these commands from `devtools/`:
 
 ```sh
 pnpm run dev
@@ -16,7 +16,7 @@ the app. Use `pnpm run catalog` when you need to refresh the generated data
 without starting the development server.
 
 `wa build` writes a compact client bundle to `ui/dist`. `pnpm run build` from
-the parent `devtooling/` directory stages that bundle alongside the generated
+the parent `devtools/` directory stages that bundle alongside the generated
 catalog in `build/cartographer/map-catalog/`, which is the standalone
 static-host deployment artifact. `ui/dist` remains a bundle only.
 

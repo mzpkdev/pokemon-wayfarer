@@ -1773,7 +1773,7 @@ static void CB2_StartBlenderLocal(void)
 
         if (gSpecialVar_0x8004 > 1)
         {
-            for (i = 0; i < gSpecialVar_0x8004; i++)
+            for (i = 0; i < gSpecialVar_0x8004 && i < ARRAY_COUNT(sLocalOpponentTasks); i++)
                 sBerryBlender->opponentTaskIds[i] = CreateTask(sLocalOpponentTasks[i], 10 + i);
         }
 
@@ -3336,7 +3336,7 @@ static u32 ArrowSpeedToRPM(u16 speed)
 static void UpdateRPM(u16 speed)
 {
     u8 i;
-    u8 digits[5];
+    u8 digits[5] = {0};
 
     // Check if new max RPM has been reached
     u32 currentRPM = ArrowSpeedToRPM(speed);
@@ -3619,19 +3619,23 @@ static void SortScores(void)
 {
     u8 playerId;
     u8 i;
+    u8 numPlayers = sBerryBlender->numPlayers;
     u8 places[BLENDER_MAX_PLAYERS];
     u32 points[BLENDER_MAX_PLAYERS];
 
-    for (i = 0; i < sBerryBlender->numPlayers; i++)
+    if (numPlayers > BLENDER_MAX_PLAYERS)
+        numPlayers = BLENDER_MAX_PLAYERS;
+
+    for (i = 0; i < numPlayers; i++)
         places[i] = i;
-    for (i = 0; i < sBerryBlender->numPlayers; i++)
+    for (i = 0; i < numPlayers; i++)
     {
         points[i] = 1000000 * sBerryBlender->scores[i][SCORE_BEST];
         points[i] += 1000 * sBerryBlender->scores[i][SCORE_GOOD];
         points[i] += 1000 - sBerryBlender->scores[i][SCORE_MISS];
     }
-    SortBasedOnPoints(places, sBerryBlender->numPlayers, points);
-    for (i = 0; i < sBerryBlender->numPlayers; i++)
+    SortBasedOnPoints(places, numPlayers, points);
+    for (i = 0; i < numPlayers; i++)
         sBerryBlender->playerPlaces[i] = places[i];
 
     if (!gReceivedRemoteLinkPlayers)
@@ -3639,7 +3643,7 @@ static void SortScores(void)
     else
         playerId = GetMultiplayerId();
 
-    for (i = 0; i < sBerryBlender->numPlayers; i++)
+    for (i = 0; i < numPlayers; i++)
     {
         if (sBerryBlender->playerPlaces[i] == playerId)
             sBerryBlender->ownRanking = i;

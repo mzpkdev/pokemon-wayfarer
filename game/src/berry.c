@@ -24,18 +24,20 @@ static u8 sLastPickedBerryType = BERRY_NONE;
 #endif
 static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water);
 static u8 CalcBerryYield(struct BerryTree *tree);
+#if !IS_HNS
 static u32 GetBerryTreeAge(u8 id, u8 stage);
+static u8 GetDrainRateByBerryType(u8);
+static void SetTreeMutations(u8 id, u8 berry);
+static void TryForWeeds(struct BerryTree *tree);
+static void TryForPests(struct BerryTree *tree);
+#endif
 static u8 GetBerryCountByBerryTreeId(u8 id);
 static u16 GetStageDurationByBerryType(u8);
-static u8 GetDrainRateByBerryType(u8);
 static u8 GetWaterBonusByBerryType(u8);
 static u8 GetWeedingBonusByBerryType(u8);
 static u8 GetPestsBonusByBerryType(u8);
-static void SetTreeMutations(u8 id, u8 berry);
 static u8 GetTreeMutationValue(u8 id);
 static u16 GetBerryPestSpecies(u8 berryId);
-static void TryForWeeds(struct BerryTree *tree);
-static void TryForPests(struct BerryTree *tree);
 static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
 
 // Check include/config/overworld.h configs and throw an error if illegal
@@ -1878,6 +1880,7 @@ bool32 BerryTreeGrow(struct BerryTree *tree)
     return TRUE;
 }
 
+#if !IS_HNS
 static u16 GetMulchAffectedGrowthRate(u16 berryDuration, u8 mulch, u8 stage)
 {
     if (stage == BERRY_STAGE_BERRIES)
@@ -1888,6 +1891,7 @@ static u16 GetMulchAffectedGrowthRate(u16 berryDuration, u8 mulch, u8 stage)
         return berryDuration / 2 * 3;
     return berryDuration;
 }
+#endif
 
 void BerryTreeTimeUpdate(s32 minutes)
 {
@@ -1902,6 +1906,9 @@ void BerryTreeTimeUpdate(s32 minutes)
         if (tree->berry && tree->stage && !tree->stopGrowth && tree->stage != BERRY_STAGE_BERRIES)
         {
             s32 time = minutes;
+
+            // HnS does not support mulch.
+            tree->mulch = 0;
 
             while (time != 0)
             {
@@ -2152,6 +2159,7 @@ static u8 CalcBerryYield(struct BerryTree *tree)
     return result;
 }
 
+#if !IS_HNS
 static u32 GetBerryTreeAge(u8 id, u8 stage)
 {
     if (stage == BERRY_STAGE_TRUNK)
@@ -2162,6 +2170,7 @@ static u32 GetBerryTreeAge(u8 id, u8 stage)
         stage -= 1;
     return GetBerryInfo(id)->growthDuration * stage / (OW_BERRY_SIX_STAGES ? 6 : 4);
 }
+#endif
 
 static u8 GetBerryCountByBerryTreeId(u8 id)
 {
@@ -2179,10 +2188,12 @@ static u16 GetStageDurationByBerryType(u8 berry)
 #endif
 }
 
+#if !IS_HNS
 static u8 GetDrainRateByBerryType(u8 berry)
 {
     return GetBerryInfo(berry)->drainRate;
 }
+#endif
 
 static u8 GetWaterBonusByBerryType(u8 berry)
 {
@@ -2515,6 +2526,7 @@ static u8 GetTreeMutationValue(u8 id)
 #endif
 }
 
+#if !IS_HNS
 static void SetTreeMutations(u8 id, u8 berry)
 {
 #if OW_BERRY_MUTATIONS == TRUE
@@ -2526,6 +2538,7 @@ static void SetTreeMutations(u8 id, u8 berry)
     tree->mutationB = myMutation.asField.b;
 #endif
 }
+#endif
 
 static u16 GetBerryPestSpecies(u8 berryId)
 {
@@ -2559,6 +2572,7 @@ static u16 GetBerryPestSpecies(u8 berryId)
 #define BERRY_WEEDS_CHANCE 15
 #define BERRY_PESTS_CHANCE 15
 
+#if !IS_HNS
 static void TryForWeeds(struct BerryTree *tree)
 {
     if (!OW_BERRY_WEEDS)
@@ -2578,6 +2592,7 @@ static void TryForPests(struct BerryTree *tree)
     if (Random() % 100 < BERRY_PESTS_CHANCE && tree->stage > BERRY_STAGE_PLANTED)
         tree->pests = TRUE;
 }
+#endif
 
 static void AddTreeBonus(struct BerryTree *tree, u8 bonus)
 {

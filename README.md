@@ -13,22 +13,22 @@ pnpm run check
 
 See [e2e/README.md](e2e/README.md) for the ROM-backed test command.
 
-## Developer tooling
+## Devtools
 
 The source-driven Cartographer and Metatiles tools live in their own
-[devtooling workspace](devtooling/README.md). Its commands read the `game/`
+[devtools workspace](devtools/README.md). Its commands read the `game/`
 source tree and keep generated catalogs in the repository-level `build/`
 directory:
 
 ```sh
 pnpm install
-pnpm --dir devtooling run check
+pnpm --dir devtools run check
 ```
 
 ## Pull request previews
 
 Same-repository, non-draft pull requests labeled `preview` publish their
-generated devtooling site at
+generated devtools site at
 `https://mzpkdev.github.io/pokemon-wayfarer/preview/pr-<number>/`. Adding the
 label to a PR that is ready for review publishes the preview, and new commits
 refresh it. Marking a labeled draft as ready publishes it. Converting it back to

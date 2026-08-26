@@ -4480,6 +4480,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_NICKNAME:
         case MON_DATA_NICKNAME10:
         {
+            if (data == NULL)
+                break;
+
             if (IsBadEgg(boxMon))
             {
                 for (retVal = 0;
@@ -4896,6 +4899,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             break;
         case MON_DATA_OT_NAME:
         {
+            if (data == NULL)
+                break;
+
             retVal = 0;
 
             while (retVal < PLAYER_NAME_LENGTH)
@@ -7811,9 +7817,11 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
 
+#if IS_HNS
     // No EVs challenge is lifted once Red is defeated, matching the EV item check in ItemUseCB_Medicine
     if (gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoEVs && !FlagGet(FLAG_DEFEATED_RED))
         return;
+#endif
 
     heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     if (heldItem == ITEM_ENIGMA_BERRY_E_READER)

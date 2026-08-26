@@ -2,11 +2,11 @@ import * as fs from "node:fs"
 import * as path from "node:path"
 import * as url from "node:url"
 
-const devtoolingRoot = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), "..")
-const repositoryRoot = path.resolve(devtoolingRoot, "..")
+const devtoolsRoot = path.resolve(path.dirname(url.fileURLToPath(import.meta.url)), "..")
+const repositoryRoot = path.resolve(devtoolsRoot, "..")
 
 export const catalogDirectory = path.join(repositoryRoot, "build/cartographer/map-catalog")
-export const uiBuildDirectory = path.join(devtoolingRoot, "ui/dist")
+export const uiBuildDirectory = path.join(devtoolsRoot, "ui/dist")
 
 const requireDirectory = (directory, label) => {
   if (!fs.statSync(directory).isDirectory()) {

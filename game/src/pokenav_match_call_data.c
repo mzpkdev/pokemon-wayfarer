@@ -123,7 +123,9 @@ static bool32 MatchCall_GetEnabled_Rival(match_call_t);
 static mapsec_u8_t MatchCall_GetMapSec_NPC(match_call_t);
 static mapsec_u8_t MatchCall_GetMapSec_Trainer(match_call_t);
 static mapsec_u8_t MatchCall_GetMapSec_Wally(match_call_t);
+#if !IS_HNS
 static mapsec_u8_t MatchCall_GetMapSec_Birch(match_call_t);
+#endif
 static mapsec_u8_t MatchCall_GetMapSec_Rival(match_call_t);
 
 static bool32 MatchCall_IsRematchable_NPC(match_call_t);
@@ -1354,10 +1356,12 @@ static mapsec_u8_t MatchCall_GetMapSec_Rival(match_call_t matchCall)
     return MAPSEC_NONE;
 }
 
+#if !IS_HNS
 static mapsec_u8_t MatchCall_GetMapSec_Birch(match_call_t matchCall)
 {
     return MAPSEC_NONE;
 }
+#endif
 
 bool32 MatchCall_IsRematchable(u32 idx)
 {

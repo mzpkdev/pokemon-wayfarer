@@ -2,7 +2,7 @@
 
 `wcartographer` renders static terrain PNGs from the Pokémon Wayfarer source tree. It does not build or run the ROM.
 
-Run these commands from `devtooling/`:
+Run these commands from `devtools/`:
 
 ```sh
 pnpm run cartographer Route101

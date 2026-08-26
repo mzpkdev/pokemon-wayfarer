@@ -79,7 +79,9 @@ static void SpriteCB_OptionSlide(struct Sprite *);
 static void SpriteCB_OptionZoom(struct Sprite *);
 static void Task_OptionBlend(u8);
 static void CreateMatchCallBlueLightSprite(void);
+#if !IS_HNS
 static void SpriteCB_BlinkingBlueLight(struct Sprite *);
+#endif
 static void DestroyRematchBlueLightSprite(void);
 static void AddOptionDescriptionWindow(void);
 static void PrintCurrentOptionDescription(void);
@@ -435,6 +437,7 @@ static const struct ScanlineEffectParams sPokenavMainMenuScanlineEffectParams =
     0
 };
 
+#if !IS_HNS
 static bool32 AreAnyTrainerRematchesNearby(void)
 {
 #if FREE_MATCH_CALL == FALSE
@@ -451,6 +454,7 @@ static bool32 AreAnyTrainerRematchesNearby(void)
 
     return FALSE;
 }
+#endif
 
 bool32 OpenPokenavMenuInitial(void)
 {
@@ -1278,6 +1282,7 @@ static void DestroyRematchBlueLightSprite(void)
     DestroySprite(gfx->blueLightSprite);
 }
 
+#if !IS_HNS
 static void SpriteCB_BlinkingBlueLight(struct Sprite *sprite)
 {
     sprite->data[0]++;
@@ -1287,6 +1292,7 @@ static void SpriteCB_BlinkingBlueLight(struct Sprite *sprite)
         sprite->invisible ^= 1;
     }
 }
+#endif
 
 static void AddOptionDescriptionWindow(void)
 {

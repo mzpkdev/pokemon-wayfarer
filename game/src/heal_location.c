@@ -58,6 +58,9 @@ static bool32 IsLastHealLocation(u32 healLocation)
     const struct HealLocation *loc = GetHealLocation(healLocation);
     const struct WarpData *warpData = &gSaveBlock1Ptr->lastHealLocation;
 
+    if (loc == NULL)
+        return FALSE;
+
     return warpData->mapGroup == loc->mapGroup
         && warpData->mapNum == loc->mapNum
         && warpData->warpId == WARP_ID_NONE

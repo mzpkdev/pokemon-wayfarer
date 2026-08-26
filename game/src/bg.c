@@ -1203,7 +1203,8 @@ u32 GetBgMetricAffineMode(u32 bg, u32 whichMetric)
         break;
     case 1:
     case 2:
-        return 0x10 << screenSize;
+        // screenSize is stored in the two-bit BG control field.
+        return 0x10 << (screenSize & 3);
     }
     return 0;
 }
