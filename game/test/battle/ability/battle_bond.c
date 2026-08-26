@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Battle Bond transforms player's Greninja - Singles")
         if (monsCountOpponent != 1) {
             ABILITY_POPUP(player, ABILITY_BATTLE_BOND);
             MESSAGE("GRENINJA became fully charged due to its bond with its trainer!");
-            MESSAGE("Greninja became Ash-Greninja!");
+            MESSAGE("GRENINJA became Ash-Greninja!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_BATTLE_BOND);
@@ -87,7 +87,7 @@ SINGLE_BATTLE_TEST("Battle Bond transforms opponent's Greninja - Singles")
         if (monsCountPlayer != 1) {
             ABILITY_POPUP(opponent, ABILITY_BATTLE_BOND);
             MESSAGE("The opposing GRENINJA became fully charged due to its bond with its trainer!");
-            MESSAGE("The opposing Greninja became Ash-Greninja!");
+            MESSAGE("The opposing GRENINJA became Ash-Greninja!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_BATTLE_BOND);

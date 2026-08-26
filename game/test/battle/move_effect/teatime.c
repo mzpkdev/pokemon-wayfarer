@@ -239,7 +239,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Lightning Rod if it has been affected by El
         MESSAGE("The opposing WOBBUFFET used TEATIME!");
         if (shouldTriggerAbility) {
             ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
-            MESSAGE("Pikachu's Sp. Atk rose!");
+            MESSAGE("PIKACHU's SP. ATK rose!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
@@ -280,7 +280,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
         MESSAGE("The opposing WOBBUFFET used TEATIME!");
         if (shouldTriggerAbility) {
             ABILITY_POPUP(player, ABILITY_MOTOR_DRIVE);
-            MESSAGE("Electivire's Speed rose!");
+            MESSAGE("ELECTIVIRE's SPEED rose!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_MOTOR_DRIVE);

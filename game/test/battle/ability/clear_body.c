@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
         if (ability == ABILITY_FULL_METAL_BODY)
             MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         else if (ability == ABILITY_WHITE_SMOKE)
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing TORKOAL's WHITE SMOKE prevents stat loss!");
         else
             MESSAGE("The opposing METANG's CLEAR BODY prevents stat loss!");
         HP_BAR(player, captureDamage: &turnTwoHit);
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
         if (ability == ABILITY_FULL_METAL_BODY)
             MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         else if (ability == ABILITY_WHITE_SMOKE)
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing TORKOAL's WHITE SMOKE prevents stat loss!");
         else
             MESSAGE("The opposing METANG's CLEAR BODY prevents stat loss!");
     }
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
         if (ability == ABILITY_FULL_METAL_BODY)
             MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         else if (ability == ABILITY_WHITE_SMOKE)
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing TORKOAL's WHITE SMOKE prevents stat loss!");
         else
             MESSAGE("The opposing METANG's CLEAR BODY prevents stat loss!");
     }

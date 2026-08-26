@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed pokemons behind subst
         }
         else
         {
-            MESSAGE("The opposing Seismitoad was cured of paralysis!");
+            MESSAGE("The opposing SEISMITOAD was cured of paralysis!");
             STATUS_ICON(opponent, none: TRUE);
         }
     }
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Wake-Up Slap does not cure paralyzed pokemons behind substit
         }
         else
         {
-            MESSAGE("The opposing Seismitoad woke up!");
+            MESSAGE("The opposing SEISMITOAD woke up!");
             STATUS_ICON(opponent, none: TRUE);
         }
     }

@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-T
             MESSAGE("The opposing HITMONCHAN's ATTACK rose!");
             MESSAGE("The opposing HITMONCHAN's accuracy rose!");
         } else if (species == SPECIES_STARYU) {
-            MESSAGE("The opposing Staryu's Attack rose!");
+            MESSAGE("The opposing STARYU's ATTACK rose!");
             MESSAGE("The opposing Staryu's accuracy rose!");
         } else {
             MESSAGE("The opposing Ursaluna's Attack rose!");

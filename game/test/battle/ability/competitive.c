@@ -294,7 +294,7 @@ SINGLE_BATTLE_TEST("Competitive activates for each stat that is lowered")
         MESSAGE("IGGLYBUFF's DEFENSE fell!");
         ABILITY_POPUP(player, ABILITY_COMPETITIVE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Igglybuff's Sp. Atk sharply rose!");
+        MESSAGE("IGGLYBUFF's SP. ATK sharply rose!");
 
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 4);
