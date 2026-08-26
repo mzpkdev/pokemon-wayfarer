@@ -40,6 +40,48 @@
 #define STATE gBattleTestRunnerState
 #define DATA gBattleTestRunnerState->data
 
+#define MESSAGE_MISMATCH_HISTORY_SIZE 4
+
+struct MessageMismatchHistoryEntry
+{
+    u16 runParameter;
+    u16 runTrial;
+    u8 queuedEvent;
+    u8 string[sizeof(gDisplayedStringBattle)];
+};
+
+static struct MessageMismatchHistoryEntry sMessageMismatchHistory[MESSAGE_MISMATCH_HISTORY_SIZE];
+static u8 sMessageMismatchHistoryCount;
+static u8 sMessageMismatchHistoryNext;
+static u16 sMessageMismatchHistoryDropped[MAX_QUEUED_EVENTS];
+
+static void ResetMessageMismatchHistory(void)
+{
+    sMessageMismatchHistoryCount = 0;
+    sMessageMismatchHistoryNext = 0;
+    memset(sMessageMismatchHistoryDropped, 0, sizeof(sMessageMismatchHistoryDropped));
+}
+
+static void RecordMessageMismatch(u8 queuedEvent, const u8 *string)
+{
+    u32 i;
+    struct MessageMismatchHistoryEntry *entry = &sMessageMismatchHistory[sMessageMismatchHistoryNext];
+
+    if (sMessageMismatchHistoryCount < MESSAGE_MISMATCH_HISTORY_SIZE)
+        sMessageMismatchHistoryCount++;
+    else
+        sMessageMismatchHistoryDropped[entry->queuedEvent]++;
+
+    entry->runParameter = STATE->runParameter;
+    entry->runTrial = STATE->runTrial;
+    entry->queuedEvent = queuedEvent;
+    for (i = 0; i < sizeof(entry->string) - 1 && string[i] != EOS; i++)
+        entry->string[i] = string[i];
+    entry->string[i] = EOS;
+
+    sMessageMismatchHistoryNext = (sMessageMismatchHistoryNext + 1) % MESSAGE_MISMATCH_HISTORY_SIZE;
+}
+
 #define RNG_SEED_DEFAULT {0, 0, 0, 0}
 static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 {
@@ -372,6 +414,7 @@ static void BattleTest_Run(void *data)
     const struct BattleTest *test = data;
 
     memset(&DATA, 0, sizeof(DATA));
+    ResetMessageMismatchHistory();
 
     DATA.recordedBattle.rngSeed = defaultSeed;
     DATA.recordedBattle.textSpeed = OPTIONS_TEXT_SPEED_FAST;
@@ -1570,6 +1613,112 @@ static s32 TryMessage(s32 i, s32 n, const u8 *string)
     return -1;
 }
 
+static bool32 QueueGroupHasMessage(s32 queuedEvent, s32 groupSize)
+{
+    s32 i;
+    s32 iMax = queuedEvent + groupSize;
+
+    for (i = queuedEvent; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type == QUEUED_MESSAGE_EVENT)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static void PrintMessageBytes(const char *label, const u8 *string)
+{
+    static const char sHexDigits[] = "0123456789ABCDEF";
+    char buffer[65];
+    u32 i;
+    u32 n = 0;
+    u32 chunkStart = 0;
+
+    for (i = 0; ; i++)
+    {
+        u8 c = string[i];
+
+        if (n + 4 > sizeof(buffer) - 1)
+        {
+            buffer[n] = '\0';
+            Test_MgbaPrintf("%s bytes[%d..%d): %s\n", label, chunkStart, i, buffer);
+            n = 0;
+            chunkStart = i;
+        }
+        buffer[n++] = '\\';
+        buffer[n++] = 'x';
+        buffer[n++] = sHexDigits[c >> 4];
+        buffer[n++] = sHexDigits[c & 0xF];
+        if (c == EOS)
+            break;
+    }
+    buffer[n] = '\0';
+    Test_MgbaPrintf("%s bytes[%d..%d): %s\n", label, chunkStart, i + 1, buffer);
+}
+
+static void PrintExpectedMessageAlternatives(s32 queuedEvent, s32 groupSize)
+{
+    s32 i;
+    s32 iMax = queuedEvent + groupSize;
+
+    for (i = queuedEvent; i < iMax; i++)
+    {
+        if (DATA.queuedEvents[i].type == QUEUED_MESSAGE_EVENT)
+        {
+            u32 line = SourceLine(DATA.queuedEvents[i].sourceLineOffset);
+            Test_MgbaPrintf("Expected MESSAGE at queue %d, source line %d:\n", i, line);
+            PrintMessageBytes("Expected MESSAGE", DATA.queuedEvents[i].as.message.pattern);
+        }
+    }
+}
+
+static void PrintMessageMismatchHistory(u8 queuedEvent)
+{
+    u32 i;
+    u32 historyStart = (sMessageMismatchHistoryNext + MESSAGE_MISMATCH_HISTORY_SIZE - sMessageMismatchHistoryCount) % MESSAGE_MISMATCH_HISTORY_SIZE;
+    u32 matchingEntries = 0;
+
+    for (i = 0; i < sMessageMismatchHistoryCount; i++)
+    {
+        const struct MessageMismatchHistoryEntry *entry = &sMessageMismatchHistory[(historyStart + i) % MESSAGE_MISMATCH_HISTORY_SIZE];
+
+        if (entry->runParameter == STATE->runParameter
+         && entry->runTrial == STATE->runTrial
+         && entry->queuedEvent == queuedEvent)
+            matchingEntries++;
+    }
+
+    Test_MgbaPrintf("Last %d unmatched actual MESSAGE entries for queue %d; %d older entries for this queue overwritten in this trial:\n", matchingEntries, queuedEvent, sMessageMismatchHistoryDropped[queuedEvent]);
+
+    for (i = 0; i < sMessageMismatchHistoryCount; i++)
+    {
+        const struct MessageMismatchHistoryEntry *entry = &sMessageMismatchHistory[(historyStart + i) % MESSAGE_MISMATCH_HISTORY_SIZE];
+
+        if (entry->runParameter == STATE->runParameter
+         && entry->runTrial == STATE->runTrial
+         && entry->queuedEvent == queuedEvent)
+        {
+            Test_MgbaPrintf("Actual MESSAGE while waiting for queue %d:\n", queuedEvent);
+            PrintMessageBytes("Actual MESSAGE", entry->string);
+        }
+    }
+}
+
+static void PrintPendingMessageDiagnostic(s32 queuedEvent, s32 groupSize)
+{
+    Test_MgbaPrintf("Pending MESSAGE diagnostics for queue %d:\n", queuedEvent);
+    PrintExpectedMessageAlternatives(queuedEvent, groupSize);
+    PrintMessageMismatchHistory(queuedEvent);
+}
+
+static void PrintForbiddenMessageDiagnostic(s32 queuedEvent, s32 groupSize, const u8 *string)
+{
+    Test_MgbaPrintf("Forbidden MESSAGE diagnostics for queue %d:\n", queuedEvent);
+    PrintExpectedMessageAlternatives(queuedEvent, groupSize);
+    Test_MgbaPrintf("Actual MESSAGE that matched forbidden group:\n");
+    PrintMessageBytes("Actual MESSAGE", string);
+}
+
 void TestRunner_Battle_RecordMessage(const u8 *string)
 {
     s32 queuedEvent;
@@ -1586,6 +1735,8 @@ void TestRunner_Battle_RecordMessage(const u8 *string)
     case QUEUE_GROUP_ONE_OF:
         if (TryMessage(DATA.trial.queuedEvent, event->groupSize, string) != -1)
             DATA.trial.queuedEvent += event->groupSize;
+        else if (QueueGroupHasMessage(DATA.trial.queuedEvent, event->groupSize))
+            RecordMessageMismatch(DATA.trial.queuedEvent, string);
         break;
     case QUEUE_GROUP_NONE_OF:
         queuedEvent = DATA.trial.queuedEvent;
@@ -1597,6 +1748,7 @@ void TestRunner_Battle_RecordMessage(const u8 *string)
                 u32 line = SourceLine(DATA.queuedEvents[match].sourceLineOffset);
                 if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
                     gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+                PrintForbiddenMessageDiagnostic(queuedEvent, event->groupSize, string);
                 Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Matched MESSAGE", filename, line);
             }
 
@@ -1775,6 +1927,8 @@ void TestRunner_Battle_AfterLastTurn(void)
         const char *macro = sEventTypeMacros[DATA.queuedEvents[DATA.trial.queuedEvent].type];
         if (gTestRunnerState.expectedFailState == EXPECT_FAIL_SCENE_OPEN)
             gTestRunnerState.expectedFailState = EXPECT_FAIL_SUCCESS;
+        if (QueueGroupHasMessage(DATA.trial.queuedEvent, DATA.queuedEvents[DATA.trial.queuedEvent].groupSize))
+            PrintPendingMessageDiagnostic(DATA.trial.queuedEvent, DATA.queuedEvents[DATA.trial.queuedEvent].groupSize);
         Test_ExitWithResult(TEST_RESULT_FAIL, line, ":L%s:%d: Unmatched %s", filename, line, macro);
     }
 
@@ -1858,6 +2012,7 @@ static void CB2_BattleTest_NextTrial(void)
         gTestRunnerState.result = TEST_RESULT_PASS;
         DATA.recordedBattle.rngSeed = MakeRngValue(STATE->runTrial);
         memset(&DATA.trial, 0, sizeof(DATA.trial));
+        ResetMessageMismatchHistory();
         SetVariablesForRecordedBattle(&DATA.recordedBattle);
         SetMainCallback2(CB2_InitBattle);
     }

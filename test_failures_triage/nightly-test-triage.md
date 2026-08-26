@@ -68,6 +68,28 @@ those local totals are worker-count-dependent and are not directly comparable
 to CI. The ledger is useful as complete per-result evidence, not as a
 replacement CI baseline.
 
+The battle runner also reports exact expected and observed message bytes before
+an unmatched or forbidden message result. It preserves the existing matcher,
+queue advancement, result status, and source line. A full local report with
+this instrumentation recorded 2,563 `PASS`, 1,893 `FAIL`, 46
+`ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
+The only status difference from the preceding local report was one X-item
+Friendship parameter that passed twice when rerun alone. It remains
+unclassified as run-level nondeterminism or state leakage.
+
+The report contains pending-message context for 1,881 result records. At least
+one observed message was retained for 1,762 records; 119 retained none. The
+four-entry history overwrote older observations in 1,344 records, so it cannot
+prove that an unretained message was absent. Charmap decoding found 268 records
+with an expected/observed pair that differs only in canonical species, move,
+ability, or item capitalization. HnS commit `73c788a6b1` capitalized those
+canonical data names, while older imported message expectations retained title
+case. Exact expectation updates are gameplay-neutral. Reverting the production
+names would change visible gameplay, and case-insensitive matching would weaken
+the assertions, so neither is part of this triage work. Another 32 case-only
+records involve generic display labels and remain open for a separate UI-text
+decision. The other 1,462 records with retained observations remain unresolved.
+
 Earlier local pre-fix evidence used:
 
 ```sh

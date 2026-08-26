@@ -22,6 +22,10 @@ The local `game/build/triage-evidence/full-strict-final.log` is a 4,676-line, 37
 
 Hydra can write a complete `mgba-rom-test-hydra/v1` NDJSON ledger. A local current-head `-j22` report contains 5,149 results and 26 diagnostics. Of its 1,892 failures, 1,756 have the `Unmatched MESSAGE` signature. Its largest source groups are Dynamax (67), Sleep Clause (52), Pursuit (30), Terastal (28), Commander (24), Cure Status (19), and Pledge (19). Worker-derived assumption repetition makes the local aggregate non-comparable to CI, but the failure distribution identifies message observability as the first shared investigation target. It does not justify relaxing message expectations or changing battle behavior.
 
+The battle runner now records exact expected and observed message bytes before reporting an unmatched or forbidden message. A second local `-j22` report contains 5,149 results: 2,563 `PASS`, 1,893 `FAIL`, 46 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`. The one-result difference from the prior local aggregate is an X-item Friendship trial that passes in two focused reruns, so it remains unclassified as run-level nondeterminism or state leakage. The diagnostic change does not alter queue matching, result status, or battle behavior.
+
+Of the 1,881 result records with pending-message context, 1,762 captured at least one observed message and 119 captured none. The four-entry bounded history overwrote older observations in 1,344 records, so absence from retained history is not proof that a message never appeared. Exact charmap decoding found 268 records where an expected and observed pair differs only in canonical species, move, ability, or item capitalization. Those are safe candidates for exact expectation updates. Another 32 records contain case-only differences in generic labels such as `Attack` or `Defense` and need a separate UI-text decision. The remaining 1,462 records with captured messages are unresolved and must not be bulk-classified as capitalization failures.
+
 ## Immediate focused work
 
 1. **Keep the SaveBlock3 test baseline.** `ClearSaveBlocks` zeroes SaveBlock3 before every test. In this project, zero enables the One Type challenge with `TYPE_NONE` rather than disabling it, so species are rejected and sent to the PC. The test runner explicitly selects the disabled sentinel. A strict focused `pokemon.c` run exited 0 with 26 `PASS` and 1 unrelated `KNOWN_FAILING`; all `givemon` paths passed. The focused `pokerus.c` run exited 0 with 19 `PASS`. Neither run emitted a timeout or `INVALID` result.
@@ -31,6 +35,7 @@ Hydra can write a complete `mgba-rom-test-hydra/v1` NDJSON ledger. A local curre
 5. **Keep Fairy mode local to tests that require it.** The exact Focus Punch AI and weakness-berry runs changed from `ASSUMPTION_FAIL` to `PASS` after their fixtures enabled Fairy typing. Pickpocket now reaches the mechanic and fails on an unmatched message instead of its Fairy prerequisite. Keep that mechanics failure open; do not change its expectation without a separate diagnosis.
 6. **Remove the intentional recovery marker from the active defect queue.** `Tests resume after CRASH` uses `KNOWN_CRASHING` and deliberately calls a null function in `test/test_test_runner.c`. Its focused run exits 0, showing recovery coverage.
 7. **Do not prioritize Heavy Ball mechanics from the historical rows.** The focused Heavy Ball and both literal Heavy Metal and Light Metal title runs pass with the committed Poké Ball runner exception. The inventory rows remain historical until a focused current run records their status.
+8. **Keep exact message matching and repair only proven stale expectations.** Canonical names were capitalized in HnS commit `73c788a6b1`, while many imported battle expectations still use title case. The first safe batch is the 268 result records with an exact case-only pair limited to canonical species, move, ability, or item names. Update expectations to the current rendered text and use focused controls. Do not make matching case-insensitive, normalize messages, or revert production names because those options would weaken assertions or change visible gameplay.
 
 ## Focused evidence and central-fix candidates
 
@@ -55,7 +60,7 @@ Goal: find one cause that explains multiple failures before inspecting individua
 
 Investigate in this order:
 
-1. Message observability, because `Unmatched MESSAGE` dominates the complete local ledger. Add diagnostic visibility for the actual event stream and classify one representative mismatch before changing any expectation or mechanic.
+1. Canonical-name expectation alignment. Message observability is in place, and 268 result records have a retained expected/actual pair that differs only in canonical species, move, ability, or item capitalization. Work in focused batches and keep exact matching. Do not infer the same cause for unresolved records.
 2. Sleep Clause, because it is the second-largest local source group and still contains setup and behavior failures that need separation.
 3. Hazards and switch-in effects, including ordering, forced switches, Sticky Web, and Toxic Spikes.
 4. Daycare regional forms remain deferred. The Daycare macro is not the defect, and changing live breeding behavior or its expectation requires a gameplay-policy decision.
