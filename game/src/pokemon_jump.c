@@ -3783,6 +3783,7 @@ struct MonInfoPacket
     u32 personality;
     u32 otId;
 };
+STATIC_ASSERT(sizeof(struct MonInfoPacket) == RFU_PACKET_SIZE * sizeof(u16), MonInfoPacketSizeDoesNotMatchRfuPacket)
 
 static void SendPacket_MonInfo(struct PokemonJump_MonInfo *monInfo)
 {
@@ -3821,6 +3822,7 @@ struct UnusedPacket
     u32 data;
     u32 filler;
 };
+STATIC_ASSERT(sizeof(struct UnusedPacket) == RFU_PACKET_SIZE * sizeof(u16), UnusedPacketSizeDoesNotMatchRfuPacket)
 
 // Data packet that's never sent
 // No function to read it either
@@ -3841,19 +3843,23 @@ struct LeaderStatePacket
     u8 jumpState:3;
     u16 jumpTimeStart;
     u16 vineTimer;
-    u32 jumpsInRow:15;
-    u32 jumpScore:17;
+    u32 scoreData;
 };
+STATIC_ASSERT(sizeof(struct LeaderStatePacket) == RFU_PACKET_SIZE * sizeof(u16), LeaderStatePacketSizeDoesNotMatchRfuPacket)
+
+#define LEADER_PACKET_JUMPS_IN_ROW_MASK 0x7FFF
+#define LEADER_PACKET_JUMP_SCORE_MASK 0x1FFFF
+#define LEADER_PACKET_JUMP_SCORE_SHIFT 15
 
 static void SendPacket_LeaderState(struct PokemonJump_Player *player, struct PokemonJump_CommData *comm)
 {
-    struct LeaderStatePacket packet;
+    struct LeaderStatePacket packet = {0};
     packet.id = PACKET_LEADER_STATE;
-    packet.jumpScore = comm->jumpScore;
+    packet.scoreData = (comm->jumpsInRow & LEADER_PACKET_JUMPS_IN_ROW_MASK)
+                     | ((comm->jumpScore & LEADER_PACKET_JUMP_SCORE_MASK) << LEADER_PACKET_JUMP_SCORE_SHIFT);
     packet.receivedBonusFlags = comm->receivedBonusFlags;
     packet.funcId = comm->funcId;
     packet.vineTimer = comm->data;
-    packet.jumpsInRow = comm->jumpsInRow;
     packet.monState = player->monState;
     packet.jumpState = player->jumpState;
     packet.jumpTimeStart = player->jumpTimeStart;
@@ -3872,11 +3878,11 @@ static bool32 RecvPacket_LeaderState(struct PokemonJump_Player *player, struct P
     if (packet.id != PACKET_LEADER_STATE)
         return FALSE;
 
-    comm->jumpScore = packet.jumpScore;
+    comm->jumpScore = packet.scoreData >> LEADER_PACKET_JUMP_SCORE_SHIFT;
     comm->receivedBonusFlags = packet.receivedBonusFlags;
     comm->funcId = packet.funcId;
     comm->data = packet.vineTimer;
-    comm->jumpsInRow = packet.jumpsInRow;
+    comm->jumpsInRow = packet.scoreData & LEADER_PACKET_JUMPS_IN_ROW_MASK;
     player->monState = packet.monState;
     player->jumpState = packet.jumpState;
     player->jumpTimeStart = packet.jumpTimeStart;
@@ -3892,11 +3898,13 @@ struct MemberStatePacket
     u16 jumpTimeStart;
     u8 funcId;
     u16 playAgainState;
+    u8 reserved[2];
 };
+STATIC_ASSERT(sizeof(struct MemberStatePacket) == RFU_PACKET_SIZE * sizeof(u16), MemberStatePacketSizeDoesNotMatchRfuPacket)
 
 static void SendPacket_MemberState(struct PokemonJump_Player *player, u8 funcId, u16 playAgainState)
 {
-    struct MemberStatePacket packet;
+    struct MemberStatePacket packet = {0};
     packet.id = PACKET_MEMBER_STATE;
     packet.monState = player->monState;
     packet.jumpState = player->jumpState;

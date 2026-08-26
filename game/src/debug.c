@@ -874,6 +874,9 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     else
         items = Debug_GetCurrentCallbackMenu();
 
+    if (items == NULL)
+        return;
+
     // create window
     HideMapNamePopUpWindow();
     LoadMessageBoxAndBorderGfx();

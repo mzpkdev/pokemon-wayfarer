@@ -50,7 +50,9 @@ static void VBCB_FieldUpdateRegionMap(void);
 static void MCB2_FieldUpdateRegionMap(void);
 static void FieldUpdateRegionMap(void);
 static void PrintRegionMapSecName();
+#if !IS_HNS
 static void PrintTitleWindowText();
+#endif
 
 static const struct BgTemplate sFieldRegionMapBgTemplates[] = {
     {
@@ -210,7 +212,7 @@ static void FieldUpdateRegionMap(void)
         {
             FreeRegionMapIconResources();
             SetMainCallback2(sFieldRegionMapHandler->callback);
-            TRY_FREE_AND_SET_NULL(sFieldRegionMapHandler);
+            FREE_AND_SET_NULL(sFieldRegionMapHandler);
             FreeAllWindowBuffers();
         }
         break;
@@ -232,6 +234,7 @@ static void PrintRegionMapSecName(void)
     }
 }
 
+#if !IS_HNS
 static void PrintTitleWindowText(void)
 {
     static const u8 FlyPromptText[] = _("{R_BUTTON} FLY");
@@ -259,3 +262,4 @@ static void PrintTitleWindowText(void)
         CopyWindowToVram(WIN_TITLE, COPYWIN_FULL);
     }
 }
+#endif

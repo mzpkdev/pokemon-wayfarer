@@ -96,7 +96,9 @@ static void RegionMap_InitializeStateBasedOnSSTidalLocation(void);
 static u8 GetMapsecType(mapsec_u16_t mapSecId);
 static mapsec_u16_t CorrectSpecialMapSecId_Internal(mapsec_u16_t mapSecId);
 static mapsec_u16_t GetTerraOrMarineCaveMapSecId(void);
+#if !IS_HNS
 static void GetMarineCaveCoords(u16 *x, u16 *y);
+#endif
 static bool32 IsPlayerInAquaHideout(mapsec_u8_t mapSecId);
 static void GetPositionOfCursorWithinMapSec(void);
 static bool8 RegionMap_IsMapSecIdInNextRow(u16 y);
@@ -1566,7 +1568,9 @@ static void InitMapBasedOnPlayerLocation(void)
     u16 x;
     u16 y;
     u16 dimensionScale;
+#if !IS_HNS
     u16 xOnMap;
+#endif
     struct WarpData *warp;
 
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SS_TIDAL_CORRIDOR)
@@ -1652,7 +1656,9 @@ static void InitMapBasedOnPlayerLocation(void)
         break;
     }
 
+#if !IS_HNS
     xOnMap = x;
+#endif
 
     dimensionScale = mapWidth / GetActiveRegionMapEntries()[sRegionMap->mapSecId].width;
     if (dimensionScale == 0)
@@ -1974,6 +1980,7 @@ static mapsec_u16_t GetTerraOrMarineCaveMapSecId(void)
     return sTerraOrMarineCaveMapSecIds[idx];
 }
 
+#if !IS_HNS
 static void GetMarineCaveCoords(u16 *x, u16 *y)
 {
     u16 idx;
@@ -1988,6 +1995,7 @@ static void GetMarineCaveCoords(u16 *x, u16 *y)
     *x = sMarineCaveLocationCoords[idx].x + MAPCURSOR_X_MIN;
     *y = sMarineCaveLocationCoords[idx].y + MAPCURSOR_Y_MIN;
 }
+#endif
 
 // Probably meant to be an "IsPlayerInIndoorDungeon" function, but in practice it only has the one mapsec
 // Additionally, because the mapsec doesnt exist in Emerald, this function always returns FALSE
@@ -3022,7 +3030,7 @@ static void CB_ExitFlyMap(void)
             {
                 SetMainCallback2(CB2_ReturnToPartyMenuFromFlyMap);
             }
-            TRY_FREE_AND_SET_NULL(sFlyMap);
+            FREE_AND_SET_NULL(sFlyMap);
             FreeAllWindowBuffers();
         }
         break;

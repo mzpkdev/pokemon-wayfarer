@@ -239,7 +239,9 @@ static EWRAM_DATA struct BattleFrontierStreakInfo sBattleFrontierStreakInfo = {0
 static u32 GetCurrentTotalMinutes(struct Time *);
 static u32 GetNumRegisteredTrainers(void);
 static u32 GetActiveMatchCallTrainerId(u32);
+#if !IS_HNS
 static int GetTrainerMatchCallId(int);
+#endif
 static mapsec_u16_t GetRematchTrainerLocation(int);
 static bool32 TrainerIsEligibleForRematch(int);
 static void StartMatchCall(void);
@@ -248,17 +250,17 @@ static void DrawMatchCallTextBoxBorder_Internal(u32, u32, u32);
 static void Task_SpinPokenavIcon(u8);
 static void InitMatchCallTextPrinter(int, const u8 *);
 static bool32 RunMatchCallTextPrinter(int);
+#if !IS_HNS
 static const struct MatchCallText *GetSameRouteMatchCallText(int, u8 *);
 static const struct MatchCallText *GetDifferentRouteMatchCallText(int, u8 *);
 static const struct MatchCallText *GetBattleMatchCallText(int, u8 *);
 static const struct MatchCallText *GetGeneralMatchCallText(int, u8 *);
-#if !IS_HNS
 static bool32 ShouldTrainerRequestBattle(int);
-#endif
 static void BuildMatchCallString(int, const struct MatchCallText *, u8 *);
 static u16 GetFrontierStreakInfo(u16, u32 *);
 static void PopulateMatchCallStringVars(int, const s8 *);
 static void PopulateMatchCallStringVar(int, int, u8 *);
+#endif
 static bool32 MatchCall_LoadGfx(u8);
 static bool32 MatchCall_DrawWindow(u8);
 static bool32 MatchCall_ReadyIntro(u8);
@@ -1282,6 +1284,7 @@ static bool32 HnsMapAllowsMatchCall(void)
 }
 #endif
 
+#if !IS_HNS
 static bool32 MapAllowsMatchCall(void)
 {
     if (!Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType) || gMapHeader.regionMapSectionId == MAPSEC_SAFARI_ZONE)
@@ -1299,6 +1302,7 @@ static bool32 MapAllowsMatchCall(void)
 
     return TRUE;
 }
+#endif
 
 static bool32 UpdateMatchCallStepCounter(void)
 {
@@ -1758,6 +1762,7 @@ static mapsec_u16_t GetRematchTrainerLocation(int matchCallId)
     return mapHeader->regionMapSectionId;
 }
 
+#if !IS_HNS
 static u32 GetNumRematchTrainersFought(void)
 {
     u32 i, count;
@@ -1790,6 +1795,7 @@ static u32 GetNthRematchTrainerFought(int n)
 
     return REMATCH_TABLE_ENTRIES;
 }
+#endif
 
 bool32 SelectMatchCallMessage(int trainerId, u8 *str)
 {
@@ -1878,6 +1884,7 @@ bool32 SelectMatchCallMessage(int trainerId, u8 *str)
 #endif
 }
 
+#if !IS_HNS
 static int GetTrainerMatchCallId(int trainerId)
 {
     int i = 0;
@@ -1974,9 +1981,11 @@ static void BuildMatchCallString(int matchCallId, const struct MatchCallText *ma
     PopulateMatchCallStringVars(matchCallId, matchCallText->stringVarFuncIds);
     StringExpandPlaceholders(str, matchCallText->text);
 }
+#endif
 
 static u8 *const sMatchCallTextStringVars[] = { gStringVar1, gStringVar2, gStringVar3 };
 
+#if !IS_HNS
 static void PopulateMatchCallStringVars(int matchCallId, const s8 *stringVarFuncIds)
 {
     int i;
@@ -1986,6 +1995,7 @@ static void PopulateMatchCallStringVars(int matchCallId, const s8 *stringVarFunc
             PopulateMatchCallStringVar(matchCallId, stringVarFuncIds[i], sMatchCallTextStringVars[i]);
     }
 }
+#endif
 
 static void (*const sPopulateMatchCallStringVarFuncs[])(int, u8 *) =
 {
@@ -1997,10 +2007,12 @@ static void (*const sPopulateMatchCallStringVarFuncs[])(int, u8 *) =
     [STR_FRONTIER_STREAK]  = PopulateBattleFrontierStreak,
 };
 
+#if !IS_HNS
 static void PopulateMatchCallStringVar(int matchCallId, int funcId, u8 *destStr)
 {
     sPopulateMatchCallStringVarFuncs[funcId](matchCallId, destStr);
 }
+#endif
 
 static const struct MultiTrainerMatchCallText sMultiTrainerMatchCallTexts[] =
 {
@@ -2173,6 +2185,7 @@ static void PopulateBattleFrontierStreak(int matchCallId, u8 *destStr)
     ConvertIntToDecimalStringN(destStr, sBattleFrontierStreakInfo.streak, STR_CONV_MODE_LEFT_ALIGN, i);
 }
 
+#if !IS_HNS
 static int GetNumOwnedBadges(void)
 {
     u32 i;
@@ -2186,7 +2199,6 @@ static int GetNumOwnedBadges(void)
     return i;
 }
 
-#if !IS_HNS
 // Whether or not a trainer calling the player from a different route should request a battle
 static bool32 ShouldTrainerRequestBattle(int matchCallId)
 {
@@ -2217,6 +2229,7 @@ static bool32 ShouldTrainerRequestBattle(int matchCallId)
 }
 #endif
 
+#if !IS_HNS
 static u16 GetFrontierStreakInfo(u16 facilityId, u32 *topicTextId)
 {
     int i;
@@ -2297,6 +2310,7 @@ static u16 GetFrontierStreakInfo(u16 facilityId, u32 *topicTextId)
 
     return streak;
 }
+#endif
 
 void BufferPokedexRatingForMatchCall(u8 *destStr)
 {

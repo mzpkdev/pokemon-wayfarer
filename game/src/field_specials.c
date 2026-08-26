@@ -5812,12 +5812,10 @@ void ForcePlayerToStartSurfing(void)
 
 void UpdateTrainerCardPhotoIcons(void)
 {
-    u16 species[PARTY_SIZE];
-    u32 personality[PARTY_SIZE];
+    u16 species[PARTY_SIZE] = {0};
+    u32 personality[PARTY_SIZE] = {0};
     u8 i;
     u8 partyCount;
-    for (i = 0; i < PARTY_SIZE; i++)
-        species[i] = SPECIES_NONE;
     partyCount = CalculatePlayerPartyCount();
     for (i = 0; i < partyCount; i++)
     {

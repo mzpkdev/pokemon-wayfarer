@@ -2928,6 +2928,9 @@ void SetContestants(enum ContestCategories contestType, u8 rank)
                 if (gContestOpponents[i].filter == CONTEST_FILTER_ONLY_POSTGAME)
                     continue;
             }
+            if (opponentsCount >= ARRAY_COUNT(opponents) - 1)
+                break;
+
             if      (contestType == CONTEST_CATEGORY_COOL && gContestOpponents[i].aiPool_Cool)
                 opponents[opponentsCount++] = i;
             else if (contestType == CONTEST_CATEGORY_BEAUTY && gContestOpponents[i].aiPool_Beauty)
@@ -2945,11 +2948,14 @@ void SetContestants(enum ContestCategories contestType, u8 rank)
     // Choose three random opponents from the list
     for (i = 0; i < CONTESTANT_COUNT - 1; i++)
     {
+        if (opponentsCount == 0)
+            break;
+
         u16 rnd = Random() % opponentsCount;
         s32 j;
 
         gContestMons[i] = gContestOpponents[opponents[rnd]];
-        for (j = rnd; opponents[j] != CONTESTANT_NONE; j++)
+        for (j = rnd; j + 1 < ARRAY_COUNT(opponents) && opponents[j] != CONTESTANT_NONE; j++)
             opponents[j] = opponents[j + 1];
         opponentsCount--;
     }
@@ -2982,6 +2988,9 @@ void SetLinkAIContestants(enum ContestCategories contestType, u8 rank, bool32 is
             if (gContestOpponents[i].filter == CONTEST_FILTER_ONLY_POSTGAME)
                 continue;
         }
+        if (opponentsCount >= ARRAY_COUNT(opponents) - 1)
+            break;
+
         if ((contestType == CONTEST_CATEGORY_COOL && gContestOpponents[i].aiPool_Cool)
             || (contestType == CONTEST_CATEGORY_BEAUTY && gContestOpponents[i].aiPool_Beauty)
             || (contestType == CONTEST_CATEGORY_CUTE && gContestOpponents[i].aiPool_Cute)
@@ -2994,12 +3003,15 @@ void SetLinkAIContestants(enum ContestCategories contestType, u8 rank, bool32 is
     // Fill remaining contestant slots with random AI opponents from the list
     for (i = 0; i < CONTESTANT_COUNT - gNumLinkContestPlayers; i++)
     {
+        if (opponentsCount == 0)
+            break;
+
         u16 rnd = GetContestRand() % opponentsCount;
 
         gContestMons[gNumLinkContestPlayers + i] = gContestOpponents[opponents[rnd]];
         StripPlayerNameForLinkContest(gContestMons[gNumLinkContestPlayers + i].trainerName);
         StripMonNameForLinkContest(gContestMons[gNumLinkContestPlayers + i].nickname, GAME_LANGUAGE);
-        for (j = rnd; opponents[j] != CONTESTANT_NONE; j++)
+        for (j = rnd; j + 1 < ARRAY_COUNT(opponents) && opponents[j] != CONTESTANT_NONE; j++)
             opponents[j] = opponents[j + 1];
         opponentsCount--;
     }

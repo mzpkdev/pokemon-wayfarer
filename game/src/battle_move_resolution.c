@@ -3770,7 +3770,7 @@ static enum MoveEndResult MoveEndClearBits(void)
         ExpendTypeStellarBoost(gBattlerAttacker, moveType);
     memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
 
-    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    for (enum BattlerId i = 0; i < gBattlersCount && i < MAX_BATTLERS_COUNT; i++)
     {
         gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
         gBattleMons[i].volatiles.tryEjectPack = FALSE;

@@ -4480,6 +4480,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_NICKNAME:
         case MON_DATA_NICKNAME10:
         {
+            if (data == NULL)
+                break;
+
             if (IsBadEgg(boxMon))
             {
                 for (retVal = 0;
@@ -4896,6 +4899,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             break;
         case MON_DATA_OT_NAME:
         {
+            if (data == NULL)
+                break;
+
             retVal = 0;
 
             while (retVal < PLAYER_NAME_LENGTH)

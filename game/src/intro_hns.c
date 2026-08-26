@@ -161,10 +161,12 @@ struct IntroSequenceData
 }; // size: 0x28BC
 
 static EWRAM_DATA struct GcmbStruct sGcmb = {0};
+#if !IS_HNS
 static EWRAM_DATA u16 sNidorinoJumpMult = 0;
 static EWRAM_DATA u16 sNidorinoAnimDelayTime = 0;
 static EWRAM_DATA u16 sNidorinoJumpDiv = 0;
 static EWRAM_DATA u16 sNidorinoRecoilReturnTime = 0;
+#endif
 static EWRAM_DATA u16 sStarSpeedX = 0;
 static EWRAM_DATA u16 sStarSpeedY = 0;
 static EWRAM_DATA u16 sStarSparklesXmodMask = 0;
@@ -185,7 +187,9 @@ static void StartIntroSequence(void);
 static void Task_CallIntroCallback(u8 taskId);
 static void SetIntroCB(struct IntroSequenceData * ptr, IntroCallback cb);
 static void IntroCB_Init(struct IntroSequenceData * ptr);
+#if !IS_HNS
 static void LoadFightSceneSpriteGraphics(void);
+#endif
 static void IntroCB_ExitToTitleScreen(struct IntroSequenceData * ptr);
 
 // GF scene
@@ -199,26 +203,37 @@ static void GFScene_StartNameSparklesBig(void);
 static void GFScene_Task_NameSparklesSmall(u8 taskId);
 static void GFScene_Task_NameSparklesBig(u8 taskId);
 static struct Sprite *GFScene_CreateLogoSprite(void);
+#if !IS_HNS
 static void GFScene_CreatePresentsSprite(void);
+#endif
 static void SpriteCB_Star(struct Sprite *sprite);
 static void SpriteCB_SparklesSmall_Star(struct Sprite *sprite);
 static void SpriteCB_SparklesSmall_Name(struct Sprite *sprite);
 static void SpriteCB_SparklesBig(struct Sprite *sprite);
 
 // Scene 1
+#if !IS_HNS
 static void IntroCB_Scene1(struct IntroSequenceData * ptr);
+#endif
+#if !IS_HNS
 static void Scene1_Task_AnimateGrass(u8 taskId);
 static void Scene1_StartGrassScrolling(void);
 static void Scene1_Task_BgZoom(u8 taskId);
+#endif
 
 // Scene 2
+#if !IS_HNS
 static void IntroCB_Scene2(struct IntroSequenceData * ptr);
+#endif
+#if !IS_HNS
 static void Scene2_Task_PanForest(u8 taskId);
 static void Scene2_Task_PanMons(u8 taskId);
 static void Scene2_CreateMonSprites(struct IntroSequenceData * ptr);
 static void Scene2_DestroyMonSprites(struct IntroSequenceData * ptr);
+#endif
 
 // Scene 3
+#if !IS_HNS
 static void IntroCB_Scene3_Entrance(struct IntroSequenceData * ptr);
 static void IntroCB_Scene3_Fight(struct IntroSequenceData * ptr);
 static void Scene3_StartBgScroll(void);
@@ -248,6 +263,9 @@ static void SpriteCB_NidorinoCry(struct Sprite *sprite);
 static void SpriteCB_NidorinoRecoil(struct Sprite *sprite);
 static void SpriteCB_NidorinoHop(struct Sprite *sprite);
 static void SpriteCB_NidorinoAttack(struct Sprite *sprite);
+#endif
+static void SpriteCB_GengarSwipe(struct Sprite *sprite);
+static void SpriteCB_RecoilDust(struct Sprite *sprite);
 
 extern const u32 gMultiBootProgram_PokemonColosseum_Start[];
 extern const u32 gMultiBootProgram_PokemonColosseum_End[];
@@ -1279,6 +1297,7 @@ static void IntroCB_GF_RevealLogo(struct IntroSequenceData * this)
     }
 }
 
+#if !IS_HNS
 static void IntroCB_Scene1(struct IntroSequenceData * this)
 {
     switch (this->state)
@@ -1353,12 +1372,14 @@ static void IntroCB_Scene1(struct IntroSequenceData * this)
         break;
     }
 }
+#endif
 
 #define tTimer   data[0]
 #define tFrame   data[1]
 #define tExiting data[2]
 #define tScroll  data[3]
 
+#if !IS_HNS
 static void Scene1_Task_AnimateGrass(u8 taskId)
 {
     s16 * data = gTasks[taskId].data;
@@ -1382,7 +1403,9 @@ static void Scene1_Task_AnimateGrass(u8 taskId)
         ChangeBgY(BG_SCENE1_GRASS, tScroll, BG_COORD_SUB);
     }
 }
+#endif
 
+#if !IS_HNS
 static void Scene1_StartGrassScrolling(void)
 {
     u8 taskId = FindTaskIdByFunc(Scene1_Task_AnimateGrass);
@@ -1411,10 +1434,12 @@ static void Scene1_Task_BgZoom(u8 taskId)
         ChangeBgY(BG_SCENE1_BACKGROUND, tFrame << 15, BG_COORD_SET);
     }
 }
+#endif
 
 #undef tTimer
 #undef tFrame
 
+#if !IS_HNS
 static void IntroCB_Scene2(struct IntroSequenceData * this)
 {
     switch (this->state)
@@ -1499,7 +1524,9 @@ static void IntroCB_Scene2(struct IntroSequenceData * this)
         break;
     }
 }
+#endif
 
+#if !IS_HNS
 // Pan the background trees right and the foreground plants left in the wide shot
 static void Scene2_Task_PanForest(u8 taskId)
 {
@@ -1538,8 +1565,10 @@ static void Scene2_DestroyMonSprites(struct IntroSequenceData * this)
     if (this->scene2NidorinoSprite != NULL)
         DestroySprite(this->scene2NidorinoSprite);
 }
+#endif
 
 // Set up the scene 3 graphics, then start the scrolling to get Gengar and Nidorino in their fight positions
+#if !IS_HNS
 static void IntroCB_Scene3_Entrance(struct IntroSequenceData * this)
 {
     switch (this->state)
@@ -1900,6 +1929,7 @@ static void Scene3_GengarZoom(struct IntroSequenceData * this)
         SetSpriteMatrixAnchor(this->scene3GengarSprites[i], sGengarZoomMatrixAnchors[i][0], sGengarZoomMatrixAnchors[i][1]);
     }
 }
+#endif
 
 static void IntroCB_ExitToTitleScreen(struct IntroSequenceData * this)
 {
@@ -2084,12 +2114,14 @@ static struct Sprite *GFScene_CreateLogoSprite(void)
     return &gSprites[spriteId];
 }
 
+#if !IS_HNS
 static void GFScene_CreatePresentsSprite(void)
 {
     int i;
     for (i = 0; i < 2; i++)
         gSprites[CreateSprite(&sSpriteTemplate_Presents, 104 + 32 * i, 108, 5)].oam.tileNum += i * 4;
 }
+#endif
 
 #define tState  data[0]
 #define tTimer  data[1]
@@ -2100,6 +2132,7 @@ static void GFScene_CreatePresentsSprite(void)
 #define tMultY  data[8]
 #define tMultX  data[9]
 
+#if !IS_HNS
 static void Scene3_StartGengarAttack(struct IntroSequenceData * this)
 {
     u8 taskId;
@@ -2212,6 +2245,7 @@ static void Scene3_CreateGengarSwipeSprites(void)
     }
 }
 
+#endif
 static void SpriteCB_GengarSwipe(struct Sprite *sprite)
 {
     sprite->invisible ^= 1;
@@ -2219,6 +2253,7 @@ static void SpriteCB_GengarSwipe(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+#if !IS_HNS
 #define tState data[0]
 #define tSpeed data[1]
 #define tMoves data[2]
@@ -2256,6 +2291,7 @@ static void Scene3_Task_GengarEnter(u8 taskId)
 #undef tState
 #undef tSpeed
 #undef tMoves
+#endif
 
 static void SpriteCB_Star(struct Sprite *sprite)
 {
@@ -2372,6 +2408,7 @@ static void SpriteCB_SparklesBig(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+#if !IS_HNS
 static void Scene3_CreateNidorinoSprite(struct IntroSequenceData * this)
 {
     u8 spriteId = CreateSprite(&sSpriteTemplate_Scene3_Nidorino, 0, 0, 9);
@@ -2573,6 +2610,7 @@ static bool8 Scene3_NidorinoAnimIsRunning(struct IntroSequenceData * ptr)
 {
     return ptr->scene3NidorinoSprite->callback == SpriteCallbackDummy ? FALSE : TRUE;
 }
+#endif
 
 #define sState          data[0]
 #define sX              data[1]
@@ -2581,6 +2619,7 @@ static bool8 Scene3_NidorinoAnimIsRunning(struct IntroSequenceData * ptr)
 #define sSpeedY         data[4]
 #define sInvisibleTimer data[7]
 
+#if !IS_HNS
 static void CreateNidorinoRecoilDustSprites(s16 x, s16 y, s16 seed)
 {
     int i;
@@ -2601,6 +2640,7 @@ static void CreateNidorinoRecoilDustSprites(s16 x, s16 y, s16 seed)
     }
 }
 
+#endif
 static void SpriteCB_RecoilDust(struct Sprite *sprite)
 {
     s16 * data = sprite->data;
@@ -2637,6 +2677,7 @@ static void SpriteCB_RecoilDust(struct Sprite *sprite)
 #undef sSpeedY
 #undef sInvisibleTimer
 
+#if !IS_HNS
 #define sState       data[0]
 #define sAirTime     data[1]
 #define sOffsetX     data[2]
@@ -2788,7 +2829,9 @@ static void SpriteCB_NidorinoAttack(struct Sprite *sprite)
 #undef sTimer
 #undef sShakeTimer
 #undef sSpeed
+#endif
 
+#if !IS_HNS
 static void LoadFightSceneSpriteGraphics(void)
 {
     int i;
@@ -2796,5 +2839,6 @@ static void LoadFightSceneSpriteGraphics(void)
         LoadCompressedSpriteSheet(&sFightSceneSpriteSheets[i]);
     LoadSpritePalettes(sFightSceneSpritePalettes);
 }
+#endif
 
 #endif // IS_HNS

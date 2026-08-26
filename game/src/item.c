@@ -946,6 +946,10 @@ u32 GetItemFlingPower(enum Item itemId)
 u32 GetItemStatus1Mask(enum Item itemId)
 {
     const u8 *effect = GetItemEffect(itemId);
+
+    if (effect == NULL)
+        return 0;
+
     switch (effect[3])
     {
     case ITEM3_PARALYSIS:
@@ -967,6 +971,10 @@ u32 GetItemStatus1Mask(enum Item itemId)
 bool32 ItemHasVolatileFlag(enum Item itemId, enum Volatile _volatile)
 {
     const u8 *effect = GetItemEffect(itemId);
+
+    if (effect == NULL)
+        return FALSE;
+
     switch (_volatile)
     {
     case VOLATILE_CONFUSION:

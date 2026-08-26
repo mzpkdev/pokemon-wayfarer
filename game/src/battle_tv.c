@@ -112,12 +112,17 @@ static const u16 sPoints_StatusDmg[] =
     3, // Nightmare
     3  // Wrap (Trapping move)
 };
+static const u16 sPoints_LightScreen[] =
+{
+    3
+};
 
 static const u16 *const sPointsArray[] =
 {
     [PTS_EFFECTIVENESS]          = sPoints_Effectiveness,
     [PTS_SET_UP]                 = sPoints_SetUp,
     [PTS_STATUS_DMG]             = sPoints_StatusDmg,
+    [PTS_LIGHT_SCREEN]           = sPoints_LightScreen,
 };
 
 // Points will always be calculated for these messages
@@ -1082,7 +1087,10 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         break;
     case PTS_LIGHT_SCREEN:
         // If hit Light Screen with damaging special move
-        if (IsBattleMoveSpecial(move) && power != 0 && tvPtr->side[defSide].lightScreenMonId != 0)
+        if (IsBattleMoveSpecial(move) && power != 0
+         && tvPtr->side[defSide].lightScreenMonId > 0
+         && tvPtr->side[defSide].lightScreenMonId <= PARTY_SIZE
+         && tvPtr->side[defSide].lightScreenMoveSlot < MAX_MON_MOVES)
         {
             u32 id = (tvPtr->side[defSide].lightScreenMonId - 1) * 4;
             movePoints->points[defSide][id + tvPtr->side[defSide].lightScreenMoveSlot] += sPointsArray[caseId][0];

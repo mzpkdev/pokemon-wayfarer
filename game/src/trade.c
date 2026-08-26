@@ -3887,15 +3887,12 @@ static bool8 DoTradeAnim_Cable(void)
         if (!gPaletteFade.active)
         {
             PlayNewMapMusic(sTradeAnim->cachedMapMusic);
-            if (sTradeAnim)
-            {
-                FreeAllWindowBuffers();
-                Free(GetBgTilemapBuffer(3));
-                Free(GetBgTilemapBuffer(1));
-                Free(GetBgTilemapBuffer(0));
-                FreeMonSpritesGfx();
-                FREE_AND_SET_NULL(sTradeAnim);
-            }
+            FreeAllWindowBuffers();
+            Free(GetBgTilemapBuffer(3));
+            Free(GetBgTilemapBuffer(1));
+            Free(GetBgTilemapBuffer(0));
+            FreeMonSpritesGfx();
+            FREE_AND_SET_NULL(sTradeAnim);
             SetMainCallback2(CB2_ReturnToField);
             BufferInGameTradeMonName();
         }
@@ -4392,15 +4389,12 @@ static bool8 DoTradeAnim_Wireless(void)
         if (!gPaletteFade.active)
         {
             PlayNewMapMusic(sTradeAnim->cachedMapMusic);
-            if (sTradeAnim)
-            {
-                FreeAllWindowBuffers();
-                Free(GetBgTilemapBuffer(3));
-                Free(GetBgTilemapBuffer(1));
-                Free(GetBgTilemapBuffer(0));
-                FreeMonSpritesGfx();
-                FREE_AND_SET_NULL(sTradeAnim);
-            }
+            FreeAllWindowBuffers();
+            Free(GetBgTilemapBuffer(3));
+            Free(GetBgTilemapBuffer(1));
+            Free(GetBgTilemapBuffer(0));
+            FreeMonSpritesGfx();
+            FREE_AND_SET_NULL(sTradeAnim);
             SetMainCallback2(CB2_ReturnToField);
             BufferInGameTradeMonName();
         }
