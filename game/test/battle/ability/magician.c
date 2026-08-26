@@ -210,7 +210,7 @@ SINGLE_BATTLE_TEST("Magician steals before switching with U-turn")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->item, ITEM_NONE);
     }

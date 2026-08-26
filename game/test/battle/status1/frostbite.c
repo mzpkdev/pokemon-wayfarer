@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Frostbite is healed when the user uses a thawing move")
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         if (move == MOVE_EMBER) {
-            MESSAGE("Wobbuffet was hurt by its frostbite!");
+            MESSAGE("WOBBUFFET was hurt by its frostbite!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_FRB, player);
         } else {
             NONE_OF {

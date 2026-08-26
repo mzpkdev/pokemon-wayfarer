@@ -107,10 +107,10 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax expires after three turns", u16 hp)
         int j;
         for (j = 0; j < DYNAMAX_TURNS_COUNT; ++j) {
             if (dynamax)
-                MESSAGE("Wobbuffet used Max Strike!");
+                MESSAGE("WOBBUFFET used MAX STRIKE!");
             else
-                MESSAGE("Wobbuffet used Scratch!");
-            MESSAGE("The opposing Wobbuffet used Celebrate!");
+                MESSAGE("WOBBUFFET used SCRATCH!");
+            MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         }
         if (dynamax) // Expect to have visual reversion at the end.
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
@@ -684,12 +684,12 @@ SINGLE_BATTLE_TEST("Dynamax: Max Strike lowers single opponent's speed")
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         // turn 1
-        MESSAGE("The opposing Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         // turn 2
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
@@ -714,21 +714,21 @@ DOUBLE_BATTLE_TEST("Dynamax: Max Strike lowers both opponents' speed")
                MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); }
     } SCENE {
         // turn 1
-        MESSAGE("The opposing Wobbuffet used Scratch!");
-        MESSAGE("The opposing Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         // turn 2
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
-        MESSAGE("The opposing Wobbuffet used Scratch!");
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
     }
 }
 
@@ -1633,7 +1633,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out")
         TURN { SWITCH(player, 0); }
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
     }
 }
 

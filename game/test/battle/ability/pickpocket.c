@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Pickpocket cannot steal from Sticky Hold")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
         ABILITY_POPUP(player, ABILITY_STICKY_HOLD);
-        MESSAGE("Grimer's item cannot be removed!");
+        MESSAGE("GRIMER's item cannot be removed!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
         EXPECT(player->item == ITEM_MAGOST_BERRY);

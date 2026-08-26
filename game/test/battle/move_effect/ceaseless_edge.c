@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Ceaseless Edge sets up hazards after hitting the target")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, player);
         HP_BAR(opponent);
         MESSAGE("Spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("2 sent out WOBBUFFET!");
         HP_BAR(opponent, damage: maxHP / 8);
         MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
     }

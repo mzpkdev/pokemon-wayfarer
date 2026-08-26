@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Encore has no effect if no previous move")
     } WHEN {
         TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Encore!");
+        MESSAGE("The opposing WOBBUFFET used ENCORE!");
         MESSAGE("But it failed!");
     }
 }
@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
         TURN { MOVE(player, MOVE_EMBER); }
     } SCENE {
         MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
+        MESSAGE("The opposing WOBBUFFET used ENCORE!");
         MESSAGE("But it failed!");
         MESSAGE("Wobbuffet used Max Flare!");
     }
@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
         MESSAGE("Wobbuffet used Max Knuckle!");
         MESSAGE("Wobbuffet used Max Knuckle!");
         MESSAGE("Wobbuffet used Max Knuckle!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
+        MESSAGE("The opposing WOBBUFFET used ENCORE!");
         MESSAGE("Wobbuffet used Arm Thrust!");
     }
 }

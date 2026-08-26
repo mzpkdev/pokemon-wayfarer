@@ -21,11 +21,11 @@ SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a m
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_SPORE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("Zigzagoon bounced the Spore back!");
+        MESSAGE("ZIGZAGOON bounced the SPORE back!");
         MESSAGE("The opposing Zigzagoon fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("Zigzagoon bounced the Spore back!");
+        MESSAGE("ZIGZAGOON bounced the SPORE back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         MESSAGE("The opposing Zigzagoon fell asleep!");

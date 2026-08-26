@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Reflect fails if already active")
         TURN { MOVE(player, MOVE_REFLECT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
-        MESSAGE("Wobbuffet used Reflect!");
+        MESSAGE("WOBBUFFET used REFLECT!");
         MESSAGE("But it failed!");
     }
 }

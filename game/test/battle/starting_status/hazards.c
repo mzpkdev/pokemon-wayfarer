@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("SetStartingStatus can start Spikes on the opposing side", s1
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(opponent, damage: maxHP / divisor);
         MESSAGE("The opposing Wynaut was hurt by the spikes!");
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Starting Stealth Rock damages the opposing switch-in")
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        MESSAGE("2 sent out Charizard!");
+        MESSAGE("2 sent out CHARIZARD!");
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(opponent, damage: maxHP / 2);
         MESSAGE("Pointed stones dug into the opposing Charizard!");
@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Starting sharp steel damages the opposing switch-in")
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
-        MESSAGE("2 sent out Sylveon!");
+        MESSAGE("2 sent out SYLVEON!");
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(opponent, damage: maxHP / 4);
         MESSAGE("The sharp steel bit into the opposing Sylveon!");
@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("SetStartingStatus can start Spikes on the player side", s16 
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {
-        MESSAGE("Go! Wynaut!");
+        MESSAGE("Go! WYNAUT!");
         s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(player, damage: maxHP / divisor);
         MESSAGE("Wynaut was hurt by the spikes!");
@@ -230,7 +230,7 @@ SINGLE_BATTLE_TEST("Starting Stealth Rock damages the player's switch-in")
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {
-        MESSAGE("Go! Charizard!");
+        MESSAGE("Go! CHARIZARD!");
         s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(player, damage: maxHP / 2);
         MESSAGE("Pointed stones dug into Charizard!");
@@ -251,7 +251,7 @@ SINGLE_BATTLE_TEST("Starting sharp steel damages the player's switch-in")
     } WHEN {
         TURN { SWITCH(player, 1); }
     } SCENE {
-        MESSAGE("Go! Sylveon!");
+        MESSAGE("Go! SYLVEON!");
         s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(player, damage: maxHP / 4);
         MESSAGE("The sharp steel bit into Sylveon!");

@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison")
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC); }
     } SCENE {
-        MESSAGE("Wobbuffet used Toxic!");
+        MESSAGE("WOBBUFFET used TOXIC!");
         ABILITY_POPUP(opponent, ABILITY_PASTEL_VEIL);
         MESSAGE("It doesn't affect the opposing Ponyta…");
         NOT STATUS_ICON(opponent, badPoison: TRUE);

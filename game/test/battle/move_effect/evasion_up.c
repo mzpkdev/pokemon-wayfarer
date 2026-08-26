@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Double Team raises Evasion by 1 stage")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_TEAM, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's evasiveness rose!");
+        MESSAGE("WOBBUFFET's evasiveness rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }

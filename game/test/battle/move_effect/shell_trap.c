@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Shell Trap activates only if hit by a physical move")
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, player);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         if (activate) {
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if attacker's Sheer Force appli
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, player);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (activate) {
             MESSAGE("Wobbuffet used Shell Trap!");
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if battler faints before being 
         TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, player);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet fainted!");
         SEND_IN_MESSAGE("Wobbuffet");
@@ -107,7 +107,7 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 1 a
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         MESSAGE("The opposing Wobbuffet used Scratch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         MESSAGE("Wobbuffet used Shell Trap!");
@@ -131,7 +131,7 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 2 a
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         MESSAGE("The opposing Wynaut used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Scratch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
@@ -155,7 +155,7 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 3 a
         TURN { MOVE(playerLeft, MOVE_SHELL_TRAP); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         MESSAGE("Wobbuffet used Celebrate!");
         MESSAGE("The opposing Wynaut used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Scratch!");
@@ -227,7 +227,7 @@ SINGLE_BATTLE_TEST("Encore fails if target has active Shell Trap waiting")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Shell Trap fails if an other -3 or lower priority Move is us
             MOVE(opponent, MOVE_DRAGON_TAIL);
         }
     } SCENE {
-        MESSAGE("Wobbuffet set a shell trap!");
+        MESSAGE("WOBBUFFET set a shell trap!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
     }
@@ -301,4 +301,3 @@ DOUBLE_BATTLE_TEST("Shell Trap activates on both opposing Targets")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerRight);
     }
 }
-

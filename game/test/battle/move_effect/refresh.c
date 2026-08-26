@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Refresh does not cure the user of Freeze")
     } WHEN {
         TURN { MOVE(player, MOVE_REFRESH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Refresh!");
+        MESSAGE("WOBBUFFET used REFRESH!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_REFRESH, player);
             STATUS_ICON(player, none: TRUE);
@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Refresh does not cure sleep when used by Sleep Talk")
         TURN { MOVE(player, MOVE_SPORE); MOVE(opponent, MOVE_SLEEP_TALK); }
         TURN { MOVE(player, MOVE_SPORE); MOVE(opponent, MOVE_REFRESH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Spore!");
+        MESSAGE("WOBBUFFET used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         MESSAGE("The opposing Wobbuffet fell asleep!");

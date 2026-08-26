@@ -264,7 +264,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal used Celebrate!");
         else
-            MESSAGE("The opposing Metang used Celebrate!");
+            MESSAGE("The opposing METANG used CELEBRATE!");
         MESSAGE("Wobbuffet used Thunder Wave!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
         NOT ABILITY_POPUP(opponent, ability);

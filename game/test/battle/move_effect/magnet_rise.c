@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Magnet Rise fails if the user is Grounded by Smack Down")
         TURN { MOVE(opponent, MOVE_SMACK_DOWN); MOVE(player, MOVE_MAGNET_RISE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SMACK_DOWN, opponent);
-        MESSAGE("Xatu fell straight down!");
+        MESSAGE("XATU fell straight down!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGNET_RISE, player);
     }
 }

@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Purifying Salt grants immunity to status effects")
         if (move != MOVE_POWDER_SNOW) {
             NOT ANIMATION(ANIM_TYPE_MOVE, move, opponent);
             ABILITY_POPUP(player, ABILITY_PURIFYING_SALT);
-            MESSAGE("It doesn't affect Wobbuffet…");
+            MESSAGE("It doesn't affect WOBBUFFET…");
             NOT STATUS_ICON(player, status);
         } else {
             NONE_OF {
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Purifying Salt user can't be poisoned by Toxic Spikes")
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(player, 1); }
     } SCENE {
-        SEND_IN_MESSAGE("Garganacl");
+        SEND_IN_MESSAGE("GARGANACL");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }

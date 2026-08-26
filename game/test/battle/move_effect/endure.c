@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over Sturdy (Gen 5+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("The opposing Aron endured the hit!");
+        MESSAGE("The opposing ARON endured the hit!");
         NOT ABILITY_POPUP(opponent, ABILITY_STURDY);
     }
 }

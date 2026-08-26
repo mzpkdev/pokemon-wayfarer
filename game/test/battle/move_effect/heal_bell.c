@@ -106,9 +106,9 @@ DOUBLE_BATTLE_TEST("Heal Bell does not cure Soundproof partners (Gen 4, Gen 6+)"
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, playerLeft);
         if (ability == ABILITY_SOUNDPROOF && config != GEN_5) {
-            MESSAGE("Exploud was hurt by its poisoning!");
+            MESSAGE("EXPLOUD was hurt by its poisoning!");
         } else {
-            NOT MESSAGE("Exploud was hurt by its poisoning!");
+            NOT MESSAGE("EXPLOUD was hurt by its poisoning!");
         }
     }
 }
@@ -135,9 +135,9 @@ SINGLE_BATTLE_TEST("Heal Bell cures inactive Soundproof Pokemon (Gen5+)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, player);
         SEND_IN_MESSAGE("Exploud");
         if (ability == ABILITY_SCRAPPY || config >= GEN_5) {
-            NOT MESSAGE("Exploud was hurt by its poisoning!");
+            NOT MESSAGE("EXPLOUD was hurt by its poisoning!");
         } else {
-            MESSAGE("Exploud was hurt by its poisoning!");
+            MESSAGE("EXPLOUD was hurt by its poisoning!");
         }
     }
 }
@@ -160,9 +160,9 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, player);
         if (config == GEN_5 || config >= GEN_8) {
-            NOT MESSAGE("Exploud was hurt by its poisoning!");
+            NOT MESSAGE("EXPLOUD was hurt by its poisoning!");
         } else {
-            MESSAGE("Exploud was hurt by its poisoning!");
+            MESSAGE("EXPLOUD was hurt by its poisoning!");
         }
     }
 }
@@ -188,7 +188,7 @@ DOUBLE_BATTLE_TEST("Aromatherapy cure Soundproof battlers regardless of config")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, playerLeft);
         NONE_OF {
-            MESSAGE("Exploud was hurt by its poisoning!");
+            MESSAGE("EXPLOUD was hurt by its poisoning!");
             MESSAGE("Wobbuffet was hurt by its poisoning!");
         }
     }
@@ -213,6 +213,6 @@ SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, player);
         SEND_IN_MESSAGE("Exploud");
-        NOT MESSAGE("Exploud was hurt by its poisoning!");
+        NOT MESSAGE("EXPLOUD was hurt by its poisoning!");
     }
 }

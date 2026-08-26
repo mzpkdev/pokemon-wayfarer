@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Roar fails if no replacements")
     } WHEN {
         TURN { MOVE(player, MOVE_ROAR); }
     } SCENE {
-        MESSAGE("Wobbuffet used Roar!");
+        MESSAGE("WOBBUFFET used ROAR!");
         MESSAGE("But it failed!");
     }
 }
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Roar fails if replacements fainted")
     } WHEN {
         TURN { MOVE(player, MOVE_ROAR); }
     } SCENE {
-        MESSAGE("Wobbuffet used Roar!");
+        MESSAGE("WOBBUFFET used ROAR!");
         MESSAGE("But it failed!");
     }
 }
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Roar fails against target with Guard Dog")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, player);
             MESSAGE("The opposing Charmander was dragged out!");
         }
-        MESSAGE("Wobbuffet used Roar!");
+        MESSAGE("WOBBUFFET used ROAR!");
         MESSAGE("But it failed!");
     }
 }
@@ -98,7 +98,7 @@ SINGLE_BATTLE_TEST("Roar fails to switch out target with Suction Cups")
     } WHEN {
         TURN { MOVE(player, MOVE_ROAR); }
     } SCENE {
-        MESSAGE("Wobbuffet used Roar!");
+        MESSAGE("WOBBUFFET used ROAR!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, player);
         ABILITY_POPUP(opponent, ABILITY_SUCTION_CUPS);
         MESSAGE("The opposing Octillery anchors itself with Suction Cups!");

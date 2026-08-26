@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Teleport fails in Trainer Battles (Gen 1-7)")
         MESSAGE("The opposing Wobbuffet used Teleport!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEPORT, opponent);
-            MESSAGE("2 sent out Wynaut!");
+            MESSAGE("2 sent out WYNAUT!");
         }
         MESSAGE("But it failed!");
     }
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Teleport forces the Pokémon to switch out in Trainer Battle
         TURN { MOVE(opponent, MOVE_TELEPORT); SEND_OUT(opponent, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEPORT, opponent);
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
     }
 }
 
@@ -79,6 +79,6 @@ SINGLE_BATTLE_TEST("Teleport does not fail if the user is trapped")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_SPIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEPORT, opponent);
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
     }
 }

@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates only if not damaged")
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         if (activate) {
@@ -55,7 +55,7 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
         MESSAGE("Wynaut is tightening its focus!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, playerLeft);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, opponentLeft);
         MESSAGE("The opposing Wobbuffet is tightening its focus!");
@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_FISSURE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
 
         if (item) {
@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Mimikyu is tightening its focus!");
+        MESSAGE("MIMIKYU is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         if (activate) {
@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash/Stu
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_SEISMIC_TOSS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
         MESSAGE("Wobbuffet lost its focus and couldn't move!");
         NONE_OF {
@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when the user's Substitute is hit")
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet used Focus Punch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
@@ -198,7 +198,7 @@ SINGLE_BATTLE_TEST("Focus Punch uses PP when losing focus (Gen 3-4)")
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (activate)
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
@@ -223,7 +223,7 @@ SINGLE_BATTLE_TEST("Focus Punch doesn't use PP when losing focus (Gen 5+)")
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (activate)
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Focus Punch failing occurs after flinching (Gen 3-4)")
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_FAKE_OUT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
         MESSAGE("Wobbuffet flinched and couldn't move!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
@@ -266,7 +266,7 @@ SINGLE_BATTLE_TEST("Focus Punch failing occurs before flinching (Gen 5+)")
         TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_FAKE_OUT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
         MESSAGE("Wobbuffet lost its focus and couldn't move!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
@@ -290,17 +290,17 @@ SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selec
         TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Wobbuffet is tightening its focus!");
+        MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
         HP_BAR(opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-            MESSAGE("Wobbuffet is tightening its focus!");
+            MESSAGE("WOBBUFFET is tightening its focus!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-            MESSAGE("Wobbuffet is tightening its focus!");
+            MESSAGE("WOBBUFFET is tightening its focus!");
         }
     }
 }

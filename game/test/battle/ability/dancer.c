@@ -144,7 +144,7 @@ SINGLE_BATTLE_TEST("Dancer doesn't trigger if the original user flinches")
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_DRAGON_DANCE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
-        MESSAGE("Wobbuffet flinched and couldn't move!");
+        MESSAGE("WOBBUFFET flinched and couldn't move!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_DANCER);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponent);
@@ -462,7 +462,7 @@ DOUBLE_BATTLE_TEST("Dancer-called moves do not update move to be called by Mimic
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIMIC, playerLeft);
-        MESSAGE("Wobbuffet learned Scratch!");
+        MESSAGE("WOBBUFFET learned SCRATCH!");
         NOT MESSAGE("Wobbuffet learned Dragon Dance!");
     }
 }

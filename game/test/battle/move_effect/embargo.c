@@ -265,7 +265,7 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Plate items on the move J
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_JUDGMENT); }
     } SCENE {
-        MESSAGE("The opposing Dragonite used Embargo!");
+        MESSAGE("The opposing DRAGONITE used EMBARGO!");
         MESSAGE("Arceus can't use items anymore!");
         MESSAGE("Arceus used Judgment!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -286,7 +286,7 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move T
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_TECHNO_BLAST); }
     } SCENE {
-        MESSAGE("The opposing Gyarados used Embargo!");
+        MESSAGE("The opposing GYARADOS used EMBARGO!");
         MESSAGE("Genesect can't use items anymore!");
         MESSAGE("Genesect used Techno Blast!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
@@ -307,7 +307,7 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Memory items on the move 
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_MULTI_ATTACK); }
     } SCENE {
-        MESSAGE("The opposing Venusaur used Embargo!");
+        MESSAGE("The opposing VENUSAUR used EMBARGO!");
         MESSAGE("Silvally can't use items anymore!");
         MESSAGE("Silvally used Multi-Attack!");
         HP_BAR(opponent, captureDamage: &results[i].damage);

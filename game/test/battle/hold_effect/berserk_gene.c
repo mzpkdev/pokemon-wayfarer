@@ -276,7 +276,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-        MESSAGE("Wobbuffet had its status healed!");
+        MESSAGE("WOBBUFFET had its status healed!");
     } THEN {
         EXPECT(player->volatiles.infiniteConfusion == 0);
     }

@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into a different type with Adaptabilit
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT, gimmick: tera); }
     } SCENE {
-        MESSAGE("Crawdaunt used Headbutt!");
+        MESSAGE("CRAWDAUNT used HEADBUTT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

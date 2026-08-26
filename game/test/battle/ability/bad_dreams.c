@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
     } SCENE {
         if (status == STATUS1_SLEEP) {
             ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
-            MESSAGE("The opposing Wobbuffet is tormented!");
+            MESSAGE("The opposing WOBBUFFET is tormented!");
             HP_BAR(opponent);
         }
         else {
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Bad Dreams causes Pokémon with Comatose to lose 1/8 of HP")
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
-        MESSAGE("The opposing Komala is tormented!");
+        MESSAGE("The opposing KOMALA is tormented!");
         HP_BAR(opponent);
     } THEN {
         EXPECT_EQ(opponent->hp, opponent->maxHP - opponent->maxHP / 8);
@@ -84,7 +84,7 @@ DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the playe
         TURN {}
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_BAD_DREAMS);
-        MESSAGE("Wobbuffet is tormented!");
+        MESSAGE("WOBBUFFET is tormented!");
         HP_BAR(playerLeft);
         MESSAGE("Wobbuffet is tormented!");
         HP_BAR(playerRight);

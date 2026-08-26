@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("Glimmora's Air Balloon popped!");
+        MESSAGE("GLIMMORA's Air Balloon popped!");
     }
 }
 

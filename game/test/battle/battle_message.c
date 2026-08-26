@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Battle Message: Send-in message depends on foe HP")
         TURN { SWITCH(player, 1); }
     } SCENE {
         if (hp > 69)
-            MESSAGE("Go! Wynaut!");
+            MESSAGE("Go! WYNAUT!");
         else if (hp > 39)
             MESSAGE("You're in charge, Wynaut!");
         else if (hp > 9)

@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;
             case MOVE_METEOR_ASSAULT: // second turn
-                MESSAGE("Wobbuffet must recharge!");
+                MESSAGE("WOBBUFFET must recharge!");
                 break;
             default:
                 break;

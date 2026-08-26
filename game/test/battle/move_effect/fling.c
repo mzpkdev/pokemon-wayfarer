@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         if (item != ITEM_NONE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon is under the effects of Embargo or M
         TURN { MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         if (move == MOVE_CELEBRATE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
@@ -123,13 +123,13 @@ SINGLE_BATTLE_TEST("Fling's thrown item can be regained with Recycle")
         TURN { MOVE(player, MOVE_RECYCLE); }
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         MESSAGE("Wobbuffet used Recycle!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
         MESSAGE("Wobbuffet found one Razor Claw!");
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
     }
@@ -150,10 +150,10 @@ SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SELF_DESTRUCT, opponent);
         HP_BAR(player);
         MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("But it failed!");
 
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
@@ -172,10 +172,10 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Protect!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("The opposing Wobbuffet protected itself!");
 
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if the user is asleep/frozen/
             MESSAGE("Wobbuffet is fast asleep.");
             MESSAGE("Wobbuffet woke up!");
         }
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         if (item != ITEM_NONE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
@@ -267,7 +267,7 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         switch (item)
@@ -325,7 +325,7 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         switch (item)
@@ -424,7 +424,7 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         if (effect == HOLD_EFFECT_RESTORE_HP) {

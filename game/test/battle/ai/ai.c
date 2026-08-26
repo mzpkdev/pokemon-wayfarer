@@ -622,8 +622,8 @@ AI_SINGLE_BATTLE_TEST("AI will only choose Surf 1/3 times if the opposing mon ha
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
     } SCENE {
-        MESSAGE("The opposing Lanturn used Surf!");
-        MESSAGE("The opposing Lanturn used Surf!");
+        MESSAGE("The opposing LANTURN used SURF!");
+        MESSAGE("The opposing LANTURN used SURF!");
     }
 }
 
@@ -639,8 +639,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
         TURN { EXPECT_MOVE(opponent, MOVE_THUNDERBOLT); }
         TURN { EXPECT_MOVE(opponent, MOVE_SURF); }
     } SCENE {
-        MESSAGE("The opposing Lanturn used Thunderbolt!");
-        MESSAGE("The opposing Lanturn used Surf!");
+        MESSAGE("The opposing LANTURN used THUNDERBOLT!");
+        MESSAGE("The opposing LANTURN used SURF!");
     }
 }
 

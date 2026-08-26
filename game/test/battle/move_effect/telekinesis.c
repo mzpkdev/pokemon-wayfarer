@@ -55,12 +55,12 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target immune to Ground-type attacks")
         TURN { MOVE(player, MOVE_TELEKINESIS); }
         TURN { MOVE(player, MOVE_BULLDOZE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Bulldoze!");
+        MESSAGE("WOBBUFFET used BULLDOZE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
         HP_BAR(opponent);
         MESSAGE("Wobbuffet used Telekinesis!");
         MESSAGE("The opposing Wynaut was hurled into the air!");
-        MESSAGE("Wobbuffet used Bulldoze!");
+        MESSAGE("WOBBUFFET used BULLDOZE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
             HP_BAR(opponent);

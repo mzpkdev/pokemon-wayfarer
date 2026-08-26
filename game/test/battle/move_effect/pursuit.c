@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting S
         TURN { MOVE(player, move); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        MESSAGE("Wobbuffet went back to 1!");
+        MESSAGE("WOBBUFFET went back to 1!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         SEND_IN_MESSAGE("Zigzagoon");
     }
@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Pursuit doesn't attack switching foe if user already acted t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
-        MESSAGE("Wobbuffet went back to 1!");
+        MESSAGE("WOBBUFFET went back to 1!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         SEND_IN_MESSAGE("Zigzagoon");
     }

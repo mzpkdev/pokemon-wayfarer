@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Roost fails when user is at full HP")
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); }
     } SCENE {
-        MESSAGE("Wobbuffet's HP is full!");
+        MESSAGE("WOBBUFFET's HP is full!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
             HP_BAR(player);
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Roost, if used by a Flying/Flying type, treats the user as a
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, damagingMove); }
     } SCENE {
-        MESSAGE("Tornadus used Roost!");
+        MESSAGE("TORNADUS used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Tornadus's HP was restored.");
 
@@ -361,7 +361,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
-        MESSAGE("Flygon used Roost!");
+        MESSAGE("FLYGON used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Flygon's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
@@ -380,7 +380,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Roost!");
+        MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
@@ -405,7 +405,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Magnet Rise
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGNET_RISE, player);
         MESSAGE("Wobbuffet levitated with electromagnetism!");
         // Turn 2
-        MESSAGE("Wobbuffet used Roost!");
+        MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
@@ -430,7 +430,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEKINESIS, opponent);
         MESSAGE("Wobbuffet was hurled into the air!");
         // Turn 2
-        MESSAGE("Wobbuffet used Roost!");
+        MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");

@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Substitute creates a Substitute at the cost of 1/4 users max
         maxHP = GetMonData(&gPlayerParty[0], MON_DATA_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
         HP_BAR(player, captureDamage: &costHP);
-        MESSAGE("Wobbuffet put in a substitute!");
+        MESSAGE("WOBBUFFET put in a substitute!");
     }THEN {
         EXPECT_EQ(maxHP / 4, costHP);
     }
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
-        MESSAGE("Wobbuffet put in a substitute!");
+        MESSAGE("WOBBUFFET put in a substitute!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }

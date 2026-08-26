@@ -330,7 +330,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         if (item != ITEM_NONE) {
-            SEND_IN_MESSAGE("Wobbuffet");
+            SEND_IN_MESSAGE("WOBBUFFET");
         } else {
             MESSAGE("Wobbuffet was dragged out!");
         }

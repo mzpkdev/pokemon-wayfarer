@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing does not affect the power of non-STAB 
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT, gimmick: tera); }
     } SCENE {
-        MESSAGE("Wobbuffet used Headbutt!");
+        MESSAGE("WOBBUFFET used HEADBUTT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into a different type gives that type 
     } WHEN {
         TURN { MOVE(player, MOVE_HEADBUTT, gimmick: tera); }
     } SCENE {
-        MESSAGE("Wobbuffet used Headbutt!");
+        MESSAGE("WOBBUFFET used HEADBUTT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -98,7 +98,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing boosts moves of the same type to 60 BP
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB, gimmick: tera); }
     } SCENE {
-        MESSAGE("Wobbuffet used Absorb!");
+        MESSAGE("WOBBUFFET used ABSORB!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -436,7 +436,7 @@ SINGLE_BATTLE_TEST("(TERA) Stellar type does not change the user's defensive pro
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: tera); MOVE(opponent, MOVE_PSYCHIC); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Psychic!");
+        MESSAGE("The opposing WOBBUFFET used PSYCHIC!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
@@ -507,15 +507,15 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar-type provides a one-t
         TURN { MOVE(player, MOVE_EXTRASENSORY); }
     } SCENE {
         // turn 1
-        MESSAGE("Wobbuffet used Extrasensory!");
+        MESSAGE("WOBBUFFET used EXTRASENSORY!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXTRASENSORY, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         // turn 2
-        MESSAGE("Wobbuffet used Extrasensory!");
+        MESSAGE("WOBBUFFET used EXTRASENSORY!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXTRASENSORY, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
         // turn 3
-        MESSAGE("Wobbuffet used Extrasensory!");
+        MESSAGE("WOBBUFFET used EXTRASENSORY!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXTRASENSORY, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
     } THEN {
@@ -537,15 +537,15 @@ SINGLE_BATTLE_TEST("(TERA) Terastallizing into the Stellar-type provides a one-t
         TURN { MOVE(player, MOVE_TAKE_DOWN); }
     } SCENE {
         // turn 1
-        MESSAGE("Wobbuffet used Take Down!");
+        MESSAGE("WOBBUFFET used TAKE DOWN!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         // turn 2
-        MESSAGE("Wobbuffet used Take Down!");
+        MESSAGE("WOBBUFFET used TAKE DOWN!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
         // turn 3
-        MESSAGE("Wobbuffet used Take Down!");
+        MESSAGE("WOBBUFFET used TAKE DOWN!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
     } THEN {

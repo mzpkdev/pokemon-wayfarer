@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Transform fails on semi-invulnerable target in Gen2+")
         TURN { MOVE(player, MOVE_DIG); MOVE(opponent, MOVE_TRANSFORM); }
     } SCENE {
         if (expectFail)
-            MESSAGE("Wobbuffet avoided the attack!");
+            MESSAGE("WOBBUFFET avoided the attack!");
         else
             MESSAGE("The opposing Ditto transformed into Wobbuffet!");
     }
@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and i
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         // turn 3
-        MESSAGE("Wobbuffet used Earthquake!");
+        MESSAGE("WOBBUFFET used EARTHQUAKE!");
         MESSAGE("It doesn't affect the opposing Ditto…");
         NOT { HP_BAR(opponent); }
     }

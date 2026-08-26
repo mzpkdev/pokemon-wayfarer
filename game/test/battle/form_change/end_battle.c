@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Meloetta returns to Aria form upon battle end after using Re
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
         HP_BAR(opponent);
-        MESSAGE("Meloetta transformed!");
+        MESSAGE("MELOETTA transformed!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_MELOETTA_ARIA);
     }
@@ -235,7 +235,7 @@ SINGLE_BATTLE_TEST("Eiscue Noice reverts to Ice Form upon battle end after being
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_EISCUE_ICE);
     }
@@ -249,7 +249,7 @@ SINGLE_BATTLE_TEST("Morpeko Hangry reverts to Full Belly Form upon battle end af
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Morpeko used Celebrate!");
+        MESSAGE("MORPEKO used CELEBRATE!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
     } THEN {

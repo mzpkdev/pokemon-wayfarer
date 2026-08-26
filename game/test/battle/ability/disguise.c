@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         HP_BAR(player);
-        MESSAGE("Pointed stones dug into Mimikyu!");
+        MESSAGE("Pointed stones dug into MIMIKYU!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }

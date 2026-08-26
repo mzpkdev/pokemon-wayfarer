@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
 
-        MESSAGE("Wobbuffet blew away Spikes!");
+        MESSAGE("WOBBUFFET blew away Spikes!");
         MESSAGE("Wobbuffet blew away Sticky Web!");
         MESSAGE("Wobbuffet blew away Toxic Spikes!");
         MESSAGE("Wobbuffet blew away Stealth Rock!");

@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft")
     } WHEN {
         TURN { MOVE(player, MOVE_THIEF); }
     } SCENE {
-        MESSAGE("Ursaluna used Thief!");
+        MESSAGE("URSALUNA used THIEF!");
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
         MESSAGE("The opposing Gastrodon's Sticky Hold made Thief ineffective!");
     }

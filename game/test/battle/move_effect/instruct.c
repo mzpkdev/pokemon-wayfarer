@@ -138,7 +138,7 @@ DOUBLE_BATTLE_TEST("Instruct doesn't bypass sleep")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
-        MESSAGE("Wobbuffet is fast asleep.");
+        MESSAGE("WOBBUFFET is fast asleep.");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
     }
 }
@@ -411,7 +411,7 @@ DOUBLE_BATTLE_TEST("Instruct message references the correct battlers")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
-        MESSAGE("The opposing Wynaut used Instruct!");
+        MESSAGE("The opposing WYNAUT used INSTRUCT!");
         NONE_OF {
             MESSAGE("Sceptile followed the opposing Wobbuffet's instructions!");
         }

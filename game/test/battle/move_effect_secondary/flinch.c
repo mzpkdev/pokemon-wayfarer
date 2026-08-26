@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Protect always works when used after flinching")
     } SCENE {
         // 1st turn
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
-        MESSAGE("Wobbuffet protected itself!");
+        MESSAGE("WOBBUFFET protected itself!");
 
         // 2nd turn
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, opponent);
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Protect always works when used after flinching")
 
         // 3rd turn
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
-        MESSAGE("Wobbuffet protected itself!");
+        MESSAGE("WOBBUFFET protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, opponent);
     }
 }

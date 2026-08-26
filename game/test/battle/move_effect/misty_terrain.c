@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Fairy-type move
             TURN { MOVE(player, MOVE_MISTY_TERRAIN); }
         TURN { MOVE(player, MOVE_MOONBLAST); }
     } SCENE {
-        MESSAGE("Wobbuffet used Moonblast!");
+        MESSAGE("WOBBUFFET used MOONBLAST!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);

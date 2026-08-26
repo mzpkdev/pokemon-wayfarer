@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Shed Shell does not allow Teleport when trapped")
         TURN { MOVE(player, MOVE_TELEPORT); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEAN_LOOK, opponent);
-        MESSAGE("Wobbuffet used Teleport!");
+        MESSAGE("WOBBUFFET used TELEPORT!");
         MESSAGE("But it failed!");
     }
 }
