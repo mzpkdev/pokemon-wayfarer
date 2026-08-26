@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+)")
         if (gen == GEN_6) {
             NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, opponent); }
             ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
-            MESSAGE("It doesn't affect Slowpoke…");
+            MESSAGE("It doesn't affect SLOWPOKE…");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         } else {

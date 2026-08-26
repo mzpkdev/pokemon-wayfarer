@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens aft
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_COTTON_DOWN);
-        MESSAGE("Meloetta's Speed fell!");
+        MESSAGE("MELOETTA's SPEED fell!");
         MESSAGE("The opposing Gossifleur fainted!");
         MESSAGE("MELOETTA transformed!");
     } THEN {

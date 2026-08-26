@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Stockpile's count can go up only to 3")
         TURN { MOVE(player, MOVE_STOCKPILE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        MESSAGE("Wobbuffet stockpiled 1!");
+        MESSAGE("WOBBUFFET stockpiled 1!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
         MESSAGE("Wobbuffet stockpiled 2!");
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Spit Up and Swallow don't work if used without Stockpile")
             MESSAGE("But it failed!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        MESSAGE("Wobbuffet stockpiled 1!");
+        MESSAGE("WOBBUFFET stockpiled 1!");
 
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         if (move == MOVE_SPIT_UP) {
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Spit Up's power raises depending on Stockpile's count", s16 
         TURN { MOVE(player, MOVE_SPIT_UP); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        MESSAGE("Wobbuffet stockpiled 1!");
+        MESSAGE("WOBBUFFET stockpiled 1!");
         if (count != 1) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
             MESSAGE("Wobbuffet stockpiled 2!");
@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("Swallow heals HP depending on Stockpile's count", s16 hpHeal
         TURN { MOVE(player, MOVE_SWALLOW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        MESSAGE("Wobbuffet stockpiled 1!");
+        MESSAGE("WOBBUFFET stockpiled 1!");
         if (count != 1) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
             MESSAGE("Wobbuffet stockpiled 2!");
@@ -180,7 +180,7 @@ SINGLE_BATTLE_TEST("Stockpile temporarily raises Def and Sp. Def", s16 dmgPyhsic
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         if (move == MOVE_STOCKPILE) {
-            MESSAGE("Wobbuffet stockpiled 1!");
+            MESSAGE("WOBBUFFET stockpiled 1!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Wobbuffet's Defense rose!");
             MESSAGE("Wobbuffet's Sp. Def rose!");
@@ -238,7 +238,7 @@ DOUBLE_BATTLE_TEST("Stockpile's Def and Sp. Def boost is lost after using Spit U
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         if (count == 1) {
-            MESSAGE("Wobbuffet's Defense fell!");
+            MESSAGE("WOBBUFFET's DEFENSE fell!");
         }
         else if (count == 2) {
             MESSAGE("Wobbuffet's Defense harshly fell!");

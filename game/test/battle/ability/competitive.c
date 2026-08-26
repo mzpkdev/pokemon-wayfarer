@@ -213,7 +213,7 @@ DOUBLE_BATTLE_TEST("Competitive is activated by Cotton Down for non-ally pokemon
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Igglybuff's Speed fell!");
+        MESSAGE("IGGLYBUFF's SPEED fell!");
         ABILITY_POPUP(playerLeft, ABILITY_COMPETITIVE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Igglybuff's Sp. Atk sharply rose!");

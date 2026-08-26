@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Trick Room doesn't print its ending message twice when used 
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, player);
-        MESSAGE("Wobbuffet twisted the dimensions!");
+        MESSAGE("WOBBUFFET twisted the dimensions!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK_ROOM, player);
         MESSAGE("The twisted dimensions returned to normal!");
         NOT MESSAGE("The twisted dimensions returned to normal!");

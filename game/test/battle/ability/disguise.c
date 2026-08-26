@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and c
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-        MESSAGE("Mimikyu became confused!");
+        MESSAGE("MIMIKYU became confused!");
         MESSAGE("Mimikyu is confused!");
         MESSAGE("It hurt itself in its confusion!");
         NOT HP_BAR(player);
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Ba
         TURN { MOVE(opponent, MOVE_SHADOW_CLAW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
-        MESSAGE("Wobbuffet's Ability was suppressed!");
+        MESSAGE("WOBBUFFET's Ability was suppressed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHADOW_CLAW, opponent);
         ABILITY_POPUP(player, ABILITY_DISGUISE);

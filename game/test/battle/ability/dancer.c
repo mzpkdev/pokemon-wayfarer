@@ -49,7 +49,7 @@ DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targe
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponentLeft);
-        MESSAGE("Wobbuffet became confused!");
+        MESSAGE("WOBBUFFET became confused!");
         MESSAGE("Wynaut became confused!");
     }
 }
@@ -168,7 +168,7 @@ DOUBLE_BATTLE_TEST("Dancer still triggers if another dancer flinches")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         ABILITY_POPUP(playerLeft, ABILITY_DANCER);
-        MESSAGE("Oricorio flinched and couldn't move!");
+        MESSAGE("ORICORIO flinched and couldn't move!");
         NONE_OF {
             MESSAGE("Oricorio used Dragon Dance!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerLeft);

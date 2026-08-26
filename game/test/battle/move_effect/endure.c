@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
-        MESSAGE("The opposing Wynaut endured the hit!");
+        MESSAGE("The opposing WYNAUT endured the hit!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
         NOT MESSAGE("The opposing Squirtle endured the hit!");

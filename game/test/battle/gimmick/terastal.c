@@ -254,7 +254,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallization persists across switches")
     } SCENE {
         // turn 1
         MESSAGE("The opposing WOBBUFFET used EARTHQUAKE!");
-        MESSAGE("It doesn't affect Wobbuffet…");
+        MESSAGE("It doesn't affect WOBBUFFET…");
         NOT { HP_BAR(player); }
         // turn 4
         MESSAGE("The opposing Wobbuffet used Earthquake!");
@@ -358,7 +358,7 @@ SINGLE_BATTLE_TEST("(TERA) Synchronoise uses a Terastallized Pokemon's Tera Type
     } SCENE {
         // turn 1
         MESSAGE("The opposing WOBBUFFET used SYNCHRONOISE!");
-        MESSAGE("It doesn't affect Wobbuffet…");
+        MESSAGE("It doesn't affect WOBBUFFET…");
         // turn 2
         MESSAGE("The opposing Wobbuffet used Synchronoise!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYNCHRONOISE, opponent);

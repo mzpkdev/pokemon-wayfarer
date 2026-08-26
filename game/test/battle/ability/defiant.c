@@ -224,7 +224,7 @@ DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon")
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Mankey's Speed fell!");
+        MESSAGE("MANKEY's SPEED fell!");
         ABILITY_POPUP(playerLeft, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Mankey's Attack sharply rose!");

@@ -18,7 +18,7 @@ DOUBLE_BATTLE_TEST("Beak Blast's charging message is shown before other moves ar
         TURN { MOVE(playerLeft, MOVE_BEAK_BLAST, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, playerLeft);
-        MESSAGE("Wynaut started heating up its beak!");
+        MESSAGE("WYNAUT started heating up its beak!");
 
         MESSAGE("Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
@@ -46,7 +46,7 @@ DOUBLE_BATTLE_TEST("Beak Blast burns all who make contact with the Pokémon")
         TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerLeft, MOVE_BEAK_BLAST, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_BEAK_BLAST_SETUP, playerLeft);
-        MESSAGE("Wynaut started heating up its beak!");
+        MESSAGE("WYNAUT started heating up its beak!");
 
         MESSAGE("Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);

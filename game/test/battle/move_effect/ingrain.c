@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Ingrain fails if already rooted")
         TURN { MOVE(player, MOVE_INGRAIN); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
-        MESSAGE("Wobbuffet planted its roots!");
+        MESSAGE("WOBBUFFET planted its roots!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_INGRAIN, player);
         MESSAGE("But it failed!");
     }

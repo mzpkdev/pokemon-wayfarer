@@ -140,7 +140,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sl
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
-        MESSAGE("Wobbuffet fell asleep!");
+        MESSAGE("WOBBUFFET fell asleep!");
         STATUS_ICON(player, sleep: TRUE);
         MESSAGE("Wobbuffet is fast asleep.");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VITAL_THROW, opponent);
@@ -263,7 +263,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech S
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
-        MESSAGE("Wobbuffet was seeded!");
+        MESSAGE("WOBBUFFET was seeded!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, player);
         MESSAGE("Wobbuffet fainted!");
         NOT MESSAGE("The opposing Wobbuffet's Leech Seed lost all its PP due to the grudge!");

@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Defense Curl raises Defense by 1 stage", s16 damage)
         if (raiseDefense) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFENSE_CURL, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's Defense rose!");
+            MESSAGE("WOBBUFFET's DEFENSE rose!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);

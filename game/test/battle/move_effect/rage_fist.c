@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not increased by a confusion hit")
         HP_BAR(opponent, captureDamage: &timesGotHit[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-        MESSAGE("Wobbuffet became confused!");
+        MESSAGE("WOBBUFFET became confused!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         MESSAGE("It hurt itself in its confusion!");
         HP_BAR(player);

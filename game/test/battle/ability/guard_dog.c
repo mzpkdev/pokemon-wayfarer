@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Guard Dog raises Attack when intimidated", s16 damage)
             ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
             ABILITY_POPUP(player, ABILITY_GUARD_DOG);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Okidogi's Attack rose!");
+            MESSAGE("OKIDOGI's ATTACK rose!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

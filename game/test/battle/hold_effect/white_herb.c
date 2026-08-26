@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DUAL_WINGBEAT, player);
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Speed fell!");
+        MESSAGE("WOBBUFFET's SPEED fell!");
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Wobbuffet's Speed fell!");

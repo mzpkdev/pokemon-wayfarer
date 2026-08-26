@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the target faints")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
-        MESSAGE("Zoroark's illusion wore off!");
+        MESSAGE("ZOROARK's illusion wore off!");
     }
 }
 
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
-        MESSAGE("Zoroark's illusion wore off!");
+        MESSAGE("ZOROARK's illusion wore off!");
     }
 }
 

@@ -632,7 +632,7 @@ DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhy
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-            MESSAGE("Glalie's evasiveness fell!");
+            MESSAGE("GLALIE's evasiveness fell!");
             MESSAGE("Your team's Aurora Veil wore off!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);

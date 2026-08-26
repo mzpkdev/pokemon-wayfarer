@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Cotton Down drops speed by one of all other battlers on the 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Wobbuffet's Speed fell!");
+        MESSAGE("WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Wynaut's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);

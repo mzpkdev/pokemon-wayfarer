@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Big Pecks is ignored by Mold Breaker")
         TURN { MOVE(player, MOVE_LEER); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MOLD_BREAKER);
-        MESSAGE("Pinsir breaks the mold!");
+        MESSAGE("PINSIR breaks the mold!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, player);
         MESSAGE("The opposing Pidgey's Defense fell!");
         NONE_OF {
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Spectral Thief from resetting posi
         TURN { MOVE(opponent, MOVE_HARDEN); MOVE(player, MOVE_SPECTRAL_THIEF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, opponent);
-        MESSAGE("The opposing Pidgey's Defense rose!");
+        MESSAGE("The opposing PIDGEY's DEFENSE rose!");
         MESSAGE("Wobbuffet stole the target's boosted stats!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
     } THEN {

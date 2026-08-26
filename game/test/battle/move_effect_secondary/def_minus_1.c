@@ -24,6 +24,6 @@ DOUBLE_BATTLE_TEST("Clanging Scales lowers defense by one stage if it hits both 
         }
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Wobbuffet's Defense fell!");
+        MESSAGE("WOBBUFFET's DEFENSE fell!");
     }
 }

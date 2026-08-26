@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers the Attack of Pokemon with Intimidate")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Gyarados's Attack fell!");
+        MESSAGE("The opposing GYARADOS's ATTACK fell!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);

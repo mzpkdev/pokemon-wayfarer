@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Life Dew recovers 25% of hp for both user and partner")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LIFE_DEW, playerLeft);
         HP_BAR(playerLeft, captureDamage: &healing[0]);
-        MESSAGE("Wobbuffet's HP was restored.");
+        MESSAGE("WOBBUFFET's HP was restored.");
         HP_BAR(playerRight, captureDamage: &healing[1]);
         MESSAGE("Wynaut's HP was restored.");
     } THEN {

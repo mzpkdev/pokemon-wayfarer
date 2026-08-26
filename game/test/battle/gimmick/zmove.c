@@ -474,7 +474,7 @@ DOUBLE_BATTLE_TEST("(Z-MOVE) Instruct fails if the target last used a Z-Move")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, playerLeft);
-        MESSAGE("Wynaut used Instruct!");
+        MESSAGE("WYNAUT used INSTRUCT!");
         MESSAGE("But it failed!");
     }
 }
