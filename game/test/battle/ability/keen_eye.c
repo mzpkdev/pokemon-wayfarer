@@ -120,16 +120,16 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-T
             MESSAGE("The opposing STARYU's ATTACK rose!");
             MESSAGE("The opposing STARYU's accuracy rose!");
         } else {
-            MESSAGE("The opposing Ursaluna's Attack rose!");
-            MESSAGE("The opposing Ursaluna's accuracy rose!");
+            MESSAGE("The opposing URSALUNA's ATTACK rose!");
+            MESSAGE("The opposing URSALUNA's accuracy rose!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOPSY_TURVY, player);
         if (species == SPECIES_HITMONCHAN)
             MESSAGE("All stat changes on the opposing HITMONCHAN were inverted!");
         else if (species == SPECIES_STARYU)
-            MESSAGE("All stat changes on the opposing Staryu were inverted!");
+            MESSAGE("All stat changes on the opposing STARYU were inverted!");
         else
-            MESSAGE("All stat changes on the opposing Ursaluna were inverted!");
+            MESSAGE("All stat changes on the opposing URSALUNA were inverted!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE - 1);
     }
