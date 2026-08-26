@@ -94,6 +94,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over Sturdy (Gen 5+)")
 {
     GIVEN {
         WITH_CONFIG(B_STURDY, GEN_5);
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Sturdy = TRUE;
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARON) { HP(1); MaxHP(1); Ability(ABILITY_STURDY); }
     } WHEN {

@@ -19,6 +19,8 @@ SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain")
         PARAMETRIZE { terrainMove = terrainData[j][0]; terrainType = terrainData[j][1]; }
 
     GIVEN {
+        if (terrainMove == MOVE_MISTY_TERRAIN)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
     } WHEN {
@@ -76,6 +78,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
 DOUBLE_BATTLE_TEST("Mimicry can trigger multiple times in a turn")
 {
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_STUNFISK_GALAR) { Speed(50); Ability(ABILITY_MIMICRY); }
         PLAYER(SPECIES_MORELULL) { Speed(40); }
         OPPONENT(SPECIES_IGGLYBUFF) { Speed(60); }

@@ -319,6 +319,8 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Nature Power transforms into different Z-Moves ba
     PARAMETRIZE { terrainMove = MOVE_GRASSY_TERRAIN;    zMove = gTypesInfo[TYPE_GRASS].zMove; }
     PARAMETRIZE { terrainMove = MOVE_MISTY_TERRAIN;     zMove = gTypesInfo[TYPE_FAIRY].zMove; }
     GIVEN {
+        if (terrainMove == MOVE_MISTY_TERRAIN)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMoveType(MOVE_NATURE_POWER) == TYPE_NORMAL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);

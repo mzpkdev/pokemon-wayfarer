@@ -637,6 +637,7 @@ SINGLE_BATTLE_TEST("Dynamax: Sitrus Berries heal based on a Pokemon's non-Dynama
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus = TRUE;
         ASSUME(I_SITRUS_BERRY_HEAL >= GEN_4);
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
         PLAYER(SPECIES_WOBBUFFET);

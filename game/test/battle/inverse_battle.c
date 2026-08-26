@@ -8,6 +8,8 @@ static bool32 IsSpeciesMonotypeOf(u32 species, enum Type type)
 
 ASSUMPTIONS
 {
+    gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
+
     // Pokemon Types
     ASSUME(IsSpeciesMonotypeOf(SPECIES_EEVEE,    TYPE_NORMAL));
     ASSUME(IsSpeciesMonotypeOf(SPECIES_MACHAMP,  TYPE_FIGHTING));
@@ -104,6 +106,7 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
     }
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         FLAG_SET(B_FLAG_INVERSE_BATTLE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
@@ -121,4 +124,3 @@ SINGLE_BATTLE_TEST("Inverse battle reverses type matchups")
             MESSAGE("It's super effective!");
     }
 }
-

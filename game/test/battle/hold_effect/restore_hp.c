@@ -10,6 +10,8 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
     PARAMETRIZE { item = ITEM_SITRUS_BERRY; }
 
     GIVEN {
+        if (item == ITEM_SITRUS_BERRY)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus = TRUE;
         ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffect == HOLD_EFFECT_RESTORE_HP);
         ASSUME(gItemsInfo[ITEM_BERRY_JUICE].holdEffect == HOLD_EFFECT_RESTORE_HP);
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);

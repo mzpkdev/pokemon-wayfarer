@@ -37,9 +37,9 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 
-#define MAX_PROCESSES               32 // See also test/test.h
-#define MAX_SUMMARY_TESTS_TO_LIST   50
-#define MAX_TEST_LIST_BUFFER_LENGTH 256
+#define MAX_PROCESSES                     32 // See also test/test.h
+#define MAX_HUMAN_SUMMARY_TESTS_TO_LIST   50
+#define MAX_TEST_LIST_BUFFER_LENGTH       256
 
 #define ARRAY_COUNT(arr) (sizeof((arr)) / sizeof((arr)[0]))
 
@@ -65,14 +65,41 @@ struct Runner
     int assumptionFails;
     int fails;
     int results;
-    char failed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char failed_TestFilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char knownFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char knownFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char expectedFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char expectedFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char assumeFailed_TestNames[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
-    char assumeFailed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char failed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char failed_TestFilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char knownFailingPassed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char knownFailingPassed_FilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_FilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char assumeFailed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+    char assumeFailed_FilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST][MAX_TEST_LIST_BUFFER_LENGTH];
+};
+
+enum ReportEventType
+{
+    REPORT_RESULT,
+    REPORT_DIAGNOSTIC,
+};
+
+struct ReportEvent
+{
+    enum ReportEventType type;
+    unsigned runner;
+    char status;
+    char test_name[sizeof(((struct Runner *)0)->test_name)];
+    char filename_line[sizeof(((struct Runner *)0)->filename_line)];
+    char diagnostic_source[32];
+    char *result_message;
+    size_t result_message_size;
+    char *diagnostic;
+    size_t diagnostic_size;
+};
+
+struct Report
+{
+    size_t events_n;
+    size_t events_capacity;
+    struct ReportEvent *events;
 };
 
 struct Symbol {
@@ -89,6 +116,8 @@ struct SymbolTable {
 static unsigned nrunners = 0;
 static unsigned runners_digits = 0;
 static struct Runner *runners = NULL;
+static bool report_enabled = false;
+static struct Report report = { 0, 0, NULL };
 
 // TODO: Build the symbol table on demand.
 static struct SymbolTable symbol_table = { NULL, 0 };
@@ -196,6 +225,213 @@ static void fprint_buffer(FILE *f, const char *buffer, size_t size)
     }
 }
 
+static struct ReportEvent *append_report_event(void)
+{
+    if (!report_enabled)
+        return NULL;
+
+    if (report.events_n == report.events_capacity)
+    {
+        size_t capacity = report.events_capacity ? report.events_capacity * 2 : 1024;
+        void *events = realloc(report.events, capacity * sizeof(*report.events));
+        if (!events)
+        {
+            perror("realloc report events failed");
+            exit(2);
+        }
+        report.events = events;
+        report.events_capacity = capacity;
+    }
+
+    struct ReportEvent *event = &report.events[report.events_n++];
+    memset(event, 0, sizeof(*event));
+    return event;
+}
+
+static char *copy_buffer(const char *buffer, size_t size)
+{
+    char *copy = malloc(size + 1);
+    if (!copy)
+    {
+        perror("malloc report buffer failed");
+        exit(2);
+    }
+    memcpy(copy, buffer, size);
+    copy[size] = '\0';
+    return copy;
+}
+
+static void record_result(unsigned runner_i, const struct Runner *runner, char status, const char *message, size_t message_size)
+{
+    struct ReportEvent *event = append_report_event();
+    if (!event)
+        return;
+
+    event->type = REPORT_RESULT;
+    event->runner = runner_i;
+    event->status = status;
+    strcpy(event->test_name, runner->test_name);
+    strcpy(event->filename_line, runner->filename_line);
+    event->result_message = copy_buffer(message, message_size);
+    event->result_message_size = message_size;
+    event->diagnostic = copy_buffer(runner->output_buffer, runner->output_buffer_size);
+    event->diagnostic_size = runner->output_buffer_size;
+}
+
+static void record_diagnostic(unsigned runner_i, const char *source, const char *diagnostic, size_t diagnostic_size)
+{
+    struct ReportEvent *event = append_report_event();
+    if (!event)
+        return;
+
+    event->type = REPORT_DIAGNOSTIC;
+    event->runner = runner_i;
+    strcpy(event->diagnostic_source, source);
+    event->diagnostic = copy_buffer(diagnostic, diagnostic_size);
+    event->diagnostic_size = diagnostic_size;
+}
+
+static const char *report_status_name(char status)
+{
+    switch (status)
+    {
+    case 'P': return "PASS";
+    case 'E': return "EXPECT_FAILING";
+    case 'K': return "KNOWN_FAILING";
+    case 'U': return "KNOWN_FAILING_PASSING";
+    case 'V': return "EXPECTED_FAIL_PASSING";
+    case 'T': return "TO_DO";
+    case 'A': return "ASSUMPTIONS_FAILED";
+    case 'F': return "FAIL";
+    default: return "UNKNOWN";
+    }
+}
+
+static void fprint_json_string(FILE *f, const char *buffer, size_t size)
+{
+    fputc('"', f);
+    for (size_t i = 0; i < size; i++)
+    {
+        unsigned char c = buffer[i];
+        switch (c)
+        {
+        case '"': fputs("\\\"", f); break;
+        case '\\': fputs("\\\\", f); break;
+        case '\b': fputs("\\b", f); break;
+        case '\f': fputs("\\f", f); break;
+        case '\n': fputs("\\n", f); break;
+        case '\r': fputs("\\r", f); break;
+        case '\t': fputs("\\t", f); break;
+        default:
+            if (c < 0x20 || c >= 0x7f)
+                fprintf(f, "\\u%04x", c);
+            else
+                fputc(c, f);
+            break;
+        }
+    }
+    fputc('"', f);
+}
+
+static int compare_report_buffers(const char *a, size_t a_size, const char *b, size_t b_size)
+{
+    int cmp = memcmp(a, b, min(a_size, b_size));
+    if (cmp != 0)
+        return cmp;
+    if (a_size < b_size)
+        return -1;
+    if (a_size > b_size)
+        return 1;
+    return 0;
+}
+
+static int compare_report_events(const void *a, const void *b)
+{
+    const struct ReportEvent *ea = a;
+    const struct ReportEvent *eb = b;
+    int cmp;
+
+    if (ea->type < eb->type)
+        return -1;
+    if (ea->type > eb->type)
+        return 1;
+    if (ea->type == REPORT_RESULT)
+    {
+        cmp = strcmp(ea->filename_line, eb->filename_line);
+        if (cmp != 0)
+            return cmp;
+        cmp = strcmp(ea->test_name, eb->test_name);
+        if (cmp != 0)
+            return cmp;
+        if (ea->status < eb->status)
+            return -1;
+        if (ea->status > eb->status)
+            return 1;
+        cmp = compare_report_buffers(ea->result_message, ea->result_message_size, eb->result_message, eb->result_message_size);
+        if (cmp != 0)
+            return cmp;
+    }
+    else
+    {
+        cmp = strcmp(ea->diagnostic_source, eb->diagnostic_source);
+        if (cmp != 0)
+            return cmp;
+    }
+    cmp = compare_report_buffers(ea->diagnostic, ea->diagnostic_size, eb->diagnostic, eb->diagnostic_size);
+    if (cmp != 0)
+        return cmp;
+    if (ea->runner < eb->runner)
+        return -1;
+    if (ea->runner > eb->runner)
+        return 1;
+    return 0;
+}
+
+static void write_report(const char *path, int exit_code, int passes, int expectedFails, int expectedFailsPassing, int knownFails, int knownFailsPassing, int todos, int assumptionFails, int fails, int results)
+{
+    if (!report_enabled)
+        return;
+
+    FILE *f = fopen(path, "w");
+    if (!f)
+    {
+        perror("open report failed");
+        return;
+    }
+
+    if (report.events_n > 1)
+        qsort(report.events, report.events_n, sizeof(*report.events), compare_report_events);
+    fprintf(f, "{\"type\":\"metadata\",\"schema\":\"mgba-rom-test-hydra/v1\",\"events\":%zu}\n", report.events_n);
+    for (size_t i = 0; i < report.events_n; i++)
+    {
+        const struct ReportEvent *event = &report.events[i];
+        if (event->type == REPORT_RESULT)
+        {
+            fprintf(f, "{\"type\":\"result\",\"status\":\"%s\",\"test_name\":", report_status_name(event->status));
+            fprint_json_string(f, event->test_name, strlen(event->test_name));
+            fputs(",\"filename_line\":", f);
+            fprint_json_string(f, event->filename_line, strlen(event->filename_line));
+            fputs(",\"result_message\":", f);
+            fprint_json_string(f, event->result_message, event->result_message_size);
+            fputs(",\"diagnostic\":", f);
+            fprint_json_string(f, event->diagnostic, event->diagnostic_size);
+            fputs("}\n", f);
+        }
+        else
+        {
+            fputs("{\"type\":\"diagnostic\",\"source\":", f);
+            fprint_json_string(f, event->diagnostic_source, strlen(event->diagnostic_source));
+            fputs(",\"message\":", f);
+            fprint_json_string(f, event->diagnostic, event->diagnostic_size);
+            fputs("}\n", f);
+        }
+    }
+    fprintf(f, "{\"type\":\"summary\",\"exit_code\":%d,\"counts\":{\"passed\":%d,\"expect_failing\":%d,\"expected_fail_passing\":%d,\"known_failing\":%d,\"known_failing_passing\":%d,\"to_do\":%d,\"assumptions_failed\":%d,\"failed\":%d,\"total\":%d}}\n", exit_code, passes, expectedFails, expectedFailsPassing, knownFails, knownFailsPassing, todos, assumptionFails, fails, results);
+
+    if (fclose(f) == EOF)
+        perror("close report failed");
+}
+
 static void handle_read(int i, struct Runner *runner)
 {
     char *sol = runner->input_buffer;
@@ -252,7 +488,7 @@ static void handle_read(int i, struct Runner *runner)
                     runner->knownFails++;
                     goto add_to_results;
                 case 'U':
-                    if (runner->knownFailsPassing < MAX_SUMMARY_TESTS_TO_LIST)
+                    if (runner->knownFailsPassing < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                     {
                         strcpy(runner->knownFailingPassed_TestNames[runner->knownFailsPassing], runner->test_name);
                         strcpy(runner->knownFailingPassed_FilenameLine[runner->knownFailsPassing], runner->filename_line);
@@ -260,7 +496,7 @@ static void handle_read(int i, struct Runner *runner)
                     runner->knownFailsPassing++;
                     goto add_to_results;
                 case 'V':
-                    if (runner->expectedFailsPassing < MAX_SUMMARY_TESTS_TO_LIST)
+                    if (runner->expectedFailsPassing < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                     {
                         strcpy(runner->expectedFailingPassed_TestNames[runner->expectedFailsPassing], runner->test_name);
                         strcpy(runner->expectedFailingPassed_FilenameLine[runner->expectedFailsPassing], runner->filename_line);
@@ -271,7 +507,7 @@ static void handle_read(int i, struct Runner *runner)
                     runner->todos++;
                     goto add_to_results;
                 case 'A':
-                    if (runner->assumptionFails < MAX_SUMMARY_TESTS_TO_LIST)
+                    if (runner->assumptionFails < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                     {
                         strcpy(runner->assumeFailed_TestNames[runner->assumptionFails], runner->test_name);
                         strcpy(runner->assumeFailed_FilenameLine[runner->assumptionFails], runner->filename_line);
@@ -279,7 +515,7 @@ static void handle_read(int i, struct Runner *runner)
                     runner->assumptionFails++;
                     goto add_to_results;
                 case 'F':
-                    if (runner->fails < MAX_SUMMARY_TESTS_TO_LIST)
+                    if (runner->fails < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                     {
                         strcpy(runner->failed_TestNames[runner->fails], runner->test_name);
                         strcpy(runner->failed_TestFilenameLine[runner->fails], runner->filename_line);
@@ -287,6 +523,7 @@ static void handle_read(int i, struct Runner *runner)
                     runner->fails++;
 add_to_results:
                     runner->results++;
+                    record_result(i, runner, soc[1], soc + 2, eol - soc - 2);
                     soc += 2;
                     fprintf(stdout, "[%0*d] %s: ", runners_digits, i, runner->test_name);
                     fwrite(soc, 1, eol - soc, stdout);
@@ -320,6 +557,7 @@ buffer_output:
         }
         else
         {
+            record_diagnostic(i, "unparsed_stdout", sol, eol - sol);
             fwrite(sol, 1, eol - sol, stdout);
         }
         sol += n;
@@ -444,8 +682,12 @@ int main(int argc, char *argv[])
     if (argc < 4)
     {
         fprintf(stderr, "usage %s mgba-rom-test objcopy rom\n", argv[0]);
+        fprintf(stderr, "Set MGBA_ROM_TEST_HYDRA_REPORT to write a complete NDJSON result report.\n");
         exit(2);
     }
+
+    const char *report_path = getenv("MGBA_ROM_TEST_HYDRA_REPORT");
+    report_enabled = report_path && report_path[0] != '\0';
 
     bool tty = isatty(STDOUT_FILENO);
     if (!tty)
@@ -761,17 +1003,17 @@ int main(int argc, char *argv[])
     int fails = 0;
     int results = 0;
 
-    char failed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char failed_TestFilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char failed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char failed_TestFilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
 
-    char knownFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char knownFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char knownFailingPassed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char knownFailingPassed_FilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
 
-    char expectedFailingPassed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char expectedFailingPassed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char expectedFailingPassed_FilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
 
-    char assumeFailed_TestNames[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
-    char assumeFailed_FilenameLine[MAX_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char assumeFailed_TestNames[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
+    char assumeFailed_FilenameLine[MAX_HUMAN_SUMMARY_TESTS_TO_LIST * MAX_PROCESSES][MAX_TEST_LIST_BUFFER_LENGTH];
 
     for (int i = 0; i < nrunners; i++)
     {
@@ -781,16 +1023,32 @@ int main(int argc, char *argv[])
             perror("waitpid runners[i] failed");
             exit(2);
         }
+        if (runners[i].input_buffer_size > 0)
+        {
+            record_diagnostic(i, "unterminated_stdout", runners[i].input_buffer, runners[i].input_buffer_size);
+            fwrite(runners[i].input_buffer, 1, runners[i].input_buffer_size, stdout);
+        }
         if (runners[i].output_buffer_size > 0)
+        {
+            record_diagnostic(i, "pending_test_output", runners[i].output_buffer, runners[i].output_buffer_size);
             fwrite(runners[i].output_buffer, 1, runners[i].output_buffer_size, stdout);
+        }
         if (WIFEXITED(wstatus) && WEXITSTATUS(wstatus) > exit_code)
             exit_code = WEXITSTATUS(wstatus);
+        char exit_diagnostic[64];
+        if (WIFEXITED(wstatus))
+            snprintf(exit_diagnostic, sizeof(exit_diagnostic), "exit_status=%d", WEXITSTATUS(wstatus));
+        else if (WIFSIGNALED(wstatus))
+            snprintf(exit_diagnostic, sizeof(exit_diagnostic), "signal=%d", WTERMSIG(wstatus));
+        else
+            snprintf(exit_diagnostic, sizeof(exit_diagnostic), "wait_status=%d", wstatus);
+        record_diagnostic(i, "runner_exit", exit_diagnostic, strlen(exit_diagnostic));
         passes += runners[i].passes;
         expectedFails += runners[i].expectedFails;
         knownFails += runners[i].knownFails;
         for (int j = 0; j < runners[i].knownFailsPassing; j++)
         {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
+            if (j < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
             {
                 strcpy(knownFailingPassed_TestNames[knownFailsPassing], runners[i].knownFailingPassed_TestNames[j]);
                 strcpy(knownFailingPassed_FilenameLine[knownFailsPassing], runners[i].knownFailingPassed_FilenameLine[j]);
@@ -799,7 +1057,7 @@ int main(int argc, char *argv[])
         }
         for (int j = 0; j < runners[i].expectedFailsPassing; j++)
         {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
+            if (j < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
             {
                 strcpy(expectedFailingPassed_TestNames[expectedFailsPassing], runners[i].expectedFailingPassed_TestNames[j]);
                 strcpy(expectedFailingPassed_FilenameLine[expectedFailsPassing], runners[i].expectedFailingPassed_FilenameLine[j]);
@@ -809,7 +1067,7 @@ int main(int argc, char *argv[])
         todos += runners[i].todos;
         for (int j = 0; j < runners[i].assumptionFails; j++)
         {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
+            if (j < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
             {
                 strcpy(assumeFailed_TestNames[assumptionFails], runners[i].assumeFailed_TestNames[j]);
                 strcpy(assumeFailed_FilenameLine[assumptionFails], runners[i].assumeFailed_FilenameLine[j]);
@@ -818,7 +1076,7 @@ int main(int argc, char *argv[])
         }
         for (int j = 0; j < runners[i].fails; j++)
         {
-            if (j < MAX_SUMMARY_TESTS_TO_LIST)
+            if (j < MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
             {
                 strcpy(failed_TestNames[fails], runners[i].failed_TestNames[j]);
                 strcpy(failed_TestFilenameLine[fails], runners[i].failed_TestFilenameLine[j]);
@@ -827,6 +1085,8 @@ int main(int argc, char *argv[])
         }
         results += runners[i].results;
     }
+
+    write_report(report_path, exit_code, passes, expectedFails, expectedFailsPassing, knownFails, knownFailsPassing, todos, assumptionFails, fails, results);
 
     if (results == 0)
     {
@@ -839,9 +1099,9 @@ int main(int argc, char *argv[])
             fprintf(stdout, "\n  \e[31mFAILED\e[0m tests:\n");
             for (int i = 0; i < fails; i++)
             {
-                if (i >= MAX_SUMMARY_TESTS_TO_LIST)
+                if (i >= MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                 {
-                    fprintf(stdout, "  - \e[31mand %d more...\e[0m\n", fails - MAX_SUMMARY_TESTS_TO_LIST);
+                    fprintf(stdout, "  - \e[31mand %d more...\e[0m\n", fails - MAX_HUMAN_SUMMARY_TESTS_TO_LIST);
                     break;
                 }
                 fprintf(stdout, "  - \e[31m");
@@ -855,9 +1115,9 @@ int main(int argc, char *argv[])
             fprintf(stdout, "\n  Tests with \e[33mASSUMPTIONS_FAILED\e[0m:\n");
             for (int i = 0; i < assumptionFails; i++)
             {
-                if (i >= MAX_SUMMARY_TESTS_TO_LIST)
+                if (i >= MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                 {
-                    fprintf(stdout, "  - \e[33mand %d more...\e[0m\n", assumptionFails - MAX_SUMMARY_TESTS_TO_LIST);
+                    fprintf(stdout, "  - \e[33mand %d more...\e[0m\n", assumptionFails - MAX_HUMAN_SUMMARY_TESTS_TO_LIST);
                     break;
                 }
                 fprintf(stdout, "  - \e[33m");
@@ -871,9 +1131,9 @@ int main(int argc, char *argv[])
             fprintf(stdout, "\n  \e[33mKNOWN_FAILING\e[0m tests \e[32mPASSING\e[0m:\n");
             for (int i = 0; i < knownFailsPassing; i++)
             {
-                if (i >= MAX_SUMMARY_TESTS_TO_LIST)
+                if (i >= MAX_HUMAN_SUMMARY_TESTS_TO_LIST)
                 {
-                    fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", knownFailsPassing - MAX_SUMMARY_TESTS_TO_LIST);
+                    fprintf(stdout, "  - \e[32mand %d more...\e[0m\n", knownFailsPassing - MAX_HUMAN_SUMMARY_TESTS_TO_LIST);
                     break;
                 }
                 fprintf(stdout, "  - \e[32m");

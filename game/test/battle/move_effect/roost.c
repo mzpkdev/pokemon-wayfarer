@@ -24,7 +24,6 @@ ASSUMPTIONS
     ASSUME(GetMoveType(MOVE_ICE_BEAM) == TYPE_ICE);
     ASSUME(GetMoveType(MOVE_DRAGON_BREATH) == TYPE_DRAGON);
     ASSUME(GetMoveType(MOVE_BITE) == TYPE_DARK);
-    ASSUME(GetMoveType(MOVE_DISARMING_VOICE) == TYPE_FAIRY);
 }
 
 SINGLE_BATTLE_TEST("Roost fails when user is at full HP")
@@ -131,6 +130,8 @@ SINGLE_BATTLE_TEST("Roost, if used by a Flying/Flying type, treats the user as a
     PARAMETRIZE { damagingMove = MOVE_DISARMING_VOICE; }
 
     GIVEN {
+        if (damagingMove == MOVE_DISARMING_VOICE)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 0) == TYPE_FLYING);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 1) == TYPE_FLYING);
         PLAYER(SPECIES_TORNADUS) { HP(50); MaxHP(100); }
@@ -199,6 +200,8 @@ SINGLE_BATTLE_TEST("Roost, if used by a Mystery/Flying type, treats the user as 
     PARAMETRIZE { damagingMove = MOVE_DISARMING_VOICE; }
 
     GIVEN {
+        if (damagingMove == MOVE_DISARMING_VOICE)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetSpeciesType(SPECIES_MOLTRES, 0) == TYPE_FIRE);
         ASSUME(GetSpeciesType(SPECIES_MOLTRES, 1) == TYPE_FLYING);
         PLAYER(SPECIES_MOLTRES) { HP(300); MaxHP(400); }

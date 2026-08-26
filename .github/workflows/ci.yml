@@ -118,10 +118,19 @@ jobs:
       - name: Run mechanics tests
         working-directory: game
         env:
+          MGBA_ROM_TEST_HYDRA_REPORT: ${{ github.workspace }}/expansion-suite-report.ndjson
           TEST: 1
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
         run: make -j"$(nproc)" check
+
+      - name: Upload Expansion Suite report
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: expansion-suite-report
+          path: expansion-suite-report.ndjson
+          if-no-files-found: warn
 
   smoke:
     name: Smoke

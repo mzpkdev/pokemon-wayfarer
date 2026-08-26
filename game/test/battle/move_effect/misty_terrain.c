@@ -25,6 +25,7 @@ SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Fairy-type move
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

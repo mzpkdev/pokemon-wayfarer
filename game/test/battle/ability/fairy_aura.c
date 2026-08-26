@@ -6,6 +6,7 @@ DOUBLE_BATTLE_TEST("Fairy Aura increases the power of all Fairy-type attacks by 
     s16 damage[8];
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
         PLAYER(SPECIES_LINOONE);
         PLAYER(SPECIES_LINOONE);
@@ -63,6 +64,7 @@ DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times")
     s16 damage[6];
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
         PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
