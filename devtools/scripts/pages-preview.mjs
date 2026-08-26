@@ -45,7 +45,7 @@ export const previewIndexHtml = (previews) => {
   <body>
     <main>
       <h1>Pokémon Wayfarer previews</h1>
-      <p>Open developer-tooling previews.</p>
+      <p>Open Devtools previews.</p>
       <ul>
 ${content}
       </ul>

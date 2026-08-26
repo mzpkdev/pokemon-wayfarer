@@ -5,7 +5,7 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", ".webanvil/buildinfo.json"]
     },
-    "pokemon-wayfarer-devtooling#build": {
+    "pokemon-wayfarer-devtools#build": {
       "dependsOn": ["^build"],
       "outputs": [
         "../build/cartographer/map-catalog/**",

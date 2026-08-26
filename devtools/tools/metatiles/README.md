@@ -2,7 +2,7 @@
 
 `wmetatiles` builds source-driven metatile catalogs and palette-correct atlases. It does not build or run the ROM.
 
-Run this from `devtooling/`:
+Run this from `devtools/`:
 
 ```sh
 pnpm run metatiles:catalog # recreates the shared map and metatile catalogs
