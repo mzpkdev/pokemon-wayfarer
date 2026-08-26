@@ -300,7 +300,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal under Cloud Nine
         ABILITY_POPUP(opponent, ability);
         ABILITY_POPUP(player, ABILITY_FORECAST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Castform transformed!");
+        MESSAGE("CASTFORM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CASTFORM_NORMAL);
     }
@@ -343,7 +343,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform when weather changes")
         // transforms again
         ABILITY_POPUP(player, ABILITY_FORECAST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Castform transformed!");
+        MESSAGE("CASTFORM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CASTFORM_SUNNY);
     }
@@ -365,7 +365,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform back to normal when its ability
         MESSAGE("CASTFORM transformed!");
         // back to normal
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Castform transformed!");
+        MESSAGE("CASTFORM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CASTFORM_NORMAL);
     }
@@ -480,4 +480,3 @@ DOUBLE_BATTLE_TEST("Forecast: All Forecast mons revert on the field if Primal We
         EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
     }
 }
-

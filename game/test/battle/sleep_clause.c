@@ -603,12 +603,12 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         else
             TURN { SWITCH(sporedSlot, switchIndex); MOVE(healingSlot, move); MOVE(playerLeft, MOVE_SPORE, target:sporedSlot); }
     } SCENE {
-        MESSAGE("Zigzagoon used Spore!");
+        MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, sporedSlot);
         MESSAGE("The opposing Zigzagoon fell asleep!");
         STATUS_ICON(sporedSlot, sleep: TRUE);
-        MESSAGE("Zigzagoon used Spore!");
+        MESSAGE("ZIGZAGOON used SPORE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, healingSlot);
@@ -632,7 +632,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLY_SWIRL, healingSlot);
         }
         STATUS_ICON(sporedSlot, sleep: FALSE);
-        MESSAGE("Zigzagoon used Spore!");
+        MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, sporedSlot);
         MESSAGE("The opposing Zigzagoon fell asleep!");
@@ -823,7 +823,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Swablu fell asleep!");
+        MESSAGE("The opposing SWABLU fell asleep!");
         MESSAGE("2 withdrew Swablu!");
         MESSAGE("2 sent out Swablu!");
         MESSAGE("Zigzagoon used Spore!");
@@ -855,7 +855,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Dratini fell asleep!");
+        MESSAGE("The opposing DRATINI fell asleep!");
         MESSAGE("The opposing Dratini's Shed Skin cured its sleep problem!");
         MESSAGE("Zigzagoon used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
@@ -911,7 +911,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         if (heldItem == ITEM_CHESTO_BERRY)
             MESSAGE("The opposing Zigzagoon's Chesto Berry woke it up!");
         else
@@ -976,12 +976,12 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
-        MESSAGE("Zigzagoon had its status healed!");
-        MESSAGE("Zigzagoon used Spore!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
+        MESSAGE("ZIGZAGOON had its status healed!");
+        MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
     }
 }
 
@@ -1002,7 +1002,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         MESSAGE("The opposing Zigzagoon fainted!");
         MESSAGE("Zigzagoon used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
@@ -1056,7 +1056,7 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("DELIBIRD used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         MESSAGE("The opposing Zigzagoon used Sleep Talk!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, opponent);
         MESSAGE("The opposing Zigzagoon used Skill Swap!");
@@ -1187,7 +1187,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         MESSAGE("The opposing WOBBUFFET used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentRight);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, playerRight);
-        MESSAGE("Wobbuffet fell asleep!");
+        MESSAGE("WOBBUFFET fell asleep!");
         MESSAGE("Appletun used G-Max Sweetness!");
         MESSAGE("The opposing Wobbuffet used Spore!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponentRight);

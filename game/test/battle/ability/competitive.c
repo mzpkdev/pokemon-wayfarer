@@ -286,7 +286,7 @@ SINGLE_BATTLE_TEST("Competitive activates for each stat that is lowered")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TICKLE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
 
-        MESSAGE("Igglybuff's Attack fell!");
+        MESSAGE("IGGLYBUFF's ATTACK fell!");
         ABILITY_POPUP(player, ABILITY_COMPETITIVE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Igglybuff's Sp. Atk sharply rose!");

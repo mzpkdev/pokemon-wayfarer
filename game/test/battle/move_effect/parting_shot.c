@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Passes Substitute and switches the user out")
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Hyper Cutter blocks Attack drop but still swit
         TURN { MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 1);
@@ -334,7 +334,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Stat drop prevention by abilities/items switch
         TURN { MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
@@ -354,7 +354,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Mist prevents stat drops and switches (Gen6)")
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_PARTING_SHOT); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, player);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);

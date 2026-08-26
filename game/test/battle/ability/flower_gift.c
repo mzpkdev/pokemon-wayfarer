@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when weather c
         // back to normal
         ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Cherrim transformed!");
+        MESSAGE("CHERRIM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CHERRIM_OVERCAST);
     }
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when its abili
         MESSAGE("CHERRIM transformed!");
         // back to normal
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Cherrim transformed!");
+        MESSAGE("CHERRIM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CHERRIM_OVERCAST);
     }
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Ni
         ABILITY_POPUP(opponent, ability);
         ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Cherrim transformed!");
+        MESSAGE("CHERRIM transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CHERRIM_OVERCAST);
     }

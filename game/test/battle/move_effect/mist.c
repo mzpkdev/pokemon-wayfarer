@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Mist prevents stat reductions from opposing moves")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
         MESSAGE("Your team became shrouded in mist!");
         MESSAGE("The opposing WOBBUFFET used GROWL!");
-        MESSAGE("Wobbuffet is protected by the mist!");
+        MESSAGE("WOBBUFFET is protected by the mist!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
@@ -33,9 +33,9 @@ SINGLE_BATTLE_TEST("Mist's protection considers Contrary") // Eg. If a move woul
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
         MESSAGE("Your team became shrouded in mist!");
         MESSAGE("The opposing WOBBUFFET used SWAGGER!");
-        MESSAGE("Snivy is protected by the mist!");
+        MESSAGE("SNIVY is protected by the mist!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-        MESSAGE("Snivy became confused!");
+        MESSAGE("SNIVY became confused!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }

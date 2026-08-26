@@ -86,7 +86,7 @@ DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the playe
         ABILITY_POPUP(opponentLeft, ABILITY_BAD_DREAMS);
         MESSAGE("WOBBUFFET is tormented!");
         HP_BAR(playerLeft);
-        MESSAGE("Wobbuffet is tormented!");
+        MESSAGE("WOBBUFFET is tormented!");
         HP_BAR(playerRight);
     } THEN {
         EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);

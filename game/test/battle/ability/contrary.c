@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         if (ability == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Attack rose!");
+            MESSAGE("The opposing SPINDA's ATTACK rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
@@ -173,14 +173,14 @@ SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normal
         if (ability == ABILITY_CONTRARY) {
             // ABILITY_POPUP(opponent, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Attack rose!");
+            MESSAGE("The opposing SPINDA's ATTACK rose!");
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Attack fell!");
+            MESSAGE("The opposing SPINDA's ATTACK fell!");
         }
 
-        MESSAGE("The opposing Spinda used Scratch!");
+        MESSAGE("The opposing SPINDA used SCRATCH!");
         HP_BAR(player, captureDamage: &results[i].damage);
     }
     FINALLY {

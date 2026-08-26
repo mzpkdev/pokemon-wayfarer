@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when not switching")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         MESSAGE("WYNAUT's wish came true!");
         HP_BAR(player, damage: -50);
-        MESSAGE("Wynaut's HP was restored.");
+        MESSAGE("WYNAUT's HP was restored.");
     }
 }
 

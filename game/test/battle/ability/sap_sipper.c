@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Sap Sipper increases Attack by one stage when hit by a Grass
     } SCENE {
         ABILITY_POPUP(player, ABILITY_SAP_SIPPER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Marill's Attack rose!");
+        MESSAGE("MARILL's ATTACK rose!");
     }
 }
 

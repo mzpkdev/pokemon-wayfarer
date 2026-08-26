@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Roost, if used by a Flying/Flying type, treats the user as a
     } SCENE {
         MESSAGE("TORNADUS used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Tornadus's HP was restored.");
+        MESSAGE("TORNADUS's HP was restored.");
 
         if (B_ROOST_PURE_FLYING >= GEN_5) // >= Gen. 5, Pokemon becomes pure Normal-type
         {
@@ -363,7 +363,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
     } SCENE {
         MESSAGE("FLYGON used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Flygon's HP was restored.");
+        MESSAGE("FLYGON's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
@@ -382,7 +382,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon
     } SCENE {
         MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Wobbuffet's HP was restored.");
+        MESSAGE("WOBBUFFET's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);

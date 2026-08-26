@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb 
             STATUS_ICON(player, burn: TRUE);
         }
         else {
-            MESSAGE("Leafeon was badly poisoned!");
+            MESSAGE("LEAFEON was badly poisoned!");
             STATUS_ICON(player, badPoison: TRUE);
         }
     }

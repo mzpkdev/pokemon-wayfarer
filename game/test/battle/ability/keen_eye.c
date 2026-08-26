@@ -160,9 +160,9 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent receivi
         if (species == SPECIES_HITMONCHAN)
             MESSAGE("2 sent out HITMONCHAN!");
         else if (species == SPECIES_STARYU)
-            MESSAGE("2 sent out Staryu!");
+            MESSAGE("2 sent out STARYU!");
         else
-            MESSAGE("2 sent out Ursaluna!");
+            MESSAGE("2 sent out URSALUNA!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE - 1);
     }

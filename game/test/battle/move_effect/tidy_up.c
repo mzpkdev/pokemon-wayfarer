@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Tidy Up raises Attack and Speed by one")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDY_UP, player);
         NOT MESSAGE("Tidying up complete!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's Speed rose!");
+        MESSAGE("WOBBUFFET's ATTACK rose!");
+        MESSAGE("WOBBUFFET's SPEED rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
@@ -48,8 +48,8 @@ SINGLE_BATTLE_TEST("Tidy Up removes hazards and raises Stats")
         MESSAGE("The pointed stones disappeared from around your team!");
         MESSAGE("Tidying up complete!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's Speed rose!");
+        MESSAGE("WOBBUFFET's ATTACK rose!");
+        MESSAGE("WOBBUFFET's SPEED rose!");
     }
 }
 
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Tidy Up removes Substitute")
         MESSAGE("Tidying up complete!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's Speed rose!");
+        MESSAGE("WOBBUFFET's SPEED rose!");
     }
 }
 
@@ -113,8 +113,8 @@ SINGLE_BATTLE_TEST("Tidy Up raises Attack and Speed by one after clearing hazard
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDY_UP, player);
         MESSAGE("Tidying up complete!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's Speed rose!");
+        MESSAGE("WOBBUFFET's ATTACK rose!");
+        MESSAGE("WOBBUFFET's SPEED rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);

@@ -204,7 +204,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
         TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_CELEBRATE); SEND_OUT(player, 1); }
     }
     SCENE {
-        SEND_IN_MESSAGE("Wobbuffet");
+        SEND_IN_MESSAGE("WOBBUFFET");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, opponent);
         MESSAGE("Wobbuffet flinched and couldn't move!");
@@ -305,4 +305,3 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
         EXPECT_GT(opponent->pp[3], 0);
     }
 }
-

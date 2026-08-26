@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Topsy-Turvy")
         TURN { MOVE(opponent, MOVE_HARDEN); MOVE(player, MOVE_TOPSY_TURVY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, opponent);
-        MESSAGE("The opposing Pidgey's Defense rose!");
+        MESSAGE("The opposing PIDGEY's DEFENSE rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOPSY_TURVY, player);
         MESSAGE("All stat changes on the opposing Pidgey were inverted!");
     } THEN {

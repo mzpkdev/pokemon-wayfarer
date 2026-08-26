@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if it sets up Tailwind
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponent);
         ABILITY_POPUP(opponent, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bramblin's Attack rose!");
+        MESSAGE("The opposing BRAMBLIN's ATTACK rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -37,7 +37,7 @@ DOUBLE_BATTLE_TEST("Wind Rider raises Attack by one stage if Tailwind is setup b
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAILWIND, opponentLeft);
         ABILITY_POPUP(opponentRight, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Bramblin's Attack rose!");
+        MESSAGE("The opposing BRAMBLIN's ATTACK rose!");
     } THEN {
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage
         }
         ABILITY_POPUP(opponent, ABILITY_WIND_RIDER);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bramblin's Attack rose!");
+        MESSAGE("The opposing BRAMBLIN's ATTACK rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }

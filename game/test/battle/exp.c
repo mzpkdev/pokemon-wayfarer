@@ -40,7 +40,7 @@ WILD_BATTLE_TEST("Higher leveled Pokemon give more exp", s32 exp)
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
         MESSAGE("The wild Caterpie fainted!");
         EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
     } FINALLY {
@@ -61,7 +61,7 @@ WILD_BATTLE_TEST("Lucky Egg boosts gained exp points by 50%", s32 exp)
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
         MESSAGE("The wild Caterpie fainted!");
         EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
     } FINALLY {

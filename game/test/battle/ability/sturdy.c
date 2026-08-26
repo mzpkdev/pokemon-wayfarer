@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKO moves")
     } SCENE {
         MESSAGE("The opposing WOBBUFFET used FISSURE!");
         ABILITY_POPUP(player, ABILITY_STURDY);
-        MESSAGE("Geodude was protected by Sturdy!");
+        MESSAGE("GEODUDE was protected by STURDY!");
     } THEN {
         EXPECT_EQ(player->hp, player->maxHP);
     }

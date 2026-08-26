@@ -24,10 +24,10 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
         switch (statId)
         {
         case STAT_DEF:
-            MESSAGE("The opposing Wynaut's Defense fell!");
+            MESSAGE("The opposing WYNAUT's DEFENSE fell!");
             break;
         case STAT_ATK:
-            MESSAGE("The opposing Wynaut's Attack fell!");
+            MESSAGE("The opposing WYNAUT's ATTACK fell!");
             break;
         case STAT_EVASION:
             if (GetMoveEffect(move) == EFFECT_EVASION_DOWN_2) {
@@ -138,7 +138,7 @@ SINGLE_BATTLE_TEST("Mirror Armor raises the stat of an attacking Pokemon with Co
         MESSAGE("The opposing SHUCKLE used LEER!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Shuckle's Defense rose!");
+        MESSAGE("The opposing SHUCKLE's DEFENSE rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);

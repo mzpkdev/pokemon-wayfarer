@@ -687,11 +687,11 @@ SINGLE_BATTLE_TEST("Dynamax: Max Strike lowers single opponent's speed")
         MESSAGE("The opposing WOBBUFFET used SCRATCH!");
         MESSAGE("WOBBUFFET used MAX STRIKE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         // turn 2
         MESSAGE("WOBBUFFET used MAX STRIKE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }

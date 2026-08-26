@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Heal Bell cures inactive Soundproof Pokemon (Gen5+)")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, player);
-        SEND_IN_MESSAGE("Exploud");
+        SEND_IN_MESSAGE("EXPLOUD");
         if (ability == ABILITY_SCRAPPY || config >= GEN_5) {
             NOT MESSAGE("EXPLOUD was hurt by its poisoning!");
         } else {
@@ -212,7 +212,7 @@ SINGLE_BATTLE_TEST("Aromatherapy cures inactive Soundproof Pokemon regardless of
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, player);
-        SEND_IN_MESSAGE("Exploud");
+        SEND_IN_MESSAGE("EXPLOUD");
         NOT MESSAGE("EXPLOUD was hurt by its poisoning!");
     }
 }

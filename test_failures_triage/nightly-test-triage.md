@@ -86,16 +86,24 @@ ability, or item capitalization. HnS commit `73c788a6b1` capitalized those
 canonical data names, while older imported message expectations retained title
 case.
 
-The evidence-backed casing batch updates 382 exact assertions across 113 test
+The first evidence-backed casing batch updates 382 exact assertions across 113 test
 files. A complete local rerun recorded 2,732 `PASS`, 1,724 `FAIL`, 46
 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
 Normalized comparison by source file and test title found 169 `FAIL` to `PASS`
 transitions and no `PASS` to `FAIL` transitions. Pending-message context fell
 from 1,881 to 1,716 records: 1,690 `FAIL`, 23 `PASS`, and 3 `KNOWN_FAILING`.
 Some updated tests now fail at a later independent assertion, which is why the
-net pass count is lower than the diagnostic-record count. The new ledger has 78
-failed records with a retained case-only pair, mostly canonical names combined
-with generic display labels. They remain open for a separate UI-text decision.
+net pass count is lower than the diagnostic-record count.
+
+Reconstructing that ledger found 99 failed result records with a retained
+case-only pair, correcting an earlier count of 78. Iterating through newly
+exposed assertions updates 144 exact expectations across 53 test files,
+including generic stat labels already rendered by the game. Three complete
+reruns moved 71 more tests from `FAIL` to `PASS` with no reverse transitions.
+The latest complete run recorded 2,803 `PASS`, 1,653 `FAIL`, 46
+`ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
+Pending-message context fell to 1,647 records. Its final two retained case-only
+pairs were aligned afterward, and both exact focused tests pass.
 
 Exact expectation updates are gameplay-neutral. Reverting the production names
 would change visible gameplay, and case-insensitive matching would weaken the

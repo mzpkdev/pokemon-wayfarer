@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("SetStartingStatus can start Spikes on the player side", s16 
         MESSAGE("Go! WYNAUT!");
         s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(player, damage: maxHP / divisor);
-        MESSAGE("Wynaut was hurt by the spikes!");
+        MESSAGE("WYNAUT was hurt by the spikes!");
     } FINALLY {
         ResetStartingStatuses();
     }
@@ -233,7 +233,7 @@ SINGLE_BATTLE_TEST("Starting Stealth Rock damages the player's switch-in")
         MESSAGE("Go! CHARIZARD!");
         s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(player, damage: maxHP / 2);
-        MESSAGE("Pointed stones dug into Charizard!");
+        MESSAGE("Pointed stones dug into CHARIZARD!");
     } THEN {
         ResetStartingStatuses();
     }
@@ -254,7 +254,7 @@ SINGLE_BATTLE_TEST("Starting sharp steel damages the player's switch-in")
         MESSAGE("Go! SYLVEON!");
         s32 maxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
         HP_BAR(player, damage: maxHP / 4);
-        MESSAGE("The sharp steel bit into Sylveon!");
+        MESSAGE("The sharp steel bit into SYLVEON!");
     } THEN {
         ResetStartingStatuses();
     }

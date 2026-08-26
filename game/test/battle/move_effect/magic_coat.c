@@ -22,13 +22,13 @@ SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a m
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
         MESSAGE("ZIGZAGOON bounced the SPORE back!");
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
         MESSAGE("ZIGZAGOON bounced the SPORE back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
     }
 }
@@ -117,8 +117,8 @@ SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
         ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
         ONE_OF {
-            MESSAGE("Greninja bounced the Spikes back!");
-            MESSAGE("Cinderace bounced the Spikes back!");
+            MESSAGE("GRENINJA bounced the SPIKES back!");
+            MESSAGE("CINDERACE bounced the SPIKES back!");
         }
         NOT ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);

@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Hone Claws increases Attack and Accuracy by one stage each")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HONE_CLAWS, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's accuracy rose!");
+        MESSAGE("WOBBUFFET's ATTACK rose!");
+        MESSAGE("WOBBUFFET's accuracy rose!");
     }
 }
