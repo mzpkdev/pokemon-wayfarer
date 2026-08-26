@@ -10,19 +10,21 @@ trivial encounters.
 
 ## Design
 
-Wild encounter levels and species availability change automatically with
-permanent adventure progress, independent of the player's current party.
+Wild encounter scaling uses Trainer Rating, a permanent measure of adventure
+progress, rather than the player's current party. Each encounter's potential
+level comes from Trainer Rating and the area's level curve.
 
-When scaling produces encounters below a species' intended level range, that
-species is replaced by a habitat-appropriate common Pokémon. As the area's
-scaled levels rise, the original species enters its encounter population. Each
-area retains a core population throughout progression so its identity remains
-recognizable.
+A manually authored list maps original species to lower-level replacements.
+When an encounter's potential level is below the original species' intended
+range, the mapped replacement appears. Once the potential level reaches that
+range, the original species replaces it completely. Species absent from the
+list remain part of the area's core population throughout progression.
 
-Each selectable starting location has an authored starting zone. A starting
-zone is a group of nearby maps intended for early play, including surrounding
-routes, caves, and dungeons. Zones are not inferred from map connections and
-may overlap or be shared by multiple starting locations.
+Each selectable starting location has an authored starting-zone marker applied
+to a list of existing maps. The marker exists only to apply an extra early-game
+level reduction. It does not alter map layout or connections. Starting zones
+are not inferred from map connections and may overlap or be shared by multiple
+starting locations.
 
 Only the chosen location's zone becomes active. Its wild encounters receive an
 additional early-game level reduction that fades with progress; other potential
@@ -41,6 +43,10 @@ Late catch-up keeps earlier areas useful by letting returning players catch new
 team members closer to their current strength instead of grinding them from very
 low levels. It also reduces trivial encounters during routine travel.
 
+The boundary of the active starting zone may create a discrete level step. The
+global early-game compression limits the danger outside that boundary, so the
+design does not require additional smoothing between marked and unmarked maps.
+
 ## Playtesting
 
 Treat the narrow-wide-narrow pattern of level differences as the baseline until
@@ -51,9 +57,10 @@ trivial encounters.
 
 ## Boundaries
 
-This feature covers ordinary wild encounter progression. It does not scale
-trainer battles or make every location a suitable starting point.
+This feature covers ordinary wild encounters only. Ordinary trainers, Gym
+Leaders, and all other trainer battles are outside its scope. It does not alter
+maps or make every location a suitable starting point.
 
-Exact progression inputs, level curves, values, starting-zone membership,
-population tiers, replacement pools, exceptions, and encounter edge cases
-belong in linked specs.
+Exact Trainer Rating inputs, potential-level formulas, curve values,
+starting-zone membership, replacement lists, exceptions, and encounter edge
+cases belong in linked specs.
