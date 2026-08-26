@@ -50,22 +50,38 @@ struct MessageMismatchHistoryEntry
     u8 string[sizeof(gDisplayedStringBattle)];
 };
 
+struct FirstMessageMismatch
+{
+    u8 queuedEvent;
+    u8 string[sizeof(gDisplayedStringBattle)];
+};
+
 static struct MessageMismatchHistoryEntry sMessageMismatchHistory[MESSAGE_MISMATCH_HISTORY_SIZE];
 static u8 sMessageMismatchHistoryCount;
 static u8 sMessageMismatchHistoryNext;
 static u16 sMessageMismatchHistoryDropped[MAX_QUEUED_EVENTS];
+static EWRAM_DATA struct FirstMessageMismatch sFirstMessageMismatch;
 
 static void ResetMessageMismatchHistory(void)
 {
     sMessageMismatchHistoryCount = 0;
     sMessageMismatchHistoryNext = 0;
     memset(sMessageMismatchHistoryDropped, 0, sizeof(sMessageMismatchHistoryDropped));
+    sFirstMessageMismatch.queuedEvent = MAX_QUEUED_EVENTS;
 }
 
 static void RecordMessageMismatch(u8 queuedEvent, const u8 *string)
 {
     u32 i;
     struct MessageMismatchHistoryEntry *entry = &sMessageMismatchHistory[sMessageMismatchHistoryNext];
+
+    if (sFirstMessageMismatch.queuedEvent != queuedEvent)
+    {
+        sFirstMessageMismatch.queuedEvent = queuedEvent;
+        for (i = 0; i < sizeof(sFirstMessageMismatch.string) - 1 && string[i] != EOS; i++)
+            sFirstMessageMismatch.string[i] = string[i];
+        sFirstMessageMismatch.string[i] = EOS;
+    }
 
     if (sMessageMismatchHistoryCount < MESSAGE_MISMATCH_HISTORY_SIZE)
         sMessageMismatchHistoryCount++;
@@ -1686,6 +1702,13 @@ static void PrintMessageMismatchHistory(u8 queuedEvent)
          && entry->runTrial == STATE->runTrial
          && entry->queuedEvent == queuedEvent)
             matchingEntries++;
+    }
+
+    if (sMessageMismatchHistoryDropped[queuedEvent] != 0
+     && sFirstMessageMismatch.queuedEvent == queuedEvent)
+    {
+        Test_MgbaPrintf("First unmatched actual MESSAGE for queue %d:\n", queuedEvent);
+        PrintMessageBytes("Actual MESSAGE", sFirstMessageMismatch.string);
     }
 
     Test_MgbaPrintf("Last %d unmatched actual MESSAGE entries for queue %d; %d older entries for this queue overwritten in this trial:\n", matchingEntries, queuedEvent, sMessageMismatchHistoryDropped[queuedEvent]);
