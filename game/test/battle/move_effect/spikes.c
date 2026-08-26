@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Spikes damage on switch in")
         }
         MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP / divisor);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
     }
 }
 
@@ -56,11 +56,11 @@ SINGLE_BATTLE_TEST("Spikes fails after 3 layers")
         MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
         MESSAGE("Spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("Wobbuffet used Spikes!");
+        MESSAGE("WOBBUFFET used SPIKES!");
         MESSAGE("But it failed!");
         MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP / 4);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
     }
 }
 

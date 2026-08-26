@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("The opposing Wobbuffet blew away Toxic Spikes!");
+        MESSAGE("The opposing WOBBUFFET blew away TOXIC SPIKES!");
     }
 }
 
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("WOBBUFFET's SPEED rose!");
     #endif
-        MESSAGE("Wobbuffet got free of the opposing Wobbuffet's Wrap!");
+        MESSAGE("WOBBUFFET got free of the opposing WOBBUFFET's WRAP!");
         MESSAGE("WOBBUFFET blew away STEALTH ROCK!");
     }
 }
@@ -57,9 +57,9 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
-        MESSAGE("The opposing Wobbuffet was poisoned!");
+        MESSAGE("The opposing WOBBUFFET was poisoned!");
         STATUS_ICON(opponent, poison: TRUE);
-        MESSAGE("Wobbuffet got free of the opposing Wobbuffet's Wrap!");
+        MESSAGE("WOBBUFFET got free of the opposing WOBBUFFET's WRAP!");
         MESSAGE("WOBBUFFET blew away STEALTH ROCK!");
     }
 }

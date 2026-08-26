@@ -148,7 +148,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Sunsteel Strike (no message)
             }
             ABILITY_POPUP(player, ABILITY_WONDER_GUARD);
         } else {
-            MESSAGE("Shedinja fainted!");
+            MESSAGE("SHEDINJA fainted!");
             NOT ABILITY_POPUP(player, ABILITY_WONDER_GUARD);
         }
     }

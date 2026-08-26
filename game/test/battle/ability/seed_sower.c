@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Seed Sower sets up Grassy Terrain even when the user faints 
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_SEED_SOWER);
         MESSAGE("Grass grew to cover the battlefield!");
-        MESSAGE("Arboliva fainted!");
+        MESSAGE("ARBOLIVA fainted!");
     }
 } 
 

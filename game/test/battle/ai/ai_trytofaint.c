@@ -13,7 +13,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers priority moves if it's slower and can kill tar
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_QUICK_ATTACK); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -28,7 +28,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose a random move if it's faster and can kill 
     } WHEN {
         TURN { EXPECT_MOVES(opponent, MOVE_QUICK_ATTACK, MOVE_STRENGTH); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

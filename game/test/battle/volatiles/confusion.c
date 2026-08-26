@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Confusion damage activates Focus Sash")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         HP_BAR(player); // Confusion damage
-        MESSAGE("Wobbuffet hung on using its Focus Sash!");
+        MESSAGE("WOBBUFFET hung on using its FOCUS SASH!");
     }
 }
 

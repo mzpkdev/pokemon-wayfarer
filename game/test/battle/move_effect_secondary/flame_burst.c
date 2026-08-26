@@ -35,7 +35,7 @@ DOUBLE_BATTLE_TEST("Flame Burst doesn't crash, opponent to player")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAME_BURST, opponentRight);
         HP_BAR(playerRight);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

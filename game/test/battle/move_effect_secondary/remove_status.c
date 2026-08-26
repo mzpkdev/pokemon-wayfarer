@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Smelling Salts get incread power vs. paralyzed targets")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SMELLING_SALTS, player);
         if (status1 == STATUS1_PARALYSIS)
         {
-            MESSAGE("The opposing Lotad fainted!");
+            MESSAGE("The opposing LOTAD fainted!");
         }
         else
         {
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Wake-Up Slap gets increased power against sleeping targets")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WAKE_UP_SLAP, player);
         if (status1 == STATUS1_SLEEP)
         {
-            MESSAGE("The opposing Lotad fainted!");
+            MESSAGE("The opposing LOTAD fainted!");
         }
         else
         {

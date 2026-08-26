@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     } THEN {
         EXPECT_GT(opponent->pp[0], 0);
         EXPECT_GT(opponent->pp[1], 0);
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Grudge does not activate for Struggle")
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         NOT MESSAGE("The opposing Wobbuffet's Struggle lost all its PP due to the grudge!");
     }
     THEN {
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Mo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         NOT MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");
     }
     THEN {

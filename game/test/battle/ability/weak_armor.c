@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail a
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
         HP_BAR(player);
-        MESSAGE("Slugma was dragged out!");
+        MESSAGE("SLUGMA was dragged out!");
         HP_BAR(player);
         MESSAGE("Pointed stones dug into Slugma!");
         NONE_OF {

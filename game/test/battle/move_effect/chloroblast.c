@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Chloroblast causes the user to faint when below 1/2 of its M
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

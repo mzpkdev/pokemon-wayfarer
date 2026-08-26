@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Alluring Voice confuses the target if the target raised a st
         HP_BAR(opponent);
         if (move == MOVE_SWORDS_DANCE) {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-            MESSAGE("The opposing Wobbuffet became confused!");
+            MESSAGE("The opposing WOBBUFFET became confused!");
         } else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);

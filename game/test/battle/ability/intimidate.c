@@ -332,7 +332,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         if (item != ITEM_NONE) {
             SEND_IN_MESSAGE("WOBBUFFET");
         } else {
-            MESSAGE("Wobbuffet was dragged out!");
+            MESSAGE("WOBBUFFET was dragged out!");
         }
     }
 }

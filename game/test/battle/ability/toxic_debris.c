@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Toxic Debris activates if user faints after physical hit")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("Glimmora fainted!");
+        MESSAGE("GLIMMORA fainted!");
     }
 }
 
