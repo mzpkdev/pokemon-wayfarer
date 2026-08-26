@@ -1,4 +1,4 @@
-name: Devtooling preview
+name: Devtooling
 
 on:
   pull_request:
@@ -17,8 +17,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build preview site
+  preview:
+    name: Preview
     if: >-
       github.event.pull_request.head.repo.full_name == github.repository &&
       (
@@ -39,9 +39,12 @@ jobs:
     timeout-minutes: 45
     permissions:
       contents: read
-      pull-requests: read
-    outputs:
-      trigger_preview_status: ${{ steps.outcome.outputs.trigger_preview_status }}
+      id-token: write
+      pages: write
+      pull-requests: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Check out workflow revision
@@ -144,43 +147,17 @@ jobs:
         with:
           path: ${{ runner.temp }}/wayfarer-preview-site
 
-  deploy:
-    name: Deploy preview site
-    needs: build
-    if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
       - name: Deploy Pages artifact
         id: deployment
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
 
-  comment:
-    name: Update preview comment
-    needs:
-      - build
-      - deploy
-    if: >-
-      always() &&
-      needs.build.result != 'skipped' &&
-      github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-
-    steps:
       - name: Create or update preview comment
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          DEPLOYMENT_RESULT: ${{ needs.deploy.result }}
-          PREVIEW_STATUS: ${{ needs.build.outputs.trigger_preview_status }}
+          DEPLOYMENT_RESULT: ${{ steps.deployment.outcome }}
+          PREVIEW_STATUS: ${{ steps.outcome.outputs.trigger_preview_status }}
           EVENT_ACTION: ${{ github.event.action }}
         run: |
           marker='<!-- devtooling-preview -->'
