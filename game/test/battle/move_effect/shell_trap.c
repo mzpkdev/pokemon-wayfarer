@@ -110,7 +110,7 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 1 a
         MESSAGE("WOBBUFFET set a shell trap!");
         MESSAGE("The opposing WOBBUFFET used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wobbuffet used Shell Trap!");
+        MESSAGE("WOBBUFFET used SHELL TRAP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);

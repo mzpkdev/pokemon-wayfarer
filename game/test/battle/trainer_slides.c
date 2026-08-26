@@ -180,7 +180,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Mega Evolution")
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
-        MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
+        MESSAGE("The opposing LOPUNNY has Mega Evolved into Mega LOPUNNY!");
     }
 }
 
@@ -451,7 +451,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Mega Evolution")
             MESSAGE("Trainer A: This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
-        MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
+        MESSAGE("The opposing LOPUNNY has Mega Evolved into Mega LOPUNNY!");
     }
 }
 
@@ -765,7 +765,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Mega Evolution")
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentLeft);
-        MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
+        MESSAGE("The opposing LOPUNNY has Mega Evolved into Mega LOPUNNY!");
         MESSAGE("Trainer Partner: This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerRight);
         MESSAGE("Aerodactyl has Mega Evolved into Mega Aerodactyl!");
@@ -792,7 +792,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing WOBBUFFET surrounded itself with its Z-Power!");
-        MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
+        MESSAGE("The opposing WOBBUFFET unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentLeft);
         MESSAGE("Trainer Partner: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Wobbuffet surrounded itself with its Z-Power!");

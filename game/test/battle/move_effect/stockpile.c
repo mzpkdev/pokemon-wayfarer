@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Stockpile's count can go up only to 3")
         MESSAGE("WOBBUFFET stockpiled 1!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        MESSAGE("Wobbuffet stockpiled 2!");
+        MESSAGE("WOBBUFFET stockpiled 2!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
         MESSAGE("Wobbuffet stockpiled 3!");
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Spit Up's power raises depending on Stockpile's count", s16 
         MESSAGE("WOBBUFFET stockpiled 1!");
         if (count != 1) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-            MESSAGE("Wobbuffet stockpiled 2!");
+            MESSAGE("WOBBUFFET stockpiled 2!");
             if (count == 3) {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
                 MESSAGE("Wobbuffet stockpiled 3!");
@@ -148,7 +148,7 @@ SINGLE_BATTLE_TEST("Swallow heals HP depending on Stockpile's count", s16 hpHeal
         MESSAGE("WOBBUFFET stockpiled 1!");
         if (count != 1) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-            MESSAGE("Wobbuffet stockpiled 2!");
+            MESSAGE("WOBBUFFET stockpiled 2!");
             if (count == 3) {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
                 MESSAGE("Wobbuffet stockpiled 3!");
@@ -182,7 +182,7 @@ SINGLE_BATTLE_TEST("Stockpile temporarily raises Def and Sp. Def", s16 dmgPyhsic
         if (move == MOVE_STOCKPILE) {
             MESSAGE("WOBBUFFET stockpiled 1!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's Defense rose!");
+            MESSAGE("WOBBUFFET's DEFENSE rose!");
             MESSAGE("Wobbuffet's Sp. Def rose!");
         }
 
@@ -249,7 +249,7 @@ DOUBLE_BATTLE_TEST("Stockpile's Def and Sp. Def boost is lost after using Spit U
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         if (count == 1) {
-            MESSAGE("Wobbuffet's Sp. Def fell!");
+            MESSAGE("WOBBUFFET's SP. DEF fell!");
         }
         else if (count == 2) {
             MESSAGE("Wobbuffet's Sp. Def harshly fell!");

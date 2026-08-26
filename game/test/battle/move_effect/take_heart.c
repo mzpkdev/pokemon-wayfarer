@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Take Heart cures the user of all status conditions")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         } else {
             STATUS_ICON(player, none: TRUE);
-            MESSAGE("Wobbuffet's status returned to normal!");
+            MESSAGE("WOBBUFFET's status returned to normal!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         }
     }

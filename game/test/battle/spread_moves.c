@@ -71,7 +71,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Raichu!");
+        MESSAGE("The CHILAN BERRY weakened the damage to the opposing RAICHU!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
 
@@ -105,7 +105,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
+        MESSAGE("The CHILAN BERRY weakened the damage to the opposing SANDSLASH!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
@@ -327,7 +327,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
         TURN { MOVE(playerLeft, MOVE_WIDE_GUARD); MOVE(opponentLeft, MOVE_HYPER_VOICE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WIDE_GUARD, playerLeft);
-        MESSAGE("Wide Guard protected your team!");
+        MESSAGE("WIDE GUARD protected your team!");
         MESSAGE("The opposing Wobbuffet used Hyper Voice!");
         MESSAGE("Wobbuffet protected itself!");
         MESSAGE("Wynaut protected itself!");
@@ -366,7 +366,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Super Effective Message on both opposing mons"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It's super effective on the opposing Golem and Onix!");
+        MESSAGE("It's super effective on the opposing GOLEM and ONIX!");
     }
 }
 
@@ -402,7 +402,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Not very effective Message on both opposing mo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PRECIPICE_BLADES, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It's not very effective on the opposing Chikorita and Treecko!");
+        MESSAGE("It's not very effective on the opposing CHIKORITA and TREECKO!");
     }
 }
 
@@ -474,7 +474,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         TURN { MOVE(playerRight, MOVE_HYPER_VOICE); MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerRight);
-        MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
+        MESSAGE("The opposing WYNAUT hung on using its FOCUS SASH!");
         MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         MESSAGE("The opposing Wobbuffet fainted!");

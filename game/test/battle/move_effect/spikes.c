@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
         s32 maxHP1 = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP1 / 8);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
         MESSAGE("2 sent out Wobbuffet!");
         HP_BAR(opponent, damage: maxHP0 / 8);
         MESSAGE("The opposing Wobbuffet was hurt by the spikes!");

@@ -51,6 +51,6 @@ DOUBLE_BATTLE_TEST("Flame Burst doesn't crash, player to opponent")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAME_BURST, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing WYNAUT fainted!");
     }
 }

@@ -300,7 +300,7 @@ DOUBLE_BATTLE_TEST("Pursuit only attacks a switching foe if user is alive")
         TURN { MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);
-        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing WYNAUT fainted!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
         SEND_IN_MESSAGE("Grimer");
     }

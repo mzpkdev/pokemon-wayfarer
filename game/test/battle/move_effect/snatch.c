@@ -62,7 +62,7 @@ DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this 
     } SCENE {
         // Both players use Snatch in turn order
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerRight);
         MESSAGE("Wynaut waits for a target to make a move!");
         // Opponent uses Celebrate (not snatchable)
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Snatch steals from the correct target when multiple snatchab
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         // First snatchable move is Swords Dance from opponentLeft
         MESSAGE("Wobbuffet snatched the opposing Abra's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
@@ -141,7 +141,7 @@ DOUBLE_BATTLE_TEST("Snatch fails when the only slower battler is a fainted ally"
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);

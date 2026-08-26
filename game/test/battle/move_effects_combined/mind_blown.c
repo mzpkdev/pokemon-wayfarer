@@ -63,7 +63,7 @@ DOUBLE_BATTLE_TEST("Mind Blown causes the user to faint when below 1/2 of its Ma
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, playerLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Mind Blown causes the user & the target to faint when below 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, player);
         HP_BAR(opponent, hp: 0);
         HP_BAR(player, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
@@ -101,7 +101,7 @@ DOUBLE_BATTLE_TEST("Mind Blown causes everyone to faint in a double battle")
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         MESSAGE("The opposing Abra fainted!");
         MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
@@ -137,7 +137,7 @@ DOUBLE_BATTLE_TEST("Mind Blown's recoil only happens once, regardless of number 
         HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
-        MESSAGE("The opposing Abra fainted!");
+        MESSAGE("The opposing ABRA fainted!");
         MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
     } THEN {
