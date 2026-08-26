@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Salac Berry raises the holder's Speed by one stage when HP d
             }
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Using Salac Berry, the Speed of Wobbuffet rose!");
+            MESSAGE("Using SALAC BERRY, the SPEED of WOBBUFFET rose!");
         }
     } THEN {
         if (move == MOVE_DRAGON_RAGE)
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Salac Berry raises Speed by one stage when HP drops to 1/2 o
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Using Salac Berry, the Speed of Bellsprout rose!");
+        MESSAGE("Using SALAC BERRY, the SPEED of BELLSPROUT rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Salac Berry raises Speed by one stage when HP drops to 1/4 o
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Using Salac Berry, the Speed of Applin sharply rose!");
+        MESSAGE("Using SALAC BERRY, the SPEED of APPLIN sharply rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
     }
@@ -83,7 +83,7 @@ DOUBLE_BATTLE_TEST("Salac Berry does not miss timing miss timing")
         MESSAGE("A sea of fire enveloped the opposing team!");
         MESSAGE("The opposing WYNAUT was hurt by the sea of fire!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("Using Salac Berry, the Speed of the opposing Wynaut rose!");
+        MESSAGE("Using SALAC BERRY, the SPEED of the opposing WYNAUT rose!");
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
     }
 }

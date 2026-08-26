@@ -22,7 +22,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly af
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
         MESSAGE("2 sent out Pikachu!");
         NONE_OF {
             ABILITY_POPUP(opponentLeft, ABILITY_EMERGENCY_EXIT);

@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)"
         NOT MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+        MESSAGE("The opposing WOBBUFFET's evasiveness fell!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
     }

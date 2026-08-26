@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet can act faster than normal, thanks to its Custap Berry!");
+        MESSAGE("WOBBUFFET can act faster than normal, thanks to its CUSTAP BERRY!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Bellsprout can act faster than normal, thanks to its Custap Berry!");
+        MESSAGE("BELLSPROUT can act faster than normal, thanks to its CUSTAP BERRY!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }

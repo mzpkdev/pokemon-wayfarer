@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Cursed Body can trigger if the attacker is behind a Substitu
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, player);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Aqua Jet was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("WOBBUFFET's AQUA JET was disabled by the opposing FRILLISH's CURSED BODY!");
     }
 }
 
@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Nature Power was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("WOBBUFFET's NATURE POWER was disabled by the opposing FRILLISH's CURSED BODY!");
     } THEN {
         u32 disabledMove = player->volatiles.disabledMove;
         EXPECT_EQ(disabledMove, MOVE_NATURE_POWER);

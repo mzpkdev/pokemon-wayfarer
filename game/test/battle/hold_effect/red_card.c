@@ -472,7 +472,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if holder is switched in mid-turn
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("WOBBUFFET is switched out with the EJECT BUTTON!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");

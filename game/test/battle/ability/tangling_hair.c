@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Tangling Hair does not cause Rocky Helmet miss activation")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing WYNAUT's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("The opposing Wynaut was hurt by Dugtrio's Rocky Helmet!");
+        MESSAGE("The opposing WYNAUT was hurt by DUGTRIO's ROCKY HELMET!");
     }
 }
 
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Tangling Hair Speed stat drop triggers defiant and keeps ori
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing PAWNIARD's SPEED fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
-        MESSAGE("The opposing Pawniard's Attack sharply rose!");
+        MESSAGE("The opposing PAWNIARD's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("The opposing Pawniard was hurt by Dugtrio's Rocky Helmet!");
     }

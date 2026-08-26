@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
             MESSAGE("The opposing Wobbuffet restored its health using its Sitrus Berry!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Sitrus Berry!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's SITRUS BERRY!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         if (item == ITEM_WEAKNESS_POLICY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE);
-            MESSAGE("Using Weakness Policy, the Attack of the opposing Wobbuffet sharply rose!");
+            MESSAGE("Using WEAKNESS POLICY, the ATTACK of the opposing WOBBUFFET sharply rose!");
             MESSAGE("Using Weakness Policy, the Sp. Atk of the opposing Wobbuffet sharply rose!");
         } else if (item == ITEM_ROCKY_HELMET) {
             HP_BAR(player);
@@ -402,7 +402,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        MESSAGE("WOBBUFFET was hurt by the opposing WOBBUFFET's ROCKY HELMET!");
         MESSAGE("Wobbuffet fainted!");
     } THEN {
         EXPECT(opponent->item == ITEM_ROCKY_HELMET);

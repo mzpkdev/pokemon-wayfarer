@@ -179,7 +179,7 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry that's collected via Pickup"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         ABILITY_POPUP(player, ABILITY_PICKUP);
-        MESSAGE("Zigzagoon found one Sitrus Berry!");
+        MESSAGE("ZIGZAGOON found one SITRUS BERRY!");
         NOT ABILITY_POPUP(opponent, ABILITY_HARVEST);
     } THEN {
         EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);

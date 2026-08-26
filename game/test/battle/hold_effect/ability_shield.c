@@ -269,7 +269,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap")
                 ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
             }
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+            MESSAGE("GYARADOS's Ability is protected by the effects of its ABILITY SHIELD!");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
             ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
@@ -294,7 +294,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
         if (item == ITEM_ABILITY_SHIELD) {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Lopunny's Ability is protected by the effects of its Ability Shield!");
+            MESSAGE("LOPUNNY's Ability is protected by the effects of its ABILITY SHIELD!");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
         }

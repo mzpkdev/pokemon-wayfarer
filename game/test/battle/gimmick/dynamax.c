@@ -1547,7 +1547,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Moves don't execute effects on fainted battlers
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("The opposing Wobbuffet fainted!");
         NOT MESSAGE("The opposing Wobbuffet's Speed fell!");
     }

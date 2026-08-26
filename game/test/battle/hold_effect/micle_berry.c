@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Micle Berry raises the holder's accuracy by 1.2 when HP drop
             }
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Wobbuffet boosted the accuracy of its next move using Micle Berry!");
+            MESSAGE("WOBBUFFET boosted the accuracy of its next move using MICLE BERRY!");
         }
     }
 }
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Micle Berry raises the holder's accuracy by 1.2 when HP drop
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Bellsprout boosted the accuracy of its next move using Micle Berry!");
+        MESSAGE("BELLSPROUT boosted the accuracy of its next move using MICLE BERRY!");
     }
 }
 

@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
         else
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
+            MESSAGE("The opposing METANG's CLEAR BODY prevents stat loss!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);
@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
         else
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
+            MESSAGE("The opposing METANG's CLEAR BODY prevents stat loss!");
     }
 }
 
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
         else if (ability == ABILITY_WHITE_SMOKE)
             MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
         else
-            MESSAGE("The opposing Metang's Clear Body prevents stat loss!");
+            MESSAGE("The opposing METANG's CLEAR BODY prevents stat loss!");
     }
 }
 
@@ -186,7 +186,7 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
         if (ability == ABILITY_FULL_METAL_BODY){ // Full Metal Body can't be ignored by breaker abilities
             NOT ANIMATION(ANIM_TYPE_MOVE, move, player);
             ABILITY_POPUP(opponent, ability);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
         }
         else{
             ANIMATION(ANIM_TYPE_MOVE, move, player);

@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Pickup grants an item used by another Pokémon")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_PICKUP);
-        MESSAGE("Zigzagoon found one Sitrus Berry!");
+        MESSAGE("ZIGZAGOON found one SITRUS BERRY!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
     }
@@ -34,7 +34,7 @@ WILD_BATTLE_TEST("Pickup grants an item used by itself in wild battles (Gen9+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_PICKUP);
-        MESSAGE("Zigzagoon found one Sitrus Berry!");
+        MESSAGE("ZIGZAGOON found one SITRUS BERRY!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
     }
@@ -230,7 +230,7 @@ SINGLE_BATTLE_TEST("Pickup restores an item that has been Flinged")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, opponent);
         ABILITY_POPUP(player, ABILITY_PICKUP);
-        MESSAGE("Zigzagoon found one Sitrus Berry!");
+        MESSAGE("ZIGZAGOON found one SITRUS BERRY!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
     }
@@ -247,7 +247,7 @@ SINGLE_BATTLE_TEST("Pickup restores an item that was used by Natural Gift")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, opponent);
         ABILITY_POPUP(player, ABILITY_PICKUP);
-        MESSAGE("Zigzagoon found one Sitrus Berry!");
+        MESSAGE("ZIGZAGOON found one SITRUS BERRY!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
     }

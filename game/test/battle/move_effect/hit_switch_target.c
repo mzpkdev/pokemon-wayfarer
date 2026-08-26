@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         ABILITY_POPUP(opponent, ABILITY_SUCTION_CUPS);
-        MESSAGE("The opposing Octillery anchors itself with Suction Cups!");
+        MESSAGE("The opposing OCTILLERY anchors itself with SUCTION CUPS!");
         NOT MESSAGE("The opposing Charmander was dragged out!");
     }
 }

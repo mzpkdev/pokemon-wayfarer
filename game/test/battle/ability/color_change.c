@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Color Change changes the type of a Pokemon being hit by a mo
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYWAVE, player);
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Psychic type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the PSYCHIC type!");
     }
 }
 
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Color Change changes the user to Electric type if hit by a m
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHO_CUT, player);
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Electric type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the ELECTRIC type!");
     }
 }
 

@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats when they're lowered")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
+        MESSAGE("WOBBUFFET returned its stats to normal using its WHITE HERB!");
     } THEN {
         EXPECT(player->item == ITEM_NONE);
         EXPECT(player->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);
@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Slugma's Weak Armor lowered its Defense!");
+        MESSAGE("SLUGMA's WEAK ARMOR lowered its DEFENSE!");
         MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
         if (move == MOVE_KNOCK_OFF) {
             MESSAGE("The opposing Wobbuffet knocked off Slugma's White Herb!");
@@ -170,7 +170,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if Magician steals it"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Slugma's Weak Armor lowered its Defense!");
+        MESSAGE("SLUGMA's WEAK ARMOR lowered its DEFENSE!");
         MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
         ABILITY_POPUP(opponent, ABILITY_MAGICIAN);
         MESSAGE("The opposing Fennekin stole Slugma's White Herb!");

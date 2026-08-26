@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Mirror Move copies the last used move by the target")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
-        MESSAGE("Wobbuffet used Mirror Move!");
+        MESSAGE("WOBBUFFET used MIRROR MOVE!");
         MESSAGE("Wobbuffet used Scratch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);

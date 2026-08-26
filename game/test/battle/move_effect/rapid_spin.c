@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("The opposing WOBBUFFET blew away TOXIC SPIKES!");
+        MESSAGE("The opposing WOBBUFFET blew away Toxic Spikes!");
     }
 }
 

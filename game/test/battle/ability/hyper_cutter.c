@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents intimidate")
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
         ABILITY_POPUP(opponent, ABILITY_HYPER_CUTTER);
-        MESSAGE("The opposing Krabby's Hyper Cutter prevents Attack loss!");
+        MESSAGE("The opposing KRABBY's HYPER CUTTER prevents ATTACK loss!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents Attack stage reduction from moves")
         TURN { MOVE(player, MOVE_GROWL); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_HYPER_CUTTER);
-        MESSAGE("The opposing Krabby's Hyper Cutter prevents Attack loss!");
+        MESSAGE("The opposing KRABBY's HYPER CUTTER prevents ATTACK loss!");
     }
 }
 
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter is ignored by Mold Breaker")
         ABILITY_POPUP(player, ABILITY_MOLD_BREAKER);
         MESSAGE("PINSIR breaks the mold!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, player);
-        MESSAGE("The opposing Krabby's Attack fell!");
+        MESSAGE("The opposing KRABBY's ATTACK fell!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_HYPER_CUTTER);
             MESSAGE("The opposing Krabby's Hyper Cutter prevents Attack loss!");
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter doesn't prevent Topsy-Turvy")
         TURN { MOVE(opponent, MOVE_SWORDS_DANCE); MOVE(player, MOVE_TOPSY_TURVY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
-        MESSAGE("The opposing Krabby's Attack sharply rose!");
+        MESSAGE("The opposing KRABBY's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOPSY_TURVY, player);
         MESSAGE("All stat changes on the opposing Krabby were inverted!");
     } THEN {

@@ -196,7 +196,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Z Move")
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing WOBBUFFET surrounded itself with its Z-Power!");
-        MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
+        MESSAGE("The opposing WOBBUFFET unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
     }
 }

@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Triple Arrows can lower Defense and cause flinch at the time
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing WOBBUFFET's DEFENSE fell!");
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        MESSAGE("The opposing WOBBUFFET flinched and couldn't move!");
     }
 }
 

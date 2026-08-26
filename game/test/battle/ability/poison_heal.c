@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Poison Heal heals from Toxic Poison damage are constant")
         HP_BAR(player, captureDamage: &turnOneHit);
 
         ABILITY_POPUP(player, ABILITY_POISON_HEAL);
-        MESSAGE("The poisoning healed Shroomish a little bit!");
+        MESSAGE("The poisoning healed SHROOMISH a little bit!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);

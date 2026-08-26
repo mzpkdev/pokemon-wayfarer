@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Weak Armor still lowers Defense if Speed can't go any higher
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Slugma's Weak Armor lowered its Defense!");
+        MESSAGE("SLUGMA's WEAK ARMOR lowered its DEFENSE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Slugma's Weak Armor sharply raised its Speed!");

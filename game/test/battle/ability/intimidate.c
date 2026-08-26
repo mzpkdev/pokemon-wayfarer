@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Atta
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
         MESSAGE("2 sent out Hitmontop!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         MESSAGE("The opposing Hitmontop's Intimidate cuts Wobbuffet's Attack!");

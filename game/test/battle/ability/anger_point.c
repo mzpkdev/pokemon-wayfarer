@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a
         MESSAGE("A critical hit!");
         ABILITY_POPUP(player, ABILITY_ANGER_POINT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Primeape's Anger Point maxed its Attack!");
+        MESSAGE("PRIMEAPE's ANGER POINT maxed its ATTACK!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
     }

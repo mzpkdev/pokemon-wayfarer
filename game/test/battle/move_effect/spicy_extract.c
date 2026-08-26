@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Spicy Extract raises target's Attack by 2 stages and lowers 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Attack sharply rose!");
+        MESSAGE("The opposing WOBBUFFET's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Defense harshly fell!");
     } THEN {
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerabili
     } SCENE {
         MESSAGE("The opposing WOBBUFFET used DIVE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, opponent);
-        MESSAGE("Wobbuffet used Spicy Extract!");
+        MESSAGE("WOBBUFFET used SPICY EXTRACT!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
         MESSAGE("The opposing Wobbuffet avoided the attack!");
     }

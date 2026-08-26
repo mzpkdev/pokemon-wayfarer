@@ -288,7 +288,7 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move T
     } SCENE {
         MESSAGE("The opposing GYARADOS used EMBARGO!");
         MESSAGE("GENESECT can't use items anymore!");
-        MESSAGE("Genesect used Techno Blast!");
+        MESSAGE("GENESECT used TECHNO BLAST!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.0), results[1].damage);

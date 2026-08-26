@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Overheat drops Sp. Atk by 2 stages - singles")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Sp. Atk harshly fell!");
+        MESSAGE("WOBBUFFET's SP. ATK harshly fell!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE - 2);
     }

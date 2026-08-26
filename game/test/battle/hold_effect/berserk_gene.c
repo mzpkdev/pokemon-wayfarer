@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse on Misty Terrain but still rai
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Berserk Gene, the Attack of Tapu Fini sharply rose!");
+        MESSAGE("Using BERSERK GENE, the ATTACK of TAPU FINI sharply rose!");
         NOT MESSAGE("Tapu Fini became confused!");
     }
 }
@@ -181,7 +181,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse when Safeguard is active")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+        MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
         MESSAGE("Wobbuffet is protected by Safeguard!");
         NOT MESSAGE("Wobbuffet became confused!");
     }
@@ -249,7 +249,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet sharply rose!");
+        MESSAGE("Using BERSERK GENE, the ATTACK of the opposing WOBBUFFET sharply rose!");
     }
 }
 

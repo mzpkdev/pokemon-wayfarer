@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Gem is consumed when it corresponds to the type of a move")
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
+        MESSAGE("The NORMAL GEM strengthened WOBBUFFET's power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
     }
 }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("The Normal Gem strengthened Delcatty's power!");
+        MESSAGE("The NORMAL GEM strengthened DELCATTY's power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT_ATTACK, player);
     }
 }

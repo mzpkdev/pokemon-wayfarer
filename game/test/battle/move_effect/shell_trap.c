@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Shell Trap activates only if hit by a physical move")
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         if (activate) {
-            MESSAGE("Wobbuffet used Shell Trap!");
+            MESSAGE("WOBBUFFET used SHELL TRAP!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
             HP_BAR(opponent);
         } else {
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if attacker's Sheer Force appli
         MESSAGE("WOBBUFFET set a shell trap!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (activate) {
-            MESSAGE("Wobbuffet used Shell Trap!");
+            MESSAGE("WOBBUFFET used SHELL TRAP!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
             HP_BAR(opponent);
         } else {

@@ -99,6 +99,6 @@ DOUBLE_BATTLE_TEST("Make It Rain lowers special attack by one stage if second ta
         HP_BAR(opponentLeft);
         MESSAGE("Coins were scattered everywhere!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("Wobbuffet's Sp. Atk fell!");
+        MESSAGE("WOBBUFFET's SP. ATK fell!");
     }
 }

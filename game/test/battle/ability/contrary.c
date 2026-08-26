@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
         if (ability == ABILITY_CONTRARY) {
             // ABILITY_POPUP(opponent, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Attack harshly fell!");
+            MESSAGE("The opposing SPINDA's ATTACK harshly fell!");
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -211,7 +211,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda cut its own HP and maximized its Attack!");
+            MESSAGE("The opposing SPINDA cut its own HP and maximized its ATTACK!");
         }
 
         HP_BAR(player, captureDamage: &results[i].damageAfter);

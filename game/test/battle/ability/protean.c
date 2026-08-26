@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per sw
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(opponent, ability);
         if (species == SPECIES_KECLEON)
-            MESSAGE("The opposing Kecleon transformed into the Water type!");
+            MESSAGE("The opposing KECLEON transformed into the WATER type!");
         else
             MESSAGE("The opposing Raboot transformed into the Water type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);

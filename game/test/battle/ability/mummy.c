@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on cont
             if (ability == ABILITY_MUMMY)
                 MESSAGE("WOBBUFFET acquired MUMMY!");
             else
-                MESSAGE("Wobbuffet acquired Lingering Aroma!");
+                MESSAGE("WOBBUFFET acquired LINGERING AROMA!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ability);

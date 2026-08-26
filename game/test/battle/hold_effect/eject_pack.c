@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Eject Pack activates once intimidate mon switches in")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet is switched out with the Eject Pack!");
+        MESSAGE("WOBBUFFET is switched out with the EJECT PACK!");
     }
 }
 
@@ -333,7 +333,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if mon is switched in due to Ej
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
         MESSAGE("2 sent out Wobbuffet!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }

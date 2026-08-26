@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Gulp Missile: Power Herb does not prevent Cramaront from tra
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE_INSTANT, player);
-        MESSAGE("Cramorant became fully charged due to its Power Herb!");
+        MESSAGE("CRAMORANT became fully charged due to its POWER HERB!");
         HP_BAR(opponent);
     } THEN {
         EXPECT_EQ(player->species, SPECIES_CRAMORANT_GULPING);

@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Eject Button is not blocked by trapping abilities or moves")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
         MESSAGE("2 sent out Wobbuffet!");
     }
 }
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picke
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Regieleki's Eject Button!");
+        MESSAGE("The opposing SNEASEL stole REGIELEKI's EJECT BUTTON!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
     }
 }
 
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Eject Button is activated before Emergency Exit")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Golisopod is switched out with the Eject Button!");
+        MESSAGE("The opposing GOLISOPOD is switched out with the EJECT BUTTON!");
     }
 }
 

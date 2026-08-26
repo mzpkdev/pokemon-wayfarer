@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         HP_BAR(player);
-        MESSAGE("Mimikyu was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        MESSAGE("MIMIKYU was hurt by the opposing WOBBUFFET's ROCKY HELMET!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without break
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         HP_BAR(player);
-        MESSAGE("Mimikyu was hurt by the opposing Carvanha's Rough Skin!");
+        MESSAGE("MIMIKYU was hurt by the opposing CARVANHA's ROUGH SKIN!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }
