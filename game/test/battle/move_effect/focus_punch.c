@@ -420,6 +420,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use status moves if the player's best attacking 
 {
     PASSES_RANDOMLY(STATUS_MOVE_FOCUS_PUNCH_CHANCE, 100, RNG_AI_STATUS_FOCUS_PUNCH);
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
         ASSUME(GetMoveCategory(MOVE_SWORDS_DANCE) == DAMAGE_CATEGORY_STATUS);
         // If Clefable is Normal-type, it will always use Play Rough.

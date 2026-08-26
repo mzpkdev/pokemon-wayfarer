@@ -10,6 +10,7 @@ ASSUMPTIONS
 DOUBLE_BATTLE_TEST("Pickpocket checks contact/effect per target for spread moves")
 {
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetSpeciesType(SPECIES_CLEFAIRY, 0) == TYPE_FAIRY);
         ASSUME(GetMoveType(MOVE_BREAKING_SWIPE) == TYPE_DRAGON);
         ASSUME(GetMoveTarget(MOVE_BREAKING_SWIPE) == TARGET_BOTH);

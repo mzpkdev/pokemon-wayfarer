@@ -709,7 +709,7 @@ struct SaveBlock2
     /*0x624*/ u16 contestLinkResults[CONTEST_CATEGORIES_COUNT][CONTESTANT_COUNT];
     /*0x64C*/ struct BattleFrontier frontier;
              u8 rivalName[PLAYER_NAME_LENGTH + 1];
-}; // sizeof=0xF2C
+}; // sizeof=0xF34
 
 extern struct SaveBlock2 *gSaveBlock2Ptr;
 

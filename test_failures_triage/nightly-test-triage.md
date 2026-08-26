@@ -49,8 +49,15 @@ target.
 
 Current strict test objects compile and link, and Hydra starts. Neither the
 `CheckTogepi` missing-flag error nor the unused Frontier healthbox-helper
-error appears in the current strict build. The current full-run command used
-for local evidence was:
+error appears in the current strict build. The completed
+[PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32975432374)
+against `fb4ad1f2c5` is the latest full-suite aggregate for this triage. It
+reported 5,113 total tests: 2,553 `PASS`, 1,884
+`FAIL`, 31 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6
+`EXPECT_FAILING`. The process exited 2 because tests failed. The job completed
+without hitting the runner timeout.
+
+Earlier local pre-fix evidence used:
 
 ```sh
 UNUSED_ERROR=1 DEPRECATED_ERROR=1 GAME_VERSION=EMERALD TEST=1 make -j22 check
@@ -62,7 +69,8 @@ bytes. It has 3,898 result lines: 1,945 `PASS`, 1,416 `FAIL`, 49
 `ASSUMPTION_FAIL`, 8 `KNOWN_FAILING`, 5 `EXPECTED_FAIL`, 474 `TO_DO`, and 1
 intentional `CRASH`; no `INVALID` result was observed. The run did not
 complete, and no final status, complete summary, or exact elapsed time was
-captured. Those counts are partial evidence, not a replacement inventory.
+captured. Those counts are pre-fix evidence and do not supersede the completed
+PR #7 aggregate.
 
 The intentional `CRASH` is the `Tests resume after CRASH` recovery test in
 `test/test_test_runner.c`. It deliberately calls a null function under
@@ -98,9 +106,17 @@ enables Fairy types locally. The exact focused run exited 0 with 1 `PASS`, with
 no timeout or `INVALID` result. This validates the test setup, not every
 Dazzling, Queenly Majesty, or Armor Tail mechanics row.
 
+The Focus Punch AI, Pickpocket spread-target, and weakness-berry tests also
+explicitly require Fairy typing. Each fixture now enables that mode locally.
+The exact Focus Punch and weakness-berry runs changed from `ASSUMPTION_FAIL` to
+`PASS`. Pickpocket now reaches the mechanic and fails on an unmatched message,
+so its remaining failure needs separate diagnosis. No expectation or battle
+behavior changed.
+
 The exact Light Metal Heavy Ball and Heavy Metal Heavy Ball runs each exited 0
-with 1 `PASS`, with no timeout or `INVALID` result. Broader capture and Ball
-Fetch observations remain incomplete.
+with 1 `PASS`, with no timeout or `INVALID` result. The Poké Ball runner
+exception used by those checks is committed in `fb4ad1f2c5`. Broader capture
+and Ball Fetch observations remain incomplete.
 
 ## Reproduction and follow-up
 
@@ -116,7 +132,7 @@ For the historical Emerald-focused reproductions, use:
 UNUSED_ERROR=1 DEPRECATED_ERROR=1 GAME_VERSION=EMERALD TEST=1 make -j22 TESTS="<prefix>" check
 ```
 
-The current evidence does not prove a full-suite completion. It also cannot
-validate the original PR #6 log range, runtime environment, or repeat count.
-Consult the inventory and priorities notes before treating a historical row as
-current.
+The PR #7 CI evidence proves full-suite completion without a runner timeout. It
+does not validate the original PR #6 log range, runtime environment, or repeat
+count. The inventory rows remain historical until a focused current run records
+evidence for an individual row.

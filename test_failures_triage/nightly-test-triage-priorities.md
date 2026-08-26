@@ -10,22 +10,25 @@ Current CI is the `expansion-suite` job in `.github/workflows/ci.yml`:
 TEST=1 UNUSED_ERROR=1 DEPRECATED_ERROR=1 make -j"$(nproc)" check
 ```
 
-The current local evidence used the Emerald variant:
+Earlier local evidence used the Emerald variant:
 
 ```sh
 UNUSED_ERROR=1 DEPRECATED_ERROR=1 GAME_VERSION=EMERALD TEST=1 make -j22 check
 ```
 
-It compiles and starts Hydra, unlike the historical compiler-blocker note. The full log is incomplete: `game/build/triage-evidence/full-strict-final.log` has 4,676 lines and 378,565 bytes, with 3,898 result lines: 1,945 `PASS`, 1,416 `FAIL`, 49 `ASSUMPTION_FAIL`, 8 `KNOWN_FAILING`, 5 `EXPECTED_FAIL`, 474 `TO_DO`, and 1 `CRASH`; no `INVALID` was observed. The run did not complete, and no final status, full summary, or reliable elapsed time was captured.
+The completed [PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32975432374) against `fb4ad1f2c5` is the latest full-suite aggregate for this triage. It reported 5,113 total tests: 2,553 `PASS`, 1,884 `FAIL`, 31 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6 `EXPECT_FAILING`. The process exited 2 because tests failed. The job completed without hitting the runner timeout. Focused results below may include later worktree changes.
+
+The local `game/build/triage-evidence/full-strict-final.log` is a 4,676-line, 378,565-byte pre-fix artifact. It compiled and started Hydra but stopped before a final summary. Its partial counts remain useful for comparison, but the completed PR #7 run supersedes it as the current aggregate.
 
 ## Immediate focused work
 
 1. **Keep the SaveBlock3 test baseline.** `ClearSaveBlocks` zeroes SaveBlock3 before every test. In this project, zero enables the One Type challenge with `TYPE_NONE` rather than disabling it, so species are rejected and sent to the PC. The test runner explicitly selects the disabled sentinel. A strict focused `pokemon.c` run exited 0 with 26 `PASS` and 1 unrelated `KNOWN_FAILING`; all `givemon` paths passed. The focused `pokerus.c` run exited 0 with 19 `PASS`. Neither run emitted a timeout or `INVALID` result.
 2. **Keep the Daycare fixture unchanged and defer its regional-form policy discrepancy.** `test/daycare.c:12-15` deliberately stores `gPlayerParty[0]` twice. `StorePokemonInDaycare` clears that party slot and compacts the party, so the second original parent moves into slot 0 before the second store. There is no slot-1 correction to make. The focused `daycare.c` run exited 2 with 4 `PASS` and 1 `FAIL`: regional forms at `test/daycare.c:166`, `EXPECT_EQ(965,52)`. It produced no timeout or `INVALID` result. Source diagnosis places the outcome in production `DetermineEggSpeciesAndParentSlots`, including current-region, Everstone, and regional-form tables. It is a deferred gameplay-policy discrepancy. No production code or test expectation changed because either could alter or hide live breeding behavior.
-3. **Keep the current Poké Ball runner exception under focused validation.** The existing dirty change in `test/test_runner_battle.c` exempts `EFFECT_ITEM_THROW_BALL` from the explicit party-index requirement. It implements the former priority #2 but is not part of this document change. The exact Light Metal Heavy Ball and Heavy Metal Heavy Ball runs each exited 0 with 1 `PASS`, with no timeout or `INVALID` result. Broader capture and Ball Fetch observations remain incomplete.
+3. **Keep the committed Poké Ball runner exception under focused validation.** Commit `fb4ad1f2c5` exempts `EFFECT_ITEM_THROW_BALL` from the explicit party-index requirement in `test/test_runner_battle.c`. The exact Light Metal Heavy Ball and Heavy Metal Heavy Ball runs each exited 0 with 1 `PASS`, with no timeout or `INVALID` result. Broader capture and Ball Fetch observations remain incomplete.
 4. **The Dazzling Z-status fixture is validated.** The static Baby-Doll Eyes and Fairium Z data are consistent, but a zeroed SaveBlock3 disables `tx_Mode_Fairy_Types` at runtime. The test enables Fairy types locally before creating its battle fixture. Its exact focused run exited 0 with 1 `PASS`, with no timeout or `INVALID` result. This validates the fixture setup, not every Dazzling, Queenly Majesty, or Armor Tail mechanics row.
-5. **Remove the intentional recovery marker from the active defect queue.** `Tests resume after CRASH` uses `KNOWN_CRASHING` and deliberately calls a null function in `test/test_test_runner.c`. Its focused run exits 0, showing recovery coverage.
-6. **Do not prioritize Heavy Ball mechanics from the historical rows.** The focused Heavy Ball and both literal Heavy Metal and Light Metal title runs pass in the current worktree with the Poké Ball runner exception present. They are not clean-HEAD evidence.
+5. **Keep Fairy mode local to tests that require it.** The exact Focus Punch AI and weakness-berry runs changed from `ASSUMPTION_FAIL` to `PASS` after their fixtures enabled Fairy typing. Pickpocket now reaches the mechanic and fails on an unmatched message instead of its Fairy prerequisite. Keep that mechanics failure open; do not change its expectation without a separate diagnosis.
+6. **Remove the intentional recovery marker from the active defect queue.** `Tests resume after CRASH` uses `KNOWN_CRASHING` and deliberately calls a null function in `test/test_test_runner.c`. Its focused run exits 0, showing recovery coverage.
+7. **Do not prioritize Heavy Ball mechanics from the historical rows.** The focused Heavy Ball and both literal Heavy Metal and Light Metal title runs pass with the committed Poké Ball runner exception. The inventory rows remain historical until a focused current run records their status.
 
 ## Focused evidence and central-fix candidates
 
