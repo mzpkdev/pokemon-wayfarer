@@ -29,7 +29,7 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form")
         switch (species)
         {
         case SPECIES_TATSUGIRI_CURLY:
-            MESSAGE("Dondozo's Attack rose!");
+            MESSAGE("DONDOZO's ATTACK rose!");
             break;
         case SPECIES_TATSUGIRI_DROOPY:
             MESSAGE("Dondozo's Defense rose!");

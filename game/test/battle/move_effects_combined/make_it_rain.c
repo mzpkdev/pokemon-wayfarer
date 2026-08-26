@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Make It Rain lowers special attack by one stage")
         HP_BAR(opponent, captureDamage: &damage[1]);
         MESSAGE("Coins were scattered everywhere!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Sp. Atk fell!");
+        MESSAGE("WOBBUFFET's SP. ATK fell!");
     } THEN {
         EXPECT_MUL_EQ(damage[0], Q_4_12(0.66), damage[1]);
     }

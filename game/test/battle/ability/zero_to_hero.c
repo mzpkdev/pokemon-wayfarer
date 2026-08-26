@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Zero to Hero transforms both player and opponent")
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
         MESSAGE("PALAFIN underwent a heroic transformation!");
         ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
-        MESSAGE("The opposing Palafin underwent a heroic transformation!");
+        MESSAGE("The opposing PALAFIN underwent a heroic transformation!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO);
         EXPECT_EQ(opponent->species, SPECIES_PALAFIN_HERO);
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Transform doesn't apply the heroic transformation message wh
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
         MESSAGE("PALAFIN underwent a heroic transformation!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
-        MESSAGE("The opposing Wobbuffet transformed into Palafin!");
+        MESSAGE("The opposing WOBBUFFET transformed into PALAFIN!");
         NOT ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Imposter doesn't apply the heroic transformation message whe
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
         MESSAGE("PALAFIN underwent a heroic transformation!");
         ABILITY_POPUP(opponent, ABILITY_IMPOSTER);
-        MESSAGE("The opposing Ditto transformed into Palafin using Imposter!");
+        MESSAGE("The opposing DITTO transformed into PALAFIN using IMPOSTER!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
             MESSAGE("The opposing Ditto underwent a heroic transformation!");

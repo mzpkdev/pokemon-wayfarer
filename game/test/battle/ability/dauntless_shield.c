@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it s
         MESSAGE("The opposing ZAMAZENTA's DAUNTLESS SHIELD raised its DEFENSE!");
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing ZAMAZENTA's DAUNTLESS SHIELD raised its DEFENSE!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }

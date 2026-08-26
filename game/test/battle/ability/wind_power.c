@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
         HP_BAR(player);
         if (move == MOVE_AIR_CUTTER) {
             ABILITY_POPUP(player, ABILITY_WIND_POWER);
-            MESSAGE("Being hit by Air Cutter charged Wattrel with power!");
+            MESSAGE("Being hit by AIR CUTTER charged WATTREL with power!");
         }
     }
     THEN {
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
         HP_BAR(opponent);
         if (move == MOVE_AIR_CUTTER) {
             ABILITY_POPUP(opponent, ABILITY_WIND_POWER);
-            MESSAGE("Being hit by Air Cutter charged the opposing Wattrel with power!");
+            MESSAGE("Being hit by AIR CUTTER charged the opposing WATTREL with power!");
         }
     }
     THEN {

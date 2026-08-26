@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
 
         if (burn) {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
-            MESSAGE("The opposing Wobbuffet was burned!");
+            MESSAGE("The opposing WOBBUFFET was burned!");
             STATUS_ICON(opponent, burn: TRUE);
         }
         else {

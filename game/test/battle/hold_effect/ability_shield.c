@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Ability Shield activates a previously suppressed ability whe
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Gyarados's Ability is protected by the effects of its Ability Shield!");
+        MESSAGE("GYARADOS's Ability is protected by the effects of its ABILITY SHIELD!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
     }
 }

@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated WALKING WAKE's Protosynthesis!");
-        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("WALKING WAKE's SP. ATK was heightened!");
     }
 }
 
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated ROARING MOON's Protosynthesis!");
-        MESSAGE("Roaring Moon's Attack was heightened!");
+        MESSAGE("ROARING MOON's ATTACK was heightened!");
     }
 }
 
@@ -253,7 +253,7 @@ SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated FLUTTER MANE's Protosynthesis!");
-        MESSAGE("Flutter Mane's Sp. Atk was heightened!");
+        MESSAGE("FLUTTER MANE's SP. ATK was heightened!");
     }
 }
 

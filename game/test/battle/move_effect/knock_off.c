@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another it
         if (B_KNOCK_OFF_REMOVAL >= GEN_5) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT);
-            MESSAGE("The opposing Wobbuffet restored a little HP using its Leftovers!");
+            MESSAGE("The opposing WOBBUFFET restored a little HP using its LEFTOVERS!");
         } else {
             NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player); }
             MESSAGE("But it failed!");

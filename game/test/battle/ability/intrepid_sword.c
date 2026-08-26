@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it swit
         MESSAGE("The opposing ZACIAN's INTREPID SWORD raised its ATTACK!");
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing ZACIAN's INTREPID SWORD raised its ATTACK!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }

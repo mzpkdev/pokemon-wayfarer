@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Electromorphosis sets up Charge when hit by any move")
             MESSAGE("Being hit by SCRATCH charged BELLIBOLT with power!");
         }
         else {
-            MESSAGE("Being hit by Gust charged Bellibolt with power!");
+            MESSAGE("Being hit by GUST charged BELLIBOLT with power!");
         }
     }
     THEN {

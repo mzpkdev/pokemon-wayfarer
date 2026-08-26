@@ -249,7 +249,7 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority, which is consider
         MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
         ABILITY_POPUP(opponentLeft, ability);
-        MESSAGE("Wobbuffet cannot use Quick Attack!");
+        MESSAGE("WOBBUFFET cannot use QUICK ATTACK!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerRight);
     }
 }
