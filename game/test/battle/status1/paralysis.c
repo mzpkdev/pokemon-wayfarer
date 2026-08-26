@@ -18,14 +18,14 @@ SINGLE_BATTLE_TEST("Paralysis reduces Speed by 50% (Gen 7+) or 75% (Gen 1-6)")
     } SCENE {
         if (playerFirst) {
             ONE_OF {
-                MESSAGE("Wobbuffet used Celebrate!");
+                MESSAGE("WOBBUFFET used CELEBRATE!");
                 MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
             }
-            MESSAGE("The opposing Wobbuffet used Celebrate!");
+            MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         } else {
-            MESSAGE("The opposing Wobbuffet used Celebrate!");
+            MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
             ONE_OF {
-                MESSAGE("Wobbuffet used Celebrate!");
+                MESSAGE("WOBBUFFET used CELEBRATE!");
                 MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
             }
         }

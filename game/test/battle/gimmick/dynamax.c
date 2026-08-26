@@ -15,9 +15,9 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax increases HP and max HP by 1.5x", u16 hp)
     } SCENE {
         if (dynamax) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
-            MESSAGE("Wobbuffet used Max Strike!");
+            MESSAGE("WOBBUFFET used MAX STRIKE!");
         }
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         results[i].hp = player->hp;
     } FINALLY {
@@ -48,9 +48,9 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax Level increases HP and max HP multipliers b
     } SCENE {
         if (dynamax) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
-            MESSAGE("Wobbuffet used Max Strike!");
+            MESSAGE("WOBBUFFET used MAX STRIKE!");
         }
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         results[i].hp = player->hp;
     } FINALLY {
@@ -345,7 +345,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon's Max Moves cannot be disabled")
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_DISABLE); }
     } SCENE {
         MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet used Disable!");
+        MESSAGE("The opposing WOBBUFFET used DISABLE!");
         MESSAGE("But it failed!");
     }
 }
@@ -363,11 +363,11 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can have base moves disabled on t
         TURN {}
         TURN { MOVE(player, MOVE_SCRATCH, allowed: FALSE); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("The opposing Wobbuffet used Disable!");
-        MESSAGE("Wobbuffet's Scratch was disabled!");
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("The opposing WOBBUFFET used DISABLE!");
+        MESSAGE("WOBBUFFET's SCRATCH was disabled!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
     }
 }
 

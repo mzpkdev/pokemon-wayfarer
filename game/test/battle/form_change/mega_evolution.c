@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         MESSAGE("GARDEVOIR used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 205);
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("GARDEVOIR used CELEBRATE!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 205);
     }
@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("SABLEYE used CELEBRATE!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 105);
     }

@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Schooling switches Level 20+ Wishiwashi's form when HP is ov
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
         }
         MESSAGE("WISHIWASHI used CELEBRATE!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         if (level >= 20 && overQuarterHP)
             EXPECT_EQ(player->species, SPECIES_WISHIWASHI_SCHOOL);

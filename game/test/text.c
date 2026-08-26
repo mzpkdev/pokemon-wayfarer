@@ -54,6 +54,16 @@ TEST("Move names fit on Contest Screen")
     // All moves explicitly listed here are too big to fit.
     switch (move)
     {
+    case MOVE_BURNING_JEALOUSY:
+    case MOVE_CHILLY_RECEPTION:
+    case MOVE_COLLISION_COURSE:
+    case MOVE_ELECTRIC_TERRAIN:
+    case MOVE_FIRST_IMPRESSION:
+    case MOVE_PARABOLIC_CHARGE:
+    case MOVE_PRECIPICE_BLADES:
+    case MOVE_REVELATION_DANCE:
+    case MOVE_REVIVAL_BLESSING:
+    case MOVE_SPRINGTIDE_STORM:
     case MOVE_STOMPING_TANTRUM:
     case MOVE_NATURES_MADNESS:
     case MOVE_DOUBLE_IRON_BASH:
@@ -174,9 +184,11 @@ TEST("Item names fit on Pokemon Storage System")
     // All items explicitly listed here are too big to fit.
     switch (item)
     {
+    case ITEM_FRESH_START_MOCHI:
     case ITEM_ELECTRIC_TERA_SHARD:
     case ITEM_FIGHTING_TERA_SHARD:
     case ITEM_PSYCHIC_TERA_SHARD:
+    case ITEM_STELLAR_TERA_SHARD:
     case ITEM_UNREMARKABLE_TEACUP:
     case ITEM_MASTERPIECE_TEACUP:
     case ITEM_TWICE_SPICED_RADISH:
@@ -201,6 +213,9 @@ TEST("Item names fit on Pokemon Summary Screen")
     // All items explicitly listed here are too big to fit.
     switch (item)
     {
+    case ITEM_ELECTRIC_TERA_SHARD:
+    case ITEM_FIGHTING_TERA_SHARD:
+    case ITEM_TWICE_SPICED_RADISH:
     case ITEM_UNREMARKABLE_TEACUP:
         EXPECT_GT(GetStringWidth(fontId, gItemsInfo[item].name, 0), widthPx);
         break;

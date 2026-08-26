@@ -22,22 +22,22 @@ SINGLE_BATTLE_TEST("Tailwind applies for 3 turns (Gen4) or 4 turns (Gen5+)")
         TURN {}
         TURN {}
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
-        MESSAGE("Wobbuffet used Tailwind!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
+        MESSAGE("WOBBUFFET used TAILWIND!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
         if (config >= GEN_5) {
-            MESSAGE("Wobbuffet used Celebrate!");
-            MESSAGE("The opposing Wobbuffet used Celebrate!");
+            MESSAGE("WOBBUFFET used CELEBRATE!");
+            MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         }
 
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
     }
 }
 

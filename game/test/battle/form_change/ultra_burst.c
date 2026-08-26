@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Ultra Burst affects turn order")
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
     } SCENE {
         MESSAGE("NECROZMA used CELEBRATE!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 263);
     }
