@@ -307,7 +307,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if Contrary is at maximum stats (Gen6
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(player, 1); }
     } SCENE {
         MESSAGE("The opposing INKAY's stats won't go any higher!");
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], MAX_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], MAX_STAT_STAGE);

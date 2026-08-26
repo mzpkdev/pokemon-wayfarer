@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+
         MESSAGE("WOBBUFFET's SPEED rose!");
     #endif
         MESSAGE("WOBBUFFET got free of the opposing WOBBUFFET's WRAP!");
-        MESSAGE("WOBBUFFET blew away STEALTH ROCK!");
+        MESSAGE("WOBBUFFET blew away Stealth Rock!");
     }
 }
 
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
         MESSAGE("The opposing WOBBUFFET was poisoned!");
         STATUS_ICON(opponent, poison: TRUE);
         MESSAGE("WOBBUFFET got free of the opposing WOBBUFFET's WRAP!");
-        MESSAGE("WOBBUFFET blew away STEALTH ROCK!");
+        MESSAGE("WOBBUFFET blew away Stealth Rock!");
     }
 }
 

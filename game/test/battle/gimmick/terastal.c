@@ -235,7 +235,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallization changes type effectiveness")
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
         MESSAGE("The opposing WOBBUFFET used EARTHQUAKE!");
-        MESSAGE("It doesn't affect Wobbuffet…");
+        MESSAGE("It doesn't affect WOBBUFFET…");
         NOT { HP_BAR(player); }
     }
 }

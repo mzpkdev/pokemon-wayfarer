@@ -191,7 +191,7 @@ SINGLE_BATTLE_TEST("Recycle cannot recover an item removed by Knock Off")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
         MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
 
-        MESSAGE("The opposing Wobbuffet used Recycle!");
+        MESSAGE("The opposing WOBBUFFET used RECYCLE!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);

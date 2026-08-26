@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if battler faints before being 
         MESSAGE("WOBBUFFET set a shell trap!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("WOBBUFFET fainted!");
-        SEND_IN_MESSAGE("Wobbuffet");
+        SEND_IN_MESSAGE("WOBBUFFET");
         NONE_OF {
             MESSAGE("Wobbuffet used Shell Trap!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
