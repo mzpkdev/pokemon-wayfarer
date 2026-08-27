@@ -52,7 +52,7 @@ DOUBLE_BATTLE_TEST("Grim Neigh does not trigger if Pokemon faint to indirect dam
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerRight);
         for (i = 0; i < 3; i++) {
             ONE_OF {
-                MESSAGE("Snorunt fainted!");
+                MESSAGE("SNORUNT fainted!");
                 MESSAGE("The opposing GLALIE fainted!");
                 MESSAGE("The opposing ABRA fainted!");
             }

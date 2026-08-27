@@ -160,7 +160,7 @@ SINGLE_BATTLE_TEST("Prankster is blocked by Quick Guard in Gen5+")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_GUARD, player);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
-        MESSAGE("Wobbuffet protected itself!");
+        MESSAGE("WOBBUFFET protected itself!");
     }
 }
 

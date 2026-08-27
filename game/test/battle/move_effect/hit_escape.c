@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out if Wimp Out fails t
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         NOT ABILITY_POPUP(opponent);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     }
 }
 
