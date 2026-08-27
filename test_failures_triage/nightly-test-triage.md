@@ -51,13 +51,13 @@ Current strict test objects compile and link, and Hydra starts. Neither the
 `CheckTogepi` missing-flag error nor the unused Frontier healthbox-helper
 error appears in the current strict build. The completed
 [PR #7 CI run](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32980328525)
-against `5993e0982b` is the latest comparable full-suite aggregate while
-the [current-head attempt](https://github.com/mzpkdev/pokemon-wayfarer/actions/runs/32984211294)
-was cancelled before any job acquired a hosted runner. It reported 5,113 total
+against `5993e0982b` is retained as comparable CI evidence. It reported 5,113 total
 tests: 2,556 `PASS`, 1,884
 `FAIL`, 28 `ASSUMPTION_FAIL`, 11 `KNOWN_FAILING`, 628 `TO_DO`, and 6
 `EXPECT_FAILING`. The process exited 2 because tests failed. The job completed
-without hitting the runner timeout.
+without hitting the runner timeout. A later attempt did not acquire
+a hosted runner, but subsequent PR pushes are acquiring runners normally. That
+cancellation is not an active task blocker.
 
 Hydra can now write an uncapped NDJSON ledger with schema
 `mgba-rom-test-hydra/v1`. A local current-head `-j22` run recorded all 5,149
@@ -108,9 +108,21 @@ pairs were aligned afterward, and both exact focused tests pass.
 A separate presentation-only pilot aligns three Galar form scenarios and 11
 directly observed Red Card messages. All three Galar targets pass. Nine Red
 Card scenarios pass, while the rooted and Suction Cups scenarios advance to
-their next independent message assertions. A complete run after the two final
-case-only updates and this pilot recorded 2,817 `PASS`, 1,639 `FAIL`, 46
+their next independent message assertions. The complete run after the two final
+case-only updates and this pilot then recorded 2,817 `PASS`, 1,639 `FAIL`, 46
 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
+
+The latest complete local Wave 24 ledger recorded all 5,149 results: 3,484
+`PASS`, 972 `FAIL`, 46 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`,
+and 6 `EXPECT_FAILING`. The test command remained nonzero because ordinary failures remain. Paired
+comparisons found no status regressions or result multiplicity drift after
+normalizing parameter progress suffixes. A final glyph-aware scan found no
+remaining presentation-only candidate.
+Of the 972 failures, 860 are unmatched-message results: 726 have substantive
+content, actor, or ordering differences, 132 retained no unmatched message for
+the pending expectation, and 2 use AI concatenated literals without a
+presentation-only counterpart. The other 112 are non-message assertions outside the
+presentation-only lane.
 
 Exact expectation updates are gameplay-neutral. Reverting the production names
 would change visible gameplay, and case-insensitive matching would weaken the
@@ -177,7 +189,9 @@ behavior changed.
 The exact Light Metal Heavy Ball and Heavy Metal Heavy Ball runs each exited 0
 with 1 `PASS`, with no timeout or `INVALID` result. The Poké Ball runner
 exception used by those checks is committed in `fb4ad1f2c5`. Broader capture
-and Ball Fetch observations remain incomplete.
+and Ball Fetch observations remain outside this presentation-only scope. Both
+`CRITICAL_CAPTURE_IF_OWNED` cases completed with `PASS` in the Wave 24 full
+run; the older focused timeout artifacts remain historical evidence.
 
 Additional Fairy, modern Sturdy, and modern Sitrus settings are enabled only
 inside fixtures that require them. Focused checks confirm that Inverse Battle,
@@ -201,7 +215,8 @@ UNUSED_ERROR=1 DEPRECATED_ERROR=1 GAME_VERSION=EMERALD TEST=1 make -j22 TESTS="<
 ```
 
 The completed PR #7 CI evidence proves full-suite completion without a runner
-timeout. The local NDJSON report provides an uncapped current result ledger, but it
+timeout. Later pushes are acquiring hosted runners normally. The local NDJSON
+report provides an uncapped current result ledger, but it
 does not validate the original PR #6 log range, runtime environment, or repeat
 count. The inventory rows remain historical until a focused current run
 records evidence for an individual row.
