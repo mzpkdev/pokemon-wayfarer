@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Last Resort always fails if it's the only known move")
     } SCENE {
         MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
         NOT HP_BAR(opponent);
     }
@@ -35,8 +35,8 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
     } SCENE {
         MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         HP_BAR(opponent);
     }
 }
@@ -55,11 +55,11 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
     } SCENE {
         MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Quick Attack!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used QUICK ATTACK!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         HP_BAR(opponent);
     }
 }
@@ -80,14 +80,14 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
     } SCENE {
         MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Quick Attack!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used QUICK ATTACK!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
-        MESSAGE("Wobbuffet used Gust!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used GUST!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         HP_BAR(opponent);
     }
 }
@@ -136,13 +136,13 @@ SINGLE_BATTLE_TEST("Last Resort works with Sleep Talk")
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
     } SCENE {
         // Turn 1
-        MESSAGE("Wobbuffet used Sleep Talk!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used SLEEP TALK!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         NOT MESSAGE("But it failed!");
         HP_BAR(opponent);
         // Turn 2
-        MESSAGE("Wobbuffet used Sleep Talk!");
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used SLEEP TALK!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         NOT MESSAGE("But it failed!");
         HP_BAR(opponent);
     }
@@ -186,4 +186,3 @@ AI_SINGLE_BATTLE_TEST("AI uses Last Resort - 4 moves")
         TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT); }
     }
 }
-
