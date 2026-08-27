@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves don't affect Dark-type Pokémon (Ge
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
-            MESSAGE("It doesn't affect Umbreon…");
+            MESSAGE("It doesn't affect UMBREON…");
         }
     }
 }
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves don't affect Dark-type Pokémon aft
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_CONFUSE_RAY); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
-        MESSAGE("It doesn't affect Umbreon…");
+        MESSAGE("It doesn't affect UMBREON…");
     }
 }
 
@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves called via Assist don't affect Dark
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
-            MESSAGE("It doesn't affect Umbreon…");
+            MESSAGE("It doesn't affect UMBREON…");
         }
     }
 }
