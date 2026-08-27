@@ -283,8 +283,8 @@ SINGLE_BATTLE_TEST("Parting Shot: Switches if both stats are at minimum (Gen6)")
         TURN { MOVE(player, MOVE_TOPSY_TURVY); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_PARTING_SHOT); MOVE(opponent, MOVE_CELEBRATE); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("The opposing Omastar's stats won't go any lower!");
-        SEND_IN_MESSAGE("Wynaut");
+        MESSAGE("The opposing OMASTAR's stats won't go any lower!");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], MIN_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], MIN_STAT_STAGE);
@@ -376,7 +376,7 @@ DOUBLE_BATTLE_TEST("Parting Shot: Flower Veil prevents stat drops and switches (
         TURN { MOVE(playerLeft, MOVE_PARTING_SHOT, target: opponentLeft); MOVE(playerRight, MOVE_CELEBRATE); SEND_OUT(playerLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PARTING_SHOT, playerLeft);
-        SEND_IN_MESSAGE("Pikachu");
+        SEND_IN_MESSAGE("PIKACHU");
     } THEN {
         EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
