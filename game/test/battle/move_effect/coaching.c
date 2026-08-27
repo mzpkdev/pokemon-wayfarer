@@ -67,14 +67,14 @@ DOUBLE_BATTLE_TEST("Coaching fails if all allies are is semi-invulnerable")
     } WHEN {
         TURN { MOVE(playerRight, MOVE_FLY, target: opponentLeft); MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
-        MESSAGE("Hawlucha used Fly!");
-        MESSAGE("Wobbuffet used Coaching!");
+        MESSAGE("HAWLUCHA used FLY!");
+        MESSAGE("WOBBUFFET used COACHING!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
-            MESSAGE("Hawlucha's Attack rose!");
-            MESSAGE("Hawlucha's Defense rose!");
+            MESSAGE("HAWLUCHA's ATTACK rose!");
+            MESSAGE("HAWLUCHA's DEFENSE rose!");
         }
-        MESSAGE("Hawlucha avoided the attack!");
+        MESSAGE("HAWLUCHA avoided the attack!");
     }
 }
 
@@ -89,8 +89,8 @@ SINGLE_BATTLE_TEST("Coaching fails in single battles")
         MESSAGE("But it failed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, player);
-            MESSAGE("Wynaut's Attack rose!");
-            MESSAGE("Wynaut's Defense rose!");
+            MESSAGE("WYNAUT's ATTACK rose!");
+            MESSAGE("WYNAUT's DEFENSE rose!");
         }
     }
 }
@@ -108,11 +108,11 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         MESSAGE("WYNAUT fainted!");
-        MESSAGE("Wobbuffet used Coaching!");
+        MESSAGE("WOBBUFFET used COACHING!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
-            MESSAGE("Wynaut's Attack rose!");
-            MESSAGE("Wynaut's Defense rose!");
+            MESSAGE("WYNAUT's ATTACK rose!");
+            MESSAGE("WYNAUT's DEFENSE rose!");
         }
         MESSAGE("But it failed!");
     }

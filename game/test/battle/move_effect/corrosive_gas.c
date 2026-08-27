@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon with the
     } SCENE {
         MESSAGE("WOBBUFFET used CORROSIVE GAS!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CORROSIVE_GAS, player);
-        NOT MESSAGE("Wobbuffet corroded the opposing Wobbuffet's Potion!");
+        NOT MESSAGE("WOBBUFFET corroded the opposing WOBBUFFET's POTION!");
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
         MESSAGE("The opposing MUK's STICKY HOLD made CORROSIVE GAS ineffective!");
     } THEN {
@@ -93,21 +93,21 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
     } WHEN {
         TURN { MOVE(playerRight, MOVE_CORROSIVE_GAS); }
     } SCENE {
-        MESSAGE("Wynaut used Corrosive Gas!");
+        MESSAGE("WYNAUT used CORROSIVE GAS!");
         if (itemPlayerLeft == ITEM_CHERI_BERRY) {
-            MESSAGE("Wynaut corroded Wobbuffet's Cheri Berry!");
+            MESSAGE("WYNAUT corroded WOBBUFFET's CHERI BERRY!");
         } else {
-            MESSAGE("It won't have any effect on Wobbuffet!");
+            MESSAGE("It won't have any effect on WOBBUFFET!");
         }
         if (itemOpponentLeft == ITEM_ORAN_BERRY) {
-            MESSAGE("Wynaut corroded the opposing Abra's Oran Berry!");
+            MESSAGE("WYNAUT corroded the opposing ABRA's ORAN BERRY!");
         } else {
-            MESSAGE("It won't have any effect on the opposing Abra!");
+            MESSAGE("It won't have any effect on the opposing ABRA!");
         }
         if (itemOpponentRight == ITEM_CHESTO_BERRY) {
-            MESSAGE("Wynaut corroded the opposing Kadabra's Chesto Berry!");
+            MESSAGE("WYNAUT corroded the opposing KADABRA's CHESTO BERRY!");
         } else {
-            MESSAGE("It won't have any effect on the opposing Kadabra!");
+            MESSAGE("It won't have any effect on the opposing KADABRA!");
         }
 
     } THEN {
