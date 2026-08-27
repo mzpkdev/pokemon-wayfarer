@@ -20,6 +20,6 @@ DOUBLE_BATTLE_TEST("Hold Hands is blocked by Crafty Shield")
         }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HOLD_HANDS, playerLeft);
-        MESSAGE("Wynaut protected itself!");
+        MESSAGE("WYNAUT protected itself!");
     }
 }
