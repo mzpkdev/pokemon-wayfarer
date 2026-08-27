@@ -25,7 +25,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-            MESSAGE("Igglybuff's Sp. Atk sharply rose!");
+            MESSAGE("IGGLYBUFF's SP. ATK sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("The opposing GYARADOS's INTIMIDATE cuts JIGGLYPUFF's ATTACK!");
@@ -82,7 +82,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimida
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Igglybuff's Sp. Atk sharply rose!");
+            MESSAGE("The opposing IGGLYBUFF's SP. ATK sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("GYARADOS's INTIMIDATE cuts the opposing JIGGLYPUFF's ATTACK!");
