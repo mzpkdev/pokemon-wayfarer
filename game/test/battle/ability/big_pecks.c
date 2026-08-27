@@ -46,8 +46,8 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Defense stage reduction from moves
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPERPOWER, opponent);
-        MESSAGE("The opposing Pidgey's Attack fell!");
-        MESSAGE("The opposing Pidgey's Defense fell!");
+        MESSAGE("The opposing PIDGEY's ATTACK fell!");
+        MESSAGE("The opposing PIDGEY's DEFENSE fell!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
     }
