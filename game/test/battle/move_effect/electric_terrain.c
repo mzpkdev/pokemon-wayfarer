@@ -10,11 +10,11 @@ SINGLE_BATTLE_TEST("Electric Terrain protects grounded battlers from falling asl
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_SPORE); }
         TURN { MOVE(player, MOVE_SPORE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Electric Terrain!");
-        MESSAGE("The opposing Claydol used Spore!");
-        MESSAGE("Wobbuffet surrounds itself with electrified terrain!");
-        MESSAGE("Wobbuffet used Spore!");
-        MESSAGE("The opposing Claydol fell asleep!");
+        MESSAGE("WOBBUFFET used ELECTRIC TERRAIN!");
+        MESSAGE("The opposing CLAYDOL used SPORE!");
+        MESSAGE("WOBBUFFET surrounds itself with electrified terrain!");
+        MESSAGE("WOBBUFFET used SPORE!");
+        MESSAGE("The opposing CLAYDOL fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
     }
 }
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Electric Terrain increases power of Electric-type moves by 3
             TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); }
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
-        MESSAGE("Wobbuffet used Thunder Shock!");
+        MESSAGE("WOBBUFFET used THUNDER SHOCK!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         if (B_TERRAIN_TYPE_BOOST >= GEN_8)
@@ -54,18 +54,18 @@ SINGLE_BATTLE_TEST("Electric Terrain lasts for 5 turns")
         TURN {}
         TURN {}
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         MESSAGE("An electric current ran across the battlefield!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
         MESSAGE("The electricity disappeared from the battlefield.");
     }
