@@ -147,9 +147,9 @@ SINGLE_BATTLE_TEST("Freeze is thawed by user's Flame Wheel")
     } WHEN {
         TURN { MOVE(player, MOVE_FLAME_WHEEL); }
     } SCENE {
-        MESSAGE("Wobbuffet's Flame Wheel melted the ice!");
+        MESSAGE("WOBBUFFET's FLAME WHEEL melted the ice!");
         STATUS_ICON(player, none: TRUE);
-        MESSAGE("Wobbuffet used Flame Wheel!");
+        MESSAGE("WOBBUFFET used FLAME WHEEL!");
     }
 }
 

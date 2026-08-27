@@ -31,20 +31,20 @@ DOUBLE_BATTLE_TEST("Strong winds remove Flying-type weaknesses of all battlers")
     } SCENE {
         if (targetPlayer) {
             if (move == MOVE_THUNDER_SHOCK)
-                MESSAGE("The opposing Pidgey used Thunder Shock!");
+                MESSAGE("The opposing PIDGEY used THUNDER SHOCK!");
             else if (move == MOVE_ICE_BEAM)
-                MESSAGE("The opposing Pidgey used Ice Beam!");
+                MESSAGE("The opposing PIDGEY used ICE BEAM!");
             else
-                MESSAGE("The opposing Pidgey used Rock Throw!");
+                MESSAGE("The opposing PIDGEY used ROCK THROW!");
             MESSAGE("The mysterious strong winds weakened the attack!");
             ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         } else {
             if (move == MOVE_THUNDER_SHOCK)
-                MESSAGE("Pidgey used Thunder Shock!");
+                MESSAGE("PIDGEY used THUNDER SHOCK!");
             else if (move == MOVE_ICE_BEAM)
-                MESSAGE("Pidgey used Ice Beam!");
+                MESSAGE("PIDGEY used ICE BEAM!");
             else
-                MESSAGE("Pidgey used Rock Throw!");
+                MESSAGE("PIDGEY used ROCK THROW!");
             MESSAGE("The mysterious strong winds weakened the attack!");
             ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
         }
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flyi
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
-        MESSAGE("Rayquaza used Thunder Shock!");
+        MESSAGE("RAYQUAZA used THUNDER SHOCK!");
         MESSAGE("The mysterious strong winds weakened the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent);
@@ -127,8 +127,8 @@ SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active")
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
-        MESSAGE("Rayquaza used Celebrate!");
-        MESSAGE("The opposing Pidgey used Celebrate!");
+        MESSAGE("RAYQUAZA used CELEBRATE!");
+        MESSAGE("The opposing PIDGEY used CELEBRATE!");
     }
 }
 
@@ -145,8 +145,8 @@ SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active in Inve
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ANTICIPATION);
-        MESSAGE("Rayquaza used Celebrate!");
-        MESSAGE("The opposing Tornadus used Celebrate!");
+        MESSAGE("RAYQUAZA used CELEBRATE!");
+        MESSAGE("The opposing TORNADUS used CELEBRATE!");
     }
 }
 
