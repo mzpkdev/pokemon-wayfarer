@@ -24,10 +24,10 @@ DOUBLE_BATTLE_TEST("Beak Blast's charging message is shown before other moves ar
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
         MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
 
-        MESSAGE("Wynaut used Beak Blast!");
+        MESSAGE("WYNAUT used BEAK BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, playerLeft);
         HP_BAR(opponentLeft);
     }
@@ -51,21 +51,21 @@ DOUBLE_BATTLE_TEST("Beak Blast burns all who make contact with the Pokémon")
         MESSAGE("WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
 
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentLeft);
-        MESSAGE("The opposing Wobbuffet was burned!");
+        MESSAGE("The opposing WOBBUFFET was burned!");
         STATUS_ICON(opponentLeft, burn: TRUE);
 
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         HP_BAR(playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
-        MESSAGE("The opposing Wobbuffet was burned!");
+        MESSAGE("The opposing WOBBUFFET was burned!");
         STATUS_ICON(opponentRight, burn: TRUE);
 
-        MESSAGE("Wynaut used Beak Blast!");
+        MESSAGE("WYNAUT used BEAK BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, playerLeft);
         HP_BAR(opponentLeft);
     }
