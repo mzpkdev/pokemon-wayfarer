@@ -799,7 +799,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
         MESSAGE("WOBBUFFET unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, playerRight);
         MESSAGE("Trainer B: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
+        MESSAGE("The opposing WOBBUFFET surrounded itself with its Z-Power!");
         MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentRight);
     }

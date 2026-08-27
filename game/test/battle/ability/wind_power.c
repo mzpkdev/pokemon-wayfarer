@@ -255,7 +255,7 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly when Tailwind is used")
             MESSAGE("Being hit by TAILWIND charged WATTREL with power!");
 
             ABILITY_POPUP(playerRight, ABILITY_WIND_POWER);
-            MESSAGE("Being hit by Tailwind charged Wattrel with power!");
+            MESSAGE("Being hit by TAILWIND charged WATTREL with power!");
         }
     }
 }

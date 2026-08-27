@@ -213,6 +213,6 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         HP_BAR(player, hp: maxHP / 2);
-        MESSAGE("Serperior cut its own HP and maximized its Attack!");
+        MESSAGE("SERPERIOR cut its own HP and maximized its ATTACK!");
     }
 }

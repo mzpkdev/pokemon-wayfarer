@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the du
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
         MESSAGE("The Electric Terrain activated IRON MOTH's Quark Drive!");
-        MESSAGE("Iron Moth's Sp. Atk was heightened!");
+        MESSAGE("IRON MOTH's SP. ATK was heightened!");
     }
 }
 
