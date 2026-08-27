@@ -238,7 +238,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandsto
         MESSAGE("The sandstorm is raging.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SANDSTORM_CONTINUES);
         MESSAGE("WOBBUFFET is buffeted by the sandstorm!");
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         NOT MESSAGE("The opposing Wobbuffet's Sandstorm lost all its PP due to the grudge!");
     }
     THEN {

@@ -64,7 +64,7 @@ DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
         MESSAGE("WOBBUFFET waits for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerRight);
-        MESSAGE("Wynaut waits for a target to make a move!");
+        MESSAGE("WYNAUT waits for a target to make a move!");
         // Opponent uses Celebrate (not snatchable)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         // Slowest opponent uses Swords Dance - only the first Snatch user should steal it

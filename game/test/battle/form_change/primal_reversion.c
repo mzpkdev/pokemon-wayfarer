@@ -78,7 +78,7 @@ DOUBLE_BATTLE_TEST("Primal Reversion's order is determined by Speed - opponent f
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentRight);
         MESSAGE("The opposing KYOGRE's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerRight);
-        MESSAGE("Groudon's Primal Reversion! It reverted to its primal state!");
+        MESSAGE("GROUDON's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentLeft);
         MESSAGE("The opposing Groudon's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerLeft);
@@ -104,7 +104,7 @@ DOUBLE_BATTLE_TEST("Primal Reversion's order is determined by Speed - player fas
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerRight);
         MESSAGE("GROUDON's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerLeft);
-        MESSAGE("Kyogre's Primal Reversion! It reverted to its primal state!");
+        MESSAGE("KYOGRE's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentLeft);
         MESSAGE("The opposing Groudon's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentRight);

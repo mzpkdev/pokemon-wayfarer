@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6")
         MESSAGE("WOBBUFFET's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("WOBBUFFET's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Wobbuffet's Attack sharply rose!");
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even
         MESSAGE("SERPERIOR's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("SERPERIOR's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Serperior's Attack sharply rose!");
@@ -203,7 +203,7 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6"
         MESSAGE("SERPERIOR's ATTACK harshly fell!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack harshly fell!");
+        MESSAGE("SERPERIOR's ATTACK harshly fell!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Serperior's Attack harshly fell!");

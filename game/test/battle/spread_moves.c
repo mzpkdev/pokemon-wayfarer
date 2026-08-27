@@ -73,7 +73,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("The CHILAN BERRY weakened the damage to the opposing RAICHU!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
-        MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
+        MESSAGE("The CHILAN BERRY weakened the damage to the opposing SANDSLASH!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
@@ -328,7 +328,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WIDE_GUARD, playerLeft);
         MESSAGE("WIDE GUARD protected your team!");
-        MESSAGE("The opposing Wobbuffet used Hyper Voice!");
+        MESSAGE("The opposing WOBBUFFET used HYPER VOICE!");
         MESSAGE("Wobbuffet protected itself!");
         MESSAGE("Wynaut protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);

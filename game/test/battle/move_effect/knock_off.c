@@ -243,7 +243,7 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
         MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
         // turn 2
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         MESSAGE("Wobbuffet used Celebrate!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);

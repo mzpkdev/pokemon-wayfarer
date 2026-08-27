@@ -176,7 +176,7 @@ SINGLE_BATTLE_TEST("Electric Seed is consumed on Electric Terrain before other a
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("Using ELECTRIC SEED, the DEFENSE of the opposing TAPU KOKO rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Electric Seed, the Defense of Tapu Bulu rose!");
+        MESSAGE("Using ELECTRIC SEED, the DEFENSE of TAPU BULU rose!");
         ABILITY_POPUP(player, ABILITY_GRASSY_SURGE);
     }
 }

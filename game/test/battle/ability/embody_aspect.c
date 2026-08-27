@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by o
         if (ability == ABILITY_EMBODY_ASPECT_TEAL_MASK)
             MESSAGE("The opposing OGERPON's EMBODY ASPECT raised its SPEED!");
         else if (ability == ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK)
-            MESSAGE("The opposing Ogerpon's Embody Aspect raised its Attack!");
+            MESSAGE("The opposing OGERPON's EMBODY ASPECT raised its ATTACK!");
         else if (ability == ABILITY_EMBODY_ASPECT_WELLSPRING_MASK)
             MESSAGE("The opposing Ogerpon's Embody Aspect raised its Sp. Def!");
         else if (ability == ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK)

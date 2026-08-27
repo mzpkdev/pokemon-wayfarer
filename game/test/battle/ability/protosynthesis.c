@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated WALKING WAKE's Protosynthesis!");
-        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("WALKING WAKE's SP. ATK was heightened!");
         NONE_OF {
             for (turns = 0; turns < 4; turns++) {
                 ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -297,7 +297,7 @@ SINGLE_BATTLE_TEST("Protosynthesis recalculates the boosted stat after Neutraliz
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated FLUTTER MANE's Protosynthesis!");
-        MESSAGE("Flutter Mane's Sp. Atk was heightened!");
+        MESSAGE("FLUTTER MANE's SP. ATK was heightened!");
     }
 }
 

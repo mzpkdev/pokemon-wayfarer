@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+
         MESSAGE("GYARADOS's INTIMIDATE cuts the opposing SUDOWOODO's ATTACK!");
         ABILITY_POPUP(opponent, ABILITY_RATTLED);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Sudowoodo's Speed rose!");
+        MESSAGE("The opposing SUDOWOODO's SPEED rose!");
     }
 }
 

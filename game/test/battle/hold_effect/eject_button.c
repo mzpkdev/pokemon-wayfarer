@@ -225,7 +225,7 @@ DOUBLE_BATTLE_TEST("Eject Button activation will not trigger an attack from the 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
         MESSAGE("WOBBUFFET is switched out with the EJECT BUTTON!");
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
             MESSAGE("Wobbuffet is switched out with the Eject Pack!");

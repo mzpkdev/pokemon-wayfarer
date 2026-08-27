@@ -60,7 +60,7 @@ DOUBLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("The opposing WOBBUFFET returned its stats to normal using its WHITE HERB!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
-        MESSAGE("The opposing Wynaut returned its stats to normal using its White Herb!");
+        MESSAGE("The opposing WYNAUT returned its stats to normal using its WHITE HERB!");
     } THEN {
         EXPECT(opponentLeft->item == ITEM_NONE);
         EXPECT(opponentLeft->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);

@@ -852,7 +852,7 @@ DOUBLE_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, bu
         ABILITY_POPUP(playerRight, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerRight);
         HP_BAR(playerRight, hp: 0);
-        MESSAGE("Oricorio fainted!");
+        MESSAGE("ORICORIO fainted!");
         SEND_IN_MESSAGE("Wynaut");
         SEND_IN_MESSAGE("Chansey");
     }

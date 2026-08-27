@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single 
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-            MESSAGE("Wobbuffet became confused!");
+            MESSAGE("WOBBUFFET became confused!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -50,7 +50,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double 
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
             MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerRight);
-            MESSAGE("Wobbuffet became confused!");
+            MESSAGE("WOBBUFFET became confused!");
         }
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {
@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-            MESSAGE("Wobbuffet became confused!");
+            MESSAGE("WOBBUFFET became confused!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -142,7 +142,7 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, (positionLeft != 0) ? playerLeft : playerRight);
             MESSAGE("Using BERSERK GENE, the ATTACK of SLOWBRO sharply rose!");
             ABILITY_POPUP((positionLeft != 0) ? playerLeft : playerRight, ABILITY_OWN_TEMPO);
-            MESSAGE("Slowbro's Own Tempo prevents confusion!");
+            MESSAGE("SLOWBRO's OWN TEMPO prevents confusion!");
         }
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
         NOT MESSAGE("Slowbro became confused!");

@@ -443,7 +443,7 @@ SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fa
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         MESSAGE("The opposing BEAUTIFLY protected itself!");
-        MESSAGE("Rapidash used Arm Thrust!");
+        MESSAGE("RAPIDASH used ARM THRUST!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ARM_THRUST, player);
         MESSAGE("The opposing Beautifly protected itself!");
         // Each effect happens only once.

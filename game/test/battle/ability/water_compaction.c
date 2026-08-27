@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Water Compaction raises Defense 2 stages on each hit of a mu
         MESSAGE("SANDYGAST's DEFENSE sharply rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURGING_STRIKES, opponent);
         ABILITY_POPUP(player, ABILITY_WATER_COMPACTION);
-        MESSAGE("Sandygast's Defense sharply rose!");
+        MESSAGE("SANDYGAST's DEFENSE sharply rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURGING_STRIKES, opponent);
         ABILITY_POPUP(player, ABILITY_WATER_COMPACTION);
         MESSAGE("Sandygast's Defense sharply rose!");

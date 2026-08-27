@@ -65,7 +65,7 @@ DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target 
             MESSAGE("The opposing GASTRODON's SP. ATK rose!");
             ABILITY_POPUP(opponentLeft, ABILITY_STORM_DRAIN);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Gastrodon's Sp. Atk rose!");
+            MESSAGE("The opposing GASTRODON's SP. ATK rose!");
         } else {
             NONE_OF {
                 HP_BAR(opponentRight);

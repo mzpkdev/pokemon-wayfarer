@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Mirror Armor switches the user even if reflect
             MESSAGE("METAGROSS's CLEAR BODY prevents stat loss!");
         } else if (ability == ABILITY_WHITE_SMOKE) {
             ABILITY_POPUP(player, ABILITY_WHITE_SMOKE);
-            MESSAGE("Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("TORKOAL's WHITE SMOKE prevents stat loss!");
         } else if (ability == ABILITY_FULL_METAL_BODY) {
             ABILITY_POPUP(player, ABILITY_FULL_METAL_BODY);
             MESSAGE("Solgaleo's Full Metal Body prevents stat loss!");

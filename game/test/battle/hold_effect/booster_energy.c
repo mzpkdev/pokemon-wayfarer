@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terr
         }
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
         MESSAGE("The Electric Terrain activated IRON MOTH's Quark Drive!");
-        MESSAGE("Iron Moth's Sp. Atk was heightened!");
+        MESSAGE("IRON MOTH's SP. ATK was heightened!");
         MESSAGE("The electricity disappeared from the battlefield.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunl
         }
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("The harsh sunlight activated RAGING BOLT's Protosynthesis!");
-        MESSAGE("Raging Bolt's Sp. Atk was heightened!");
+        MESSAGE("RAGING BOLT's SP. ATK was heightened!");
         MESSAGE("The sunlight faded.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weat
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("RAGING BOLT used its BOOSTER ENERGY to activate PROTOSYNTHESIS!");
-        MESSAGE("Raging Bolt's Attack was heightened!");
+        MESSAGE("RAGING BOLT's ATTACK was heightened!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         MESSAGE("The sunlight faded.");
     } THEN {
@@ -108,7 +108,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highes
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("RAGING BOLT used its BOOSTER ENERGY to activate PROTOSYNTHESIS!");
         if (attack == 110)
-            MESSAGE("Raging Bolt's Attack was heightened!");
+            MESSAGE("RAGING BOLT's ATTACK was heightened!");
         else if (defense == 110)
             MESSAGE("Raging Bolt's Defense was heightened!");
         else if (speed == 110)
@@ -169,7 +169,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("IRON MOTH used its BOOSTER ENERGY to activate QUARK DRIVE!");
-        MESSAGE("Iron Moth's Attack was heightened!");
+        MESSAGE("IRON MOTH's ATTACK was heightened!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, opponent);
         MESSAGE("The grass disappeared from the battlefield.");
     } THEN {

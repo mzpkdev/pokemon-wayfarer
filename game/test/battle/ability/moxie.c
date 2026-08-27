@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Moxie/Chilling Neigh does not trigger when already at maximu
         if (species == SPECIES_SALAMENCE)
             MESSAGE("SALAMENCE cut its own HP and maximized its ATTACK!");
         else if (species == SPECIES_GLASTRIER)
-            MESSAGE("Glastrier cut its own HP and maximized its Attack!");
+            MESSAGE("GLASTRIER cut its own HP and maximized its ATTACK!");
         else
             MESSAGE("Calyrex cut its own HP and maximized its Attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);

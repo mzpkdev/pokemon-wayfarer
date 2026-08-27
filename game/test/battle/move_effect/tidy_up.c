@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Tidy Up removes Substitute")
         MESSAGE("The opposing WOBBUFFET used SUBSTITUTE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
         MESSAGE("The opposing WOBBUFFET put in a substitute!");
-        MESSAGE("Wobbuffet used Tidy Up!");
+        MESSAGE("WOBBUFFET used TIDY UP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDY_UP, player);
         MESSAGE("The opposing Wobbuffet's substitute faded!");
         MESSAGE("Tidying up complete!");

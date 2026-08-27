@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Syrup Bomb covers the foe in sticky syrup for 3 turns")
         HP_BAR(opponent);
         MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup isn't applied again if the target is already co
         HP_BAR(opponent);
         MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
         NOT MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Sticky syrup will not decrease speed further then minus six"
         HP_BAR(opponent);
         MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed won't go any lower!");
+        MESSAGE("The opposing WOBBUFFET's SPEED won't go any lower!");
         NONE_OF {
             MESSAGE("The opposing Wobbuffet's Speed fell!");
         }
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user switches out")
         HP_BAR(opponent);
         MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
             MESSAGE("The opposing Wobbuffet's Speed fell!");

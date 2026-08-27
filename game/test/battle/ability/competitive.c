@@ -28,7 +28,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
             MESSAGE("Igglybuff's Sp. Atk sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("The opposing Gyarados's Intimidate cuts Jigglypuff's Attack!");
+        MESSAGE("The opposing GYARADOS's INTIMIDATE cuts JIGGLYPUFF's ATTACK!");
         if (abilityRight == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerRight, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
@@ -85,7 +85,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimida
             MESSAGE("The opposing Igglybuff's Sp. Atk sharply rose!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("Gyarados's Intimidate cuts the opposing Jigglypuff's Attack!");
+        MESSAGE("GYARADOS's INTIMIDATE cuts the opposing JIGGLYPUFF's ATTACK!");
         if (abilityRight == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentRight, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
@@ -219,7 +219,7 @@ DOUBLE_BATTLE_TEST("Competitive is activated by Cotton Down for non-ally pokemon
         MESSAGE("IGGLYBUFF's SP. ATK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Igglybuff's Speed fell!");
+        MESSAGE("IGGLYBUFF's SPEED fell!");
         ABILITY_POPUP(playerRight, ABILITY_COMPETITIVE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Igglybuff's Sp. Atk sharply rose!");

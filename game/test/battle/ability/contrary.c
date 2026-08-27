@@ -56,7 +56,7 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
             MESSAGE("The opposing SPINDA's ATTACK rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
+            MESSAGE("MIGHTYENA's INTIMIDATE cuts the opposing SPINDA's ATTACK!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Sp. Atk harshly fell!");
+            MESSAGE("The opposing SPINDA's SP. ATK harshly fell!");
         }
 
         // MESSAGE("The opposing Spinda used Overheat!");

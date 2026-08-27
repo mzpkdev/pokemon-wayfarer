@@ -135,7 +135,7 @@ DOUBLE_BATTLE_TEST("Battle Bond transforms player's Greninja when fainting its A
         HP_BAR(playerRight);
         MESSAGE("WOBBUFFET fainted!");
         ABILITY_POPUP(playerLeft, ABILITY_BATTLE_BOND);
-        MESSAGE("Greninja became fully charged due to its bond with its trainer!");
+        MESSAGE("GRENINJA became fully charged due to its bond with its trainer!");
         MESSAGE("Greninja became Ash-Greninja!");
     } FINALLY {
         EXPECT(playerLeft->species == SPECIES_GRENINJA_ASH);

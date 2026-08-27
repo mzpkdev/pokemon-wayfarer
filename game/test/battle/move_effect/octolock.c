@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
         MESSAGE("The opposing WOBBUFFET can no longer escape because of Octolock!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Defense fell!");
+        MESSAGE("The opposing WOBBUFFET's DEFENSE fell!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Sp. Def fell!");
         NONE_OF {

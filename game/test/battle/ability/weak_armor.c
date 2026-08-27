@@ -156,7 +156,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can'
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
             ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
             MESSAGE("MAGCARGO's WEAK ARMOR lowered its DEFENSE!");
-            MESSAGE("Magcargo's Weak Armor sharply raised its Speed!");
+            MESSAGE("MAGCARGO's WEAK ARMOR sharply raised its SPEED!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
@@ -193,7 +193,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         MESSAGE("MAGCARGO's WEAK ARMOR lowered its DEFENSE!");
-        MESSAGE("Magcargo's Weak Armor sharply raised its Speed!");
+        MESSAGE("MAGCARGO's WEAK ARMOR sharply raised its SPEED!");
         for (j = 0; j < 4; j++)
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);

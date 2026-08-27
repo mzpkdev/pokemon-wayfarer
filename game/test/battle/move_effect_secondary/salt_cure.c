@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage 
         for (j = 0; j < 4; j++) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
             HP_BAR(opponent, damage: maxHP / 8);
-            MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");
+            MESSAGE("The opposing WOBBUFFET is hurt by SALT CURE!");
         }
     }
 }
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Salt Cure is removed when the afflicted Pokémon is switched
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
         MESSAGE("The opposing WOBBUFFET is being salt cured!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
-        MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");
+        MESSAGE("The opposing WOBBUFFET is hurt by SALT CURE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
             MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");

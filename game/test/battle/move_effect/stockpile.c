@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Stockpile's count can go up only to 3")
         MESSAGE("WOBBUFFET stockpiled 2!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-        MESSAGE("Wobbuffet stockpiled 3!");
+        MESSAGE("WOBBUFFET stockpiled 3!");
 
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
         MESSAGE("But it failed!");
@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("Spit Up's power raises depending on Stockpile's count", s16 
             MESSAGE("WOBBUFFET stockpiled 2!");
             if (count == 3) {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-                MESSAGE("Wobbuffet stockpiled 3!");
+                MESSAGE("WOBBUFFET stockpiled 3!");
             }
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIT_UP, player);
@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("Swallow heals HP depending on Stockpile's count", s16 hpHeal
             MESSAGE("WOBBUFFET stockpiled 2!");
             if (count == 3) {
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
-                MESSAGE("Wobbuffet stockpiled 3!");
+                MESSAGE("WOBBUFFET stockpiled 3!");
             }
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWALLOW, player);
@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("Stockpile temporarily raises Def and Sp. Def", s16 dmgPyhsic
             MESSAGE("WOBBUFFET stockpiled 1!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("WOBBUFFET's DEFENSE rose!");
-            MESSAGE("Wobbuffet's Sp. Def rose!");
+            MESSAGE("WOBBUFFET's SP. DEF rose!");
         }
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
@@ -257,7 +257,7 @@ DOUBLE_BATTLE_TEST("Stockpile's Def and Sp. Def boost is lost after using Spit U
         else {
             MESSAGE("Wobbuffet's Sp. Def severely fell!");
         }
-        MESSAGE("Wobbuffet's stockpiled effect wore off!");
+        MESSAGE("WOBBUFFET's stockpiled effect wore off!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].dmgPhysicalAfter);

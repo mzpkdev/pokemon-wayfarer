@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Teeter Dance can confuse foes and allies")
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponentLeft);
         MESSAGE("The opposing WOBBUFFET became confused!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerRight);
-        MESSAGE("Wynaut became confused!");
+        MESSAGE("WYNAUT became confused!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponentRight);
         MESSAGE("The opposing Wynaut became confused!");
     }

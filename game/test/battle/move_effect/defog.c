@@ -253,7 +253,7 @@ DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
             MESSAGE("The opposing team's MIST wore off!");
-            MESSAGE("The opposing team's Safeguard wore off!");
+            MESSAGE("The opposing team's SAFEGUARD wore off!");
         }
         MESSAGE("Wobbuffet used Screech!");
         if (move == MOVE_DEFOG) {
