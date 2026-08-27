@@ -372,7 +372,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Mankey's Attack sharply rose!");
         }
-        MESSAGE("Mankey's Attack won't go any higher!");
+        MESSAGE("MANKEY's ATTACK won't go any higher!");
 
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
