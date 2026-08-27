@@ -125,9 +125,9 @@ SINGLE_BATTLE_TEST("Steel Beam does not cause the user to lose HP if there is no
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_BEAM, player);
             HP_BAR(player);
         }
-        MESSAGE("Wobbuffet used Steel Beam!");
+        MESSAGE("WOBBUFFET used STEEL BEAM!");
         MESSAGE("But it failed!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("2 sent out WOBBUFFET!");
     }
 }
 
