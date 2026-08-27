@@ -102,11 +102,11 @@ SINGLE_BATTLE_TEST("Stellar-type Tera Blast lowers both offensive stats")
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack fell!");
-        MESSAGE("Wobbuffet's Sp. Atk fell!");
+        MESSAGE("WOBBUFFET's ATTACK fell!");
+        MESSAGE("WOBBUFFET's SP. ATK fell!");
     }
 }
 
@@ -124,15 +124,15 @@ SINGLE_BATTLE_TEST("Stellar-type Tera Blast has 100 BP and a one-time 1.2x boost
         TURN { MOVE(player, MOVE_TERA_BLAST); }
     } SCENE {
         // turn 1
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         // turn 2
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
         // turn 4
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
     } THEN {
@@ -151,7 +151,7 @@ SINGLE_BATTLE_TEST("Stellar-type Tera Blast is super-effective on Stellar-type P
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         MESSAGE("It's super effective!");
     }
@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("Stellar-type Tera Blast activates a Stellar-type Pokemon's W
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         MESSAGE("It's super effective!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
