@@ -255,7 +255,7 @@ DOUBLE_BATTLE_TEST("Stockpile's Def and Sp. Def boost is lost after using Spit U
             MESSAGE("WOBBUFFET's SP. DEF harshly fell!");
         }
         else {
-            MESSAGE("Wobbuffet's Sp. Def severely fell!");
+            MESSAGE("WOBBUFFET's SP. DEF severely fell!");
         }
         MESSAGE("WOBBUFFET's stockpiled effect wore off!");
 

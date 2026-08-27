@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highes
         else if (spAttack == 110)
             MESSAGE("RAGING BOLT's SP. ATK was heightened!");
         else if (spDefense == 110)
-            MESSAGE("Raging Bolt's Sp. Def was heightened!");
+            MESSAGE("RAGING BOLT's SP. DEF was heightened!");
     } THEN {
         EXPECT(player->item == ITEM_NONE);
     }

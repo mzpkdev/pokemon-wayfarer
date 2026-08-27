@@ -70,7 +70,7 @@ DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the abili
         HP_BAR(opponentRight);
 
         if (abilityLeft == ABILITY_STAMINA) {
-            STAMINA_STAT_RAISE(playerLeft, "Wobbuffet's Defense rose!");
+            STAMINA_STAT_RAISE(playerLeft, "WOBBUFFET's DEFENSE rose!");
         }
 
         if (abilityRight == ABILITY_STAMINA) {

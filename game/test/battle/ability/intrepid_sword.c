@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword activates when it's no longer effected by Neu
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing ZACIAN's INTREPID SWORD raised its ATTACK!");
     }
 }
 

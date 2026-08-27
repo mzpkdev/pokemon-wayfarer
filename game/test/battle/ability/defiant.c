@@ -49,7 +49,7 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate")
         if (abilityRight == ABILITY_DEFIANT) {
             ABILITY_POPUP(playerRight, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Primeape's Attack sharply rose!");
+            MESSAGE("PRIMEAPE's ATTACK sharply rose!");
         }
     } THEN {
         // -2 from Intimidates and +4 from Defiants gets +2 total
@@ -107,7 +107,7 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate")
         if (abilityRight == ABILITY_DEFIANT) {
             ABILITY_POPUP(opponentRight, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("The opposing Primeape's Attack sharply rose!");
+            MESSAGE("The opposing PRIMEAPE's ATTACK sharply rose!");
         }
     } THEN {
         // -2 from Intimidates and +4 from Defiants gets +2 total

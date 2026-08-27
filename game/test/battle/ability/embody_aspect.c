@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Embody Aspect activates when it's no longer effected by Neut
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_EMBODY_ASPECT_TEAL_MASK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Ogerpon's Embody Aspect raised its Speed!");
+        MESSAGE("The opposing OGERPON's EMBODY ASPECT raised its SPEED!");
     }
 }
 
