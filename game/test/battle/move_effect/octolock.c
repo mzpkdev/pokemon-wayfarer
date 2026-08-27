@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks")
         ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
         MESSAGE("The opposing PIDGEY's BIG PECKS prevents DEFENSE loss!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Pidgey's Sp. Def fell!");
+        MESSAGE("The opposing PIDGEY's SP. DEF fell!");
     }
 }
 
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
         MESSAGE("The opposing BISHARP's DEFENSE fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing BISHARP's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Bisharp's Sp. Def fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);

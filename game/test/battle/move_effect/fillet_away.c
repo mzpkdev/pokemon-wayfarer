@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Fillet Away sharply raises Attack, Sp. Atk, and Speed")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("WOBBUFFET's ATTACK sharply rose!");
         MESSAGE("WOBBUFFET's SP. ATK sharply rose!");
-        MESSAGE("Wobbuffet's Speed sharply rose!");
+        MESSAGE("WOBBUFFET's SPEED sharply rose!");
         HP_BAR(player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FILLET_AWAY, player);
         MESSAGE("WOBBUFFET's ATTACK sharply rose!");
         MESSAGE("WOBBUFFET's SP. ATK sharply rose!");
-        MESSAGE("Wobbuffet's Speed sharply rose!");
+        MESSAGE("WOBBUFFET's SPEED sharply rose!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }

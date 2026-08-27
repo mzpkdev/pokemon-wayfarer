@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Battle Bond Greninja returns to base form upon battle end af
         MESSAGE("The opposing WOBBUFFET fainted!");
         ABILITY_POPUP(player, ABILITY_BATTLE_BOND);
         MESSAGE("GRENINJA became fully charged due to its bond with its trainer!");
-        MESSAGE("Greninja became Ash-Greninja!");
+        MESSAGE("GRENINJA became Ash-Greninja!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_GRENINJA_BATTLE_BOND);
     }
