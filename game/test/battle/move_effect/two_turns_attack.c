@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Razor Wind needs a charging turn")
         // Charging turn
         if (B_UPDATED_MOVE_DATA >= GEN_5) {
             NOT MESSAGE("Wobbuffet whipped up a whirlwind!");
-            MESSAGE("Wobbuffet used Razor Wind!");
+            MESSAGE("WOBBUFFET used RAZOR WIND!");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         }
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Razor Wind needs a charging turn")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         // Attack turn
-        MESSAGE("Wobbuffet used Razor Wind!");
+        MESSAGE("WOBBUFFET used RAZOR WIND!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         HP_BAR(opponent);
     }
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb")
     } SCENE {
         if (B_UPDATED_MOVE_DATA >= GEN_5) {
             NOT MESSAGE("Wobbuffet whipped up a whirlwind!");
-            MESSAGE("Wobbuffet used Razor Wind!");
+            MESSAGE("WOBBUFFET used RAZOR WIND!");
         } else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         if (B_UPDATED_MOVE_DATA < GEN_5)
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
+        MESSAGE("WOBBUFFET became fully charged due to its POWER HERB!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
             MESSAGE("Wobbuffet used Razor Wind!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, player);
@@ -79,7 +79,7 @@ DOUBLE_BATTLE_TEST("Razor Wind successfully KOs both opponents")
     } SCENE {
         if (B_UPDATED_MOVE_DATA >= GEN_5) {
             NOT MESSAGE("Wobbuffet whipped up a whirlwind!");
-            MESSAGE("Wobbuffet used Razor Wind!");
+            MESSAGE("WOBBUFFET used RAZOR WIND!");
         } else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, playerLeft);
         if (B_UPDATED_MOVE_DATA < GEN_5)
@@ -87,13 +87,13 @@ DOUBLE_BATTLE_TEST("Razor Wind successfully KOs both opponents")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
-        MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
+        MESSAGE("WOBBUFFET became fully charged due to its POWER HERB!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
             MESSAGE("Wobbuffet used Razor Wind!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_WIND, playerLeft);
         HP_BAR(opponentLeft);
-        MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
+        MESSAGE("The opposing WYNAUT fainted!");
     }
 }
 
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Skull Bash needs a charging turn")
         // Charging turn
         if (B_UPDATED_MOVE_DATA >= GEN_5) {
             NOT MESSAGE("Wobbuffet lowered its head!");
-            MESSAGE("Wobbuffet used Skull Bash!");
+            MESSAGE("WOBBUFFET used SKULL BASH!");
         } else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKULL_BASH, player);
         if (B_UPDATED_MOVE_DATA < GEN_5)
@@ -117,9 +117,9 @@ SINGLE_BATTLE_TEST("Skull Bash needs a charging turn")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKULL_BASH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Defense rose!");
+        MESSAGE("WOBBUFFET's DEFENSE rose!");
         // Attack turn
-        MESSAGE("Wobbuffet used Skull Bash!");
+        MESSAGE("WOBBUFFET used SKULL BASH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKULL_BASH, player);
         HP_BAR(opponent);
     }
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Skull Bash doesn't need to charge with Power Herb")
     } SCENE {
         if (B_UPDATED_MOVE_DATA >= GEN_5) {
             NOT MESSAGE("Wobbuffet lowered its head!");
-            MESSAGE("Wobbuffet used Skull Bash!");
+            MESSAGE("WOBBUFFET used SKULL BASH!");
         } else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKULL_BASH, player);
         if (B_UPDATED_MOVE_DATA < GEN_5)
@@ -143,9 +143,9 @@ SINGLE_BATTLE_TEST("Skull Bash doesn't need to charge with Power Herb")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKULL_BASH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Defense rose!");
+        MESSAGE("WOBBUFFET's DEFENSE rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
+        MESSAGE("WOBBUFFET became fully charged due to its POWER HERB!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
             MESSAGE("Wobbuffet used Skull Bash!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKULL_BASH, player);
@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Sky Attack needs a charging turn")
                 MESSAGE("Wobbuffet became cloaked in a harsh light!");
                 MESSAGE("Wobbuffet is glowing!");
             }
-            MESSAGE("Wobbuffet used Sky Attack!");
+            MESSAGE("WOBBUFFET used SKY ATTACK!");
         } else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_ATTACK, player);
         if (B_UPDATED_MOVE_DATA < GEN_4)
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Sky Attack needs a charging turn")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_ATTACK, player);
         // Attack turn
-        MESSAGE("Wobbuffet used Sky Attack!");
+        MESSAGE("WOBBUFFET used SKY ATTACK!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_ATTACK, player);
         HP_BAR(opponent);
     }
@@ -197,7 +197,7 @@ SINGLE_BATTLE_TEST("Sky Attack doesn't need to charge with Power Herb")
                 MESSAGE("Wobbuffet became cloaked in a harsh light!");
                 MESSAGE("Wobbuffet is glowing!");
             }
-            MESSAGE("Wobbuffet used Sky Attack!");
+            MESSAGE("WOBBUFFET used SKY ATTACK!");
         } else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_ATTACK, player);
         if (B_UPDATED_MOVE_DATA < GEN_4)
@@ -207,7 +207,7 @@ SINGLE_BATTLE_TEST("Sky Attack doesn't need to charge with Power Herb")
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_ATTACK, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
+        MESSAGE("WOBBUFFET became fully charged due to its POWER HERB!");
         if (B_UPDATED_MOVE_DATA < GEN_5)
             MESSAGE("Wobbuffet used Sky Attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_ATTACK, player);
@@ -234,18 +234,18 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight
         if (move2 == MOVE_SOLAR_BEAM) {
             MESSAGE("WOBBUFFET used SOLAR BEAM!");
         } else {
-            MESSAGE("Wobbuffet used Solar Blade!");
+            MESSAGE("WOBBUFFET used SOLAR BLADE!");
         }
         MESSAGE("WOBBUFFET absorbed light!");
 
         if (move2 == MOVE_SOLAR_BEAM) {
             if (move1 == MOVE_SPLASH) {
-                MESSAGE("Wobbuffet used Solar Beam!");
+                MESSAGE("WOBBUFFET used SOLAR BEAM!");
             }
             ANIMATION(ANIM_TYPE_MOVE, move2, player);
         } else {
             if (move1 == MOVE_SPLASH) {
-                MESSAGE("Wobbuffet used Solar Blade!");
+                MESSAGE("WOBBUFFET used SOLAR BLADE!");
             }
             ANIMATION(ANIM_TYPE_MOVE, move2, player);
         }
@@ -409,11 +409,11 @@ SINGLE_BATTLE_TEST("Electro Shot needs a charging Turn")
         // Charging turn
         MESSAGE("WOBBUFFET used ELECTRO SHOT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
-        MESSAGE("Wobbuffet absorbed electricity!");
+        MESSAGE("WOBBUFFET absorbed electricity!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Sp. Atk rose!");
+        MESSAGE("WOBBUFFET's SP. ATK rose!");
         // Attack turn
-        MESSAGE("Wobbuffet used Electro Shot!");
+        MESSAGE("WOBBUFFET used ELECTRO SHOT!");
         HP_BAR(opponent);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
@@ -449,13 +449,13 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRO_SHOT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Electro Shot!");
+        MESSAGE("WOBBUFFET used ELECTRO SHOT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
-        MESSAGE("Wobbuffet absorbed electricity!");
+        MESSAGE("WOBBUFFET absorbed electricity!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Sp. Atk rose!");
+        MESSAGE("WOBBUFFET's SP. ATK rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
+        MESSAGE("WOBBUFFET became fully charged due to its POWER HERB!");
         NONE_OF {
             MESSAGE("Wobbuffet used Electro Shot!");
         }
