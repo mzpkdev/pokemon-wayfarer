@@ -20,8 +20,8 @@ SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed pokemons behind subst
         {
             MESSAGE("The substitute took damage for the opposing SEISMITOAD!");
             NONE_OF {
-                MESSAGE("The opposing Seismitoad's substitute faded!"); // Smelling Salts does 86 damage, the sub has 122 HP, if hitting a sub it shouldn't get boosted damage.
-                MESSAGE("The opposing Seismitoad was cured of paralysis!");
+                MESSAGE("The opposing SEISMITOAD's substitute faded!"); // Smelling Salts does 86 damage, the sub has 122 HP, if hitting a sub it shouldn't get boosted damage.
+                MESSAGE("The opposing SEISMITOAD was cured of paralysis!");
                 STATUS_ICON(opponent, none: TRUE);
             }
         }
@@ -53,8 +53,8 @@ SINGLE_BATTLE_TEST("Smelling Salts get incread power vs. paralyzed targets")
         }
         else
         {
-            NOT MESSAGE("The opposing Lotad fainted!");
-            MESSAGE("The opposing Lotad used Celebrate!");
+            NOT MESSAGE("The opposing LOTAD fainted!");
+            MESSAGE("The opposing LOTAD used CELEBRATE!");
         }
     }
 }
@@ -78,8 +78,8 @@ SINGLE_BATTLE_TEST("Wake-Up Slap does not cure paralyzed pokemons behind substit
         {
             MESSAGE("The substitute took damage for the opposing SEISMITOAD!");
             NONE_OF {
-                MESSAGE("The opposing Seismitoad's substitute faded!"); // Smelling Salts does 86 damage, the sub has 122 HP, if hitting a sub it shouldn't get boosted damage.
-                MESSAGE("The opposing Seismitoad woke up!");
+                MESSAGE("The opposing SEISMITOAD's substitute faded!"); // Smelling Salts does 86 damage, the sub has 122 HP, if hitting a sub it shouldn't get boosted damage.
+                MESSAGE("The opposing SEISMITOAD woke up!");
                 STATUS_ICON(opponent, none: TRUE);
             }
         }
@@ -111,8 +111,8 @@ SINGLE_BATTLE_TEST("Wake-Up Slap gets increased power against sleeping targets")
         }
         else
         {
-            NOT MESSAGE("The opposing Lotad fainted!");
-            MESSAGE("The opposing Lotad used Celebrate!");
+            NOT MESSAGE("The opposing LOTAD fainted!");
+            MESSAGE("The opposing LOTAD used CELEBRATE!");
         }
     }
 }
@@ -132,8 +132,8 @@ DOUBLE_BATTLE_TEST("Sparkling Aria cures burns from all Pokemon on the field and
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SUBSTITUTE); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_SPARKLING_ARIA); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet's burn was cured!");
-        MESSAGE("Wobbuffet's burn was cured!");
-        MESSAGE("The opposing Wynaut's burn was cured!");
+        MESSAGE("The opposing WOBBUFFET's burn was cured!");
+        MESSAGE("WOBBUFFET's burn was cured!");
+        MESSAGE("The opposing WYNAUT's burn was cured!");
     }
 }
