@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Syrup Bomb covers the foe in sticky syrup for 3 turns")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
         MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
         MESSAGE("The opposing Wobbuffet's Speed fell!");
         NONE_OF {

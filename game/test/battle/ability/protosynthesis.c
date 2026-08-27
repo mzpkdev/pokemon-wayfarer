@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Walking Wake's Protosynthesis!");
+        MESSAGE("The harsh sunlight activated WALKING WAKE's Protosynthesis!");
         MESSAGE("Walking Wake's Sp. Atk was heightened!");
     }
 }

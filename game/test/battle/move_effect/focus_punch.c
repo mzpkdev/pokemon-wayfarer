@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
         MESSAGE("WOBBUFFET is tightening its focus!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, opponentLeft);
-        MESSAGE("The opposing Wobbuffet is tightening its focus!");
+        MESSAGE("The opposing WOBBUFFET is tightening its focus!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, opponentRight);
         HP_BAR(playerLeft);

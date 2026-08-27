@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used
         if (species == SPECIES_KECLEON)
             MESSAGE("The opposing KECLEON transformed into the NORMAL type!");
         else
-            MESSAGE("The opposing Raboot transformed into the Normal type!");
+            MESSAGE("The opposing RABOOT transformed into the NORMAL type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(opponent, ability);
         if (species == SPECIES_KECLEON)

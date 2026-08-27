@@ -38,7 +38,7 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate")
         //2nd mon Intimidate
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("The opposing Arbok's Intimidate cuts Mankey's Attack!");
+        MESSAGE("The opposing ARBOK's INTIMIDATE cuts MANKEY's ATTACK!");
         if (abilityLeft == ABILITY_DEFIANT) {
             ABILITY_POPUP(playerLeft, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
@@ -96,7 +96,7 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate")
         //2nd mon Intimidate
         ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Arbok's Intimidate cuts the opposing Mankey's Attack!");
+        MESSAGE("ARBOK's INTIMIDATE cuts the opposing MANKEY's ATTACK!");
         if (abilityLeft == ABILITY_DEFIANT) {
             ABILITY_POPUP(opponentLeft, ABILITY_DEFIANT);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
@@ -233,7 +233,7 @@ DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon")
         MESSAGE("MANKEY's SPEED fell!");
         ABILITY_POPUP(playerRight, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Mankey's Attack sharply rose!");
+        MESSAGE("MANKEY's ATTACK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Mankey's Speed fell!");

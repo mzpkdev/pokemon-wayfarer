@@ -38,7 +38,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate
         //2nd mon Intimidate
         ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("The opposing Arbok's Intimidate cuts Igglybuff's Attack!");
+        MESSAGE("The opposing ARBOK's INTIMIDATE cuts IGGLYBUFF's ATTACK!");
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(playerLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
@@ -95,7 +95,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimida
         //2nd mon Intimidate
         ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Arbok's Intimidate cuts the opposing Igglybuff's Attack!");
+        MESSAGE("ARBOK's INTIMIDATE cuts the opposing IGGLYBUFF's ATTACK!");
         if (abilityLeft == ABILITY_COMPETITIVE) {
             ABILITY_POPUP(opponentLeft, ABILITY_COMPETITIVE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
@@ -222,7 +222,7 @@ DOUBLE_BATTLE_TEST("Competitive is activated by Cotton Down for non-ally pokemon
         MESSAGE("IGGLYBUFF's SPEED fell!");
         ABILITY_POPUP(playerRight, ABILITY_COMPETITIVE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Igglybuff's Sp. Atk sharply rose!");
+        MESSAGE("IGGLYBUFF's SP. ATK sharply rose!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Igglybuff's Speed fell!");

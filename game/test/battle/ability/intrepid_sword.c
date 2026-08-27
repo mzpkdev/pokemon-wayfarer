@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield both can be Skill Swappe
 
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing ZAMAZENTA's DAUNTLESS SHIELD raised its DEFENSE!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
         ABILITY_POPUP(player, ABILITY_DAUNTLESS_SHIELD);

@@ -771,7 +771,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Mega Evolution")
         MESSAGE("AERODACTYL has Mega Evolved into Mega AERODACTYL!");
         MESSAGE("Trainer B: This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentRight);
-        MESSAGE("The opposing Medicham has Mega Evolved into Mega Medicham!");
+        MESSAGE("The opposing MEDICHAM has Mega Evolved into Mega MEDICHAM!");
     }
 }
 
@@ -796,7 +796,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentLeft);
         MESSAGE("Trainer Partner: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("WOBBUFFET surrounded itself with its Z-Power!");
-        MESSAGE("Wobbuffet unleashes its full-force Z-Move!");
+        MESSAGE("WOBBUFFET unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, playerRight);
         MESSAGE("Trainer B: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");

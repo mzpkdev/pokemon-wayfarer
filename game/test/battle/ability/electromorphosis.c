@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Electromorphosis triggers on each multistrike hit but Charge
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
         MESSAGE("Being hit by DOUBLE HIT charged BELLIBOLT with power!");
         ABILITY_POPUP(player, ABILITY_ELECTROMORPHOSIS);
-        MESSAGE("Being hit by Double Hit charged Bellibolt with power!");
+        MESSAGE("Being hit by DOUBLE HIT charged BELLIBOLT with power!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent, captureDamage: &dmgAfterMultiHit);
     } THEN {
