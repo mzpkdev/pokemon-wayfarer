@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Quick Draw does not activate 70% of the time")
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_QUICK_DRAW);
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
-        MESSAGE("Slowbro used Scratch!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
+        MESSAGE("SLOWBRO-G used SCRATCH!");
     }
 }

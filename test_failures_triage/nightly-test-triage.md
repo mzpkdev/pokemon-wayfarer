@@ -151,11 +151,27 @@ per worker, 22 times each. Replacing those 44 duplicate rows with one passing
 result per test accounts for the lower total; the 5,099 normalized test
 identities are unchanged. No result regressed.
 
-A strict Wave 28 scan found no further presentation-only candidate. None of the
-717 remaining deterministic unmatched-message results meets the full evidence
-gate: a direct decoded case-only or wrapping-only pair on the same queue, with no
-prior or overwritten actual messages. The rest are probability wrappers and
-other assertions. They require separate gameplay, ordering, configuration, or
+Wave 29 covers presentation mismatches hidden behind randomized result wrappers
+rather than reported as top-level unmatched messages. It aligns 26 exact message
+expectations across ten test files without changing any probability,
+configuration, or production behavior. Nine randomized tests now reach their
+existing declared rates. All three Early Bird tests also pass with canonical
+messages. The only fixture change expands the preset sleep-status test to every
+timer value allowed by the configured generation, using the same three-, four-,
+and seven-turn bounds as the other sleep-duration tests.
+
+The full Wave 29 ledger retains all 5,107 results and records 3,690 `PASS`, 770
+`FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`. Normalized
+comparison found exactly 13 `FAIL` to `PASS` transitions, with no regression,
+identity disappearance, or multiplicity change. The status1 sleep title changed
+to describe configured coverage, and the comparison maps it to its Wave 28
+identity.
+
+The deterministic unmatched-message lane remains exhausted after Wave 29. None
+of those results meets the full evidence gate: a direct decoded case-only or
+wrapping-only pair on the same queue, with no prior or overwritten actual
+messages. A separate final scan found no remaining randomized-wrapper candidate.
+The residual failures require gameplay, ordering, configuration, or
 missing-evidence classification.
 
 Exact expectation updates are gameplay-neutral. Reverting the production names

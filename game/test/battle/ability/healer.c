@@ -40,8 +40,8 @@ DOUBLE_BATTLE_TEST("Healer cures status condition before burn or poison damage i
     } WHEN {
         TURN {}
     } SCENE {
-        NOT MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("The opposing Chansey's Healer cured the opposing Wobbuffet's problem!");
+        NOT MESSAGE("The opposing WOBBUFFET fainted!");
+        MESSAGE("The opposing CHANSEY's HEALER cured the opposing WOBBUFFET's problem!");
     }
 }
 

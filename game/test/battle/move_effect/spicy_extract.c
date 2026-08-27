@@ -92,13 +92,13 @@ SINGLE_BATTLE_TEST("Spicy Extract bypasses accuracy checks")
     } WHEN {
         TURN { MOVE(player, MOVE_SPICY_EXTRACT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Spicy Extract!");
-        NOT MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("WOBBUFFET used SPICY EXTRACT!");
+        NOT MESSAGE("WOBBUFFET's attack missed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Attack sharply rose!");
+        MESSAGE("The opposing WOBBUFFET's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Defense harshly fell!");
+        MESSAGE("The opposing WOBBUFFET's DEFENSE harshly fell!");
     }
 }
 
