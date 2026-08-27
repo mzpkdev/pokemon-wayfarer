@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Sky Drop fails on targets heavier or equal than 200kg")
         TURN { MOVE(player, MOVE_SKY_DROP); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, player);
-        MESSAGE("The opposing Metagross is too heavy to be lifted!");
+        MESSAGE("The opposing METAGROSS is too heavy to be lifted!");
     }
 }
 

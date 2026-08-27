@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Infatuation")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
         NONE_OF { ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, player); }
-        MESSAGE("It doesn't affect Slowpoke…");
+        MESSAGE("It doesn't affect SLOWPOKE…");
     }
 }
 
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Captivate")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
-        MESSAGE("It doesn't affect Slowpoke…");
+        MESSAGE("It doesn't affect SLOWPOKE…");
     }
 }
 
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
-        MESSAGE("Slowpoke's Oblivious prevents stat loss!");
+        MESSAGE("SLOWPOKE's OBLIVIOUS prevents stat loss!");
     }
 }
 

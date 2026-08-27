@@ -98,21 +98,21 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
             NOT MESSAGE("The opposing Wobbuffet protected itself!");
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, usedMove, player);
-            MESSAGE("The opposing Wobbuffet protected itself!");
+            MESSAGE("The opposing WOBBUFFET protected itself!");
             if (usedMove == MOVE_SCRATCH) {
                 NOT HP_BAR(opponent);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 if (statId == STAT_ATK) {
                     #if B_KINGS_SHIELD_LOWER_ATK >= GEN_8
-                    MESSAGE("Wobbuffet's Attack fell!");
+                    MESSAGE("WOBBUFFET's ATTACK fell!");
                     #else
                     MESSAGE("Wobbuffet's Attack harshly fell!");
                     #endif
                 } else if (statId == STAT_SPEED) {
-                    MESSAGE("Wobbuffet's Speed fell!");
+                    MESSAGE("WOBBUFFET's SPEED fell!");
                 } else if (statId == STAT_DEF) {
                     if (lowersBy == 2) {
-                        MESSAGE("Wobbuffet's Defense harshly fell!");
+                        MESSAGE("WOBBUFFET's DEFENSE harshly fell!");
                     }
                 }
             } else {
