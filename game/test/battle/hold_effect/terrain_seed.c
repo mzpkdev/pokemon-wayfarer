@@ -35,12 +35,12 @@ SINGLE_BATTLE_TEST("Electric Seed raises the holder's Defense on Electric Terrai
         MESSAGE("Using ELECTRIC SEED, the DEFENSE of WOBBUFFET rose!");
         if (item == ITEM_ELECTRIC_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Using Electric Seed, the Defense of the opposing Tapu Koko rose!");
+            MESSAGE("Using ELECTRIC SEED, the DEFENSE of the opposing TAPU KOKO rose!");
         }
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
+        SEND_IN_MESSAGE("WOBBUFFET");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Electric Seed, the Defense of Wobbuffet rose!");
+        MESSAGE("Using ELECTRIC SEED, the DEFENSE of WOBBUFFET rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -67,12 +67,12 @@ SINGLE_BATTLE_TEST("Grassy Seed raises the holder's Defense on Grassy Terrain")
         MESSAGE("Using GRASSY SEED, the DEFENSE of WOBBUFFET rose!");
         if (item == ITEM_GRASSY_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Using Grassy Seed, the Defense of the opposing Tapu Bulu rose!");
+            MESSAGE("Using GRASSY SEED, the DEFENSE of the opposing TAPU BULU rose!");
         }
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
+        SEND_IN_MESSAGE("WOBBUFFET");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Grassy Seed, the Defense of Wobbuffet rose!");
+        MESSAGE("Using GRASSY SEED, the DEFENSE of WOBBUFFET rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -99,12 +99,12 @@ SINGLE_BATTLE_TEST("Misty Seed raises the holder's Sp. Defense on Misty Terrain"
         MESSAGE("Using MISTY SEED, the SP. DEF of WOBBUFFET rose!");
         if (item == ITEM_MISTY_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Using Misty Seed, the Sp. Def of the opposing Tapu Fini rose!");
+            MESSAGE("Using MISTY SEED, the SP. DEF of the opposing TAPU FINI rose!");
         }
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
+        SEND_IN_MESSAGE("WOBBUFFET");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Misty Seed, the Sp. Def of Wobbuffet rose!");
+        MESSAGE("Using MISTY SEED, the SP. DEF of WOBBUFFET rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -131,12 +131,12 @@ SINGLE_BATTLE_TEST("Psychic Seed raises the holder's Sp. Defense on Psychic Terr
         MESSAGE("Using PSYCHIC SEED, the SP. DEF of WOBBUFFET rose!");
         if (item == ITEM_PSYCHIC_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("Using Psychic Seed, the Sp. Def of the opposing Tapu Lele rose!");
+            MESSAGE("Using PSYCHIC SEED, the SP. DEF of the opposing TAPU LELE rose!");
         }
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        SEND_IN_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
+        SEND_IN_MESSAGE("WOBBUFFET");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Psychic Seed, the Sp. Def of Wobbuffet rose!");
+        MESSAGE("Using PSYCHIC SEED, the SP. DEF of WOBBUFFET rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
     }
