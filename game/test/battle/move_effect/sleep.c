@@ -7,14 +7,20 @@ ASSUMPTIONS
     ASSUME(GetMoveNonVolatileStatus(MOVE_HYPNOSIS) == MOVE_EFFECT_SLEEP);
 }
 
-SINGLE_BATTLE_TEST("Hypnosis inflicts 1-3 turns of sleep")
+SINGLE_BATTLE_TEST("Hypnosis inflicts the configured number of sleep turns")
 {
-    u32 turns, count;
-    ASSUME(B_SLEEP_TURNS >= GEN_5);
-    PARAMETRIZE { turns = 1; }
-    PARAMETRIZE { turns = 2; }
-    PARAMETRIZE { turns = 3; }
-    PASSES_RANDOMLY(1, 3, RNG_SLEEP_TURNS);
+    u32 turns = 0, count, maxTurns;
+
+    if (B_SLEEP_TURNS >= GEN_5)
+        maxTurns = 3;
+    else if (B_SLEEP_TURNS >= GEN_3)
+        maxTurns = 4;
+    else
+        maxTurns = 7;
+
+    for (count = 1; count <= maxTurns; count++)
+        PARAMETRIZE { turns = count; }
+    PASSES_RANDOMLY(1, maxTurns, RNG_SLEEP_TURNS);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -25,15 +31,15 @@ SINGLE_BATTLE_TEST("Hypnosis inflicts 1-3 turns of sleep")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Wobbuffet fell asleep!");
+        MESSAGE("The opposing WOBBUFFET fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
         for (count = 0; count < turns; ++count)
         {
             if (count < turns - 1)
-                MESSAGE("The opposing Wobbuffet is fast asleep.");
+                MESSAGE("The opposing WOBBUFFET is fast asleep.");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         }
-        MESSAGE("The opposing Wobbuffet woke up!");
+        MESSAGE("The opposing WOBBUFFET woke up!");
         STATUS_ICON(opponent, none: TRUE);
     }
 }

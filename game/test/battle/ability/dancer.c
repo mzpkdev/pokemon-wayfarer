@@ -682,7 +682,7 @@ SINGLE_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ABILITY_POPUP(opponent, ABILITY_DANCER);
-        MESSAGE("The opposing Oricorio is confused!");
+        MESSAGE("The opposing ORICORIO is confused!");
         MESSAGE("It hurt itself in its confusion!");
         HP_BAR(opponent);
         NONE_OF {

@@ -548,24 +548,31 @@ DOUBLE_BATTLE_TEST("Sleep Clause: G-Max Befuddle can only sleep one opposing mon
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon wakes up")
 {
+    u32 count, maxTurns;
+
+    if (B_SLEEP_TURNS >= GEN_5)
+        maxTurns = 3;
+    else if (B_SLEEP_TURNS >= GEN_3)
+        maxTurns = 4;
+    else
+        maxTurns = 7;
+
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-        ASSUME(B_SLEEP_TURNS >= GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SPORE); }
-        TURN {}
-        TURN {}
-        TURN {}
+        for (count = 0; count < maxTurns; count++)
+            TURN {}
         TURN { MOVE(player, MOVE_SPORE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet woke up!");
-        MESSAGE("Wobbuffet used Spore!");
+        MESSAGE("The opposing WOBBUFFET woke up!");
+        MESSAGE("WOBBUFFET used SPORE!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Wobbuffet fell asleep!");
+        MESSAGE("The opposing WOBBUFFET fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
     }
 }
@@ -589,7 +596,6 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
         ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
         ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
-        ASSUME(B_SLEEP_TURNS >= GEN_5);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_ZIGZAGOON);
@@ -613,29 +619,29 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, healingSlot);
             STATUS_ICON(healingSlot, sleep: TRUE);
-            MESSAGE("The opposing Zigzagoon fell asleep!");
+            MESSAGE("The opposing ZIGZAGOON fell asleep!");
         }
-        MESSAGE("Sleep Clause kept the opposing Zigzagoon awake!");
+        MESSAGE("Sleep Clause kept the opposing ZIGZAGOON awake!");
         if (move == MOVE_AROMATHERAPY)
         {
-            MESSAGE("The opposing Zigzagoon used Aromatherapy!");
+            MESSAGE("The opposing ZIGZAGOON used AROMATHERAPY!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_AROMATHERAPY, healingSlot);
         }
         else if (move == MOVE_HEAL_BELL)
         {
-            MESSAGE("The opposing Zigzagoon used Heal Bell!");
+            MESSAGE("The opposing ZIGZAGOON used HEAL BELL!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BELL, healingSlot);
         }
         else
         {
-            MESSAGE("The opposing Zigzagoon used Sparkly Swirl!");
+            MESSAGE("The opposing ZIGZAGOON used SPARKLY SWIRL!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLY_SWIRL, healingSlot);
         }
         STATUS_ICON(sporedSlot, sleep: FALSE);
         MESSAGE("ZIGZAGOON used SPORE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, playerLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, sporedSlot);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
     }
 }
 

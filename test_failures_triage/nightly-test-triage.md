@@ -135,9 +135,28 @@ status counts remained unchanged throughout.
 The three batches changed exactly 302 `MESSAGE` expectations across the same 127
 test files and did not change production code or matching behavior. Two
 independent Wave 27 scans found zero remaining candidates under the strict gate.
-The 785 residual failures include 717 deterministic unmatched-message results;
-the rest are probability wrappers and other assertions. They require separate
-gameplay, ordering, configuration, or missing-evidence classification.
+Wave 28 adds two directly observed casing corrections in randomized tests and
+makes four sleep tests exercise the configured generation instead of aborting
+when `B_SLEEP_TURNS` is older than Gen 5. The sleep bounds remain exact: three
+turns for Gen 5 and later, four for Gen 3 and 4, and seven for older generations.
+The newly exercised sleep paths add another 15 exact uppercase message
+expectations.
+
+Wave 28 recorded 5,107 results: 3,677 `PASS`, 783 `FAIL`, 12 `KNOWN_FAILING`,
+629 `TO_DO`, and 6 `EXPECT_FAILING`, with no assumption failures. Compared with
+Wave 27, the two randomized tests moved from `FAIL` to `PASS` and all four unique
+sleep tests moved from `ASSUMPTIONS_FAILED` to `PASS`. The total fell by 42
+because Hydra had emitted the Dark Void and Hypnosis file-level assumption once
+per worker, 22 times each. Replacing those 44 duplicate rows with one passing
+result per test accounts for the lower total; the 5,099 normalized test
+identities are unchanged. No result regressed.
+
+A strict Wave 28 scan found no further presentation-only candidate. None of the
+717 remaining deterministic unmatched-message results meets the full evidence
+gate: a direct decoded case-only or wrapping-only pair on the same queue, with no
+prior or overwritten actual messages. The rest are probability wrappers and
+other assertions. They require separate gameplay, ordering, configuration, or
+missing-evidence classification.
 
 Exact expectation updates are gameplay-neutral. Reverting the production names
 would change visible gameplay, and case-insensitive matching would weaken the
