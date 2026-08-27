@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri avoids moves targetted towards it")
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Tatsugiri avoided the attack!");
+        MESSAGE("TATSUGIRI avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentRight);
     }
 }
@@ -104,7 +104,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacke
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Tatsugiri avoided the attack!");
+        MESSAGE("TATSUGIRI avoided the attack!");
     }
 }
 
@@ -122,10 +122,10 @@ DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affect
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("Tatsugiri was hurt by its poisoning!");
+        MESSAGE("TATSUGIRI was hurt by its poisoning!");
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-            MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+            MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         }
     }
 }
@@ -146,8 +146,8 @@ DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         MESSAGE("The opposing WOBBUFFET used WHIRLWIND!");
-        MESSAGE("Tatsugiri avoided the attack!");
-        MESSAGE("The opposing Wobbuffet used Whirlwind!");
+        MESSAGE("TATSUGIRI avoided the attack!");
+        MESSAGE("The opposing WOBBUFFET used Whirlwind!");
         MESSAGE("But it failed!"); // Avoided on tatsu, but it failed on dozo
     }
 }
@@ -191,7 +191,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move i
         HP_BAR(playerLeft);
         HP_BAR(opponentRight);
         NOT HP_BAR(playerRight);
-        MESSAGE("Dondozo fainted!");
+        MESSAGE("DONDOZO fainted!");
     }
 }
 
@@ -321,7 +321,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("Tatsugiri avoided the attack!");
+        MESSAGE("TATSUGIRI avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
         HP_BAR(playerLeft);
         HP_BAR(opponentRight);
@@ -344,7 +344,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("Tatsugiri avoided the attack!");
+        MESSAGE("TATSUGIRI avoided the attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, opponentLeft);
         HP_BAR(playerRight);
         HP_BAR(opponentRight);
@@ -389,9 +389,9 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when a 
     } WHEN {
         TURN { SWITCH(playerLeft, 2); MOVE(opponentRight, MOVE_DRAGON_DARTS, target: playerRight); SEND_OUT(playerRight, 0); }
     } SCENE {
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, opponentRight);
-        MESSAGE("Dondozo fainted!");
+        MESSAGE("DONDOZO fainted!");
         NOT HP_BAR(playerLeft);
     }
 }
@@ -413,7 +413,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when co
         else
             TURN { MOVE(opponentRight, MOVE_DRAGON_DARTS, target: playerLeft); }
     } SCENE {
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, opponentRight);
         HP_BAR(playerRight);
         NOT HP_BAR(playerLeft);
@@ -499,7 +499,7 @@ DOUBLE_BATTLE_TEST("Commander clears when Dondozo is replaced and Tatsugiri can 
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, opponentRight);
-        MESSAGE("Dondozo fainted!");
+        MESSAGE("DONDOZO fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEED_BOMB, opponentLeft);
         HP_BAR(playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BUZZ, opponentRight);
@@ -526,11 +526,11 @@ DOUBLE_BATTLE_TEST("Commander does not clear semi-invulnerability of non-Tatsugi
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("Tatsugiri fainted!");
+        MESSAGE("TATSUGIRI fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft);
-        MESSAGE("Dondozo fainted!");
+        MESSAGE("DONDOZO fainted!");
         NOT HP_BAR(playerRight);
     } THEN {
         EXPECT_EQ(playerRight->hp, playerRight->maxHP);
@@ -558,7 +558,7 @@ DOUBLE_BATTLE_TEST("Commander still blocks forced switch after swallowed Tatsugi
     } SCENE {
         ABILITY_POPUP(opponentRight, ABILITY_COMMANDER);
         MESSAGE("The opposing TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("The opposing Tatsugiri fainted!");
+        MESSAGE("The opposing TATSUGIRI fainted!");
         if (move == MOVE_DRAGON_TAIL)
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, playerLeft);
@@ -589,7 +589,7 @@ DOUBLE_BATTLE_TEST("Red Card is still consumed but cannot force out Dondozo afte
     } SCENE {
         ABILITY_POPUP(opponentRight, ABILITY_COMMANDER);
         MESSAGE("The opposing TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("The opposing Tatsugiri fainted!");
+        MESSAGE("The opposing TATSUGIRI fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     } THEN {
