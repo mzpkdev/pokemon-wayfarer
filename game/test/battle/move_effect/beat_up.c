@@ -193,10 +193,10 @@ SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
     } WHEN {
         TURN { MOVE(player, MOVE_BEAT_UP); }
     } SCENE {
-        MESSAGE("Wobbuffet's attack!");
-        MESSAGE("Wynaut's attack!");
-        NOT MESSAGE("Wynaut's attack!");
-        MESSAGE("Pikachu's attack!");
+        MESSAGE("WOBBUFFET's attack!");
+        MESSAGE("WYNAUT's attack!");
+        NOT MESSAGE("WYNAUT's attack!");
+        MESSAGE("PIKACHU's attack!");
     }
 }
 
