@@ -43,14 +43,14 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Gen5+)")
         if (config >= GEN_5) {
             HP_BAR(player, hp: 1);
             ABILITY_POPUP(player, ABILITY_STURDY);
-            MESSAGE("Geodude endured the hit using Sturdy!");
+            MESSAGE("GEODUDE endured the hit using STURDY!");
         } else {
             HP_BAR(player, hp: 0);
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_STURDY);
                 MESSAGE("Geodude endured the hit using Sturdy!");
             }
-            SEND_IN_MESSAGE("Geodude");
+            SEND_IN_MESSAGE("GEODUDE");
         }
     }
 }

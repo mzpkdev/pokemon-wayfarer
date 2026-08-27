@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability (Gen5+)")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Buneary used Fling!");
+        MESSAGE("BUNEARY used FLING!");
         if (ability != ABILITY_KLUTZ || config == GEN_4) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
