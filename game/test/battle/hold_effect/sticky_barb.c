@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Sticky Barb gets transferred if its holder is hit by a conta
         else
         {
             NOT MESSAGE("The Sticky Barb attached itself to the opposing Wobbuffet!");
-            MESSAGE("Wobbuffet was hurt by the Sticky Barb!");
+            MESSAGE("WOBBUFFET was hurt by the STICKY BARB!");
         }
     }
 }
