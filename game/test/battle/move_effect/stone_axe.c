@@ -57,9 +57,9 @@ SINGLE_BATTLE_TEST("Stone Axe can set up pointed stones only once")
         HP_BAR(opponent);
         NOT MESSAGE("Pointed stones float in the air around the opposing team!");
 
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP / 8);
-        MESSAGE("Pointed stones dug into the opposing Wynaut!");
+        MESSAGE("Pointed stones dug into the opposing WYNAUT!");
     }
 }
 

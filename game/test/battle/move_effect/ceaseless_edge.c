@@ -57,9 +57,9 @@ SINGLE_BATTLE_TEST("Ceaseless Edge can set up to 3 layers of Spikes")
         HP_BAR(opponent);
         NOT MESSAGE("Spikes were scattered on the ground all around the opposing team!");
 
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP / 4);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
     }
 }
 

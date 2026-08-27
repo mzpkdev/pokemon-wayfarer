@@ -77,8 +77,8 @@ DOUBLE_BATTLE_TEST("Forewarn does not trigger if a mon switches in while the opp
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, playerLeft);
         HP_BAR(opponentLeft);
         NOT ABILITY_POPUP(playerLeft, ABILITY_FOREWARN);
-        MESSAGE("2 sent out Treecko!");
-        MESSAGE("2 sent out Torchic!");
+        MESSAGE("2 sent out TREECKO!");
+        MESSAGE("2 sent out TORCHIC!");
         NOT ABILITY_POPUP(playerLeft, ABILITY_FOREWARN);
     }
 }

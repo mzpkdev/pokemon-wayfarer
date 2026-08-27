@@ -211,7 +211,7 @@ SINGLE_BATTLE_TEST("Intimidate can not further lower opponents Atk stat if it is
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("The opposing Arbok's Intimidate cuts Wobbuffet's Attack!");
         }
-        MESSAGE("Wobbuffet's Attack won't go any lower!");
+        MESSAGE("WOBBUFFET's ATTACK won't go any lower!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MIN_STAT_STAGE);
     }
