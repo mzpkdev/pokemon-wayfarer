@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't stop an item flung at an affected target fro
         MESSAGE("The opposing WOBBUFFET can't use items anymore!");
         // Turn 2
         MESSAGE("WOBBUFFET used FLING!");
-        MESSAGE("WOBBUFFET flung its Light Ball!");
+        MESSAGE("WOBBUFFET flung its LIGHT BALL!");
         HP_BAR(opponent);
         MESSAGE("The opposing WOBBUFFET is paralyzed, so it may be unable to move!");
     }
@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't block the effects of berries obtained throug
         // Turn 2
         MESSAGE("WOBBUFFET used PLUCK!");
         HP_BAR(opponent);
-        MESSAGE("WOBBUFFET stole and ate its target's Oran Berry!");
+        MESSAGE("WOBBUFFET stole and ate its target's ORAN BERRY!");
         HP_BAR(player, damage: -hp);
     }
 }
