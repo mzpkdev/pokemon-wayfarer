@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without 
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
-        MESSAGE("The opposing Regice took the Future Sight attack!");
+        MESSAGE("The opposing REGICE took the FUTURE SIGHT attack!");
         HP_BAR(opponent, captureDamage: &futureSightDmg);
     } THEN {
         EXPECT_EQ(seedFlareDmg, futureSightDmg);
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent, captureDamage: &seedFlareDmg);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
-        MESSAGE("The opposing Regice took the Future Sight attack!");
+        MESSAGE("The opposing REGICE took the FUTURE SIGHT attack!");
         HP_BAR(opponent, captureDamage: &futureSightDmg);
         NOT HP_BAR(player);
     } THEN {
@@ -116,8 +116,8 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Houndoom took the Future Sight attack!");
-        MESSAGE("It doesn't affect the opposing Houndoom…");
+        MESSAGE("The opposing HOUNDOOM took the FUTURE SIGHT attack!");
+        MESSAGE("It doesn't affect the opposing HOUNDOOM…");
         NOT HP_BAR(opponent);
     }
 }
@@ -141,9 +141,9 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEMENTO, opponent);
-        MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("2 sent out Wynaut!");
-        NOT MESSAGE("The opposing Wynaut took the Future Sight attack!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
+        MESSAGE("2 sent out WYNAUT!");
+        NOT MESSAGE("The opposing WYNAUT took the FUTURE SIGHT attack!");
     }
 }
 
@@ -162,9 +162,9 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints by residual d
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WRAP, player);
-        MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("2 sent out Wynaut!");
-        NOT MESSAGE("The opposing Wynaut took the Future Sight attack!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
+        MESSAGE("2 sent out WYNAUT!");
+        NOT MESSAGE("The opposing WYNAUT took the FUTURE SIGHT attack!");
     }
 }
 
@@ -181,8 +181,8 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
         TURN {}
         TURN { MOVE(player, MOVE_PSYCHIC); }
     } SCENE {
-        MESSAGE("The opposing Pidgey hung on using its Focus Sash!");
+        MESSAGE("The opposing PIDGEY hung on using its FOCUS SASH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC, player);
-        MESSAGE("The opposing Pidgey fainted!");
+        MESSAGE("The opposing PIDGEY fainted!");
     }
 }

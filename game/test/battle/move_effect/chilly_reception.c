@@ -18,15 +18,15 @@ SINGLE_BATTLE_TEST("Chilly Reception sets up snow and switches the user out")
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
 #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
         MESSAGE("It started to hail!");
 #else
         MESSAGE("It started to snow!");
 #endif
-        MESSAGE("Slowking went back to 1!");
-        SEND_IN_MESSAGE("Slowpoke");
+        MESSAGE("SLOWKING-G went back to 1!");
+        SEND_IN_MESSAGE("SLOWPOKE-G");
 #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HAIL_CONTINUES);
 #else
@@ -46,11 +46,11 @@ SINGLE_BATTLE_TEST("Chilly Reception switches the user out, even if the weather 
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         MESSAGE("There is no relief from this heavy rain!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
-        MESSAGE("Slowking went back to 1!");
-        SEND_IN_MESSAGE("Slowpoke");
+        MESSAGE("SLOWKING-G went back to 1!");
+        SEND_IN_MESSAGE("SLOWPOKE-G");
         MESSAGE("Rain continues to fall.");
     }
 }
@@ -63,10 +63,10 @@ SINGLE_BATTLE_TEST("Chilly Reception does not switch the user out if no replacem
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
         MESSAGE("It started to snow!");
-        NOT MESSAGE("Slowking went back to 1!");
+        NOT MESSAGE("SLOWKING-G went back to 1!");
     }
 }
 
@@ -79,10 +79,10 @@ SINGLE_BATTLE_TEST("Chilly Reception does not switch the user out if replacement
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
         MESSAGE("It started to snow!");
-        NOT MESSAGE("Slowking went back to 1!");
+        NOT MESSAGE("SLOWKING-G went back to 1!");
     }
 }
 
@@ -94,14 +94,14 @@ SINGLE_BATTLE_TEST("Chilly Reception changes the weather, even if the user canno
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
 #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
         MESSAGE("It started to hail!");
 #else
         MESSAGE("It started to snow!");
 #endif
-        NOT MESSAGE("Slowking went back to 1!");
+        NOT MESSAGE("SLOWKING-G went back to 1!");
     }
 }
 
@@ -114,11 +114,11 @@ SINGLE_BATTLE_TEST("Chilly Reception switches the user out even if it can't chan
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
         MESSAGE("But it failed!"); // According to jpwiki, this is the correct message
-        MESSAGE("Slowking went back to 1!");
-        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("SLOWKING-G went back to 1!");
+        SEND_IN_MESSAGE("WOBBUFFET");
     }
 }
 
@@ -130,7 +130,7 @@ SINGLE_BATTLE_TEST("Chilly Reception fails if it can't switch the user out or ch
     } WHEN {
         TURN { MOVE(player, MOVE_CHILLY_RECEPTION); }
     } SCENE {
-        MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
         MESSAGE("But it failed!");
     }
@@ -146,14 +146,14 @@ SINGLE_BATTLE_TEST("Chilly Reception doesn't announce its move if it's called by
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); SEND_OUT(player, 1); }
     } SCENE {
-        NOT MESSAGE("Slowking is preparing to tell a chillingly bad joke!");
+        NOT MESSAGE("SLOWKING-G is preparing to tell a chillingly bad joke!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHILLY_RECEPTION, player);
 #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL
         MESSAGE("It started to hail!");
 #else
         MESSAGE("It started to snow!");
 #endif
-        MESSAGE("Slowking went back to 1!");
-        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("SLOWKING-G went back to 1!");
+        SEND_IN_MESSAGE("WOBBUFFET");
     }
 }
