@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Thousand Arrows does neutral damage to non-grounded Flying t
             MESSAGE("The opposing SKARMORY used CELEBRATE!");
         } else {
             MESSAGE("The opposing SCYTHER fell straight down!");
-            MESSAGE("The opposing Scyther used Celebrate!");
+            MESSAGE("The opposing SCYTHER used CELEBRATE!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("Congratulations, 1!");

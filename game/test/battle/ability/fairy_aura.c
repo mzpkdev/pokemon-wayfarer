@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times")
         HP_BAR(playerLeft, captureDamage: &damage[2]);
 
         // Turn 2
-        SWITCH_OUT_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
         SEND_IN_MESSAGE("Xerneas");
 
         // Turn 3

@@ -258,7 +258,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutral
     } SCENE {
         ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        SWITCH_OUT_MESSAGE("Weezing");
+        SWITCH_OUT_MESSAGE("WEEZING");
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         SEND_IN_MESSAGE("Wobbuffet");

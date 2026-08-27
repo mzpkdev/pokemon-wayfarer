@@ -181,7 +181,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas leaving the field allows abilities to activ
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        SWITCH_OUT_MESSAGE("Weezing");
+        SWITCH_OUT_MESSAGE("WEEZING");
         MESSAGE("The effects of the neutralizing gas wore off!");
         if (speedPlayerRight > speedOppLeft)
         {

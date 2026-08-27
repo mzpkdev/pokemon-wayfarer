@@ -74,7 +74,7 @@ DOUBLE_BATTLE_TEST("Stamina activates correctly for every battler with the abili
         }
 
         if (abilityRight == ABILITY_STAMINA) {
-            STAMINA_STAT_RAISE(playerRight, "Wobbuffet's Defense rose!");
+            STAMINA_STAT_RAISE(playerRight, "WOBBUFFET's DEFENSE rose!");
         }
 
         NOT HP_BAR(opponentLeft); // We need to check the attacker itself does NOT get damaged. There was an issue when the targets would get overwritten by the Stamina's stat raise.

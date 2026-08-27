@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin reduces Sp. Def if opposing mon's ability does
         TURN { MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN);
-        MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+        MESSAGE("CHI-YU's BEADS OF RUIN weakened the SP. DEF of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLE_PLAY, opponent);
@@ -100,7 +100,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
             TURN { MOVE(playerRight, move, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
-        MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+        MESSAGE("CHI-YU's BEADS OF RUIN weakened the SP. DEF of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
         else
         {
             ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN);
-            MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+            MESSAGE("CHI-YU's BEADS OF RUIN weakened the SP. DEF of all surrounding Pokémon!");
         }
     }
 }
@@ -156,7 +156,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Bre
         TURN { MOVE(opponentLeft, MOVE_ROUND, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
-        MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+        MESSAGE("CHI-YU's BEADS OF RUIN weakened the SP. DEF of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentLeft);
         HP_BAR(playerRight, captureDamage: &results[i].damage);
     } FINALLY {
@@ -181,7 +181,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid"
         TURN { MOVE(opponentRight, move, target: playerLeft); MOVE(opponentLeft, MOVE_ROUND, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
-        MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
+        MESSAGE("CHI-YU's BEADS OF RUIN weakened the SP. DEF of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentLeft);
         HP_BAR(playerRight, captureDamage: &results[i].damage);
