@@ -71,8 +71,8 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_REVIVAL_BLESSING); }
     } SCENE {
-        MESSAGE("The opposing Audino used Revival Blessing!");
-        MESSAGE("Pidgey was revived and is ready to fight again!");
+        MESSAGE("The opposing AUDINO used REVIVAL BLESSING!");
+        MESSAGE("PIDGEY was revived and is ready to fight again!");
     }
 }
 
@@ -609,7 +609,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will not switch in a Pokemo
     } WHEN {
             TURN { MOVE(player, MOVE_NIGHT_SLASH) ; EXPECT_SEND_OUT(opponent, alakazamFirst ? 1 : 2); } // AI doesn't send out Alakazam if it gets outsped
     } SCENE {
-        MESSAGE("The opposing Kadabra fainted!");
+        MESSAGE("The opposing KADABRA fainted!");
         if (alakazamFirst) {
             MESSAGE(AI_TRAINER_NAME " sent out Alakazam!");
         } else {
@@ -1289,6 +1289,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if it has bee
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will stay in if Encore'd into super effective move")
 {
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         ASSUME(GetSpeciesType(SPECIES_AZURILL, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_AZURILL, 1) == TYPE_FAIRY);
@@ -1836,6 +1837,7 @@ AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own weather setting abi
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will properly consider immunities when determining switchin type matchup")
 {
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetSpeciesType(SPECIES_WHIMSICOTT, 0) == TYPE_GRASS);
         ASSUME(GetSpeciesType(SPECIES_WHIMSICOTT, 1) == TYPE_FAIRY); // Gen 5's pure Grass type makes the test fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
@@ -1851,6 +1853,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will properly consider immu
 AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will properly consider immunities when determining switchin type matchup (Doubles)")
 {
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_POLIWRATH) { Moves(MOVE_WATER_GUN, MOVE_KARATE_CHOP); }
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }

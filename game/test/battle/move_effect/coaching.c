@@ -17,8 +17,8 @@ DOUBLE_BATTLE_TEST("Coaching raises Attack and Defense of ally by 1 stage each")
         TURN { MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
-        MESSAGE("Wynaut's Attack rose!");
-        MESSAGE("Wynaut's Defense rose!");
+        MESSAGE("WYNAUT's ATTACK rose!");
+        MESSAGE("WYNAUT's DEFENSE rose!");
     }
 }
 
@@ -34,8 +34,8 @@ DOUBLE_BATTLE_TEST("Coaching bypasses Protect")
         TURN { MOVE(playerRight, MOVE_PROTECT); MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
-        MESSAGE("Wynaut's Attack rose!");
-        MESSAGE("Wynaut's Defense rose!");
+        MESSAGE("WYNAUT's ATTACK rose!");
+        MESSAGE("WYNAUT's DEFENSE rose!");
     }
 }
 
@@ -51,8 +51,8 @@ DOUBLE_BATTLE_TEST("Coaching bypasses Crafty Shield")
         TURN { MOVE(playerRight, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);
-        MESSAGE("Wynaut's Attack rose!");
-        MESSAGE("Wynaut's Defense rose!");
+        MESSAGE("WYNAUT's ATTACK rose!");
+        MESSAGE("WYNAUT's DEFENSE rose!");
     }
 }
 
@@ -107,7 +107,7 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
         TURN { MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         MESSAGE("Wobbuffet used Coaching!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_COACHING, playerLeft);

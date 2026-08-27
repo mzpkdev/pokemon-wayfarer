@@ -21,9 +21,9 @@ SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single 
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-            MESSAGE("Wobbuffet became confused!");
+            MESSAGE("WOBBUFFET became confused!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -48,9 +48,9 @@ DOUBLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a double 
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, playerRight);
-            MESSAGE("Wobbuffet became confused!");
+            MESSAGE("WOBBUFFET became confused!");
         }
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {
@@ -75,9 +75,9 @@ SINGLE_BATTLE_TEST("Berserk Gene activates on switch in", s16 damage)
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-            MESSAGE("Wobbuffet became confused!");
+            MESSAGE("WOBBUFFET became confused!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -102,9 +102,9 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Using Berserk Gene, the Attack of Slowbro sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of SLOWBRO sharply rose!");
             ABILITY_POPUP(player, ABILITY_OWN_TEMPO);
-            MESSAGE("Slowbro's Own Tempo prevents confusion!");
+            MESSAGE("SLOWBRO's OWN TEMPO prevents confusion!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
         NOT MESSAGE("Slowbro became confused!");
@@ -140,9 +140,9 @@ DOUBLE_BATTLE_TEST("Berserk Gene does not confuse a Pokemon with Own Tempo but s
         if (item == ITEM_BERSERK_GENE)
         {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, (positionLeft != 0) ? playerLeft : playerRight);
-            MESSAGE("Using Berserk Gene, the Attack of Slowbro sharply rose!");
+            MESSAGE("Using BERSERK GENE, the ATTACK of SLOWBRO sharply rose!");
             ABILITY_POPUP((positionLeft != 0) ? playerLeft : playerRight, ABILITY_OWN_TEMPO);
-            MESSAGE("Slowbro's Own Tempo prevents confusion!");
+            MESSAGE("SLOWBRO's OWN TEMPO prevents confusion!");
         }
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
         NOT MESSAGE("Slowbro became confused!");
@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse on Misty Terrain but still rai
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Berserk Gene, the Attack of Tapu Fini sharply rose!");
+        MESSAGE("Using BERSERK GENE, the ATTACK of TAPU FINI sharply rose!");
         NOT MESSAGE("Tapu Fini became confused!");
     }
 }
@@ -181,8 +181,8 @@ SINGLE_BATTLE_TEST("Berserk Gene does not confuse when Safeguard is active")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Berserk Gene, the Attack of Wobbuffet sharply rose!");
-        MESSAGE("Wobbuffet is protected by Safeguard!");
+        MESSAGE("Using BERSERK GENE, the ATTACK of WOBBUFFET sharply rose!");
+        MESSAGE("WOBBUFFET is protected by Safeguard!");
         NOT MESSAGE("Wobbuffet became confused!");
     }
 }
@@ -249,7 +249,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet sharply rose!");
+        MESSAGE("Using BERSERK GENE, the ATTACK of the opposing WOBBUFFET sharply rose!");
     }
 }
 
@@ -276,7 +276,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-        MESSAGE("Wobbuffet had its status healed!");
+        MESSAGE("WOBBUFFET had its status healed!");
     } THEN {
         EXPECT(player->volatiles.infiniteConfusion == 0);
     }

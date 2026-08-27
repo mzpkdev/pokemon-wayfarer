@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the 
             };
             ABILITY_POPUP(opponent, ABILITY_LIGHTNING_ROD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Raichu's Sp. Atk rose!");
+            MESSAGE("The opposing RAICHU's SP. ATK rose!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_LIGHTNING_ROD);
@@ -97,13 +97,13 @@ DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack")
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_THUNDERBOLT, target: playerLeft); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Thunderbolt!");
+        MESSAGE("The opposing WOBBUFFET used THUNDERBOLT!");
         if (B_REDIRECT_ABILITY_ALLIES >= GEN_4)
         {
             NOT HP_BAR(playerLeft);
             ABILITY_POPUP(opponentLeft, ABILITY_LIGHTNING_ROD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Raichu's Sp. Atk rose!");
+            MESSAGE("The opposing RAICHU's SP. ATK rose!");
         }
         else
         {

@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
         ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("The opposing Wobbuffet blew away Toxic Spikes!");
+        MESSAGE("The opposing WOBBUFFET blew away Toxic Spikes!");
     }
 }
 
@@ -37,10 +37,10 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away Wrap, hazards and raises Speed (Gen 8+
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
     #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Speed rose!");
+        MESSAGE("WOBBUFFET's SPEED rose!");
     #endif
-        MESSAGE("Wobbuffet got free of the opposing Wobbuffet's Wrap!");
-        MESSAGE("Wobbuffet blew away Stealth Rock!");
+        MESSAGE("WOBBUFFET got free of the opposing WOBBUFFET's WRAP!");
+        MESSAGE("WOBBUFFET blew away Stealth Rock!");
     }
 }
 
@@ -57,10 +57,10 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MORTAL_SPIN, player);
-        MESSAGE("The opposing Wobbuffet was poisoned!");
+        MESSAGE("The opposing WOBBUFFET was poisoned!");
         STATUS_ICON(opponent, poison: TRUE);
-        MESSAGE("Wobbuffet got free of the opposing Wobbuffet's Wrap!");
-        MESSAGE("Wobbuffet blew away Stealth Rock!");
+        MESSAGE("WOBBUFFET got free of the opposing WOBBUFFET's WRAP!");
+        MESSAGE("WOBBUFFET blew away Stealth Rock!");
     }
 }
 
@@ -79,10 +79,10 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
 
-        MESSAGE("Wobbuffet blew away Spikes!");
-        MESSAGE("Wobbuffet blew away Sticky Web!");
-        MESSAGE("Wobbuffet blew away Toxic Spikes!");
-        MESSAGE("Wobbuffet blew away Stealth Rock!");
+        MESSAGE("WOBBUFFET blew away Spikes!");
+        MESSAGE("WOBBUFFET blew away Sticky Web!");
+        MESSAGE("WOBBUFFET blew away Toxic Spikes!");
+        MESSAGE("WOBBUFFET blew away Stealth Rock!");
     } THEN {
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_NONE);
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);

@@ -12,7 +12,7 @@ DOUBLE_BATTLE_TEST("Forewarn warns about the highest power move among all opposi
         TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_FOREWARN);
-        MESSAGE("Forewarn alerted Musharna to the opposing Excadrill's Fissure!");
+        MESSAGE("FOREWARN alerted MUSHARNA to the opposing EXCADRILL's FISSURE!");
     }
 }
 
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Forewarn randomly chooses between same-power moves on one op
         TURN {}
     } SCENE {
         ABILITY_POPUP(player, ABILITY_FOREWARN);
-        MESSAGE("Forewarn alerted Musharna to the opposing Zubat's Tackle!");
+        MESSAGE("FOREWARN alerted MUSHARNA to the opposing ZUBAT's TACKLE!");
     }
 }
 
@@ -47,7 +47,7 @@ DOUBLE_BATTLE_TEST("Forewarn randomly chooses between opponents with same-power 
         TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_FOREWARN);
-        MESSAGE("Forewarn alerted Musharna to the opposing Zubat's Tackle!");
+        MESSAGE("FOREWARN alerted MUSHARNA to the opposing ZUBAT's TACKLE!");
     }
 }
 

@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Comatose isn't affected by Mold Breaker, Turboblaze or Terav
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         ABILITY_POPUP(player, ABILITY_COMATOSE);
-        MESSAGE("It doesn't affect Komala…");
+        MESSAGE("It doesn't affect KOMALA…");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }

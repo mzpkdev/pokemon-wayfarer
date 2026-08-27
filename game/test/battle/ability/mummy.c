@@ -22,9 +22,9 @@ SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on cont
         if (MoveMakesContact(move)) {
             ABILITY_POPUP(opponent, ability);
             if (ability == ABILITY_MUMMY)
-                MESSAGE("Wobbuffet acquired Mummy!");
+                MESSAGE("WOBBUFFET acquired MUMMY!");
             else
-                MESSAGE("Wobbuffet acquired Lingering Aroma!");
+                MESSAGE("WOBBUFFET acquired LINGERING AROMA!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(opponent, ability);

@@ -39,9 +39,9 @@ SINGLE_BATTLE_TEST("Pursuit attacks a foe using Volt Switch / U-Turn / Parting S
         TURN { MOVE(player, move); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        MESSAGE("Wobbuffet went back to 1!");
+        MESSAGE("WOBBUFFET went back to 1!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
-        SEND_IN_MESSAGE("Zigzagoon");
+        SEND_IN_MESSAGE("ZIGZAGOON");
     }
 }
 
@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Pursuit doesn't attack switching foe if user already acted t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
-        MESSAGE("Wobbuffet went back to 1!");
+        MESSAGE("WOBBUFFET went back to 1!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         SEND_IN_MESSAGE("Zigzagoon");
     }
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Pursuit doubles in power if attacking while target switches 
         HP_BAR(player, captureDamage: &results[i].damage);
         if (speed == 5)
             ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
-        SEND_IN_MESSAGE("Zigzagoon");
+        SEND_IN_MESSAGE("ZIGZAGOON");
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
     }
@@ -300,7 +300,7 @@ DOUBLE_BATTLE_TEST("Pursuit only attacks a switching foe if user is alive")
         TURN { MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);
-        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing WYNAUT fainted!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
         SEND_IN_MESSAGE("Grimer");
     }
@@ -315,8 +315,8 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe but fails if user is asleep"
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
-        SWITCH_OUT_MESSAGE("Wobbuffet");
-        MESSAGE("The opposing Wynaut is fast asleep.");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
+        MESSAGE("The opposing WYNAUT is fast asleep.");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         SEND_IN_MESSAGE("Zigzagoon");
     }
@@ -354,7 +354,7 @@ DOUBLE_BATTLE_TEST("Pursuit attacks a switching foe but isn't affected by Follow
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOLLOW_ME, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
-        SEND_IN_MESSAGE("Zigzagoon");
+        SEND_IN_MESSAGE("ZIGZAGOON");
     }
 }
 
@@ -456,7 +456,7 @@ DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against target with Volt
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
         ABILITY_POPUP(playerLeft, ABILITY_VOLT_ABSORB);
-        SEND_IN_MESSAGE("Zigzagoon");
+        SEND_IN_MESSAGE("ZIGZAGOON");
     }
 }
 
@@ -622,10 +622,10 @@ SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twic
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 2); }
     } SCENE {
-        SWITCH_OUT_MESSAGE("Golisopod");
+        SWITCH_OUT_MESSAGE("GOLISOPOD");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
         ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
-        SEND_IN_MESSAGE("Voltorb");
+        SEND_IN_MESSAGE("VOLTORB");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_VOLTORB);
     }

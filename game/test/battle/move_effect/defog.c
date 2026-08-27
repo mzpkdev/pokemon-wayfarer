@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+        MESSAGE("The opposing WOBBUFFET's evasiveness fell!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
     }
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness harshly fell!");
+        MESSAGE("The opposing WOBBUFFET's evasiveness harshly fell!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 6);
@@ -65,11 +65,11 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4)"
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Substitute!");
+        MESSAGE("The opposing WOBBUFFET used SUBSTITUTE!");
         NOT MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+        MESSAGE("The opposing WOBBUFFET's evasiveness fell!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
     }
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute
         TURN { MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Substitute!");
+        MESSAGE("The opposing WOBBUFFET used SUBSTITUTE!");
         if (move == MOVE_CELEBRATE)
         {
             MESSAGE("But it failed!");
@@ -252,8 +252,8 @@ DOUBLE_BATTLE_TEST("Defog removes Mist and Safeguard from target's side")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SAFEGUARD, opponentRight);
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
-            MESSAGE("The opposing team's Mist wore off!");
-            MESSAGE("The opposing team's Safeguard wore off!");
+            MESSAGE("The opposing team's MIST wore off!");
+            MESSAGE("The opposing team's SAFEGUARD wore off!");
         }
         MESSAGE("Wobbuffet used Screech!");
         if (move == MOVE_DEFOG) {
@@ -405,7 +405,7 @@ SINGLE_BATTLE_TEST("Defog removes Spikes from target's side")
         } else {
             NOT MESSAGE("The spikes disappeared from the ground around the opposing team!");
             HP_BAR(opponent);
-            MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+            MESSAGE("The opposing WOBBUFFET was hurt by the spikes!");
         }
     }
 }
@@ -590,7 +590,7 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Aurora Veil from the user's side", s16 
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("The opposing Glalie's evasiveness fell!");
+            MESSAGE("The opposing GLALIE's evasiveness fell!");
         }
         NOT MESSAGE("Your team's Aurora Veil wore off!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
@@ -632,8 +632,8 @@ DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhy
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
         if (move == MOVE_DEFOG) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-            MESSAGE("Glalie's evasiveness fell!");
-            MESSAGE("Your team's Aurora Veil wore off!");
+            MESSAGE("GLALIE's evasiveness fell!");
+            MESSAGE("Your team's AURORA VEIL wore off!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, captureDamage: &results[i].damagePhysical);
@@ -744,9 +744,9 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        MESSAGE("Wobbuffet used Defog!");
+        MESSAGE("WOBBUFFET used DEFOG!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-        MESSAGE("The opposing team's Light Screen wore off!");
+        MESSAGE("The opposing team's LIGHT SCREEN wore off!");
     } THEN {
         if (config >= GEN_5)
             EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE);

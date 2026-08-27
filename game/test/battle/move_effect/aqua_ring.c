@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Aqua Ring fails if already active")
         TURN { MOVE(player, MOVE_AQUA_RING); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_RING, player);
-        MESSAGE("Wobbuffet surrounded itself with a veil of water!");
+        MESSAGE("WOBBUFFET surrounded itself with a veil of water!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_RING, player);
         MESSAGE("But it failed!");
     }
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Aqua Ring's effect is passed by Baton Pass")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_RING, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT(player->hp == 58);
     }

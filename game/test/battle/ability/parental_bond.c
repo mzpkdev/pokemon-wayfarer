@@ -315,7 +315,7 @@ SINGLE_BATTLE_TEST("Parental Bond only triggers Dragon Tail's target switch out 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(opponent);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wynaut was dragged out!");
+        MESSAGE("The opposing WYNAUT was dragged out!");
     }
     THEN {
         EXPECT_EQ(player->species, SPECIES_KANGASKHAN_MEGA);
@@ -368,7 +368,7 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on OHKO moves")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
         HP_BAR(opponent, hp: 1);
-        MESSAGE("The opposing Machamp hung on using its Focus Sash!");
+        MESSAGE("The opposing MACHAMP hung on using its FOCUS SASH!");
         NOT HP_BAR(opponent);
     } THEN {
         EXPECT_EQ(opponent->hp, 1);

@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Assist fails if there are no valid moves to choose from")
     } WHEN {
         TURN { MOVE(player, MOVE_ASSIST); }
     } SCENE {
-        MESSAGE("Wobbuffet used Assist!");
+        MESSAGE("WOBBUFFET used ASSIST!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSIST, player);
         MESSAGE("But it failed!");
     }
@@ -45,9 +45,9 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     } WHEN {
         TURN { MOVE(player, MOVE_ASSIST); }
     } SCENE {
-        MESSAGE("Wobbuffet used Assist!");
+        MESSAGE("WOBBUFFET used ASSIST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSIST, player);
-        MESSAGE("Wobbuffet used Surf!");
+        MESSAGE("WOBBUFFET used SURF!");
         if (item == ITEM_PASSHO_BERRY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         } else {

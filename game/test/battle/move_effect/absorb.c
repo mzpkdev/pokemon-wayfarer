@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_ABSORB); }
     } SCENE {
-        MESSAGE("Wobbuffet was prevented from healing!");
+        MESSAGE("WOBBUFFET was prevented from healing!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
             HP_BAR(opponent);
@@ -198,7 +198,7 @@ SINGLE_BATTLE_TEST("Absorb does not play the draining message at full HP in Gen5
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
         if (genConfig < GEN_5)
-            MESSAGE("The opposing Wobbuffet had its energy drained!");
+            MESSAGE("The opposing WOBBUFFET had its energy drained!");
         else
             NOT MESSAGE("The opposing Wobbuffet had its energy drained!");
     }

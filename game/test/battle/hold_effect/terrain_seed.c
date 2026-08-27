@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Electric Seed raises the holder's Defense on Electric Terrai
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Electric Seed, the Defense of Wobbuffet rose!");
+        MESSAGE("Using ELECTRIC SEED, the DEFENSE of WOBBUFFET rose!");
         if (item == ITEM_ELECTRIC_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("Using Electric Seed, the Defense of the opposing Tapu Koko rose!");
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Grassy Seed raises the holder's Defense on Grassy Terrain")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Grassy Seed, the Defense of Wobbuffet rose!");
+        MESSAGE("Using GRASSY SEED, the DEFENSE of WOBBUFFET rose!");
         if (item == ITEM_GRASSY_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("Using Grassy Seed, the Defense of the opposing Tapu Bulu rose!");
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Misty Seed raises the holder's Sp. Defense on Misty Terrain"
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Misty Seed, the Sp. Def of Wobbuffet rose!");
+        MESSAGE("Using MISTY SEED, the SP. DEF of WOBBUFFET rose!");
         if (item == ITEM_MISTY_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("Using Misty Seed, the Sp. Def of the opposing Tapu Fini rose!");
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Psychic Seed raises the holder's Sp. Defense on Psychic Terr
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Psychic Seed, the Sp. Def of Wobbuffet rose!");
+        MESSAGE("Using PSYCHIC SEED, the SP. DEF of WOBBUFFET rose!");
         if (item == ITEM_PSYCHIC_SEED) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("Using Psychic Seed, the Sp. Def of the opposing Tapu Lele rose!");
@@ -174,9 +174,9 @@ SINGLE_BATTLE_TEST("Electric Seed is consumed on Electric Terrain before other a
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Using Electric Seed, the Defense of the opposing Tapu Koko rose!");
+        MESSAGE("Using ELECTRIC SEED, the DEFENSE of the opposing TAPU KOKO rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Using Electric Seed, the Defense of Tapu Bulu rose!");
+        MESSAGE("Using ELECTRIC SEED, the DEFENSE of TAPU BULU rose!");
         ABILITY_POPUP(player, ABILITY_GRASSY_SURGE);
     }
 }

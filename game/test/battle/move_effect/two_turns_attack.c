@@ -232,11 +232,11 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight
         // Potential visual bug. 
         // The script has the B_WAIT_TIME_LONG waitmessage but it does not wait
         if (move2 == MOVE_SOLAR_BEAM) {
-            MESSAGE("Wobbuffet used Solar Beam!");
+            MESSAGE("WOBBUFFET used SOLAR BEAM!");
         } else {
             MESSAGE("Wobbuffet used Solar Blade!");
         }
-        MESSAGE("Wobbuffet absorbed light!");
+        MESSAGE("WOBBUFFET absorbed light!");
 
         if (move2 == MOVE_SOLAR_BEAM) {
             if (move1 == MOVE_SPLASH) {
@@ -407,7 +407,7 @@ SINGLE_BATTLE_TEST("Electro Shot needs a charging Turn")
         TURN { SKIP_TURN(player); }
     } SCENE {
         // Charging turn
-        MESSAGE("Wobbuffet used Electro Shot!");
+        MESSAGE("WOBBUFFET used ELECTRO SHOT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
         MESSAGE("Wobbuffet absorbed electricity!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -429,11 +429,11 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge when it's raining")
         TURN { MOVE(opponent, MOVE_RAIN_DANCE); MOVE(player, MOVE_ELECTRO_SHOT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
-        MESSAGE("Wobbuffet used Electro Shot!");
+        MESSAGE("WOBBUFFET used ELECTRO SHOT!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRO_SHOT, player);
-        MESSAGE("Wobbuffet absorbed electricity!");
+        MESSAGE("WOBBUFFET absorbed electricity!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Sp. Atk rose!");
+        MESSAGE("WOBBUFFET's SP. ATK rose!");
         NONE_OF {
             MESSAGE("Wobbuffet used Electro Shot!");
         }

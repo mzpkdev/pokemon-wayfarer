@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Terrain Boost: Expanding Force's power increases by 50% if t
             TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
         TURN { MOVE(player, MOVE_EXPANDING_FORCE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Expanding Force!");
+        MESSAGE("WOBBUFFET used EXPANDING FORCE!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         if (B_TERRAIN_TYPE_BOOST >= GEN_8)

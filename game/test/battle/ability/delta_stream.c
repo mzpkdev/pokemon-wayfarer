@@ -18,7 +18,7 @@ DOUBLE_BATTLE_TEST("Delta Stream doesn't activate if there's already strong wind
     } SCENE {
         ABILITY_POPUP(opponentLeft, ABILITY_DELTA_STREAM);
         MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");
-        SWITCH_OUT_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("WOBBUFFET");
         SEND_IN_MESSAGE("Rayquaza");
         NONE_OF {
             ABILITY_POPUP(playerLeft, ABILITY_DELTA_STREAM);
@@ -40,7 +40,7 @@ DOUBLE_BATTLE_TEST("Strong winds continue as long as there's a Pokémon with Del
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Rayquaza fainted!");
+        MESSAGE("RAYQUAZA fainted!");
         SEND_IN_MESSAGE("Wobbuffet");
         NOT MESSAGE("The mysterious strong winds have dissipated!");
     } THEN {

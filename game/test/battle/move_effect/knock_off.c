@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
             MESSAGE("The opposing Wobbuffet restored its health using its Sitrus Berry!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Sitrus Berry!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's SITRUS BERRY!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }
@@ -70,13 +70,13 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         if (item == ITEM_WEAKNESS_POLICY) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE);
-            MESSAGE("Using Weakness Policy, the Attack of the opposing Wobbuffet sharply rose!");
-            MESSAGE("Using Weakness Policy, the Sp. Atk of the opposing Wobbuffet sharply rose!");
+            MESSAGE("Using WEAKNESS POLICY, the ATTACK of the opposing WOBBUFFET sharply rose!");
+            MESSAGE("Using WEAKNESS POLICY, the SP. ATK of the opposing WOBBUFFET sharply rose!");
         } else if (item == ITEM_ROCKY_HELMET) {
             HP_BAR(player);
-            MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+            MESSAGE("WOBBUFFET was hurt by the opposing WOBBUFFET's ROCKY HELMET!");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-            MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Rocky Helmet!");
+            MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's ROCKY HELMET!");
         }
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if i
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
-        MESSAGE("The opposing Wobbuffet's substitute faded!");
+        MESSAGE("The opposing WOBBUFFET's substitute faded!");
         NOT { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF); }
     } THEN {
         EXPECT(opponent->item == ITEM_LEFTOVERS);
@@ -189,9 +189,9 @@ SINGLE_BATTLE_TEST("Recycle cannot recover an item removed by Knock Off")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Leftovers!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
 
-        MESSAGE("The opposing Wobbuffet used Recycle!");
+        MESSAGE("The opposing WOBBUFFET used RECYCLE!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
@@ -210,12 +210,12 @@ SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another it
         // turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Leftovers!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
         // turn 2
         if (B_KNOCK_OFF_REMOVAL >= GEN_5) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT);
-            MESSAGE("The opposing Wobbuffet restored a little HP using its Leftovers!");
+            MESSAGE("The opposing WOBBUFFET restored a little HP using its LEFTOVERS!");
         } else {
             NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player); }
             MESSAGE("But it failed!");
@@ -241,10 +241,10 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
         // turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Leftovers!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
         // turn 2
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }
@@ -262,7 +262,7 @@ DOUBLE_BATTLE_TEST("Knock Off does not trigger the opposing ally's Symbiosis")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
-        MESSAGE("The opposing Wobbuffet knocked off Wobbuffet's Leftovers!");
+        MESSAGE("The opposing WOBBUFFET knocked off WOBBUFFET's LEFTOVERS!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT);
             MESSAGE("Wobbuffet restored its health using its Leftovers!");
@@ -280,7 +280,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Mega Stones from Pokemon that don't
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Absolite!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's ABSOLITE!");
     }
 }
 
@@ -304,7 +304,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Orbs for Primal Reversion from Poke
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Red Orb!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's RED ORB!");
     }
 }
 
@@ -352,7 +352,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off other form-change hold items from P
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Sky Plate!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's SKY PLATE!");
     }
 }
 
@@ -376,7 +376,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off begin-battle form-change hold items
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Rusted Shield!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's RUSTED SHIELD!");
     }
 }
 
@@ -402,8 +402,8 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET was hurt by the opposing WOBBUFFET's ROCKY HELMET!");
+        MESSAGE("WOBBUFFET fainted!");
     } THEN {
         EXPECT(opponent->item == ITEM_ROCKY_HELMET);
     }
@@ -431,7 +431,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consu
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
-        MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
+        MESSAGE("The opposing WOBBUFFET's Air Balloon popped!");
         NOT MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Air Balloon!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
@@ -446,7 +446,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Ogerpon masks from Pokemon that are
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Hearthflame Mask!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's HEARTHFLAME MASK!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }
@@ -474,7 +474,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off a Booster Energy from a non Paradox
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Booster Energy!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's BOOSTER ENERGY!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }

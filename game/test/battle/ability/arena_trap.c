@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Arena Trap doesn't prevent switch outs via moves that switch
         if (move == MOVE_VOLT_SWITCH)
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, player);
         ANIMATION(ANIM_TYPE_MOVE, move, player);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     }
 }
 

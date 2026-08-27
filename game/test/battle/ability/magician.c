@@ -15,13 +15,13 @@ SINGLE_BATTLE_TEST("Magician gets self-damage recoil after stealing Life Orb")
         // 1st turn
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
-        MESSAGE("Delphox stole the opposing Wobbuffet's Life Orb!");
+        MESSAGE("DELPHOX stole the opposing WOBBUFFET's LIFE ORB!");
         HP_BAR(player);
-        MESSAGE("Delphox was hurt by the Life Orb!");
+        MESSAGE("DELPHOX was hurt by the LIFE ORB!");
         // 2nd turn - Life Orb recoil happens now
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(player);
-        MESSAGE("Delphox was hurt by the Life Orb!");
+        MESSAGE("DELPHOX was hurt by the LIFE ORB!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_LIFE_ORB);
         EXPECT_EQ(opponent->item, ITEM_NONE);
@@ -210,7 +210,7 @@ SINGLE_BATTLE_TEST("Magician steals before switching with U-turn")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         ABILITY_POPUP(player, ABILITY_MAGICIAN);
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
     } THEN {
         EXPECT_EQ(opponent->item, ITEM_NONE);
     }

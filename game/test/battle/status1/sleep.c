@@ -1,12 +1,19 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Sleep prevents the battler from using a move")
+SINGLE_BATTLE_TEST("Sleep prevents the battler from using a move for the configured number of turns")
 {
-    u32 turns, j;
-    PARAMETRIZE { turns = 1; }
-    PARAMETRIZE { turns = 2; }
-    PARAMETRIZE { turns = 3; }
+    u32 turns = 0, j, maxTurns;
+
+    if (B_SLEEP_TURNS >= GEN_5)
+        maxTurns = 3;
+    else if (B_SLEEP_TURNS >= GEN_3)
+        maxTurns = 4;
+    else
+        maxTurns = 7;
+
+    for (j = 1; j <= maxTurns; j++)
+        PARAMETRIZE { turns = j; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP_TURN(turns)); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -15,10 +22,10 @@ SINGLE_BATTLE_TEST("Sleep prevents the battler from using a move")
             TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
         for (j = 0; j < turns - 1; j++)
-            MESSAGE("Wobbuffet is fast asleep.");
-        MESSAGE("Wobbuffet woke up!");
+            MESSAGE("WOBBUFFET is fast asleep.");
+        MESSAGE("WOBBUFFET woke up!");
         STATUS_ICON(player, none: TRUE);
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
     }
 }
 

@@ -25,9 +25,9 @@ SINGLE_BATTLE_TEST("Endure does not prevent multiple hits and stat changes occur
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
         MESSAGE("The Pokémon was hit 5 time(s)!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Defense fell!");
+        MESSAGE("WOBBUFFET's DEFENSE fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Speed rose!");
+        MESSAGE("WOBBUFFET's SPEED rose!");
     }
 }
 
@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due t
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
-        MESSAGE("The opposing Wynaut endured the hit!");
+        MESSAGE("The opposing WYNAUT endured the hit!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
         NOT MESSAGE("The opposing Squirtle endured the hit!");
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Endure only lasts for one turn")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("The opposing Wobbuffet endured the hit!");
+        MESSAGE("The opposing WOBBUFFET endured the hit!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
         NOT MESSAGE("The opposing Wobbuffet endured the hit!");
     }
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over False Swipe (Gen 5+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, player);
-        MESSAGE("The opposing Wobbuffet endured the hit!");
+        MESSAGE("The opposing WOBBUFFET endured the hit!");
         // No message for False Swipe, but Endure message should still happen
     }
 }
@@ -94,6 +94,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over Sturdy (Gen 5+)")
 {
     GIVEN {
         WITH_CONFIG(B_STURDY, GEN_5);
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Sturdy = TRUE;
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARON) { HP(1); MaxHP(1); Ability(ABILITY_STURDY); }
     } WHEN {
@@ -101,7 +102,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over Sturdy (Gen 5+)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("The opposing Aron endured the hit!");
+        MESSAGE("The opposing ARON endured the hit!");
         NOT ABILITY_POPUP(opponent, ABILITY_STURDY);
     }
 }
@@ -117,7 +118,7 @@ SINGLE_BATTLE_TEST("Endure takes precedence over Focus Sash/Focus Band")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("The opposing Wobbuffet endured the hit!");
+        MESSAGE("The opposing WOBBUFFET endured the hit!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }

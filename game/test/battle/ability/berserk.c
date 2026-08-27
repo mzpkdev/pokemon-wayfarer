@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Berserk raises Sp.Atk by 1")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ABILITY_POPUP(player, ABILITY_BERSERK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Drampa's Sp. Atk rose!");
+        MESSAGE("DRAMPA's SP. ATK rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }

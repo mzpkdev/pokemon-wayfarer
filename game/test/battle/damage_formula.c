@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Marshadow vs Mawile)")
         }
     }
     SCENE{
-        MESSAGE("Marshadow used Spectral Thief!");
+        MESSAGE("MARSHADOW used SPECTRAL THIEF!");
         HP_BAR(opponent, captureDamage: &dmg);
     }
     THEN{

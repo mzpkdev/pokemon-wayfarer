@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Ice Face blocks physical moves, changing Eiscue into its Noi
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_EISCUE_NOICE);
     }
@@ -54,13 +54,13 @@ SINGLE_BATTLE_TEST("Ice Face is restored if hail or snow begins while Noice Face
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_EISCUE_NOICE);
     }
@@ -86,11 +86,11 @@ SINGLE_BATTLE_TEST("Ice Face is restored if Noice Face Eiscue is sent in while h
         TURN { SWITCH(player, 0); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
     }
 }
 

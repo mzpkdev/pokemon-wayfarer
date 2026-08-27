@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Absorb users to lose HP instead of heal")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
         HP_BAR(opponent, captureDamage: &damage);
         HP_BAR(player, captureDamage: &healed);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
+        MESSAGE("WOBBUFFET sucked up the liquid ooze!");
     } THEN {
         EXPECT_MUL_EQ(damage, Q_4_12(0.5), healed);
     }
@@ -53,8 +53,8 @@ DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(playerLeft);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET sucked up the liquid ooze!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -72,8 +72,8 @@ DOUBLE_BATTLE_TEST("Liquid Ooze will faint Matcha Gatcha users if it deals enoug
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MATCHA_GOTCHA, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(playerLeft);
-        MESSAGE("Wobbuffet sucked up the liquid ooze!");
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET sucked up the liquid ooze!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

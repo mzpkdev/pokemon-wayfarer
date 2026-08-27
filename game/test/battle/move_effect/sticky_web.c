@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Sticky Web can only be set up 1 time")
         TURN { MOVE(player, MOVE_STICKY_WEB); }
         TURN { MOVE(player, MOVE_STICKY_WEB); }
     } SCENE {
-        MESSAGE("Wobbuffet used Sticky Web!");
+        MESSAGE("WOBBUFFET used STICKY WEB!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
 
@@ -249,7 +249,7 @@ SINGLE_BATTLE_TEST("Sticky Web is placed on the correct side after Explosion")
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
         MESSAGE("A sticky web has been laid out on the ground around your team!");
    }

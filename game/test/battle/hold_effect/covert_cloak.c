@@ -68,10 +68,10 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects")
         HP_BAR(opponent);
         switch (move) {
             case MOVE_INFESTATION:
-                MESSAGE("The opposing Skarmory has been afflicted with an infestation by Wobbuffet!");
+                MESSAGE("The opposing SKARMORY has been afflicted with an infestation by WOBBUFFET!");
                 break;
             case MOVE_THOUSAND_ARROWS:
-                MESSAGE("The opposing Skarmory fell straight down!");
+        MESSAGE("The opposing SKARMORY fell straight down!");
                 break;
             case MOVE_JAW_LOCK:
                 MESSAGE("Neither Pokémon can run away!");
@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block self-targeting effects, primary 
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;
             case MOVE_METEOR_ASSAULT: // second turn
-                MESSAGE("Wobbuffet must recharge!");
+                MESSAGE("WOBBUFFET must recharge!");
                 break;
             default:
                 break;
@@ -143,7 +143,7 @@ DOUBLE_BATTLE_TEST("Covert Cloak does or does not block Sparkling Aria depending
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
         if (moveToUse == MOVE_SCRATCH) {
-            MESSAGE("The opposing Wobbuffet's burn was cured!");
+            MESSAGE("The opposing WOBBUFFET's burn was cured!");
             STATUS_ICON(opponentLeft, none: TRUE);
         } else {
             NONE_OF {
@@ -203,6 +203,6 @@ SINGLE_BATTLE_TEST("Covert Cloak does not prevent ability stat changes")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet's Speed fell!");
+        MESSAGE("WOBBUFFET's SPEED fell!");
     }
 }

@@ -24,26 +24,26 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
         switch (statId)
         {
         case STAT_DEF:
-            MESSAGE("The opposing Wynaut's Defense fell!");
+            MESSAGE("The opposing WYNAUT's DEFENSE fell!");
             break;
         case STAT_ATK:
-            MESSAGE("The opposing Wynaut's Attack fell!");
+            MESSAGE("The opposing WYNAUT's ATTACK fell!");
             break;
         case STAT_EVASION:
             if (GetMoveEffect(move) == EFFECT_EVASION_DOWN_2) {
-                MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
+                MESSAGE("The opposing WYNAUT's evasiveness harshly fell!");
             } else {
                 MESSAGE("The opposing Wynaut's evasiveness fell!");
             }
             break;
         case STAT_ACC:
-            MESSAGE("The opposing Wynaut's accuracy fell!");
+            MESSAGE("The opposing WYNAUT's accuracy fell!");
             break;
         case STAT_SPATK:
-            MESSAGE("The opposing Wynaut's Sp. Atk fell!");
+            MESSAGE("The opposing WYNAUT's SP. ATK fell!");
             break;
         case STAT_SPDEF:
-            MESSAGE("The opposing Wynaut's Sp. Def harshly fell!");
+            MESSAGE("The opposing WYNAUT's SP. DEF harshly fell!");
             break;
         }
     } THEN {
@@ -60,11 +60,11 @@ SINGLE_BATTLE_TEST("Mirror Armor triggers even if the attacking Pokemon also has
     } WHEN {
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
-        MESSAGE("The opposing Corviknight used Leer!");
+        MESSAGE("The opposing CORVIKNIGHT used LEER!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Corviknight's Defense fell!");
+        MESSAGE("The opposing CORVIKNIGHT's DEFENSE fell!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
@@ -79,10 +79,10 @@ SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stats of an attacking Pokemon
     } WHEN {
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
-        MESSAGE("The opposing Wynaut used Leer!");
+        MESSAGE("The opposing WYNAUT used LEER!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
-        MESSAGE("The opposing Wynaut's Clear Body prevents stat loss!");
+        MESSAGE("The opposing WYNAUT's CLEAR BODY prevents stat loss!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers the Attack of Pokemon with Intimidate")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Gyarados's Attack fell!");
+        MESSAGE("The opposing GYARADOS's ATTACK fell!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
@@ -135,10 +135,10 @@ SINGLE_BATTLE_TEST("Mirror Armor raises the stat of an attacking Pokemon with Co
     } WHEN {
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
-        MESSAGE("The opposing Shuckle used Leer!");
+        MESSAGE("The opposing SHUCKLE used LEER!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Shuckle's Defense rose!");
+        MESSAGE("The opposing SHUCKLE's DEFENSE rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);

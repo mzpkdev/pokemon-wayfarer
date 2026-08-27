@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Eruption's damage is affected by the user's current HP", s16
     } WHEN {
         TURN { MOVE(player, MOVE_ERUPTION); }
     } SCENE {
-        MESSAGE("Wobbuffet used Eruption!");
+        MESSAGE("WOBBUFFET used ERUPTION!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ERUPTION, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

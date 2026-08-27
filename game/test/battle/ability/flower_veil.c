@@ -35,7 +35,7 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - right ta
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_FLOWER_VEIL);
-        MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
+        MESSAGE("The opposing CHIKORITA surrounded itself with a veil of petals!");
     }
 }
 
@@ -59,7 +59,7 @@ DOUBLE_BATTLE_TEST("Flower Veil prevents status on allied Grass-types - left tar
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         ABILITY_POPUP(opponentRight, ABILITY_FLOWER_VEIL);
-        MESSAGE("The opposing Chikorita surrounded itself with a veil of petals!");
+        MESSAGE("The opposing CHIKORITA surrounded itself with a veil of petals!");
     }
 }
 
@@ -77,7 +77,7 @@ DOUBLE_BATTLE_TEST("Flower Veil's stat reduction protection considers Contrary")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWAGGER, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_FLOWER_VEIL);
-        MESSAGE("The opposing Snivy surrounded itself with a veil of petals!");
+        MESSAGE("The opposing SNIVY surrounded itself with a veil of petals!");
     } THEN {
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }

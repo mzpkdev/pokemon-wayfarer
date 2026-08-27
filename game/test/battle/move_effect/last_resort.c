@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Last Resort always fails if it's the only known move")
         TURN { MOVE(player, MOVE_LAST_RESORT); }
         TURN { MOVE(player, MOVE_LAST_RESORT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
         MESSAGE("Wobbuffet used Last Resort!");
         MESSAGE("But it failed!");
@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_LAST_RESORT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("Wobbuffet used Last Resort!");
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
         TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_LAST_RESORT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
         MESSAGE("Wobbuffet used Quick Attack!");
         MESSAGE("Wobbuffet used Last Resort!");
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Last Resort works only when all of the known moves have been
         TURN { MOVE(player, MOVE_GUST); }
         TURN { MOVE(player, MOVE_LAST_RESORT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Last Resort!");
+        MESSAGE("WOBBUFFET used LAST RESORT!");
         MESSAGE("But it failed!");
         MESSAGE("Wobbuffet used Quick Attack!");
         MESSAGE("Wobbuffet used Last Resort!");

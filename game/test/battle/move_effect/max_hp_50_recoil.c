@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Steel Beam causes the user to faint when below 1/2 of its Ma
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_BEAM, player);
         HP_BAR(player, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -62,7 +62,7 @@ DOUBLE_BATTLE_TEST("Steel Beam causes the user to faint when below 1/2 of its Ma
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_BEAM, playerLeft);
         HP_BAR(playerLeft, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -78,8 +78,8 @@ SINGLE_BATTLE_TEST("Steel Beam causes the user & the target to faint when below 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_BEAM, player);
         HP_BAR(opponent, hp: 0);
         HP_BAR(player, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 

@@ -37,6 +37,7 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
     }
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMovePower(move) > 0);
         ASSUME(GetMoveType(move) == type);
         ASSUME(GetSpeciesType(defender, 0) == GetSpeciesType(defender, 1));

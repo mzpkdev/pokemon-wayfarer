@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Apicot Berry raises the holder's Sp. Def by one stage when H
             }
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Using Apicot Berry, the Sp. Def of Wobbuffet rose!");
+            MESSAGE("Using APICOT BERRY, the SP. DEF of WOBBUFFET rose!");
         }
     } THEN {
         if (move == MOVE_DRAGON_RAGE)
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Apicot Berry raises Sp. Def by one stage when HP drops to 1/
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Using Apicot Berry, the Sp. Def of Bellsprout rose!");
+        MESSAGE("Using APICOT BERRY, the SP. DEF of BELLSPROUT rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Apicot Berry raises Sp. Def by one stage when HP drops to 1/
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Using Apicot Berry, the Sp. Def of Applin sharply rose!");
+        MESSAGE("Using APICOT BERRY, the SP. DEF of APPLIN sharply rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
     }

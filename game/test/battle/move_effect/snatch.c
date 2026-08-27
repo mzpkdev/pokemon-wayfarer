@@ -18,10 +18,10 @@ SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_SWORDS_DANCE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
-        MESSAGE("Wobbuffet snatched the opposing Wynaut's move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
+        MESSAGE("WOBBUFFET snatched the opposing WYNAUT's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("WOBBUFFET's ATTACK sharply rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Snatch does not steal non-snatchable moves")
         TURN { MOVE(player, MOVE_SNATCH); MOVE(opponent, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
         HP_BAR(player);
     }
@@ -62,15 +62,15 @@ DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this 
     } SCENE {
         // Both players use Snatch in turn order
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerRight);
-        MESSAGE("Wynaut waits for a target to make a move!");
+        MESSAGE("WYNAUT waits for a target to make a move!");
         // Opponent uses Celebrate (not snatchable)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         // Slowest opponent uses Swords Dance - only the first Snatch user should steal it
-        MESSAGE("Wobbuffet snatched the opposing Kadabra's move!");
+        MESSAGE("WOBBUFFET snatched the opposing KADABRA's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("WOBBUFFET's ATTACK sharply rose!");
         // The second Snatch user should NOT steal the already-snatched move
         NOT MESSAGE("Wynaut snatched the opposing Kadabra's move!");
     } THEN {
@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Snatch steals from the correct target when multiple snatchab
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        MESSAGE("Wobbuffet waits for a target to make a move!");
+        MESSAGE("WOBBUFFET waits for a target to make a move!");
         // First snatchable move is Swords Dance from opponentLeft
         MESSAGE("Wobbuffet snatched the opposing Abra's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
@@ -141,7 +141,7 @@ DOUBLE_BATTLE_TEST("Snatch fails when the only slower battler is a fainted ally"
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);

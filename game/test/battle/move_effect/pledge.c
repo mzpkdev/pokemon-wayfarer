@@ -51,7 +51,7 @@ DOUBLE_BATTLE_TEST("Rainbow doubles the chance of secondary move effects")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, playerLeft);
-        MESSAGE("The opposing Wynaut was burned!");
+        MESSAGE("The opposing WYNAUT was burned!");
     }
 }
 
@@ -72,7 +72,7 @@ DOUBLE_BATTLE_TEST("Rainbow flinch chance does not stack with Serene Grace")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_PLEDGE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BITE, playerLeft);
-        MESSAGE("The opposing Wynaut flinched and couldn't move!");
+        MESSAGE("The opposing WYNAUT flinched and couldn't move!");
     }
 }
 
@@ -401,11 +401,11 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Right")
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         if (speedPLeft < speedPRight) {
-            MESSAGE("Wynaut is fast asleep.");
+            MESSAGE("WYNAUT is fast asleep.");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
-            MESSAGE("Wynaut is fast asleep.");
+            MESSAGE("WYNAUT is fast asleep.");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -439,11 +439,11 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Left")
         TURN { MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         if (speedPRight < speedPLeft) {
-            MESSAGE("Wobbuffet is fast asleep.");
+            MESSAGE("WOBBUFFET is fast asleep.");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
-            MESSAGE("Wobbuffet is fast asleep.");
+            MESSAGE("WOBBUFFET is fast asleep.");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
@@ -472,11 +472,11 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Right"
         TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerRight); MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         if (speedPLeft < speedPRight) {
-            MESSAGE("Wynaut flinched and couldn't move!");
+            MESSAGE("WYNAUT flinched and couldn't move!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
-            MESSAGE("Wynaut flinched and couldn't move!");
+            MESSAGE("WYNAUT flinched and couldn't move!");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -505,11 +505,11 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Left")
         TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft); MOVE(playerRight, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerLeft, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         if (speedPRight < speedPLeft) {
-            MESSAGE("Wobbuffet flinched and couldn't move!");
+            MESSAGE("WOBBUFFET flinched and couldn't move!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
-            MESSAGE("Wobbuffet flinched and couldn't move!");
+            MESSAGE("WOBBUFFET flinched and couldn't move!");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
@@ -534,8 +534,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't fail if any mon wakes up")
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         NONE_OF {
-            MESSAGE("Wobbuffet is fast asleep.");
-            MESSAGE("Wynaut is fast asleep.");
+            MESSAGE("WOBBUFFET is fast asleep.");
+            MESSAGE("WYNAUT is fast asleep.");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerRight);
         }
@@ -559,8 +559,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo doesn't fail if any mon thaws out")
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 1)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 1)); }
     } SCENE {
         NONE_OF {
-            MESSAGE("Wobbuffet is frozen solid!");
-            MESSAGE("Wynaut is frozen solid!");
+            MESSAGE("WOBBUFFET is frozen solid!");
+            MESSAGE("WYNAUT is frozen solid!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerRight);
         }
@@ -583,11 +583,11 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Le
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         if (speedLeft < speedRight) {
-            MESSAGE("Wynaut is fast asleep.");
+            MESSAGE("WYNAUT is fast asleep.");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
-            MESSAGE("Wynaut is fast asleep.");
+            MESSAGE("WYNAUT is fast asleep.");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -611,11 +611,11 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Ri
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
         if (speedRight < speedLeft) {
-            MESSAGE("Wobbuffet is fast asleep.");
+            MESSAGE("WOBBUFFET is fast asleep.");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerRight);
         } else {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_PLEDGE, playerRight);
-            MESSAGE("Wobbuffet is fast asleep.");
+            MESSAGE("WOBBUFFET is fast asleep.");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
@@ -639,8 +639,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Le
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
-        MESSAGE("Wobbuffet is fast asleep.");
-        MESSAGE("Wynaut is fast asleep.");
+        MESSAGE("WOBBUFFET is fast asleep.");
+        MESSAGE("WYNAUT is fast asleep.");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -665,8 +665,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Sleep Both Ri
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight); }
     } SCENE {
-        MESSAGE("Wynaut is fast asleep.");
-        MESSAGE("Wobbuffet is fast asleep.");
+        MESSAGE("WYNAUT is fast asleep.");
+        MESSAGE("WOBBUFFET is fast asleep.");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -687,8 +687,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both L
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); }
     } SCENE {
-        MESSAGE("Wobbuffet is frozen solid!");
-        MESSAGE("Wynaut is frozen solid!");
+        MESSAGE("WOBBUFFET is frozen solid!");
+        MESSAGE("WYNAUT is frozen solid!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -709,8 +709,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Frozen Both R
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_FROZEN, 0)); }
     } SCENE {
-        MESSAGE("Wynaut is frozen solid!");
-        MESSAGE("Wobbuffet is frozen solid!");
+        MESSAGE("WYNAUT is frozen solid!");
+        MESSAGE("WOBBUFFET is frozen solid!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -731,8 +731,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
     } SCENE {
-        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
-        MESSAGE("Wynaut couldn't move because it's paralyzed!");
+        MESSAGE("WOBBUFFET couldn't move because it's paralyzed!");
+        MESSAGE("WYNAUT couldn't move because it's paralyzed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -753,8 +753,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Paralyzed Bot
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIRE_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); MOVE(playerRight, MOVE_GRASS_PLEDGE, target: opponentRight, WITH_RNG(RNG_PARALYSIS, 0)); }
     } SCENE {
-        MESSAGE("Wynaut couldn't move because it's paralyzed!");
-        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+        MESSAGE("WYNAUT couldn't move because it's paralyzed!");
+        MESSAGE("WOBBUFFET couldn't move because it's paralyzed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
@@ -778,8 +778,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Both L
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentRight);
-        MESSAGE("Wobbuffet flinched and couldn't move!");
-        MESSAGE("Wynaut flinched and couldn't move!");
+        MESSAGE("WOBBUFFET flinched and couldn't move!");
+        MESSAGE("WYNAUT flinched and couldn't move!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);
@@ -803,8 +803,8 @@ DOUBLE_BATTLE_TEST("Pledge move combo fails if ally fails to act - Flinch Both R
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentRight);
-        MESSAGE("Wynaut flinched and couldn't move!");
-        MESSAGE("Wobbuffet flinched and couldn't move!");
+        MESSAGE("WYNAUT flinched and couldn't move!");
+        MESSAGE("WOBBUFFET flinched and couldn't move!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerLeft);

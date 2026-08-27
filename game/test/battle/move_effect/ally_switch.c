@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Ally Switch fails in a single battle")
     } WHEN {
         TURN { MOVE(player, MOVE_ALLY_SWITCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Ally Switch!");
+        MESSAGE("WOBBUFFET used ALLY SWITCH!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, player);
         MESSAGE("But it failed!");
     }
@@ -363,7 +363,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed position")
         TURN {}
     } SCENE {
         // turn 1
-        MESSAGE("The opposing Bulbasaur used Leech Seed!");
+        MESSAGE("The opposing BULBASAUR used LEECH SEED!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, playerLeft);
         HP_BAR(playerLeft);
@@ -396,7 +396,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
-        MESSAGE("Wynaut took the Future Sight attack!");
+        MESSAGE("WYNAUT took the FUTURE SIGHT attack!");
         HP_BAR(playerLeft);
         NOT HP_BAR(playerRight);
     }
@@ -418,7 +418,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update Future Sight target position whe
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
-        MESSAGE("Wobbuffet took the Future Sight attack!");
+        MESSAGE("WOBBUFFET took the FUTURE SIGHT attack!");
         HP_BAR(playerLeft);
         NOT HP_BAR(playerRight);
     }

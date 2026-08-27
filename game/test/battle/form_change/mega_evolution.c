@@ -80,8 +80,8 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
-        MESSAGE("Gardevoir used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
+        MESSAGE("GARDEVOIR used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 205);
     }
@@ -96,8 +96,8 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Gardevoir used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("GARDEVOIR used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 205);
     }
@@ -114,8 +114,8 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
-        MESSAGE("Sableye used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("SABLEYE used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT_EQ(player->speed, 105);
     }
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
-        MESSAGE("The opposing Garchomp fainted!");
+        MESSAGE("The opposing GARCHOMP fainted!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
             MESSAGE("Wobbuffet was hurt by the opposing Garchomp's Rough Skin!");

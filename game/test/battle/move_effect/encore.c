@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Encore has no effect if no previous move")
     } WHEN {
         TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Encore!");
+        MESSAGE("The opposing WOBBUFFET used ENCORE!");
         MESSAGE("But it failed!");
     }
 }
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Encore forces the last move used before the target flinched"
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        MESSAGE("The opposing WOBBUFFET flinched and couldn't move!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASS_KNOT, opponent);
@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
         TURN { MOVE(player, MOVE_EMBER); }
     } SCENE {
         MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
+        MESSAGE("The opposing WOBBUFFET used ENCORE!");
         MESSAGE("But it failed!");
         MESSAGE("Wobbuffet used Max Flare!");
     }
@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after
         MESSAGE("Wobbuffet used Max Knuckle!");
         MESSAGE("Wobbuffet used Max Knuckle!");
         MESSAGE("Wobbuffet used Max Knuckle!");
-        MESSAGE("The opposing Wobbuffet used Encore!");
+        MESSAGE("The opposing WOBBUFFET used ENCORE!");
         MESSAGE("Wobbuffet used Arm Thrust!");
     }
 }
@@ -197,7 +197,7 @@ DOUBLE_BATTLE_TEST("Encore works even if the target's last move failed")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUCKER_PUNCH, opponentRight);
         MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, playerLeft);
-        MESSAGE("The opposing Wobbuffet must do an encore!");
+        MESSAGE("The opposing WOBBUFFET must do an encore!");
     }
 }
 

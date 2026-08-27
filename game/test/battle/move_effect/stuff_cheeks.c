@@ -83,9 +83,9 @@ SINGLE_BATTLE_TEST("Stuff Cheeks can be used even if Magic Room is active")
             MOVE(player, MOVE_STUFF_CHEEKS);
         }
     } SCENE {
-        MESSAGE("Skwovet used Stuff Cheeks!");
+        MESSAGE("SKWOVET used STUFF CHEEKS!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUFF_CHEEKS, player);
-        MESSAGE("Using Liechi Berry, the Attack of Skwovet rose!");
+        MESSAGE("Using LIECHI BERRY, the ATTACK of SKWOVET rose!");
     }
 }
 
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks fails if the user's berry is removed before the
         TURN { MOVE(opponent, MOVE_KNOCK_OFF); MOVE(player, MOVE_STUFF_CHEEKS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
-        MESSAGE("Skwovet used Stuff Cheeks!");
+        MESSAGE("SKWOVET used STUFF CHEEKS!");
         MESSAGE("But it failed!");
     }
 }

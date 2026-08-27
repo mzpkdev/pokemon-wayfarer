@@ -61,9 +61,9 @@ SINGLE_BATTLE_TEST("Eject Button will not activate under Substitute")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        MESSAGE("The opposing Raichu put in a substitute!");
+        MESSAGE("The opposing RAICHU put in a substitute!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        MESSAGE("The substitute took damage for the opposing Raichu!");
+        MESSAGE("The substitute took damage for the opposing RAICHU!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             MESSAGE("The opposing Raichu is switched out with the Eject Button!");
@@ -85,8 +85,8 @@ SINGLE_BATTLE_TEST("Eject Button is not blocked by trapping abilities or moves")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
+        MESSAGE("2 sent out WOBBUFFET!");
     }
 }
 
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after given to player by Picke
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Regieleki's Eject Button!");
+        MESSAGE("The opposing SNEASEL stole REGIELEKI's EJECT BUTTON!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
@@ -144,7 +144,7 @@ SINGLE_BATTLE_TEST("Eject Button has no chance to activate after Dragon Tail")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
-        MESSAGE("The opposing Chansey was dragged out!");
+        MESSAGE("The opposing CHANSEY was dragged out!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             MESSAGE("The opposing Chansey is switched out with the Eject Button!");
@@ -166,7 +166,7 @@ SINGLE_BATTLE_TEST("Eject Button prevents Volt Switch / U-Turn from activating")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, player);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
     }
 }
 
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Eject Button is activated before Emergency Exit")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Golisopod is switched out with the Eject Button!");
+        MESSAGE("The opposing GOLISOPOD is switched out with the EJECT BUTTON!");
     }
 }
 
@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Eject Button is not triggered after High Jump Kick crash dam
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
-        MESSAGE("The opposing Wobbuffet kept going and crashed!");
+        MESSAGE("The opposing WOBBUFFET kept going and crashed!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
@@ -223,9 +223,9 @@ DOUBLE_BATTLE_TEST("Eject Button activation will not trigger an attack from the 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAKE_IT_RAIN, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        MESSAGE("Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("WOBBUFFET is switched out with the EJECT BUTTON!");
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
             MESSAGE("Wobbuffet is switched out with the Eject Pack!");

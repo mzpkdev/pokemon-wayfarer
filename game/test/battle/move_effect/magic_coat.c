@@ -21,14 +21,14 @@ SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a m
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_SPORE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("Zigzagoon bounced the Spore back!");
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("ZIGZAGOON bounced the SPORE back!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("Zigzagoon bounced the Spore back!");
+        MESSAGE("ZIGZAGOON bounced the SPORE back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
+        MESSAGE("The opposing ZIGZAGOON fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
     }
 }
@@ -62,7 +62,7 @@ DOUBLE_BATTLE_TEST("Magic Coat fails when the only slower battler is a fainted a
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);
@@ -117,8 +117,8 @@ SINGLE_BATTLE_TEST("Magic Coat reflection doesn't activate Protean/Libero")
         ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
         ONE_OF {
-            MESSAGE("Greninja bounced the Spikes back!");
-            MESSAGE("Cinderace bounced the Spikes back!");
+            MESSAGE("GRENINJA bounced the SPIKES back!");
+            MESSAGE("CINDERACE bounced the SPIKES back!");
         }
         NOT ABILITY_POPUP(player, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);

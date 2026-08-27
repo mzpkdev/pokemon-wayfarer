@@ -25,7 +25,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect the user fr
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, opponentRight);
         ABILITY_POPUP(opponentLeft, ability);
-        MESSAGE("Wobbuffet cannot use Quick Attack!");
+        MESSAGE("WOBBUFFET cannot use QUICK ATTACK!");
     }
 }
 
@@ -48,7 +48,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect users partn
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, opponentRight);
         ABILITY_POPUP(opponentLeft, ability);
-        MESSAGE("Wobbuffet cannot use Quick Attack!");
+        MESSAGE("WOBBUFFET cannot use QUICK ATTACK!");
     }
 }
 
@@ -187,6 +187,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block a move
     PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMoveZEffect(MOVE_BABY_DOLL_EYES) == Z_EFFECT_DEF_UP_1);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FAIRIUM_Z); }
         OPPONENT(species) { Ability(ability); }
@@ -245,10 +246,10 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority, which is consider
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerRight);
         HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
         ABILITY_POPUP(opponentLeft, ability);
-        MESSAGE("Wobbuffet cannot use Quick Attack!");
+        MESSAGE("WOBBUFFET cannot use QUICK ATTACK!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, playerRight);
     }
 }

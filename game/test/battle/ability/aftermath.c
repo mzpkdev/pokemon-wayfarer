@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Aftermath ability pop-up will be displayed correctly: player
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
         ABILITY_POPUP(opponent, ABILITY_AFTERMATH);
-        MESSAGE("The opposing Voltorb fainted!");
+        MESSAGE("The opposing VOLTORB fainted!");
     }
 }
 
@@ -45,6 +45,6 @@ SINGLE_BATTLE_TEST("Aftermath ability pop-up will be displayed correctly: oppone
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, opponent);
         ABILITY_POPUP(player, ABILITY_AFTERMATH);
-        MESSAGE("Voltorb fainted!");
+        MESSAGE("VOLTORB fainted!");
     }
 }

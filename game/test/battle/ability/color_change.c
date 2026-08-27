@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Color Change changes the type of a Pokemon being hit by a mo
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYWAVE, player);
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Psychic type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the PSYCHIC type!");
     }
 }
 
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Color Change changes the user to Electric type if hit by a m
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHO_CUT, player);
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Electric type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the ELECTRIC type!");
     }
 }
 
@@ -94,9 +94,9 @@ SINGLE_BATTLE_TEST("Color Change changes the type when a Pokemon is hit by Futur
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
-        MESSAGE("The opposing Kecleon took the Future Sight attack!");
+        MESSAGE("The opposing KECLEON took the FUTURE SIGHT attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Psychic type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the PSYCHIC type!");
     }
 }
 
@@ -111,9 +111,9 @@ SINGLE_BATTLE_TEST("Color Change changes the type when a Pokemon is hit by Doom 
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOOM_DESIRE, player);
-        MESSAGE("The opposing Kecleon took the Doom Desire attack!");
+        MESSAGE("The opposing KECLEON took the DOOM DESIRE attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Steel type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the STEEL type!");
     }
 }
 
@@ -128,9 +128,9 @@ SINGLE_BATTLE_TEST("Color Change changes the type to Electric when a Pokemon is 
         TURN { MOVE(opponent, MOVE_ELECTRIFY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
-        MESSAGE("The opposing Kecleon took the Future Sight attack!");
+        MESSAGE("The opposing KECLEON took the FUTURE SIGHT attack!");
         ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);
-        MESSAGE("The opposing Kecleon's Color Change made it the Electric type!");
+        MESSAGE("The opposing KECLEON's COLOR CHANGE made it the ELECTRIC type!");
     }
 }
 
@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("Color Change does not change the type to Normal when a Pokem
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOAK, player);
-        MESSAGE("The opposing Kecleon transformed into the Water type!");
+        MESSAGE("The opposing KECLEON transformed into the WATER type!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_COLOR_CHANGE);

@@ -58,7 +58,7 @@ AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_CHOSEN can control AI move
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -104,7 +104,7 @@ AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE correctly controls AI move selection when
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -145,7 +145,7 @@ AI_SINGLE_BATTLE_TEST("TIE_BREAK_SCORE with SCORE_TIE_RANDOM randomizes AI move 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_ICE_BEAM); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

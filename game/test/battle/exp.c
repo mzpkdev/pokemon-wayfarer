@@ -17,7 +17,7 @@ WILD_BATTLE_TEST("Pokemon gain experience after catching a Pokemon (Gen6+)")
     } WHEN {
         TURN { USE_ITEM(player, ITEM_ULTRA_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
     } SCENE {
-        MESSAGE("You used Ultra Ball!");
+        MESSAGE("You used ULTRA BALL!");
         ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW, player);
         if (level != MAX_LEVEL && config >= GEN_6) {
             EXPERIENCE_BAR(player);
@@ -40,8 +40,8 @@ WILD_BATTLE_TEST("Higher leveled Pokemon give more exp", s32 exp)
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("The wild Caterpie fainted!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("The wild CATERPIE fainted!");
         EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
     } FINALLY {
         EXPECT_GT(results[1].exp, results[0].exp);
@@ -61,8 +61,8 @@ WILD_BATTLE_TEST("Lucky Egg boosts gained exp points by 50%", s32 exp)
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("The wild Caterpie fainted!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("The wild CATERPIE fainted!");
         EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
     } FINALLY {
         EXPECT_MUL_EQ(results[1].exp, Q_4_12(1.5), results[0].exp);

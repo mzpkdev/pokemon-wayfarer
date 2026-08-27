@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Tera Shift transforms Terapagos into its Terastal form on sw
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TERA_SHIFT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Terapagos transformed!");
+        MESSAGE("TERAPAGOS transformed!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_TERAPAGOS_TERASTAL);
     }
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Tera Shift can't be suppressed by Neutralizing Gas")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TERA_SHIFT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Terapagos transformed!");
+        MESSAGE("TERAPAGOS transformed!");
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
     } THEN {
         EXPECT_EQ(player->species, SPECIES_TERAPAGOS_TERASTAL);

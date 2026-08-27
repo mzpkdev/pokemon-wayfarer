@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Tera Blast changes from Normal-type to the user's Tera Type"
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         MESSAGE("It's super effective!");
     }
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Tera Blast has correct effectiveness for every Tera Type")
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
     } SCENE {
         if (species == SPECIES_GASTLY && type == TYPE_NORMAL)
-            MESSAGE("It doesn't affect the opposing Gastly…");
+            MESSAGE("It doesn't affect the opposing GASTLY…");
         else
             MESSAGE("It's super effective!");
     }
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Tera Blast becomes a physical move if the user is Terastalli
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: tera); }
     } SCENE {
-        MESSAGE("Wobbuffet used Tera Blast!");
+        MESSAGE("WOBBUFFET used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -180,9 +180,9 @@ SINGLE_BATTLE_TEST("Flying-type Tera Blast does not have its priority boosted by
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_QUICK_ATTACK); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Quick Attack!");
+        MESSAGE("The opposing WOBBUFFET used QUICK ATTACK!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, opponent);
-        MESSAGE("Talonflame used Tera Blast!");
+        MESSAGE("TALONFLAME used TERA BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
     }
 }

@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by one stage when hit 
         HP_BAR(opponent);
         if (move == MOVE_SCRATCH) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("Using Kee Berry, the Defense of the opposing Wobbuffet rose!");
+            MESSAGE("Using KEE BERRY, the DEFENSE of the opposing WOBBUFFET rose!");
         } else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by two stages with Rip
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("Using Kee Berry, the Defense of the opposing Applin sharply rose!");
+        MESSAGE("Using KEE BERRY, the DEFENSE of the opposing APPLIN sharply rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
     }

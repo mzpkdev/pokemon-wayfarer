@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+)")
         TURN { MOVE(player, MOVE_AERIAL_ACE); }
     } SCENE {
         if (hp == 100 || config <= GEN_6) {
-            MESSAGE("Talonflame used Aerial Ace!");
-            MESSAGE("The opposing Wobbuffet used Celebrate!");
+            MESSAGE("TALONFLAME used AERIAL ACE!");
+            MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         }
         else {
             MESSAGE("The opposing Wobbuffet used Celebrate!");
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves")
         TURN { MOVE(player, move); }
     } SCENE {
         if (move == MOVE_AERIAL_ACE) {
-            MESSAGE("Talonflame used Aerial Ace!");
-            MESSAGE("The opposing Wobbuffet used Celebrate!");
+            MESSAGE("TALONFLAME used AERIAL ACE!");
+            MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         }
         else {
             MESSAGE("The opposing Wobbuffet used Celebrate!");
@@ -72,9 +72,9 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
     } WHEN {
         TURN { MOVE(opponent, move); }
     } SCENE {
-            MESSAGE("Wobbuffet used Celebrate!");
+            MESSAGE("WOBBUFFET used CELEBRATE!");
         if (move == MOVE_NATURAL_GIFT) {
-            MESSAGE("The opposing Talonflame used Natural Gift!");
+            MESSAGE("The opposing TALONFLAME used NATURAL GIFT!");
         }
         else if (move == MOVE_JUDGMENT) {
             MESSAGE("The opposing Talonflame used Judgment!");

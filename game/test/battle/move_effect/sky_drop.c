@@ -64,7 +64,7 @@ DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SKY_DROP, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRAVITY, playerRight);
-        MESSAGE("Wobbuffet fell from the sky due to the gravity!");
+        MESSAGE("WOBBUFFET fell from the sky due to the gravity!");
     }
 }
 

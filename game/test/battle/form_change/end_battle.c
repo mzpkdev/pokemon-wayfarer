@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Meloetta returns to Aria form upon battle end after using Re
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
         HP_BAR(opponent);
-        MESSAGE("Meloetta transformed!");
+        MESSAGE("MELOETTA transformed!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_MELOETTA_ARIA);
     }
@@ -133,10 +133,10 @@ SINGLE_BATTLE_TEST("Battle Bond Greninja returns to base form upon battle end af
         TURN { MOVE(player, MOVE_WATER_GUN); SEND_OUT(opponent, 1); }
     } SCENE {
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         ABILITY_POPUP(player, ABILITY_BATTLE_BOND);
-        MESSAGE("Greninja became fully charged due to its bond with its trainer!");
-        MESSAGE("Greninja became Ash-Greninja!");
+        MESSAGE("GRENINJA became fully charged due to its bond with its trainer!");
+        MESSAGE("GRENINJA became Ash-Greninja!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_GRENINJA_BATTLE_BOND);
     }
@@ -235,7 +235,7 @@ SINGLE_BATTLE_TEST("Eiscue Noice reverts to Ice Form upon battle end after being
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_EISCUE_ICE);
     }
@@ -249,8 +249,8 @@ SINGLE_BATTLE_TEST("Morpeko Hangry reverts to Full Belly Form upon battle end af
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Morpeko used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("MORPEKO used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_MORPEKO_FULL_BELLY);

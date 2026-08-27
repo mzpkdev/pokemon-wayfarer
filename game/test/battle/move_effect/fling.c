@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         if (item != ITEM_NONE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Fling fails if Pokémon is under the effects of Embargo or M
         TURN { MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         if (move == MOVE_CELEBRATE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
@@ -123,13 +123,13 @@ SINGLE_BATTLE_TEST("Fling's thrown item can be regained with Recycle")
         TURN { MOVE(player, MOVE_RECYCLE); }
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         MESSAGE("Wobbuffet used Recycle!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECYCLE, player);
         MESSAGE("Wobbuffet found one Razor Claw!");
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
     }
@@ -150,10 +150,10 @@ SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SELF_DESTRUCT, opponent);
         HP_BAR(player);
         MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("But it failed!");
 
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
@@ -172,10 +172,10 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Protect!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("The opposing Wobbuffet protected itself!");
 
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT_EQ(player->item, ITEM_NONE);
@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing WOBBUFFET's TAUNT wore off!");
     }
 }
 
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if the user is asleep/frozen/
             MESSAGE("Wobbuffet is fast asleep.");
             MESSAGE("Wobbuffet woke up!");
         }
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         if (item != ITEM_NONE) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
             HP_BAR(opponent);
@@ -267,7 +267,7 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         switch (item)
@@ -325,7 +325,7 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         switch (item)
@@ -424,12 +424,12 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
+        MESSAGE("WOBBUFFET used FLING!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
         if (effect == HOLD_EFFECT_RESTORE_HP) {
             if (item == ITEM_ORAN_BERRY) {
-                MESSAGE("The opposing Wobbuffet restored its health using its Oran Berry!");
+                MESSAGE("The opposing WOBBUFFET restored its health using its ORAN BERRY!");
             } else if (item == ITEM_SITRUS_BERRY) {
                 MESSAGE("The opposing Wobbuffet restored its health using its Sitrus Berry!");
             } else {
@@ -588,7 +588,7 @@ SINGLE_BATTLE_TEST("Fling - Mental Herb effect should not remove the target's he
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing WOBBUFFET's TAUNT wore off!");
     } THEN {
         EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);
     }
@@ -608,7 +608,7 @@ SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's hel
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet returned its stats to normal using its White Herb!");
+        MESSAGE("The opposing WOBBUFFET returned its stats to normal using its WHITE HERB!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);

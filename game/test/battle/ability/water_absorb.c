@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Water Absorb heals 25% when hit by water type moves")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("POLIWAG restored HP using its WATER ABSORB!");
     }
 }
 
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Water Absorb activates on status moves")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("POLIWAG restored HP using its WATER ABSORB!");
     }
 }
 
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Water Absorb is only triggered once on multi strike moves")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("POLIWAG restored HP using its WATER ABSORB!");
     }
 }
 
@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("POLIWAG restored HP using its WATER ABSORB!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);

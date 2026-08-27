@@ -27,8 +27,8 @@ SINGLE_BATTLE_TEST("Work Up raises Attack and Sp. Attack by 1 stage each", s16 d
         if (raiseStats) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_WORK_UP, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Wobbuffet's Attack rose!");
-            MESSAGE("Wobbuffet's Sp. Atk rose!");
+            MESSAGE("WOBBUFFET's ATTACK rose!");
+            MESSAGE("WOBBUFFET's SP. ATK rose!");
         }
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);

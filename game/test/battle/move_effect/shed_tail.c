@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute at the cost of 1/2 users maxi
         maxHP = GetMonData(&gPlayerParty[0], MON_DATA_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
         HP_BAR(player, captureDamage: &costHP);
-        MESSAGE("Wobbuffet shed its tail to create a decoy!");
+        MESSAGE("WOBBUFFET shed its tail to create a decoy!");
         SEND_IN_MESSAGE("Wynaut");
     }THEN {
         EXPECT_EQ(maxHP / 2, costHP);
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Shed Tail fails if there are no usable Pokémon left")
     } WHEN {
         TURN { MOVE(player, MOVE_SHED_TAIL); }
     } SCENE {
-        MESSAGE("Wobbuffet used Shed Tail!");
+        MESSAGE("WOBBUFFET used SHED TAIL!");
         MESSAGE("But it failed!");
     }
 }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on 
         TURN { MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
-        MESSAGE("Wobbuffet shed its tail to create a decoy!");
+        MESSAGE("WOBBUFFET shed its tail to create a decoy!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
         if (hp == 160)
-            MESSAGE("Bulbasaur's substitute faded!");
+            MESSAGE("BULBASAUR's substitute faded!");
         else
             NOT MESSAGE("Bulbasaur's substitute faded!");
     }

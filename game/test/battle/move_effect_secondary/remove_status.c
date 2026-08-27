@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed pokemons behind subst
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SMELLING_SALTS, player);
         if (ability == ABILITY_INNER_FOCUS)
         {
-            MESSAGE("The substitute took damage for the opposing Seismitoad!");
+            MESSAGE("The substitute took damage for the opposing SEISMITOAD!");
             NONE_OF {
                 MESSAGE("The opposing Seismitoad's substitute faded!"); // Smelling Salts does 86 damage, the sub has 122 HP, if hitting a sub it shouldn't get boosted damage.
                 MESSAGE("The opposing Seismitoad was cured of paralysis!");
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Smelling Salts does not cure paralyzed pokemons behind subst
         }
         else
         {
-            MESSAGE("The opposing Seismitoad was cured of paralysis!");
+            MESSAGE("The opposing SEISMITOAD was cured of paralysis!");
             STATUS_ICON(opponent, none: TRUE);
         }
     }
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Smelling Salts get incread power vs. paralyzed targets")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SMELLING_SALTS, player);
         if (status1 == STATUS1_PARALYSIS)
         {
-            MESSAGE("The opposing Lotad fainted!");
+            MESSAGE("The opposing LOTAD fainted!");
         }
         else
         {
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Wake-Up Slap does not cure paralyzed pokemons behind substit
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WAKE_UP_SLAP, player);
         if (ability == ABILITY_INNER_FOCUS)
         {
-            MESSAGE("The substitute took damage for the opposing Seismitoad!");
+            MESSAGE("The substitute took damage for the opposing SEISMITOAD!");
             NONE_OF {
                 MESSAGE("The opposing Seismitoad's substitute faded!"); // Smelling Salts does 86 damage, the sub has 122 HP, if hitting a sub it shouldn't get boosted damage.
                 MESSAGE("The opposing Seismitoad woke up!");
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Wake-Up Slap does not cure paralyzed pokemons behind substit
         }
         else
         {
-            MESSAGE("The opposing Seismitoad woke up!");
+            MESSAGE("The opposing SEISMITOAD woke up!");
             STATUS_ICON(opponent, none: TRUE);
         }
     }
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Wake-Up Slap gets increased power against sleeping targets")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WAKE_UP_SLAP, player);
         if (status1 == STATUS1_SLEEP)
         {
-            MESSAGE("The opposing Lotad fainted!");
+            MESSAGE("The opposing LOTAD fainted!");
         }
         else
         {

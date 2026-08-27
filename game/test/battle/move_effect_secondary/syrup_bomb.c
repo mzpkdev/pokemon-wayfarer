@@ -20,16 +20,16 @@ SINGLE_BATTLE_TEST("Syrup Bomb covers the foe in sticky syrup for 3 turns")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
+        MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Wobbuffet's Speed fell!");
+            MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         }
     }
 }
@@ -45,9 +45,9 @@ SINGLE_BATTLE_TEST("Sticky Syrup isn't applied again if the target is already co
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
+        MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
         NOT MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof")
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_BULLETPROOF);
-        MESSAGE("The opposing Chespin's Bulletproof blocks Syrup Bomb!");
+        MESSAGE("The opposing CHESPIN's BULLETPROOF blocks SYRUP BOMB!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
             HP_BAR(opponent);
@@ -133,8 +133,8 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Amulet")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
-        MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
+        MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
+        MESSAGE("The effects of the CLEAR AMULET held by the opposing WOBBUFFET prevents its stats from being lowered!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
             MESSAGE("The opposing Wobbuffet's Speed fell!");
@@ -161,9 +161,9 @@ SINGLE_BATTLE_TEST("Sticky syrup will not decrease speed further then minus six"
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
+        MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed won't go any lower!");
+        MESSAGE("The opposing WOBBUFFET's SPEED won't go any lower!");
         NONE_OF {
             MESSAGE("The opposing Wobbuffet's Speed fell!");
         }
@@ -182,9 +182,9 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user switches out")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
+        MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
             MESSAGE("The opposing Wobbuffet's Speed fell!");
@@ -206,10 +206,10 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
+        MESSAGE("The opposing WOBBUFFET got covered in sticky candy syrup!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         SEND_IN_MESSAGE("Wynaut");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);

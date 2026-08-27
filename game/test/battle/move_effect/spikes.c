@@ -30,9 +30,9 @@ SINGLE_BATTLE_TEST("Spikes damage on switch in")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
             MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         }
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP / divisor);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
     }
 }
 
@@ -56,11 +56,11 @@ SINGLE_BATTLE_TEST("Spikes fails after 3 layers")
         MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
         MESSAGE("Spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("Wobbuffet used Spikes!");
+        MESSAGE("WOBBUFFET used SPIKES!");
         MESSAGE("But it failed!");
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP / 4);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
     }
 }
 
@@ -77,12 +77,12 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
     } SCENE {
         s32 maxHP0 = GetMonData(&OPPONENT_PARTY[0], MON_DATA_MAX_HP);
         s32 maxHP1 = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
-        MESSAGE("2 sent out Wynaut!");
+        MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP1 / 8);
-        MESSAGE("The opposing Wynaut was hurt by the spikes!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("The opposing WYNAUT was hurt by the spikes!");
+        MESSAGE("2 sent out WOBBUFFET!");
         HP_BAR(opponent, damage: maxHP0 / 8);
-        MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+        MESSAGE("The opposing WOBBUFFET was hurt by the spikes!");
     }
 }
 

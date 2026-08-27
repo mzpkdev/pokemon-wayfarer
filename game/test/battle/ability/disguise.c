@@ -64,8 +64,8 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and c
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
-        MESSAGE("Mimikyu became confused!");
-        MESSAGE("Mimikyu is confused!");
+        MESSAGE("MIMIKYU became confused!");
+        MESSAGE("MIMIKYU is confused!");
         MESSAGE("It hurt itself in its confusion!");
         NOT HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_DISGUISE);
@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
         HP_BAR(player);
-        MESSAGE("Pointed stones dug into Mimikyu!");
+        MESSAGE("Pointed stones dug into MIMIKYU!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }
@@ -154,7 +154,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         HP_BAR(player);
-        MESSAGE("Mimikyu was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        MESSAGE("MIMIKYU was hurt by the opposing WOBBUFFET's ROCKY HELMET!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without break
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         HP_BAR(player);
-        MESSAGE("Mimikyu was hurt by the opposing Carvanha's Rough Skin!");
+        MESSAGE("MIMIKYU was hurt by the opposing CARVANHA's ROUGH SKIN!");
     } THEN {
         EXPECT_EQ(player->species, species);
     }
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Ba
         TURN { MOVE(opponent, MOVE_SHADOW_CLAW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
-        MESSAGE("Wobbuffet's Ability was suppressed!");
+        MESSAGE("WOBBUFFET's Ability was suppressed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHADOW_CLAW, opponent);
         ABILITY_POPUP(player, ABILITY_DISGUISE);

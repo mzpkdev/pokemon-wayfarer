@@ -24,7 +24,6 @@ ASSUMPTIONS
     ASSUME(GetMoveType(MOVE_ICE_BEAM) == TYPE_ICE);
     ASSUME(GetMoveType(MOVE_DRAGON_BREATH) == TYPE_DRAGON);
     ASSUME(GetMoveType(MOVE_BITE) == TYPE_DARK);
-    ASSUME(GetMoveType(MOVE_DISARMING_VOICE) == TYPE_FAIRY);
 }
 
 SINGLE_BATTLE_TEST("Roost fails when user is at full HP")
@@ -35,7 +34,7 @@ SINGLE_BATTLE_TEST("Roost fails when user is at full HP")
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); }
     } SCENE {
-        MESSAGE("Wobbuffet's HP is full!");
+        MESSAGE("WOBBUFFET's HP is full!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
             HP_BAR(player);
@@ -52,8 +51,8 @@ SINGLE_BATTLE_TEST("Roost fails if the user is under the effects of Heal Block")
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); MOVE(player, MOVE_ROOST); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
-        MESSAGE("Wobbuffet was prevented from healing!"); // Message when Heal Block is applied
-        MESSAGE("Wobbuffet was prevented from healing!"); // Message when trying to heal under Heal Block
+        MESSAGE("WOBBUFFET was prevented from healing!"); // Message when Heal Block is applied
+        MESSAGE("WOBBUFFET was prevented from healing!"); // Message when trying to heal under Heal Block
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
             HP_BAR(player);
@@ -131,6 +130,8 @@ SINGLE_BATTLE_TEST("Roost, if used by a Flying/Flying type, treats the user as a
     PARAMETRIZE { damagingMove = MOVE_DISARMING_VOICE; }
 
     GIVEN {
+        if (damagingMove == MOVE_DISARMING_VOICE)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 0) == TYPE_FLYING);
         ASSUME(GetSpeciesType(SPECIES_TORNADUS, 1) == TYPE_FLYING);
         PLAYER(SPECIES_TORNADUS) { HP(50); MaxHP(100); }
@@ -138,9 +139,9 @@ SINGLE_BATTLE_TEST("Roost, if used by a Flying/Flying type, treats the user as a
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, damagingMove); }
     } SCENE {
-        MESSAGE("Tornadus used Roost!");
+        MESSAGE("TORNADUS used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Tornadus's HP was restored.");
+        MESSAGE("TORNADUS's HP was restored.");
 
         if (B_ROOST_PURE_FLYING >= GEN_5) // >= Gen. 5, Pokemon becomes pure Normal-type
         {
@@ -199,6 +200,8 @@ SINGLE_BATTLE_TEST("Roost, if used by a Mystery/Flying type, treats the user as 
     PARAMETRIZE { damagingMove = MOVE_DISARMING_VOICE; }
 
     GIVEN {
+        if (damagingMove == MOVE_DISARMING_VOICE)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetSpeciesType(SPECIES_MOLTRES, 0) == TYPE_FIRE);
         ASSUME(GetSpeciesType(SPECIES_MOLTRES, 1) == TYPE_FLYING);
         PLAYER(SPECIES_MOLTRES) { HP(300); MaxHP(400); }
@@ -358,10 +361,10 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
-        MESSAGE("Flygon used Roost!");
+        MESSAGE("FLYGON used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Flygon's HP was restored.");
-        MESSAGE("The opposing Wobbuffet used Earthquake!");
+        MESSAGE("FLYGON's HP was restored.");
+        MESSAGE("The opposing WOBBUFFET used EARTHQUAKE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
@@ -377,10 +380,10 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Roost!");
+        MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Wobbuffet's HP was restored.");
-        MESSAGE("The opposing Wobbuffet used Earthquake!");
+        MESSAGE("WOBBUFFET's HP was restored.");
+        MESSAGE("The opposing WOBBUFFET used EARTHQUAKE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
             HP_BAR(player);
@@ -402,7 +405,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Magnet Rise
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGNET_RISE, player);
         MESSAGE("Wobbuffet levitated with electromagnetism!");
         // Turn 2
-        MESSAGE("Wobbuffet used Roost!");
+        MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
@@ -427,7 +430,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEKINESIS, opponent);
         MESSAGE("Wobbuffet was hurled into the air!");
         // Turn 2
-        MESSAGE("Wobbuffet used Roost!");
+        MESSAGE("WOBBUFFET used ROOST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Wobbuffet's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");

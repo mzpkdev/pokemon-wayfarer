@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Solar Beam does half damage if Sandstorm is up (Gen3+)", s16
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
         TURN { SKIP_TURN(player); }
     } SCENE {
-        MESSAGE("Hippowdon used Solar Beam!");
+        MESSAGE("HIPPOWDON used SOLAR BEAM!");
         MESSAGE("Hippowdon absorbed light!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         MESSAGE("Hippowdon used Solar Beam!");

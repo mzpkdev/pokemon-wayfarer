@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Protect: Protect, Detect, Spiky Shield, Baneful Bunker and B
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, protectMove, opponent);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, usedMove, player);
         MESSAGE("The opposing Wobbuffet protected itself!");
         if (usedMove == MOVE_LEER) {
@@ -91,7 +91,7 @@ SINGLE_BATTLE_TEST("Protect: King's Shield, Silk Trap and Obstruct protect from 
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, protectMove, opponent);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         if (usedMove == MOVE_LEER) {
             ANIMATION(ANIM_TYPE_MOVE, usedMove, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -182,7 +182,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKY_SHIELD, opponent);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, usedMove, player);
         MESSAGE("The opposing Wobbuffet protected itself!");
         NOT HP_BAR(opponent);
@@ -239,7 +239,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making co
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, opponent);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, usedMove, player);
         MESSAGE("The opposing Wobbuffet protected itself!");
         if (usedMove == MOVE_SCRATCH) {
@@ -317,7 +317,7 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making con
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, opponent);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, usedMove, player);
         MESSAGE("The opposing Wobbuffet protected itself!");
         if (usedMove == MOVE_SCRATCH) {
@@ -442,8 +442,8 @@ SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fa
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        MESSAGE("The opposing Beautifly protected itself!");
-        MESSAGE("Rapidash used Arm Thrust!");
+        MESSAGE("The opposing BEAUTIFLY protected itself!");
+        MESSAGE("RAPIDASH used ARM THRUST!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ARM_THRUST, player);
         MESSAGE("The opposing Beautifly protected itself!");
         // Each effect happens only once.
@@ -497,7 +497,7 @@ DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wynaut fainted!");
+        MESSAGE("WYNAUT fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerLeft);

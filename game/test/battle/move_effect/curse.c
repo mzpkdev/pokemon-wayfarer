@@ -16,10 +16,10 @@ SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when u
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Speed fell!");
+        MESSAGE("WOBBUFFET's SPEED fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Wobbuffet's Attack rose!");
-        MESSAGE("Wobbuffet's Defense rose!");
+        MESSAGE("WOBBUFFET's ATTACK rose!");
+        MESSAGE("WOBBUFFET's DEFENSE rose!");
     }
 }
 

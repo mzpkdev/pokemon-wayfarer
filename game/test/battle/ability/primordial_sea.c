@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves")
         TURN { MOVE(opponent, MOVE_EMBER); }
         TURN { MOVE(opponent, MOVE_EMBER); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Ember!");
+        MESSAGE("The opposing WOBBUFFET used EMBER!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("The Fire-type attack fizzled out in the heavy rain!");
         NOT HP_BAR(player);

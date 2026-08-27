@@ -17,8 +17,8 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Walking Wake's Protosynthesis!");
-        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("The harsh sunlight activated WALKING WAKE's Protosynthesis!");
+        MESSAGE("WALKING WAKE's SP. ATK was heightened!");
     }
 }
 
@@ -69,8 +69,8 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Walking Wake's Protosynthesis!");
-        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("The harsh sunlight activated WALKING WAKE's Protosynthesis!");
+        MESSAGE("WALKING WAKE's SP. ATK was heightened!");
         NONE_OF {
             for (turns = 0; turns < 4; turns++) {
                 ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
@@ -80,8 +80,8 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Walking Wake's Protosynthesis!");
-        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("The harsh sunlight activated WALKING WAKE's Protosynthesis!");
+        MESSAGE("WALKING WAKE's SP. ATK was heightened!");
     }
 }
 
@@ -96,8 +96,8 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Roaring Moon's Protosynthesis!");
-        MESSAGE("Roaring Moon's Attack was heightened!");
+        MESSAGE("The harsh sunlight activated ROARING MOON's Protosynthesis!");
+        MESSAGE("ROARING MOON's ATTACK was heightened!");
     }
 }
 
@@ -146,8 +146,8 @@ SINGLE_BATTLE_TEST("Protosynthesis uses Wonder Room swapped defenses when choosi
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WONDER_ROOM, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Roaring Moon's Protosynthesis!");
-        MESSAGE("Roaring Moon's Sp. Def was heightened!");
+        MESSAGE("The harsh sunlight activated ROARING MOON's Protosynthesis!");
+        MESSAGE("ROARING MOON's SP. DEF was heightened!");
     }
 }
 
@@ -252,8 +252,8 @@ SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Flutter Mane's Protosynthesis!");
-        MESSAGE("Flutter Mane's Sp. Atk was heightened!");
+        MESSAGE("The harsh sunlight activated FLUTTER MANE's Protosynthesis!");
+        MESSAGE("FLUTTER MANE's SP. ATK was heightened!");
     }
 }
 
@@ -296,8 +296,8 @@ SINGLE_BATTLE_TEST("Protosynthesis recalculates the boosted stat after Neutraliz
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponent);
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("The harsh sunlight activated Flutter Mane's Protosynthesis!");
-        MESSAGE("Flutter Mane's Sp. Atk was heightened!");
+        MESSAGE("The harsh sunlight activated FLUTTER MANE's Protosynthesis!");
+        MESSAGE("FLUTTER MANE's SP. ATK was heightened!");
     }
 }
 

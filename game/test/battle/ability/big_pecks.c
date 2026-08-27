@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Big Pecks prevents Defense stage reduction from moves")
         TURN { MOVE(player, MOVE_LEER); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
-        MESSAGE("The opposing Pidgey's Big Pecks prevents Defense loss!");
+        MESSAGE("The opposing PIDGEY's BIG PECKS prevents DEFENSE loss!");
     }
 }
 
@@ -25,9 +25,9 @@ SINGLE_BATTLE_TEST("Big Pecks is ignored by Mold Breaker")
         TURN { MOVE(player, MOVE_LEER); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_MOLD_BREAKER);
-        MESSAGE("Pinsir breaks the mold!");
+        MESSAGE("PINSIR breaks the mold!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, player);
-        MESSAGE("The opposing Pidgey's Defense fell!");
+        MESSAGE("The opposing PIDGEY's DEFENSE fell!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
             MESSAGE("The opposing Pidgey's Big Pecks prevents Defense loss!");
@@ -64,9 +64,9 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Topsy-Turvy")
         TURN { MOVE(opponent, MOVE_HARDEN); MOVE(player, MOVE_TOPSY_TURVY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, opponent);
-        MESSAGE("The opposing Pidgey's Defense rose!");
+        MESSAGE("The opposing PIDGEY's DEFENSE rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOPSY_TURVY, player);
-        MESSAGE("All stat changes on the opposing Pidgey were inverted!");
+        MESSAGE("All stat changes on the opposing PIDGEY were inverted!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
     }
@@ -85,8 +85,8 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Spectral Thief from resetting posi
         TURN { MOVE(opponent, MOVE_HARDEN); MOVE(player, MOVE_SPECTRAL_THIEF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, opponent);
-        MESSAGE("The opposing Pidgey's Defense rose!");
-        MESSAGE("Wobbuffet stole the target's boosted stats!");
+        MESSAGE("The opposing PIDGEY's DEFENSE rose!");
+        MESSAGE("WOBBUFFET stole the target's boosted stats!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent receiving negative Defense stage c
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
-        MESSAGE("2 sent out Pidgey!");
+        MESSAGE("2 sent out PIDGEY!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
     }

@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Psychic Noise is blocked by Soundproof")
         TURN { MOVE(player, MOVE_PSYCHIC_NOISE); MOVE(opponent, MOVE_RECOVER); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_SOUNDPROOF);
-        MESSAGE("The opposing Voltorb's Soundproof blocks Psychic Noise!");
+        MESSAGE("The opposing VOLTORB's SOUNDPROOF blocks PSYCHIC NOISE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
     }
 }
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Psychic Noise heal block effect is blocked by Aroma Veil")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_NOISE, player);
         ABILITY_POPUP(opponent, ABILITY_AROMA_VEIL);
-        MESSAGE("The opposing Milcery is protected by an aromatic veil!");
+        MESSAGE("The opposing MILCERY is protected by an aromatic veil!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponent);
     }
 }
@@ -67,7 +67,7 @@ DOUBLE_BATTLE_TEST("Psychic Noise heal block effect is blocked by partners Aroma
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_NOISE, playerLeft);
         ABILITY_POPUP(opponentRight, ABILITY_AROMA_VEIL);
-        MESSAGE("The opposing Wobbuffet is protected by an aromatic veil!");
+        MESSAGE("The opposing WOBBUFFET is protected by an aromatic veil!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, opponentLeft);
     }
 }

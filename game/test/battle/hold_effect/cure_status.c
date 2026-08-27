@@ -351,7 +351,7 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatil
         TURN { MOVE(opponent, MOVE_SWITCHEROO); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet's Lum Berry normalized its status!");
+        MESSAGE("WOBBUFFET's LUM BERRY normalized its status!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
         EXPECT(player->volatiles.confusionTurns == 0);

@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Captivate decreases the target's Sp. Attack if they're oppos
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CAPTIVATE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Nidoking's Sp. Atk harshly fell!");
+        MESSAGE("The opposing NIDOKING's SP. ATK harshly fell!");
     } THEN {
         EXPECT(opponent->statStages[STAT_SPATK] == DEFAULT_STAT_STAGE - 2);
     }
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Attract fails when used by a genderless Pokémon")
     } WHEN {
         TURN { MOVE(player, MOVE_ATTRACT); }
     } SCENE {
-        MESSAGE("Starmie used Attract!");
+        MESSAGE("STARMIE used ATTRACT!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT(!(opponent->volatiles.infatuation));
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Attract fails if both the user and the target are genderless
     } WHEN {
         TURN { MOVE(player, MOVE_ATTRACT); }
     } SCENE {
-        MESSAGE("Starmie used Attract!");
+        MESSAGE("STARMIE used ATTRACT!");
         MESSAGE("But it failed!");
     } THEN {
         EXPECT(!(opponent->volatiles.infatuation));

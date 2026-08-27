@@ -32,17 +32,17 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
         if (move != MOVE_SCRATCH) {
             ABILITY_POPUP(opponent, ABILITY_RATTLED);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Sudowoodo's Speed rose!");
+            MESSAGE("The opposing SUDOWOODO's SPEED rose!");
         }
-        MESSAGE("The opposing Sudowoodo used Celebrate!");
+        MESSAGE("The opposing SUDOWOODO used CELEBRATE!");
         // Sudowoodo is now faster
         if (move != MOVE_SCRATCH){
-            MESSAGE("The opposing Sudowoodo used Celebrate!");
+            MESSAGE("The opposing SUDOWOODO used CELEBRATE!");
             ANIMATION(ANIM_TYPE_MOVE, move, player);
             HP_BAR(opponent);
             ABILITY_POPUP(opponent, ABILITY_RATTLED);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Sudowoodo's Speed rose!");
+            MESSAGE("The opposing SUDOWOODO's SPEED rose!");
         }
         else {
             ANIMATION(ANIM_TYPE_MOVE, move, player);
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidat
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Gyarados's Intimidate cuts the opposing Sudowoodo's Attack!");
+        MESSAGE("GYARADOS's INTIMIDATE cuts the opposing SUDOWOODO's ATTACK!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_RATTLED);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
@@ -83,10 +83,10 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Gyarados's Intimidate cuts the opposing Sudowoodo's Attack!");
+        MESSAGE("GYARADOS's INTIMIDATE cuts the opposing SUDOWOODO's ATTACK!");
         ABILITY_POPUP(opponent, ABILITY_RATTLED);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Sudowoodo's Speed rose!");
+        MESSAGE("The opposing SUDOWOODO's SPEED rose!");
     }
 }
 

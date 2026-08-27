@@ -18,7 +18,7 @@ DOUBLE_BATTLE_TEST("Grim Neigh raises Sp. Attack by one stage after directly cau
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); SEND_OUT(opponentLeft, 2); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
-        MESSAGE("The opposing Glalie fainted!");
+        MESSAGE("The opposing GLALIE fainted!");
         MESSAGE("Snorunt fainted!");
         MESSAGE("The opposing Abra fainted!");
         ABILITY_POPUP(playerLeft, abilityPopUp);
@@ -53,8 +53,8 @@ DOUBLE_BATTLE_TEST("Grim Neigh does not trigger if Pokemon faint to indirect dam
         for (i = 0; i < 3; i++) {
             ONE_OF {
                 MESSAGE("Snorunt fainted!");
-                MESSAGE("The opposing Glalie fainted!");
-                MESSAGE("The opposing Abra fainted!");
+                MESSAGE("The opposing GLALIE fainted!");
+                MESSAGE("The opposing ABRA fainted!");
             }
             NONE_OF {
                 ABILITY_POPUP(playerLeft, abilityPopUp);

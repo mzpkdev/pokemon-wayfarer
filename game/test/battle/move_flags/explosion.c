@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint")
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -32,8 +32,8 @@ SINGLE_BATTLE_TEST("Explosion causes the user & the target to faint")
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
         HP_BAR(opponent, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it misses")
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it has no effect"
         TURN { MOVE(player, MOVE_EXPLOSION); }
     } SCENE {
         HP_BAR(player, hp: 0);
-        MESSAGE("It doesn't affect the opposing Gastly…");
+        MESSAGE("It doesn't affect the opposing GASTLY…");
         NOT HP_BAR(opponent);
         MESSAGE("Wobbuffet fainted!");
     }
@@ -84,7 +84,7 @@ DOUBLE_BATTLE_TEST("Explosion causes everyone to faint in a double battle")
         HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         MESSAGE("The opposing Abra fainted!");
         MESSAGE("Wynaut fainted!");
         MESSAGE("The opposing Kadabra fainted!");
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp")
             HP_BAR(player, hp: 0);
         }
         ABILITY_POPUP(opponent, ABILITY_DAMP);
-        MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Explosion!");
+        MESSAGE("The opposing GOLDUCK's DAMP prevents WOBBUFFET from using EXPLOSION!");
     }
 }
 

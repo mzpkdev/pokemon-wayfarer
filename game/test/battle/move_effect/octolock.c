@@ -10,9 +10,9 @@ SINGLE_BATTLE_TEST("Octolock decreases Defense and Sp. Def by at the end of the 
         TURN { MOVE(player, MOVE_OCTOLOCK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Wobbuffet can no longer escape because of Octolock!");
+        MESSAGE("The opposing WOBBUFFET can no longer escape because of Octolock!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Defense fell!");
+        MESSAGE("The opposing WOBBUFFET's DEFENSE fell!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Sp. Def fell!");
     }
@@ -77,12 +77,12 @@ SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks")
         TURN { MOVE(player, MOVE_OCTOLOCK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Pidgey can no longer escape because of Octolock!");
+        MESSAGE("The opposing PIDGEY can no longer escape because of Octolock!");
         NOT MESSAGE("The opposing Pidgey's Defense fell!");
         ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
-        MESSAGE("The opposing Pidgey's Big Pecks prevents Defense loss!");
+        MESSAGE("The opposing PIDGEY's BIG PECKS prevents DEFENSE loss!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Pidgey's Sp. Def fell!");
+        MESSAGE("The opposing PIDGEY's SP. DEF fell!");
     }
 }
 
@@ -96,8 +96,8 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Amulet")
         TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Wobbuffet can no longer escape because of Octolock!");
-        MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
+        MESSAGE("The opposing WOBBUFFET can no longer escape because of Octolock!");
+        MESSAGE("The effects of the CLEAR AMULET held by the opposing WOBBUFFET prevents its stats from being lowered!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("The opposing Wobbuffet's Defense fell!");
@@ -141,17 +141,17 @@ SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
         TURN { MOVE(player, MOVE_OCTOLOCK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Bisharp can no longer escape because of Octolock!");
+        MESSAGE("The opposing BISHARP can no longer escape because of Octolock!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Defense fell!");
+        MESSAGE("The opposing BISHARP's DEFENSE fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing BISHARP's ATTACK sharply rose!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Sp. Def fell!");
+        MESSAGE("The opposing BISHARP's SP. DEF fell!");
         ABILITY_POPUP(opponent, ABILITY_DEFIANT);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        MESSAGE("The opposing BISHARP's ATTACK sharply rose!");
     }
 }
 
@@ -166,9 +166,9 @@ SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
-        MESSAGE("The opposing Wobbuffet can no longer escape because of Octolock!");
+        MESSAGE("The opposing WOBBUFFET can no longer escape because of Octolock!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Defense fell!");
+        MESSAGE("The opposing WOBBUFFET's DEFENSE fell!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's Sp. Def fell!");
         NONE_OF {

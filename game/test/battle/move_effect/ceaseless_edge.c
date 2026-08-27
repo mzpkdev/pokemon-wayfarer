@@ -20,9 +20,9 @@ SINGLE_BATTLE_TEST("Ceaseless Edge sets up hazards after hitting the target")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, player);
         HP_BAR(opponent);
         MESSAGE("Spikes were scattered on the ground all around the opposing team!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("2 sent out WOBBUFFET!");
         HP_BAR(opponent, damage: maxHP / 8);
-        MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+        MESSAGE("The opposing WOBBUFFET was hurt by the spikes!");
     }
 }
 
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CEASELESS_EDGE, player);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        MESSAGE("WOBBUFFET was hurt by the opposing WOBBUFFET's ROCKY HELMET!");
         NOT MESSAGE("Spikes were scattered on the ground all around the opposing team!");
     }
 }

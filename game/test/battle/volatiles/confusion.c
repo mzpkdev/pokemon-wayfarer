@@ -21,8 +21,8 @@ SINGLE_BATTLE_TEST("Confusion adds a 50/33% chance to hit self with 40 power")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player, captureDamage: &damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
-        MESSAGE("The opposing Wobbuffet became confused!");
-        MESSAGE("The opposing Wobbuffet is confused!");
+        MESSAGE("The opposing WOBBUFFET became confused!");
+        MESSAGE("The opposing WOBBUFFET is confused!");
         MESSAGE("It hurt itself in its confusion!");
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Confusion damage activates Focus Sash")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, opponent);
         HP_BAR(player); // Confusion damage
-        MESSAGE("Wobbuffet hung on using its Focus Sash!");
+        MESSAGE("WOBBUFFET hung on using its FOCUS SASH!");
     }
 }
 

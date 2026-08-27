@@ -64,10 +64,10 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
         switch (move)
         {
             case MOVE_INFESTATION:
-                MESSAGE("The opposing Vivillon has been afflicted with an infestation by Wobbuffet!");
+                MESSAGE("The opposing VIVILLON has been afflicted with an infestation by WOBBUFFET!");
                 break;
             case MOVE_THOUSAND_ARROWS:
-                MESSAGE("The opposing Vivillon fell straight down!");
+                MESSAGE("The opposing VIVILLON fell straight down!");
                 break;
             case MOVE_JAW_LOCK:
                 MESSAGE("Neither Pokémon can run away!");
@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;
             case MOVE_METEOR_ASSAULT: // second turn
-                MESSAGE("Wobbuffet must recharge!");
+                MESSAGE("WOBBUFFET must recharge!");
                 break;
             default:
                 break;
@@ -140,7 +140,7 @@ DOUBLE_BATTLE_TEST("Shield Dust does or does not block Sparkling Aria depending 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLING_ARIA, playerLeft);
         if (moveToUse == MOVE_SCRATCH) {
-            MESSAGE("The opposing Vivillon's burn was cured!");
+            MESSAGE("The opposing VIVILLON's burn was cured!");
             STATUS_ICON(opponentLeft, none: TRUE);
         } else {
             NONE_OF {
@@ -189,7 +189,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not prevent ability stat changes")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Vivillon's Speed fell!");
+        MESSAGE("VIVILLON's SPEED fell!");
     }
 }
 

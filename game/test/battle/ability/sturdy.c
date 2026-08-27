@@ -4,15 +4,16 @@
 SINGLE_BATTLE_TEST("Sturdy prevents OHKO moves")
 {
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Sturdy = TRUE;
         ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FISSURE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Fissure!");
+        MESSAGE("The opposing WOBBUFFET used FISSURE!");
         ABILITY_POPUP(player, ABILITY_STURDY);
-        MESSAGE("Geodude was protected by Sturdy!");
+        MESSAGE("GEODUDE was protected by STURDY!");
     } THEN {
         EXPECT_EQ(player->hp, player->maxHP);
     }
@@ -25,6 +26,8 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Gen5+)")
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(B_STURDY, config);
+        if (config >= GEN_5)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Sturdy = TRUE;
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_STURDY); MaxHP(100); HP(100); }
         PLAYER(SPECIES_GEODUDE);
         OPPONENT(SPECIES_WOBBUFFET);

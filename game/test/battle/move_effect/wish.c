@@ -21,9 +21,9 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when not switching")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
-        MESSAGE("Wynaut's wish came true!");
+        MESSAGE("WYNAUT's wish came true!");
         HP_BAR(player, damage: -50);
-        MESSAGE("Wynaut's HP was restored.");
+        MESSAGE("WYNAUT's HP was restored.");
     }
 }
 
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the user's HP when switching (Gen5+)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, player);
         SWITCH_OUT_MESSAGE("Wynaut");
         SEND_IN_MESSAGE("Wobbuffet");
-        MESSAGE("Wynaut's wish came true!");
+        MESSAGE("WYNAUT's wish came true!");
         HP_BAR(player, damage: -50);
         MESSAGE("Wobbuffet's HP was restored.");
     }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Wish restores 50% of the recipient's HP when switching (Gen3
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WISH, player);
         SWITCH_OUT_MESSAGE("Wynaut");
         SEND_IN_MESSAGE("Wobbuffet");
-        MESSAGE("Wynaut's wish came true!");
+        MESSAGE("WYNAUT's wish came true!");
         HP_BAR(player, damage: -100);
         MESSAGE("Wobbuffet's HP was restored.");
     }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Wish heals the user at the end of the next turn")
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        MESSAGE("Wobbuffet's wish came true!");
+        MESSAGE("WOBBUFFET's wish came true!");
         HP_BAR(player);
     }
 }
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Wish is blocked by Heal Block")
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_BLOCK, opponent);
-        MESSAGE("Wobbuffet was prevented from healing!");
+        MESSAGE("WOBBUFFET was prevented from healing!");
         NOT HP_BAR(player);
     }
 }

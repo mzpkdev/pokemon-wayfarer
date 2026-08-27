@@ -10,6 +10,8 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
     PARAMETRIZE { item = ITEM_SITRUS_BERRY; }
 
     GIVEN {
+        if (item == ITEM_SITRUS_BERRY)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus = TRUE;
         ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffect == HOLD_EFFECT_RESTORE_HP);
         ASSUME(gItemsInfo[ITEM_BERRY_JUICE].holdEffect == HOLD_EFFECT_RESTORE_HP);
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
@@ -22,9 +24,9 @@ DOUBLE_BATTLE_TEST("Restore HP Item effects do not miss timing")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIRE_PLEDGE, playerRight);
         MESSAGE("A sea of fire enveloped the opposing team!");
-        MESSAGE("The opposing Wynaut was hurt by the sea of fire!");
+        MESSAGE("The opposing WYNAUT was hurt by the sea of fire!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
+        MESSAGE("The opposing WOBBUFFET was hurt by the sea of fire!");
     }
 }
 

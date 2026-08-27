@@ -15,16 +15,16 @@ SINGLE_BATTLE_TEST("Grassy Terrain recovers 1/16th HP at end of turn")
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        MESSAGE("Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("WOBBUFFET is healed by the grassy terrain!");
         HP_BAR(player, damage: -maxHPPlayer / 16);
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
         HP_BAR(opponent, damage: -maxHPOpponent / 16);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
-        MESSAGE("Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("WOBBUFFET is healed by the grassy terrain!");
         HP_BAR(player, damage: -maxHPPlayer / 16);
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
         HP_BAR(opponent, damage: -maxHPOpponent / 16);
     }
 }
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Grassy Terrain increases power of Grass-type moves by 30/50 
             TURN { MOVE(player, MOVE_GRASSY_TERRAIN); }
         TURN { MOVE(player, MOVE_ABSORB); }
     } SCENE {
-        MESSAGE("Wobbuffet used Absorb!");
+        MESSAGE("WOBBUFFET used ABSORB!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         if (B_TERRAIN_TYPE_BOOST >= GEN_8)

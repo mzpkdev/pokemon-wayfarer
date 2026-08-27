@@ -220,7 +220,7 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if used by a Terastallized Pokemon")
         TURN { MOVE(opponent, MOVE_TACKLE); }
         TURN { MOVE(player, MOVE_CONVERSION_2, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Wobbuffet used Conversion 2!");
+        MESSAGE("WOBBUFFET used CONVERSION 2!");
         MESSAGE("But it failed!");
     }
 }

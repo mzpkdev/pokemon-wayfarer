@@ -6,6 +6,7 @@ DOUBLE_BATTLE_TEST("Aura Break inverts Fairy Aura's effect")
     s16 damage[3];
 
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }

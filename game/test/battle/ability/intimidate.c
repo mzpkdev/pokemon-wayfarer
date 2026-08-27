@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after switch ou
         {
             ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The opposing Arbok's Intimidate cuts Wobbuffet's Attack!");
+            MESSAGE("The opposing ARBOK's INTIMIDATE cuts WOBBUFFET's ATTACK!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Intimidate (opponent) lowers player's attack after KO", s16 
         {
             ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("The opposing Arbok's Intimidate cuts Wobbuffet's Attack!");
+            MESSAGE("The opposing ARBOK's INTIMIDATE cuts WOBBUFFET's ATTACK!");
         }
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -120,10 +120,10 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Atta
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
-        MESSAGE("2 sent out Hitmontop!");
+        MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
+        MESSAGE("2 sent out HITMONTOP!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
-        MESSAGE("The opposing Hitmontop's Intimidate cuts Wobbuffet's Attack!");
+        MESSAGE("The opposing HITMONTOP's INTIMIDATE cuts WOBBUFFET's ATTACK!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
             MESSAGE("The opposing Hitmontop used Scratch!");
@@ -258,7 +258,7 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutral
     } SCENE {
         ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        SWITCH_OUT_MESSAGE("Weezing");
+        SWITCH_OUT_MESSAGE("WEEZING");
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         SEND_IN_MESSAGE("Wobbuffet");
@@ -330,9 +330,9 @@ SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         if (item != ITEM_NONE) {
-            SEND_IN_MESSAGE("Wobbuffet");
+            SEND_IN_MESSAGE("WOBBUFFET");
         } else {
-            MESSAGE("Wobbuffet was dragged out!");
+            MESSAGE("WOBBUFFET was dragged out!");
         }
     }
 }

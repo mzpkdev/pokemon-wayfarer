@@ -22,20 +22,20 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form")
         TURN { MOVE(opponentRight, MOVE_HAZE); MOVE(playerRight, MOVE_ORDER_UP, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, opponentRight); // Remove previous stat boosts
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ORDER_UP, playerRight);
         switch (species)
         {
         case SPECIES_TATSUGIRI_CURLY:
-            MESSAGE("Dondozo's Attack rose!");
+            MESSAGE("DONDOZO's ATTACK rose!");
             break;
         case SPECIES_TATSUGIRI_DROOPY:
-            MESSAGE("Dondozo's Defense rose!");
+            MESSAGE("DONDOZO's DEFENSE rose!");
             break;
         case SPECIES_TATSUGIRI_STRETCHY:
-            MESSAGE("Dondozo's Speed rose!");
+        MESSAGE("DONDOZO's SPEED rose!");
             break;
         }
     } THEN {
@@ -71,7 +71,7 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if 
         TURN { MOVE(opponentRight, MOVE_HAZE); MOVE(playerRight, MOVE_ORDER_UP, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Tatsugiri was hurt by its poisoning!");
         MESSAGE("Tatsugiri fainted!");

@@ -114,22 +114,22 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-T
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HONE_CLAWS, opponent);
         if (species == SPECIES_HITMONCHAN) {
-            MESSAGE("The opposing Hitmonchan's Attack rose!");
-            MESSAGE("The opposing Hitmonchan's accuracy rose!");
+            MESSAGE("The opposing HITMONCHAN's ATTACK rose!");
+            MESSAGE("The opposing HITMONCHAN's accuracy rose!");
         } else if (species == SPECIES_STARYU) {
-            MESSAGE("The opposing Staryu's Attack rose!");
-            MESSAGE("The opposing Staryu's accuracy rose!");
+            MESSAGE("The opposing STARYU's ATTACK rose!");
+            MESSAGE("The opposing STARYU's accuracy rose!");
         } else {
-            MESSAGE("The opposing Ursaluna's Attack rose!");
-            MESSAGE("The opposing Ursaluna's accuracy rose!");
+            MESSAGE("The opposing URSALUNA's ATTACK rose!");
+            MESSAGE("The opposing URSALUNA's accuracy rose!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOPSY_TURVY, player);
         if (species == SPECIES_HITMONCHAN)
-            MESSAGE("All stat changes on the opposing Hitmonchan were inverted!");
+            MESSAGE("All stat changes on the opposing HITMONCHAN were inverted!");
         else if (species == SPECIES_STARYU)
-            MESSAGE("All stat changes on the opposing Staryu were inverted!");
+            MESSAGE("All stat changes on the opposing STARYU were inverted!");
         else
-            MESSAGE("All stat changes on the opposing Ursaluna were inverted!");
+            MESSAGE("All stat changes on the opposing URSALUNA were inverted!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE - 1);
     }
@@ -158,11 +158,11 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent receivi
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SAND_ATTACK, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
         if (species == SPECIES_HITMONCHAN)
-            MESSAGE("2 sent out Hitmonchan!");
+            MESSAGE("2 sent out HITMONCHAN!");
         else if (species == SPECIES_STARYU)
-            MESSAGE("2 sent out Staryu!");
+            MESSAGE("2 sent out STARYU!");
         else
-            MESSAGE("2 sent out Ursaluna!");
+            MESSAGE("2 sent out URSALUNA!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE - 1);
     }
@@ -188,15 +188,15 @@ SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief fro
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HONE_CLAWS, opponent);
         if (species == SPECIES_HITMONCHAN)
         {
-            MESSAGE("The opposing Hitmonchan's Attack rose!");
-            MESSAGE("The opposing Hitmonchan's accuracy rose!");
+            MESSAGE("The opposing HITMONCHAN's ATTACK rose!");
+            MESSAGE("The opposing HITMONCHAN's accuracy rose!");
         }
         else
         {
             MESSAGE("The opposing Staryu's Attack rose!");
             MESSAGE("The opposing Staryu's accuracy rose!");
         }
-        MESSAGE("Wobbuffet stole the target's boosted stats!");
+        MESSAGE("WOBBUFFET stole the target's boosted stats!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE);

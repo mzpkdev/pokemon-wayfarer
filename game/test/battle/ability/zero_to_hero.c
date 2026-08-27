@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Zero to Hero can't be suppressed by Neutralizing Gas")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
 
@@ -48,9 +48,9 @@ SINGLE_BATTLE_TEST("Zero to Hero transforms both player and opponent")
         TURN { SWITCH(player, 0); SWITCH(opponent, 0); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
         ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
-        MESSAGE("The opposing Palafin underwent a heroic transformation!");
+        MESSAGE("The opposing PALAFIN underwent a heroic transformation!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO);
         EXPECT_EQ(opponent->species, SPECIES_PALAFIN_HERO);
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Zero to Hero will activate if a switch move is used")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLIP_TURN, player);
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
 
@@ -107,9 +107,9 @@ SINGLE_BATTLE_TEST("Transform doesn't apply the heroic transformation message wh
         TURN { SWITCH(player, 0); MOVE(opponent, MOVE_TRANSFORM); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
-        MESSAGE("The opposing Wobbuffet transformed into Palafin!");
+        MESSAGE("The opposing WOBBUFFET transformed into PALAFIN!");
         NOT ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
@@ -126,9 +126,9 @@ SINGLE_BATTLE_TEST("Imposter doesn't apply the heroic transformation message whe
         TURN { SWITCH(player, 0); SWITCH(opponent, 0); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Palafin underwent a heroic transformation!");
+        MESSAGE("PALAFIN underwent a heroic transformation!");
         ABILITY_POPUP(opponent, ABILITY_IMPOSTER);
-        MESSAGE("The opposing Ditto transformed into Palafin using Imposter!");
+        MESSAGE("The opposing DITTO transformed into PALAFIN using IMPOSTER!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
             MESSAGE("The opposing Ditto underwent a heroic transformation!");

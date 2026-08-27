@@ -25,6 +25,7 @@ SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Fairy-type move
     PARAMETRIZE { terrain = FALSE; }
     PARAMETRIZE { terrain = TRUE; }
     GIVEN {
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -32,7 +33,7 @@ SINGLE_BATTLE_TEST("Misty Terrain does not increase the power of Fairy-type move
             TURN { MOVE(player, MOVE_MISTY_TERRAIN); }
         TURN { MOVE(player, MOVE_MOONBLAST); }
     } SCENE {
-        MESSAGE("Wobbuffet used Moonblast!");
+        MESSAGE("WOBBUFFET used MOONBLAST!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -52,7 +53,7 @@ SINGLE_BATTLE_TEST("Misty Terrain decreases power of Dragon-type moves by 50 per
             TURN { MOVE(player, MOVE_MISTY_TERRAIN); }
         TURN { MOVE(player, MOVE_DRAGON_CLAW); }
     } SCENE {
-        MESSAGE("Wobbuffet used Dragon Claw!");
+        MESSAGE("WOBBUFFET used DRAGON CLAW!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(0.5), results[1].damage);

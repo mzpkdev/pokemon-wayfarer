@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("If Glaive Rush is successful moves targeted at the user do n
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_MEGA_PUNCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Glaive Rush!");
+        MESSAGE("WOBBUFFET used GLAIVE RUSH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GLAIVE_RUSH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEGA_PUNCH, opponent);
     }

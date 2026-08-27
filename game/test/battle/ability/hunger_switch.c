@@ -12,8 +12,8 @@ SINGLE_BATTLE_TEST("Hunger Switch switches Morpeko's forms at the end of the tur
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Morpeko used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("MORPEKO used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
     } THEN {
         if (species == SPECIES_MORPEKO_FULL_BELLY)

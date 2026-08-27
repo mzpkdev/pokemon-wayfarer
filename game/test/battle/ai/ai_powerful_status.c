@@ -15,7 +15,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers to set up a powerful Status over fainting a ta
         TURN { EXPECT_MOVE(opponent, MOVE_TRICK_ROOM); }
         TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -33,7 +33,7 @@ AI_SINGLE_BATTLE_TEST("AI will try to do damage on target instead of setting up 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

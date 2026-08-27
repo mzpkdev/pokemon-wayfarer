@@ -35,6 +35,8 @@ SINGLE_BATTLE_TEST("Type-enhancing items increase the base power of moves by 20%
     }
 
     GIVEN {
+        if (type == TYPE_FAIRY)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_Fairy_Types = TRUE;
         ASSUME(GetMovePower(move) > 0);
         if (item != ITEM_NONE) {
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_TYPE_POWER);

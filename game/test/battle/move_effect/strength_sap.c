@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARM, player);
-        MESSAGE("Wobbuffet used Strength Sap!");
+        MESSAGE("WOBBUFFET used STRENGTH SAP!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
