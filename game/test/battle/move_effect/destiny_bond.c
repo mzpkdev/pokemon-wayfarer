@@ -111,9 +111,9 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are not affected by Destiny Bond
     } WHEN {
         TURN { MOVE(opponent, MOVE_DESTINY_BOND); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Destiny Bond!");
-        MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET used DESTINY BOND!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         NONE_OF { HP_BAR(player); }
     }
 }
