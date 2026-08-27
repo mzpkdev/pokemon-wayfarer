@@ -82,7 +82,7 @@ DOUBLE_BATTLE_TEST("Primal Reversion's order is determined by Speed - opponent f
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentLeft);
         MESSAGE("The opposing GROUDON's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, playerLeft);
-        MESSAGE("Kyogre's Primal Reversion! It reverted to its primal state!");
+        MESSAGE("KYOGRE's Primal Reversion! It reverted to its primal state!");
     } THEN {
         EXPECT_EQ(playerLeft->species, SPECIES_KYOGRE_PRIMAL);
         EXPECT_EQ(opponentLeft->species, SPECIES_GROUDON_PRIMAL);
@@ -108,7 +108,7 @@ DOUBLE_BATTLE_TEST("Primal Reversion's order is determined by Speed - player fas
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentLeft);
         MESSAGE("The opposing GROUDON's Primal Reversion! It reverted to its primal state!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, opponentRight);
-        MESSAGE("The opposing Kyogre's Primal Reversion! It reverted to its primal state!");
+        MESSAGE("The opposing KYOGRE's Primal Reversion! It reverted to its primal state!");
     } THEN {
         EXPECT_EQ(playerLeft->species, SPECIES_KYOGRE_PRIMAL);
         EXPECT_EQ(opponentLeft->species, SPECIES_GROUDON_PRIMAL);

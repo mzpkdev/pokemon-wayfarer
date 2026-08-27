@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("Parting Shot: Mirror Armor switches the user even if reflect
             ABILITY_POPUP(player, ABILITY_FULL_METAL_BODY);
             MESSAGE("SOLGALEO's FULL METAL BODY prevents stat loss!");
         } else if (item == ITEM_CLEAR_AMULET) {
-            MESSAGE("The effects of the Clear Amulet held by Lucario prevents its stats from being lowered!");
+            MESSAGE("The effects of the CLEAR AMULET held by LUCARIO prevents its stats from being lowered!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);

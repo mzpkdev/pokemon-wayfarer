@@ -123,7 +123,7 @@ DOUBLE_BATTLE_TEST("Teatime causes all Pokémon to consume their berry")
             MESSAGE("Using LIECHI BERRY, the ATTACK of WOBBUFFET rose!");
             MESSAGE("Using LIECHI BERRY, the ATTACK of WYNAUT rose!");
             MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wynaut rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WYNAUT rose!");
         } else if (user == playerRight) {
             MESSAGE("Using Liechi Berry, the Attack of Wynaut rose!");
             MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");

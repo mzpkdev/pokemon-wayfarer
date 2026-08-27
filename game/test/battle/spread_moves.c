@@ -330,7 +330,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Wide Guard")
         MESSAGE("WIDE GUARD protected your team!");
         MESSAGE("The opposing WOBBUFFET used HYPER VOICE!");
         MESSAGE("WOBBUFFET protected itself!");
-        MESSAGE("Wynaut protected itself!");
+        MESSAGE("WYNAUT protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
     }
 }
