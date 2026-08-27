@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Double Shock fails if the user isn't an Electric-type")
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); }
     } SCENE {
         NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_SHOCK, player); }
-        MESSAGE("Wobbuffet used Double Shock!");
+        MESSAGE("WOBBUFFET used DOUBLE SHOCK!");
         MESSAGE("But it failed!");
     }
 }
