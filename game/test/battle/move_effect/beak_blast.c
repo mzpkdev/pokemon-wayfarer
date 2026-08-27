@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
         else {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
-                MESSAGE("The opposing Wobbuffet was burned!");
+                MESSAGE("The opposing WOBBUFFET was burned!");
                 STATUS_ICON(opponent, burn: TRUE);
             }
         }
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Beak Blast doesn't burn when charging a two turn move")
         NONE_OF {
             HP_BAR(player);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
-            MESSAGE("The opposing Wobbuffet was burned!");
+            MESSAGE("The opposing WOBBUFFET was burned!");
             STATUS_ICON(opponent, burn: TRUE);
         }
     }
