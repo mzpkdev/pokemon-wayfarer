@@ -22,7 +22,7 @@ DOUBLE_BATTLE_TEST("Beak Blast's charging message is shown before other moves ar
 
         MESSAGE("WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
             }
         }
 
-        MESSAGE("Wobbuffet used Beak Blast!");
+        MESSAGE("WOBBUFFET used BEAK BLAST!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, player);
         HP_BAR(opponent);
     }

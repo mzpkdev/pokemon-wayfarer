@@ -69,9 +69,9 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a f
         ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("Dondozo is buffeted by the sandstorm!");
-        MESSAGE("Tatsugiri is buffeted by the sandstorm!");
-        MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
+        MESSAGE("DONDOZO is buffeted by the sandstorm!");
+        MESSAGE("TATSUGIRI is buffeted by the sandstorm!");
+        MESSAGE("The opposing WOBBUFFET is buffeted by the sandstorm!");
     }
 }
 
@@ -87,7 +87,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take poison damage if while i
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("Tatsugiri was hurt by its poisoning!");
+        MESSAGE("TATSUGIRI was hurt by its poisoning!");
     }
 }
 
@@ -145,7 +145,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
-        MESSAGE("The opposing Wobbuffet used Whirlwind!");
+        MESSAGE("The opposing WOBBUFFET used WHIRLWIND!");
         MESSAGE("Tatsugiri avoided the attack!");
         MESSAGE("The opposing Wobbuffet used Whirlwind!");
         MESSAGE("But it failed!"); // Avoided on tatsu, but it failed on dozo

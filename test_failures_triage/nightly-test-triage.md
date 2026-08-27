@@ -112,17 +112,32 @@ their next independent message assertions. The complete run after the two final
 case-only updates and this pilot then recorded 2,817 `PASS`, 1,639 `FAIL`, 46
 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
 
-The latest complete local Wave 24 ledger recorded all 5,149 results: 3,484
-`PASS`, 972 `FAIL`, 46 `ASSUMPTION_FAIL`, 12 `KNOWN_FAILING`, 629 `TO_DO`,
-and 6 `EXPECT_FAILING`. The test command remained nonzero because ordinary failures remain. Paired
-comparisons found no status regressions or result multiplicity drift after
-normalizing parameter progress suffixes. A final glyph-aware scan found no
-remaining presentation-only candidate.
-Of the 972 failures, 860 are unmatched-message results: 726 have substantive
-content, actor, or ordering differences, 132 retained no unmatched message for
-the pending expectation, and 2 use AI concatenated literals without a
-presentation-only counterpart. The other 112 are non-message assertions outside the
-presentation-only lane.
+Wave 24 recorded all 5,149 results: 3,484 `PASS`, 972 `FAIL`, 46
+`ASSUMPTIONS_FAILED`, 12 `KNOWN_FAILING`, 629 `TO_DO`, and 6 `EXPECT_FAILING`.
+An earlier scan incorrectly declared the presentation-only lane exhausted
+because it considered only the first unmatched message. The runner can retain
+later actual messages while the same expectation is pending, so the complete
+retained-history scan found another 242 directly evidenced expectations across
+127 test files.
+
+Wave 25 applied those 242 expectation-only changes and recorded 3,621 `PASS`
+and 835 `FAIL`. There were 138 `FAIL` to `PASS` transitions at edited records;
+102 other edited records advanced to later assertions. One unrelated X-item
+Friendship result moved from `PASS` to `FAIL`, passed in isolation, and recovered
+in Wave 26. The next adversarial scan required a deterministic unmatched-message
+failure, a direct one-line source literal, no prior or overwritten actuals, and
+a case-only match to the first retained actual on the same queue. Two independent
+generators agreed on 55 more expectations. Wave 26 recorded 3,666 `PASS` and 790
+`FAIL`, with 45 `FAIL` to `PASS` transitions and no regressions. A final five-row
+batch produced Wave 27: 3,671 `PASS`, 785 `FAIL`, and no regressions. All other
+status counts remained unchanged throughout.
+
+The three batches changed exactly 302 `MESSAGE` expectations across the same 127
+test files and did not change production code or matching behavior. Two
+independent Wave 27 scans found zero remaining candidates under the strict gate.
+The 785 residual failures include 717 deterministic unmatched-message results;
+the rest are probability wrappers and other assertions. They require separate
+gameplay, ordering, configuration, or missing-evidence classification.
 
 Exact expectation updates are gameplay-neutral. Reverting the production names
 would change visible gameplay, and case-insensitive matching would weaken the

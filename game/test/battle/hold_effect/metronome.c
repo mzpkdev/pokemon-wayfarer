@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Metronome Item counts charging turn of moves for its attacki
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
         TURN { SKIP_TURN(player); }
     } SCENE {
-        MESSAGE("Wobbuffet used Solar Beam!");
+        MESSAGE("WOBBUFFET used SOLAR BEAM!");
         MESSAGE("Wobbuffet absorbed light!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         MESSAGE("Congratulations, 1!");

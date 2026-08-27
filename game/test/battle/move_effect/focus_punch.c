@@ -66,8 +66,8 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, playerRight);
         HP_BAR(opponentLeft);
 
-        MESSAGE("Wobbuffet lost its focus and couldn't move!");
-        MESSAGE("The opposing Wobbuffet lost its focus and couldn't move!");
+        MESSAGE("WOBBUFFET lost its focus and couldn't move!");
+        MESSAGE("The opposing WOBBUFFET lost its focus and couldn't move!");
     }
 }
 
@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
 
         if (item) {
-            MESSAGE("Wobbuffet used Focus Punch!");
+            MESSAGE("WOBBUFFET used FOCUS PUNCH!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
             HP_BAR(opponent);
         } else {
@@ -123,7 +123,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
 
         if (activate) {
-            MESSAGE("Mimikyu used Focus Punch!");
+            MESSAGE("MIMIKYU used FOCUS PUNCH!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
             HP_BAR(opponent);
         } else {
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when the user's Substitute is hit")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
         MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        MESSAGE("Wobbuffet used Focus Punch!");
+        MESSAGE("WOBBUFFET used FOCUS PUNCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
         HP_BAR(opponent);
     }

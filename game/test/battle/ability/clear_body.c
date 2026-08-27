@@ -265,7 +265,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
             MESSAGE("The opposing Torkoal used Celebrate!");
         else
             MESSAGE("The opposing METANG used CELEBRATE!");
-        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("WOBBUFFET used THUNDER WAVE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
         NOT ABILITY_POPUP(opponent, ability);
         MESSAGE("Wobbuffet used Thunder Wave!");
@@ -324,7 +324,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent r
         TURN { MOVE(player, MOVE_SCARY_FACE); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
         TURN { MOVE(player, MOVE_SCARY_FACE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scary Face!");
+        MESSAGE("WOBBUFFET used SCARY FACE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCARY_FACE, player);
         ABILITY_POPUP(opponent, ability);
         if (ability == ABILITY_FULL_METAL_BODY)

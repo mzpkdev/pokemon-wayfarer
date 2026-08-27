@@ -64,10 +64,10 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
         switch (move)
         {
             case MOVE_INFESTATION:
-                MESSAGE("The opposing Vivillon has been afflicted with an infestation by Wobbuffet!");
+                MESSAGE("The opposing VIVILLON has been afflicted with an infestation by WOBBUFFET!");
                 break;
             case MOVE_THOUSAND_ARROWS:
-                MESSAGE("The opposing Vivillon fell straight down!");
+                MESSAGE("The opposing VIVILLON fell straight down!");
                 break;
             case MOVE_JAW_LOCK:
                 MESSAGE("Neither Pokémon can run away!");

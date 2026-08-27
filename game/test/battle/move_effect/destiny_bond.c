@@ -22,8 +22,8 @@ SINGLE_BATTLE_TEST("Destiny Bond faints the opposing mon if it fainted from the 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DESTINY_BOND, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("WOBBUFFET fainted!");
-        MESSAGE("Wobbuffet took its attacker down with it!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET took its attacker down with it!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 

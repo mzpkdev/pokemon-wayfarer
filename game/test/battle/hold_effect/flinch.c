@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Kings Rock holder will flinch the target 10% of the time")
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        MESSAGE("The opposing WOBBUFFET flinched and couldn't move!");
     }
 }
 
@@ -31,6 +31,6 @@ SINGLE_BATTLE_TEST("Kings Rock does not increase flinch chance of a move that ha
         TURN { MOVE(player, MOVE_HEADBUTT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, player);
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        MESSAGE("The opposing WOBBUFFET flinched and couldn't move!");
     }
 }

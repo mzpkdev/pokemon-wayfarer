@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Pa
     SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
-        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
+        MESSAGE("WOBBUFFET is paralyzed, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
         MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VITAL_THROW, opponent);
@@ -207,7 +207,7 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
         SEND_IN_MESSAGE("WOBBUFFET");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRUDGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, opponent);
-        MESSAGE("Wobbuffet flinched and couldn't move!");
+        MESSAGE("WOBBUFFET flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("Wobbuffet fainted!");
         NOT MESSAGE("The opposing Wobbuffet's Scratch lost all its PP due to the grudge!");

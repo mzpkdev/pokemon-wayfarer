@@ -66,6 +66,6 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_TERA: AI might tera if it gets saved from a
     } WHEN {
         TURN { MOVE(player, MOVE_SEED_BOMB); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet terastallized into the Fire type!");
+        MESSAGE("The opposing WOBBUFFET terastallized into the FIRE type!");
     }
 }

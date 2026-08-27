@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallization's 60 BP floor occurs after Technicia
     } WHEN {
         TURN { MOVE(player, MOVE_MEGA_DRAIN, gimmick: tera); }
     } SCENE {
-        MESSAGE("Mr. Mime used Mega Drain!");
+        MESSAGE("MR. MIME used MEGA DRAIN!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEGA_DRAIN, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallization's 60 BP floor occurs after Technicia
     } WHEN {
         TURN { MOVE(player, MOVE_STORED_POWER, gimmick: tera); }
     } SCENE {
-        MESSAGE("Mr. Mime used Stored Power!");
+        MESSAGE("MR. MIME used STORED POWER!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STORED_POWER, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallization's 60 BP floor does not apply to prio
     } WHEN {
         TURN { MOVE(player, MOVE_QUICK_ATTACK, gimmick: tera); }
     } SCENE {
-        MESSAGE("Wobbuffet used Quick Attack!");
+        MESSAGE("WOBBUFFET used QUICK ATTACK!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("(TERA) Terastallization changes type effectiveness", s16 dam
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: tera); MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Water Gun!");
+        MESSAGE("The opposing WOBBUFFET used WATER GUN!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
@@ -322,7 +322,7 @@ SINGLE_BATTLE_TEST("(TERA) Reflect Type fails if used by a Terastallized Pokemon
     } WHEN {
         TURN { MOVE(player, MOVE_REFLECT_TYPE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Wobbuffet used Reflect Type!");
+        MESSAGE("WOBBUFFET used REFLECT TYPE!");
         MESSAGE("But it failed!");
     }
 }
@@ -360,7 +360,7 @@ SINGLE_BATTLE_TEST("(TERA) Synchronoise uses a Terastallized Pokemon's Tera Type
         MESSAGE("The opposing WOBBUFFET used SYNCHRONOISE!");
         MESSAGE("It doesn't affect WOBBUFFET…");
         // turn 2
-        MESSAGE("The opposing Wobbuffet used Synchronoise!");
+        MESSAGE("The opposing WOBBUFFET used SYNCHRONOISE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYNCHRONOISE, opponent);
     }
 }
@@ -374,8 +374,8 @@ SINGLE_BATTLE_TEST("(TERA) Revelation Dance uses a Terastallized Pokemon's Tera 
     } WHEN {
         TURN { MOVE(player, MOVE_REVELATION_DANCE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Oricorio used Revelation Dance!");
-        MESSAGE("It doesn't affect the opposing Gengar…");
+        MESSAGE("ORICORIO used REVELATION DANCE!");
+        MESSAGE("It doesn't affect the opposing GENGAR…");
         NOT { HP_BAR(opponent); }
     }
 }
@@ -399,7 +399,7 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
         TURN { MOVE(player, MOVE_DOUBLE_SHOCK); }
     } SCENE {
         // turn 1 - regular STAB
-        MESSAGE("Pichu used Double Shock!");
+        MESSAGE("PICHU used DOUBLE SHOCK!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_SHOCK, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         // turn 2 - lost Electric type, gained back from Tera
@@ -473,8 +473,8 @@ SINGLE_BATTLE_TEST("(TERA) Revelation Dance uses a Stellar-type Pokemon's base t
     } WHEN {
         TURN { MOVE(player, MOVE_REVELATION_DANCE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Oricorio used Revelation Dance!");
-        MESSAGE("It doesn't affect the opposing Gumshoos…");
+        MESSAGE("ORICORIO used REVELATION DANCE!");
+        MESSAGE("It doesn't affect the opposing GUMSHOOS…");
         NOT { HP_BAR(opponent); }
     }
 }

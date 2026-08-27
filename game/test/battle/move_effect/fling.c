@@ -429,7 +429,7 @@ SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even 
         HP_BAR(opponent);
         if (effect == HOLD_EFFECT_RESTORE_HP) {
             if (item == ITEM_ORAN_BERRY) {
-                MESSAGE("The opposing Wobbuffet restored its health using its Oran Berry!");
+                MESSAGE("The opposing WOBBUFFET restored its health using its ORAN BERRY!");
             } else if (item == ITEM_SITRUS_BERRY) {
                 MESSAGE("The opposing Wobbuffet restored its health using its Sitrus Berry!");
             } else {
@@ -608,7 +608,7 @@ SINGLE_BATTLE_TEST("Fling - White Herb effect should not remove the target's hel
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet returned its stats to normal using its White Herb!");
+        MESSAGE("The opposing WOBBUFFET returned its stats to normal using its WHITE HERB!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->item, ITEM_RAZOR_CLAW);

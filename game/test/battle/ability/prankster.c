@@ -188,10 +188,10 @@ SINGLE_BATTLE_TEST("Prankster-affected moves can still be bounced back by Dark-t
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_CONFUSE_RAY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-        MESSAGE("The opposing Volbeat used Confuse Ray!");
-        MESSAGE("Umbreon bounced the Confuse Ray back!");
+        MESSAGE("The opposing VOLBEAT used CONFUSE RAY!");
+        MESSAGE("UMBREON bounced the CONFUSE RAY back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
-        MESSAGE("The opposing Volbeat became confused!");
+        MESSAGE("The opposing VOLBEAT became confused!");
     }
 }
 
@@ -231,7 +231,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves can still be bounced back by a Dark
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CONFUSE_RAY); }
     } SCENE {
-        MESSAGE("The opposing Volbeat's Confuse Ray was bounced back by Absol's Magic Bounce!");
+        MESSAGE("The opposing VOLBEAT's CONFUSE RAY was bounced back by ABSOL's MAGIC BOUNCE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
     }
 }
@@ -244,9 +244,9 @@ SINGLE_BATTLE_TEST("Prankster-affected moves that are bounced back by Magic Boun
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CONFUSE_RAY); }
     } SCENE {
-        MESSAGE("The opposing Murkrow's Confuse Ray was bounced back by Absol's Magic Bounce!");
+        MESSAGE("The opposing MURKROW's CONFUSE RAY was bounced back by ABSOL's MAGIC BOUNCE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
-        MESSAGE("The opposing Murkrow became confused!");
+        MESSAGE("The opposing MURKROW became confused!");
     }
 }
 

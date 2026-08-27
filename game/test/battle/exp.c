@@ -17,7 +17,7 @@ WILD_BATTLE_TEST("Pokemon gain experience after catching a Pokemon (Gen6+)")
     } WHEN {
         TURN { USE_ITEM(player, ITEM_ULTRA_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
     } SCENE {
-        MESSAGE("You used Ultra Ball!");
+        MESSAGE("You used ULTRA BALL!");
         ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW, player);
         if (level != MAX_LEVEL && config >= GEN_6) {
             EXPERIENCE_BAR(player);

@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Relic Song is blocked by Throat Chop")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THROAT_CHOP, opponent);
         HP_BAR(player);
-        MESSAGE("The effects of Throat Chop prevent Wobbuffet from using certain moves!");
+        MESSAGE("The effects of Throat Chop prevent WOBBUFFET from using certain moves!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
     }
 }

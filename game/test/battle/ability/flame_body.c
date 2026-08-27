@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Flame Body triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        MESSAGE("The opposing Magmar's Flame Body burned Wobbuffet!");
+        MESSAGE("The opposing MAGMAR's FLAME BODY burned WOBBUFFET!");
         STATUS_ICON(player, burn: TRUE);
     }
 }

@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target with a random non-fainted re
         TURN { MOVE(player, MOVE_DRAGON_TAIL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
-        MESSAGE("The opposing Bulbasaur was dragged out!");
+        MESSAGE("The opposing BULBASAUR was dragged out!");
     }
 }
 
@@ -39,7 +39,7 @@ DOUBLE_BATTLE_TEST("Dragon Tail switches the target with a random non-battler, n
         TURN { MOVE(playerLeft, MOVE_DRAGON_TAIL, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, playerLeft);
-        MESSAGE("The opposing Bulbasaur was dragged out!");
+        MESSAGE("The opposing BULBASAUR was dragged out!");
     }
 }
 
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Iron Barbs!");
+        MESSAGE("WOBBUFFET was hurt by the opposing TOGEDEMARU's IRON BARBS!");
         HP_BAR(player);
         MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Rocky Helmet!");
         MESSAGE("The opposing Charmander was dragged out!");
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Immunit
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Snorlax was dragged out!");
+        MESSAGE("The opposing SNORLAX was dragged out!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
     }
@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(opponent);
-        MESSAGE("The opposing Weezing was dragged out!");
+        MESSAGE("The opposing WEEZING was dragged out!");
         MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
         NOT STATUS_ICON(opponent, poison: TRUE);
         HP_BAR(opponent);

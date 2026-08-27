@@ -20,7 +20,7 @@ DOUBLE_BATTLE_TEST("Healer cures adjacent ally's status condition 30% of the tim
     } WHEN {
         TURN {}
     } SCENE {
-        MESSAGE("The opposing Chansey's Healer cured the opposing Wobbuffet's problem!");
+        MESSAGE("The opposing CHANSEY's HEALER cured the opposing WOBBUFFET's problem!");
     }
 }
 

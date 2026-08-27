@@ -128,8 +128,8 @@ SINGLE_BATTLE_TEST("If Salt Cure faints the target, messages will be applied in 
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
         MESSAGE("The opposing WOBBUFFET is being salt cured!");
-        MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET is hurt by SALT CURE!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 

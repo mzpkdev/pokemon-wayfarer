@@ -16,8 +16,8 @@ SINGLE_BATTLE_TEST("Revival Blessing revives a chosen fainted party member for t
     } WHEN {
         TURN { MOVE(player, MOVE_REVIVAL_BLESSING, partyIndex:2); }
     } SCENE {
-        MESSAGE("Wobbuffet used Revival Blessing!");
-        MESSAGE("Wynaut was revived and is ready to fight again!");
+        MESSAGE("WOBBUFFET used REVIVAL BLESSING!");
+        MESSAGE("WYNAUT was revived and is ready to fight again!");
     }
 }
 
@@ -31,8 +31,8 @@ SINGLE_BATTLE_TEST("Revival Blessing revives a fainted party member for an oppon
     } WHEN {
         TURN { MOVE(opponent, MOVE_REVIVAL_BLESSING, partyIndex:1); }
     } SCENE {
-        MESSAGE("The opposing Raichu used Revival Blessing!");
-        MESSAGE("Pichu was revived and is ready to fight again!");
+        MESSAGE("The opposing RAICHU used REVIVAL BLESSING!");
+        MESSAGE("PICHU was revived and is ready to fight again!");
     }
 }
 
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Revival Blessing fails if no party members are fainted")
     } WHEN {
         TURN { MOVE(player, MOVE_REVIVAL_BLESSING); }
     } SCENE {
-        MESSAGE("Wobbuffet used Revival Blessing!");
+        MESSAGE("WOBBUFFET used REVIVAL BLESSING!");
         MESSAGE("But it failed!");
     }
 }
@@ -73,7 +73,7 @@ AI_MULTI_BATTLE_TEST("AI will not revive a partner's party member with Revival B
         TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
     } SCENE {
         if (user == opponentLeft) {
-            MESSAGE("The opposing Wobbuffet used Revival Blessing!");
+            MESSAGE("The opposing WOBBUFFET used REVIVAL BLESSING!");
             MESSAGE("But it failed!");
         } else if (user == playerRight) {
             MESSAGE("Clefairy used Revival Blessing!");

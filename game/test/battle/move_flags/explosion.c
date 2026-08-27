@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user & the target to faint")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
         HP_BAR(opponent, hp: 0);
         MESSAGE("WOBBUFFET fainted!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 

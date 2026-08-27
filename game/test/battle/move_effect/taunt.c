@@ -45,7 +45,7 @@ AI_SINGLE_BATTLE_TEST("Taunt lasts for 3-5 turns (Gen 4)")
             NOT MESSAGE("The opposing Wobbuffet's Taunt wore off!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         }
-        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+        MESSAGE("The opposing WOBBUFFET's TAUNT wore off!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     }
 }

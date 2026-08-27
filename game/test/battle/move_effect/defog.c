@@ -746,7 +746,7 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
         MESSAGE("WOBBUFFET used DEFOG!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-        MESSAGE("The opposing team's Light Screen wore off!");
+        MESSAGE("The opposing team's LIGHT SCREEN wore off!");
     } THEN {
         if (config >= GEN_5)
             EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE);

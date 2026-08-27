@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet's Sticky Hold made Trick ineffective!");
+        MESSAGE("The opposing WOBBUFFET's STICKY HOLD made TRICK ineffective!");
     } THEN {
         EXPECT(player->item == ITEM_SITRUS_BERRY);
         EXPECT(opponent->item == ITEM_LUM_BERRY);

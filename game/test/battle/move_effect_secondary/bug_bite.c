@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Bug Bite eats the target's berry and immediately gains its e
         if (item == ITEM_CHESTO_BERRY) {
             MESSAGE("Wobbuffet used Sleep Talk!");
         }
-        MESSAGE("Wobbuffet used Bug Bite!");
+        MESSAGE("WOBBUFFET used BUG BITE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(opponent);
         if (effect == HOLD_EFFECT_RESTORE_HP || effect == HOLD_EFFECT_ENIGMA_BERRY) {

@@ -487,8 +487,8 @@ DOUBLE_BATTLE_TEST("Dancer-called moves doesn't update move to be called by Mirr
         ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("Wobbuffet used Mirror Move!");
-        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("WOBBUFFET used MIRROR MOVE!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         NOT MESSAGE("Wobbuffet used Dragon Dance!");
     }
@@ -678,7 +678,7 @@ SINGLE_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a
         TURN { MOVE(player, MOVE_DRAGON_DANCE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
-        MESSAGE("The opposing Oricorio became confused!");
+        MESSAGE("The opposing ORICORIO became confused!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ABILITY_POPUP(opponent, ABILITY_DANCER);

@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Soak/Magic Powder's type change is overwitten if the target 
         NOT MESSAGE("It doesn't affect Mimikyu…");
         ABILITY_POPUP(player, ABILITY_DISGUISE);
         // Turn 3
-        MESSAGE("It doesn't affect Mimikyu…");
+        MESSAGE("It doesn't affect MIMIKYU…");
     }
 }
 

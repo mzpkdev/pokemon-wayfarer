@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Mirror Move fails if no move was used before")
     } WHEN {
         TURN { MOVE(player, MOVE_MIRROR_MOVE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Mirror Move!");
+        MESSAGE("WOBBUFFET used MIRROR MOVE!");
         MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
@@ -72,8 +72,8 @@ SINGLE_BATTLE_TEST("Mirror Move's called powder move fails against Grass Types")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
         STATUS_ICON(opponent, paralysis: TRUE);
-        MESSAGE("The opposing Wobbuffet used Mirror Move!");
-        MESSAGE("The opposing Wobbuffet used Stun Spore!");
+        MESSAGE("The opposing WOBBUFFET used MIRROR MOVE!");
+        MESSAGE("The opposing WOBBUFFET used STUN SPORE!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
         MESSAGE("It doesn't affect Oddish…");
         NOT STATUS_ICON(player, paralysis: TRUE);

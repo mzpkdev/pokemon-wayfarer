@@ -63,7 +63,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First STAB Hit")
     } WHEN {
         TURN { MOVE(player, MOVE_VINE_WHIP); }
     } SCENE {
-        MESSAGE("Bulbasaur used Vine Whip!");
+        MESSAGE("BULBASAUR used VINE WHIP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VINE_WHIP, player);
         MESSAGE("Trainer A: Player lands their first STAB move.{PAUSE_UNTIL_PRESS}");
     }

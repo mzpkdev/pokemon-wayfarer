@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Cursed Body triggers 30% of the time")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AQUA_JET, player);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Aqua Jet was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("WOBBUFFET's AQUA JET was disabled by the opposing FRILLISH's CURSED BODY!");
     }
 }
 
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move inste
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-        MESSAGE("Wobbuffet's Sleep Talk was disabled by the opposing Frillish's Cursed Body!");
+        MESSAGE("WOBBUFFET's SLEEP TALK was disabled by the opposing FRILLISH's CURSED BODY!");
     } THEN {
         u32 disabledMove = player->volatiles.disabledMove;
         EXPECT_EQ(disabledMove, MOVE_SLEEP_TALK);

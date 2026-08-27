@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Toxic Chain inflicts bad poison when attacking")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TOXIC_CHAIN);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-        MESSAGE("The opposing Wobbuffet was badly poisoned!");
+        MESSAGE("The opposing WOBBUFFET was badly poisoned!");
         STATUS_ICON(opponent, badPoison: TRUE);
     } THEN {
         EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);

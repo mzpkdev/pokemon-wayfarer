@@ -206,9 +206,9 @@ SINGLE_BATTLE_TEST("Pickpocket activates after Thief or Covet steals an item")
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
-        MESSAGE("Wobbuffet stole the opposing Sneasel's Magost Berry!");
+        MESSAGE("WOBBUFFET stole the opposing SNEASEL's MAGOST BERRY!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Wobbuffet's Magost Berry!");
+        MESSAGE("The opposing SNEASEL stole WOBBUFFET's MAGOST BERRY!");
     } THEN {
         EXPECT(opponent->item == ITEM_MAGOST_BERRY);
         EXPECT(player->item == ITEM_NONE);
@@ -265,9 +265,9 @@ SINGLE_BATTLE_TEST("Pickpocket steals Life Orb after it activates")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet was hurt by the Life Orb!");
+        MESSAGE("WOBBUFFET was hurt by the LIFE ORB!");
         ABILITY_POPUP(opponent, ABILITY_PICKPOCKET);
-        MESSAGE("The opposing Sneasel stole Wobbuffet's Life Orb!");
+        MESSAGE("The opposing SNEASEL stole WOBBUFFET's LIFE ORB!");
     } THEN {
         EXPECT(opponent->item == ITEM_LIFE_ORB);
         EXPECT(player->item == ITEM_NONE);

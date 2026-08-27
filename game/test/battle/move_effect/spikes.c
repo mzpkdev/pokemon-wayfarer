@@ -80,9 +80,9 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
         MESSAGE("2 sent out WYNAUT!");
         HP_BAR(opponent, damage: maxHP1 / 8);
         MESSAGE("The opposing WYNAUT was hurt by the spikes!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("2 sent out WOBBUFFET!");
         HP_BAR(opponent, damage: maxHP0 / 8);
-        MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+        MESSAGE("The opposing WOBBUFFET was hurt by the spikes!");
     }
 }
 

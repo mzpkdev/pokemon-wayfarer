@@ -71,8 +71,8 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_REVIVAL_BLESSING); }
     } SCENE {
-        MESSAGE("The opposing Audino used Revival Blessing!");
-        MESSAGE("Pidgey was revived and is ready to fight again!");
+        MESSAGE("The opposing AUDINO used REVIVAL BLESSING!");
+        MESSAGE("PIDGEY was revived and is ready to fight again!");
     }
 }
 

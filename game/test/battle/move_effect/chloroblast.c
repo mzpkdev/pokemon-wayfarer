@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Chloroblast causes the user & the target to faint when below
         HP_BAR(opponent, hp: 0);
         MESSAGE("The opposing WOBBUFFET fainted!");
         HP_BAR(player, hp: 0);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

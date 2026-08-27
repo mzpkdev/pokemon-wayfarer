@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
         }
 
         // 5 turns
-        MESSAGE("Tapu Bulu used Celebrate!");
+        MESSAGE("TAPU BULU used CELEBRATE!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
 
         MESSAGE("Tapu Bulu used Celebrate!");

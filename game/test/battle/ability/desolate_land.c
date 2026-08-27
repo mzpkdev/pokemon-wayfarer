@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Water Gun!");
+        MESSAGE("The opposing WOBBUFFET used WATER GUN!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
         MESSAGE("The Water-type attack evaporated in the extremely harsh sunlight!");
         NOT HP_BAR(player);

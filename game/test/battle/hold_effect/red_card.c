@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Red Card switches the attacker with a random non-fainted rep
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
+        MESSAGE("WOBBUFFET held up its Red Card against the opposing WOBBUFFET!");
         MESSAGE("The opposing Bulbasaur was dragged out!");
     } THEN {
         EXPECT(player->item == ITEM_NONE);
@@ -43,7 +43,7 @@ DOUBLE_BATTLE_TEST("Red Card switches the target with a random non-battler, non-
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
-        MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
+        MESSAGE("WOBBUFFET held up its Red Card against the opposing WOBBUFFET!");
         MESSAGE("The opposing Bulbasaur was dragged out!");
     } THEN {
         EXPECT(playerLeft->item == ITEM_NONE);
@@ -454,7 +454,7 @@ SINGLE_BATTLE_TEST("Red Card does not cause the dragged out mon to lose hp due t
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing WOBBUFFET held up its Red Card against WOBBUFFET!");
-        MESSAGE("Wynaut was dragged out!");
+        MESSAGE("WYNAUT was dragged out!");
         NOT HP_BAR(player);
     }
 }

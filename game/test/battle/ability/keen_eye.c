@@ -196,7 +196,7 @@ SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief fro
             MESSAGE("The opposing Staryu's Attack rose!");
             MESSAGE("The opposing Staryu's accuracy rose!");
         }
-        MESSAGE("Wobbuffet stole the target's boosted stats!");
+        MESSAGE("WOBBUFFET stole the target's boosted stats!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE);

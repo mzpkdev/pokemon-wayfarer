@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Paralysis has a 25% chance of skipping the turn")
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
     } SCENE {
-        MESSAGE("Wobbuffet couldn't move because it's paralyzed!");
+        MESSAGE("WOBBUFFET couldn't move because it's paralyzed!");
     }
 }
 
@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't print an effectiveness message")
     } WHEN {
         TURN { MOVE(opponent, MOVE_THUNDER_WAVE); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Thunder Wave!");
+        MESSAGE("The opposing WOBBUFFET used THUNDER WAVE!");
         NOT MESSAGE("It's super effective!");
     }
 }

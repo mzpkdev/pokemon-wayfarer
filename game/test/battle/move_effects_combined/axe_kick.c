@@ -32,8 +32,8 @@ SINGLE_BATTLE_TEST("Axe Kick deals damage half the hp to user if def battler pro
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponent);
         MESSAGE("The opposing WOBBUFFET protected itself!");
-        MESSAGE("The opposing Wobbuffet protected itself!");
-        MESSAGE("Wobbuffet kept going and crashed!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
+        MESSAGE("WOBBUFFET kept going and crashed!");
         HP_BAR(player, hp: maxHP / 2);
     }
 }

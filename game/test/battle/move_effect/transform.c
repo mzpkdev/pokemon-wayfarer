@@ -72,7 +72,7 @@ SINGLE_BATTLE_TEST("Transform fails when the user is already transformed in Gen5
         if (expectFail)
             MESSAGE("But it failed!");
         else
-            MESSAGE("The opposing Ditto transformed into Wobbuffet!");
+            MESSAGE("The opposing DITTO transformed into WOBBUFFET!");
     }
 }
 

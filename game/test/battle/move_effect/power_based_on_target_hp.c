@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Crush Grip's damage is affected by the target's current HP",
     } WHEN {
         TURN { MOVE(player, MOVE_CRUSH_GRIP); }
     } SCENE {
-        MESSAGE("Wobbuffet used Crush Grip!");
+        MESSAGE("WOBBUFFET used CRUSH GRIP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUSH_GRIP, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {

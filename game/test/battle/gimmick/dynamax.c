@@ -191,7 +191,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be flinched")
     } WHEN {
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Fake Out!");
+        MESSAGE("The opposing WOBBUFFET used FAKE OUT!");
         NONE_OF { MESSAGE("Wobbuffet flinched and couldn't move!"); }
         MESSAGE("Wobbuffet used Max Strike!");
     }
@@ -206,7 +206,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be hit by weight-based mov
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_HEAVY_SLAM); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("The opposing Wobbuffet used Heavy Slam!");
         MESSAGE("The move was blocked by the power of Dynamax!");
         NONE_OF { HP_BAR(player); }
@@ -222,7 +222,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be hit by OHKO moves")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_FISSURE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("The opposing Machamp used Fissure!");
         MESSAGE("It doesn't affect Wobbuffet…");
         NONE_OF { HP_BAR(player); }
@@ -256,7 +256,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by phazing moves
         TURN { MOVE(opponent, MOVE_DRAGON_TAIL); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
         TURN { MOVE(opponent, MOVE_WHIRLWIND); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("The opposing Wobbuffet used Dragon Tail!");
         HP_BAR(player);
         MESSAGE("The move was blocked by the power of Dynamax!");
@@ -311,7 +311,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot have their ability swapped
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
-        MESSAGE("Miltank used Max Strike!");
+        MESSAGE("MILTANK used MAX STRIKE!");
         MESSAGE("The opposing Runerigus used Skill Swap!");
         MESSAGE("But it failed!");
     } THEN {
@@ -344,7 +344,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon's Max Moves cannot be disabled")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_DISABLE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("The opposing WOBBUFFET used DISABLE!");
         MESSAGE("But it failed!");
     }
@@ -379,7 +379,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Torment")
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_TORMENT); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("The opposing Wobbuffet used Torment!");
         MESSAGE("But it failed!");
     }
@@ -563,7 +563,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot use Max Guard while holdin
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
         TURN { MOVE(player, MOVE_PROTECT, allowed: FALSE); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
         MESSAGE("Wobbuffet used Max Strike!");
     }
 }
@@ -605,7 +605,7 @@ SINGLE_BATTLE_TEST("Dynamax: Super Fang uses a Pokemon's non-Dynamax HP", s16 da
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUPER_FANG); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Super Fang!");
+        MESSAGE("The opposing WOBBUFFET used SUPER FANG!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -624,7 +624,7 @@ SINGLE_BATTLE_TEST("Dynamax: Pain Split uses a Pokemon's non-Dynamax HP", s16 da
     } WHEN {
         TURN { MOVE(opponent, MOVE_PAIN_SPLIT); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Pain Split!");
+        MESSAGE("The opposing WOBBUFFET used PAIN SPLIT!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -645,7 +645,7 @@ SINGLE_BATTLE_TEST("Dynamax: Sitrus Berries heal based on a Pokemon's non-Dynama
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLING); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
     } SCENE {
-        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+        MESSAGE("WOBBUFFET restored its health using its SITRUS BERRY!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -664,7 +664,7 @@ SINGLE_BATTLE_TEST("Dynamax: Heal Pulse heals based on a Pokemon's non-Dynamax H
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_PULSE); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Heal Pulse!");
+        MESSAGE("The opposing WOBBUFFET used HEAL PULSE!");
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -881,7 +881,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Mindstorm sets up Psychic Terrain")
         TURN { MOVE(opponent, MOVE_EXTREME_SPEED); MOVE(player, MOVE_PSYCHIC, gimmick: GIMMICK_DYNAMAX); }
         TURN { MOVE(opponent, MOVE_EXTREME_SPEED); MOVE(player, MOVE_PSYCHIC); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Extreme Speed!");
+        MESSAGE("The opposing WOBBUFFET used EXTREME SPEED!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
         MESSAGE("Wobbuffet is protected by the Psychic Terrain!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
@@ -897,7 +897,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Lightning sets up Electric Terrain")
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SPORE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Lightning!");
+        MESSAGE("WOBBUFFET used MAX LIGHTNING!");
         MESSAGE("The opposing Wobbuffet used Spore!");
         MESSAGE("Wobbuffet surrounds itself with electrified terrain!");
     }
@@ -979,7 +979,7 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Hydrosnipe has fixed power and ignores abilit
     } WHEN {
         TURN { MOVE(player, move, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("Inteleon used G-Max Hydrosnipe!");
+        MESSAGE("INTELEON used G-MAX HYDROSNIPE!");
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_EQ(results[0].damage, results[1].damage);
@@ -1577,7 +1577,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Attacks prints a message when hitting into Max 
     } WHEN {
         TURN { MOVE(player, MOVE_GROWL, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
-        MESSAGE("Wobbuffet used Max Guard!");
+        MESSAGE("WOBBUFFET used MAX GUARD!");
         MESSAGE("The opposing Wobbuffet used Max Strike!");
     }
 }
@@ -1646,8 +1646,8 @@ SINGLE_BATTLE_TEST("Dynamax: max move against semi-invulnerable target prints th
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_FLY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
-        MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("WOBBUFFET used MAX STRIKE!");
+        MESSAGE("The opposing WOBBUFFET avoided the attack!");
     }
 }
 

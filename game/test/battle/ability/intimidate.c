@@ -121,9 +121,9 @@ SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Atta
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
-        MESSAGE("2 sent out Hitmontop!");
+        MESSAGE("2 sent out HITMONTOP!");
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
-        MESSAGE("The opposing Hitmontop's Intimidate cuts Wobbuffet's Attack!");
+        MESSAGE("The opposing HITMONTOP's INTIMIDATE cuts WOBBUFFET's ATTACK!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
             MESSAGE("The opposing Hitmontop used Scratch!");

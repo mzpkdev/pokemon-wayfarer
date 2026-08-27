@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Plasma Fists does not set up Ion Deluge if it does not conne
     } WHEN {
         TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Krabby used Plasma Fists!");
+        MESSAGE("KRABBY used PLASMA FISTS!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_PLASMA_FISTS, player);
             MESSAGE("A deluge of ions showers the battlefield!");
@@ -75,10 +75,10 @@ SINGLE_BATTLE_TEST("Plasma Fists type-changing effect does not override Pixilate
     } WHEN {
         TURN { MOVE(player, MOVE_PLASMA_FISTS); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Krabby used Plasma Fists!");
+        MESSAGE("KRABBY used PLASMA FISTS!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PLASMA_FISTS, player);
         MESSAGE("A deluge of ions showers the battlefield!");
-        MESSAGE("The opposing Sylveon used Scratch!");
+        MESSAGE("The opposing SYLVEON used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         NOT MESSAGE("It's super effective!");
     }

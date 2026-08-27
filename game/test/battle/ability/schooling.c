@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Schooling switches Level 20+ Wishiwashi's form when HP is 25
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
         }
         MESSAGE("WISHIWASHI used CELEBRATE!");
-        MESSAGE("The opposing Wobbuffet used Super Fang!");
+        MESSAGE("The opposing WOBBUFFET used SUPER FANG!");
         HP_BAR(player);
         if (level >= 20)
         {
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Schooling switches Level 20+ Wishiwashi's form when HP is he
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_HEAL_PULSE); }
     } SCENE {
         MESSAGE("WISHIWASHI used CELEBRATE!");
-        MESSAGE("The opposing Wobbuffet used Heal Pulse!");
+        MESSAGE("The opposing WOBBUFFET used HEAL PULSE!");
         HP_BAR(player);
         if (level >= 20)
         {

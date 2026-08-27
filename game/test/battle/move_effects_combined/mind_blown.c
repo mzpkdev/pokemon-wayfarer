@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Mind Blown causes the user & the target to faint when below 
         HP_BAR(opponent, hp: 0);
         HP_BAR(player, hp: 0);
         MESSAGE("WOBBUFFET fainted!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 

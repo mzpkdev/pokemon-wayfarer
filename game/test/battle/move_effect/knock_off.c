@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if i
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
-        MESSAGE("The opposing Wobbuffet's substitute faded!");
+        MESSAGE("The opposing WOBBUFFET's substitute faded!");
         NOT { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF); }
     } THEN {
         EXPECT(opponent->item == ITEM_LEFTOVERS);
@@ -244,7 +244,7 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
         MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's LEFTOVERS!");
         // turn 2
         MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }
@@ -304,7 +304,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Orbs for Primal Reversion from Poke
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Red Orb!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's RED ORB!");
     }
 }
 
@@ -352,7 +352,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off other form-change hold items from P
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Sky Plate!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's SKY PLATE!");
     }
 }
 
@@ -376,7 +376,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off begin-battle form-change hold items
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Rusted Shield!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's RUSTED SHIELD!");
     }
 }
 
@@ -446,7 +446,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off Ogerpon masks from Pokemon that are
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Hearthflame Mask!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's HEARTHFLAME MASK!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }
@@ -474,7 +474,7 @@ SINGLE_BATTLE_TEST("Knock Off does knock off a Booster Energy from a non Paradox
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
-        MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Booster Energy!");
+        MESSAGE("WOBBUFFET knocked off the opposing WOBBUFFET's BOOSTER ENERGY!");
     } THEN {
         EXPECT(opponent->item == ITEM_NONE);
     }

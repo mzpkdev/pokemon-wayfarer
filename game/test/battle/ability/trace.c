@@ -61,7 +61,7 @@ DOUBLE_BATTLE_TEST("Trace copies opponents ability randomly")
         TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_TRACE);
-        MESSAGE("It traced the opposing Torchic's Blaze!");
+        MESSAGE("It traced the opposing TORCHIC's BLAZE!");
     }
 }
 

@@ -383,7 +383,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves with the best possible score, chosen ran
         TURN { EXPECT_MOVES(opponent, MOVE_THUNDERBOLT, MOVE_SLUDGE_BOMB); SEND_OUT(player, 1); }
     }
     SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 

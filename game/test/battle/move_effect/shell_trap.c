@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Shell Trap activates only if hit by a physical move")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
             HP_BAR(opponent);
         } else {
-            MESSAGE("Wobbuffet's shell trap didn't work!");
+            MESSAGE("WOBBUFFET's shell trap didn't work!");
             NONE_OF {
                 MESSAGE("Wobbuffet used Shell Trap!");
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Shell Trap does not activate if attacker's Sheer Force appli
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
             HP_BAR(opponent);
         } else {
-            MESSAGE("Wobbuffet's shell trap didn't work!");
+            MESSAGE("WOBBUFFET's shell trap didn't work!");
             NONE_OF {
                 MESSAGE("Wobbuffet used Shell Trap!");
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
@@ -114,7 +114,7 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 1 a
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
         MESSAGE("The opposing Wynaut used Celebrate!");
     }
 }

@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Big Pecks doesn't prevent Spectral Thief from resetting posi
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, opponent);
         MESSAGE("The opposing PIDGEY's DEFENSE rose!");
-        MESSAGE("Wobbuffet stole the target's boosted stats!");
+        MESSAGE("WOBBUFFET stole the target's boosted stats!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);

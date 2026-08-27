@@ -86,7 +86,7 @@ SINGLE_BATTLE_TEST("Eject Button is not blocked by trapping abilities or moves")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing WOBBUFFET is switched out with the EJECT BUTTON!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("2 sent out WOBBUFFET!");
     }
 }
 
@@ -144,7 +144,7 @@ SINGLE_BATTLE_TEST("Eject Button has no chance to activate after Dragon Tail")
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
-        MESSAGE("The opposing Chansey was dragged out!");
+        MESSAGE("The opposing CHANSEY was dragged out!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             MESSAGE("The opposing Chansey is switched out with the Eject Button!");

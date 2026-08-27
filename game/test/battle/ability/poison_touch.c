@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Poison Touch has a 30% chance to poison when attacking with 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
-        MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+        MESSAGE("The opposing WOBBUFFET was poisoned by GRIMER's POISON TOUCH!");
         STATUS_ICON(opponent, poison: TRUE);
     }
 }
