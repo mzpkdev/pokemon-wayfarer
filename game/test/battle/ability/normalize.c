@@ -24,12 +24,12 @@ SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
         if (ability == ABILITY_CUTE_CHARM)
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
-            NOT { MESSAGE("It doesn't affect Gastly…"); }
+            NOT { MESSAGE("It doesn't affect GASTLY…"); }
         }
         else
         {
             NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent); }
-            MESSAGE("It doesn't affect Gastly…");
+            MESSAGE("It doesn't affect GASTLY…");
         }
     }
 }
