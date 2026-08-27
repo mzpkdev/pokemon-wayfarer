@@ -88,7 +88,7 @@ SINGLE_BATTLE_TEST("Rototiller fails if the only valid target is semi-invulnerab
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
         MESSAGE("WOBBUFFET used ROTOTILLER!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROTOTILLER, player);
-        MESSAGE("The opposing Tangela avoided the attack!");
+        MESSAGE("The opposing TANGELA avoided the attack!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);

@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick recoil happens after Spiky Shield 
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKY_SHIELD, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_JUMP_KICK, player);
-        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Spiky Shield!");
+        MESSAGE("WOBBUFFET was hurt by the opposing WOBBUFFET's SPIKY SHIELD!");
         MESSAGE("WOBBUFFET kept going and crashed!");
         HP_BAR(player, damage: maxHP / 2);
     }

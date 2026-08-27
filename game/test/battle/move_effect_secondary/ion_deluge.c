@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Plasma Fists does not set up Ion Deluge if it does not conne
             ANIMATION(ANIM_TYPE_MOVE, MOVE_PLASMA_FISTS, player);
             MESSAGE("A deluge of ions showers the battlefield!");
         }
-        MESSAGE("The opposing Phanpy used Scratch!");
+        MESSAGE("The opposing PHANPY used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         NOT MESSAGE("It's super effective!");
     }

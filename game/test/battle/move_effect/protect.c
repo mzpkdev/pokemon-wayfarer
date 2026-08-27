@@ -790,9 +790,9 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
         TURN { MOVE(opponentLeft, MOVE_CRAFTY_SHIELD); MOVE(playerLeft, move, target: opponentLeft); MOVE(playerRight, move, target: opponentRight); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
-        MESSAGE("The opposing Wobbuffet protected itself!");
+        MESSAGE("The opposing WOBBUFFET protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
-        MESSAGE("The opposing Wynaut protected itself!");
+        MESSAGE("The opposing WYNAUT protected itself!");
     }
 }
 
