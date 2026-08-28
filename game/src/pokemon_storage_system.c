@@ -112,6 +112,7 @@ enum {
     MSG_CHANGED_TO_ITEM,
     MSG_CANT_STORE_MAIL,
     MSG_NUZLOCKE_FAINTED,
+    MSG_ONE_TYPE_BLOCKED,
 };
 
 // IDs for how to resolve variables in the above messages
@@ -1082,7 +1083,8 @@ static const struct StorageMessage sMessages[] =
     [MSG_ITEM_IS_HELD]         = {COMPOUND_STRING("{DYNAMIC 0} is now held."),   MSG_VAR_ITEM_NAME},
     [MSG_CHANGED_TO_ITEM]      = {COMPOUND_STRING("Changed to {DYNAMIC 0}."),    MSG_VAR_ITEM_NAME},
     [MSG_CANT_STORE_MAIL]      = {COMPOUND_STRING("MAIL can't be stored!"),      MSG_VAR_NONE},
-    [MSG_NUZLOCKE_FAINTED]     = {COMPOUND_STRING("This POKéMON has fainted\nin Nuzlocke mode!"),       MSG_VAR_NONE},
+    [MSG_NUZLOCKE_FAINTED]     = {COMPOUND_STRING("fainted in Nuzlocke!"),       MSG_VAR_NONE},
+    [MSG_ONE_TYPE_BLOCKED]     = {COMPOUND_STRING("Wrong type!"), MSG_VAR_NONE},
 };
 
 static bool8 IsBoxMonNuzlockeDead(u8 boxId, u8 position)
@@ -1107,6 +1109,26 @@ static bool8 IsMovingMonNuzlockeDead(void)
         return FALSE;
 
     return GetMonData(&sStorage->movingMon, MON_DATA_HP, NULL) == 0;
+}
+
+// The One Type Challenge sends off-type mon to the PC rather than the party.
+// Without these the player could just withdraw them again.
+static bool8 IsBoxMonOffType(u8 boxId, u8 position)
+{
+    u16 species = GetBoxMonDataAt(boxId, position, MON_DATA_SPECIES);
+
+    if (species == SPECIES_NONE)
+        return FALSE;
+
+    return !DoesSpeciesPassOneTypeChallenge(species);
+}
+
+static bool8 IsMovingMonOffType(void)
+{
+    if (!sIsMonBeingMoved)
+        return FALSE;
+
+    return !DoesSpeciesPassOneTypeChallenge(GetMonData(&sStorage->movingMon, MON_DATA_SPECIES));
 }
 
 static const struct WindowTemplate sYesNoWindowTemplate =
@@ -2079,7 +2101,7 @@ static void InitStartingPosData(void)
 
 static void SetMonIconTransparency(void)
 {
-    if (sStorage->boxOption == OPTION_MOVE_ITEMS)
+    if (sStorage->boxOption == OPTION_MOVE_ITEMS || sStorage->boxOption == OPTION_SELECT_MON || sStorage->boxOption == OPTION_MOVE_MONS || sStorage->boxOption == OPTION_DEPOSIT || sStorage->boxOption == OPTION_WITHDRAW)
     {
         SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT2_ALL);
         SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(7, 11));
@@ -2633,6 +2655,11 @@ static void Task_OnSelectedMon(u8 taskId)
                 sStorage->state = 7;
                 break;
             }
+            if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY && IsMovingMonOffType())
+            {
+                sStorage->state = 8;
+                break;
+            }
             PlaySE(SE_SELECT);
             ClearBottomWindow();
             SetPokeStorageTask(Task_PlaceMon);
@@ -2645,6 +2672,10 @@ static void Task_OnSelectedMon(u8 taskId)
             else if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY && IsMovingMonNuzlockeDead())
             {
                 sStorage->state = 7;
+            }
+            else if (sIsMonBeingMoved && sCursorArea == CURSOR_AREA_IN_PARTY && IsMovingMonOffType())
+            {
+                sStorage->state = 8;
             }
             else
             {
@@ -2772,6 +2803,11 @@ static void Task_OnSelectedMon(u8 taskId)
         PrintMessage(MSG_NUZLOCKE_FAINTED);
         sStorage->state = 6;
         break;
+    case 8:
+        PlaySE(SE_FAILURE);
+        PrintMessage(MSG_ONE_TYPE_BLOCKED);
+        sStorage->state = 6;
+        break;
     }
 }
 
@@ -2846,6 +2882,11 @@ static void Task_WithdrawMon(u8 taskId)
         else if (IsBoxMonNuzlockeDead(StorageGetCurrentBox(), sCursorPosition))
         {
             PrintMessage(MSG_NUZLOCKE_FAINTED);
+            sStorage->state = 1;
+        }
+        else if (IsBoxMonOffType(StorageGetCurrentBox(), sCursorPosition))
+        {
+            PrintMessage(MSG_ONE_TYPE_BLOCKED);
             sStorage->state = 1;
         }
         else
@@ -4515,6 +4556,19 @@ static bool32 ShouldBoxmonSpriteBeTransparent(u32 boxId, u32 boxPosition)
     if (sStorage->boxOption == OPTION_SELECT_MON
      && IsBoxMonExcluded(GetBoxedMonPtr(boxId, boxPosition)))
         return TRUE;
+
+    struct Pokemon mon = {0};
+    BoxMonAtToMon(boxId, boxPosition, &mon);
+
+    if (IsNuzlockeActive() || IsNuzlockeEasyActive())
+    {
+        if ((sStorage->boxOption == OPTION_SELECT_MON
+        || sStorage->boxOption == OPTION_DEPOSIT
+        || sStorage->boxOption == OPTION_WITHDRAW
+        || sStorage->boxOption == OPTION_MOVE_MONS)
+        && GetMonData(&mon, MON_DATA_HP) == 0 && GetMonData(&mon, MON_DATA_IS_EGG) == FALSE)
+            return TRUE;
+    }
     return FALSE;
 }
 
@@ -4821,6 +4875,18 @@ static void  CreatePartyMonSprite(u8 partyPosition, bool8 visible)
         if (partySprite != NULL && IsBoxMonExcluded(&(partyPokemon->box)))
             partySprite->oam.objMode = ST_OAM_OBJ_BLEND;
     }
+
+    if (IsNuzlockeActive() || IsNuzlockeEasyActive())
+    {
+        if (sStorage->boxOption == OPTION_SELECT_MON
+        || sStorage->boxOption == OPTION_DEPOSIT
+        || sStorage->boxOption == OPTION_WITHDRAW
+        || sStorage->boxOption == OPTION_MOVE_MONS)
+        {
+            if (GetMonData(partyPokemon, MON_DATA_HP) == 0 && GetMonData(partyPokemon, MON_DATA_IS_EGG) == FALSE)
+                partySprite->oam.objMode = ST_OAM_OBJ_BLEND;
+        }
+    }
 }
 
 static void CreatePartyMonsSprites(bool8 visible)
@@ -4872,6 +4938,21 @@ static void CreatePartyMonsSprites(bool8 visible)
         {
             if (sStorage->partySprites[i] != NULL && IsBoxMonExcluded(&(gPlayerParty[i].box)))
                 sStorage->partySprites[i]->oam.objMode = ST_OAM_OBJ_BLEND;
+        }
+    }
+
+    if (IsNuzlockeActive() || IsNuzlockeEasyActive())
+    {
+        if (sStorage->boxOption == OPTION_SELECT_MON
+        || sStorage->boxOption == OPTION_DEPOSIT
+        || sStorage->boxOption == OPTION_WITHDRAW
+        || sStorage->boxOption == OPTION_MOVE_MONS)
+        {
+            for (i = 0; i < PARTY_SIZE; i++)
+            {
+                if (GetMonData(&gPlayerParty[i], MON_DATA_HP) == 0 && GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) == FALSE)
+                    sStorage->partySprites[i]->oam.objMode = ST_OAM_OBJ_BLEND;
+            }
         }
     }
 }
@@ -5359,6 +5440,7 @@ static void Task_InitBox(u8 taskId)
         CreateBoxScrollArrows();
         InitBoxMonSprites(task->tBoxId);
         SetGpuReg(REG_OFFSET_BG2CNT, BGCNT_PRIORITY(2) | BGCNT_CHARBASE(2) | BGCNT_SCREENBASE(27) | BGCNT_TXT512x256);
+        SetMonIconTransparency();
         break;
     case 4:
         DestroyTask(taskId);

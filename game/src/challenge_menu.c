@@ -22,6 +22,7 @@
 #include "constants/songs.h"
 #include "battle_main.h"
 #include "random.h"
+#include "config/randomizer.h"
 #include "overworld.h"
 #include "script.h"
 #include "challenge_menu.h"
@@ -81,6 +82,7 @@ enum {
     ITEM_RANDOM_STATIC,
     ITEM_RANDOM_SIMILAR,
     ITEM_RANDOM_LEGENDARIES,
+    ITEM_RANDOM_GEN_SCOPE,
     ITEM_RANDOM_TYPE,
     ITEM_RANDOM_MOVES,
     ITEM_RANDOM_ABILITIES,
@@ -133,7 +135,7 @@ enum {
 };
 
 // Maximum items in any single tab
-#define MAX_ITEMS_PER_TAB 16
+#define MAX_ITEMS_PER_TAB 20
 #define ITEMS_VISIBLE 5
 #define Y_DIFF 16
 
@@ -195,7 +197,8 @@ static const u8 sMidGameLockPolicy[TAB_COUNT * MAX_ITEMS_PER_TAB] = {
     [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_TYPE_EFFEC]  = LOCK_ONEWAY_DOWN,
     [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_ITEMS]       = LOCK_ONEWAY_DOWN,
     [TAB_RANDOMIZER * MAX_ITEMS_PER_TAB + ITEM_RANDOM_CHAOS]       = LOCK_ONEWAY_DOWN,
-    // MAP_BASED and SIMILAR are LOCK_FREE (default 0)
+    // MAP_BASED, SIMILAR and GEN_SCOPE are LOCK_FREE (default 0) -- GEN_SCOPE is
+    // deliberately adjustable in both directions mid-run.
     // TAB_NUZLOCKE
     [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_NUZLOCKE]      = LOCK_ONEWAY_DOWN,
     [TAB_NUZLOCKE * MAX_ITEMS_PER_TAB + ITEM_NUZLOCKE_SPECIES_CLAUSE] = LOCK_ONEWAY_DOWN,
@@ -219,7 +222,7 @@ static const u8 sMidGameLockPolicy[TAB_COUNT * MAX_ITEMS_PER_TAB] = {
     [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_POKECENTER]    = LOCK_ONEWAY_DOWN,
     [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_EXPENSIVE]     = LOCK_ONEWAY_DOWN,
     [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_EVO_LIMIT]     = LOCK_ONEWAY_DOWN,
-    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_ONE_TYPE]      = LOCK_ONEWAY_DOWN,
+    [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_ONE_TYPE]      = LOCK_FREE,
     [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_BST_EQUALIZER] = LOCK_ONEWAY_DOWN,
     [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_MIRROR]        = LOCK_ONEWAY_DOWN,
     [TAB_CHALLENGES * MAX_ITEMS_PER_TAB + ITEM_CHALLENGES_MIRROR_THIEF]  = LOCK_ONEWAY_DOWN,
@@ -512,6 +515,11 @@ static const u8 *const sChoices_OffRandom[] = {
     COMPOUND_STRING("RANDOM"),
 };
 
+static const u8 *const sChoices_GenScope[] = {
+    COMPOUND_STRING("GEN 1-9"),
+    COMPOUND_STRING("GEN 1-3"),
+};
+
 static const u8 *const sChoices_OffChaos[] = {
     COMPOUND_STRING("OFF"),
     COMPOUND_STRING("CHAOS"),
@@ -714,7 +722,7 @@ static const u8 *const sDesc_RandomTrainer[] = {
 };
 static const u8 *const sDesc_RandomStatic[] = {
     COMPOUND_STRING("Static encounters will be the same\nas in the base game."),
-    COMPOUND_STRING("Named {PKMN}, casino {PKMN}, roamers,\nand some other special {PKMN} won't change."),
+    COMPOUND_STRING("Named {PKMN}, casino {PKMN}, roamers, and\nsome other special {PKMN} won't change."),
 };
 static const u8 *const sDesc_RandomSimilar[] = {
     COMPOUND_STRING("{PKMN} replaced with similar tiered\nones. Currently based on evo stages."),
@@ -723,6 +731,10 @@ static const u8 *const sDesc_RandomSimilar[] = {
 static const u8 *const sDesc_RandomLegendaries[] = {
     COMPOUND_STRING("Legendary {PKMN} will not be\nincluded and randomized."),
     COMPOUND_STRING("Include legendary {PKMN} in\nrandomization!"),
+};
+static const u8 *const sDesc_RandomGenScope[] = {
+    COMPOUND_STRING("Randomize into {PKMN} from every\ngeneration."),
+    COMPOUND_STRING("Only GEN 1-3 {PKMN} and their\ncross-gen evolutions."),
 };
 static const u8 *const sDesc_RandomType[] = {
     COMPOUND_STRING("{PKMN} types stay the same as in\nthe base game."),
@@ -808,6 +820,12 @@ static const struct ChallengeMenuItem sTabItems_Randomizer[] = {
         .descriptions = sDesc_RandomLegendaries,
         .numChoices   = 2,
         .choiceNames  = sChoices_OffOn,
+    },
+    [ITEM_RANDOM_GEN_SCOPE] = {
+        .name         = COMPOUND_STRING("GEN SCOPE"),
+        .descriptions = sDesc_RandomGenScope,
+        .numChoices   = 2,
+        .choiceNames  = sChoices_GenScope,
     },
     [ITEM_RANDOM_TYPE] = {
         .name         = COMPOUND_STRING("TYPE"),
@@ -1100,6 +1118,7 @@ static const u8 *const sDesc_EvoLimit[] = {
 };
 #define NUM_ONE_TYPE_CHOICES 20
 #define ONE_TYPE_OFF 31
+#define EVO_LINE_TYPE_SEARCH_DEPTH 4 // deepest evolution chain worth walking
 
 static const u8 sText_Desc_OneType[] = _("Allow only one {PKMN} type the\nplayer can capture and use.");
 static const u8 *const sDesc_OneType[] = {
@@ -1288,6 +1307,7 @@ static bool8 CheckConditions(u8 tab, u8 itemIndex)
         case ITEM_RANDOM_SIMILAR:
             return masterOn && anyPkmn && !(*GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_CHAOS));
         case ITEM_RANDOM_LEGENDARIES:
+        case ITEM_RANDOM_GEN_SCOPE:
             return masterOn && anyPkmn;
         case ITEM_RANDOM_CHAOS:
             return masterOn && (anyPkmn
@@ -1970,6 +1990,11 @@ static void Task_ConfirmSaveYes(u8 taskId)
         cs->tx_Random_Static           = 0;
         cs->tx_Random_Similar          = 0;
         cs->tx_Random_IncludeLegendaries = 0;
+        // Not cleared to 0 like the rest: 0 means "all generations", so zeroing
+        // it here would quietly drop the default the next time the randomizer is
+        // switched back on. It is inert while the randomizer is off, and it is
+        // not part of the master-toggle derivation on load.
+        cs->tx_Random_GenScope         = RANDOMIZER_DEFAULT_GEN_SCOPE_1_3;
         cs->tx_Random_Type             = 0;
         cs->tx_Random_Moves            = 0;
         cs->tx_Random_Abilities        = 0;
@@ -1988,6 +2013,7 @@ static void Task_ConfirmSaveYes(u8 taskId)
         cs->tx_Random_Static           = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STATIC);
         cs->tx_Random_Similar          = !(*GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_SIMILAR));
         cs->tx_Random_IncludeLegendaries = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_LEGENDARIES);
+        cs->tx_Random_GenScope         = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_GEN_SCOPE);
         cs->tx_Random_Type             = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_TYPE);
         cs->tx_Random_Moves            = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_MOVES);
         cs->tx_Random_Abilities        = *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_ABILITIES);
@@ -2208,6 +2234,7 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_STATIC)      = cs->tx_Random_Static;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_SIMILAR)     = !cs->tx_Random_Similar;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_LEGENDARIES) = cs->tx_Random_IncludeLegendaries;
+            *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_GEN_SCOPE)   = cs->tx_Random_GenScope;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_TYPE)        = cs->tx_Random_Type;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_MOVES)       = cs->tx_Random_Moves;
             *GetSelectionPtr(TAB_RANDOMIZER, ITEM_RANDOM_ABILITIES)   = cs->tx_Random_Abilities;
@@ -2406,4 +2433,45 @@ bool8 IsPokecenterChallengeActivated(void)
 bool8 IsOneTypeChallengeActive(void)
 {
     return gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge != ONE_TYPE_OFF;
+}
+
+// Returns TRUE if the species has the given type, or if any species it can
+// eventually evolve into has it. Lets pre-evolutions that "grow into" the
+// challenge type (e.g. Trapinch for a Dragon run) be used.
+static bool8 DoesEvoLineHaveType(u16 species, u8 type, u8 depth)
+{
+    const struct Evolution *evolutions;
+    u32 i;
+
+    if (species == SPECIES_NONE || depth > EVO_LINE_TYPE_SEARCH_DEPTH)
+        return FALSE;
+
+    if (GetSpeciesType(species, 0) == type || GetSpeciesType(species, 1) == type)
+        return TRUE;
+
+    evolutions = GetSpeciesEvolutions(species);
+    if (evolutions == NULL)
+        return FALSE;
+
+    for (i = 0; evolutions[i].method != EVOLUTIONS_END; i++)
+    {
+        u16 target = evolutions[i].targetSpecies;
+
+        // An evolution can point at a species this build has compiled out.
+        if (target == SPECIES_NONE || target > NUM_SPECIES || !IsSpeciesEnabled(target))
+            continue;
+
+        if (DoesEvoLineHaveType(target, type, depth + 1))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+bool8 DoesSpeciesPassOneTypeChallenge(u16 species)
+{
+    if (!IsOneTypeChallengeActive())
+        return TRUE;
+
+    return DoesEvoLineHaveType(species, gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge, 0);
 }
