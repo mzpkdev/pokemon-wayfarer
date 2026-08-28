@@ -741,5 +741,3 @@ The inventory covers 338 deferred tests across 112 source files. It does not inc
 
 - `Item names fit on PC Storage (list)` ([source](text.c#L147)): ELECTRIC TERA SHARD is one pixel wider than the PC Storage list allowance. Re-enable after the list layout or item text fits.
 - `Item descriptions fit on Bag and Shop Screen` ([source](text.c#L243)): The FIRE ELECTRIC FIGHTING TERA SHARD description exceeds the Bag and Shop text allowance. Re-enable after the UI or text fits.
-
-
