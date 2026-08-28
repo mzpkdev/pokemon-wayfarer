@@ -21,7 +21,7 @@ GoldenrodUnderground1_ClearTheWay::
 	return
 
 @ Added an antisoft lock, using wall panels
-@ Added more anti softlock 
+@ Added more anti softlock
 
 GoldenrodCity_UndergroundSwitches_InDoorAntiLock::
 	lock
