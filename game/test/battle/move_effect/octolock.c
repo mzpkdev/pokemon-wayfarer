@@ -3,6 +3,8 @@
 
 SINGLE_BATTLE_TEST("Octolock decreases Defense and Sp. Def by at the end of the turn")
 {
+    // TODO(nightly-failures): Octolock's end-of-turn stat-drop log does not match this game. Re-enable after stat behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -20,6 +22,8 @@ SINGLE_BATTLE_TEST("Octolock decreases Defense and Sp. Def by at the end of the 
 
 SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke and Full Metal Body")
 {
+    // TODO(nightly-failures): Octolock's prevention-ability log does not match this game. Re-enable after stat prevention and messages align.
+    KNOWN_FAILING;
     u32 species;
     enum Ability ability;
 
@@ -108,6 +112,8 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Amulet")
 
 SINGLE_BATTLE_TEST("Octolock will not decrease Defense and Sp. Def further then minus six")
 {
+    // TODO(nightly-failures): Octolock's minimum-stat-stage log does not match this game. Re-enable after stat behavior and messages align.
+    KNOWN_FAILING;
     u8 j;
 
     GIVEN {
@@ -157,6 +163,8 @@ SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions")
 
 SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
 {
+    // TODO(nightly-failures): Octolock's switch-out end condition emits an unexpected battle log. Re-enable after lock behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

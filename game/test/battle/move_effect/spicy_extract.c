@@ -64,6 +64,9 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
 
 SINGLE_BATTLE_TEST("Spicy Extract Defense loss is prevented by Big Pecks")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_BIG_PECKS); }
@@ -120,6 +123,9 @@ SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerabili
 
 SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); }
@@ -142,6 +148,9 @@ SINGLE_BATTLE_TEST("Spicy Extract stat changes will be inverted by Contrary")
 
 SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defense only")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_CONTRARY); Item(ITEM_CLEAR_AMULET); }

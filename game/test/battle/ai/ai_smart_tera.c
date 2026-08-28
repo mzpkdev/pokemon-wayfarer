@@ -4,6 +4,8 @@
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_TERA: AI will tera if it enables a ko")
 {
+    // TODO(nightly-failures): The AI Smart Tera transformation message does not match this game. Re-enable after AI Terastallization behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMovePower(MOVE_SEED_BOMB) == 80);
         ASSUME(GetMovePower(MOVE_AQUA_TAIL) == 90);

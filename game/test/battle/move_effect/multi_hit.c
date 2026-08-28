@@ -280,7 +280,7 @@ SINGLE_BATTLE_TEST("Multi Hit moves will not disrupt Destiny Bond flag")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, opponent);
         }
-        MESSAGE("Wobbuffet took its attacker down with it!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET took its attacker down with it!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }

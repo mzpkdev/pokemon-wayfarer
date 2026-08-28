@@ -17,10 +17,10 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks mad
         TURN { MOVE(player, MOVE_TELEKINESIS); MOVE(opponent, MOVE_MINIMIZE); }
         TURN { MOVE(player, MOVE_SCREECH, hit:FALSE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Telekinesis!");
-        MESSAGE("The opposing Wynaut was hurled into the air!");
-        MESSAGE("The opposing Wynaut used Minimize!");
-        MESSAGE("Wobbuffet used Screech!");
+        MESSAGE("WOBBUFFET used TELEKINESIS!");
+        MESSAGE("The opposing WYNAUT was hurled into the air!");
+        MESSAGE("The opposing WYNAUT used MINIMIZE!");
+        MESSAGE("WOBBUFFET used SCREECH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
         NOT MESSAGE("Wobbuffet's attack missed!");
     }
@@ -36,11 +36,11 @@ SINGLE_BATTLE_TEST("Telekinesis ends after 3 turns")
         TURN {}
         TURN {}
     } SCENE {
-        MESSAGE("Wobbuffet used Telekinesis!");
-        MESSAGE("The opposing Wynaut was hurled into the air!");
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wynaut was freed from the telekinesis!");
+        MESSAGE("WOBBUFFET used TELEKINESIS!");
+        MESSAGE("The opposing WYNAUT was hurled into the air!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WYNAUT was freed from the telekinesis!");
     }
 }
 
@@ -58,14 +58,14 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target immune to Ground-type attacks")
         MESSAGE("WOBBUFFET used BULLDOZE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
         HP_BAR(opponent);
-        MESSAGE("Wobbuffet used Telekinesis!");
-        MESSAGE("The opposing Wynaut was hurled into the air!");
+        MESSAGE("WOBBUFFET used TELEKINESIS!");
+        MESSAGE("The opposing WYNAUT was hurled into the air!");
         MESSAGE("WOBBUFFET used BULLDOZE!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
             HP_BAR(opponent);
         }
-        MESSAGE("It doesn't affect the opposing Wynaut…");
+        MESSAGE("It doesn't affect the opposing WYNAUT…");
     }
 }
 

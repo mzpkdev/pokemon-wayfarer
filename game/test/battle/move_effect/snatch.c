@@ -99,12 +99,12 @@ DOUBLE_BATTLE_TEST("Snatch steals from the correct target when multiple snatchab
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
         MESSAGE("WOBBUFFET waits for a target to make a move!");
         // First snatchable move is Swords Dance from opponentLeft
-        MESSAGE("Wobbuffet snatched the opposing Abra's move!");
+        MESSAGE("WOBBUFFET snatched the opposing ABRA's move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("WOBBUFFET's ATTACK sharply rose!");
         // Agility should NOT be snatched (Snatch was already used)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AGILITY, opponentRight);
-        MESSAGE("The opposing Kadabra's Speed sharply rose!");
+        MESSAGE("The opposing KADABRA's SPEED sharply rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);

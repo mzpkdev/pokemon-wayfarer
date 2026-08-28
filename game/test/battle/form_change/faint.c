@@ -14,10 +14,10 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Shi
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUST, opponent);
         HP_BAR(player);
-        MESSAGE("Aegislash fainted!");
-        SEND_IN_MESSAGE("Wobbuffet");
-        SWITCH_OUT_MESSAGE("Wobbuffet")
-        SEND_IN_MESSAGE("Aegislash");
+        MESSAGE("AEGISLASH fainted!");
+        SEND_IN_MESSAGE("WOBBUFFET");
+        SWITCH_OUT_MESSAGE("WOBBUFFET")
+        SEND_IN_MESSAGE("AEGISLASH");
     } THEN {
         // We do not check gPlayerParty data to avoid triggering FORM_CHANGE_END_BATTLE.
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
@@ -37,10 +37,10 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon fainting (start as Bla
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GUST, opponent);
         HP_BAR(player);
-        MESSAGE("Aegislash fainted!");
-        SEND_IN_MESSAGE("Wobbuffet");
-        SWITCH_OUT_MESSAGE("Wobbuffet")
-        SEND_IN_MESSAGE("Aegislash");
+        MESSAGE("AEGISLASH fainted!");
+        SEND_IN_MESSAGE("WOBBUFFET");
+        SWITCH_OUT_MESSAGE("WOBBUFFET")
+        SEND_IN_MESSAGE("AEGISLASH");
     } THEN {
         // We do not check gPlayerParty data to avoid triggering FORM_CHANGE_END_BATTLE.
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
@@ -61,11 +61,11 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
         TURN { MOVE(playerRight, MOVE_GYRO_BALL, target: opponentRight); }
     } SCENE {
         if (species == SPECIES_CASTFORM) {
-            MESSAGE("The opposing Castform fainted!");
-            NOT MESSAGE("The opposing Castform transformed!");
+            MESSAGE("The opposing CASTFORM fainted!");
+            NOT MESSAGE("The opposing CASTFORM transformed!");
         } else {
-            MESSAGE("The opposing Cherrim fainted!");
-            NOT MESSAGE("The opposing Cherrim transformed!");
+            MESSAGE("The opposing CHERRIM fainted!");
+            NOT MESSAGE("The opposing CHERRIM transformed!");
         }
     }
 }

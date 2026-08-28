@@ -241,13 +241,13 @@ DOUBLE_BATTLE_TEST("Red Card activates for only the fastest target")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, opponentLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         MESSAGE("WOBBUFFET held up its Red Card against the opposing WOBBUFFET!");
-        MESSAGE("The opposing Unown was dragged out!");
+        MESSAGE("The opposing UNOWN was dragged out!");
 
         // Slower target's Red Card still able to activate on other battler.
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
-        MESSAGE("Wynaut held up its Red Card against the opposing Wynaut!");
-        MESSAGE("The opposing Wobbuffet was dragged out!");
+        MESSAGE("WYNAUT held up its Red Card against the opposing WYNAUT!");
+        MESSAGE("The opposing WOBBUFFET was dragged out!");
     } THEN {
         EXPECT(playerLeft->item == ITEM_NONE);
         EXPECT(playerRight->item == ITEM_NONE);
@@ -428,8 +428,8 @@ SINGLE_BATTLE_TEST("Red Card is consumed after dragged out replacement has its S
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing WOBBUFFET held up its Red Card against WOBBUFFET!");
-        MESSAGE("Wynaut was dragged out!");
-        MESSAGE("Wynaut was caught in a sticky web!");
+        MESSAGE("WYNAUT was dragged out!");
+        MESSAGE("WYNAUT was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         // 3rd turn, Red Card was consumed, it can't trigger again
         NONE_OF {

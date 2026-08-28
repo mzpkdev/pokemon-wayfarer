@@ -43,7 +43,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose a priority move if it is slower then the t
         TURN { MOVE(player, MOVE_STRENGTH); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
         TURN { MOVE(player, MOVE_STRENGTH); EXPECT_MOVE(opponent, MOVE_QUICK_ATTACK); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 
@@ -56,7 +56,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Loaded Dice damage increase from multi hit moves"
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_BULLET_SEED); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -73,4 +73,3 @@ AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
         }
     }
 }
-

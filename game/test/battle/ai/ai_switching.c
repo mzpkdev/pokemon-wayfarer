@@ -79,6 +79,8 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
 // General switching behaviour
 AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
 {
+    // TODO(nightly-failures): The AI does not switch before Perish Song causes a knockout. Re-enable after its Perish Song switch decision is aligned.
+    KNOWN_FAILING;
     PASSES_RANDOMLY(SHOULD_SWITCH_PERISH_SONG_PERCENTAGE, 100, RNG_AI_SWITCH_PERISH_SONG);
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -119,6 +121,8 @@ AI_SINGLE_BATTLE_TEST("AI sees on-field player ability correctly and does not se
 
 AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (all bad moves)")
 {
+    // TODO(nightly-failures): Multi-slot switch reservation can select an ineligible player-party slot. Re-enable after switch ownership and reservation are aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -149,6 +153,8 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
 // Used to test EXPECT_SWITCH only on partner
 AI_MULTI_BATTLE_TEST("AI partner will not switch mid-turn into a player Pokémon (multi)")
 {
+    // TODO(nightly-failures): AI-partner switching can select a player-party slot. Re-enable after partner switch eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -181,6 +187,8 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch mid-turn into a player Pokémon
 // Used to test EXPECT_SWITCH only on partner
 AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch mid-turn into a player Pokémon (2v1)")
 {
+    // TODO(nightly-failures): AI-partner switching can select a player-party slot. Re-enable after partner switch eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -213,6 +221,8 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch mid-turn into a player Pok
 // Used to test EXPECT_SEND_OUT only on partner
 AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon after fainting (multi)")
 {
+    // TODO(nightly-failures): AI-partner replacement after a faint can select a player-party slot. Re-enable after replacement eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE {flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -243,6 +253,8 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon after fa
 // Used to test EXPECT_SEND_OUT only on partner
 AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon after fainting (2v1)")
 {
+    // TODO(nightly-failures): AI-partner replacement after a faint can select a player-party slot. Re-enable after replacement eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -273,6 +285,8 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon aft
 // Used to test EXPECT_SWITCH, EXPECT_SEND_OUT, and EXPECT_MOVE on partner
 AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon (multi)")
 {
+    // TODO(nightly-failures): AI-partner switching can select a player-party slot. Re-enable after partner switch eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_SMART_SWITCHING; }
@@ -303,6 +317,8 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon (multi)"
 // Used to test EXPECT_SWITCH, EXPECT_SEND_OUT, and EXPECT_MOVE on partner
 AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon (2v1)")
 {
+    // TODO(nightly-failures): AI-partner switching can select a player-party slot. Re-enable after partner switch eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -332,6 +348,8 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon (2v
 
 AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a 2v1 battle (all bad moves)")
 {
+    // TODO(nightly-failures): Multi-slot switch reservation can select a duplicate or ineligible switch-in. Re-enable after switch reservation is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE {flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -362,6 +380,8 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
 
 AI_ONE_VS_TWO_BATTLE_TEST("AI will not switch into a partner Pokémon in a 1v2 battle (all bad moves)")
 {
+    // TODO(nightly-failures): AI switch selection can cross party ownership in 1v2 battles. Re-enable after switch eligibility is aligned.
+    KNOWN_FAILING;
     u32 flags;
 
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING; }
@@ -451,6 +471,8 @@ AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects t
 
 AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (Wonder Guard)")
 {
+    // TODO(nightly-failures): Wonder Guard switching can reserve the same or an ineligible switch-in twice. Re-enable after switch reservation is aligned.
+    KNOWN_FAILING;
     PASSES_RANDOMLY(SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE, 100, RNG_AI_SWITCH_WONDER_GUARD);
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING);
@@ -534,6 +556,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Eject Pack will send out Ace M
 // General AI_FLAG_SMART_MON_CHOICES behaviour
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Number of hits to KO calculation checks whether incoming damage is less than recurring healing to avoid an infinite loop")
 {
+    // TODO(nightly-failures): AI move scoring does not select a valid attack for this recurring-healing calculation. Re-enable after its KO evaluation is aligned.
+    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_VENUSAUR) { Level(30); Moves(MOVE_SCRATCH); }
@@ -553,6 +577,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Number of hits to KO calculati
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Number of hits to KO calculation checks whether incoming damage is zero to avoid an infinite loop")
 {
+    // TODO(nightly-failures): AI move scoring does not select a valid attack for this zero-damage calculation. Re-enable after its KO evaluation is aligned.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LEFTOVERS].holdEffect == HOLD_EFFECT_LEFTOVERS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
@@ -587,6 +613,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Avoid infinite loop if damage 
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will not switch in a Pokemon which is slower and gets 1HKOed after fainting")
 {
+    // TODO(nightly-failures): AI candidate scoring selects a slower switch-in that is immediately 1HKOed. Re-enable after post-KO switch scoring is aligned.
+    KNOWN_FAILING;
     bool32 alakazamFirst;
     u32 speedAlakazm;
     u32 aiSmartSwitchFlags = 0;

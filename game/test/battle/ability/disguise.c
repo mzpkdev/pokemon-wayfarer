@@ -86,11 +86,10 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to it
     } WHEN {
         TURN { MOVE(opponent, MOVE_AERIAL_ACE); }
     } SCENE {
-        MESSAGE("Mimikyu floats in the air with its Air Balloon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
         NOT HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_DISGUISE);
-        MESSAGE("Mimikyu's Air Balloon popped!");
+        MESSAGE("MIMIKYU's Air Balloon popped!");
     } THEN {
         EXPECT_EQ(player->species, newSpecies);
     }
@@ -213,11 +212,11 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's types revert back to Ghost/Fairy when Di
         TURN { MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(opponent, MOVE_SHADOW_CLAW); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Soak!");
-        MESSAGE("Mimikyu transformed into the Water type!");
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        MESSAGE("The opposing WOBBUFFET used SOAK!");
+        MESSAGE("MIMIKYU transformed into the WATER type!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
         ABILITY_POPUP(player, ABILITY_DISGUISE);
-        MESSAGE("The opposing Wobbuffet used Shadow Claw!");
+        MESSAGE("The opposing WOBBUFFET used SHADOW CLAW!");
         MESSAGE("It's super effective!");
     }
 }

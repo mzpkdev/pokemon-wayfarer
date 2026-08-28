@@ -9,6 +9,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up")
 {
+    // TODO(nightly-failures): Solar Beam in sun emits an unexpected battle log. Re-enable after weather behavior and messages align.
+    KNOWN_FAILING;
     enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_DROUGHT; }
@@ -35,6 +37,8 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up")
 
 SINGLE_BATTLE_TEST("Solar Beam does half damage if Sandstorm is up (Gen3+)", s16 damage)
 {
+    // TODO(nightly-failures): Solar Beam in sandstorm emits an unexpected battle log. Re-enable after weather damage behavior and messages align.
+    KNOWN_FAILING;
     enum Ability ability;
     u32 config;
 

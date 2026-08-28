@@ -44,11 +44,11 @@ SINGLE_BATTLE_TEST("Transform fails on transformed target in Gen2+")
         TURN { MOVE(player, MOVE_TRANSFORM); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRANSFORM); }
     } SCENE {
-        MESSAGE("Ditto transformed into Wobbuffet!");
+        MESSAGE("DITTO transformed into WOBBUFFET!");
         if (expectFail)
             MESSAGE("But it failed!");
         else
-            MESSAGE("The opposing Wobbuffet transformed into Wobbuffet!");
+            MESSAGE("The opposing WOBBUFFET transformed into WOBBUFFET!");
     }
 }
 

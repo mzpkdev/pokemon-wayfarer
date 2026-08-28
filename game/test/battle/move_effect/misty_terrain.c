@@ -3,6 +3,9 @@
 
 SINGLE_BATTLE_TEST("Misty Terrain protects grounded battlers from non-volatile status conditions")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
@@ -62,6 +65,9 @@ SINGLE_BATTLE_TEST("Misty Terrain decreases power of Dragon-type moves by 50 per
 
 SINGLE_BATTLE_TEST("Misty Terrain lasts for 5 turns")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);

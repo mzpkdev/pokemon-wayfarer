@@ -116,9 +116,9 @@ SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stats of an attacking Pokemon
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); }
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
-        MESSAGE("The opposing Wynaut used Substitute!");
+        MESSAGE("The opposing WYNAUT used SUBSTITUTE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
-        MESSAGE("The opposing Wynaut used Leer!");
+        MESSAGE("The opposing WYNAUT used LEER!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {
@@ -156,13 +156,13 @@ SINGLE_BATTLE_TEST("Mirror Armor doesn't lower the stat of the attacking Pokemon
         TURN { MOVE(player, MOVE_SCREECH); }
         TURN { MOVE(opponent, MOVE_LEER); }
     } SCENE {
-        MESSAGE("Corviknight used Screech!");
-        MESSAGE("Corviknight used Screech!");
-        MESSAGE("Corviknight used Screech!");
-        MESSAGE("The opposing Wynaut used Leer!");
+        MESSAGE("CORVIKNIGHT used SCREECH!");
+        MESSAGE("CORVIKNIGHT used SCREECH!");
+        MESSAGE("CORVIKNIGHT used SCREECH!");
+        MESSAGE("The opposing WYNAUT used LEER!");
         ABILITY_POPUP(player, ABILITY_MIRROR_ARMOR);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wynaut's Defense won't go any lower!");
+        MESSAGE("The opposing WYNAUT's DEFENSE won't go any lower!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_DEF], MIN_STAT_STAGE);

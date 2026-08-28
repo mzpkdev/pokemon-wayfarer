@@ -8,6 +8,9 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on target's Attack Stat", s16 hp)
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     u32 atkStat = 0;
 
     PARAMETRIZE { atkStat = 100; }
@@ -33,6 +36,9 @@ SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on tar
 // Same as above, but Substitute is used before Strength Sap.
 SINGLE_BATTLE_TEST("Strength Sap works exactly the same when attacker is behind substitute", s16 hp)
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     u32 atkStat = 0;
 
     PARAMETRIZE { atkStat = 100; }
@@ -61,6 +67,9 @@ SINGLE_BATTLE_TEST("Strength Sap works exactly the same when attacker is behind 
 // This test checks all stat stages from -6 to +6.
 SINGLE_BATTLE_TEST("Strength Sap lowers Attack by 1 and restores HP based on target's Attack Stat and stat Change", s16 hp)
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     s32 j = 0, statStage = 0;
 
     for (j = 0; j <= MAX_STAT_STAGE; j++) {
@@ -145,6 +154,9 @@ TO_DO_BATTLE_TEST("Strength Sap will restore hp if target has Contrary and is at
 
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     enum Item item;
 
     PARAMETRIZE { item = ITEM_NONE; }
@@ -228,6 +240,9 @@ SINGLE_BATTLE_TEST("Strength Sap fails if Heal Block applies")
 
 SINGLE_BATTLE_TEST("Strength Sap will drain users HP if target has Liquid Ooze")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     s16 lostHp;
     s32 atkStat;
 

@@ -98,7 +98,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Player Lands First Down")
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponent,1); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         MESSAGE("Trainer A: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}");
     }
 }
@@ -116,7 +116,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Enemy Mon Unaffected")
         TURN { MOVE(player, MOVE_SHEER_COLD); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, player);
-        MESSAGE("It doesn't affect the opposing Glalie…");
+        MESSAGE("It doesn't affect the opposing GLALIE…");
         MESSAGE("Trainer A: Player attacked enemy with ineffective move.{PAUSE_UNTIL_PRESS}");
     }
 }
@@ -132,7 +132,7 @@ AI_SINGLE_BATTLE_TEST("Trainer Slide: Singles: Last Switchin")
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponent,1); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         MESSAGE("Trainer A: This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}");
     }
 }
@@ -296,7 +296,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Player Lands First STAB Hit")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_VINE_WHIP, target: opponentLeft); }
     } SCENE {
-        MESSAGE("Bulbasaur used Vine Whip!");
+        MESSAGE("BULBASAUR used VINE WHIP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_VINE_WHIP, playerLeft);
         MESSAGE("Trainer A: Player lands their first STAB move.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
@@ -341,7 +341,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Player Lands First Down")
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,2); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         MESSAGE("Trainer A: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
             MESSAGE("Trainer A: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}");
@@ -364,7 +364,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Enemy Mon Unaffected")
         TURN { MOVE(playerLeft, MOVE_SHEER_COLD); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, playerLeft);
-        MESSAGE("It doesn't affect the opposing Glalie…");
+        MESSAGE("It doesn't affect the opposing GLALIE…");
         MESSAGE("Trainer A: Player attacked enemy with ineffective move.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
             MESSAGE("Trainer A: Player attacked enemy with ineffective move.{PAUSE_UNTIL_PRESS}");
@@ -385,7 +385,7 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Last Switchin")
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentLeft,2); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         MESSAGE("Trainer A: This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}");
         NONE_OF {
             MESSAGE("Trainer A: This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}");
@@ -471,8 +471,8 @@ AI_DOUBLE_BATTLE_TEST("Trainer Slide: Doubles: Z Move")
         NONE_OF {
             MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         }
-        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
-        MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
+        MESSAGE("The opposing WOBBUFFET surrounded itself with its Z-Power!");
+        MESSAGE("The opposing WOBBUFFET unleashes its full-force Z-Move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponentLeft);
     }
 }
@@ -591,7 +591,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First STAB Hit")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        MESSAGE("Sandshrew used Earthquake!");
+        MESSAGE("SANDSHREW used EARTHQUAKE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         MESSAGE("Trainer A: Player lands their first STAB move.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: Player lands their first STAB move.{PAUSE_UNTIL_PRESS}");
@@ -615,7 +615,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First Super Effective H
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
-        MESSAGE("Sandshrew used Earthquake!");
+        MESSAGE("SANDSHREW used EARTHQUAKE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         MESSAGE("Trainer A: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: This message plays after the player lands their first super effective hit.{PAUSE_UNTIL_PRESS}");
@@ -643,11 +643,11 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Player Lands First Down")
             EXPECT_MOVE(opponentRight, MOVE_HEALING_WISH); EXPECT_SEND_OUT(opponentRight,4); 
         }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
         MESSAGE("Trainer A: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing WYNAUT fainted!");
         MESSAGE("Trainer B: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("Raticate fainted!");
+        MESSAGE("RATICATE fainted!");
         // Note: Planned PR for additional slides will change slides from using "Player/Opponent" side to "Attacker/Target" side
         // MESSAGE("Trainer Partner: This message plays after the player KOs one enemy mon.{PAUSE_UNTIL_PRESS}");
     }
@@ -668,8 +668,8 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Enemy Mon Unaffected")
         TURN { MOVE(playerLeft, MOVE_BOOMBURST); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BOOMBURST, playerLeft);
-        MESSAGE("It doesn't affect the opposing Gengar and Haunter…");
-        MESSAGE("It doesn't affect Gastly…");
+        MESSAGE("It doesn't affect the opposing GENGAR and HAUNTER…");
+        MESSAGE("It doesn't affect GASTLY…");
         MESSAGE("Trainer A: Player attacked enemy with ineffective move.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: Player attacked enemy with ineffective move.{PAUSE_UNTIL_PRESS}");
         // Note: Planned PR for additional slides will change slides from using "Player/Opponent" side to "Attacker/Target" side
@@ -697,9 +697,9 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Last Switchin")
             EXPECT_MOVE(opponentRight, MOVE_MEMENTO, target: playerRight); EXPECT_SEND_OUT(opponentRight,4); 
         }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
-        MESSAGE("Raticate fainted!");
-        MESSAGE("The opposing Wynaut fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
+        MESSAGE("RATICATE fainted!");
+        MESSAGE("The opposing WYNAUT fainted!");
         MESSAGE("Trainer A: This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer Partner: This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}");
         MESSAGE("Trainer B: This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}");

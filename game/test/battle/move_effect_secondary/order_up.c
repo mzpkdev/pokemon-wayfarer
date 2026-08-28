@@ -73,21 +73,21 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if 
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("TATSUGIRI was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        MESSAGE("Tatsugiri was hurt by its poisoning!");
-        MESSAGE("Tatsugiri fainted!");
+        MESSAGE("TATSUGIRI was hurt by its poisoning!");
+        MESSAGE("TATSUGIRI fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HAZE, opponentRight); // Remove previous stat boosts
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ORDER_UP, playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         switch (species)
         {
         case SPECIES_TATSUGIRI_CURLY:
-            MESSAGE("Dondozo's Attack rose!");
+            MESSAGE("DONDOZO's ATTACK rose!");
             break;
         case SPECIES_TATSUGIRI_DROOPY:
-            MESSAGE("Dondozo's Defense rose!");
+            MESSAGE("DONDOZO's DEFENSE rose!");
             break;
         case SPECIES_TATSUGIRI_STRETCHY:
-            MESSAGE("Dondozo's Speed rose!");
+            MESSAGE("DONDOZO's SPEED rose!");
             break;
         }
     } THEN {
@@ -131,9 +131,9 @@ DOUBLE_BATTLE_TEST("Order Up is boosted by Sheer Force without removing the stat
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_ENTRAINMENT, target: playerLeft); MOVE(playerLeft, MOVE_ORDER_UP, target: opponentLeft); }
     } SCENE {
-        MESSAGE("The opposing Tauros used Entrainment!");
-        MESSAGE("Dondozo acquired Sheer Force!");
-        MESSAGE("Dondozo used Order Up!");
+        MESSAGE("The opposing TAUROS used ENTRAINMENT!");
+        MESSAGE("DONDOZO acquired SHEER FORCE!");
+        MESSAGE("DONDOZO used ORDER UP!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
     }
 }
@@ -157,13 +157,13 @@ DOUBLE_BATTLE_TEST("Order Up is always boosted by Sheer Force", s16 damage)
                MOVE(opponentLeft, move, target: playerLeft);
                MOVE(playerLeft, MOVE_ORDER_UP, target: opponentRight); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Haze!");
+        MESSAGE("The opposing WOBBUFFET used HAZE!");
         if (move == MOVE_ENTRAINMENT)
         {
-            MESSAGE("The opposing Tauros used Entrainment!");
-            MESSAGE("Dondozo acquired Sheer Force!");
+            MESSAGE("The opposing TAUROS used ENTRAINMENT!");
+            MESSAGE("DONDOZO acquired SHEER FORCE!");
         }
-        MESSAGE("Dondozo used Order Up!");
+        MESSAGE("DONDOZO used ORDER UP!");
         HP_BAR(opponentRight, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.3), results[1].damage);

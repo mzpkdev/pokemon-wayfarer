@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Soul Heart boosts Sp. Atk after opponent uses Memento")
         TURN { MOVE(player, MOVE_MEMENTO); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         ABILITY_POPUP(opponent, ABILITY_SOUL_HEART);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     } THEN {

@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Innards Out deal dmg on fainting equal to the amount of dmg 
     } WHEN {
         TURN { MOVE(opponent, MOVE_PSYCHIC); SEND_OUT(player, 1); if (hp == 100) { SEND_OUT(opponent, 1); } }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Psychic!");
+        MESSAGE("The opposing WOBBUFFET used PSYCHIC!");
         HP_BAR(player, hp);
         ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
         HP_BAR(opponent, hp);
@@ -37,8 +37,8 @@ SINGLE_BATTLE_TEST("Innards Out does not trigger after Gastro Acid has been used
         TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
         TURN { MOVE(opponent, MOVE_PSYCHIC); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Gastro Acid!");
-        MESSAGE("The opposing Wobbuffet used Psychic!");
+        MESSAGE("The opposing WOBBUFFET used GASTRO ACID!");
+        MESSAGE("The opposing WOBBUFFET used PSYCHIC!");
         HP_BAR(player);
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Innards Out does not damage Magic Guard Pokemon")
     } WHEN {
         TURN { MOVE(opponent, MOVE_PSYCHIC); SEND_OUT(player, 1); }
     } SCENE {
-        MESSAGE("The opposing Clefable used Psychic!");
+        MESSAGE("The opposing CLEFABLE used PSYCHIC!");
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
         NOT HP_BAR(opponent);
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Innards Out uses correct damage amount for Future Sight")
         TURN { SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
-        MESSAGE("Pyukumuku took the Future Sight attack!");
+        MESSAGE("PYUKUMUKU took the FUTURE SIGHT attack!");
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
         HP_BAR(opponent, damage: 1);
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Innards Out doesn't trigger if Future Sight user is not on f
         TURN { SEND_OUT(player, 1); } //SEND_OUT(opponent, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
-        MESSAGE("Pyukumuku took the Future Sight attack!");
+        MESSAGE("PYUKUMUKU took the FUTURE SIGHT attack!");
         HP_BAR(player);
         NONE_OF {
          ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
@@ -121,7 +121,7 @@ SINGLE_BATTLE_TEST("Innards Out triggers if Future Sight user is back on the fie
         TURN { SWITCH(opponent, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, opponent);
-        MESSAGE("Pyukumuku took the Future Sight attack!");
+        MESSAGE("PYUKUMUKU took the FUTURE SIGHT attack!");
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_INNARDS_OUT);
         HP_BAR(opponent);

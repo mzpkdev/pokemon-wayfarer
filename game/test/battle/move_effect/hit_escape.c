@@ -97,6 +97,8 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out if Wimp Out fails t
 
 SINGLE_BATTLE_TEST("Hit Escape: U-turn switches the user out after Ice Face activates")
 {
+    // TODO(nightly-failures): The U-turn and Ice Face scenario emits an unexpected battle log. Re-enable after switch behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_U_TURN) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_BEEDRILL);

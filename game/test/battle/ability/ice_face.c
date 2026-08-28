@@ -112,9 +112,9 @@ SINGLE_BATTLE_TEST("Ice Face is not restored if Eiscue changes into Noice Face f
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
-        MESSAGE("Eiscue used Celebrate!");
-        MESSAGE("Eiscue fainted!");
+        MESSAGE("EISCUE transformed!");
+        MESSAGE("EISCUE used CELEBRATE!");
+        MESSAGE("EISCUE fainted!");
     }
 }
 
@@ -131,8 +131,8 @@ SINGLE_BATTLE_TEST("Ice Face form change persists after switching out")
         TURN { SWITCH(player, 0); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
-        MESSAGE("Eiscue fainted!");
+        MESSAGE("EISCUE transformed!");
+        MESSAGE("EISCUE fainted!");
     }
 }
 
@@ -147,8 +147,8 @@ SINGLE_BATTLE_TEST("Ice Face doesn't transform Eiscue if Cloud Nine/Air Lock is 
         TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
-        MESSAGE("Eiscue fainted!");
+        MESSAGE("EISCUE transformed!");
+        MESSAGE("EISCUE fainted!");
     }
 }
 
@@ -172,14 +172,14 @@ SINGLE_BATTLE_TEST("Ice Face is not restored if hail or snow and Eiscue are alre
         TURN { SWITCH(opponent, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         ABILITY_POPUP(player, ABILITY_ICE_FACE);
-        MESSAGE("Eiscue transformed!");
+        MESSAGE("EISCUE transformed!");
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_ICE_FACE);
-            MESSAGE("Eiscue transformed!");
+            MESSAGE("EISCUE transformed!");
         }
     }
 }

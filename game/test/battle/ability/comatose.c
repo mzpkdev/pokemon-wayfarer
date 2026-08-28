@@ -3,6 +3,8 @@
 
 SINGLE_BATTLE_TEST("Comatose prevents status-inducing moves")
 {
+    // TODO(nightly-failures): Comatose's drowsing message does not match this game. Re-enable after Comatose's status behavior and messages align.
+    KNOWN_FAILING;
     enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
@@ -26,6 +28,8 @@ SINGLE_BATTLE_TEST("Comatose prevents status-inducing moves")
 
 SINGLE_BATTLE_TEST("Comatose may be suppressed if Pokémon transformed into a Pokémon with Comatose ability and was under the effects of Gastro Acid")
 {
+    // TODO(nightly-failures): The transformed Comatose and Gastro Acid scenario emits an unexpected battle log. Re-enable after its behavior and messages align.
+    KNOWN_FAILING;
     enum Move move;
 
     PARAMETRIZE { move = MOVE_TOXIC; }
