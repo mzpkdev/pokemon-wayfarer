@@ -16,11 +16,7 @@ on:
 jobs:
   validate:
     name: Validate
-    if: >-
-      github.event.action == 'opened' ||
-      github.event.action == 'reopened' ||
-      github.event.action == 'edited' ||
-      github.event.action == 'synchronize'
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
