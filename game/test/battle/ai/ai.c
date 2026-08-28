@@ -485,7 +485,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
             TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
         }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -767,9 +767,9 @@ AI_SINGLE_BATTLE_TEST("AI uses a guaranteed KO move instead of the move with the
             TURN { EXPECT_MOVE(opponent, MOVE_SLASH); }
     } SCENE {
         if (flags & AI_FLAG_TRY_TO_FAINT)
-            MESSAGE("Wobbuffet fainted!");
+            MESSAGE("WOBBUFFET fainted!");
         else
-            NOT MESSAGE("Wobbuffet fainted!");
+            NOT MESSAGE("WOBBUFFET fainted!");
     }
 }
 

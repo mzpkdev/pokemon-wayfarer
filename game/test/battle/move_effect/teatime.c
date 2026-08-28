@@ -112,11 +112,11 @@ DOUBLE_BATTLE_TEST("Teatime causes all Pokémon to consume their berry")
         if (user == playerLeft) {
             MESSAGE("WOBBUFFET used TEATIME!");
         } else if (user == playerRight) {
-            MESSAGE("Wynaut used Teatime!");
+            MESSAGE("WYNAUT used TEATIME!");
         } else if (user == opponentLeft) {
             MESSAGE("The opposing WOBBUFFET used TEATIME!");
         } else {
-            MESSAGE("The opposing Wynaut used Teatime!");
+            MESSAGE("The opposing WYNAUT used TEATIME!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, user);
         if (user == playerLeft) {
@@ -125,20 +125,20 @@ DOUBLE_BATTLE_TEST("Teatime causes all Pokémon to consume their berry")
             MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
             MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WYNAUT rose!");
         } else if (user == playerRight) {
-            MESSAGE("Using Liechi Berry, the Attack of Wynaut rose!");
-            MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wynaut rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of WYNAUT rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of WOBBUFFET rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WYNAUT rose!");
         } else if (user == opponentLeft) {
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wynaut rose!");
-            MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");
-            MESSAGE("Using Liechi Berry, the Attack of Wynaut rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WYNAUT rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of WOBBUFFET rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of WYNAUT rose!");
         } else if (user == opponentRight) {
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wynaut rose!");
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
-            MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");
-            MESSAGE("Using Liechi Berry, the Attack of Wynaut rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WYNAUT rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of WOBBUFFET rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of WYNAUT rose!");
         }
     }
 }
@@ -171,7 +171,7 @@ SINGLE_BATTLE_TEST("Teatime does not affect Pokémon in the semi-invulnerable tu
         MESSAGE("WOBBUFFET used TEATIME!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
-            MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
+            MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
         }
     }
 }
@@ -207,7 +207,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Volt Absorb if it has been affected by Elec
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
         if (shouldTriggerAbility) {
-            NOT MESSAGE("Using Liechi Berry, the Attack of Jolteon rose!");
+            NOT MESSAGE("Using LIECHI BERRY, the ATTACK of JOLTEON rose!");
         } else {
             MESSAGE("Using LIECHI BERRY, the ATTACK of JOLTEON rose!");
         }
@@ -243,13 +243,13 @@ SINGLE_BATTLE_TEST("Teatime triggers Lightning Rod if it has been affected by El
         } else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
-                MESSAGE("Pikachu's Sp. Atk rose!");
+                MESSAGE("PIKACHU's SP. ATK rose!");
             }
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
         if (shouldTriggerAbility) {
-            NOT MESSAGE("Using Liechi Berry, the Attack of Pikachu rose!");
+            NOT MESSAGE("Using LIECHI BERRY, the ATTACK of PIKACHU rose!");
         } else {
             MESSAGE("Using LIECHI BERRY, the ATTACK of PIKACHU rose!");
         }
@@ -284,13 +284,13 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
         } else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_MOTOR_DRIVE);
-                MESSAGE("Electivire's Speed rose!");
+                MESSAGE("ELECTIVIRE's SPEED rose!");
             }
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, opponent);
         MESSAGE("Using LIECHI BERRY, the ATTACK of the opposing WOBBUFFET rose!");
         if (shouldTriggerAbility) {
-            NOT MESSAGE("Using Liechi Berry, the Attack of Electivire rose!");
+            NOT MESSAGE("Using LIECHI BERRY, the ATTACK of ELECTIVIRE rose!");
         } else {
             MESSAGE("Using LIECHI BERRY, the ATTACK of ELECTIVIRE rose!");
         }

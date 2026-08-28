@@ -230,7 +230,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, player);
         MESSAGE("SALANDIT protected itself!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        MESSAGE("Salandit protected itself!");
+        MESSAGE("SALANDIT protected itself!");
         STATUS_ICON(opponent, poison: TRUE);
     }
 }

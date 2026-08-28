@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Explosion causes the user to faint even if it has no effect"
         HP_BAR(player, hp: 0);
         MESSAGE("It doesn't affect the opposing GASTLY…");
         NOT HP_BAR(opponent);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -85,9 +85,9 @@ DOUBLE_BATTLE_TEST("Explosion causes everyone to faint in a double battle")
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
         MESSAGE("WOBBUFFET fainted!");
-        MESSAGE("The opposing Abra fainted!");
-        MESSAGE("Wynaut fainted!");
-        MESSAGE("The opposing Kadabra fainted!");
+        MESSAGE("The opposing ABRA fainted!");
+        MESSAGE("WYNAUT fainted!");
+        MESSAGE("The opposing KADABRA fainted!");
     }
 }
 
@@ -139,8 +139,8 @@ DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt 
         NOT HP_BAR(opponentLeft, hp: 0);
         HP_BAR(playerRight, hp: 0);
         HP_BAR(opponentRight, hp: 0);
-        MESSAGE("Geodude fainted!");
-        MESSAGE("Wynaut fainted!");
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("GEODUDE-A fainted!");
+        MESSAGE("WYNAUT fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }

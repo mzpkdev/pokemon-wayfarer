@@ -270,9 +270,9 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block high-p
     } WHEN {
         TURN { MOVE(player, MOVE_METRONOME, WITH_RNG(RNG_METRONOME, MOVE_QUICK_ATTACK)); }
     } SCENE {
-        MESSAGE("Wobbuffet used Metronome!");
+        MESSAGE("WOBBUFFET used METRONOME!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METRONOME, player);
-        MESSAGE("Waggling a finger let it use Quick Attack!");
+        MESSAGE("Waggling a finger let it use QUICK ATTACK!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
         HP_BAR(opponent);
         NOT ABILITY_POPUP(opponent, ability);

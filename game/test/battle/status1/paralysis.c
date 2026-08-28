@@ -78,13 +78,13 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't affect Electric types (Gen6+)")
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_WAVE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("WOBBUFFET used THUNDER WAVE!");
         if (gen == GEN_6) {
             NONE_OF {
                 ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
                 STATUS_ICON(opponent, paralysis: TRUE);
             }
-            MESSAGE("It doesn't affect the opposing Pikachu…");
+            MESSAGE("It doesn't affect the opposing PIKACHU…");
         } else {
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
             STATUS_ICON(opponent, paralysis: TRUE);

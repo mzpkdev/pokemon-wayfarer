@@ -17,12 +17,12 @@ SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+)")
         if (gen == GEN_6) {
             ABILITY_POPUP(opponent, ABILITY_OVERCOAT);
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-            MESSAGE("It doesn't affect the opposing Pineco…");
+            MESSAGE("It doesn't affect the opposing PINECO…");
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
             NONE_OF {
                 ABILITY_POPUP(opponent, ABILITY_OVERCOAT);
-                MESSAGE("It doesn't affect the opposing Pineco…");
+                MESSAGE("It doesn't affect the opposing PINECO…");
             }
         }
     }
@@ -38,7 +38,7 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SANDSTORM); }
     } SCENE {
-        MESSAGE("Wynaut used Sandstorm!");
+        MESSAGE("WYNAUT used SANDSTORM!");
         MESSAGE("The sandstorm is raging.");
         HP_BAR(playerLeft);
         NONE_OF {
@@ -61,8 +61,8 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HAIL); MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
     } SCENE {
-        MESSAGE("Wynaut used Hail!");
-        MESSAGE("Solosis used Skill Swap!");
+        MESSAGE("WYNAUT used HAIL!");
+        MESSAGE("SOLOSIS used SKILL SWAP!");
         HP_BAR(playerLeft);
         NONE_OF {
             HP_BAR(playerRight);
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+)")
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE, WITH_RNG(RNG_EFFECT_SPORE, 1)); }
     } SCENE {
-        MESSAGE("Pineco used Tackle!");
+        MESSAGE("PINECO used TACKLE!");
         if (config == GEN_6) {
             NOT ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         }

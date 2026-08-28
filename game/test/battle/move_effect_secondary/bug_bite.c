@@ -47,58 +47,58 @@ SINGLE_BATTLE_TEST("Bug Bite eats the target's berry and immediately gains its e
 
     } SCENE {
         if (item == ITEM_CHESTO_BERRY) {
-            MESSAGE("Wobbuffet used Sleep Talk!");
+            MESSAGE("WOBBUFFET used SLEEP TALK!");
         }
         MESSAGE("WOBBUFFET used BUG BITE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(opponent);
         if (effect == HOLD_EFFECT_RESTORE_HP || effect == HOLD_EFFECT_ENIGMA_BERRY) {
             if (item == ITEM_ORAN_BERRY) {
-                MESSAGE("Wobbuffet restored its health using its Oran Berry!");
+                MESSAGE("WOBBUFFET restored its health using its ORAN BERRY!");
             } else if (item == ITEM_SITRUS_BERRY) {
-                MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+                MESSAGE("WOBBUFFET restored its health using its SITRUS BERRY!");
             } else {
-                MESSAGE("Wobbuffet restored its health using its Enigma Berry!");
+                MESSAGE("WOBBUFFET restored its health using its ENIGMA BERRY!");
             }
             HP_BAR(player);
         }
         else if (effect == HOLD_EFFECT_RESTORE_PP) {
-            MESSAGE("Wobbuffet restored PP to its move Bug Bite using its Leppa Berry!");
+            MESSAGE("WOBBUFFET restored PP to its move BUG BITE using its LEPPA BERRY!");
         }
         else if (status1 != STATUS1_NONE) {
             if (status1 == STATUS1_BURN) {
-                MESSAGE("Wobbuffet's Rawst Berry cured its burn!");
+                MESSAGE("WOBBUFFET's RAWST BERRY cured its burn!");
             } else if (status1 == STATUS1_SLEEP) {
-                MESSAGE("Wobbuffet's Chesto Berry woke it up!");
+                MESSAGE("WOBBUFFET's CHESTO BERRY woke it up!");
             } else if (status1 == STATUS1_PARALYSIS) {
-                MESSAGE("Wobbuffet's Cheri Berry cured its paralysis!");
+                MESSAGE("WOBBUFFET's CHERI BERRY cured its paralysis!");
             } else if (status1 == STATUS1_TOXIC_POISON || status1 == STATUS1_POISON) {
-                MESSAGE("Wobbuffet's Pecha Berry cured its poison!");
+                MESSAGE("WOBBUFFET's PECHA BERRY cured its poison!");
             } else if (status1 == STATUS1_FROSTBITE) {
-                MESSAGE("Wobbuffet's Aspear Berry cured its frostbite!");
+                MESSAGE("WOBBUFFET's ASPEAR BERRY cured its frostbite!");
             }
             NOT STATUS_ICON(player, status1);
         }
         else if (statId != 0) {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             if (statId == STAT_ATK) {
-                MESSAGE("Using Liechi Berry, the Attack of Wobbuffet rose!");
+                MESSAGE("Using LIECHI BERRY, the ATTACK of WOBBUFFET rose!");
             } else if (statId == STAT_DEF) {
                 if (item == ITEM_GANLON_BERRY) {
-                    MESSAGE("Using Ganlon Berry, the Defense of Wobbuffet rose!");
+                    MESSAGE("Using GANLON BERRY, the DEFENSE of WOBBUFFET rose!");
                 } else {
-                    MESSAGE("Using Kee Berry, the Defense of Wobbuffet rose!");
+                    MESSAGE("Using KEE BERRY, the DEFENSE of WOBBUFFET rose!");
                 }
             } else if (statId == STAT_SPDEF) {
                 if (item == ITEM_APICOT_BERRY) {
-                    MESSAGE("Using Apicot Berry, the Sp. Def of Wobbuffet rose!");
+                    MESSAGE("Using APICOT BERRY, the SP. DEF of WOBBUFFET rose!");
                 } else {
-                    MESSAGE("Using Maranga Berry, the Sp. Def of Wobbuffet rose!");
+                    MESSAGE("Using MARANGA BERRY, the SP. DEF of WOBBUFFET rose!");
                 }
             } else if (statId == STAT_SPEED) {
-                MESSAGE("Using Salac Berry, the Speed of Wobbuffet rose!");
+                MESSAGE("Using SALAC BERRY, the SPEED of WOBBUFFET rose!");
             } else if (statId == STAT_SPATK) {
-                MESSAGE("Using Petaya Berry, the Sp. Atk of Wobbuffet rose!");
+                MESSAGE("Using PETAYA BERRY, the SP. ATK of WOBBUFFET rose!");
             }
         }
     } THEN {
@@ -126,9 +126,9 @@ SINGLE_BATTLE_TEST("Tanga Berry activates before Bug Bite")
     } WHEN {
         TURN { MOVE(player, MOVE_BUG_BITE); }
     } SCENE {
-        MESSAGE("Wobbuffet used Bug Bite!");
+        MESSAGE("WOBBUFFET used BUG BITE!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The Tanga Berry weakened the damage to the opposing Wobbuffet!");
+        MESSAGE("The TANGA BERRY weakened the damage to the opposing WOBBUFFET!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(opponent);
     } THEN {

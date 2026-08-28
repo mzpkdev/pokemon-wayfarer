@@ -126,9 +126,9 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP if there is n
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
             HP_BAR(player);
         }
-        MESSAGE("Wobbuffet used Chloroblast!");
+        MESSAGE("WOBBUFFET used CHLOROBLAST!");
         MESSAGE("But it failed!");
-        MESSAGE("2 sent out Wobbuffet!");
+        MESSAGE("2 sent out WOBBUFFET!");
     }
 }
 

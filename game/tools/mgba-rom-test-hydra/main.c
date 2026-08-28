@@ -116,6 +116,7 @@ struct SymbolTable {
 static unsigned nrunners = 0;
 static unsigned runners_digits = 0;
 static struct Runner *runners = NULL;
+static char rom_dir[FILENAME_MAX];
 static bool report_enabled = false;
 static struct Report report = { 0, 0, NULL };
 
@@ -594,6 +595,28 @@ static void unlink_roms(void)
             }
         }
     }
+
+    if (rom_dir[0] && rmdir(rom_dir) == -1)
+        perror("rmdir rom_dir failed");
+}
+
+static void create_rom_dir(void)
+{
+    const char *tmpdir = getenv("TMPDIR");
+    if (tmpdir == NULL || tmpdir[0] == '\0')
+        tmpdir = "/tmp";
+
+    int n = snprintf(rom_dir, sizeof(rom_dir), "%s/mgba-rom-test-hydra-XXXXXX", tmpdir);
+    if (n < 0 || n >= sizeof(rom_dir))
+    {
+        fprintf(stderr, "ROM temporary directory path is too long\n");
+        exit(2);
+    }
+    if (mkdtemp(rom_dir) == NULL)
+    {
+        perror("mkdtemp rom_dir failed");
+        exit(2);
+    }
 }
 
 static void exit2(int _)
@@ -780,11 +803,18 @@ int main(int argc, char *argv[])
     atexit(unlink_roms);
     signal(SIGINT, exit2);
     signal(SIGTERM, exit2);
+    create_rom_dir();
 
     // Start test runners.
     pid_t parent_pid = getpid();
     for (int i = 0; i < nrunners; i++)
     {
+        int n = snprintf(runners[i].rom_path, sizeof(runners[i].rom_path), "%s/%d.gba", rom_dir, i);
+        if (n < 0 || n >= sizeof(runners[i].rom_path))
+        {
+            fprintf(stderr, "ROM temporary file path is too long\n");
+            exit(2);
+        }
         int pipefds[2];
         if (pipe(pipefds) == -1)
         {
@@ -822,10 +852,8 @@ int main(int argc, char *argv[])
                 perror("close pipefds[1] failed");
                 _exit(2);
             }
-            char rom_path[FILENAME_MAX];
-            sprintf(rom_path, "/tmp/mgba-rom-test-hydra-%05d", getpid());
             int tmpfd;
-            if ((tmpfd = open(rom_path, O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR)) == -1)
+            if ((tmpfd = open(runners[i].rom_path, O_WRONLY | O_CREAT | O_EXCL, S_IRUSR | S_IWUSR)) == -1)
             {
                 perror("open tmpfd failed");
                 _exit(2);
@@ -846,7 +874,7 @@ int main(int argc, char *argv[])
                 char n_arg[5], i_arg[5];
                 snprintf(n_arg, sizeof(n_arg), "\\x%02x", nrunners);
                 snprintf(i_arg, sizeof(i_arg), "\\x%02x", i);
-                if (execlp("tools/patchelf/patchelf", "tools/patchelf/patchelf", rom_path, "gTestRunnerN", n_arg, "gTestRunnerI", i_arg, NULL) == -1)
+                if (execlp("tools/patchelf/patchelf", "tools/patchelf/patchelf", runners[i].rom_path, "gTestRunnerN", n_arg, "gTestRunnerI", i_arg, NULL) == -1)
                 {
                     perror("execlp patchelf failed");
                     _exit(2);
@@ -875,7 +903,7 @@ int main(int argc, char *argv[])
             }
             else if (objcopypid == 0)
             {
-                if (execlp(argv[2], argv[2], "-O", "binary", rom_path, rom_path, NULL) == -1)
+                if (execlp(argv[2], argv[2], "-O", "binary", runners[i].rom_path, runners[i].rom_path, NULL) == -1)
                 {
                     perror("execlp objcopy failed");
                     _exit(2);
@@ -898,14 +926,13 @@ int main(int argc, char *argv[])
 #endif
             // stdbuf is required because otherwise mgba never flushes
             // stdout.
-            if (execlp("stdbuf", "stdbuf", "-oL", argv[1], "-l15", "-ClogLevel.gba.dma=16", "-Rr0", rom_path, NULL) == -1)
+            if (execlp("stdbuf", "stdbuf", "-oL", argv[1], "-l15", "-ClogLevel.gba.dma=16", "-Rr0", runners[i].rom_path, NULL) == -1)
             {
                 perror("execl stdbuf mgba-rom-test failed");
                 _exit(2);
             }
         } else {
             runners[i].pid = pid;
-            sprintf(runners[i].rom_path, "/tmp/mgba-rom-test-hydra-%05d", runners[i].pid);
             runners[i].outfd = pipefds[0];
             if (close(pipefds[1]) == -1)
             {

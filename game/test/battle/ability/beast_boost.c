@@ -55,8 +55,8 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DESTINY_BOND, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_BEAST_BOOST);
-        SEND_IN_MESSAGE("Wynaut");
-        MESSAGE("2 sent out Wobbuffet!");
+        SEND_IN_MESSAGE("WYNAUT");
+        MESSAGE("2 sent out WOBBUFFET!");
     }
 }
 

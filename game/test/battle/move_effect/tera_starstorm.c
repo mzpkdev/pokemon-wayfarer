@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Tera Starstorm changes from Normal-type to Stellar-type if u
         MESSAGE("TERAPAGOS used TERA STARSTORM!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_STARSTORM, player);
         HP_BAR(opponent);
-        NOT { MESSAGE("It doesn't affect the opposing Misdreavus…"); }
+        NOT { MESSAGE("It doesn't affect the opposing MISDREAVUS…"); }
     }
 }
 
@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Tera Starstorm targets both opponents in a double battle if 
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TERA_STARSTORM, target:opponentLeft); }
     } SCENE {
-        MESSAGE("Terapagos used Tera Starstorm!");
+        MESSAGE("TERAPAGOS used TERA STARSTORM!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_STARSTORM, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Tera Starstorm becomes a physical move if the user is Terapa
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_STARSTORM, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIRROR_COAT, opponent);
         HP_BAR(player);
-        MESSAGE("Terapagos used Tera Starstorm!");
+        MESSAGE("TERAPAGOS used TERA STARSTORM!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_STARSTORM, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, opponent);
         HP_BAR(player);

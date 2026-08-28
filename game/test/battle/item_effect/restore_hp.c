@@ -196,6 +196,8 @@ SINGLE_BATTLE_TEST("Items can restore a battler's HP by a percentage")
     PARAMETRIZE { item = ITEM_SITRUS_BERRY; percentage = 25; }
 #endif
     GIVEN {
+        if (item == ITEM_SITRUS_BERRY)
+            gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus = TRUE;
         ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_RESTORE_HP);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); }
         OPPONENT(SPECIES_WOBBUFFET);

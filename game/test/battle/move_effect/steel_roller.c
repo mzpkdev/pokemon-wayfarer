@@ -48,7 +48,7 @@ SINGLE_BATTLE_TEST("Steel Roller will fail if there is no Terrain")
         TURN { MOVE(opponent, MOVE_STEEL_ROLLER); }
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_ROLLER, opponent);
-        MESSAGE("The opposing Wobbuffet used Steel Roller!");
+        MESSAGE("The opposing WOBBUFFET used STEEL ROLLER!");
         MESSAGE("But it failed!");
     }
 }

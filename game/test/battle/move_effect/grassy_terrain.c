@@ -64,18 +64,18 @@ SINGLE_BATTLE_TEST("Grassy Terrain lasts for 5 turns")
         TURN {}
         TURN {}
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
         MESSAGE("Grass grew to cover the battlefield!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
-        MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("WOBBUFFET used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
 
         MESSAGE("The grass disappeared from the battlefield.");
     }
@@ -93,14 +93,14 @@ SINGLE_BATTLE_TEST("Grassy Terrain heals the Pokémon on the field for the durat
         TURN {}
         TURN {}
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("The opposing WOBBUFFET used CELEBRATE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
         MESSAGE("Grass grew to cover the battlefield!");
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
-        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
+        MESSAGE("The opposing WOBBUFFET is healed by the grassy terrain!");
         MESSAGE("The grass disappeared from the battlefield.");
     }
 }

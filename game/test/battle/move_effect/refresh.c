@@ -59,9 +59,9 @@ SINGLE_BATTLE_TEST("Refresh does not cure sleep when used by Sleep Talk")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         MESSAGE("The opposing WOBBUFFET fell asleep!");
-        MESSAGE("The opposing Wobbuffet used Sleep Talk!");
+        MESSAGE("The opposing WOBBUFFET used SLEEP TALK!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, opponent);
-        MESSAGE("The opposing Wobbuffet used Refresh!");
+        MESSAGE("The opposing WOBBUFFET used REFRESH!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_REFRESH, player);
             STATUS_ICON(player, none: TRUE);

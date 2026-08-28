@@ -413,9 +413,9 @@ DOUBLE_BATTLE_TEST("Instruct message references the correct battlers")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("The opposing WYNAUT used INSTRUCT!");
         NONE_OF {
-            MESSAGE("Sceptile followed the opposing Wobbuffet's instructions!");
+            MESSAGE("SCEPTILE followed the opposing WOBBUFFET's instructions!");
         }
-        MESSAGE("Sceptile followed the opposing Wynaut's instructions!");
+        MESSAGE("SCEPTILE followed the opposing WYNAUT's instructions!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
     }
 }

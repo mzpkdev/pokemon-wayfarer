@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Shaymin retains Land form if it was frozen or frostbitten in
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POWDER_SNOW, opponent);
         FREEZE_OR_FROSTBURN_STATUS(player, TRUE);
         NOT HP_BAR(player); // Regression caused by Mimikyu form change
-        MESSAGE("Shaymin transformed!");
+        MESSAGE("SHAYMIN transformed!");
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_SHAYMIN_LAND);
     }

@@ -27,7 +27,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Facade")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
         if (expectedMove == MOVE_FACADE)
-            MESSAGE("Wobbuffet fainted!");
+            MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -49,7 +49,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Smelling Salt")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
         if (expectedMove == MOVE_SMELLING_SALTS)
-            MESSAGE("Wobbuffet fainted!");
+            MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -71,7 +71,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
         if (expectedMove == MOVE_WAKE_UP_SLAP)
-            MESSAGE("Meganium fainted!");
+            MESSAGE("MEGANIUM fainted!");
     }
 }
 
@@ -95,7 +95,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Grav Apple")
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
         if (expectedMove == MOVE_GRAV_APPLE)
-            MESSAGE("Wobbuffet fainted!");
+            MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -131,7 +131,7 @@ AI_SINGLE_BATTLE_TEST("AI will only use Dream Eater if target is asleep")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     } SCENE {
         if (expectedMove == MOVE_DREAM_EATER)
-            MESSAGE("Meganium fainted!");
+            MESSAGE("MEGANIUM fainted!");
     }
 }
 
@@ -166,7 +166,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Spit Up")
         TURN { EXPECT_MOVE(opponent, MOVE_STOCKPILE); }
         TURN { EXPECT_MOVE(opponent, MOVE_SPIT_UP); }
     } SCENE {
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
     }
 }
 
@@ -193,7 +193,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, opponentMove); }
         TURN { MOVE(player, playerMove); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing WOBBUFFET fainted!");
     }
 }
 

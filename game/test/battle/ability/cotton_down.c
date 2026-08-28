@@ -77,17 +77,17 @@ DOUBLE_BATTLE_TEST("Cotton Down correctly gets blocked by stat reduction prevent
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-            MESSAGE("Metagross's Speed fell!");
+            MESSAGE("METAGROSS's SPEED fell!");
         }
         ABILITY_POPUP(playerLeft, ABILITY_CLEAR_BODY);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            MESSAGE("Wynaut's Speed fell!");
+            MESSAGE("WYNAUT's SPEED fell!");
         }
-        MESSAGE("The effects of the Clear Amulet held by Wynaut prevents its stats from being lowered!");
+        MESSAGE("The effects of the CLEAR AMULET held by WYNAUT prevents its stats from being lowered!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("The opposing Corviknight's Speed fell!");
+            MESSAGE("The opposing CORVIKNIGHT's SPEED fell!");
         }
         ABILITY_POPUP(opponentRight, ABILITY_MIRROR_ARMOR);
     } THEN {

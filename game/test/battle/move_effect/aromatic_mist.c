@@ -11,7 +11,7 @@ DOUBLE_BATTLE_TEST("Aromatic Mist raises Sp. Defense of a target ally by 1 stage
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_AROMATIC_MIST); }
     } SCENE {
-        MESSAGE("Weezing used Aromatic Mist!");
+        MESSAGE("WEEZING-G used AROMATIC MIST!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
     } THEN {
         EXPECT_EQ(playerLeft->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);

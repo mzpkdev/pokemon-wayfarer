@@ -21,12 +21,12 @@ SINGLE_BATTLE_TEST("Aura Wheel raises Speed; fails if the user is not Morpeko")
         if (species != SPECIES_MORPEKO)
         {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_AURA_WHEEL, player);
-            MESSAGE("But Wobbuffet can't use the move!");
+            MESSAGE("But WOBBUFFET can't use the move!");
         }
         else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_AURA_WHEEL, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Morpeko's Speed rose!");
+            MESSAGE("MORPEKO's SPEED rose!");
         }
     }
 }

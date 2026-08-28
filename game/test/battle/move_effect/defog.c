@@ -223,11 +223,11 @@ DOUBLE_BATTLE_TEST("Defog doesn't remove Mist or Safeguard from the user's side"
             MESSAGE("Your team's Mist wore off!");
             MESSAGE("Your team's Safeguard wore off!");
         }
-        MESSAGE("The opposing Wobbuffet used Screech!");
-        MESSAGE("Wobbuffet is protected by the mist!");
+        MESSAGE("The opposing WOBBUFFET used SCREECH!");
+        MESSAGE("WOBBUFFET is protected by the mist!");
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        MESSAGE("The opposing Wobbuffet used Toxic!");
-        MESSAGE("Wobbuffet is protected by Safeguard!");
+        MESSAGE("The opposing WOBBUFFET used TOXIC!");
+        MESSAGE("WOBBUFFET is protected by Safeguard!");
         NOT STATUS_ICON(playerRight, badPoison: TRUE);
     }
 }

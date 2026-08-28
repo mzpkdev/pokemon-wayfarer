@@ -157,10 +157,10 @@ DOUBLE_BATTLE_TEST("Shell Trap activates immediately after being hit on turn 3 a
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SHELL_TRAP_SETUP, playerLeft);
         MESSAGE("WOBBUFFET set a shell trap!");
         MESSAGE("WOBBUFFET used CELEBRATE!");
-        MESSAGE("The opposing Wynaut used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Scratch!");
+        MESSAGE("The opposing WYNAUT used CELEBRATE!");
+        MESSAGE("The opposing WOBBUFFET used SCRATCH!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        MESSAGE("Wobbuffet used Shell Trap!");
+        MESSAGE("WOBBUFFET used SHELL TRAP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);

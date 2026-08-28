@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO
         } else {
             MESSAGE("WOBBUFFET fainted!");
             NONE_OF {
-                MESSAGE("Wobbuffet used Focus Punch!");
+                MESSAGE("WOBBUFFET used FOCUS PUNCH!");
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
                 HP_BAR(opponent);
             }
@@ -129,7 +129,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+
         } else {
             MESSAGE("MIMIKYU lost its focus and couldn't move!");
             NONE_OF {
-                MESSAGE("Mimikyu used Focus Punch!");
+                MESSAGE("MIMIKYU used FOCUS PUNCH!");
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
                 HP_BAR(opponent);
             }
@@ -155,9 +155,9 @@ SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash/Stu
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
         MESSAGE("WOBBUFFET is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
-        MESSAGE("Wobbuffet lost its focus and couldn't move!");
+        MESSAGE("WOBBUFFET lost its focus and couldn't move!");
         NONE_OF {
-            MESSAGE("Wobbuffet used Focus Punch!");
+            MESSAGE("WOBBUFFET used FOCUS PUNCH!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
             HP_BAR(opponent);
         }
@@ -330,7 +330,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when used by selectin
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
         }
-        MESSAGE("Wobbuffet lost its focus and couldn't move!");
+        MESSAGE("WOBBUFFET lost its focus and couldn't move!");
     }
 }
 
@@ -358,7 +358,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will NOT lose focus if damaged when used by sele
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, playerLeft);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
-            MESSAGE("Wobbuffet lost its focus and couldn't move!");
+            MESSAGE("WOBBUFFET lost its focus and couldn't move!");
         }
     }
 }
@@ -387,7 +387,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when encored into a d
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, playerLeft);
         }
-        MESSAGE("Wobbuffet lost its focus and couldn't move!");
+        MESSAGE("WOBBUFFET lost its focus and couldn't move!");
     }
 }
 

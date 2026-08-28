@@ -73,19 +73,19 @@ SINGLE_BATTLE_TEST("Download doesn't activate if target hasn't been sent out yet
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
         // Everyone faints.
 
-        SEND_IN_MESSAGE("Porygon");
+        SEND_IN_MESSAGE("PORYGON");
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_DOWNLOAD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Porygon's Download raised its Attack!");
+            MESSAGE("PORYGON's DOWNLOAD raised its ATTACK!");
         }
-        MESSAGE("2 sent out Porygon2!");
+        MESSAGE("2 sent out PORYGON2!");
 
         if (ability == ABILITY_DOWNLOAD)
         {
             ABILITY_POPUP(opponent, ABILITY_DOWNLOAD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Porygon2's Download raised its Sp. Atk!");
+            MESSAGE("The opposing PORYGON2's DOWNLOAD raised its SP. ATK!");
         }
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRI_ATTACK, opponent);

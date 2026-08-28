@@ -75,11 +75,11 @@ DOUBLE_BATTLE_TEST("After You calculates correct turn order if only one Pokémon
         MESSAGE("REGIROCK took the kind offer!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STONE_EDGE, playerRight);
         HP_BAR(opponentLeft);
-        MESSAGE("The opposing Pidgeot fainted!");
+        MESSAGE("The opposing PIDGEOT fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_AFTER_YOU, playerLeft);
-        MESSAGE("Regirock took the kind offer!");
+        MESSAGE("REGIROCK took the kind offer!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STONE_EDGE, playerRight);
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
@@ -103,7 +103,7 @@ DOUBLE_BATTLE_TEST("After You fails if the turn order remains the same after Aft
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
-        MESSAGE("The opposing Wynaut used After You!");
+        MESSAGE("The opposing WYNAUT used AFTER YOU!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_AFTER_YOU, opponentRight);
         MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
