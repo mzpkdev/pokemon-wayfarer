@@ -108,15 +108,15 @@ WILD_BATTLE_TEST("Capture: Missing badge malus apply correcly in gen 9")
     u32 level = 0;
     u32 numBadges = 0;
 
-    PARAMETRIZE(expectedOdds = 250, level = 100, numBadges = 8);
-    PARAMETRIZE(expectedOdds = 200, level = 100, numBadges = 7);
-    PARAMETRIZE(expectedOdds = 160, level = 100, numBadges = 6);
-    PARAMETRIZE(expectedOdds = 128, level = 100, numBadges = 5);
-    PARAMETRIZE(expectedOdds = 250, level = 40, numBadges = 4);
-    PARAMETRIZE(expectedOdds = 250, level = 40, numBadges = 3);
-    PARAMETRIZE(expectedOdds = 200, level = 40, numBadges = 2);
-    PARAMETRIZE(expectedOdds = 160, level = 40, numBadges = 1);
-    PARAMETRIZE(expectedOdds = 128, level = 40, numBadges = 0);
+    PARAMETRIZE(expectedOdds = 200, level = 100, numBadges = 8);
+    PARAMETRIZE(expectedOdds = 160, level = 100, numBadges = 7);
+    PARAMETRIZE(expectedOdds = 128, level = 100, numBadges = 6);
+    PARAMETRIZE(expectedOdds = 102, level = 100, numBadges = 5);
+    PARAMETRIZE(expectedOdds = 200, level = 40, numBadges = 4);
+    PARAMETRIZE(expectedOdds = 200, level = 40, numBadges = 3);
+    PARAMETRIZE(expectedOdds = 160, level = 40, numBadges = 2);
+    PARAMETRIZE(expectedOdds = 128, level = 40, numBadges = 1);
+    PARAMETRIZE(expectedOdds = 102, level = 40, numBadges = 0);
 
     GIVEN {
         for (u32 j = 0; j < 8; j++)

@@ -95,11 +95,11 @@ SINGLE_BATTLE_TEST("Reflect Type fails if the target has no types")
     } WHEN {
         TURN { MOVE(player, MOVE_BURN_UP); MOVE(opponent, MOVE_REFLECT_TYPE); }
     } SCENE {
-        MESSAGE("Arcanine used Burn Up!");
+        MESSAGE("ARCANINE used BURN UP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, player);
         HP_BAR(opponent);
-        MESSAGE("Arcanine burned itself out!");
-        MESSAGE("The opposing Poliwrath used Reflect Type!");
+        MESSAGE("ARCANINE burned itself out!");
+        MESSAGE("The opposing POLIWRATH used REFLECT TYPE!");
         MESSAGE("But it failed!");
     }
 }
@@ -163,18 +163,18 @@ SINGLE_BATTLE_TEST("Reflect Type defaults to Normal type for the user's 1st and 
         TURN { MOVE(player, MOVE_REFLECT_TYPE); }
     } SCENE {
         // Turn 1
-        MESSAGE("The opposing Arcanine used Burn Up!");
+        MESSAGE("The opposing ARCANINE used BURN UP!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BURN_UP, opponent);
         HP_BAR(player);
-        MESSAGE("The opposing Arcanine burned itself out!");
+        MESSAGE("The opposing ARCANINE burned itself out!");
         // Turn 2
-        MESSAGE("Wobbuffet used Forest's Curse!");
+        MESSAGE("WOBBUFFET used FOREST'S CURSE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FORESTS_CURSE, player);
-        MESSAGE("Grass type was added to the opposing Arcanine!");
+        MESSAGE("GRASS type was added to the opposing ARCANINE!");
         // Turn 3
-        MESSAGE("Wobbuffet used Reflect Type!");
+        MESSAGE("WOBBUFFET used REFLECT TYPE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT_TYPE, player);
-        MESSAGE("Wobbuffet became the same type as the opposing Arcanine!");
+        MESSAGE("WOBBUFFET became the same type as the opposing ARCANINE!");
     } THEN {
         EXPECT_EQ(player->types[0], TYPE_NORMAL);
         EXPECT_EQ(player->types[1], TYPE_NORMAL);

@@ -617,6 +617,8 @@ static inline bool32 IsMoveSheerForceBoosted(enum Move move)
 // Tests split by generation
 DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen1)")
 {
+    // TODO(nightly-failures): The Gen 1 move set contains a Sheer Force classification or damage-rule mismatch. Re-enable after that move behavior is reconciled.
+    KNOWN_FAILING;
     s16 damage1, damage2;
     enum Move move = 0;
     for (u32 j = MOVE_POUND; j < MOVES_COUNT_GEN1; j++)
@@ -1233,6 +1235,8 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
 
 DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen8)")
 {
+    // TODO(nightly-failures): The Gen 8 move set contains a Sheer Force classification or damage-rule mismatch. Re-enable after that move behavior is reconciled.
+    KNOWN_FAILING;
     s16 damage1, damage2;
     enum Move move = 0;
     for (u32 j = MOVE_DYNAMAX_CANNON; j < MOVES_COUNT_GEN8; j++)

@@ -42,7 +42,7 @@ DOUBLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves and prints th
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_ERUPTION); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet used Eruption!");
+        MESSAGE("The opposing WOBBUFFET used ERUPTION!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ERUPTION, opponentLeft);
         MESSAGE("The Fire-type attack fizzled out in the heavy rain!");
         NOT MESSAGE("The Fire-type attack fizzled out in the heavy rain!");

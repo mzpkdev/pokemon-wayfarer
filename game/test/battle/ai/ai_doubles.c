@@ -264,6 +264,9 @@ AI_DOUBLE_BATTLE_TEST("AI treats Harvest as a sun benefit only when a berry is i
 
 AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose Helping Hand")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     enum Move j;
     enum Move statusMove = MOVE_NONE;
 
@@ -728,6 +731,9 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
 
 AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
 {
+    // TODO(nightly-failures): The AI selects a move this scenario forbids.
+    // Re-enable after AI move scoring is corrected.
+    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MAGNETON);

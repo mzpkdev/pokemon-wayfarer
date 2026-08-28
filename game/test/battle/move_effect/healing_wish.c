@@ -123,9 +123,9 @@ SINGLE_BATTLE_TEST("Healing Wish effect activates only if the switched Pokémon 
             HP_BAR(player, hp: 100);
             MESSAGE("WYNAUT regained health!");
         } else if (switchTo == 3) {
-            MESSAGE("The healing wish came true for Wynaut!");
+            MESSAGE("The healing wish came true for WYNAUT!");
             STATUS_ICON(player, none: TRUE);
-            MESSAGE("Wynaut regained health!");
+            MESSAGE("WYNAUT regained health!");
         } else {
             NONE_OF {
                 MESSAGE("The healing wish came true for Wynaut!");

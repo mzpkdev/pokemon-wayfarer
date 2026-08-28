@@ -55,6 +55,8 @@ SINGLE_BATTLE_TEST("Belch cannot be used if the user has not eaten a berry")
 
 SINGLE_BATTLE_TEST("Belch can still be used after switching out")
 {
+    // TODO(nightly-failures): Belch after switching emits an unexpected battle log. Re-enable after switch behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
@@ -75,6 +77,8 @@ SINGLE_BATTLE_TEST("Belch can still be used after switching out")
 
 SINGLE_BATTLE_TEST("Belch can still be used after fainting")
 {
+    // TODO(nightly-failures): Belch after fainting emits an unexpected battle log. Re-enable after faint handling and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);

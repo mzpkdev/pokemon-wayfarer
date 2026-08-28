@@ -19,10 +19,10 @@ SINGLE_BATTLE_TEST("Sticky Web lowers Speed by 1 on switch-in")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
-        MESSAGE("2 sent out Wynaut!");
-        MESSAGE("The opposing Wynaut was caught in a sticky web!");
+        MESSAGE("2 sent out WYNAUT!");
+        MESSAGE("The opposing WYNAUT was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wynaut's Speed fell!");
+        MESSAGE("The opposing WYNAUT's SPEED fell!");
     }
 }
 
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Sticky Web can only be set up 1 time")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
 
-        MESSAGE("Wobbuffet used Sticky Web!");
+        MESSAGE("WOBBUFFET used STICKY WEB!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         MESSAGE("But it failed!");
     }
@@ -64,14 +64,14 @@ DOUBLE_BATTLE_TEST("Sticky Web lowers Speed by 1 in a double battle after Explos
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, playerRight);
         MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
-        MESSAGE("2 sent out Wynaut!");
-        MESSAGE("2 sent out Alakazam!");
-        MESSAGE("The opposing Alakazam was caught in a sticky web!");
+        MESSAGE("2 sent out WYNAUT!");
+        MESSAGE("2 sent out ALAKAZAM!");
+        MESSAGE("The opposing ALAKAZAM was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Alakazam's Speed fell!");
-        MESSAGE("The opposing Wynaut was caught in a sticky web!");
+        MESSAGE("The opposing ALAKAZAM's SPEED fell!");
+        MESSAGE("The opposing WYNAUT was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-        MESSAGE("The opposing Wynaut's Speed fell!");
+        MESSAGE("The opposing WYNAUT's SPEED fell!");
     }
 }
 
@@ -88,10 +88,10 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for a Pokemon with Contrary")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
-        MESSAGE("2 sent out Shuckle!");
-        MESSAGE("The opposing Shuckle was caught in a sticky web!");
+        MESSAGE("2 sent out SHUCKLE!");
+        MESSAGE("The opposing SHUCKLE was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Shuckle's Speed rose!");
+        MESSAGE("The opposing SHUCKLE's SPEED rose!");
     }
 }
 
@@ -123,19 +123,19 @@ DOUBLE_BATTLE_TEST("Sticky Web has correct interactions with Mirror Armor - the 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, BATTLER_PLAYER);
         MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
 
-        SEND_IN_MESSAGE("Corviknight");
-        MESSAGE("Corviknight was caught in a sticky web!");
+        SEND_IN_MESSAGE("CORVIKNIGHT");
+        MESSAGE("CORVIKNIGHT was caught in a sticky web!");
         ABILITY_POPUP(playerRight, ABILITY_MIRROR_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, BATTLER_OPPONENT);
         if (opponentSetUpper == 0) {
-            MESSAGE("The opposing Caterpie's Speed fell!");
+            MESSAGE("The opposing CATERPIE's SPEED fell!");
             NONE_OF {
-                MESSAGE("The opposing Caterpie was caught in a sticky web!");
+                MESSAGE("The opposing CATERPIE was caught in a sticky web!");
             }
         } else {
-            MESSAGE("The opposing Weedle's Speed fell!");
+            MESSAGE("The opposing WEEDLE's SPEED fell!");
             NONE_OF {
-                MESSAGE("The opposing Weedle was caught in a sticky web!");
+                MESSAGE("The opposing WEEDLE was caught in a sticky web!");
             }
         }
     }
@@ -176,8 +176,8 @@ DOUBLE_BATTLE_TEST("Sticky Web has correct interactions with Mirror Armor - no o
             MESSAGE("A sticky web has been laid out on the ground around the opposing team!");
         }
 
-        SEND_IN_MESSAGE("Corviknight");
-        MESSAGE("Corviknight was caught in a sticky web!");
+        SEND_IN_MESSAGE("CORVIKNIGHT");
+        MESSAGE("CORVIKNIGHT was caught in a sticky web!");
         ABILITY_POPUP(playerRight, ABILITY_MIRROR_ARMOR);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
     } THEN {
@@ -220,13 +220,13 @@ DOUBLE_BATTLE_TEST("Sticky Web has correct interactions with Mirror Armor - no o
         MESSAGE("A sticky web has been laid out on the ground around your team!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEMENTO, opponentLeft);
-        MESSAGE("The opposing Caterpie fainted!");
+        MESSAGE("The opposing CATERPIE fainted!");
         if (hasReplacement) {
-            MESSAGE("2 sent out Pidgey!");
+            MESSAGE("2 sent out PIDGEY!");
         }
 
-        SEND_IN_MESSAGE("Corviknight");
-        MESSAGE("Corviknight was caught in a sticky web!");
+        SEND_IN_MESSAGE("CORVIKNIGHT");
+        MESSAGE("CORVIKNIGHT was caught in a sticky web!");
         ABILITY_POPUP(playerRight, ABILITY_MIRROR_ARMOR);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
     } THEN {
@@ -266,7 +266,7 @@ SINGLE_BATTLE_TEST("Sticky Web is placed on the correct side after Memento")
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MEMENTO, player);
-        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("WOBBUFFET fainted!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
         MESSAGE("A sticky web has been laid out on the ground around your team!");
     }
@@ -289,13 +289,13 @@ DOUBLE_BATTLE_TEST("Sticky Web setter has their speed lowered with Mirror Armor 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponentLeft);
         MESSAGE("A sticky web has been laid out on the ground around your team!");
         // Turn 2 - ally switch
-        MESSAGE("The opposing Natu used Ally Switch!");
+        MESSAGE("The opposing NATU used ALLY SWITCH!");
         // turn 3 - send our corviknight
-        SEND_IN_MESSAGE("Corviknight");
-        MESSAGE("Corviknight was caught in a sticky web!");
+        SEND_IN_MESSAGE("CORVIKNIGHT");
+        MESSAGE("CORVIKNIGHT was caught in a sticky web!");
         ABILITY_POPUP(playerRight, ABILITY_MIRROR_ARMOR);
         // sticky web setter - caterpie (now opponentRight) gets speed lowered
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Caterpie's Speed fell!");
+        MESSAGE("The opposing CATERPIE's SPEED fell!");
     }
 }

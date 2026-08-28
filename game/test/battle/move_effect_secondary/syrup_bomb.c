@@ -92,32 +92,32 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
         HP_BAR(opponent);
         if (species == SPECIES_BELDUM)
         {
-            MESSAGE("The opposing Beldum got covered in sticky candy syrup!");
+        MESSAGE("The opposing BELDUM got covered in sticky candy syrup!");
             ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Beldum's Clear Body prevents stat loss!");
+        MESSAGE("The opposing BELDUM's CLEAR BODY prevents stat loss!");
             NONE_OF {
-                MESSAGE("The opposing Beldum's Speed fell!");
+                MESSAGE("The opposing BELDUM's SPEED fell!");
             }
         }
         else if (species == SPECIES_TORKOAL)
         {
-            MESSAGE("The opposing Torkoal got covered in sticky candy syrup!");
+            MESSAGE("The opposing TORKOAL got covered in sticky candy syrup!");
             ABILITY_POPUP(opponent, ABILITY_WHITE_SMOKE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            MESSAGE("The opposing TORKOAL's WHITE SMOKE prevents stat loss!");
             NONE_OF {
-                MESSAGE("The opposing Torkoal's Speed fell!");
+                MESSAGE("The opposing TORKOAL's SPEED fell!");
             }
         }
         else if (species == SPECIES_SOLGALEO)
         {
-            MESSAGE("The opposing Solgaleo got covered in sticky candy syrup!");
+            MESSAGE("The opposing SOLGALEO got covered in sticky candy syrup!");
             ABILITY_POPUP(opponent, ABILITY_FULL_METAL_BODY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            MESSAGE("The opposing SOLGALEO's FULL METAL BODY prevents stat loss!");
             NONE_OF {
-                MESSAGE("The opposing Solgaleo's Speed fell!");
+                MESSAGE("The opposing SOLGALEO's SPEED fell!");
             }
         }
     }
@@ -210,10 +210,10 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user faints")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         HP_BAR(player);
         MESSAGE("WOBBUFFET fainted!");
-        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("WYNAUT");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Wobbuffet's Speed fell!");
+            MESSAGE("The opposing WOBBUFFET's SPEED fell!");
         }
     }
 }

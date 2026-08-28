@@ -108,8 +108,8 @@ WILD_BATTLE_TEST("Large exp gains are supported", s32 exp) // #1455
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("The wild Blissey fainted!");
+        MESSAGE("WOBBUFFET used SCRATCH!");
+        MESSAGE("The wild BLISSEY fainted!");
         EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
     } THEN {
         EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL) > 1);

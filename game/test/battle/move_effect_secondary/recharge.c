@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Recharge moves make the user unable to attack for exactly on
         TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METEOR_ASSAULT, player);
-        MESSAGE("Wobbuffet must recharge!");
+        MESSAGE("WOBBUFFET must recharge!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
     }
 }

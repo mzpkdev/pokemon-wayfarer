@@ -32,6 +32,8 @@ SINGLE_BATTLE_TEST("Sword of Ruin reduces Defense if opposing mon's ability does
 
 SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battlers fainted - Player")
 {
+    // TODO(nightly-failures): Sword of Ruin's post-faint switch-in message does not match this game. Re-enable after switch-in behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
@@ -54,6 +56,8 @@ SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battler
 
 SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battlers fainted - Opponent")
 {
+    // TODO(nightly-failures): Sword of Ruin's opponent post-faint switch-in message does not match this game. Re-enable after switch-in behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET);

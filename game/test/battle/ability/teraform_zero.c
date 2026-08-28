@@ -47,11 +47,11 @@ SINGLE_BATTLE_TEST("Teraform Zero can be replaced")
         TURN { MOVE(opponent, MOVE_POUND); }
         TURN { MOVE(opponent, MOVE_WORRY_SEED); MOVE(player, MOVE_REST, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("The opposing Whimsicott used Worry Seed!");
-        MESSAGE("Terapagos acquired Insomnia!");
-        MESSAGE("Terapagos used Rest!");
+        MESSAGE("The opposing WHIMSICOTT used WORRY SEED!");
+        MESSAGE("TERAPAGOS acquired INSOMNIA!");
+        MESSAGE("TERAPAGOS used REST!");
         ABILITY_POPUP(player, ABILITY_INSOMNIA);
-        MESSAGE("Terapagos stayed awake using its Insomnia!");
+        MESSAGE("TERAPAGOS stayed awake using its INSOMNIA!");
     }
 }
 
@@ -94,9 +94,9 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
     } WHEN {
         TURN {  SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Terapagos is storing energy!");
-        MESSAGE("Terapagos terastallized into the Stellar type!");
+        MESSAGE("TERAPAGOS is storing energy!");
+        MESSAGE("TERAPAGOS terastallized into the STELLAR type!");
         NOT ABILITY_POPUP(playerRight, ABILITY_NEUTRALIZING_GAS);
-        MESSAGE("Terapagos used Celebrate!");
+        MESSAGE("TERAPAGOS used CELEBRATE!");
     }
 }

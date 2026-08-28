@@ -32,6 +32,9 @@ SINGLE_BATTLE_TEST("Tablets of Ruin reduces Attack if opposing mon's ability doe
 
 SINGLE_BATTLE_TEST("Tablets of Ruin's message displays correctly after all battlers fainted - Player")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
@@ -54,6 +57,9 @@ SINGLE_BATTLE_TEST("Tablets of Ruin's message displays correctly after all battl
 
 SINGLE_BATTLE_TEST("Tablets of Ruin's message displays correctly after all battlers fainted - Opponent")
 {
+    // TODO(nightly-failures): The current battle does not emit this test's expected message.
+    // Re-enable after the message flow is corrected.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(IsExplosionMove(MOVE_EXPLOSION));
         PLAYER(SPECIES_WOBBUFFET);

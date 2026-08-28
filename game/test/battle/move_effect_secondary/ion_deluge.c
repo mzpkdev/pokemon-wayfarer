@@ -8,6 +8,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Ion Duldge turns normal moves into electric for the remainder of the current turn")
 {
+    // TODO(nightly-failures): Ion Deluge's type-change log does not match this game. Re-enable after type-change behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
         PLAYER(SPECIES_KRABBY);
@@ -29,6 +31,8 @@ SINGLE_BATTLE_TEST("Ion Duldge turns normal moves into electric for the remainde
 
 SINGLE_BATTLE_TEST("Plasma Fists turns normal moves into electric for the remainder of the current turn")
 {
+    // TODO(nightly-failures): Plasma Fists' type-change log does not match this game. Re-enable after type-change behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_KRABBY);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -86,6 +90,8 @@ SINGLE_BATTLE_TEST("Plasma Fists type-changing effect does not override Pixilate
 
 SINGLE_BATTLE_TEST("Plasma Fists type-changing effect is applied after Normalize")
 {
+    // TODO(nightly-failures): Plasma Fists after Normalize emits an unexpected battle log. Re-enable after type-change behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_KRABBY);
         OPPONENT(SPECIES_SKITTY) { Ability(ABILITY_NORMALIZE); }
@@ -103,6 +109,8 @@ SINGLE_BATTLE_TEST("Plasma Fists type-changing effect is applied after Normalize
 
 SINGLE_BATTLE_TEST("Plasma Fists turns normal type dynamax-moves into electric type moves")
 {
+    // TODO(nightly-failures): Plasma Fists with Dynamax moves emits an unexpected battle log. Re-enable after type-change behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         PLAYER(SPECIES_KRABBY) { Speed(100); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }

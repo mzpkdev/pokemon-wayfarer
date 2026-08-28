@@ -50,7 +50,7 @@ DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targe
         ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponentLeft);
         MESSAGE("WOBBUFFET became confused!");
-        MESSAGE("Wynaut became confused!");
+        MESSAGE("WYNAUT became confused!");
     }
 }
 
@@ -375,7 +375,7 @@ SINGLE_BATTLE_TEST("Dancer-called moves can be reflected by Magic Bounce")
         ABILITY_POPUP(opponent, ABILITY_DANCER);
         ABILITY_POPUP(player, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, opponent);
-        MESSAGE("The opposing Oricorio's Feather Dance was bounced back by Espeon's Magic Bounce!");
+        MESSAGE("The opposing ORICORIO's FEATHER DANCE was bounced back by ESPEON's MAGIC BOUNCE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -528,13 +528,13 @@ DOUBLE_BATTLE_TEST("Dancer still activates after Red Card")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fiery Dance!");
+        MESSAGE("WOBBUFFET used FIERY DANCE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
         HP_BAR(opponentLeft);
         // Red card trigger
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
-        MESSAGE("Chansey was dragged out!");
+        MESSAGE("The opposing WOBBUFFET held up its Red Card against WOBBUFFET!");
+        MESSAGE("CHANSEY was dragged out!");
         // Dancer
         ABILITY_POPUP(playerRight, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
@@ -554,14 +554,14 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
     } SCENE {
-        MESSAGE("Octillery used Fiery Dance!");
+        MESSAGE("OCTILLERY used FIERY DANCE!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
         HP_BAR(opponentLeft);
         // red card trigger
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet held up its Red Card against Octillery!");
-        MESSAGE("Octillery anchors itself with Suction Cups!");
-        NOT MESSAGE("Chansey was dragged out!");
+        MESSAGE("The opposing WOBBUFFET held up its Red Card against OCTILLERY!");
+        MESSAGE("OCTILLERY anchors itself with SUCTION CUPS!");
+        NOT MESSAGE("CHANSEY was dragged out!");
         // Dancer
         ABILITY_POPUP(playerRight, ABILITY_DANCER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
@@ -853,8 +853,8 @@ DOUBLE_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, bu
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerRight);
         HP_BAR(playerRight, hp: 0);
         MESSAGE("ORICORIO fainted!");
-        SEND_IN_MESSAGE("Wynaut");
-        SEND_IN_MESSAGE("Chansey");
+        SEND_IN_MESSAGE("WYNAUT");
+        SEND_IN_MESSAGE("CHANSEY");
     }
 }
 

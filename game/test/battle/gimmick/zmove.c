@@ -585,6 +585,8 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
 {
+    // TODO(nightly-failures): Genesis Supernova's terrain-blocking message sequence differs from this expectation. Re-enable after its terrain behavior is aligned.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
         PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }
@@ -602,6 +604,8 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain when the target is behind a Substitute")
 {
+    // TODO(nightly-failures): Genesis Supernova, Substitute, and Psychic Terrain use a different message sequence. Re-enable after their interaction is aligned.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
         PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }

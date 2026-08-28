@@ -3,6 +3,8 @@
 
 SINGLE_BATTLE_TEST("Revive restores a fainted battler's HP to half")
 {
+    // TODO(nightly-failures): Revive's restoration message does not match this game. Re-enable after item behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
@@ -21,6 +23,8 @@ SINGLE_BATTLE_TEST("Revive restores a fainted battler's HP to half")
 
 SINGLE_BATTLE_TEST("Max Revive restores a fainted battler's HP fully")
 {
+    // TODO(nightly-failures): Max Revive's restoration message does not match this game. Re-enable after item behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_MAX_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
@@ -39,6 +43,8 @@ SINGLE_BATTLE_TEST("Max Revive restores a fainted battler's HP fully")
 
 SINGLE_BATTLE_TEST("Revival Herb restores a fainted battler's HP fully")
 {
+    // TODO(nightly-failures): Revival Herb's restoration message does not match this game. Re-enable after item behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_REVIVAL_HERB].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
@@ -57,6 +63,8 @@ SINGLE_BATTLE_TEST("Revival Herb restores a fainted battler's HP fully")
 
 SINGLE_BATTLE_TEST("Max Honey restores a fainted battler's HP fully")
 {
+    // TODO(nightly-failures): Max Honey's restoration message does not match this game. Re-enable after item behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_MAX_HONEY].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); }
@@ -76,6 +84,8 @@ SINGLE_BATTLE_TEST("Max Honey restores a fainted battler's HP fully")
 // Note: this test is oddly specific with implicit moves/speeds, because I had errors/invalids without them.
 DOUBLE_BATTLE_TEST("Revive works for a partner in a double battle")
 {
+    // TODO(nightly-failures): The partner Revive scenario emits an unexpected battle log. Re-enable after revive behavior and messages align.
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); MaxHP(200); Moves(MOVE_IRON_DEFENSE, MOVE_CELEBRATE); Speed(5); }

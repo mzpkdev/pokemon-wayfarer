@@ -228,6 +228,7 @@ SINGLE_BATTLE_TEST("Harvest can restore a Berry that was transferred from anothe
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus = TRUE;
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); }
     } WHEN {
@@ -247,6 +248,7 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         ASSUME(gItemsInfo[ITEM_APICOT_BERRY].holdEffect == HOLD_EFFECT_SP_DEFENSE_UP);
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_New_Citrus = TRUE;
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); Item(ITEM_APICOT_BERRY); }
     } WHEN {
