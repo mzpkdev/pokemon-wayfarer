@@ -1,9 +1,19 @@
+import * as childProcess from "node:child_process"
+import * as fs from "node:fs"
+import * as os from "node:os"
 import * as path from "node:path"
 
-import { describe, expect, it } from "vitest"
+import { afterAll, beforeAll, describe, expect, it } from "vitest"
 
 import { catalogEncounterSprites } from "./encounter-sprites"
-import { catalogWildEncounters, sourceWildEncounters } from "./encounters"
+import {
+  catalogWildEncounters,
+  sourceProductForBaseLabel,
+  sourceWildEncounterCatalog,
+  sourceWildEncounters,
+} from "./encounters"
+import { profileIndex, profileLookupKey } from "./projection"
+import type { CatalogEncounterProjectionProfile, CatalogWildEncounterProjection } from "./types"
 
 const sourceRoot = path.resolve(import.meta.dirname, "../../../../..", "game")
 
@@ -261,6 +271,38 @@ describe("source wild encounters", () => {
     ])
   })
 
+  it("retains inverted authored ranges with their normalized runtime envelope", () => {
+    const encounters = catalogWildEncounters(
+      encounterDocument([
+        {
+          map: "MAP_ALPHA",
+          base_label: "inverted",
+          land_mons: {
+            encounter_rate: 20,
+            mons: [{ min_level: 43, max_level: 42, species: "SPECIES_EEVEE" }],
+          },
+        },
+      ]),
+      mapNamesById,
+      speciesLabelsById,
+    ).get("Alpha")
+
+    expect(encounters?.sets[0]?.methods[0]?.slots[0]).toMatchObject({
+      minLevel: 43,
+      maxLevel: 42,
+      runtimeMinLevel: 42,
+      runtimeMaxLevel: 43,
+    })
+    expect(encounters?.diagnostics).toContainEqual(
+      expect.objectContaining({
+        code: "invalid_source_slot",
+        reason: "invalid_level_range",
+        minLevel: 43,
+        maxLevel: 42,
+      }),
+    )
+  })
+
   it("fails generation when method slots do not match the source field definition", () => {
     expect(() =>
       catalogWildEncounters(
@@ -291,5 +333,109 @@ describe("source wild encounters", () => {
         speciesLabelsById,
       ),
     ).toThrow("has no Pokémon Wayfarer species label source entry")
+  })
+})
+
+describe("generated Trainer Rating projection joins", () => {
+  let temporaryDirectory = ""
+  let catalog: ReturnType<typeof sourceWildEncounterCatalog>
+
+  beforeAll(() => {
+    temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "wayfarer-cartographer-projection-"))
+    const projectionPath = path.join(temporaryDirectory, "projection.json")
+    childProcess.execFileSync(
+      "python3",
+      [
+        path.join(sourceRoot, "tools/wild_encounters/wild_encounters_to_header.py"),
+        "--cartographer-projection",
+        projectionPath,
+      ],
+      { cwd: sourceRoot },
+    )
+    catalog = sourceWildEncounterCatalog(
+      sourceRoot,
+      new Map([
+        ["MAP_ROUTE101", "Route101"],
+        ["MAP_MT_SILVER_SNOW_HNS", "MtSilverSnow_hns"],
+        ["MAP_ROUTE18", "Route18"],
+      ]),
+      temporaryDirectory,
+      projectionPath,
+      () => null,
+    )
+  })
+
+  afterAll(() => {
+    fs.rmSync(temporaryDirectory, { force: true, recursive: true })
+  })
+
+  it("decorates projection species and joins exact product profile references", () => {
+    expect(catalog.projection.trainerRating).toEqual({ minimum: 10, maximum: 80 })
+    expect(
+      catalog.projection.species.find((species) => species.authoredSpecies === "SPECIES_MAGIKARP"),
+    ).toMatchObject({ speciesLabel: "MAGIKARP", sprite: null })
+
+    const route101 = catalog.encountersByMap.get("Route101")?.sets[0]
+    expect(route101).toMatchObject({ product: "EMERALD", runtimeTime: "day" })
+    expect(route101?.methods[0]?.profiles[0]).toEqual({
+      profileKey: "EMERALD/gRoute101/land_mons/NONE",
+      fishingRod: "NONE",
+      levelOffset: 0,
+    })
+  })
+
+  it("uses generator runtime identity and keeps version populations separate", () => {
+    expect(
+      catalog.encountersByMap
+        .get("MtSilverSnow_hns")
+        ?.sets.find((set) => set.baseLabel === "gMtSilver_SnowNight_hns_Day")?.runtimeTime,
+    ).toBe("night")
+
+    const route18 = catalog.encountersByMap.get("Route18")
+    expect(new Set(route18?.sets.map((set) => set.product))).toEqual(
+      new Set(["FIRERED", "LEAFGREEN"]),
+    )
+    expect(new Set(route18?.runtimeTimes.map((time) => time.product))).toEqual(
+      new Set(["FIRERED", "LEAFGREEN"]),
+    )
+  })
+
+  it("indexes an otherwise identical profile separately for every product", () => {
+    const base: Omit<CatalogEncounterProjectionProfile, "product" | "profileKey"> = {
+      map: "MAP_ALPHA",
+      baseLabel: "shared_label",
+      header: "shared_label",
+      headerId: 0,
+      runtimeTime: "TIME_DAY",
+      method: "land_mons",
+      runtimeArea: "WILD_AREA_LAND",
+      fishingRod: "NONE",
+      runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_NONE",
+      levelOffset: 0,
+      encounterRate: 20,
+      authoredSlotCount: 1,
+      runtimeSlotCount: 1,
+    }
+    const profiles: CatalogEncounterProjectionProfile[] = ["FIRERED", "LEAFGREEN"].map(
+      (product) => ({
+        ...base,
+        product: product as "FIRERED" | "LEAFGREEN",
+        profileKey: `${product}/shared_label/land_mons/NONE`,
+      }),
+    )
+    const indexed = profileIndex({ profiles } as CatalogWildEncounterProjection)
+
+    expect(indexed.get(profileLookupKey("FIRERED", "shared_label", "land_mons", "NONE"))).toBe(
+      profiles[0],
+    )
+    expect(indexed.get(profileLookupKey("LEAFGREEN", "shared_label", "land_mons", "NONE"))).toBe(
+      profiles[1],
+    )
+  })
+
+  it("rejects an ambiguous source product label before profile lookup", () => {
+    expect(() => sourceProductForBaseLabel("gSharedFireRed_LeafGreen")).toThrow(
+      "source label has ambiguous product markers",
+    )
   })
 })

@@ -8,7 +8,7 @@ Keep ordinary wild encounters relevant as a player advances through a campaign. 
 
 Trainer Rating is a persistent progression value. New games start at 10, the lowest supported rating, and the system never lowers a saved rating. The rating is internal and has no player-facing screen.
 
-Every ordinary encounter profile compiled into Emerald, FireRed/LeafGreen, or the HNS regions uses the same rating. The system adjusts encounter levels and can return an over-levelled evolved species to an eligible predecessor. It also respects specific species floors.
+Every ordinary encounter profile compiled into Emerald, FireRed/LeafGreen, or HNS uses the same rating. The system adjusts encounter levels and can return an over-levelled evolved species to an eligible predecessor. It also respects specific species floors.
 
 The campaign targets are:
 
@@ -38,9 +38,11 @@ The early game begins from Rating 10 rather than zero so starter-area encounters
 
 The scope includes all ordinary encounter profiles that each build currently compiles:
 
-- Emerald: its available regions.
+- Emerald: Hoenn.
 - FireRed/LeafGreen: Kanto and the Sevii Islands.
-- HNS: Johto, Kanto, and its miscellaneous regions.
+- HNS: Johto, Kanto, Alola, Sinjoh, Faraway Island, and Southern Island.
+
+Sinjoh is a distinct region in HNS. No full Sinnoh encounter region is present in the current builds.
 
 Profile identity and encounter mechanics remain authored. This includes land, water, Rock Smash, fishing rods, time of day, ability-based selection, lures, Altering Cave, and HNS Hoenn Sound behavior.
 

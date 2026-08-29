@@ -11,6 +11,12 @@ The workspace uses pnpm workspaces, Turborepo, WebAnvil, TypeScript 7, and Ark
 UI in the Svelte app. WebAnvil owns builds, formatting, linting, test commands,
 browser tests, and declaration generation.
 
+Catalog generation also requires Python 3 and a C preprocessor available as
+`cpp`. Set the `CPP` environment variable to the executable name or path when
+the preprocessor is installed under another name. Catalog commands check both
+prerequisites before replacing an existing generated catalog and report a
+setup error when either command is unavailable.
+
 ## Layout
 
 ```text

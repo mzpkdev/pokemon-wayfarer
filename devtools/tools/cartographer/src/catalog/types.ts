@@ -48,6 +48,8 @@ export type CatalogEncounterSlot = {
   }>
   minLevel: number
   maxLevel: number
+  runtimeMinLevel: number
+  runtimeMaxLevel: number
   speciesId: string
   speciesLabel: string
   sprite: CatalogEncounterSprite | null
@@ -62,17 +64,78 @@ export type CatalogEncounterSprite = {
   source: string
 }
 
+export type CatalogEncounterProduct = "EMERALD" | "FIRERED" | "LEAFGREEN" | "POKEMON_HNS"
+
+export type CatalogEncounterTimeOfDay = "morning" | "day" | "evening" | "night"
+
+export type CatalogEncounterFishingRod = "NONE" | "OLD_ROD" | "GOOD_ROD" | "SUPER_ROD"
+
+export type CatalogEncounterProjectionProfile = {
+  profileKey: string
+  product: CatalogEncounterProduct
+  map: string
+  baseLabel: string
+  header: string
+  headerId: number
+  runtimeTime: "TIME_MORNING" | "TIME_DAY" | "TIME_EVENING" | "TIME_NIGHT"
+  method: CatalogEncounterMethod["type"]
+  runtimeArea: "WILD_AREA_LAND" | "WILD_AREA_WATER" | "WILD_AREA_ROCKS" | "WILD_AREA_FISHING"
+  fishingRod: CatalogEncounterFishingRod
+  runtimeFishingRod:
+    | "WILD_ENCOUNTER_FISHING_ROD_NONE"
+    | "WILD_ENCOUNTER_FISHING_ROD_OLD"
+    | "WILD_ENCOUNTER_FISHING_ROD_GOOD"
+    | "WILD_ENCOUNTER_FISHING_ROD_SUPER"
+  levelOffset: number
+  encounterRate: number
+  authoredSlotCount: number
+  runtimeSlotCount: number
+}
+
+export type CatalogWildEncounterProjection = {
+  schemaVersion: 1
+  trainerRating: { minimum: number; maximum: number }
+  authoredLevel: { minimum: number; maximum: number }
+  products: Array<{ id: CatalogEncounterProduct; displayName: string }>
+  levelProjections: Array<{
+    levelOffset: number
+    ratings: Array<{ rating: number; projectedLevels: number[] }>
+  }>
+  species: Array<{
+    authoredSpecies: string
+    authoredSpeciesId: number
+    speciesLabel: string
+    sprite: CatalogEncounterSprite | null
+    outcomesByProjectedLevel: Array<{
+      minimumProjectedLevel: number
+      maximumProjectedLevel: number
+      effectiveSpecies: string
+      eligible: boolean
+      minimumOrdinaryWildLevel: number
+    }>
+  }>
+  profiles: CatalogEncounterProjectionProfile[]
+  headerCounts: Record<CatalogEncounterProduct, number>
+}
+
 export type CatalogEncounterMethod = {
   type: "land_mons" | "water_mons" | "rock_smash_mons" | "fishing_mons"
   encounterRate: number
   source: CatalogSourcePointer
   slots: CatalogEncounterSlot[]
+  profiles: Array<{
+    profileKey: string
+    fishingRod: CatalogEncounterFishingRod
+    levelOffset: number
+  }>
 }
 
 export type CatalogEncounterSet = {
   mapId: string
   mapName: string
   baseLabel: string
+  product: CatalogEncounterProduct
+  runtimeTime: CatalogEncounterTimeOfDay
   header: {
     groupLabel: string
     groupIndex: number
@@ -83,7 +146,8 @@ export type CatalogEncounterSet = {
 }
 
 export type CatalogEncounterRuntimeTime = {
-  timeOfDay: "morning" | "day" | "evening" | "night"
+  product: CatalogEncounterProduct
+  timeOfDay: CatalogEncounterTimeOfDay
   methods: Array<{
     type: CatalogEncounterMethod["type"]
     resolution: "direct" | "fallback" | "unavailable"
@@ -323,7 +387,7 @@ export type CatalogMap = {
 }
 
 export type MapCatalog = {
-  schemaVersion: 7
+  schemaVersion: 8
   format: "pokemon-wayfarer-exterior-map-catalog"
   pixelsPerMetatile: 16
   source: {
@@ -340,6 +404,7 @@ export type MapCatalog = {
   topology: {
     conflicts: TopologyDiagnostic[]
   }
+  wildEncounterProjection: CatalogWildEncounterProjection
   regions: Array<CatalogRegion & { mapCount: number; maps: string[] }>
   maps: CatalogMap[]
 }

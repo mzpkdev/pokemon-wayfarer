@@ -12,6 +12,14 @@ Which ordinary random encounter tables deliberately place an evolved Pokemon bel
 
 This audit covers active runtime slots in `gWildMonHeaders` for Emerald, FireRed, LeafGreen, and HNS. It includes ordinary land, water, Rock Smash, and fishing profiles.
 
+The regional coverage by game is:
+
+- Emerald: Hoenn.
+- FireRed/LeafGreen: Kanto and the Sevii Islands.
+- HNS: Johto, Kanto, Alola, Sinjoh, Faraway Island, and Southern Island.
+
+Sinjoh is a distinct region in HNS. No full Sinnoh encounter region is present in the audited builds.
+
 It excludes fixed and scripted encounters, hidden DexNav entries, roamers, outbreaks, Feebas, Battle Pike, and Battle Pyramid. The scripted Red Gyarados is excluded. The separate ordinary Lake of Rage water table is included.
 
 Duplicate slots and profiles are grouped where that does not hide a build, method, authored range, or evolution threshold. HNS compact rows may combine maps with identical species, range, and method signatures; their locations are summarized in the location cell. Day and night variants with identical results are counted once.
@@ -33,6 +41,8 @@ Ranged slots need no separate policy. Each rolled level is projected normally, t
 | HNS | 26 | 153 | 82 |
 
 FireRed contributes 111 raw slots and 109 consolidated groups. LeafGreen contributes 122 raw slots and 118 consolidated groups. HNS has 54 compact cross-map species, range, and method signatures after equivalent profiles are combined; preserving maps as separate groups produces the 82 shown in the table. No qualifying HNS Kanto entries were found.
+
+The findings contain qualifying rows from the Sevii Islands and Sinjoh. Alola was included in the HNS-wide audit but produced no qualifying authored under-level rows.
 
 ## Emerald findings
 

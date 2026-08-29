@@ -30,9 +30,11 @@
     CatalogDirectTopologyMismatch,
     CatalogMissingReverseConnection,
     CatalogTopologyDiagnostic,
+    CatalogEncounterSprite,
     CatalogWildEncounterMethod,
     MapCatalog,
   } from "./catalog.js"
+  import { effectiveRosterFor, resolveMapEncounters } from "./encounters.js"
   import {
     cartographerExtent,
     solveGeography,
@@ -56,6 +58,8 @@
     showObjects?: boolean
     showEncounterTrainers?: boolean
     encounterMode?: boolean
+    trainerRating?: number
+    preferredProduct?: string | null
     onSelectMap?: (name: string) => void
     onSelectWarp?: (selection: WarpSelection) => void
     onSelectObject?: (selection: ObjectSelection) => void
@@ -77,6 +81,8 @@
     showObjects = false,
     showEncounterTrainers = true,
     encounterMode = false,
+    trainerRating = 10,
+    preferredProduct = null,
     onSelectMap,
     onSelectWarp,
     onSelectObject,
@@ -272,11 +278,13 @@
     | {
         map: OpenLayersMap
         view: View
+        hitLayer: VectorLayer<VectorSource>
         exits: VectorLayer<VectorSource>
         objects: VectorLayer<VectorSource>
         trainers: VectorLayer<VectorSource>
         habitats: VectorLayer<VectorSource>
         encounterRosters: VectorLayer<VectorSource>
+        encounterRosterSource: VectorSource
         topologyConflicts: VectorLayer<VectorSource>
         atlasOverlaps: VectorLayer<VectorSource>
         imageLayers: ReadonlyMap<string, ImageLayer<ImageStatic>>
@@ -300,7 +308,11 @@
     return new Map(
       surfaceMaps.flatMap((map) => {
         const methods = new Set(
-          map.wildEncounters.sets.flatMap((set) => set.methods.map((method) => method.type)),
+          resolveMapEncounters(
+            map,
+            preferredProduct,
+            catalog.wildEncounterProjection.products,
+          ).sets.flatMap((set) => set.methods.map((method) => method.type)),
         )
         const codes = Object.entries(methodCodes)
           .filter(([method]) => methods.has(method as keyof typeof methodCodes))
@@ -311,6 +323,21 @@
     )
   })
   let encounterMapCount = $derived(encounterMethodsByMap.size)
+  let selectedMapRoster = $derived.by(() => {
+    const map = surfaceMaps.find((candidate) => candidate.name === selectedMapName)
+    if (!map) return []
+    const resolved = resolveMapEncounters(
+      map,
+      preferredProduct,
+      catalog.wildEncounterProjection.products,
+    )
+    const outcomes = (["land_mons", "water_mons"] as const).flatMap((method) =>
+      effectiveRosterFor(catalog.wildEncounterProjection, resolved, method, trainerRating),
+    )
+    return [
+      ...new Map(outcomes.map((outcome) => [outcome.speciesId, outcome.speciesLabel])).values(),
+    ]
+  })
   let geography = $derived(solveGeography(surfaceMaps))
   let extent = $derived(cartographerExtent(geography.placements, catalog.pixelsPerMetatile))
   const isDirectMismatch = (
@@ -360,22 +387,20 @@
     map: CatalogMap,
     method: CatalogWildEncounterMethod["type"],
   ): boolean => {
+    return resolveMapEncounters(
+      map,
+      preferredProduct,
+      catalog.wildEncounterProjection.products,
+    ).sets.some((set) => set.methods.some((candidate) => candidate.type === method))
+  }
+
+  const hasAnyEncounterMethod = (
+    map: CatalogMap,
+    method: CatalogWildEncounterMethod["type"],
+  ): boolean => {
     return map.wildEncounters.sets.some((set) =>
       set.methods.some((candidate) => candidate.type === method),
     )
-  }
-
-  const rosterFor = (
-    map: CatalogMap,
-    method: CatalogWildEncounterMethod["type"],
-  ): CatalogWildEncounterMethod["slots"] => {
-    const slots = map.wildEncounters.sets.flatMap((set) =>
-      set.methods
-        .filter((candidate) => candidate.type === method)
-        .flatMap((candidate) => candidate.slots),
-    )
-    const distinct = new Map(slots.map((slot) => [slot.speciesId, slot]))
-    return [...distinct.values()].filter((slot) => slot.sprite).slice(0, 3)
   }
 
   const visualDirectMismatchFor = (
@@ -475,9 +500,7 @@
     return style
   }
 
-  const encounterRosterStyleFor = (
-    sprite: NonNullable<CatalogWildEncounterMethod["slots"][number]["sprite"]>,
-  ): Style => {
+  const encounterRosterStyleFor = (sprite: CatalogEncounterSprite): Style => {
     const existing = encounterRosterStyles.get(sprite.path)
     if (existing) return existing
     const style = new Style({
@@ -490,6 +513,54 @@
     })
     encounterRosterStyles.set(sprite.path, style)
     return style
+  }
+
+  const populateEncounterRoster = (source: VectorSource): void => {
+    source.clear()
+    for (const map of surfaceMaps) {
+      const placement = geography.placements[map.name]
+      if (!placement) continue
+      const resolved = resolveMapEncounters(
+        map,
+        preferredProduct,
+        catalog.wildEncounterProjection.products,
+      )
+      for (const [kind, method] of [
+        ["land", "land_mons"],
+        ["water", "water_mons"],
+      ] as const) {
+        const largest = [...map.encounterHabitat[kind]].sort(
+          (left, right) =>
+            right.widthMetatiles * right.heightMetatiles -
+            left.widthMetatiles * left.heightMetatiles,
+        )[0]
+        if (!largest) continue
+        const roster = effectiveRosterFor(
+          catalog.wildEncounterProjection,
+          resolved,
+          method,
+          trainerRating,
+        )
+          .filter((outcome) => outcome.sprite)
+          .slice(0, 3)
+        for (const [index, outcome] of roster.entries()) {
+          if (!outcome.sprite) continue
+          source.addFeature(
+            new Feature({
+              geometry: new Point([
+                (placement.x + largest.xMetatiles + largest.widthMetatiles / 2) *
+                  catalog.pixelsPerMetatile +
+                  (index - (roster.length - 1) / 2) * 18,
+                -(placement.y + largest.yMetatiles + largest.heightMetatiles / 2) *
+                  catalog.pixelsPerMetatile,
+              ]),
+              mapName: map.name,
+              sprite: outcome.sprite,
+            }),
+          )
+        }
+      }
+    }
   }
 
   const focusMap = (name: string): void => {
@@ -513,11 +584,25 @@
   })
 
   $effect(() => {
+    const currentRating = trainerRating
+    const currentProduct = preferredProduct
+    if (!instance) return
+    void currentRating
+    void currentProduct
+    populateEncounterRoster(instance.encounterRosterSource)
+    instance.hitLayer.changed()
+    instance.habitats.changed()
+    instance.encounterRosters.changed()
+    instance.map.render()
+  })
+
+  $effect(() => {
     const currentSelection = selectedMapName
     const currentEncounterMode = encounterMode
     if (!instance) return
     instance.habitats.setVisible(currentEncounterMode)
     instance.encounterRosters.setVisible(currentEncounterMode)
+    instance.hitLayer.changed()
     if (currentSelection || currentEncounterMode) {
       instance.habitats.changed()
       instance.encounterRosters.changed()
@@ -603,7 +688,7 @@
         ["land", "land_mons"],
         ["water", "water_mons"],
       ] as const) {
-        if (!hasEncounterMethod(map, method)) continue
+        if (!hasAnyEncounterMethod(map, method)) continue
         for (const rectangle of map.encounterHabitat[kind]) {
           habitatSource.addFeature(
             new Feature({
@@ -620,34 +705,13 @@
               ),
               mapName: map.name,
               kind,
-            }),
-          )
-        }
-        const largest = [...map.encounterHabitat[kind]].sort(
-          (left, right) =>
-            right.widthMetatiles * right.heightMetatiles -
-            left.widthMetatiles * left.heightMetatiles,
-        )[0]
-        if (!largest) continue
-        const roster = rosterFor(map, method)
-        for (const [index, slot] of roster.entries()) {
-          if (!slot.sprite) continue
-          encounterRosterSource.addFeature(
-            new Feature({
-              geometry: new Point([
-                (placement.x + largest.xMetatiles + largest.widthMetatiles / 2) *
-                  catalog.pixelsPerMetatile +
-                  (index - (roster.length - 1) / 2) * 18,
-                -(placement.y + largest.yMetatiles + largest.heightMetatiles / 2) *
-                  catalog.pixelsPerMetatile,
-              ]),
-              mapName: map.name,
-              sprite: slot.sprite,
+              method,
             }),
           )
         }
       }
     }
+    populateEncounterRoster(encounterRosterSource)
     for (const diagnostic of directTopologyMismatches) {
       const visual = visualDirectMismatchFor(diagnostic)
       const expectedExtent = toOpenLayersExtent(visual.expected, catalog.pixelsPerMetatile)
@@ -736,6 +800,10 @@
       source: habitatSource,
       style: (feature) => {
         if (!encounterMode || feature.get("mapName") !== selectedMapName) return undefined
+        const mapName = feature.get("mapName") as string
+        const method = feature.get("method") as CatalogWildEncounterMethod["type"]
+        const map = surfaceMaps.find((candidate) => candidate.name === mapName)
+        if (!map || !hasEncounterMethod(map, method)) return undefined
         const kind = feature.get("kind") as keyof typeof encounterHabitatStyles
         return encounterHabitatStyles[kind]
       },
@@ -746,9 +814,7 @@
       style: (feature, resolution) => {
         if (!encounterMode || feature.get("mapName") !== selectedMapName || resolution > 16)
           return undefined
-        const sprite = feature.get(
-          "sprite",
-        ) as CatalogWildEncounterMethod["slots"][number]["sprite"]
+        const sprite = feature.get("sprite") as CatalogEncounterSprite | null
         return sprite ? scaledStyle(encounterRosterStyleFor(sprite), resolution) : undefined
       },
       visible: encounterMode,
@@ -854,11 +920,13 @@
     instance = {
       map,
       view,
+      hitLayer,
       exits,
       objects,
       trainers,
       habitats,
       encounterRosters,
+      encounterRosterSource,
       topologyConflicts,
       atlasOverlaps: atlasOverlapLayer,
       imageLayers: new Map(imageRecords.map((record) => [record.map.name, record.layer])),
@@ -904,6 +972,13 @@
       onZoomIn={() => instance?.view.setZoom((instance.view.getZoom() ?? 0) + 1)}
       onFit={() => instance?.view.fit(extent, { padding: [40, 40, 40, 40], maxZoom: 3 })}
     />
+    {#if encounterMode && selectedMapName}
+      <p class="sr-only" aria-label="Encounter roster preview">
+        {selectedMapName} at Trainer Rating {trainerRating}: {selectedMapRoster.length > 0
+          ? selectedMapRoster.join(", ")
+          : "unavailable"}
+      </p>
+    {/if}
     {#if showObjects && !encounterMode}
       <ObjectFilterPanel kinds={objectKinds} onToggle={toggleObjectKind} />
     {/if}

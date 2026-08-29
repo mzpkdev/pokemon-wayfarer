@@ -1,5 +1,61 @@
 import { expect, test } from "webanvil/e2e"
 
+test("previews scaled encounters without remounting the map", async ({ page }) => {
+  await page.goto("/")
+
+  const mapSearch = page.getByRole("combobox", { name: "Name or map section" })
+  await mapSearch.fill("LakeOfRage")
+  await page.getByRole("option", { name: /LakeOfRage_hns/ }).click()
+  await page
+    .getByRole("navigation", { name: "Cartographer views" })
+    .getByRole("button", { name: "Encounters", exact: true })
+    .click()
+
+  const slider = page.getByRole("slider", { name: "Trainer Rating" })
+  await expect(slider).toHaveAttribute("aria-valuenow", "10")
+  const mapRoster = page.getByLabel("Encounter roster preview")
+  await expect(mapRoster).toContainText(/Magikarp/i)
+  await expect(mapRoster).not.toContainText(/Gyarados/i)
+  const sourceSet = page.locator('details[aria-label="Source set gLakeOfRage_hns_Day"]')
+  await sourceSet.locator(":scope > summary").click()
+  const water = sourceSet.locator('details[aria-label="Water encounter method"]')
+  await water.locator(":scope > summary").click()
+  const scalingRow = water.locator("tbody tr").nth(4)
+  await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(1)
+  await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(1)
+
+  const viewport = page.getByLabel("Interactive cartographer")
+  await viewport.evaluate((element) => element.setAttribute("data-scaling-e2e", "mounted"))
+  await slider.focus()
+  for (let rating = 10; rating < 30; rating += 1) await slider.press("ArrowRight")
+  await expect(slider).toHaveAttribute("aria-valuenow", "30")
+  await expect(page).toHaveURL(/rating=30/)
+  await expect(viewport).toHaveAttribute("data-scaling-e2e", "mounted")
+  await expect(mapRoster).toContainText(/Gyarados/i)
+  await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(2)
+  await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(0)
+
+  await mapSearch.fill("CeruleanCity_Frlg")
+  await page.getByRole("option", { name: /CeruleanCity_Frlg/ }).click()
+  const version = page.getByRole("combobox", { name: "Game version" })
+  await expect(version).toBeVisible()
+  await version.selectOption("FIRERED")
+  await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
+    1,
+  )
+  await expect(
+    page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
+  ).toHaveCount(0)
+  await version.selectOption("LEAFGREEN")
+  await expect(page).toHaveURL(/product=LEAFGREEN/)
+  await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
+    0,
+  )
+  await expect(
+    page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
+  ).toHaveCount(1)
+})
+
 test("shows the cartographer", async ({ page }) => {
   await page.goto("/")
 
@@ -160,7 +216,7 @@ test("shows the cartographer", async ({ page }) => {
     .toBe(true)
   await expect(route32Set.getByLabel("Old Rod fishing")).toBeVisible()
   await expect(route32Set.getByLabel("Good Rod fishing")).toBeVisible()
-  await expect(route32Set.getByText("MAGIKARP", { exact: true }).first()).toBeVisible()
+  await expect(route32Set.getByText(/^Magikarp$/i).first()).toBeVisible()
   const encounterSprite = fishing.locator('img[src*="pokemon-icons/"]').first()
   await expect(encounterSprite).toBeVisible()
   await expect

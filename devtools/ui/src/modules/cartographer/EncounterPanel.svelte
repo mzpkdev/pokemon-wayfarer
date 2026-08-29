@@ -1,6 +1,16 @@
 <script lang="ts">
-  import type { CatalogMap, CatalogObject, CatalogWildEncounterMethod } from "./catalog.js"
-  import { fishingGroupIds, rodLabel, visibleEncounterSlots } from "./encounters.js"
+  import type {
+    CatalogMap,
+    CatalogObject,
+    CatalogWildEncounterMethod,
+    CatalogWildEncounterProjection,
+  } from "./catalog.js"
+  import {
+    fishingGroupIds,
+    resolveMethodSlots,
+    rodLabel,
+    type ResolvedMapEncounters,
+  } from "./encounters.js"
   import EncounterSlotsTable from "./EncounterSlotsTable.svelte"
   import TrainerEvents from "./TrainerEvents.svelte"
   import type { ObjectSelection } from "./types.js"
@@ -9,10 +19,20 @@
   type Props = {
     selectedMap: CatalogMap | null
     selectedObject: ObjectSelection | null
+    encounters: ResolvedMapEncounters | null
+    projection: CatalogWildEncounterProjection
+    trainerRating: number
     onSelectTrainer?: (trainer: CatalogObject) => void
   }
 
-  let { selectedMap, selectedObject, onSelectTrainer }: Props = $props()
+  let {
+    selectedMap,
+    selectedObject,
+    encounters,
+    projection,
+    trainerRating,
+    onSelectTrainer,
+  }: Props = $props()
 
   const methodLabels: Record<CatalogWildEncounterMethod["type"], string> = {
     land_mons: "Land",
@@ -64,8 +84,7 @@
         <h2 class="mb-0 mt-2 text-2xl font-semibold tracking-[-0.025em]">{selectedMap.name}</h2>
       </div>
       <p class="mb-0 mt-2 font-cartographer-mono text-xs text-cartographer-muted sm:text-right">
-        {selectedMap.wildEncounters.sets.length} source {selectedMap.wildEncounters.sets.length ===
-        1
+        {encounters?.sets.length ?? 0} source {(encounters?.sets.length ?? 0) === 1
           ? "set"
           : "sets"}
       </p>
@@ -73,7 +92,14 @@
 
     <TrainerEvents mapName={selectedMap.name} {trainers} {selectedObject} {onSelectTrainer} />
 
-    {#if selectedMap.wildEncounters.sets.length === 0}
+    <p class="m-0 border-b border-cartographer-border px-5 py-3 text-sm text-cartographer-muted">
+      Normal non-randomized ordinary encounters · Trainer Rating {trainerRating}
+      {#if encounters?.product}
+        · {encounters.availableProducts.find((product) => product.id === encounters?.product)
+          ?.displayName ?? encounters.product}{/if}
+    </p>
+
+    {#if !encounters || encounters.sets.length === 0}
       <div class="p-6">
         <h3 class="m-0 text-base font-semibold">No source encounter sets</h3>
         <p class="mb-0 mt-2 leading-6 text-cartographer-muted">
@@ -82,17 +108,17 @@
       </div>
     {:else}
       <div class="grid min-w-0 gap-5 p-5">
-        {#if selectedMap.wildEncounters.runtimeTimes.length > 0}
+        {#if encounters.runtimeTimes.length > 0}
           <CollapsibleSection
             title="Runtime encounter times"
-            count={selectedMap.wildEncounters.runtimeTimes.length}
+            count={encounters.runtimeTimes.length}
           >
             <p class="m-0 px-4 py-3 text-sm text-cartographer-muted">
               Time-labelled source tables are selected per encounter method. Missing tables use the
               source-configured Day fallback when it provides that method.
             </p>
             <ul class="m-0 grid list-none divide-y divide-cartographer-border p-0">
-              {#each selectedMap.wildEncounters.runtimeTimes as time (time.timeOfDay)}
+              {#each encounters.runtimeTimes as time (`${time.product}-${time.timeOfDay}`)}
                 <li class="grid gap-2 px-4 py-3">
                   <div>
                     <p class="m-0 text-sm font-medium">{timeOfDayLabels[time.timeOfDay]}</p>
@@ -118,7 +144,7 @@
           </CollapsibleSection>
         {/if}
 
-        {#each selectedMap.wildEncounters.sets as encounterSet, setIndex (`${encounterSet.baseLabel}-${setIndex}`)}
+        {#each encounters.sets as encounterSet, setIndex (`${encounterSet.product}-${encounterSet.baseLabel}-${setIndex}`)}
           {@const listedMethods = new Set(encounterSet.methods.map((method) => method.type))}
           {@const missingMethods = methodTypes.filter((type) => !listedMethods.has(type))}
           <CollapsibleSection
@@ -142,7 +168,7 @@
 
             <div class="grid divide-y divide-cartographer-border">
               {#each encounterSet.methods as method (method.type)}
-                {@const visibleSlots = visibleEncounterSlots(method)}
+                {@const resolvedSlots = resolveMethodSlots(projection, method, trainerRating)}
                 <CollapsibleSection
                   title={methodLabels[method.type]}
                   meta={`Source rate ${method.encounterRate}`}
@@ -151,17 +177,16 @@
                   <p
                     class="mb-3 mt-0 px-4 pt-3 font-cartographer-mono text-[0.68rem] text-cartographer-muted"
                   >
-                    Slot weights are source table weights, not final player encounter probabilities.
+                    Selection weight is renormalized within this encounter method after unavailable
+                    slots are removed.
                   </p>
-                  {#if visibleSlots.length === 0}
+                  {#if resolvedSlots.length === 0 && method.type !== "fishing_mons"}
                     <p class="m-0 px-4 pb-4 text-sm text-cartographer-muted">
                       No non-zero source slots are recorded for this method.
                     </p>
                   {:else if method.type === "fishing_mons"}
                     {@const groupIds = fishingGroupIds(method)}
-                    {@const ungroupedSlots = visibleSlots.filter(
-                      (slot) => slot.groups.length === 0,
-                    )}
+                    {@const ungroupedSlots = resolveMethodSlots(projection, method, trainerRating)}
                     <div class="grid min-w-0 gap-4 px-4 pb-4">
                       {#each groupIds as groupId (groupId)}
                         <section
@@ -178,9 +203,8 @@
                             >
                           </header>
                           <EncounterSlotsTable
-                            slots={visibleSlots.filter((slot) =>
-                              slot.groups.some((group) => group.id === groupId),
-                            )}
+                            slots={resolveMethodSlots(projection, method, trainerRating, groupId)}
+                            {trainerRating}
                           />
                         </section>
                       {/each}
@@ -189,12 +213,16 @@
                           <p class="m-0 text-sm text-cartographer-muted">
                             Slots without a recorded source group
                           </p>
-                          <div class="mt-3"><EncounterSlotsTable slots={ungroupedSlots} /></div>
+                          <div class="mt-3">
+                            <EncounterSlotsTable slots={ungroupedSlots} {trainerRating} />
+                          </div>
                         </section>
                       {/if}
                     </div>
                   {:else}
-                    <div class="px-4 pb-4"><EncounterSlotsTable slots={visibleSlots} /></div>
+                    <div class="px-4 pb-4">
+                      <EncounterSlotsTable slots={resolvedSlots} {trainerRating} />
+                    </div>
                   {/if}
                 </CollapsibleSection>
               {/each}

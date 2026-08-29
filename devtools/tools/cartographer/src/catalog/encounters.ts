@@ -1,13 +1,20 @@
 import * as fs from "node:fs"
 import * as path from "node:path"
 
+import { catalogEncounterSprites } from "./encounter-sprites"
 import type {
+  CatalogEncounterFishingRod,
+  CatalogEncounterProduct,
+  CatalogEncounterProjectionProfile,
   CatalogEncounterSprite,
   CatalogEncounterSet,
+  CatalogEncounterTimeOfDay,
   CatalogEncounterRuntimeTime,
   CatalogSourcePointer,
+  CatalogWildEncounterProjection,
   CatalogWildEncounters,
 } from "./types"
+import { profileIndex, profileLookupKey, readWildEncounterProjection } from "./projection"
 
 const wildEncounterPath = "src/data/wild_encounters.json"
 const speciesInfoPath = "src/data/pokemon/species_info.h"
@@ -17,6 +24,7 @@ const overworldConfigPath = "include/config/overworld.h"
 const rtcConstantsPath = "include/constants/rtc.h"
 const encounterTypes = ["land_mons", "water_mons", "rock_smash_mons", "fishing_mons"] as const
 const runtimeTimeIds = ["morning", "day", "evening", "night"] as const
+const profileRods: CatalogEncounterFishingRod[] = ["OLD_ROD", "GOOD_ROD", "SUPER_ROD"]
 
 type EncounterType = (typeof encounterTypes)[number]
 type RuntimeTimeId = (typeof runtimeTimeIds)[number]
@@ -205,30 +213,105 @@ const sourceTimeForBaseLabel = (
   return runtimeConfig.fallbackTime
 }
 
+export const sourceProductForBaseLabel = (baseLabel: string): CatalogEncounterProduct => {
+  const markedProducts: CatalogEncounterProduct[] = []
+  if (baseLabel.includes("FireRed")) markedProducts.push("FIRERED")
+  if (baseLabel.includes("LeafGreen")) markedProducts.push("LEAFGREEN")
+  if (baseLabel.includes("_Hns") || baseLabel.includes("_hns")) {
+    markedProducts.push("POKEMON_HNS")
+  }
+  if (markedProducts.length > 1) {
+    throw new Error(`${baseLabel}: source label has ambiguous product markers`)
+  }
+  return markedProducts[0] ?? "EMERALD"
+}
+
 const runtimeTimesFor = (
-  setsByTime: ReadonlyMap<RuntimeTimeId, CatalogEncounterSet[]>,
+  sets: readonly CatalogEncounterSet[],
   runtimeConfig: EncounterRuntimeConfig,
 ): CatalogEncounterRuntimeTime[] => {
   if (!runtimeConfig.enabled) return []
-  return runtimeTimeIds.map((timeOfDay) => ({
-    timeOfDay,
-    methods: encounterTypes.map((type) => {
-      const direct = (setsByTime.get(timeOfDay) ?? []).filter((set) =>
-        set.methods.some((method) => method.type === type),
-      )
-      const fallback = runtimeConfig.disableFallback
-        ? []
-        : (setsByTime.get(runtimeConfig.fallbackTime) ?? []).filter((set) =>
+  const presentProducts = [...new Set(sets.map((set) => set.product))]
+  return presentProducts.flatMap((product) =>
+    runtimeTimeIds.map((timeOfDay) => ({
+      product,
+      timeOfDay,
+      methods: encounterTypes.map((type) => {
+        const direct = sets.filter(
+          (set) =>
+            set.product === product &&
+            set.runtimeTime === timeOfDay &&
             set.methods.some((method) => method.type === type),
-          )
-      const sets = direct.length > 0 ? direct : fallback
-      return {
-        type,
-        resolution: direct.length > 0 ? "direct" : fallback.length > 0 ? "fallback" : "unavailable",
-        sets: sets.map((set) => ({ baseLabel: set.baseLabel, source: set.source })),
-      }
-    }),
-  }))
+        )
+        const fallback = runtimeConfig.disableFallback
+          ? []
+          : sets.filter(
+              (set) =>
+                set.product === product &&
+                set.runtimeTime === runtimeConfig.fallbackTime &&
+                set.methods.some((method) => method.type === type),
+            )
+        const resolvedSets = direct.length > 0 ? direct : fallback
+        return {
+          type,
+          resolution:
+            direct.length > 0 ? "direct" : fallback.length > 0 ? "fallback" : "unavailable",
+          sets: resolvedSets.map((set) => ({ baseLabel: set.baseLabel, source: set.source })),
+        }
+      }),
+    })),
+  )
+}
+
+const timeOfDayForProfile = (
+  runtimeTime: CatalogEncounterProjectionProfile["runtimeTime"],
+): CatalogEncounterTimeOfDay =>
+  runtimeTime.replace(/^TIME_/, "").toLowerCase() as CatalogEncounterTimeOfDay
+
+const joinedProfiles = (
+  product: CatalogEncounterProduct,
+  baseLabel: string,
+  mapId: string,
+  metadata: FieldMetadata,
+  method: SourceMethod,
+  profiles: ReadonlyMap<string, CatalogEncounterProjectionProfile> | undefined,
+  consumedProfiles: Set<string>,
+): CatalogEncounterProjectionProfile[] => {
+  if (!profiles) return []
+  const rodsForMethod: CatalogEncounterFishingRod[] =
+    metadata.field.type === "fishing_mons" ? profileRods : ["NONE"]
+  return rodsForMethod.map((rod) => {
+    const key = profileLookupKey(product, baseLabel, metadata.field.type, rod)
+    const profile = profiles.get(key)
+    if (!profile) throw sourceError("", `projection has no exact profile join for ${key}`)
+    const runtimeSlotCount =
+      rod === "NONE"
+        ? metadata.field.encounter_rates.length
+        : (metadata.field.groups?.[rod.toLowerCase()]?.length ?? 0)
+    const mismatches = [
+      profile.map === mapId ? null : `map ${profile.map}`,
+      profile.encounterRate === method.encounter_rate
+        ? null
+        : `encounter rate ${profile.encounterRate}`,
+      profile.authoredSlotCount === method.mons.length
+        ? null
+        : `authored slot count ${profile.authoredSlotCount}`,
+      profile.runtimeSlotCount === runtimeSlotCount
+        ? null
+        : `runtime slot count ${profile.runtimeSlotCount}`,
+    ].filter((value): value is string => value !== null)
+    if (mismatches.length > 0) {
+      throw sourceError(
+        "",
+        `projection profile ${profile.profileKey} disagrees on ${mismatches.join(", ")}`,
+      )
+    }
+    if (consumedProfiles.has(profile.profileKey)) {
+      throw sourceError("", `projection profile joined more than once: ${profile.profileKey}`)
+    }
+    consumedProfiles.add(profile.profileKey)
+    return profile
+  })
 }
 
 /**
@@ -243,28 +326,42 @@ export const catalogWildEncounters = (
   selectorMapIds: ReadonlySet<string> = new Set(),
   spriteForSpecies: (speciesId: string) => CatalogEncounterSprite | null = () => null,
   runtimeConfig: EncounterRuntimeConfig = defaultRuntimeConfig,
+  projection?: CatalogWildEncounterProjection,
 ): Map<string, CatalogWildEncounters> => {
   const groupFields = fieldsFor(document)
   const groups = (document as SourceEncounterDocument).wild_encounter_groups
+  const profiles = projection ? profileIndex(projection) : undefined
+  const consumedProfiles = new Set<string>()
   const byMap = new Map<string, CatalogWildEncounters>()
   for (const [groupIndex, group] of groups.entries()) {
     const groupPointer = `/wild_encounter_groups/${groupIndex}`
     if (group.for_maps !== true) continue
     const setsByMapId = new Map<string, CatalogEncounterSet[]>()
-    const setsByMapAndTime = new Map<string, Map<RuntimeTimeId, CatalogEncounterSet[]>>()
     const diagnosticsByHeaderIndex = new Map<number, CatalogWildEncounters["diagnostics"]>()
     for (const [headerIndex, encounter] of group.encounters.entries()) {
       const encounterPointer = `${groupPointer}/encounters/${headerIndex}`
       if (!isRecord(encounter)) throw sourceError(encounterPointer, "expected an object")
       const mapId = requireString(encounter.map, `${encounterPointer}/map`)
       const baseLabel = requireString(encounter.base_label, `${encounterPointer}/base_label`)
+      const sourceProduct = sourceProductForBaseLabel(baseLabel)
       const diagnostics: CatalogWildEncounters["diagnostics"] = []
+      const methodProfiles: CatalogEncounterProjectionProfile[][] = []
       const methods = groupFields[groupIndex]!.filter(
         (metadata) => encounter[metadata.field.type] !== null && metadata.field.type in encounter,
       ).map((metadata) => {
         const methodType = metadata.field.type
         const methodPointer = `${encounterPointer}/${methodType}`
         const method = methodFor(encounter[methodType], methodPointer)
+        const joined = joinedProfiles(
+          sourceProduct,
+          baseLabel,
+          mapId,
+          metadata,
+          method,
+          profiles,
+          consumedProfiles,
+        )
+        methodProfiles.push(joined)
         return {
           type: methodType,
           encounterRate: method.encounter_rate,
@@ -283,7 +380,6 @@ export const catalogWildEncounters = (
                 maxLevel: slot.max_level,
                 source,
               })
-              return []
             }
             if (slotIndex >= metadata.field.encounter_rates.length) {
               diagnostics.push({
@@ -336,6 +432,8 @@ export const catalogWildEncounters = (
                 groups: groupsForSlot(metadata, slotIndex),
                 minLevel: slot.min_level,
                 maxLevel: slot.max_level,
+                runtimeMinLevel: Math.min(slot.min_level, slot.max_level),
+                runtimeMaxLevel: Math.max(slot.min_level, slot.max_level),
                 speciesId: slot.species,
                 speciesLabel,
                 sprite: spriteForSpecies(slot.species),
@@ -343,14 +441,37 @@ export const catalogWildEncounters = (
               },
             ]
           }),
+          profiles: joined.map((profile) => ({
+            profileKey: profile.profileKey,
+            fishingRod: profile.fishingRod,
+            levelOffset: profile.levelOffset,
+          })),
         }
       })
+      const joined = methodProfiles.flat()
+      const products = new Set(joined.map((profile) => profile.product))
+      const runtimeTimes = new Set(joined.map((profile) => profile.runtimeTime))
+      if (profiles && (products.size !== 1 || runtimeTimes.size !== 1)) {
+        throw sourceError(
+          encounterPointer,
+          "projection method profiles must resolve to one product and runtime time",
+        )
+      }
+      if (profiles && joined.some((profile) => profile.product !== sourceProduct)) {
+        throw sourceError(encounterPointer, "projection product does not match the source label")
+      }
+      const product = joined[0]?.product ?? sourceProduct
+      const runtimeTime = joined[0]
+        ? timeOfDayForProfile(joined[0].runtimeTime)
+        : sourceTimeForBaseLabel(baseLabel, runtimeConfig)
       const mapName = mapNamesById.get(mapId)
       if (!mapName) continue
       const set: CatalogEncounterSet = {
         mapId,
         mapName,
         baseLabel,
+        product,
+        runtimeTime,
         header: { groupLabel: group.label, groupIndex, headerIndex },
         source: sourcePointer(encounterPointer),
         methods,
@@ -358,13 +479,6 @@ export const catalogWildEncounters = (
       const mapSets = setsByMapId.get(mapId) ?? []
       mapSets.push(set)
       setsByMapId.set(mapId, mapSets)
-      const setsByTime =
-        setsByMapAndTime.get(mapId) ?? new Map<RuntimeTimeId, CatalogEncounterSet[]>()
-      const timeOfDay = sourceTimeForBaseLabel(baseLabel, runtimeConfig)
-      const timeSets = setsByTime.get(timeOfDay) ?? []
-      timeSets.push(set)
-      setsByTime.set(timeOfDay, timeSets)
-      setsByMapAndTime.set(mapId, setsByTime)
       diagnosticsByHeaderIndex.set(headerIndex, diagnostics)
     }
     for (const [mapId, sets] of setsByMapId) {
@@ -375,10 +489,14 @@ export const catalogWildEncounters = (
         ...sets.flatMap((set) => diagnosticsByHeaderIndex.get(set.header.headerIndex) ?? []),
       )
       if (group.label === "gWildMonHeaders" && !selectorMapIds.has(mapId)) {
-        current.runtimeTimes = runtimeTimesFor(setsByMapAndTime.get(mapId)!, runtimeConfig)
+        current.runtimeTimes = runtimeTimesFor(sets, runtimeConfig)
       }
       byMap.set(mapName, current)
     }
+  }
+  if (projection && consumedProfiles.size !== projection.profiles.length) {
+    const missing = projection.profiles.find((profile) => !consumedProfiles.has(profile.profileKey))
+    throw sourceError("", `projection profile was not joined: ${missing?.profileKey ?? "unknown"}`)
   }
   return byMap
 }
@@ -399,7 +517,34 @@ export const sourceWildEncounters = (
   )
 }
 
-const sourceSpeciesLabels = (root: string): Map<string, string> => {
+export const sourceWildEncounterCatalog = (
+  root: string,
+  mapNamesById: ReadonlyMap<string, string>,
+  output: string,
+  projectionPath: string,
+  spriteForSpecies: (speciesId: string) => CatalogEncounterSprite | null = catalogEncounterSprites(
+    root,
+    output,
+  ),
+): {
+  encountersByMap: Map<string, CatalogWildEncounters>
+  projection: CatalogWildEncounterProjection
+} => {
+  const speciesLabels = sourceSpeciesLabels(root)
+  const projection = readWildEncounterProjection(projectionPath, speciesLabels, spriteForSpecies)
+  const encountersByMap = catalogWildEncounters(
+    JSON.parse(fs.readFileSync(path.join(root, wildEncounterPath), "utf8")),
+    mapNamesById,
+    speciesLabels,
+    runtimeSelectorMapIds(root),
+    spriteForSpecies,
+    sourceEncounterRuntimeConfig(root),
+    projection,
+  )
+  return { encountersByMap, projection }
+}
+
+export const sourceSpeciesLabels = (root: string): Map<string, string> => {
   const speciesLabels = new Map<string, string>()
   const directory = path.join(root, speciesInfoDirectory)
   const sources = [

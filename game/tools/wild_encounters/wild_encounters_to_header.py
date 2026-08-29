@@ -23,6 +23,7 @@ DEFAULT_RTC = ROOT / "include/constants/rtc.h"
 DEFAULT_SPECIES = ROOT / "include/constants/species.h"
 DEFAULT_SPECIES_INFO = ROOT / "src/data/pokemon/species_info.h"
 DEFAULT_SPECIES_CONFIG = ROOT / "include/config/pokemon.h"
+DEFAULT_TRAINER_RATING = ROOT / "include/trainer_rating.h"
 
 MAX_LEVEL = 100
 MAX_OFFSET = 5
@@ -191,6 +192,23 @@ def load_scaling(path):
             raise ValidationError(f"{path}: retention point {rating} does not fit u16")
         points.append({"anchor_level": anchor_level, "retention_numerator": retention.numerator, "retention_denominator": retention.denominator})
     return {"projection_cap": cap, "anchors": anchors, "points": points, "profile_offsets": source["profileOffsets"]}
+
+
+def trainer_rating_bounds(path, projection_cap):
+    try:
+        source = Path(path).read_text(encoding="utf-8")
+    except OSError as error:
+        raise ValidationError(f"{path}: {error}") from error
+    values = {}
+    for name in ("TRAINER_RATING_MIN", "TRAINER_RATING_MAX"):
+        match = re.search(rf"^\s*#define\s+{name}\s+(\d+)\s*$", source, re.MULTILINE)
+        if match is None:
+            raise ValidationError(f"{path}: {name} is not defined as an integer")
+        values[name] = int(match.group(1))
+    minimum, maximum = values["TRAINER_RATING_MIN"], values["TRAINER_RATING_MAX"]
+    if not 0 <= minimum <= maximum <= projection_cap:
+        raise ValidationError(f"{path}: Trainer Rating bounds must fit projection cap {projection_cap}")
+    return minimum, maximum
 
 
 def product_for(label):
@@ -758,6 +776,136 @@ def audit_method(profile, method, rod, scaling, offset, by_species, failures):
     return {"label": profile["label"], "map": profile["map"], "header": profile["header"], "headerId": profile["header_id"], "timeOfDay": profile["time"], "method": method, "fishingRod": rod, "encounterRate": profile["encounter"][method]["encounter_rate"], "authoredSlotCount": len(profile["encounter"][method]["mons"]), "runtimeSlotCount": len(slots), "levelOffset": offset, "samples": samples}
 
 
+def species_projection_intervals(species, by_species):
+    intervals = []
+    for level in range(1, MAX_LEVEL + 1):
+        effective, _ = effective_species(species, level, by_species)
+        floor = by_species[effective]["minimum_level"]
+        outcome = (effective, level >= floor, floor)
+        if intervals and intervals[-1]["_outcome"] == outcome:
+            intervals[-1]["maximumProjectedLevel"] = level
+            continue
+        intervals.append({
+            "minimumProjectedLevel": level,
+            "maximumProjectedLevel": level,
+            "effectiveSpecies": effective,
+            "eligible": outcome[1],
+            "minimumOrdinaryWildLevel": floor,
+            "_outcome": outcome,
+        })
+    for interval in intervals:
+        del interval["_outcome"]
+    return intervals
+
+
+def build_cartographer_projection_model(profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating):
+    if not 0 <= minimum_rating <= maximum_rating <= scaling["projection_cap"]:
+        raise ValidationError("Cartographer Trainer Rating bounds exceed the projection curve")
+    by_species = {item["species"]: item for item in metadata}
+    offset_map = {
+        (item["product"], item["header_id"], item["area"], item["time"], item["rod"]): item["level_offset"]
+        for item in offsets
+    }
+    configured_offsets = sorted({0, *(item["level_offset"] for item in offsets)})
+    level_projections = []
+    for offset in configured_offsets:
+        ratings = []
+        for rating in range(minimum_rating, maximum_rating + 1):
+            ratings.append({
+                "rating": rating,
+                "projectedLevels": [
+                    project_level(scaling, authored_level, rating, offset)
+                    for authored_level in range(1, MAX_LEVEL + 1)
+                ],
+            })
+        level_projections.append({"levelOffset": offset, "ratings": ratings})
+
+    species = []
+    for item in metadata:
+        species.append({
+            "authoredSpecies": item["species"],
+            "authoredSpeciesId": item["species_id"],
+            "outcomesByProjectedLevel": species_projection_intervals(item["species"], by_species),
+        })
+
+    profiles_by_identity, runtime_identities = {}, set()
+    for profile in profiles:
+        for method in config.mon_types:
+            if method not in profile["encounter"]:
+                continue
+            rods = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD") if method == "fishing_mons" else ("NONE",)
+            for rod in rods:
+                profile_key = f"{profile['product']}/{profile['label']}/{method}/{rod}"
+                runtime_identity = (
+                    profile["product"], profile["header_id"], METHOD_AREAS[method],
+                    profile["time"], RODS[rod],
+                )
+                if profile_key in profiles_by_identity:
+                    raise ValidationError(f"duplicate Cartographer profile key {profile_key}")
+                if runtime_identity in runtime_identities:
+                    raise ValidationError(f"duplicate Cartographer runtime identity {runtime_identity}")
+                runtime_identities.add(runtime_identity)
+                slots = method_slots(profile, method, rod)
+                profiles_by_identity[profile_key] = {
+                    "profileKey": profile_key,
+                    "product": profile["product"],
+                    "map": profile["map"],
+                    "baseLabel": profile["label"],
+                    "header": profile["header"],
+                    "headerId": profile["header_id"],
+                    "runtimeTime": profile["time"],
+                    "method": method,
+                    "runtimeArea": METHOD_AREAS[method],
+                    "fishingRod": rod,
+                    "runtimeFishingRod": RODS[rod],
+                    "levelOffset": offset_map.get(runtime_identity, 0),
+                    "encounterRate": profile["encounter"][method]["encounter_rate"],
+                    "authoredSlotCount": len(profile["encounter"][method]["mons"]),
+                    "runtimeSlotCount": len(slots),
+                }
+
+    product_order = {product: index for index, (product, _) in enumerate(PRODUCTS)}
+    method_order = {method: index for index, method in enumerate(config.mon_types)}
+    rod_order = {rod: index for index, rod in enumerate(RODS)}
+    ordered_profiles = sorted(
+        profiles_by_identity.values(),
+        key=lambda row: (
+            product_order[row["product"]], row["headerId"], row["runtimeTime"],
+            method_order[row["method"]], rod_order[row["fishingRod"]], row["baseLabel"],
+        ),
+    )
+    return {
+        "schemaVersion": 1,
+        "trainerRating": {"minimum": minimum_rating, "maximum": maximum_rating},
+        "authoredLevel": {"minimum": 1, "maximum": MAX_LEVEL},
+        "products": [{"id": product, "displayName": display} for product, display in PRODUCTS],
+        "levelProjections": level_projections,
+        "species": species,
+        "profiles": ordered_profiles,
+        "headerCounts": {product: len(header_ids[product]) for product, _ in PRODUCTS},
+    }
+
+
+def build_cartographer_projection(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO, trainer_rating_path=DEFAULT_TRAINER_RATING):
+    encounters = load_json(encounters_path)
+    config = Config(config_path, rtc_constants_path, encounters)
+    scaling = load_scaling(scaling_path)
+    known_species = species_ids(species_path)
+    profiles, header_ids = validate_encounters(encounters, known_species, config)
+    ordinary_species = {
+        mon["species"]
+        for profile in profiles
+        for method in config.mon_types
+        for mon in profile["encounter"].get(method, {}).get("mons", [])
+    }
+    metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
+    offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
+    minimum_rating, maximum_rating = trainer_rating_bounds(trainer_rating_path, scaling["projection_cap"])
+    return build_cartographer_projection_model(
+        profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating,
+    )
+
+
 def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
@@ -819,12 +967,29 @@ def generate_wild_encounter_balance_audit(output_path=DEFAULT_AUDIT, **kwargs):
     return audit
 
 
+def generate_cartographer_projection(output_path, **kwargs):
+    projection = build_cartographer_projection(**kwargs)
+    atomic_write(
+        output_path,
+        json.dumps(projection, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n",
+    )
+    return projection
+
+
 def arguments():
     parser = argparse.ArgumentParser(description="Generate wild encounter scaling data")
     parser.add_argument("--encounters", type=Path, default=DEFAULT_ENCOUNTERS); parser.add_argument("--scaling", type=Path, default=DEFAULT_SCALING); parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG); parser.add_argument("--rtc-constants", type=Path, default=DEFAULT_RTC); parser.add_argument("--species", type=Path, default=DEFAULT_SPECIES)
     parser.add_argument("--wild-encounter-species", type=Path, default=DEFAULT_SPECIES_METADATA); parser.add_argument("--species-info", type=Path, default=DEFAULT_SPECIES_INFO)
-    parser.add_argument("--balance-audit", type=Path, nargs="?", const=DEFAULT_AUDIT)
+    parser.add_argument("--trainer-rating", type=Path, default=DEFAULT_TRAINER_RATING)
+    outputs = parser.add_mutually_exclusive_group()
+    outputs.add_argument("--balance-audit", type=Path, nargs="?", const=DEFAULT_AUDIT)
+    outputs.add_argument(
+        "--cartographer-projection",
+        type=Path,
+        metavar="PATH",
+        help="write the schema-versioned Trainer Rating projection model used by the devtools Cartographer",
+    )
     return parser.parse_args()
 
 
@@ -832,7 +997,17 @@ def main():
     args = arguments()
     common = {"encounters_path": args.encounters, "scaling_path": args.scaling, "config_path": args.config, "rtc_constants_path": args.rtc_constants, "species_path": args.species, "wild_encounter_species_path": args.wild_encounter_species, "species_info_path": args.species_info}
     try:
-        if args.balance_audit is None:
+        if args.cartographer_projection is not None:
+            projection = generate_cartographer_projection(
+                args.cartographer_projection,
+                trainer_rating_path=args.trainer_rating,
+                **common,
+            )
+            print(
+                f"Cartographer wild encounter projection generated: {args.cartographer_projection} "
+                f"({len(projection['profiles'])} profiles)"
+            )
+        elif args.balance_audit is None:
             generate(output_path=args.output, **common)
         else:
             audit = generate_wild_encounter_balance_audit(args.balance_audit, **common)
