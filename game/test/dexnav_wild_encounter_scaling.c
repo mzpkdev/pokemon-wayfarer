@@ -2,12 +2,13 @@
 #include "dexnav.h"
 #include "event_data.h"
 #include "test/test.h"
+#include "trainer_rating.h"
 #include "wild_encounter.h"
 
 static const struct WildPokemon sDexNavNormalMons[] =
 {
-    { 32, 32, SPECIES_VENUSAUR },
-    { 32, 33, SPECIES_VENUSAUR },
+    { 10, 10, SPECIES_GYARADOS },
+    { 10, 11, SPECIES_GYARADOS },
 };
 
 static const struct WildPokemonInfo sDexNavNormalInfo =
@@ -73,7 +74,7 @@ static void ResetDexNavTrainerRating(void)
 #else
     FlagClear(FLAG_IS_CHAMPION);
 #endif
-    VarSet(VAR_TRAINER_RATING, 0);
+    VarSet(VAR_TRAINER_RATING, TRAINER_RATING_MIN);
 }
 
 TEST("DexNav leaves hidden data raw while ordinary profiles use effective species")
@@ -82,12 +83,13 @@ TEST("DexNav leaves hidden data raw while ordinary profiles use effective specie
     struct WildEncounterSpeciesOutcome outcome;
 
     ResetDexNavTrainerRating();
+    EXPECT_EQ(GetTrainerRating(), TRAINER_RATING_MIN);
 
     // The normal UI list and ordinary detector fallback both resolve entries
-    // through this effective profile boundary, so Venusaur reverses below its
-    // authored evolution levels at Trainer Rating zero.
-    EXPECT(DexNavGetEffectiveProfileOutcomeForTesting(&profile, 0, 32, &outcome));
-    EXPECT_EQ(outcome.species, SPECIES_BULBASAUR);
+    // through this effective profile boundary. The authored-under-threshold
+    // Gyarados reverses to Magikarp at the minimum Trainer Rating.
+    EXPECT(DexNavGetEffectiveProfileOutcomeForTesting(&profile, 0, 10, &outcome));
+    EXPECT_EQ(outcome.species, SPECIES_MAGIKARP);
 
     // Hidden DexNav has no ordinary-profile projection and continues to read
     // its authored source directly.
@@ -101,6 +103,7 @@ TEST("DexNav ordinary detector fallback mirrors the eligible profile only for lu
     u8 slot;
 
     ResetDexNavTrainerRating();
+    EXPECT_EQ(GetTrainerRating(), TRAINER_RATING_MIN);
 
     // The ordinary fallback first does its normal weighted pick (slot 0 for
     // roll 0), then a 0 or 1 lure roll reverses its eligible slot sequence.
@@ -122,19 +125,20 @@ TEST("DexNav selected species preserve conditional raw source and level weights"
     bool8 accepted;
 
     ResetDexNavTrainerRating();
+    EXPECT_EQ(GetTrainerRating(), TRAINER_RATING_MIN);
 
-    // Both raw sources yield Bulbasaur. Their proposal mass is 70 * 1 for the
+    // Both raw sources yield Magikarp. Their proposal mass is 70 * 1 for the
     // one-level source and 30 * 2 for the two-level source. The correction
     // accepts the latter with probability 1 / 2, giving each accepted raw
     // level its ordinary source weight divided by its full authored range.
-    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_BULBASAUR, 0, 0, &accepted, &outcome));
+    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 0, 0, &accepted, &outcome));
     EXPECT(accepted);
-    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 32, 0));
+    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 10, TRAINER_RATING_MIN));
 
-    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_BULBASAUR, 70, 1, &accepted, &outcome));
+    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 70, 1, &accepted, &outcome));
     EXPECT(!accepted);
 
-    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_BULBASAUR, 100, 0, &accepted, &outcome));
+    EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 100, 0, &accepted, &outcome));
     EXPECT(accepted);
-    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 33, 0));
+    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 11, TRAINER_RATING_MIN));
 }
