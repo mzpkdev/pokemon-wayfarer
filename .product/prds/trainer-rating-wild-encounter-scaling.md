@@ -52,15 +52,24 @@ When a projected level is below a level-evolved species' evolution threshold, th
 
 Global species floors then apply to every non-randomized ordinary wild population. A slot is ineligible if one of its possible projected outcomes has a resulting species below that species' floor; ordinary selection uses the remaining authored weights without rewriting the source table.
 
-| Species | Minimum level |
-| --- | ---: |
-| Kecleon | 20 |
-| Skarmory | 18 |
-| Scyther, Pinsir, Chansey | 23 |
-| Kangaskhan, Tauros, Relicanth | 25 |
-| Sneasel | 30 |
-| Mantine | 35 |
-| Bagon, Tropius, Absol, Heracross | 20 |
+| Species | Minimum level | Example ordinary encounter |
+| --- | ---: | --- |
+| Kecleon | 20 | Emerald, Route 118, land grass, 25 |
+| Skarmory | 18 | Emerald, Route 113, land grass, 16 |
+| Scyther | 23 | FireRed, Safari Zone Center, land grass, 23 |
+| Pinsir | 23 | LeafGreen, Safari Zone Center, land grass, 23 |
+| Chansey | 23 | FireRed, Safari Zone Center, land grass, 23 |
+| Kangaskhan | 25 | FireRed, Safari Zone East, land grass, 25 |
+| Tauros | 25 | FireRed, Safari Zone West, land grass, 25 |
+| Relicanth | 25 | Emerald, Underwater Route 124, water/surf, 30-35 |
+| Sneasel | 30 | LeafGreen, Four Island Icefall Cave 1F, land grass, 30 |
+| Mantine | 35 | LeafGreen, Seven Island Trainer Tower, water/surf, 35-40 |
+| Bagon | 20 | Emerald, Meteor Falls B1F 2R, land grass, 25-35 |
+| Tropius | 20 | Emerald, Route 119, land grass, 25-27 |
+| Absol | 20 | Emerald, Route 120, land grass, 25-27 |
+| Heracross | 20 | Emerald, Safari Zone North, land grass, 27-29 |
+
+Each example identifies an ordinary encounter that motivated review of the global floor. It does not limit the floor to that map, method, build, or level range.
 
 Ordinary-population readers use the same effective population as an actual encounter. This includes the Pokédex area display, Match Call, radio, local ambient species selection, and ordinary land or water DexNav populations. Hidden DexNav populations stay authored and unscaled.
 
