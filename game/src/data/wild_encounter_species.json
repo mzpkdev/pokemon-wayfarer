@@ -2,7 +2,19 @@
   "schemaVersion": 1,
   "minimumOrdinaryWildLevels": [
     {"species": "SPECIES_KECLEON", "minimumOrdinaryWildLevel": 20},
-    {"species": "SPECIES_SKARMORY", "minimumOrdinaryWildLevel": 18}
+    {"species": "SPECIES_SKARMORY", "minimumOrdinaryWildLevel": 18},
+    {"species": "SPECIES_SCYTHER", "minimumOrdinaryWildLevel": 23},
+    {"species": "SPECIES_PINSIR", "minimumOrdinaryWildLevel": 23},
+    {"species": "SPECIES_CHANSEY", "minimumOrdinaryWildLevel": 23},
+    {"species": "SPECIES_KANGASKHAN", "minimumOrdinaryWildLevel": 25},
+    {"species": "SPECIES_TAUROS", "minimumOrdinaryWildLevel": 25},
+    {"species": "SPECIES_SNEASEL", "minimumOrdinaryWildLevel": 30},
+    {"species": "SPECIES_MANTINE", "minimumOrdinaryWildLevel": 35},
+    {"species": "SPECIES_BAGON", "minimumOrdinaryWildLevel": 20},
+    {"species": "SPECIES_TROPIUS", "minimumOrdinaryWildLevel": 20},
+    {"species": "SPECIES_ABSOL", "minimumOrdinaryWildLevel": 20},
+    {"species": "SPECIES_HERACROSS", "minimumOrdinaryWildLevel": 20},
+    {"species": "SPECIES_RELICANTH", "minimumOrdinaryWildLevel": 25}
   ],
   "predecessorResolutions": []
 }

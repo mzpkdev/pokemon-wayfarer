@@ -49,7 +49,28 @@ For a selected authored slot, the game first determines the authored level using
 
 The selected slot and its authored source remain the basis for ordinary encounter selection. Existing selection mechanics stay intact, including encounter weights, rod partitions, time of day, ability effects, lures, Altering Cave, and HNS Hoenn Sound. Pressure, Vital Spirit, and lure-level effects choose the authored level before projection.
 
-If a non-randomized projected encounter would be below a numeric level-evolution threshold, its species resolves through the appropriate predecessor chain until the projected level supports the stage. This rule depends on the projected level, not on whether the source table authored the evolved species below its threshold. It applies only to ordinary populations; fixed and scripted encounters remain excluded. The initial explicit floors require Kecleon to be at least level 20 and Skarmory to be at least level 18. A floor can mark a slot ineligible at the resulting level. Ordinary selection excludes ineligible slots, sums the remaining authored weights, and rolls within that total without rewriting the source table.
+If a non-randomized projected encounter would be below a numeric level-evolution threshold, its species resolves through the appropriate predecessor chain until the projected level supports the stage. This rule depends on the projected level, not on whether the source table authored the evolved species below its threshold. It applies only to ordinary populations; fixed and scripted encounters remain excluded.
+
+Global species floors apply to every non-randomized ordinary wild population after predecessor resolution. A slot is ineligible if one of its possible projected outcomes has a resulting species below that species' floor. Ordinary selection excludes ineligible slots, sums the remaining authored weights, and rolls within that total without rewriting the source table.
+
+| Species | Minimum level | Example ordinary encounter |
+| --- | ---: | --- |
+| Kecleon | 20 | Emerald, Route 118, land grass, 25 |
+| Skarmory | 18 | Emerald, Route 113, land grass, 16 |
+| Scyther | 23 | FireRed, Safari Zone Center, land grass, 23 |
+| Pinsir | 23 | LeafGreen, Safari Zone Center, land grass, 23 |
+| Chansey | 23 | FireRed, Safari Zone Center, land grass, 23 |
+| Kangaskhan | 25 | FireRed, Safari Zone East, land grass, 25 |
+| Tauros | 25 | FireRed, Safari Zone West, land grass, 25 |
+| Relicanth | 25 | Emerald, Underwater Route 124, water/surf, 30-35 |
+| Sneasel | 30 | LeafGreen, Four Island Icefall Cave 1F, land grass, 30 |
+| Mantine | 35 | LeafGreen, Seven Island Trainer Tower, water/surf, 35-40 |
+| Bagon | 20 | Emerald, Meteor Falls B1F 2R, land grass, 25-35 |
+| Tropius | 20 | Emerald, Route 119, land grass, 25-27 |
+| Absol | 20 | Emerald, Route 120, land grass, 25-27 |
+| Heracross | 20 | Emerald, Safari Zone North, land grass, 27-29 |
+
+Each example identifies an ordinary encounter that motivated review of the global floor. It does not limit the floor to that map, method, build, or level range.
 
 In wild-randomizer mode, the existing randomized species mapping continues to run from the original selected slot. Its level still projects through Trainer Rating, but predecessor resolution and species-floor eligibility filtering are bypassed.
 
@@ -81,10 +102,6 @@ The following retain their authored behavior and do not use Trainer Rating scali
 Validation must include deterministic checks for Trainer Rating progression, save migration, level projection, predecessor resolution, species floors, eligible-weight selection, excluded sources, and ordinary population consumers. Generated encounter data must reproduce authored profiles before scaling and produce a balance audit for every covered build.
 
 Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS. Build at least one complete release ROM after generation, then playtest the progression milestones and ordinary encounter mechanics described in the parent PRD.
-
-## Open questions
-
-- The encounter-table audit recommends evaluating explicit floors of 20 for Aerodactyl, 15 for Heracross, and 25 for Bagon. These are not part of the implemented floor set until the balance policy is approved.
 
 ## References
 

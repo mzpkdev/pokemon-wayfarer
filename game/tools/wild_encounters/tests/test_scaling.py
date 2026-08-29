@@ -113,8 +113,30 @@ class WildEncounterScalingTests(unittest.TestCase):
         )
         by_species = {row["species"]: row for row in metadata}
         self.assertEqual(by_species["SPECIES_KECLEON"]["species_id"], 352)
-        self.assertEqual(by_species["SPECIES_KECLEON"]["minimum_level"], 20)
-        self.assertEqual(by_species["SPECIES_SKARMORY"]["minimum_level"], 18)
+        reviewed_floors = {
+            "SPECIES_KECLEON": 20,
+            "SPECIES_SKARMORY": 18,
+            "SPECIES_SCYTHER": 23,
+            "SPECIES_PINSIR": 23,
+            "SPECIES_CHANSEY": 23,
+            "SPECIES_KANGASKHAN": 25,
+            "SPECIES_TAUROS": 25,
+            "SPECIES_RELICANTH": 25,
+            "SPECIES_SNEASEL": 30,
+            "SPECIES_MANTINE": 35,
+            "SPECIES_BAGON": 20,
+            "SPECIES_TROPIUS": 20,
+            "SPECIES_ABSOL": 20,
+            "SPECIES_HERACROSS": 20,
+        }
+        self.assertEqual(
+            {
+                species: row["minimum_level"]
+                for species, row in by_species.items()
+                if row["minimum_level"] > 1
+            },
+            reviewed_floors,
+        )
         self.assertEqual(by_species["SPECIES_GYARADOS"]["predecessor"], "SPECIES_MAGIKARP")
         self.assertEqual(by_species["SPECIES_GYARADOS"]["predecessor_level"], 20)
         self.assertEqual(

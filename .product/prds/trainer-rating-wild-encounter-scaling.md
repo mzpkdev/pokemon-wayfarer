@@ -48,7 +48,28 @@ Profile identity and encounter mechanics remain authored. This includes land, wa
 
 ## Interactions
 
-When a projected level is below a level-evolved species' evolution threshold, the encounter uses the appropriate predecessor. This applies to every non-randomized ordinary encounter, including tables that author an evolved form below its natural threshold. Resolution follows the predecessor chain until the projected level supports the stage. Fixed and scripted encounters remain excluded. The initial explicit floors keep Kecleon at level 20 or above and Skarmory at level 18 or above. A floor can make a slot ineligible, after which ordinary selection uses the remaining authored weights.
+When a projected level is below a level-evolved species' evolution threshold, the encounter uses the appropriate predecessor. This applies to every non-randomized ordinary encounter, including tables that author an evolved form below its natural threshold. Resolution follows the predecessor chain until the projected level supports the stage. Fixed and scripted encounters remain excluded.
+
+Global species floors then apply to every non-randomized ordinary wild population. A slot is ineligible if one of its possible projected outcomes has a resulting species below that species' floor; ordinary selection uses the remaining authored weights without rewriting the source table.
+
+| Species | Minimum level | Example ordinary encounter |
+| --- | ---: | --- |
+| Kecleon | 20 | Emerald, Route 118, land grass, 25 |
+| Skarmory | 18 | Emerald, Route 113, land grass, 16 |
+| Scyther | 23 | FireRed, Safari Zone Center, land grass, 23 |
+| Pinsir | 23 | LeafGreen, Safari Zone Center, land grass, 23 |
+| Chansey | 23 | FireRed, Safari Zone Center, land grass, 23 |
+| Kangaskhan | 25 | FireRed, Safari Zone East, land grass, 25 |
+| Tauros | 25 | FireRed, Safari Zone West, land grass, 25 |
+| Relicanth | 25 | Emerald, Underwater Route 124, water/surf, 30-35 |
+| Sneasel | 30 | LeafGreen, Four Island Icefall Cave 1F, land grass, 30 |
+| Mantine | 35 | LeafGreen, Seven Island Trainer Tower, water/surf, 35-40 |
+| Bagon | 20 | Emerald, Meteor Falls B1F 2R, land grass, 25-35 |
+| Tropius | 20 | Emerald, Route 119, land grass, 25-27 |
+| Absol | 20 | Emerald, Route 120, land grass, 25-27 |
+| Heracross | 20 | Emerald, Safari Zone North, land grass, 27-29 |
+
+Each example identifies an ordinary encounter that motivated review of the global floor. It does not limit the floor to that map, method, build, or level range.
 
 Ordinary-population readers use the same effective population as an actual encounter. This includes the Pokédex area display, Match Call, radio, local ambient species selection, and ordinary land or water DexNav populations. Hidden DexNav populations stay authored and unscaled.
 
@@ -63,10 +84,6 @@ Trainer Rating must survive saves and migrations without changing save-block lay
 Playtesting should confirm that new-game, four-badge, eight-badge, League, and postgame encounters feel appropriate in every currently supported region. It should cover land, water, Rock Smash, fishing, time-based, ability-influenced, lure, Altering Cave, and HNS Hoenn Sound encounters, plus the ordinary population readers.
 
 It should also check that excluded sources remain unchanged, that a later rating never produces a lower projected encounter outcome, and that existing saves migrate without losing progression.
-
-## Open questions
-
-- Should Aerodactyl, Heracross, and Bagon receive explicit ordinary-wild floors of 20, 15, and 25 respectively? A cross-region table audit identified them as the strongest additional candidates.
 
 ## References
 
