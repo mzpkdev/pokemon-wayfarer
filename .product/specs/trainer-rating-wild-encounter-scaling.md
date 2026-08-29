@@ -49,7 +49,19 @@ For a selected authored slot, the game first determines the authored level using
 
 The selected slot and its authored source remain the basis for ordinary encounter selection. Existing selection mechanics stay intact, including encounter weights, rod partitions, time of day, ability effects, lures, Altering Cave, and HNS Hoenn Sound. Pressure, Vital Spirit, and lure-level effects choose the authored level before projection.
 
-If a non-randomized projected encounter would be below a numeric level-evolution threshold, its species resolves through the appropriate predecessor chain until the projected level supports the stage. This rule depends on the projected level, not on whether the source table authored the evolved species below its threshold. It applies only to ordinary populations; fixed and scripted encounters remain excluded. The initial explicit floors require Kecleon to be at least level 20 and Skarmory to be at least level 18. A floor can mark a slot ineligible at the resulting level. Ordinary selection excludes ineligible slots, sums the remaining authored weights, and rolls within that total without rewriting the source table.
+If a non-randomized projected encounter would be below a numeric level-evolution threshold, its species resolves through the appropriate predecessor chain until the projected level supports the stage. This rule depends on the projected level, not on whether the source table authored the evolved species below its threshold. It applies only to ordinary populations; fixed and scripted encounters remain excluded.
+
+Global species floors apply to every non-randomized ordinary wild population after predecessor resolution. A slot is ineligible if one of its possible projected outcomes has a resulting species below that species' floor. Ordinary selection excludes ineligible slots, sums the remaining authored weights, and rolls within that total without rewriting the source table.
+
+| Species | Minimum level |
+| --- | ---: |
+| Kecleon | 20 |
+| Skarmory | 18 |
+| Scyther, Pinsir, Chansey | 23 |
+| Kangaskhan, Tauros, Relicanth | 25 |
+| Sneasel | 30 |
+| Mantine | 35 |
+| Bagon, Tropius, Absol, Heracross | 20 |
 
 In wild-randomizer mode, the existing randomized species mapping continues to run from the original selected slot. Its level still projects through Trainer Rating, but predecessor resolution and species-floor eligibility filtering are bypassed.
 
@@ -81,10 +93,6 @@ The following retain their authored behavior and do not use Trainer Rating scali
 Validation must include deterministic checks for Trainer Rating progression, save migration, level projection, predecessor resolution, species floors, eligible-weight selection, excluded sources, and ordinary population consumers. Generated encounter data must reproduce authored profiles before scaling and produce a balance audit for every covered build.
 
 Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS. Build at least one complete release ROM after generation, then playtest the progression milestones and ordinary encounter mechanics described in the parent PRD.
-
-## Open questions
-
-- The encounter-table audit recommends evaluating explicit floors of 20 for Aerodactyl, 15 for Heracross, and 25 for Bagon. These are not part of the implemented floor set until the balance policy is approved.
 
 ## References
 

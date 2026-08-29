@@ -121,26 +121,21 @@ These entries are not malformed data. Pokemon games frequently use under-level e
 
 The selected policy intentionally changes these source-authored ordinary exceptions. Each outcome is judged by its projected level, including outcomes from mixed ranged slots. The inventory above identifies the ordinary populations affected by that decision; it does not imply that the source data is malformed.
 
-## Separate species-floor review
+## Global species-floor policy
 
-The current explicit ordinary-wild floors are:
+Global floors apply to every non-randomized ordinary wild population. After level projection and predecessor resolution, a slot is ineligible if one of its possible projected outcomes has a resulting species below that species' floor. Ordinary selection uses the remaining authored weights without changing source tables.
 
-| Species | Floor |
+| Species | Minimum level |
 | --- | ---: |
 | Kecleon | 20 |
 | Skarmory | 18 |
+| Scyther, Pinsir, Chansey | 23 |
+| Kangaskhan, Tauros, Relicanth | 25 |
+| Sneasel | 30 |
+| Mantine | 35 |
+| Bagon, Tropius, Absol, Heracross | 20 |
 
-These are single-stage exceptions rather than under-level evolved forms, so they do not appear in the lists above.
-
-The cross-region strength audit found three additional candidates:
-
-| Species | Candidate floor | Evidence at Rating 10 |
-| --- | ---: | --- |
-| Aerodactyl | 20 | HNS Sinjoh Ruins Temple authors level 5, projected to 9 |
-| Heracross | 15 | HNS Azalea Rock Smash authors level 10, projected to 11 |
-| Bagon | 25 | Emerald Meteor Falls authors 25, 30, and 35, projected to 19, 21, and 24 |
-
-Anorith and Lileep also appear at level 5 in Sinjoh Ruins Temple and project to 9 at Rating 10. They are first-stage fossils rather than strong evolved forms. The audit recommends leaving them unchanged unless the design adopts a general minimum for fossil species.
+These are separate from the under-level evolved-form findings above. They prevent late-game ordinary wild species from appearing early at an unsuitable projected level.
 
 No Gyarados floor is recommended. Ordinary Gyarados below level 20 resolves to Magikarp through the general predecessor rule, while projected outcomes at level 20 or above remain Gyarados. A floor would unnecessarily remove lower-level outcomes instead of resolving them to the eligible stage.
 
@@ -150,11 +145,11 @@ No Gyarados floor is recommended. Ordinary Gyarados below level 20 resolves to M
 
 Resolve every non-randomized ordinary evolved species below its numeric level threshold, even when the source table authored it that way. This applies consistently across every covered build and to every ordinary table listed above.
 
-Fixed and scripted encounters remain outside Trainer Rating scaling. Wild-randomizer mode also retains its existing species mapping and bypasses predecessor resolution.
+Fixed and scripted encounters remain outside Trainer Rating scaling. Wild-randomizer mode also retains its existing species mapping and bypasses predecessor resolution and species-floor filtering.
 
-### Separate open decision: add curated species floors
+### Selected: apply global species floors to ordinary populations
 
-Add floors for exceptional single-stage or first-stage species whose strength or identity needs a minimum level. Aerodactyl, Heracross, and Bagon remain candidates; this decision does not approve those floors.
+Apply the global floors listed above to every non-randomized ordinary wild population. A slot with a possible projected outcome below its resulting species' floor is ineligible; the remaining authored weights are renormalized for selection. Fixed and scripted encounters remain excluded, and wild-randomizer mode continues to bypass predecessor resolution and species-floor filtering.
 
 ## Sources
 
