@@ -1,5 +1,97 @@
 import { expect, test } from "webanvil/e2e"
 
+test("previews scaled encounters without remounting the map", async ({ page }) => {
+  await page.goto("/")
+
+  const mapSearch = page.getByRole("combobox", { name: "Name or map section" })
+  await mapSearch.fill("LakeOfRage")
+  await page.getByRole("option", { name: /LakeOfRage_hns/ }).click()
+  await page
+    .getByRole("navigation", { name: "Cartographer views" })
+    .getByRole("button", { name: "Encounters", exact: true })
+    .click()
+
+  const slider = page.getByRole("slider", { name: "Trainer Rating" })
+  await expect(slider).toHaveAttribute("aria-valuenow", "10")
+  const mapRoster = page.getByLabel("Encounter roster preview")
+  await expect(mapRoster).toContainText(/Magikarp/i)
+  await expect(mapRoster).not.toContainText(/Gyarados/i)
+  const regionalMap = page.getByRole("region", { name: "Interactive regional map" })
+  const mapBounds = await regionalMap.boundingBox()
+  if (!mapBounds) throw new Error("The regional map needs visible bounds")
+  await regionalMap.click({ position: { x: mapBounds.width / 2, y: mapBounds.height / 2 } })
+  const rosterPopup = page.getByRole("dialog", { name: /LakeOfRage_hns.*Water/ })
+  await expect(rosterPopup).toBeVisible()
+  const authoredGyarados = rosterPopup.locator('[aria-label="Authored slot 5 GYARADOS"]')
+  await expect(authoredGyarados.getByText("MAGIKARP", { exact: true })).toBeVisible()
+  await expect(authoredGyarados.getByText("Projected Lv. 11-13", { exact: true })).toBeVisible()
+  const sourceSet = page.locator('details[aria-label="Source set gLakeOfRage_hns_Day"]')
+  await sourceSet.locator(":scope > summary").click()
+  const water = sourceSet.locator('details[aria-label="Water encounter method"]')
+  await water.locator(":scope > summary").click()
+  const scalingRow = water.locator("tbody tr").nth(4)
+  await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(1)
+  await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(1)
+
+  const viewport = page.getByLabel("Interactive cartographer")
+  await viewport.evaluate((element) => element.setAttribute("data-scaling-e2e", "mounted"))
+  await slider.focus()
+  for (let rating = 10; rating < 30; rating += 1) await slider.press("ArrowRight")
+  await expect(slider).toHaveAttribute("aria-valuenow", "30")
+  await expect(page).toHaveURL(/rating=30/)
+  await expect(viewport).toHaveAttribute("data-scaling-e2e", "mounted")
+  await expect(mapRoster).toContainText(/Gyarados/i)
+  await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(2)
+  await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(0)
+  await expect(rosterPopup).toBeVisible()
+  await expect(rosterPopup).toContainText("Trainer Rating 30")
+  await expect(authoredGyarados.getByText("GYARADOS", { exact: true })).toBeVisible()
+  await expect(authoredGyarados.getByText("Projected Lv. 23-25", { exact: true })).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(rosterPopup).toHaveCount(0)
+  const populationControls = page.getByRole("navigation", {
+    name: "Projected encounter populations",
+  })
+  const waterPopulationButton = populationControls.getByRole("button", { name: "Water" })
+  await waterPopulationButton.focus()
+  await waterPopulationButton.press("Enter")
+  await expect(rosterPopup).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(waterPopulationButton).toBeFocused()
+
+  await mapSearch.fill("CeruleanCity_Frlg")
+  await page.getByRole("option", { name: /CeruleanCity_Frlg/ }).click()
+  const version = page.getByRole("combobox", { name: "Game version" })
+  await expect(version).toBeVisible()
+  await version.selectOption("FIRERED")
+  await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
+    1,
+  )
+  await expect(
+    page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
+  ).toHaveCount(0)
+  await populationControls.getByRole("button", { name: "Water" }).click()
+  const ceruleanPopup = page.getByRole("dialog", { name: /CeruleanCity_Frlg.*Water/ })
+  await expect(
+    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_FireRed"]'),
+  ).toHaveCount(1)
+  await version.selectOption("LEAFGREEN")
+  await expect(page).toHaveURL(/product=LEAFGREEN/)
+  await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
+    0,
+  )
+  await expect(
+    page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
+  ).toHaveCount(1)
+  await expect(ceruleanPopup).toBeVisible()
+  await expect(
+    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_FireRed"]'),
+  ).toHaveCount(0)
+  await expect(
+    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_LeafGreen"]'),
+  ).toHaveCount(1)
+})
+
 test("shows the cartographer", async ({ page }) => {
   await page.goto("/")
 
@@ -160,7 +252,7 @@ test("shows the cartographer", async ({ page }) => {
     .toBe(true)
   await expect(route32Set.getByLabel("Old Rod fishing")).toBeVisible()
   await expect(route32Set.getByLabel("Good Rod fishing")).toBeVisible()
-  await expect(route32Set.getByText("MAGIKARP", { exact: true }).first()).toBeVisible()
+  await expect(route32Set.getByText(/^Magikarp$/i).first()).toBeVisible()
   const encounterSprite = fishing.locator('img[src*="pokemon-icons/"]').first()
   await expect(encounterSprite).toBeVisible()
   await expect

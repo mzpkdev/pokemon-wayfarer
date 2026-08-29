@@ -1,6 +1,7 @@
 import importlib.util
 from fractions import Fraction
 from pathlib import Path
+import tempfile
 import unittest
 
 
@@ -20,6 +21,35 @@ class WildEncounterScalingTests(unittest.TestCase):
         cls.species = GENERATOR.species_ids(GENERATOR.DEFAULT_SPECIES)
         cls.profiles, cls.header_ids = GENERATOR.validate_encounters(
             cls.encounters, cls.species, cls.config
+        )
+        ordinary = {
+            mon["species"]
+            for profile in cls.profiles
+            for method in cls.config.mon_types
+            for mon in profile["encounter"].get(method, {}).get("mons", [])
+        }
+        cls.metadata = GENERATOR.load_species_metadata(
+            GENERATOR.DEFAULT_SPECIES_METADATA,
+            GENERATOR.DEFAULT_SPECIES_INFO,
+            cls.species,
+            ordinary,
+        )
+        cls.by_species = {row["species"]: row for row in cls.metadata}
+        cls.offsets = GENERATOR.load_offsets(
+            cls.scaling["profile_offsets"], cls.profiles, GENERATOR.DEFAULT_SCALING
+        )
+        minimum, maximum = GENERATOR.trainer_rating_bounds(
+            GENERATOR.DEFAULT_TRAINER_RATING, cls.scaling["projection_cap"]
+        )
+        cls.cartographer = GENERATOR.build_cartographer_projection_model(
+            cls.profiles,
+            cls.header_ids,
+            cls.config,
+            cls.scaling,
+            cls.metadata,
+            cls.offsets,
+            minimum,
+            maximum,
         )
 
     def test_projection_curve_is_exact_at_required_join_points(self):
@@ -152,6 +182,195 @@ class WildEncounterScalingTests(unittest.TestCase):
         ]
         self.assertEqual({row["fishingRod"] for row in fishing}, {"OLD_ROD", "GOOD_ROD", "SUPER_ROD"})
         self.assertTrue(all("slotOutcomes" in sample for row in fishing for sample in row["samples"]))
+
+    def test_cartographer_projection_has_runtime_bounds_and_strict_profile_identities(self):
+        projection = self.cartographer
+        self.assertEqual(projection["schemaVersion"], 1)
+        self.assertEqual(projection["trainerRating"], {"minimum": 10, "maximum": 80})
+        self.assertEqual(projection["authoredLevel"], {"minimum": 1, "maximum": 100})
+        self.assertEqual(
+            projection["headerCounts"],
+            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 168},
+        )
+
+        rows = projection["profiles"]
+        self.assertEqual(len({row["profileKey"] for row in rows}), len(rows))
+        self.assertEqual(
+            len({
+                (
+                    row["product"], row["headerId"], row["runtimeArea"],
+                    row["runtimeTime"], row["runtimeFishingRod"],
+                )
+                for row in rows
+            }),
+            len(rows),
+        )
+        source_profiles = {profile["label"]: profile for profile in self.profiles}
+        for row in rows:
+            source = source_profiles[row["baseLabel"]]
+            self.assertEqual(row["product"], source["product"])
+            self.assertEqual(row["map"], source["map"])
+            self.assertEqual(row["header"], source["header"])
+            self.assertEqual(row["headerId"], source["header_id"])
+            self.assertEqual(row["runtimeTime"], source["time"])
+            self.assertEqual(row["runtimeSlotCount"], len(
+                GENERATOR.method_slots(source, row["method"], row["fishingRod"])
+            ))
+
+        mt_silver = [
+            row for row in rows
+            if row["baseLabel"] == "gMtSilver_SnowNight_hns_Day"
+        ]
+        self.assertTrue(mt_silver)
+        self.assertTrue(all(row["runtimeTime"] == "TIME_NIGHT" for row in mt_silver))
+        self.assertTrue(all(row["header"] == "gMtSilver_SnowNight_hns" for row in mt_silver))
+
+    def test_cartographer_level_projection_is_exhaustive_and_exact(self):
+        for offset_row in self.cartographer["levelProjections"]:
+            offset = offset_row["levelOffset"]
+            self.assertEqual(
+                [row["rating"] for row in offset_row["ratings"]],
+                list(range(10, 81)),
+            )
+            for rating_row in offset_row["ratings"]:
+                self.assertEqual(len(rating_row["projectedLevels"]), 100)
+                for authored_level, projected_level in enumerate(
+                    rating_row["projectedLevels"], start=1
+                ):
+                    self.assertEqual(
+                        projected_level,
+                        GENERATOR.project_level(
+                            self.scaling, authored_level, rating_row["rating"], offset
+                        ),
+                    )
+
+    def test_cartographer_species_intervals_are_exhaustive_and_exact(self):
+        rows = {row["authoredSpecies"]: row for row in self.cartographer["species"]}
+        self.assertEqual(set(rows), set(self.by_species))
+        for authored_species, row in rows.items():
+            covered = []
+            for interval in row["outcomesByProjectedLevel"]:
+                covered.extend(range(
+                    interval["minimumProjectedLevel"],
+                    interval["maximumProjectedLevel"] + 1,
+                ))
+                for level in range(
+                    interval["minimumProjectedLevel"],
+                    interval["maximumProjectedLevel"] + 1,
+                ):
+                    effective, _ = GENERATOR.effective_species(
+                        authored_species, level, self.by_species
+                    )
+                    floor = self.by_species[effective]["minimum_level"]
+                    self.assertEqual(interval["effectiveSpecies"], effective)
+                    self.assertEqual(interval["minimumOrdinaryWildLevel"], floor)
+                    self.assertEqual(interval["eligible"], level >= floor)
+            self.assertEqual(covered, list(range(1, 101)))
+
+    def test_cartographer_lookup_composes_to_exact_slot_semantics(self):
+        levels_by_offset = {
+            row["levelOffset"]: {
+                rating["rating"]: rating["projectedLevels"]
+                for rating in row["ratings"]
+            }
+            for row in self.cartographer["levelProjections"]
+        }
+        species_rows = {
+            row["authoredSpecies"]: row["outcomesByProjectedLevel"]
+            for row in self.cartographer["species"]
+        }
+
+        def projected_outcome(authored_species, projected_level):
+            return next(
+                interval
+                for interval in species_rows[authored_species]
+                if interval["minimumProjectedLevel"] <= projected_level <= interval["maximumProjectedLevel"]
+            )
+
+        profiles = {profile["label"]: profile for profile in self.profiles}
+        for profile_row in self.cartographer["profiles"]:
+            profile = profiles[profile_row["baseLabel"]]
+            offset = profile_row["levelOffset"]
+            for slot_index, mon, _ in GENERATOR.method_slots(
+                profile, profile_row["method"], profile_row["fishingRod"]
+            ):
+                authored_minimum = mon.get("min_level", 2)
+                authored_maximum = mon.get("max_level", 100)
+                slot = {
+                    "species": mon["species"],
+                    "minimumLevel": min(authored_minimum, authored_maximum),
+                    "maximumLevel": max(authored_minimum, authored_maximum),
+                }
+                failures = []
+                summaries, _ = GENERATOR.slot_summary(
+                    slot,
+                    self.scaling,
+                    offset,
+                    self.by_species,
+                    failures,
+                    f"{profile_row['profileKey']}/slot {slot_index}",
+                )
+                self.assertEqual(failures, [])
+                for rating in range(10, 81):
+                    outcomes, locked = {}, False
+                    for authored_level in range(slot["minimumLevel"], slot["maximumLevel"] + 1):
+                        projected_level = levels_by_offset[offset][rating][authored_level - 1]
+                        outcome = projected_outcome(mon["species"], projected_level)
+                        locked |= not outcome["eligible"]
+                        effective = outcomes.setdefault(
+                            outcome["effectiveSpecies"],
+                            {"minimumLevel": projected_level, "maximumLevel": projected_level},
+                        )
+                        effective["minimumLevel"] = min(effective["minimumLevel"], projected_level)
+                        effective["maximumLevel"] = max(effective["maximumLevel"], projected_level)
+                    self.assertEqual(locked, summaries[rating]["locked"])
+                    self.assertEqual(outcomes, summaries[rating]["outcomes"])
+
+    def test_cartographer_projection_supports_nonzero_profile_offsets(self):
+        profile = self.profiles[0]
+        method = next(method for method in self.config.mon_types if method in profile["encounter"])
+        rod = "OLD_ROD" if method == "fishing_mons" else "NONE"
+        offset = {
+            "product": profile["product"],
+            "header_id": profile["header_id"],
+            "area": GENERATOR.METHOD_AREAS[method],
+            "time": profile["time"],
+            "rod": GENERATOR.RODS[rod],
+            "level_offset": 2,
+        }
+        projection = GENERATOR.build_cartographer_projection_model(
+            self.profiles,
+            self.header_ids,
+            self.config,
+            self.scaling,
+            self.metadata,
+            [offset],
+            10,
+            80,
+        )
+        self.assertEqual(
+            [row["levelOffset"] for row in projection["levelProjections"]], [0, 2]
+        )
+        row = next(
+            row for row in projection["profiles"]
+            if row["baseLabel"] == profile["label"]
+            and row["method"] == method
+            and row["fishingRod"] == rod
+        )
+        self.assertEqual(row["levelOffset"], 2)
+
+    def test_cartographer_projection_cli_writes_deterministic_json(self):
+        with tempfile.TemporaryDirectory() as directory:
+            first = Path(directory) / "first.json"
+            second = Path(directory) / "second.json"
+            GENERATOR.generate_cartographer_projection(first)
+            GENERATOR.generate_cartographer_projection(second)
+            self.assertEqual(first.read_bytes(), second.read_bytes())
+            self.assertLess(first.stat().st_size, 2_000_000)
+            self.assertEqual(
+                GENERATOR.load_json(first)["trainerRating"],
+                {"minimum": 10, "maximum": 80},
+            )
 
 
 if __name__ == "__main__":

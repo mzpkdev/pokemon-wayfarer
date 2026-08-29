@@ -1,11 +1,11 @@
 # Trainer Rating wild encounter scaling
 
 PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
-This specification defines the persistent Trainer Rating, its build-specific progression sources, and the effective ordinary wild population derived from it. It covers the ordinary encounter profiles compiled into Emerald, FireRed/LeafGreen, and the current HNS regions. It does not define new regional content or trainer battle scaling.
+This specification defines the persistent Trainer Rating, its build-specific progression sources, and the effective ordinary wild population derived from it. It covers the ordinary encounter profiles compiled into Emerald, FireRed/LeafGreen, and HNS. It does not define new regional content or trainer battle scaling.
 
 ## Behavior
 
@@ -35,9 +35,11 @@ The system resolves ordinary land, water, Rock Smash, and fishing profiles from 
 
 The active coverage is:
 
-- Emerald: all ordinary profiles compiled into the ROM.
+- Emerald: Hoenn.
 - FireRed/LeafGreen: Kanto and the Sevii Islands.
-- HNS: Johto, Kanto, and all currently compiled miscellaneous regions.
+- HNS: Johto, Kanto, Alola, Sinjoh, Faraway Island, and Southern Island.
+
+Sinjoh is distinct from Sinnoh. None of the current builds contains a full Sinnoh encounter region.
 
 Adding a map connection or warp to HNS does not make a new region eligible. Its ordinary profiles must explicitly target the HNS build. Once that data is compiled into HNS, the existing global Trainer Rating pipeline applies without a new scaling implementation. Any Hoenn badges or story milestones require a separate progression design before they can affect Trainer Rating.
 

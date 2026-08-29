@@ -11,10 +11,9 @@ import {
 } from "../renderer"
 import { catalogRegions, categoryFor, mapOutputPaths, regionFor } from "./classify"
 import { catalogObjects, objectSourceTables } from "./objects"
-import { catalogEncounterSprites } from "./encounter-sprites"
 import type { ObjectSourceTables } from "./objects"
 import { mapScriptBodies } from "./scripts"
-import { sourceWildEncounters } from "./encounters"
+import { sourceWildEncounterCatalog } from "./encounters"
 import { topologyConflicts } from "./topology"
 import {
   posixRelative,
@@ -135,11 +134,13 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
   const mapsByName = sourceMaps(root, exteriorMaps)
   const namesById = new Map([...mapsByName].map(([name, map]) => [map.id, name]))
   const objectTables = objectSourceTables(root)
-  const wildEncountersByMap = sourceWildEncounters(
-    root,
-    namesById,
-    catalogEncounterSprites(root, output),
-  )
+  const { encountersByMap: wildEncountersByMap, projection: wildEncounterProjection } =
+    sourceWildEncounterCatalog(
+      root,
+      namesById,
+      output,
+      path.join(path.dirname(output), "wild-encounter-projection.json"),
+    )
   const maps: CatalogMap[] = []
 
   for (const name of exteriorMaps) {
@@ -167,7 +168,7 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
   }
 
   const catalog: MapCatalog = {
-    schemaVersion: 7,
+    schemaVersion: 8,
     format: "pokemon-wayfarer-exterior-map-catalog",
     pixelsPerMetatile: 16,
     source: sourceState(root),
@@ -188,6 +189,7 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
     topology: {
       conflicts: topologyConflicts(maps),
     },
+    wildEncounterProjection,
     regions: catalogRegions.map((region) => {
       const names = maps.filter((map) => map.region === region.id).map((map) => map.name)
       return { ...region, mapCount: names.length, maps: names }

@@ -17,8 +17,12 @@
     type MapCatalog,
   } from "./catalog.js"
   import { visibleSurfaceMaps } from "./geography.js"
+  import { resolveMapEncounters } from "./encounters.js"
   import type { ObjectSelection, WarpSelection } from "./types.js"
+  import Slider from "./ui-toolkit/Slider.svelte"
   import {
+    MAX_TRAINER_RATING,
+    MIN_TRAINER_RATING,
     cartographerUrlWithState,
     parseCartographerUrlState,
     type CartographerViewState,
@@ -46,12 +50,16 @@
   let showEncounterTrainers = $state(true)
   let focusToken = $state(0)
   let activeTab = $state<CartographerTab>("map")
+  let trainerRating = $state(MIN_TRAINER_RATING)
+  let requestedProduct = $state<string | null>(null)
 
   onMount(() => {
     const state = parseCartographerUrlState(window.location.href)
     requestedRegion = state.region
     requestedMap = state.selectedMap
     initialView = state.view
+    trainerRating = state.trainerRating
+    requestedProduct = state.product
     const controller = new AbortController()
     loadCatalog(controller.signal)
       .then((catalog) => {
@@ -90,6 +98,15 @@
   let renderedMapNames = $derived(
     new Set(visibleSurfaceMaps(catalog?.maps ?? []).map((map) => map.name)),
   )
+  let activeEncounters = $derived(
+    selectedMap && catalog
+      ? resolveMapEncounters(
+          selectedMap,
+          requestedProduct,
+          catalog.wildEncounterProjection.products,
+        )
+      : null,
+  )
 
   const replaceUrl = (): void => {
     if (!activeRegion) return
@@ -97,6 +114,8 @@
       region: activeRegion.id,
       selectedMap: selectedMap?.name ?? null,
       view: currentView,
+      trainerRating,
+      product: activeEncounters?.product ?? requestedProduct,
     })
     const current = `${window.location.pathname}${window.location.search}${window.location.hash}`
     if (next !== current) window.history.replaceState(window.history.state, "", next)
@@ -140,6 +159,16 @@
   const handleCameraChange = (view: CartographerViewState): void => {
     currentView = view
     replaceUrl()
+  }
+
+  const selectProduct = (product: string): void => {
+    requestedProduct = product
+    queueMicrotask(replaceUrl)
+  }
+
+  const selectTrainerRating = (rating: number): void => {
+    trainerRating = rating
+    queueMicrotask(replaceUrl)
   }
 </script>
 
@@ -209,6 +238,37 @@
           {maps.length} source maps · only default-visible surface maps are shown
         </p>
       </div>
+      {#if activeTab === "encounters"}
+        <div
+          class="mt-4 flex flex-wrap items-end gap-5 border border-cartographer-border bg-cartographer-panel-raised p-3"
+          aria-label="Encounter scaling controls"
+        >
+          <Slider
+            label="Trainer Rating"
+            minimum={MIN_TRAINER_RATING}
+            maximum={MAX_TRAINER_RATING}
+            value={trainerRating}
+            onValueChange={selectTrainerRating}
+          />
+          {#if activeEncounters && activeEncounters.availableProducts.length > 1}
+            <label class="grid gap-2 text-xs font-medium text-cartographer-muted">
+              Game version
+              <select
+                class="min-w-36 border border-cartographer-border bg-cartographer-field px-2.5 py-2 text-sm text-cartographer-ink focus-visible:border-cartographer-signal focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cartographer-signal"
+                value={activeEncounters.product ?? ""}
+                onchange={(event) => selectProduct(event.currentTarget.value)}
+              >
+                {#each activeEncounters.availableProducts as product (product.id)}
+                  <option value={product.id}>{product.displayName}</option>
+                {/each}
+              </select>
+            </label>
+          {/if}
+          <p class="m-0 text-xs leading-5 text-cartographer-muted">
+            Preview of normal non-randomized ordinary encounters.
+          </p>
+        </div>
+      {/if}
     </header>
     <div class="grid gap-4 xl:grid-cols-[15.5rem_minmax(0,1fr)_20rem]">
       <aside class="grid content-start gap-3">
@@ -279,6 +339,8 @@
                 ? { mapName: selectedMap.name, token: focusToken }
                 : null}
               encounterMode
+              {trainerRating}
+              preferredProduct={activeEncounters?.product ?? requestedProduct}
               {showEncounterTrainers}
               onSelectMap={selectMap}
               onSelectObject={(selection) => {
@@ -294,6 +356,9 @@
           <EncounterPanel
             {selectedMap}
             {selectedObject}
+            encounters={activeEncounters}
+            projection={catalog.wildEncounterProjection}
+            {trainerRating}
             onSelectTrainer={(trainer) => {
               if (!selectedMap) return
               selectedObject = { sourceMapName: selectedMap.name, objectId: trainer.objectId }
