@@ -18,7 +18,8 @@ See [e2e/README.md](e2e/README.md) for the ROM-backed test command.
 The source-driven Cartographer and Metatiles tools live in their own
 [devtools workspace](devtools/README.md). Its commands read the `game/`
 source tree and keep generated catalogs in the repository-level `build/`
-directory:
+directory. The same browser app includes a formatted, deep-linkable viewer for
+the Markdown files in `.product/`:
 
 ```sh
 pnpm install

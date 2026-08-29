@@ -21,7 +21,7 @@ setup error when either command is unavailable.
 
 ```text
 tools/      CLI packages
-ui/         Svelte cartographer
+ui/         Svelte source browser and product docs viewer
 ```
 
 `tools/cartographer` is the source-driven map-render CLI. `tools/metatiles`
@@ -29,9 +29,10 @@ generates source-driven metatile metadata and palette-correct preview atlases.
 Add further CLI tools under `tools/`. `ui` is the only browser package; add a
 separate UI package only when it has a real independent consumer.
 
-`ui` is the Svelte cartographer. It consumes the static catalog and terrain images
-created by `tools/cartographer`; it does not read the ROM or source
-tree in the browser.
+`ui` contains Cartographer, Metatiles, and a Docs module. The map modules consume
+the static catalog and terrain images created by the CLI tools. Docs bundles every
+Markdown file below `.product/` through Vite, so restart the development server
+after adding or renaming a document. Markdown HTML is sanitized before display.
 
 `ui/src/modules/cartographer/ui-toolkit` owns styled local UI primitives. It wraps Ark
 UI for stateful controls so cartographer components can stay focused on map behavior.
