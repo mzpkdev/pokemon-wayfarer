@@ -4,6 +4,8 @@
 
 u8 ClampTrainerRating(u16 rating)
 {
+    if (rating < TRAINER_RATING_MIN)
+        return TRAINER_RATING_MIN;
     if (rating > TRAINER_RATING_MAX)
         return TRAINER_RATING_MAX;
 
@@ -92,6 +94,11 @@ u8 GetTrainerRating(void)
         VarSet(VAR_TRAINER_RATING, rating);
 
     return rating;
+}
+
+void InitializeTrainerRatingForNewGame(void)
+{
+    VarSet(VAR_TRAINER_RATING, TRAINER_RATING_MIN);
 }
 
 void InitializeTrainerRatingForSaveMigration(void)
