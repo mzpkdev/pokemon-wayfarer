@@ -18,6 +18,7 @@
 #include "rtc.h"
 #include "easy_chat.h"
 #include "event_data.h"
+#include "trainer_rating.h"
 #include "money.h"
 #include "mom_savings.h"
 #include "trainer_hill.h"
@@ -244,6 +245,7 @@ void NewGameInitData(void)
     PlayTimeCounter_Reset();
     ClearPokedexFlags();
     InitEventData();
+    InitializeTrainerRatingForNewGame();
     ClearTVShowData();
     ResetGabbyAndTy();
     ClearSecretBases();

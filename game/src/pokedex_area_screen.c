@@ -124,8 +124,8 @@ static void BuildAreaGlowTilemap(void);
 static void SetAreaHasMon(u16, u16);
 static void SetSpecialMapHasMon(u16, u16);
 static mapsec_u16_t GetRegionMapSectionId(u8, u8);
-static bool8 MapHasSpecies(const struct WildEncounterTypes *, u32, u16);
-static bool8 MonListHasSpecies(const struct WildPokemonInfo *, u16, u16);
+static bool8 MapHasSpecies(u16, u32, u16);
+static bool8 ProfileHasSpecies(u16, enum WildPokemonArea, enum WildEncounterFishingRod, u16);
 static void DoAreaGlow(void);
 static void Task_ShowPokedexAreaScreen(u8 taskId);
 static void Task_UpdatePokedexAreaScreen(u8 taskId);
@@ -360,7 +360,7 @@ static void FindMapsWithMon(u16 species)
             continue;
 #endif
 
-        if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], headerSectionId, species))
+        if (MapHasSpecies(i, headerSectionId, species))
         {
             switch (gWildMonHeaders[i].mapGroup)
             {
@@ -452,7 +452,7 @@ static mapsec_u16_t GetRegionMapSectionId(u8 mapGroup, u8 mapNum)
     return Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->regionMapSectionId;
 }
 
-static bool8 MapHasSpecies(const struct WildEncounterTypes *info, u32 headerSectionId, u16 species)
+static bool8 MapHasSpecies(u16 headerId, u32 headerSectionId, u16 species)
 {
     // If this is a header for Altering Cave, skip it if it's not the current Altering Cave encounter set
     if (headerSectionId == MAPSEC_ALTERING_CAVE)
@@ -462,31 +462,57 @@ static bool8 MapHasSpecies(const struct WildEncounterTypes *info, u32 headerSect
             return FALSE;
     }
 
-    if (MonListHasSpecies(info->landMonsInfo, species, LAND_WILD_COUNT))
+    if (ProfileHasSpecies(headerId, WILD_AREA_LAND, WILD_ENCOUNTER_FISHING_ROD_NONE, species))
         return TRUE;
-    if (MonListHasSpecies(info->waterMonsInfo, species, WATER_WILD_COUNT))
+    if (ProfileHasSpecies(headerId, WILD_AREA_WATER, WILD_ENCOUNTER_FISHING_ROD_NONE, species))
         return TRUE;
-// When searching the fishing encounters, this incorrectly uses the size of the land encounters.
-// As a result it's reading out of bounds of the fishing encounters tables.
-#ifdef BUGFIX
-    if (MonListHasSpecies(info->fishingMonsInfo, species, FISH_WILD_COUNT))
-#else
-    if (MonListHasSpecies(info->fishingMonsInfo, species, LAND_WILD_COUNT))
-#endif
+    if (ProfileHasSpecies(headerId, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_OLD, species))
         return TRUE;
-    if (MonListHasSpecies(info->rockSmashMonsInfo, species, ROCK_WILD_COUNT))
+    if (ProfileHasSpecies(headerId, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_GOOD, species))
+        return TRUE;
+    if (ProfileHasSpecies(headerId, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_SUPER, species))
+        return TRUE;
+    if (ProfileHasSpecies(headerId, WILD_AREA_ROCKS, WILD_ENCOUNTER_FISHING_ROD_NONE, species))
         return TRUE;
     return FALSE;
 }
 
-static bool8 MonListHasSpecies(const struct WildPokemonInfo *info, u16 species, u16 size)
+static bool8 ProfileHasSpecies(u16 headerId, enum WildPokemonArea area, enum WildEncounterFishingRod fishingRod, u16 species)
 {
-    u16 i;
-    if (info != NULL)
+    struct WildEncounterProfileContext context =
     {
-        for (i = 0; i < size; i++)
+        .headerId = headerId,
+        .timeOfDay = gAreaTimeOfDay,
+        .area = area,
+        .fishingRod = fishingRod,
+    };
+    struct WildEncounterProfileView view;
+    u8 slot;
+
+    if (!GetWildEncounterProfileView(&context, &view))
+        return FALSE;
+
+    // Area lookup is display-only. Iterate the authored level range to expose
+    // every effective species a profile can produce without consuming RNG.
+    for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+    {
+        const struct WildPokemon *entry;
+        u16 authoredLevel;
+        u8 minimumLevel;
+        u8 maximumLevel;
+
+        if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
+         || !GetWildEncounterProfileEntry(&view, slot, &entry))
+            continue;
+
+        minimumLevel = min(entry->minLevel, entry->maxLevel);
+        maximumLevel = max(entry->minLevel, entry->maxLevel);
+        for (authoredLevel = minimumLevel; authoredLevel <= maximumLevel; authoredLevel++)
         {
-            if (info->wildPokemon[i].species == species)
+            struct WildEncounterSpeciesOutcome outcome;
+
+            if (GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
+             && outcome.species == species)
                 return TRUE;
         }
     }

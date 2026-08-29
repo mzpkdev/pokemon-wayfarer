@@ -1,6 +1,7 @@
 <!--
 Keep this short enough for a stakeholder to scan in under a minute.
 Write from the product perspective: lead with the user or project outcome, make the strongest honest case for the change, and leave implementation details to the diff.
+Required PR title: type(optional-scope): concise imperative summary. Allowed types: build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test.
 -->
 
 ## What

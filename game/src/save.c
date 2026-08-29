@@ -14,6 +14,7 @@
 #include "constants/game_stat.h"
 #include "constants/rematches.h"
 #include "event_data.h"
+#include "trainer_rating.h"
 
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
@@ -973,6 +974,14 @@ u8 LoadGameSave(u8 saveType)
         }
 #endif //FREE_MATCH_CALL
         gSaveBlock1Ptr->saveVersion = 4;
+    }
+
+    if (gSaveBlock1Ptr->saveVersion < 5)
+    {
+        // VAR_TRAINER_RATING was previously unused. Do not trust whatever old
+        // saves contain there; initialize it only from their durable progress.
+        InitializeTrainerRatingForSaveMigration();
+        gSaveBlock1Ptr->saveVersion = 5;
     }
 
     // Add version migration steps here:

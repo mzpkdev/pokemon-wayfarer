@@ -3,6 +3,10 @@
 
 #include "config/dexnav.h"
 
+struct WildEncounterProfileView;
+struct WildEncounterSpeciesOutcome;
+struct WildPokemonInfo;
+
 // GUI Info
 enum RowGUIInfo
 {
@@ -78,6 +82,18 @@ bool32 TryFindHiddenPokemon(void);
 u32 CalculateDexNavShinyRolls(void);
 void IncrementDexNavChain(void);
 bool32 OnStep_DexNavSearch(void);
+
+#if TESTING
+// Deterministic seams for mechanics coverage. They are omitted from release
+// builds and let tests inspect only the normal-profile boundary: hidden
+// DexNav data remains a separate raw source.
+bool8 DexNavGetEffectiveProfileOutcomeForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 authoredLevel, struct WildEncounterSpeciesOutcome *outcome);
+u16 DexNavGetHiddenProfileSpeciesForTesting(const struct WildPokemonInfo *info, u8 slot);
+// Models only the ordinary detector fallback's weighted slot then optional
+// lure mirror, with supplied rolls. It never applies to raw hidden entries.
+bool8 DexNavSelectProfileFallbackSlotWithRollsForTesting(const struct WildEncounterProfileView *view, u16 selectionRoll, bool8 lureActive, u8 lureRoll, u8 *slot);
+bool8 DexNavSelectProfileOutcomeWithRollsForTesting(const struct WildEncounterProfileView *view, u16 species, u32 proposalRoll, u32 acceptanceRoll, bool8 *accepted, struct WildEncounterSpeciesOutcome *outcome);
+#endif
 
 extern u16 gDexNavSpecies;
 
