@@ -2045,57 +2045,48 @@ static void PopulateMapName(int matchCallId, u8 *destStr)
     GetMapName(destStr, GetRematchTrainerLocation(matchCallId), 0);
 }
 
-static u8 GetLandEncounterSlot(void)
+static bool8 GetTrainerLocationWildSpecies(u16 headerId, enum WildPokemonArea area, u16 *species)
 {
-    int rand = Random() % 100;
-    if (rand < 20)
-        return 0;
-    else if (rand >= 20 && rand < 40)
-        return 1;
-    else if (rand >= 40 && rand < 50)
-        return 2;
-    else if (rand >= 50 && rand < 60)
-        return 3;
-    else if (rand >= 60 && rand < 70)
-        return 4;
-    else if (rand >= 70 && rand < 80)
-        return 5;
-    else if (rand >= 80 && rand < 85)
-        return 6;
-    else if (rand >= 85 && rand < 90)
-        return 7;
-    else if (rand >= 90 && rand < 94)
-        return 8;
-    else if (rand >= 94 && rand < 98)
-        return 9;
-    else if (rand >= 98 && rand < 99)
-        return 10;
-    else
-        return 11;
-}
+    struct WildEncounterProfileContext context =
+    {
+        .headerId = headerId,
+        .timeOfDay = GetTimeOfDayForEncounters(headerId, area),
+        .area = area,
+        .fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE,
+    };
+    struct WildEncounterProfileView view;
+    const struct WildPokemon *entry;
+    struct WildEncounterSpeciesOutcome outcome;
+    u16 eligibleWeight;
+    u8 slot;
+    u8 authoredLevel;
 
-static u8 GetWaterEncounterSlot(void)
-{
-    int rand = Random() % 100;
-    if (rand < 60)
-        return 0;
-    else if (rand >= 60 && rand < 90)
-        return 1;
-    else if (rand >= 90 && rand < 95)
-        return 2;
-    else if (rand >= 95 && rand < 99)
-        return 3;
-    else
-        return 4;
+    if (species == NULL || !GetWildEncounterProfileView(&context, &view))
+        return FALSE;
+
+    eligibleWeight = GetCurrentWildEncounterProfileEligibleWeight(&view);
+    if (eligibleWeight == 0
+     || !SelectCurrentWildEncounterProfileSlot(&view, Random() % eligibleWeight, &slot)
+     || !GetWildEncounterProfileEntry(&view, slot, &entry))
+        return FALSE;
+
+    // Match Call has always chosen only a slot. Use its lowest authored level
+    // as a stable representative to resolve the effective species without
+    // adding a level-roll side effect.
+    authoredLevel = min(entry->minLevel, entry->maxLevel);
+    if (!GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
+     || outcome.species == SPECIES_NONE)
+        return FALSE;
+
+    *species = outcome.species;
+    return TRUE;
 }
 
 static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 {
     u16 species[2];
     int numSpecies;
-    u8 slot;
     int i = 0;
-    enum TimeOfDay timeOfDay;
 
     if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED)) // ??? This check is nonsense.
     {
@@ -2110,22 +2101,12 @@ static void PopulateSpeciesFromTrainerLocation(int matchCallId, u8 *destStr)
 
         if (gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED))
         {
-            timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_LAND);
             numSpecies = 0;
-            if (gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo)
-            {
-                slot = GetLandEncounterSlot();
-                species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].landMonsInfo->wildPokemon[slot].species;
+            if (GetTrainerLocationWildSpecies(i, WILD_AREA_LAND, &species[numSpecies]))
                 numSpecies++;
-            }
 
-            timeOfDay = GetTimeOfDayForEncounters(i, WILD_AREA_WATER);
-            if (gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo)
-            {
-                slot = GetWaterEncounterSlot();
-                species[numSpecies] = gWildMonHeaders[i].encounterTypes[timeOfDay].waterMonsInfo->wildPokemon[slot].species;
+            if (GetTrainerLocationWildSpecies(i, WILD_AREA_WATER, &species[numSpecies]))
                 numSpecies++;
-            }
 
             if (numSpecies)
             {

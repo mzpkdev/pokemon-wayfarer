@@ -418,6 +418,51 @@ static void GetBuenaPasswordString(u8 *dest, u32 category, u32 word)
     }
 }
 
+static bool8 PickWildSpeciesFromProfile(u16 headerId, enum TimeOfDay timeOfDay, u16 *species)
+{
+    struct WildEncounterProfileContext context =
+    {
+        .headerId = headerId,
+        .timeOfDay = timeOfDay,
+        .area = WILD_AREA_LAND,
+        .fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE,
+    };
+    struct WildEncounterProfileView view;
+    u8 firstSlot;
+    u8 offset;
+
+    if (species == NULL || !GetWildEncounterProfileView(&context, &view))
+        return FALSE;
+
+    // Crystal's radio picked one of authored land slots 2 through 4. Retain
+    // that single RNG draw, then walk that small window deterministically if
+    // its initial slot is not in the current effective population.
+    firstSlot = 2 + (Random() % 3);
+    for (offset = 0; offset < 3; offset++)
+    {
+        const struct WildPokemon *entry;
+        struct WildEncounterSpeciesOutcome outcome;
+        u8 slot = 2 + ((firstSlot - 2 + offset) % 3);
+        u8 authoredLevel;
+
+        if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
+         || !GetWildEncounterProfileEntry(&view, slot, &entry))
+            continue;
+
+        // Station copy displays a species only, so a fixed endpoint gives it
+        // an effective species without consuming a new level RNG value.
+        authoredLevel = min(entry->minLevel, entry->maxLevel);
+        if (GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
+         && outcome.species != SPECIES_NONE)
+        {
+            *species = outcome.species;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static u16 PickWildSpeciesFromRoute(u8 mapGroup, u8 mapNum)
 {
     u32 i;
@@ -426,21 +471,16 @@ static u16 PickWildSpeciesFromRoute(u8 mapGroup, u8 mapNum)
         if (gWildMonHeaders[i].mapGroup == mapGroup && gWildMonHeaders[i].mapNum == mapNum)
         {
             enum TimeOfDay tod = Random() % TIMES_OF_DAY_COUNT;
-            const struct WildPokemonInfo *info;
+            u16 species;
 
-            info = gWildMonHeaders[i].encounterTypes[tod].landMonsInfo;
-            if (info != NULL && info->wildPokemon != NULL)
-            {
-                // Pick from the middle slots (2-4) like Crystal
-                u32 slot = 2 + (Random() % 3);
-                return info->wildPokemon[slot].species;
-            }
+            if (PickWildSpeciesFromProfile(i, tod, &species))
+                return species;
+
             // Fallback: try any time of day with land mons
             for (tod = TIME_MORNING; tod < TIMES_OF_DAY_COUNT; tod++)
             {
-                info = gWildMonHeaders[i].encounterTypes[tod].landMonsInfo;
-                if (info != NULL && info->wildPokemon != NULL)
-                    return info->wildPokemon[2 + (Random() % 3)].species;
+                if (PickWildSpeciesFromProfile(i, tod, &species))
+                    return species;
             }
         }
     }
