@@ -30,7 +30,7 @@ In evidence cells, bare map paths such as `Route101/scripts.inc` are relative to
 
 ## What counts as a trivial change
 
-A suggestion appears only when the bypass can stay local to one map or transport script: remove or narrow a turnback trigger, move one blocker off a choke point, stop installing a blocking metatile, or relax a self-contained item or state check. A dash means no complete, low-risk trivial change was found.
+A suggestion appears only when the bypass can stay local to a small set of directly related maps or transport scripts: remove or narrow a turnback trigger, move one blocker off a choke point, stop installing a blocking metatile, or relax a self-contained item or state check. A dash means no complete, low-risk trivial change was found.
 
 These are research candidates, not implementation approval. Every suggested lane or object move still needs a collision check and an emulator walkthrough. Suggestions must not synthesize unrelated story-completion flags merely to open a road.
 
@@ -75,6 +75,10 @@ Uncertain Johto candidates:
 | Mt. Moon Silver battle | At Pewter state 0 or 1, Silver occupies the Mt. Moon through-route and forces a battle before the state advances to 2. | Replace the frame event with a state-only transition and hide Silver. This drops the rematch but does not alter other Kanto state. | `game/data/maps/MtMoon_Cave_hns/map.json:17-30`; `MtMoon_Cave_hns/scripts.inc:12-63` |
 | Surf-dependent Kanto coast | Surf requires Johto Badge 4 and a party user. It gates Cinnabar's Route 20 and Route 21 approaches and other ocean travel. | - | `game/src/field_move.c:49-54`; `game/src/field_control_avatar.c:678-685`; `game/data/maps/CinnabarIsland_hns/map.json:9-25` |
 | Cycling Road | The Celadon to Route 16 gate pushes back anyone not currently on a bicycle. The bicycle comes from Goldenrod. | Remove the bike check and manage the cycling-road flag only from travel direction. | `game/data/maps/Gate_CeladonCity_Route16_hns/map.json:47-74`; `Gate_CeladonCity_Route16_hns/scripts.inc:4-18`; `GoldenrodCity_BikeShop_hns/scripts.inc:4-20` |
+
+Uncertain Kanto candidate:
+
+- Engineers controlled by `FLAG_RETURNED_MACHINE_PART` stand immediately beyond the Route 5 and Route 6 Underground Path entrance warps. The intermediate entrance maps connect both ends to the same north-south tunnel, so the pair may close this Cerulean-Vermilion shortcut until the stolen Machine Part is returned. Confirm that adjacent collision and elevation do not leave a walkable lane before promoting this to a blocker. If confirmed, moving both engineers one tile aside is a small, paired map change that preserves their dialogue and hide flag. Evidence: `game/data/maps/Route5_hns/map.json:82-92,129-133`; `Route5_TunnelEntrance_hns/map.json:17-32`; `Route6_hns/map.json:119-130,258-263`; `Route6_TunnelEntrance_hns/map.json:17-32`; `Route6_hns/scripts.inc:20-22,32-35`.
 
 The Route 27 Reception officer, Victory Road, and Mt. Silver guard are listed under HNS Johto because they sit on the Johto-side League and Mt. Silver approach. They also control access to Kanto's Route 23 branch and Sinjoh.
 
