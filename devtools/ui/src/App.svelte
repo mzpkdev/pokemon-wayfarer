@@ -4,14 +4,27 @@
   import { onMount } from "svelte"
 
   import Cartographer from "./modules/cartographer/Cartographer.svelte"
+  import Docs from "./modules/docs/Docs.svelte"
   import Metatiles from "./modules/metatiles/Metatiles.svelte"
 
-  type ModuleId = "cartographer" | "metatiles"
+  type ModuleId = "cartographer" | "docs" | "metatiles"
 
   const fadeIn = { delay: 75, duration: 125, easing: cubicOut }
 
   const moduleFromHash = (): ModuleId => {
+    if (window.location.hash.startsWith("#docs")) return "docs"
     return window.location.hash === "#metatiles" ? "metatiles" : "cartographer"
+  }
+
+  const moduleTitle = (): string => {
+    switch (activeModule) {
+      case "docs":
+        return "Docs"
+      case "metatiles":
+        return "Metatiles"
+      default:
+        return "Cartographer"
+    }
   }
 
   let activeModule = $state<ModuleId>("cartographer")
@@ -30,10 +43,10 @@
 </script>
 
 <svelte:head>
-  <title>{activeModule === "cartographer" ? "Cartographer" : "Metatiles"} · Wayfarer</title>
+  <title>{moduleTitle()} · Wayfarer</title>
   <meta
     name="description"
-    content="An interactive terrain index for the Pokémon HnS world source."
+    content="Source-driven Pokémon Wayfarer maps, metatiles, and product documentation."
   />
 </svelte:head>
 
@@ -63,6 +76,15 @@
       >
         Metatiles
       </a>
+      <a
+        class="relative inline-flex items-center text-sm font-semibold text-cartographer-signal no-underline after:absolute after:-bottom-3 after:left-0 after:h-px after:w-full after:bg-cartographer-signal"
+        class:text-cartographer-muted={activeModule !== "docs"}
+        class:after:hidden={activeModule !== "docs"}
+        href="#docs"
+        aria-current={activeModule === "docs" ? "page" : undefined}
+      >
+        Docs
+      </a>
     </div>
     <span class="hidden items-center text-xs text-cartographer-muted sm:flex">Local source</span>
   </nav>
@@ -71,8 +93,10 @@
     <div in:fade={fadeIn}>
       {#if activeModule === "cartographer"}
         <Cartographer />
-      {:else}
+      {:else if activeModule === "metatiles"}
         <Metatiles />
+      {:else}
+        <Docs />
       {/if}
     </div>
   {/key}
