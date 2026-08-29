@@ -56,6 +56,19 @@ static const struct WildPokemonInfo sAlternateEvolutionInfo =
 
 static const u8 sAlternateEvolutionWeights[] = { 100 };
 
+static const struct WildPokemon sUnderThresholdEvolutionMons[] =
+{
+    { 10, 10, SPECIES_GYARADOS },
+};
+
+static const struct WildPokemonInfo sUnderThresholdEvolutionInfo =
+{
+    .encounterRate = 1,
+    .wildPokemon = sUnderThresholdEvolutionMons,
+};
+
+static const u8 sUnderThresholdEvolutionWeights[] = { 100 };
+
 static struct WildEncounterProfileView MakeTestProfile(const struct WildPokemonInfo *info, const u8 *weights, u8 entryCount)
 {
     return (struct WildEncounterProfileView)
@@ -228,15 +241,20 @@ TEST("Wild encounter scaling applies floor and evolution policy before selection
     struct WildEncounterProfileView floorView = MakeTestProfile(&sFloorInfo, sFloorWeights, ARRAY_COUNT(sFloorMons));
     struct WildEncounterProfileView evolutionView = MakeTestProfile(&sEvolutionInfo, sEvolutionWeights, ARRAY_COUNT(sEvolutionMons));
     struct WildEncounterProfileView alternateEvolutionView = MakeTestProfile(&sAlternateEvolutionInfo, sAlternateEvolutionWeights, ARRAY_COUNT(sAlternateEvolutionMons));
+    struct WildEncounterProfileView underThresholdEvolutionView = MakeTestProfile(&sUnderThresholdEvolutionInfo, sUnderThresholdEvolutionWeights, ARRAY_COUNT(sUnderThresholdEvolutionMons));
     struct WildEncounterSpeciesOutcome outcome;
     u8 slot;
     u8 mirroredSlot;
 
     EXPECT(GetWildEncounterSpeciesOutcome(&evolutionView, 0, 32, 0, FALSE, &outcome));
     EXPECT_EQ(outcome.species, SPECIES_BULBASAUR);
+    // The projection, rather than authored table validity, governs ordinary
+    // profile reversal. An authored level-10 Gyarados becomes Magikarp.
+    EXPECT(GetWildEncounterSpeciesOutcome(&underThresholdEvolutionView, 0, 10, 0, FALSE, &outcome));
+    EXPECT_EQ(outcome.species, SPECIES_MAGIKARP);
     // Golem has both a numeric Graveler predecessor and a trade evolution
-    // route. Its unambiguous numeric chain still reverses at a low rating.
-    EXPECT(GetWildEncounterSpeciesOutcome(&alternateEvolutionView, 0, 51, 0, FALSE, &outcome));
+    // route. Its authored-below-threshold numeric chain still reverses.
+    EXPECT(GetWildEncounterSpeciesOutcome(&alternateEvolutionView, 0, 32, 0, FALSE, &outcome));
     EXPECT_EQ(outcome.species, SPECIES_GEODUDE);
     EXPECT(!IsWildEncounterProfileSlotEligible(&floorView, 0, 0, FALSE));
     EXPECT_EQ(GetWildEncounterProfileEffectiveWeight(&floorView, 0, 0, FALSE), 0);

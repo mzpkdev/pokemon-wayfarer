@@ -182,7 +182,7 @@ static bool8 IsCurrentWildEncounterRandomized(void)
 #endif
 }
 
-static u16 ResolveWildEncounterSpecies(u16 species, u8 authoredLevel, u8 projectedLevel, bool8 isWildRandomized)
+static u16 ResolveWildEncounterSpecies(u16 species, u8 projectedLevel, bool8 isWildRandomized)
 {
     // Randomized species are selected after this core resolves a slot. Applying
     // authored evolution metadata here would change that mapping's order.
@@ -194,7 +194,6 @@ static u16 ResolveWildEncounterSpecies(u16 species, u8 authoredLevel, u8 project
     while ((metadata = GetWildEncounterSpeciesMetadata(species)) != NULL)
     {
         if (metadata->predecessorSpecies == SPECIES_NONE
-         || authoredLevel < metadata->predecessorLevel
          || projectedLevel >= metadata->predecessorLevel)
             break;
         species = metadata->predecessorSpecies;
@@ -328,7 +327,7 @@ bool8 GetWildEncounterSpeciesOutcome(const struct WildEncounterProfileView *view
         return FALSE;
 
     outcome->level = ProjectWildEncounterLevel(view, authoredLevel, trainerRating);
-    outcome->species = ResolveWildEncounterSpecies(entry->species, authoredLevel, outcome->level, isWildRandomized);
+    outcome->species = ResolveWildEncounterSpecies(entry->species, outcome->level, isWildRandomized);
     return TRUE;
 }
 

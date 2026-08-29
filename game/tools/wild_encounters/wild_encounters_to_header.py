@@ -678,12 +678,12 @@ def project_level(scaling, vanilla, rating, offset):
     return min(max(high_water + offset, 1), MAX_LEVEL)
 
 
-def effective_species(species, vanilla, level, by_species):
+def effective_species(species, level, by_species):
     result, changes = species, []
     while True:
         metadata = by_species[result]
         predecessor = metadata["predecessor"]
-        if predecessor == "SPECIES_NONE" or vanilla < metadata["predecessor_level"] or level >= metadata["predecessor_level"]:
+        if predecessor == "SPECIES_NONE" or level >= metadata["predecessor_level"]:
             return result, changes
         changes.append((result, predecessor)); result = predecessor
 
@@ -701,7 +701,7 @@ def slot_summary(slot, scaling, offset, by_species, failures, location):
         previous_level, previous_rank = None, None
         for rating in range(scaling["projection_cap"] + 1):
             level = project_level(scaling, vanilla, rating, offset)
-            species, changes = effective_species(slot["species"], vanilla, level, by_species)
+            species, changes = effective_species(slot["species"], level, by_species)
             outcome = summaries[rating]["outcomes"].setdefault(species, {"minimumLevel": level, "maximumLevel": level})
             outcome["minimumLevel"], outcome["maximumLevel"] = min(outcome["minimumLevel"], level), max(outcome["maximumLevel"], level)
             summaries[rating]["changes"].update(changes)

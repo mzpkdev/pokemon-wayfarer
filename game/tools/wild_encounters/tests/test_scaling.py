@@ -87,13 +87,17 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(by_species["SPECIES_SKARMORY"]["minimum_level"], 18)
         self.assertEqual(by_species["SPECIES_GYARADOS"]["predecessor"], "SPECIES_MAGIKARP")
         self.assertEqual(by_species["SPECIES_GYARADOS"]["predecessor_level"], 20)
+        self.assertEqual(
+            GENERATOR.effective_species("SPECIES_GYARADOS", 7, by_species),
+            ("SPECIES_MAGIKARP", [("SPECIES_GYARADOS", "SPECIES_MAGIKARP")]),
+        )
         # A trade route does not erase a separately unambiguous numeric
         # predecessor. Runtime and audit projection must still reverse it.
         self.assertEqual(by_species["SPECIES_GOLEM"]["predecessor"], "SPECIES_GRAVELER")
         self.assertEqual(by_species["SPECIES_GOLEM"]["predecessor_level"], 38)
         self.assertTrue(by_species["SPECIES_GOLEM"]["has_alternate_non_level_route"])
         self.assertEqual(
-            GENERATOR.effective_species("SPECIES_GOLEM", 51, 21, by_species),
+            GENERATOR.effective_species("SPECIES_GOLEM", 14, by_species),
             ("SPECIES_GEODUDE", [("SPECIES_GOLEM", "SPECIES_GRAVELER"), ("SPECIES_GRAVELER", "SPECIES_GEODUDE")]),
         )
 

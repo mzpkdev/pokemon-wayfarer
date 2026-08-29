@@ -46,7 +46,7 @@ Profile identity and encounter mechanics remain authored. This includes land, wa
 
 ## Interactions
 
-When a projected level is below a level-evolved species' evolution threshold, the encounter uses the appropriate predecessor. The initial explicit floors keep Kecleon at level 20 or above and Skarmory at level 18 or above. A floor can make a slot ineligible, after which ordinary selection uses the remaining authored weights.
+When a projected level is below a level-evolved species' evolution threshold, the encounter uses the appropriate predecessor. This applies to every non-randomized ordinary encounter, including tables that author an evolved form below its natural threshold. Resolution follows the predecessor chain until the projected level supports the stage. Fixed and scripted encounters remain excluded. The initial explicit floors keep Kecleon at level 20 or above and Skarmory at level 18 or above. A floor can make a slot ineligible, after which ordinary selection uses the remaining authored weights.
 
 Ordinary-population readers use the same effective population as an actual encounter. This includes the Pokédex area display, Match Call, radio, local ambient species selection, and ordinary land or water DexNav populations. Hidden DexNav populations stay authored and unscaled.
 

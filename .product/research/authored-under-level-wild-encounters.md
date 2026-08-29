@@ -16,16 +16,13 @@ It excludes fixed and scripted encounters, hidden DexNav entries, roamers, outbr
 
 Duplicate slots and profiles are grouped where that does not hide a build, method, authored range, or evolution threshold. HNS compact rows may combine maps with identical species, range, and method signatures; their locations are summarized in the location cell. Day and night variants with identical results are counted once.
 
-## Current scaling rule
+## Selected scaling policy
 
-The runtime preserves a species that the source table already authors below its numeric evolution threshold. It only resolves an evolved species to its predecessor when both conditions are true:
+Every non-randomized ordinary encounter resolves its species from the projected level, even when the source table authored an evolved form below its numeric evolution threshold. Resolution follows the numeric predecessor chain until the projected level supports the resulting stage.
 
-1. The rolled authored level met or exceeded the numeric evolution threshold.
-2. Trainer Rating projection lowered the result below that threshold.
+For example, an ordinary Gyarados projected to level 18 becomes Magikarp whether its authored roll was level 15 or level 25. Fixed and scripted encounters do not enter this pipeline, so the scripted Red Gyarados remains unchanged.
 
-For example, an authored level 25 Gyarados projected to level 18 becomes Magikarp. An authored level 15 Gyarados remains Gyarados because the source table already made that exception.
-
-Some ranged slots cross an evolution threshold. In those slots, a low authored roll remains the evolved species while a higher authored roll can resolve to its predecessor if scaling pushes the result below the threshold.
+Ranged slots need no separate policy. Each rolled level is projected normally, then the species is resolved for that projected level. A ranged slot can therefore produce a predecessor at lower projected outcomes and the authored evolved species at outcomes that meet its threshold.
 
 ## Summary
 
@@ -112,7 +109,7 @@ Only the first five authored Lake of Rage water rows are active under the shared
 
 These entries are not malformed data. Pokemon games frequently use under-level evolved forms to give a place or encounter method a distinct population. Viridian Forest Metapod and Kakuna, Pokemon Tower Haunter, Seafoam Dewgong, Route 45 Dragonair, Slowpoke Well Slowbro, and ordinary fishing Gyarados are examples of that pattern.
 
-Applying a universal natural-evolution rule would change all of these source-authored exceptions. It would also change mixed ranged slots differently depending on the rolled authored level. The current implementation instead preserves authored exceptions while preventing Trainer Rating projection from creating new ones.
+The selected policy intentionally changes these source-authored ordinary exceptions. Each outcome is judged by its projected level, including outcomes from mixed ranged slots. The inventory above identifies the ordinary populations affected by that decision; it does not imply that the source data is malformed.
 
 ## Separate species-floor review
 
@@ -135,21 +132,19 @@ The cross-region strength audit found three additional candidates:
 
 Anorith and Lileep also appear at level 5 in Sinjoh Ruins Temple and project to 9 at Rating 10. They are first-stage fossils rather than strong evolved forms. The audit recommends leaving them unchanged unless the design adopts a general minimum for fossil species.
 
-No Gyarados floor is recommended under the current policy. A simple floor would reject an entire ranged slot as soon as one possible Gyarados outcome fell below 20, including rolls that could otherwise resolve correctly from authored levels at or above 20. Preserving the source-authored exception is consistent with Dragonair, Haunter, Dewgong, Seaking, and the other entries in this research.
+No Gyarados floor is recommended. Ordinary Gyarados below level 20 resolves to Magikarp through the general predecessor rule, while projected outcomes at level 20 or above remain Gyarados. A floor would unnecessarily remove lower-level outcomes instead of resolving them to the eligible stage.
 
-## Decision options
+## Decision record
 
-### Preserve authored exceptions
+### Selected: enforce natural evolution levels for ordinary populations
 
-Keep the current rule. Trainer Rating may reverse a species only when projection creates a new under-level outcome. This preserves every ordinary source table listed above.
+Resolve every non-randomized ordinary evolved species below its numeric level threshold, even when the source table authored it that way. This applies consistently across every covered build and to every ordinary table listed above.
 
-### Enforce natural evolution levels globally
+Fixed and scripted encounters remain outside Trainer Rating scaling. Wild-randomizer mode also retains its existing species mapping and bypasses predecessor resolution.
 
-Resolve every evolved species below its numeric level threshold, even when the source table authored it that way. This would affect common and intentional encounters across every build and would require a policy for ranged slots.
+### Separate open decision: add curated species floors
 
-### Add curated species floors
-
-Keep authored evolved forms, but add floors for exceptional single-stage or first-stage species whose strength or identity needs a minimum level. Aerodactyl, Heracross, and Bagon are the current candidates.
+Add floors for exceptional single-stage or first-stage species whose strength or identity needs a minimum level. Aerodactyl, Heracross, and Bagon remain candidates; this decision does not approve those floors.
 
 ## Sources
 
