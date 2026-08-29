@@ -34,6 +34,40 @@ export type ResolvedEncounterSlot = {
   selectionWeight: number | null
 }
 
+export type EncounterRosterMethodType = Extract<
+  CatalogWildEncounterMethod["type"],
+  "land_mons" | "water_mons"
+>
+
+export type EncounterRosterActivation = {
+  timeOfDay: CatalogWildEncounterRuntimeTime["timeOfDay"]
+  resolution: Extract<
+    CatalogWildEncounterRuntimeTime["methods"][number]["resolution"],
+    "direct" | "fallback"
+  >
+}
+
+export type EncounterRosterSlot = ResolvedEncounterSlot & {
+  eligible: true
+  selectionWeight: number
+}
+
+export type EncounterRosterSource = {
+  key: string
+  set: CatalogWildEncounterSet
+  method: CatalogWildEncounterMethod
+  activations: EncounterRosterActivation[]
+  slots: ResolvedEncounterSlot[]
+  effectiveSlots: EncounterRosterSlot[]
+  lockedSlotCount: number
+}
+
+export type ResolvedEncounterPopulation = {
+  method: EncounterRosterMethodType
+  sources: EncounterRosterSource[]
+  unavailableTimes: CatalogWildEncounterRuntimeTime["timeOfDay"][]
+}
+
 type ProjectionIndex = {
   speciesById: Map<string, CatalogWildEncounterProjection["species"][number]>
   levelsByOffsetAndRating: Map<string, readonly number[]>
@@ -236,4 +270,71 @@ export const effectiveRosterFor = (
       }),
   )
   return [...new Map(outcomes.map((outcome) => [outcome.speciesId, outcome])).values()]
+}
+
+const sameSource = (
+  left: CatalogWildEncounterSet["source"],
+  right: CatalogWildEncounterSet["source"],
+): boolean => left.path === right.path && left.pointer === right.pointer
+
+const activationsFor = (
+  encounterSet: ResolvedMapEncounters,
+  sourceSet: CatalogWildEncounterSet,
+  methodType: EncounterRosterMethodType,
+): EncounterRosterActivation[] => {
+  const uses = encounterSet.runtimeTimes.flatMap((runtimeTime) =>
+    runtimeTime.methods
+      .filter((method) => method.type === methodType && method.resolution !== "unavailable")
+      .filter((method) =>
+        method.sets.some(
+          (set) =>
+            set.baseLabel === sourceSet.baseLabel && sameSource(set.source, sourceSet.source),
+        ),
+      )
+      .map((method) => ({
+        timeOfDay: runtimeTime.timeOfDay,
+        resolution: method.resolution as EncounterRosterActivation["resolution"],
+      })),
+  )
+  return [...new Map(uses.map((use) => [`${use.timeOfDay}/${use.resolution}`, use])).values()]
+}
+
+export const resolveEncounterPopulation = (
+  projection: CatalogWildEncounterProjection,
+  encounterSet: ResolvedMapEncounters,
+  methodType: EncounterRosterMethodType,
+  rating: number,
+): ResolvedEncounterPopulation => {
+  const sources = encounterSet.sets.flatMap((sourceSet) =>
+    sourceSet.methods.flatMap((method, methodIndex) => {
+      if (method.type !== methodType) return []
+      const slots = resolveMethodSlots(projection, method, rating)
+      const effectiveSlots = slots.filter(
+        (slot): slot is EncounterRosterSlot => slot.eligible && slot.selectionWeight !== null,
+      )
+      return [
+        {
+          key: `${sourceSet.product}/${sourceSet.baseLabel}/${sourceSet.source.path}${sourceSet.source.pointer}/${method.type}/${methodIndex}`,
+          set: sourceSet,
+          method,
+          activations: activationsFor(encounterSet, sourceSet, methodType),
+          slots,
+          effectiveSlots,
+          lockedSlotCount: slots.length - effectiveSlots.length,
+        },
+      ]
+    }),
+  )
+  const unavailableTimes = encounterSet.runtimeTimes.flatMap((runtimeTime) =>
+    runtimeTime.methods.some(
+      (method) => method.type === methodType && method.resolution === "unavailable",
+    )
+      ? [runtimeTime.timeOfDay]
+      : [],
+  )
+  return {
+    method: methodType,
+    sources,
+    unavailableTimes: [...new Set(unavailableTimes)],
+  }
 }

@@ -7,6 +7,7 @@
   import ImageLayer from "ol/layer/Image"
   import VectorLayer from "ol/layer/Vector"
   import OpenLayersMap from "ol/Map"
+  import Overlay from "ol/Overlay"
   import Projection from "ol/proj/Projection"
   import ImageStatic from "ol/source/ImageStatic"
   import VectorSource from "ol/source/Vector"
@@ -21,6 +22,7 @@
 
   import MapToolbar from "./MapToolbar.svelte"
   import AtlasOverlapPanel from "./AtlasOverlapPanel.svelte"
+  import EncounterRosterPopup from "./EncounterRosterPopup.svelte"
   import ObjectFilterPanel from "./ObjectFilterPanel.svelte"
   import TopologyConflictPanel from "./TopologyConflictPanel.svelte"
   import type {
@@ -34,7 +36,12 @@
     CatalogWildEncounterMethod,
     MapCatalog,
   } from "./catalog.js"
-  import { effectiveRosterFor, resolveMapEncounters } from "./encounters.js"
+  import {
+    effectiveRosterFor,
+    resolveEncounterPopulation,
+    resolveMapEncounters,
+    type EncounterRosterMethodType,
+  } from "./encounters.js"
   import {
     cartographerExtent,
     solveGeography,
@@ -274,6 +281,13 @@
   }
 
   let host = $state<HTMLDivElement | undefined>(undefined)
+  let popupHost = $state<HTMLDivElement | undefined>(undefined)
+  let encounterPopup = $state<{
+    mapName: string
+    method: EncounterRosterMethodType
+    coordinate: [number, number]
+  } | null>(null)
+  let encounterPopupReturnFocus = $state<HTMLElement | undefined>(undefined)
   let instance = $state<
     | {
         map: OpenLayersMap
@@ -285,6 +299,7 @@
         habitats: VectorLayer<VectorSource>
         encounterRosters: VectorLayer<VectorSource>
         encounterRosterSource: VectorSource
+        encounterRosterOverlay: Overlay
         topologyConflicts: VectorLayer<VectorSource>
         atlasOverlaps: VectorLayer<VectorSource>
         imageLayers: ReadonlyMap<string, ImageLayer<ImageStatic>>
@@ -323,8 +338,25 @@
     )
   })
   let encounterMapCount = $derived(encounterMethodsByMap.size)
+  let selectedSurfaceMap = $derived(
+    surfaceMaps.find((candidate) => candidate.name === selectedMapName),
+  )
+  let selectedEncounterMethodTypes = $derived.by(() => {
+    if (!selectedSurfaceMap) return []
+    const methods = new Set(
+      resolveMapEncounters(
+        selectedSurfaceMap,
+        preferredProduct,
+        catalog.wildEncounterProjection.products,
+      ).sets.flatMap((set) => set.methods.map((method) => method.type)),
+    )
+    return (["land_mons", "water_mons"] as const).filter((method) => {
+      const habitat = method === "land_mons" ? "land" : "water"
+      return methods.has(method) && selectedSurfaceMap.encounterHabitat[habitat].length > 0
+    })
+  })
   let selectedMapRoster = $derived.by(() => {
-    const map = surfaceMaps.find((candidate) => candidate.name === selectedMapName)
+    const map = selectedSurfaceMap
     if (!map) return []
     const resolved = resolveMapEncounters(
       map,
@@ -337,6 +369,28 @@
     return [
       ...new Map(outcomes.map((outcome) => [outcome.speciesId, outcome.speciesLabel])).values(),
     ]
+  })
+  let encounterPopupDetails = $derived.by(() => {
+    if (!encounterPopup) return null
+    const map = surfaceMaps.find((candidate) => candidate.name === encounterPopup?.mapName)
+    if (!map) return null
+    const resolved = resolveMapEncounters(
+      map,
+      preferredProduct,
+      catalog.wildEncounterProjection.products,
+    )
+    const productName =
+      resolved.availableProducts.find((product) => product.id === resolved.product)?.displayName ??
+      resolved.product
+    return {
+      population: resolveEncounterPopulation(
+        catalog.wildEncounterProjection,
+        resolved,
+        encounterPopup.method,
+        trainerRating,
+      ),
+      productName,
+    }
   })
   let geography = $derived(solveGeography(surfaceMaps))
   let extent = $derived(cartographerExtent(geography.placements, catalog.pixelsPerMetatile))
@@ -478,6 +532,13 @@
     instance.encounterRosters.changed()
   }
 
+  const closeEncounterPopup = (restoreFocus = true): void => {
+    const returnFocus = encounterPopupReturnFocus ?? host
+    encounterPopup = null
+    if (restoreFocus) queueMicrotask(() => returnFocus?.focus())
+    encounterPopupReturnFocus = undefined
+  }
+
   const objectStyleFor = (object: CatalogObject): Style => {
     if (object.graphicsId === "OBJ_EVENT_GFX_LIGHT_SPRITE") return lightSourceStyle
     const placeholder = objectPlaceholderFor(object)
@@ -515,6 +576,34 @@
     return style
   }
 
+  const encounterPopupCoordinateFor = (
+    map: CatalogMap,
+    method: EncounterRosterMethodType,
+  ): [number, number] | null => {
+    const placement = geography.placements[map.name]
+    const kind = method === "land_mons" ? "land" : "water"
+    const largest = [...map.encounterHabitat[kind]].sort(
+      (left, right) =>
+        right.widthMetatiles * right.heightMetatiles - left.widthMetatiles * left.heightMetatiles,
+    )[0]
+    if (!placement || !largest) return null
+    return [
+      (placement.x + largest.xMetatiles + largest.widthMetatiles / 2) * catalog.pixelsPerMetatile,
+      -(placement.y + largest.yMetatiles + largest.heightMetatiles / 2) * catalog.pixelsPerMetatile,
+    ]
+  }
+
+  const openEncounterPopup = (
+    mapName: string,
+    method: EncounterRosterMethodType,
+    coordinate: [number, number],
+    returnFocus: HTMLElement,
+  ): void => {
+    encounterPopupReturnFocus = returnFocus
+    encounterPopup = { mapName, method, coordinate }
+    queueMicrotask(() => popupHost?.querySelector<HTMLElement>('[role="dialog"]')?.focus())
+  }
+
   const populateEncounterRoster = (source: VectorSource): void => {
     source.clear()
     for (const map of surfaceMaps) {
@@ -543,6 +632,8 @@
         )
           .filter((outcome) => outcome.sprite)
           .slice(0, 3)
+        const popupCoordinate = encounterPopupCoordinateFor(map, method)
+        if (!popupCoordinate) continue
         for (const [index, outcome] of roster.entries()) {
           if (!outcome.sprite) continue
           source.addFeature(
@@ -555,6 +646,8 @@
                   catalog.pixelsPerMetatile,
               ]),
               mapName: map.name,
+              method,
+              popupCoordinate,
               sprite: outcome.sprite,
             }),
           )
@@ -581,6 +674,17 @@
     updateTopologyConflictVisibility()
     updateAtlasOverlapVisibility()
     instance.map.render()
+  })
+
+  $effect(() => {
+    const currentPopup = encounterPopup
+    if (!instance) return
+    instance.encounterRosterOverlay.setPosition(currentPopup?.coordinate)
+  })
+
+  $effect(() => {
+    if (encounterPopup && (!encounterMode || selectedMapName !== encounterPopup.mapName))
+      closeEncounterPopup(false)
   })
 
   $effect(() => {
@@ -615,8 +719,9 @@
   })
 
   onMount(() => {
-    if (!extent || !host) return
+    if (!extent || !host || !popupHost) return
     const mapHost = host
+    const rosterPopupHost = popupHost
     const projection = new Projection({
       code: "pokemon-wayfarer-cartographer-pixels",
       units: "pixels",
@@ -854,6 +959,20 @@
       ],
       view,
     })
+    const encounterRosterOverlay = new Overlay({
+      element: rosterPopupHost,
+      positioning: "bottom-center",
+      offset: [0, -24],
+      stopEvent: true,
+      autoPan: { animation: { duration: 180 }, margin: 24 },
+    })
+    map.addOverlay(encounterRosterOverlay)
+    const closeEncounterPopupOnEscape = (event: KeyboardEvent): void => {
+      if (event.key !== "Escape" || !encounterPopup) return
+      event.preventDefault()
+      closeEncounterPopup()
+    }
+    document.addEventListener("keydown", closeEncounterPopupOnEscape)
     let showingNative = false
     const reportCamera = (): void => {
       const center = view.getCenter()
@@ -887,6 +1006,46 @@
       mapHost.style.cursor = name ? "pointer" : ""
     })
     map.on("singleclick", (event) => {
+      const rosterSelection: {
+        value: {
+          mapName: string
+          method: EncounterRosterMethodType
+          coordinate: [number, number]
+        } | null
+      } = { value: null }
+      map.forEachFeatureAtPixel(
+        event.pixel,
+        (feature) => {
+          const mapName = feature.get("mapName")
+          const method = feature.get("method")
+          const coordinate = feature.get("popupCoordinate")
+          if (
+            typeof mapName !== "string" ||
+            (method !== "land_mons" && method !== "water_mons") ||
+            !Array.isArray(coordinate) ||
+            coordinate.length !== 2 ||
+            typeof coordinate[0] !== "number" ||
+            typeof coordinate[1] !== "number"
+          )
+            return undefined
+          rosterSelection.value = { mapName, method, coordinate: [coordinate[0], coordinate[1]] }
+          return feature
+        },
+        {
+          hitTolerance: 12,
+          layerFilter: (layer) => layer === encounterRosters,
+        },
+      )
+      if (rosterSelection.value) {
+        openEncounterPopup(
+          rosterSelection.value.mapName,
+          rosterSelection.value.method,
+          rosterSelection.value.coordinate,
+          mapHost,
+        )
+        return
+      }
+      closeEncounterPopup(false)
       const chosen: {
         value: { mapName: string; warpId?: string; objectId?: string } | null
       } = { value: null }
@@ -927,6 +1086,7 @@
       habitats,
       encounterRosters,
       encounterRosterSource,
+      encounterRosterOverlay,
       topologyConflicts,
       atlasOverlaps: atlasOverlapLayer,
       imageLayers: new Map(imageRecords.map((record) => [record.map.name, record.layer])),
@@ -940,6 +1100,8 @@
     }
     reportCamera()
     return () => {
+      document.removeEventListener("keydown", closeEncounterPopupOnEscape)
+      map.removeOverlay(encounterRosterOverlay)
       map.setTarget(undefined)
       instance = undefined
     }
@@ -979,6 +1141,28 @@
           : "unavailable"}
       </p>
     {/if}
+    {#if encounterMode && selectedSurfaceMap && selectedEncounterMethodTypes.length > 0}
+      <nav
+        class="flex flex-wrap items-center gap-2 border-t border-cartographer-border bg-cartographer-panel-raised px-4 py-2"
+        aria-label="Projected encounter populations"
+      >
+        <span class="mr-auto text-xs text-cartographer-muted">Full projected population</span>
+        {#each selectedEncounterMethodTypes as method (method)}
+          <button
+            type="button"
+            class="border border-cartographer-border bg-cartographer-panel px-3 py-1.5 font-cartographer-mono text-xs text-cartographer-ink hover:border-cartographer-signal hover:text-cartographer-signal-soft focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-cartographer-signal"
+            aria-haspopup="dialog"
+            onclick={(event) => {
+              const coordinate = encounterPopupCoordinateFor(selectedSurfaceMap, method)
+              if (coordinate)
+                openEncounterPopup(selectedSurfaceMap.name, method, coordinate, event.currentTarget)
+            }}
+          >
+            {method === "land_mons" ? "Land" : "Water"}
+          </button>
+        {/each}
+      </nav>
+    {/if}
     {#if showObjects && !encounterMode}
       <ObjectFilterPanel kinds={objectKinds} onToggle={toggleObjectKind} />
     {/if}
@@ -986,7 +1170,21 @@
       class="cartographer-map-field h-[58vh] min-h-88 border-t border-cartographer-border md:h-[min(70vh,48rem)] md:min-h-112"
       bind:this={host}
       aria-label="Interactive regional map"
+      role="region"
+      tabindex="-1"
     ></div>
+    <div bind:this={popupHost} class:hidden={!encounterPopupDetails}>
+      {#if encounterPopup && encounterPopupDetails}
+        <EncounterRosterPopup
+          mapName={encounterPopup.mapName}
+          method={encounterPopup.method}
+          population={encounterPopupDetails.population}
+          {trainerRating}
+          productName={encounterPopupDetails.productName}
+          onClose={closeEncounterPopup}
+        />
+      {/if}
+    </div>
     {#if !encounterMode}
       <TopologyConflictPanel diagnostics={topologyDiagnostics} visible={showTopologyConflicts} />
       <AtlasOverlapPanel overlaps={atlasOverlaps} visible={showAtlasOverlaps} />
@@ -995,7 +1193,7 @@
       class="m-0 border-t border-cartographer-border px-4 py-3 font-cartographer-mono text-[0.68rem] leading-5 tracking-[0.04em] text-cartographer-muted"
     >
       {encounterMode
-        ? "Blue frames mark maps with source encounter sets. Selected-map tints mark runtime-valid land and water tiles; grouped icons preview each method roster, not exact encounters. Trainer event sprites mark source trainer locations. L, W, R, and F mean land, water, Rock Smash, and fishing."
+        ? "Blue frames mark maps with source encounter sets. Selected-map tints mark runtime-valid land and water tiles; grouped icons preview each method roster, not exact encounters. Select an icon to inspect its full projected population. Trainer event sprites mark source trainer locations. L, W, R, and F mean land, water, Rock Smash, and fishing."
         : "Pan, scroll, or pinch to inspect. Select a map for source details. Toggle exits and object kinds when you need them."}
     </p>
   </section>

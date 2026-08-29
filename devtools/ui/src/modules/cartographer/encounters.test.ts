@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 import {
   effectiveRosterFor,
   fishingGroupIds,
+  resolveEncounterPopulation,
   resolveMethodSlots,
   rodLabel,
   type ResolvedMapEncounters,
@@ -289,6 +290,287 @@ describe("encounter presentation", () => {
     ])
     expect(effectiveRosterFor(projection, encounters, "water_mons", 30)).toMatchObject([
       { speciesId: "SPECIES_GYARADOS", projectedMinimumLevel: 20 },
+    ])
+  })
+
+  it("groups the complete resolved roster by source set and runtime time use", () => {
+    const slot = (
+      slotIndex: number,
+      slotRate: number,
+      runtimeLevel: number,
+      speciesId: string,
+      speciesLabel: string,
+    ) => ({
+      slotIndex,
+      slotRate,
+      slotRateSource: source,
+      groups: [],
+      minLevel: runtimeLevel,
+      maxLevel: runtimeLevel,
+      runtimeMinLevel: runtimeLevel,
+      runtimeMaxLevel: runtimeLevel,
+      speciesId,
+      speciesLabel,
+      sprite: null,
+      source,
+    })
+    const method = (
+      type: "land_mons" | "water_mons",
+      slots: CatalogWildEncounterMethod["slots"],
+    ): CatalogWildEncounterMethod => ({
+      type,
+      encounterRate: 20,
+      source,
+      profiles: [{ profileKey: `${type}/scaled`, fishingRod: "NONE", levelOffset: 1 }],
+      slots,
+    })
+    const dayLand = method("land_mons", [
+      slot(0, 50, 20, "SPECIES_GYARADOS", "Gyarados"),
+      slot(1, 25, 8, "SPECIES_RATTATA", "Rattata"),
+      slot(2, 25, 14, "SPECIES_SKARMORY", "Skarmory"),
+    ])
+    const nightLand = method("land_mons", [slot(0, 100, 12, "SPECIES_RATTATA", "Rattata")])
+    const unusedWater = method("water_mons", [slot(0, 100, 20, "SPECIES_GYARADOS", "Gyarados")])
+    const daySource = { ...source, pointer: "/wild_encounter_groups/0/encounters/0" }
+    const nightSource = { ...source, pointer: "/wild_encounter_groups/0/encounters/1" }
+    const encounters: ResolvedMapEncounters = {
+      availableProducts: [{ id: "POKEMON_HNS", displayName: "HNS" }],
+      product: "POKEMON_HNS",
+      sets: [
+        {
+          mapId: "MAP_ROUTE_32_HNS",
+          mapName: "Route32_hns",
+          baseLabel: "gRoute32_hns_Day",
+          product: "POKEMON_HNS",
+          runtimeTime: "day",
+          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
+          source: daySource,
+          methods: [dayLand, unusedWater],
+        },
+        {
+          mapId: "MAP_ROUTE_32_HNS",
+          mapName: "Route32_hns",
+          baseLabel: "gRoute32_hns_Night",
+          product: "POKEMON_HNS",
+          runtimeTime: "night",
+          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 1 },
+          source: nightSource,
+          methods: [nightLand],
+        },
+      ],
+      runtimeTimes: [
+        {
+          product: "POKEMON_HNS",
+          timeOfDay: "morning",
+          methods: [
+            {
+              type: "land_mons",
+              resolution: "fallback",
+              sets: [{ baseLabel: "gRoute32_hns_Day", source: daySource }],
+            },
+          ],
+        },
+        {
+          product: "POKEMON_HNS",
+          timeOfDay: "day",
+          methods: [
+            {
+              type: "land_mons",
+              resolution: "direct",
+              sets: [{ baseLabel: "gRoute32_hns_Day", source: daySource }],
+            },
+          ],
+        },
+        {
+          product: "POKEMON_HNS",
+          timeOfDay: "evening",
+          methods: [
+            {
+              type: "land_mons",
+              resolution: "fallback",
+              sets: [{ baseLabel: "gRoute32_hns_Day", source: daySource }],
+            },
+          ],
+        },
+        {
+          product: "POKEMON_HNS",
+          timeOfDay: "night",
+          methods: [
+            {
+              type: "land_mons",
+              resolution: "direct",
+              sets: [{ baseLabel: "gRoute32_hns_Night", source: nightSource }],
+            },
+          ],
+        },
+      ],
+    }
+
+    const population = resolveEncounterPopulation(projection, encounters, "land_mons", 10)
+    const groups = population.sources
+
+    expect(population.method).toBe("land_mons")
+    expect(population.unavailableTimes).toEqual([])
+    expect(groups).toHaveLength(2)
+    expect(groups[0]).toMatchObject({
+      set: { baseLabel: "gRoute32_hns_Day", runtimeTime: "day" },
+      activations: [
+        { timeOfDay: "morning", resolution: "fallback" },
+        { timeOfDay: "day", resolution: "direct" },
+        { timeOfDay: "evening", resolution: "fallback" },
+      ],
+      lockedSlotCount: 1,
+    })
+    expect(groups[0]?.slots).toHaveLength(3)
+    expect(groups[0]?.effectiveSlots).toMatchObject([
+      {
+        source: { speciesId: "SPECIES_GYARADOS" },
+        outcomes: [{ speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 10 }],
+        selectionWeight: 2 / 3,
+      },
+      {
+        source: { speciesId: "SPECIES_RATTATA" },
+        outcomes: [{ speciesId: "SPECIES_RATTATA", projectedMinimumLevel: 4 }],
+        selectionWeight: 1 / 3,
+      },
+    ])
+    expect(
+      groups[0]?.effectiveSlots.some(
+        (candidate) => candidate.source.speciesId === "SPECIES_SKARMORY",
+      ),
+    ).toBe(false)
+    expect(groups[1]).toMatchObject({
+      set: { baseLabel: "gRoute32_hns_Night", runtimeTime: "night" },
+      activations: [{ timeOfDay: "night", resolution: "direct" }],
+      lockedSlotCount: 0,
+      effectiveSlots: [
+        {
+          source: { speciesId: "SPECIES_RATTATA" },
+          outcomes: [{ projectedMinimumLevel: 6 }],
+          selectionWeight: 1,
+        },
+      ],
+    })
+  })
+
+  it("keeps source time provenance when runtime resolution metadata is absent", () => {
+    const water: CatalogWildEncounterMethod = {
+      type: "water_mons",
+      encounterRate: 20,
+      source,
+      profiles: [{ profileKey: "water", fishingRod: "NONE", levelOffset: 1 }],
+      slots: [
+        {
+          slotIndex: 0,
+          slotRate: 100,
+          slotRateSource: source,
+          groups: [],
+          minLevel: 20,
+          maxLevel: 20,
+          runtimeMinLevel: 20,
+          runtimeMaxLevel: 20,
+          speciesId: "SPECIES_GYARADOS",
+          speciesLabel: "Gyarados",
+          sprite: null,
+          source,
+        },
+      ],
+    }
+    const encounters: ResolvedMapEncounters = {
+      availableProducts: [{ id: "EMERALD", displayName: "Emerald" }],
+      product: "EMERALD",
+      runtimeTimes: [],
+      sets: [
+        {
+          mapId: "MAP_ALTERING_CAVE",
+          mapName: "AlteringCave",
+          baseLabel: "gAlteringCave1",
+          product: "EMERALD",
+          runtimeTime: "day",
+          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
+          source,
+          methods: [water],
+        },
+      ],
+    }
+
+    expect(resolveEncounterPopulation(projection, encounters, "water_mons", 10)).toMatchObject({
+      method: "water_mons",
+      unavailableTimes: [],
+      sources: [
+        {
+          set: { baseLabel: "gAlteringCave1", runtimeTime: "day" },
+          activations: [],
+          lockedSlotCount: 0,
+          effectiveSlots: [
+            {
+              outcomes: [{ speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 10 }],
+              selectionWeight: 1,
+            },
+          ],
+        },
+      ],
+    })
+  })
+
+  it("retains a fully locked source and method-wide unavailable runtime times", () => {
+    const land: CatalogWildEncounterMethod = {
+      type: "land_mons",
+      encounterRate: 20,
+      source,
+      profiles: [{ profileKey: "land", fishingRod: "NONE", levelOffset: 1 }],
+      slots: [
+        {
+          slotIndex: 0,
+          slotRate: 100,
+          slotRateSource: source,
+          groups: [],
+          minLevel: 14,
+          maxLevel: 14,
+          runtimeMinLevel: 14,
+          runtimeMaxLevel: 14,
+          speciesId: "SPECIES_SKARMORY",
+          speciesLabel: "Skarmory",
+          sprite: null,
+          source,
+        },
+      ],
+    }
+    const encounters: ResolvedMapEncounters = {
+      availableProducts: [{ id: "POKEMON_HNS", displayName: "HNS" }],
+      product: "POKEMON_HNS",
+      sets: [
+        {
+          mapId: "MAP_ROUTE_45_HNS",
+          mapName: "Route45_hns",
+          baseLabel: "gRoute45_hns_Day",
+          product: "POKEMON_HNS",
+          runtimeTime: "day",
+          header: { groupLabel: "gWildMonHeaders", groupIndex: 0, headerIndex: 0 },
+          source,
+          methods: [land],
+        },
+      ],
+      runtimeTimes: [
+        {
+          product: "POKEMON_HNS",
+          timeOfDay: "morning",
+          methods: [{ type: "land_mons", resolution: "unavailable", sets: [] }],
+        },
+      ],
+    }
+
+    const population = resolveEncounterPopulation(projection, encounters, "land_mons", 10)
+
+    expect(population.unavailableTimes).toEqual(["morning"])
+    expect(population.sources).toMatchObject([
+      {
+        set: { baseLabel: "gRoute45_hns_Day" },
+        activations: [],
+        slots: [{ eligible: false, selectionWeight: null }],
+        effectiveSlots: [],
+        lockedSlotCount: 1,
+      },
     ])
   })
 })

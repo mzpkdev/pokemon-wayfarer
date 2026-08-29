@@ -16,6 +16,15 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   const mapRoster = page.getByLabel("Encounter roster preview")
   await expect(mapRoster).toContainText(/Magikarp/i)
   await expect(mapRoster).not.toContainText(/Gyarados/i)
+  const regionalMap = page.getByRole("region", { name: "Interactive regional map" })
+  const mapBounds = await regionalMap.boundingBox()
+  if (!mapBounds) throw new Error("The regional map needs visible bounds")
+  await regionalMap.click({ position: { x: mapBounds.width / 2, y: mapBounds.height / 2 } })
+  const rosterPopup = page.getByRole("dialog", { name: /LakeOfRage_hns.*Water/ })
+  await expect(rosterPopup).toBeVisible()
+  const authoredGyarados = rosterPopup.locator('[aria-label="Authored slot 5 GYARADOS"]')
+  await expect(authoredGyarados.getByText("MAGIKARP", { exact: true })).toBeVisible()
+  await expect(authoredGyarados.getByText("Projected Lv. 11-13", { exact: true })).toBeVisible()
   const sourceSet = page.locator('details[aria-label="Source set gLakeOfRage_hns_Day"]')
   await sourceSet.locator(":scope > summary").click()
   const water = sourceSet.locator('details[aria-label="Water encounter method"]')
@@ -34,6 +43,21 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   await expect(mapRoster).toContainText(/Gyarados/i)
   await expect(scalingRow.getByText(/^Gyarados$/i)).toHaveCount(2)
   await expect(scalingRow.getByText(/^Magikarp$/i)).toHaveCount(0)
+  await expect(rosterPopup).toBeVisible()
+  await expect(rosterPopup).toContainText("Trainer Rating 30")
+  await expect(authoredGyarados.getByText("GYARADOS", { exact: true })).toBeVisible()
+  await expect(authoredGyarados.getByText("Projected Lv. 23-25", { exact: true })).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(rosterPopup).toHaveCount(0)
+  const populationControls = page.getByRole("navigation", {
+    name: "Projected encounter populations",
+  })
+  const waterPopulationButton = populationControls.getByRole("button", { name: "Water" })
+  await waterPopulationButton.focus()
+  await waterPopulationButton.press("Enter")
+  await expect(rosterPopup).toBeVisible()
+  await page.keyboard.press("Escape")
+  await expect(waterPopulationButton).toBeFocused()
 
   await mapSearch.fill("CeruleanCity_Frlg")
   await page.getByRole("option", { name: /CeruleanCity_Frlg/ }).click()
@@ -46,6 +70,11 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   await expect(
     page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
   ).toHaveCount(0)
+  await populationControls.getByRole("button", { name: "Water" }).click()
+  const ceruleanPopup = page.getByRole("dialog", { name: /CeruleanCity_Frlg.*Water/ })
+  await expect(
+    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_FireRed"]'),
+  ).toHaveCount(1)
   await version.selectOption("LEAFGREEN")
   await expect(page).toHaveURL(/product=LEAFGREEN/)
   await expect(page.locator('details[aria-label="Source set sCeruleanCity_FireRed"]')).toHaveCount(
@@ -53,6 +82,13 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   )
   await expect(
     page.locator('details[aria-label="Source set sCeruleanCity_LeafGreen"]'),
+  ).toHaveCount(1)
+  await expect(ceruleanPopup).toBeVisible()
+  await expect(
+    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_FireRed"]'),
+  ).toHaveCount(0)
+  await expect(
+    ceruleanPopup.locator('[aria-label="Source encounter set sCeruleanCity_LeafGreen"]'),
   ).toHaveCount(1)
 })
 
