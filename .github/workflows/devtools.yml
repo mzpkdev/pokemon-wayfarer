@@ -226,6 +226,7 @@ jobs:
         run: |
           marker='<!-- devtools-preview -->'
           preview_url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/preview/pr-${PR_NUMBER}/"
+          docs_url="${preview_url}#docs"
 
           if [ "$EVENT_ACTION" = closed ] && [ "$DEPLOYMENT_RESULT" = success ]; then
             body="${marker}"$'\n'"This devtools preview was removed because the pull request is closed."
@@ -236,7 +237,7 @@ jobs:
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = draft ]; then
             body="${marker}"$'\n'"### Devtools"$'\n\n'"The preview will be available when this PR is ready for review."
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = ready ]; then
-            body="${marker}"$'\n'"### Devtools"$'\n\n'"[Open the preview for this PR](${preview_url})"
+            body="${marker}"$'\n'"### Devtools"$'\n\n'"[Open the preview for this PR](${preview_url})"$'\n\n'"[Open the product docs](${docs_url})"
           else
             body="${marker}"$'\n'"Devtools preview is unavailable because its Pages build did not complete."
           fi

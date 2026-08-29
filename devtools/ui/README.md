@@ -27,9 +27,10 @@ and warp navigation. Its generated input is ignored under
 `build/cartographer/map-catalog/`.
 
 Docs groups files by their folder below `.product/`, takes each page title from its
-first level-one heading, and keeps the selected page and heading in the URL. Vite
-bundles the Markdown at startup and build time. Restart the development server after
-adding or renaming a document.
+first level-one heading, and keeps the selected page and heading in the URL. Files
+named with the `__NAME__.md` convention are treated as authoring templates and do
+not appear in navigation. Vite bundles the Markdown at startup and build time.
+Restart the development server after adding or renaming a document.
 
 `src/App.svelte` owns the page shell and module navigation. Each module lives under
 `src/modules/`. Cartographer and its styled interface primitives live in

@@ -39,7 +39,9 @@ export const documentPathFromImport = (importPath: string): string | null => {
   const marker = "/.product/"
   const markerIndex = importPath.lastIndexOf(marker)
   if (markerIndex === -1 || !importPath.toLowerCase().endsWith(".md")) return null
-  return importPath.slice(markerIndex + marker.length)
+  const path = importPath.slice(markerIndex + marker.length)
+  const filename = path.split("/").at(-1) ?? path
+  return /^__.+__\.md$/i.test(filename) ? null : path
 }
 
 export const documentTitle = (path: string, source: string): string => {

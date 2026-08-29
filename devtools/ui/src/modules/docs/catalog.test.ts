@@ -9,8 +9,9 @@ import {
 } from "./catalog.js"
 
 describe("product document catalog", () => {
-  it("finds documents, uses the first H1 as a title, and falls back to the filename", () => {
+  it("finds documents, skips templates, and derives readable titles", () => {
     const documents = buildDocumentCatalog({
+      "../../../../../.product/prds/__PRD_TEMPLATE__.md": "# [Feature name]",
       "../../../../../.product/specs/fallback-title.md": "No heading here.",
       "../../../../../.product/research/audit.md": "# **Traversal audit**\n\nBody.",
       "../../../../../README.md": "# Ignore me",

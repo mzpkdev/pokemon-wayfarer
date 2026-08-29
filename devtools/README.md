@@ -30,9 +30,10 @@ Add further CLI tools under `tools/`. `ui` is the only browser package; add a
 separate UI package only when it has a real independent consumer.
 
 `ui` contains Cartographer, Metatiles, and a Docs module. The map modules consume
-the static catalog and terrain images created by the CLI tools. Docs bundles every
-Markdown file below `.product/` through Vite, so restart the development server
-after adding or renaming a document. Markdown HTML is sanitized before display.
+the static catalog and terrain images created by the CLI tools. Docs bundles
+Markdown files below `.product/` through Vite and omits `__NAME__.md` templates
+from navigation. Restart the development server after adding or renaming a
+document. Markdown HTML is sanitized before display.
 
 `ui/src/modules/cartographer/ui-toolkit` owns styled local UI primitives. It wraps Ark
 UI for stateful controls so cartographer components can stay focused on map behavior.
