@@ -9,6 +9,7 @@
 #include "field_control_avatar.h"
 #include "field_effect.h"
 #include "field_effect_helpers.h"
+#include "field_move.h"
 #include "field_screen_effect.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
@@ -1665,34 +1666,12 @@ enum Gender GetPlayerAvatarGenderByGraphicsId(u16 gfxId)
 
 bool8 PartyHasMonWithSurf(void)
 {
-    u8 i;
+    u8 partyIndex;
 
-    if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
-    {
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
-                break;
-            if (MonKnowsMove(&gPlayerParty[i], MOVE_SURF))
-                return TRUE;
-        }
-        if (CheckBagHasItem(ITEM_HM03, 1))
-        {
-            for (i = 0; i < PARTY_SIZE; i++)
-            {
-                u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
-                if (!species)
-                    break;
-                if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && CanLearnTeachableMove(species, MOVE_SURF))
-                    return TRUE;
-            }
-            // Challenge runs (mono-type, randomized moves, etc.) can lock the player out of
-            // every Surf learner, so owning HM03 is enough on its own.
-            if (HMsOverwriteOptionActive())
-                return TRUE;
-        }
-    }
-    return FALSE;
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING))
+        return FALSE;
+
+    return ResolveFieldMoveUser(MOVE_SURF, &partyIndex) == FIELD_MOVE_USER_FOUND;
 }
 
 bool8 IsPlayerSurfingNorth(void)

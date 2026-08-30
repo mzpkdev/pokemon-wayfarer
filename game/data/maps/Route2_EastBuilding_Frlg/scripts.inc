@@ -67,6 +67,6 @@ Route2_EastBuilding_Text_ExplainHM05::
 	.string "of caves and dungeons.$"
 
 Route2_EastBuilding_Text_CanGetThroughRockTunnel::
-	.string "Once a POKéMON learns FLASH, you\n"
-	.string "can get through ROCK TUNNEL.$"
-
+	.string "Keep HM05 in your BAG and bring a\n"
+	.string "compatible POKéMON to light up\l"
+	.string "ROCK TUNNEL.$"

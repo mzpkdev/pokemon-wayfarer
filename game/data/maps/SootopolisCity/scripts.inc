@@ -1693,13 +1693,11 @@ SootopolisCity_Text_ThankYouForHelpAcceptThis:
 SootopolisCity_Text_ExplainWaterfallGoToGym:
 	.string "That HIDDEN MACHINE contains\n"
 	.string "WATERFALL.\p"
-	.string "If you have the RAIN BADGE, a POKéMON\n"
-	.string "that has learned that HM move can\l"
-	.string "force its way up waterfalls.\p"
-	.string "And where does one get the RAIN BADGE?\n"
-	.string "You know, don't you?\p"
-	.string "That's right! You have to beat\n"
-	.string "the SOOTOPOLIS GYM LEADER.\p"
+	.string "Keep this HM in your BAG, and a\n"
+	.string "compatible POKéMON can force\l"
+	.string "its way up waterfalls.\p"
+	.string "The SOOTOPOLIS GYM LEADER still\n"
+	.string "awaits your challenge.\p"
 	.string "When you're all set to go, step through\n"
 	.string "that door.$"
 

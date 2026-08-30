@@ -285,8 +285,8 @@ Route118_Text_TryCatchingMonWithGoodRod:
 
 Route118_Text_CanCrossRiversWithSurf:
 	.string "Even if there isn't a boat, you can\n"
-	.string "cross rivers and the sea if you have\l"
-	.string "a POKéMON that knows SURF.\p"
+	.string "cross rivers and the sea with the\l"
+	.string "HM move SURF.\p"
 	.string "POKéMON can be counted on to do so\n"
 	.string "much!$"
 
@@ -297,4 +297,3 @@ Route118_Text_RouteSignMauville:
 Route118_Text_RouteSign119:
 	.string "ROUTE 118\n"
 	.string "{UP_ARROW} ROUTE 119$"
-

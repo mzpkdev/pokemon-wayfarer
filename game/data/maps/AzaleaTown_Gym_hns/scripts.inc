@@ -692,8 +692,6 @@ AzaleaTown_Gym_Text_HiveBadgeSpeech:
 	.string "If you have it, POKéMON up\n"
 	.string "to L30 will obey you,\l"
 	.string "even traded ones.\p"
-	.string "POKéMON that know CUT will be able\n"
-	.string "to use it outside of battle too.\p"
 	.string "Here, I also want you to\n"
 	.string "have this.$"
 

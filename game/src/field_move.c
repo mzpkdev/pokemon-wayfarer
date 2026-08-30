@@ -1,85 +1,151 @@
 #include "global.h"
+#include "challenge_menu.h"
 #include "event_data.h"
 #include "field_move.h"
 #include "fldeff.h"
 #include "fldeff_misc.h"
+#include "item.h"
 #include "party_menu.h"
+#include "pokemon.h"
 #include "constants/field_move.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
 
 static bool32 IsFieldMoveUnlocked_Cut(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE02_GET);
-    if (IS_FRLG)
-        return FlagGet(FLAG_BADGE02_GET);
-
-    return FlagGet(FLAG_BADGE01_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Flash(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE01_GET);
-    if (IS_FRLG)
-        return FlagGet(FLAG_BADGE01_GET);
-
-    return FlagGet(FLAG_BADGE02_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_RockSmash(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE01_GET);
-    if (IS_FRLG)
-        return FlagGet(FLAG_BADGE06_GET);
-
-    return FlagGet(FLAG_BADGE03_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Strength(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE03_GET);
-
-    return FlagGet(FLAG_BADGE04_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Surf(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE04_GET);
-
-    return FlagGet(FLAG_BADGE05_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Fly(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE05_GET);
-    if (IS_FRLG)
-        return FlagGet(FLAG_BADGE03_GET);
-
-    return FlagGet(FLAG_BADGE06_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Dive(void)
 {
-    if (IS_HNS)
+    if (IS_HNS || IS_FRLG)
         return FlagGet(FLAG_BADGE07_GET);
 
-    return FlagGet(FLAG_BADGE07_GET);
+    return TRUE;
 }
 
 static bool32 IsFieldMoveUnlocked_Waterfall(void)
 {
-    if (IS_HNS)
-        return FlagGet(FLAG_BADGE08_GET);
-    if (IS_FRLG)
-        return FlagGet(FLAG_BADGE07_GET);
+    return TRUE;
+}
 
-    return FlagGet(FLAG_BADGE08_GET);
+#if IS_HNS
+static bool32 IsFieldMoveUnlocked_Whirlpool(void)
+{
+    return TRUE;
+}
+#endif
+
+static enum FieldMoveUserResult ResolveMoveUser(enum Move move, bool32 allowCompatibilityWithoutItem, u8 *partyIndex)
+{
+    enum Item item = GetTMHMItemIdFromMoveId(move);
+    bool32 hasItem = item != ITEM_NONE && CheckBagHasItem(item, 1);
+    u32 partyCount = GetMaxPartySize();
+
+    *partyIndex = PARTY_SIZE;
+
+    for (u32 i = 0; i < partyCount; i++)
+    {
+        struct Pokemon *mon = &gPlayerParty[i];
+
+        if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+            break;
+        if (!GetMonData(mon, MON_DATA_IS_EGG) && MonKnowsMove(mon, move))
+        {
+            *partyIndex = i;
+            return FIELD_MOVE_USER_FOUND;
+        }
+    }
+
+    if (item != ITEM_NONE && !hasItem)
+        return FIELD_MOVE_USER_MISSING_ITEM;
+    if (item == ITEM_NONE && !allowCompatibilityWithoutItem)
+        return FIELD_MOVE_USER_NO_ELIGIBLE_MON;
+
+    for (u32 i = 0; i < partyCount; i++)
+    {
+        struct Pokemon *mon = &gPlayerParty[i];
+        u16 species = GetMonData(mon, MON_DATA_SPECIES);
+
+        if (species == SPECIES_NONE)
+            break;
+        if (!GetMonData(mon, MON_DATA_IS_EGG) && CanLearnTeachableMove(species, move))
+        {
+            *partyIndex = i;
+            return FIELD_MOVE_USER_FOUND;
+        }
+    }
+
+    if (hasItem && HMsOverwriteOptionActive())
+    {
+        for (u32 i = 0; i < partyCount; i++)
+        {
+            struct Pokemon *mon = &gPlayerParty[i];
+
+            if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE)
+                break;
+            if (!GetMonData(mon, MON_DATA_IS_EGG))
+            {
+                *partyIndex = i;
+                return FIELD_MOVE_USER_FOUND;
+            }
+        }
+    }
+
+    return FIELD_MOVE_USER_NO_ELIGIBLE_MON;
+}
+
+enum FieldMoveUserResult ResolveFieldMoveUser(enum Move move, u8 *partyIndex)
+{
+    return ResolveMoveUser(move, FALSE, partyIndex);
+}
+
+enum FieldMoveUserResult ResolvePartyMoveUser(enum Move move, u8 *partyIndex)
+{
+    return ResolveMoveUser(move, TRUE, partyIndex);
+}
+
+bool32 CanPartyMonUseFieldMove(struct Pokemon *mon, enum Move move)
+{
+    enum Item item;
+    u16 species;
+
+    species = GetMonData(mon, MON_DATA_SPECIES);
+    if (species == SPECIES_NONE || GetMonData(mon, MON_DATA_IS_EGG))
+        return FALSE;
+    if (MonKnowsMove(mon, move))
+        return TRUE;
+
+    item = GetTMHMItemIdFromMoveId(move);
+    if (item == ITEM_NONE || !CheckBagHasItem(item, 1))
+        return FALSE;
+
+    return CanLearnTeachableMove(species, move) || HMsOverwriteOptionActive();
 }
 
 #if OW_ROCK_CLIMB_FIELD_MOVE == TRUE
@@ -191,6 +257,16 @@ const struct FieldMoveInfo gFieldMoveInfo[FIELD_MOVES_COUNT] =
         .moveID = MOVE_WATERFALL,
         .partyMsgID = PARTY_MSG_CANT_USE_HERE,
     },
+
+#if IS_HNS
+    [FIELD_MOVE_WHIRLPOOL] =
+    {
+        .fieldMoveFunc = NULL,
+        .isUnlockedFunc = IsFieldMoveUnlocked_Whirlpool,
+        .moveID = MOVE_WHIRLPOOL,
+        .partyMsgID = PARTY_MSG_CANT_USE_HERE,
+    },
+#endif
 
     [FIELD_MOVE_TELEPORT] =
     {

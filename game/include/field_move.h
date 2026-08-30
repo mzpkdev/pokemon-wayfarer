@@ -14,6 +14,10 @@ struct FieldMoveInfo
 
 extern const struct FieldMoveInfo gFieldMoveInfo[];
 
+enum FieldMoveUserResult ResolveFieldMoveUser(enum Move move, u8 *partyIndex);
+enum FieldMoveUserResult ResolvePartyMoveUser(enum Move move, u8 *partyIndex);
+bool32 CanPartyMonUseFieldMove(struct Pokemon *mon, enum Move move);
+
 static inline bool32 SetUpFieldMove(enum FieldMove fieldMove)
 {
     return gFieldMoveInfo[fieldMove].fieldMoveFunc();

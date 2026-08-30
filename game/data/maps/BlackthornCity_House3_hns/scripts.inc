@@ -35,8 +35,6 @@ BlackthornCity_MoveDeletersHouse_EventScript_ChooseMonAndMoveToForget::
 	end
 
 BlackthornCity_MoveDeletersHouse_EventScript_TryForgetMove::
-	special IsLastMonThatKnowsSurf
-	goto_if_eq VAR_RESULT, TRUE, BlackthornCity_MoveDeletersHouse_EventScript_LastMonWithSurf
 	special MoveDeleterForgetMove
 	playfanfare MUS_MOVE_DELETED
 	waitfanfare
@@ -57,12 +55,6 @@ BlackthornCity_MoveDeletersHouse_EventScript_EggCantForgetMoves::
 
 BlackthornCity_MoveDeletersHouse_EventScript_ComeAgain::
 	msgbox BlackthornCity_MoveDeletersHouse_Text_ComeAgain, MSGBOX_DEFAULT
-	releaseall
-	end
-
-BlackthornCity_MoveDeletersHouse_EventScript_LastMonWithSurf::
-	special BufferMoveDeleterNicknameAndMove
-	msgbox BlackthornCity_MoveDeletersHouse_Text_CantForgetSurf, MSGBOX_DEFAULT
 	releaseall
 	end
 
@@ -98,11 +90,6 @@ BlackthornCity_MoveDeletersHouse_Text_ComeAgain:
 BlackthornCity_MoveDeletersHouse_Text_EggCantForgetMoves:
 	.string "What?\n"
 	.string "No EGG should know any moves.$"
-
-BlackthornCity_MoveDeletersHouse_Text_CantForgetSurf:
-	.string "Hm!\p"
-	.string "Your {STR_VAR_1} doesn't seem willing\n"
-	.string "to forget SURF.$"
 
 BlackthornCity_MoveRelearnersHouse_EventScript_MoveRelearner::
 	lockall
@@ -210,6 +197,5 @@ BlackthornCity_MoveRelearnersHouse_Text_ComeBackWithHeartScale:
 BlackthornCity_MoveRelearnersHouse_Text_CantTeachEgg:
 	.string "Hunh? There isn't a single move that\n"
 	.string "I can teach an EGG.$"
-
 
 

@@ -1,7 +1,7 @@
 # HM field use
 
 PRD: [HM field use](../prds/hm-field-use.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
