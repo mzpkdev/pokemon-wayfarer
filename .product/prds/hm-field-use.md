@@ -120,6 +120,7 @@ Carry HM Surf through the first Route 33 to Azalea trigger in HNS and confirm th
 ## References
 
 - [Technical specification](../specs/hm-field-use.md)
+- [Native HM utility learnsets](native-hm-learnsets.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [FireRed and LeafGreen open-world regional traversal](frlg-open-world-region-traversal.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)
