@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "malloc.h"
 #include "battle.h"
 #include "challenge_menu.h"
@@ -230,6 +233,36 @@ static EWRAM_DATA u16 sPartyMenuItemId = 0;
 EWRAM_DATA u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2] = {0}; // bits 0-3 are the current pos of Slot 1, 4-7 are Slot 2, and so on
 static EWRAM_DATA u8 sInitialLevel = 0;
 static EWRAM_DATA u8 sFinalLevel = 0;
+
+#ifdef E2E_TESTING
+static void CB2_InitPartyMenu(void);
+static void CB2_ReloadPartyMenu(void);
+static void CB2_UpdatePartyMenu(void);
+
+bool32 E2ETest_IsPartyMenuOpen(void)
+{
+    return gMain.callback2 == CB2_InitPartyMenu
+        || gMain.callback2 == CB2_ReloadPartyMenu
+        || gMain.callback2 == CB2_UpdatePartyMenu;
+}
+
+void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count)
+{
+    u32 i;
+
+    *count = 0;
+    if (!E2ETest_IsPartyMenuOpen()
+     || sPartyMenuInternal == NULL
+     || sPartyMenuInternal->windowId[0] == WINDOW_NONE)
+        return;
+
+    *count = sPartyMenuInternal->numActions;
+    if (*count > E2E_TEST_MAX_PARTY_MENU_ACTIONS)
+        *count = E2E_TEST_MAX_PARTY_MENU_ACTIONS;
+    for (i = 0; i < *count; i++)
+        actions[i] = sPartyMenuInternal->actions[i];
+}
+#endif
 
 // IWRAM common
 COMMON_DATA void (*gItemUseCB)(u8, TaskFunc) = NULL;
@@ -4076,6 +4109,10 @@ static void CursorCb_FieldMove(u8 taskId)
     PlaySE(SE_SELECT);
     if (gFieldMoveInfo[fieldMove].fieldMoveFunc == NULL)
         return;
+
+#ifdef E2E_TESTING
+    E2ETest_RecordFieldMove(FieldMove_GetMoveId(fieldMove), gPartyMenu.slotId, E2E_TEST_FIELD_MOVE_SELECTED);
+#endif
 
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);

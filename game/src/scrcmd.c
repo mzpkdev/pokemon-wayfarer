@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "frontier_util.h"
 #include "battle_setup.h"
 #include "battle_util.h"
@@ -3054,6 +3057,9 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
 
     gSpecialVar_0x8008 = ResolveFieldMoveUser(FieldMove_GetMoveId(fieldMove), &partyIndex);
     gSpecialVar_Result = partyIndex;
+#ifdef E2E_TESTING
+    E2ETest_RecordFieldMove(FieldMove_GetMoveId(fieldMove), partyIndex, gSpecialVar_0x8008);
+#endif
     if (gSpecialVar_0x8008 == FIELD_MOVE_USER_FOUND)
         gSpecialVar_0x8004 = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
 
@@ -3067,6 +3073,9 @@ bool8 ScrCmd_checkpartymove(struct ScriptContext *ctx)
 
     gSpecialVar_0x8008 = ResolvePartyMoveUser(moveId, &partyIndex);
     gSpecialVar_Result = partyIndex;
+#ifdef E2E_TESTING
+    E2ETest_RecordFieldMove(moveId, partyIndex, gSpecialVar_0x8008);
+#endif
     if (gSpecialVar_0x8008 == FIELD_MOVE_USER_FOUND)
         gSpecialVar_0x8004 = GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES);
 

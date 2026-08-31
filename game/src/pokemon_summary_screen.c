@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "main.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -1386,6 +1389,13 @@ static void MainCB2(void)
     DoScheduledBgTilemapCopiesToVram();
     UpdatePaletteFade();
 }
+
+#ifdef E2E_TESTING
+bool32 E2ETest_IsSummaryScreenOpen(void)
+{
+    return gMain.callback2 == CB2_InitSummaryScreen || gMain.callback2 == MainCB2;
+}
+#endif
 
 static void VBlank(void)
 {
