@@ -191,12 +191,17 @@ Sootopolis is not part of this coverage. It remains unlockable content whose
 entrance, Dive requirement, story state, and return behavior are defined by its
 own progression.
 
-Fishing-based recovery depends on equipment and capture supplies that this PRD
-does not distribute. A separate PRD must ensure that the Old Rod is obtainable
-for these routes and either make it sufficient for the required existing
-encounter slots or guarantee the stronger rod those slots currently use. That
-separate work must also define how Poké Balls or another capture fallback remain
-available on an isolated shore.
+The Standard Rod fishing PRD makes every authored fishing slot available at
+every rod quality, so the Old Rod can hook each listed recovery species without
+an encounter edit or a stronger rod. It also requires a separate accessibility
+check for species used in required traversal recovery. Native Surf settlement
+coverage depends on those rules.
+
+This PRD does not distribute the Old Rod or capture supplies. A separate
+fishing-readiness PRD must ensure that the player can obtain the Old Rod before
+a required crossing, set a practical fishing probability for each recovery
+species, and keep Poké Balls or another capture fallback available on an
+isolated shore. It must also cover removal of the last Surf user.
 
 Until those dependencies are implemented, the encounter coverage in this
 section validates the species and route design but does not by itself prove
@@ -286,8 +291,8 @@ available in multiple places.
 For every native Surf settlement route, test both directions using only the
 existing encounter tables and geometry. Confirm the player can reach a listed
 native user from dry land on each side. Run separate dependency tests for rod
-availability, the rod tier used by the encounter slot, capture supplies, a full
-party, and removal of the last Surf user.
+availability, the Old Rod probability of the recovery species, capture
+supplies, a full party, and removal of the last Surf user.
 
 Play early and midgame battles with Surf, Strength, Waterfall, and Dive users at
 their first practical encounter levels. Check whether the new attack causes one
@@ -306,6 +311,7 @@ before this feature.
 ## References
 
 - [Badge-free HM field use](hm-field-use.md)
+- [Standard Rod fishing](standard-rod-fishing.md)
 - [HM field-use technical specification](../specs/hm-field-use.md)
 - [HM compatibility data](../../game/src/data/pokemon/all_learnables.json)
 - [Teachable learnset generation](../../game/docs/tutorials/teachable_learnsets.md)

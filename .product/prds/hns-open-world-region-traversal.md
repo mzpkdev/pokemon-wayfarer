@@ -105,7 +105,9 @@ These decisions are required before an implementation spec can claim full covera
 
 ## Native Surf dependency
 
-This PRD does not change encounters, terrain, rod distribution, or capture-supply availability. A separate fishing-readiness PRD must make the Old Rod obtainable around the Cianwood and Cinnabar approaches and either make it sufficient for the required existing encounter slots or guarantee the rod tier those slots currently use. It must also address Poké Ball availability and removal of the last Surf user on either remote shore.
+The Standard Rod fishing PRD makes the required existing fishing slots available with the Old Rod and requires an accessibility check for traversal recovery species. This PRD does not change encounters, terrain, rod distribution, or capture-supply availability.
+
+A separate fishing-readiness PRD must ensure that the player can obtain the Old Rod before the Cianwood and Cinnabar crossings, give each recovery species a practical Old Rod probability, and address Poké Ball availability and removal of the last Surf user on either remote shore.
 
 Until that dependency is implemented, native Surf resolves the route design but does not close the no-stranding acceptance requirement.
 
@@ -145,3 +147,4 @@ Until that dependency is implemented, native Surf resolves the route design but 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
 - [Badge-free HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
+- [Standard Rod fishing](standard-rod-fishing.md)
