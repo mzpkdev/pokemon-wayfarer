@@ -320,6 +320,24 @@ TEST("HM field use: Fly and Flash apply HMs Overwrite but reject Eggs")
     }
 }
 
+TEST("HM field use: party actions reserve terrain HMs for contextual use")
+{
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_CUT));
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_ROCK_SMASH));
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_STRENGTH));
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_SURF));
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_WATERFALL));
+    EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_FLY));
+    EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_FLASH));
+    EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_DIG));
+#if IS_HNS
+    EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_DIVE));
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_WHIRLPOOL));
+#else
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_DIVE));
+#endif
+}
+
 TEST("HM field use: every regional HM field action is badge-free")
 {
     static const enum FieldMove fieldMoves[] =

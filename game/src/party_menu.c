@@ -2932,6 +2932,7 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
                 if (gFieldMoveInfo[j].fieldMoveFunc != NULL
                  && move != MOVE_FLY
                  && move != MOVE_FLASH
+                 && IsFieldMovePartyMenuAction(j)
                  && GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == move
                  && numFieldMoves < maxFieldMoves)
                 {

@@ -148,6 +148,13 @@ bool32 CanPartyMonUseFieldMove(struct Pokemon *mon, enum Move move)
     return CanLearnTeachableMove(species, move) || HMsOverwriteOptionActive();
 }
 
+bool32 IsFieldMovePartyMenuAction(enum FieldMove fieldMove)
+{
+    return fieldMove == FIELD_MOVE_FLY
+        || fieldMove == FIELD_MOVE_FLASH
+        || !IsMoveHM(FieldMove_GetMoveId(fieldMove));
+}
+
 #if OW_ROCK_CLIMB_FIELD_MOVE == TRUE
 static bool32 IsFieldMoveUnlocked_RockClimb(void)
 {
