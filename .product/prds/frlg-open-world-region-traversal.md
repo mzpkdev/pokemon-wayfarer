@@ -2,16 +2,17 @@
 
 ## Player outcome
 
-After the opening releases the player with a starter, every Kanto town and city is reachable without completing the main story, earning badges, or using HMs. The player may take a long route, but determination is enough.
+After the opening releases the player with a starter, every Kanto town and city is reachable without completing the main story, earning badges, owning an HM, or using an HM move in the field. The player may take a long route, but determination is enough.
 
-The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Rainbow Pass. Once unlocked, travel to and between its towns and cities has no further story or HM requirement.
+The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Rainbow Pass. Once unlocked, travel to and between its towns and cities has no further story requirement and never requires HM field use.
 
 ## Rules
 
 - Walking, doors, and always-available local transport form the core settlement network.
-- Main-story state, Gym progress, forced victories, and HMs cannot close the only route to a town or city in an unlocked region.
+- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in an unlocked region. That route also cannot require an HM item or a Pokémon that knows an HM move.
 - Surf and Fly may make settlement travel faster. They are never required for basic settlement access.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
+- A Pokémon that already knows an HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
 - After a region is unlocked, repeat travel is frictionless and always includes a return route.
@@ -39,7 +40,7 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 ### Seagallop shakedown
 
 - Start: speak to the port builder beside Machop's construction lot in Vermilion. This is available on the first visit to the city.
-- Job: inspect three marked soft spots in the construction lot. Machop follows the player to each marker and tamps it down. This uses no battle, item, HM, badge, or earlier story flag.
+- Job: inspect three marked soft spots in the construction lot. Machop follows the player to each marker and tamps it down. This uses no battle, item, field move, badge, or earlier story flag.
 - Turn-in: report to the builder, who certifies the pier for Seagallop service. The ferry sailor gives the player the Rainbow Pass and adds Sevii Islands to the shared dock's service choices. This does not change the S.S. Anne scene.
 - Shared dock: while the S.S. Anne is present, the sailor offers S.S. Anne and Sevii Islands. The S.S. Anne choice keeps its existing Ticket, boarding, captain, rival, Cut, and departure behavior. Sevii Islands never advances or departs the S.S. Anne. After the player causes the ship's normal departure, the sailor offers only Sevii Islands.
 - First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives the existing regional introduction and expands the Town Map, but does not start the Meteorite delivery unless the player separately accepts it.
@@ -68,14 +69,17 @@ These four decisions are required before an implementation spec can claim comple
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks, then record the chosen core lane in Settlement coverage before implementation begins.
-- From a new save after the opening, visit the ten named Kanto settlements without badges, HMs, story completion flags, or forced victories.
+- From a new save after the opening, visit the ten named Kanto settlements without badges, HM items, story completion flags, field-move use, or forced victories.
+- Run every required core settlement route with no HM items in the Bag and a party in which no Pokémon knows an HM move.
 - Use each bypass first, then return and complete its preserved story normally.
 - Complete the Seagallop shakedown and receive the Rainbow Pass without leaving Vermilion or satisfying another story flag.
 - Open Sevii service while the S.S. Anne is still present, use both dock choices, and confirm neither choice changes the other's independent story state.
 - Confirm the first Sevii trip goes to One Island, Celio's introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
-- Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HMs, forced battles, or a lost return option.
+- Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.
 - Confirm FireRed and LeafGreen behave the same.
 
 ## References
 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Badge-free HM field use](hm-field-use.md)
+- [Native HM utility learnsets](native-hm-learnsets.md)

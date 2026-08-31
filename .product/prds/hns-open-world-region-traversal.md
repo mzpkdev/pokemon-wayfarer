@@ -2,16 +2,17 @@
 
 ## Player outcome
 
-After the opening releases the player with a starter, every town and city in the current unlocked region is reachable without completing the main story, earning badges, or using HMs. The player may take a long route, but determination is enough.
+After the opening releases the player with a starter, every town and city in the current unlocked region is reachable without completing the main story, earning badges, owning an HM, or using an HM move in the field. The player may take a long route, but determination is enough.
 
-Kanto opens through the S.S. Aqua maiden voyage, Alola through the Mt. Moon keepsake quest, and Sinjoh through Meara's Ruins of Alph survey. Each quest awards its named travel item. Once a region is unlocked, travel to and between its settlements has no further story or HM requirement.
+Kanto opens through the S.S. Aqua maiden voyage, Alola through the Mt. Moon keepsake quest, and Sinjoh through Meara's Ruins of Alph survey. Each quest awards its named travel item. Once a region is unlocked, travel to and between its settlements has no further story requirement and never requires HM field use.
 
 ## Rules
 
 - Walking, doors, and always-available local transport form each region's core settlement network.
-- Main-story state, Gym progress, forced victories, and HMs cannot close the only route to a town or city in an unlocked region.
+- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in an unlocked region. That route also cannot require an HM item or a Pokémon that knows an HM move.
 - Surf and Fly may make settlement travel faster. They are never required for basic settlement access.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
+- A Pokémon that already knows an HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
 - After a region is unlocked, repeat travel is frictionless and always includes a return route.
@@ -64,7 +65,7 @@ A healing point or Fly marker does not make a route or landmark a settlement. Th
 ### Sinjoh: Ruins of Alph field survey
 
 - Start: place Meara in the Ruins of Alph Lab from the player's first visit. Her Mt. Silver Pokémon Center placement is no longer used for the unlock.
-- Job: Meara asks the player to inspect one new marked inscription beside the lab on the Ruins of Alph exterior map. Reading it sets one dedicated survey flag. No chamber puzzle, HM, badge, battle, or other story flag is required.
+- Job: Meara asks the player to inspect one new marked inscription beside the lab on the Ruins of Alph exterior map. Reading it sets one dedicated survey flag. No chamber puzzle, HM item, field move, badge, battle, or other story flag is required.
 - Turn-in: return to Meara. She gives the player the Azure Flute and offers to leave immediately. Remove the duplicate Azure Flute pickup from Mt. Silver 2F.
 - First arrival: accepting the trip marks Sinjoh visited, establishes only the baseline map state required for its actors and exits, and sends the player to the Sinjoh branch entrance without requiring Mt. Silver access. Meara accompanies the player and appears beside that arrival point.
 - State isolation: arrival does not visit the Kimono Hideout, move the Route 50 story past its baseline, resolve Machamp or its boulder, open a plate or Regi room, or advance Steven, Arceus, or any noble encounter.
@@ -110,7 +111,7 @@ These decisions are required before an implementation spec can claim full covera
 | --- | --- | --- | --- |
 | Johto | Route 30 object | Violet approach | Confirm whether the object closes the only walking route. |
 | Sinjoh | Snowswept Cavern rocks and boulder | New Sinjoh | Confirm in the emulator whether Rock Smash or Strength is mandatory. If blocked, choose a clear normal path that keeps Machamp optional. |
-| Sinjoh | Snowswept Cavern approach | Sinjoh Ruins | Confirm the ruins do not inherit an HM requirement from the New Sinjoh approach. |
+| Sinjoh | Snowswept Cavern approach | Sinjoh Ruins | Confirm the ruins do not inherit a field-move requirement from the New Sinjoh approach. |
 
 ## Out of scope
 
@@ -122,12 +123,13 @@ These decisions are required before an implementation spec can claim full covera
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks and Checks before decision, then record the chosen core lane in Settlement coverage before implementation begins.
-- From a new save after the opening, visit the ten named Johto settlements without badges, HMs, story completion flags, or forced victories.
+- From a new save after the opening, visit the ten named Johto settlements without badges, HM items, story completion flags, field-move use, or forced victories.
+- Run every required settlement route with no HM items in the Bag and a party in which no Pokémon knows an HM move.
 - Complete the S.S. Aqua maiden voyage, Mt. Moon keepsake, and Ruins of Alph survey exactly as written and receive their travel items without unrelated story flags.
 - After the maiden voyage, return between Olivine and Vermilion with only the S.S. Ticket and without the Machine Part. Confirm the train remains locked until both the Machine Part is returned and the Pass is obtained.
-- From Vermilion, follow the named Kanto land route to the other eight mainland settlements; use the selected Cinnabar service for the tenth. Do not battle Silver, wake Snorlax, own a Bicycle, or use an HM.
+- From Vermilion, follow the named Kanto land route to the other eight mainland settlements; use the selected Cinnabar service for the tenth. Do not battle Silver, wake Snorlax, own a Bicycle, or use an HM field move.
 - Use the Island Hopper to visit all four named Alola island hubs and return to Route 13 without Surf or island-story progress.
-- Visit New Sinjoh and Sinjoh Ruins without Mt. Silver permission or an HM and return through Meara.
+- Visit New Sinjoh and Sinjoh Ruins without Mt. Silver permission or HM field use and return through Meara.
 - Return from every unlocked region without repeating its unlock story.
 - Use each bypass first, then return and complete its preserved story normally.
 - Confirm Surf and Fly improve travel without becoming prerequisites for settlement access.
@@ -136,3 +138,5 @@ These decisions are required before an implementation spec can claim full covera
 ## References
 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Badge-free HM field use](hm-field-use.md)
+- [Native HM utility learnsets](native-hm-learnsets.md)

@@ -2,14 +2,15 @@
 
 ## Player outcome
 
-After the opening releases the player with a starter, every Hoenn town and city is reachable without completing the main story, earning badges, or using HMs. The player may take a long route, but determination is enough.
+After the opening releases the player with a starter, every Hoenn town and city is reachable without completing the main story, earning badges, owning an HM, or using an HM move in the field. The player may take a long route, but determination is enough.
 
 Surf and Fly make travel faster. Cut, Rock Smash, Surf, bicycles, and local stories may still unlock shortcuts, hidden locations, and optional content.
 
 ## Rules
 
 - Walking, doors, and always-available local transport form Hoenn's core settlement network.
-- Main-story state, Gym progress, forced victories, and HMs cannot close the only route to a town or city.
+- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city. That route also cannot require an HM item or a Pokémon that knows an HM move.
+- A Pokémon that already knows an HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story actor or battle may occupy one approach only when another visible lane remains open.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - A bypass does not complete its story or award skipped badges, HMs, items, or rewards.
@@ -47,7 +48,7 @@ The required roster is Littleroot Town, Oldale Town, Petalburg City, Rustboro Ci
 ### Route 111 desert survey
 
 - Start: speak to a new desert surveyor at the southern desert boundary on Route 111.
-- Job: inspect three numbered weather stakes along the non-desert side of Route 111, then return to the surveyor. No battle, HM, badge, or earlier story flag is required.
+- Job: inspect three numbered weather stakes along the non-desert side of Route 111, then return to the surveyor. No battle, HM item, field move, badge, or earlier story flag is required.
 - Reward: the surveyor gives the player the Go-Goggles.
 - Result: the desert boundary accepts the Go-Goggles permanently. The desert remains an optional shortcut and exploration area rather than part of the core settlement route.
 - Later story: the post-Lavaridge handoff checks whether the player already owns the Go-Goggles. If so, the giver acknowledges the surveyor's pair and gives no duplicate. The surrounding scene and all unrelated rewards still run normally.
@@ -81,14 +82,17 @@ These five route-design decisions are required before an implementation spec can
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks, then record the chosen lane or service in Settlement coverage before implementation begins.
-- From a new save after the opening, visit all fifteen named Hoenn settlements without badges, HMs, story completion flags, or forced victories.
+- From a new save after the opening, visit all fifteen named Hoenn settlements without badges, HM items, story completion flags, field-move use, or forced victories.
+- Run every required core settlement route with no HM items in the Bag and a party in which no Pokémon knows an HM move.
 - Use the public ferry from Route 104 to Dewford and Slateport and return from both destinations while the Peeko and Letter stories are untouched and while either story is active.
 - Use each bypass first, then return and complete its preserved story normally.
 - Test every changed connection from both directions and after saving on either side.
 - Confirm Surf and Fly improve travel without becoming prerequisites for settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
-- Complete the Route 111 desert survey without a badge, HM, or unrelated story flag; confirm the Go-Goggles keep the boundary open and the later handoff does not duplicate them.
+- Complete the Route 111 desert survey without a badge, HM item, field-move use, or unrelated story flag; confirm the Go-Goggles keep the boundary open and the later handoff does not duplicate them.
 
 ## References
 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Badge-free HM field use](hm-field-use.md)
+- [Native HM utility learnsets](native-hm-learnsets.md)
