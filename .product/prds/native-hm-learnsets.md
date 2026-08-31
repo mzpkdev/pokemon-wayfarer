@@ -264,59 +264,6 @@ Existing HM compatibility must remain intact in the generated runtime
 teachable learnsets. If the compatibility source changes, regenerate and check
 the compiled teachable data before accepting the roster.
 
-## Playtesting
-
-For every species and HM pairing in the regional tables:
-
-- Catch or generate the species at every configured level boundary in at least
-  two qualifying places. Cover each range's minimum, maximum, and every
-  level-up breakpoint inside it, then confirm that the species knows every
-  assigned utility move immediately.
-- Confirm that at least one of those places is reachable without using the same
-  HM move.
-- With no matching HM and no former authorizing badge, use the move at a valid
-  field obstacle and confirm that the caught Pokémon performs it.
-- Confirm that the move occupies a normal move slot, works normally in battle,
-  and uses PP only in battle.
-- Replace or forget the move and confirm that field use is no longer available
-  without the HM. Restore it through normal relearning and confirm field use
-  returns.
-- Evolve the Pokémon and confirm that it keeps the move and can relearn it after
-  forgetting it.
-
-Repeat the catch-time and Move Reminder checks in normal and legacy-moves mode.
-
-Test each regional pair as a coverage unit. The two species should be
-obtainable in meaningfully different parts of the region rather than two floors
-of one dungeon. FireRed and LeafGreen must each have both Kanto choices
-available in multiple places.
-
-For every native Surf settlement route, test both directions with a listed
-native user prepared before each crossing and with no HM03 or badge. Confirm
-that the route uses only the existing encounter tables and geometry and that a
-listed native user appears in encounter data reachable from dry land on each
-side. These tests establish route availability, not recovery after Surf access
-is lost.
-
-Missing rods or Poké Balls, impractical fishing probabilities, a full party,
-removal of the last Surf user, and emergency return behavior do not block this
-PRD's acceptance. Record those cases as inputs to the separate
-traversal-recovery PRD.
-
-Play early and midgame battles with Surf, Strength, Waterfall, and Dive users at
-their first practical encounter levels. Check whether the new attack causes one
-utility species to dominate nearby wild and trainer battles. Adjust learn
-levels before weakening the move or replacing a thematic species.
-
-Complete one no-HM traversal run in each build using only caught native users:
-
-- FireRed or LeafGreen: Cut, Flash, Surf, Strength, Rock Smash, and Waterfall.
-- HNS: Cut, Flash, Surf, Strength, Rock Smash, Waterfall, and Whirlpool.
-- Emerald: Cut, Flash, Surf, Strength, Rock Smash, Waterfall, and Dive.
-
-Fly, HNS Dive, and region-inactive HM moves must behave exactly as they did
-before this feature.
-
 ## References
 
 - [Badge-free HM field use](hm-field-use.md)
