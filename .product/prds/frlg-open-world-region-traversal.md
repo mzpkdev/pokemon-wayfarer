@@ -15,7 +15,7 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 - A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
-- After a region is unlocked, repeat travel is frictionless and always includes a return route.
+- Every inter-region travel service is frictionless after its region is unlocked and always includes a return option.
 - Opening a travel lane does not complete the story attached to it or award skipped rewards.
 
 ## Settlement coverage
@@ -58,13 +58,13 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 
 These three decisions are required before an implementation spec can claim complete Kanto coverage. They are not permission to invent story-completion flags; the chosen lane must preserve the associated story and reward.
 
-## Native Surf dependency
+## Native Surf recovery boundary
 
-The Standard Rod fishing PRD makes the existing Horsea and Krabby slots available with the Old Rod and requires an accessibility check for traversal recovery species. This PRD does not change encounters, terrain, rod distribution, or capture-supply availability.
+The Standard Rod fishing PRD makes the existing Horsea and Krabby slots eligible with the Old Rod. A player who already has the rod and capture supplies can therefore obtain another native Surf user from the existing encounter tables. This PRD does not change encounters, terrain, rod distribution, fishing probabilities, or capture-supply availability.
 
-A separate fishing-readiness PRD must ensure that the player can obtain the Old Rod before the Cinnabar crossing, give Horsea and Krabby practical Old Rod probabilities, and address Poké Ball availability and removal of the last Surf user on Cinnabar.
+Acceptance here covers a prepared player crossing Route 21 in both directions. It does not guarantee recovery when the player lacks the Old Rod or Poké Balls, has a full party, or deposits, releases, or forgets Surf on the last user.
 
-Until that dependency is implemented, native Surf resolves the route design but does not close the no-stranding acceptance requirement.
+A separate traversal-recovery PRD owns those softlock-prevention and emergency-return requirements. This PRD may be accepted independently and must not be cited as proof that Kanto's settlement network is softlock-safe.
 
 ## Out of scope
 
@@ -83,7 +83,7 @@ Until that dependency is implemented, native Surf resolves the route design but 
 - Open Sevii service while the S.S. Anne is still present, use both dock choices, and confirm neither choice changes the other's independent story state.
 - Confirm the first Sevii trip goes to One Island, Celio's introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
 - Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.
-- In both versions, fish native Horsea and Krabby on the Pallet and Cinnabar sides. Cross Route 21 in both directions without HM03 or a badge.
+- In both versions, confirm native Horsea and Krabby remain in the existing fishing tables on the Pallet and Cinnabar sides. With a native Surf user prepared before each crossing, cross Route 21 in both directions without HM03 or a badge.
 - Confirm FireRed and LeafGreen behave the same.
 
 ## References

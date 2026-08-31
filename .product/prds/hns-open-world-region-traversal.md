@@ -15,7 +15,7 @@ Kanto opens through the S.S. Aqua maiden voyage, Alola through the Mt. Moon keep
 - A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
-- After a region is unlocked, repeat travel is frictionless and always includes a return route.
+- Every inter-region travel service is frictionless after its region is unlocked and always includes a return option.
 - Opening a travel lane does not complete the story attached to it or award skipped rewards.
 
 ## Settlement coverage
@@ -103,13 +103,13 @@ A healing point or Fly marker does not make a route or landmark a settlement. Th
 
 These decisions are required before an implementation spec can claim full coverage. The Kanto land route is no longer an open question: it deliberately uses Saffron, optionalizes the Mt. Moon Silver battle, and treats Cycling Road as loan-bicycle public access. The Vermilion Snorlax and Underground Paths remain redundant shortcuts on that route.
 
-## Native Surf dependency
+## Native Surf recovery boundary
 
-The Standard Rod fishing PRD makes the required existing fishing slots available with the Old Rod and requires an accessibility check for traversal recovery species. This PRD does not change encounters, terrain, rod distribution, or capture-supply availability.
+The Standard Rod fishing PRD makes the required existing fishing slots eligible with the Old Rod. A player who already has the rod and capture supplies can therefore obtain another native Surf user from the existing encounter tables. This PRD does not change encounters, terrain, rod distribution, fishing probabilities, or capture-supply availability.
 
-A separate fishing-readiness PRD must ensure that the player can obtain the Old Rod before the Cianwood and Cinnabar crossings, give each recovery species a practical Old Rod probability, and address Poké Ball availability and removal of the last Surf user on either remote shore.
+Acceptance here covers a prepared player crossing to Cianwood and Cinnabar in both directions. It does not guarantee recovery when the player lacks the Old Rod or Poké Balls, has a full party, or deposits, releases, or forgets Surf on the last user.
 
-Until that dependency is implemented, native Surf resolves the route design but does not close the no-stranding acceptance requirement.
+A separate traversal-recovery PRD owns those softlock-prevention and emergency-return requirements. This PRD may be accepted independently and must not be cited as proof that Johto's or Kanto's settlement network is softlock-safe.
 
 ## Checks before decision
 
@@ -138,7 +138,7 @@ Until that dependency is implemented, native Surf resolves the route design but 
 - Visit New Sinjoh and Sinjoh Ruins without Mt. Silver permission or HM field use and return through Meara.
 - Return from every unlocked region without repeating its unlock story.
 - Use each bypass first, then return and complete its preserved story normally.
-- Cross to Cianwood and Cinnabar in both directions using the existing native Surf encounter coverage and no HM03 or badge.
+- With a native Surf user prepared before each crossing, cross to Cianwood and Cinnabar in both directions using the existing encounter geometry and no HM03 or badge.
 - Confirm no native HM other than Surf becomes a prerequisite for settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
 

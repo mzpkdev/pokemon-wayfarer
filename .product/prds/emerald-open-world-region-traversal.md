@@ -26,7 +26,7 @@ The required opening roster is Littleroot Town, Oldale Town, Petalburg City, Rus
 | Route 104 public ferry | Dewford and Slateport, with a return to Route 104 | A new deckhand outside Briney's Cottage uses the existing Briney boat departure and offers Route 104, Dewford, and Slateport from the player's first visit. The same three-stop menu appears at all three landings. Briney, Peeko, the Letter, and the Devon Goods story never start, stop, or remove this service. No new route geometry or pier is required. |
 | Lavaridge branch | Lavaridge | One ordinary lane through Route 112, the cable car, Mt. Chimney, or Jagged Pass must be selected below. |
 | Eastern mainland | Fortree and Lilycove | Native Surf crosses Route 118 without HM03 or a badge. Existing Lotad encounters serve the western land network and existing Wailmer fishing encounters serve the eastern land network. Route 119 then reaches Fortree; a Kecleon bypass on Route 120 continues to Lilycove. |
-| Eastern sea network | Mossdeep and Pacifidlog | Native Wailmer users connect Lilycove, Mossdeep, and Pacifidlog through the existing ocean routes and fishing encounters. The separate fishing-readiness dependency must be complete before this route can claim no-stranding coverage. |
+| Eastern sea network | Mossdeep and Pacifidlog | Native Wailmer users connect Lilycove, Mossdeep, and Pacifidlog through the existing ocean routes and fishing encounters. Prepared travel is in scope; recovery after losing access to Surf is not. |
 
 ## Approved changes
 
@@ -62,13 +62,13 @@ The required opening roster is Littleroot Town, Oldale Town, Petalburg City, Rus
 
 These two route-design decisions are required before an implementation spec can claim complete opening-network coverage.
 
-## Native Surf dependency
+## Native Surf recovery boundary
 
-The Standard Rod fishing PRD makes the existing Wailmer slots available with the Old Rod and requires an accessibility check for traversal recovery species. This PRD does not change encounters, terrain, rod distribution, or capture-supply availability.
+The Standard Rod fishing PRD makes the existing Wailmer slots eligible with the Old Rod. A player who already has the rod and capture supplies can therefore obtain another native Surf user from the existing encounter tables. This PRD does not change encounters, terrain, rod distribution, fishing probabilities, or capture-supply availability.
 
-A separate fishing-readiness PRD must ensure that the player can obtain the Old Rod before the approved crossings, give Wailmer a practical Old Rod probability, and address Poké Ball availability and removal of the last Surf user on an isolated shore.
+Acceptance here covers a prepared player crossing each approved route in both directions. It does not guarantee recovery when the player lacks the Old Rod or Poké Balls, has a full party, or deposits, releases, or forgets Surf on the last user.
 
-Until that dependency is implemented, native Surf resolves the route design but does not close the no-stranding acceptance requirement.
+A separate traversal-recovery PRD owns those softlock-prevention and emergency-return requirements. This PRD may be accepted independently and must not be cited as proof that Hoenn's opening settlement network is softlock-safe.
 
 ## Checks before decision
 
@@ -93,7 +93,7 @@ Until that dependency is implemented, native Surf resolves the route design but 
 - Use the public ferry from Route 104 to Dewford and Slateport and return from both destinations while the Peeko and Letter stories are untouched and while either story is active.
 - Use each bypass first, then return and complete its preserved story normally.
 - Test every changed connection from both directions and after saving on either side.
-- Cross Route 118 in both directions with existing native Surf encounters, then travel among Lilycove, Mossdeep, and Pacifidlog in both directions without HM03 or a badge.
+- With a native Surf user prepared before each crossing, cross Route 118 in both directions, then travel among Lilycove, Mossdeep, and Pacifidlog in both directions without HM03 or a badge.
 - Confirm no native HM other than Surf becomes a prerequisite for opening-network settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
 - Complete the Route 111 desert survey without a badge, HM item, field-move use, or unrelated story flag; confirm the Go-Goggles keep the boundary open and the later handoff does not duplicate them.

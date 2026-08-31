@@ -13,9 +13,11 @@ ability to the player for free. The Pokémon occupies a party slot, and the HM
 move occupies one of its four move slots.
 
 Native Surf users may also provide the ordinary route to a settlement when the
-existing encounter geography supports recovery from either direction. Surf is
-the only native HM allowed to fill this role. Other native HM moves remain
-tools for optional routes, shortcuts, and sequence breaks.
+existing encounter geography provides a listed user on both sides. Surf is the
+only native HM allowed to fill this role. Other native HM moves remain tools
+for optional routes, shortcuts, and sequence breaks. This establishes route
+availability for a prepared player, not recovery after the player gives up
+access to Surf.
 
 This behavior applies to Emerald, FireRed and LeafGreen, and HNS. It builds on
 the existing rule that a Pokémon which knows an HM move may use it in the field
@@ -79,13 +81,16 @@ This feature does not:
 - change species encounter locations or encounter rates;
 - make a move usable when its normal terrain, direction, map, or destination
   conditions are not met;
-- guarantee that the player always carries every field move.
+- guarantee that the player always carries every field move;
+- prevent the player from becoming stranded after losing access to the last
+  native Surf user.
 
 This PRD does not add grass, fishing encounters, encounter slots, or new
 species placements to make native Surf coverage work. A settlement route may
 rely on native Surf only when the existing encounter data already provides a
 listed native user on every land-connected side of the crossing. A water
-encounter that requires Surf to reach does not provide recovery coverage.
+encounter that requires Surf to reach does not provide directional coverage.
+This encounter rule is a content prerequisite, not a softlock guarantee.
 
 The open-world traversal PRDs define the approved native Surf crossings. They
 continue to require ordinary access for every other core obstacle.
@@ -191,21 +196,19 @@ Sootopolis is not part of this coverage. It remains unlockable content whose
 entrance, Dive requirement, story state, and return behavior are defined by its
 own progression.
 
-The Standard Rod fishing PRD makes every authored fishing slot available at
-every rod quality, so the Old Rod can hook each listed recovery species without
-an encounter edit or a stronger rod. It also requires a separate accessibility
-check for species used in required traversal recovery. Native Surf settlement
-coverage depends on those rules.
+The Standard Rod fishing PRD makes every authored fishing slot eligible at
+every rod quality. A player who already has the Old Rod and capture supplies
+can therefore hook each listed fishing species without an encounter edit or a
+stronger rod. It does not guarantee that the Old Rod is obtainable before a
+crossing or that the required species has a practical fishing probability.
 
-This PRD does not distribute the Old Rod or capture supplies. A separate
-fishing-readiness PRD must ensure that the player can obtain the Old Rod before
-a required crossing, set a practical fishing probability for each recovery
-species, and keep Poké Balls or another capture fallback available on an
-isolated shore. It must also cover removal of the last Surf user.
+Acceptance in this PRD covers prepared travel in both directions. It does not
+cover missing rods or Poké Balls, a full party, depositing or releasing the
+last Surf user, forgetting Surf, or emergency return behavior. A separate
+traversal-recovery PRD owns those softlock-prevention requirements.
 
-Until those dependencies are implemented, the encounter coverage in this
-section validates the species and route design but does not by itself prove
-that a player can never become stranded.
+This PRD may be accepted before that recovery work. It must not be used alone
+as evidence that a regional settlement network is softlock-safe.
 
 ## Presentation
 
@@ -288,11 +291,17 @@ obtainable in meaningfully different parts of the region rather than two floors
 of one dungeon. FireRed and LeafGreen must each have both Kanto choices
 available in multiple places.
 
-For every native Surf settlement route, test both directions using only the
-existing encounter tables and geometry. Confirm the player can reach a listed
-native user from dry land on each side. Run separate dependency tests for rod
-availability, the Old Rod probability of the recovery species, capture
-supplies, a full party, and removal of the last Surf user.
+For every native Surf settlement route, test both directions with a listed
+native user prepared before each crossing and with no HM03 or badge. Confirm
+that the route uses only the existing encounter tables and geometry and that a
+listed native user appears in encounter data reachable from dry land on each
+side. These tests establish route availability, not recovery after Surf access
+is lost.
+
+Missing rods or Poké Balls, impractical fishing probabilities, a full party,
+removal of the last Surf user, and emergency return behavior do not block this
+PRD's acceptance. Record those cases as inputs to the separate
+traversal-recovery PRD.
 
 Play early and midgame battles with Surf, Strength, Waterfall, and Dive users at
 their first practical encounter levels. Check whether the new attack causes one
