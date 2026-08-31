@@ -86,9 +86,6 @@ rod, registration, and giver state unchanged.
 
 ## Boundaries
 
-This feature does not add a Heavy Rod, Deep Rod, deep-water tile behavior, or a
-second fishing habitat. It does not add or author new encounter tables.
-
 The ten fishing entries already attached to each map remain unchanged. This
 feature does not move species between entries, edit their authored levels, or
 change land, Surf, Rock Smash, hidden, fixed, scripted, or facility encounters.
@@ -101,9 +98,6 @@ support order-independent upgrades.
 This feature does not redesign the fishing animation or reeling minigame. The
 Easier Fishing option and the existing manual behavior for each displayed rod
 quality remain available.
-
-It does not guarantee Poké Ball availability, protect the player's last field
-move user, or by itself prove that a traversal route cannot strand the player.
 
 This feature targets new saves. It does not define conversion or compatibility
 behavior for saves created before the feature is introduced.
@@ -225,59 +219,6 @@ HNS must not use current rod possession as the contribution state for its Old
 and Good Rod NPCs. Its three giver states must remain permanent across regional
 progression; a flag cleared during the Kanto transition cannot serve as the
 Route 12 contribution flag.
-
-## Playtesting
-
-Use deterministic encounter sampling for each quality state. For profiles with
-ten eligible entries, confirm that every entry appears, observed distributions
-match the configured global profile, and the least likely entry satisfies the
-Old Rod floor. Repeat with locked and empty entries to confirm that the
-remaining weights renormalize without failed encounters.
-
-Repeat each distribution with an active Lure. Confirm that its slot reversal
-uses the unified eligible sequence, increases rare catches as intended, and
-does not erase the visible difference between rod qualities.
-
-Exercise representative inland, coastal, cave, Safari, day, and night fishing
-profiles in Emerald, FireRed, LeafGreen, and each HNS region. Confirm that no
-map-specific encounter data was needed and that every species previously tied
-to Good or Super Rod can be caught with Old Rod.
-
-At low and high Trainer Ratings, catch evolved species from former Super Rod
-entries and confirm that projected levels, predecessor resolution, and species
-floors remain correct. Repeat in randomizer mode.
-
-Test the 25%, 50%, and 75% base bite rates before and after every configured
-friendship, ability, proximity, time, and chain modifier. Cover Easier Fishing
-and Manual Fishing at all three qualities.
-
-For each build, test all six orders of its three rod givers. Every first unused
-giver must award the Old Rod, every second must replace it with the Good Rod,
-and every third must replace it with the Super Rod. Revisit each contributor
-between upgrades and confirm that the same NPC cannot contribute twice. Test
-declined offers, save and reload between contributors, and HNS regional
-transitions without losing contribution state.
-
-Confirm that each upgrade removes the lower rod and transfers registration when
-the old rod occupies either of the two registered-item shortcut slots. The
-other registered item and shortcut behavior must remain unchanged.
-
-Review the revised conversations in every possible award position. Confirm
-that they do not refer to a fixed local tier or an exclusive species pool.
-Verify that the FireRed and LeafGreen family identity and Route 12 Magikarp
-records, Emerald Dewford tutorial, and HNS Olivine veteran flavor remain
-available after the progression logic changes.
-
-Fill the Key Items pocket before the first award. The award must fail without
-setting the giver's contribution flag and remain retryable after space is
-available. Repeat with a full pocket before Good and Super upgrades. Each
-upgrade must succeed by reusing the lower rod's slot, remove that lower rod,
-transfer either registration, and set the contributor's flag only after the
-transaction completes.
-
-Review every fishing-based species used by a traversal design. Confirm that the
-player can obtain the necessary rod and that the species' final probability is
-appropriate for recovery rather than trophy hunting.
 
 ## Open questions
 
