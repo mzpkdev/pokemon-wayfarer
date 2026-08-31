@@ -12,6 +12,11 @@ This creates an alternative to story-based HM acquisition without giving the
 ability to the player for free. The Pokémon occupies a party slot, and the HM
 move occupies one of its four move slots.
 
+Native Surf users may also provide the ordinary route to a settlement when the
+existing encounter geography supports recovery from either direction. Surf is
+the only native HM allowed to fill this role. Other native HM moves remain
+tools for optional routes, shortcuts, and sequence breaks.
+
 This behavior applies to Emerald, FireRed and LeafGreen, and HNS. It builds on
 the existing rule that a Pokémon which knows an HM move may use it in the field
 without owning the HM or holding the former authorizing badge.
@@ -76,9 +81,14 @@ This feature does not:
   conditions are not met;
 - guarantee that the player always carries every field move.
 
-The open-world traversal PRDs still define which settlements must be reachable
-without field moves. Native HM users support optional routes, shortcuts, and
-sequence breaks. They are not required members of the core settlement network.
+This PRD does not add grass, fishing encounters, encounter slots, or new
+species placements to make native Surf coverage work. A settlement route may
+rely on native Surf only when the existing encounter data already provides a
+listed native user on every land-connected side of the crossing. A water
+encounter that requires Surf to reach does not provide recovery coverage.
+
+The open-world traversal PRDs define the approved native Surf crossings. They
+continue to require ordinary access for every other core obstacle.
 
 ## Balance
 
@@ -96,8 +106,8 @@ level 1. A move may appear again at a later learn level when one placement
 cannot keep it active across both qualifying encounter ranges. The move must
 remain available through normal move relearning.
 
-Repeated species are intentional. Geodude, Aipom, Chinchou, Wooper, Miltank,
-Corphish, Sableye, Barboach, and Carvanha each support two related field roles.
+Repeated species are intentional. Geodude, Horsea, Aipom, Chinchou, Wooper,
+Miltank, Corphish, Sableye, Wailmer, and Carvanha each support two related field roles.
 A player may build a compact utility party around them, but each additional HM
 still consumes another move slot.
 
@@ -112,7 +122,7 @@ than Fly.
 | --- | --- | --- |
 | Cut | Paras and Rattata | Claws and incisors across Mt. Moon, the Safari Zone, and early routes. |
 | Flash | Voltorb and Pikachu | Electrical light from Route 10, the Power Plant, Viridian Forest, and the Safari Zone. |
-| Surf | Poliwag and Tentacool | Inland fishing and broad coastal encounters. |
+| Surf | Horsea and Krabby | Fishing coverage on both the Pallet and Cinnabar sides of Kanto's ocean crossing. |
 | Strength | Machop and Geodude | Physical power across Mt. Moon, Rock Tunnel, Victory Road, and other caves. |
 | Rock Smash | Mankey and Geodude | Striking fists and a rock-bodied partner found on routes and in caves. |
 | Waterfall | Goldeen and Horsea | Inland and coastal fishing coverage from two natural swimmers. |
@@ -129,7 +139,7 @@ HNS uses Generation II species for its seven regional HMs other than Fly.
 | --- | --- | --- |
 | Cut | Gligar and Aipom | Pincers and a tail-hand across mountain routes, the Safari Zone, and Headbutt encounters. |
 | Flash | Chinchou and Mareep | A lantern fish and a glowing tail across water, caves, and early land routes. |
-| Surf | Wooper and Corsola | Inland ponds and caves paired with coastal settlements and the Whirl Islands. |
+| Surf | Chinchou and Wooper | Shore fishing around Olivine and Cianwood paired with early land encounters on Route 32 and around the Ruins of Alph. |
 | Strength | Snubbull and Miltank | Compact physical power across Routes 34, 35, 38, 39, and 47. |
 | Rock Smash | Aipom and Miltank | A tail-hand strike and a horned battering ram across Headbutt areas and Routes 38, 39, and 47. |
 | Waterfall | Wooper and Marill | Inland pools and caves across Route 32, the Ruins of Alph, Union Cave, Route 42, and Mt. Mortar. |
@@ -150,7 +160,7 @@ Emerald uses Generation III species for its seven regional HMs other than Fly.
 | --- | --- | --- |
 | Cut | Corphish and Sableye | Pincers and claws across ponds and several cave systems. |
 | Flash | Electrike and Sableye | Electrical light and luminous gem eyes across Routes 110 and 118 and Hoenn's caves. |
-| Surf | Lotad and Barboach | Early ponds paired with rivers, Meteor Falls, and Victory Road. |
+| Surf | Lotad and Wailmer | Early land encounters paired with widespread fishing throughout Hoenn's eastern waterways and ocean settlements. |
 | Strength | Makuhita and Torkoal | Muscle and a heavy shell across Granite Cave, Victory Road, Fiery Path, and Magma Hideout. |
 | Rock Smash | Aron and Corphish | An iron head and crushing pincers across cave networks and ponds. |
 | Waterfall | Barboach and Carvanha | River and cave encounters paired with the eastern waterways on Routes 118 and 119. |
@@ -163,6 +173,34 @@ second choice. Volbeat is more literal but appears only on Route 117.
 Carvanha begins as a frail utility catch, but Sharpedo is a strong evolution.
 Waterfall and Dive still consume separate move slots after evolution, so the
 combat improvement does not remove the utility cost.
+
+## Native Surf settlement coverage
+
+Native Surf may replace an ordinary ferry or constructed crossing only on the
+following routes. Coverage uses existing encounters and map geometry.
+
+| Build and route | Existing departure-side source | Existing arrival-side source |
+| --- | --- | --- |
+| FireRed and LeafGreen, Pallet to Cinnabar | Horsea and Krabby are available through Pallet's existing fishing encounters in both versions. | Horsea and Krabby are available through Cinnabar's existing fishing encounters in both versions. |
+| HNS Johto, Olivine to Cianwood | Wooper is available on the connected Johto mainland, while Chinchou is available around Olivine. | Cianwood's existing fishing encounters provide Chinchou during the day and Krabby, a Kanto native Surf user, at night. |
+| HNS Kanto, mainland to Cinnabar | Chinchou is available around Vermilion on the connected Kanto mainland. | Chinchou is available in Cinnabar's existing fishing encounters during the day and at night. |
+| Emerald, Route 118 and the eastern mainland | Lotad is available on the western land network. | Wailmer is available through existing fishing encounters on the eastern land network. |
+| Emerald, Lilycove to Mossdeep and Pacifidlog | Wailmer is available through Lilycove's existing fishing encounters. | Wailmer is available through the existing fishing encounters in Mossdeep and Pacifidlog. |
+
+Sootopolis is not part of this coverage. It remains unlockable content whose
+entrance, Dive requirement, story state, and return behavior are defined by its
+own progression.
+
+Fishing-based recovery depends on equipment and capture supplies that this PRD
+does not distribute. A separate PRD must ensure that the Old Rod is obtainable
+for these routes and either make it sufficient for the required existing
+encounter slots or guarantee the stronger rod those slots currently use. That
+separate work must also define how Poké Balls or another capture fallback remain
+available on an isolated shore.
+
+Until those dependencies are implemented, the encounter coverage in this
+section validates the species and route design but does not by itself prove
+that a player can never become stranded.
 
 ## Presentation
 
@@ -244,6 +282,12 @@ Test each regional pair as a coverage unit. The two species should be
 obtainable in meaningfully different parts of the region rather than two floors
 of one dungeon. FireRed and LeafGreen must each have both Kanto choices
 available in multiple places.
+
+For every native Surf settlement route, test both directions using only the
+existing encounter tables and geometry. Confirm the player can reach a listed
+native user from dry land on each side. Run separate dependency tests for rod
+availability, the rod tier used by the encounter slot, capture supplies, a full
+party, and removal of the last Surf user.
 
 Play early and midgame battles with Surf, Strength, Waterfall, and Dive users at
 their first practical encounter levels. Check whether the new attack causes one

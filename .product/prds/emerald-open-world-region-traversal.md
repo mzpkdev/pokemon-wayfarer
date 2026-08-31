@@ -2,15 +2,15 @@
 
 ## Player outcome
 
-After the opening releases the player with a starter, every Hoenn town and city is reachable without completing the main story, earning badges, owning an HM, or using an HM move in the field. The player may take a long route, but determination is enough.
+After the opening releases the player with a starter, every ordinary Hoenn town and city except Sootopolis is reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the route across natural water. The player may take a long route, but determination is enough.
 
-Surf and Fly make travel faster. Cut, Rock Smash, Surf, bicycles, and local stories may still unlock shortcuts, hidden locations, and optional content.
+Sootopolis remains unlockable content. Its enclosed geography, Dive entrance, Gym, and crisis story do not belong to the opening settlement network.
 
 ## Rules
 
-- Walking, doors, and always-available local transport form Hoenn's core settlement network.
-- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city. That route also cannot require an HM item or a Pokémon that knows an HM move.
-- A Pokémon that already knows an HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
+- Walking, doors, always-available local transport, and the approved native Surf crossings form Hoenn's core settlement network.
+- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in the opening network. That route cannot require an HM item. Only the named water crossings may require a Pokémon that already knows Surf.
+- Native Cut, Flash, Strength, Rock Smash, Waterfall, and Dive users may open optional routes before the matching HM is found. Those routes do not count toward the core settlement network.
 - A story actor or battle may occupy one approach only when another visible lane remains open.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - A bypass does not complete its story or award skipped badges, HMs, items, or rewards.
@@ -18,15 +18,15 @@ Surf and Fly make travel faster. Cut, Rock Smash, Surf, bicycles, and local stor
 
 ## Settlement coverage
 
-The required roster is Littleroot Town, Oldale Town, Petalburg City, Rustboro City, Dewford Town, Slateport City, Mauville City, Verdanturf Town, Fallarbor Town, Lavaridge Town, Fortree City, Lilycove City, Mossdeep City, Sootopolis City, and Pacifidlog Town. Ever Grande is an endgame destination and is not part of this roster.
+The required opening roster is Littleroot Town, Oldale Town, Petalburg City, Rustboro City, Dewford Town, Slateport City, Mauville City, Verdanturf Town, Fallarbor Town, Lavaridge Town, Fortree City, Lilycove City, Mossdeep City, and Pacifidlog Town. Sootopolis is unlockable content, while Ever Grande remains an endgame destination.
 
 | Network segment | Settlements served | Core access contract |
 | --- | --- | --- |
 | Southwest and central land network | Littleroot, Oldale, Petalburg, Rustboro, Slateport, Mauville, Verdanturf, and Fallarbor | Existing roads, Petalburg Woods, the public ferry, Route 110, and the Route 111/113 loop remain passable under the approved changes below. Rusturf Tunnel remains an optional Rock Smash shortcut. |
 | Route 104 public ferry | Dewford and Slateport, with a return to Route 104 | A new deckhand outside Briney's Cottage uses the existing Briney boat departure and offers Route 104, Dewford, and Slateport from the player's first visit. The same three-stop menu appears at all three landings. Briney, Peeko, the Letter, and the Devon Goods story never start, stop, or remove this service. No new route geometry or pier is required. |
 | Lavaridge branch | Lavaridge | One ordinary lane through Route 112, the cable car, Mt. Chimney, or Jagged Pass must be selected below. |
-| Eastern mainland | Fortree and Lilycove | One HM-free Route 118 crossing must connect Mauville's side to the eastern bank. Route 119 then reaches Fortree; a Kecleon bypass on Route 120 continues to Lilycove. |
-| Eastern sea network | Mossdeep, Sootopolis, and Pacifidlog | One public transport network with visible boarding and return points must be selected below. Removing Lilycove's Wailmer keeps the Surf route open but does not satisfy this HM-free lane. |
+| Eastern mainland | Fortree and Lilycove | Native Surf crosses Route 118 without HM03 or a badge. Existing Lotad encounters serve the western land network and existing Wailmer fishing encounters serve the eastern land network. Route 119 then reaches Fortree; a Kecleon bypass on Route 120 continues to Lilycove. |
+| Eastern sea network | Mossdeep and Pacifidlog | Native Wailmer users connect Lilycove, Mossdeep, and Pacifidlog through the existing ocean routes and fishing encounters. The separate fishing-readiness dependency must be complete before this route can claim no-stranding coverage. |
 
 ## Approved changes
 
@@ -41,7 +41,7 @@ The required roster is Littleroot Town, Oldale Town, Petalburg City, Rustboro Ci
 | Route 111 northbound road | Move one Rock Smash rock off the choke. Keep the other rock as an optional field-move interaction. |
 | Route 119 bridge | Initialize only the dedicated Aqua roadblock hide state. Keep the Weather Institute occupation and Shelly battle available. |
 | Route 119 rival | Leave one trigger lane for the battle and one lane for travel. Fly remains a battle reward. |
-| Lilycove east ocean outlet | Do not install the blocking Wailmer metatiles. Keep the submarine, hideout, and Team Aqua story state unchanged. This preserves Surf as an optional direct route; it is not the ordinary HM-free sea connection. |
+| Lilycove east ocean outlet | Do not install the blocking Wailmer metatiles. Keep the submarine, hideout, and Team Aqua story state unchanged. This is the native Surf entrance to the eastern sea network. |
 
 ## Shortcut story
 
@@ -58,22 +58,26 @@ The required roster is Littleroot Town, Oldale Town, Petalburg City, Rustboro Ci
 | Block | Access affected | Decision needed |
 | --- | --- | --- |
 | Lavaridge approach | Lavaridge | Choose one core lane. Either keep the Route 112 cable car operating before the team conflict, or leave a walkable descent through the Mt. Chimney staging and Jagged Pass. Specify which team actors move and where their scenes remain available. |
-| Route 118 water choke | Fortree and Lilycove | Choose an HM-free crossing between Mauville's Route 118 bank and the eastern bank. Specify whether it is a bridge, a short ferry, or another visible transport; include both boarding points and unrestricted return behavior. |
 | Route 120 Kecleon and Steven | Lilycove from the Fortree side | Choose the bypass lane or object placement that lets the player cross without the Devon Scope while keeping Steven's scene and the Kecleon encounter available. |
-| Eastern sea service | Mossdeep and Pacifidlog | Choose the operator, boarding points, and menu for ordinary travel among Lilycove, Mossdeep, and Pacifidlog. Every stop must offer an immediate return, and no stop may check Surf, Dive, badges, or story state. |
-| Sootopolis service | Sootopolis | Choose a believable surface arrival point and connect it to the eastern sea service. The player must enter and leave without Dive, the Mind Badge, the Space Center story, or the crisis story. The underwater entrance remains optional. |
 
-These five route-design decisions are required before an implementation spec can claim complete Hoenn coverage. Each chosen service must be visible and understandable in the world; a hidden warp is not an ordinary travel solution.
+These two route-design decisions are required before an implementation spec can claim complete opening-network coverage.
+
+## Native Surf dependency
+
+This PRD does not change encounters, terrain, rod distribution, or capture-supply availability. A separate fishing-readiness PRD must make the Old Rod obtainable around the approved crossings and either make it sufficient for the existing Wailmer slots or guarantee the rod tier those slots currently require. It must also address Poké Ball availability and removal of the last Surf user on an isolated shore.
+
+Until that dependency is implemented, native Surf resolves the route design but does not close the no-stranding acceptance requirement.
 
 ## Checks before decision
 
 | Suspected problem | Check needed |
 | --- | --- |
-| Early eastern-city arrival | Enter Fortree, Lilycove, Mossdeep, Sootopolis, and Pacifidlog before their campaign order. Record any arrival script that advances a team, Gym, legendary, weather, or rival state; convert it to baseline presentation only before approving the associated lane. |
+| Early eastern-city arrival | Enter Fortree, Lilycove, Mossdeep, and Pacifidlog before their campaign order. Record any arrival script that advances a team, Gym, legendary, weather, or rival state; convert it to baseline presentation only before approving the associated lane. |
 
 ## Out of scope
 
 - Ever Grande's League area, Victory Road, and the Battle Frontier are endgame locations.
+- Sootopolis is unlockable content. This pass does not bypass its Dive entrance, Gym state, Cave of Origin state, or crisis progression.
 - New Mauville, hideouts, legendary rooms, Regi chambers, Safari expansion, and event islands are optional content.
 - Rusturf Tunnel may retain Rock Smash because it is a shortcut between already reachable settlements.
 - The Route 111 desert uses the survey story above and remains a gated shortcut.
@@ -82,12 +86,13 @@ These five route-design decisions are required before an implementation spec can
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks, then record the chosen lane or service in Settlement coverage before implementation begins.
-- From a new save after the opening, visit all fifteen named Hoenn settlements without badges, HM items, story completion flags, field-move use, or forced victories.
-- Run every required core settlement route with no HM items in the Bag and a party in which no Pokémon knows an HM move.
+- From a new save after the opening, visit all fourteen named opening-network settlements without badges, HM items, story completion flags, or forced victories. Native Surf is allowed only on the approved water crossings.
+- Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved crossings.
 - Use the public ferry from Route 104 to Dewford and Slateport and return from both destinations while the Peeko and Letter stories are untouched and while either story is active.
 - Use each bypass first, then return and complete its preserved story normally.
 - Test every changed connection from both directions and after saving on either side.
-- Confirm Surf and Fly improve travel without becoming prerequisites for settlement access.
+- Cross Route 118 in both directions with existing native Surf encounters, then travel among Lilycove, Mossdeep, and Pacifidlog in both directions without HM03 or a badge.
+- Confirm no native HM other than Surf becomes a prerequisite for opening-network settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
 - Complete the Route 111 desert survey without a badge, HM item, field-move use, or unrelated story flag; confirm the Go-Goggles keep the boundary open and the later handoff does not duplicate them.
 

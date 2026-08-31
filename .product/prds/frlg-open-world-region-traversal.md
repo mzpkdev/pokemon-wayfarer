@@ -2,17 +2,17 @@
 
 ## Player outcome
 
-After the opening releases the player with a starter, every Kanto town and city is reachable without completing the main story, earning badges, owning an HM, or using an HM move in the field. The player may take a long route, but determination is enough.
+After the opening releases the player with a starter, every Kanto town and city is reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the route to Cinnabar. The player may take a long route, but determination is enough.
 
 The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Rainbow Pass. Once unlocked, travel to and between its towns and cities has no further story requirement and never requires HM field use.
 
 ## Rules
 
-- Walking, doors, and always-available local transport form the core settlement network.
-- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in an unlocked region. That route also cannot require an HM item or a Pokémon that knows an HM move.
-- Surf and Fly may make settlement travel faster. They are never required for basic settlement access.
+- Walking, doors, always-available local transport, and the approved native Surf crossing form the core settlement network.
+- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in an unlocked region. That route cannot require an HM item. Only the Cinnabar crossing may require a Pokémon that already knows Surf.
+- Fly may make settlement travel faster. Surf remains optional except for the approved Cinnabar route.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
-- A Pokémon that already knows an HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
+- A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
 - After a region is unlocked, repeat travel is frictionless and always includes a return route.
@@ -22,7 +22,7 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. The Fuchsia and Cinnabar lanes remain the two route-design decisions listed below. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Fuchsia retains one unresolved land approach. Native Surf connects Pallet to Cinnabar through Route 21. Existing Horsea and Krabby fishing encounters provide both species on both sides in FireRed and LeafGreen. Route 20 and Seafoam remain optional. |
 | Sevii Islands | The settlement hubs on One, Two, Three, Four, Five, Six, and Seven Island | The Seagallop service is the core network. The unlock trip introduces One Island; immediately afterward, every Sevii port offers all seven islands and Vermilion. |
 
 Indigo Plateau and event-only islands are not settlements in this pass. A route, cave, or optional landmark does not enter scope merely because it has a healing point.
@@ -55,9 +55,14 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 | Pewter escort | Pewter's east exit | Move the escort or leave a second lane open. |
 | Mt. Moon Super Nerd | Pewter to Cerulean | Add a bypass that preserves the Fossil battle and reward. |
 | Route 12 and Route 16 Snorlax | Fuchsia City | Choose the core lane: either leave a walkable lane around Route 12 Snorlax, or leave a walkable lane around Route 16 Snorlax and allow Cycling Road entry without owning the Bicycle. Preserve both encounters; the unused approach may remain a shortcut. |
-| Route 20 and Route 21 Surf | Cinnabar Island | Choose one ordinary transport connection from Pallet or Fuchsia to Cinnabar, including its operator, boarding point, arrival point, and always-available return trip. Seafoam and both Surf routes may remain optional. |
 
-These four decisions are required before an implementation spec can claim complete Kanto coverage. They are not permission to invent story-completion flags; the chosen lane must preserve the associated story and reward.
+These three decisions are required before an implementation spec can claim complete Kanto coverage. They are not permission to invent story-completion flags; the chosen lane must preserve the associated story and reward.
+
+## Native Surf dependency
+
+This PRD does not change encounters, terrain, rod distribution, or capture-supply availability. A separate fishing-readiness PRD must make the Old Rod obtainable around the Cinnabar approaches and either make it sufficient for the existing Horsea and Krabby slots or guarantee the rod tier those slots currently require. It must also address Poké Ball availability and removal of the last Surf user on Cinnabar.
+
+Until that dependency is implemented, native Surf resolves the route design but does not close the no-stranding acceptance requirement.
 
 ## Out of scope
 
@@ -69,13 +74,14 @@ These four decisions are required before an implementation spec can claim comple
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks, then record the chosen core lane in Settlement coverage before implementation begins.
-- From a new save after the opening, visit the ten named Kanto settlements without badges, HM items, story completion flags, field-move use, or forced victories.
-- Run every required core settlement route with no HM items in the Bag and a party in which no Pokémon knows an HM move.
+- From a new save after the opening, visit the ten named Kanto settlements without badges, HM items, story completion flags, or forced victories. Native Surf is allowed only for Cinnabar.
+- Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the Cinnabar crossing.
 - Use each bypass first, then return and complete its preserved story normally.
 - Complete the Seagallop shakedown and receive the Rainbow Pass without leaving Vermilion or satisfying another story flag.
 - Open Sevii service while the S.S. Anne is still present, use both dock choices, and confirm neither choice changes the other's independent story state.
 - Confirm the first Sevii trip goes to One Island, Celio's introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
 - Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.
+- In both versions, fish native Horsea and Krabby on the Pallet and Cinnabar sides. Cross Route 21 in both directions without HM03 or a badge.
 - Confirm FireRed and LeafGreen behave the same.
 
 ## References
