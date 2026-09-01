@@ -1233,9 +1233,8 @@
 	.2byte \move
 	.endm
 
-	@ Checks if at least one Pokemon in the player's party knows the specified field move and if the field move is unlocked. If so, VAR_RESULT is set to the
-	@ (zero-indexed) slot number of the first Pokemon that knows the move. If not, VAR_RESULT is set to PARTY_SIZE.
-	@ VAR_0x8004 is also set to this Pokemon's species.
+	@ Resolves the field move's user. VAR_RESULT receives the party slot or PARTY_SIZE,
+	@ VAR_0x8004 receives the user's species, and VAR_0x8008 receives a FieldMoveUserResult.
 	.macro checkfieldmove fieldMove:req, checkUnlocked=FALSE
 	.byte SCR_OP_CHECKFIELDMOVE
 	.byte \fieldMove
@@ -2952,8 +2951,8 @@
 	.2byte \move2_4
 	.endm
 
-	@ Checks if any Pokemon in the player's party knows the given move.
-	@ Sets VAR_RESULT to the (zero-indexed) slot number, or PARTY_SIZE if none.
+	@ Resolves a party move user. Moves without a machine retain their compatibility fallback.
+	@ VAR_RESULT receives the party slot or PARTY_SIZE, and VAR_0x8008 receives a FieldMoveUserResult.
 	.macro checkpartymove move:req
 	.byte SCR_OP_CHECKPARTYMOVE
 	.2byte \move

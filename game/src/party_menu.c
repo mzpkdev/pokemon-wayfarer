@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "malloc.h"
 #include "battle.h"
 #include "challenge_menu.h"
@@ -231,6 +234,36 @@ EWRAM_DATA u8 gBattlePartyCurrentOrder[PARTY_SIZE / 2] = {0}; // bits 0-3 are th
 static EWRAM_DATA u8 sInitialLevel = 0;
 static EWRAM_DATA u8 sFinalLevel = 0;
 
+#ifdef E2E_TESTING
+static void CB2_InitPartyMenu(void);
+static void CB2_ReloadPartyMenu(void);
+static void CB2_UpdatePartyMenu(void);
+
+bool32 E2ETest_IsPartyMenuOpen(void)
+{
+    return gMain.callback2 == CB2_InitPartyMenu
+        || gMain.callback2 == CB2_ReloadPartyMenu
+        || gMain.callback2 == CB2_UpdatePartyMenu;
+}
+
+void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count)
+{
+    u32 i;
+
+    *count = 0;
+    if (!E2ETest_IsPartyMenuOpen()
+     || sPartyMenuInternal == NULL
+     || sPartyMenuInternal->windowId[0] == WINDOW_NONE)
+        return;
+
+    *count = sPartyMenuInternal->numActions;
+    if (*count > E2E_TEST_MAX_PARTY_MENU_ACTIONS)
+        *count = E2E_TEST_MAX_PARTY_MENU_ACTIONS;
+    for (i = 0; i < *count; i++)
+        actions[i] = sPartyMenuInternal->actions[i];
+}
+#endif
+
 // IWRAM common
 COMMON_DATA void (*gItemUseCB)(u8, TaskFunc) = NULL;
 
@@ -308,7 +341,6 @@ static void HandleChooseMonSelection(u8, s8 *);
 static u16 PartyMenuButtonHandler(s8 *);
 static s8 *GetCurrentPartySlotPtr(void);
 static bool8 IsSelectedMonNotEgg(u8 *);
-static bool8 DoesSelectedMonKnowHM(u8 *);
 static void PartyMenuRemoveWindow(u8 *);
 static void CB2_SetUpExitToBattleScreen(void);
 static void Task_ClosePartyMenuAfterText(u8);
@@ -515,7 +547,6 @@ static void Task_FirstBattleEnterParty_WaitFadeNormal(u8 taskId);
 static const u8 sText_askText[] = _("Would you like to change {STR_VAR_1}'s\nability to {STR_VAR_2}?");
 static const u8 sText_doneText[] = _("{STR_VAR_1}'s ability became\n{STR_VAR_2}!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_BasePointsResetToZero[] = _("{STR_VAR_1}'s base points\nwere all reset to zero!{PAUSE_UNTIL_PRESS}");
-static const u8 sText_CannotSendMonToBoxHM[] = _("Cannot send that mon to the box,\nbecause it knows a HM move.{PAUSE_UNTIL_PRESS}");
 static const u8 sText_CannotSendMonToBoxPartner[] = _("Cannot send a mon that doesn't\nbelong to you to the box.{PAUSE_UNTIL_PRESS}");
 
 // static const data
@@ -1548,13 +1579,6 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
                 ScheduleBgCopyTilemapToVram(2);
                 gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
             }
-            else if (DoesSelectedMonKnowHM((u8 *)slotPtr))
-            {
-                PlaySE(SE_FAILURE);
-                DisplayPartyMenuMessage(sText_CannotSendMonToBoxHM, FALSE);
-                ScheduleBgCopyTilemapToVram(2);
-                gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
-            }
             else
             {
                 PlaySE(SE_SELECT);
@@ -1581,19 +1605,6 @@ static bool8 IsSelectedMonNotEgg(u8 *slotPtr)
         return FALSE;
     }
     return TRUE;
-}
-
-static bool8 DoesSelectedMonKnowHM(u8 *slotPtr)
-{
-    if (B_CATCH_SWAP_CHECK_HMS == FALSE)
-        return FALSE;
-
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (IsMoveHM(GetMonData(&gPlayerParty[*slotPtr], MON_DATA_MOVE1 + i)))
-            return TRUE;
-    }
-    return FALSE;
 }
 
 static void HandleChooseMonCancel(u8 taskId, s8 *slotPtr)
@@ -2916,8 +2927,6 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 {
     u8 i, j;
-    bool32 hasFlyAlready = FALSE;
-    bool32 hasFlashAlready = FALSE;
     u8 numFieldMoves = 0;
     u8 maxFieldMoves = MAX_MON_MOVES;
 
@@ -2934,62 +2943,37 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
     }
 
-    if (HMsOverwriteOptionActive() && slotId == 0)
+    if (!GetMonData(&mons[slotId], MON_DATA_IS_EGG))
     {
+        if (CanPartyMonUseFieldMove(&mons[slotId], MOVE_FLY) && numFieldMoves < maxFieldMoves)
+        {
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, FIELD_MOVE_FLY + MENU_FIELD_MOVES);
+            numFieldMoves++;
+        }
+        if (CanPartyMonUseFieldMove(&mons[slotId], MOVE_FLASH) && numFieldMoves < maxFieldMoves)
+        {
+            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, FIELD_MOVE_FLASH + MENU_FIELD_MOVES);
+            numFieldMoves++;
+        }
+
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             for (j = 0; j != FIELD_MOVES_COUNT; j++)
             {
-                if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j) && numFieldMoves < maxFieldMoves)
+                enum Move move = FieldMove_GetMoveId(j);
+
+                if (gFieldMoveInfo[j].fieldMoveFunc != NULL
+                 && move != MOVE_FLY
+                 && move != MOVE_FLASH
+                 && IsFieldMovePartyMenuAction(j)
+                 && GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == move
+                 && numFieldMoves < maxFieldMoves)
                 {
-                    if (FieldMove_GetMoveId(j) == MOVE_FLY)
-                        hasFlyAlready = TRUE;
-                    if (FieldMove_GetMoveId(j) == MOVE_FLASH)
-                        hasFlashAlready = TRUE;
                     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
                     numFieldMoves++;
                     break;
                 }
             }
-        }
-        if (CheckBagHasItem(ITEM_HM02, 1) && numFieldMoves < maxFieldMoves && !hasFlyAlready)
-        {
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, FIELD_MOVE_FLY + MENU_FIELD_MOVES);
-            numFieldMoves++;
-        }
-        if (CheckBagHasItem(ITEM_HM05, 1) && numFieldMoves < maxFieldMoves && !hasFlashAlready)
-        {
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, FIELD_MOVE_FLASH + MENU_FIELD_MOVES);
-            numFieldMoves++;
-        }
-    }
-    else
-    {
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            for (j = 0; j != FIELD_MOVES_COUNT; j++)
-            {
-                if (GetMonData(&mons[slotId], i + MON_DATA_MOVE1) == FieldMove_GetMoveId(j))
-                {
-                    if (FieldMove_GetMoveId(j) != MOVE_FLY && FieldMove_GetMoveId(j) != MOVE_FLASH && numFieldMoves < maxFieldMoves)
-                    {
-                        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, j + MENU_FIELD_MOVES);
-                        numFieldMoves++;
-                    }
-                    break;
-                }
-            }
-        }
-        if (numFieldMoves < maxFieldMoves && CanLearnTeachableMove(GetMonData(&mons[slotId], MON_DATA_SPECIES), MOVE_FLY))
-        {
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, FIELD_MOVE_FLY + MENU_FIELD_MOVES);
-            numFieldMoves++;
-        }
-        if (numFieldMoves < maxFieldMoves && CheckBagHasItem(ITEM_HM05, 1)
-         && CanLearnTeachableMove(GetMonData(&mons[slotId], MON_DATA_SPECIES), MOVE_FLASH))
-        {
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, FIELD_MOVE_FLASH + MENU_FIELD_MOVES);
-            numFieldMoves++;
         }
     }
 
@@ -4126,6 +4110,10 @@ static void CursorCb_FieldMove(u8 taskId)
     if (gFieldMoveInfo[fieldMove].fieldMoveFunc == NULL)
         return;
 
+#ifdef E2E_TESTING
+    E2ETest_RecordFieldMove(FieldMove_GetMoveId(fieldMove), gPartyMenu.slotId, E2E_TEST_FIELD_MOVE_SELECTED);
+#endif
+
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
     if (MenuHelpers_IsLinkActive() == TRUE || InUnionRoom() == TRUE)
@@ -4139,11 +4127,10 @@ static void CursorCb_FieldMove(u8 taskId)
     }
     else
     {
-        // All field moves before WATERFALL are HMs.
         if (!IsFieldMoveUnlocked(fieldMove))
         {
-            DisplayPartyMenuMessage(gText_CantUseUntilNewBadge, TRUE);
-            gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+            DisplayPartyMenuStdMessage(FieldMove_GetPartyMsgID(fieldMove));
+            gTasks[taskId].func = Task_CancelAfterAorBPress;
         }
         else if (SetUpFieldMove(fieldMove) == TRUE)
         {
@@ -8253,34 +8240,6 @@ void IsSelectedMonEgg(void)
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;
-}
-
-void IsLastMonThatKnowsSurf(void)
-{
-    enum Move move;
-    u32 i, j;
-
-    gSpecialVar_Result = FALSE;
-    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
-        return;
-
-    move = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_MOVE1 + gSpecialVar_0x8005);
-    if (move == MOVE_SURF)
-    {
-        for (i = 0; i < CalculatePlayerPartyCount(); i++)
-        {
-            if (i != gSpecialVar_0x8004)
-            {
-                for (j = 0; j < MAX_MON_MOVES; j++)
-                {
-                    if (GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j) == MOVE_SURF)
-                        return;
-                }
-            }
-        }
-        if (AnyStorageMonWithMove(move) != TRUE)
-            gSpecialVar_Result = !P_CAN_FORGET_HIDDEN_MOVE;
-    }
 }
 
 static void CursorCb_ChangeLevelUpMoves(u8 taskId)

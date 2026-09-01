@@ -208,8 +208,8 @@ SproutTower_Text_SageLi_TakeFlash:
 SproutTower_Text_SageLi_FlashExplain:
 	.string "FLASH illuminates even the\n"
 	.string "darkest of all places.\p"
-	.string "But to use it out of battle, you\n"
-	.string "need the BADGE from VIOLET's GYM.$"
+	.string "Keep its HM in your BAG and bring\n"
+	.string "a compatible POKéMON with you.$"
 
 SproutTower_Text_SageLi_AfterBattle:
 	.string "I hope you learn and grow from\n"

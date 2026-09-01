@@ -64,10 +64,8 @@ SSAnne_CaptainsOffice_Text_ThankYouHaveHMForCut::
 	.string "technique?\p"
 	.string "I could show you my prized CUT\n"
 	.string "technique if I weren't so ill…\p"
-	.string "I know! You can have this!\n"
-	.string "This HIDDEN MACHINE!\p"
-	.string "Teach CUT to your POKéMON, and\n"
-	.string "you can see it CUT anytime!$"
+	.string "I know! You can have this\n"
+	.string "HIDDEN MACHINE for CUT!$"
 
 SSAnne_CaptainsOffice_Text_ObtainedHM01FromCaptain::
 	.string "{PLAYER} obtained HM01\n"
@@ -76,8 +74,16 @@ SSAnne_CaptainsOffice_Text_ObtainedHM01FromCaptain::
 SSAnne_CaptainsOffice_Text_ExplainCut::
 	.string "Using CUT, you can chop down\n"
 	.string "small trees.\p"
-	.string "Why not try it with the trees\n"
-	.string "around VERMILION CITY?$"
+	.string "You don't need a BADGE to use an\n"
+	.string "HM move in the field.\p"
+	.string "With its HM in your BAG, a\n"
+	.string "compatible POKéMON in your party\l"
+	.string "can use the move without\l"
+	.string "learning it.\p"
+	.string "EGGS can't use HM moves.\p"
+	.string "Teaching the move is optional.\n"
+	.string "If you do, it can be forgotten or\l"
+	.string "replaced like any other move.$"
 
 SSAnne_CaptainsOffice_Text_SSAnneWillSetSailSoon::
 	.string "CAPTAIN: …Whew!\p"
@@ -98,4 +104,3 @@ SSAnne_CaptainsOffice_Text_YuckShouldntHaveLooked::
 SSAnne_CaptainsOffice_Text_HowToConquerSeasickness::
 	.string "How to Conquer Seasickness…\n"
 	.string "The CAPTAIN's reading this!$"
-

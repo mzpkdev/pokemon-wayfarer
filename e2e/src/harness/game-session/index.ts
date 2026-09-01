@@ -1,4 +1,5 @@
 export { GameSession } from "./game-session"
+export { hms, moves, partyMenuActions, species } from "./catalog"
 export type {
   Button,
   Checkpoint,
@@ -6,6 +7,10 @@ export type {
   GameMap,
   StoryFlag,
   StoryVar,
+  Hm,
+  Move,
+  PartyMenuAction,
+  Species,
   TextSpeed,
 } from "./catalog"
 export type { ArrangeGame, PlayerPosition } from "./features/arrange"

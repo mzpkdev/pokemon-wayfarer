@@ -148,9 +148,6 @@ MahoganyTown_Gym_Text_ReceivedBadge:
 MahoganyTown_Gym_Text_GlacierBadgeSpeech:
     .string "That BADGE will raise the SPECIAL\n"
     .string "ATTACK of POKéMON.\p"
-    .string "It also lets your POKéMON use\n"
-    .string "WHIRLPOOL to get across\l"
-    .string "real whirlpools.\p"
     .string "And this… This is a gift from me!$"
 
 MahoganyTown_Gym_Text_HailSpeech:
@@ -257,4 +254,3 @@ MahoganyTown_Gym_Text_SkierClarissaBeaten:
 MahoganyTown_Gym_Text_SkierClarissaAfter:
     .string "I shouldn't have been bragging\n"
     .string "about my skiing…$"
-

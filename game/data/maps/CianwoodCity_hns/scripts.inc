@@ -92,11 +92,9 @@ CianwoodCity_Text_ChucksWifeEasierToFly:
 	.string "You crossed the sea to get here?\p"
 	.string "That must have been hard.\p"
 	.string "It would be much easier if your\n"
-	.string "POKéMON knew how to FLY...$"
+	.string "POKéMON could use FLY...$"
 
 CianwoodCity_Text_ChucksWifeBeatChuck:
-	.string "But you can't use FLY without this\n"
-	.string "city's GYM BADGE.\p"
 	.string "If you beat the GYM LEADER here,\n"
 	.string "come see me.\p"
 	.string "I'll have a nice gift for you.$"
@@ -106,8 +104,8 @@ CianwoodCity_Text_ChucksWifeGiveHM:
 	.string "Then you should take this HM.$"
 
 CianwoodCity_Text_ChucksWifeFlySpeech:
-	.string "Teach FLY to your POKéMON.\p"
-	.string "You will be able to FLY instantly\n"
+	.string "Keep this HM in your BAG, and a\n"
+	.string "compatible POKéMON can FLY\l"
 	.string "to anywhere you have visited.$"
 
 CianwoodCity_Text_ChucksWifeChubby:

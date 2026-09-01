@@ -356,10 +356,8 @@ MauvilleCity_Gym_Text_ReceivedDynamoBadge:
 	.string "from WATTSON.$"
 
 MauvilleCity_Gym_Text_ExplainDynamoBadgeTakeThis:
-	.string "With the DYNAMO BADGE, POKéMON can\n"
-	.string "use ROCK SMASH out of battle.\p"
-	.string "And, it will make your POKéMON a little\n"
-	.string "bit faster, too.\p"
+	.string "The DYNAMO BADGE will make your\n"
+	.string "POKéMON a little bit faster.\p"
 	.string "Hmm…\n"
 	.string "You should take this, too!$"
 
@@ -418,4 +416,3 @@ MauvilleCity_Gym_Text_WattsonRematchNeedTwoMons:
 	.string "You've only one POKéMON with you!\p"
 	.string "Come see me with two or more\n"
 	.string "POKéMON, all right?$"
-

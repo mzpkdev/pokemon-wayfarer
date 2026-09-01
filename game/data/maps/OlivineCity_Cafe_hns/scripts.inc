@@ -59,8 +59,9 @@ OlivineCity_Text_CafeSailorStrength:
 	.string "lightweights!\p"
 	.string "They don't have the power to\n"
 	.string "move boulders aside.\p"
-	.string "Here, use this and teach them\n"
-	.string "STRENGTH!$"
+	.string "Here, take this STRENGTH HM!\n"
+	.string "Keep it in your BAG and bring a\l"
+	.string "compatible POKéMON.$"
 
 OlivineCity_Text_CafeSailorGotStrength:
 	.string "On the sea, the only thing you\n"
@@ -78,4 +79,3 @@ OlivineCity_Text_CafeSailor:
 	.string "I always visit the OLIVINE CAFE.\p"
 	.string "Everything on the menu makes me\n"
 	.string "feel stronger. I can't stop eating!$"
-

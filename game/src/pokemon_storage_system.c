@@ -6722,39 +6722,12 @@ static void TrySetCursorFistAnim(void)
         StartSpriteAnim(sStorage->cursorSprite, CURSOR_ANIM_FIST);
 }
 
-// If the player is on the listed map (or any map, if none is specified),
-// they may not release their last Pokémon that knows the specified move.
-// This is to stop the player from softlocking themselves by not having
-// a Pokémon that knows a required field move.
-struct
-{
-    s8 mapGroup;
-    s8 mapNum;
-    u16 move;
-} static const sRestrictedReleaseMoves[] =
-{
-    {MAP_GROUPS_COUNT, 0, MOVE_SURF},
-    {MAP_GROUPS_COUNT, 0, MOVE_DIVE},
-    {MAP_GROUP(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F), MAP_NUM(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F), MOVE_STRENGTH},
-    {MAP_GROUP(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F), MAP_NUM(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F), MOVE_ROCK_SMASH},
-    {MAP_GROUP(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_2F), MAP_NUM(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_2F), MOVE_STRENGTH},
-    {MAP_GROUP(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_2F), MAP_NUM(MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_2F), MOVE_ROCK_SMASH},
-};
-
 static void GetRestrictedReleaseMoves(u16 *moves)
 {
-    s32 i;
-
-    for (i = 0; i < ARRAY_COUNT(sRestrictedReleaseMoves); i++)
-    {
-        if (sRestrictedReleaseMoves[i].mapGroup == MAP_GROUPS_COUNT
-        || (sRestrictedReleaseMoves[i].mapGroup == gSaveBlock1Ptr->location.mapGroup
-         && sRestrictedReleaseMoves[i].mapNum == gSaveBlock1Ptr->location.mapNum))
-        {
-            *moves = sRestrictedReleaseMoves[i].move;
-            moves++;
-        }
-    }
+#if IS_HNS
+    // Dive is not an HM in HNS and retains its existing release restriction.
+    *moves++ = MOVE_DIVE;
+#endif
     *moves = MOVES_COUNT;
 }
 

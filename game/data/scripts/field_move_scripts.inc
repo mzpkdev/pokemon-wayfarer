@@ -2,7 +2,7 @@
 EventScript_CutTree::
 	lockall
 	checkfieldmove FIELD_MOVE_CUT, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckTreeCantCut
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	buffermovename STR_VAR_2, MOVE_CUT
@@ -64,7 +64,7 @@ EventScript_UseRockSmash::
 EventScript_RockSmash::
 	lockall
 	checkfieldmove FIELD_MOVE_ROCK_SMASH, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSmashRock
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	buffermovename STR_VAR_2, MOVE_ROCK_SMASH
@@ -229,7 +229,7 @@ EventScript_StrengthBoulder::
 	lockall
 	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
 	checkfieldmove FIELD_MOVE_STRENGTH, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	setfieldeffectargument 0, VAR_RESULT
 	msgbox Text_WantToStrength, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, EventScript_CancelStrength
@@ -288,7 +288,7 @@ Text_StrengthActivated:
 EventScript_UseWaterfall::
 	lockall
 	checkfieldmove FIELD_MOVE_WATERFALL, TRUE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantWaterfall
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	msgbox Text_WantToWaterfall, MSGBOX_YESNO
@@ -323,7 +323,7 @@ Text_MonUsedWaterfall:
 EventScript_UseDive::
 	lockall
 	checkfieldmove FIELD_MOVE_DIVE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantDive
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	copyvar 0x8004 VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
@@ -350,7 +350,7 @@ EventScript_EndDive::
 EventScript_UseDiveUnderwater::
 	lockall
 	checkfieldmove FIELD_MOVE_DIVE
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSurface
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	setfieldeffectargument 1, 1

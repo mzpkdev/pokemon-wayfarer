@@ -151,10 +151,8 @@ GoldenrodCity_Gym_Text_PlayerReceivedPlainBadge:
     .string "{PLAYER} received PLAINBADGE.$"
 
 GoldenrodCity_Gym_Text_WhitneyPlainBadge:
-    .string "PLAINBADGE lets your POKéMON use\n"
-    .string "STRENGTH outside of battle.\p"
-    .string "It also boosts your POKéMON's\n"
-	.string "DEFENSE.\p"
+    .string "PLAINBADGE boosts your POKéMON's\n"
+    .string "DEFENSE.\p"
     .string "Oh, you can have this too!$"
 
 GoldenrodCity_Gym_Text_WhitneyAttract:
@@ -244,4 +242,3 @@ GoldenrodCity_Gym_Text_GymGuide:
 GoldenrodCity_Gym_Text_GymGuideWin:
     .string "You won? Great! I was busy admiring\n"
     .string "the ladies here.$"
-

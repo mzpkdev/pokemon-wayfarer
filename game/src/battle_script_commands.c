@@ -6076,7 +6076,7 @@ static void Cmd_yesnoboxlearnmove(void)
                 enum Move move = GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_MOVE1 + movePosition);
                 if (CannotForgetMove(move))
                 {
-                    PrepareStringBattle(STRINGID_HMMOVESCANTBEFORGOTTEN, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
+                    PrepareStringBattle(STRINGID_MOVECANTBEFORGOTTEN, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
                     gBattleScripting.learnMoveState = 6;
                 }
                 else

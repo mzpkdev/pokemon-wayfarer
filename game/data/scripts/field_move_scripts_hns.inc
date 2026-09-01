@@ -1,10 +1,8 @@
 @ Interact with cuttable tree
 EventScript_CutTree::
 	lockall
-	goto_if_unset FLAG_RECEIVED_HM_CUT, EventScript_CheckTreeCantCut
-	goto_if_unset FLAG_BADGE02_GET, EventScript_CheckTreeCantCut
-	checkpartymove MOVE_CUT
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CheckTreeCantCut
+	checkfieldmove FIELD_MOVE_CUT, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	buffermovename STR_VAR_2, MOVE_CUT
@@ -66,10 +64,8 @@ EventScript_UseRockSmash::
 @ Interact with smashable rock
 EventScript_RockSmash::
 	lockall
-	checkpartymove MOVE_ROCK_SMASH
-	goto_if_unset FLAG_BADGE01_GET, EventScript_CantSmashRock
-	goto_if_unset FLAG_RECEIVED_HM_ROCK_SMASH, EventScript_CantSmashRock
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantSmashRock
+	checkfieldmove FIELD_MOVE_ROCK_SMASH, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
@@ -323,12 +319,9 @@ Text_CantHeadbutt:
 
 EventScript_StrengthBoulder::
 	lockall
-	goto_if_unset FLAG_BADGE03_GET, EventScript_CantStrength
-	checkitem ITEM_HM_STRENGTH
-	goto_if_eq VAR_RESULT, FALSE, EventScript_CantStrength
 	goto_if_set FLAG_SYS_USE_STRENGTH, EventScript_CheckActivatedBoulder
-	checkpartymove MOVE_STRENGTH
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantStrength
+	checkfieldmove FIELD_MOVE_STRENGTH, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	@msgbox Text_WantToStrength, MSGBOX_YESNO
@@ -385,9 +378,8 @@ Text_StrengthActivated:
 
 EventScript_UseWaterfall::
 	lockall
-	goto_if_unset FLAG_BADGE08_GET, EventScript_CantWaterfall
-	checkpartymove MOVE_WATERFALL
-	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_CantWaterfall
+	checkfieldmove FIELD_MOVE_WATERFALL, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
 	bufferpartymonnick STR_VAR_1, VAR_RESULT
 	setfieldeffectargument 0, VAR_RESULT
 	@msgbox Text_WantToWaterfall, MSGBOX_YESNO
@@ -467,9 +459,12 @@ EventScript_EndSurface::
 @HnS
 EventScript_Whirlpool::
 	lockall
-	goto_if_unset FLAG_BADGE07_GET, EventScript_CantWhirlpool
-	@checkpartymove MOVE_WHIRLPOOL @checkpartymove doesn't work for the 8th hm i guess.
-	@goto_if_eq VAR_RESULT, FALSE, EventScript_CantWhirlpool
+	checkfieldmove FIELD_MOVE_WHIRLPOOL, TRUE
+	goto_if_eq VAR_RESULT, PARTY_SIZE, EventScript_FieldMoveFailure
+	bufferpartymonnick STR_VAR_1, VAR_RESULT
+	setfieldeffectargument 0, VAR_RESULT
+	buffermovename STR_VAR_2, MOVE_WHIRLPOOL
+	msgbox Text_MonUsedFieldMove, MSGBOX_DEFAULT
 	playse SE_M_WATERFALL
 	goto_if_eq VAR_FACING, DIR_NORTH, EventScript_WhirlpoolGoNorth
 	goto_if_eq VAR_FACING, DIR_SOUTH, EventScript_WhirlpoolGoSouth
@@ -545,7 +540,7 @@ Text_WantToDive:
 	.string "Would you like to use DIVE?$"
 
 Text_MonUsedDive:
-	.string "{STR_VAR_1} used WHIRLPOOL.$"
+	.string "{STR_VAR_1} used DIVE.$"
 
 Text_CantSurface:
 	.string "Light is filtering down from above.\n"

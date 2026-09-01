@@ -13,8 +13,8 @@ Route14_Text_CarterDefeat::
 	.string "Not good enough quite yet.$"
 
 Route14_Text_CarterPostBattle::
-	.string "You have some HMs, right? POKéMON\n"
-	.string "can't forget those moves easily.$"
+	.string "HM moves can be forgotten or\n"
+	.string "replaced like any other move.$"
 
 Route14_Text_MitchIntro::
 	.string "My bird POKéMON should be ready\n"
@@ -43,8 +43,8 @@ Route14_Text_BeckPostBattle::
 	.string "of the move.$"
 
 Route14_Text_MarlonIntro::
-	.string "Have you taught your bird POKéMON\n"
-	.string "how to FLY?\p"
+	.string "Have you tried using FLY with your\n"
+	.string "bird POKéMON?\p"
 	.string "You'll be able to soar with it into\n"
 	.string "the sky!$"
 

@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "menu.h"
 #include "string_util.h"
 #include "task.h"
@@ -75,7 +78,13 @@ bool8 ShowFieldMessage(const u8 *str)
 {
     if (sFieldMessageBoxMode != FIELD_MESSAGE_BOX_HIDDEN)
         return FALSE;
+#ifdef E2E_TESTING
+    E2ETest_RecordFieldMessage(str);
+#endif
     ExpandStringAndStartDrawFieldMessage(str, TRUE);
+#ifdef E2E_TESTING
+    E2ETest_RecordExpandedFieldMessage(gStringVar4);
+#endif
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_NORMAL;
     return TRUE;
 }
@@ -122,6 +131,10 @@ bool8 ShowFieldMessageFromBuffer(void)
 {
     if (sFieldMessageBoxMode != FIELD_MESSAGE_BOX_HIDDEN)
         return FALSE;
+#ifdef E2E_TESTING
+    E2ETest_RecordFieldMessage(gStringVar4);
+    E2ETest_RecordExpandedFieldMessage(gStringVar4);
+#endif
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_NORMAL;
     StartDrawFieldMessage();
     return TRUE;

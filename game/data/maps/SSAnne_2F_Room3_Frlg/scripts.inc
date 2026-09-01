@@ -18,6 +18,5 @@ SSAnne_2F_Room3_Text_SomeTreesCanBeCutDown::
 	.string "using the move CUT.\p"
 	.string "But remember this!\n"
 	.string "CUT is an HM technique.\p"
-	.string "Once learned, it is not so easily\n"
-	.string "discarded.$"
-
+	.string "If learned, it can be forgotten or\n"
+	.string "replaced like any other move.$"

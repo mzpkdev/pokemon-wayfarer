@@ -642,12 +642,11 @@ RocketHideout_B2F_Text_LanceElectrodeDone:
     .string "have any need for it.$"
 
 RocketHideout_B2F_Text_LanceWhirlpool:
-    .string "That's WHIRLPOOL. Teach it to a\n"
-    .string "POKéMON to get across wild water.\p"
-    .string "But keep this in mind.\p"
-    .string "You can use that out of battle\n"
-    .string "only with the BADGE from\l"
-    .string "MAHOGANY GYM.$"
+    .string "That's WHIRLPOOL. Keep its HM\n"
+    .string "in your BAG, and bring a\l"
+    .string "compatible POKéMON to cross\l"
+    .string "wild water.\p"
+    .string "No BADGE is required.$"
 
 RocketHideout_B2F_Text_LanceMonMaster:
     .string "{PLAYER}…\p"
@@ -819,4 +818,3 @@ RocketHideout_B2F_EventScript_Grunt16::
 	trainerbattle_single TRAINER_GRUNT_16_HNS, RocketHideout_B2F_Text_GruntM19Seen, RocketHideout_B2F_Text_GruntM19Beaten
 	msgbox RocketHideout_B2F_Text_GruntM19After, MSGBOX_AUTOCLOSE
 	end
-

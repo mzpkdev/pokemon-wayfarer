@@ -473,22 +473,22 @@ SlateportCity_Harbor_Text_TeamAquaLeftNeedDive:
 	.string "You're not responsible for this.\p"
 	.string "Trying to catch a submarine…\n"
 	.string "It's impossible for most people.\p"
-	.string "You would need a POKéMON that knows\n"
-	.string "how to DIVE…\p"
+	.string "You would need the HM for DIVE\n"
+	.string "and a compatible POKéMON…\p"
 	.string "Perhaps if you went out to\n"
 	.string "MOSSDEEP CITY…\p"
 	.string "A lot of divers live out there, so\n"
-	.string "someone might teach you…$"
+	.string "someone might help you…$"
 
 SlateportCity_Harbor_Text_NeedDiveToCatchSub:
 	.string "CAPT. STERN: Trying to catch a\n"
 	.string "submarine… It's impossible.\p"
-	.string "You would need a POKéMON that knows\n"
-	.string "how to DIVE…\p"
+	.string "You would need the HM for DIVE\n"
+	.string "and a compatible POKéMON…\p"
 	.string "Perhaps if you went out to\n"
 	.string "MOSSDEEP CITY…\p"
 	.string "A lot of divers live out there, so\n"
-	.string "someone might teach you…$"
+	.string "someone might help you…$"
 
 SlateportCity_Harbor_Text_WontBeLongBeforeWeFinishFerry:
 	.string "CAPT. STERN: Oh, yes.\n"

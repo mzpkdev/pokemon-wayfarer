@@ -2,12 +2,18 @@ import {
   checkpoints,
   directions,
   maps,
+  hms,
+  moves,
+  species,
   storyFlags,
   storyVars,
   textSpeeds,
   type Checkpoint,
   type Direction,
   type GameMap,
+  type Hm,
+  type Move,
+  type Species,
   type StoryFlag,
   type StoryVar,
   type TextSpeed,
@@ -19,6 +25,9 @@ import {
   encodeArrangeRequest,
   keepCoordinate,
   keepMap,
+  maxBagItems,
+  maxMoves,
+  maxParty,
   maxPatches,
   parseArrangeResult,
 } from "../protocol"
@@ -44,6 +53,18 @@ export type ArrangeGame = {
   determinism?: {
     rngSeed?: number
     textSpeed?: TextSpeed
+  }
+  party?: {
+    species: Species
+    moves?: Move[]
+    egg?: boolean
+    fainted?: boolean
+  }[]
+  bag?: {
+    hms?: Partial<Record<Hm, number>>
+  }
+  challenge?: {
+    hmsOverwrite?: boolean
   }
 }
 
@@ -90,11 +111,26 @@ export const createArrangeApi = (runtime: SessionRuntime, state: StateApi): Arra
   const arrange = async (options: ArrangeGame): Promise<void> => {
     const vars = entries(options.story?.vars)
     const flags = entries(options.story?.flags)
+    const party = options.party ?? []
+    const bagItems = entries(options.bag?.hms)
+      .filter(([, quantity]) => quantity > 0)
+      .map(([name, quantity]) => ({ item: hms[name], quantity }))
     if (vars.length > maxPatches) {
       throw new Error(`Test ROM supports at most ${maxPatches} var overrides`)
     }
     if (flags.length > maxPatches) {
       throw new Error(`Test ROM supports at most ${maxPatches} flag overrides`)
+    }
+    if (party.length > maxParty) {
+      throw new Error(`Test ROM supports at most ${maxParty} party Pokémon`)
+    }
+    if (bagItems.length > maxBagItems) {
+      throw new Error(`Test ROM supports at most ${maxBagItems} HM Bag fixtures`)
+    }
+    for (const mon of party) {
+      if ((mon.moves?.length ?? 0) > maxMoves) {
+        throw new Error(`Test ROM supports at most ${maxMoves} moves per party Pokémon`)
+      }
     }
 
     const position = options.player?.position
@@ -112,6 +148,14 @@ export const createArrangeApi = (runtime: SessionRuntime, state: StateApi): Arra
       checkpoint: checkpoints[options.checkpoint],
       facing: directions[options.player?.facing ?? "up"],
       textSpeed: textSpeeds[options.determinism?.textSpeed ?? "instant"],
+      party: party.map((mon) => ({
+        species: species[mon.species],
+        moves: Array.from({ length: maxMoves }, (_, index) => moves[mon.moves?.[index] ?? "none"]),
+        egg: mon.egg ?? false,
+        fainted: mon.fainted ?? false,
+      })),
+      bagItems,
+      hmsOverwrite: options.challenge?.hmsOverwrite ?? false,
     })
 
     const requestAddress = runtime.address("gE2ETestRequest")

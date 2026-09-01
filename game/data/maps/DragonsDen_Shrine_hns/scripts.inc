@@ -366,12 +366,9 @@ DragonsDen_Shrine_Text_PlayerReceivedRisingBadge:
     .string "{PLAYER} received RISINGBADGE.$"
 
 DragonsDen_Shrine_Text_RisingBadgeExplanation:
-    .string "RISINGBADGE will enable your\n"
-    .string "POKéMON to use the move for\l"
-    .string "climbing waterfalls.\p"
-    .string "Also, all POKéMON will recognize\n"
-    .string "you as a trainer and obey your\l"
-    .string "every command without question.$"
+    .string "All POKéMON will recognize you as\n"
+    .string "a trainer and obey your every\l"
+    .string "command without question.$"
 
 DragonsDen_Shrine_Text_ElderScoldsClair:
     .string "CLAIR…\p"

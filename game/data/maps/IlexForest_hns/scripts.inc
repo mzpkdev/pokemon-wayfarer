@@ -680,11 +680,18 @@ IlexForest_Text_CharcoalMasterIntro:
 	.string "I know! Here, take this.$"
 
 IlexForest_Text_CharcoalMasterOutro:
-	.string "That's the CUT HM.\n"
-	.string "Teach that to a POKéMON to clear\l"
+	.string "That's the CUT HM. It clears\n"
 	.string "small trees.\p"
-	.string "Of course, you have to have the\n"
-	.string "GYM BADGE from AZALEA to use it.$"
+	.string "You don't need a BADGE to use an\n"
+	.string "HM move in the field.\p"
+	.string "With its HM in your BAG, a\n"
+	.string "compatible POKéMON in your party\l"
+	.string "can use the move without\l"
+	.string "learning it.\p"
+	.string "EGGS can't use HM moves.\p"
+	.string "Teaching the move is optional.\n"
+	.string "If you do, it can be forgotten or\l"
+	.string "replaced like any other move.$"
 
 IlexForest_Text_CharcoalMasterTalkAfter:
 	.string "Do you want to apprentice as a\n"
