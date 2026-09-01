@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "malloc.h"
 #include "bg.h"
 #include "data.h"
@@ -10297,3 +10300,77 @@ void MoveFirstBoxPokemonToParty(void)
         PurgeMonOrBoxMon(boxNum, boxIndex);
     }
 }
+
+#ifdef E2E_TESTING
+void E2ETest_SetStorageCurrentBox(u8 boxId)
+{
+    // Synthetic setup only. Arrange validates the box and calls this while the UI is closed.
+    if (sStorage == NULL)
+        SetCurrentBox(boxId);
+}
+
+static u8 E2ETest_GetSemanticStorageMode(u8 boxOption)
+{
+    if (boxOption == OPTION_MOVE_MONS)
+        return E2E_TEST_STORAGE_MODE_MOVE;
+    if (boxOption == OPTION_DEPOSIT)
+        return E2E_TEST_STORAGE_MODE_DEPOSIT;
+    if (boxOption == OPTION_WITHDRAW)
+        return E2E_TEST_STORAGE_MODE_WITHDRAW;
+    return E2E_TEST_STORAGE_MODE_NONE;
+}
+
+void E2ETest_GetStorageUiState(u8 *uiState, u8 *mode, u8 *cursorArea, u8 *cursorPosition, bool8 *movingMon)
+{
+    TaskFunc taskFunc;
+    u8 taskId;
+
+    *uiState = E2E_TEST_STORAGE_UI_NONE;
+    *mode = E2E_TEST_STORAGE_MODE_NONE;
+    *cursorArea = 0xFF;
+    *cursorPosition = 0xFF;
+    *movingMon = FALSE;
+    taskId = FindTaskIdByFunc(Task_PCMainMenu);
+    if (taskId != TASK_NONE)
+    {
+        *cursorPosition = gTasks[taskId].data[1];
+        *mode = E2ETest_GetSemanticStorageMode(gTasks[taskId].data[1]);
+        *uiState = gTasks[taskId].data[0] == STATE_HANDLE_INPUT
+            ? E2E_TEST_STORAGE_UI_PC_MENU
+            : E2E_TEST_STORAGE_UI_INITIALIZING;
+        return;
+    }
+    if (sStorage == NULL || sStorage->taskId >= NUM_TASKS || !gTasks[sStorage->taskId].isActive)
+        return;
+
+    *mode = E2ETest_GetSemanticStorageMode(sStorage->boxOption);
+    *cursorArea = sCursorArea;
+    *cursorPosition = sCursorPosition;
+    *movingMon = sIsMonBeingMoved;
+    taskFunc = gTasks[sStorage->taskId].func;
+    if (taskFunc == Task_PokeStorageMain && sStorage->state == MSTATE_HANDLE_INPUT)
+        *uiState = E2E_TEST_STORAGE_UI_READY;
+    else if (taskFunc == Task_OnSelectedMon)
+        *uiState = E2E_TEST_STORAGE_UI_MON_MENU;
+    else if (taskFunc == Task_DepositMenu)
+        *uiState = E2E_TEST_STORAGE_UI_DEPOSIT_BOX;
+    else if (taskFunc == Task_WithdrawMon)
+        *uiState = E2E_TEST_STORAGE_UI_WITHDRAWING;
+    else if (taskFunc == Task_MoveMon || taskFunc == Task_PlaceMon || taskFunc == Task_ShiftMon)
+        *uiState = E2E_TEST_STORAGE_UI_MOVING;
+    else if (taskFunc == Task_ReleaseMon && sStorage->state <= 1)
+        *uiState = E2E_TEST_STORAGE_UI_RELEASE_CONFIRM;
+    else if (taskFunc == Task_ReleaseMon && sStorage->state == 2)
+        *uiState = E2E_TEST_STORAGE_UI_RELEASE_CHECK;
+    else if (taskFunc == Task_ReleaseMon && sStorage->state <= 7)
+        *uiState = E2E_TEST_STORAGE_UI_RELEASED;
+    else if (taskFunc == Task_ReleaseMon)
+        *uiState = E2E_TEST_STORAGE_UI_RELEASE_BLOCKED;
+    else if (taskFunc == Task_OnCloseBoxPressed && sStorage->state == 2)
+        *uiState = E2E_TEST_STORAGE_UI_EXIT_CONFIRM;
+    else if (taskFunc == Task_InitPokeStorage)
+        *uiState = E2E_TEST_STORAGE_UI_INITIALIZING;
+    else
+        *uiState = E2E_TEST_STORAGE_UI_BUSY;
+}
+#endif

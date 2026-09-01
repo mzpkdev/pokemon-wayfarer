@@ -94,6 +94,70 @@ await game.player.move("up")
 await game.dialogue.waitForOpen()
 ```
 
+The HNS-only battle and storage fixtures are deliberately narrow. They support
+the HM party-management journeys, not a general battle simulator or a complete
+PC model. Party and PC fixtures share species, level, moves, and Egg state.
+Fainted state is party-only because boxed Pokémon do not have meaningful current
+HP. Tests identify Pokémon by unique species; personality and other identity
+fields are not part of this ABI.
+
+```ts
+await game.arrange({
+  checkpoint: "new-bark-after-intro",
+  player: {
+    facing: "up",
+    position: { map: "cherrygrove-pokemon-center", x: 11, y: 2 },
+  },
+  party: [{ species: "lapras", moves: ["surf"] }],
+  bag: { hms: { surf: 1 }, items: { masterBall: 1 } },
+  pc: {
+    currentBox: 0,
+    observedSlots: [
+      { box: 0, slot: 0, mon: null },
+      { box: 0, slot: 1, mon: { species: "pidgey", moves: ["fly"] } },
+    ],
+  },
+})
+```
+
+Fixtures create synthetic starting state. `arrange()` may create the party and
+Bag, initialize and observe up to eight requested PC coordinates, and choose the
+current box. Every `pc.observedSlots` entry requires `mon`: a Pokémon initializes
+the slot with that fixture, while `null` clears it. The same coordinates remain
+in bounded telemetry for `game.state.read()` and `game.storage.slot(box, slot)`.
+Boxed fixtures intentionally do not model current HP or fainted state. HMs use
+`bag.hms`; `bag.items` is the generic item surface used for the Master Ball and
+does not expose duplicate HM aliases.
+
+`battle.startWild()` creates the requested wild opponent and starts the normal
+battle state machine from a settled overworld. It resolves at the first real
+battle-text input boundary. The playbook then uses controller input for the Bag,
+capture messages, catch-swap prompt, and party picker. Capture tests use a Master
+Ball because capture probability is outside this capability's scope. V1 supports
+ordinary HNS overworld battles only; Safari Zone, Bug Contest, and other special
+battle contexts are outside its contract.
+
+Storage journeys arrange the player in Cherrygrove's Pokémon Center and interact
+with its real PC script. There is no command that opens storage directly. The
+mode selection, deposit, withdrawal, box movement, release, and exit screens run
+through their normal game tasks and real controller input. Telemetry reports only
+the current box, the requested PC coordinates, and small semantic state-machine
+markers. It does not publish all 420 box slots or a general event history.
+
+Field-use assertions also stay on gameplay paths. For example, the recovery
+journey leaves the PC, walks to Cherrygrove's shore, and interacts with the water
+to prove that the withdrawn Surf user is resolved again. Tests should not treat
+fixture state or a memory snapshot as proof that capture, storage, release, or
+field use worked.
+
+The command mailbox is versioned as ABI v7. Arrangement and wild-battle commands
+share request IDs and result handling, reject commands while a harness-owned game
+state machine is active, and validate invalid species, item quantities, boxes,
+and slots in the ROM. Protocol changes must increment the ABI and update both the
+C static layout assertions and TypeScript protocol tests. Raw invalid-request
+construction is available only through the explicitly named protocol-test
+support module; it is not part of the public `GameSession` gameplay facade.
+
 The current checkpoints are `bedroom-before-clock`,
 `new-bark-after-intro`, and `elm-lab-before-intro`. A test can override the
 map, coordinates, facing direction, supported story vars and flags, RNG seed,
@@ -106,8 +170,8 @@ layout offsets published by the ROM ABI. `game.player` supplies real controller
 actions, while `game.wait` and `game.dialogue` synchronize against ROM state
 instead of fixed frame delays.
 
-The mailbox, checkpoints, and telemetry only exist in the E2E ROM. Normal and
-release ROMs do not compile them.
+The mailbox, checkpoints, and telemetry only exist in the HNS E2E ROM. Normal and
+release ROMs do not compile them. Other map versions are outside this capability.
 
 ## Layout
 
