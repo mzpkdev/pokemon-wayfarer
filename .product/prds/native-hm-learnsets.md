@@ -73,6 +73,12 @@ not need native Dive or Whirlpool users. HNS adds native Whirlpool users but
 does not change Dive, which remains a non-HM field action there. Emerald adds
 native Dive users but does not add Whirlpool as a field action.
 
+Regional assignments are build-specific. FireRed and LeafGreen compile the
+Kanto roster, HNS compiles the Johto roster, and Emerald compiles the Hoenn
+roster. HNS does not compile the Hoenn Dive assignments in this feature.
+Activating Dive as an HNS HM and choosing native HNS Dive users are separate
+future product work.
+
 This feature does not:
 
 - move, duplicate, or remove HM items;
@@ -187,7 +193,7 @@ following routes. Coverage uses existing encounters and map geometry.
 | Build and route | Existing departure-side source | Existing arrival-side source |
 | --- | --- | --- |
 | FireRed and LeafGreen, Pallet to Cinnabar | Horsea and Krabby are available through Pallet's existing fishing encounters in both versions. | Horsea and Krabby are available through Cinnabar's existing fishing encounters in both versions. |
-| HNS Johto, Olivine to Cianwood | Wooper is available on the connected Johto mainland, while Chinchou is available around Olivine. | Cianwood's existing fishing encounters provide Chinchou during the day and Krabby, a Kanto native Surf user, at night. |
+| HNS Johto, Olivine to Cianwood | Wooper is available on the connected Johto mainland, while Chinchou is available around Olivine. | Cianwood's existing daytime fishing encounters provide Chinchou. |
 | HNS Kanto, mainland to Cinnabar | Chinchou is available around Vermilion on the connected Kanto mainland. | Chinchou is available in Cinnabar's existing fishing encounters during the day and at night. |
 | Emerald, Route 118 and the eastern mainland | Lotad is available on the western land network. | Wailmer is available through existing fishing encounters on the eastern land network. |
 | Emerald, Lilycove to Mossdeep and Pacifidlog | Wailmer is available through Lilycove's existing fishing encounters. | Wailmer is available through the existing fishing encounters in Mossdeep and Pacifidlog. |
@@ -257,8 +263,9 @@ or authorize that system.
 The game has an active normal learnset and a Generation III legacy learnset
 path. Native utility moves must be present in both modes, either by updating
 both data sources or by centralizing the additions in shared learnset
-selection. Every build must produce the same native utility roster in normal
-and legacy-moves mode.
+selection. Within each build, normal and legacy-moves mode must produce the
+same native utility roster. This parity requirement does not make the regional
+rosters identical across builds.
 
 Existing HM compatibility must remain intact in the generated runtime
 teachable learnsets. If the compatibility source changes, regenerate and check
