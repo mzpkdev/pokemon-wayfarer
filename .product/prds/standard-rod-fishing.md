@@ -38,6 +38,26 @@ former partition and then apply that partition's old internal weights, because
 that would compound probabilities and make the last entries functionally
 unavailable.
 
+The profiles below total 100. When all entries are eligible, each value is the
+entry's percentage among successful fishing encounters. If Trainer Rating
+makes an entry ineligible, the game removes that entry and renormalizes the
+remaining values.
+
+| Quality | Entry 0 | Entry 1 | Entry 2 | Entry 3 | Entry 4 | Entry 5 | Entry 6 | Entry 7 | Entry 8 | Entry 9 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Old Rod | 38 | 22 | 10 | 8 | 8 | 4 | 3 | 3 | 2 | 2 |
+| Good Rod | 25 | 18 | 12 | 10 | 9 | 7 | 6 | 5 | 4 | 4 |
+| Super Rod | 12 | 10 | 11 | 10 | 10 | 10 | 10 | 9 | 9 | 9 |
+
+The resulting rarity-band shares make each upgrade visible without removing
+the common population:
+
+| Quality | Common entries 0 and 1 | Less common entries 2 through 4 | Rare entries 5 through 9 |
+| --- | ---: | ---: | ---: |
+| Old Rod | 60% | 26% | 14% |
+| Good Rod | 43% | 31% | 26% |
+| Super Rod | 22% | 31% | 47% |
+
 All eligible entries have a nonzero chance at every quality. Good Rod shifts
 weight toward the middle and rare entries. Super Rod shifts it further toward
 the rare entries. An upgrade never removes a species from the local fishing
@@ -110,15 +130,39 @@ must have at least a 0.5% chance among successful fishing encounters. Any
 species used as a required traversal recovery must receive a separate
 accessibility check and cannot rely on a trophy-level probability.
 
+Under the selected profile, the least likely Old Rod entries have a 2% chance
+among successful encounters. Every species relied upon for native Surf
+coverage has at least an 8% aggregate chance among successful Old Rod
+encounters at its named source and at least a 2% chance per unmodified cast
+after the Old Rod's 25% bite rate. This limits the least accessible required
+user to an average of 50 casts. Lure use is not required for this guarantee.
+
+The baseline accessibility results are:
+
+| Build and source | Native Surf user | Chance per successful Old Rod encounter | Chance per unmodified cast | Average casts |
+| --- | --- | ---: | ---: | ---: |
+| FireRed and LeafGreen, Pallet or Cinnabar | The version's less common Horsea or Krabby assignment | 8% | 2% | 50 |
+| FireRed and LeafGreen, Pallet or Cinnabar | The version's more common Horsea or Krabby assignment | 14% | 3.5% | 28.6 |
+| HNS, Olivine port, Vermilion, or Cinnabar | Chinchou | 11% | 2.75% | 36.4 |
+| HNS, Cianwood during the day | Chinchou | 12% | 3% | 33.3 |
+| Emerald, Lilycove | Wailmer | 19% | 4.75% | 21.1 |
+| Emerald, Mossdeep or Pacifidlog | Wailmer | 18% | 4.5% | 22.2 |
+
+These figures aggregate duplicate entries for the named species and do not
+count any additional availability from species resolution. Ineligible-entry
+filtering cannot be allowed to remove a required native Surf source at any
+Trainer Rating from 10 through 80.
+
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old
 Rod. Super Rod should further increase the former Super entries. Common entries
 remain available at every quality so upgrading does not create a reverse
 collection gate.
 
-Exact ten-entry profiles are balance values. They should be chosen through a
-deterministic distribution report and playtesting, then shared across maps
-rather than tuned per location.
+The selected profiles remain global rather than map-specific. Acceptance
+requires a deterministic distribution report and playtesting that confirm the
+authored species results, the rarity-band shifts, and the native Surf
+accessibility values above.
 
 ## Content
 
@@ -171,9 +215,9 @@ rod quality. They do not need to display exact slot probabilities.
 
 ## Interactions
 
-- Trainer Rating applies after the unified weighting selects an authored
-  entry. Level projection, predecessor resolution, species floors, and
-  ineligible-entry filtering remain unchanged.
+- Trainer Rating determines entry eligibility before the unified weighted
+  roll. After selection, level projection and predecessor resolution determine
+  the encounter outcome as they do for other ordinary encounters.
 - If one or more entries are ineligible, the game renormalizes the current
   quality's weights across the eligible entries. A selected empty or locked
   entry must not turn a successful bite into a silent failure.
@@ -219,11 +263,6 @@ HNS must not use current rod possession as the contribution state for its Old
 and Good Rod NPCs. Its three giver states must remain permanent across regional
 progression; a flag cleared during the Kanto transition cannot serve as the
 Route 12 contribution flag.
-
-## Open questions
-
-- What exact ten-entry weight profile should Old Rod, Good Rod, and Super Rod
-  use after deterministic simulation and playtesting?
 
 ## References
 
