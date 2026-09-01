@@ -2,7 +2,7 @@
 
 ## Intent
 
-Make HMs useful in an open-world campaign without making Gym order or move slots part of the traversal cost. A player who has found an HM and brought a Pokémon capable of learning it can use that field move immediately. Teaching the move remains available, but it is a battle-build choice rather than a field-use requirement.
+Make HMs useful in an open-world campaign without tying field use to Gym order. A player who has found an HM and brought a Pokémon capable of learning it can use that field move immediately without teaching it. A Pokémon that already knows the move may provide the field action before the HM is found, trading a party slot and move slot for earlier access.
 
 This behavior applies to Emerald, FireRed and LeafGreen, and HNS.
 
@@ -30,17 +30,17 @@ HM items remain reusable and non-discardable. Once obtained, an HM remains in th
 
 Existing HM acquisition points, story conditions, and reward gates remain unchanged. A badge may still be required to receive an HM when that badge is part of the existing reward sequence. For example, Chuck's wife may still wait for the Storm Badge before giving Fly, but the dialogue must present Fly as a reward rather than a field-use permission granted by the badge.
 
-This feature does not change Pokémon compatibility tables, HM numbering, move effects in battle, map obstacles, puzzles, animations, or destination rules such as which Fly locations have been visited. It does not add Bag commands for field use or change non-HM field moves.
+This feature does not change Pokémon compatibility tables, HM numbering, move effects in battle, map obstacles, puzzles, animations, or destination rules such as which Fly locations have been visited. It does not add Bag commands for field use or change non-HM field moves. Separate content may add HM moves to level-up learnsets without changing these eligibility rules.
 
 HNS uses Whirlpool rather than Dive as HM08. This feature does not reclassify HNS Dive or change its non-HM field-use rules.
 
 Badges keep all unrelated effects, including progression, obedience, battle, level-cap, shop, and rematch behavior defined elsewhere.
 
-The open-world regional traversal designs continue to define which settlements must be reachable without HMs. This feature changes how optional HM routes and shortcuts work after the player obtains the relevant machine; it does not make HMs part of the core settlement network.
+The open-world regional traversal designs continue to define which settlements must be reachable without HMs. This feature changes how optional HM routes and shortcuts work whenever the party has an eligible user, including before HM acquisition when a Pokémon already knows the move. It does not make HMs part of the core settlement network.
 
 ## Balance
 
-HM acquisition remains the progression gate for each field ability. Party composition also matters in a standard playthrough because the player needs a compatible Pokémon when nobody knows the move. Removing the badge check lets players use an HM as soon as they discover it, while allowing unlearned use removes the permanent move-slot tax.
+HM acquisition remains the standard path to each field ability, but it is not the only path. Before finding the HM, a Pokémon that already knows the move can provide earlier access while occupying a party slot and move slot. After finding it, any compatible party Pokémon can provide the field action without learning the move. Removing the badge check keeps both paths independent of Gym order.
 
 The HMs Overwrite exception protects challenge runs whose party restrictions or randomized movesets could otherwise remove every compatible user. It does not grant an HM the player has not obtained.
 
@@ -73,7 +73,7 @@ Supporting dialogue and messages that teach or enforce the old rules also need r
 | HNS, Johto | Chuck's wife, Lance's Whirlpool explanation, the Blackthorn Move Deleter, Azalea's first-entry Surf removal, and any shared HM tutorial text |
 | Shared text | Messages that say HM moves cannot be forgotten, that another badge is needed, or that protect the last Surf user |
 
-Each build should explain the complete rule once at an early, ordinary HM handoff or tutorial touchpoint. That explanation should say that the player can either teach the move or carry the HM with a compatible Pokémon in the party, and that badges are not required. Gym Leaders and later HM givers should not repeat the full tutorial.
+Each build should explain the complete rule once at an early, ordinary HM handoff or tutorial touchpoint. That explanation should say that a Pokémon which already knows the move can use it without the HM. Otherwise, the player can teach the HM or carry it with a compatible Pokémon without changing that Pokémon's moveset. Badges are not required. The tutorial may mention that some wild Pokémon already know field moves, but it should not list the native utility roster. Gym Leaders and later HM givers should not repeat the full tutorial.
 
 ## Presentation
 
@@ -100,7 +100,8 @@ Test each HM available in Emerald, FireRed/LeafGreen, and HNS with no badges and
 
 For every build, cover these eligibility cases:
 
-- A Pokémon knows the move and the HM is absent.
+- A Pokémon, including a native utility user caught in the wild, knows the move and the HM is absent.
+- In each build with native utility learnsets, catch at least one assigned species and use its move before receiving the matching HM.
 - The HM is owned and a Pokémon can learn the move but does not know it.
 - The HM is owned, but the only compatible Pokémon is fainted.
 - The HM is owned, but the only compatible species is an Egg.
@@ -113,13 +114,14 @@ Confirm that contextual obstacles, Surf entry, Fly, Flash, save and reload, map 
 
 Use the Move Deleter and ordinary move replacement on every HM move available in each build. Deposit and catch-swap the only Pokémon that knows an HM, including the only Surf user, and confirm no HM-specific protection remains.
 
-Replay every affected Gym reward and HM handoff. HM items must still be awarded at their existing points, while no dialogue or system message says that badges authorize field use or that HM moves cannot be forgotten. New players should be able to explain the Bag-plus-compatible-Pokémon rule after the centralized tutorial without relying on Gym dialogue.
+Replay every affected Gym reward and HM handoff. HM items must still be awarded at their existing points, while no dialogue or system message says that badges authorize field use or that HM moves cannot be forgotten. After the centralized tutorial, new players should be able to explain both the known-move route without an HM and the HM-plus-compatible-Pokémon route without relying on Gym dialogue.
 
 Carry HM Surf through the first Route 33 to Azalea trigger in HNS and confirm that the transition does not remove it from the Bag.
 
 ## References
 
 - [Technical specification](../specs/hm-field-use.md)
+- [Native HM utility learnsets](native-hm-learnsets.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [FireRed and LeafGreen open-world regional traversal](frlg-open-world-region-traversal.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)

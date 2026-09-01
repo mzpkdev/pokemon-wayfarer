@@ -2,27 +2,28 @@
 
 ## Player outcome
 
-After the opening releases the player with a starter, every town and city in the current unlocked region is reachable without completing the main story, earning badges, or using HMs. The player may take a long route, but determination is enough.
+After the opening releases the player with a starter, every town and city in the current unlocked region is reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the routes to Cianwood and Cinnabar. The player may take a long route, but determination is enough.
 
-Kanto opens through the S.S. Aqua maiden voyage, Alola through the Mt. Moon keepsake quest, and Sinjoh through Meara's Ruins of Alph survey. Each quest awards its named travel item. Once a region is unlocked, travel to and between its settlements has no further story or HM requirement.
+Kanto opens through the S.S. Aqua maiden voyage, Alola through the Mt. Moon keepsake quest, and Sinjoh through Meara's Ruins of Alph survey. Each quest awards its named travel item. Once a region is unlocked, travel to and between its settlements has no further story requirement. Only the named Cianwood and Cinnabar crossings may require native Surf.
 
 ## Rules
 
-- Walking, doors, and always-available local transport form each region's core settlement network.
-- Main-story state, Gym progress, forced victories, and HMs cannot close the only route to a town or city in an unlocked region.
-- Surf and Fly may make settlement travel faster. They are never required for basic settlement access.
+- Walking, doors, always-available local transport, and the approved native Surf crossings form each region's core settlement network.
+- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in an unlocked region. That route cannot require an HM item. Only the named Cianwood and Cinnabar crossings may require a Pokémon that already knows Surf.
+- Fly may make settlement travel faster. Surf remains optional outside the approved Cianwood and Cinnabar routes.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
+- A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
-- After a region is unlocked, repeat travel is frictionless and always includes a return route.
+- Every inter-region travel service is frictionless after its region is unlocked and always includes a return option.
 - Opening a travel lane does not complete the story attached to it or award skipped rewards.
 
 ## Settlement coverage
 
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
-| Johto | New Bark Town, Cherrygrove City, Violet City, Azalea Town, Goldenrod City, Ecruteak City, Olivine City, Cianwood City, Mahogany Town, and Blackthorn City | The existing land loop serves nine settlements once the listed road actors and turnbacks stop blocking it. Cianwood requires the ordinary ferry decision below. Safari Zone Gate, Lake of Rage, the League corridor, and Mt. Silver are not towns or cities in this pass. |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | The S.S. Aqua releases the player in Vermilion. Route 6 and Saffron connect Celadon, Lavender, and Cerulean. The nonblocking Mt. Moon route continues to Pewter, Viridian, and Pallet. Celadon's loan-bicycle access to Cycling Road reaches Fuchsia. Cinnabar requires the ordinary transport decision below. |
+| Johto | New Bark Town, Cherrygrove City, Violet City, Azalea Town, Goldenrod City, Ecruteak City, Olivine City, Cianwood City, Mahogany Town, and Blackthorn City | The existing land loop serves nine settlements once the listed road actors and turnbacks stop blocking it. Native Surf crosses Routes 40 and 41 to Cianwood. Existing mainland encounters provide Wooper and Chinchou; Cianwood fishing provides Chinchou by day and native Krabby by night. Safari Zone Gate, Lake of Rage, the League corridor, and Mt. Silver are not towns or cities in this pass. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | The S.S. Aqua releases the player in Vermilion. Route 6 and Saffron connect Celadon, Lavender, and Cerulean. The nonblocking Mt. Moon route continues to Pewter, Viridian, and Pallet. Celadon's loan-bicycle access to Cycling Road reaches Fuchsia. Native Surf reaches Cinnabar through Route 21, with existing Chinchou fishing encounters around Vermilion and Cinnabar providing directional coverage. Route 20 remains optional. |
 | Alola | Melemele Isle, Akala Isle, Ula'ula Isle, and Poni Isle | The Route 13 trip releases the player at Melemele. The proposed four-stop Island Hopper service below must connect the four inhabited island hubs without Surf. Caves, forests, ocean routes, and encounter areas are optional destinations rather than settlements. |
 | Sinjoh | New Sinjoh and Sinjoh Ruins | Meara releases the player at the Sinjoh branch entrance. The Snowswept Cavern route must provide a normal lane to both inhabited hubs; the exact obstacle check remains listed below. |
 
@@ -64,7 +65,7 @@ A healing point or Fly marker does not make a route or landmark a settlement. Th
 ### Sinjoh: Ruins of Alph field survey
 
 - Start: place Meara in the Ruins of Alph Lab from the player's first visit. Her Mt. Silver Pokémon Center placement is no longer used for the unlock.
-- Job: Meara asks the player to inspect one new marked inscription beside the lab on the Ruins of Alph exterior map. Reading it sets one dedicated survey flag. No chamber puzzle, HM, badge, battle, or other story flag is required.
+- Job: Meara asks the player to inspect one new marked inscription beside the lab on the Ruins of Alph exterior map. Reading it sets one dedicated survey flag. No chamber puzzle, HM item, field move, badge, battle, or other story flag is required.
 - Turn-in: return to Meara. She gives the player the Azure Flute and offers to leave immediately. Remove the duplicate Azure Flute pickup from Mt. Silver 2F.
 - First arrival: accepting the trip marks Sinjoh visited, establishes only the baseline map state required for its actors and exits, and sends the player to the Sinjoh branch entrance without requiring Mt. Silver access. Meara accompanies the player and appears beside that arrival point.
 - State isolation: arrival does not visit the Kimono Hideout, move the Route 50 story past its baseline, resolve Machamp or its boulder, open a plate or Regi room, or advance Steven, Arceus, or any noble encounter.
@@ -97,12 +98,18 @@ A healing point or Fly marker does not make a route or landmark a settlement. Th
 | --- | --- | --- | --- |
 | Johto | Cherrygrove Silver battle | Cherrygrove onward route | Add a bypass that keeps the battle available. |
 | Johto | Azalea Silver battle | Azalea onward route | Add a bypass that keeps the battle available. |
-| Johto | Route 41 Surf | Cianwood City | Add an always-available normal connection. A public ferry is the leading option. |
 | Johto | Ice Path Kimono Girl | Blackthorn City | Add a second lane or make her interaction optional in place. |
-| Kanto | Route 20 and Route 21 Surf | Cinnabar Island | Choose one ordinary transport connection from Pallet or Fuchsia to Cinnabar, including its operator, boarding point, arrival point, and always-available return. Both Surf routes may remain optional. |
 | Alola | Island Hopper placement | Akala, Ula'ula, and Poni | Approve one visible shoreline landing and sailor position on each island for the five-option service defined above. No additional island quest is needed or allowed for basic settlement access. |
 
 These decisions are required before an implementation spec can claim full coverage. The Kanto land route is no longer an open question: it deliberately uses Saffron, optionalizes the Mt. Moon Silver battle, and treats Cycling Road as loan-bicycle public access. The Vermilion Snorlax and Underground Paths remain redundant shortcuts on that route.
+
+## Native Surf recovery boundary
+
+The Standard Rod fishing PRD makes the required existing fishing slots eligible with the Old Rod. A player who already has the rod and capture supplies can therefore obtain another native Surf user from the existing encounter tables. This PRD does not change encounters, terrain, rod distribution, fishing probabilities, or capture-supply availability.
+
+Acceptance here covers a prepared player crossing to Cianwood and Cinnabar in both directions. It does not guarantee recovery when the player lacks the Old Rod or Poké Balls, has a full party, or deposits, releases, or forgets Surf on the last user.
+
+A separate traversal-recovery PRD owns those softlock-prevention and emergency-return requirements. This PRD may be accepted independently and must not be cited as proof that Johto's or Kanto's settlement network is softlock-safe.
 
 ## Checks before decision
 
@@ -110,7 +117,7 @@ These decisions are required before an implementation spec can claim full covera
 | --- | --- | --- | --- |
 | Johto | Route 30 object | Violet approach | Confirm whether the object closes the only walking route. |
 | Sinjoh | Snowswept Cavern rocks and boulder | New Sinjoh | Confirm in the emulator whether Rock Smash or Strength is mandatory. If blocked, choose a clear normal path that keeps Machamp optional. |
-| Sinjoh | Snowswept Cavern approach | Sinjoh Ruins | Confirm the ruins do not inherit an HM requirement from the New Sinjoh approach. |
+| Sinjoh | Snowswept Cavern approach | Sinjoh Ruins | Confirm the ruins do not inherit a field-move requirement from the New Sinjoh approach. |
 
 ## Out of scope
 
@@ -122,17 +129,22 @@ These decisions are required before an implementation spec can claim full covera
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks and Checks before decision, then record the chosen core lane in Settlement coverage before implementation begins.
-- From a new save after the opening, visit the ten named Johto settlements without badges, HMs, story completion flags, or forced victories.
+- From a new save after the opening, visit the ten named Johto settlements without badges, HM items, story completion flags, or forced victories. Native Surf is allowed only for Cianwood.
+- Run every required settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved Cianwood and Cinnabar crossings.
 - Complete the S.S. Aqua maiden voyage, Mt. Moon keepsake, and Ruins of Alph survey exactly as written and receive their travel items without unrelated story flags.
 - After the maiden voyage, return between Olivine and Vermilion with only the S.S. Ticket and without the Machine Part. Confirm the train remains locked until both the Machine Part is returned and the Pass is obtained.
-- From Vermilion, follow the named Kanto land route to the other eight mainland settlements; use the selected Cinnabar service for the tenth. Do not battle Silver, wake Snorlax, own a Bicycle, or use an HM.
+- From Vermilion, follow the named Kanto land route to the other eight mainland settlements, then use native Surf to reach Cinnabar. Do not battle Silver, wake Snorlax, own a Bicycle, own HM03, or satisfy a Surf badge check.
 - Use the Island Hopper to visit all four named Alola island hubs and return to Route 13 without Surf or island-story progress.
-- Visit New Sinjoh and Sinjoh Ruins without Mt. Silver permission or an HM and return through Meara.
+- Visit New Sinjoh and Sinjoh Ruins without Mt. Silver permission or HM field use and return through Meara.
 - Return from every unlocked region without repeating its unlock story.
 - Use each bypass first, then return and complete its preserved story normally.
-- Confirm Surf and Fly improve travel without becoming prerequisites for settlement access.
+- With a native Surf user prepared before each crossing, cross to Cianwood and Cinnabar in both directions using the existing encounter geometry and no HM03 or badge.
+- Confirm no native HM other than Surf becomes a prerequisite for settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
 
 ## References
 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Badge-free HM field use](hm-field-use.md)
+- [Native HM utility learnsets](native-hm-learnsets.md)
+- [Standard Rod fishing](standard-rod-fishing.md)
