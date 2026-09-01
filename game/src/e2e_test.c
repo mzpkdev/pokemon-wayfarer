@@ -1,6 +1,8 @@
 #ifdef E2E_TESTING
 
 #include "global.h"
+#include "battle.h"
+#include "battle_setup.h"
 #include "e2e_test.h"
 #include "challenge_menu.h"
 #include "event_data.h"
@@ -16,10 +18,12 @@
 #include "new_game.h"
 #include "overworld.h"
 #include "pokemon.h"
+#include "pokemon_storage_system.h"
 #include "random.h"
 #include "script.h"
 #include "sprite.h"
 #include "string_util.h"
+#include "wild_encounter.h"
 #include "constants/field_effects.h"
 #include "constants/flags.h"
 #include "constants/global.h"
@@ -34,7 +38,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 6,
+    .version = 7,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -44,11 +48,11 @@ const struct E2ETestAbi gE2ETestAbi =
     .varsOffset = offsetof(struct SaveBlock1, vars),
 };
 
-STATIC_ASSERT(sizeof(struct E2ETestRequest) == 196, E2ETestRequestSize);
+STATIC_ASSERT(sizeof(struct E2ETestRequest) == 424, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 160, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 344, E2ETestStateSize);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -57,6 +61,7 @@ enum E2ETestInternalStage
     E2E_TEST_STAGE_WAIT_NEW_GAME,
     E2E_TEST_STAGE_WAIT_FIELD,
     E2E_TEST_STAGE_WAIT_FACING,
+    E2E_TEST_STAGE_WAIT_BATTLE,
 };
 
 static const u8 sDefaultPlayerName[] = COMPOUND_STRING("ETHAN");
@@ -74,6 +79,19 @@ static bool32 sLastFieldMoveUnlocked;
 static u8 sLastDialogueMessage;
 static u32 sDialogueSequence;
 static u8 sLastDialogueText[E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH];
+static struct E2ETestBagItem sObservedBagItems[E2E_TEST_MAX_BAG_ITEMS];
+static struct E2ETestPcSlot sObservedPcSlots[E2E_TEST_MAX_PC_SLOTS];
+static u8 sObservedBagItemCount;
+static u8 sObservedPcSlotCount;
+static u16 sCaughtSpecies;
+static u8 sCatchSwapState;
+static u8 sCatchSwapCursor;
+static u8 sCatchSwapSelectedParty;
+static u8 sCatchSwapBox;
+static u8 sCatchSwapSlot;
+static bool32 sNicknamePrompt;
+static u8 sNicknameCursor;
+static u8 sRejectedResultFrames;
 
 extern void UpdateSurfBlobFieldEffect(struct Sprite *sprite);
 
@@ -143,6 +161,26 @@ void E2ETest_RecordExpandedFieldMessage(const u8 *str)
         sLastDialogueText[i] = EOS;
 }
 
+void E2ETest_RecordCapture(u16 species)
+{
+    sCaughtSpecies = species;
+}
+
+void E2ETest_RecordCatchSwap(u8 state, u8 cursor, u8 selectedParty, u8 boxId, u8 boxPosition)
+{
+    sCatchSwapState = state;
+    sCatchSwapCursor = cursor;
+    sCatchSwapSelectedParty = selectedParty;
+    sCatchSwapBox = boxId;
+    sCatchSwapSlot = boxPosition;
+}
+
+void E2ETest_RecordNicknamePrompt(bool32 active, u8 cursor)
+{
+    sNicknamePrompt = active;
+    sNicknameCursor = cursor;
+}
+
 static void ResetObservations(void)
 {
     sLastFieldMove = MOVE_NONE;
@@ -152,6 +190,35 @@ static void ResetObservations(void)
     sLastDialogueMessage = E2E_TEST_DIALOGUE_NONE;
     sDialogueSequence = 0;
     memset(sLastDialogueText, EOS, sizeof(sLastDialogueText));
+    sCaughtSpecies = SPECIES_NONE;
+    sCatchSwapState = E2E_TEST_CATCH_SWAP_NONE;
+    sCatchSwapCursor = 0;
+    sCatchSwapSelectedParty = PARTY_SIZE;
+    sCatchSwapBox = TOTAL_BOXES_COUNT;
+    sCatchSwapSlot = IN_BOX_COUNT;
+    sNicknamePrompt = FALSE;
+    sNicknameCursor = 0;
+}
+
+static void CreateFixtureMon(struct Pokemon *mon, const struct E2ETestMonFixture *fixture, u32 personality, bool32 fainted)
+{
+    u32 move;
+
+    CreateMonWithIVs(mon, fixture->species, fixture->level, personality, OTID_STRUCT_PRESET(0), 0);
+    for (move = 0; move < MAX_MON_MOVES; move++)
+        SetMonMoveSlot(mon, fixture->moves[move], move);
+    if (fixture->isEgg)
+    {
+        bool8 isEgg = TRUE;
+
+        SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
+    }
+    if (fainted)
+    {
+        u16 hp = 0;
+
+        SetMonData(mon, MON_DATA_HP, &hp);
+    }
 }
 
 static void ApplyPartyFixtures(void)
@@ -163,28 +230,33 @@ static void ApplyPartyFixtures(void)
     for (i = 0; i < sRequest.partyCount; i++)
     {
         struct Pokemon *mon = &gPlayerParty[i];
-        u32 move;
 
-        CreateMonWithIVs(mon, sRequest.party[i].species, 20, i, OTID_STRUCT_PRESET(0), 0);
-        for (move = 0; move < MAX_MON_MOVES; move++)
-            SetMonMoveSlot(mon, sRequest.party[i].moves[move], move);
-        if (sRequest.party[i].isEgg)
-        {
-            bool8 isEgg = TRUE;
-
-            SetMonData(mon, MON_DATA_IS_EGG, &isEgg);
-        }
-        if (sRequest.party[i].fainted)
-        {
-            u16 hp = 0;
-
-            SetMonData(mon, MON_DATA_HP, &hp);
-        }
+        CreateFixtureMon(mon, &sRequest.party[i].mon, i, sRequest.party[i].fainted);
         gPlayerPartyCount++;
     }
 
     if (gPlayerPartyCount != 0)
         FlagSet(FLAG_SYS_POKEMON_GET);
+}
+
+static void ApplyPcFixtures(void)
+{
+    u32 i;
+
+    ResetPokemonStorageSystem();
+    E2ETest_SetStorageCurrentBox(sRequest.currentBox);
+    VarSet(VAR_PC_BOX_TO_SEND_MON, sRequest.currentBox);
+    sObservedPcSlotCount = sRequest.pcSlotCount;
+    for (i = 0; i < sRequest.pcSlotCount; i++)
+    {
+        struct Pokemon mon;
+
+        sObservedPcSlots[i] = sRequest.pcSlots[i];
+        if (sRequest.pcSlots[i].mon.species == SPECIES_NONE)
+            continue;
+        CreateFixtureMon(&mon, &sRequest.pcSlots[i].mon, PARTY_SIZE + i, FALSE);
+        SetBoxMonAt(sRequest.pcSlots[i].boxId, sRequest.pcSlots[i].boxPosition, &mon.box);
+    }
 }
 
 static bool32 ApplyBagFixtures(void)
@@ -241,21 +313,46 @@ static void CopyRequest(void)
     {
         u32 move;
 
-        sRequest.party[i].species = gE2ETestRequest.party[i].species;
+        sRequest.party[i].mon.species = gE2ETestRequest.party[i].mon.species;
         for (move = 0; move < MAX_MON_MOVES; move++)
-            sRequest.party[i].moves[move] = gE2ETestRequest.party[i].moves[move];
-        sRequest.party[i].isEgg = gE2ETestRequest.party[i].isEgg;
+            sRequest.party[i].mon.moves[move] = gE2ETestRequest.party[i].mon.moves[move];
+        sRequest.party[i].mon.level = gE2ETestRequest.party[i].mon.level;
+        sRequest.party[i].mon.isEgg = gE2ETestRequest.party[i].mon.isEgg;
+        sRequest.party[i].mon.reserved = gE2ETestRequest.party[i].mon.reserved;
         sRequest.party[i].fainted = gE2ETestRequest.party[i].fainted;
+        memcpy(sRequest.party[i].reserved, (const void *)gE2ETestRequest.party[i].reserved, sizeof(sRequest.party[i].reserved));
     }
     for (i = 0; i < E2E_TEST_MAX_BAG_ITEMS; i++)
     {
         sRequest.bagItems[i].item = gE2ETestRequest.bagItems[i].item;
         sRequest.bagItems[i].quantity = gE2ETestRequest.bagItems[i].quantity;
     }
+    for (i = 0; i < E2E_TEST_MAX_PC_SLOTS; i++)
+    {
+        u32 move;
+
+        sRequest.pcSlots[i].mon.species = gE2ETestRequest.pcSlots[i].mon.species;
+        for (move = 0; move < MAX_MON_MOVES; move++)
+            sRequest.pcSlots[i].mon.moves[move] = gE2ETestRequest.pcSlots[i].mon.moves[move];
+        sRequest.pcSlots[i].mon.level = gE2ETestRequest.pcSlots[i].mon.level;
+        sRequest.pcSlots[i].mon.isEgg = gE2ETestRequest.pcSlots[i].mon.isEgg;
+        sRequest.pcSlots[i].mon.reserved = gE2ETestRequest.pcSlots[i].mon.reserved;
+        sRequest.pcSlots[i].boxId = gE2ETestRequest.pcSlots[i].boxId;
+        sRequest.pcSlots[i].boxPosition = gE2ETestRequest.pcSlots[i].boxPosition;
+        memcpy(sRequest.pcSlots[i].reserved, (const void *)gE2ETestRequest.pcSlots[i].reserved, sizeof(sRequest.pcSlots[i].reserved));
+    }
+    sRequest.wildMon.species = gE2ETestRequest.wildMon.species;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        sRequest.wildMon.moves[i] = gE2ETestRequest.wildMon.moves[i];
+    sRequest.wildMon.level = gE2ETestRequest.wildMon.level;
+    sRequest.wildMon.isEgg = gE2ETestRequest.wildMon.isEgg;
+    sRequest.wildMon.reserved = gE2ETestRequest.wildMon.reserved;
     sRequest.partyCount = gE2ETestRequest.partyCount;
     sRequest.bagItemCount = gE2ETestRequest.bagItemCount;
+    sRequest.pcSlotCount = gE2ETestRequest.pcSlotCount;
+    sRequest.currentBox = gE2ETestRequest.currentBox;
     sRequest.hmsOverwrite = gE2ETestRequest.hmsOverwrite;
-    sRequest.reserved = gE2ETestRequest.reserved;
+    memcpy(sRequest.reserved, (const void *)gE2ETestRequest.reserved, sizeof(sRequest.reserved));
 }
 
 static void PublishResult(u8 status, u8 phase, u16 error)
@@ -275,6 +372,22 @@ static void FailRequest(enum E2ETestError error)
     sStage = E2E_TEST_STAGE_IDLE;
     gE2ETestRequest.status = E2E_TEST_STATUS_ERROR;
     PublishResult(E2E_TEST_STATUS_ERROR, E2E_TEST_ARRANGE_PHASE_VALIDATE, error);
+}
+
+static void RejectPendingRequestWhileBusy(void)
+{
+    gE2ETestResult.requestId = gE2ETestRequest.requestId;
+    gE2ETestResult.mapGroup = sMapGroup;
+    gE2ETestResult.mapNum = sMapNum;
+    gE2ETestResult.x = sX;
+    gE2ETestResult.y = sY;
+    gE2ETestResult.error = E2E_TEST_ERROR_BUSY;
+    gE2ETestResult.phase = E2E_TEST_ARRANGE_PHASE_VALIDATE;
+    gE2ETestResult.status = E2E_TEST_STATUS_ERROR;
+    gE2ETestRequest.status = E2E_TEST_STATUS_ERROR;
+    // The TypeScript mailbox polls every two frames. Keep this result visible
+    // without abandoning the command that still owns sStage.
+    sRejectedResultFrames = 2;
 }
 
 static bool32 ResolveCheckpoint(void)
@@ -321,13 +434,45 @@ static bool32 ResolveCheckpoint(void)
     return TRUE;
 }
 
-static enum E2ETestError ValidateRequest(void)
+static enum E2ETestError ValidateMonFixture(const struct E2ETestMonFixture *mon, bool32 allowEmpty)
+{
+    u32 move;
+
+    if (mon->species == SPECIES_NONE)
+    {
+        if (allowEmpty
+         && mon->level == 0
+         && mon->isEgg == FALSE
+         && mon->reserved == 0)
+        {
+            for (move = 0; move < MAX_MON_MOVES; move++)
+            {
+                if (mon->moves[move] != MOVE_NONE)
+                    return E2E_TEST_ERROR_MOVE;
+            }
+            return E2E_TEST_ERROR_NONE;
+        }
+        return E2E_TEST_ERROR_SPECIES;
+    }
+    if (mon->species >= NUM_SPECIES || !IsSpeciesEnabled(mon->species))
+        return E2E_TEST_ERROR_SPECIES;
+    if (mon->level == 0 || mon->level > MAX_LEVEL)
+        return E2E_TEST_ERROR_LEVEL;
+    if (mon->isEgg > TRUE || mon->reserved != 0)
+        return E2E_TEST_ERROR_PARTY;
+    for (move = 0; move < MAX_MON_MOVES; move++)
+    {
+        if (mon->moves[move] >= MOVES_COUNT)
+            return E2E_TEST_ERROR_MOVE;
+    }
+    return E2E_TEST_ERROR_NONE;
+}
+
+static enum E2ETestError ValidateArrangeRequest(void)
 {
     const struct MapHeader *mapHeader;
     u32 i;
 
-    if (sRequest.command != E2E_TEST_COMMAND_ARRANGE)
-        return E2E_TEST_ERROR_COMMAND;
     if (!ResolveCheckpoint())
         return E2E_TEST_ERROR_CHECKPOINT;
     if (sMapGroup >= MAP_GROUPS_COUNT || sMapNum >= MAP_GROUP_COUNT[sMapGroup])
@@ -363,35 +508,77 @@ static enum E2ETestError ValidateRequest(void)
         return E2E_TEST_ERROR_PARTY_COUNT;
     for (i = 0; i < sRequest.partyCount; i++)
     {
-        u32 move;
+        enum E2ETestError error = ValidateMonFixture(&sRequest.party[i].mon, FALSE);
 
-        if (sRequest.party[i].species == SPECIES_NONE
-         || sRequest.party[i].species > NUM_SPECIES
-         || !IsSpeciesEnabled(sRequest.party[i].species)
-         || sRequest.party[i].isEgg > TRUE
-         || sRequest.party[i].fainted > TRUE)
+        if (error != E2E_TEST_ERROR_NONE)
+            return error;
+        if (sRequest.party[i].fainted > TRUE
+         || sRequest.party[i].reserved[0] != 0
+         || sRequest.party[i].reserved[1] != 0
+         || sRequest.party[i].reserved[2] != 0)
             return E2E_TEST_ERROR_PARTY;
-        for (move = 0; move < MAX_MON_MOVES; move++)
-        {
-            if (sRequest.party[i].moves[move] >= MOVES_COUNT)
-                return E2E_TEST_ERROR_MOVE;
-        }
     }
     if (sRequest.bagItemCount > E2E_TEST_MAX_BAG_ITEMS)
         return E2E_TEST_ERROR_BAG_ITEM_COUNT;
     for (i = 0; i < sRequest.bagItemCount; i++)
     {
-        enum Move move = GetItemTMHMMoveId(sRequest.bagItems[i].item);
-
-        if (!IsMoveHM(move)
-         || sRequest.bagItems[i].quantity == 0
-         || sRequest.bagItems[i].quantity > MAX_BAG_ITEM_CAPACITY)
+        if (sRequest.bagItems[i].item == ITEM_NONE
+         || sRequest.bagItems[i].item >= ITEMS_COUNT
+         || GetItemPocket(sRequest.bagItems[i].item) >= POCKETS_COUNT)
             return E2E_TEST_ERROR_BAG_ITEM;
+        if (sRequest.bagItems[i].quantity == 0
+         || sRequest.bagItems[i].quantity > MAX_BAG_ITEM_CAPACITY)
+            return E2E_TEST_ERROR_ITEM_QUANTITY;
     }
-    if (sRequest.hmsOverwrite > TRUE || sRequest.reserved != 0)
+    if (sRequest.pcSlotCount > E2E_TEST_MAX_PC_SLOTS)
+        return E2E_TEST_ERROR_PC_SLOT_COUNT;
+    if (sRequest.currentBox >= TOTAL_BOXES_COUNT)
+        return E2E_TEST_ERROR_PC_BOX;
+    for (i = 0; i < sRequest.pcSlotCount; i++)
+    {
+        enum E2ETestError error;
+        u32 j;
+
+        if (sRequest.pcSlots[i].boxId >= TOTAL_BOXES_COUNT)
+            return E2E_TEST_ERROR_PC_BOX;
+        if (sRequest.pcSlots[i].boxPosition >= IN_BOX_COUNT)
+            return E2E_TEST_ERROR_PC_SLOT;
+        if (sRequest.pcSlots[i].reserved[0] != 0 || sRequest.pcSlots[i].reserved[1] != 0)
+            return E2E_TEST_ERROR_PC_SLOT;
+        for (j = 0; j < i; j++)
+        {
+            if (sRequest.pcSlots[i].boxId == sRequest.pcSlots[j].boxId
+             && sRequest.pcSlots[i].boxPosition == sRequest.pcSlots[j].boxPosition)
+                return E2E_TEST_ERROR_PC_SLOT;
+        }
+        error = ValidateMonFixture(&sRequest.pcSlots[i].mon, TRUE);
+        if (error != E2E_TEST_ERROR_NONE)
+            return error;
+    }
+    if (sRequest.hmsOverwrite > TRUE
+     || sRequest.reserved[0] != 0
+     || sRequest.reserved[1] != 0
+     || sRequest.reserved[2] != 0)
         return E2E_TEST_ERROR_PARTY;
 
     return E2E_TEST_ERROR_NONE;
+}
+
+static enum E2ETestError ValidateRequest(void)
+{
+    switch (sRequest.command)
+    {
+    case E2E_TEST_COMMAND_ARRANGE:
+        return ValidateArrangeRequest();
+    case E2E_TEST_COMMAND_START_WILD_BATTLE:
+        if (ValidateMonFixture(&sRequest.wildMon, FALSE) != E2E_TEST_ERROR_NONE)
+            return ValidateMonFixture(&sRequest.wildMon, FALSE);
+        if (sRequest.wildMon.isEgg)
+            return E2E_TEST_ERROR_PARTY;
+        return E2E_TEST_ERROR_NONE;
+    default:
+        return E2E_TEST_ERROR_COMMAND;
+    }
 }
 
 static void ApplyCheckpointDefaults(void)
@@ -436,6 +623,9 @@ static bool32 ApplyOverrides(void)
     ApplyPartyFixtures();
     if (!ApplyBagFixtures())
         return FALSE;
+    sObservedBagItemCount = sRequest.bagItemCount;
+    memcpy(sObservedBagItems, sRequest.bagItems, sizeof(sObservedBagItems));
+    ApplyPcFixtures();
     ApplyHMsOverwriteFixture();
     ResetObservations();
 
@@ -453,6 +643,32 @@ static void StartWarp(void)
     sStage = E2E_TEST_STAGE_WAIT_FIELD;
 }
 
+static bool32 IsStorageStateMachineActive(void)
+{
+    u8 uiState;
+    u8 mode;
+    u8 cursorArea;
+    u8 cursorPosition;
+    bool8 movingMon;
+
+    E2ETest_GetStorageUiState(&uiState, &mode, &cursorArea, &cursorPosition, &movingMon);
+    return uiState != E2E_TEST_STORAGE_UI_NONE;
+}
+
+static void StartWildBattle(void)
+{
+    u32 move;
+
+    CreateWildMon(sRequest.wildMon.species, sRequest.wildMon.level);
+    for (move = 0; move < MAX_MON_MOVES; move++)
+        SetMonMoveSlot(&gEnemyParty[0], sRequest.wildMon.moves[move], move);
+    ResetObservations();
+    gE2ETestRequest.status = E2E_TEST_STATUS_RUNNING;
+    PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_FIELD_READY, E2E_TEST_ERROR_NONE);
+    BattleSetup_StartWildBattle();
+    sStage = E2E_TEST_STAGE_WAIT_BATTLE;
+}
+
 static void BeginRequest(void)
 {
     enum E2ETestError error;
@@ -462,6 +678,27 @@ static void BeginRequest(void)
     if (error != E2E_TEST_ERROR_NONE)
     {
         FailRequest(error);
+        return;
+    }
+
+    if (gMain.inBattle || IsStorageStateMachineActive())
+    {
+        FailRequest(E2E_TEST_ERROR_BUSY);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_START_WILD_BATTLE)
+    {
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+        sMapGroup = gSaveBlock1Ptr->location.mapGroup;
+        sMapNum = gSaveBlock1Ptr->location.mapNum;
+        sX = gSaveBlock1Ptr->pos.x;
+        sY = gSaveBlock1Ptr->pos.y;
+        StartWildBattle();
         return;
     }
 
@@ -476,6 +713,17 @@ static void BeginRequest(void)
 
 static void UpdateRequest(void)
 {
+    if (sStage != E2E_TEST_STAGE_IDLE && gE2ETestRequest.status == E2E_TEST_STATUS_PENDING)
+    {
+        RejectPendingRequestWhileBusy();
+        return;
+    }
+    if (sRejectedResultFrames != 0)
+    {
+        sRejectedResultFrames--;
+        return;
+    }
+
     switch (sStage)
     {
     case E2E_TEST_STAGE_IDLE:
@@ -509,20 +757,20 @@ static void UpdateRequest(void)
         gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
         PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_FIELD_READY, E2E_TEST_ERROR_NONE);
         break;
+    case E2E_TEST_STAGE_WAIT_BATTLE:
+    {
+        u8 cursor;
+
+        if (!gMain.inBattle
+         || (!E2ETest_IsBattleTextReady() && !E2ETest_GetBattleActionMenuState(&cursor)))
+            break;
+        sStage = E2E_TEST_STAGE_IDLE;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_FIELD_READY, E2E_TEST_ERROR_NONE);
+        break;
+    }
     }
 }
-
-static const enum Item sHmItems[E2E_TEST_MAX_BAG_ITEMS] =
-{
-    ITEM_HM_CUT,
-    ITEM_HM_FLY,
-    ITEM_HM_SURF,
-    ITEM_HM_STRENGTH,
-    ITEM_HM_FLASH,
-    ITEM_HM_ROCK_SMASH,
-    ITEM_HM_WATERFALL,
-    ITEM_HM_WHIRLPOOL,
-};
 
 static u8 CountSurfBlobs(void)
 {
@@ -543,6 +791,11 @@ static void UpdateState(void)
     u32 i;
     u8 partyMenuActionCount;
     u8 partyMenuActions[E2E_TEST_MAX_PARTY_MENU_ACTIONS];
+    u8 storageCursorArea;
+    u8 storageCursorPosition;
+    u8 storageUiState;
+    u8 storageMode;
+    bool8 storageMovingMon;
 
     gE2ETestState.frame++;
     gE2ETestState.phase = E2E_TEST_GAME_PHASE_BOOT;
@@ -569,6 +822,30 @@ static void UpdateState(void)
     memcpy((void *)gE2ETestState.dialogueText, sLastDialogueText, sizeof(sLastDialogueText));
     gE2ETestState.partyEggMask = 0;
     gE2ETestState.partyFaintedMask = 0;
+    gE2ETestState.battleEnemySpecies = SPECIES_NONE;
+    gE2ETestState.caughtSpecies = sCaughtSpecies;
+    gE2ETestState.lastUsedItem = gLastUsedItem;
+    gE2ETestState.battleEnemyLevel = 0;
+    gE2ETestState.battleActive = gMain.inBattle;
+    gE2ETestState.catchSwapState = sCatchSwapState;
+    gE2ETestState.catchSwapCursor = sCatchSwapCursor;
+    gE2ETestState.catchSwapSelectedParty = sCatchSwapSelectedParty;
+    gE2ETestState.catchSwapBox = sCatchSwapBox;
+    gE2ETestState.catchSwapSlot = sCatchSwapSlot;
+    gE2ETestState.storageUiState = E2E_TEST_STORAGE_UI_NONE;
+    gE2ETestState.storageOpen = FALSE;
+    gE2ETestState.storageReady = FALSE;
+    gE2ETestState.storageCursorArea = 0xFF;
+    gE2ETestState.storageCursorPosition = 0xFF;
+    gE2ETestState.storageMovingMon = FALSE;
+    gE2ETestState.storageCurrentBox = TOTAL_BOXES_COUNT;
+    gE2ETestState.pcSlotCount = sObservedPcSlotCount;
+    gE2ETestState.battleUiState = gMain.inBattle ? E2E_TEST_BATTLE_UI_OTHER : E2E_TEST_BATTLE_UI_NONE;
+    gE2ETestState.battleCursor = 0xFF;
+    gE2ETestState.battleBagPocket = 0xFF;
+    gE2ETestState.battleBagItem = ITEM_NONE;
+    gE2ETestState.storageMode = E2E_TEST_STORAGE_MODE_NONE;
+    memset((void *)gE2ETestState.reserved2, 0, sizeof(gE2ETestState.reserved2));
     gE2ETestState.mapGroup = E2E_TEST_KEEP_MAP;
     gE2ETestState.mapNum = E2E_TEST_KEEP_MAP;
     gE2ETestState.x = E2E_TEST_KEEP_COORDINATE;
@@ -584,8 +861,24 @@ static void UpdateState(void)
     for (i = 0; i < E2E_TEST_MAX_BAG_ITEMS; i++)
     {
         gE2ETestState.bagItemCounts[i] = 0;
+        gE2ETestState.bagItemIds[i] = ITEM_NONE;
         gE2ETestState.partyMenuActions[i] = 0xFF;
     }
+    for (i = 0; i < E2E_TEST_MAX_PC_SLOTS; i++)
+    {
+        u32 move;
+
+        gE2ETestState.pcSlots[i].species = SPECIES_NONE;
+        for (move = 0; move < MAX_MON_MOVES; move++)
+            gE2ETestState.pcSlots[i].moves[move] = MOVE_NONE;
+        gE2ETestState.pcSlots[i].level = 0;
+        gE2ETestState.pcSlots[i].isEgg = FALSE;
+        gE2ETestState.pcSlots[i].boxId = TOTAL_BOXES_COUNT;
+        gE2ETestState.pcSlots[i].boxPosition = IN_BOX_COUNT;
+        gE2ETestState.pcSlots[i].reserved = 0;
+    }
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        gE2ETestState.battleEnemyMoves[i] = MOVE_NONE;
 
     if (gMain.inBattle)
         gE2ETestState.phase = E2E_TEST_GAME_PHASE_BATTLE;
@@ -616,8 +909,77 @@ static void UpdateState(void)
         if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE && GetMonData(mon, MON_DATA_HP) == 0)
             gE2ETestState.partyFaintedMask |= 1 << i;
     }
-    for (i = 0; i < E2E_TEST_MAX_BAG_ITEMS; i++)
-        gE2ETestState.bagItemCounts[i] = CountTotalItemQuantityInBag(sHmItems[i]);
+    for (i = 0; i < sObservedBagItemCount; i++)
+    {
+        gE2ETestState.bagItemIds[i] = sObservedBagItems[i].item;
+        gE2ETestState.bagItemCounts[i] = CountTotalItemQuantityInBag(sObservedBagItems[i].item);
+    }
+    for (i = 0; i < sObservedPcSlotCount; i++)
+    {
+        u32 move;
+        struct BoxPokemon *mon = GetBoxedMonPtr(sObservedPcSlots[i].boxId, sObservedPcSlots[i].boxPosition);
+
+        gE2ETestState.pcSlots[i].species = GetBoxMonData(mon, MON_DATA_SPECIES);
+        for (move = 0; move < MAX_MON_MOVES; move++)
+            gE2ETestState.pcSlots[i].moves[move] = GetBoxMonData(mon, MON_DATA_MOVE1 + move);
+        gE2ETestState.pcSlots[i].level = GetLevelFromBoxMonExp(mon);
+        gE2ETestState.pcSlots[i].isEgg = GetBoxMonData(mon, MON_DATA_IS_EGG);
+        gE2ETestState.pcSlots[i].boxId = sObservedPcSlots[i].boxId;
+        gE2ETestState.pcSlots[i].boxPosition = sObservedPcSlots[i].boxPosition;
+        gE2ETestState.pcSlots[i].reserved = 0;
+    }
+    gE2ETestState.storageCurrentBox = StorageGetCurrentBox();
+    E2ETest_GetStorageUiState(&storageUiState, &storageMode, &storageCursorArea, &storageCursorPosition, &storageMovingMon);
+    gE2ETestState.storageUiState = storageUiState;
+    gE2ETestState.storageMode = storageMode;
+    gE2ETestState.storageOpen = storageUiState != E2E_TEST_STORAGE_UI_NONE;
+    gE2ETestState.storageReady = storageUiState == E2E_TEST_STORAGE_UI_READY
+                              || storageUiState == E2E_TEST_STORAGE_UI_PC_MENU;
+    gE2ETestState.storageCursorArea = storageCursorArea;
+    gE2ETestState.storageCursorPosition = storageCursorPosition;
+    gE2ETestState.storageMovingMon = storageMovingMon;
+    if (gMain.inBattle)
+    {
+        u8 cursor;
+        u8 bagUiState;
+        u8 pocket;
+        u16 item;
+
+        gE2ETestState.battleEnemySpecies = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+        gE2ETestState.battleEnemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+        for (i = 0; i < MAX_MON_MOVES; i++)
+            gE2ETestState.battleEnemyMoves[i] = GetMonData(&gEnemyParty[0], MON_DATA_MOVE1 + i);
+        if (E2ETest_GetBattleActionMenuState(&cursor))
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_ACTION_MENU;
+            gE2ETestState.battleCursor = cursor;
+        }
+        else if (E2ETest_GetBattleBagState(&bagUiState, &pocket, &item))
+        {
+            gE2ETestState.battleUiState = bagUiState;
+            gE2ETestState.battleBagPocket = pocket;
+            gE2ETestState.battleBagItem = item;
+        }
+        else if (E2ETest_IsCaughtDexReady())
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_CAUGHT_DEX;
+        else if (sNicknamePrompt)
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_NICKNAME;
+            gE2ETestState.battleCursor = sNicknameCursor;
+        }
+        else if (sCatchSwapState == E2E_TEST_CATCH_SWAP_PROMPT)
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_CATCH_SWAP_PROMPT;
+            gE2ETestState.battleCursor = sCatchSwapCursor;
+        }
+        else if (E2ETest_GetCatchSwapPartyState(&cursor))
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY;
+            gE2ETestState.battleCursor = cursor;
+        }
+        else if (E2ETest_IsBattleTextReady())
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_TEXT;
+    }
     if (sLastFieldMoveUser < PARTY_SIZE)
         gE2ETestState.fieldMoveUserSpecies = GetMonData(&gPlayerParty[sLastFieldMoveUser], MON_DATA_SPECIES);
     if (E2ETest_IsSummaryScreenOpen())
@@ -628,6 +990,13 @@ static void UpdateState(void)
         gE2ETestState.uiMode = E2E_TEST_UI_PAUSE_MENU;
     else if (!IsFieldMessageBoxHidden())
         gE2ETestState.uiMode = E2E_TEST_UI_DIALOGUE;
+    if (gE2ETestState.storageOpen)
+        gE2ETestState.uiMode = E2E_TEST_UI_STORAGE;
+    else if (gE2ETestState.battleUiState == E2E_TEST_BATTLE_UI_CATCH_SWAP_PROMPT
+          || gE2ETestState.battleUiState == E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY)
+        gE2ETestState.uiMode = E2E_TEST_UI_CATCH_SWAP;
+    else if (gMain.inBattle)
+        gE2ETestState.uiMode = E2E_TEST_UI_BATTLE;
 
     E2ETest_GetPartyMenuActions(partyMenuActions, &partyMenuActionCount);
     gE2ETestState.partyMenuActionCount = partyMenuActionCount;

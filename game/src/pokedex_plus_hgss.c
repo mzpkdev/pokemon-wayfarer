@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "battle_main.h"
 #include "battle_util.h"
 #include "bg.h"
@@ -9032,3 +9035,10 @@ static void FillCryMeterWindowTilemapWithBg(void)
         windowLocal.window.height,
         windowLocal.window.paletteNum);
 }
+
+#ifdef E2E_TESTING
+bool32 E2ETest_IsCaughtDexReady(void)
+{
+    return FuncIsActiveTask(Task_HandleCaughtMonPageInput);
+}
+#endif

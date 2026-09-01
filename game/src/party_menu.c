@@ -262,6 +262,18 @@ void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count)
     for (i = 0; i < *count; i++)
         actions[i] = sPartyMenuInternal->actions[i];
 }
+
+bool32 E2ETest_GetCatchSwapPartyState(u8 *cursor)
+{
+    if (!E2ETest_IsPartyMenuOpen()
+     || sPartyMenuInternal == NULL
+     || gPartyMenu.action != PARTY_ACTION_SEND_MON_TO_BOX
+     || gPaletteFade.active)
+        return FALSE;
+
+    *cursor = gPartyMenu.slotId;
+    return TRUE;
+}
 #endif
 
 // IWRAM common

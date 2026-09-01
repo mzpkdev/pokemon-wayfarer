@@ -1,16 +1,27 @@
 import {
   directions,
   hms,
+  items,
   maps,
   moves,
   species,
   type Direction,
   type GameMap,
   type Hm,
+  type Item,
   type Move,
   type Species,
 } from "../catalog"
-import { dialogueMessages, gamePhases, parseStateSnapshot, uiModes } from "../protocol"
+import {
+  battleUiStates,
+  catchSwapStates,
+  dialogueMessages,
+  gamePhases,
+  parseStateSnapshot,
+  storageUiStates,
+  storageModes,
+  uiModes,
+} from "../protocol"
 import { type SessionRuntime } from "../runtime"
 
 export type GameState = {
@@ -63,6 +74,7 @@ export type GameState = {
   }[]
   bag: {
     hms: Record<Hm, number>
+    items: Record<Item, number>
   }
   challenge: {
     hmsOverwrite: boolean
@@ -70,6 +82,50 @@ export type GameState = {
   partyMenu: {
     open: boolean
     actions: number[]
+  }
+  pc: {
+    currentBox: number
+    slots: {
+      box: number
+      slot: number
+      mon: {
+        species: Species | "unknown"
+        moves: (Move | "unknown")[]
+        level: number
+        egg: boolean
+      } | null
+    }[]
+  }
+  battle: {
+    active: boolean
+    ui: (typeof battleUiStates)[number]
+    cursor: number | null
+    enemy: {
+      species: Species | "unknown"
+      moves: (Move | "unknown")[]
+      level: number
+    } | null
+    bag: {
+      pocket: number | null
+      item: Item | "unknown"
+    }
+    lastUsedItem: Item | "unknown"
+    caughtSpecies: Species | "unknown"
+    catchSwap: {
+      state: (typeof catchSwapStates)[number]
+      cursor: number | null
+      selectedParty: number | null
+      box: number | null
+      slot: number | null
+    }
+  }
+  storage: {
+    open: boolean
+    ready: boolean
+    ui: (typeof storageUiStates)[number]
+    mode: (typeof storageModes)[number]
+    cursor: { area: number | null; position: number | null }
+    movingMon: boolean
   }
 }
 
@@ -123,13 +179,28 @@ const decodeFieldMessageText = (bytes: number[]): string => {
 }
 
 export const describeState = (state: GameState): string =>
-  `phase=${state.phase}, map=${state.map.name}(${state.map.mapGroup}:${state.map.mapNum}), position=${state.player.x}:${state.player.y}, facing=${state.player.facing}, ready=${state.ready}, controlsLocked=${state.controlsLocked}, scriptActive=${state.scriptActive}, dialogueOpen=${state.dialogueOpen}`
+  `phase=${state.phase}, map=${state.map.name}(${state.map.mapGroup}:${state.map.mapNum}), position=${state.player.x}:${state.player.y}, facing=${state.player.facing}, ready=${state.ready}, controlsLocked=${state.controlsLocked}, scriptActive=${state.scriptActive}, dialogueOpen=${state.dialogueOpen}, battle=${state.battle.ui}, storage=${state.storage.ui}/${state.storage.mode}@${state.storage.cursor.area}:${state.storage.cursor.position}`
 
 export const createStateApi = (runtime: SessionRuntime): StateApi => ({
   read: async () => {
     const snapshot = parseStateSnapshot(
       await runtime.readBytes(runtime.address("gE2ETestState"), runtime.abi.stateSize),
     )
+    const bagQuantity = (item: number): number =>
+      snapshot.bagItems.find((entry) => entry.item === item)?.quantity ?? 0
+    const namedPcSlots = snapshot.pcSlots.map((slot) => ({
+      box: slot.box,
+      slot: slot.slot,
+      mon:
+        slot.species === species.none
+          ? null
+          : {
+              species: nameByValue(species, slot.species),
+              moves: slot.moves.map((move) => nameByValue(moves, move)),
+              level: slot.level,
+              egg: slot.egg,
+            },
+    }))
     return {
       frame: snapshot.frame,
       map: {
@@ -180,8 +251,11 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       })),
       bag: {
         hms: Object.fromEntries(
-          Object.keys(hms).map((name, index) => [name, snapshot.bagItemCounts[index]!]),
+          Object.entries(hms).map(([name, item]) => [name, bagQuantity(item)]),
         ) as Record<Hm, number>,
+        items: Object.fromEntries(
+          Object.entries(items).map(([name, item]) => [name, bagQuantity(item)]),
+        ) as Record<Item, number>,
       },
       challenge: {
         hmsOverwrite: snapshot.hmsOverwrite,
@@ -189,6 +263,48 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       partyMenu: {
         open: snapshot.uiMode === 3,
         actions: snapshot.partyMenuActions,
+      },
+      pc: {
+        currentBox: snapshot.storageCurrentBox,
+        slots: namedPcSlots,
+      },
+      battle: {
+        active: snapshot.battleActive,
+        ui: battleUiStates[snapshot.battleUiState] ?? "other",
+        cursor: snapshot.battleCursor === 0xff ? null : snapshot.battleCursor,
+        enemy:
+          snapshot.battleEnemySpecies === species.none
+            ? null
+            : {
+                species: nameByValue(species, snapshot.battleEnemySpecies),
+                moves: snapshot.battleEnemyMoves.map((move) => nameByValue(moves, move)),
+                level: snapshot.battleEnemyLevel,
+              },
+        bag: {
+          pocket: snapshot.battleBagPocket === 0xff ? null : snapshot.battleBagPocket,
+          item: nameByValue(items, snapshot.battleBagItem),
+        },
+        lastUsedItem: nameByValue(items, snapshot.lastUsedItem),
+        caughtSpecies: nameByValue(species, snapshot.caughtSpecies),
+        catchSwap: {
+          state: catchSwapStates[snapshot.catchSwapState] ?? "none",
+          cursor: snapshot.catchSwapCursor === 0xff ? null : snapshot.catchSwapCursor,
+          selectedParty:
+            snapshot.catchSwapSelectedParty < 6 ? snapshot.catchSwapSelectedParty : null,
+          box: snapshot.catchSwapBox < 14 ? snapshot.catchSwapBox : null,
+          slot: snapshot.catchSwapSlot < 30 ? snapshot.catchSwapSlot : null,
+        },
+      },
+      storage: {
+        open: snapshot.storageOpen,
+        ready: snapshot.storageReady,
+        ui: storageUiStates[snapshot.storageUiState] ?? "busy",
+        mode: storageModes[snapshot.storageMode] ?? "none",
+        cursor: {
+          area: snapshot.storageCursorArea === 0xff ? null : snapshot.storageCursorArea,
+          position: snapshot.storageCursorPosition === 0xff ? null : snapshot.storageCursorPosition,
+        },
+        movingMon: snapshot.storageMovingMon,
       },
     }
   },

@@ -9,6 +9,7 @@
 #define E2E_TEST_MAX_FLAGS 8
 #define E2E_TEST_MAX_PARTY PARTY_SIZE
 #define E2E_TEST_MAX_BAG_ITEMS 8
+#define E2E_TEST_MAX_PC_SLOTS 8
 #define E2E_TEST_MAX_PARTY_MENU_ACTIONS 8
 #define E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH 32
 #define E2E_TEST_KEEP_MAP 0xFFFF
@@ -28,6 +29,7 @@ enum E2ETestCommand
 {
     E2E_TEST_COMMAND_NONE,
     E2E_TEST_COMMAND_ARRANGE,
+    E2E_TEST_COMMAND_START_WILD_BATTLE,
 };
 
 enum E2ETestCheckpoint
@@ -66,6 +68,13 @@ enum E2ETestError
     E2E_TEST_ERROR_MOVE,
     E2E_TEST_ERROR_BAG_ITEM_COUNT,
     E2E_TEST_ERROR_BAG_ITEM,
+    E2E_TEST_ERROR_SPECIES,
+    E2E_TEST_ERROR_LEVEL,
+    E2E_TEST_ERROR_ITEM_QUANTITY,
+    E2E_TEST_ERROR_PC_SLOT_COUNT,
+    E2E_TEST_ERROR_PC_BOX,
+    E2E_TEST_ERROR_PC_SLOT,
+    E2E_TEST_ERROR_BUSY,
 };
 
 enum E2ETestGamePhase
@@ -99,6 +108,58 @@ enum E2ETestUiMode
     E2E_TEST_UI_DIALOGUE,
     E2E_TEST_UI_PARTY_MENU,
     E2E_TEST_UI_SUMMARY,
+    E2E_TEST_UI_BATTLE,
+    E2E_TEST_UI_CATCH_SWAP,
+    E2E_TEST_UI_STORAGE,
+};
+
+enum E2ETestCatchSwapState
+{
+    E2E_TEST_CATCH_SWAP_NONE,
+    E2E_TEST_CATCH_SWAP_PROMPT,
+    E2E_TEST_CATCH_SWAP_CHOOSE_PARTY,
+    E2E_TEST_CATCH_SWAP_RESOLVED,
+};
+
+enum E2ETestStorageUiState
+{
+    E2E_TEST_STORAGE_UI_NONE,
+    E2E_TEST_STORAGE_UI_INITIALIZING,
+    E2E_TEST_STORAGE_UI_PC_MENU,
+    E2E_TEST_STORAGE_UI_READY,
+    E2E_TEST_STORAGE_UI_MON_MENU,
+    E2E_TEST_STORAGE_UI_DEPOSIT_BOX,
+    E2E_TEST_STORAGE_UI_WITHDRAWING,
+    E2E_TEST_STORAGE_UI_MOVING,
+    E2E_TEST_STORAGE_UI_RELEASE_CONFIRM,
+    E2E_TEST_STORAGE_UI_RELEASE_CHECK,
+    E2E_TEST_STORAGE_UI_RELEASED,
+    E2E_TEST_STORAGE_UI_RELEASE_BLOCKED,
+    E2E_TEST_STORAGE_UI_EXIT_CONFIRM,
+    E2E_TEST_STORAGE_UI_BUSY,
+};
+
+enum E2ETestStorageMode
+{
+    E2E_TEST_STORAGE_MODE_NONE,
+    E2E_TEST_STORAGE_MODE_MOVE,
+    E2E_TEST_STORAGE_MODE_DEPOSIT,
+    E2E_TEST_STORAGE_MODE_WITHDRAW,
+};
+
+enum E2ETestBattleUiState
+{
+    E2E_TEST_BATTLE_UI_NONE,
+    E2E_TEST_BATTLE_UI_STARTING,
+    E2E_TEST_BATTLE_UI_ACTION_MENU,
+    E2E_TEST_BATTLE_UI_BAG,
+    E2E_TEST_BATTLE_UI_BAG_CONTEXT,
+    E2E_TEST_BATTLE_UI_CAUGHT_DEX,
+    E2E_TEST_BATTLE_UI_NICKNAME,
+    E2E_TEST_BATTLE_UI_CATCH_SWAP_PROMPT,
+    E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY,
+    E2E_TEST_BATTLE_UI_OTHER,
+    E2E_TEST_BATTLE_UI_TEXT,
 };
 
 struct E2ETestVarPatch
@@ -114,18 +175,34 @@ struct E2ETestFlagPatch
     u8 reserved;
 };
 
-struct E2ETestPartyMon
+struct E2ETestMonFixture
 {
     u16 species;
     u16 moves[MAX_MON_MOVES];
+    u8 level;
     u8 isEgg;
+    u32 reserved;
+};
+
+struct E2ETestPartyMonFixture
+{
+    struct E2ETestMonFixture mon;
     u8 fainted;
+    u8 reserved[3];
 };
 
 struct E2ETestBagItem
 {
     u16 item;
     u16 quantity;
+};
+
+struct E2ETestPcSlot
+{
+    struct E2ETestMonFixture mon;
+    u8 boxId;
+    u8 boxPosition;
+    u8 reserved[2];
 };
 
 struct E2ETestRequest
@@ -146,12 +223,27 @@ struct E2ETestRequest
     u8 useRngSeed;
     u8 command;
     u8 status;
-    struct E2ETestPartyMon party[E2E_TEST_MAX_PARTY];
+    struct E2ETestPartyMonFixture party[E2E_TEST_MAX_PARTY];
     struct E2ETestBagItem bagItems[E2E_TEST_MAX_BAG_ITEMS];
+    struct E2ETestPcSlot pcSlots[E2E_TEST_MAX_PC_SLOTS];
+    struct E2ETestMonFixture wildMon;
     u8 partyCount;
     u8 bagItemCount;
+    u8 pcSlotCount;
+    u8 currentBox;
     u8 hmsOverwrite;
-    u8 reserved;
+    u8 reserved[3];
+};
+
+struct E2ETestObservedPcSlot
+{
+    u16 species;
+    u16 moves[MAX_MON_MOVES];
+    u8 level;
+    u8 isEgg;
+    u8 boxId;
+    u8 boxPosition;
+    u16 reserved;
 };
 
 struct E2ETestResult
@@ -201,6 +293,33 @@ struct E2ETestState
     u32 dialogueSequence;
     u8 dialogueText[E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH];
     u8 fieldMoveUnlocked;
+    u16 bagItemIds[E2E_TEST_MAX_BAG_ITEMS];
+    struct E2ETestObservedPcSlot pcSlots[E2E_TEST_MAX_PC_SLOTS];
+    u16 battleEnemySpecies;
+    u16 battleEnemyMoves[MAX_MON_MOVES];
+    u16 caughtSpecies;
+    u16 lastUsedItem;
+    u8 battleEnemyLevel;
+    u8 battleActive;
+    u8 catchSwapState;
+    u8 catchSwapCursor;
+    u8 catchSwapSelectedParty;
+    u8 catchSwapBox;
+    u8 catchSwapSlot;
+    u8 storageUiState;
+    u8 storageOpen;
+    u8 storageReady;
+    u8 storageCursorArea;
+    u8 storageCursorPosition;
+    u8 storageMovingMon;
+    u8 storageCurrentBox;
+    u8 pcSlotCount;
+    u8 battleUiState;
+    u8 battleCursor;
+    u8 battleBagPocket;
+    u8 storageMode;
+    u16 battleBagItem;
+    u8 reserved2[4];
 };
 
 struct E2ETestAbi
@@ -224,9 +343,19 @@ void E2ETest_Update(void);
 void E2ETest_RecordFieldMove(enum Move move, u8 partyIndex, u8 result);
 void E2ETest_RecordFieldMessage(const u8 *str);
 void E2ETest_RecordExpandedFieldMessage(const u8 *str);
+void E2ETest_RecordCapture(u16 species);
+void E2ETest_RecordCatchSwap(u8 state, u8 cursor, u8 selectedParty, u8 boxId, u8 boxPosition);
+void E2ETest_RecordNicknamePrompt(bool32 active, u8 cursor);
 bool32 E2ETest_IsPartyMenuOpen(void);
 void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count);
 bool32 E2ETest_IsSummaryScreenOpen(void);
+void E2ETest_SetStorageCurrentBox(u8 boxId);
+void E2ETest_GetStorageUiState(u8 *uiState, u8 *mode, u8 *cursorArea, u8 *cursorPosition, bool8 *movingMon);
+bool32 E2ETest_GetBattleActionMenuState(u8 *cursor);
+bool32 E2ETest_IsBattleTextReady(void);
+bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item);
+bool32 E2ETest_IsCaughtDexReady(void);
+bool32 E2ETest_GetCatchSwapPartyState(u8 *cursor);
 
 #endif // E2E_TESTING
 

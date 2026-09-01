@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "battle.h"
 #include "battle_hold_effects.h"
 #include "battle_message.h"
@@ -10582,6 +10585,9 @@ static void FinalizeCapture(void)
     TryBattleFormChange(gBattlerTarget, FORM_CHANGE_END_BATTLE, GetBattlerAbility(gBattlerTarget));
     gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
     struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
+#ifdef E2E_TESTING
+    E2ETest_RecordCapture(GetMonData(caughtMon, MON_DATA_SPECIES));
+#endif
     SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
     if (CalculatePlayerPartyCount() == GetMaxPartySize())
@@ -11099,6 +11105,9 @@ static void Cmd_givecaughtmon(void)
         gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_HANDLE_INPUT;
         gBattleCommunication[CURSOR_POSITION] = 0;
         BattleCreateYesNoCursorAt(0);
+#ifdef E2E_TESTING
+        E2ETest_RecordCatchSwap(E2E_TEST_CATCH_SWAP_PROMPT, 0, PARTY_SIZE, TOTAL_BOXES_COUNT, IN_BOX_COUNT);
+#endif
         break;
     case GIVECAUGHTMON_HANDLE_INPUT:
         if (JOY_NEW(DPAD_UP) && gBattleCommunication[CURSOR_POSITION] != 0)
@@ -11115,6 +11124,9 @@ static void Cmd_givecaughtmon(void)
             gBattleCommunication[CURSOR_POSITION] = 1;
             BattleCreateYesNoCursorAt(1);
         }
+#ifdef E2E_TESTING
+        E2ETest_RecordCatchSwap(E2E_TEST_CATCH_SWAP_PROMPT, gBattleCommunication[CURSOR_POSITION], PARTY_SIZE, TOTAL_BOXES_COUNT, IN_BOX_COUNT);
+#endif
         if (JOY_NEW(A_BUTTON))
         {
             PlaySE(SE_SELECT);
@@ -11139,6 +11151,9 @@ static void Cmd_givecaughtmon(void)
             BtlController_EmitChoosePokemon(gBattlerAttacker, B_COMM_TO_CONTROLLER, PARTY_ACTION_SEND_MON_TO_BOX, PARTY_SIZE, ABILITY_NONE, 0, gBattleStruct->battlerPartyOrders[gBattlerAttacker]);
             MarkBattlerForControllerExec(gBattlerAttacker);
             gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_HANDLE_CHOSEN_MON;
+#ifdef E2E_TESTING
+            E2ETest_RecordCatchSwap(E2E_TEST_CATCH_SWAP_CHOOSE_PARTY, 0, PARTY_SIZE, TOTAL_BOXES_COUNT, IN_BOX_COUNT);
+#endif
         }
         break;
     case GIVECAUGHTMON_HANDLE_CHOSEN_MON:
@@ -11157,6 +11172,9 @@ static void Cmd_givecaughtmon(void)
                 // Mon chosen, try to put it in the PC
                 if (CopyMonToPC(&gPlayerParty[gSelectedMonPartyId]) == MON_GIVEN_TO_PC)
                 {
+#ifdef E2E_TESTING
+                    E2ETest_RecordCatchSwap(E2E_TEST_CATCH_SWAP_RESOLVED, 0, gSelectedMonPartyId, gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+#endif
                     GetMonNickname(&gPlayerParty[gSelectedMonPartyId], gStringVar2);
                     StringCopy(gStringVar1, GetBoxNamePtr(GetPCBoxToSendMon()));
                     ZeroMonData(&gPlayerParty[gSelectedMonPartyId]);
@@ -11400,6 +11418,9 @@ static void Cmd_trygivecaughtmonnick(void)
             gBattleCommunication[CURSOR_POSITION] = 0;
             BattleCreateYesNoCursorAt(0);
         }
+#ifdef E2E_TESTING
+        E2ETest_RecordNicknamePrompt(TRUE, 0);
+#endif
         break;
     case 1:
         if (IsNuzlockeNicknamingActive())
@@ -11418,6 +11439,9 @@ static void Cmd_trygivecaughtmonnick(void)
             gBattleCommunication[CURSOR_POSITION] = 1;
             BattleCreateYesNoCursorAt(1);
         }
+#ifdef E2E_TESTING
+        E2ETest_RecordNicknamePrompt(TRUE, gBattleCommunication[CURSOR_POSITION]);
+#endif
         if (JOY_NEW(A_BUTTON))
         {
             PlaySE(SE_SELECT);
@@ -11463,6 +11487,9 @@ static void Cmd_trygivecaughtmonnick(void)
         }
         break;
     case 4:
+#ifdef E2E_TESTING
+        E2ETest_RecordNicknamePrompt(FALSE, 0);
+#endif
         gBattleCommunication[MULTIUSE_STATE] = 0;
         gBattlescriptCurrInstr = cmd->nextInstr;
         break;
