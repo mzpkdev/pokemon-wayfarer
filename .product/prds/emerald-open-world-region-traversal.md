@@ -11,9 +11,10 @@ Sootopolis remains unlockable content. Its enclosed geography, Dive entrance, Gy
 - Walking, doors, always-available local transport, and the approved native Surf crossings form Hoenn's core settlement network.
 - Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in the opening network. That route cannot require an HM item. Only the named water crossings may require a Pokémon that already knows Surf.
 - Native Cut, Flash, Strength, Rock Smash, Waterfall, and Dive users may open optional routes before the matching HM is found. Those routes do not count toward the core settlement network.
-- A story actor or battle may occupy one approach only when another visible lane remains open.
+- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or battle must leave another visible lane open.
+- This exception applies only when this PRD explicitly names the encounter as the selected core lane. It does not replace an approved bypass or optional-scene requirement.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
-- A bypass does not complete its story or award skipped badges, HMs, items, or rewards.
+- A bypass or roadblock removal does not complete its attached story or award skipped rewards. Completing a permitted self-contained encounter may advance only that encounter's local state and grant its normal reward.
 - Maps and scripts must tolerate visits in an unexpected campaign order.
 
 ## Settlement coverage
@@ -24,8 +25,8 @@ The required opening roster is Littleroot Town, Oldale Town, Petalburg City, Rus
 | --- | --- | --- |
 | Southwest and central land network | Littleroot, Oldale, Petalburg, Rustboro, Slateport, Mauville, Verdanturf, and Fallarbor | Existing roads, Petalburg Woods, the public ferry, Route 110, and the Route 111/113 loop remain passable under the approved changes below. Rusturf Tunnel remains an optional Rock Smash shortcut. |
 | Route 104 public ferry | Dewford and Slateport, with a return to Route 104 | A new deckhand outside Briney's Cottage uses the existing Briney boat departure and offers Route 104, Dewford, and Slateport from the player's first visit. The same three-stop menu appears at all three landings. Briney, Peeko, the Letter, and the Devon Goods story never start, stop, or remove this service. No new route geometry or pier is required. |
-| Lavaridge branch | Lavaridge | One ordinary lane through Route 112, the cable car, Mt. Chimney, or Jagged Pass must be selected below. |
-| Eastern mainland | Fortree and Lilycove | Native Surf crosses Route 118 without HM03 or a badge. Existing Lotad encounters serve the western land network and existing Wailmer fishing encounters serve the eastern land network. Route 119 then reaches Fortree; a Kecleon bypass on Route 120 continues to Lilycove. |
+| Lavaridge branch | Lavaridge | The Route 112 grunts leave one lane to an always-operating cable car. Mt. Chimney remains passable to Jagged Pass before, during, and after its team conflict. The conflict appears only after the Meteor Falls theft and retains its normal completion state. |
+| Eastern mainland | Fortree and Lilycove | Native Surf crosses Route 118 without HM03 or a badge. Existing Lotad encounters serve the western land network and existing Wailmer fishing encounters serve the eastern land network. Route 119 then reaches Fortree. Steven and Kecleon retain their Route 120 bridge scene, which requires no earlier progress or victory and opens the bridge after the encounter resolves. |
 | Eastern sea network | Mossdeep and Pacifidlog | Native Wailmer users connect Lilycove, Mossdeep, and Pacifidlog through the existing ocean routes and fishing encounters. Prepared travel is in scope; recovery after losing access to Surf is not. |
 
 ## Approved changes
@@ -39,8 +40,11 @@ The required opening roster is Littleroot Town, Oldale Town, Petalburg City, Rus
 | Route 110 Aqua wall | Initialize only the dedicated roadblock hide state. Do not complete the museum battles or Devon Goods delivery. |
 | Route 110 rival | Leave one trigger lane for the battle and one lane for travel. The Itemfinder remains a battle reward. |
 | Route 111 northbound road | Move one Rock Smash rock off the choke. Keep the other rock as an optional field-move interaction. |
+| Route 112 and Mt. Chimney | Move the two Route 112 grunts aside so one cable-car lane is always open. Hide the summit conflict before the Meteor Falls theft, reveal it when that scene completes, and move the four actors above Jagged Pass out of the descent lane. Keep Maxie's battle and its normal aftermath available only after Meteor Falls. |
 | Route 119 bridge | Initialize only the dedicated Aqua roadblock hide state. Keep the Weather Institute occupation and Shelly battle available. |
 | Route 119 rival | Leave one trigger lane for the battle and one lane for travel. Fly remains a battle reward. |
+| Route 120 Steven and Kecleon | Keep the original bridge placement. The player may decline and retry, or accept and defeat, catch, flee from, or escape Kecleon through a battle move. Every non-loss resolution grants the Devon Scope exactly once and permanently opens the bridge. Losing leaves the scene available after recovery. Reward delivery must succeed before the completion state is committed. |
+| Early eastern arrivals | Fortree, Lilycove, Mossdeep, and Pacifidlog may run baseline presentation and set their own visited state. Arrival does not advance a team, Gym, legendary, weather, rival, or other campaign scene. Route 118's Steven introduction may remain as baseline presentation. |
 | Lilycove east ocean outlet | Do not install the blocking Wailmer metatiles. Keep the submarine, hideout, and Team Aqua story state unchanged. This is the native Surf entrance to the eastern sea network. |
 
 ## Shortcut story
@@ -53,15 +57,6 @@ The required opening roster is Littleroot Town, Oldale Town, Petalburg City, Rus
 - Result: the desert boundary accepts the Go-Goggles permanently. The desert remains an optional shortcut and exploration area rather than part of the core settlement route.
 - Later story: the post-Lavaridge handoff checks whether the player already owns the Go-Goggles. If so, the giver acknowledges the surveyor's pair and gives no duplicate. The surrounding scene and all unrelated rewards still run normally.
 
-## Unresolved settlement blocks
-
-| Block | Access affected | Decision needed |
-| --- | --- | --- |
-| Lavaridge approach | Lavaridge | Choose one core lane. Either keep the Route 112 cable car operating before the team conflict, or leave a walkable descent through the Mt. Chimney staging and Jagged Pass. Specify which team actors move and where their scenes remain available. |
-| Route 120 Kecleon and Steven | Lilycove from the Fortree side | Choose the bypass lane or object placement that lets the player cross without the Devon Scope while keeping Steven's scene and the Kecleon encounter available. |
-
-These two route-design decisions are required before an implementation spec can claim complete opening-network coverage.
-
 ## Native Surf recovery boundary
 
 The Standard Rod fishing PRD makes the existing Wailmer slots eligible with the Old Rod. A player who already has the rod and capture supplies can therefore obtain another native Surf user from the existing encounter tables. This PRD does not change encounters, terrain, rod distribution, fishing probabilities, or capture-supply availability.
@@ -69,12 +64,6 @@ The Standard Rod fishing PRD makes the existing Wailmer slots eligible with the 
 Acceptance here covers a prepared player crossing each approved route in both directions. It does not guarantee recovery when the player lacks the Old Rod or Poké Balls, has a full party, or deposits, releases, or forgets Surf on the last user.
 
 A separate traversal-recovery PRD owns those softlock-prevention and emergency-return requirements. This PRD may be accepted independently and must not be cited as proof that Hoenn's opening settlement network is softlock-safe.
-
-## Checks before decision
-
-| Suspected problem | Check needed |
-| --- | --- |
-| Early eastern-city arrival | Enter Fortree, Lilycove, Mossdeep, and Pacifidlog before their campaign order. Record any arrival script that advances a team, Gym, legendary, weather, or rival state; convert it to baseline presentation only before approving the associated lane. |
 
 ## Out of scope
 
@@ -85,13 +74,14 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - The Route 111 desert uses the survey story above and remains a gated shortcut.
 - This pass does not redesign shortcut rewards or optional encounters unless they block the only settlement route.
 
-## Target acceptance after open decisions
+## Acceptance
 
-- Resolve every row under Unresolved settlement blocks, then record the chosen lane or service in Settlement coverage before implementation begins.
-- From a new save after the opening, visit all fourteen named opening-network settlements without badges, HM items, story completion flags, or forced victories. Native Surf is allowed only on the approved water crossings.
+- From a new save after the opening, visit all fourteen named opening-network settlements without badges, HM items, earlier or unrelated story-completion flags, or a required battle victory. Native Surf is allowed only on the approved water crossings.
 - Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved crossings.
 - Use the public ferry from Route 104 to Dewford and Slateport and return from both destinations while the Peeko and Letter stories are untouched and while either story is active.
-- Use each bypass first, then return and complete its preserved story normally.
+- Reach Lavaridge before Meteor Falls, during the Mt. Chimney conflict, and after defeating Maxie. The road stays open in all three states, and the conflict cannot be completed before Meteor Falls.
+- Approach Steven from both directions. Decline and retry, lose and retry after recovery, then defeat, catch, flee from, or escape Kecleon through a battle move. Each non-loss completion opens the bridge and grants the Devon Scope exactly once. A failed reward delivery leaves the scene retryable.
+- Use each bypass or roadblock removal first, then return and complete its preserved story normally.
 - Test every changed connection from both directions and after saving on either side.
 - With a native Surf user prepared before each crossing, cross Route 118 in both directions, then travel among Lilycove, Mossdeep, and Pacifidlog in both directions without HM03 or a badge.
 - Confirm no native HM other than Surf becomes a prerequisite for opening-network settlement access.
