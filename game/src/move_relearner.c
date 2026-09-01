@@ -377,7 +377,6 @@ static bool32 HasRelearnerLevelUpMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerEggMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerTMMoves(struct BoxPokemon *boxMon);
 static bool32 HasRelearnerTutorMoves(struct BoxPokemon *boxMon);
-static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerEggMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTMMoves(struct BoxPokemon *mon, u16 *moves);
 static u32 GetRelearnerTutorMoves(struct BoxPokemon *mon, u16 *moves);
@@ -1053,7 +1052,7 @@ static void CreateLearnableMovesList(void)
         break;
     case MOVE_RELEARNER_LEVEL_UP_MOVES:
     default:
-        sMoveRelearnerStruct->numMenuChoices = GetRelearnerLevelUpMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
+        sMoveRelearnerStruct->numMenuChoices = GetBoxMonRelearnableLevelUpMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
         break;
     }
 
@@ -1167,7 +1166,7 @@ static void SortMovesAlphabetically(u16 *moves, u32 numMoves)
         QuickSortMoves(moves, 0, numMoves - 1);
 }
 
-static u32 GetRelearnerLevelUpMoves(struct BoxPokemon *mon, u16 *moves)
+u32 GetBoxMonRelearnableLevelUpMoves(struct BoxPokemon *mon, u16 moves[MAX_RELEARNER_MOVES])
 {
     u32 numMoves = 0;
     u32 species = GetBoxMonData(mon, MON_DATA_SPECIES_OR_EGG);
