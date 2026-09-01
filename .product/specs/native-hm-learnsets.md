@@ -1,7 +1,7 @@
 # Native HM utility learnsets
 
 PRD: [Native HM utility learnsets](../prds/native-hm-learnsets.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
