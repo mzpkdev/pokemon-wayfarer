@@ -187,13 +187,18 @@ static void ApplyPartyFixtures(void)
         FlagSet(FLAG_SYS_POKEMON_GET);
 }
 
-static void ApplyBagFixtures(void)
+static bool32 ApplyBagFixtures(void)
 {
     u32 i;
 
     ClearBag();
     for (i = 0; i < sRequest.bagItemCount; i++)
-        AddBagItem(sRequest.bagItems[i].item, sRequest.bagItems[i].quantity);
+    {
+        if (!AddBagItem(sRequest.bagItems[i].item, sRequest.bagItems[i].quantity))
+            return FALSE;
+    }
+
+    return TRUE;
 }
 
 static void ApplyHMsOverwriteFixture(void)
@@ -361,6 +366,7 @@ static enum E2ETestError ValidateRequest(void)
         u32 move;
 
         if (sRequest.party[i].species == SPECIES_NONE
+         || sRequest.party[i].species > NUM_SPECIES
          || !IsSpeciesEnabled(sRequest.party[i].species)
          || sRequest.party[i].isEgg > TRUE
          || sRequest.party[i].fainted > TRUE)
@@ -377,7 +383,9 @@ static enum E2ETestError ValidateRequest(void)
     {
         enum Move move = GetItemTMHMMoveId(sRequest.bagItems[i].item);
 
-        if (!IsMoveHM(move) || sRequest.bagItems[i].quantity == 0)
+        if (!IsMoveHM(move)
+         || sRequest.bagItems[i].quantity == 0
+         || sRequest.bagItems[i].quantity > MAX_BAG_ITEM_CAPACITY)
             return E2E_TEST_ERROR_BAG_ITEM;
     }
     if (sRequest.hmsOverwrite > TRUE || sRequest.reserved != 0)
@@ -405,7 +413,7 @@ static void ApplyCheckpointDefaults(void)
     }
 }
 
-static void ApplyOverrides(void)
+static bool32 ApplyOverrides(void)
 {
     u32 i;
 
@@ -426,9 +434,12 @@ static void ApplyOverrides(void)
         SeedRng2(sRequest.rngSeed);
     }
     ApplyPartyFixtures();
-    ApplyBagFixtures();
+    if (!ApplyBagFixtures())
+        return FALSE;
     ApplyHMsOverwriteFixture();
     ResetObservations();
+
+    return TRUE;
 }
 
 static void StartWarp(void)
@@ -476,7 +487,11 @@ static void UpdateRequest(void)
             break;
         PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
         ApplyCheckpointDefaults();
-        ApplyOverrides();
+        if (!ApplyOverrides())
+        {
+            FailRequest(E2E_TEST_ERROR_BAG_ITEM);
+            break;
+        }
         StartWarp();
         break;
     case E2E_TEST_STAGE_WAIT_FIELD:
