@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
@@ -409,6 +412,37 @@ static void HandleInputChooseAction(enum BattlerId battler)
         BtlController_Complete(battler);
     }
 }
+
+#ifdef E2E_TESTING
+bool32 E2ETest_GetBattleActionMenuState(u8 *cursor)
+{
+    u32 battler;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerSide(battler) == B_SIDE_PLAYER
+         && gBattlerControllerFuncs[battler] == HandleInputChooseAction)
+        {
+            *cursor = gActionSelectionCursor[battler];
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+bool32 E2ETest_IsBattleTextReady(void)
+{
+    u32 battler;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerSide(battler) == B_SIDE_PLAYER
+         && gBattlerControllerFuncs[battler] == Controller_WaitForString)
+            return TRUE;
+    }
+    return FALSE;
+}
+#endif
 
 void HandleInputChooseTarget(enum BattlerId battler)
 {

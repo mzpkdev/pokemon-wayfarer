@@ -8,12 +8,14 @@ export const checkpoints = {
 
 export const maps = {
   "new-bark-town": { mapGroup: 0, mapNum: 0 },
+  "cherrygrove-city": { mapGroup: 0, mapNum: 1 },
   "azalea-town": { mapGroup: 0, mapNum: 3 },
   "route-33": { mapGroup: 0, mapNum: 15 },
   "route-41": { mapGroup: 0, mapNum: 23 },
   "elm-lab": { mapGroup: 1, mapNum: 0 },
   "players-house-1f": { mapGroup: 1, mapNum: 3 },
   "players-bedroom": { mapGroup: 1, mapNum: 4 },
+  "cherrygrove-pokemon-center": { mapGroup: 2, mapNum: 0 },
   "blackthorn-move-deleter": { mapGroup: 10, mapNum: 5 },
   "test-map-1": { mapGroup: 30, mapNum: 27 },
 } as const
@@ -42,6 +44,7 @@ export const species = {
   none: 0,
   pidgey: 16,
   rattata: 19,
+  zubat: 41,
   poliwag: 60,
   geodude: 74,
   onix: 95,
@@ -63,6 +66,7 @@ export const moves = {
   none: 0,
   cut: 15,
   fly: 19,
+  tackle: 33,
   surf: 57,
   strength: 70,
   waterfall: 127,
@@ -81,6 +85,10 @@ export const hms = {
   rockSmash: 687,
   waterfall: 688,
   whirlpool: 689,
+} as const
+
+export const items = {
+  masterBall: 4,
 } as const
 
 export const partyMenuActions = {
@@ -126,6 +134,8 @@ export type StoryFlag = keyof typeof storyFlags
 export type Button = keyof typeof buttons
 export type TextSpeed = keyof typeof textSpeeds
 export type Species = keyof typeof species
+export type FixtureSpecies = Exclude<Species, "none">
 export type Move = keyof typeof moves
 export type Hm = keyof typeof hms
+export type Item = keyof typeof items
 export type PartyMenuAction = keyof typeof partyMenuActions
