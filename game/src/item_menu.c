@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "item_menu.h"
 #include "battle.h"
 #include "challenge_menu.h"
@@ -3145,3 +3148,33 @@ static s32 CompareItemsByIndex(enum Pocket pocketId, struct ItemSlot item1, stru
 
     return 0; // Cannot have multiple stacks of indexed items
 }
+
+#ifdef E2E_TESTING
+bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item)
+{
+    u16 position;
+
+    if (gBagMenu == NULL
+     || gBagPosition.location != ITEMMENULOCATION_BATTLE
+     || gPaletteFade.active)
+        return FALSE;
+
+    *pocket = gBagPosition.pocket;
+    if (FuncIsActiveTask(Task_BagMenu_HandleInput))
+    {
+        *state = E2E_TEST_BATTLE_UI_BAG;
+        position = gBagPosition.scrollPosition[*pocket] + gBagPosition.cursorPosition[*pocket];
+        *item = GetBagItemId(*pocket, position);
+    }
+    else if (FuncIsActiveTask(Task_ItemContext_SingleRow) || FuncIsActiveTask(Task_ItemContext_MultipleRows))
+    {
+        *state = E2E_TEST_BATTLE_UI_BAG_CONTEXT;
+        *item = gSpecialVar_ItemId;
+    }
+    else
+    {
+        return FALSE;
+    }
+    return TRUE;
+}
+#endif
