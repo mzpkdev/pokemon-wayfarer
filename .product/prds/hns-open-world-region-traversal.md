@@ -13,10 +13,12 @@ Kanto opens through the S.S. Aqua maiden voyage, Alola through the Mt. Moon keep
 - Fly may make settlement travel faster. Surf remains optional outside the approved Cianwood and Cinnabar routes.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
 - A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
+- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or battle must leave another visible lane open.
+- This exception applies only when this PRD explicitly names the encounter as the selected core lane. It does not replace an approved bypass or optional-scene requirement.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
 - Every inter-region travel service is frictionless after its region is unlocked and always includes a return option.
-- Opening a travel lane does not complete the story attached to it or award skipped rewards.
+- A bypass or roadblock removal does not complete its attached story or award skipped rewards. Completing a permitted self-contained encounter may advance only that encounter's local state and grant its normal reward.
 
 ## Settlement coverage
 
@@ -129,7 +131,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 ## Target acceptance after open decisions
 
 - Resolve every row under Unresolved settlement blocks and Checks before decision, then record the chosen core lane in Settlement coverage before implementation begins.
-- From a new save after the opening, visit the ten named Johto settlements without badges, HM items, story completion flags, or forced victories. Native Surf is allowed only for Cianwood.
+- From a new save after the opening, visit the ten named Johto settlements without badges, HM items, earlier or unrelated story-completion flags, or a required battle victory. Native Surf is allowed only for Cianwood.
 - Run every required settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved Cianwood and Cinnabar crossings.
 - Complete the S.S. Aqua maiden voyage, Mt. Moon keepsake, and Ruins of Alph survey exactly as written and receive their travel items without unrelated story flags.
 - After the maiden voyage, return between Olivine and Vermilion with only the S.S. Ticket and without the Machine Part. Confirm the train remains locked until both the Machine Part is returned and the Pass is obtained.
