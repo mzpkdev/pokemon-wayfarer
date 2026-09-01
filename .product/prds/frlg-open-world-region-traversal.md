@@ -24,7 +24,7 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Fuchsia retains one unresolved land approach. Native Surf connects Pallet to Cinnabar through Route 21. Existing Horsea and Krabby fishing encounters provide both species on both sides in FireRed and LeafGreen. Route 20 and Seafoam remain optional. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Route 12 is the core Fuchsia approach; its Snorlax remains asleep beside an open lane. Route 16 and Cycling Road remain an optional Bicycle shortcut. Native Surf connects Pallet to Cinnabar through Route 21. Existing Horsea and Krabby fishing encounters provide both species on both sides in FireRed and LeafGreen. Route 20 and Seafoam remain optional. |
 | Sevii Islands | The settlement hubs on One, Two, Three, Four, Five, Six, and Seven Island | The Seagallop service is the core network. The unlock trip introduces One Island; immediately afterward, every Sevii port offers all seven islands and Vermilion. |
 
 Indigo Plateau and event-only islands are not settlements in this pass. A route, cave, or optional landmark does not enter scope merely because it has a healing point.
@@ -34,8 +34,11 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 | Connection | Required behavior |
 | --- | --- |
 | Viridian north road | After the player receives a starter, place the old man beside the road instead of across it. Oak's Parcel, the Pokédex scene, coffee dialogue, and catching tutorial remain available, but none may block Route 2. |
+| Pewter east road | Keep the Gym guide and the upper two escort triggers. Remove the bottom and right triggers so the player may leave through the lower lane without starting the escort. The guide's dialogue, movement, visibility, and scene state remain available through the retained triggers. |
+| Mt. Moon Fossil room | Keep Super Nerd Miguel and both Fossils in place. Remove the automatic approach trigger beside Miguel so the player may pass through the open tile. Speaking to Miguel still starts the original battle, and victory still unlocks the original Fossil choice. |
 | Cerulean east and south exits | Stop the transition logic from moving the policeman and Slowbro pair into blocking positions. Bill, Nugget Bridge, the rival battle, and the northern story route remain available. |
 | Four Saffron gates | Allow direct passage without Tea. Each gate may still advance its local scene when first crossed. |
+| Route 12 Snorlax | Move Snorlax and its underfoot Leftovers one tile east, leaving the north-south lane open. Keep the Poké Flute interaction, encounter, hide flag, wake flag, and Leftovers reward unchanged at the new tile. Do not change Route 16 or Cycling Road. |
 
 ## Sevii unlock story
 
@@ -45,20 +48,11 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 - Job: inspect three marked soft spots in the construction lot. Machop follows the player to each marker and tamps it down. This uses no battle, item, field move, badge, or earlier story flag.
 - Turn-in: report to the builder, who certifies the pier for Seagallop service. The ferry sailor gives the player the Rainbow Pass and adds Sevii Islands to the shared dock's service choices. This does not change the S.S. Anne scene.
 - Shared dock: while the S.S. Anne is present, the sailor offers S.S. Anne and Sevii Islands. The S.S. Anne choice keeps its existing Ticket, boarding, captain, rival, Cut, and departure behavior. Sevii Islands never advances or departs the S.S. Anne. After the player causes the ship's normal departure, the sailor offers only Sevii Islands.
-- First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives the existing regional introduction and expands the Town Map, but does not start the Meteorite delivery unless the player separately accepts it.
+- First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives a new travel-only introduction and expands the Town Map. Bill remains hidden until his normal Cinnabar trip. This introduction does not give the Meteorite or Tri-Pass, disable PC storage, move Bill, or advance the existing One Island quest state.
+- Existing Meteorite story: Bill's normal Cinnabar invitation remains the entry to the original Meteorite delivery after early Sevii travel. That later trip may reuse the player's Rainbow Pass, but it still starts the original local quest and preserves its rewards and state transitions without giving a duplicate pass.
 - Permanent service: as soon as Celio's introduction ends, the One Island sailor offers One through Seven Island and Vermilion. Every other Sevii port uses that same eight-destination menu from its first visit. The Rainbow Pass is the only credential.
-- State isolation: visiting an island marks that destination visited and initializes only the baseline NPC and transport state needed to enter and leave it. It does not complete Lostelle, the biker invasion, Hypno, the Meteorite, the Ruby, the Champion, or the National Pokédex progression.
+- State isolation: visiting an island marks that destination visited and initializes only the baseline NPC and transport state needed to enter and leave it. It does not complete Lostelle, the biker invasion, Hypno, the Meteorite, the Ruby, the Champion, or the National Pokédex progression. The shared rival scene on Four or Six Island remains deferred until its original Sevii prerequisite is met and plays exactly once at whichever location resolves first.
 - Return guarantee: the player can always select Vermilion or another island. Starting any local island story never removes the ferry menu.
-
-## Unresolved settlement blocks
-
-| Block | Access affected | Decision needed |
-| --- | --- | --- |
-| Pewter escort | Pewter's east exit | Move the escort or leave a second lane open. |
-| Mt. Moon Super Nerd | Pewter to Cerulean | Add a bypass that preserves the Fossil battle and reward. |
-| Route 12 and Route 16 Snorlax | Fuchsia City | Choose the core lane: either leave a walkable lane around Route 12 Snorlax, or leave a walkable lane around Route 16 Snorlax and allow Cycling Road entry without owning the Bicycle. Preserve both encounters; the unused approach may remain a shortcut. |
-
-These three decisions are required before an implementation spec can claim complete Kanto coverage. They are not permission to invent story-completion flags; the chosen lane must preserve the associated story and reward.
 
 ## Native Surf recovery boundary
 
@@ -72,19 +66,21 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 
 - Indigo Plateau, Route 23's badge challenge, and Victory Road are endgame content.
 - Birth Island, Navel Rock, legendary encounters, optional caves, and Trainer Tower are optional destinations.
-- Cerulean to Route 9 and the unused Fuchsia approach may remain gated shortcuts. Cycling Road may remain Bicycle-gated only if Route 12 is selected as Fuchsia's core lane.
+- Cerulean to Route 9 and Route 16 may remain gated shortcuts. Cycling Road remains Bicycle-gated because Route 12 is Fuchsia's core lane.
 - This pass does not redesign shortcut rewards or optional encounters unless they block the only settlement route.
 
-## Target acceptance after open decisions
+## Acceptance
 
-- Resolve every row under Unresolved settlement blocks, then record the chosen core lane in Settlement coverage before implementation begins.
 - From a new save after the opening, visit the ten named Kanto settlements without badges, HM items, earlier or unrelated story-completion flags, or a required battle victory. Native Surf is allowed only for Cinnabar.
 - Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the Cinnabar crossing.
-- Use each bypass first, then return and complete its preserved story normally.
+- Leave Pewter through the free lower lane, pass Miguel without a battle, and walk past Route 12 Snorlax. Then return and complete each preserved scene and reward normally.
 - Complete the Seagallop shakedown and receive the Rainbow Pass without leaving Vermilion or satisfying another story flag.
 - Open Sevii service while the S.S. Anne is still present, use both dock choices, and confirm neither choice changes the other's independent story state.
-- Confirm the first Sevii trip goes to One Island, Celio's introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
+- Confirm the first Sevii trip goes to One Island, Celio's travel introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
+- After early Sevii travel, take Bill's normal Cinnabar trip and confirm the Meteorite story starts without replacing or duplicating the Rainbow Pass.
 - Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.
+- Enter Two Island's Game Corner and Three Island's port before starting the original detour. Confirm Lostelle, the bikers, PC storage, and detour-completion state remain unchanged.
+- Reach Four and Six Island before the postgame Sevii story in both visit orders and confirm the shared rival scene remains pending. Satisfy the original prerequisite later and confirm it plays exactly once at whichever location resolves first.
 - In both versions, confirm native Horsea and Krabby remain in the existing fishing tables on the Pallet and Cinnabar sides. With a native Surf user prepared before each crossing, cross Route 21 in both directions without HM03 or a badge.
 - Confirm FireRed and LeafGreen behave the same.
 
