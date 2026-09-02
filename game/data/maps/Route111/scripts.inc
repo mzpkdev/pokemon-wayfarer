@@ -164,6 +164,133 @@ Route111_EventScript_ReceivedBerry::
 	release
 	end
 
+#if !IS_FRLG && !IS_HNS
+Route111_EventScript_DesertSurveyor::
+	lock
+	faceplayer
+	checkitem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, TRUE, Route111_EventScript_DesertSurveyAlreadyComplete
+	goto_if_set FLAG_RECEIVED_GO_GOGGLES, Route111_EventScript_DesertSurveyRestoreReward
+	goto_if_unset FLAG_ROUTE_111_DESERT_SURVEY_STARTED, Route111_EventScript_DesertSurveyOffer
+	setvar VAR_0x8004, 3
+	call_if_set FLAG_ROUTE_111_DESERT_SURVEY_STAKE_1, Route111_EventScript_DesertSurveyCountStake
+	call_if_set FLAG_ROUTE_111_DESERT_SURVEY_STAKE_2, Route111_EventScript_DesertSurveyCountStake
+	call_if_set FLAG_ROUTE_111_DESERT_SURVEY_STAKE_3, Route111_EventScript_DesertSurveyCountStake
+	goto_if_eq VAR_0x8004, 0, Route111_EventScript_DesertSurveyGiveReward
+	goto_if_eq VAR_0x8004, 1, Route111_EventScript_DesertSurveyOneRemaining
+	goto_if_eq VAR_0x8004, 2, Route111_EventScript_DesertSurveyTwoRemaining
+	msgbox Route111_Text_DesertSurveyThreeRemaining, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyCountStake::
+	subvar VAR_0x8004, 1
+	return
+
+Route111_EventScript_DesertSurveyOffer::
+	msgbox Route111_Text_DesertSurveyOffer, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Route111_EventScript_DesertSurveyDeclined
+	setflag FLAG_ROUTE_111_DESERT_SURVEY_STARTED
+	msgbox Route111_Text_DesertSurveyAccepted, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyDeclined::
+	msgbox Route111_Text_DesertSurveyDeclined, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyOneRemaining::
+	msgbox Route111_Text_DesertSurveyOneRemaining, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyTwoRemaining::
+	msgbox Route111_Text_DesertSurveyTwoRemaining, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyGiveReward::
+	msgbox Route111_Text_DesertSurveyReward, MSGBOX_DEFAULT
+	additem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, Route111_EventScript_DesertSurveyBagFull
+	setvar VAR_0x8000, ITEM_GO_GOGGLES
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox Route111_Text_DesertSurveyComplete, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyRestoreReward::
+	msgbox Route111_Text_DesertSurveyRestoreReward, MSGBOX_DEFAULT
+	additem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, Route111_EventScript_DesertSurveyBagFull
+	setvar VAR_0x8000, ITEM_GO_GOGGLES
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox Route111_Text_DesertSurveyComplete, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyBagFull::
+	msgbox Route111_Text_DesertSurveyBagFull, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyAlreadyComplete::
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox Route111_Text_DesertSurveyAlreadyComplete, MSGBOX_DEFAULT
+	release
+	end
+
+Route111_EventScript_DesertSurveyStake1::
+	goto_if_unset FLAG_ROUTE_111_DESERT_SURVEY_STARTED, Route111_EventScript_DesertSurveyStakeNotStarted
+	goto_if_set FLAG_ROUTE_111_DESERT_SURVEY_STAKE_1, Route111_EventScript_DesertSurveyStake1Recorded
+	setflag FLAG_ROUTE_111_DESERT_SURVEY_STAKE_1
+	msgbox Route111_Text_DesertSurveyStake1RecordedNow, MSGBOX_SIGN
+	end
+
+Route111_EventScript_DesertSurveyStake1Recorded::
+	msgbox Route111_Text_DesertSurveyStake1AlreadyRecorded, MSGBOX_SIGN
+	end
+
+Route111_EventScript_DesertSurveyStake2::
+	goto_if_unset FLAG_ROUTE_111_DESERT_SURVEY_STARTED, Route111_EventScript_DesertSurveyStakeNotStarted
+	goto_if_set FLAG_ROUTE_111_DESERT_SURVEY_STAKE_2, Route111_EventScript_DesertSurveyStake2Recorded
+	setflag FLAG_ROUTE_111_DESERT_SURVEY_STAKE_2
+	msgbox Route111_Text_DesertSurveyStake2RecordedNow, MSGBOX_SIGN
+	end
+
+Route111_EventScript_DesertSurveyStake2Recorded::
+	msgbox Route111_Text_DesertSurveyStake2AlreadyRecorded, MSGBOX_SIGN
+	end
+
+Route111_EventScript_DesertSurveyStake3::
+	goto_if_unset FLAG_ROUTE_111_DESERT_SURVEY_STARTED, Route111_EventScript_DesertSurveyStakeNotStarted
+	goto_if_set FLAG_ROUTE_111_DESERT_SURVEY_STAKE_3, Route111_EventScript_DesertSurveyStake3Recorded
+	setflag FLAG_ROUTE_111_DESERT_SURVEY_STAKE_3
+	msgbox Route111_Text_DesertSurveyStake3RecordedNow, MSGBOX_SIGN
+	end
+
+Route111_EventScript_DesertSurveyStake3Recorded::
+	msgbox Route111_Text_DesertSurveyStake3AlreadyRecorded, MSGBOX_SIGN
+	end
+
+Route111_EventScript_DesertSurveyStakeNotStarted::
+	msgbox Route111_Text_DesertSurveyStakeNotStarted, MSGBOX_SIGN
+	end
+#else
+Route111_EventScript_DesertSurveyor::
+Route111_EventScript_DesertSurveyStake1::
+Route111_EventScript_DesertSurveyStake2::
+Route111_EventScript_DesertSurveyStake3::
+	end
+#endif
+
 @ Unused
 Route111_EventScript_ViciousSandstormTriggerUp::
 	lockall
@@ -719,3 +846,85 @@ Route111_Text_TrainerHillSign:
 	.string "“Scale the heights, you hot-blooded\n"
 	.string "TRAINERS!”$"
 
+#if !IS_FRLG && !IS_HNS
+Route111_Text_DesertSurveyOffer:
+	.string "I'm charting the winds around the\n"
+	.string "ROUTE 111 desert.\p"
+	.string "Three numbered weather stakes stand\n"
+	.string "along the safe side of this route.\p"
+	.string "Will you inspect them all?\n"
+	.string "Then report back to me.$"
+
+Route111_Text_DesertSurveyAccepted:
+	.string "Thank you. Record each stake,\n"
+	.string "then return here.\p"
+	.string "You may inspect them in any order.$"
+
+Route111_Text_DesertSurveyDeclined:
+	.string "Understood. Come back if you decide\n"
+	.string "to help with the survey.$"
+
+Route111_Text_DesertSurveyThreeRemaining:
+	.string "All three weather stakes still need\n"
+	.string "their readings recorded.$"
+
+Route111_Text_DesertSurveyTwoRemaining:
+	.string "Two weather stakes still need their\n"
+	.string "readings recorded.$"
+
+Route111_Text_DesertSurveyOneRemaining:
+	.string "One weather stake still needs its\n"
+	.string "reading recorded.$"
+
+Route111_Text_DesertSurveyReward:
+	.string "That's all three weather readings.\n"
+	.string "This pair of GO-GOGGLES is yours.$"
+
+Route111_Text_DesertSurveyComplete:
+	.string "The GO-GOGGLES will keep the desert\n"
+	.string "sand out of your eyes.\p"
+	.string "Survey complete. Thank you.$"
+
+Route111_Text_DesertSurveyRestoreReward:
+	.string "You're still owed a pair of\n"
+	.string "GO-GOGGLES.\p"
+	.string "Let me replace them now.$"
+
+Route111_Text_DesertSurveyBagFull:
+	.string "The KEY ITEMS pocket is full.\p"
+	.string "Make room, then come back.\n"
+	.string "I'll keep the GO-GOGGLES for you.$"
+
+Route111_Text_DesertSurveyAlreadyComplete:
+	.string "Those GO-GOGGLES are already yours.\n"
+	.string "No second pair is needed.\p"
+	.string "Survey complete. Thank you.$"
+
+Route111_Text_DesertSurveyStakeNotStarted:
+	.string "WEATHER STAKE\p"
+	.string "The survey hasn't started yet.$"
+
+Route111_Text_DesertSurveyStake1RecordedNow:
+	.string "WEATHER STAKE No. 1\p"
+	.string "The wind reading was recorded.$"
+
+Route111_Text_DesertSurveyStake1AlreadyRecorded:
+	.string "WEATHER STAKE No. 1\p"
+	.string "The reading is already recorded.$"
+
+Route111_Text_DesertSurveyStake2RecordedNow:
+	.string "WEATHER STAKE No. 2\p"
+	.string "The wind reading was recorded.$"
+
+Route111_Text_DesertSurveyStake2AlreadyRecorded:
+	.string "WEATHER STAKE No. 2\p"
+	.string "The reading is already recorded.$"
+
+Route111_Text_DesertSurveyStake3RecordedNow:
+	.string "WEATHER STAKE No. 3\p"
+	.string "The wind reading was recorded.$"
+
+Route111_Text_DesertSurveyStake3AlreadyRecorded:
+	.string "WEATHER STAKE No. 3\p"
+	.string "The reading is already recorded.$"
+#endif

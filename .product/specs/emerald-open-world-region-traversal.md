@@ -1,7 +1,7 @@
 # Emerald open-world regional traversal
 
 PRD: [Emerald open-world regional traversal](../prds/emerald-open-world-region-traversal.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 

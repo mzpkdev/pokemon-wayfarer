@@ -5,7 +5,22 @@ MtChimney_MapScripts::
 
 MtChimney_OnTransition:
 	setvar VAR_JAGGED_PASS_ASH_WEATHER, 1
+	call MtChimney_EventScript_DeriveTeamVisibility
 	end
+
+MtChimney_EventScript_DeriveTeamVisibility::
+	goto_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, MtChimney_EventScript_HideTeamConflict
+	goto_if_set FLAG_MET_ARCHIE_METEOR_FALLS, MtChimney_EventScript_ShowTeamConflict
+
+MtChimney_EventScript_HideTeamConflict::
+	setflag FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA
+	setflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA
+	return
+
+MtChimney_EventScript_ShowTeamConflict::
+	clearflag FLAG_HIDE_MT_CHIMNEY_TEAM_AQUA
+	clearflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA
+	return
 
 MtChimney_OnResume:
 	setstepcallback STEP_CB_ASH

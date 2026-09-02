@@ -5,6 +5,10 @@ LavaridgeTown_MapScripts::
 
 LavaridgeTown_OnTransition:
 	setflag FLAG_VISITED_LAVARIDGE_TOWN
+#if !IS_FRLG && !IS_HNS
+	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 3, LavaridgeTown_EventScript_ResetPendingGoGoggles
+	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 2, LavaridgeTown_EventScript_ReconcileGoGoggles
+#endif
 	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, LavaridgeTown_EventScript_ClearLavaridgeWhiteOut
 	call_if_set FLAG_DEFEATED_EVIL_TEAM_MT_CHIMNEY, LavaridgeTown_EventScript_ShowMtChimneyTrainers
 	call Common_EventScript_SetupRivalGfxId
@@ -12,6 +16,22 @@ LavaridgeTown_OnTransition:
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 1, LavaridgeTown_EventScript_CheckSetRivalPos
 	call_if_eq VAR_LAVARIDGE_TOWN_STATE, 1, LavaridgeTown_EventScript_HideMapNamePopup
 	end
+
+#if !IS_FRLG && !IS_HNS
+LavaridgeTown_EventScript_ResetPendingGoGoggles::
+	setvar VAR_LAVARIDGE_TOWN_STATE, 1
+	return
+
+LavaridgeTown_EventScript_ReconcileGoGoggles::
+	checkitem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_ReopenGoGogglesHandoff
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	return
+
+LavaridgeTown_EventScript_ReopenGoGogglesHandoff::
+	setvar VAR_LAVARIDGE_TOWN_STATE, 1
+	return
+#endif
 
 LavaridgeTown_EventScript_ClearLavaridgeWhiteOut::
 	clearflag FLAG_WHITEOUT_TO_LAVARIDGE
@@ -58,20 +78,73 @@ LavaridgeTown_EventScript_RivalGiveGoGoggles::
 	end
 
 LavaridgeTown_EventScript_MayGiveGoGoggles::
+#if !IS_FRLG && !IS_HNS
+	checkitem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_EventScript_MayRecognizeGoGoggles
+#endif
 	msgbox LavaridgeTown_Text_MayNiceBadgesTakeThis, MSGBOX_DEFAULT
+#if !IS_FRLG && !IS_HNS
+	additem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_GoGogglesBagFull
+	setvar VAR_0x8000, ITEM_GO_GOGGLES
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+#else
 	giveitem ITEM_GO_GOGGLES
+#endif
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
 	goto LavaridgeTown_EventScript_RivalExit
 	end
 
 LavaridgeTown_EventScript_BrendanGiveGoGoggles::
+#if !IS_FRLG && !IS_HNS
+	checkitem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, TRUE, LavaridgeTown_EventScript_BrendanRecognizeGoGoggles
+#endif
 	msgbox LavaridgeTown_Text_BrendanNiceBadgesTakeThis, MSGBOX_DEFAULT
+#if !IS_FRLG && !IS_HNS
+	additem ITEM_GO_GOGGLES
+	goto_if_eq VAR_RESULT, FALSE, LavaridgeTown_EventScript_GoGogglesBagFull
+	setvar VAR_0x8000, ITEM_GO_GOGGLES
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+#else
 	giveitem ITEM_GO_GOGGLES
+#endif
 	setflag FLAG_RECEIVED_GO_GOGGLES
 	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
 	goto LavaridgeTown_EventScript_RivalExit
 	end
+
+#if !IS_FRLG && !IS_HNS
+LavaridgeTown_EventScript_MayRecognizeGoGoggles::
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox LavaridgeTown_Text_MayRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
+	msgbox LavaridgeTown_Text_MayExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+	goto LavaridgeTown_EventScript_RivalExit
+	end
+
+LavaridgeTown_EventScript_BrendanRecognizeGoGoggles::
+	setflag FLAG_RECEIVED_GO_GOGGLES
+	msgbox LavaridgeTown_Text_BrendanRecognizeSurveyGoGoggles, MSGBOX_DEFAULT
+	msgbox LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad, MSGBOX_DEFAULT
+	goto LavaridgeTown_EventScript_RivalExit
+	end
+
+LavaridgeTown_EventScript_GoGogglesBagFull::
+	msgbox LavaridgeTown_Text_GoGogglesBagFull, MSGBOX_DEFAULT
+	closemessage
+	removeobject LOCALID_LAVARIDGE_RIVAL
+	setvar VAR_LAVARIDGE_TOWN_STATE, 3
+	clearflag FLAG_HIDE_MAP_NAME_POPUP
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	releaseall
+	end
+#endif
 
 LavaridgeTown_EventScript_RivalExit::
 	closemessage
@@ -283,6 +356,13 @@ LavaridgeTown_Text_MayNiceBadgesTakeThis:
 	.string "I guess it would be okay for you to\n"
 	.string "have this.$"
 
+#if !IS_FRLG && !IS_HNS
+LavaridgeTown_Text_MayRecognizeSurveyGoGoggles:
+	.string "MAY: Oh! The ROUTE 111 surveyor\n"
+	.string "already gave you GO-GOGGLES.\p"
+	.string "Then you don't need another pair.$"
+#endif
+
 LavaridgeTown_Text_MayExplainGoGogglesChallengeDad:
 	.string "MAY: With those GO-GOGGLES, you'll\n"
 	.string "have no trouble getting through the\l"
@@ -303,6 +383,13 @@ LavaridgeTown_Text_BrendanNiceBadgesTakeThis:
 	.string "All right, then.\n"
 	.string "You may as well have this.$"
 
+#if !IS_FRLG && !IS_HNS
+LavaridgeTown_Text_BrendanRecognizeSurveyGoGoggles:
+	.string "BRENDAN: Oh! The ROUTE 111 surveyor\n"
+	.string "already gave you GO-GOGGLES.\p"
+	.string "Then you don't need another pair.$"
+#endif
+
 LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad:
 	.string "BRENDAN: Keep those with you if you're\n"
 	.string "planning on going into that desert near\l"
@@ -316,6 +403,13 @@ LavaridgeTown_Text_BrendanExplainGoGogglesChallengeDad:
 	.string "Unlike you, {PLAYER}, your dad looks like\n"
 	.string "he really is tough.\p"
 	.string "See you around!$"
+
+#if !IS_FRLG && !IS_HNS
+LavaridgeTown_Text_GoGogglesBagFull:
+	.string "Your KEY ITEMS pocket is full.\p"
+	.string "I'll hold on to these GO-GOGGLES.\n"
+	.string "Come back after making room.$"
+#endif
 
 LavaridgeTown_Text_HaveEggWillYouTakeIt:
 	.string "I have here an EGG.\p"
@@ -403,4 +497,3 @@ LavaridgeTown_Text_GymSign:
 LavaridgeTown_Text_HerbShopSign:
 	.string "POKéMON HERB SHOP\n"
 	.string "“Bitter taste--better cure!”$"
-

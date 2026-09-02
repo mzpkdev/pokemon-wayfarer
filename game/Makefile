@@ -298,7 +298,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates wild-encounter-scaling-test wild-encounter-balance-audit frlg-traversal-static-test
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -643,6 +643,9 @@ hns: all
 .PHONY: e2e
 e2e:
 	+$(MAKE) BUILD=hns E2E=1 $(E2E_ROM) $(E2E_SYM)
+
+emerald-traversal-static-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_emerald_traversal.py' -q
 
 wild-encounter-scaling-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_*.py' -q
