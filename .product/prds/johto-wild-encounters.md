@@ -62,9 +62,13 @@ Their populations may mix the two regional generations more evenly than the
 rest of Johto. They still count in the regional report, but they do not need to
 meet the method targets on each individual map.
 
-Generation III and later species may remain as rare, habitat-specific finds.
-They must not displace the Generation II identity of the region or become a
-generic filler pool.
+Species from independent Generation III families do not appear in ordinary
+Johto encounters. Hoenn owns their ordinary discovery. Wynaut and Azurill may
+appear only as Generation II family extensions produced by predecessor
+resolution; neither may occupy an authored slot. Generation IV and later
+species may remain as rare, habitat-specific finds when they continue an
+established family or serve a deliberate local role. They must not displace
+Johto's Generation II identity or become a generic filler pool.
 
 ## Boundaries
 
@@ -94,23 +98,38 @@ probability portfolio.
 The work does not promise Pokédex completion within Johto alone. Regional and
 whole-game catchability remain separate product decisions.
 
+The independent Generation III family exclusion applies to ordinary wild
+encounters. It does not remove evolution, breeding, gifts, trades, fixed
+encounters, or other special acquisition methods that another design owns.
+
 ## Balance
 
 The current HNS Johto portfolio is heavily weighted toward Generation I. The
 audited baseline and target ranges are:
 
-| Portfolio | Current Generation I | Current Generation II | Current later generations | Generation II target |
-| --- | ---: | ---: | ---: | ---: |
-| All ordinary Johto profiles | 72.8% | 25.9% | 1.3% | 35% to 40% |
-| Land | Not separately required | 27.9% | Not separately required | 40% to 50% |
-| Surf | Not separately required | 11.9% | Not separately required | 20% to 30% |
-| Fishing | Not separately required | 3.7% | Not separately required | 15% to 25% |
+Generation classification normally uses the effective species' base National
+Dex number, and a form uses its base species' number. Numbers 252 through 386
+inclusive are Generation III. Wynaut and Azurill are the only exception: when
+predecessor resolution produces them from an authored Wobbuffet or Marill
+family entry, the balance report counts the outcome with its Generation II
+family. Neither species may occupy an authored ordinary slot.
+
+In the table, Generation III families means independent Generation III
+families, not Wynaut or Azurill as resolved Generation II family extensions.
+
+| Portfolio | Gen I | Gen II families | Gen III families | Gen IV+ | Gen II target |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| All ordinary Johto profiles | 72.8% | 25.9% | 0% | 1.3% | 35% to 40% |
+| Land | Not separately required | 27.9% | 0% | Not separately required | 40% to 50% |
+| Surf | Not separately required | 11.9% | 0% | Not separately required | 20% to 30% |
+| Fishing | Not separately required | 3.7% | 0% | Not separately required | 15% to 25% |
 
 The completed overall portfolio must place Generation I between 55% and 65%,
-Generation II between 35% and 40%, and all later generations at 5% or less.
-The values must total exactly 100% before display rounding. Acceptance uses the
-exact calculated probabilities; a report may show rounded values for reading,
-but rounding cannot change a pass or failure.
+Generation II families between 35% and 40%, independent Generation III
+families at exactly 0%, and Generation IV onward at 5% or less. The values must
+total exactly 100% before display rounding. Acceptance uses the exact calculated
+probabilities; a report may show rounded values for reading, but rounding
+cannot change a pass or failure.
 
 Rock Smash and Headbutt use the same authored interaction profiles in HNS.
 Generation II should account for 50% to 65% of their regional probability
@@ -158,9 +177,11 @@ A second report samples the effective species outcomes at Trainer Ratings 10,
 probability must remain between 30% and 45% overall, 35% and 55% for land, 15%
 and 35% for Surf, 10% and 30% for equal-quality fishing, and 45% and 70% for
 interaction profiles. Each individual rod quality must retain at least 5%
-effective Generation II fishing probability. These results do not replace the
-authored targets; they ensure that entry eligibility, predecessor resolution,
-and species floors do not reverse Johto's identity during campaign milestones.
+effective Generation II fishing probability. Independent Generation III
+families must remain at exactly 0% in every effective report. These results do
+not replace the authored targets; they ensure that entry eligibility,
+predecessor resolution, and species floors do not reverse Johto's identity
+during campaign milestones.
 
 ## Content
 
@@ -242,6 +263,11 @@ mountain habitat.
 - Time-of-day selection, ability-based slot influence, Lures, repel checks,
   and ordinary population readers continue to operate on the rebalanced
   profiles.
+- Hoenn Sound must not change an ordinary Johto distribution, including when a
+  persisted Hoenn track reaches Johto. It does not target Wynaut or Azurill when
+  predecessor resolution produces them from a Generation II family entry. A
+  future radio-only Hoenn population requires a separate superseding product
+  decision.
 - Pokédex area data and other ordinary population readers must expose the same
   eligible species that an encounter can produce.
 - Randomizer mode continues to receive the selected authored entry and raw
@@ -286,6 +312,17 @@ The Johto rebalance is accepted when all of the following are true:
   and identifies every runtime fallback.
 - Effective outcome reports at the six Trainer Rating milestones meet the
   numeric overall, method, and individual-rod guardrails.
+- Across every Johto-owned profile, report zero Generation III species in
+  active authored slots. In every non-randomized effective population, allow
+  only Wynaut or Azurill produced by predecessor resolution from an authored
+  Generation II family entry; report zero probability for every other
+  Generation III species. Apply this at every Trainer Rating, day and night,
+  encounter method, and Standard Rod quality, with Hoenn Sound off and on.
+- Classify Generation III from base National Dex numbers 252 through 386. Count
+  a resolved Wynaut or Azurill with its Generation II family and report its
+  provenance separately. Do not count `SPECIES_NONE`, inactive trailing rows,
+  gifts, trades, statics, scripted encounters, facilities, event islands, or
+  randomized outcomes.
 - The Chinchou accessibility rows pass Standard Rod validation, and Aipom's
   Headbutt map coverage and aggregate probability do not regress.
 - Every qualifying native HM profile still contains its named Gligar, Aipom,
