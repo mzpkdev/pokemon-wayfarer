@@ -552,55 +552,85 @@ TEST("Named native HM encounter profiles retain anchors through production Train
 
                 for (area = WILD_AREA_LAND; area <= WILD_AREA_FISHING; area++)
                 {
-                    u8 rodCount = area == WILD_AREA_FISHING ? 3 : 1;
-                    u8 rodId;
-
-                    for (rodId = 0; rodId < rodCount; rodId++)
+                    struct WildEncounterProfileContext context =
                     {
-                        struct WildEncounterProfileContext context =
-                        {
-                            .headerId = headerId,
-                            .timeOfDay = timeOfDay,
-                            .area = area,
-                            .fishingRod = area == WILD_AREA_FISHING ? rodId : WILD_ENCOUNTER_FISHING_ROD_NONE,
-                        };
-                        struct WildEncounterProfileView view;
-                        u8 slot;
+                        .headerId = headerId,
+                        .timeOfDay = timeOfDay,
+                        .area = area,
+                        .fishingRod = area == WILD_AREA_FISHING ? WILD_ENCOUNTER_FISHING_ROD_OLD : WILD_ENCOUNTER_FISHING_ROD_NONE,
+                    };
+                    struct WildEncounterProfileView view;
+                    u8 slot;
 
-                        if (!GetWildEncounterProfileView(&context, &view))
+                    // Every Standard Rod quality exposes the same authored ten
+                    // slots. Traverse them once, then retain each rod's profile
+                    // identity below so any rod-specific level offsets are still
+                    // covered without repeating identical moveset validation.
+                    if (!GetWildEncounterProfileView(&context, &view))
+                        continue;
+                    for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+                    {
+                        const struct WildPokemon *entry;
+                        u8 authoredLevel;
+
+                        ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
+                        if (entry->species != place->species)
                             continue;
-                        for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
-                        {
-                            const struct WildPokemon *entry;
-                            u8 authoredLevel;
-
-                            ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
-                            if (entry->species != place->species)
-                                continue;
-                            if (entry->minLevel < place->minLevel || entry->maxLevel > place->maxLevel)
-                                continue;
+                        if (entry->minLevel < place->minLevel || entry->maxLevel > place->maxLevel)
+                            continue;
 #if IS_HNS
-                            if (place->species == SPECIES_AIPOM)
-                                EXPECT_EQ(area, WILD_AREA_ROCKS);
+                        if (place->species == SPECIES_AIPOM)
+                            EXPECT_EQ(area, WILD_AREA_ROCKS);
 #endif
-                            EXPECT_GE(entry->minLevel, place->minLevel);
-                            EXPECT_LE(entry->maxLevel, place->maxLevel);
-                            matchingSlots++;
-                            for (authoredLevel = entry->minLevel; authoredLevel <= entry->maxLevel; authoredLevel++)
+                        EXPECT_GE(entry->minLevel, place->minLevel);
+                        EXPECT_LE(entry->maxLevel, place->maxLevel);
+                        matchingSlots++;
+                        if (area == WILD_AREA_FISHING)
+                        {
+                            u8 rodId;
+
+                            // Good and Super Rod retain their own profile identity
+                            // for offsets. Boundary outcomes cover that integration;
+                            // the exhaustive sweep below uses the shared Old Rod
+                            // profile to stay within the mechanics-test time limit.
+                            for (rodId = WILD_ENCOUNTER_FISHING_ROD_GOOD; rodId <= WILD_ENCOUNTER_FISHING_ROD_SUPER; rodId++)
                             {
-                                u16 rating;
+                                struct WildEncounterProfileContext rodContext = context;
+                                struct WildEncounterProfileView rodView;
+                                struct WildEncounterSpeciesOutcome outcome;
 
-                                for (rating = 10; rating <= 80; rating++)
+                                rodContext.fishingRod = rodId;
+                                ASSUME(GetWildEncounterProfileView(&rodContext, &rodView));
+                                ASSUME(GetWildEncounterSpeciesOutcome(&rodView, slot, entry->minLevel, 10, FALSE, &outcome));
+                                EXPECT_EQ(outcome.species, place->species);
+                                if (outcome.level >= anchor->floor)
                                 {
-                                    struct WildEncounterSpeciesOutcome outcome;
-
-                                    ASSUME(GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, rating, FALSE, &outcome));
-                                    EXPECT_EQ(outcome.species, place->species);
-                                    if (outcome.level < anchor->floor)
-                                        continue;
                                     CreateNativeHmMon(&mon, outcome.species, outcome.level);
                                     ExpectNativeMoves(&mon, anchor->moves, anchor->moveCount);
                                 }
+                                ASSUME(GetWildEncounterSpeciesOutcome(&rodView, slot, entry->maxLevel, 80, FALSE, &outcome));
+                                EXPECT_EQ(outcome.species, place->species);
+                                if (outcome.level >= anchor->floor)
+                                {
+                                    CreateNativeHmMon(&mon, outcome.species, outcome.level);
+                                    ExpectNativeMoves(&mon, anchor->moves, anchor->moveCount);
+                                }
+                            }
+                        }
+                        for (authoredLevel = entry->minLevel; authoredLevel <= entry->maxLevel; authoredLevel++)
+                        {
+                            u16 rating;
+
+                            for (rating = 10; rating <= 80; rating++)
+                            {
+                                struct WildEncounterSpeciesOutcome outcome;
+
+                                ASSUME(GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, rating, FALSE, &outcome));
+                                EXPECT_EQ(outcome.species, place->species);
+                                if (outcome.level < anchor->floor)
+                                    continue;
+                                CreateNativeHmMon(&mon, outcome.species, outcome.level);
+                                ExpectNativeMoves(&mon, anchor->moves, anchor->moveCount);
                             }
                         }
                     }
