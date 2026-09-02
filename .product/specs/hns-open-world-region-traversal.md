@@ -14,17 +14,19 @@ Cianwood and Cinnabar.
 
 It does not open Route 44, Ice Path, Blackthorn, the League corridor, Mt.
 Silver, Alola, or Sinjoh early. It does not change wild encounters, fishing
-odds, native learnsets, optional field-move routes, battle scaling, or recovery
-after the player loses access to their last Surf user.
+odds, native learnsets, optional field-move routes, ordinary trainer placement
+or sight range, battle scaling, or recovery after the player loses access to
+their last Surf user.
 
 ## Behavior
 
 ### Availability and state isolation
 
 The Johto settlement network becomes available when the player receives a
-starter. No later badge, HM item, key item, payment, forced victory, or campaign
-flag may close a core connection through Mahogany. Only the Routes 40 and 41
-crossing to Cianwood may require a Pokemon that already knows Surf.
+starter. No later badge, HM item, key item, payment, forced scripted or story
+victory, or campaign flag may close a core connection through Mahogany. Only
+the Routes 40 and 41 crossing to Cianwood may require a Pokemon that already
+knows Surf.
 
 Kanto unlocks through the maiden voyage described below. After that voyage,
 the S.S. Ticket alone keeps the Olivine and Vermilion ferry connection open.
@@ -42,6 +44,11 @@ reward scene.
 No encounter uses the sole-lane exception in this specification. The retained
 Silver battles, Sudowoodo, Snorlax, and other story encounters remain optional
 because a separate travel lane stays open.
+
+Ordinary sight-based trainers may challenge the player on a core route. Keep
+their object coordinates, trainer types, and sight ranges unchanged. Their
+future player-relative level scaling is outside this specification, and their
+battles do not satisfy or advance any travel story state.
 
 ### Johto road changes
 
@@ -104,17 +111,18 @@ meanings:
 | 1 | Maiden voyage boarded and ship actors initialized. |
 | 2 | Grandfather has asked the player to find his granddaughter. |
 | 3 | Granddaughter escorted back; reunion presentation pending. |
-| 4 | Reunion complete; one or both rewards still pending. |
-| 5 | S.S. Ticket and Metal Coat committed; arrival announcement pending. |
-| 6 | Vermilion arrival announced; disembarkation ready. |
-| 7 | Maiden voyage complete; direct ferry service unlocked. |
+| 4 | Reunion complete; S.S. Ticket delivery pending. |
+| 5 | S.S. Ticket committed; one additional Metal Coat delivery pending. |
+| 6 | Both rewards committed; arrival announcement pending. |
+| 7 | Vermilion arrival announced; disembarkation ready. |
+| 8 | Maiden voyage complete; direct ferry service unlocked. |
 
 Apply the following script changes:
 
 1. In `OlivineCity_PortInside_hns`, state 0 offers the maiden voyage without an
    S.S. Ticket. Accepting initializes the existing ship object flags once and
-   sets state 1. States 1 through 6 board or resume the maiden voyage without a
-   Ticket and without reinitializing its actors. State 7 and later use the
+   sets state 1. States 1 through 7 board or resume the maiden voyage without a
+   Ticket and without reinitializing its actors. State 8 and later use the
    normal destination menu, whose Vermilion option checks only for the Ticket.
 2. In `SSAqua_B1F_hns`, move `LOCALID_SSAQUA_B1F_SAILORLOOKING` at `(28,8)`
    away from the corridor and remove the state-2 coordinate event at `(29,8)`
@@ -128,32 +136,55 @@ Apply the following script changes:
    control available instead of replaying the cutscene. Change the room's
    reunited actor-layout threshold from state 5 to state 4 so re-entering while
    a reward is pending does not restore the pre-reunion positions.
-4. The shared reunion reward routine treats an already-owned S.S. Ticket or
-   Metal Coat as that reward being satisfied. For each missing item, check its
-   pocket, give it, and verify `VAR_RESULT` before continuing. State 5 is set
-   only when both items are present. A full pocket or failed grant leaves state
-   4, displays make-room dialogue, and releases control. At state 4, speaking
-   to the grandfather retries only the missing rewards. At state 5 or later,
-   he uses his normal post-reunion dialogue.
+4. At state 4, the shared reunion reward routine treats an already-owned S.S.
+   Ticket as its unique key-item reward being satisfied. Otherwise it
+   preflights the Key Items pocket, gives the Ticket, and verifies `VAR_RESULT`.
+   Only a present or successfully granted Ticket advances the voyage to state
+   5. At state 5, preflight the Items pocket and grant exactly one Metal Coat,
+   regardless of how many the player already owns. Verify `VAR_RESULT`, then
+   set state 6. A full pocket or failed grant leaves the current state,
+   displays make-room dialogue, and releases control. Speaking to the
+   grandfather at state 4 or 5 retries only that state's pending reward. At
+   state 6 or later, he uses his normal post-reunion dialogue.
 5. Remove the later S.S. Ticket grant from Elm in `NewBarkTown_Lab_hns` so the
    maiden reunion is the only Ticket source. Replace its Ticket-specific copy,
    remove `giveitem ITEM_SS_TICKET`, and do not clear
    `FLAG_HIDE_SSAQUA_1F_GRANDPA`. Preserve the unrelated late-story commits to
    `VAR_NEWBARKTOWN_LABSTATE` and `FLAG_HIDE_OLIVINE_PORT_OAK`.
-6. In `SSAqua_1F_hns`, delete the Kanto progress flag heap from `LeaveBoat`.
-   Disembarking sets only `FLAG_VISITED_KANTO`,
-   `FLAG_VISITED_VERMILION_CITY`, and state 7 before warping to Vermilion port.
+6. In `PokemonLeague_HallOfFame_hns`, remove the
+   `VAR_SSAQUA_STATE = 0` write from the first Johto League clear. The League
+   must not change any voyage state. Preserve the other first-clear effects.
+7. In `SSAqua_1F_hns`, delete the Kanto progress flag heap from `LeaveBoat`.
+   Run the arrival announcement at state 6 and set state 7 after it finishes.
+   The door sailor permits disembarkation at state 7. Disembarking sets only
+   `FLAG_VISITED_KANTO`,
+   `FLAG_VISITED_VERMILION_CITY`, and state 8 before warping to Vermilion port.
    It never writes `VAR_NUM_BADGES`, badge flags, Gym state, Rocket state,
    radio state, Snorlax state, Machine Part state, Copycat state, or another
    settlement's visited flag.
-7. In `VermilionCity_PortInside_hns`, remove the
-   `FLAG_RETURNED_MACHINE_PART` ferry gate. At state 7 or later, the Olivine
+8. In `VermilionCity_PortInside_hns`, remove the
+   `FLAG_RETURNED_MACHINE_PART` ferry gate. At state 8 or later, the Olivine
    destination checks only for the S.S. Ticket. Repeat travel never resets or
    replays the granddaughter story.
 
-Whiteout during states 1 through 6 may return the player to Olivine, but the
+Whiteout during states 1 through 7 may return the player to Olivine, but the
 resume branch above must always let that state reboard. A save and reload at
-state 4 must permit a missing reward to be retried through the grandfather.
+state 4 or 5 must permit that state's missing reward to be retried through the
+grandfather.
+
+### Kanto regional map presentation
+
+`FLAG_VISITED_KANTO` selects both the combined Johto and Kanto map layout and
+its matching location entries. In `GetActiveRegionMapEntries`, return
+`sRegionMapEntries_Johto` while the flag is clear and `gRegionMapEntries` after
+the flag is set. Keep the matching `GetRegionMapType` and `GetMapSecIdAt`
+selection. The layout and location-entry selection must never use opposite
+flag branches.
+
+Before Kanto unlock, the region map, player marker, cursor, Fly map, and
+Pokedex area display use the Johto-only coordinates. After unlock, all of them
+use the combined coordinates. Only Vermilion becomes a newly available Kanto
+Fly destination on first arrival because no other Kanto visited flag is set.
 
 ### Kanto land connections
 
@@ -295,10 +326,10 @@ and lost-last-user recovery.
 
 Extend the existing HNS `GameSession` E2E suite and map catalog. Catalog-only
 map additions do not require an ABI revision. Add a focused save-and-reload
-helper that keeps the test ROM and save isolation so state-4 voyage rewards
-and an active Cycling Road loan can be verified across reload. Add a synthetic
-full-pocket fixture or a narrow unit test for the atomic Lost Item to Pass
-helper because the existing eight-entry Bag arrangement cannot fill the
+helper that keeps the test ROM and save isolation so state-4 and state-5 voyage
+rewards and an active Cycling Road loan can be verified across reload. Add a
+synthetic full-pocket fixture or a narrow unit test for the atomic Lost Item to
+Pass helper because the existing eight-entry Bag arrangement cannot fill the
 60-slot Key Items pocket.
 
 The acceptance suite must cover:
@@ -311,13 +342,22 @@ The acceptance suite must cover:
   and a full-pocket reward retry. Each optional Silver battle remains
   available after taking its bypass.
 - Maiden boarding at state 0 without a Ticket, reboarding in every state 1
-  through 6, optional Stanley, full-pocket failure and retry for each reward
-  at state 4, both rewards exactly once, arrival at state 7, and first-arrival
-  state isolation. Elm's later scene must not grant the Ticket.
+  through 7, optional Stanley, full-pocket failure and retry for the Ticket at
+  state 4 and Metal Coat at state 5, both rewards exactly once, arrival at
+  state 8, and first-arrival state isolation. A run that begins with one Metal
+  Coat must end with two. Elm's later scene must not grant the Ticket.
 - Repeat ferry travel in both directions with Ticket present and Machine Part
   unset. Ticket absent denies repeat travel. The voyage must not change badge
   count, Rocket state, radio state, Gym completion, Snorlax state, Copycat
   state, or unrelated visited flags.
+- After completing the maiden voyage before the Johto League, finish the first
+  League clear. Confirm state 8 and direct ferry travel survive unchanged and
+  the maiden voyage does not repeat.
+- Exercise the region map before and after `FLAG_VISITED_KANTO`. Confirm the
+  selected layout and location-entry table agree, every Johto and Kanto cursor
+  position uses the expected coordinates, the player marker matches the
+  current map, the Pokedex area display uses the active coordinates, and only
+  visited settlements appear as Fly destinations.
 - Mt. Moon crossing without interaction, Silver decline and loss without
   state change, and Silver victory with only the original local commits.
 - Cycling Road entry from each gate without a Bicycle, save and reload while
@@ -338,6 +378,8 @@ The acceptance suite must cover:
 - Regression checks that Route 44, Ice Path, Blackthorn, Route 13 Alola access,
   Snowswept Cavern, New Sinjoh, the League corridor, and Mt. Silver retain
   their current progression gates.
+- Source assertions that every ordinary sight-based trainer on a changed map
+  retains its object coordinates, trainer type, and sight range.
 
 ## References
 

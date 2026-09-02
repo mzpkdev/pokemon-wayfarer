@@ -13,17 +13,18 @@ and early arrival behavior needed to reach all fourteen opening-network
 settlements in the parent PRD.
 
 It does not open Sootopolis or Ever Grande, reorder Gyms or the main campaign,
-remove field moves from optional content, or change battle and wild encounter
-scaling.
+remove field moves from optional content, change ordinary trainer placement or
+sight range, or change battle and wild encounter scaling.
 
 ## Behavior
 
 ### Availability and state isolation
 
 The settlement network becomes available when the Route 101 rescue releases the
-player with a starter. No later badge, HM item, key item, payment, battle
-victory, or campaign flag may disable a core connection. Only the named Route
-118 and eastern-sea crossings may require a Pokémon that already knows Surf.
+player with a starter. No later badge, HM item, key item, payment, scripted or
+story battle victory, or campaign flag may disable a core connection. Only the
+named Route 118 and eastern-sea crossings may require a Pokémon that already
+knows Surf.
 
 Opening a lane changes only the collision, object visibility, or local transport
 needed for that lane. It must not grant an attached item, finish a battle, or set
@@ -42,10 +43,15 @@ hold:
   permanently removes the blocker.
 - A failed commit leaves the encounter and reward available to retry.
 
-All other story actors and battles leave a second visible lane open. Reaching a
-map early may set its normal visited state and baseline presentation. It may not
-start or complete an unrelated team, Gym, rival, legendary, weather, or reward
-scene.
+All other story actors and scripted battles leave a second visible lane open.
+Reaching a map early may set its normal visited state and baseline
+presentation. It may not start or complete an unrelated team, Gym, rival,
+legendary, weather, or reward scene.
+
+Ordinary sight-based trainers may challenge the player on a core route. Keep
+their object coordinates, trainer types, and sight ranges unchanged. Their
+future player-relative level scaling is outside this specification, and their
+battles do not satisfy or advance any travel story state.
 
 This exception applies only to the Route 120 Steven and Kecleon scene in this
 specification. It does not relax any bypass or optional-scene decision in the
@@ -250,13 +256,15 @@ blackout recovery, and return travel must work for every early settlement.
 Static and automated checks must verify that each changed trigger leaves its
 required lane, only dedicated roadblock flags are initialized, the public ferry
 writes no campaign state, the approved native Surf coverage remains available,
-survey reward delivery is retry-safe, and Route 120 implements every result in
-its matrix.
+survey reward delivery is retry-safe, Route 120 implements every result in its
+matrix, and ordinary sight-based trainers on changed maps retain their object
+coordinates, trainer types, and sight ranges.
 
 Build the Emerald ROM and run `make -C game check`. Then use a fresh save
 immediately after the starter to complete this journey without badges, HM
-items, earlier campaign completion, or a required victory. Surf may be known
-only for the approved water crossings:
+items, earlier campaign completion, or a required scripted or story victory.
+Ordinary sight-based trainer battles are permitted. Surf may be known only for
+the approved water crossings:
 
 1. Visit and leave all fourteen opening-network settlements in the PRD.
 2. Use all three Route 104 public ferry stops in both directions, save at each

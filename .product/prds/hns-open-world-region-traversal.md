@@ -9,11 +9,12 @@ Kanto opens through the S.S. Aqua maiden voyage, which awards the S.S. Ticket. O
 ## Rules
 
 - Walking, doors, always-available local transport, and the approved native Surf crossings form the core settlement networks in this pass.
-- Main-story state, Gym progress, and forced victories cannot close the only route to a settlement named under Settlement coverage. That route cannot require an HM item. Only the named Cianwood and Cinnabar crossings may require a Pokémon that already knows Surf.
+- Main-story state, Gym progress, and forced scripted or story victories cannot close the only route to a settlement named under Settlement coverage. That route cannot require an HM item. Only the named Cianwood and Cinnabar crossings may require a Pokémon that already knows Surf.
+- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions and sight ranges in this pass and do not count as story-gated traversal. Player-relative trainer scaling is owned separately.
 - Fly may make settlement travel faster. Surf remains optional outside the approved Cianwood and Cinnabar routes.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
 - A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
-- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or battle must leave another visible lane open.
+- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or scripted battle must leave another visible lane open.
 - This exception applies only when this PRD explicitly names the encounter as the selected core lane. It does not replace an approved bypass or optional-scene requirement.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to Kanto may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
@@ -50,10 +51,10 @@ Route 30 requires no map or script change. Its existing east-side walking lane p
 
 - Start: the Olivine port sailor offers a one-time maiden-voyage boarding as soon as the player can reach Olivine. Elm and the Johto League are not involved.
 - Job: aboard the ship, the grandfather asks the player to find his granddaughter. She is in the captain's room. The blocking sailor is moved off the corridor; speaking to him may still start his battle, but winning it is not required to find the girl.
-- Turn-in: escort the granddaughter back to her grandfather. He gives the player the S.S. Ticket as a permanent travel credential and the existing Metal Coat reward. Each item is delivered exactly once, and the reunion remains retryable until both rewards are present.
-- First arrival: the ship arrives inside Vermilion port, marks Kanto and Vermilion visited, selects Kanto as an available map region, and leaves the Olivine return sailor active before releasing the player. It sets only the maiden-voyage reunion, Ticket, and minimum region-visited state.
+- Turn-in: escort the granddaughter back to her grandfather. He gives the player the S.S. Ticket as a permanent travel credential and one additional Metal Coat as the existing reunion reward. Voyage state records each successful grant separately. Owning a Metal Coat before the reunion never satisfies or replaces its reward. Each item is delivered exactly once, and the reunion remains retryable until both grants succeed.
+- First arrival: the ship arrives inside Vermilion port, marks Kanto and Vermilion visited, selects the combined Johto and Kanto regional map, and leaves the Olivine return sailor active before releasing the player. The combined map uses the matching location coordinates for its cursor, player marker, Fly destinations, and Pokédex area display. Arrival sets only the maiden-voyage reunion, Ticket, and minimum region-visited state.
 - State isolation: the arrival does not return the Machine Part, upgrade the radio, wake Snorlax, repair the Magnet Train, mark another Kanto settlement visited, complete a Gym, or advance any Kanto campaign scene.
-- Repeat travel: the S.S. Ticket alone opens direct Olivine and Vermilion sailings. Remove or ignore the old Machine Part check on both ferry desks. The missing-granddaughter story never repeats, and the Machine Part gates only the Magnet Train.
+- Repeat travel: the S.S. Ticket alone opens direct Olivine and Vermilion sailings. Remove or ignore the old Machine Part check on both ferry desks. The missing-granddaughter story never repeats, including after the player's first Johto League victory, and the Machine Part gates only the Magnet Train.
 
 ## Inter-region shortcut story
 
@@ -85,12 +86,14 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 
 ## Target acceptance
 
-- From a new save after the opening, visit the nine named Johto settlements without badges, HM items, earlier or unrelated story-completion flags, or a required battle victory. Native Surf is allowed only for Cianwood.
+- From a new save after the opening, visit the nine named Johto settlements without badges, HM items, earlier or unrelated story-completion flags, or a required scripted or story battle victory. Ordinary sight-based trainer battles are permitted. Native Surf is allowed only for Cianwood.
 - Before Mom is visited, walk Route 30 from Cherrygrove to Route 31 and back without changing its map, scripts, or staged objects.
 - Confirm Route 44, Ice Path, and Blackthorn retain their original progression and are not opened by any change in this pass.
 - Run every required settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved Cianwood and Cinnabar crossings.
-- Complete the S.S. Aqua maiden voyage exactly as written and receive the S.S. Ticket without unrelated story flags.
+- Complete the S.S. Aqua maiden voyage exactly as written and receive the S.S. Ticket without unrelated story flags. Begin a second run with a Metal Coat already owned and confirm the reunion adds exactly one more.
 - After the maiden voyage, return between Olivine and Vermilion with only the S.S. Ticket and without the Machine Part. Confirm the train remains locked until both the Machine Part is returned and the Pass is obtained.
+- After unlocking the ferry early, complete the Johto League for the first time and confirm the voyage remains complete and direct ferry service still works.
+- Before Kanto unlock, confirm the regional map uses the Johto layout and coordinates. After first arrival, confirm the combined Johto and Kanto layout, cursor, player marker, Fly destinations, and Pokédex area positions use the combined coordinates.
 - From Vermilion, follow the named Kanto land route to the other eight mainland settlements, then use native Surf to reach Cinnabar. Do not battle Silver, wake Snorlax, own a Bicycle, own HM03, or satisfy a Surf badge check.
 - Confirm this pass does not change Alola or Sinjoh entry, transport, visit flags, encounters, or rewards.
 - Return from Kanto without repeating the maiden-voyage story.
@@ -98,6 +101,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - With a native Surf user prepared before each crossing, cross to Cianwood and Cinnabar in both directions using the existing encounter geometry and no HM03 or badge.
 - Confirm no native HM other than Surf becomes a prerequisite for settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
+- Confirm this pass does not change the position, trainer type, or sight range of any ordinary sight-based trainer.
 
 ## References
 
