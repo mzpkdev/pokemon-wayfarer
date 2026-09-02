@@ -25,6 +25,7 @@ import {
   maxParty,
   maxPcSlots,
   maxPatches,
+  fullPocketMasks,
   pcBoxCapacity,
   totalPcBoxes,
 } from "../protocol"
@@ -62,6 +63,7 @@ export type ArrangeGame = {
   bag?: {
     hms?: Partial<Record<Hm, number>>
     items?: Partial<Record<Item, number>>
+    fullPockets?: (keyof typeof fullPocketMasks)[]
   }
   pc?: {
     currentBox?: number
@@ -95,6 +97,10 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
       .filter(([, quantity]) => quantity > 0)
       .map(([name, quantity]) => ({ item: items[name], quantity }))
     const bagItems = [...hmBagItems, ...genericBagItems]
+    const fullPockets = options.bag?.fullPockets ?? []
+    if (new Set(fullPockets).size !== fullPockets.length)
+      throw new Error("Each full Bag pocket fixture may be requested only once")
+    const fullPocketMask = fullPockets.reduce((mask, pocket) => mask | fullPocketMasks[pocket], 0)
     const observedPcSlots = options.pc?.observedSlots ?? []
     const currentBox = options.pc?.currentBox ?? 0
     if (vars.length > maxPatches) {
@@ -159,6 +165,7 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
           })),
           currentBox,
           hmsOverwrite: options.challenge?.hmsOverwrite ?? false,
+          fullPocketMask,
         }),
       "arrange game",
     )

@@ -225,41 +225,16 @@ Route32_EventScript_FriedaCompleted::
 Route32_EventScript_BaldingMan::
 	lock
 	faceplayer
+	goto_if_ge VAR_VIOLET_CITY_STATE, 5, Route32_EventScript_BaldingManCompleted
+	goto Route32_EventScript_BaldingManCheck
+
+Route32_EventScript_BaldingManCompleted::
 	msgbox Route32_Text_CooltrainerM_Experiences, MSGBOX_DEFAULT
 	closemessage
 	turnobject LOCALID_ROUTE32_BALDINGMAN, DIR_EAST
 	release
 	end
 
-Route32_EventScript_BaldingManTriggerLeft::
-	lock
-	playse SE_PIN
-	applymovement LOCALID_ROUTE32_BALDINGMAN, Common_Movement_ExclamationMark
-	delay 55
-	waitmovement LOCALID_ROUTE32_BALDINGMAN
-	turnobject OBJ_EVENT_ID_PLAYER, DIR_WEST
-	goto Route32_EventScript_BaldingManCheck
-	end
-Route32_EventScript_BaldingManTriggerMid::
-	lock
-	playse SE_PIN
-	applymovement LOCALID_ROUTE32_BALDINGMAN, Common_Movement_ExclamationMark
-	delay 55
-	waitmovement LOCALID_ROUTE32_BALDINGMAN
-	applymovement OBJ_EVENT_ID_PLAYER, Route32_Movement_StartMid
-	waitmovement 0
-	goto Route32_EventScript_BaldingManCheck
-	end
-Route32_EventScript_BaldingManTriggerRight::
-	lock
-	playse SE_PIN
-	applymovement LOCALID_ROUTE32_BALDINGMAN, Common_Movement_ExclamationMark
-	delay 55
-	waitmovement LOCALID_ROUTE32_BALDINGMAN
-	applymovement OBJ_EVENT_ID_PLAYER, Route32_Movment_StartRight
-	waitmovement 0
-	goto Route32_EventScript_BaldingManCheck
-	end
 Route32_EventScript_BaldingManCheck::
 	goto_if_unset FLAG_HIDE_SPROUT_TOWER_SILVER, Route32_EventScript_BaldingManTower
 	goto_if_unset FLAG_DEFEATED_VIOLET_GYM, Route32_EventScript_BaldingManGym
@@ -267,32 +242,26 @@ Route32_EventScript_BaldingManCheck::
 	msgbox Route32_Text_CooltrainerM_HaveThisSeed, MSGBOX_DEFAULT
 	giveitem ITEM_MIRACLE_SEED
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	closemessage
 	setvar VAR_VIOLET_CITY_STATE, 5
+	closemessage
 	release
 	end
 Route32_EventScript_BaldingManTower::
 	msgbox Route32_Text_CooltrainerM_WhatsTheHurry, MSGBOX_DEFAULT
 	msgbox Route32_Text_CooltrainerM_SproutTower, MSGBOX_DEFAULT
 	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, Route32_Movement_Turnback
-	waitmovement 0
 	release
 	end
 Route32_EventScript_BaldingManGym::
 	msgbox Route32_Text_CooltrainerM_WhatsTheHurry, MSGBOX_DEFAULT
 	msgbox Route32_Text_CooltrainerM_VioletGym, MSGBOX_DEFAULT
 	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, Route32_Movement_Turnback
-	waitmovement 0
 	release
 	end
 Route32_EventScript_BaldingManEgg::
 	msgbox Route32_Text_CooltrainerM_WhatsTheHurry, MSGBOX_DEFAULT
 	msgbox Route32_Text_CooltrainerM_AideIsWaiting, MSGBOX_DEFAULT
 	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, Route32_Movement_Turnback
-	waitmovement 0
 	release
 	end
 
@@ -330,19 +299,6 @@ Route32_EventScript_Sign3::
 	closemessage
 	release
 	end
-
-Route32_Movement_Turnback:
-	walk_up
-	step_end
-
-Route32_Movement_StartMid:
-	walk_left
-	step_end
-
-Route32_Movment_StartRight:
-	walk_left
-	walk_left
-	step_end
 
 Route32_Movement_SlowpokeLeft::
 	step_end

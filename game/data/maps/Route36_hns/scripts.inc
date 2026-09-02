@@ -262,7 +262,8 @@ Route36_Text_RockSmashGuy3:
 	.string "just smash 'em up!$"
 
 Route36_Text_OddTree:
-	.string "A weird tree is blocking the way.$"
+	.string "A weird tree is standing in the\n"
+	.string "shrub clearing.$"
 
 Route36_Text_Lass1:
 	.string "Be careful at night on this route!\p"

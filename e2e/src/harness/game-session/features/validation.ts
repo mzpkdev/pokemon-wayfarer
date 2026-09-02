@@ -63,6 +63,7 @@ export const createValidationApi = (
         wildMon: emptyMon(),
         currentBox: 0,
         hmsOverwrite: false,
+        fullPocketMask: 0,
       }
       switch (invalid) {
         case "current-box":

@@ -133,7 +133,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SAILOR_HNS",
-      "x": 28,
+      "x": 27,
       "y": 8,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_NONE",
@@ -175,17 +175,7 @@
       "dest_warp_id": "9"
     }
   ],
-  "coord_events": [
-    {
-      "type": "trigger",
-      "x": 29,
-      "y": 8,
-      "elevation": 0,
-      "var": "VAR_SSAQUA_STATE",
-      "var_value": "2",
-      "script": "SSAqua_B1F_EventScript_Trigger"
-    }
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

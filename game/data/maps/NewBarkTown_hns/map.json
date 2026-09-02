@@ -203,62 +203,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-    {
-      "type": "trigger",
-      "x": 0,
-      "y": 12,
-      "elevation": 0,
-      "var": "VAR_NEWBARK_TOWN_STATE",
-      "var_value": "2",
-      "script": "NewBarkTown_EventScript_LeaveTrigger"
-    },
-    {
-      "type": "trigger",
-      "x": 0,
-      "y": 13,
-      "elevation": 0,
-      "var": "VAR_NEWBARK_TOWN_STATE",
-      "var_value": "2",
-      "script": "NewBarkTown_EventScript_LeaveTrigger"
-    },
-    {
-      "type": "trigger",
-      "x": 0,
-      "y": 14,
-      "elevation": 0,
-      "var": "VAR_NEWBARK_TOWN_STATE",
-      "var_value": "2",
-      "script": "NewBarkTown_EventScript_LeaveTrigger"
-    },
-    {
-      "type": "trigger",
-      "x": 0,
-      "y": 12,
-      "elevation": 0,
-      "var": "VAR_NEWBARK_TOWN_STATE",
-      "var_value": "4",
-      "script": "NewBarkTown_EventScript_LeaveTrigger"
-    },
-    {
-      "type": "trigger",
-      "x": 0,
-      "y": 13,
-      "elevation": 0,
-      "var": "VAR_NEWBARK_TOWN_STATE",
-      "var_value": "4",
-      "script": "NewBarkTown_EventScript_LeaveTrigger"
-    },
-    {
-      "type": "trigger",
-      "x": 0,
-      "y": 14,
-      "elevation": 0,
-      "var": "VAR_NEWBARK_TOWN_STATE",
-      "var_value": "4",
-      "script": "NewBarkTown_EventScript_LeaveTrigger"
-    }
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",

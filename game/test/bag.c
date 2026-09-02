@@ -24,6 +24,7 @@ static const u16 sStandardRodContributorFlags[] =
 STATIC_ASSERT(FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED == 0x304, StandardRodRoute32FlagId);
 STATIC_ASSERT(FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED == 0x305, StandardRodOlivineFlagId);
 STATIC_ASSERT(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED == 0x306, StandardRodRoute12FlagId);
+STATIC_ASSERT(FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED == 0x307, MagnetTrainRestorationStartedFlagId);
 #else
 static const u16 sStandardRodContributorFlags[] =
 {
@@ -224,6 +225,48 @@ TEST("Standard Rod: script wrapper reports the outcome and dynamic awarded item"
     EXPECT_EQ(gSpecialVar_0x8005, ITEM_OLD_ROD);
     EXPECT(FlagGet(sStandardRodContributorFlags[0]));
 }
+
+#if IS_HNS
+TEST("Magnet Train: Lost Item atomically becomes the Pass in a full Key Items pocket")
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+
+    ClearBag();
+    BagPocket_SetSlotItemIdAndCount(pocket, 0, ITEM_LOST_ITEM, 1);
+    FillEmptyKeyItemSlots();
+
+    EXPECT(TrySwapLostItemForPass());
+    EXPECT(!CheckBagHasItem(ITEM_LOST_ITEM, 1));
+    EXPECT(CheckBagHasItem(ITEM_PASS, 1));
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_PASS), 1);
+}
+
+TEST("Magnet Train: Lost Item handoff fails without mutating the Bag when the item is missing")
+{
+    ClearBag();
+    FillEmptyKeyItemSlots();
+
+    EXPECT(!TrySwapLostItemForPass());
+    EXPECT(!CheckBagHasItem(ITEM_LOST_ITEM, 1));
+    EXPECT(!CheckBagHasItem(ITEM_PASS, 1));
+}
+
+TEST("Magnet Train: preexisting Pass satisfies the handoff without duplication")
+{
+    ClearBag();
+    EXPECT(AddBagItem(ITEM_LOST_ITEM, 2));
+    EXPECT(AddBagItem(ITEM_PASS, 1));
+    FillEmptyKeyItemSlots();
+
+    RUN_OVERWORLD_SCRIPT(
+        specialvar VAR_RESULT, TrySwapLostItemForPass;
+    );
+
+    EXPECT(gSpecialVar_Result);
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_LOST_ITEM), 0);
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_PASS), 1);
+}
+#endif
 
 TEST("TMs and HMs are sorted correctly in the bag")
 {

@@ -850,8 +850,8 @@
 #define FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED       0x304
 #define FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED       0x305
 #define FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED       0x306
-#define FLAG_UNUSED_39                              0x307
-#define HNS_UNUSED_COUNT                            40
+#define FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED  0x307
+#define HNS_UNUSED_COUNT                            39
 
 #define HNS_CONTENT_FLAGS_END                       0x308
 

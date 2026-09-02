@@ -435,6 +435,28 @@ bool32 RemoveBagItem(enum Item itemId, u16 count)
     return BagPocket_RemoveItem(&gBagPockets[GetItemPocket(itemId)], itemId, count);
 }
 
+bool32 TrySwapLostItemForPass(void)
+{
+    u16 lostItemCount = CountTotalItemQuantityInBag(ITEM_LOST_ITEM);
+
+    if (lostItemCount == 0)
+        return FALSE;
+
+    if (CheckBagHasItem(ITEM_PASS, 1))
+        return RemoveBagItem(ITEM_LOST_ITEM, lostItemCount);
+
+    if (!RemoveBagItem(ITEM_LOST_ITEM, lostItemCount))
+        return FALSE;
+
+    if (!AddBagItem(ITEM_PASS, 1))
+    {
+        AddBagItem(ITEM_LOST_ITEM, lostItemCount);
+        return FALSE;
+    }
+
+    return TRUE;
+}
+
 // Unsafe function: Only use with functions that already check the slot and count are valid
 void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count)
 {

@@ -2,6 +2,7 @@
 
 #include "global.h"
 #include "battle.h"
+#include "battle_main.h"
 #include "battle_setup.h"
 #include "e2e_test.h"
 #include "challenge_menu.h"
@@ -20,6 +21,8 @@
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
+#include "region_map.h"
+#include "save.h"
 #include "script.h"
 #include "sprite.h"
 #include "string_util.h"
@@ -38,7 +41,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 7,
+    .version = 8,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -92,6 +95,7 @@ static u8 sCatchSwapSlot;
 static bool32 sNicknamePrompt;
 static u8 sNicknameCursor;
 static u8 sRejectedResultFrames;
+static struct RegionMap sObservedPokedexRegionMap;
 
 extern void UpdateSurfBlobFieldEffect(struct Sprite *sprite);
 
@@ -270,6 +274,37 @@ static bool32 ApplyBagFixtures(void)
             return FALSE;
     }
 
+    if (sRequest.fullPocketMask & E2E_TEST_FULL_POCKET_ITEMS)
+    {
+        struct BagPocket *pocket = &gBagPockets[POCKET_ITEMS];
+
+        for (i = 0; i < pocket->capacity; i++)
+        {
+            if (BagPocket_GetSlotData(pocket, i).itemId == ITEM_NONE)
+                BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_LEFTOVERS, 1);
+        }
+    }
+    if (sRequest.fullPocketMask & E2E_TEST_FULL_POCKET_KEY_ITEMS)
+    {
+        struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+
+        for (i = 0; i < pocket->capacity; i++)
+        {
+            if (BagPocket_GetSlotData(pocket, i).itemId == ITEM_NONE)
+                BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_OLD_ROD, 1);
+        }
+    }
+    if (sRequest.fullPocketMask & E2E_TEST_FULL_POCKET_TM_HM)
+    {
+        struct BagPocket *pocket = &gBagPockets[POCKET_TM_HM];
+
+        for (i = 0; i < pocket->capacity; i++)
+        {
+            if (BagPocket_GetSlotData(pocket, i).itemId == ITEM_NONE)
+                BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_TM_FOCUS_PUNCH, 1);
+        }
+    }
+
     return TRUE;
 }
 
@@ -352,6 +387,7 @@ static void CopyRequest(void)
     sRequest.pcSlotCount = gE2ETestRequest.pcSlotCount;
     sRequest.currentBox = gE2ETestRequest.currentBox;
     sRequest.hmsOverwrite = gE2ETestRequest.hmsOverwrite;
+    sRequest.fullPocketMask = gE2ETestRequest.fullPocketMask;
     memcpy(sRequest.reserved, (const void *)gE2ETestRequest.reserved, sizeof(sRequest.reserved));
 }
 
@@ -555,10 +591,12 @@ static enum E2ETestError ValidateArrangeRequest(void)
         if (error != E2E_TEST_ERROR_NONE)
             return error;
     }
-    if (sRequest.hmsOverwrite > TRUE
-     || sRequest.reserved[0] != 0
-     || sRequest.reserved[1] != 0
-     || sRequest.reserved[2] != 0)
+    if (sRequest.hmsOverwrite > TRUE)
+        return E2E_TEST_ERROR_PARTY;
+    if (sRequest.fullPocketMask & ~E2E_TEST_FULL_POCKET_MASK)
+        return E2E_TEST_ERROR_FULL_POCKET_MASK;
+    if (sRequest.reserved[0] != 0
+     || sRequest.reserved[1] != 0)
         return E2E_TEST_ERROR_PARTY;
 
     return E2E_TEST_ERROR_NONE;
@@ -575,6 +613,11 @@ static enum E2ETestError ValidateRequest(void)
             return ValidateMonFixture(&sRequest.wildMon, FALSE);
         if (sRequest.wildMon.isEgg)
             return E2E_TEST_ERROR_PARTY;
+        return E2E_TEST_ERROR_NONE;
+    case E2E_TEST_COMMAND_SAVE:
+    case E2E_TEST_COMMAND_OBSERVE_REGION_MAP:
+    case E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION:
+    case E2E_TEST_COMMAND_WIN_BATTLE:
         return E2E_TEST_ERROR_NONE;
     default:
         return E2E_TEST_ERROR_COMMAND;
@@ -681,6 +724,20 @@ static void BeginRequest(void)
         return;
     }
 
+    if (sRequest.command == E2E_TEST_COMMAND_WIN_BATTLE)
+    {
+        if (!gMain.inBattle)
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+
+        BattleDebug_WonBattle();
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
     if (gMain.inBattle || IsStorageStateMachineActive())
     {
         FailRequest(E2E_TEST_ERROR_BUSY);
@@ -699,6 +756,75 @@ static void BeginRequest(void)
         sX = gSaveBlock1Ptr->pos.x;
         sY = gSaveBlock1Ptr->pos.y;
         StartWildBattle();
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_SAVE)
+    {
+        u8 saveStatus;
+
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+        gE2ETestRequest.status = E2E_TEST_STATUS_RUNNING;
+        PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        if (gDifferentSaveFile == TRUE)
+        {
+            saveStatus = TrySavingData(SAVE_OVERWRITE_DIFFERENT_FILE);
+            gDifferentSaveFile = FALSE;
+        }
+        else
+        {
+            saveStatus = TrySavingData(SAVE_NORMAL);
+        }
+        if (saveStatus != SAVE_STATUS_OK)
+        {
+            FailRequest(E2E_TEST_ERROR_SAVE);
+            return;
+        }
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_OBSERVE_REGION_MAP)
+    {
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+
+        // Exercise the same initialization entry point used by the Pokedex
+        // area screen. The retained test-only storage keeps region_map.c's
+        // internal pointer valid until the next real region-map UI replaces it.
+        memset(&sObservedPokedexRegionMap, 0, sizeof(sObservedPokedexRegionMap));
+        ShowRegionMapForPokedexAreaScreen(&sObservedPokedexRegionMap);
+        sMapGroup = GetRegionMapType(gMapHeader.regionMapSectionId);
+        sMapNum = sObservedPokedexRegionMap.mapSecId;
+        sX = sObservedPokedexRegionMap.cursorPosX;
+        sY = sObservedPokedexRegionMap.cursorPosY;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION)
+    {
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+
+        sMapGroup = GetRegionMapType(gMapHeader.regionMapSectionId);
+        sMapNum = GetRegionMapSecIdAt(sRequest.x, sRequest.y);
+        sX = sRequest.x;
+        sY = sRequest.y;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
         return;
     }
 

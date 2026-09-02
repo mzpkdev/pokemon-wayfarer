@@ -3,46 +3,17 @@ CeruleanCity_Gym_hns_MapScripts::
 	.byte 0
 
 CeruleanCity_Gym_OnFrame::
-	map_script_2 VAR_KANTO_ROCKET_STORY_STATE, 2,  CeruleanCity_Gym_EventScript_RocketGrunt
-	map_script_2 VAR_TEMP_0, 0,  CeruleanCity_Gym_EventScript_TryMachinePart
+	map_script_2 VAR_TEMP_0, 0, CeruleanCity_Gym_EventScript_TryMachinePart
 	.2byte 0
 
-CeruleanCity_Gym_EventScript_RocketGrunt::
-	lock
-	applymovement LOCALID_CERULEAN_GYM_ROCKET, CeruleanCity_Gym_Movement_GruntBumpPlayer
-	delay 20
-	playse SE_BANG
-	waitmovement 0
-	
-	msgbox CeruleanGym_Text_GruntIntro, MSGBOX_DEFAULT
-	closemessage
-	playse SE_PIN
-	applymovement LOCALID_CERULEAN_GYM_ROCKET, Common_Movement_ExclamationMark
-	delay 55
-	waitmovement LOCALID_CERULEAN_GYM_ROCKET
-	applymovement LOCALID_CERULEAN_GYM_ROCKET, CeruleanCity_Gym_Movement_GruntWalkBack
-	waitmovement 0
-	msgbox CeruleanGym_Text_GruntBigMistake, MSGBOX_DEFAULT
-	applymovement LOCALID_CERULEAN_GYM_ROCKET, CeruleanCity_Gym_Movement_GruntWalkToPlayerAgain
-	waitmovement 0
-	msgbox CeruleanGym_Text_GruntBye, MSGBOX_DEFAULT
-	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, CeruleanCity_Gym_Movement_PlayerSlide
-	delay 10
-	applymovement LOCALID_CERULEAN_GYM_ROCKET, CeruleanCity_Gym_Movement_GruntLeave
-	waitmovement 0
-	fadescreenswapbuffers FADE_TO_BLACK
-	playse SE_EXIT
-	setflag FLAG_HIDE_CERULEAN_GYM_ROCKET
-	removeobject LOCALID_CERULEAN_GYM_ROCKET
-	fadescreenswapbuffers FADE_FROM_BLACK
-	clearflag FLAG_HIDE_CERULEAN_CAPE_ROCKET
-	setvar VAR_KANTO_ROCKET_STORY_STATE, 3
-	release
-	end
-
 CeruleanCity_Gym_EventScript_TryMachinePart::
-	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 5, CeruleanCity_Gym_EventScript_MachinePart
+	goto_if_unset FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED, CeruleanCity_Gym_EventScript_NoMachinePartSparkle
+	goto_if_set FLAG_RETURNED_MACHINE_PART, CeruleanCity_Gym_EventScript_NoMachinePartSparkle
+	goto_if_set FLAG_HIDDEN_ITEM_MACHINE_PART, CeruleanCity_Gym_EventScript_NoMachinePartSparkle
+	checkitem ITEM_MACHINE_PART
+	goto_if_eq VAR_RESULT, FALSE, CeruleanCity_Gym_EventScript_MachinePart
+
+CeruleanCity_Gym_EventScript_NoMachinePartSparkle::
 	setvar VAR_TEMP_0, 1
 	end
 
@@ -63,10 +34,14 @@ CeruleanCity_Gym_EventScript_MachinePart::
 	end
 
 CeruleanCity_Gym_EventScript_MachinePartItem::
-	goto_if_lt VAR_KANTO_ROCKET_STORY_STATE, 5, CeruleanCity_Gym_EventScript_DoNothing
-	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 6, CeruleanCity_Gym_EventScript_DoNothing
+	goto_if_unset FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED, CeruleanCity_Gym_EventScript_DoNothing
+	goto_if_set FLAG_RETURNED_MACHINE_PART, CeruleanCity_Gym_EventScript_DoNothing
+	goto_if_set FLAG_HIDDEN_ITEM_MACHINE_PART, CeruleanCity_Gym_EventScript_DoNothing
+	checkitem ITEM_MACHINE_PART
+	goto_if_eq VAR_RESULT, TRUE, CeruleanCity_Gym_EventScript_DoNothing
 	finditem ITEM_MACHINE_PART
-	setvar VAR_KANTO_ROCKET_STORY_STATE, 6
+	checkitem ITEM_MACHINE_PART
+	goto_if_eq VAR_RESULT, FALSE, CeruleanCity_Gym_EventScript_DoNothing
 	setflag FLAG_HIDDEN_ITEM_MACHINE_PART
 	end
 
@@ -83,40 +58,6 @@ CeruleanCity_Movement_CameraPanDown:
 	walk_down
 	walk_down
 	walk_down
-	step_end
-
-CeruleanCity_Gym_Movement_GruntBumpPlayer:
-	walk_fast_down
-	walk_fast_down
-	walk_in_place_fast_down
-	lock_facing_direction
-	jump_up
-	unlock_facing_direction
-	delay_16
-	walk_down
-	step_end
-
-CeruleanCity_Gym_Movement_GruntWalkBack:
-	lock_facing_direction
-	walk_slow_up
-	walk_slow_up
-	unlock_facing_direction
-	step_end
-
-CeruleanCity_Gym_Movement_GruntWalkToPlayerAgain:
-	walk_down
-	walk_down
-	step_end
-
-CeruleanCity_Gym_Movement_PlayerSlide:
-	lock_facing_direction
-	walk_fast_right
-	unlock_facing_direction
-	step_end
-
-CeruleanCity_Gym_Movement_GruntLeave:
-	walk_fast_down
-	walk_in_place_fast_down
 	step_end
 
 CeruleanCity_Gym_EventScript_Statue::
@@ -212,24 +153,6 @@ CeruleanCity_Gym_EventScript_Misty_Defeated::
 	closemessage
 	release
 	end
-
-CeruleanGym_Text_GruntIntro:
-	.string "Oops! I so sorry! You not hurt,\n"
-	.string "okay?\p"
-	.string "I very busy. No time for talking\n"
-	.string "with you. Not good for me if\l"
-	.string "seen by somebody.$"
-
-CeruleanGym_Text_GruntBigMistake:
-	.string "Oh no! You seen me already!\n"
-	.string "I make big mistake!$"
-
-CeruleanGym_Text_GruntBye:
-	.string "Hey, you! Forget you see me,\n"
-	.string "okay?\p"
-	.string "You see, hear, know nothing,\p"
-	.string "okay? Bye, kid! Nothing!\p"
-	.string "Bye-bye a go-go!$"
 
 CeruleanGym_Text_Note1:
 	.string "Sorry, I'll be out for a while.\n"
