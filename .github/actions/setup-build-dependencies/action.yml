@@ -56,10 +56,9 @@ runs:
         )
         sudo apt-get "${apt_options[@]}" update
 
-        archive_directory="$RUNNER_TEMP/apt-archives/$PACKAGE_SET"
+        archive_directory="$GITHUB_WORKSPACE/.cache/apt-archives/$PACKAGE_SET"
         package_list="$RUNNER_TEMP/build-dependencies-$PACKAGE_SET.txt"
         download_plan="$RUNNER_TEMP/apt-download-plan-$PACKAGE_SET.txt"
-        sudo install -d -m 1777 "$archive_directory" "$archive_directory/partial"
         printf '%s\n' "${packages[@]}" > "$package_list"
 
         {
@@ -98,6 +97,8 @@ runs:
       run: |
         set -euo pipefail
         sudo install -d -m 1777 "$ARCHIVE_DIRECTORY" "$ARCHIVE_DIRECTORY/partial"
+        sudo chown _apt "$ARCHIVE_DIRECTORY/partial"
+        sudo chmod 0700 "$ARCHIVE_DIRECTORY/partial"
 
     - name: Download APT archives on cache miss
       if: steps.apt-cache.outputs.cache-hit != 'true'
@@ -130,6 +131,15 @@ runs:
           printf '::warning::APT download failed; retrying once in 10 seconds.\n'
           sleep 10
         done
+
+    - name: Prepare APT archives for caching
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        ARCHIVE_DIRECTORY: ${{ steps.resolve.outputs.archive-directory }}
+      run: |
+        set -euo pipefail
+        sudo chmod -R a+rX "$ARCHIVE_DIRECTORY"
 
     - name: Save APT archives
       if: steps.apt-cache.outputs.cache-hit != 'true'
