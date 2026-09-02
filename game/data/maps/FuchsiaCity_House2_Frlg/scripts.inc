@@ -18,16 +18,33 @@ FuchsiaCity_House2_EventScript_AlreadyGotGoodRod::
 
 FuchsiaCity_House2_EventScript_GiveGoodRod::
 	msgbox FuchsiaCity_House2_Text_LikeYourStyleTakeThis
-	checkitemspace ITEM_GOOD_ROD
-	goto_if_eq VAR_RESULT, FALSE, FuchsiaCity_House2_EventScript_NoRoomForGoodRod
-	giveitem_msg FuchsiaCity_House2_Text_ReceivedGoodRod, ITEM_GOOD_ROD
-	msgbox FuchsiaCity_House2_Text_GoodRodCanCatchBetterMons
-	setflag FLAG_GOT_GOOD_ROD
+	setvar VAR_0x8004, FLAG_GOT_GOOD_ROD
+	special Script_TryAwardStandardRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, FuchsiaCity_House2_EventScript_AlreadyGotGoodRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, FuchsiaCity_House2_EventScript_RodUpgradeFailed
+	copyvar VAR_0x8000, VAR_0x8005
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto_if_eq VAR_0x8005, ITEM_OLD_ROD, FuchsiaCity_House2_EventScript_ReceivedOldRod
+	goto_if_eq VAR_0x8005, ITEM_GOOD_ROD, FuchsiaCity_House2_EventScript_ReceivedUpgradedGoodRod
+	msgbox FuchsiaCity_House2_Text_CompletedSuperRod
 	release
 	end
 
-FuchsiaCity_House2_EventScript_NoRoomForGoodRod::
-	msgbox FuchsiaCity_House2_Text_YouHaveNoRoomForGift
+FuchsiaCity_House2_EventScript_ReceivedOldRod::
+	msgbox FuchsiaCity_House2_Text_StartedWithOldRod
+	release
+	end
+
+FuchsiaCity_House2_EventScript_ReceivedUpgradedGoodRod::
+	msgbox FuchsiaCity_House2_Text_ImprovedToGoodRod
+	release
+	end
+
+FuchsiaCity_House2_EventScript_RodUpgradeFailed::
+	msgbox FuchsiaCity_House2_Text_RodUpgradeFailed
 	release
 	end
 
@@ -43,17 +60,25 @@ FuchsiaCity_House2_Text_LikeYourStyleTakeThis::
 	.string "I think we can be friends.\p"
 	.string "Take this and fish, young friend!$"
 
-FuchsiaCity_House2_Text_ReceivedGoodRod::
-	.string "{PLAYER} received a GOOD ROD from\n"
-	.string "the FISHING GURU's brother.$"
-
-FuchsiaCity_House2_Text_GoodRodCanCatchBetterMons::
+FuchsiaCity_House2_Text_StartedWithOldRod::
 	.string "Fishing is a way of life!\n"
 	.string "It is like the finest poetry.\p"
-	.string "A crummy OLD ROD could only catch\n"
-	.string "MAGIKARP, yes?\p"
-	.string "But with a GOOD ROD, you can\n"
-	.string "catch much better POKéMON.$"
+	.string "Your OLD ROD can catch any POKéMON\n"
+	.string "living in the local waters.$"
+
+FuchsiaCity_House2_Text_ImprovedToGoodRod::
+	.string "You have an angler's spirit! Your GOOD\n"
+	.string "ROD gets more bites and gives uncommon\l"
+	.string "catches better odds.$"
+
+FuchsiaCity_House2_Text_CompletedSuperRod::
+	.string "A fine angler indeed! Your SUPER ROD\n"
+	.string "gives rare catches and bites their\l"
+	.string "best odds.$"
+
+FuchsiaCity_House2_Text_RodUpgradeFailed::
+	.string "Something isn't right with your fishing\n"
+	.string "gear. Come back once it's sorted out.$"
 
 FuchsiaCity_House2_Text_OhThatsDisappointing::
 	.string "Oh…\n"
@@ -62,9 +87,4 @@ FuchsiaCity_House2_Text_OhThatsDisappointing::
 FuchsiaCity_House2_Text_HowAreTheFishBiting::
 	.string "Hello there, {PLAYER}!\p"
 	.string "How are the fish biting?$"
-
-FuchsiaCity_House2_Text_YouHaveNoRoomForGift::
-	.string "Oh, no!\p"
-	.string "I had a gift for you, but you have\n"
-	.string "no room for it!$"
 

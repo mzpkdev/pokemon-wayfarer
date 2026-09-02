@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "qualityWeights": {
+    "OLD_ROD": [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
+    "GOOD_ROD": [25, 18, 12, 10, 9, 7, 6, 5, 4, 4],
+    "SUPER_ROD": [12, 10, 11, 10, 10, 10, 10, 9, 9, 9]
+  },
+  "nativeSurfAccessibility": [
+    {"product": "FIRERED", "baseLabel": "sPalletTown_FireRed", "timeOfDay": "TIME_DAY", "species": "SPECIES_HORSEA", "expectedOldRodSuccessfulEncounterPercent": 14, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "FIRERED", "baseLabel": "sPalletTown_FireRed", "timeOfDay": "TIME_DAY", "species": "SPECIES_KRABBY", "expectedOldRodSuccessfulEncounterPercent": 8, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "FIRERED", "baseLabel": "sCinnabarIsland_FireRed", "timeOfDay": "TIME_DAY", "species": "SPECIES_HORSEA", "expectedOldRodSuccessfulEncounterPercent": 14, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "FIRERED", "baseLabel": "sCinnabarIsland_FireRed", "timeOfDay": "TIME_DAY", "species": "SPECIES_KRABBY", "expectedOldRodSuccessfulEncounterPercent": 8, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "LEAFGREEN", "baseLabel": "sPalletTown_LeafGreen", "timeOfDay": "TIME_DAY", "species": "SPECIES_HORSEA", "expectedOldRodSuccessfulEncounterPercent": 8, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "LEAFGREEN", "baseLabel": "sPalletTown_LeafGreen", "timeOfDay": "TIME_DAY", "species": "SPECIES_KRABBY", "expectedOldRodSuccessfulEncounterPercent": 14, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "LEAFGREEN", "baseLabel": "sCinnabarIsland_LeafGreen", "timeOfDay": "TIME_DAY", "species": "SPECIES_HORSEA", "expectedOldRodSuccessfulEncounterPercent": 8, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "LEAFGREEN", "baseLabel": "sCinnabarIsland_LeafGreen", "timeOfDay": "TIME_DAY", "species": "SPECIES_KRABBY", "expectedOldRodSuccessfulEncounterPercent": 14, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gOlivineCity_PortOutside_hns_Day", "timeOfDay": "TIME_DAY", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gOlivineCity_PortOutside_hns_Night", "timeOfDay": "TIME_NIGHT", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gVermilionCity_hns_Day", "timeOfDay": "TIME_DAY", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gVermilionCity_hns_Night", "timeOfDay": "TIME_NIGHT", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gVermilionCity_PortOutside_hns_Day", "timeOfDay": "TIME_DAY", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gVermilionCity_PortOutside_hns_Night", "timeOfDay": "TIME_NIGHT", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gCinnabarIsland_hns_Day", "timeOfDay": "TIME_DAY", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gCinnabarIsland_hns_Night", "timeOfDay": "TIME_NIGHT", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 11, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "POKEMON_HNS", "baseLabel": "gCianwoodCity_hns_Day", "timeOfDay": "TIME_DAY", "species": "SPECIES_CHINCHOU", "expectedOldRodSuccessfulEncounterPercent": 12, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "EMERALD", "baseLabel": "gLilycoveCity", "timeOfDay": "TIME_DAY", "species": "SPECIES_WAILMER", "expectedOldRodSuccessfulEncounterPercent": 19, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "EMERALD", "baseLabel": "gMossdeepCity", "timeOfDay": "TIME_DAY", "species": "SPECIES_WAILMER", "expectedOldRodSuccessfulEncounterPercent": 18, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2},
+    {"product": "EMERALD", "baseLabel": "gPacifidlogTown", "timeOfDay": "TIME_DAY", "species": "SPECIES_WAILMER", "expectedOldRodSuccessfulEncounterPercent": 18, "minimumOldRodSuccessfulEncounterPercent": 8, "minimumOldRodUnmodifiedCastPercent": 2}
+  ]
+}

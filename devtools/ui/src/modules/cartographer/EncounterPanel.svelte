@@ -6,7 +6,7 @@
     CatalogWildEncounterProjection,
   } from "./catalog.js"
   import {
-    fishingGroupIds,
+    fishingProfiles,
     resolveMethodSlots,
     rodLabel,
     type ResolvedMapEncounters,
@@ -185,39 +185,35 @@
                       No non-zero source slots are recorded for this method.
                     </p>
                   {:else if method.type === "fishing_mons"}
-                    {@const groupIds = fishingGroupIds(method)}
-                    {@const ungroupedSlots = resolveMethodSlots(projection, method, trainerRating)}
+                    {@const profiles = fishingProfiles(method)}
                     <div class="grid min-w-0 gap-4 px-4 pb-4">
-                      {#each groupIds as groupId (groupId)}
+                      {#each profiles as profile (profile.profileKey)}
                         <section
                           class="min-w-0 border border-cartographer-border"
-                          aria-label={`${rodLabel(groupId)} fishing`}
+                          aria-label={`${rodLabel(profile.fishingRod)} fishing`}
                         >
                           <header
                             class="flex items-baseline justify-between gap-3 border-b border-cartographer-border bg-cartographer-panel-raised px-3 py-2"
                           >
-                            <h4 class="m-0 text-sm font-semibold">{rodLabel(groupId)}</h4>
+                            <h4 class="m-0 text-sm font-semibold">
+                              {rodLabel(profile.fishingRod)}
+                            </h4>
                             <code
                               class="font-cartographer-mono text-[0.68rem] text-cartographer-muted"
-                              >{groupId}</code
+                              >{profile.fishingRod}</code
                             >
                           </header>
                           <EncounterSlotsTable
-                            slots={resolveMethodSlots(projection, method, trainerRating, groupId)}
+                            slots={resolveMethodSlots(
+                              projection,
+                              method,
+                              trainerRating,
+                              profile.fishingRod,
+                            )}
                             {trainerRating}
                           />
                         </section>
                       {/each}
-                      {#if ungroupedSlots.length > 0}
-                        <section class="min-w-0 border border-cartographer-border p-3">
-                          <p class="m-0 text-sm text-cartographer-muted">
-                            Slots without a recorded source group
-                          </p>
-                          <div class="mt-3">
-                            <EncounterSlotsTable slots={ungroupedSlots} {trainerRating} />
-                          </div>
-                        </section>
-                      {/if}
                     </div>
                   {:else}
                     <div class="px-4 pb-4">

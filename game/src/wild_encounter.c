@@ -64,6 +64,7 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 #endif
 static bool8 IsAbilityAllowingEncounter(u8 level);
 static bool8 TryGenerateWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDay, enum WildPokemonArea area, enum WildEncounterFishingRod fishingRod, u8 flags);
+static u16 GenerateFishingWildMon(u32 headerId, enum TimeOfDay timeOfDay, u8 rod, bool8 useFeebasOverride);
 static u16 GenerateFishingWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDay, u8 rod);
 static u16 GetLocalWildEncounterProfileSpecies(const struct WildEncounterProfileView *view);
 #if IS_HNS
@@ -91,11 +92,6 @@ static const u8 sWildEncounterWaterWeights[WATER_WILD_COUNT] =
 static const u8 sWildEncounterRockWeights[ROCK_WILD_COUNT] =
 {
     60, 30, 5, 4, 1,
-};
-
-static const u8 sWildEncounterFishingWeights[FISH_WILD_COUNT] =
-{
-    70, 30, 60, 20, 20, 40, 40, 15, 4, 1,
 };
 
 static u16 GetWildMonHeaderCount(void)
@@ -182,6 +178,13 @@ static bool8 IsCurrentWildEncounterRandomized(void)
 #endif
 }
 
+#if RANDOMIZER_AVAILABLE == TRUE
+static u16 RandomizeAuthoredWildEncounter(const struct WildPokemon *entry, u8 mapNum, u8 mapGroup, enum WildPokemonArea area, u8 slot)
+{
+    return RandomizeWildEncounter(entry->species, mapNum, mapGroup, area, slot);
+}
+#endif
+
 static u16 ResolveWildEncounterSpecies(u16 species, u8 projectedLevel, bool8 isWildRandomized)
 {
     // Randomized species are selected after this core resolves a slot. Applying
@@ -240,20 +243,14 @@ bool8 GetWildEncounterProfileView(const struct WildEncounterProfileContext *cont
         break;
     case WILD_AREA_FISHING:
         wildMonsInfo = gWildMonHeaders[context->headerId].encounterTypes[context->timeOfDay].fishingMonsInfo;
-        view->weights = sWildEncounterFishingWeights;
         switch (context->fishingRod)
         {
         case WILD_ENCOUNTER_FISHING_ROD_OLD:
-            view->entryStart = 0;
-            view->entryCount = 2;
-            break;
         case WILD_ENCOUNTER_FISHING_ROD_GOOD:
-            view->entryStart = 2;
-            view->entryCount = 3;
-            break;
         case WILD_ENCOUNTER_FISHING_ROD_SUPER:
-            view->entryStart = 5;
-            view->entryCount = 5;
+            view->weights = gStandardRodFishingWeights[context->fishingRod];
+            view->entryStart = 0;
+            view->entryCount = FISH_WILD_COUNT;
             break;
         default:
             return FALSE;
@@ -341,6 +338,9 @@ bool8 IsWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *
     const struct WildPokemon *entry;
 
     if (!GetWildEncounterProfileEntry(view, slot, &entry))
+        return FALSE;
+
+    if (entry->species == SPECIES_NONE)
         return FALSE;
 
     if (isWildRandomized)
@@ -1229,44 +1229,47 @@ bool8 SweetScentWildEncounter(void)
     return FALSE;
 }
 
-bool8 DoesCurrentMapHaveFishingMons(void)
+bool8 DoesCurrentMapHaveFishingMons(u8 rod)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
+    struct WildEncounterProfileContext context;
+    struct WildEncounterProfileView view;
 
     if (headerId == HEADER_NONE)
         return FALSE;
 
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_FISHING);
-    if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].fishingMonsInfo != NULL)
-        return TRUE;
-    else
+    context = (struct WildEncounterProfileContext)
+    {
+        .headerId = headerId,
+        .timeOfDay = timeOfDay,
+        .area = WILD_AREA_FISHING,
+        .fishingRod = rod,
+    };
+    if (!GetWildEncounterProfileView(&context, &view))
         return FALSE;
+    return DoesWildEncounterProfileHaveAvailableEntries(&view, GetTrainerRating(), IsCurrentWildEncounterRandomized());
 }
 
 void FishingWildEncounter(u8 rod)
 {
     u16 species;
-    u32 headerId;
-    enum TimeOfDay timeOfDay;
+    u32 headerId = HEADER_NONE;
+    enum TimeOfDay timeOfDay = TIME_OF_DAY_DEFAULT;
+    bool8 useFeebasOverride;
 
     gIsFishingEncounter = FALSE;
-    if (CheckFeebas() == TRUE)
-    {
-        u8 level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
-
-        species = sWildFeebas.species;
-        CreateWildMon(species, level);
-    }
-    else
+    useFeebasOverride = CheckFeebas();
+    if (!useFeebasOverride)
     {
         headerId = GetCurrentMapWildMonHeaderId();
         if (headerId == HEADER_NONE)
             return;
 
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_FISHING);
-        species = GenerateFishingWildMonFromProfile(headerId, timeOfDay, rod);
     }
+    species = GenerateFishingWildMon(headerId, timeOfDay, rod, useFeebasOverride);
 
     // A malformed or future all-locked profile does not create an enemy. Do
     // not advance fishing state or start an invalid SPECIES_NONE battle.
@@ -1277,6 +1280,18 @@ void FishingWildEncounter(u8 rod)
     IncrementGameStat(GAME_STAT_FISHING_ENCOUNTERS);
     SetPokemonAnglerSpecies(species);
     BattleSetup_StartWildBattle();
+}
+
+static u16 GenerateFishingWildMon(u32 headerId, enum TimeOfDay timeOfDay, u8 rod, bool8 useFeebasOverride)
+{
+    if (useFeebasOverride)
+    {
+        u8 level = ChooseWildMonLevel(&sWildFeebas, 0, WILD_AREA_FISHING);
+
+        CreateWildMon(sWildFeebas.species, level);
+        return sWildFeebas.species;
+    }
+    return GenerateFishingWildMonFromProfile(headerId, timeOfDay, rod);
 }
 
 u16 GetLocalWildMon(bool8 *isWaterMon)
@@ -1671,6 +1686,14 @@ bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProf
     return FALSE;
 }
 
+bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized)
+{
+    return view != NULL
+        && view->wildMonsInfo != NULL
+        && view->wildMonsInfo->encounterRate != 0
+        && GetWildEncounterProfileEligibleWeight(view, trainerRating, isWildRandomized) != 0;
+}
+
 static bool8 TrySelectWildEncounterProfileBaseSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u8 *slot)
 {
     u16 eligibleWeight = GetWildEncounterProfileEligibleWeight(view, trainerRating, isWildRandomized);
@@ -1772,7 +1795,7 @@ static bool8 TryGenerateWildMonFromProfile(u32 headerId, enum TimeOfDay timeOfDa
     #if RANDOMIZER_AVAILABLE == TRUE
     // The randomizer still receives the authored species and raw slot index in
     // its original position after all selection and level checks.
-    species = RandomizeWildEncounter(entry->species, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, slot);
+    species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, area, slot);
     #endif
     CreateWildMon(species, outcome.level);
     return TRUE;
@@ -1807,13 +1830,31 @@ static u16 GenerateFishingWildMonFromProfile(u32 headerId, enum TimeOfDay timeOf
 
     species = outcome.species;
     #if RANDOMIZER_AVAILABLE == TRUE
-    species = RandomizeWildEncounter(entry->species, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, slot);
+    species = RandomizeAuthoredWildEncounter(entry, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, WILD_AREA_FISHING, slot);
     #endif
 
     UpdateChainFishingStreak();
     CreateWildMon(species, outcome.level);
     return species;
 }
+
+#if TESTING
+u16 GenerateFeebasFishingWildMonForTesting(u8 rod)
+{
+    return GenerateFishingWildMon(HEADER_NONE, TIME_OF_DAY_DEFAULT, rod, TRUE);
+}
+
+#if RANDOMIZER_AVAILABLE == TRUE
+u16 RandomizeWildEncounterProfileEntryForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 mapNum, u8 mapGroup, enum WildPokemonArea area)
+{
+    const struct WildPokemon *entry;
+
+    if (!GetWildEncounterProfileEntry(view, slot, &entry))
+        return SPECIES_NONE;
+    return RandomizeAuthoredWildEncounter(entry, mapNum, mapGroup, area, slot);
+}
+#endif
+#endif
 
 static u16 GetLocalWildEncounterProfileSpecies(const struct WildEncounterProfileView *view)
 {

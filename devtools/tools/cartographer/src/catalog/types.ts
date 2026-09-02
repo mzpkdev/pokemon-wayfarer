@@ -90,10 +90,11 @@ export type CatalogEncounterProjectionProfile = {
   encounterRate: number
   authoredSlotCount: number
   runtimeSlotCount: number
+  weights?: number[]
 }
 
 export type CatalogWildEncounterProjection = {
-  schemaVersion: 1
+  schemaVersion: 2
   trainerRating: { minimum: number; maximum: number }
   authoredLevel: { minimum: number; maximum: number }
   products: Array<{ id: CatalogEncounterProduct; displayName: string }>

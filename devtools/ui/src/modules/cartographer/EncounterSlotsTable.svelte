@@ -1,6 +1,6 @@
 <script lang="ts">
   import { mapImageUrl } from "./urls.js"
-  import type { ResolvedEncounterSlot } from "./encounters.js"
+  import { rarityBandLabel, type ResolvedEncounterSlot } from "./encounters.js"
 
   type Props = {
     slots: readonly ResolvedEncounterSlot[]
@@ -68,11 +68,17 @@
                   slot.source.runtimeMaxLevel,
                 )}
               {/if}
-              · source weight {slot.source.slotRate}
+              {#if slot.fishingRod}
+                · {rarityBandLabel(slot.source)} band · profile weight {slot.rawWeight}
+              {:else}
+                · source weight {slot.rawWeight}
+              {/if}
             </p>
           </td>
           <td class="px-3 py-3 align-top">
-            {#if slot.outcomes.length === 0}
+            {#if slot.source.speciesId === "SPECIES_NONE"}
+              <span class="text-cartographer-muted">No species authored</span>
+            {:else if slot.outcomes.length === 0}
               <span class="text-cartographer-muted">Projection unavailable</span>
             {:else}
               <ul class="m-0 grid list-none gap-2 p-0">

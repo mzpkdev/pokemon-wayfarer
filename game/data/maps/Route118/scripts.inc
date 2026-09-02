@@ -31,10 +31,33 @@ Route118_EventScript_GoodRodFisherman::
 
 Route118_EventScript_ReceiveGoodRod::
 	msgbox Route118_Text_IdenticalMindsTakeThis, MSGBOX_DEFAULT
-	giveitem ITEM_GOOD_ROD
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_RECEIVED_GOOD_ROD
-	msgbox Route118_Text_TryYourLuckFishing, MSGBOX_DEFAULT
+	setvar VAR_0x8004, FLAG_RECEIVED_GOOD_ROD
+	special Script_TryAwardStandardRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, Route118_EventScript_ReceivedGoodRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, Route118_EventScript_RodUpgradeFailed
+	copyvar VAR_0x8000, VAR_0x8005
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto_if_eq VAR_0x8005, ITEM_OLD_ROD, Route118_EventScript_ReceivedOldRod
+	goto_if_eq VAR_0x8005, ITEM_GOOD_ROD, Route118_EventScript_ReceivedUpgradedGoodRod
+	msgbox Route118_Text_CompletedSuperRod, MSGBOX_DEFAULT
+	release
+	end
+
+Route118_EventScript_ReceivedOldRod::
+	msgbox Route118_Text_StartedWithOldRod, MSGBOX_DEFAULT
+	release
+	end
+
+Route118_EventScript_ReceivedUpgradedGoodRod::
+	msgbox Route118_Text_ImprovedToGoodRod, MSGBOX_DEFAULT
+	release
+	end
+
+Route118_EventScript_RodUpgradeFailed::
+	msgbox Route118_Text_RodUpgradeFailed, MSGBOX_DEFAULT
 	release
 	end
 
@@ -263,14 +286,33 @@ Route118_Text_StevenQuestions:
 
 Route118_Text_YouAgreeGoodRodIsGood:
 	.string "Hmm!\n"
-	.string "A GOOD ROD is really good!\p"
+	.string "Fishing with a well-tuned ROD is\n"
+	.string "really good!\p"
 	.string "Wouldn't you agree?$"
 
 Route118_Text_IdenticalMindsTakeThis:
 	.string "Hmm!\n"
 	.string "We're of identical minds!\p"
 	.string "Hmm!\n"
-	.string "Take this GOOD ROD!$"
+	.string "Let me help with your fishing ROD!$"
+
+Route118_Text_StartedWithOldRod:
+	.string "Start with that OLD ROD! It can catch\n"
+	.string "any POKéMON living in local waters.$"
+
+Route118_Text_ImprovedToGoodRod:
+	.string "I see you've fished before! The GOOD\n"
+	.string "ROD gets more bites and improves the\l"
+	.string "odds of uncommon catches.$"
+
+Route118_Text_CompletedSuperRod:
+	.string "Hmm! Your ROD is fully tuned! The\n"
+	.string "SUPER ROD gives rare catches and\l"
+	.string "bites their best odds.$"
+
+Route118_Text_RodUpgradeFailed:
+	.string "Hmm! Something isn't right with your\n"
+	.string "fishing gear. Come back when it's fixed.$"
 
 Route118_Text_TryYourLuckFishing:
 	.string "Wherever there's water, try your luck\n"
@@ -281,7 +323,7 @@ Route118_Text_DontYouLikeToFish:
 
 Route118_Text_TryCatchingMonWithGoodRod:
 	.string "Try catching all sorts of POKéMON\n"
-	.string "with your GOOD ROD.$"
+	.string "with your ROD.$"
 
 Route118_Text_CanCrossRiversWithSurf:
 	.string "Even if there isn't a boat, you can\n"

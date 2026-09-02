@@ -2,6 +2,7 @@
 #define GUARD_WILD_ENCOUNTER_H
 
 #include "rtc.h"
+#include "config/randomizer.h"
 #include "constants/wild_encounter.h"
 
 #define HEADER_NONE 0xFFFF
@@ -100,8 +101,8 @@ struct WildEncounterProfileContext
     enum WildEncounterFishingRod fishingRod;
 };
 
-// The active slice of an authored table. Fishing shares one ten-entry table, so
-// entryStart and entryCount retain the legacy rod partitions exactly.
+// The active slice of an authored table. Every fishing quality views the same
+// authored ten-entry prefix with a different generated weight profile.
 struct WildEncounterProfileView
 {
     const struct WildPokemonInfo *wildMonsInfo;
@@ -131,6 +132,7 @@ extern const struct WildEncounterProfileOffset gWildEncounterProfileOffsets[];
 extern const u16 gWildEncounterProfileOffsetCount;
 extern const struct WildEncounterSpeciesMetadata gWildEncounterSpeciesMetadata[];
 extern const u16 gWildEncounterSpeciesMetadataCount;
+extern const u8 gStandardRodFishingWeights[WILD_ENCOUNTER_FISHING_ROD_NONE][FISH_WILD_COUNT];
 extern bool8 gIsFishingEncounter;
 extern bool8 gIsSurfingEncounter;
 extern u8 gChainFishingDexNavStreak;
@@ -138,7 +140,7 @@ extern u8 gChainFishingDexNavStreak;
 void DisableWildEncounters(bool8 disabled);
 bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior);
 bool8 SweetScentWildEncounter(void);
-bool8 DoesCurrentMapHaveFishingMons(void);
+bool8 DoesCurrentMapHaveFishingMons(u8 rod);
 void FishingWildEncounter(u8 rod);
 u16 GetLocalWildMon(bool8 *isWaterMon);
 u16 GetLocalWaterMon(void);
@@ -178,10 +180,18 @@ bool8 SelectWildEncounterProfileTypeSlot(const struct WildEncounterProfileView *
 // this deterministic helper in the core ensures filtered profiles cannot map
 // an otherwise valid selection back onto a locked authored slot.
 bool8 GetWildEncounterProfileMirroredEligibleSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u8 slot, u8 *mirroredSlot);
+bool8 DoesWildEncounterProfileHaveAvailableEntries(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized);
 bool8 IsCurrentWildEncounterProfileSlotEligible(const struct WildEncounterProfileView *view, u8 slot);
 u16 GetCurrentWildEncounterProfileEligibleWeight(const struct WildEncounterProfileView *view);
 u16 GetCurrentWildEncounterProfileEffectiveWeight(const struct WildEncounterProfileView *view, u8 slot);
 bool8 SelectCurrentWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 roll, u8 *slot);
+
+#if TESTING
+u16 GenerateFeebasFishingWildMonForTesting(u8 rod);
+#if RANDOMIZER_AVAILABLE == TRUE
+u16 RandomizeWildEncounterProfileEntryForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 mapNum, u8 mapGroup, enum WildPokemonArea area);
+#endif
+#endif
 
 // Live ordinary encounters apply their legacy lure, ability, and HNS Hoenn
 // Sound semantics over these eligible populations. The pure helpers keep

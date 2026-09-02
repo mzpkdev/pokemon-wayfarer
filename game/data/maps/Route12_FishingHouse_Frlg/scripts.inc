@@ -12,18 +12,35 @@ Route12_FishingHouse_EventScript_FishingGuruBrother::
 	end
 
 Route12_FishingHouse_EventScript_GiveSuperRod::
-	checkitemspace ITEM_SUPER_ROD
-	goto_if_eq VAR_RESULT, FALSE, Route12_FishingHouse_EventScript_NoRoomForSuperRod
-	additem ITEM_SUPER_ROD
 	msgbox Route12_FishingHouse_Text_TakeThisAndFish
-	msgreceiveditem Route12_FishingHouse_Text_ReceivedSuperRod, ITEM_SUPER_ROD
-	setflag FLAG_GOT_SUPER_ROD
+	setvar VAR_0x8004, FLAG_GOT_SUPER_ROD
+	special Script_TryAwardStandardRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, Route12_FishingHouse_EventScript_CheckMagikarpRecord
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, Route12_FishingHouse_EventScript_RodUpgradeFailed
+	copyvar VAR_0x8000, VAR_0x8005
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto_if_eq VAR_0x8005, ITEM_OLD_ROD, Route12_FishingHouse_EventScript_ReceivedOldRod
+	goto_if_eq VAR_0x8005, ITEM_GOOD_ROD, Route12_FishingHouse_EventScript_ReceivedGoodRod
+	msgbox Route12_FishingHouse_Text_CompletedSuperRod
+	goto Route12_FishingHouse_EventScript_ExplainMagikarpActivity
+
+Route12_FishingHouse_EventScript_ReceivedOldRod::
+	msgbox Route12_FishingHouse_Text_StartedWithOldRod
+	goto Route12_FishingHouse_EventScript_ExplainMagikarpActivity
+
+Route12_FishingHouse_EventScript_ReceivedGoodRod::
+	msgbox Route12_FishingHouse_Text_ImprovedToGoodRod
+
+Route12_FishingHouse_EventScript_ExplainMagikarpActivity::
 	msgbox Route12_FishingHouse_Text_IfYouCatchBigMagikarpShowMe
 	release
 	end
 
-Route12_FishingHouse_EventScript_NoRoomForSuperRod::
-	msgbox Route12_FishingHouse_Text_NoRoomForGift
+Route12_FishingHouse_EventScript_RodUpgradeFailed::
+	msgbox Route12_FishingHouse_Text_RodUpgradeFailed
 	release
 	end
 
@@ -110,9 +127,23 @@ Route12_FishingHouse_Text_TakeThisAndFish::
 	.string "I think we can be friends.\p"
 	.string "Take this and fish, young friend!$"
 
-Route12_FishingHouse_Text_ReceivedSuperRod::
-	.string "{PLAYER} received a SUPER ROD from\n"
-	.string "the FISHING GURU's brother.$"
+Route12_FishingHouse_Text_StartedWithOldRod::
+	.string "You're an angler now! That OLD ROD can\n"
+	.string "catch any POKéMON living in the local\l"
+	.string "waters.$"
+
+Route12_FishingHouse_Text_ImprovedToGoodRod::
+	.string "I knew you were an angler! Your GOOD\n"
+	.string "ROD gets more bites and gives uncommon\l"
+	.string "catches better odds.$"
+
+Route12_FishingHouse_Text_CompletedSuperRod::
+	.string "A devoted angler! Your SUPER ROD gives\n"
+	.string "rare catches and bites their best odds.$"
+
+Route12_FishingHouse_Text_RodUpgradeFailed::
+	.string "Something isn't right with your fishing\n"
+	.string "gear. Come back once it's sorted out.$"
 
 Route12_FishingHouse_Text_IfYouCatchBigMagikarpShowMe::
 	.string "Fishing is a way of life!\n"
@@ -132,7 +163,7 @@ Route12_FishingHouse_Text_OhThatsDisappointing::
 Route12_FishingHouse_Text_TryFishingBringMeMagikarp::
 	.string "Hello there, {PLAYER}!\n"
 	.string "Have you been fishing?\p"
-	.string "Try fishing with the SUPER ROD in\n"
+	.string "Try fishing with your ROD in\n"
 	.string "any body of water.\p"
 	.string "You'll find different POKéMON in\n"
 	.string "different places.\p"
@@ -186,4 +217,3 @@ Route12_FishingHouse_Text_BlankChartOfSomeSort::
 	.string "It's a blank chart of some sort.\p"
 	.string "It has spaces for writing in\n"
 	.string "records of some kind.$"
-

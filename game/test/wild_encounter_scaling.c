@@ -1,4 +1,5 @@
 #include "global.h"
+#include "randomizer.h"
 #include "test/test.h"
 #include "wild_encounter.h"
 
@@ -15,6 +16,39 @@ static const struct WildPokemonInfo sSelectionInfo =
 };
 
 static const u8 sSelectionWeights[] = { 70, 30 };
+
+static const struct WildPokemon sFishingSelectionMons[FISH_WILD_COUNT] =
+{
+    { 10, 10, SPECIES_MAGIKARP }, { 10, 10, SPECIES_MAGIKARP },
+    { 10, 10, SPECIES_MAGIKARP }, { 10, 10, SPECIES_MAGIKARP },
+    { 10, 10, SPECIES_MAGIKARP }, { 10, 10, SPECIES_MAGIKARP },
+    { 10, 10, SPECIES_MAGIKARP }, { 10, 10, SPECIES_MAGIKARP },
+    { 10, 10, SPECIES_MAGIKARP }, { 10, 10, SPECIES_MAGIKARP },
+};
+
+static const struct WildPokemonInfo sFishingSelectionInfo =
+{
+    .encounterRate = 1,
+    .wildPokemon = sFishingSelectionMons,
+};
+
+static const struct WildPokemon sEmptySelectionMons[] =
+{
+    { 10, 10, SPECIES_NONE },
+    { 10, 10, SPECIES_MAGIKARP },
+};
+
+static const struct WildPokemonInfo sEmptySelectionInfo =
+{
+    .encounterRate = 1,
+    .wildPokemon = sEmptySelectionMons,
+};
+
+static const struct WildPokemonInfo sZeroRateSelectionInfo =
+{
+    .encounterRate = 0,
+    .wildPokemon = sEmptySelectionMons,
+};
 
 static const struct WildPokemon sFloorMons[] =
 {
@@ -134,11 +168,19 @@ TEST("Wild encounter scaling follows anchors, high-water marks, and bounds")
     EXPECT_EQ(ProjectWildEncounterLevelWithOffset(90, 80, 20), MAX_LEVEL);
 }
 
-TEST("Wild encounter scaling keeps profile slices and fishing rod partitions exact")
+TEST("Standard Rod: every fishing quality uses the generated ten-slot profile")
 {
+    static const u8 expected[][FISH_WILD_COUNT] =
+    {
+        [WILD_ENCOUNTER_FISHING_ROD_OLD] = { 38, 22, 10, 8, 8, 4, 3, 3, 2, 2 },
+        [WILD_ENCOUNTER_FISHING_ROD_GOOD] = { 25, 18, 12, 10, 9, 7, 6, 5, 4, 4 },
+        [WILD_ENCOUNTER_FISHING_ROD_SUPER] = { 12, 10, 11, 10, 10, 10, 10, 9, 9, 9 },
+    };
     struct WildEncounterProfileView view;
     const struct WildPokemon *entry;
     u8 mirroredSlot;
+    u8 rod;
+    u8 slot;
 
     ASSUME(FindFirstProfile(WILD_AREA_LAND, WILD_ENCOUNTER_FISHING_ROD_NONE, &view));
     EXPECT_EQ(view.entryStart, 0);
@@ -157,30 +199,44 @@ TEST("Wild encounter scaling keeps profile slices and fishing rod partitions exa
     EXPECT_EQ(view.entryCount, ROCK_WILD_COUNT);
     EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 0, FALSE), 100);
 
-    ASSUME(FindFirstProfile(WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_OLD, &view));
-    EXPECT_EQ(view.entryStart, 0);
-    EXPECT_EQ(view.entryCount, 2);
-    EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 0, FALSE), 100);
-    EXPECT(!GetWildEncounterProfileEntry(&view, 2, &entry));
-    EXPECT(GetWildEncounterProfileMirroredEligibleSlot(&view, 0, FALSE, 0, &mirroredSlot));
-    EXPECT_EQ(mirroredSlot, 1);
+    for (rod = WILD_ENCOUNTER_FISHING_ROD_OLD; rod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; rod++)
+    {
+        ASSUME(FindFirstProfile(WILD_AREA_FISHING, rod, &view));
+        EXPECT_EQ(view.entryStart, 0);
+        EXPECT_EQ(view.entryCount, FISH_WILD_COUNT);
+        for (slot = 0; slot < FISH_WILD_COUNT; slot++)
+            EXPECT_EQ(view.weights[slot], expected[rod][slot]);
+        EXPECT(GetWildEncounterProfileEntry(&view, 9, &entry));
+        EXPECT(!GetWildEncounterProfileEntry(&view, 10, &entry));
+        EXPECT(GetWildEncounterProfileMirroredEligibleSlot(&view, 80, FALSE, 0, &mirroredSlot));
+        EXPECT_EQ(mirroredSlot, 9);
+    }
+}
 
-    ASSUME(FindFirstProfile(WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_GOOD, &view));
-    EXPECT_EQ(view.entryStart, 2);
-    EXPECT_EQ(view.entryCount, 3);
-    EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 0, FALSE), 100);
-    EXPECT(!GetWildEncounterProfileEntry(&view, 1, &entry));
-    EXPECT(!GetWildEncounterProfileEntry(&view, 5, &entry));
-    EXPECT(GetWildEncounterProfileMirroredEligibleSlot(&view, 0, FALSE, 2, &mirroredSlot));
-    EXPECT_EQ(mirroredSlot, 4);
+TEST("Standard Rod weighted selection covers every exact boundary")
+{
+    struct WildEncounterProfileView view = MakeTestProfile(&sFishingSelectionInfo, NULL, FISH_WILD_COUNT);
+    u8 rod;
+    u8 slot;
+    u8 candidate;
+    u16 boundary;
 
-    ASSUME(FindFirstProfile(WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_SUPER, &view));
-    EXPECT_EQ(view.entryStart, 5);
-    EXPECT_EQ(view.entryCount, 5);
-    EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 0, FALSE), 100);
-    EXPECT(!GetWildEncounterProfileEntry(&view, 4, &entry));
-    EXPECT(GetWildEncounterProfileMirroredEligibleSlot(&view, 0, FALSE, 5, &mirroredSlot));
-    EXPECT_EQ(mirroredSlot, 9);
+    for (rod = WILD_ENCOUNTER_FISHING_ROD_OLD; rod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; rod++)
+    {
+        view.weights = gStandardRodFishingWeights[rod];
+        EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 80, FALSE), 100);
+        boundary = 0;
+        for (candidate = 0; candidate < FISH_WILD_COUNT; candidate++)
+        {
+            EXPECT(SelectWildEncounterProfileSlot(&view, 80, FALSE, boundary, &slot));
+            EXPECT_EQ(slot, candidate);
+            boundary += view.weights[candidate];
+            EXPECT(SelectWildEncounterProfileSlot(&view, 80, FALSE, boundary - 1, &slot));
+            EXPECT_EQ(slot, candidate);
+        }
+        EXPECT_EQ(boundary, 100);
+        EXPECT(!SelectWildEncounterProfileSlot(&view, 80, FALSE, boundary, &slot));
+    }
 }
 
 TEST("Wild encounter scaling rejects unsupported or malformed profile contexts")
@@ -283,7 +339,7 @@ TEST("Wild encounter scaling applies floor and evolution policy before selection
     EXPECT_EQ(mirroredSlot, 1);
 }
 
-TEST("Wild encounter scaling treats all-locked profiles as no encounter")
+TEST("Standard Rod: all-locked profiles produce no encounter")
 {
     struct WildEncounterProfileView view = MakeTestProfile(&sFloorInfo, sFloorWeights, 1);
     u8 slot;
@@ -293,6 +349,83 @@ TEST("Wild encounter scaling treats all-locked profiles as no encounter")
     EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 0, FALSE), 0);
     EXPECT(!SelectWildEncounterProfileSlot(&view, 0, FALSE, 0, &slot));
 }
+
+TEST("Standard Rod: fishing excludes empty slots even when randomized")
+{
+    static const u8 weights[] = { 70, 30 };
+    struct WildEncounterProfileView view = MakeTestProfile(&sEmptySelectionInfo, weights, ARRAY_COUNT(sEmptySelectionMons));
+    u8 slot;
+
+    EXPECT(!IsWildEncounterProfileSlotEligible(&view, 0, 80, FALSE));
+    EXPECT(!IsWildEncounterProfileSlotEligible(&view, 0, 80, TRUE));
+    EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, 80, TRUE), 30);
+    EXPECT(SelectWildEncounterProfileSlot(&view, 80, TRUE, 0, &slot));
+    EXPECT_EQ(slot, 1);
+    EXPECT(!GetWildEncounterProfileMirroredEligibleSlot(&view, 80, TRUE, 0, &slot));
+    EXPECT(GetWildEncounterProfileMirroredEligibleSlot(&view, 80, TRUE, 1, &slot));
+    EXPECT_EQ(slot, 1);
+}
+
+TEST("Standard Rod: fishing availability rejects zero rates and zero eligible data")
+{
+    static const u8 weights[] = { 70, 30 };
+    struct WildEncounterProfileView view = MakeTestProfile(&sEmptySelectionInfo, weights, ARRAY_COUNT(sEmptySelectionMons));
+
+    EXPECT(DoesWildEncounterProfileHaveAvailableEntries(&view, 80, FALSE));
+    EXPECT(DoesWildEncounterProfileHaveAvailableEntries(&view, 80, TRUE));
+
+    view.wildMonsInfo = &sZeroRateSelectionInfo;
+    EXPECT(!DoesWildEncounterProfileHaveAvailableEntries(&view, 80, FALSE));
+
+    view.wildMonsInfo = &sEmptySelectionInfo;
+    view.entryCount = 1;
+    EXPECT(!DoesWildEncounterProfileHaveAvailableEntries(&view, 80, FALSE));
+    EXPECT(!DoesWildEncounterProfileHaveAvailableEntries(&view, 80, TRUE));
+
+    view.wildMonsInfo = NULL;
+    EXPECT(!DoesWildEncounterProfileHaveAvailableEntries(&view, 80, FALSE));
+    EXPECT(!DoesWildEncounterProfileHaveAvailableEntries(NULL, 80, FALSE));
+}
+
+TEST("Standard Rod: Route 119 Feebas override stays ahead of every rod profile")
+{
+    u8 rod;
+
+    for (rod = WILD_ENCOUNTER_FISHING_ROD_OLD; rod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; rod++)
+        EXPECT_EQ(GenerateFeebasFishingWildMonForTesting(rod), SPECIES_FEEBAS);
+}
+
+#if RANDOMIZER_AVAILABLE == TRUE
+TEST("Standard Rod: fishing randomizer receives the authored species and raw slot")
+{
+    struct WildEncounterProfileView view = MakeTestProfile(&sUnderThresholdEvolutionInfo, sUnderThresholdEvolutionWeights, ARRAY_COUNT(sUnderThresholdEvolutionMons));
+    u16 randomizedAuthored;
+    u16 randomizedEffective;
+    u16 actual;
+    u16 mapNum;
+    bool8 foundDistinctMapping = FALSE;
+
+    gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon = TRUE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_MapBased = TRUE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Chaos = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Similar = FALSE;
+    gSaveBlock3Ptr->challengeSettings.tx_Random_IncludeLegendaries = FALSE;
+
+    for (mapNum = 0; mapNum <= 255; mapNum++)
+    {
+        randomizedAuthored = RandomizeWildEncounter(SPECIES_GYARADOS, mapNum, 42, WILD_AREA_FISHING, 0);
+        randomizedEffective = RandomizeWildEncounter(SPECIES_MAGIKARP, mapNum, 42, WILD_AREA_FISHING, 0);
+        if (randomizedAuthored == randomizedEffective)
+            continue;
+        actual = RandomizeWildEncounterProfileEntryForTesting(&view, 0, mapNum, 42, WILD_AREA_FISHING);
+        EXPECT_EQ(actual, randomizedAuthored);
+        EXPECT_NE(actual, randomizedEffective);
+        foundDistinctMapping = TRUE;
+        break;
+    }
+    EXPECT(foundDistinctMapping);
+}
+#endif
 
 TEST("Wild encounter scaling applies type attraction over eligible slots")
 {

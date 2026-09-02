@@ -226,6 +226,8 @@ void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
 void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
 u16 CountTotalItemQuantityInBag(enum Item itemId);
+u32 TryAwardStandardRod(u16 contributorFlag, enum Item *awardedItem);
+void Script_TryAwardStandardRod(void);
 bool32 AddPyramidBagItem(enum Item itemId, u16 count);
 bool32 RemovePyramidBagItem(enum Item itemId, u16 count);
 const u8 *GetItemName(enum Item itemId);

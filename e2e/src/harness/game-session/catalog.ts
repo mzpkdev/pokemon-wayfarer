@@ -16,13 +16,19 @@ export const maps = {
   "players-house-1f": { mapGroup: 1, mapNum: 3 },
   "players-bedroom": { mapGroup: 1, mapNum: 4 },
   "cherrygrove-pokemon-center": { mapGroup: 2, mapNum: 0 },
+  "olivine-house-3": { mapGroup: 7, mapNum: 6 },
   "blackthorn-move-deleter": { mapGroup: 10, mapNum: 5 },
+  "vermilion-port-inside": { mapGroup: 15, mapNum: 3 },
+  "route-32-pokemon-center": { mapGroup: 22, mapNum: 27 },
+  "route-12-house": { mapGroup: 23, mapNum: 25 },
+  "ss-aqua-1f": { mapGroup: 30, mapNum: 8 },
   "test-map-1": { mapGroup: 30, mapNum: 27 },
 } as const
 
 export const storyVars = {
   newBarkTownLabState: 0x4074,
   newBarkTownState: 0x4075,
+  ssAquaState: 0x408b,
 } as const
 
 export const storyFlags = {
@@ -30,6 +36,9 @@ export const storyFlags = {
   hideElmLabAide: 0x04b,
   adventureStarted: 0x1d4,
   momVisited: 0x265,
+  standardRodRoute32Contributed: 0x304,
+  standardRodOlivineContributed: 0x305,
+  standardRodRoute12Contributed: 0x306,
   badge1: 0x880,
   badge2: 0x881,
   badge3: 0x882,
@@ -89,6 +98,9 @@ export const hms = {
 
 export const items = {
   masterBall: 4,
+  oldRod: 709,
+  goodRod: 710,
+  superRod: 711,
 } as const
 
 export const partyMenuActions = {

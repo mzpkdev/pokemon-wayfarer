@@ -4,6 +4,7 @@
 #include "fieldmap.h"
 #include "field_effect_helpers.h"
 #include "field_player_avatar.h"
+#include "fishing.h"
 #include "menu.h"
 #include "metatile_behavior.h"
 #include "random.h"
@@ -260,7 +261,7 @@ static bool32 Fishing_CheckForBite(struct Task *task)
     task->tStep = FISHING_GOT_BITE;
     bite = FALSE;
 
-    if (!DoesCurrentMapHaveFishingMons())
+    if (!DoesCurrentMapHaveFishingMons(task->tFishingRod))
     {
         task->tStep = FISHING_NOT_EVEN_NIBBLE;
         return TRUE;
@@ -506,7 +507,18 @@ static bool32 Fishing_RollForBite(u32 rod, bool32 isStickyHold)
 
 static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
 {
-    u32 odds;
+    u32 followerBoost = CalculateFishingFollowerBoost();
+    u32 proximityBoost = CalculateFishingProximityBoost();
+    u32 timeOfDayBoost = CalculateFishingTimeOfDayBoost();
+    u32 odds = CalculateFishingBiteOddsWithBonuses(rod, isStickyHold, followerBoost, proximityBoost, timeOfDayBoost);
+
+    DebugPrintf("Fishing odds: %d", odds);
+    return odds;
+}
+
+u32 CalculateFishingBiteOddsWithBonuses(u32 rod, bool32 isStickyHold, u32 followerBoost, u32 proximityBoost, u32 timeOfDayBoost)
+{
+    u32 odds = 0;
 
     if (rod == OLD_ROD)
         odds = FISHING_OLD_ROD_ODDS;
@@ -515,15 +527,14 @@ static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
     if (rod == SUPER_ROD)
         odds = FISHING_SUPER_ROD_ODDS;
 
-    odds += CalculateFishingFollowerBoost();
-    odds += CalculateFishingProximityBoost();
-    odds += CalculateFishingTimeOfDayBoost();
+    odds += followerBoost;
+    odds += proximityBoost;
+    odds += timeOfDayBoost;
 
     if (isStickyHold && I_FISHING_STICKY_BOOST >= GEN_4)
         odds *= 2;
 
     odds = min(100, odds);
-    DebugPrintf("Fishing odds: %d", odds);
     return odds;
 }
 

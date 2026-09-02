@@ -93,6 +93,7 @@ const boundedRange = (
 
 const profile = (value: unknown, path: string): CatalogEncounterProjectionProfile => {
   const item = record(value, path)
+  const method = member(item.method, methods, `${path}/method`)
   exactKeys(
     item,
     [
@@ -111,12 +112,12 @@ const profile = (value: unknown, path: string): CatalogEncounterProjectionProfil
       "encounterRate",
       "authoredSlotCount",
       "runtimeSlotCount",
+      ...(method === "fishing_mons" ? ["weights"] : []),
     ],
     path,
   )
   const product = member(item.product, products, `${path}/product`)
   const baseLabel = string(item.baseLabel, `${path}/baseLabel`)
-  const method = member(item.method, methods, `${path}/method`)
   const fishingRod = member(item.fishingRod, rods, `${path}/fishingRod`)
   const profileKey = string(item.profileKey, `${path}/profileKey`)
   if (profileKey !== `${product}/${baseLabel}/${method}/${fishingRod}`) {
@@ -133,6 +134,18 @@ const profile = (value: unknown, path: string): CatalogEncounterProjectionProfil
   if (runtimeFishingRod !== runtimeRodForRod[fishingRod]) {
     fail(`${path}/runtimeFishingRod`, `does not match ${fishingRod}`)
   }
+  const runtimeSlotCount = integer(item.runtimeSlotCount, `${path}/runtimeSlotCount`, 0, 255)
+  let weights: number[] | undefined
+  if (method === "fishing_mons") {
+    if (runtimeSlotCount !== 10) fail(`${path}/runtimeSlotCount`, "expected 10 for fishing")
+    weights = array(item.weights, `${path}/weights`).map((value, index) =>
+      integer(value, `${path}/weights/${index}`, 1, 255),
+    )
+    if (weights.length !== 10) fail(`${path}/weights`, "expected exactly 10 weights")
+    if (weights.reduce((sum, weight) => sum + weight, 0) !== 100) {
+      fail(`${path}/weights`, "expected weights to total 100")
+    }
+  }
   return {
     profileKey,
     product,
@@ -148,7 +161,8 @@ const profile = (value: unknown, path: string): CatalogEncounterProjectionProfil
     levelOffset: integer(item.levelOffset, `${path}/levelOffset`, -5, 5),
     encounterRate: integer(item.encounterRate, `${path}/encounterRate`, 0, 255),
     authoredSlotCount: integer(item.authoredSlotCount, `${path}/authoredSlotCount`, 1, 255),
-    runtimeSlotCount: integer(item.runtimeSlotCount, `${path}/runtimeSlotCount`, 0, 255),
+    runtimeSlotCount,
+    ...(weights ? { weights } : {}),
   }
 }
 
@@ -178,7 +192,7 @@ export const readWildEncounterProjection = (
     ],
     filePath,
   )
-  if (root.schemaVersion !== 1) fail(`${filePath}/schemaVersion`, "expected 1")
+  if (root.schemaVersion !== 2) fail(`${filePath}/schemaVersion`, "expected 2")
   const trainerRating = boundedRange(root.trainerRating, `${filePath}/trainerRating`, 10, 80)
   const authoredLevel = boundedRange(root.authoredLevel, `${filePath}/authoredLevel`, 1, 100)
 
@@ -347,7 +361,7 @@ export const readWildEncounterProjection = (
   }
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     trainerRating,
     authoredLevel,
     products: productRows,
