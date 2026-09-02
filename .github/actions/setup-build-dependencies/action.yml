@@ -1,0 +1,169 @@
+name: Set up build dependencies
+description: Install cached APT build dependencies for ROM and E2E jobs.
+
+inputs:
+  package-set:
+    description: Dependency set to install (base or e2e).
+    required: true
+
+outputs:
+  cache-hit:
+    description: Whether the exact APT archive cache was restored.
+    value: ${{ steps.apt-cache.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve APT download plan
+      id: resolve
+      shell: bash
+      env:
+        PACKAGE_SET: ${{ inputs.package-set }}
+      run: |
+        set -euo pipefail
+        export LANG=C
+
+        base_packages=(
+          binutils-arm-none-eabi
+          build-essential
+          gcc-arm-none-eabi
+          libnewlib-arm-none-eabi
+          libpng-dev
+          pkg-config
+          python3
+        )
+        case "$PACKAGE_SET" in
+          base)
+            packages=("${base_packages[@]}")
+            ;;
+          e2e)
+            packages=(
+              "${base_packages[@]}"
+              libopengl0
+              xvfb
+            )
+            ;;
+          *)
+            printf 'Unknown package set: %s\n' "$PACKAGE_SET" >&2
+            exit 1
+            ;;
+        esac
+
+        apt_options=(
+          -o Acquire::Retries=3
+          -o Acquire::http::Timeout=30
+          -o Acquire::https::Timeout=30
+        )
+        sudo apt-get "${apt_options[@]}" update
+
+        archive_directory="/tmp/pokemon-wayfarer-apt-archives/$PACKAGE_SET"
+        package_list="$RUNNER_TEMP/build-dependencies-$PACKAGE_SET.txt"
+        download_plan="$RUNNER_TEMP/apt-download-plan-$PACKAGE_SET.txt"
+        printf '%s\n' "${packages[@]}" > "$package_list"
+
+        {
+          printf 'package=%s\n' "${packages[@]}"
+          apt-get "${apt_options[@]}" \
+            --print-uris \
+            --yes \
+            --download-only \
+            --no-install-recommends \
+            install "${packages[@]}" \
+            | sed -n "/^'/p"
+        } > "$download_plan"
+
+        # shellcheck source=/etc/os-release
+        . /etc/os-release
+        package_fingerprint="$(sha256sum "$download_plan" | cut -d ' ' -f 1)"
+        {
+          printf 'archive-directory=%s\n' "$archive_directory"
+          printf 'package-list=%s\n' "$package_list"
+          printf 'package-fingerprint=%s\n' "$package_fingerprint"
+          printf 'ubuntu-release=%s-%s\n' "$ID" "$VERSION_ID"
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Restore APT archives
+      id: apt-cache
+      uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      with:
+        path: ${{ steps.resolve.outputs.archive-directory }}
+        key: >-
+          apt-archives-v1-${{ runner.os }}-${{ runner.arch }}-${{ steps.resolve.outputs.ubuntu-release }}-${{ inputs.package-set }}-${{ steps.resolve.outputs.package-fingerprint }}
+
+    - name: Prepare APT archive permissions
+      shell: bash
+      env:
+        ARCHIVE_DIRECTORY: ${{ steps.resolve.outputs.archive-directory }}
+      run: |
+        set -euo pipefail
+        sudo install -d -m 1777 "$ARCHIVE_DIRECTORY" "$ARCHIVE_DIRECTORY/partial"
+        sudo chown _apt "$ARCHIVE_DIRECTORY/partial"
+        sudo chmod 0700 "$ARCHIVE_DIRECTORY/partial"
+
+    - name: Download APT archives on cache miss
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        ARCHIVE_DIRECTORY: ${{ steps.resolve.outputs.archive-directory }}
+        PACKAGE_LIST: ${{ steps.resolve.outputs.package-list }}
+      run: |
+        set -euo pipefail
+        mapfile -t packages < "$PACKAGE_LIST"
+        apt_options=(
+          -o Acquire::Retries=3
+          -o Acquire::http::Timeout=30
+          -o Acquire::https::Timeout=30
+          -o APT::Keep-Downloaded-Packages=true
+          -o "Dir::Cache::archives=$ARCHIVE_DIRECTORY"
+        )
+
+        for attempt in 1 2; do
+          if sudo apt-get "${apt_options[@]}" \
+            --yes \
+            --download-only \
+            --no-install-recommends \
+            install "${packages[@]}"; then
+            break
+          fi
+          if (( attempt == 2 )); then
+            exit 1
+          fi
+          printf '::warning::APT download failed; retrying once in 10 seconds.\n'
+          sleep 10
+        done
+
+    - name: Prepare APT archives for caching
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        ARCHIVE_DIRECTORY: ${{ steps.resolve.outputs.archive-directory }}
+      run: |
+        set -euo pipefail
+        sudo chmod -R a+rX "$ARCHIVE_DIRECTORY"
+
+    - name: Save APT archives
+      if: steps.apt-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+      with:
+        path: ${{ steps.resolve.outputs.archive-directory }}
+        key: ${{ steps.apt-cache.outputs.cache-primary-key }}
+
+    - name: Install build dependencies
+      shell: bash
+      env:
+        ARCHIVE_DIRECTORY: ${{ steps.resolve.outputs.archive-directory }}
+        PACKAGE_LIST: ${{ steps.resolve.outputs.package-list }}
+      run: |
+        set -euo pipefail
+        mapfile -t packages < "$PACKAGE_LIST"
+        apt_options=(
+          -o Acquire::Retries=3
+          -o Acquire::http::Timeout=30
+          -o Acquire::https::Timeout=30
+          -o APT::Keep-Downloaded-Packages=true
+          -o "Dir::Cache::archives=$ARCHIVE_DIRECTORY"
+        )
+        sudo apt-get "${apt_options[@]}" \
+          --yes \
+          --no-install-recommends \
+          install "${packages[@]}"
