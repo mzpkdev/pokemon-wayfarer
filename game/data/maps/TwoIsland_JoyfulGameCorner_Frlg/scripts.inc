@@ -7,7 +7,20 @@ TwoIsland_JoyfulGameCorner_Frlg_MapScripts::
 
 TwoIsland_JoyfulGameCorner_OnTransition::
 	call_if_set FLAG_GOT_MOON_STONE_FROM_JOYFUL_GAME_CORNER, TwoIsland_JoyfulGameCorner_EventScript_SetLostelleReturnedPos
+	call_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 0, TwoIsland_JoyfulGameCorner_EventScript_DeferLostelleSceneIfEarly
+	call_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 5, TwoIsland_JoyfulGameCorner_EventScript_RestoreDeferredLostelleScene
 	end
+
+TwoIsland_JoyfulGameCorner_EventScript_DeferLostelleSceneIfEarly::
+	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 1, TwoIsland_JoyfulGameCorner_EventScript_EndDeferredLostelleCheck
+	setvar VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 5
+TwoIsland_JoyfulGameCorner_EventScript_EndDeferredLostelleCheck::
+	return
+
+TwoIsland_JoyfulGameCorner_EventScript_RestoreDeferredLostelleScene::
+	goto_if_lt VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 1, TwoIsland_JoyfulGameCorner_EventScript_EndDeferredLostelleCheck
+	setvar VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 0
+	return
 
 TwoIsland_JoyfulGameCorner_EventScript_SetLostelleReturnedPos::
 	setobjectxyperm LOCALID_JOYFUL_GAME_CORNER_DADDY, 6, 2
@@ -124,9 +137,15 @@ TwoIsland_JoyfulGameCorner_Movement_BikerLookAround::
 TwoIsland_JoyfulGameCorner_EventScript_InfoMan::
 	lock
 	faceplayer
+	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 5, TwoIsland_JoyfulGameCorner_EventScript_InfoManEarlyTravel
 	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 4, JoyfulGameCorner_EventScript_InfoMan2_Frlg
 	goto_if_set FLAG_RESCUED_LOSTELLE, TwoIsland_JoyfulGameCorner_EventScript_GetGamesGoingSoon
 	msgbox TwoIsland_JoyfulGameCorner_Text_NotRunningAnyGamesToday
+	release
+	end
+
+TwoIsland_JoyfulGameCorner_EventScript_InfoManEarlyTravel::
+	msgbox TwoIsland_JoyfulGameCorner_Text_GamesNotOpenYet
 	release
 	end
 
@@ -139,10 +158,16 @@ TwoIsland_JoyfulGameCorner_EventScript_GetGamesGoingSoon::
 TwoIsland_JoyfulGameCorner_EventScript_LostellesDaddy::
 	lock
 	faceplayer
+	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 5, TwoIsland_JoyfulGameCorner_EventScript_DaddyEarlyTravel
 	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 4, JoyfulGameCorner_EventScript_MinigameAttendant_Frlg
 	goto_if_set FLAG_GOT_MOON_STONE_FROM_JOYFUL_GAME_CORNER, TwoIsland_JoyfulGameCorner_EventScript_GetGameCornerRunning
 	goto_if_eq VAR_MAP_SCENE_TWO_ISLAND_JOYFUL_GAME_CORNER, 3, TwoIsland_JoyfulGameCorner_EventScript_GiveDaddyMeteorite
 	msgbox TwoIsland_JoyfulGameCorner_Text_PleaseGoToThreeIsland
+	release
+	end
+
+TwoIsland_JoyfulGameCorner_EventScript_DaddyEarlyTravel::
+	msgbox TwoIsland_JoyfulGameCorner_Text_DaddyEarlyTravel
 	release
 	end
 
@@ -249,6 +274,15 @@ TwoIsland_JoyfulGameCorner_Text_NotRunningAnyGamesToday::
 	.string "I'm sorry.\n"
 	.string "We're not running any games today.$"
 
+TwoIsland_JoyfulGameCorner_Text_GamesNotOpenYet::
+	.string "The games aren't open yet.\n"
+	.string "Please come back another time.$"
+
+TwoIsland_JoyfulGameCorner_Text_DaddyEarlyTravel::
+	.string "Welcome to TWO ISLAND!\p"
+	.string "I'm getting the GAME CORNER ready,\n"
+	.string "so there's nothing to play just yet.$"
+
 TwoIsland_JoyfulGameCorner_Text_GetGamesGoingSoon::
 	.string "We'll get the games going soon\n"
 	.string "for you!$"
@@ -300,4 +334,3 @@ TwoIsland_JoyfulGameCorner_Text_PleaseShowMeYouBeingCool::
 	.string "Listen, listen!\p"
 	.string "Please show me you being cool\n"
 	.string "again!$"
-

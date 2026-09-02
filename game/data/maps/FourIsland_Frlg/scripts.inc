@@ -5,12 +5,36 @@ FourIsland_Frlg_MapScripts::
 
 FourIsland_OnTransition::
 	setworldmapflag FLAG_WORLD_MAP_FOUR_ISLAND
-	call_if_eq VAR_MAP_SCENE_FOUR_ISLAND, 0, FourIsland_EventScript_ShowRival
+	call FourIsland_EventScript_ArbitrateRivalScene
 	call FourIsland_EventScript_TrySetDayCareManPos
 	end
 
+FourIsland_EventScript_ArbitrateRivalScene::
+	goto_if_eq VAR_MAP_SCENE_FOUR_ISLAND, 1, FourIsland_EventScript_SynchronizeCompletedRivalScene
+	goto_if_lt VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, FourIsland_EventScript_DeferRivalScene
+	goto_if_eq VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 1, FourIsland_EventScript_SynchronizeCompletedRivalScene
+	goto_if_eq VAR_MAP_SCENE_FOUR_ISLAND, 2, FourIsland_EventScript_RestoreDeferredRivalScene
+	goto_if_ne VAR_MAP_SCENE_FOUR_ISLAND, 0, FourIsland_EventScript_EndRivalArbitration
 FourIsland_EventScript_ShowRival::
 	clearflag FLAG_HIDE_FOUR_ISLAND_RIVAL
+	return
+
+FourIsland_EventScript_DeferRivalScene::
+	goto_if_ne VAR_MAP_SCENE_FOUR_ISLAND, 0, FourIsland_EventScript_EndRivalArbitration
+	setvar VAR_MAP_SCENE_FOUR_ISLAND, 2
+	setflag FLAG_HIDE_FOUR_ISLAND_RIVAL
+	return
+
+FourIsland_EventScript_RestoreDeferredRivalScene::
+	setvar VAR_MAP_SCENE_FOUR_ISLAND, 0
+	goto FourIsland_EventScript_ShowRival
+
+FourIsland_EventScript_SynchronizeCompletedRivalScene::
+	setvar VAR_MAP_SCENE_FOUR_ISLAND, 1
+	setvar VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 1
+	setflag FLAG_HIDE_FOUR_ISLAND_RIVAL
+	setflag FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL
+FourIsland_EventScript_EndRivalArbitration::
 	return
 
 FourIsland_EventScript_TrySetDayCareManPos::
@@ -46,6 +70,9 @@ FourIsland_EventScript_RivalScene::
 	delay 35
 	removeobject LOCALID_FOUR_ISLAND_RIVAL
 	setvar VAR_MAP_SCENE_FOUR_ISLAND, 1
+	setvar VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 1
+	setflag FLAG_HIDE_FOUR_ISLAND_RIVAL
+	setflag FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL
 	releaseall
 	end
 
@@ -215,4 +242,3 @@ FourIsland_Text_MadeSlushieUsingIcefallCaveIce::
 
 FourIsland_Text_LoreleisHouse::
 	.string "LORELEI'S HOUSE$"
-

@@ -901,6 +901,22 @@ static const struct MenuAction sMultichoiceList_SeagallopVermilion[] = {
     { gText_Exit }
 };
 
+static const struct MenuAction sMultichoiceList_SeviiShakedownStart[] = {
+    { COMPOUND_STRING("START") },
+    { COMPOUND_STRING("NOT NOW") }
+};
+
+static const struct MenuAction sMultichoiceList_VermilionSharedDock[] = {
+    { COMPOUND_STRING("S.S. ANNE") },
+    { gText_SeviiIslands },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_VermilionSeviiDock[] = {
+    { gText_SeviiIslands },
+    { gText_Exit }
+};
+
 const u8 sText_NoThanks[] = _("NO THANKS");
 
 static const struct MenuAction sMultichoiceList_GameCornerPokemonPrizes[] = {
@@ -1443,6 +1459,9 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_BATTLE_MODE_HNS]            = MULTICHOICE(MultichoiceList_BattleModeHns),
     [MULTI_FOSSIL_HNS]                = MULTICHOICE(MultichoiceList_FossilHns),
     [MULTI_GAME_CORNER_DOLLS2]         = MULTICHOICE(MultichoiceList_GameCornerDolls2),
+    [MULTI_SEVII_SHAKEDOWN_START]       = MULTICHOICE(sMultichoiceList_SeviiShakedownStart),
+    [MULTI_VERMILION_SHARED_DOCK]       = MULTICHOICE(sMultichoiceList_VermilionSharedDock),
+    [MULTI_VERMILION_SEVII_DOCK]        = MULTICHOICE(sMultichoiceList_VermilionSeviiDock),
 };
 
 const u8 *const gStdStrings[] =

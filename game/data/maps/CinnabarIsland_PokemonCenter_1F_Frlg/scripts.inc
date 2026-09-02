@@ -31,6 +31,8 @@ CinnabarIsland_PokemonCenter_1F_EventScript_Bill::
 	faceplayer
 	msgbox CinnabarIsland_PokemonCenter_1F_Text_ReadyToSailToOneIsland, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, CinnabarIsland_PokemonCenter_1F_EventScript_NotReadyToSail
+	specialvar VAR_RESULT, CanStartOriginalSeviiTrip
+	goto_if_eq VAR_RESULT, FALSE, CinnabarIsland_PokemonCenter_1F_EventScript_NoRoomForSeviiTrip
 	msgbox CinnabarIsland_PokemonCenter_1F_Text_LetsGo
 	closemessage
 	playbgm MUS_FOLLOW_ME, 1
@@ -46,6 +48,11 @@ CinnabarIsland_PokemonCenter_1F_EventScript_Bill::
 	clearflag FLAG_HIDE_CINNABAR_BILL
 	warp MAP_CINNABAR_ISLAND, 14, 11
 	waitstate
+	release
+	end
+
+CinnabarIsland_PokemonCenter_1F_EventScript_NoRoomForSeviiTrip::
+	msgbox CinnabarIsland_Text_NotEnoughRoomForTrip
 	release
 	end
 
@@ -176,4 +183,3 @@ CinnabarIsland_PokemonCenter_1F_Text_OhNotDoneYet::
 CinnabarIsland_PokemonCenter_1F_Text_LetsGo::
 	.string "Well, that's it.\n"
 	.string "Let's go!$"
-

@@ -2,7 +2,12 @@ Route7_EastEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route7_EastEntrance_EventScript_Guard::
-	msgbox Route7_EastEntrance_Text_HiHowsItGoing, MSGBOX_NPC
+	lock
+	faceplayer
+	checkitem ITEM_TEA
+	goto_if_eq VAR_RESULT, TRUE, Route7_EastEntrance_EventScript_GiveTeaDirect
+	msgbox Route7_EastEntrance_Text_HiHowsItGoing
+	release
 	end
 
 Route7_EastEntrance_EventScript_GuardTriggerTop::
@@ -27,17 +32,28 @@ Route7_EastEntrance_EventScript_GuardTrigger::
 	textcolor NPC_TEXT_COLOR_MALE
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
-	goto_if_set FLAG_GOT_TEA, Route7_EastEntrance_EventScript_GiveTea
-	msgbox Route7_EastEntrance_Text_ThirstyOnGuardDuty
-	closemessage
-	applymovement LOCALID_PLAYER, Route7_EastEntrance_Movement_BlockPlayerEntry
-	waitmovement 0
+	checkitem ITEM_TEA
+	goto_if_eq VAR_RESULT, TRUE, Route7_EastEntrance_EventScript_GiveTea
+	call_if_eq VAR_TEMP_1, 0, Route7_EastEntrance_WalkToGuardTop
+	call_if_eq VAR_TEMP_1, 1, Route7_EastEntrance_WalkToGuardMid
+	call_if_eq VAR_TEMP_1, 2, Route7_EastEntrance_WalkToGuardBottom
+	setvar VAR_MAP_SCENE_ROUTE5_ROUTE6_ROUTE7_ROUTE8_GATES, 1
 	releaseall
 	end
 
 Route7_EastEntrance_EventScript_GiveTea::
 	removeitem ITEM_TEA
 	goto Route7_EastEntrance_EventScript_GuardDrinkTea
+	end
+
+Route7_EastEntrance_EventScript_GiveTeaDirect::
+	textcolor NPC_TEXT_COLOR_MALE
+	removeitem ITEM_TEA
+	msgbox Route7_EastEntrance_Text_ThatTeaLooksTasty
+	closemessage
+	msgbox Route7_EastEntrance_Text_ThanksIllShareTeaWithGuards
+	setvar VAR_MAP_SCENE_ROUTE5_ROUTE6_ROUTE7_ROUTE8_GATES, 1
+	release
 	end
 
 Route7_EastEntrance_EventScript_GuardDrinkTea::
@@ -108,4 +124,3 @@ Route7_EastEntrance_Text_ThanksIllShareTeaWithGuards::
 
 Route7_EastEntrance_Text_HiHowsItGoing::
 	.string "Hi, how's it going?$"
-

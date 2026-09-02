@@ -84,7 +84,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_SNORLAX",
-      "x": 14,
+      "x": 15,
       "y": 70,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
@@ -273,7 +273,7 @@
     },
     {
       "type": "hidden_item",
-      "x": 14,
+      "x": 15,
       "y": 70,
       "elevation": 3,
       "item": "ITEM_LEFTOVERS",

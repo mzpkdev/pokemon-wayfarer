@@ -126,15 +126,23 @@ CinnabarIsland_EventScript_BillApproachPlayer2::
 	return
 
 CinnabarIsland_EventScript_AgreeSailToOneIsland::
+	specialvar VAR_RESULT, CanStartOriginalSeviiTrip
+	goto_if_eq VAR_RESULT, FALSE, CinnabarIsland_EventScript_NoRoomForSeviiTrip
 	msgbox CinnabarIsland_Text_AllRightLetsGo
 	closemessage
 	call CinnabarIsland_EventScript_SailToOneIsland
 	releaseall
 	end
 
+CinnabarIsland_EventScript_NoRoomForSeviiTrip::
+	msgbox CinnabarIsland_Text_NotEnoughRoomForTrip
+	closemessage
+	goto CinnabarIsland_EventScript_WaitForPlayerInPokeCenter
+
 CinnabarIsland_EventScript_DeclineSailToOneIsland::
 	msgbox CinnabarIsland_Text_IllBeWaitingInPokeCenter
 	closemessage
+CinnabarIsland_EventScript_WaitForPlayerInPokeCenter::
 	call_if_unset FLAG_TEMP_2, CinnabarIsland_EventScript_BillExitToPokeCenter
 	call_if_set FLAG_TEMP_2, CinnabarIsland_EventScript_BillReturnToPokeCenter
 	removeobject LOCALID_CINNABAR_BILL
@@ -201,6 +209,8 @@ CinnabarIsland_EventScript_SailToOneIsland::
 	removeobject LOCALID_CINNABAR_BILL
 	delay 40
 	setflag FLAG_HIDE_CINNABAR_SEAGALLOP
+	clearflag FLAG_HIDE_ONE_ISLAND_BILL
+	clearflag FLAG_HIDE_ONE_ISLAND_POKECENTER_BILL
 	setvar VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 1
 	setvar VAR_0x8004, SEAGALLOP_CINNABAR_ISLAND
 	setvar VAR_0x8006, SEAGALLOP_ONE_ISLAND
@@ -400,6 +410,12 @@ CinnabarIsland_Text_AllRightLetsGo::
 	.string "All right, then.\n"
 	.string "Let's go!$"
 
+CinnabarIsland_Text_NotEnoughRoomForTrip::
+	.string "You'll need room for everything we'll\n"
+	.string "be taking to ONE ISLAND.\p"
+	.string "Make some space in the KEY ITEMS\n"
+	.string "pocket, then come back.$"
+
 CinnabarIsland_Text_IllBeWaitingInPokeCenter::
 	.string "What, are you too busy?\p"
 	.string "Well, all right.\n"
@@ -425,4 +441,3 @@ CinnabarIsland_Text_IfYouHaveTriPassYouCanGoAgain::
 	.string "always take a ferry there from\l"
 	.string "VERMILION PORT.\p"
 	.string "All right, thanks for your company!$"
-

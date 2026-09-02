@@ -74,7 +74,7 @@
       "local_id": "LOCALID_TUTORIAL_MAN",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 21,
-      "y": 6,
+      "y": 8,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 2,
@@ -192,15 +192,6 @@
   "coord_events": [
     {
       "type": "trigger",
-      "x": 22,
-      "y": 11,
-      "elevation": 3,
-      "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN",
-      "var_value": "0",
-      "script": "ViridianCity_EventScript_RoadBlocked"
-    },
-    {
-      "type": "trigger",
       "x": 36,
       "y": 11,
       "elevation": 3,
@@ -216,15 +207,6 @@
       "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN",
       "var_value": "1",
       "script": "ViridianCity_EventScript_TutorialTriggerLeft"
-    },
-    {
-      "type": "trigger",
-      "x": 22,
-      "y": 8,
-      "elevation": 3,
-      "var": "VAR_MAP_SCENE_VIRIDIAN_CITY_OLD_MAN",
-      "var_value": "1",
-      "script": "ViridianCity_EventScript_TutorialTriggerRight"
     }
   ],
   "bg_events": [

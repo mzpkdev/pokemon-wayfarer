@@ -3,8 +3,11 @@ ThreeIsland_Port_Frlg_MapScripts::
 	.byte 0
 
 ThreeIsland_Port_OnTransition::
+	goto_if_ne VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 1, ThreeIsland_Port_EventScript_EndDetourTransition
+	goto_if_unset FLAG_SYS_PC_STORAGE_DISABLED, ThreeIsland_Port_EventScript_EndDetourTransition
 	clearflag FLAG_SYS_PC_STORAGE_DISABLED
 	setflag FLAG_SEVII_DETOUR_FINISHED
+ThreeIsland_Port_EventScript_EndDetourTransition::
 	end
 
 ThreeIsland_Port_EventScript_Woman::
@@ -61,4 +64,3 @@ ThreeIsland_Port_Text_EverythingTurnedOutForBest::
 	.string "Those BIKERS ran off, and\n"
 	.string "LOSTELLE was found safe.\p"
 	.string "Everything turned out for the best!$"
-

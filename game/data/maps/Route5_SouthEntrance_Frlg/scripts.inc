@@ -2,7 +2,12 @@ Route5_SouthEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route5_SouthEntrance_EventScript_Guard::
-	msgbox Route5_SouthEntrance_Text_HiHowsItGoing, MSGBOX_NPC
+	lock
+	faceplayer
+	checkitem ITEM_TEA
+	goto_if_eq VAR_RESULT, TRUE, Route5_SouthEntrance_EventScript_GiveTeaDirect
+	msgbox Route5_SouthEntrance_Text_HiHowsItGoing
+	release
 	end
 
 Route5_SouthEntrance_EventScript_GuardTriggerLeft::
@@ -27,17 +32,28 @@ Route5_SouthEntrance_EventScript_GuardTrigger::
 	textcolor NPC_TEXT_COLOR_MALE
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
-	goto_if_set FLAG_GOT_TEA, Route5_SouthEntrance_EventScript_GiveTea
-	msgbox Route5_SouthEntrance_Text_ThirstyOnGuardDuty
-	closemessage
-	applymovement LOCALID_PLAYER, Route5_SouthEntrance_Movement_BlockPlayerEntry
-	waitmovement 0
+	checkitem ITEM_TEA
+	goto_if_eq VAR_RESULT, TRUE, Route5_SouthEntrance_EventScript_GiveTea
+	call_if_eq VAR_TEMP_1, 0, Route5_SouthEntrance_EventScript_WalkToGuardLeft
+	call_if_eq VAR_TEMP_1, 1, Route5_SouthEntrance_EventScript_WalkToGuardMid
+	call_if_eq VAR_TEMP_1, 2, Route5_SouthEntrance_EventScript_WalkToGuardRight
+	setvar VAR_MAP_SCENE_ROUTE5_ROUTE6_ROUTE7_ROUTE8_GATES, 1
 	releaseall
 	end
 
 Route5_SouthEntrance_EventScript_GiveTea::
 	removeitem ITEM_TEA
 	goto Route5_SouthEntrance_EventScript_GuardDrinkTea
+	end
+
+Route5_SouthEntrance_EventScript_GiveTeaDirect::
+	textcolor NPC_TEXT_COLOR_MALE
+	removeitem ITEM_TEA
+	msgbox Route5_SouthEntrance_Text_ThatTeaLooksTasty
+	closemessage
+	msgbox Route5_SouthEntrance_Text_ThanksIllShareTeaWithGuards
+	setvar VAR_MAP_SCENE_ROUTE5_ROUTE6_ROUTE7_ROUTE8_GATES, 1
+	release
 	end
 
 Route5_SouthEntrance_EventScript_GuardDrinkTea::
@@ -108,4 +124,3 @@ Route5_SouthEntrance_Text_ThanksIllShareTeaWithGuards::
 
 Route5_SouthEntrance_Text_HiHowsItGoing::
 	.string "Hi, how's it going?$"
-

@@ -4,7 +4,6 @@ CeruleanCity_Frlg_MapScripts::
 
 CeruleanCity_OnTransition::
 	setworldmapflag FLAG_WORLD_MAP_CERULEAN_CITY
-	call_if_unset FLAG_GOT_SS_TICKET, CeruleanCity_EventScript_BlockExits
 	end
 
 CeruleanCity_EventScript_BlockExits::
@@ -533,4 +532,3 @@ CeruleanCity_Text_GymSign::
 	.string "CERULEAN CITY POKéMON GYM\n"
 	.string "LEADER: MISTY\l"
 	.string "The Tomboyish Mermaid!$"
-

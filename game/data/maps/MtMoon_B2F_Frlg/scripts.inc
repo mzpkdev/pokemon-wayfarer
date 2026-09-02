@@ -53,6 +53,7 @@ MtMoon_B2F_EventScript_MiguelGoPickFossil::
 MtMoon_B2F_EventScript_DomeFossil::
 	lock
 	faceplayer
+	goto_if_ne VAR_MAP_SCENE_MT_MOON_B2F, 1, MtMoon_B2F_EventScript_FossilUnavailable
 	msgbox MtMoon_B2F_Text_YouWantDomeFossil, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MtMoon_B2F_EventScript_DontTakeFossil
 	removeobject LOCALID_DOME_FOSSIL
@@ -83,6 +84,7 @@ MtMoon_B2F_Movement_MiguelToHelixFossil::
 MtMoon_B2F_EventScript_HelixFossil::
 	lock
 	faceplayer
+	goto_if_ne VAR_MAP_SCENE_MT_MOON_B2F, 1, MtMoon_B2F_EventScript_FossilUnavailable
 	msgbox MtMoon_B2F_Text_YouWantHelixFossil, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MtMoon_B2F_EventScript_DontTakeFossil
 	removeobject LOCALID_HELIX_FOSSIL
@@ -104,6 +106,10 @@ MtMoon_B2F_EventScript_HelixFossil::
 	end
 
 MtMoon_B2F_EventScript_DontTakeFossil::
+	release
+	end
+
+MtMoon_B2F_EventScript_FossilUnavailable::
 	release
 	end
 
@@ -216,4 +222,3 @@ MtMoon_B2F_Text_ObtainedHelixFossil::
 
 MtMoon_B2F_Text_ObtainedDomeFossil::
 	.string "Obtained the DOME FOSSIL!$"
-

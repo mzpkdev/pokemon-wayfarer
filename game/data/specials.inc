@@ -604,6 +604,8 @@ gSpecials::
 	def_special GetSeagallopNumber
 	def_special DoSeagallopFerryScene
 	def_special IsPlayerLeftOfVermilionSailor
+	def_special CanStartOriginalSeviiTrip
+	def_special TryCompleteSeviiRubyHandoff
 	def_special SetVermilionTrashCans
 	def_special DoSSAnneDepartureCutscene
 	def_special StartMarowakBattle
