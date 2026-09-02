@@ -186,6 +186,9 @@
 #define MULTI_BATTLE_MODE_HNS              175
 #define MULTI_FOSSIL_HNS                   176
 #define MULTI_GAME_CORNER_DOLLS2           177
+#define MULTI_SEVII_SHAKEDOWN_START         178
+#define MULTI_VERMILION_SHARED_DOCK         179
+#define MULTI_VERMILION_SEVII_DOCK          180
 
 #define MULTI_NONE 255
 

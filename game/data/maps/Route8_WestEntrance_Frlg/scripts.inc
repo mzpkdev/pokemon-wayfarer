@@ -2,7 +2,12 @@ Route8_WestEntrance_Frlg_MapScripts::
 	.byte 0
 
 Route8_WestEntrance_EventScript_Guard::
-	msgbox Route8_WestEntrance_Text_HiHowsItGoing, MSGBOX_NPC
+	lock
+	faceplayer
+	checkitem ITEM_TEA
+	goto_if_eq VAR_RESULT, TRUE, Route8_WestEntrance_EventScript_GiveTeaDirect
+	msgbox Route8_WestEntrance_Text_HiHowsItGoing
+	release
 	end
 
 Route8_WestEntrance_EventScript_GuardTriggerTop::
@@ -27,17 +32,28 @@ Route8_WestEntrance_EventScript_GuardTrigger::
 	textcolor NPC_TEXT_COLOR_MALE
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
-	goto_if_set FLAG_GOT_TEA, Route8_WestEntrance_EventScript_GiveTea
-	msgbox Route8_WestEntrance_Text_ThirstyOnGuardDuty
-	closemessage
-	applymovement LOCALID_PLAYER, Route8_WestEntrance_Movement_BlockPlayerEntry
-	waitmovement 0
+	checkitem ITEM_TEA
+	goto_if_eq VAR_RESULT, TRUE, Route8_WestEntrance_EventScript_GiveTea
+	call_if_eq VAR_TEMP_1, 0, Route8_WestEntrance_EventScript_WalkToGuardTop
+	call_if_eq VAR_TEMP_1, 1, Route8_WestEntrance_EventScript_WalkToGuardMid
+	call_if_eq VAR_TEMP_1, 2, Route8_WestEntrance_EventScript_WalkToGuardBottom
+	setvar VAR_MAP_SCENE_ROUTE5_ROUTE6_ROUTE7_ROUTE8_GATES, 1
 	releaseall
 	end
 
 Route8_WestEntrance_EventScript_GiveTea::
 	removeitem ITEM_TEA
 	goto Route8_WestEntrance_EventScript_GuardDrinkTea
+	end
+
+Route8_WestEntrance_EventScript_GiveTeaDirect::
+	textcolor NPC_TEXT_COLOR_MALE
+	removeitem ITEM_TEA
+	msgbox Route8_WestEntrance_Text_ThatTeaLooksTasty
+	closemessage
+	msgbox Route8_WestEntrance_Text_ThanksIllShareTeaWithGuards
+	setvar VAR_MAP_SCENE_ROUTE5_ROUTE6_ROUTE7_ROUTE8_GATES, 1
+	release
 	end
 
 @ Unused
@@ -120,4 +136,3 @@ Route8_WestEntrance_Text_ThanksIllShareTeaWithGuards::
 
 Route8_WestEntrance_Text_HiHowsItGoing::
 	.string "Hi, how's it going?$"
-

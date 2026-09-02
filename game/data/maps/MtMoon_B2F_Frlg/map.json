@@ -205,17 +205,7 @@
       "dest_warp_id": "6"
     }
   ],
-  "coord_events": [
-    {
-      "type": "trigger",
-      "x": 14,
-      "y": 11,
-      "elevation": 3,
-      "var": "VAR_MAP_SCENE_MT_MOON_B2F",
-      "var_value": "0",
-      "script": "MtMoon_B2F_EventScript_MiguelTrigger"
-    }
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "hidden_item",

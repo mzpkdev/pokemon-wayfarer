@@ -9,6 +9,7 @@ OneIsland_OnTransition::
 
 OneIsland_OnFrame::
 	map_script_2 VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 2, OneIsland_EventScript_EnterOneIslandFirstTime
+	map_script_2 VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 4, OneIsland_EventScript_EnterOneIslandTravelIntro
 	.2byte 0
 
 OneIsland_EventScript_EnterOneIslandFirstTime::
@@ -30,6 +31,24 @@ OneIsland_EventScript_EnterOneIslandFirstTime::
 	waitdooranim
 	removeobject LOCALID_ONE_ISLAND_BILL
 	setvar VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 3
+	warp MAP_ONE_ISLAND_POKEMON_CENTER_1F, 9, 9
+	waitstate
+	releaseall
+	end
+
+OneIsland_EventScript_EnterOneIslandTravelIntro::
+	lockall
+	textcolor NPC_TEXT_COLOR_MALE
+	applymovement LOCALID_PLAYER, OneIsland_Movement_PlayerExitHarbor
+	waitmovement 0
+	applymovement LOCALID_PLAYER, OneIsland_Movement_PlayerWalkToPokeCenter
+	waitmovement 0
+	opendoor 14, 5
+	waitdooranim
+	applymovement LOCALID_PLAYER, OneIsland_Movement_PlayerEnterPokeCenter
+	waitmovement 0
+	closedoor 14, 5
+	waitdooranim
 	warp MAP_ONE_ISLAND_POKEMON_CENTER_1F, 9, 9
 	waitstate
 	releaseall
@@ -166,4 +185,3 @@ OneIsland_Text_ReturnToCinnabar::
 OneIsland_Text_IsntWarmClimateHereGreat::
 	.string "Hi, sight-seeing, are you?\n"
 	.string "Isn't the warm climate here great?$"
-

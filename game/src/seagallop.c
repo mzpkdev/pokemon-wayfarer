@@ -4,11 +4,13 @@
 #include "field_screen_effect.h"
 #include "field_weather.h"
 #include "gpu_regs.h"
+#include "item.h"
 #include "main.h"
 #include "malloc.h"
 #include "overworld.h"
 #include "palette.h"
 #include "scanline_effect.h"
+#include "seagallop.h"
 #include "sound.h"
 #include "task.h"
 #include "text_window.h"
@@ -504,4 +506,55 @@ bool8 IsPlayerLeftOfVermilionSailor(void)
         return TRUE;
 
     return FALSE;
+}
+
+bool32 CanStartOriginalSeviiTrip(void)
+{
+    struct BagPocket *keyItems = &gBagPockets[POCKET_KEY_ITEMS];
+    u32 emptySlots = 0;
+    u32 missingItems = 0;
+
+    if (!CheckBagHasItem(ITEM_TOWN_MAP, 1))
+        missingItems++;
+    if (!CheckBagHasItem(ITEM_METEORITE, 1))
+        missingItems++;
+    if (!CheckBagHasItem(ITEM_TRI_PASS, 1) && !CheckBagHasItem(ITEM_RAINBOW_PASS, 1))
+        missingItems++;
+
+    for (u32 i = 0; i < keyItems->capacity; i++)
+    {
+        if (BagPocket_GetSlotData(keyItems, i).itemId == ITEM_NONE)
+            emptySlots++;
+    }
+
+    return emptySlots >= missingItems;
+}
+
+bool32 TryCompleteSeviiRubyHandoff(void)
+{
+    bool32 hadTriPass;
+
+    if (!CheckBagHasItem(ITEM_RUBY, 1))
+        return FALSE;
+
+    if (CheckBagHasItem(ITEM_RAINBOW_PASS, 1))
+        return RemoveBagItem(ITEM_RUBY, 1);
+
+    hadTriPass = CheckBagHasItem(ITEM_TRI_PASS, 1);
+    if (!RemoveBagItem(ITEM_RUBY, 1))
+        return FALSE;
+    if (hadTriPass && !RemoveBagItem(ITEM_TRI_PASS, 1))
+    {
+        AddBagItem(ITEM_RUBY, 1);
+        return FALSE;
+    }
+    if (!AddBagItem(ITEM_RAINBOW_PASS, 1))
+    {
+        if (hadTriPass)
+            AddBagItem(ITEM_TRI_PASS, 1);
+        AddBagItem(ITEM_RUBY, 1);
+        return FALSE;
+    }
+
+    return TRUE;
 }

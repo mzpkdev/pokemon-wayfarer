@@ -6,11 +6,35 @@ SixIsland_PokemonCenter_1F_Frlg_MapScripts::
 
 SixIsland_PokemonCenter_1F_OnTransition::
 	setrespawn HEAL_LOCATION_SIX_ISLAND
-	call_if_eq VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 0, SixIsland_PokemonCenter_1F_EventScript_ShowRival
+	call SixIsland_PokemonCenter_1F_EventScript_ArbitrateRivalScene
 	end
 
+SixIsland_PokemonCenter_1F_EventScript_ArbitrateRivalScene::
+	goto_if_eq VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 1, SixIsland_PokemonCenter_1F_EventScript_SynchronizeCompletedRivalScene
+	goto_if_lt VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, SixIsland_PokemonCenter_1F_EventScript_DeferRivalScene
+	goto_if_eq VAR_MAP_SCENE_FOUR_ISLAND, 1, SixIsland_PokemonCenter_1F_EventScript_SynchronizeCompletedRivalScene
+	goto_if_eq VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 2, SixIsland_PokemonCenter_1F_EventScript_RestoreDeferredRivalScene
+	goto_if_ne VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 0, SixIsland_PokemonCenter_1F_EventScript_EndRivalArbitration
 SixIsland_PokemonCenter_1F_EventScript_ShowRival::
 	clearflag FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL
+	return
+
+SixIsland_PokemonCenter_1F_EventScript_DeferRivalScene::
+	goto_if_ne VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 0, SixIsland_PokemonCenter_1F_EventScript_EndRivalArbitration
+	setvar VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 2
+	setflag FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL
+	return
+
+SixIsland_PokemonCenter_1F_EventScript_RestoreDeferredRivalScene::
+	setvar VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 0
+	goto SixIsland_PokemonCenter_1F_EventScript_ShowRival
+
+SixIsland_PokemonCenter_1F_EventScript_SynchronizeCompletedRivalScene::
+	setvar VAR_MAP_SCENE_FOUR_ISLAND, 1
+	setvar VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 1
+	setflag FLAG_HIDE_FOUR_ISLAND_RIVAL
+	setflag FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL
+SixIsland_PokemonCenter_1F_EventScript_EndRivalArbitration::
 	return
 
 SixIsland_PokemonCenter_1F_OnFrame::
@@ -41,6 +65,8 @@ SixIsland_PokemonCenter_1F_EventScript_RivalScene::
 	removeobject LOCALID_SIX_ISLAND_RIVAL
 	setvar VAR_MAP_SCENE_SIX_ISLAND_POKEMON_CENTER_1F, 1
 	setvar VAR_MAP_SCENE_FOUR_ISLAND, 1
+	setflag FLAG_HIDE_FOUR_ISLAND_RIVAL
+	setflag FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL
 	releaseall
 	end
 
@@ -112,4 +138,3 @@ SixIsland_PokemonCenter_1F_Text_RivalImpossibleToGetAllMonsAroundHere::
 	.string "I may as well leave for home.\p"
 	.string "That's that, then!\n"
 	.string "Smell ya later!$"
-

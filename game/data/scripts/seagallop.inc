@@ -1,6 +1,12 @@
 @ Separate selection menus for before the Rainbow Pass is obtained
 EventScript_ChooseDestFromOneIsland::
+#if IS_FRLG
+	goto_if_eq VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 5, EventScript_ChooseOnlyVermilionFromOneIsland
+	call EventScript_CheckFullSeagallopService
+	goto_if_eq VAR_RESULT, TRUE, EventScript_SeviiDestinationsPage1
+#else
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, EventScript_SeviiDestinationsPage1
+#endif
 	goto_if_ge VAR_MAP_SCENE_CINNABAR_ISLAND, 4, EventScript_ChooseDestFromOneIslandVermilionAllowed
 	multichoice 19, 6, MULTI_ISLAND_23, FALSE
 	switch VAR_RESULT
@@ -21,7 +27,12 @@ EventScript_ChooseDestFromOneIslandVermilionAllowed::
 	end
 
 EventScript_ChooseDestFromTwoIsland::
+#if IS_FRLG
+	call EventScript_CheckFullSeagallopService
+	goto_if_eq VAR_RESULT, TRUE, EventScript_SeviiDestinationsPage1
+#else
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, EventScript_SeviiDestinationsPage1
+#endif
 	goto_if_ge VAR_MAP_SCENE_CINNABAR_ISLAND, 4, EventScript_ChooseDestFromTwoIslandVermilionAllowed
 	multichoice 19, 6, MULTI_ISLAND_13, FALSE
 	switch VAR_RESULT
@@ -62,7 +73,12 @@ EventScript_SailToThreeIsland2::
 	end
 
 EventScript_ChooseDestFromIsland::
+#if IS_FRLG
+	call EventScript_CheckFullSeagallopService
+	goto_if_eq VAR_RESULT, TRUE, EventScript_SeviiDestinationsPage1
+#else
 	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, EventScript_SeviiDestinationsPage1
+#endif
 	goto_if_ge VAR_MAP_SCENE_CINNABAR_ISLAND, 4, EventScript_ChooseDestFromIslandVermilionAllowed
 	multichoice 19, 6, MULTI_ISLAND_12, FALSE
 	switch VAR_RESULT
@@ -81,6 +97,30 @@ EventScript_ChooseDestFromIslandVermilionAllowed::
 	case 3, EventScript_CancelSail
 	case MULTI_B_PRESSED, EventScript_CancelSail
 	end
+
+#if IS_FRLG
+EventScript_ChooseOnlyVermilionFromOneIsland::
+	multichoice 20, 8, MULTI_SEAGALLOP_VERMILION, FALSE
+	switch VAR_RESULT
+	case 0, EventScript_SailToVermilion2
+	case 1, EventScript_CancelSail
+	case MULTI_B_PRESSED, EventScript_CancelSail
+	end
+
+EventScript_CheckFullSeagallopService::
+	checkitem ITEM_RAINBOW_PASS
+	goto_if_eq VAR_RESULT, FALSE, EventScript_FullSeagallopServiceLocked
+	goto_if_ge VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5, EventScript_FullSeagallopServiceUnlocked
+	goto_if_unset FLAG_SEVII_SHAKEDOWN_COMPLETE, EventScript_FullSeagallopServiceLocked
+	goto_if_unset FLAG_SEVII_TRAVEL_INTRO_SEEN, EventScript_FullSeagallopServiceLocked
+EventScript_FullSeagallopServiceUnlocked::
+	setvar VAR_RESULT, TRUE
+	return
+
+EventScript_FullSeagallopServiceLocked::
+	setvar VAR_RESULT, FALSE
+	return
+#endif
 
 EventScript_SailToDest::
 	specialvar VAR_RESULT, GetSeagallopNumber

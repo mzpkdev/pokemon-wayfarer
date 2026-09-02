@@ -50,8 +50,78 @@ OneIsland_PokemonCenter_1F_EventScript_SetBillCelioReadyToLeavePos::
 	return
 
 OneIsland_PokemonCenter_1F_OnFrame::
-	map_script_2 VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 0, OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene
+	map_script_2 VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 0, OneIsland_PokemonCenter_1F_EventScript_DispatchFirstMeeting
 	.2byte 0
+
+OneIsland_PokemonCenter_1F_EventScript_DispatchFirstMeeting::
+	goto_if_eq VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 3, OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene
+	goto_if_ne VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 4, OneIsland_PokemonCenter_1F_EventScript_EndFirstMeetingDispatch
+	goto_if_unset FLAG_SEVII_SHAKEDOWN_COMPLETE, OneIsland_PokemonCenter_1F_EventScript_EndFirstMeetingDispatch
+	goto_if_set FLAG_SEVII_TRAVEL_INTRO_SEEN, OneIsland_PokemonCenter_1F_EventScript_EndFirstMeetingDispatch
+	goto OneIsland_PokemonCenter_1F_EventScript_TravelIntroduction
+
+OneIsland_PokemonCenter_1F_EventScript_EndFirstMeetingDispatch::
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_TravelIntroduction::
+	lockall
+	textcolor NPC_TEXT_COLOR_MALE
+	applymovement LOCALID_PLAYER, OneIsland_PokemonCenter_1F_Movement_PlayerWalkToCelio
+	waitmovement 0
+	applymovement LOCALID_CELIO, Common_Movement_FacePlayer
+	waitmovement 0
+	msgbox OneIsland_PokemonCenter_1F_Text_CelioWelcomeToSevii
+	call OneIsland_PokemonCenter_1F_EventScript_TryPrepareTravelMap
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_TravelIntroductionNoRoom
+	call OneIsland_PokemonCenter_1F_EventScript_CommitTravelIntroduction
+	releaseall
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_TravelIntroductionRetry::
+	msgbox OneIsland_PokemonCenter_1F_Text_CelioReadyToExpandMap
+	call OneIsland_PokemonCenter_1F_EventScript_TryPrepareTravelMap
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_TravelIntroductionRetryNoRoom
+	call OneIsland_PokemonCenter_1F_EventScript_CommitTravelIntroduction
+	release
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_TryPrepareTravelMap::
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_TravelMapReady
+	checkitemspace ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_TravelMapNotReady
+	giveitem_msg OneIsland_PokemonCenter_1F_Text_ReceivedTownMap, ITEM_TOWN_MAP, 1, MUS_RG_OBTAIN_KEY_ITEM
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_TravelMapNotReady
+	setflag FLAG_HIDE_TOWN_MAP
+	setvar VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2
+OneIsland_PokemonCenter_1F_EventScript_TravelMapReady::
+	setvar VAR_RESULT, TRUE
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_TravelMapNotReady::
+	setvar VAR_RESULT, FALSE
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_CommitTravelIntroduction::
+	msgbox OneIsland_PokemonCenter_1F_Text_CelioExpandedTownMap
+	setflag FLAG_SYS_SEVII_MAP_123
+	setflag FLAG_SYS_SEVII_MAP_4567
+	setflag FLAG_SEVII_TRAVEL_INTRO_SEEN
+	setvar VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 0
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_TravelIntroductionNoRoom::
+	msgbox OneIsland_PokemonCenter_1F_Text_CelioNoRoomForTownMap
+	setvar VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 5
+	releaseall
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_TravelIntroductionRetryNoRoom::
+	msgbox OneIsland_PokemonCenter_1F_Text_CelioNoRoomForTownMap
+	setvar VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 5
+	release
+	end
 
 OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 	lockall
@@ -97,16 +167,12 @@ OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	msgbox OneIsland_PokemonCenter_1F_Text_CanYouDeliverThisMeteoritePlayer
-	msgreceiveditem OneIsland_PokemonCenter_1F_Text_AcceptedMeteoriteFromBill, ITEM_METEORITE, 1, MUS_RG_OBTAIN_KEY_ITEM
-	additem ITEM_METEORITE
+	call OneIsland_PokemonCenter_1F_EventScript_GiveMeteoriteIfMissing
 	applymovement LOCALID_CELIO, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
-	msgbox OneIsland_PokemonCenter_1F_Text_CelioPleaseTakeThis
-	giveitem_msg OneIsland_PokemonCenter_1F_Text_ObtainedTriPass, ITEM_TRI_PASS, 1, MUS_RG_OBTAIN_KEY_ITEM
-	msgbox OneIsland_PokemonCenter_1F_Text_PassLetsYouTravelBetweenIslands
-	call_if_ge VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2, OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMapPage
-	call_if_lt VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2, OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMap
-	setflag FLAG_SYS_SEVII_MAP_123
+	call OneIsland_PokemonCenter_1F_EventScript_GiveOriginalTravelItems
+	call OneIsland_PokemonCenter_1F_EventScript_VerifyOriginalTravelItems
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_OriginalItemDeliveryFailed
 	msgbox OneIsland_PokemonCenter_1F_Text_BillCatchYouLater
 	closemessage
 	applymovement LOCALID_ONE_ISLAND_POKEMON_CENTER_BILL, Common_Movement_WalkInPlaceFasterUp
@@ -115,6 +181,73 @@ OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 	waitmovement 0
 	setflag FLAG_SYS_PC_STORAGE_DISABLED
 	setvar VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 1
+	releaseall
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_GiveMeteoriteIfMissing::
+	checkitem ITEM_METEORITE
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_EndGiveMeteorite
+	giveitem_msg OneIsland_PokemonCenter_1F_Text_AcceptedMeteoriteFromBill, ITEM_METEORITE, 1, MUS_RG_OBTAIN_KEY_ITEM
+OneIsland_PokemonCenter_1F_EventScript_EndGiveMeteorite::
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_GiveOriginalTravelItems::
+	checkitem ITEM_RAINBOW_PASS
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_ReconcileOriginalRainbowPass
+	checkitem ITEM_TRI_PASS
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_ExpandOriginalTownMap
+	msgbox OneIsland_PokemonCenter_1F_Text_CelioPleaseTakeThis
+	giveitem_msg OneIsland_PokemonCenter_1F_Text_ObtainedTriPass, ITEM_TRI_PASS, 1, MUS_RG_OBTAIN_KEY_ITEM
+	msgbox OneIsland_PokemonCenter_1F_Text_PassLetsYouTravelBetweenIslands
+	goto OneIsland_PokemonCenter_1F_EventScript_ExpandOriginalTownMap
+
+OneIsland_PokemonCenter_1F_EventScript_ReconcileOriginalRainbowPass::
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_ReconcileOriginalRainbowTownMap
+	call OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMap
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMapReconciliation
+OneIsland_PokemonCenter_1F_EventScript_ReconcileOriginalRainbowTownMap::
+	setflag FLAG_SYS_SEVII_MAP_123
+	goto_if_unset FLAG_SEVII_SHAKEDOWN_COMPLETE, OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMap
+	setflag FLAG_SYS_SEVII_MAP_4567
+	setflag FLAG_SEVII_TRAVEL_INTRO_SEEN
+OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMapReconciliation::
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_ExpandOriginalTownMap::
+	goto_if_set FLAG_SEVII_TRAVEL_INTRO_SEEN, OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMap
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_ShowOriginalTownMapPage
+	call OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMap
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMapReconciliation
+	goto OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMap
+OneIsland_PokemonCenter_1F_EventScript_ShowOriginalTownMapPage::
+	call OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMapPage
+OneIsland_PokemonCenter_1F_EventScript_EndOriginalTownMap::
+	setflag FLAG_SYS_SEVII_MAP_123
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_VerifyOriginalTravelItems::
+	checkitem ITEM_METEORITE
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_OriginalTravelItemsMissing
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_OriginalTravelItemsMissing
+	checkitem ITEM_RAINBOW_PASS
+	goto_if_eq VAR_RESULT, TRUE, OneIsland_PokemonCenter_1F_EventScript_OriginalTravelItemsReady
+	checkitem ITEM_TRI_PASS
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_OriginalTravelItemsMissing
+OneIsland_PokemonCenter_1F_EventScript_OriginalTravelItemsReady::
+	setvar VAR_RESULT, TRUE
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_OriginalTravelItemsMissing::
+	setvar VAR_RESULT, FALSE
+	return
+
+OneIsland_PokemonCenter_1F_EventScript_OriginalItemDeliveryFailed::
+	msgbox OneIsland_PokemonCenter_1F_Text_OriginalItemsNotReady
 	releaseall
 	end
 
@@ -136,9 +269,12 @@ OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMapPage::
 	return
 
 OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMap::
+	giveitem_msg OneIsland_PokemonCenter_1F_Text_ReceivedTownMap, ITEM_TOWN_MAP, 1, MUS_RG_OBTAIN_KEY_ITEM
+	checkitem ITEM_TOWN_MAP
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_EndReceiveTownMap
 	setflag FLAG_HIDE_TOWN_MAP
 	setvar VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2
-	giveitem_msg OneIsland_PokemonCenter_1F_Text_ReceivedTownMap, ITEM_TOWN_MAP, 1, MUS_RG_OBTAIN_KEY_ITEM
+OneIsland_PokemonCenter_1F_EventScript_EndReceiveTownMap::
 	return
 
 OneIsland_PokemonCenter_1F_Movement_PlayerWalkToCelio::
@@ -198,6 +334,7 @@ OneIsland_PokemonCenter_1F_EventScript_BillGoTakeStroll::
 OneIsland_PokemonCenter_1F_EventScript_Celio::
 	lock
 	faceplayer
+	goto_if_eq VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 5, OneIsland_PokemonCenter_1F_EventScript_TravelIntroductionRetry
 	goto_if_eq VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 7, OneIsland_PokemonCenter_1F_EventScript_CelioGiveBillFact
 	goto_if_eq VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 6, OneIsland_PokemonCenter_1F_EventScript_CelioJustGivenSapphire
 	goto_if_set FLAG_RECOVERED_SAPPHIRE, OneIsland_PokemonCenter_1F_EventScript_GiveCelioSapphire
@@ -316,11 +453,17 @@ OneIsland_PokemonCenter_1F_EventScript_DeclineHelpCelio::
 
 OneIsland_PokemonCenter_1F_EventScript_GiveRainbowPass::
 	msgbox OneIsland_PokemonCenter_1F_Text_AnotherGemstoneInSeviiIslands
-	removeitem ITEM_RUBY
-	removeitem ITEM_TRI_PASS
-	setvar VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5
-	additem ITEM_RAINBOW_PASS
+	setvar VAR_0x8009, FALSE
+	goto_if_unset FLAG_SYS_SEVII_MAP_4567, OneIsland_PokemonCenter_1F_EventScript_CheckExistingRainbowPass
+	setvar VAR_0x8009, TRUE
+OneIsland_PokemonCenter_1F_EventScript_CheckExistingRainbowPass::
+	checkitem ITEM_RAINBOW_PASS
+	copyvar VAR_0x8008, VAR_RESULT
+	specialvar VAR_RESULT, TryCompleteSeviiRubyHandoff
+	goto_if_eq VAR_RESULT, FALSE, OneIsland_PokemonCenter_1F_EventScript_RainbowPassDeliveryFailed
 	setflag FLAG_SYS_SEVII_MAP_4567
+	setvar VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F, 5
+	goto_if_eq VAR_0x8008, TRUE, OneIsland_PokemonCenter_1F_EventScript_CompleteRubyHandoffWithRainbowPass
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 	message OneIsland_PokemonCenter_1F_Text_ReturnedTriPassForRainbowPass
@@ -332,6 +475,26 @@ OneIsland_PokemonCenter_1F_EventScript_GiveRainbowPass::
 	waitfanfare
 	call EventScript_RestorePrevTextColor
 	goto OneIsland_PokemonCenter_1F_EventScript_ExplainRainbowPass
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_CompleteRubyHandoffWithRainbowPass::
+	goto_if_eq VAR_0x8009, TRUE, OneIsland_PokemonCenter_1F_EventScript_CompleteRubyHandoffWithoutReward
+	textcolor NPC_TEXT_COLOR_NEUTRAL
+	playfanfare MUS_RG_OBTAIN_KEY_ITEM
+	message OneIsland_PokemonCenter_1F_Text_ObtainedExtraMapPage
+	waitmessage
+	waitfanfare
+	call EventScript_RestorePrevTextColor
+	goto OneIsland_PokemonCenter_1F_EventScript_ExplainRainbowPass
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_CompleteRubyHandoffWithoutReward::
+	goto OneIsland_PokemonCenter_1F_EventScript_ExplainRainbowPass
+	end
+
+OneIsland_PokemonCenter_1F_EventScript_RainbowPassDeliveryFailed::
+	msgbox OneIsland_PokemonCenter_1F_Text_RainbowPassDeliveryFailed
+	release
 	end
 
 OneIsland_PokemonCenter_1F_EventScript_CelioWaitingForRuby::
@@ -649,6 +812,40 @@ OneIsland_PokemonCenter_1F_Text_ReceivedTownMap::
 	.string "{PLAYER} received\n"
 	.string "a TOWN MAP!$"
 
+OneIsland_PokemonCenter_1F_Text_CelioWelcomeToSevii::
+	.string "CELIO: Welcome to ONE ISLAND!\p"
+	.string "There are seven islands in this\n"
+	.string "region, all linked by SEAGALLOP.\p"
+	.string "Your RAINBOW PASS lets you visit\n"
+	.string "every one of them and VERMILION.\p"
+	.string "Let me expand your TOWN MAP so\n"
+	.string "you can find your way.$"
+
+OneIsland_PokemonCenter_1F_Text_CelioReadyToExpandMap::
+	.string "CELIO: Ready for me to expand your\n"
+	.string "TOWN MAP?$"
+
+OneIsland_PokemonCenter_1F_Text_CelioExpandedTownMap::
+	.string "CELIO: There! Your TOWN MAP now\n"
+	.string "shows all seven SEVII ISLANDS.\p"
+	.string "The ferry will always be ready to\n"
+	.string "take you between them.$"
+
+OneIsland_PokemonCenter_1F_Text_CelioNoRoomForTownMap::
+	.string "CELIO: Your KEY ITEMS pocket is\n"
+	.string "full.\p"
+	.string "Make some room, then talk to me\n"
+	.string "again. The ferry can take you back\l"
+	.string "to VERMILION whenever you need.$"
+
+OneIsland_PokemonCenter_1F_Text_OriginalItemsNotReady::
+	.string "BILL: Hold on. We need to make sure\n"
+	.string "you have everything for the trip.$"
+
+OneIsland_PokemonCenter_1F_Text_RainbowPassDeliveryFailed::
+	.string "CELIO: I couldn't update your PASS.\n"
+	.string "Please talk to me again.$"
+
 OneIsland_PokemonCenter_1F_Text_BillCatchYouLater::
 	.string "BILL: I'll catch you later!\n"
 	.string "Say hi to the guy for me!$"
@@ -918,4 +1115,3 @@ OneIsland_PokemonCenter_1F_Text_MachineLinkedWithKantoAndHoenn::
 
 OneIsland_PokemonCenter_1F_Text_ObtainedTriPass::
 	.string "Obtained the TRI-PASS!$"
-
