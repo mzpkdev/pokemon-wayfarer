@@ -9,11 +9,12 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 ## Rules
 
 - Walking, doors, always-available local transport, and the approved native Surf crossing form the core settlement network.
-- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in an unlocked region. That route cannot require an HM item. Only the Cinnabar crossing may require a Pokémon that already knows Surf.
+- Main-story state, Gym progress, and forced scripted or story victories cannot close the only route to a town or city in an unlocked region. That route cannot require an HM item. Only the Cinnabar crossing may require a Pokémon that already knows Surf.
+- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions and sight ranges in this pass and do not count as story-gated traversal. Player-relative trainer scaling is owned separately.
 - Fly may make settlement travel faster. Surf remains optional except for the approved Cinnabar route.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
 - A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
-- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or battle must leave another visible lane open.
+- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or scripted battle must leave another visible lane open.
 - This exception applies only when this PRD explicitly names the encounter as the selected core lane. It does not replace an approved bypass or optional-scene requirement.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - First-time travel to another region may require a self-contained local story and a key item. It cannot depend on Gym progress or a chain of unrelated campaign flags.
@@ -71,7 +72,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 
 ## Acceptance
 
-- From a new save after the opening, visit the ten named Kanto settlements without badges, HM items, earlier or unrelated story-completion flags, or a required battle victory. Native Surf is allowed only for Cinnabar.
+- From a new save after the opening, visit the ten named Kanto settlements without badges, HM items, earlier or unrelated story-completion flags, or a required scripted or story battle victory. Ordinary sight-based trainer battles are permitted. Native Surf is allowed only for Cinnabar.
 - Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the Cinnabar crossing.
 - Leave Pewter through the free lower lane, pass Miguel without a battle, and walk past Route 12 Snorlax. Then return and complete each preserved scene and reward normally.
 - Complete the Seagallop shakedown and receive the Rainbow Pass without leaving Vermilion or satisfying another story flag.
@@ -83,6 +84,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Reach Four and Six Island before the postgame Sevii story in both visit orders and confirm the shared rival scene remains pending. Satisfy the original prerequisite later and confirm it plays exactly once at whichever location resolves first.
 - In both versions, confirm native Horsea and Krabby remain in the existing fishing tables on the Pallet and Cinnabar sides. With a native Surf user prepared before each crossing, cross Route 21 in both directions without HM03 or a badge.
 - Confirm FireRed and LeafGreen behave the same.
+- Confirm this pass does not change the position, trainer type, or sight range of any ordinary sight-based trainer.
 
 ## References
 

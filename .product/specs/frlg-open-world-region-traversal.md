@@ -1,7 +1,7 @@
 # FireRed and LeafGreen open-world regional traversal
 
 PRD: [FireRed and LeafGreen open-world regional traversal](../prds/frlg-open-world-region-traversal.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -14,8 +14,9 @@ state isolation needed for early Sevii arrival.
 
 It does not open Indigo Plateau or event-only islands, remove HM requirements
 from optional content, redesign the S.S. Anne or Sevii campaign stories, change
-wild encounters, or provide emergency recovery after the player loses access
-to their last native Surf user.
+wild encounters, ordinary trainer placement or sight range, or provide
+emergency recovery after the player loses access to their last native Surf
+user.
 
 ## Behavior
 
@@ -23,8 +24,9 @@ to their last native Surf user.
 
 The Kanto settlement network becomes available when the opening releases the
 player with a starter. No later badge, HM item, key item, payment, forced
-victory, or campaign flag may close a core land connection. Only the Route 21
-crossing to Cinnabar may require a Pokémon that already knows Surf.
+scripted or story victory, or campaign flag may close a core land connection.
+Only the Route 21 crossing to Cinnabar may require a Pokémon that already
+knows Surf.
 
 Opening a lane changes only the object position, coordinate event, or local
 transport state needed for that lane. It must not grant an attached item,
@@ -36,6 +38,11 @@ milestone, or postgame reward.
 No encounter uses the sole-lane exception in this specification. Snorlax and
 Miguel remain optional because the selected travel lanes go around their
 interactions.
+
+Ordinary sight-based trainers may challenge the player on a core route. Keep
+their object coordinates, trainer types, and sight ranges unchanged. Their
+future player-relative level scaling is outside this specification, and their
+battles do not satisfy or advance any travel story state.
 
 ### Kanto road changes
 
@@ -288,12 +295,15 @@ user.
 
 Static checks must verify the exact trigger removals and object moves, the six
 FRLG-only flag assignments, item-before-flag reward ordering, dock dispatch,
-full-menu reachability, and early-island scene guards.
+full-menu reachability, early-island scene guards, and unchanged coordinates,
+trainer types, and sight ranges for ordinary sight-based trainers on changed
+maps.
 
 Build both FireRed and LeafGreen ROMs and run `make -C game check`. Then use a
 fresh save immediately after the starter to complete this journey without
-badges, HM items, unrelated campaign completion, or a required victory. Surf
-may be known only for the Route 21 crossing:
+badges, HM items, unrelated campaign completion, or a required scripted or
+story victory. Ordinary sight-based trainer battles are permitted. Surf may be
+known only for the Route 21 crossing:
 
 1. Visit and leave all ten Kanto settlements named by the PRD.
 2. Cross each changed Kanto lane in both directions before its original story,

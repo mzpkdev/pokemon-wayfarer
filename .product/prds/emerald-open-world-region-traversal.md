@@ -9,9 +9,10 @@ Sootopolis remains unlockable content. Its enclosed geography, Dive entrance, Gy
 ## Rules
 
 - Walking, doors, always-available local transport, and the approved native Surf crossings form Hoenn's core settlement network.
-- Main-story state, Gym progress, and forced victories cannot close the only route to a town or city in the opening network. That route cannot require an HM item. Only the named water crossings may require a Pokémon that already knows Surf.
+- Main-story state, Gym progress, and forced scripted or story victories cannot close the only route to a town or city in the opening network. That route cannot require an HM item. Only the named water crossings may require a Pokémon that already knows Surf.
+- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions and sight ranges in this pass and do not count as story-gated traversal. Player-relative trainer scaling is owned separately.
 - Native Cut, Flash, Strength, Rock Smash, Waterfall, and Dive users may open optional routes before the matching HM is found. Those routes do not count toward the core settlement network.
-- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or battle must leave another visible lane open.
+- A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or scripted battle must leave another visible lane open.
 - This exception applies only when this PRD explicitly names the encounter as the selected core lane. It does not replace an approved bypass or optional-scene requirement.
 - A story-gated shortcut must be self-contained. It cannot depend on a badge count or unrelated story flags from other cities.
 - A bypass or roadblock removal does not complete its attached story or award skipped rewards. Completing a permitted self-contained encounter may advance only that encounter's local state and grant its normal reward.
@@ -76,7 +77,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 
 ## Acceptance
 
-- From a new save after the opening, visit all fourteen named opening-network settlements without badges, HM items, earlier or unrelated story-completion flags, or a required battle victory. Native Surf is allowed only on the approved water crossings.
+- From a new save after the opening, visit all fourteen named opening-network settlements without badges, HM items, earlier or unrelated story-completion flags, or a required scripted or story battle victory. Ordinary sight-based trainer battles are permitted. Native Surf is allowed only on the approved water crossings.
 - Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved crossings.
 - Use the public ferry from Route 104 to Dewford and Slateport and return from both destinations while the Peeko and Letter stories are untouched and while either story is active.
 - Reach Lavaridge before Meteor Falls, during the Mt. Chimney conflict, and after defeating Maxie. The road stays open in all three states, and the conflict cannot be completed before Meteor Falls.
@@ -87,6 +88,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Confirm no native HM other than Surf becomes a prerequisite for opening-network settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
 - Complete the Route 111 desert survey without a badge, HM item, field-move use, or unrelated story flag; confirm the Go-Goggles keep the boundary open and the later handoff does not duplicate them.
+- Confirm this pass does not change the position, trainer type, or sight range of any ordinary sight-based trainer.
 
 ## References
 
