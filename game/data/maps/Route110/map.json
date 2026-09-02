@@ -587,15 +587,6 @@
     },
     {
       "type": "trigger",
-      "x": 35,
-      "y": 56,
-      "elevation": 3,
-      "var": "VAR_ROUTE110_STATE",
-      "var_value": "0",
-      "script": "Route110_EventScript_RivalTrigger3"
-    },
-    {
-      "type": "trigger",
       "x": 7,
       "y": 85,
       "elevation": 3,

@@ -6,6 +6,40 @@ DewfordTown_OnTransition:
 	setflag FLAG_VISITED_DEWFORD_TOWN
 	end
 
+DewfordTown_EventScript_PublicFerryDeckhand::
+	lock
+	faceplayer
+	setvar VAR_0x8004, 1
+	goto Route104_EventScript_PublicFerryMenu
+
+DewfordTown_EventScript_PublicFerrySailingPresentationToRoute104::
+	call Common_EventScript_BeginPublicFerrySailingPresentation
+	addobject LOCALID_DEWFORD_BOAT
+	setobjectxy LOCALID_DEWFORD_BOAT, 12, 8
+	setobjectxy LOCALID_PLAYER, 12, 8
+	hideobjectat LOCALID_PLAYER, MAP_DEWFORD_TOWN
+	fadescreen FADE_FROM_BLACK
+	applymovement LOCALID_DEWFORD_BOAT, DewfordTown_Movement_SailToPetalburg
+	applymovement LOCALID_PLAYER, DewfordTown_Movement_SailToPetalburg
+	waitmovement 0
+	call Common_EventScript_EndPublicFerrySailingPresentation
+	showobjectat LOCALID_PLAYER, MAP_ROUTE104
+	return
+
+DewfordTown_EventScript_PublicFerrySailingPresentationToSlateport::
+	call Common_EventScript_BeginPublicFerrySailingPresentation
+	addobject LOCALID_DEWFORD_BOAT
+	setobjectxy LOCALID_DEWFORD_BOAT, 12, 8
+	setobjectxy LOCALID_PLAYER, 12, 8
+	hideobjectat LOCALID_PLAYER, MAP_DEWFORD_TOWN
+	fadescreen FADE_FROM_BLACK
+	applymovement LOCALID_DEWFORD_BOAT, DewfordTown_Movement_SailToSlateport
+	applymovement LOCALID_PLAYER, DewfordTown_Movement_SailToSlateport
+	waitmovement 0
+	call Common_EventScript_EndPublicFerrySailingPresentation
+	showobjectat LOCALID_PLAYER, MAP_ROUTE109
+	return
+
 DewfordTown_EventScript_Briney::
 	lock
 	faceplayer

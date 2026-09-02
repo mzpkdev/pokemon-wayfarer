@@ -10,19 +10,11 @@ Route120_OnResume:
 	end
 
 Route120_EventScript_RemoveKecleonObject::
-	call_if_eq VAR_0x8009, 0, Route120_EventScript_RemoveBridgeKecleon
 	call_if_eq VAR_0x8009, 1, Route120_EventScript_RemoveKecleon
 	call_if_eq VAR_0x8009, 2, Route120_EventScript_RemoveKecleon
 	call_if_eq VAR_0x8009, 3, Route120_EventScript_RemoveKecleon
 	call_if_eq VAR_0x8009, 4, Route120_EventScript_RemoveKecleon
 	call_if_eq VAR_0x8009, 5, Route120_EventScript_RemoveKecleon
-	return
-
-Route120_EventScript_RemoveBridgeKecleon::
-	specialvar VAR_RESULT, GetBattleOutcome
-	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
-	removeobject LOCALID_BRIDGE_KECLEON
-	removeobject LOCALID_BRIDGE_KECLEON_SHADOW
 	return
 
 Route120_EventScript_RemoveKecleon::
@@ -36,6 +28,12 @@ Route120_OnLoad:
 	call_if_set FLAG_RECEIVED_DEVON_SCOPE, Route120_EventScript_SetBridgeClearMetatiles
 	call_if_unset FLAG_RECEIVED_DEVON_SCOPE, Route120_EventScript_SetBridgeKecleonMovement
 	end
+
+Route120_EventScript_SetBridgeObjectHideFlags::
+	setflag FLAG_HIDE_ROUTE_120_STEVEN
+	setflag FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE
+	setflag FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE_SHADOW
+	return
 
 Route120_EventScript_CloseAncientTomb::
 	setmetatile 7, 54, METATILE_General_RockWall_RockBase, TRUE
@@ -54,6 +52,7 @@ Route120_EventScript_SetBridgeKecleonMovement::
 	return
 
 Route120_OnTransition:
+	call_if_set FLAG_RECEIVED_DEVON_SCOPE, Route120_EventScript_SetBridgeObjectHideFlags
 	call GabbyAndTy_EventScript_UpdateLocation
 	call Route120_EventScript_SetWeather
 	end
@@ -154,10 +153,19 @@ Route120_EventScript_BerryNotLove::
 Route120_EventScript_Steven::
 	lock
 	faceplayer
+	checkitem ITEM_DEVON_SCOPE
+	goto_if_eq VAR_RESULT, TRUE, Route120_EventScript_RepairBridgeCompletion
 	goto_if_set FLAG_NOT_READY_FOR_BATTLE_ROUTE_120, Route120_EventScript_StevenAskReadyForBattle
+	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, Route120_EventScript_StevenGreetingAfterDewford
+	msgbox Route120_Text_StevenGreetingBeforeDewford, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Route120_EventScript_StevenNotReady
+	goto Route120_EventScript_StevenTryBattleKecleon
+	end
+
+Route120_EventScript_StevenGreetingAfterDewford::
 	msgbox Route120_Text_StevenGreeting, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, Route120_EventScript_StevenNotReady
-	goto Route120_EventScript_StevenBattleKecleon
+	goto Route120_EventScript_StevenTryBattleKecleon
 	end
 
 Route120_EventScript_StevenNotReady::
@@ -169,7 +177,18 @@ Route120_EventScript_StevenNotReady::
 Route120_EventScript_StevenAskReadyForBattle::
 	msgbox Route120_Text_StevenReadyForBattle, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, Route120_EventScript_StevenNotReady
+	goto Route120_EventScript_StevenTryBattleKecleon
+	end
+
+Route120_EventScript_StevenTryBattleKecleon::
+	checkitemspace ITEM_DEVON_SCOPE
+	goto_if_eq VAR_RESULT, FALSE, Route120_EventScript_StevenNeedsBagSpace
 	goto Route120_EventScript_StevenBattleKecleon
+	end
+
+Route120_EventScript_StevenNeedsBagSpace::
+	msgbox Route120_Text_StevenNeedsBagSpace, MSGBOX_DEFAULT
+	release
 	end
 
 Route120_EventScript_StevenBattleKecleon::
@@ -191,32 +210,36 @@ Route120_EventScript_StevenBattleKecleon::
 	delay 40
 	waitmoncry
 	setwildbattle SPECIES_KECLEON, 30
-	setvar VAR_0x8009, 0
-	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	dowildbattle
-	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
-	goto_if_eq VAR_RESULT, B_OUTCOME_WON, Route120_EventScript_RemoveBridgeKecleonPostBattle
-	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, Route120_EventScript_RemoveBridgeKecleonPostBattle
-	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, Route120_EventScript_RemoveBridgeKecleonPostBattle
-	goto Route120_EventScript_StevenGiveDeconScope
+	goto_if_eq VAR_RESULT, B_OUTCOME_LOST, Route120_EventScript_StevenBattleDefeated
+	goto_if_eq VAR_RESULT, B_OUTCOME_DREW, Route120_EventScript_StevenBattleDefeated
+	goto_if_eq VAR_RESULT, B_OUTCOME_FORFEITED, Route120_EventScript_StevenBattleDefeated
+	goto Route120_EventScript_CommitBridgeCompletion
 	end
 
-Route120_EventScript_RemoveBridgeKecleonPostBattle::
+Route120_EventScript_StevenBattleDefeated::
+	call Route120_EventScript_RestoreBridgeKecleon
+	release
+	end
+
+Route120_EventScript_CommitBridgeCompletion::
+	applymovement LOCALID_ROUTE120_STEVEN, Common_Movement_WalkInPlaceFasterDown
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+	waitmovement 0
+	call Route120_EventScript_StevenDevonScopeDialogue
+	additem ITEM_DEVON_SCOPE
+	goto_if_eq VAR_RESULT, FALSE, Route120_EventScript_StevenRewardDeliveryFailed
+	setvar VAR_0x8000, ITEM_DEVON_SCOPE
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	setflag FLAG_RECEIVED_DEVON_SCOPE
+	call Route120_EventScript_SetBridgeObjectHideFlags
 	fadescreenswapbuffers FADE_TO_BLACK
 	removeobject LOCALID_BRIDGE_KECLEON
 	removeobject LOCALID_BRIDGE_KECLEON_SHADOW
 	fadescreenswapbuffers FADE_FROM_BLACK
-	goto Route120_EventScript_StevenGiveDeconScope
-	end
-
-Route120_EventScript_StevenGiveDeconScope::
-	applymovement LOCALID_ROUTE120_STEVEN, Common_Movement_WalkInPlaceFasterDown
-	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
-	msgbox Route120_Text_StevenGiveDevonScope, MSGBOX_DEFAULT
-	giveitem ITEM_DEVON_SCOPE
-	setflag FLAG_RECEIVED_DEVON_SCOPE
 	msgbox Route120_Text_StevenGoodbye, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_ROUTE120_STEVEN, Common_Movement_WalkInPlaceFasterDown
@@ -227,10 +250,48 @@ Route120_EventScript_StevenGiveDeconScope::
 	delay 15
 	removeobject LOCALID_ROUTE120_STEVEN
 	waitfieldeffect FLDEFF_NPCFLY_OUT
-	setmetatile 13, 15, METATILE_Fortree_WoodBridge1_Top, FALSE
-	setmetatile 12, 16, METATILE_Fortree_WoodBridge1_Bottom, FALSE
-	setmetatile 12, 17, METATILE_General_ReflectiveWater, FALSE
-	setmetatile 13, 17, METATILE_General_ReflectiveWater, FALSE
+	call Route120_EventScript_SetBridgeClearMetatiles
+	special DrawWholeMapView
+	release
+	end
+
+Route120_EventScript_StevenDevonScopeDialogue::
+	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, Route120_EventScript_StevenDevonScopeDialogueAfterDewford
+	msgbox Route120_Text_StevenGiveDevonScopeBeforeDewford, MSGBOX_DEFAULT
+	return
+
+Route120_EventScript_StevenDevonScopeDialogueAfterDewford::
+	msgbox Route120_Text_StevenGiveDevonScope, MSGBOX_DEFAULT
+	return
+
+Route120_EventScript_StevenRewardDeliveryFailed::
+	call Route120_EventScript_RestoreBridgeKecleon
+	msgbox Route120_Text_StevenRewardStillOwed, MSGBOX_DEFAULT
+	release
+	end
+
+Route120_EventScript_RestoreBridgeKecleon::
+	fadescreenswapbuffers FADE_TO_BLACK
+	removeobject LOCALID_BRIDGE_KECLEON
+	removeobject LOCALID_BRIDGE_KECLEON_SHADOW
+	clearflag FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE
+	clearflag FLAG_HIDE_ROUTE_120_KECLEON_BRIDGE_SHADOW
+	setobjectmovementtype LOCALID_BRIDGE_KECLEON_SHADOW, MOVEMENT_TYPE_FACE_RIGHT
+	addobject LOCALID_BRIDGE_KECLEON
+	addobject LOCALID_BRIDGE_KECLEON_SHADOW
+	fadescreenswapbuffers FADE_FROM_BLACK
+	return
+
+Route120_EventScript_RepairBridgeCompletion::
+	msgbox Route120_Text_StevenRecognizedDevonScope, MSGBOX_DEFAULT
+	setflag FLAG_RECEIVED_DEVON_SCOPE
+	call Route120_EventScript_SetBridgeObjectHideFlags
+	fadescreenswapbuffers FADE_TO_BLACK
+	removeobject LOCALID_BRIDGE_KECLEON
+	removeobject LOCALID_BRIDGE_KECLEON_SHADOW
+	removeobject LOCALID_ROUTE120_STEVEN
+	fadescreenswapbuffers FADE_FROM_BLACK
+	call Route120_EventScript_SetBridgeClearMetatiles
 	special DrawWholeMapView
 	release
 	end
@@ -372,6 +433,18 @@ Route120_Text_StevenGreeting:
 	.string "{PLAYER}{KUN}, are your POKéMON ready for\n"
 	.string "battle?$"
 
+Route120_Text_StevenGreetingBeforeDewford:
+	.string "STEVEN: Hm? {PLAYER}{KUN}, hi.\p"
+	.string "There's something here that you can't\n"
+	.string "see, right?\p"
+	.string "Now, if I were to use this device on\n"
+	.string "the invisible obstacle…\p"
+	.string "No, no. Rather than describing it,\n"
+	.string "I should just show you.\l"
+	.string "That would be more fun.\p"
+	.string "{PLAYER}{KUN}, are your POKéMON ready for\n"
+	.string "battle?$"
+
 Route120_Text_StevenIllWaitHere:
 	.string "STEVEN: No?\p"
 	.string "I'll wait here, so you can get ready.$"
@@ -383,6 +456,16 @@ Route120_Text_StevenReadyForBattle:
 Route120_Text_StevenShowMeYourPower:
 	.string "STEVEN: {PLAYER}{KUN}, show me your true\n"
 	.string "power as a TRAINER!$"
+
+Route120_Text_StevenNeedsBagSpace:
+	.string "STEVEN: You'll need room in your BAG\n"
+	.string "for the DEVON SCOPE before we begin.$"
+
+Route120_Text_StevenRewardStillOwed:
+	.string "STEVEN: There still isn't room for the\n"
+	.string "DEVON SCOPE.\p"
+	.string "Make some space, then we'll try\n"
+	.string "again.$"
 
 Route120_Text_StevenUsedDevonScope:
 	.string "STEVEN used the DEVON SCOPE.\p"
@@ -399,6 +482,20 @@ Route120_Text_StevenGiveDevonScope:
 	.string "DEVON SCOPE.\p"
 	.string "Who knows, there may be other\n"
 	.string "concealed POKéMON.$"
+
+Route120_Text_StevenGiveDevonScopeBeforeDewford:
+	.string "STEVEN: I see…\n"
+	.string "Your battle style is intriguing.\p"
+	.string "I'd like you to have this\n"
+	.string "DEVON SCOPE.\p"
+	.string "Who knows, there may be other\n"
+	.string "concealed POKéMON.$"
+
+Route120_Text_StevenRecognizedDevonScope:
+	.string "STEVEN: You already have a\n"
+	.string "DEVON SCOPE.\p"
+	.string "Then this obstacle won't keep the\n"
+	.string "bridge closed any longer.$"
 
 Route120_Text_StevenGoodbye:
 	.string "STEVEN: {PLAYER}{KUN}.\p"

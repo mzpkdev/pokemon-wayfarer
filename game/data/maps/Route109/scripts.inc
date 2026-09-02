@@ -4,6 +4,26 @@
 Route109_MapScripts::
 	.byte 0
 
+Route109_EventScript_PublicFerryDeckhand::
+	lock
+	faceplayer
+	setvar VAR_0x8004, 2
+	goto Route104_EventScript_PublicFerryMenu
+
+Route109_EventScript_PublicFerrySailingPresentation::
+	call Common_EventScript_BeginPublicFerrySailingPresentation
+	addobject LOCALID_ROUTE109_BOAT
+	setobjectxy LOCALID_ROUTE109_BOAT, 21, 26
+	setobjectxy LOCALID_PLAYER, 21, 25
+	hideobjectat LOCALID_PLAYER, MAP_ROUTE109
+	fadescreen FADE_FROM_BLACK
+	applymovement LOCALID_ROUTE109_BOAT, Route109_Movement_SailToDewford
+	applymovement LOCALID_PLAYER, Route109_Movement_SailToDewford
+	waitmovement 0
+	call Common_EventScript_EndPublicFerrySailingPresentation
+	showobjectat LOCALID_PLAYER, MAP_DEWFORD_TOWN
+	return
+
 Route109_EventScript_StartDepartForDewford::
 	call EventScript_BackupMrBrineyLocation
 	setobjectsubpriority LOCALID_ROUTE109_BRINEY, MAP_ROUTE109, 0

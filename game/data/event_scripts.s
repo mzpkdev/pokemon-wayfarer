@@ -1283,6 +1283,17 @@ Common_EventScript_StopBrineysBoatMusic::
 	fadedefaultbgm
 	return
 
+Common_EventScript_BeginPublicFerrySailingPresentation::
+	closemessage
+	fadescreen FADE_TO_BLACK
+	call Common_EventScript_PlayBrineysBoatMusic
+	return
+
+Common_EventScript_EndPublicFerrySailingPresentation::
+	fadescreen FADE_TO_BLACK
+	call Common_EventScript_StopBrineysBoatMusic
+	return
+
 	.include "data/scripts/prof_birch.inc"
 
 @ Below could be split as ferry.inc aside from the Rusturf tunnel script

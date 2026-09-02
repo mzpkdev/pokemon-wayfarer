@@ -3,8 +3,13 @@ Route119_WeatherInstitute_1F_MapScripts::
 	.byte 0
 
 Route119_WeatherInstitute_1F_OnTransition:
+	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_1F_EventScript_ShowTeamAqua
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_1F_EventScript_SetLittleBoyPos
 	end
+
+Route119_WeatherInstitute_1F_EventScript_ShowTeamAqua::
+	clearflag FLAG_HIDE_ROUTE_119_TEAM_AQUA
+	return
 
 Route119_WeatherInstitute_1F_EventScript_SetLittleBoyPos::
 	setobjectxyperm LOCALID_WEATHER_INSTITUTE_LITTLE_BOY, 0, 5
@@ -130,4 +135,3 @@ Route119_WeatherInstitute_1F_Text_WhatWereAquasUpTo:
 Route119_WeatherInstitute_1F_Text_TakeRestInBed:
 	.string "There's a bed…\n"
 	.string "Let's take a rest.$"
-

@@ -18,6 +18,102 @@ Route104_OnTransition:
 	call Route104_EventScript_ShowOrHideWhiteHerbFlorist
 	end
 
+Route104_EventScript_PublicFerryDeckhand::
+	lock
+	faceplayer
+	setvar VAR_0x8004, 0
+	goto Route104_EventScript_PublicFerryMenu
+
+Route104_EventScript_PublicFerryMenu::
+	message Route104_Text_PublicFerryDestinationPrompt
+	waitmessage
+	multichoicedefault 18, 4, MULTI_EMERALD_PUBLIC_FERRY, 3, FALSE
+	switch VAR_RESULT
+	case 0, Route104_EventScript_PublicFerryChooseRoute104
+	case 1, Route104_EventScript_PublicFerryChooseDewford
+	case 2, Route104_EventScript_PublicFerryChooseSlateport
+	case 3, Route104_EventScript_PublicFerryCancel
+	case MULTI_B_PRESSED, Route104_EventScript_PublicFerryCancel
+	end
+
+Route104_EventScript_PublicFerryChooseRoute104::
+	goto_if_eq VAR_0x8004, 0, Route104_EventScript_PublicFerryAlreadyHere
+	msgbox Route104_Text_PublicFerryDepartRoute104, MSGBOX_DEFAULT
+	goto_if_eq VAR_0x8004, 1, Route104_EventScript_PublicFerryDewfordToRoute104
+	call Route109_EventScript_PublicFerrySailingPresentation
+	goto Route104_EventScript_PublicFerryArriveRoute104
+
+Route104_EventScript_PublicFerryDewfordToRoute104::
+	call DewfordTown_EventScript_PublicFerrySailingPresentationToRoute104
+	goto Route104_EventScript_PublicFerryArriveRoute104
+
+Route104_EventScript_PublicFerryArriveRoute104::
+	warp MAP_ROUTE104, 14, 52
+	waitstate
+	turnobject LOCALID_PLAYER, DIR_NORTH
+	release
+	end
+
+Route104_EventScript_PublicFerryChooseDewford::
+	goto_if_eq VAR_0x8004, 1, Route104_EventScript_PublicFerryAlreadyHere
+	msgbox Route104_Text_PublicFerryDepartDewford, MSGBOX_DEFAULT
+	goto_if_eq VAR_0x8004, 0, Route104_EventScript_PublicFerryRoute104ToDewford
+	call Route109_EventScript_PublicFerrySailingPresentation
+	goto Route104_EventScript_PublicFerryArriveDewford
+
+Route104_EventScript_PublicFerryRoute104ToDewford::
+	call Route104_EventScript_PublicFerrySailingPresentation
+	goto Route104_EventScript_PublicFerryArriveDewford
+
+Route104_EventScript_PublicFerryArriveDewford::
+	warp MAP_DEWFORD_TOWN, 13, 10
+	waitstate
+	turnobject LOCALID_PLAYER, DIR_NORTH
+	release
+	end
+
+Route104_EventScript_PublicFerryChooseSlateport::
+	goto_if_eq VAR_0x8004, 2, Route104_EventScript_PublicFerryAlreadyHere
+	msgbox Route104_Text_PublicFerryDepartSlateport, MSGBOX_DEFAULT
+	goto_if_eq VAR_0x8004, 0, Route104_EventScript_PublicFerryRoute104ToSlateport
+	call DewfordTown_EventScript_PublicFerrySailingPresentationToSlateport
+	goto Route104_EventScript_PublicFerryArriveSlateport
+
+Route104_EventScript_PublicFerryRoute104ToSlateport::
+	call Route104_EventScript_PublicFerrySailingPresentation
+	goto Route104_EventScript_PublicFerryArriveSlateport
+
+Route104_EventScript_PublicFerryArriveSlateport::
+	warp MAP_ROUTE109, 22, 25
+	waitstate
+	setflag FLAG_VISITED_SLATEPORT_CITY
+	turnobject LOCALID_PLAYER, DIR_NORTH
+	release
+	end
+
+Route104_EventScript_PublicFerryAlreadyHere::
+	msgbox Route104_Text_PublicFerryAlreadyHere, MSGBOX_DEFAULT
+	goto Route104_EventScript_PublicFerryMenu
+
+Route104_EventScript_PublicFerryCancel::
+	closemessage
+	release
+	end
+
+Route104_EventScript_PublicFerrySailingPresentation::
+	call Common_EventScript_BeginPublicFerrySailingPresentation
+	addobject LOCALID_ROUTE104_BOAT
+	setobjectxy LOCALID_ROUTE104_BOAT, 12, 54
+	setobjectxy LOCALID_PLAYER, 12, 53
+	hideobjectat LOCALID_PLAYER, MAP_ROUTE104
+	fadescreen FADE_FROM_BLACK
+	applymovement LOCALID_ROUTE104_BOAT, Route104_Movement_SailToDewford
+	applymovement LOCALID_PLAYER, Route104_Movement_SailToDewford
+	waitmovement 0
+	call Common_EventScript_EndPublicFerrySailingPresentation
+	showobjectat LOCALID_PLAYER, MAP_DEWFORD_TOWN
+	return
+
 Route104_EventScript_ShowOrHideWhiteHerbFlorist::
 	goto_if_unset FLAG_MET_PRETTY_PETAL_SHOP_OWNER, Route104_EventScript_HideWhiteHerbFlorist
 	goto_if_unset FLAG_BADGE03_GET, Route104_EventScript_HideWhiteHerbFlorist
@@ -1054,6 +1150,25 @@ Route104_Text_FlowerShopSellingSaplings:
 
 Route104_Text_MrBrineysCottage:
 	.string "MR. BRINEY'S COTTAGE$"
+
+Route104_Text_PublicFerryDestinationPrompt:
+	.string "Where would you like to go?$"
+
+Route104_Text_PublicFerryAlreadyHere:
+	.string "You're already at this stop.\p"
+	.string "Please choose another destination.$"
+
+Route104_Text_PublicFerryDepartRoute104:
+	.string "All aboard!\n"
+	.string "Next stop, ROUTE 104!$"
+
+Route104_Text_PublicFerryDepartDewford:
+	.string "All aboard!\n"
+	.string "Next stop, DEWFORD!$"
+
+Route104_Text_PublicFerryDepartSlateport:
+	.string "All aboard!\n"
+	.string "Next stop, SLATEPORT!$"
 
 Route104_Text_RouteSignPetalburg:
 	.string "ROUTE 1O4\n"

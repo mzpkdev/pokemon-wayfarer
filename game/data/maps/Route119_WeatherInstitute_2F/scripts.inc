@@ -3,10 +3,15 @@ Route119_WeatherInstitute_2F_MapScripts::
 	.byte 0
 
 Route119_WeatherInstitute_2F_OnTransition:
+	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_2F_EventScript_ShowTeamAqua
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 0, Route119_WeatherInstitute_2F_EventScript_SetScientistPosAquaHere
 	call_if_eq VAR_WEATHER_INSTITUTE_STATE, 1, Route119_WeatherInstitute_2F_EventScript_SetScientistPosAquaGone
 	call_if_set FLAG_SYS_GAME_CLEAR, Route119_WeatherInstitute_2F_EventScript_SetScientistPosGameClear
 	end
+
+Route119_WeatherInstitute_2F_EventScript_ShowTeamAqua::
+	clearflag FLAG_HIDE_ROUTE_119_TEAM_AQUA
+	return
 
 Route119_WeatherInstitute_2F_EventScript_SetScientistPosAquaHere::
 	setobjectxyperm LOCALID_WEATHER_INSTITUTE_2F_SCIENTIST, 1, 6
@@ -323,4 +328,3 @@ Route119_WeatherInstitute_2F_Text_NoAbnormalWeather:
 	.string "no longer being reported.\p"
 	.string "The occasional rainfall is a blessing,\n"
 	.string "really.$"
-

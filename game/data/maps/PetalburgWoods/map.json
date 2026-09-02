@@ -240,15 +240,6 @@
       "var": "VAR_PETALBURG_WOODS_STATE",
       "var_value": "0",
       "script": "PetalburgWoods_EventScript_DevonResearcherLeft"
-    },
-    {
-      "type": "trigger",
-      "x": 27,
-      "y": 23,
-      "elevation": 3,
-      "var": "VAR_PETALBURG_WOODS_STATE",
-      "var_value": "0",
-      "script": "PetalburgWoods_EventScript_DevonResearcherRight"
     }
   ],
   "bg_events": [
