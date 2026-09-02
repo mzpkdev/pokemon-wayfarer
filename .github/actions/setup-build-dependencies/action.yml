@@ -56,7 +56,7 @@ runs:
         )
         sudo apt-get "${apt_options[@]}" update
 
-        archive_directory="$GITHUB_WORKSPACE/.cache/apt-archives/$PACKAGE_SET"
+        archive_directory="/tmp/pokemon-wayfarer-apt-archives/$PACKAGE_SET"
         package_list="$RUNNER_TEMP/build-dependencies-$PACKAGE_SET.txt"
         download_plan="$RUNNER_TEMP/apt-download-plan-$PACKAGE_SET.txt"
         printf '%s\n' "${packages[@]}" > "$package_list"
