@@ -109,6 +109,10 @@ topology and encounter-rate addition.
 Routes 26 through 28, Tohjo Falls, Mt. Silver, the Johto Rocket Hideout, Sinjoh,
 Alola, event islands, and every Sevii map are rejected from the Kanto manifest.
 The three Kanto Victory Road maps remain Kanto-owned regardless of map section.
+`MAP_ROUTE10_POWER_PLANT_ENTRANCE_HNS` and
+`MAP_ROUTE10_POWER_PLANT_BACK_ROOM_HNS` have no ordinary encounter profiles and
+remain encounter-free. Use `MAP_ROUTE10_HNS` as the representative Power Plant
+approach for ecology inspection and playtesting.
 
 ### FireRed and LeafGreen source mapping
 
@@ -366,8 +370,8 @@ Compile the affected encounter, radio, Pokédex, and DexNav objects for HNS,
 then build one HNS release ROM. Playtest a new Kanto start through the first
 badge at day and night, all three rod qualities, both Chinchou coasts, one
 unchanged cave night, one materially changed route night, Safari Zone, Power
-Plant, and Route 23. Confirm special acquisitions and Sevii encounters did not
-change.
+Plant approach on Route 10, and Route 23. Confirm special acquisitions and
+Sevii encounters did not change.
 
 ## References
 

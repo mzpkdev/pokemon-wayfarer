@@ -82,10 +82,10 @@ Kanto uses these priorities in order:
    habitat or family-continuity reason.
 
 Habitat wins when a generation target conflicts with a convincing local
-population. Power Plant does not need a Generation II species merely to satisfy
-a quota, and a nocturnal cave may exceed the regional Generation II share when
-its residents support that choice. The regional report must make such local
-exceptions visible.
+population. The Route 10 Power Plant approach does not need a Generation II
+species merely to satisfy a quota, and a nocturnal cave may exceed the regional
+Generation II share when its residents support that choice. The regional report
+must make such local exceptions visible.
 
 ### Day and night
 
@@ -464,10 +464,10 @@ Playtesting should answer these questions:
   and 2.75 percent per unmodified cast. Confirm every qualifying Chinchou knows
   Surf. If its effective range falls below level 20, confirm the native-HM
   source record, specification, and generated learnset were updated together.
-- Inspect representative early route, forest, cave, power facility, Safari Zone,
-  coast, pond, and transition profiles in game at day and night, plus Sevii
-  profiles when they are included. Compare observed results with the
-  deterministic report.
+- Inspect representative early route, forest, cave, Route 10 Power Plant
+  approach, Safari Zone, coast, pond, and transition profiles in game at day
+  and night, plus Sevii profiles when they are included. Compare observed
+  results with the deterministic report.
 - Confirm gifts, trades, fossils, prizes, statics, scripted encounters,
   legendaries, and Mew acquisition are unchanged.
 
