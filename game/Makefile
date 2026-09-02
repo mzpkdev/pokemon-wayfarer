@@ -280,7 +280,7 @@ AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
 AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
 
-$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
+$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py
 
 $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc

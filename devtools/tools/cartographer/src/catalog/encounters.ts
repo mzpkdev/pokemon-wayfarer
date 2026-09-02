@@ -284,10 +284,7 @@ const joinedProfiles = (
     const key = profileLookupKey(product, baseLabel, metadata.field.type, rod)
     const profile = profiles.get(key)
     if (!profile) throw sourceError("", `projection has no exact profile join for ${key}`)
-    const runtimeSlotCount =
-      rod === "NONE"
-        ? metadata.field.encounter_rates.length
-        : (metadata.field.groups?.[rod.toLowerCase()]?.length ?? 0)
+    const runtimeSlotCount = rod === "NONE" ? metadata.field.encounter_rates.length : 10
     const mismatches = [
       profile.map === mapId ? null : `map ${profile.map}`,
       profile.encounterRate === method.encounter_rate
@@ -397,11 +394,13 @@ export const catalogWildEncounters = (
             }
             const slotRate = metadata.field.encounter_rates[slotIndex]!
             const reason =
-              slot.species === "SPECIES_NONE"
-                ? "species_none"
-                : slotRate === 0
-                  ? "zero_slot_rate"
-                  : null
+              methodType === "fishing_mons"
+                ? null
+                : slot.species === "SPECIES_NONE"
+                  ? "species_none"
+                  : slotRate === 0
+                    ? "zero_slot_rate"
+                    : null
             if (reason) {
               diagnostics.push({
                 code: "excluded_source_slot",
@@ -415,7 +414,8 @@ export const catalogWildEncounters = (
               })
               return []
             }
-            const speciesLabel = speciesLabelsById.get(slot.species)
+            const speciesLabel =
+              slot.species === "SPECIES_NONE" ? "NONE" : speciesLabelsById.get(slot.species)
             if (!speciesLabel) {
               throw sourceError(
                 `${methodPointer}/mons/${slotIndex}/species`,

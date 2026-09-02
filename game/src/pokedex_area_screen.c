@@ -126,6 +126,7 @@ static void SetSpecialMapHasMon(u16, u16);
 static mapsec_u16_t GetRegionMapSectionId(u8, u8);
 static bool8 MapHasSpecies(u16, u32, u16);
 static bool8 ProfileHasSpecies(u16, enum WildPokemonArea, enum WildEncounterFishingRod, u16);
+static bool8 ProfileViewHasSpecies(const struct WildEncounterProfileView *, u16);
 static void DoAreaGlow(void);
 static void Task_ShowPokedexAreaScreen(u8 taskId);
 static void Task_UpdatePokedexAreaScreen(u8 taskId);
@@ -468,10 +469,6 @@ static bool8 MapHasSpecies(u16 headerId, u32 headerSectionId, u16 species)
         return TRUE;
     if (ProfileHasSpecies(headerId, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_OLD, species))
         return TRUE;
-    if (ProfileHasSpecies(headerId, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_GOOD, species))
-        return TRUE;
-    if (ProfileHasSpecies(headerId, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_SUPER, species))
-        return TRUE;
     if (ProfileHasSpecies(headerId, WILD_AREA_ROCKS, WILD_ENCOUNTER_FISHING_ROD_NONE, species))
         return TRUE;
     return FALSE;
@@ -487,22 +484,27 @@ static bool8 ProfileHasSpecies(u16 headerId, enum WildPokemonArea area, enum Wil
         .fishingRod = fishingRod,
     };
     struct WildEncounterProfileView view;
-    u8 slot;
-
     if (!GetWildEncounterProfileView(&context, &view))
         return FALSE;
 
+    return ProfileViewHasSpecies(&view, species);
+}
+
+static bool8 ProfileViewHasSpecies(const struct WildEncounterProfileView *view, u16 species)
+{
+    u8 slot;
+
     // Area lookup is display-only. Iterate the authored level range to expose
     // every effective species a profile can produce without consuming RNG.
-    for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+    for (slot = view->entryStart; slot < view->entryStart + view->entryCount; slot++)
     {
         const struct WildPokemon *entry;
         u16 authoredLevel;
         u8 minimumLevel;
         u8 maximumLevel;
 
-        if (!IsCurrentWildEncounterProfileSlotEligible(&view, slot)
-         || !GetWildEncounterProfileEntry(&view, slot, &entry))
+        if (!IsCurrentWildEncounterProfileSlotEligible(view, slot)
+         || !GetWildEncounterProfileEntry(view, slot, &entry))
             continue;
 
         minimumLevel = min(entry->minLevel, entry->maxLevel);
@@ -511,13 +513,20 @@ static bool8 ProfileHasSpecies(u16 headerId, enum WildPokemonArea area, enum Wil
         {
             struct WildEncounterSpeciesOutcome outcome;
 
-            if (GetCurrentWildEncounterSpeciesOutcome(&view, slot, authoredLevel, &outcome)
+            if (GetCurrentWildEncounterSpeciesOutcome(view, slot, authoredLevel, &outcome)
              && outcome.species == species)
                 return TRUE;
         }
     }
     return FALSE;
 }
+
+#if TESTING
+bool8 PokedexArea_ProfileViewHasSpeciesForTesting(const struct WildEncounterProfileView *view, u16 species)
+{
+    return ProfileViewHasSpecies(view, species);
+}
+#endif
 
 static void BuildAreaGlowTilemap(void)
 {

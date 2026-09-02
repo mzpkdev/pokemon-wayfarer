@@ -17,18 +17,34 @@ VermilionCity_House1_EventScript_AlreadyGotOldRod::
 	end
 
 VermilionCity_House1_EventScript_GiveOldRod::
-	checkitemspace ITEM_OLD_ROD
-	goto_if_eq VAR_RESULT, FALSE, VermilionCity_House1_EventScript_NoRoomForOldRod
-	additem ITEM_OLD_ROD
 	msgbox VermilionCity_House1_Text_TakeThisAndFish
-	msgreceiveditem VermilionCity_House1_Text_ReceivedOldRodFromFishingGuru, ITEM_OLD_ROD
-	setflag FLAG_GOT_OLD_ROD
-	msgbox VermilionCity_House1_Text_FishingIsAWayOfLife
+	setvar VAR_0x8004, FLAG_GOT_OLD_ROD
+	special Script_TryAwardStandardRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, VermilionCity_House1_EventScript_AlreadyGotOldRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, VermilionCity_House1_EventScript_RodUpgradeFailed
+	copyvar VAR_0x8000, VAR_0x8005
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto_if_eq VAR_0x8005, ITEM_OLD_ROD, VermilionCity_House1_EventScript_ReceivedOldRod
+	goto_if_eq VAR_0x8005, ITEM_GOOD_ROD, VermilionCity_House1_EventScript_ReceivedGoodRod
+	msgbox VermilionCity_House1_Text_CompletedSuperRod
 	release
 	end
 
-VermilionCity_House1_EventScript_NoRoomForOldRod::
-	msgbox VermilionCity_House1_Text_NoRoomForNiceGift
+VermilionCity_House1_EventScript_ReceivedOldRod::
+	msgbox VermilionCity_House1_Text_StartedWithOldRod
+	release
+	end
+
+VermilionCity_House1_EventScript_ReceivedGoodRod::
+	msgbox VermilionCity_House1_Text_ImprovedToGoodRod
+	release
+	end
+
+VermilionCity_House1_EventScript_RodUpgradeFailed::
+	msgbox VermilionCity_House1_Text_RodUpgradeFailed
 	release
 	end
 
@@ -43,9 +59,24 @@ VermilionCity_House1_Text_TakeThisAndFish::
 	.string "I think we can be friends.\p"
 	.string "Take this and fish, young friend!$"
 
-VermilionCity_House1_Text_ReceivedOldRodFromFishingGuru::
-	.string "{PLAYER} received an OLD ROD from\n"
-	.string "the FISHING GURU.$"
+VermilionCity_House1_Text_StartedWithOldRod::
+	.string "You're an angler now, young friend!\n"
+	.string "That OLD ROD can catch any POKéMON\l"
+	.string "living in the local waters.$"
+
+VermilionCity_House1_Text_ImprovedToGoodRod::
+	.string "I see you're already an angler! Your\n"
+	.string "GOOD ROD will get more bites and give\l"
+	.string "uncommon catches better odds.$"
+
+VermilionCity_House1_Text_CompletedSuperRod::
+	.string "A true fishing devotee! Your SUPER ROD\n"
+	.string "gives rare catches and bites their\l"
+	.string "best odds.$"
+
+VermilionCity_House1_Text_RodUpgradeFailed::
+	.string "Something isn't right with your fishing\n"
+	.string "gear. Come back once it's sorted out.$"
 
 VermilionCity_House1_Text_FishingIsAWayOfLife::
 	.string "Fishing is a way of life!\n"
@@ -60,9 +91,4 @@ VermilionCity_House1_Text_OhThatsSoDisappointing::
 VermilionCity_House1_Text_HowAreTheFishBiting::
 	.string "Hello there, {PLAYER}!\p"
 	.string "How are the fish biting?$"
-
-VermilionCity_House1_Text_NoRoomForNiceGift::
-	.string "Oh, no!\p"
-	.string "I had a nice gift for you, but you\n"
-	.string "have no room for it!$"
 

@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_ENCOUNTERS = ROOT / "src/data/wild_encounters.json"
 DEFAULT_SCALING = ROOT / "src/data/wild_encounter_scaling.json"
 DEFAULT_SPECIES_METADATA = ROOT / "src/data/wild_encounter_species.json"
+DEFAULT_STANDARD_ROD_FISHING = ROOT / "src/data/standard_rod_fishing.json"
 DEFAULT_OUTPUT = ROOT / "src/data/wild_encounters.h"
 DEFAULT_AUDIT = ROOT / "build/wild-encounter-balance-audit.json"
 DEFAULT_CONFIG = ROOT / "include/config/overworld.h"
@@ -45,6 +46,9 @@ RODS = {
 }
 PRODUCTS = (("EMERALD", "Emerald"), ("FIRERED", "FireRed"),
             ("LEAFGREEN", "LeafGreen"), ("POKEMON_HNS", "HNS"))
+FISHING_QUALITIES = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD")
+FISHING_SLOT_COUNT = 10
+FISHING_BASE_BITE_PERCENT = {"OLD_ROD": 25, "GOOD_ROD": 50, "SUPER_ROD": 75}
 # The legacy generator detected any time word in a label before removing only a
 # terminal ``_Time`` suffix. Mt. Silver's SnowNight map relies on that historic
 # binding; retain it deliberately rather than make the general parser ambiguous.
@@ -192,6 +196,52 @@ def load_scaling(path):
             raise ValidationError(f"{path}: retention point {rating} does not fit u16")
         points.append({"anchor_level": anchor_level, "retention_numerator": retention.numerator, "retention_denominator": retention.denominator})
     return {"projection_cap": cap, "anchors": anchors, "points": points, "profile_offsets": source["profileOffsets"]}
+
+
+def load_standard_rod_fishing(path):
+    source = load_json(path)
+    exact_keys(source, {"schemaVersion", "qualityWeights", "nativeSurfAccessibility"}, path)
+    if source["schemaVersion"] != 1 or isinstance(source["schemaVersion"], bool):
+        raise ValidationError(f"{path}/schemaVersion: expected 1")
+
+    quality_weights = source["qualityWeights"]
+    exact_keys(quality_weights, set(FISHING_QUALITIES), f"{path}/qualityWeights")
+    for quality in FISHING_QUALITIES:
+        weights = quality_weights[quality]
+        location = f"{path}/qualityWeights/{quality}"
+        if not isinstance(weights, list) or len(weights) != FISHING_SLOT_COUNT:
+            raise ValidationError(f"{location}: expected exactly ten weights")
+        for index, weight in enumerate(weights):
+            integer(weight, f"{location}/{index}", 1, 0xFF)
+        if sum(weights) != 100:
+            raise ValidationError(f"{location}: weights must total 100")
+
+    rows = source["nativeSurfAccessibility"]
+    if not isinstance(rows, list) or len(rows) != 20:
+        raise ValidationError(f"{path}/nativeSurfAccessibility: expected exactly 20 records")
+    expected_fields = {
+        "product", "baseLabel", "timeOfDay", "species",
+        "expectedOldRodSuccessfulEncounterPercent",
+        "minimumOldRodSuccessfulEncounterPercent",
+        "minimumOldRodUnmodifiedCastPercent",
+    }
+    identities = set()
+    for index, row in enumerate(rows):
+        location = f"{path}/nativeSurfAccessibility/{index}"
+        exact_keys(row, expected_fields, location)
+        if row["product"] not in dict(PRODUCTS):
+            raise ValidationError(f"{location}/product: unsupported product")
+        identifier(row["baseLabel"], f"{location}/baseLabel")
+        identifier(row["timeOfDay"], f"{location}/timeOfDay")
+        identifier(row["species"], f"{location}/species", SPECIES_IDENTIFIER)
+        integer(row["expectedOldRodSuccessfulEncounterPercent"], f"{location}/expectedOldRodSuccessfulEncounterPercent", 1, 100)
+        integer(row["minimumOldRodSuccessfulEncounterPercent"], f"{location}/minimumOldRodSuccessfulEncounterPercent", 1, 100)
+        integer(row["minimumOldRodUnmodifiedCastPercent"], f"{location}/minimumOldRodUnmodifiedCastPercent", 1, 100)
+        identity = tuple(row[key] for key in ("product", "baseLabel", "timeOfDay", "species"))
+        if identity in identities:
+            raise ValidationError(f"{location}: duplicate accessibility record")
+        identities.add(identity)
+    return source
 
 
 def trainer_rating_bounds(path, projection_cap):
@@ -434,9 +484,11 @@ def validate_encounters(encounters, known_species, config):
             partitions = field.get("groups")
             if not isinstance(partitions, dict) or set(partitions) != {"old_rod", "good_rod", "super_rod"}:
                 raise ValidationError("wild_encounters.json/fishing_mons: expected rod partitions")
+            if len(weights) != FISHING_SLOT_COUNT:
+                raise ValidationError("wild_encounters.json/fishing_mons: expected exactly ten source slots")
             slots = [slot for partition in partitions.values() for slot in partition]
-            if sorted(slots) != list(range(len(weights))):
-                raise ValidationError("wild_encounters.json/fishing_mons: partitions must cover each slot once")
+            if sorted(slots) != list(range(FISHING_SLOT_COUNT)):
+                raise ValidationError("wild_encounters.json/fishing_mons: rod partitions must cover slots 0 through 9 exactly once")
         for profile in profiles:
             entry = profile["encounter"].get(method)
             if entry is None:
@@ -453,6 +505,36 @@ def validate_encounters(encounters, known_species, config):
                 minimum = integer(mon.get("min_level", 2), f"{location}/min_level", 1, MAX_LEVEL)
                 maximum = integer(mon.get("max_level", 100), f"{location}/max_level", 1, MAX_LEVEL)
     return profiles, header_ids
+
+
+def validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, path=DEFAULT_STANDARD_ROD_FISHING):
+    profiles_by_label = {profile["label"]: profile for profile in profiles}
+    old_weights = standard_rod["qualityWeights"]["OLD_ROD"]
+    for index, row in enumerate(standard_rod["nativeSurfAccessibility"]):
+        location = f"{path}/nativeSurfAccessibility/{index}"
+        profile = profiles_by_label.get(row["baseLabel"])
+        if profile is None:
+            raise ValidationError(f"{location}/baseLabel: unknown profile")
+        if profile["product"] != row["product"]:
+            raise ValidationError(f"{location}/product: does not match profile")
+        if row["timeOfDay"] not in config.times or profile["time"] != row["timeOfDay"]:
+            raise ValidationError(f"{location}/timeOfDay: does not match resolved runtime time")
+        if row["species"] not in known_species:
+            raise ValidationError(f"{location}/species: unknown species")
+        fishing = profile["encounter"].get("fishing_mons")
+        if fishing is None or len(fishing.get("mons", [])) < FISHING_SLOT_COUNT:
+            raise ValidationError(f"{location}/baseLabel: profile has no complete fishing table")
+        species_weight = sum(
+            old_weights[slot]
+            for slot, mon in enumerate(fishing["mons"][:FISHING_SLOT_COUNT])
+            if mon["species"] == row["species"]
+        )
+        if species_weight == 0:
+            raise ValidationError(f"{location}/species: species is not authored in the fishing profile")
+        if species_weight != row["expectedOldRodSuccessfulEncounterPercent"]:
+            raise ValidationError(
+                f"{location}/expectedOldRodSuccessfulEncounterPercent: expected {species_weight} from the Old Rod profile"
+            )
 
 
 def build_species_metadata(document, evolutions, known_species, ordinary_species):
@@ -655,7 +737,12 @@ class Assembler:
             self.write_headers(headers)
 
 
-def render_scaling(output, scaling, offsets, metadata):
+def render_scaling(output, scaling, offsets, metadata, standard_rod):
+    output.write("\nconst u8 gStandardRodFishingWeights[WILD_ENCOUNTER_FISHING_ROD_NONE][FISH_WILD_COUNT] =\n{\n")
+    for quality in FISHING_QUALITIES:
+        weights = ", ".join(str(weight) for weight in standard_rod["qualityWeights"][quality])
+        output.write(f"    [{RODS[quality]}] = {{ {weights} }},\n")
+    output.write("};\n")
     output.write("\nconst struct WildEncounterScalingConfig gWildEncounterScalingConfig =\n{\n")
     output.write(f"    .projectionCap = {scaling['projection_cap']},\n}};\n\n")
     output.write("const struct WildEncounterScalingAnchor gWildEncounterScalingAnchors[] =\n{\n")
@@ -680,11 +767,11 @@ def render_scaling(output, scaling, offsets, metadata):
     output.write("};\nconst u16 gWildEncounterSpeciesMetadataCount = ARRAY_COUNT(gWildEncounterSpeciesMetadata);\n")
 
 
-def render_header(encounters, config, scaling, offsets, metadata):
+def render_header(encounters, config, scaling, offsets, metadata, standard_rod):
     output = io.StringIO()
     output.write("//\n// DO NOT MODIFY THIS FILE! It is auto-generated by tools/wild_encounters/wild_encounters_to_header.py\n//\n\n\n")
     assembler = Assembler(output, encounters, config)
-    assembler.write_macros(); assembler.write_encounters(); render_scaling(output, scaling, offsets, metadata)
+    assembler.write_macros(); assembler.write_encounters(); render_scaling(output, scaling, offsets, metadata, standard_rod)
     return output.getvalue()
 
 
@@ -713,8 +800,8 @@ def stage_rank(species, by_species):
     return rank
 
 
-def slot_summary(slot, scaling, offset, by_species, failures, location):
-    summaries = [{"locked": False, "outcomes": {}, "changes": set()} for _ in range(scaling["projection_cap"] + 1)]
+def slot_summary(slot, scaling, offset, by_species, failures, location, exclude_species_none=False):
+    summaries = [{"locked": False, "outcomes": {}, "outcomeCounts": {}, "changes": set()} for _ in range(scaling["projection_cap"] + 1)]
     for vanilla in range(slot["minimumLevel"], slot["maximumLevel"] + 1):
         previous_level, previous_rank = None, None
         for rating in range(scaling["projection_cap"] + 1):
@@ -722,8 +809,9 @@ def slot_summary(slot, scaling, offset, by_species, failures, location):
             species, changes = effective_species(slot["species"], level, by_species)
             outcome = summaries[rating]["outcomes"].setdefault(species, {"minimumLevel": level, "maximumLevel": level})
             outcome["minimumLevel"], outcome["maximumLevel"] = min(outcome["minimumLevel"], level), max(outcome["maximumLevel"], level)
+            summaries[rating]["outcomeCounts"][species] = summaries[rating]["outcomeCounts"].get(species, 0) + 1
             summaries[rating]["changes"].update(changes)
-            if level < by_species[species]["minimum_level"]:
+            if (exclude_species_none and slot["species"] == "SPECIES_NONE") or level < by_species[species]["minimum_level"]:
                 summaries[rating]["locked"] = True
             rank = stage_rank(species, by_species)
             if previous_level is not None and level < previous_level:
@@ -742,38 +830,167 @@ def slot_summary(slot, scaling, offset, by_species, failures, location):
     return summaries, unlock
 
 
-def method_slots(profile, method, rod):
+def method_slots(profile, method, rod, standard_rod=None):
     field = next(field for field in profile["group"]["fields"] if field["type"] == method)
     # The existing engine owns selection counts through the field weight table.
     # Some HNS source entries carry inert trailing rows, so audit the same active
     # prefix rather than inventing weights for authored rows the engine cannot pick.
-    indices = range(len(field["encounter_rates"])) if method != "fishing_mons" else field["groups"][rod.lower()]
-    return [(index, profile["encounter"][method]["mons"][index], field["encounter_rates"][index]) for index in indices]
+    if method == "fishing_mons":
+        if standard_rod is None:
+            standard_rod = load_standard_rod_fishing(DEFAULT_STANDARD_ROD_FISHING)
+        indices = range(FISHING_SLOT_COUNT)
+        weights = standard_rod["qualityWeights"][rod]
+    else:
+        indices = range(len(field["encounter_rates"]))
+        weights = field["encounter_rates"]
+    return [(index, profile["encounter"][method]["mons"][index], weights[index]) for index in indices]
 
 
-def audit_method(profile, method, rod, scaling, offset, by_species, failures):
+def probability(numerator, denominator):
+    value = Fraction(numerator, denominator)
+    return {"numerator": value.numerator, "denominator": value.denominator}
+
+
+def audit_method(profile, method, rod, scaling, offset, by_species, failures, standard_rod):
     slots = []
-    for index, mon, weight in method_slots(profile, method, rod):
+    for index, mon, weight in method_slots(profile, method, rod, standard_rod):
         authored_minimum, authored_maximum = mon.get("min_level", 2), mon.get("max_level", 100)
         # Preserve the authored table verbatim in the generated header. The audit
         # uses its numeric envelope so legacy inverted ranges remain visible but
         # do not make the balance report impossible to produce.
         slot = {"species": mon["species"], "minimumLevel": min(authored_minimum, authored_maximum), "maximumLevel": max(authored_minimum, authored_maximum), "authoredMinimumLevel": authored_minimum, "authoredMaximumLevel": authored_maximum, "authoredRangeWasInverted": authored_minimum > authored_maximum}
-        summaries, unlock = slot_summary(slot, scaling, offset, by_species, failures, f"{profile['product']}/{profile['label']}/{method}/{rod}/slot {index}")
+        summaries, unlock = slot_summary(slot, scaling, offset, by_species, failures, f"{profile['product']}/{profile['label']}/{method}/{rod}/slot {index}", method == "fishing_mons")
         slots.append({"slot": index, "weight": weight, "original": slot, "summaries": summaries, "unlock": unlock})
     samples = []
-    for rating in (value for value in SAMPLE_RATINGS if value <= scaling["projection_cap"]):
+    ratings = range(10, min(80, scaling["projection_cap"]) + 1) if method == "fishing_mons" else (value for value in SAMPLE_RATINGS if value <= scaling["projection_cap"])
+    for rating in ratings:
         locked = [slot for slot in slots if slot["summaries"][rating]["locked"]]
         eligible = [slot for slot in slots if slot not in locked]
-        if not eligible:
+        if not eligible and method != "fishing_mons":
             failures.append(f"{profile['product']}/{profile['label']}/{method}/{rod}: all slots are locked at rating {rating}")
         total = sum(slot["weight"] for slot in eligible)
         outcomes = []
-        for slot in slots:
+        for position, slot in enumerate(slots):
             summary = slot["summaries"][rating]
-            outcomes.append({"slot": slot["slot"], "weight": slot["weight"], "locked": summary["locked"], "unlockRating": slot["unlock"], "effective": [{"species": species, **outcome} for species, outcome in sorted(summary["outcomes"].items())], "stageChanges": [{"fromSpecies": source, "toSpecies": target} for source, target in sorted(summary["changes"])], "renormalizedWeight": None if summary["locked"] else {"numerator": slot["weight"], "denominator": total}})
-        samples.append({"rating": rating, "eligibleSlotCount": len(eligible), "lockedSlotCount": len(locked), "eligibleWeight": total, "lockedWeight": sum(slot["weight"] for slot in locked), "slotOutcomes": outcomes})
-    return {"label": profile["label"], "map": profile["map"], "header": profile["header"], "headerId": profile["header_id"], "timeOfDay": profile["time"], "method": method, "fishingRod": rod, "encounterRate": profile["encounter"][method]["encounter_rate"], "authoredSlotCount": len(profile["encounter"][method]["mons"]), "runtimeSlotCount": len(slots), "levelOffset": offset, "samples": samples}
+            if method == "fishing_mons":
+                level_count = slot["original"]["maximumLevel"] - slot["original"]["minimumLevel"] + 1
+                outcome = {
+                    "slot": slot["slot"],
+                    "authoredSpecies": slot["original"]["species"],
+                    "weight": slot["weight"],
+                    "eligible": not summary["locked"],
+                    "effectiveSpeciesGivenSlotProbabilities": [
+                        {"species": species, "probability": probability(count, level_count)}
+                        for species, count in sorted(summary["outcomeCounts"].items())
+                    ],
+                }
+                if not summary["locked"]:
+                    eligible_position = eligible.index(slot)
+                    mirrored = eligible[len(eligible) - eligible_position - 1]
+                    outcome["mirroredSlot"] = mirrored["slot"]
+                    outcome["lureOffSuccessfulEncounterProbability"] = probability(slot["weight"], total)
+                    outcome["lureOnSuccessfulEncounterProbability"] = probability(4 * slot["weight"] + mirrored["weight"], 5 * total)
+                    bite = FISHING_BASE_BITE_PERCENT[rod]
+                    outcome["lureOffUnmodifiedCastProbability"] = probability(slot["weight"] * bite, total * 100)
+                    outcome["lureOnUnmodifiedCastProbability"] = probability((4 * slot["weight"] + mirrored["weight"]) * bite, 5 * total * 100)
+            else:
+                outcome = {"slot": slot["slot"], "weight": slot["weight"], "locked": summary["locked"], "unlockRating": slot["unlock"], "effective": [{"species": species, **value} for species, value in sorted(summary["outcomes"].items())], "stageChanges": [{"fromSpecies": source, "toSpecies": target} for source, target in sorted(summary["changes"])], "renormalizedWeight": None if summary["locked"] else probability(slot["weight"], total)}
+            outcomes.append(outcome)
+        sample = {"rating": rating, "eligibleSlotCount": len(eligible), "lockedSlotCount": len(locked), "eligibleWeight": total, "lockedWeight": sum(slot["weight"] for slot in locked), "slotOutcomes": outcomes}
+        if method == "fishing_mons":
+            authored_aggregates = {}
+            effective_aggregates = {}
+            if total:
+                for eligible_position, slot in enumerate(eligible):
+                    mirrored = eligible[len(eligible) - eligible_position - 1]
+                    species = slot["original"]["species"]
+                    lure_off_slot = Fraction(slot["weight"], total)
+                    lure_on_slot = Fraction(4 * slot["weight"] + mirrored["weight"], 5 * total)
+                    authored = authored_aggregates.setdefault(species, {"lureOff": Fraction(0), "lureOn": Fraction(0)})
+                    authored["lureOff"] += lure_off_slot
+                    authored["lureOn"] += lure_on_slot
+                    level_count = slot["original"]["maximumLevel"] - slot["original"]["minimumLevel"] + 1
+                    for effective_species, count in slot["summaries"][rating]["outcomeCounts"].items():
+                        conditional = Fraction(count, level_count)
+                        effective = effective_aggregates.setdefault(effective_species, {"lureOff": Fraction(0), "lureOn": Fraction(0)})
+                        effective["lureOff"] += lure_off_slot * conditional
+                        effective["lureOn"] += lure_on_slot * conditional
+            bite = FISHING_BASE_BITE_PERCENT[rod]
+            def aggregate_rows(aggregates):
+                return [
+                {
+                    "species": species,
+                    "lureOffSuccessfulEncounterProbability": probability(values["lureOff"].numerator, values["lureOff"].denominator),
+                    "lureOnSuccessfulEncounterProbability": probability(values["lureOn"].numerator, values["lureOn"].denominator),
+                    "lureOffUnmodifiedCastProbability": probability((values["lureOff"] * Fraction(bite, 100)).numerator, (values["lureOff"] * Fraction(bite, 100)).denominator),
+                    "lureOnUnmodifiedCastProbability": probability((values["lureOn"] * Fraction(bite, 100)).numerator, (values["lureOn"] * Fraction(bite, 100)).denominator),
+                }
+                for species, values in sorted(aggregates.items())
+                ]
+            sample["aggregateAuthoredSpeciesProbabilities"] = aggregate_rows(authored_aggregates)
+            sample["aggregateSpeciesProbabilities"] = aggregate_rows(effective_aggregates)
+        if method == "fishing_mons":
+            sample["ratings"] = [sample.pop("rating")]
+            if samples and {key: value for key, value in samples[-1].items() if key != "ratings"} == {key: value for key, value in sample.items() if key != "ratings"}:
+                samples[-1]["ratings"].extend(sample["ratings"])
+            else:
+                samples.append(sample)
+        else:
+            samples.append(sample)
+    row = {"label": profile["label"], "map": profile["map"], "header": profile["header"], "headerId": profile["header_id"], "timeOfDay": profile["time"], "method": method, "fishingRod": rod, "encounterRate": profile["encounter"][method]["encounter_rate"], "authoredSlotCount": len(profile["encounter"][method]["mons"]), "runtimeSlotCount": len(slots), "levelOffset": offset, "samples": samples}
+    if method == "fishing_mons":
+        row["weights"] = list(standard_rod["qualityWeights"][rod])
+        row["baseBitePercent"] = FISHING_BASE_BITE_PERCENT[rod]
+    return row
+
+
+def validate_standard_rod_balance(standard_rod, profiles, scaling, metadata, offsets):
+    """Validate release-blocking fishing invariants during ordinary generation."""
+    failures = []
+    for slot, weight in enumerate(standard_rod["qualityWeights"]["OLD_ROD"]):
+        if Fraction(weight, 100) < Fraction(1, 200):
+            failures.append(f"OLD_ROD/slot {slot}: below the 0.5 percent minimum when eligible")
+
+    profiles_by_label = {profile["label"]: profile for profile in profiles}
+    by_species = {item["species"]: item for item in metadata}
+    offset_map = {
+        (item["product"], item["header_id"], item["area"], item["time"], item["rod"]): item["level_offset"]
+        for item in offsets
+    }
+    audited_profiles = {}
+    for record in standard_rod["nativeSurfAccessibility"]:
+        profile = profiles_by_label[record["baseLabel"]]
+        row = audited_profiles.get(profile["label"])
+        if row is None:
+            key = (
+                profile["product"], profile["header_id"], METHOD_AREAS["fishing_mons"],
+                profile["time"], RODS["OLD_ROD"],
+            )
+            row = audit_method(
+                profile, "fishing_mons", "OLD_ROD", scaling,
+                offset_map.get(key, 0), by_species, failures, standard_rod,
+            )
+            audited_profiles[profile["label"]] = row
+        for sample in row["samples"]:
+            species_row = next(
+                (item for item in sample["aggregateAuthoredSpeciesProbabilities"] if item["species"] == record["species"]),
+                None,
+            )
+            success = Fraction(0) if species_row is None else Fraction(**species_row["lureOffSuccessfulEncounterProbability"])
+            per_cast = Fraction(0) if species_row is None else Fraction(**species_row["lureOffUnmodifiedCastProbability"])
+            expected = Fraction(record["expectedOldRodSuccessfulEncounterPercent"], 100)
+            minimum_success = Fraction(record["minimumOldRodSuccessfulEncounterPercent"], 100)
+            minimum_cast = Fraction(record["minimumOldRodUnmodifiedCastPercent"], 100)
+            for rating in sample["ratings"]:
+                identity = f"{record['product']}/{record['baseLabel']}/{record['timeOfDay']}/{record['species']}/rating {rating}"
+                if success != expected:
+                    failures.append(f"{identity}: expected {expected}, got {success}")
+                if success < minimum_success:
+                    failures.append(f"{identity}: below successful-encounter accessibility minimum")
+                if per_cast < minimum_cast:
+                    failures.append(f"{identity}: below unmodified-cast accessibility minimum")
+    if failures:
+        raise ValidationError("standard rod balance invariant failures: " + "; ".join(failures))
 
 
 def species_projection_intervals(species, by_species):
@@ -798,7 +1015,9 @@ def species_projection_intervals(species, by_species):
     return intervals
 
 
-def build_cartographer_projection_model(profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating):
+def build_cartographer_projection_model(profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating, standard_rod=None):
+    if standard_rod is None:
+        standard_rod = load_standard_rod_fishing(DEFAULT_STANDARD_ROD_FISHING)
     if not 0 <= minimum_rating <= maximum_rating <= scaling["projection_cap"]:
         raise ValidationError("Cartographer Trainer Rating bounds exceed the projection curve")
     by_species = {item["species"]: item for item in metadata}
@@ -845,8 +1064,8 @@ def build_cartographer_projection_model(profiles, header_ids, config, scaling, m
                 if runtime_identity in runtime_identities:
                     raise ValidationError(f"duplicate Cartographer runtime identity {runtime_identity}")
                 runtime_identities.add(runtime_identity)
-                slots = method_slots(profile, method, rod)
-                profiles_by_identity[profile_key] = {
+                slots = method_slots(profile, method, rod, standard_rod)
+                profile_row = {
                     "profileKey": profile_key,
                     "product": profile["product"],
                     "map": profile["map"],
@@ -863,6 +1082,9 @@ def build_cartographer_projection_model(profiles, header_ids, config, scaling, m
                     "authoredSlotCount": len(profile["encounter"][method]["mons"]),
                     "runtimeSlotCount": len(slots),
                 }
+                if method == "fishing_mons":
+                    profile_row["weights"] = list(standard_rod["qualityWeights"][rod])
+                profiles_by_identity[profile_key] = profile_row
 
     product_order = {product: index for index, (product, _) in enumerate(PRODUCTS)}
     method_order = {method: index for index, method in enumerate(config.mon_types)}
@@ -875,7 +1097,7 @@ def build_cartographer_projection_model(profiles, header_ids, config, scaling, m
         ),
     )
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "trainerRating": {"minimum": minimum_rating, "maximum": maximum_rating},
         "authoredLevel": {"minimum": 1, "maximum": MAX_LEVEL},
         "products": [{"id": product, "displayName": display} for product, display in PRODUCTS],
@@ -886,12 +1108,14 @@ def build_cartographer_projection_model(profiles, header_ids, config, scaling, m
     }
 
 
-def build_cartographer_projection(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO, trainer_rating_path=DEFAULT_TRAINER_RATING):
+def build_cartographer_projection(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, standard_rod_fishing_path=DEFAULT_STANDARD_ROD_FISHING, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO, trainer_rating_path=DEFAULT_TRAINER_RATING):
     encounters = load_json(encounters_path)
     config = Config(config_path, rtc_constants_path, encounters)
     scaling = load_scaling(scaling_path)
     known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
+    standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
+    validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
     ordinary_species = {
         mon["species"]
         for profile in profiles
@@ -902,19 +1126,24 @@ def build_cartographer_projection(encounters_path=DEFAULT_ENCOUNTERS, scaling_pa
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
     minimum_rating, maximum_rating = trainer_rating_bounds(trainer_rating_path, scaling["projection_cap"])
     return build_cartographer_projection_model(
-        profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating,
+        profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating, standard_rod,
     )
 
 
-def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
+def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, standard_rod_fishing_path=DEFAULT_STANDARD_ROD_FISHING, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
+    standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
+    validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
     ordinary_species = {mon["species"] for profile in profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
     by_species = {item["species"]: item for item in metadata}
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
     offset_map = {(item["product"], item["header_id"], item["area"], item["time"], item["rod"]): item["level_offset"] for item in offsets}
     failures, products = [], []
+    for slot, weight in enumerate(standard_rod["qualityWeights"]["OLD_ROD"]):
+        if Fraction(weight, 100) < Fraction(1, 200):
+            failures.append(f"OLD_ROD/slot {slot}: below the 0.5 percent minimum when eligible")
     for product, display in PRODUCTS:
         selected = [profile for profile in profiles if profile["product"] == product]
         if not selected:
@@ -926,9 +1155,43 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
                     continue
                 for rod in (("OLD_ROD", "GOOD_ROD", "SUPER_ROD") if method == "fishing_mons" else ("NONE",)):
                     key = (product, profile["header_id"], METHOD_AREAS[method], profile["time"], RODS[rod])
-                    population.append(audit_method(profile, method, rod, scaling, offset_map.get(key, 0), by_species, failures))
+                    population.append(audit_method(profile, method, rod, scaling, offset_map.get(key, 0), by_species, failures, standard_rod))
         products.append({"product": display, "headerCount": len(header_ids[product]), "profileCount": len(selected), "population": population})
-    return {"schemaVersion": 1, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "invariants": {"passed": not failures, "failures": failures}}
+
+    population_by_identity = {
+        (product, row["label"], row["timeOfDay"], row["fishingRod"]): row
+        for (product, _), product_row in zip(PRODUCTS, products)
+        for row in product_row["population"]
+        if row["method"] == "fishing_mons"
+    }
+    accessibility = []
+    for record in standard_rod["nativeSurfAccessibility"]:
+        row = population_by_identity[(record["product"], record["baseLabel"], record["timeOfDay"], "OLD_ROD")]
+        rating_results = []
+        for sample in row["samples"]:
+            species_row = next((item for item in sample["aggregateAuthoredSpeciesProbabilities"] if item["species"] == record["species"]), None)
+            success = Fraction(0) if species_row is None else Fraction(**species_row["lureOffSuccessfulEncounterProbability"])
+            per_cast = Fraction(0) if species_row is None else Fraction(**species_row["lureOffUnmodifiedCastProbability"])
+            expected = Fraction(record["expectedOldRodSuccessfulEncounterPercent"], 100)
+            minimum_success = Fraction(record["minimumOldRodSuccessfulEncounterPercent"], 100)
+            minimum_cast = Fraction(record["minimumOldRodUnmodifiedCastPercent"], 100)
+            for rating in sample["ratings"]:
+                identity = f"{record['product']}/{record['baseLabel']}/{record['timeOfDay']}/{record['species']}/rating {rating}"
+                if success != expected:
+                    failures.append(f"{identity}: expected {expected}, got {success}")
+                if success < minimum_success:
+                    failures.append(f"{identity}: below successful-encounter accessibility minimum")
+                if per_cast < minimum_cast:
+                    failures.append(f"{identity}: below unmodified-cast accessibility minimum")
+                rating_results.append({
+                    "rating": rating,
+                    "successfulEncounterProbability": probability(success.numerator, success.denominator),
+                    "unmodifiedCastProbability": probability(per_cast.numerator, per_cast.denominator),
+                    "expectedUnmodifiedCasts": None if per_cast == 0 else probability(per_cast.denominator, per_cast.numerator),
+                })
+        accessibility.append({**record, "ratings": rating_results})
+
+    return {"schemaVersion": 2, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(10, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "invariants": {"passed": not failures, "failures": failures}}
 
 
 def atomic_write(path, content):
@@ -951,19 +1214,23 @@ def atomic_write(path, content):
         raise
 
 
-def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, output_path=DEFAULT_OUTPUT, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
+def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, standard_rod_fishing_path=DEFAULT_STANDARD_ROD_FISHING, output_path=DEFAULT_OUTPUT, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
     profiles, _ = validate_encounters(encounters, known_species, config)
+    standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
+    validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
     ordinary_species = {mon["species"] for profile in profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
-    atomic_write(output_path, render_header(encounters, config, scaling, load_offsets(scaling["profile_offsets"], profiles, scaling_path), metadata))
+    offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
+    validate_standard_rod_balance(standard_rod, profiles, scaling, metadata, offsets)
+    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod))
 
 
 def generate_wild_encounter_balance_audit(output_path=DEFAULT_AUDIT, **kwargs):
     audit = build_wild_encounter_balance_audit(**kwargs)
     if audit["invariants"]["failures"]:
         raise ValidationError("wild encounter balance audit invariant failures: " + "; ".join(audit["invariants"]["failures"]))
-    atomic_write(output_path, json.dumps(audit, ensure_ascii=True, indent=2, sort_keys=True) + "\n")
+    atomic_write(output_path, json.dumps(audit, ensure_ascii=True, separators=(",", ":"), sort_keys=True) + "\n")
     return audit
 
 
@@ -979,6 +1246,7 @@ def generate_cartographer_projection(output_path, **kwargs):
 def arguments():
     parser = argparse.ArgumentParser(description="Generate wild encounter scaling data")
     parser.add_argument("--encounters", type=Path, default=DEFAULT_ENCOUNTERS); parser.add_argument("--scaling", type=Path, default=DEFAULT_SCALING); parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--standard-rod-fishing", type=Path, default=DEFAULT_STANDARD_ROD_FISHING)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG); parser.add_argument("--rtc-constants", type=Path, default=DEFAULT_RTC); parser.add_argument("--species", type=Path, default=DEFAULT_SPECIES)
     parser.add_argument("--wild-encounter-species", type=Path, default=DEFAULT_SPECIES_METADATA); parser.add_argument("--species-info", type=Path, default=DEFAULT_SPECIES_INFO)
     parser.add_argument("--trainer-rating", type=Path, default=DEFAULT_TRAINER_RATING)
@@ -995,7 +1263,7 @@ def arguments():
 
 def main():
     args = arguments()
-    common = {"encounters_path": args.encounters, "scaling_path": args.scaling, "config_path": args.config, "rtc_constants_path": args.rtc_constants, "species_path": args.species, "wild_encounter_species_path": args.wild_encounter_species, "species_info_path": args.species_info}
+    common = {"encounters_path": args.encounters, "scaling_path": args.scaling, "standard_rod_fishing_path": args.standard_rod_fishing, "config_path": args.config, "rtc_constants_path": args.rtc_constants, "species_path": args.species, "wild_encounter_species_path": args.wild_encounter_species, "species_info_path": args.species_info}
     try:
         if args.cartographer_projection is not None:
             projection = generate_cartographer_projection(

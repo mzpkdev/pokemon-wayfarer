@@ -1,4 +1,5 @@
 import importlib.util
+import copy
 from fractions import Fraction
 from pathlib import Path
 import tempfile
@@ -18,6 +19,9 @@ class WildEncounterScalingTests(unittest.TestCase):
         cls.encounters = GENERATOR.load_json(GENERATOR.DEFAULT_ENCOUNTERS)
         cls.config = GENERATOR.Config(GENERATOR.DEFAULT_CONFIG, GENERATOR.DEFAULT_RTC, cls.encounters)
         cls.scaling = GENERATOR.load_scaling(GENERATOR.DEFAULT_SCALING)
+        cls.standard_rod = GENERATOR.load_standard_rod_fishing(
+            GENERATOR.DEFAULT_STANDARD_ROD_FISHING
+        )
         cls.species = GENERATOR.species_ids(GENERATOR.DEFAULT_SPECIES)
         cls.profiles, cls.header_ids = GENERATOR.validate_encounters(
             cls.encounters, cls.species, cls.config
@@ -50,7 +54,152 @@ class WildEncounterScalingTests(unittest.TestCase):
             cls.offsets,
             minimum,
             maximum,
+            cls.standard_rod,
         )
+
+    def test_standard_rod_source_is_strict_and_exact(self):
+        self.assertEqual(self.standard_rod["schemaVersion"], 1)
+        self.assertEqual(
+            self.standard_rod["qualityWeights"],
+            {
+                "OLD_ROD": [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
+                "GOOD_ROD": [25, 18, 12, 10, 9, 7, 6, 5, 4, 4],
+                "SUPER_ROD": [12, 10, 11, 10, 10, 10, 10, 9, 9, 9],
+            },
+        )
+        self.assertEqual(len(self.standard_rod["nativeSurfAccessibility"]), 20)
+        expected_recovery = {
+            ("FIRERED", label, "TIME_DAY", species, expected)
+            for label in ("sPalletTown_FireRed", "sCinnabarIsland_FireRed")
+            for species, expected in (("SPECIES_HORSEA", 14), ("SPECIES_KRABBY", 8))
+        } | {
+            ("LEAFGREEN", label, "TIME_DAY", species, expected)
+            for label in ("sPalletTown_LeafGreen", "sCinnabarIsland_LeafGreen")
+            for species, expected in (("SPECIES_HORSEA", 8), ("SPECIES_KRABBY", 14))
+        } | {
+            ("POKEMON_HNS", label, "TIME_NIGHT" if label.endswith("_Night") else "TIME_DAY", "SPECIES_CHINCHOU", 11)
+            for label in (
+                "gOlivineCity_PortOutside_hns_Day", "gOlivineCity_PortOutside_hns_Night",
+                "gVermilionCity_hns_Day", "gVermilionCity_hns_Night",
+                "gVermilionCity_PortOutside_hns_Day", "gVermilionCity_PortOutside_hns_Night",
+                "gCinnabarIsland_hns_Day", "gCinnabarIsland_hns_Night",
+            )
+        } | {
+            ("POKEMON_HNS", "gCianwoodCity_hns_Day", "TIME_DAY", "SPECIES_CHINCHOU", 12),
+            ("EMERALD", "gLilycoveCity", "TIME_DAY", "SPECIES_WAILMER", 19),
+            ("EMERALD", "gMossdeepCity", "TIME_DAY", "SPECIES_WAILMER", 18),
+            ("EMERALD", "gPacifidlogTown", "TIME_DAY", "SPECIES_WAILMER", 18),
+        }
+        self.assertEqual(
+            {
+                (row["product"], row["baseLabel"], row["timeOfDay"], row["species"], row["expectedOldRodSuccessfulEncounterPercent"])
+                for row in self.standard_rod["nativeSurfAccessibility"]
+            },
+            expected_recovery,
+        )
+        self.assertTrue(all(
+            row["minimumOldRodSuccessfulEncounterPercent"] == 8
+            and row["minimumOldRodUnmodifiedCastPercent"] == 2
+            for row in self.standard_rod["nativeSurfAccessibility"]
+        ))
+        GENERATOR.validate_standard_rod_accessibility(
+            self.standard_rod, self.profiles, self.species, self.config
+        )
+
+    def test_standard_rod_source_rejects_shape_and_total_drift(self):
+        document = {
+            "schemaVersion": 1,
+            "qualityWeights": self.standard_rod["qualityWeights"],
+            "nativeSurfAccessibility": self.standard_rod["nativeSurfAccessibility"],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "standard-rod.json"
+            import json
+
+            malformed = json.loads(json.dumps(document))
+            malformed["qualityWeights"]["OLD_ROD"] = [50] * 10
+            path.write_text(json.dumps(malformed), encoding="utf-8")
+            with self.assertRaisesRegex(GENERATOR.ValidationError, "total 100"):
+                GENERATOR.load_standard_rod_fishing(path)
+
+            malformed = json.loads(json.dumps(document))
+            malformed["qualityWeights"]["GOOD_ROD"].append(1)
+            path.write_text(json.dumps(malformed), encoding="utf-8")
+            with self.assertRaisesRegex(GENERATOR.ValidationError, "exactly ten"):
+                GENERATOR.load_standard_rod_fishing(path)
+
+    def test_source_fishing_schema_requires_all_ten_runtime_slots(self):
+        encounters = copy.deepcopy(self.encounters)
+        fishing = next(
+            field
+            for field in encounters["wild_encounter_groups"][0]["fields"]
+            if field["type"] == "fishing_mons"
+        )
+        fishing["encounter_rates"] = fishing["encounter_rates"][:9]
+        fishing["groups"]["super_rod"].remove(9)
+        config = GENERATOR.Config(
+            GENERATOR.DEFAULT_CONFIG, GENERATOR.DEFAULT_RTC, encounters
+        )
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "exactly ten source slots"):
+            GENERATOR.validate_encounters(encounters, self.species, config)
+
+    def test_all_regional_giver_scripts_use_the_shared_dynamic_transaction(self):
+        givers = {
+            "data/maps/DewfordTown/scripts.inc": "FLAG_RECEIVED_OLD_ROD",
+            "data/maps/Route118/scripts.inc": "FLAG_RECEIVED_GOOD_ROD",
+            "data/maps/MossdeepCity_House3/scripts.inc": "FLAG_RECEIVED_SUPER_ROD",
+            "data/maps/VermilionCity_House1_Frlg/scripts.inc": "FLAG_GOT_OLD_ROD",
+            "data/maps/FuchsiaCity_House2_Frlg/scripts.inc": "FLAG_GOT_GOOD_ROD",
+            "data/maps/Route12_FishingHouse_Frlg/scripts.inc": "FLAG_GOT_SUPER_ROD",
+            "data/maps/Route32_PokemonCenter_hns/scripts.inc": "FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED",
+            "data/maps/OlivineCity_House3_hns/scripts.inc": "FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED",
+            "data/maps/Route12_House_hns/scripts.inc": "FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED",
+        }
+        for relative_path, flag in givers.items():
+            with self.subTest(path=relative_path):
+                source = (ROOT / relative_path).read_text(encoding="utf-8")
+                self.assertIn(f"goto_if_set {flag},", source)
+                self.assertIn("MSGBOX_YESNO", source)
+                self.assertIn(f"setvar VAR_0x8004, {flag}", source)
+                self.assertIn("special Script_TryAwardStandardRod", source)
+                self.assertIn("STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED", source)
+                self.assertIn("STANDARD_ROD_AWARD_NO_SPACE", source)
+                self.assertIn("STANDARD_ROD_AWARD_INVALID_STATE", source)
+                self.assertIn("copyvar VAR_0x8000, VAR_0x8005", source)
+                self.assertIn("call EventScript_ObtainItemMessage", source)
+                self.assertIn("goto_if_eq VAR_0x8005, ITEM_OLD_ROD", source)
+                self.assertIn("goto_if_eq VAR_0x8005, ITEM_GOOD_ROD", source)
+                self.assertIn("CompletedSuperRod", source)
+                self.assertNotIn(f"setflag {flag}", source)
+                self.assertNotRegex(source, r"(?:giveitem|additem|removeitem) ITEM_(?:OLD|GOOD|SUPER)_ROD")
+
+        route12 = (ROOT / "data/maps/Route12_FishingHouse_Frlg/scripts.inc").read_text(encoding="utf-8")
+        self.assertIn("goto_if_set FLAG_GOT_SUPER_ROD, Route12_FishingHouse_EventScript_CheckMagikarpRecord", route12)
+        self.assertGreaterEqual(route12.count("goto Route12_FishingHouse_EventScript_ExplainMagikarpActivity"), 2)
+
+    def test_ordinary_generation_balance_validation_rejects_locked_recovery(self):
+        GENERATOR.validate_standard_rod_balance(
+            self.standard_rod,
+            self.profiles,
+            self.scaling,
+            self.metadata,
+            self.offsets,
+        )
+        metadata = copy.deepcopy(self.metadata)
+        next(
+            row for row in metadata if row["species"] == "SPECIES_WAILMER"
+        )["minimum_level"] = 100
+        with self.assertRaisesRegex(
+            GENERATOR.ValidationError,
+            "standard rod balance invariant failures:.*below successful-encounter accessibility minimum",
+        ):
+            GENERATOR.validate_standard_rod_balance(
+                self.standard_rod,
+                self.profiles,
+                self.scaling,
+                metadata,
+                self.offsets,
+            )
 
     def test_projection_curve_is_exact_at_required_join_points(self):
         self.assertEqual(self.scaling["projection_cap"], 80)
@@ -204,10 +353,46 @@ class WildEncounterScalingTests(unittest.TestCase):
         ]
         self.assertEqual({row["fishingRod"] for row in fishing}, {"OLD_ROD", "GOOD_ROD", "SUPER_ROD"})
         self.assertTrue(all("slotOutcomes" in sample for row in fishing for sample in row["samples"]))
+        self.assertTrue(all(row["runtimeSlotCount"] == 10 for row in fishing))
+        self.assertTrue(all(
+            [rating for sample in row["samples"] for rating in sample["ratings"]] == list(range(10, 81))
+            for row in fishing
+        ))
+        self.assertEqual(len(audit["nativeSurfAccessibility"]), 20)
+        self.assertEqual(audit["minimumEligibleOldRodEntryProbability"], {"numerator": 1, "denominator": 50})
+        for recovery in audit["nativeSurfAccessibility"]:
+            self.assertEqual([row["rating"] for row in recovery["ratings"]], list(range(10, 81)))
+
+        def fraction(row):
+            return Fraction(row["numerator"], row["denominator"])
+
+        checked_split_outcome = False
+        for row in fishing:
+            for sample in row["samples"]:
+                if not any(len(slot["effectiveSpeciesGivenSlotProbabilities"]) > 1 for slot in sample["slotOutcomes"]):
+                    continue
+                expected = {}
+                for slot in sample["slotOutcomes"]:
+                    if not slot["eligible"]:
+                        continue
+                    slot_probability = fraction(slot["lureOffSuccessfulEncounterProbability"])
+                    for effective in slot["effectiveSpeciesGivenSlotProbabilities"]:
+                        expected[effective["species"]] = expected.get(effective["species"], Fraction(0)) + slot_probability * fraction(effective["probability"])
+                actual = {
+                    species["species"]: fraction(species["lureOffSuccessfulEncounterProbability"])
+                    for species in sample["aggregateSpeciesProbabilities"]
+                }
+                self.assertEqual(actual, expected)
+                self.assertEqual(sum(actual.values(), Fraction(0)), Fraction(1))
+                checked_split_outcome = True
+                break
+            if checked_split_outcome:
+                break
+        self.assertTrue(checked_split_outcome)
 
     def test_cartographer_projection_has_runtime_bounds_and_strict_profile_identities(self):
         projection = self.cartographer
-        self.assertEqual(projection["schemaVersion"], 1)
+        self.assertEqual(projection["schemaVersion"], 2)
         self.assertEqual(projection["trainerRating"], {"minimum": 10, "maximum": 80})
         self.assertEqual(projection["authoredLevel"], {"minimum": 1, "maximum": 100})
         self.assertEqual(
@@ -238,6 +423,11 @@ class WildEncounterScalingTests(unittest.TestCase):
             self.assertEqual(row["runtimeSlotCount"], len(
                 GENERATOR.method_slots(source, row["method"], row["fishingRod"])
             ))
+            if row["method"] == "fishing_mons":
+                self.assertEqual(row["runtimeSlotCount"], 10)
+                self.assertEqual(row["weights"], self.standard_rod["qualityWeights"][row["fishingRod"]])
+            else:
+                self.assertNotIn("weights", row)
 
         mt_silver = [
             row for row in rows

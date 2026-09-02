@@ -1,10 +1,229 @@
 #include "global.h"
 #include "battle.h"
 #include "event_data.h"
+#include "item.h"
 #include "item_menu.h"
 #include "pokemon.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
+
+#if IS_FRLG
+static const u16 sStandardRodContributorFlags[] =
+{
+    FLAG_GOT_OLD_ROD,
+    FLAG_GOT_GOOD_ROD,
+    FLAG_GOT_SUPER_ROD,
+};
+#elif IS_HNS
+static const u16 sStandardRodContributorFlags[] =
+{
+    FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED,
+    FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED,
+    FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED,
+};
+STATIC_ASSERT(FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED == 0x304, StandardRodRoute32FlagId);
+STATIC_ASSERT(FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED == 0x305, StandardRodOlivineFlagId);
+STATIC_ASSERT(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED == 0x306, StandardRodRoute12FlagId);
+#else
+static const u16 sStandardRodContributorFlags[] =
+{
+    FLAG_RECEIVED_OLD_ROD,
+    FLAG_RECEIVED_GOOD_ROD,
+    FLAG_RECEIVED_SUPER_ROD,
+};
+#endif
+
+static const u8 sStandardRodVisitOrders[][3] =
+{
+    {0, 1, 2},
+    {0, 2, 1},
+    {1, 0, 2},
+    {1, 2, 0},
+    {2, 0, 1},
+    {2, 1, 0},
+};
+
+static void ResetStandardRodTestState(void)
+{
+    ClearBag();
+    for (u32 i = 0; i < ARRAY_COUNT(sStandardRodContributorFlags); i++)
+        FlagClear(sStandardRodContributorFlags[i]);
+    gSaveBlock1Ptr->registeredItem = ITEM_NONE;
+    gSaveBlock3Ptr->registeredItemHold = ITEM_NONE;
+}
+
+static u32 FindKeyItemSlot(enum Item itemId)
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+
+    for (u32 i = 0; i < pocket->capacity; i++)
+    {
+        if (BagPocket_GetSlotData(pocket, i).itemId == itemId)
+            return i;
+    }
+    return pocket->capacity;
+}
+
+static void FillEmptyKeyItemSlots(void)
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+
+    for (u32 i = 0; i < pocket->capacity; i++)
+    {
+        if (BagPocket_GetSlotData(pocket, i).itemId == ITEM_NONE)
+            BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_BICYCLE, 1);
+    }
+}
+
+TEST("Standard Rod: every giver visit order awards Old, Good, then Super")
+{
+    static const enum Item expectedAwards[] = {ITEM_OLD_ROD, ITEM_GOOD_ROD, ITEM_SUPER_ROD};
+
+    for (u32 order = 0; order < ARRAY_COUNT(sStandardRodVisitOrders); order++)
+    {
+        enum Item awardedItem;
+
+        ResetStandardRodTestState();
+        for (u32 step = 0; step < ARRAY_COUNT(expectedAwards); step++)
+        {
+            u16 flag = sStandardRodContributorFlags[sStandardRodVisitOrders[order][step]];
+
+            EXPECT_EQ(TryAwardStandardRod(flag, &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+            EXPECT_EQ(awardedItem, expectedAwards[step]);
+            EXPECT(FlagGet(flag));
+            EXPECT_EQ(CountTotalItemQuantityInBag(expectedAwards[step]), 1);
+            if (step > 0)
+                EXPECT_EQ(CountTotalItemQuantityInBag(expectedAwards[step - 1]), 0);
+        }
+    }
+}
+
+TEST("Standard Rod: a contributor cannot award twice")
+{
+    enum Item awardedItem;
+
+    ResetStandardRodTestState();
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[0], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[0], &awardedItem), STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED);
+    EXPECT_EQ(awardedItem, ITEM_NONE);
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_OLD_ROD), 1);
+    EXPECT(!FlagGet(sStandardRodContributorFlags[1]));
+    EXPECT(!FlagGet(sStandardRodContributorFlags[2]));
+}
+
+TEST("Standard Rod: a full Key Items pocket rejects only the first award")
+{
+    enum Item awardedItem;
+
+    ResetStandardRodTestState();
+    FillEmptyKeyItemSlots();
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[0], &awardedItem), STANDARD_ROD_AWARD_NO_SPACE);
+    EXPECT_EQ(awardedItem, ITEM_NONE);
+    EXPECT(!FlagGet(sStandardRodContributorFlags[0]));
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_OLD_ROD), 0);
+}
+
+TEST("Standard Rod: full-pocket upgrades reuse the exact encrypted Bag slot")
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+    enum Item awardedItem;
+    u32 rodSlot;
+
+    ResetStandardRodTestState();
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[0], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    rodSlot = FindKeyItemSlot(ITEM_OLD_ROD);
+    ASSUME(rodSlot < pocket->capacity);
+    FillEmptyKeyItemSlots();
+
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[1], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(awardedItem, ITEM_GOOD_ROD);
+    EXPECT_EQ(FindKeyItemSlot(ITEM_GOOD_ROD), rodSlot);
+    EXPECT_EQ(BagPocket_GetSlotData(pocket, rodSlot).quantity, 1);
+
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[2], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(awardedItem, ITEM_SUPER_ROD);
+    EXPECT_EQ(FindKeyItemSlot(ITEM_SUPER_ROD), rodSlot);
+    EXPECT_EQ(BagPocket_GetSlotData(pocket, rodSlot).quantity, 1);
+}
+
+TEST("Standard Rod: upgrades transfer both registered-item shortcuts independently")
+{
+    enum Item awardedItem;
+
+    ResetStandardRodTestState();
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[0], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    gSaveBlock1Ptr->registeredItem = ITEM_OLD_ROD;
+    gSaveBlock3Ptr->registeredItemHold = ITEM_BICYCLE;
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[1], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(gSaveBlock1Ptr->registeredItem, ITEM_GOOD_ROD);
+    EXPECT_EQ(gSaveBlock3Ptr->registeredItemHold, ITEM_BICYCLE);
+
+    gSaveBlock1Ptr->registeredItem = ITEM_BICYCLE;
+    gSaveBlock3Ptr->registeredItemHold = ITEM_GOOD_ROD;
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[2], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(gSaveBlock1Ptr->registeredItem, ITEM_BICYCLE);
+    EXPECT_EQ(gSaveBlock3Ptr->registeredItemHold, ITEM_SUPER_ROD);
+}
+
+TEST("Standard Rod: upgrades transfer both registered-item shortcuts together")
+{
+    enum Item awardedItem;
+
+    ResetStandardRodTestState();
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[0], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    gSaveBlock1Ptr->registeredItem = ITEM_OLD_ROD;
+    gSaveBlock3Ptr->registeredItemHold = ITEM_OLD_ROD;
+
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[1], &awardedItem), STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(gSaveBlock1Ptr->registeredItem, ITEM_GOOD_ROD);
+    EXPECT_EQ(gSaveBlock3Ptr->registeredItemHold, ITEM_GOOD_ROD);
+}
+
+TEST("Standard Rod: invalid state rolls back Bag shortcuts and contributor flag")
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+    enum Item awardedItem;
+
+    ResetStandardRodTestState();
+    FlagSet(sStandardRodContributorFlags[0]);
+    BagPocket_SetSlotItemIdAndCount(pocket, 7, ITEM_OLD_ROD, 2);
+    gSaveBlock1Ptr->registeredItem = ITEM_OLD_ROD;
+    gSaveBlock3Ptr->registeredItemHold = ITEM_OLD_ROD;
+
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[1], &awardedItem), STANDARD_ROD_AWARD_INVALID_STATE);
+    EXPECT_EQ(awardedItem, ITEM_NONE);
+    EXPECT_EQ(BagPocket_GetSlotData(pocket, 7).itemId, ITEM_OLD_ROD);
+    EXPECT_EQ(BagPocket_GetSlotData(pocket, 7).quantity, 2);
+    EXPECT_EQ(gSaveBlock1Ptr->registeredItem, ITEM_OLD_ROD);
+    EXPECT_EQ(gSaveBlock3Ptr->registeredItemHold, ITEM_OLD_ROD);
+    EXPECT(!FlagGet(sStandardRodContributorFlags[1]));
+}
+
+TEST("Standard Rod: invalid contributor flags and mismatched progression do not mutate state")
+{
+    enum Item awardedItem;
+
+    ResetStandardRodTestState();
+    EXPECT_EQ(TryAwardStandardRod(FLAG_TEMP_1, &awardedItem), STANDARD_ROD_AWARD_INVALID_STATE);
+    EXPECT_EQ(awardedItem, ITEM_NONE);
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_OLD_ROD), 0);
+
+    FlagSet(sStandardRodContributorFlags[0]);
+    EXPECT_EQ(TryAwardStandardRod(sStandardRodContributorFlags[1], &awardedItem), STANDARD_ROD_AWARD_INVALID_STATE);
+    EXPECT(!FlagGet(sStandardRodContributorFlags[1]));
+    EXPECT_EQ(CountTotalItemQuantityInBag(ITEM_GOOD_ROD), 0);
+}
+
+TEST("Standard Rod: script wrapper reports the outcome and dynamic awarded item")
+{
+    ResetStandardRodTestState();
+    gSpecialVar_0x8004 = sStandardRodContributorFlags[0];
+    Script_TryAwardStandardRod();
+
+    EXPECT_EQ(gSpecialVar_Result, STANDARD_ROD_AWARD_SUCCESS);
+    EXPECT_EQ(gSpecialVar_0x8005, ITEM_OLD_ROD);
+    EXPECT(FlagGet(sStandardRodContributorFlags[0]));
+}
 
 TEST("TMs and HMs are sorted correctly in the bag")
 {

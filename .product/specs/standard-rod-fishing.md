@@ -1,7 +1,7 @@
 # Standard Rod fishing progression
 
 PRD: [Standard Rod fishing progression](../prds/standard-rod-fishing.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 

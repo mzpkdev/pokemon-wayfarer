@@ -80,10 +80,34 @@ DewfordTown_EventScript_OldRodFisherman::
 
 DewfordTown_EventScript_GiveOldRod::
 	msgbox DewfordTown_Text_GiveYouOneOfMyRods, MSGBOX_DEFAULT
-	giveitem ITEM_OLD_ROD
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_RECEIVED_OLD_ROD
+	setvar VAR_0x8004, FLAG_RECEIVED_OLD_ROD
+	special Script_TryAwardStandardRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, DewfordTown_EventScript_HowsFishing
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, DewfordTown_EventScript_RodUpgradeFailed
+	copyvar VAR_0x8000, VAR_0x8005
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto_if_eq VAR_0x8005, ITEM_OLD_ROD, DewfordTown_EventScript_ReceivedOldRod
+	goto_if_eq VAR_0x8005, ITEM_GOOD_ROD, DewfordTown_EventScript_ReceivedGoodRod
+	msgbox DewfordTown_Text_CompletedSuperRod, MSGBOX_DEFAULT
+	goto DewfordTown_EventScript_FishingTutorial
+
+DewfordTown_EventScript_ReceivedOldRod::
+	msgbox DewfordTown_Text_StartedWithOldRod, MSGBOX_DEFAULT
+	goto DewfordTown_EventScript_FishingTutorial
+
+DewfordTown_EventScript_ReceivedGoodRod::
+	msgbox DewfordTown_Text_ImprovedToGoodRod, MSGBOX_DEFAULT
+
+DewfordTown_EventScript_FishingTutorial::
 	msgbox DewfordTown_Text_ThrowInFishingAdvice, MSGBOX_DEFAULT
+	release
+	end
+
+DewfordTown_EventScript_RodUpgradeFailed::
+	msgbox DewfordTown_Text_RodUpgradeFailed, MSGBOX_DEFAULT
 	release
 	end
 
@@ -699,6 +723,25 @@ DewfordTown_Text_GiveYouOneOfMyRods:
 	.string "I hear you, and I like what\n"
 	.string "you're saying!\p"
 	.string "I'll give you one of my fishing RODS.$"
+
+DewfordTown_Text_StartedWithOldRod:
+	.string "Now you're an angler, too!\n"
+	.string "That OLD ROD can catch any local\n"
+	.string "POKéMON.$"
+
+DewfordTown_Text_ImprovedToGoodRod:
+	.string "You've got some fishing experience!\n"
+	.string "Your GOOD ROD will get more bites and\l"
+	.string "give uncommon catches better odds.$"
+
+DewfordTown_Text_CompletedSuperRod:
+	.string "Now that's a seasoned angler's ROD!\n"
+	.string "Your SUPER ROD gives rare catches and\l"
+	.string "bites their best odds.$"
+
+DewfordTown_Text_RodUpgradeFailed:
+	.string "Something isn't right with your fishing\n"
+	.string "gear. Come back once it's sorted out.$"
 
 DewfordTown_Text_ThrowInFishingAdvice:
 	.string "And, as an added bonus, I'll even throw\n"

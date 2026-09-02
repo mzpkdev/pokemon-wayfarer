@@ -3,6 +3,8 @@
 
 #include "rtc.h"
 
+struct WildEncounterProfileView;
+
 extern u8 gAreaTimeOfDay;
 
 enum PokedexAreaScreenState
@@ -13,5 +15,9 @@ enum PokedexAreaScreenState
 
 void DisplayPokedexAreaScreen(u16 species, u8 *screenSwitchState, enum TimeOfDay timeOfDay, enum PokedexAreaScreenState areaState);
 void ShowPokedexAreaScreen(u16 species, u8 *screenSwitchState);
+
+#if TESTING
+bool8 PokedexArea_ProfileViewHasSpeciesForTesting(const struct WildEncounterProfileView *view, u16 species);
+#endif
 
 #endif // GUARD_POKEDEX_AREA_SCREEN_H

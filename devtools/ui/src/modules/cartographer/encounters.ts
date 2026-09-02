@@ -31,6 +31,8 @@ export type ResolvedEncounterSlot = {
   source: CatalogWildEncounterSlot
   outcomes: ProjectedEncounterOutcome[]
   eligible: boolean
+  rawWeight: number
+  fishingRod: string | null
   selectionWeight: number | null
 }
 
@@ -71,6 +73,7 @@ export type ResolvedEncounterPopulation = {
 type ProjectionIndex = {
   speciesById: Map<string, CatalogWildEncounterProjection["species"][number]>
   levelsByOffsetAndRating: Map<string, readonly number[]>
+  profilesByKey: Map<string, CatalogWildEncounterProjection["profiles"][number]>
 }
 
 const projectionIndexes = new WeakMap<CatalogWildEncounterProjection, ProjectionIndex>()
@@ -85,6 +88,7 @@ const projectionIndex = (projection: CatalogWildEncounterProjection): Projection
         table.ratings.map((row) => [`${table.levelOffset}/${row.rating}`, row.projectedLevels]),
       ),
     ),
+    profilesByKey: new Map(projection.profiles.map((profile) => [profile.profileKey, profile])),
   }
   projectionIndexes.set(projection, index)
   return index
@@ -93,10 +97,11 @@ const projectionIndex = (projection: CatalogWildEncounterProjection): Projection
 export const visibleEncounterSlots = (
   method: CatalogWildEncounterMethod,
 ): CatalogWildEncounterSlot[] => {
+  if (method.type === "fishing_mons") return method.slots
   return method.slots.filter((slot) => slot.speciesId !== "SPECIES_NONE" && slot.slotRate > 0)
 }
 
-export const fishingGroupIds = (method: CatalogWildEncounterMethod): string[] => {
+export const fishingRarityBandIds = (method: CatalogWildEncounterMethod): string[] => {
   return [
     ...new Set(
       visibleEncounterSlots(method).flatMap((slot) => slot.groups.map((group) => group.id)),
@@ -106,9 +111,30 @@ export const fishingGroupIds = (method: CatalogWildEncounterMethod): string[] =>
 
 export const rodLabel = (groupId: string): string => {
   return groupId
+    .toLowerCase()
     .split("_")
     .map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`)
     .join(" ")
+}
+
+const rarityBandLabels: Readonly<Record<string, string>> = {
+  old_rod: "Common",
+  good_rod: "Less common",
+  super_rod: "Rare",
+}
+
+export const rarityBandLabel = (slot: CatalogWildEncounterSlot): string => {
+  const labels = slot.groups
+    .map((group) => rarityBandLabels[group.id])
+    .filter((label): label is string => label !== undefined)
+  return [...new Set(labels)].join(", ") || "Unbanded"
+}
+
+export const fishingProfiles = (
+  method: CatalogWildEncounterMethod,
+): CatalogWildEncounterMethod["profiles"] => {
+  if (method.type !== "fishing_mons") return []
+  return method.profiles.filter((profile) => profile.fishingRod !== "NONE")
 }
 
 export const resolveMapEncounters = (
@@ -146,10 +172,10 @@ const projectionFor = (
 
 const profileFor = (
   method: CatalogWildEncounterMethod,
-  groupId: string | null,
+  fishingRod: string | null,
 ): CatalogWildEncounterMethod["profiles"][number] | null => {
   if (method.type !== "fishing_mons") return method.profiles[0] ?? null
-  return method.profiles.find((profile) => profile.fishingRod === groupId?.toUpperCase()) ?? null
+  return method.profiles.find((profile) => profile.fishingRod === fishingRod) ?? null
 }
 
 const slotOutcomes = (
@@ -157,9 +183,9 @@ const slotOutcomes = (
   method: CatalogWildEncounterMethod,
   slot: CatalogWildEncounterSlot,
   rating: number,
-  groupId: string | null,
+  fishingRod: string | null,
 ): ProjectedEncounterOutcome[] => {
-  const profile = profileFor(method, groupId)
+  const profile = profileFor(method, fishingRod)
   const speciesById = projectionIndex(projection).speciesById
   const authoredSpecies = speciesById.get(slot.speciesId)
   if (!profile || !authoredSpecies) return []
@@ -225,29 +251,35 @@ export const resolveMethodSlots = (
   projection: CatalogWildEncounterProjection,
   method: CatalogWildEncounterMethod,
   rating: number,
-  groupId: string | null = null,
+  fishingRod: string | null = null,
 ): ResolvedEncounterSlot[] => {
-  const slots = visibleEncounterSlots(method).filter(
-    (slot) =>
-      method.type !== "fishing_mons" ||
-      (groupId === null
-        ? slot.groups.length === 0
-        : slot.groups.some((group) => group.id === groupId)),
-  )
+  const slots = visibleEncounterSlots(method)
+  const profileReference = profileFor(method, fishingRod)
+  const profile = profileReference
+    ? projectionIndex(projection).profilesByKey.get(profileReference.profileKey)
+    : undefined
   const projected = slots.map((source) => {
-    const outcomes = slotOutcomes(projection, method, source, rating, groupId)
+    const outcomes = slotOutcomes(projection, method, source, rating, fishingRod)
+    const rawWeight =
+      method.type === "fishing_mons" ? (profile?.weights?.[source.slotIndex] ?? 0) : source.slotRate
     return {
       source,
       outcomes,
-      eligible: outcomes.length > 0 && outcomes.every((row) => row.eligible),
+      rawWeight,
+      fishingRod: method.type === "fishing_mons" ? fishingRod : null,
+      eligible:
+        source.speciesId !== "SPECIES_NONE" &&
+        rawWeight > 0 &&
+        outcomes.length > 0 &&
+        outcomes.every((row) => row.eligible),
     }
   })
   const denominator = projected
     .filter((slot) => slot.eligible)
-    .reduce((sum, slot) => sum + slot.source.slotRate, 0)
+    .reduce((sum, slot) => sum + slot.rawWeight, 0)
   return projected.map((slot) => ({
     ...slot,
-    selectionWeight: slot.eligible && denominator > 0 ? slot.source.slotRate / denominator : null,
+    selectionWeight: slot.eligible && denominator > 0 ? slot.rawWeight / denominator : null,
   }))
 }
 
@@ -261,9 +293,12 @@ export const effectiveRosterFor = (
     set.methods
       .filter((method) => method.type === methodType)
       .flatMap((method) => {
-        const groupIds = method.type === "fishing_mons" ? fishingGroupIds(method) : [null]
-        return groupIds.flatMap((groupId) =>
-          resolveMethodSlots(projection, method, rating, groupId).flatMap((slot) =>
+        const profileRods =
+          method.type === "fishing_mons"
+            ? fishingProfiles(method).map((profile) => profile.fishingRod)
+            : [null]
+        return profileRods.flatMap((fishingRod) =>
+          resolveMethodSlots(projection, method, rating, fishingRod).flatMap((slot) =>
             slot.eligible ? slot.outcomes : [],
           ),
         )

@@ -132,31 +132,21 @@ describe("source wild encounters", () => {
     )
   })
 
-  it("excludes Route5_hns's real NONE sentinel rows from player-facing methods", () => {
+  it("retains Route5_hns's ten fishing slots while excluding non-fishing NONE rows", () => {
     const encounters = sourceWildEncounters(sourceRoot, mapNamesById).get("Route5_hns")
     const baseSet = encounters?.sets[0]
     const water = baseSet?.methods.find((method) => method.type === "water_mons")
     const fishing = baseSet?.methods.find((method) => method.type === "fishing_mons")
 
     expect(water?.slots).toEqual([])
-    expect(fishing?.slots).toEqual([])
-    expect(
-      baseSet?.methods
-        .flatMap((method) => method.slots)
-        .some((slot) => slot.speciesId === "SPECIES_NONE"),
-    ).toBe(false)
+    expect(fishing?.slots).toHaveLength(10)
+    expect(fishing?.slots.every((slot) => slot.speciesId === "SPECIES_NONE")).toBe(true)
     expect(encounters?.diagnostics).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           code: "excluded_source_slot",
           reason: "species_none",
           methodType: "water_mons",
-          speciesId: "SPECIES_NONE",
-        }),
-        expect.objectContaining({
-          code: "excluded_source_slot",
-          reason: "species_none",
-          methodType: "fishing_mons",
           speciesId: "SPECIES_NONE",
         }),
       ]),
@@ -338,11 +328,12 @@ describe("source wild encounters", () => {
 
 describe("generated Trainer Rating projection joins", () => {
   let temporaryDirectory = ""
+  let projectionPath = ""
   let catalog: ReturnType<typeof sourceWildEncounterCatalog>
 
   beforeAll(() => {
     temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), "wayfarer-cartographer-projection-"))
-    const projectionPath = path.join(temporaryDirectory, "projection.json")
+    projectionPath = path.join(temporaryDirectory, "projection.json")
     childProcess.execFileSync(
       "python3",
       [
@@ -356,6 +347,7 @@ describe("generated Trainer Rating projection joins", () => {
       sourceRoot,
       new Map([
         ["MAP_ROUTE101", "Route101"],
+        ["MAP_ROUTE102", "Route102"],
         ["MAP_MT_SILVER_SNOW_HNS", "MtSilverSnow_hns"],
         ["MAP_ROUTE18", "Route18"],
       ]),
@@ -370,6 +362,7 @@ describe("generated Trainer Rating projection joins", () => {
   })
 
   it("decorates projection species and joins exact product profile references", () => {
+    expect(catalog.projection.schemaVersion).toBe(2)
     expect(catalog.projection.trainerRating).toEqual({ minimum: 10, maximum: 80 })
     expect(
       catalog.projection.species.find((species) => species.authoredSpecies === "SPECIES_MAGIKARP"),
@@ -382,6 +375,67 @@ describe("generated Trainer Rating projection joins", () => {
       fishingRod: "NONE",
       levelOffset: 0,
     })
+  })
+
+  it("joins all three ten-slot fishing profiles with their exact generated weights", () => {
+    const fishing = catalog.encountersByMap
+      .get("Route102")
+      ?.sets[0]?.methods.find((method) => method.type === "fishing_mons")
+
+    expect(fishing?.profiles.map((profile) => profile.fishingRod)).toEqual([
+      "OLD_ROD",
+      "GOOD_ROD",
+      "SUPER_ROD",
+    ])
+    expect(
+      fishing?.profiles.map((reference) =>
+        profileIndex(catalog.projection).get(reference.profileKey),
+      ),
+    ).toMatchObject([
+      { runtimeSlotCount: 10, weights: [38, 22, 10, 8, 8, 4, 3, 3, 2, 2] },
+      { runtimeSlotCount: 10, weights: [25, 18, 12, 10, 9, 7, 6, 5, 4, 4] },
+      { runtimeSlotCount: 10, weights: [12, 10, 11, 10, 10, 10, 10, 9, 9, 9] },
+    ])
+  })
+
+  it("rejects malformed fishing weights in projection schema 2", () => {
+    const malformed = JSON.parse(fs.readFileSync(projectionPath, "utf8")) as {
+      profiles: Array<{ method: string; weights?: number[] }>
+    }
+    const fishing = malformed.profiles.find((profile) => profile.method === "fishing_mons")
+    expect(fishing).toBeDefined()
+    fishing!.weights = [100]
+    const malformedPath = path.join(temporaryDirectory, "malformed-projection.json")
+    fs.writeFileSync(malformedPath, JSON.stringify(malformed))
+
+    expect(() =>
+      sourceWildEncounterCatalog(
+        sourceRoot,
+        new Map([["MAP_ROUTE101", "Route101"]]),
+        temporaryDirectory,
+        malformedPath,
+        () => null,
+      ),
+    ).toThrow("expected exactly 10 weights")
+  })
+
+  it("rejects projection schema 1", () => {
+    const stale = JSON.parse(fs.readFileSync(projectionPath, "utf8")) as {
+      schemaVersion: number
+    }
+    stale.schemaVersion = 1
+    const stalePath = path.join(temporaryDirectory, "stale-projection.json")
+    fs.writeFileSync(stalePath, JSON.stringify(stale))
+
+    expect(() =>
+      sourceWildEncounterCatalog(
+        sourceRoot,
+        new Map([["MAP_ROUTE101", "Route101"]]),
+        temporaryDirectory,
+        stalePath,
+        () => null,
+      ),
+    ).toThrow("schemaVersion: expected 2")
   })
 
   it("uses generator runtime identity and keeps version populations separate", () => {

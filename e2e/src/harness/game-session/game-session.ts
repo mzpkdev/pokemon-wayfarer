@@ -6,6 +6,7 @@ import { createArrangeApi, type ArrangeApi } from "./features/arrange"
 import { createBattleApi, type BattleApi } from "./features/battle"
 import { createControlsApi, type ControlsApi } from "./features/controls"
 import { createDialogueApi, type DialogueApi } from "./features/dialogue"
+import { createInventoryApi, type InventoryApi } from "./features/inventory"
 import { createPlayerApi, type PlayerApi } from "./features/player"
 import { createStateApi, type StateApi } from "./features/state"
 import { createStorageApi, type StorageApi } from "./features/storage"
@@ -27,6 +28,7 @@ export class GameSession {
   readonly battle: BattleApi
   readonly controls: ControlsApi
   readonly dialogue: DialogueApi
+  readonly inventory: InventoryApi
   readonly player: PlayerApi
   readonly state: StateApi
   readonly storage: StorageApi
@@ -48,6 +50,7 @@ export class GameSession {
     this.battle = createBattleApi(runtime, mailbox)
     this.controls = createControlsApi(runtime)
     this.dialogue = createDialogueApi(state, wait)
+    this.inventory = createInventoryApi(runtime)
     this.player = createPlayerApi(runtime)
     this.state = state
     this.storage = createStorageApi(state, wait)

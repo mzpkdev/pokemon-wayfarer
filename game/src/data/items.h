@@ -14081,9 +14081,9 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("OLD ROD"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "Use by any body of\n"
-            "water to fish for\n"
-            "wild Pokémon."),
+            "Catches any Pokémon\n"
+            "in the local fishing\n"
+            "population."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
@@ -14098,9 +14098,9 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("GOOD ROD"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "A decent fishing\n"
-            "rod for catching\n"
-            "wild Pokémon."),
+            "Improves bite rates\n"
+            "and the chance of\n"
+            "uncommon catches."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,
@@ -14115,9 +14115,9 @@ const struct ItemInfo gItemsInfo[] =
         .name = ITEM_NAME("SUPER ROD"),
         .price = 0,
         .description = COMPOUND_STRING(
-            "The best fishing\n"
-            "rod for catching\n"
-            "wild Pokémon."),
+            "The best bite rate\n"
+            "and chance of rare\n"
+            "catches."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_FIELD,

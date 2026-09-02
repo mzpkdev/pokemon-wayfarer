@@ -144,7 +144,7 @@ export type CatalogWildEncounterMethod = {
   slots: CatalogWildEncounterSlot[]
   profiles: Array<{
     profileKey: string
-    fishingRod: string | null
+    fishingRod: string
     levelOffset: number
   }>
 }
@@ -178,7 +178,7 @@ export type CatalogWildEncounterRuntimeTime = {
 }
 
 export type CatalogWildEncounterProjection = {
-  schemaVersion: 1
+  schemaVersion: 2
   trainerRating: { minimum: number; maximum: number }
   authoredLevel: { minimum: number; maximum: number }
   products: Array<{ id: string; displayName: string }>
@@ -215,6 +215,7 @@ export type CatalogWildEncounterProjection = {
     encounterRate: number
     authoredSlotCount: number
     runtimeSlotCount: number
+    weights?: number[]
   }>
   headerCounts: Record<string, number>
 }
@@ -373,6 +374,7 @@ const hasSourcePointer = (value: unknown): value is CatalogSourcePointer => {
 }
 
 const wildEncounterTypes = ["land_mons", "water_mons", "rock_smash_mons", "fishing_mons"] as const
+const fishingRods = ["OLD_ROD", "GOOD_ROD", "SUPER_ROD"] as const
 
 const hasWildEncounterType = (value: unknown): value is CatalogWildEncounterMethod["type"] => {
   return (
@@ -490,7 +492,7 @@ const hasWildEncounterRuntimeTime = (value: unknown): value is CatalogWildEncoun
 
 const wildEncounterProjectionIssue = (value: unknown): string | null => {
   const projection = asRecord(value)
-  if (!projection || projection.schemaVersion !== 1) return "must use projection schemaVersion 1"
+  if (!projection || projection.schemaVersion !== 2) return "must use projection schemaVersion 2"
   const trainerRating = asRecord(projection?.trainerRating)
   const authoredLevel = asRecord(projection?.authoredLevel)
   if (trainerRating?.minimum !== 10 || trainerRating.maximum !== 80) {
@@ -622,6 +624,20 @@ const wildEncounterProjectionIssue = (value: unknown): string | null => {
         `${profile.product}/${profile.baseLabel}/${profile.method}/${profile.fishingRod}`
     ) {
       return "profiles contains an invalid runtime profile"
+    }
+    if (profile.method === "fishing_mons") {
+      if (
+        !fishingRods.includes(profile.fishingRod as (typeof fishingRods)[number]) ||
+        profile.runtimeSlotCount !== 10 ||
+        !Array.isArray(profile.weights) ||
+        profile.weights.length !== 10 ||
+        !profile.weights.every((weight) => hasInteger(weight) && weight > 0) ||
+        profile.weights.reduce((sum, weight) => sum + (weight as number), 0) !== 100
+      ) {
+        return `${profile.profileKey} must contain 10 positive integer weights totaling 100`
+      }
+    } else if (profile.fishingRod !== "NONE" || "weights" in profile) {
+      return `${profile.profileKey} must use NONE and must not contain fishing weights`
     }
     if (profileKeys.has(profile.profileKey))
       return `contains duplicate profile ${profile.profileKey}`
@@ -857,6 +873,25 @@ export const validateCatalog = (value: unknown): MapCatalog => {
         for (const method of set.methods) {
           if (method.profiles.length === 0) {
             details.push(`${set.baseLabel} ${method.type} has no projection profiles.`)
+          }
+          if (method.type === "fishing_mons") {
+            const rods = method.profiles.map((profile) => profile.fishingRod).sort()
+            const expectedRods = ["GOOD_ROD", "OLD_ROD", "SUPER_ROD"]
+            if (
+              rods.length !== expectedRods.length ||
+              rods.some((rod, index) => rod !== expectedRods[index])
+            ) {
+              details.push(
+                `${set.baseLabel} fishing_mons must reference Old, Good, and Super Rod profiles.`,
+              )
+            }
+            const slotIndices = method.slots.map((slot) => slot.slotIndex).sort((a, b) => a - b)
+            if (
+              slotIndices.length !== 10 ||
+              slotIndices.some((slotIndex, index) => slotIndex !== index)
+            ) {
+              details.push(`${set.baseLabel} fishing_mons must retain slots 0 through 9.`)
+            }
           }
           for (const reference of method.profiles) {
             const profile = projectionProfiles.get(reference.profileKey)

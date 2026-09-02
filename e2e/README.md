@@ -129,6 +129,13 @@ Boxed fixtures intentionally do not model current HP or fainted state. HMs use
 `bag.hms`; `bag.items` is the generic item surface used for the Master Ball and
 does not expose duplicate HM aliases.
 
+The Standard Rod giver journey uses `game.inventory.rodSlots()` to inspect the
+occupied Old, Good, and Super Rod slots in the HNS Key Items pocket. This is a
+read-only semantic view backed by the ROM's `gBagPockets` symbol. ABI v7 does
+not provide fixtures or telemetry for `registeredItem` or
+`registeredItemHold`, so the E2E suite cannot safely seed or assert registered
+shortcut migration. The mechanics tests cover that transaction instead.
+
 `battle.startWild()` creates the requested wild opponent and starts the normal
 battle state machine from a settled overworld. It resolves at the first real
 battle-text input boundary. The playbook then uses controller input for the Bag,

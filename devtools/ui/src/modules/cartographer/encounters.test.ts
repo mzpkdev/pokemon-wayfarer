@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest"
 
 import {
   effectiveRosterFor,
-  fishingGroupIds,
+  fishingProfiles,
+  fishingRarityBandIds,
+  rarityBandLabel,
   resolveEncounterPopulation,
   resolveMethodSlots,
   rodLabel,
@@ -36,7 +38,7 @@ const fishing: CatalogWildEncounterMethod = {
       slotIndex: 1,
       slotRate: 0,
       slotRateSource: source,
-      groups: [{ id: "good_rod", source }],
+      groups: [{ id: "old_rod", source }],
       minLevel: 10,
       maxLevel: 10,
       runtimeMinLevel: 10,
@@ -64,20 +66,27 @@ const fishing: CatalogWildEncounterMethod = {
   profiles: [
     { profileKey: "old", fishingRod: "OLD_ROD", levelOffset: 0 },
     { profileKey: "good", fishingRod: "GOOD_ROD", levelOffset: 0 },
+    { profileKey: "super", fishingRod: "SUPER_ROD", levelOffset: 0 },
   ],
 }
 
 describe("encounter presentation", () => {
-  it("omits sentinel and zero-weight slots before rendering", () => {
+  it("retains fishing slots even when legacy rates are zero or the species is NONE", () => {
     expect(visibleEncounterSlots(fishing).map((slot) => slot.speciesLabel)).toEqual([
       "Magikarp",
+      "None",
       "Goldeen",
     ])
   })
 
-  it("keeps fishing visibly grouped by the source rod labels", () => {
-    expect(fishingGroupIds(fishing)).toEqual(["old_rod", "good_rod"])
-    expect(rodLabel("super_rod")).toBe("Super Rod")
+  it("uses source groups only as rarity-band labels", () => {
+    expect(fishingRarityBandIds(fishing)).toEqual(["old_rod", "good_rod"])
+    expect(fishing.slots.map(rarityBandLabel)).toEqual(["Common", "Common", "Less common"])
+    expect(fishingProfiles(fishing).map((profile) => rodLabel(profile.fishingRod))).toEqual([
+      "Old Rod",
+      "Good Rod",
+      "Super Rod",
+    ])
   })
 
   const identity = Array.from({ length: 100 }, (_, index) => index + 1)
@@ -85,7 +94,7 @@ describe("encounter presentation", () => {
     Math.max(1, Math.ceil((index + 1) / 2)),
   )
   const projection: CatalogWildEncounterProjection = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     trainerRating: { minimum: 10, maximum: 80 },
     authoredLevel: { minimum: 1, maximum: 100 },
     products: [{ id: "hns", displayName: "HeartGold and SoulSilver" }],
@@ -190,7 +199,62 @@ describe("encounter presentation", () => {
         ],
       },
     ],
-    profiles: [],
+    profiles: [
+      {
+        profileKey: "old",
+        product: "hns",
+        map: "MAP_ALPHA",
+        baseLabel: "alpha",
+        header: "headers",
+        headerId: 0,
+        runtimeTime: "TIME_DAY",
+        method: "fishing_mons",
+        runtimeArea: "WILD_AREA_FISHING",
+        fishingRod: "OLD_ROD",
+        runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_OLD",
+        levelOffset: 0,
+        encounterRate: 20,
+        authoredSlotCount: 10,
+        runtimeSlotCount: 10,
+        weights: [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
+      },
+      {
+        profileKey: "good",
+        product: "hns",
+        map: "MAP_ALPHA",
+        baseLabel: "alpha",
+        header: "headers",
+        headerId: 0,
+        runtimeTime: "TIME_DAY",
+        method: "fishing_mons",
+        runtimeArea: "WILD_AREA_FISHING",
+        fishingRod: "GOOD_ROD",
+        runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_GOOD",
+        levelOffset: 0,
+        encounterRate: 20,
+        authoredSlotCount: 10,
+        runtimeSlotCount: 10,
+        weights: [25, 18, 12, 10, 9, 7, 6, 5, 4, 4],
+      },
+      {
+        profileKey: "super",
+        product: "hns",
+        map: "MAP_ALPHA",
+        baseLabel: "alpha",
+        header: "headers",
+        headerId: 0,
+        runtimeTime: "TIME_DAY",
+        method: "fishing_mons",
+        runtimeArea: "WILD_AREA_FISHING",
+        fishingRod: "SUPER_ROD",
+        runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_SUPER",
+        levelOffset: 0,
+        encounterRate: 20,
+        authoredSlotCount: 10,
+        runtimeSlotCount: 10,
+        weights: [12, 10, 11, 10, 10, 10, 10, 9, 9, 9],
+      },
+    ],
     headerCounts: {},
   }
 
@@ -238,10 +302,111 @@ describe("encounter presentation", () => {
     expect(slots[1]).toMatchObject({ eligible: true, selectionWeight: 1 })
   })
 
-  it("renormalizes each fishing rod partition independently", () => {
-    const slots = resolveMethodSlots(projection, fishing, 10, "good_rod")
-    expect(slots).toHaveLength(1)
-    expect(slots[0]?.selectionWeight).toBe(1)
+  it("renormalizes a quality profile after excluding SPECIES_NONE", () => {
+    const slots = resolveMethodSlots(projection, fishing, 10, "GOOD_ROD")
+    expect(slots).toHaveLength(3)
+    expect(slots[0]).toMatchObject({ rawWeight: 25, selectionWeight: 25 / 37 })
+    expect(slots[1]).toMatchObject({ eligible: false, rawWeight: 18, selectionWeight: null })
+    expect(slots[2]).toMatchObject({ rawWeight: 12, selectionWeight: 12 / 37 })
+  })
+
+  it("keeps all ten slots in every quality and includes every rarity band", () => {
+    const tenSlots: CatalogWildEncounterMethod = {
+      ...fishing,
+      slots: Array.from({ length: 10 }, (_, slotIndex) => ({
+        slotIndex,
+        slotRate: slotIndex === 0 ? 100 : 0,
+        slotRateSource: source,
+        groups: [
+          {
+            id: slotIndex < 2 ? "old_rod" : slotIndex < 5 ? "good_rod" : "super_rod",
+            source,
+          },
+        ],
+        minLevel: 5,
+        maxLevel: 5,
+        runtimeMinLevel: 5,
+        runtimeMaxLevel: 5,
+        speciesId: "SPECIES_MAGIKARP",
+        speciesLabel: "Magikarp",
+        sprite: null,
+        source,
+      })),
+    }
+
+    expect(
+      fishingProfiles(tenSlots).map((profile) =>
+        resolveMethodSlots(projection, tenSlots, 10, profile.fishingRod).map(
+          (slot) => slot.selectionWeight,
+        ),
+      ),
+    ).toEqual([
+      [0.38, 0.22, 0.1, 0.08, 0.08, 0.04, 0.03, 0.03, 0.02, 0.02],
+      [0.25, 0.18, 0.12, 0.1, 0.09, 0.07, 0.06, 0.05, 0.04, 0.04],
+      [0.12, 0.1, 0.11, 0.1, 0.1, 0.1, 0.1, 0.09, 0.09, 0.09],
+    ])
+    expect(new Set(tenSlots.slots.map(rarityBandLabel))).toEqual(
+      new Set(["Common", "Less common", "Rare"]),
+    )
+  })
+
+  it("renormalizes generated weights across Trainer Rating eligible slots", () => {
+    const filtered: CatalogWildEncounterMethod = {
+      ...fishing,
+      slots: Array.from({ length: 10 }, (_, slotIndex) => ({
+        slotIndex,
+        slotRate: 0,
+        slotRateSource: source,
+        groups: [
+          {
+            id: slotIndex < 2 ? "old_rod" : slotIndex < 5 ? "good_rod" : "super_rod",
+            source,
+          },
+        ],
+        minLevel: 5,
+        maxLevel: 5,
+        runtimeMinLevel: 5,
+        runtimeMaxLevel: 5,
+        speciesId: slotIndex === 0 ? "SPECIES_SKARMORY" : "SPECIES_MAGIKARP",
+        speciesLabel: slotIndex === 0 ? "Skarmory" : "Magikarp",
+        sprite: null,
+        source,
+      })),
+    }
+
+    const slots = resolveMethodSlots(projection, filtered, 10, "OLD_ROD")
+    expect(slots[0]).toMatchObject({ eligible: false, rawWeight: 38, selectionWeight: null })
+    expect(slots[1]?.selectionWeight).toBeCloseTo(22 / 62)
+    expect(slots[9]?.selectionWeight).toBeCloseTo(2 / 62)
+  })
+
+  it("returns a safe zero-data view when every fishing entry is SPECIES_NONE", () => {
+    const zeroData: CatalogWildEncounterMethod = {
+      ...fishing,
+      slots: Array.from({ length: 10 }, (_, slotIndex) => ({
+        slotIndex,
+        slotRate: 0,
+        slotRateSource: source,
+        groups: [
+          {
+            id: slotIndex < 2 ? "old_rod" : slotIndex < 5 ? "good_rod" : "super_rod",
+            source,
+          },
+        ],
+        minLevel: 1,
+        maxLevel: 1,
+        runtimeMinLevel: 1,
+        runtimeMaxLevel: 1,
+        speciesId: "SPECIES_NONE",
+        speciesLabel: "None",
+        sprite: null,
+        source,
+      })),
+    }
+
+    const slots = resolveMethodSlots(projection, zeroData, 10, "SUPER_ROD")
+    expect(slots).toHaveLength(10)
+    expect(slots.every((slot) => !slot.eligible && slot.selectionWeight === null)).toBe(true)
   })
 
   it("changes the effective map roster across an evolution-reversal threshold", () => {

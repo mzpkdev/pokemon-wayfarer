@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest"
 import { CatalogValidationError, validateCatalog } from "./catalog.js"
 
 const projection = (): Record<string, unknown> => ({
-  schemaVersion: 1,
+  schemaVersion: 2,
   trainerRating: { minimum: 10, maximum: 80 },
   authoredLevel: { minimum: 1, maximum: 100 },
   products: [{ id: "emerald", displayName: "Emerald" }],
@@ -217,6 +217,15 @@ describe("validateCatalog", () => {
     )
   })
 
+  it("rejects pre-weight fishing projection schemas", () => {
+    const model = projection()
+    model.schemaVersion = 1
+
+    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
+      "must use projection schemaVersion 2",
+    )
+  })
+
   it("rejects projection species intervals with missing coverage or references", () => {
     const model = projection()
     const species = model.species as Array<Record<string, unknown>>
@@ -232,6 +241,53 @@ describe("validateCatalog", () => {
 
     expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
       "invalid or incomplete outcome intervals",
+    )
+  })
+
+  it("validates fishing profile weights without changing non-fishing rows", () => {
+    const model = projection()
+    const profiles = model.profiles as Array<Record<string, unknown>>
+    expect(profiles[0]).not.toHaveProperty("weights")
+
+    profiles[0] = {
+      profileKey: "emerald/gRoute101/fishing_mons/OLD_ROD",
+      product: "emerald",
+      map: "MAP_ROUTE101",
+      baseLabel: "gRoute101",
+      header: "gWildMonHeaders",
+      headerId: 0,
+      runtimeTime: "TIME_DAY",
+      method: "fishing_mons",
+      runtimeArea: "WILD_AREA_FISHING",
+      fishingRod: "OLD_ROD",
+      runtimeFishingRod: "WILD_ENCOUNTER_FISHING_ROD_OLD",
+      levelOffset: 0,
+      encounterRate: 20,
+      authoredSlotCount: 10,
+      runtimeSlotCount: 10,
+      weights: [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
+    }
+    expect(validateCatalog(catalog({ wildEncounterProjection: model }))).toBeDefined()
+
+    ;(profiles[0]!.weights as number[])[9] = 1
+    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
+      "must contain 10 positive integer weights totaling 100",
+    )
+
+    profiles[0]!.weights = [38, 22, 10, 8, 8, 4, 3, 3, 2, 2]
+    profiles[0]!.runtimeSlotCount = 9
+    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
+      "must contain 10 positive integer weights totaling 100",
+    )
+  })
+
+  it("rejects fishing weights on a non-fishing profile", () => {
+    const model = projection()
+    const profiles = model.profiles as Array<Record<string, unknown>>
+    profiles[0]!.weights = [38, 22, 10, 8, 8, 4, 3, 3, 2, 2]
+
+    expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
+      "must use NONE and must not contain fishing weights",
     )
   })
 

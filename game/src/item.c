@@ -609,6 +609,129 @@ u16 CountTotalItemQuantityInBag(enum Item itemId)
     return BagPocket_CountTotalItemQuantity(&gBagPockets[GetItemPocket(itemId)], itemId);
 }
 
+static bool32 IsActiveStandardRodContributorFlag(u16 flagId)
+{
+#if IS_FRLG
+    return flagId == FLAG_GOT_OLD_ROD
+        || flagId == FLAG_GOT_GOOD_ROD
+        || flagId == FLAG_GOT_SUPER_ROD;
+#elif IS_HNS
+    return flagId == FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED
+        || flagId == FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED
+        || flagId == FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED;
+#else
+    return flagId == FLAG_RECEIVED_OLD_ROD
+        || flagId == FLAG_RECEIVED_GOOD_ROD
+        || flagId == FLAG_RECEIVED_SUPER_ROD;
+#endif
+}
+
+static u32 CountStandardRodContributors(void)
+{
+#if IS_FRLG
+    return FlagGet(FLAG_GOT_OLD_ROD)
+         + FlagGet(FLAG_GOT_GOOD_ROD)
+         + FlagGet(FLAG_GOT_SUPER_ROD);
+#elif IS_HNS
+    return FlagGet(FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED)
+         + FlagGet(FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED)
+         + FlagGet(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED);
+#else
+    return FlagGet(FLAG_RECEIVED_OLD_ROD)
+         + FlagGet(FLAG_RECEIVED_GOOD_ROD)
+         + FlagGet(FLAG_RECEIVED_SUPER_ROD);
+#endif
+}
+
+static bool32 FindOnlyStandardRodSlot(enum Item rod, u32 *slot)
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+    bool32 found = FALSE;
+
+    for (u32 i = 0; i < pocket->capacity; i++)
+    {
+        struct ItemSlot itemSlot = BagPocket_GetSlotData(pocket, i);
+
+        if (itemSlot.itemId != rod)
+            continue;
+        if (found || itemSlot.quantity != 1)
+            return FALSE;
+        found = TRUE;
+        *slot = i;
+    }
+
+    return found;
+}
+
+u32 TryAwardStandardRod(u16 contributorFlag, enum Item *awardedItem)
+{
+    struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
+    enum Item currentRod = ITEM_NONE;
+    enum Item nextRod = ITEM_NONE;
+    u32 contributorCount;
+    u32 rodSlot = 0;
+
+    if (awardedItem == NULL)
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+    *awardedItem = ITEM_NONE;
+    if (!IsActiveStandardRodContributorFlag(contributorFlag))
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+    if (FlagGet(contributorFlag))
+        return STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED;
+
+    contributorCount = CountStandardRodContributors();
+    switch (contributorCount)
+    {
+    case 0:
+        nextRod = ITEM_OLD_ROD;
+        break;
+    case 1:
+        currentRod = ITEM_OLD_ROD;
+        nextRod = ITEM_GOOD_ROD;
+        break;
+    case 2:
+        currentRod = ITEM_GOOD_ROD;
+        nextRod = ITEM_SUPER_ROD;
+        break;
+    default:
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+    }
+
+    if (CountTotalItemQuantityInBag(ITEM_OLD_ROD) != (currentRod == ITEM_OLD_ROD)
+     || CountTotalItemQuantityInBag(ITEM_GOOD_ROD) != (currentRod == ITEM_GOOD_ROD)
+     || CountTotalItemQuantityInBag(ITEM_SUPER_ROD) != 0)
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+
+    if (currentRod != ITEM_NONE && !FindOnlyStandardRodSlot(currentRod, &rodSlot))
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+
+    if (currentRod == ITEM_NONE)
+    {
+        if (!AddBagItem(nextRod, 1))
+            return STANDARD_ROD_AWARD_NO_SPACE;
+    }
+    else
+    {
+        BagPocket_SetSlotItemIdAndCount(pocket, rodSlot, nextRod, 1);
+        if (gSaveBlock1Ptr->registeredItem == currentRod)
+            gSaveBlock1Ptr->registeredItem = nextRod;
+        if (gSaveBlock3Ptr->registeredItemHold == currentRod)
+            gSaveBlock3Ptr->registeredItemHold = nextRod;
+    }
+
+    FlagSet(contributorFlag);
+    *awardedItem = nextRod;
+    return STANDARD_ROD_AWARD_SUCCESS;
+}
+
+void Script_TryAwardStandardRod(void)
+{
+    enum Item awardedItem;
+
+    gSpecialVar_Result = TryAwardStandardRod(gSpecialVar_0x8004, &awardedItem);
+    gSpecialVar_0x8005 = awardedItem;
+}
+
 static bool32 CheckPyramidBagHasItem(enum Item itemId, u16 count)
 {
     u8 i;
