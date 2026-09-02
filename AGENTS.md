@@ -10,6 +10,10 @@
 
 Never hex-edit or directly byte-patch `game/data/layouts/**/map.bin`. Make static tile, collision, or elevation changes in Porymap configured for the target layout version; consult the layout-version guidance in `game/include/fieldmap.h`. Manual event edits in `map.json` remain allowed when they are schema-valid.
 
+## Save compatibility
+
+The ROM hack is not yet publicly released. Backward compatibility with save data from prerelease builds is not required. Do not add migrations or preserve obsolete save layouts solely for prerelease saves, because doing so creates technical debt before the first release. Revisit this policy only when an explicit product decision or public release establishes a save-compatibility baseline.
+
 ## Agent workflow
 
 A root agent, meaning an agent not spawned by another agent, acts as an orchestrator. Delegate bounded discovery, implementation, research, and review to native Codex subagents so the root context stays focused on decisions and synthesis. The root agent must inspect the resulting work, reconcile overlaps, and run relevant verification before reporting completion.
