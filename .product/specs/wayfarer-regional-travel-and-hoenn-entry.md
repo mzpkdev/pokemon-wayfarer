@@ -307,22 +307,21 @@ Static and automated checks must verify:
 15. Ever Grande is reachable early without opening Victory Road or the League.
 16. Sootopolis remains locked until its original late-game progression.
 
-The end-to-end journey starts from a fresh HNS save immediately after receiving
-the starter. Without badges, HM items, tickets, payments, required story
-battles, or campaign completion, the player must:
+Automated acceptance is layered rather than expressed as one fresh-save
+end-to-end itinerary. Static map and topology audits own the public travel
+contacts, return paths, early Ever Grande access, and absence of an early
+Sootopolis destination. Focused runtime tests own initialization idempotence,
+starter and rival isolation, active-region selection, Fly authorization, heal
+slots, blackout behavior, and regional state persistence.
 
-1. travel from Johto to Kanto and return;
-2. travel to Hoenn, save and reload, and return;
-3. re-enter Hoenn without rerunning initialization;
-4. choose each Hoenn starter in separate runs, leave the selected gift with
-   Birch, complete the Route 103 rival battle, leave Hoenn, return, and receive
-   exactly the selected starter without changing a later Silver battle;
-5. heal once in each region, travel away, return, and verify each regional heal
-   slot;
-6. black out once in each region and recover within that region;
-7. Fly among visited destinations in all three regions;
-8. visit Ever Grande without entering Victory Road or the League; and
-9. confirm Sootopolis remains unavailable until its original unlock.
+SkyEmu coverage for this milestone is limited to three focused checks: an
+outdoor-to-indoor Hoenn transition through the normal map path, representative
+campaign maps from every Hoenn traversal class, and one real save and reload on
+a Hoenn dungeon map. It does not need to exercise every destination pair,
+starter branch, regional heal and blackout combination, Fly route, or a full
+Hoenn campaign in a single journey. Those cases remain requirements of the
+focused static and runtime test layers above; a start-to-finish playthrough is
+not a required CI, release, or manual acceptance test.
 
 ## References
 

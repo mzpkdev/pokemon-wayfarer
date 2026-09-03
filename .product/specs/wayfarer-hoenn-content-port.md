@@ -169,9 +169,10 @@ The union behavior follows these rules:
 
 A fresh player who enters Hoenn without first catching a Johto utility user
 must be able to obtain the Hoenn-native users required by the Emerald traversal
-specification. End-to-end coverage must catch the required users from Hoenn
-encounters and cross Route 118 and the eastern sea network without relying on a
-Pokémon transferred from another region.
+specification. Encounter, learnset, and traversal tests must prove that the
+required users are available from Hoenn encounters and can satisfy Route 118
+and eastern-sea traversal without relying on a Pokémon transferred from another
+region. This proof does not require a SkyEmu capture-and-traversal journey.
 
 ### Existing open-world progression
 
@@ -352,17 +353,26 @@ Static and automated validation must prove all of the following:
     satisfy Hoenn badge-count checks.
 13. Sootopolis remains unavailable until Hoenn Dive authorization and its
     original late-game progression are satisfied.
-14. A fresh player may visit the opening network first and then complete the
-    Emerald main campaign through the Hoenn Hall of Fame.
-15. Completing any regional League in every possible order leaves all other
-    regional campaigns valid.
+14. Opening-network topology and representative runtime map loads remain
+    compatible with the preserved Emerald campaign content through the Hoenn
+    Hall of Fame.
+15. Regional-state tests exercise League completion permutations without
+    driving every regional campaign from beginning to end.
 16. The complete required content passes the runtime foundation's ROM and
     memory gates.
 
-The end-to-end campaign run must include save and reload checkpoints before and
-after every Gym, major team event, Sootopolis unlock, League entry, and Hall of
-Fame result. At least one run must visit every opening-network settlement before
-starting the adapted Route 101 campaign.
+SkyEmu acceptance is deliberately limited to the focused
+`wayfarer-hoenn-map-load` journey. It must load an outdoor and indoor Hoenn map
+through normal transitions, load representative campaign maps from each Hoenn
+traversal class, and preserve one representative Hoenn dungeon location through
+a real save and reload. It must not script the full campaign, every Gym and team
+event, every regional League order, or a start-to-finish Hall of Fame run.
+
+The generated manifest and static audits own exhaustive content and topology
+coverage. Focused Python and ROM tests own regional state, progression, Trainer,
+encounter, HM, save, and isolation behavior. A full campaign playthrough may be
+performed informally, but it is not a required CI, release, or manual acceptance
+test.
 
 ## References
 

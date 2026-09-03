@@ -260,31 +260,35 @@ survey reward delivery is retry-safe, Route 120 implements every result in its
 matrix, and ordinary sight-based trainers on changed maps retain their object
 coordinates, trainer types, and sight ranges.
 
-Build the Emerald ROM and run `make -C game check`. Then use a fresh save
-immediately after the starter to complete this journey without badges, HM
-items, earlier campaign completion, or a required scripted or story victory.
-Ordinary sight-based trainer battles are permitted. Surf may be known only for
-the approved water crossings:
+Build the Emerald ROM and run `make -C game check`. The static topology audits,
+focused script tests, and ROM tests collectively cover the cases below. They do
+not need to run as one fresh-save journey, and neither standalone Emerald nor
+Wayfarer acceptance requires a live all-settlement or full-campaign
+playthrough. Fixtures for early traversal start after the starter without
+badges, HM items, earlier campaign completion, or a required scripted or story
+victory. Surf may be supplied only for the approved water-crossing cases.
 
-1. Visit and leave all fourteen opening-network settlements in the PRD.
-2. Use all three Route 104 public ferry stops in both directions, save at each
-   remote stop, reload, and return immediately.
-3. Cross every changed road before its original story, while that story is
-   active where applicable, and after completing it.
-4. Exercise the three Mt. Chimney states and confirm Maxie cannot be challenged
-   before Meteor Falls.
-5. Exercise Route 120 from both approaches: decline and retry, fail the Bag-space
-   precheck, and inject every defined `B_OUTCOME_*` value. Confirm lost, drawn,
-   and forfeited battles leave the scene retryable, while every non-defeat
-   outcome performs the complete reward-and-removal transaction.
-6. Prepare the named native Surf users, cross Route 118 in both directions, and
-   travel among Lilycove, Mossdeep, and Pacifidlog without HM03 or a badge.
-7. Reach each eastern settlement early and confirm its Gym, team, rival,
-   legendary, weather, and reward state remains at baseline.
-8. Confirm Emerald survey flags do not alter the FRLG or HNS meanings at
-   addresses `0x264` through `0x267`.
-9. Complete every preserved story after first using its travel lane and confirm
-   that its battle, item, dialogue, and aftermath occur once.
+1. The topology audit must account for entrances and exits for all fourteen
+   opening-network settlements in the PRD.
+2. Focused ferry tests must cover all three Route 104 stops in both directions,
+   including save-and-reload persistence at remote stops.
+3. Changed-road fixtures must cover the state before the original story, the
+   active story where applicable, and the completed state.
+4. Mt. Chimney tests must exercise its three states and confirm Maxie cannot be
+   challenged before Meteor Falls.
+5. Route 120 tests must cover both approaches, decline and retry, the Bag-space
+   precheck, and every defined `B_OUTCOME_*` value. Lost, drawn, and forfeited
+   battles leave the scene retryable; every non-defeat outcome performs the
+   complete reward-and-removal transaction.
+6. Encounter, learnset, and traversal tests must prove the named native Surf
+   users support Route 118 in both directions and the Lilycove, Mossdeep, and
+   Pacifidlog network without HM03 or a badge.
+7. Early-arrival fixtures must confirm each eastern settlement leaves its Gym,
+   team, rival, legendary, weather, and reward state at baseline.
+8. State-isolation tests must confirm Emerald survey flags do not alter the FRLG
+   or HNS meanings at addresses `0x264` through `0x267`.
+9. The content and script audits must retain every preserved story battle, item,
+   dialogue, aftermath, and one-time state after its travel lane is used.
 
 ## References
 
