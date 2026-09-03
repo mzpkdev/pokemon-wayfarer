@@ -1,7 +1,9 @@
 #include "global.h"
+#include "fishing.h"
 #include "randomizer.h"
 #include "test/test.h"
 #include "wild_encounter.h"
+#include "constants/items.h"
 
 static const struct WildPokemon sSelectionMons[] =
 {
@@ -16,6 +18,23 @@ static const struct WildPokemonInfo sSelectionInfo =
 };
 
 static const u8 sSelectionWeights[] = { 70, 30 };
+
+#if IS_HNS
+static const struct WildPokemon sHoennSoundSelectionMons[] =
+{
+    { 10, 10, SPECIES_MAGIKARP },
+    { 10, 10, SPECIES_TREECKO },
+    { 10, 10, SPECIES_TAILLOW },
+};
+
+static const struct WildPokemonInfo sHoennSoundSelectionInfo =
+{
+    .encounterRate = 1,
+    .wildPokemon = sHoennSoundSelectionMons,
+};
+
+static const u8 sHoennSoundSelectionWeights[] = { 70, 20, 10 };
+#endif
 
 static const struct WildPokemon sFishingSelectionMons[FISH_WILD_COUNT] =
 {
@@ -139,6 +158,29 @@ static bool8 FindFirstProfile(enum WildPokemonArea area, enum WildEncounterFishi
     return FALSE;
 }
 
+#if IS_HNS
+static bool8 FindProfileForMap(u16 map, enum TimeOfDay timeOfDay, enum WildPokemonArea area, enum WildEncounterFishingRod rod, struct WildEncounterProfileView *view)
+{
+    struct WildEncounterProfileContext context;
+    u16 headerId;
+
+    for (headerId = 0; gWildMonHeaders[headerId].mapGroup != MAP_GROUP(MAP_UNDEFINED); headerId++)
+    {
+        u16 headerMap = (gWildMonHeaders[headerId].mapGroup << 8) | gWildMonHeaders[headerId].mapNum;
+
+        if (headerMap != map)
+            continue;
+        context.headerId = headerId;
+        context.timeOfDay = timeOfDay;
+        context.area = area;
+        context.fishingRod = rod;
+        if (GetWildEncounterProfileView(&context, view))
+            return TRUE;
+    }
+    return FALSE;
+}
+#endif
+
 TEST("Wild encounter scaling follows anchors, high-water marks, and bounds")
 {
     static const u8 sRatings[] = { 0, 4, 8, 16, 30, 40, 55, 65, 80 };
@@ -238,6 +280,153 @@ TEST("Standard Rod weighted selection covers every exact boundary")
         EXPECT(!SelectWildEncounterProfileSlot(&view, 80, FALSE, boundary, &slot));
     }
 }
+
+#if IS_HNS
+TEST("Kanto land and Surf profiles are unchanged by Hoenn Sound")
+{
+    static const u8 sRatings[] = { 10, 16, 40, 55, 65, 80 };
+    static const enum TimeOfDay sTimesOfDay[] = { TIME_DAY, TIME_NIGHT };
+    static const struct
+    {
+        u16 map;
+        enum WildPokemonArea area;
+    } sProfiles[] =
+    {
+        { MAP_ROUTE1_HNS, WILD_AREA_LAND },
+        { MAP_ROUTE10_HNS, WILD_AREA_LAND },
+        { MAP_ROUTE10_HNS, WILD_AREA_WATER },
+        { MAP_CINNABAR_ISLAND_HNS, WILD_AREA_WATER },
+        { MAP_MT_MOON_CAVE_HNS, WILD_AREA_LAND },
+    };
+    struct WildEncounterProfileView hoennSoundView = MakeTestProfile(&sHoennSoundSelectionInfo, sHoennSoundSelectionWeights, ARRAY_COUNT(sHoennSoundSelectionMons));
+    u8 hoennSoundSlot;
+    u8 profileId;
+
+    // Prove the radio path is independently active before checking that it
+    // falls through for Kanto-only profiles.
+    ASSUME(SelectWildEncounterProfileSlotWithHoennSoundForTesting(&hoennSoundView, 80, FALSE, FALSE, 0, 0, 0, &hoennSoundSlot));
+    EXPECT_EQ(hoennSoundSlot, 0);
+    ASSUME(SelectWildEncounterProfileSlotWithHoennSoundForTesting(&hoennSoundView, 80, FALSE, TRUE, 0, 0, 0, &hoennSoundSlot));
+    EXPECT_EQ(hoennSoundSlot, 1);
+    ASSUME(SelectWildEncounterProfileSlotWithHoennSoundForTesting(&hoennSoundView, 80, FALSE, TRUE, 0, 1, 0, &hoennSoundSlot));
+    EXPECT_EQ(hoennSoundSlot, 2);
+    ASSUME(SelectWildEncounterProfileSlotWithHoennSoundForTesting(&hoennSoundView, 80, FALSE, TRUE, 1, 0, 0, &hoennSoundSlot));
+    EXPECT_EQ(hoennSoundSlot, 0);
+
+    for (profileId = 0; profileId < ARRAY_COUNT(sProfiles); profileId++)
+    {
+        u8 timeOfDayId;
+
+        for (timeOfDayId = 0; timeOfDayId < ARRAY_COUNT(sTimesOfDay); timeOfDayId++)
+        {
+            struct WildEncounterProfileView view;
+            u8 slot;
+            u16 rating = sRatings[(profileId * ARRAY_COUNT(sTimesOfDay) + timeOfDayId) % ARRAY_COUNT(sRatings)];
+
+            ASSUME(FindProfileForMap(sProfiles[profileId].map, sTimesOfDay[timeOfDayId], sProfiles[profileId].area, WILD_ENCOUNTER_FISHING_ROD_NONE, &view));
+            for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+            {
+                const struct WildPokemon *entry;
+
+                ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
+                EXPECT(entry->species < SPECIES_TREECKO || entry->species > SPECIES_DEOXYS_NORMAL);
+            }
+
+            {
+                u16 eligibleWeight = GetWildEncounterProfileEligibleWeight(&view, rating, FALSE);
+                u16 boundary = 0;
+
+                ASSUME(eligibleWeight > 0);
+                for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+                {
+                    u16 weight = GetWildEncounterProfileEffectiveWeight(&view, slot, rating, FALSE);
+                    u16 boundaryRolls[2];
+                    u8 boundaryId;
+
+                    if (weight == 0)
+                        continue;
+                    boundaryRolls[0] = boundary;
+                    boundaryRolls[1] = boundary + weight - 1;
+                    for (boundaryId = 0; boundaryId < ARRAY_COUNT(boundaryRolls); boundaryId++)
+                    {
+                        u8 soundOffSlot;
+                        u8 soundOnSlot;
+
+                        ASSUME(SelectWildEncounterProfileSlotWithHoennSoundForTesting(&view, rating, FALSE, FALSE, 0, 0, boundaryRolls[boundaryId], &soundOffSlot));
+                        ASSUME(SelectWildEncounterProfileSlotWithHoennSoundForTesting(&view, rating, FALSE, TRUE, 0, 0, boundaryRolls[boundaryId], &soundOnSlot));
+                        EXPECT_EQ(soundOffSlot, slot);
+                        EXPECT_EQ(soundOnSlot, soundOffSlot);
+                    }
+                    boundary += weight;
+                }
+                EXPECT_EQ(boundary, eligibleWeight);
+            }
+        }
+    }
+}
+
+TEST("Kanto Chinchou records retain exact Old Rod accessibility")
+{
+    static const struct
+    {
+        u16 map;
+        enum TimeOfDay timeOfDay;
+    } sRecords[] =
+    {
+        { MAP_VERMILION_CITY_HNS, TIME_DAY },
+        { MAP_VERMILION_CITY_HNS, TIME_NIGHT },
+        { MAP_VERMILION_CITY_PORT_OUTSIDE_HNS, TIME_DAY },
+        { MAP_VERMILION_CITY_PORT_OUTSIDE_HNS, TIME_NIGHT },
+        { MAP_CINNABAR_ISLAND_HNS, TIME_DAY },
+        { MAP_CINNABAR_ISLAND_HNS, TIME_NIGHT },
+    };
+    u8 recordId;
+    u32 oldRodBitePercent = CalculateFishingBiteOddsWithBonuses(OLD_ROD, FALSE, 0, 0, 0);
+
+    EXPECT_EQ(oldRodBitePercent, 25);
+    EXPECT_EQ(oldRodBitePercent * 11, 275);
+
+    for (recordId = 0; recordId < ARRAY_COUNT(sRecords); recordId++)
+    {
+        struct WildEncounterProfileView view;
+        u8 lowestEffectiveLevel = MAX_LEVEL;
+        u16 rating;
+
+        ASSUME(FindProfileForMap(sRecords[recordId].map, sRecords[recordId].timeOfDay, WILD_AREA_FISHING, WILD_ENCOUNTER_FISHING_ROD_OLD, &view));
+        EXPECT_EQ(view.wildMonsInfo->encounterRate, 30);
+        EXPECT_EQ(view.entryCount, FISH_WILD_COUNT);
+
+        for (rating = 10; rating <= 80; rating++)
+        {
+            u16 chinchouWeight = 0;
+            u8 slot;
+
+            EXPECT_EQ(GetWildEncounterProfileEligibleWeight(&view, rating, FALSE), 100);
+            for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+            {
+                const struct WildPokemon *entry;
+                u8 authoredLevel;
+
+                ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
+                if (entry->species != SPECIES_CHINCHOU)
+                    continue;
+                chinchouWeight += GetWildEncounterProfileEffectiveWeight(&view, slot, rating, FALSE);
+                for (authoredLevel = entry->minLevel; authoredLevel <= entry->maxLevel; authoredLevel++)
+                {
+                    struct WildEncounterSpeciesOutcome outcome;
+
+                    ASSUME(GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, rating, FALSE, &outcome));
+                    EXPECT_EQ(outcome.species, SPECIES_CHINCHOU);
+                    if (outcome.level < lowestEffectiveLevel)
+                        lowestEffectiveLevel = outcome.level;
+                }
+            }
+            EXPECT_EQ(chinchouWeight, 11);
+        }
+        EXPECT_EQ(lowestEffectiveLevel, 9);
+    }
+}
+#endif
 
 TEST("Wild encounter scaling rejects unsupported or malformed profile contexts")
 {

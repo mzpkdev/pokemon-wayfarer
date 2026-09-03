@@ -45,6 +45,7 @@ The following existing encounter profiles establish the required two-place cover
 | Johto | Gligar | Cut | Route 42, level 21; Route 45, level 31 |
 | Johto | Aipom | Cut, Rock Smash | Azalea Town and Route 33 Headbutt-backed profiles, level 10 |
 | Johto | Chinchou | Flash, Surf, Whirlpool | Olivine port, levels 20 and 40; Cianwood fishing, level 20 |
+| Kanto | Chinchou | Flash, Surf, Whirlpool | Vermilion and Cinnabar fishing, authored level 5 and effective levels 9 to 90 |
 | Johto | Mareep | Flash | Route 31 and Route 32, 5 to 7 |
 | Johto | Wooper | Surf, Waterfall | Route 32 and Ruins of Alph, 4 to 19 |
 | Johto | Snubbull | Strength | Route 34 and Route 35, 13 to 15 |
@@ -64,7 +65,7 @@ The following existing encounter profiles establish the required two-place cover
 
 Aipom's qualifying profiles are stored as Rock Smash encounter data but are also consumed by the independent Headbutt interaction. Aipom counts only through Headbutt access; Rock Smash cannot be required to obtain its native Rock Smash user.
 
-Chinchou also supplies the existing HNS Kanto Surf crossings. Vermilion and Cinnabar fishing can produce Chinchou at authored levels 40 to 44. Its schedule below covers those catches without a Kanto encounter change.
+Chinchou also supplies the HNS Kanto Surf crossings. The six Vermilion, port, and Cinnabar day/night profiles author it at level 5. Trainer Rating projects those catches to levels 9 through 90 over the required Rating 10 to 80 range, so its schedule starts at level 9 and preserves all three utility moves through level 100.
 
 Trainer Rating projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at Rating 80.
 
@@ -86,7 +87,7 @@ Add the following entries to the anchor species. `L` means level. Multiple moves
 | FireRed and LeafGreen | Goldeen | L5 Waterfall; L21 Waterfall; L40 Waterfall | L5 Waterfall; L29 Waterfall |
 | HNS | Gligar | L19 Cut; L35 Cut; L55 Cut | L19 Cut; L44 Cut |
 | HNS | Aipom | L10 Cut, Rock Smash; L18 Cut, Rock Smash; L29 Cut, Rock Smash; L39 Cut, Rock Smash | L10 Cut, Rock Smash; L25 Cut, Rock Smash; L38 Cut, Rock Smash |
-| HNS | Chinchou | L20 Flash, Surf, Whirlpool; L28 Flash, Surf, Whirlpool; L34 Flash, Surf, Whirlpool; L42 Flash, Surf, Whirlpool; L47 Flash, Surf, Whirlpool | L20 Flash, Surf, Whirlpool; L29 Flash, Surf, Whirlpool; L41 Flash, Surf, Whirlpool |
+| HNS | Chinchou | L9 Flash, Surf, Whirlpool; L17 Flash, Surf, Whirlpool; L23 Flash, Surf, Whirlpool; L31 Flash, Surf, Whirlpool; L39 Flash, Surf, Whirlpool; L45 Flash, Surf, Whirlpool; L50 Flash, Surf, Whirlpool | L9 Flash, Surf, Whirlpool; L17 Flash, Surf, Whirlpool; L29 Flash, Surf, Whirlpool; L41 Flash, Surf, Whirlpool |
 | HNS | Mareep | L5 Flash; L18 Flash; L32 Flash; L46 Flash | L5 Flash; L30 Flash |
 | HNS | Wooper | L4 Surf, Waterfall; L15 Surf, Waterfall; L29 Surf, Waterfall; L43 Surf, Waterfall | L4 Surf, Waterfall; L21 Surf, Waterfall; L41 Surf, Waterfall |
 | HNS | Snubbull | L13 Strength; L37 Strength | L13 Strength; L43 Strength |

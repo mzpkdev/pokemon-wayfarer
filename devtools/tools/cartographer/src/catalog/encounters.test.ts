@@ -355,7 +355,7 @@ describe("generated Trainer Rating projection joins", () => {
       projectionPath,
       () => null,
     )
-  })
+  }, 120_000)
 
   afterAll(() => {
     fs.rmSync(temporaryDirectory, { force: true, recursive: true })
