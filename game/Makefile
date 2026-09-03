@@ -454,7 +454,7 @@ check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit
 endif
-	@cp $< $(HEADLESSELF)
+	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
 

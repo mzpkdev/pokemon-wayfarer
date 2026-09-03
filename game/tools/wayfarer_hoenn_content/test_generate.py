@@ -20,6 +20,7 @@ class WayfarerHoennContentAuditTest(unittest.TestCase):
         root = Path(temporary.name)
         for directory in (
             "data/maps/EmeraldMap",
+            "data/maps/FrlgMap",
             "data/maps/HnsMap",
             "data/layouts/TestLayout",
             "data/scripts",
@@ -77,6 +78,25 @@ class WayfarerHoennContentAuditTest(unittest.TestCase):
             "EmeraldMap_MapScripts::\nEmeraldMap_EventScript_Test::\n"
             "\ttrainerbattle_single TRAINER_ALPHA, Text_Intro, Text_Defeat\n"
             "\tsetflag FLAG_TEST\n",
+            encoding="utf-8",
+        )
+        (root / "data/event_scripts.s").write_text(
+            '\t.include "data/maps/EmeraldMap/scripts.inc"\n'
+            '\t.include "data/scripts/shared.inc"\n'
+            '.if IS_FRLG\n'
+            '\t.include "data/maps/FrlgMap/scripts.inc"\n'
+            '.endif\n'
+            '.if IS_HNS\n'
+            '\t.include "data/maps/HnsMap/scripts.inc"\n'
+            '.endif\n',
+            encoding="utf-8",
+        )
+        (root / "data/maps/FrlgMap/scripts.inc").write_text(
+            "InactiveFrlg_EventScript_Test::\n\tend\n",
+            encoding="utf-8",
+        )
+        (root / "data/maps/HnsMap/scripts.inc").write_text(
+            "ActiveHns_EventScript_Test::\n\tend\n",
             encoding="utf-8",
         )
         self.write_json(
@@ -202,6 +222,35 @@ class WayfarerHoennContentAuditTest(unittest.TestCase):
         manifest = self.run_fixture(root, policy)
         failures = "\n".join(manifest["audit"]["failures"])
         self.assertIn("expectedMapContentSha256 changed", failures)
+
+    def test_generated_map_outputs_do_not_enter_authored_script_graph(self):
+        root, policy = self.make_fixture()
+        baseline = self.run_fixture(root, policy)
+        generated = root / "data/maps/EmeraldMap/events.inc"
+        generated.write_text("GeneratedMapOutput_EventScript_Test::\n\tend\n", encoding="utf-8")
+
+        symbols, _, _ = GENERATOR.script_symbols(root)
+        manifest = self.run_fixture(root, policy)
+
+        self.assertNotIn("GeneratedMapOutput_EventScript_Test", symbols)
+        self.assertEqual(
+            manifest["fingerprints"]["mapContentSha256"],
+            baseline["fingerprints"]["mapContentSha256"],
+        )
+        self.assertTrue(manifest["audit"]["passed"], manifest["audit"]["failures"])
+
+    def test_inactive_build_script_includes_do_not_enter_authored_graph(self):
+        root, policy = self.make_fixture()
+
+        paths = GENERATOR.event_script_source_paths(root)
+        symbols, _, _ = GENERATOR.script_symbols(root)
+        manifest = self.run_fixture(root, policy)
+
+        self.assertNotIn(root / "data/maps/FrlgMap/scripts.inc", paths)
+        self.assertIn(root / "data/maps/HnsMap/scripts.inc", paths)
+        self.assertNotIn("InactiveFrlg_EventScript_Test", symbols)
+        self.assertIn("ActiveHns_EventScript_Test", symbols)
+        self.assertTrue(manifest["audit"]["passed"], manifest["audit"]["failures"])
 
     def test_shared_event_script_trainers_and_state_are_audited(self):
         root, policy = self.make_fixture()

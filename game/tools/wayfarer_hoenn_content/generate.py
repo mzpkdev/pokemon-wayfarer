@@ -39,6 +39,7 @@ PERSISTENT_RE = re.compile(r"\b(?:FLAG|VAR)_[A-Za-z0-9_]+\b")
 TRAINER_RE = re.compile(r"\bTRAINER_[A-Z0-9_]+\b")
 SCRIPT_LABEL_RE = re.compile(r"^\s*([A-Za-z_][A-Za-z0-9_]*)::?\s*$", re.MULTILINE)
 SCRIPT_TOKEN_RE = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
+SCRIPT_INCLUDE_RE = re.compile(r'^\s*\.include\s+"(data/[^"]+\.(?:inc|s))"', re.MULTILINE)
 DEFINE_RE = re.compile(r"^\s*#define\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.+?)\s*$", re.MULTILINE)
 MAPPED_DEFINE_RE = re.compile(r"^\s*#define\s+((?:FLAG|VAR)_[A-Za-z0-9_]+)\s+(0x[0-9A-Fa-f]+)\s*$", re.MULTILINE)
 TRAINER_SOURCE_RE = re.compile(
@@ -139,6 +140,77 @@ def filter_wayfarer_source(source: str) -> str:
     return "\n".join(output)
 
 
+def assembler_condition_value(condition: str) -> bool | None:
+    """Evaluate build-selector expressions, leaving unrelated config guards intact."""
+    identifiers = set(re.findall(r"\b[A-Za-z_][A-Za-z0-9_]*\b", condition))
+    if identifiers and not identifiers.issubset(WAYFARER_CPP_SYMBOLS):
+        return None
+    return evaluate_wayfarer_condition(condition)
+
+
+def filter_wayfarer_assembler_source(source: str) -> str:
+    """Apply known .if build guards while conservatively retaining unknown guards."""
+    output = []
+    # Each frame stores parent activity, whether a prior branch matched, current
+    # activity, and whether this tool understands the condition.
+    stack = [(True, False, True, True)]
+    for line in source.splitlines():
+        directive = re.match(
+            r"^\s*\.(if|ifdef|ifndef|elseif|else|endif)\b\s*(.*)$", line
+        )
+        if directive is None:
+            if stack[-1][2]:
+                output.append(line)
+            continue
+        command, argument = directive.groups()
+        if command in {"if", "ifdef", "ifndef"}:
+            parent_active = stack[-1][2]
+            if command == "if":
+                value = assembler_condition_value(argument)
+            else:
+                symbol = argument.strip()
+                value = (bool(WAYFARER_CPP_SYMBOLS[symbol])
+                         if symbol in WAYFARER_CPP_SYMBOLS else None)
+                if command == "ifndef" and value is not None:
+                    value = not value
+            if value is None:
+                stack.append((parent_active, False, parent_active, False))
+            else:
+                stack.append((parent_active, value, parent_active and value, True))
+        elif command == "elseif":
+            if len(stack) == 1:
+                raise AuditError("unmatched .elseif in event script")
+            parent_active, prior_matched, _, understood = stack[-1]
+            value = assembler_condition_value(argument)
+            if not understood or value is None:
+                stack[-1] = (parent_active, prior_matched, parent_active, False)
+            else:
+                matched = not prior_matched and value
+                stack[-1] = (parent_active, prior_matched or matched,
+                             parent_active and matched, True)
+        elif command == "else":
+            if len(stack) == 1:
+                raise AuditError("unmatched .else in event script")
+            parent_active, prior_matched, _, understood = stack[-1]
+            if understood:
+                stack[-1] = (parent_active, True,
+                             parent_active and not prior_matched, True)
+            else:
+                stack[-1] = (parent_active, prior_matched, parent_active, False)
+        else:
+            if len(stack) == 1:
+                raise AuditError("unmatched .endif in event script")
+            stack.pop()
+    if len(stack) != 1:
+        raise AuditError("unterminated assembler condition in event script")
+    return "\n".join(output)
+
+
+def filter_event_script_source(source: str) -> str:
+    source = strip_asm_comments(source)
+    return filter_wayfarer_assembler_source(filter_wayfarer_source(source))
+
+
 def fingerprint(rows) -> str:
     payload = "".join(f"{row}\n" for row in rows)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
@@ -233,29 +305,42 @@ def load_wild_methods(game_root: Path):
     return methods, profiles
 
 
+def event_script_source_paths(game_root: Path):
+    """Return the authored source closure compiled by data/event_scripts.s."""
+    entry = game_root / "data/event_scripts.s"
+    pending = [entry]
+    visited = set()
+    while pending:
+        path = pending.pop()
+        if path in visited or not path.is_file():
+            continue
+        visited.add(path)
+        source = filter_event_script_source(path.read_text(encoding="utf-8"))
+        pending.extend(game_root / relative for relative in SCRIPT_INCLUDE_RE.findall(source))
+    return sorted(visited)
+
+
 def script_symbols(game_root: Path):
     symbols = set()
     symbol_paths = {}
     symbol_blocks = {}
-    for base in (game_root / "data", game_root / "src"):
-        for pattern in ("**/*.inc", "**/*.s"):
-            for path in base.glob(pattern):
-                try:
-                    source = filter_wayfarer_source(strip_asm_comments(path.read_text(encoding="utf-8")))
-                    matches = list(SCRIPT_LABEL_RE.finditer(source))
-                    found = [match.group(1) for match in matches]
-                    symbols.update(found)
-                    for index, match in enumerate(matches):
-                        symbol = match.group(1)
-                        symbol_paths.setdefault(symbol, path)
-                        end = matches[index + 1].start() if index + 1 < len(matches) else len(source)
-                        symbol_blocks.setdefault(symbol, (
-                            path,
-                            source[match.start():end],
-                            source.count("\n", 0, match.start()) + 1,
-                        ))
-                except UnicodeDecodeError:
-                    continue
+    for path in event_script_source_paths(game_root):
+        try:
+            source = filter_event_script_source(path.read_text(encoding="utf-8"))
+            matches = list(SCRIPT_LABEL_RE.finditer(source))
+            found = [match.group(1) for match in matches]
+            symbols.update(found)
+            for index, match in enumerate(matches):
+                symbol = match.group(1)
+                symbol_paths.setdefault(symbol, path)
+                end = matches[index + 1].start() if index + 1 < len(matches) else len(source)
+                symbol_blocks.setdefault(symbol, (
+                    path,
+                    source[match.start():end],
+                    source.count("\n", 0, match.start()) + 1,
+                ))
+        except UnicodeDecodeError:
+            continue
     return symbols, symbol_paths, symbol_blocks
 
 
