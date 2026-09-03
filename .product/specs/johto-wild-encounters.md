@@ -1,7 +1,7 @@
 # Johto wild encounters
 
 PRD: [Johto wild encounter ecology](../prds/johto-wild-encounters.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -46,17 +46,20 @@ portfolio row for runtime fallback. Each `fallbacks` record contains `map`,
 runtime times use an authored day profile so Cartographer and the day-and-night
 diff can expose them.
 
-Every `changes` record identifies a profile, target slot, before species, after
-species, and one of these ordered change kinds:
+Every `changes` record has exactly `map`, `baseLabel`, `method`, `time`, `slot`,
+`beforeSpecies`, `afterSpecies`, `changeKind`, `reason`, `habitatEvidence`, and
+`targetFailureBefore`. The map, label, method, and runtime time identify one
+authored profile, including the duplicate Mt. Silver Snow source rows. Change
+kinds use this order:
 
-1. `REWEIGHT_EXISTING`, where species already present in the profile move among
-   fixed slot weights.
-2. `CONSOLIDATE_DUPLICATE`, where a repeated species loses a slot and another
-   species already present receives it.
-3. `ADD_LOCAL_SPECIES`, where a duplicate slot receives a species not previously
-   present in that profile.
-4. `REMOVE_FORBIDDEN`, used only to remove a directly authored independent
+1. `REMOVE_FORBIDDEN`, used only to remove a directly authored independent
    Generation III species.
+2. `REWEIGHT_EXISTING`, where species already present in the profile move among
+   fixed slot weights.
+3. `CONSOLIDATE_DUPLICATE`, where a repeated species loses a slot and another
+   species already present receives it.
+4. `ADD_LOCAL_SPECIES`, where a duplicate slot receives a species not previously
+   present in that profile.
 
 Each change also records `reason`, `habitatEvidence`, and `targetFailureBefore`.
 `reason` is one of `METHOD_IDENTITY`, `TIME_IDENTITY`, `LOCAL_FAMILY`,
@@ -65,6 +68,17 @@ Each change also records `reason`, `habitatEvidence`, and `targetFailureBefore`.
 time variant that already supports the species. `targetFailureBefore` lists
 the numeric portfolio or single-species cap that the previous stages could not
 meet. It is empty for `REWEIGHT_EXISTING` and `REMOVE_FORBIDDEN`.
+
+The closed `targetFailureBefore` values are
+`AUTHORED_OVERALL_GEN2_MIN`, `AUTHORED_LAND_GEN2_MIN`,
+`AUTHORED_SURF_GEN2_MIN`, `AUTHORED_FISHING_GEN2_MIN`,
+`AUTHORED_INTERACTION_GEN2_MIN`, `AUTHORED_OLD_ROD_GEN2_MIN`,
+`AUTHORED_GOOD_ROD_GEN2_MIN`, `AUTHORED_SUPER_ROD_GEN2_MIN`, and
+`INTERACTION_SPECIES_CAP:SPECIES_*`. A consolidation or addition must cite an
+actual failure from its pre-change snapshot. A method-specific target applies
+only to that method, while `AUTHORED_OVERALL_GEN2_MIN` applies to every method
+because the overall portfolio directly aggregates them. An unrelated method
+failure cannot authorize the change.
 
 The generator reconstructs the baseline from the change ledger, replays the
 ordered changes, and calculates a portfolio snapshot after each stage. It
@@ -245,6 +259,12 @@ imposed, but a change fails if day and night become identical when they were
 different in the baseline or if a time-exclusive species disappears without a
 `TIME_IDENTITY` change reason.
 
+The four frozen Mt. Silver Snow source rows generate two duplicate runtime
+identities. Preserve their topology and require the unused day row to mirror
+the active day row and the unused night row to mirror the active night row.
+The schema-v3 audit names both duplicate identities and fails if either mirror
+pair diverges.
+
 ### Protected native-HM anchors
 
 Copy only the Johto-owned HNS rows from the native-HM specification into
@@ -259,6 +279,12 @@ Miltank, Marill, and Mantine. For every named slot and authored level, the
 production projection must yield an eligible family member with the required
 utility moves at every Rating. The species must remain obtainable in every
 qualifying place and time named by the current native-HM inventory.
+
+Mantine's global `minimumOrdinaryWildLevel` is 14. An authored level-15
+Mantine can project to level 14 at Rating 10, so 14 is the minimum valid floor
+for this protected inventory. Do not implement this as a Johto-only runtime
+exception, change the authored levels, weaken the Rating 10 through 80 anchor,
+or add Mantyke or another predecessor resolution.
 
 Aipom remains available through the Rock Smash-backed Headbutt profiles for
 Azalea Town and Route 33 at authored level 10. Its set of qualifying Headbutt

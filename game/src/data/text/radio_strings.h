@@ -26,8 +26,8 @@ static const u8 sRadioStationName_HoennSound[]  = _("Hoenn Sound");
 
 static const u8 sRadioText_Hoenn1[] = _("A Pokemon melody from a");
 static const u8 sRadioText_Hoenn2[] = _("faraway region called HOENN!");
-static const u8 sRadioText_Hoenn3[] = _("Wild POKéMON from that region");
-static const u8 sRadioText_Hoenn4[] = _("may appear nearby!");
+static const u8 sRadioText_Hoenn3[] = _("Turn it up and enjoy");
+static const u8 sRadioText_Hoenn4[] = _("the sound of HOENN!");
 
 // ==========================================================
 // POKéDEX Show

@@ -63,13 +63,18 @@ Global species floors then apply to every non-randomized ordinary wild populatio
 | Tauros | 25 | FireRed, Safari Zone West, land grass, 25 |
 | Relicanth | 25 | Emerald, Underwater Route 124, water/surf, 30-35 |
 | Sneasel | 30 | LeafGreen, Four Island Icefall Cave 1F, land grass, 30 |
-| Mantine | 35 | LeafGreen, Seven Island Trainer Tower, water/surf, 35-40 |
+| Mantine | 14 | HNS, Whirl Islands, water/surf, authored 15-19 and projected 14 at Rating 10 |
 | Bagon | 20 | Emerald, Meteor Falls B1F 2R, land grass, 25-35 |
 | Tropius | 20 | Emerald, Route 119, land grass, 25-27 |
 | Absol | 20 | Emerald, Route 120, land grass, 25-27 |
 | Heracross | 20 | Emerald, Safari Zone North, land grass, 27-29 |
 
 Each example identifies an ordinary encounter that motivated review of the global floor. It does not limit the floor to that map, method, build, or level range.
+
+Mantine's floor is 14 because an authored level-15 Mantine can project to
+level 14 at Rating 10. The floor applies globally. It does not add a
+Johto-only exception, change authored encounter levels, or introduce Mantyke
+predecessor resolution.
 
 Ordinary-population readers use the same effective population as an actual encounter. This includes the Pokédex area display, Match Call, radio, local ambient species selection, and ordinary land or water DexNav populations. Hidden DexNav populations stay authored and unscaled.
 
