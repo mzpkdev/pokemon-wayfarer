@@ -9,9 +9,9 @@ This specification defines the build, map catalog, persistent-state model, and
 ROM budget for the Wayfarer product. It keeps HNS as the engine while making
 the HNS and Emerald content sets available in one ROM.
 
-It does not define the Hoenn content manifest, the adapted Hoenn introduction,
-or player-facing regional travel. Those behaviors belong to the Wayfarer Hoenn
-content port and regional travel specifications.
+It does not define the Hoenn content manifest, adapted Hoenn introduction, or
+player-facing entry route. Those behaviors belong to the Wayfarer Hoenn
+content port and Hoenn entry specifications.
 
 ## Behavior
 
@@ -135,7 +135,7 @@ all region-indexed arrays.
 
 A new game clears all Wayfarer regional state before running any regional
 initializer. The first Hoenn arrival may apply the Hoenn baseline defined by
-the travel specification, but it must not clear HNS progress. Starting a new
+the entry specification, but it must not clear HNS progress. Starting a new
 game after an existing save must not retain a Hoenn item, badge, visited bit,
 Trainer result, or story value.
 
@@ -147,6 +147,20 @@ Prerelease save compatibility is not required. Introducing the Wayfarer save
 layout increments the save version and initializes the new fields as a unit.
 Once a public Wayfarer save format exists, later changes require an explicit
 migration or a deliberate compatibility break.
+
+### Active region dispatch
+
+Every included map resolves to exactly one active region: Johto, Kanto, or
+Hoenn. The runtime derives that region from the loaded map's provenance and
+updates the saved current-region value after a map load. A stale saved value
+cannot override the region of the loaded map.
+
+Settlement and route interiors inherit the region of their owning exterior or
+entrance. Transport interiors, event islands, and other shared or ambiguous
+spaces declare an explicit context or preserve the originating HNS region; they
+must not resolve to Hoenn merely because of presentation metadata. Map, Fly,
+Pokédex area, visited-state, healing, blackout, field-move, and regional story
+dispatch consume this same resolved context.
 
 ### Regional state isolation
 
@@ -220,15 +234,18 @@ Static and automated checks must prove all of the following:
    the requested region's value.
 8. New game, save, reload, and save replacement initialize and preserve the
    Hoenn bank correctly.
-9. Compile-time size assertions pass for saved and runtime structures.
-10. The release build stays at or below `0x09F80000` and reports each required
+9. Every map, interior, and transport context resolves to one region; map
+   transitions update the saved current region; and a stale saved value cannot
+   override the loaded map's provenance.
+10. Compile-time size assertions pass for saved and runtime structures.
+11. The release build stays at or below `0x09F80000` and reports each required
    size category.
-11. Representative map loads and transitions run without heap corruption or a
+12. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
 
 ## References
 
 - [Wayfarer Hoenn content port](wayfarer-hoenn-content-port.md)
-- [Wayfarer regional travel and Hoenn entry](wayfarer-regional-travel-and-hoenn-entry.md)
+- [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)

@@ -2,10 +2,15 @@
 
 ## Intent
 
-Wayfarer combines Johto, Kanto, and Hoenn in one HNS-based playthrough. After
-the opening gives the player a starter, the player can travel to Hoenn, explore
-its towns and routes, challenge its Trainers and Gyms, and complete its main
-campaign without starting a separate game or changing ROMs.
+Wayfarer adds Pokémon Emerald's Hoenn region to the HNS-based game. The same
+player, party, Bag, Pokédex, storage, money, options, and play time continue
+into Hoenn. Entering Hoenn does not start another save or replace the player
+with Emerald's protagonist.
+
+This milestone provides the first supported route into Hoenn. It does not yet
+provide travel back to Johto or Kanto. The player first completes the existing
+S.S. Aqua maiden voyage from Olivine to Vermilion, receives the S.S. Ticket,
+and may then take the S.S. Aqua from Vermilion to Slateport.
 
 Hoenn keeps the identity and authored content of Pokémon Emerald. Wayfarer uses
 the HNS engine and progression rules around that content, including HNS wild
@@ -15,274 +20,238 @@ limit.
 
 ## Design
 
-### One continuous adventure
+### Shared player and save
 
-- The HNS player, party, Bag, Pokédex, money, options, and play time continue
-  across all regions.
-- Hoenn is part of the same save file. Entering or leaving it never starts a
-  second campaign slot or swaps the player to Emerald's protagonist.
-- The HNS opening remains the start of the game. Regional travel becomes
-  available after the player receives the first starter and gains normal
-  control in the opening Johto network.
-- The regional service connects Johto, Kanto, and a Littleroot-area arrival in
-  Hoenn. Its basic travel and return options require no badge, HM, ticket,
-  payment, scripted victory, or regional story completion.
-- The original S.S. Aqua and other regional transport stories may remain as
-  content, but they cannot be the only way to enter or leave a region.
+- The HNS opening remains the start of the game.
+- The player reaches Kanto through the existing S.S. Aqua maiden voyage.
+- Completing the maiden voyage and receiving the S.S. Ticket unlocks the
+  outbound Hoenn route at Vermilion Port.
+- The outbound route lands inside Slateport Harbor.
+- Hoenn uses the same player and global Pokémon and inventory systems while
+  keeping its regional story state separate.
+- This milestone has no Hoenn-to-Kanto or Hoenn-to-Johto route. The boarding
+  interaction must state that return service is unavailable and require
+  confirmation before departure.
 
-### Hoenn arrival and campaign start
+The one-way boundary is deliberate implementation staging. It is not the final
+regional-travel experience. A later PRD will define return shipping, the
+coexistence of the S.S. Aqua and S.S. Tidal at Hoenn ports, and any additional
+cross-region travel conveniences.
 
-The player arrives in Hoenn as a visiting Trainer. The first arrival prepares
-only Hoenn's local starting state and does not reset or replace any HNS player
-state.
+### S.S. Aqua access
 
-The Emerald campaign begins from an adapted Route 101 Birch rescue:
+The existing HNS S.S. Aqua story remains the authority for Kanto access and the
+S.S. Ticket:
 
-1. The player reaches Littleroot and Route 101 with their existing party.
-2. Birch's rescue uses a Pokémon from that party instead of forcing the stock
-   Emerald starter-selection sequence.
-3. After the rescue, the player selects one Hoenn starter for Hoenn's local
-   rival branches. Birch offers that Pokémon as an optional gift, which may be
-   claimed immediately or left with him for later.
-4. Brendan or May fills Emerald's local rival role. The player does not become
-   Brendan or May and does not repeat the moving-house, clock-setting, player
-   creation, or initial Pokédex setup.
-5. Completing the adapted introduction establishes the minimum Hoenn campaign
-   state needed for the original story to proceed.
+1. The player boards the maiden voyage at Olivine.
+2. The missing-granddaughter sequence is completed aboard the ship.
+3. The reunion grants the S.S. Ticket and its existing rewards.
+4. The player disembarks at Vermilion and completes the maiden voyage.
+5. The Vermilion attendant then offers Slateport as a Wayfarer-only
+   destination alongside the existing HNS destinations.
 
-Canceling the local starter choice postpones only rival-dependent Hoenn story;
-travel and open exploration remain available. After the choice is committed,
-leaving the selected gift with Birch does not block the main campaign. The
-gift remains available until accepted.
+The Slateport option requires both completed maiden-voyage state and possession
+of the S.S. Ticket. It does not require a Kanto badge, the Machine Part, the
+Magnet Train Pass, a League result, payment, or Hoenn progress. Declining the
+one-way warning changes no state.
 
-### Open exploration
+The Magnet Train remains a Johto and Kanto service. It never travels to Hoenn.
 
-- Hoenn's opening-network towns, cities, roads, caves, and sea routes are
-  available early under the existing Emerald open-world traversal rules.
-- Visiting a later location does not complete an earlier story scene, award its
-  reward, defeat its opponent, or synthesize its completion flags.
-- Later story scenes appear only when their own Hoenn prerequisites are met.
-  Maps must tolerate being visited before those scenes become active.
-- A story actor or scripted battle cannot occupy the only route to a town or
-  city. A passable lane or independent transport option remains available.
-- Ordinary sight-based Trainers may still challenge the player. Their battles
-  are content, not story gates.
-- Sootopolis remains a late-game town. Its Dive entrance, weather crisis, Cave
-  of Origin scenes, Gym, and related rewards retain their original Hoenn story
-  progression.
-- Ever Grande can be visited early, but Victory Road, the Elite Four challenge,
-  and Champion completion retain their Hoenn requirements.
-- Optional and secret locations may retain their original field-move, item, or
-  story requirements when they are not the only route to an ordinary
-  settlement.
+### First Hoenn arrival
 
-### Authored Hoenn content
+The first successful Slateport trip initializes only Hoenn's local starting
+state. It preserves the HNS player, party, Bag, Pokédex, storage, money,
+options, play time, Trainer ID, clock, Johto progress, and Kanto progress.
 
-Wayfarer includes the following Emerald content as part of the Hoenn region:
+Initialization establishes the pre-campaign Hoenn baseline, records Hoenn as
+visited and current, and registers Slateport as a safe recovery destination.
+It does not grant a Hoenn starter or advance Birch, rival, Gym, team,
+legendary, harbor, ferry, or League state. The player arrives on walkable
+ground in Slateport Harbor and can exit normally into Slateport City.
 
-- The mainland, towns, cities, routes, caves, sea routes, interiors, and
-  required campaign locations.
-- Map NPCs, shops, healing facilities, item pickups, hidden items, trades, and
-  ordinary interactions.
-- Ordinary Trainers, rivals, Team Aqua and Team Magma encounters, Gym Leaders,
-  the Elite Four, and the Champion.
-- The eight Hoenn Gyms and the Emerald main story through the Hoenn Hall of
-  Fame.
-- Emerald's authored wild species, encounter methods, slot weights, and
-  locations.
+The operation runs once. Saving and reloading in Hoenn cannot repeat it.
 
-Trainer parties keep their Emerald species, levels, moves, items, AI, and battle
-formats. Wayfarer does not add Trainer Rating scaling, badge scaling, or another
-dynamic level system to Hoenn Trainers. Ordinary Trainer positions, movement,
-trainer types, and sight ranges also remain unchanged unless a separate
-traversal requirement explicitly moves a blocking story actor.
+### Hoenn campaign start
 
-Wild Pokémon use Emerald's authored populations and the existing HNS Trainer
-Rating level projection. Hoenn progress does not add new inputs to Trainer
-Rating. Fixed, gift, legendary, hidden, and scripted Pokémon keep their authored
-levels unless another approved feature already governs them.
+The player reaches Littleroot and Route 101 through Hoenn's open settlement
+network. Birch's adapted rescue uses a Pokémon from the existing party instead
+of forcing Emerald's starter-selection bag.
+
+After the rescue, the player selects Treecko, Torchic, or Mudkip for Hoenn's
+local rival branches. Birch offers the selected Pokémon as an optional gift,
+which may be accepted immediately or left with him. The choice and gift state
+remain separate from the HNS starter and Silver's party selection.
+
+Canceling the local starter choice postpones only rival-dependent Hoenn story.
+Open exploration remains available. Once the choice is committed, it cannot be
+changed, but accepting the gift is not required to continue the campaign.
+
+### Open exploration and authored content
+
+Hoenn uses the implemented Emerald open-world traversal behavior. Its public
+Route 104 ferry, road lanes, native Surf crossings, and early-arrival rules
+remain available. Visiting a location does not complete its story, award its
+reward, or defeat its opponent.
+
+Wayfarer includes the Emerald maps, NPCs, shops, healing facilities, items,
+ordinary Trainers, rivals, team encounters, Gym Leaders, Elite Four, Champion,
+and main story required to complete Hoenn. Trainer parties retain their
+Emerald-authored species, levels, moves, items, AI, and battle formats.
+
+Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
+locations while using the HNS Trainer Rating level projection. Hoenn progress
+does not add Trainer Rating inputs. Fixed, gift, legendary, hidden, and
+scripted Pokémon retain their authored levels unless another approved feature
+already governs them.
+
+Sootopolis remains a late-game town. Its Dive entrance, weather crisis, Cave
+of Origin, Gym, and related rewards retain their original Hoenn progression.
+This milestone adds no special transport to Ever Grande or another inland
+Hoenn destination.
 
 ### Regional progression
 
-- Hoenn has eight independent badge states. They do not reuse or overwrite the
-  Johto and Kanto badge states.
-- A Hoenn story check that asks for a badge count uses only Hoenn badges.
+- Hoenn has eight independent badge states.
+- Hoenn badge-count checks use only Hoenn badges.
 - Hoenn badges do not alter HNS Trainer Rating.
-- Hoenn Champion completion is independent of Johto and Kanto Champion
-  completion.
-- Completing one region's League cannot start, finish, reset, or unlock another
+- Hoenn Champion completion is independent from Johto and Kanto completion.
+- Completing one League cannot start, finish, reset, or unlock another
   region's campaign.
-- One-time Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed
-  after leaving the region, saving, reloading, blacking out, or completing a
-  League elsewhere.
+- Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
+  saving, reloading, and blacking out.
 
 HNS field-move rules apply throughout Wayfarer. Wayfarer includes the HNS and
-Hoenn native utility learnsets together. A Pokémon that can use a field move
-under HNS rules can use it in Hoenn without restoring Emerald's general badge
-and HM ownership checks.
+Hoenn native utility learnsets together. HM08 remains Whirlpool and HM09 is
+Dive. Hoenn Dive spots require the Hoenn authorization granted by Steven's
+Mossdeep event.
 
-Sootopolis is the exception. Using Dive on a Hoenn dive spot requires the
-Hoenn-specific authorization granted by Steven's Mossdeep event. In Wayfarer,
-HM08 remains Whirlpool and Steven grants HM09 for Dive. The two machines,
-moves, permissions, and field actions remain distinct.
+### Ticket and ship ownership
 
-### Region-aware travel and recovery
+Wayfarer has one S.S. Ticket item. The HNS maiden-voyage reunion is its normal
+source and the item is not consumed by travel.
 
-- The Town Map opens on the player's current region. The player can switch
-  between Johto, Kanto, and Hoenn views.
-- Each view uses that region's map art, labels, player marker, location data,
-  and visited destinations.
-- Fly exposes only destinations the player has visited. Region tabs may be used
-  to select a visited destination in another region.
-- The physical regional service remains available even after Fly is obtained
-  and never becomes dependent on Fly.
-- Each region remembers its own most recent healing location. A blackout
-  returns the player to the current region's last valid healing location, or to
-  that region's safe arrival point if none has been registered.
-- Saving and reloading preserves the current region, map position, Hoenn
-  campaign state, visited locations, badges, defeated Trainers, collected
-  items, and healing destinations.
+The S.S. Aqua uses it for the Olivine, Vermilion, and outbound Slateport
+service defined by this milestone. The S.S. Tidal remains a separate Emerald
+ship with its original Hoenn Champion unlock and original destinations.
+Possessing the ticket before the Hoenn League does not reveal or unlock the
+S.S. Tidal.
+
+If a Hoenn postgame event would award the S.S. Ticket after the player already
+owns it, the event recognizes the existing item instead of attempting a
+duplicate grant. It may announce that the S.S. Tidal is available, but it does
+not turn that ship into a return route to Johto or Kanto.
+
+### Map, Fly, healing, and blackout
+
+The existing Wayfarer runtime selects Hoenn map art, names, destinations, and
+Pokédex area data while the player is on a Hoenn map. This milestone does not
+add manual region tabs or cross-region Fly.
+
+The Vermilion-to-Slateport trip sets Slateport as the active safe recovery
+location before returning control. Later healing in Hoenn updates the ordinary
+active healing location. A blackout in Hoenn must recover at a valid Hoenn
+location and must not move the player to Johto or Kanto.
+
+This milestone does not preserve a separate healing history for every region.
+That behavior belongs to the future return-travel PRD.
 
 ## Boundaries
 
-- Wayfarer does not redesign or rebalance Emerald Trainer parties.
+- There is no supported route from Hoenn back to Johto or Kanto in this
+  milestone.
+- Slateport does not gain an S.S. Aqua attendant or departure menu.
+- Cross-region Fly and selectable Town Map region tabs are not included.
+- The S.S. Tidal keeps its original postgame role and destinations.
+- This milestone does not add early Ever Grande transport.
+- Wayfarer does not redesign or scale Emerald Trainer parties.
 - Wayfarer does not add Hoenn-based Trainer Rating milestones.
-- Free regional exploration does not mean every dungeon, shortcut, legendary
-  room, Gym interaction, or story reward is available immediately.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
-  preservation targets when they already work, but they are not required for
-  the first complete Hoenn campaign milestone.
-- This PRD does not define Sinnoh integration. The ROM budget must leave useful
-  headroom for a later Sinnoh slice, but it does not promise that a full Sinnoh
-  campaign will fit.
-- Compatibility with saves from prerelease builds is not required. A released
-  Wayfarer version must not silently reinterpret saved state after its save
-  format becomes public.
+  preservation targets, not requirements for this milestone.
+- This PRD does not define Sinnoh integration.
+- Compatibility with prerelease saves is not required.
+
+A public release that promises free travel among regions must not ship with
+this one-way boundary. Return travel requires its own approved PRD and
+implementation.
 
 ## Balance
 
-Hoenn's ordinary and boss Trainers use their Emerald-authored levels. This
-means the player may meet battles that are much stronger or weaker than their
-current party when regions are explored out of order. Wayfarer does not correct
-that mismatch with scaling.
+Hoenn's ordinary and boss Trainers use their Emerald-authored levels. The
+player may therefore meet battles much stronger or weaker than the current
+party. Wayfarer does not correct that mismatch with Trainer scaling.
 
-Wild levels continue to follow HNS Trainer Rating wherever the player travels.
-The same rating produces the same intended wild-level band in Johto, Kanto, and
-Hoenn. Hoenn badges and story milestones do not raise it.
-
-Rewards remain attached to their original Hoenn interactions. Opening a travel
-lane cannot grant a skipped reward. A one-time reward must either be delivered
-and recorded together or remain available to retry.
+Wild levels continue to follow HNS Trainer Rating. Hoenn badges and story
+milestones do not raise it. Rewards remain attached to their original Hoenn
+interactions.
 
 ## Presentation
 
-- Player-facing build and save identifiers use the name "Wayfarer" rather than
-  "HNS All Region" or another internal integration name.
-- Regional transport clearly lists Johto, Kanto, and Hoenn destinations and
-  always includes Cancel and a valid return journey.
-- The map and Fly interfaces identify the selected region and do not mix
-  Hoenn's destinations with the Johto and Kanto map layout.
-- The Hoenn introduction acknowledges that the player is visiting with an
-  existing party. It must not present the player as having just moved from a
-  different home.
-- Existing Emerald music, map presentation, dialogue, and encounter identity
-  remain intact unless HNS already applies a global presentation change.
+- Player-facing build and save identifiers use the name "Wayfarer".
+- The Vermilion attendant identifies the destination as Slateport, Hoenn.
+- Before departure, the attendant says that return service is unavailable.
+- Canceling or declining leaves the player in Vermilion with no state change.
+- Hoenn entry treats the existing player as a visiting Trainer and adds no
+  replacement introduction.
+- Existing Emerald music, maps, dialogue, and encounter identity remain intact
+  unless an approved Wayfarer rule changes them.
 
 ## Interactions
 
-### Existing open-world traversal
+The HNS open-world traversal specification continues to own the S.S. Aqua
+maiden voyage, the Olivine and Vermilion service, and the Kanto settlement
+network. This PRD extends only the completed Vermilion service with an outbound
+Slateport destination.
 
-The Emerald open-world traversal behavior remains the basis for Hoenn's road
-network. Its bypasses, public Route 104 ferry, native Surf crossings, and local
-state isolation continue to apply. Wayfarer keeps Sootopolis behind its
-original late-game progression. Ever Grande may be visited early without
-unlocking Victory Road, the Elite Four, or Champion content.
+The Emerald open-world traversal specification remains authoritative inside
+Hoenn. The Hoenn content port owns the adapted Birch rescue and campaign
+content. The Hoenn entry specification owns the outbound trip, first-arrival
+boundary, and safe Slateport handoff.
 
-The HNS open-world traversal behavior remains the basis for Johto and Kanto.
-Wayfarer's regional service supersedes any rule that makes the S.S. Aqua maiden
-voyage the required first entry to Kanto. The maiden voyage remains optional
-story content and must coexist with prior Kanto visits.
-
-### Shared systems
-
-- Pokédex area data follows the selected region while species ownership and
-  seen status remain global.
-- Pokémon Centers, shops, the PC, party storage, the Bag, money, and player
-  identity remain shared across regions.
-- Hoenn events must not read a Johto or Kanto flag or variable merely because
-  the source games assigned both meanings to the same numeric identifier.
-- Whiteout, Hall of Fame, credits, daily resets, and new-game initialization
-  run only the region-specific story cleanup that applies to the current event.
-- Global game-clear state cannot stand in for Hoenn Champion state when it
-  would reveal or complete Hoenn postgame content.
+Pokémon Centers, shops, the PC, party storage, the Bag, money, and player
+identity remain shared. Hoenn events cannot read an HNS flag or variable merely
+because the source games assigned both meanings to the same numeric value.
 
 ## Constraints
 
-- The final ROM must be no larger than 32 MiB and must not rely on a 64 MiB ROM
-  mapping, emulator-only storage, or a custom cartridge mapper.
-- During Hoenn development, release builds must keep at least 512 KiB of unused
-  ROM space. A 1 MiB reserve is preferred until the required Hoenn campaign is
-  complete.
-- Space savings must preserve player-facing content. Deduplication, removal of
-  empty data, release-only debug removal, and transparent compression take
-  priority over cutting maps, Trainers, NPCs, encounters, Gyms, or story.
-- Existing HNS map identifiers and persistent meanings cannot be renumbered by
-  the union build. Hoenn receives distinct persistent state even when Emerald
-  and HNS originally used the same numeric IDs.
-- Map group and map numbers must remain representable by the GBA engine's
-  existing warp format.
-- Added persistent state and runtime buffers must stay within the save-sector,
-  EWRAM, heap, and decompression limits of the GBA engine.
-- Every release build reports total ROM use and fails before exceeding either
-  the 32 MiB limit or the active reserve threshold.
+- The final ROM must be no larger than 32 MiB.
+- Release builds must keep at least 512 KiB of unused ROM space during Hoenn
+  development.
+- Existing HNS map identifiers and persistent meanings cannot be renumbered.
+- Map group and map numbers must remain representable by the existing warp
+  format.
+- Added persistent state and runtime buffers must fit the existing save,
+  EWRAM, heap, and decompression limits.
+- Every release build reports total ROM use and fails before exceeding its
+  active ceiling.
 
 ## Playtesting
 
-Automated acceptance is intentionally layered. SkyEmu coverage is limited to
-three focused checks: an outdoor-to-indoor Hoenn transition through the normal
-map path, representative campaign maps from every Hoenn traversal class, and
-one real save-and-reload check on a Hoenn dungeon map. The generated content
-manifest, static topology audits, and focused runtime and mechanics tests own
-exhaustive content, state-isolation, progression, Trainer, encounter, HM, and
-ROM-budget checks. Neither CI nor release acceptance requires a scripted
-start-to-finish Hoenn campaign playthrough. Manual playtesting also uses
-focused scenarios; a full playthrough is not a planned acceptance artifact.
+Automated acceptance is layered. Static and ROM tests own the gate matrix,
+state isolation, one-time initialization, destination validity, ticket
+behavior, and absence of a reverse route. One focused SkyEmu journey starts
+from a completed maiden voyage in Vermilion, boards for Slateport, enters
+Hoenn, saves, reloads, and exits the harbor into Slateport City.
 
-- Can a new HNS player reach Johto, Kanto, and Hoenn after receiving the first
-  starter without earning a badge or completing a regional campaign?
-- Can the player return from every region with no Fly user and no story ticket?
-- Can the player visit representative towns and routes in Hoenn's opening
-  network before advancing the Emerald campaign, then return to Route 101
-  without having consumed later story state?
-- Does Birch's adapted rescue work with an existing party, does each local
-  starter choice control the correct Hoenn branches without changing the HNS
-  starter, and does the optional gift remain available when left with Birch?
-- Do representative Hoenn wild encounters use the expected Emerald species and
-  HNS-scaled level band at several Trainer Ratings?
-- Do ordinary Trainers, each Gym Leader, rival battles, team bosses, the Elite
-  Four, and the Champion use their authored Emerald parties without scaling?
-- Do Hoenn badges, Champion state, defeated Trainers, items, NPC visibility,
-  and story scenes survive travel, save and reload, blackout, and another
-  region's League completion?
-- Does Sootopolis remain unavailable until the original late-game Dive and
-  crisis progression opens it?
-- Can the player visit Ever Grande early without accidentally starting or
-  completing Victory Road, Elite Four, or Champion content?
-- Do the Town Map, Fly, Pokédex area display, healing, blackout, and Hall of Fame
-  behavior select the correct region in every tested order?
-- Can all required Hoenn campaign content be built with the active ROM reserve
-  intact and accounted for by the generated completeness audit?
+Acceptance answers these questions:
+
+- Is Slateport unavailable before the maiden voyage completes?
+- Does the route require the S.S. Ticket without adding another story gate?
+- Does declining the one-way warning leave all state unchanged?
+- Does arrival preserve Johto and Kanto progress?
+- Does first-arrival initialization run exactly once?
+- Can the player save, reload, heal, and black out safely in Hoenn?
+- Does Route 101 retain the adapted Birch rescue afterward?
+- Does the S.S. Tidal remain locked until the Hoenn Champion result?
+- Does the build remain within the active ROM limit?
 
 ## References
 
 - [Wayfarer runtime foundation specification](../specs/wayfarer-runtime-foundation.md)
 - [Wayfarer Hoenn content port specification](../specs/wayfarer-hoenn-content-port.md)
-- [Wayfarer regional travel and Hoenn entry specification](../specs/wayfarer-regional-travel-and-hoenn-entry.md)
-- [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
-- [HNS open-world regional traversal](hns-open-world-region-traversal.md)
-- [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
-- [Badge-free HM field use](hm-field-use.md)
-- [Native HM utility learnsets](native-hm-learnsets.md)
-- [Emerald and Hoenn story traversal blockers](../research/emerald-hoenn-story-traversal-blockers.md)
-- [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Wayfarer Hoenn entry specification](../specs/wayfarer-hoenn-entry.md)
+- [Emerald open-world regional traversal](../specs/emerald-open-world-region-traversal.md)
+- [HNS open-world regional traversal](../specs/hns-open-world-region-traversal.md)
+- [Trainer Rating wild encounter scaling](../specs/trainer-rating-wild-encounter-scaling.md)
+- [Badge-free HM field use](../specs/hm-field-use.md)
+- [Native HM utility learnsets](../specs/native-hm-learnsets.md)

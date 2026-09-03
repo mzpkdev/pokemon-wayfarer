@@ -1,7 +1,7 @@
 # Wayfarer Hoenn content port
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -11,10 +11,11 @@ Trainers, wild encounters, Gyms, the Emerald main story, the Pokémon League,
 and content-completeness validation.
 
 The runtime foundation owns map generation, persistent storage, regional state
-isolation, and the ROM budget. The regional travel specification owns first
-entry, the adapted Birch rescue, inter-region travel, Town Map and Fly behavior,
-healing, and whiteout recovery. The implemented Emerald open-world traversal
-specification remains authoritative for Hoenn's opening settlement network.
+isolation, and the ROM budget. This specification owns the adapted Birch
+rescue and Hoenn campaign. The Hoenn entry specification owns the first
+supported interregional trip and safe Slateport handoff. The implemented
+Emerald open-world traversal specification remains authoritative for Hoenn's
+opening settlement network.
 
 ## Behavior
 
@@ -41,8 +42,8 @@ specification, or the existing Emerald traversal specification names a change.
 
 The generated port also owns source-scoped symbol rewrites required by the
 union build. In particular, every included Hoenn use of Emerald's shared
-`VAR_STARTER_MON` resolves to the dedicated Hoenn starter choice defined by the
-regional-entry specification. The rewrite must not change HNS consumers or the
+`VAR_STARTER_MON` resolves to the dedicated Hoenn starter choice defined by
+this specification. The rewrite must not change HNS consumers or the
 standalone Emerald build. The content audit enumerates every source occurrence
 and fails if an included Wayfarer Hoenn consumer retains the raw shared symbol.
 
@@ -167,7 +168,7 @@ The union behavior follows these rules:
 - Wayfarer adds no new utility species or schedules beyond the two existing
   regional sets.
 
-A fresh player who enters Hoenn without first catching a Johto utility user
+Any player who enters Hoenn without first catching a Johto utility user
 must be able to obtain the Hoenn-native users required by the Emerald traversal
 specification. Encounter, learnset, and traversal tests must prove that the
 required users are available from Hoenn encounters and can satisfy Route 118
@@ -179,7 +180,7 @@ region. This proof does not require a SkyEmu capture-and-traversal journey.
 The implemented Emerald open-world regional traversal specification applies to
 Wayfarer Hoenn maps. Its public Route 104 ferry, road lanes, Mt. Chimney states,
 Route 111 survey, Route 120 Kecleon transaction, native Surf crossings, and
-early-arrival rules remain unchanged unless the Wayfarer travel specification
+early-arrival rules remain unchanged unless the Wayfarer entry specification
 defines a cross-region addition.
 
 Using an open travel lane does not complete its attached Emerald story. A
@@ -190,6 +191,46 @@ dialogue, and aftermath remains available once.
 Sootopolis stays outside the opening settlement network. Its Dive entrance,
 weather crisis, Cave of Origin scenes, Gym, and related rewards retain their
 late-game Hoenn progression.
+
+### Adapted Hoenn opening
+
+Birch's Route 101 rescue remains the start of the Emerald campaign, but it uses
+the Wayfarer player and existing party:
+
+1. Approaching the retained trigger starts Birch's normal request for help.
+2. The battle uses the first non-Egg, non-fainted Pokémon in the player's
+   existing party and never opens Emerald's forced starter-selection Bag.
+3. A loss or interruption uses normal recovery and leaves the rescue available
+   to retry.
+4. A successful rescue advances only the Hoenn opening state required to visit
+   Birch's lab and select the local starter branch.
+5. Birch asks the player to select Treecko, Torchic, or Mudkip for Hoenn's rival
+   and campaign branches, then offers that Pokémon as an optional gift.
+
+`VAR_HOENN_STARTER_CHOICE` starts at `HOENN_STARTER_CHOICE_NONE`. A committed
+choice records Treecko, Torchic, or Mudkip using Emerald's original branch
+mapping. `FLAG_HOENN_STARTER_RECEIVED` records whether Birch successfully
+delivered the gift. Neither value reads or writes the HNS starter variable or
+changes Silver's party selection.
+
+Every included Hoenn consumer of Emerald's shared `VAR_STARTER_MON` resolves to
+`VAR_HOENN_STARTER_CHOICE` through a Hoenn-source-scoped rewrite. Standalone
+Emerald and all HNS consumers retain their original symbol and behavior. The
+content audit fails if an included Hoenn consumer keeps the raw shared symbol.
+
+The choice prompt may be canceled. Until a choice is committed, all three
+choices remain available, the gift remains unclaimed, and rival-dependent
+Hoenn story waits. Once committed, the choice cannot change. The player may
+accept the selected Pokémon immediately or leave it with Birch and continue
+the campaign. Failed delivery leaves the same selected Pokémon available to
+retry and does not set `FLAG_HOENN_STARTER_RECEIVED`.
+
+Wayfarer does not run Emerald's moving-truck arrival, bedroom setup, clock
+setup, player creation, naming, initial money, initial Bag, initial party,
+initial PC, or initial Pokédex sequence. Hoenn scripts instead use the visitor
+baseline prepared for the adapted rescue. Brendan or May remains the local
+rival according to the normal player-gender relationship without replacing the
+Wayfarer player, family, home, or Trainer identity.
 
 ### Main campaign and regional progression
 
@@ -287,8 +328,8 @@ Completing it must:
 3. run only the Hoenn League and story cleanup;
 4. preserve Johto and Kanto campaign state;
 5. show the intended Hall of Fame and credits presentation; and
-6. return the player to a valid Wayfarer location with regional travel
-   available.
+6. return the player to a valid Hoenn location without creating an implicit
+   route to Johto or Kanto.
 
 Completing the Johto or Kanto League before Hoenn cannot reveal Hoenn postgame
 NPCs, ferries, gifts, or encounters that require the Hoenn Champion result.
@@ -319,23 +360,31 @@ Static and automated validation must prove all of the following:
 2. Every warp and connection resolves and every required interior can be
    entered and exited.
 3. Every reachable Hoenn flag and variable is valid in the Wayfarer namespace.
-4. Every Trainer reference resolves to the expected Emerald-authored party and
+4. Birch's rescue uses the existing party, never opens forced starter selection,
+   and remains retryable after a loss or interruption.
+5. Hoenn starter choice and delivery remain separate from each other and from
+   the HNS starter. Cancel, leave-with-Birch, successful delivery, and failed
+   delivery preserve their specified states.
+6. The adapted opening skips Emerald's replacement-player initialization and
+   preserves the Wayfarer player, family, home, clock, party, Bag, money,
+   Pokédex, storage, options, and Trainer ID.
+7. Every Trainer reference resolves to the expected Emerald-authored party and
    a distinct defeat bit.
-5. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
+8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
-6. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
+9. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
    party.
-7. Every authored ordinary wild profile exists in Wayfarer, preserves its
+10. Every authored ordinary wild profile exists in Wayfarer, preserves its
    source population, and uses HNS level projection.
-8. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
+11. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
    users satisfy the traversal coverage without a Johto capture.
-9. Item balls, hidden items, gifts, trades, Trainer defeats, NPC visibility,
+12. Item balls, hidden items, gifts, trades, Trainer defeats, NPC visibility,
    and story scenes persist through save and reload.
-10. The Wayfarer registry reports nine HMs; forward and reverse lookups map HM08
+13. The Wayfarer registry reports nine HMs; forward and reverse lookups map HM08
     to Whirlpool and HM09 to Dive; both moves pass `IsMoveHM`; Steven grants
     HM09 atomically; and standalone HNS and Emerald retain their eight-HM
     mappings.
-11. With a valid Dive user present, the map-aware Dive preflight passes this
+14. With a valid Dive user present, the map-aware Dive preflight passes this
     matrix for both diving and resurfacing:
 
     | Map context | HNS Badge 7 | Hoenn authorization | Result |
@@ -349,16 +398,16 @@ Static and automated validation must prove all of the following:
     | Hoenn | set | unset | denied |
     | Hoenn | set | set | allowed |
 
-12. Each Hoenn Gym awards the correct regional badge and only Hoenn badges
+15. Each Hoenn Gym awards the correct regional badge and only Hoenn badges
     satisfy Hoenn badge-count checks.
-13. Sootopolis remains unavailable until Hoenn Dive authorization and its
+16. Sootopolis remains unavailable until Hoenn Dive authorization and its
     original late-game progression are satisfied.
-14. Opening-network topology and representative runtime map loads remain
+17. Opening-network topology and representative runtime map loads remain
     compatible with the preserved Emerald campaign content through the Hoenn
     Hall of Fame.
-15. Regional-state tests exercise League completion permutations without
+18. Regional-state tests exercise League completion permutations without
     driving every regional campaign from beginning to end.
-16. The complete required content passes the runtime foundation's ROM and
+19. The complete required content passes the runtime foundation's ROM and
     memory gates.
 
 SkyEmu acceptance is deliberately limited to the focused
@@ -377,7 +426,7 @@ test.
 ## References
 
 - [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
-- [Wayfarer regional travel and Hoenn entry](wayfarer-regional-travel-and-hoenn-entry.md)
+- [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [HM field use](hm-field-use.md)
