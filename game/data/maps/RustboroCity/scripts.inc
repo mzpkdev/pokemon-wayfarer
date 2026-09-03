@@ -858,10 +858,10 @@ RustboroCity_EventScript_MayAskToBattle::
 
 RustboroCity_EventScript_BattleMay::
 	msgbox RustboroCity_Text_MayImNotGoingToLose, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, RustboroCity_EventScript_BattleMayTreecko
-	case 1, RustboroCity_EventScript_BattleMayTorchic
-	case 2, RustboroCity_EventScript_BattleMayMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, RustboroCity_EventScript_BattleMayTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, RustboroCity_EventScript_BattleMayTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, RustboroCity_EventScript_BattleMayMudkip
 	end
 
 RustboroCity_EventScript_MayBrineyHint::
@@ -924,10 +924,10 @@ RustboroCity_EventScript_BrendanAskToBattle::
 
 RustboroCity_EventScript_BattleBrendan::
 	msgbox RustboroCity_Text_BrendanIWontGoEasy, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, RustboroCity_EventScript_BattleBrendanTreecko
-	case 1, RustboroCity_EventScript_BattleBrendanTorchic
-	case 2, RustboroCity_EventScript_BattleBrendanMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, RustboroCity_EventScript_BattleBrendanTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, RustboroCity_EventScript_BattleBrendanTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, RustboroCity_EventScript_BattleBrendanMudkip
 	end
 
 RustboroCity_EventScript_BrendanBrineyHint::

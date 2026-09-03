@@ -52,6 +52,12 @@
 #define WAYFARER_HOENN_USE_FLASH_FLAG     0x888
 #define WAYFARER_HOENN_USE_STRENGTH_FLAG  0x889
 #define WAYFARER_HOENN_WHITEOUT_TO_LAVARIDGE_FLAG 0x06C
+#define WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG  0x2D3
+
+// Emerald leaves source flag 0x4FF unused. Wayfarer reserves its mapped Hoenn
+// bank bit for Birch's starter delivery state. The source-constant audit tests
+// that no authored Emerald content claims the original flag.
+#define WAYFARER_HOENN_STARTER_RECEIVED_SOURCE_FLAG 0x4FF
 
 #define WAYFARER_HOENN_TRAINERS_COUNT      855
 #define WAYFARER_HOENN_TRAINER_FLAG_BYTES ((WAYFARER_HOENN_TRAINERS_COUNT + 7) / 8)

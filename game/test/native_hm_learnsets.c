@@ -980,6 +980,16 @@ TEST("Native HM exclusions and regional build gates remain exact")
     }
 }
 
+#if IS_WAYFARER
+TEST("Wayfarer HM09 Dive retains generated anchor and successor compatibility")
+{
+    EXPECT(CanLearnTeachableMove(SPECIES_WAILMER, MOVE_DIVE));
+    EXPECT(CanLearnTeachableMove(SPECIES_WAILORD, MOVE_DIVE));
+    EXPECT(CanLearnTeachableMove(SPECIES_CARVANHA, MOVE_DIVE));
+    EXPECT(CanLearnTeachableMove(SPECIES_SHARPEDO, MOVE_DIVE));
+}
+#endif
+
 TEST("Native HM anchors retain generated HM compatibility and successor exceptions")
 {
     u8 anchorId;

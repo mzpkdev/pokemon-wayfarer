@@ -36,6 +36,8 @@ ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"^#define HGSS_SORT_TMS_BY_NUM\s+(?
 TM_LITERACY_PAT = re.compile(r"^#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
+CPP_IDENTIFIER_PAT = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
+CPP_DEFINED_PAT = re.compile(r"defined\s*(?:\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)|([A-Za-z_][A-Za-z0-9_]*))")
 
 def enabled() -> bool:
     """
@@ -45,6 +47,38 @@ def enabled() -> bool:
         cfg_pokemon = cfg_pokemon_fp.read()
         cfg_defined = CONFIG_ENABLED_PAT.search(cfg_pokemon)
         return cfg_defined is not None and cfg_defined.group("cfg_val") in ("TRUE", "1")
+
+def build_symbols(build: str) -> set[str]:
+    symbols = {build} if build else set()
+    if build in {"POKEMON_HNS", "POKEMON_WAYFARER"}:
+        symbols.add("IS_HNS")
+    if build in {"FIRERED", "LEAFGREEN"}:
+        symbols.add("IS_FRLG")
+    if build == "POKEMON_WAYFARER":
+        symbols.update({"POKEMON_HNS", "IS_WAYFARER", "HAS_EMERALD_CONTENT"})
+    elif build == "EMERALD":
+        symbols.add("HAS_EMERALD_CONTENT")
+    return symbols
+
+
+def evaluate_cpp_condition(expression: str, symbols: set[str]) -> bool:
+    expression = CPP_DEFINED_PAT.sub(
+        lambda match: "True" if (match.group(1) or match.group(2)) in symbols else "False",
+        expression,
+    )
+    expression = CPP_IDENTIFIER_PAT.sub(
+        lambda match: match.group(0)
+        if match.group(0) in {"True", "False", "and", "or", "not"}
+        else ("True" if match.group(0) in symbols else "False"),
+        expression,
+    )
+    expression = expression.replace("&&", " and ").replace("||", " or ")
+    expression = re.sub(r"!(?!=)", " not ", expression)
+    expression = expression.strip()
+    if re.search(r"[^\s()TrueFalsandornot]", expression):
+        raise ValueError(f"unsupported preprocessor condition: {expression}")
+    return bool(eval(expression, {"__builtins__": {}}, {}))
+
 
 def extract_repo_tms(build: str = "") -> typing.Generator[str, None, None]:
     """
@@ -60,32 +94,46 @@ def extract_repo_tms(build: str = "") -> typing.Generator[str, None, None]:
             yield f"MOVE_{m.group(1)}"
         return
 
-    BUILD_GUARD_MAP = {
-        "POKEMON_HNS": "IS_HNS",
-        "POKEMON_WAYFARER": "IS_HNS",
-        "FIRERED": "IS_FRLG",
-        "LEAFGREEN": "IS_FRLG",
-    }
-    target_guard = BUILD_GUARD_MAP.get(build, "")
-
-    # Simple state machine for top-level #if IS_X / #else / #endif
+    symbols = build_symbols(build)
     active = True
-    depth = 0
+    conditions = []
     for line in text.splitlines():
         stripped = line.strip()
 
-        if stripped.startswith("#if ") or stripped.startswith("#ifdef"):
-            depth += 1
-            if depth == 1:
-                active = bool(target_guard and target_guard in stripped)
+        if stripped.startswith("#ifdef "):
+            condition = stripped.removeprefix("#ifdef ").strip() in symbols
+            conditions.append([active, condition, condition])
+            active = active and condition
             continue
-        if stripped.startswith("#else") and depth == 1:
-            active = not active
+        if stripped.startswith("#ifndef "):
+            condition = stripped.removeprefix("#ifndef ").strip() not in symbols
+            conditions.append([active, condition, condition])
+            active = active and condition
+            continue
+        if stripped.startswith("#if "):
+            condition = evaluate_cpp_condition(stripped.removeprefix("#if "), symbols)
+            conditions.append([active, condition, condition])
+            active = active and condition
+            continue
+        if stripped.startswith("#elif "):
+            parent_active, _, branch_taken = conditions[-1]
+            condition = not branch_taken and evaluate_cpp_condition(
+                stripped.removeprefix("#elif "), symbols
+            )
+            conditions[-1][1] = condition
+            conditions[-1][2] = branch_taken or condition
+            active = parent_active and condition
+            continue
+        if stripped == "#else":
+            parent_active, _, branch_taken = conditions[-1]
+            condition = not branch_taken
+            conditions[-1][1] = condition
+            conditions[-1][2] = True
+            active = parent_active and condition
             continue
         if stripped.startswith("#endif"):
-            if depth == 1:
-                active = True
-            depth = max(0, depth - 1)
+            parent_active, _, _ = conditions.pop()
+            active = parent_active
             continue
 
         if active:

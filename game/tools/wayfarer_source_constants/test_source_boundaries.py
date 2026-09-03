@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import re
 import shutil
@@ -10,6 +11,9 @@ from pathlib import Path
 GAME = Path(__file__).resolve().parents[2]
 MAPS = GAME / "data" / "maps"
 GENERATOR = Path(__file__).with_name("generate.py")
+SPEC = importlib.util.spec_from_file_location("wayfarer_source_constants", GENERATOR)
+GENERATOR_MODULE = importlib.util.module_from_spec(SPEC)
+SPEC.loader.exec_module(GENERATOR_MODULE)
 
 FLAG_OPERAND_RE = re.compile(
     r"(?m)^\s*(?:setflag|clearflag|checkflag|goto_if_(?:set|unset)|call_if_(?:set|unset))\s+"
@@ -69,6 +73,32 @@ class SourceBoundaryTests(unittest.TestCase):
             match.group(3): (int(match.group(1), 16), int(match.group(2), 16))
             for match in PAIR_RE.finditer(cls.common_data_path.read_text())
         }
+        cls.emerald_starter_values = GENERATOR_MODULE.dump_values(
+            cc,
+            GAME / "include",
+            "POKEMON_EMERALD",
+            [
+                "VAR_STARTER_MON",
+                "VAR_HOENN_STARTER_CHOICE",
+                "HOENN_STARTER_CHOICE_NONE",
+                "HOENN_STARTER_CHOICE_TREECKO",
+                "HOENN_STARTER_CHOICE_TORCHIC",
+                "HOENN_STARTER_CHOICE_MUDKIP",
+                "FLAG_HOENN_STARTER_RECEIVED",
+            ],
+        )
+        cls.hns_starter_values = GENERATOR_MODULE.dump_values(
+            cc,
+            GAME / "include",
+            "POKEMON_HNS",
+            ["VAR_STARTER_MON", "VAR_HOENN_STARTER_CHOICE", "FLAG_HOENN_STARTER_RECEIVED"],
+        )
+        cls.frlg_starter_values = GENERATOR_MODULE.dump_values(
+            cc,
+            GAME / "include",
+            "FIRERED",
+            ["VAR_STARTER_MON", "VAR_HOENN_STARTER_CHOICE", "FLAG_HOENN_STARTER_RECEIVED"],
+        )
 
     @classmethod
     def tearDownClass(cls):
@@ -90,6 +120,57 @@ class SourceBoundaryTests(unittest.TestCase):
         self.assertEqual(self.engine["VAR_LITTLEROOT_TOWN_STATE"], 0x4050)
         self.assertEqual(self.hoenn["MAPSEC_PETALBURG_CITY"], 7)
         self.assertEqual(self.engine["MAPSEC_PETALBURG_CITY"], 0)
+
+    def test_hoenn_starter_constants_are_source_scoped(self):
+        self.assertEqual(self.hoenn["VAR_HOENN_STARTER_CHOICE"], 0x7023)
+        self.assertEqual(self.hoenn["FLAG_HOENN_STARTER_RECEIVED"], 0x64FF)
+        self.assertEqual(self.engine["VAR_STARTER_MON"], 0x4023)
+        self.assertEqual(self.emerald_starter_values["VAR_STARTER_MON"], 0x4023)
+        self.assertEqual(self.emerald_starter_values["VAR_HOENN_STARTER_CHOICE"], 0x4023)
+        self.assertEqual(self.emerald_starter_values["FLAG_HOENN_STARTER_RECEIVED"], 0x4FF)
+        self.assertEqual(self.emerald_starter_values["HOENN_STARTER_CHOICE_NONE"], 0xFFFF)
+        self.assertEqual(self.emerald_starter_values["HOENN_STARTER_CHOICE_TREECKO"], 0)
+        self.assertEqual(self.emerald_starter_values["HOENN_STARTER_CHOICE_TORCHIC"], 1)
+        self.assertEqual(self.emerald_starter_values["HOENN_STARTER_CHOICE_MUDKIP"], 2)
+        self.assertEqual(self.hns_starter_values["VAR_STARTER_MON"], 0x4023)
+        self.assertEqual(self.hns_starter_values["VAR_HOENN_STARTER_CHOICE"], 0x4023)
+        self.assertEqual(self.hns_starter_values["FLAG_HOENN_STARTER_RECEIVED"], 0)
+        self.assertEqual(self.frlg_starter_values["VAR_HOENN_STARTER_CHOICE"], 0x4023)
+        self.assertEqual(self.frlg_starter_values["FLAG_HOENN_STARTER_RECEIVED"], 0)
+
+    def test_all_hoenn_starter_consumers_use_dedicated_symbol(self):
+        occurrences = GENERATOR_MODULE.audit_hoenn_starter_symbols(MAPS)
+        counts = {}
+        for path, _, symbol in occurrences:
+            self.assertEqual(symbol, "VAR_HOENN_STARTER_CHOICE")
+            relative_path = str(path.relative_to(MAPS))
+            counts[relative_path] = counts.get(relative_path, 0) + 1
+
+        self.assertEqual(counts, {
+            "LilycoveCity/scripts.inc": 2,
+            "LittlerootTown_ProfessorBirchsLab/scripts.inc": 6,
+            "MauvilleCity_GameCorner/scripts.inc": 1,
+            "PetalburgCity_PokemonCenter_1F/scripts.inc": 3,
+            "Route103/scripts.inc": 3,
+            "Route104/scripts.inc": 2,
+            "Route110/scripts.inc": 2,
+            "Route119/scripts.inc": 2,
+            "RustboroCity/scripts.inc": 2,
+        })
+
+    def test_reserved_starter_received_source_flag_is_unused(self):
+        authored_paths = [
+            GAME / "data" / "event_scripts.s",
+            *sorted((GAME / "data" / "scripts").glob("*.inc")),
+            *sorted(MAPS.glob("*/map.json")),
+            *sorted(MAPS.glob("*/scripts.inc")),
+        ]
+        uses = [str(path.relative_to(GAME)) for path in authored_paths
+                if "FLAG_UNUSED_0x4FF" in path.read_text()]
+        self.assertEqual(uses, [])
+        self.assertTrue(
+            GENERATOR_MODULE.FLAG_LOW_START <= 0x4FF <= GENERATOR_MODULE.FLAG_LOW_END
+        )
 
     def test_emerald_map_event_operands_are_mappable(self):
         checked = 0

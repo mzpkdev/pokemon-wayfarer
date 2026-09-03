@@ -239,12 +239,22 @@ story content and must coexist with prior Kanto visits.
 
 ## Playtesting
 
+Automated acceptance is intentionally layered. SkyEmu coverage is limited to
+three focused checks: an outdoor-to-indoor Hoenn transition through the normal
+map path, representative campaign maps from every Hoenn traversal class, and
+one real save-and-reload check on a Hoenn dungeon map. The generated content
+manifest, static topology audits, and focused runtime and mechanics tests own
+exhaustive content, state-isolation, progression, Trainer, encounter, HM, and
+ROM-budget checks. Neither CI nor release acceptance requires a scripted
+start-to-finish Hoenn campaign playthrough. Manual playtesting also uses
+focused scenarios; a full playthrough is not a planned acceptance artifact.
+
 - Can a new HNS player reach Johto, Kanto, and Hoenn after receiving the first
   starter without earning a badge or completing a regional campaign?
 - Can the player return from every region with no Fly user and no story ticket?
-- Can the player visit every town and city in Hoenn's opening network before
-  advancing the Emerald campaign, then return to Route 101 and complete the
-  full campaign normally?
+- Can the player visit representative towns and routes in Hoenn's opening
+  network before advancing the Emerald campaign, then return to Route 101
+  without having consumed later story state?
 - Does Birch's adapted rescue work with an existing party, does each local
   starter choice control the correct Hoenn branches without changing the HNS
   starter, and does the optional gift remain available when left with Birch?
@@ -261,8 +271,8 @@ story content and must coexist with prior Kanto visits.
   completing Victory Road, Elite Four, or Champion content?
 - Do the Town Map, Fly, Pokédex area display, healing, blackout, and Hall of Fame
   behavior select the correct region in every tested order?
-- Can the complete required Hoenn campaign and all required regional content be
-  built with the active ROM reserve intact?
+- Can all required Hoenn campaign content be built with the active ROM reserve
+  intact and accounted for by the generated completeness audit?
 
 ## References
 

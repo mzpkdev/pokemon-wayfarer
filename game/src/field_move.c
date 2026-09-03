@@ -7,6 +7,7 @@
 #include "item.h"
 #include "party_menu.h"
 #include "pokemon.h"
+#include "wayfarer_persistence.h"
 #include "constants/field_move.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
@@ -43,10 +44,14 @@ static bool32 IsFieldMoveUnlocked_Fly(void)
 
 static bool32 IsFieldMoveUnlocked_Dive(void)
 {
+#if IS_WAYFARER
+    return WayfarerIsDiveAuthorizedForCurrentMap();
+#else
     if (IS_HNS || IS_FRLG)
         return FlagGet(FLAG_BADGE07_GET);
 
     return TRUE;
+#endif
 }
 
 static bool32 IsFieldMoveUnlocked_Waterfall(void)

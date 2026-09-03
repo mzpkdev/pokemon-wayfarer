@@ -74,10 +74,10 @@ Route119_EventScript_PlayBrendanMusic::
 
 Route119_EventScript_BattleMay::
 	msgbox Route119_Text_MayIntro, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route119_EventScript_BattleMayTreecko
-	case 1, Route119_EventScript_BattleMayTorchic
-	case 2, Route119_EventScript_BattleMayMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, Route119_EventScript_BattleMayTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, Route119_EventScript_BattleMayTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, Route119_EventScript_BattleMayMudkip
 	end
 
 Route119_EventScript_BattleMayTreecko::
@@ -104,10 +104,10 @@ Route119_EventScript_DefeatedMay::
 
 Route119_EventScript_BattleBrendan::
 	msgbox Route119_Text_BrendanIntro, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route119_EventScript_BattleBrendanTreecko
-	case 1, Route119_EventScript_BattleBrendanTorchic
-	case 2, Route119_EventScript_BattleBrendanMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, Route119_EventScript_BattleBrendanTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, Route119_EventScript_BattleBrendanTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, Route119_EventScript_BattleBrendanMudkip
 	end
 
 Route119_EventScript_BattleBrendanTreecko::

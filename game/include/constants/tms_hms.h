@@ -1,7 +1,7 @@
 #ifndef GUARD_CONSTANTS_TMS_HMS_H
 #define GUARD_CONSTANTS_TMS_HMS_H
 
-#if IS_HNS
+#if defined(POKEMON_HNS) || defined(POKEMON_WAYFARER)
 
 #define FOREACH_TM(F) \
     F(FOCUS_PUNCH) \
@@ -97,6 +97,18 @@
     F(FLASH_CANNON) \
     F(TRICK_ROOM)
 
+#if defined(POKEMON_WAYFARER)
+#define FOREACH_HM(F) \
+    F(CUT) \
+    F(FLY) \
+    F(SURF) \
+    F(STRENGTH) \
+    F(FLASH) \
+    F(ROCK_SMASH) \
+    F(WATERFALL) \
+    F(WHIRLPOOL) \
+    F(DIVE)
+#else
 #define FOREACH_HM(F) \
     F(CUT) \
     F(FLY) \
@@ -106,6 +118,7 @@
     F(ROCK_SMASH) \
     F(WATERFALL) \
     F(WHIRLPOOL)
+#endif
 
 #else
 

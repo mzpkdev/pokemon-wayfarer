@@ -55,6 +55,30 @@ class SourceConstantTests(unittest.TestCase):
                 {"MAPSEC_PETALBURG_CITY"},
             )
 
+    def test_starter_audit_rejects_raw_symbol_in_emerald_map(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            maps = Path(temp_dir)
+            emerald = maps / "Route103"
+            emerald.mkdir()
+            (emerald / "map.json").write_text(json.dumps({"game_version": "emerald"}))
+            (emerald / "scripts.inc").write_text("\tswitch VAR_STARTER_MON\n")
+
+            with self.assertRaisesRegex(
+                ValueError,
+                r"Route103/scripts\.inc:1.*use VAR_HOENN_STARTER_CHOICE",
+            ):
+                GENERATOR.audit_hoenn_starter_symbols(maps)
+
+    def test_starter_audit_ignores_hns_source_maps(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            maps = Path(temp_dir)
+            hns = maps / "NewBarkTown_hns"
+            hns.mkdir()
+            (hns / "map.json").write_text(json.dumps({"game_version": "hns"}))
+            (hns / "scripts.inc").write_text("\tsetvar VAR_STARTER_MON, 0\n")
+
+            self.assertEqual(GENERATOR.audit_hoenn_starter_symbols(maps), [])
+
 
 if __name__ == "__main__":
     unittest.main()

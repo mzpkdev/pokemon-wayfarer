@@ -23,6 +23,7 @@ MACRO_RE = re.compile(r"^#define\s+([A-Za-z_][A-Za-z0-9_]*)\s+(.+)$")
 IDENT_RE = re.compile(r"\b[A-Za-z_][A-Za-z0-9_]*\b")
 INTEGER_SUFFIX_RE = re.compile(r"(?<=\d)[uUlL]+\b")
 PERSISTENT_TOKEN_RE = re.compile(r"\b(?:FLAG|VAR)_[A-Za-z0-9_]+\b")
+STARTER_TOKEN_RE = re.compile(r"\b(?:VAR_HOENN_STARTER_CHOICE|VAR_STARTER_MON)\b")
 
 BIN_OPS = {
     ast.Add: operator.add,
@@ -209,6 +210,38 @@ def collect_hoenn_map_section_names(maps_dir):
     return names
 
 
+def collect_hoenn_starter_occurrences(maps_dir):
+    occurrences = []
+    for map_json in sorted(Path(maps_dir).glob("*/map.json")):
+        data = json.loads(map_json.read_text())
+        if data.get("game_version", "emerald") != "emerald":
+            continue
+
+        script_path = map_json.with_name("scripts.inc")
+        if not script_path.exists():
+            continue
+        for line_number, line in enumerate(script_path.read_text().splitlines(), 1):
+            for match in STARTER_TOKEN_RE.finditer(line):
+                occurrences.append((script_path, line_number, match.group(0)))
+    return occurrences
+
+
+def audit_hoenn_starter_symbols(maps_dir):
+    occurrences = collect_hoenn_starter_occurrences(maps_dir)
+    raw_occurrences = [
+        (path, line_number)
+        for path, line_number, symbol in occurrences
+        if symbol == "VAR_STARTER_MON"
+    ]
+    if raw_occurrences:
+        locations = ", ".join(f"{path}:{line_number}" for path, line_number in raw_occurrences)
+        raise ValueError(
+            f"Wayfarer Hoenn source uses raw VAR_STARTER_MON at {locations}; "
+            "use VAR_HOENN_STARTER_CHOICE"
+        )
+    return occurrences
+
+
 def render_common_tables(common_names, emerald_values, engine_values):
     aliases = {}
     flag_pairs = []
@@ -266,6 +299,7 @@ def render_common_tables(common_names, emerald_values, engine_values):
 
 def main():
     args = parse_args()
+    audit_hoenn_starter_symbols(args.maps_dir)
     emerald_macros = dump_macros(args.cpp, args.include_dir, "POKEMON_EMERALD")
     engine_macros = dump_macros(args.cpp, args.include_dir, "POKEMON_WAYFARER")
     source_names = sorted(

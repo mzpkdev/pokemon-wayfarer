@@ -103,6 +103,18 @@ PetalburgCity_Gym_EventScript_Norman::
 	vsseeker_rematchid TRAINER_NORMAN_1
 	lock
 	faceplayer
+#if IS_WAYFARER
+	goto_if_lt VAR_PETALBURG_GYM_STATE, 2, PetalburgCity_Gym_EventScript_NormanBeginTutorial
+	goto_if_eq VAR_PETALBURG_GYM_STATE, 7, PetalburgCity_Gym_EventScript_NormanPostBattle
+	goto_if_eq VAR_PETALBURG_GYM_STATE, 8, PetalburgCity_Gym_EventScript_NormanRematch
+	specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript
+	switch VAR_RESULT
+	case 0, PetalburgCity_Gym_EventScript_NormanNoBadges
+	case 1, PetalburgCity_Gym_EventScript_NormanOneBadge
+	case 2, PetalburgCity_Gym_EventScript_NormanTwoBadges
+	case 3, PetalburgCity_Gym_EventScript_NormanThreeBadges
+	goto PetalburgCity_Gym_EventScript_NormanBattle
+#else
 	switch VAR_PETALBURG_GYM_STATE
 	case 2, PetalburgCity_Gym_EventScript_NormanNoBadges
 	case 3, PetalburgCity_Gym_EventScript_NormanOneBadge
@@ -111,6 +123,8 @@ PetalburgCity_Gym_EventScript_Norman::
 	case 6, PetalburgCity_Gym_EventScript_NormanBattle
 	case 7, PetalburgCity_Gym_EventScript_NormanPostBattle
 	case 8, PetalburgCity_Gym_EventScript_NormanRematch
+#endif
+PetalburgCity_Gym_EventScript_NormanBeginTutorial::
 	msgbox PetalburgCity_Gym_Text_DadYoureHereWithYourPokemon, MSGBOX_DEFAULT
 	closemessage
 	switch VAR_FACING

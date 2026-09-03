@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "emerald",
+  "expectedMapCount": 518,
+  "expectedCatalogSha256": "8797f3299e66d08e025021c14c4b063d3e11ce6cc21b74ccb3ae6d833780cf6f",
+  "expectedMapContentSha256": "bdd43a011ac73c5973248d3d617a7dd7c0d864ca72d8ba3817d7d4112aee767f",
+  "expectedTrainerReferencesSha256": "895b369dfdad47019dbbfd08fb9b89da36e7c96d77d963502f1ee3078c4ef97b",
+  "expectedTrainerOffset": 630,
+  "expectedTrainerPartiesSha256": "4c3df217b1a40b09a5b7cadf9bf201cc5b433234dff7857b14a8ee1e5ff3645c",
+  "expectedWildMethodsSha256": "7b0e5c11c6465832e27bcf2d408d2e532c80fc5f72eaa26a7e9eb0e065494a16",
+  "expectedWildProfileCount": 124,
+  "expectedWildProfilesSha256": "25f80a47f99c66920dfa662ee3cabccf8369fda8efc581beff14e5ee1f7f5c84",
+  "expectedStarterConsumersSha256": "eac6aeb2e501a6d54d556350a3a981fdd8204586748f39ad4e8f617c4bf640e7",
+  "default": {
+    "classification": "required",
+    "reason": "Emerald-authored Hoenn map retained for the traversable region and main campaign.",
+    "specification": ".product/specs/wayfarer-hoenn-content-port.md",
+    "disposition": "included"
+  },
+  "rules": [
+    {
+      "globs": [
+        "Unused*"
+      ],
+      "system": "unused-source-maps",
+      "classification": "excluded",
+      "reason": "Unused Emerald source maps are outside the first Wayfarer Hoenn campaign milestone.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#optional-emerald-systems",
+      "disposition": "excluded-from-first-milestone"
+    },
+    {
+      "globs": [
+        "BattleColosseum_2P",
+        "BattleColosseum_4P",
+        "TradeCenter",
+        "RecordCorner",
+        "UnionRoom"
+      ],
+      "system": "multiplayer",
+      "classification": "excluded",
+      "reason": "Multiplayer-only Emerald rooms are outside the first Wayfarer Hoenn campaign milestone.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#optional-emerald-systems",
+      "disposition": "excluded-from-first-milestone"
+    },
+    {
+      "globs": ["InsideOfTruck"],
+      "system": "stock-emerald-introduction",
+      "classification": "excluded",
+      "reason": "The stock moving-truck introduction is replaced by Wayfarer's adapted regional entry.",
+      "specification": ".product/specs/wayfarer-regional-travel-and-hoenn-entry.md",
+      "disposition": "deferred-to-another-specification"
+    },
+    {
+      "globs": [
+        "BattleFrontier*",
+        "BattleTower*",
+        "BattleDome*",
+        "BattlePalace*",
+        "BattleArena*",
+        "BattleFactory*",
+        "BattlePike*",
+        "BattlePyramid*",
+        "*BattleTent*",
+        "TrainerHill*",
+        "ArtisanCave*"
+      ],
+      "system": "battle-facilities",
+      "classification": "optional",
+      "reason": "Battle facilities are preservation targets but do not block the first complete Hoenn campaign milestone.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#optional-emerald-systems",
+      "disposition": "included-with-named-limitation"
+    },
+    {
+      "globs": [
+        "*Contest*",
+        "ContestHall*"
+      ],
+      "system": "contests",
+      "classification": "optional",
+      "reason": "Contest content is a preservation target but does not block the first complete Hoenn campaign milestone.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#optional-emerald-systems",
+      "disposition": "included-with-named-limitation"
+    },
+    {
+      "globs": [
+        "SecretBase*"
+      ],
+      "system": "secret-bases",
+      "classification": "optional",
+      "reason": "Secret Base content is a preservation target but does not block the first complete Hoenn campaign milestone.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#optional-emerald-systems",
+      "disposition": "included-with-named-limitation"
+    },
+    {
+      "globs": [
+        "SafariZone*",
+        "Route121_SafariZoneEntrance"
+      ],
+      "system": "safari-extensions",
+      "classification": "optional",
+      "reason": "Emerald Safari extensions are optional preservation content for the first milestone.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#optional-emerald-systems",
+      "disposition": "included-with-named-limitation"
+    },
+    {
+      "globs": [
+        "NavelRock*",
+        "BirthIsland*",
+        "FarawayIsland*",
+        "SouthernIsland*"
+      ],
+      "system": "event-islands",
+      "classification": "optional",
+      "reason": "Event-island content is not required for the Emerald main campaign milestone.",
+      "specification": ".product/prds/wayfarer-hoenn-integration.md#boundaries",
+      "disposition": "included-with-named-limitation"
+    }
+  ]
+}

@@ -34,9 +34,9 @@ PetalburgCity_PokemonCenter_1F_EventScript_Woman::
 	end
 
 PetalburgCity_PokemonCenter_1F_EventScript_SayStarterTypeInfo::
-	call_if_eq VAR_STARTER_MON, 0, PetalburgCity_PokemonCenter_1F_EventScript_SayTreeckoType
-	call_if_eq VAR_STARTER_MON, 1, PetalburgCity_PokemonCenter_1F_EventScript_SayTorchicType
-	call_if_eq VAR_STARTER_MON, 2, PetalburgCity_PokemonCenter_1F_EventScript_SayMudkipType
+	call_if_eq VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TREECKO, PetalburgCity_PokemonCenter_1F_EventScript_SayTreeckoType
+	call_if_eq VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TORCHIC, PetalburgCity_PokemonCenter_1F_EventScript_SayTorchicType
+	call_if_eq VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, PetalburgCity_PokemonCenter_1F_EventScript_SayMudkipType
 	release
 	end
 
@@ -91,4 +91,3 @@ PetalburgCity_PokemonCenter_1F_Text_MudkipIsWaterType:
 	.string "It's strong against the FIRE type.\p"
 	.string "But, it's weak against GRASS-type\n"
 	.string "and ELECTRIC-type POKéMON.$"
-

@@ -164,11 +164,10 @@ describe.sequential("HNS HM field use", () => {
       await game.controls.press("a")
     })
 
-    it("keeps HNS's non-HM Dive selectable but badge-gated", async () => {
+    it("reserves Wayfarer HM09 Dive for contextual use on HNS maps", async () => {
       await game.arrange({
         checkpoint: "new-bark-after-intro",
         player: { position: { map: "route-41", x: 9, y: 21 } },
-        story: { flags: { badge7: false } },
         party: [{ species: "lapras", moves: ["dive"] }],
       })
 
@@ -177,25 +176,9 @@ describe.sequential("HNS HM field use", () => {
       await expect(game.state.read()).resolves.toMatchObject({
         partyMenu: {
           open: true,
-          actions: expect.arrayContaining([partyMenuActions.dive]),
+          actions: expect.not.arrayContaining([partyMenuActions.dive]),
         },
       })
-
-      await selectFieldPartyAction(game, partyMenuActions.dive)
-      await game.wait.frames(120)
-      await expect(game.state.read()).resolves.toMatchObject({
-        map: { name: "route-41" },
-        partyMenu: { open: true },
-        player: { surfing: false },
-        fieldMove: {
-          move: "dive",
-          user: 0,
-          userSpecies: "lapras",
-          result: "selected",
-          unlocked: false,
-        },
-      })
-      await game.controls.press("a")
     })
   })
 

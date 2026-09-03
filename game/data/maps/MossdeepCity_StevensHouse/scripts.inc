@@ -1,3 +1,10 @@
+#if IS_HNS && !IS_WAYFARER
+@ Standalone HNS assembles the Emerald event-script archive without exposing
+@ Hoenn maps. Keep those dormant references linkable without adding Dive to
+@ the HNS HM registry, where HM08 remains Whirlpool.
+#define ITEM_HM_DIVE ITEM_HM08
+#endif
+
 MossdeepCity_StevensHouse_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, MossdeepCity_StevensHouse_OnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, MossdeepCity_StevensHouse_OnTransition
@@ -14,6 +21,9 @@ MossdeepCity_StevensHouse_EventScript_HideStevensNote::
 
 MossdeepCity_StevensHouse_OnTransition:
 	call_if_eq VAR_STEVENS_HOUSE_STATE, 2, MossdeepCity_StevensHouse_EventScript_SetStevenPos
+#if IS_WAYFARER
+	call_if_eq VAR_STEVENS_HOUSE_STATE, 3, MossdeepCity_StevensHouse_EventScript_SetStevenPos
+#endif
 	end
 
 MossdeepCity_StevensHouse_EventScript_SetStevenPos::
@@ -36,6 +46,54 @@ MossdeepCity_StevensHouse_EventScript_StevenGivesDive::
 	waitmovement 0
 	applymovement LOCALID_STEVENS_HOUSE_STEVEN, MossdeepCity_StevensHouse_Movement_StevenApproachPlayer
 	waitmovement 0
+#if IS_WAYFARER
+	checkitem ITEM_HM_DIVE
+	goto_if_eq VAR_RESULT, TRUE, MossdeepCity_StevensHouse_EventScript_RecognizeDive
+	msgbox MossdeepCity_StevensHouse_Text_YouveEarnedHMDive, MSGBOX_DEFAULT
+	additem ITEM_HM_DIVE
+	goto_if_eq VAR_RESULT, FALSE, MossdeepCity_StevensHouse_EventScript_DiveRewardDeliveryFailed
+	setvar VAR_0x8000, ITEM_HM_DIVE
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto MossdeepCity_StevensHouse_EventScript_CommitDiveReward
+	end
+
+MossdeepCity_StevensHouse_EventScript_RecognizeDive::
+	msgbox MossdeepCity_StevensHouse_Text_RecognizedDive, MSGBOX_DEFAULT
+
+MossdeepCity_StevensHouse_EventScript_CommitDiveReward::
+	call MossdeepCity_StevensHouse_EventScript_AuthorizeDive
+	msgbox MossdeepCity_StevensHouse_Text_ExplainDive, MSGBOX_DEFAULT
+	closemessage
+	delay 20
+	applymovement LOCALID_STEVENS_HOUSE_STEVEN, MossdeepCity_StevensHouse_Movement_StevenReturn
+	waitmovement 0
+	call MossdeepCity_StevensHouse_EventScript_CompleteDiveStory
+	releaseall
+	end
+
+MossdeepCity_StevensHouse_EventScript_DiveRewardDeliveryFailed::
+	msgbox MossdeepCity_StevensHouse_Text_DiveRewardBagFull, MSGBOX_DEFAULT
+	closemessage
+	delay 20
+	applymovement LOCALID_STEVENS_HOUSE_STEVEN, MossdeepCity_StevensHouse_Movement_StevenReturn
+	waitmovement 0
+	setvar VAR_STEVENS_HOUSE_STATE, 3
+	releaseall
+	end
+
+MossdeepCity_StevensHouse_EventScript_AuthorizeDive::
+	setflag FLAG_RECEIVED_HM_DIVE
+	setflag FLAG_OMIT_DIVE_FROM_STEVEN_LETTER
+	return
+
+MossdeepCity_StevensHouse_EventScript_CompleteDiveStory::
+	setflag FLAG_HIDE_MOSSDEEP_CITY_SCOTT
+	setflag FLAG_HIDE_SEAFLOOR_CAVERN_ENTRANCE_AQUA_GRUNT
+	setvar VAR_STEVENS_HOUSE_STATE, 2
+	return
+#else
 	msgbox MossdeepCity_StevensHouse_Text_YouveEarnedHMDive, MSGBOX_DEFAULT
 	giveitem ITEM_HM_DIVE
 	setflag FLAG_RECEIVED_HM_DIVE
@@ -50,6 +108,7 @@ MossdeepCity_StevensHouse_EventScript_StevenGivesDive::
 	setvar VAR_STEVENS_HOUSE_STATE, 2
 	releaseall
 	end
+#endif
 
 MossdeepCity_StevensHouse_Movement_StevenApproachPlayer:
 	walk_left
@@ -132,8 +191,43 @@ MossdeepCity_StevensHouse_EventScript_RockDisplay::
 	end
 
 MossdeepCity_StevensHouse_EventScript_Steven::
+#if IS_WAYFARER
+	goto_if_eq VAR_STEVENS_HOUSE_STATE, 3, MossdeepCity_StevensHouse_EventScript_RetryDiveReward
+#endif
 	msgbox MossdeepCity_StevensHouse_Text_UnderwateCavernBetweenMossdeepSootopolis, MSGBOX_NPC
 	end
+
+#if IS_WAYFARER
+MossdeepCity_StevensHouse_EventScript_RetryDiveReward::
+	lockall
+	faceplayer
+	checkitem ITEM_HM_DIVE
+	goto_if_eq VAR_RESULT, TRUE, MossdeepCity_StevensHouse_EventScript_RetryRecognizeDive
+	msgbox MossdeepCity_StevensHouse_Text_DiveRewardStillOwed, MSGBOX_DEFAULT
+	additem ITEM_HM_DIVE
+	goto_if_eq VAR_RESULT, FALSE, MossdeepCity_StevensHouse_EventScript_RetryDiveRewardDeliveryFailed
+	setvar VAR_0x8000, ITEM_HM_DIVE
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
+	goto MossdeepCity_StevensHouse_EventScript_CommitRetriedDiveReward
+	end
+
+MossdeepCity_StevensHouse_EventScript_RetryRecognizeDive::
+	msgbox MossdeepCity_StevensHouse_Text_RecognizedDive, MSGBOX_DEFAULT
+
+MossdeepCity_StevensHouse_EventScript_CommitRetriedDiveReward::
+	call MossdeepCity_StevensHouse_EventScript_AuthorizeDive
+	msgbox MossdeepCity_StevensHouse_Text_ExplainDive, MSGBOX_DEFAULT
+	call MossdeepCity_StevensHouse_EventScript_CompleteDiveStory
+	releaseall
+	end
+
+MossdeepCity_StevensHouse_EventScript_RetryDiveRewardDeliveryFailed::
+	msgbox MossdeepCity_StevensHouse_Text_DiveRewardBagFull, MSGBOX_DEFAULT
+	releaseall
+	end
+#endif
 
 MossdeepCity_StevensHouse_EventScript_Letter::
 	lockall
@@ -166,6 +260,22 @@ MossdeepCity_StevensHouse_Text_ExplainDive:
 	.string "DIVE again.\p"
 	.string "In some places, it won't be possible\n"
 	.string "for you to surface, though.$"
+
+#if IS_WAYFARER
+MossdeepCity_StevensHouse_Text_RecognizedDive:
+	.string "STEVEN: Ah, you already have DIVE.\p"
+	.string "Then let me make sure you can use it\n"
+	.string "in HOENN's deep waters.$"
+
+MossdeepCity_StevensHouse_Text_DiveRewardStillOwed:
+	.string "STEVEN: I've held on to DIVE for you.\n"
+	.string "Please, take it now.$"
+
+MossdeepCity_StevensHouse_Text_DiveRewardBagFull:
+	.string "STEVEN: Your BAG is full.\p"
+	.string "I'll hold on to DIVE. Come back after\n"
+	.string "you've made room.$"
+#endif
 
 MossdeepCity_StevensHouse_Text_UnderwateCavernBetweenMossdeepSootopolis:
 	.string "STEVEN: Apparently, there's an\n"
@@ -212,3 +322,6 @@ MossdeepCity_StevensHouse_Text_CollectionOfRareRocks:
 	.string "It's a collection of rare rocks and\n"
 	.string "stones assembled by STEVEN.$"
 
+#if IS_HNS && !IS_WAYFARER
+#undef ITEM_HM_DIVE
+#endif

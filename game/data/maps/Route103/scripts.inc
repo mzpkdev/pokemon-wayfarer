@@ -18,11 +18,22 @@ Route103_EventScript_OpenAlteringCave::
 	return
 
 Route103_EventScript_Rival::
+#if IS_WAYFARER
+	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_LocalStarterRequired
+#endif
 	lockall
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, Route103_EventScript_RivalMay
 	goto_if_eq VAR_RESULT, FEMALE, Route103_EventScript_RivalBrendan
 	end
+
+#if IS_WAYFARER
+Route103_EventScript_LocalStarterRequired::
+	lockall
+	msgbox Route103_Text_LocalStarterRequired, MSGBOX_DEFAULT
+	releaseall
+	end
+#endif
 
 Route103_EventScript_RivalMay::
 	msgbox Route103_Text_MayRoute103Pokemon, MSGBOX_DEFAULT
@@ -35,10 +46,10 @@ Route103_EventScript_RivalMay::
 	applymovement LOCALID_ROUTE103_RIVAL, Common_Movement_Delay48
 	waitmovement 0
 	msgbox Route103_Text_MayLetsBattle, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route103_EventScript_StartMayBattleTreecko
-	case 1, Route103_EventScript_StartMayBattleTorchic
-	case 2, Route103_EventScript_StartMayBattleMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, Route103_EventScript_StartMayBattleTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, Route103_EventScript_StartMayBattleTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_StartMayBattleMudkip
 	end
 
 Route103_EventScript_RivalBrendan::
@@ -52,10 +63,10 @@ Route103_EventScript_RivalBrendan::
 	applymovement LOCALID_ROUTE103_RIVAL, Common_Movement_Delay48
 	waitmovement 0
 	msgbox Route103_Text_BrendanLetsBattle, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route103_EventScript_StartBrendanBattleTreecko
-	case 1, Route103_EventScript_StartBrendanBattleTorchic
-	case 2, Route103_EventScript_StartBrendanBattleMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, Route103_EventScript_StartBrendanBattleTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, Route103_EventScript_StartBrendanBattleTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_StartBrendanBattleMudkip
 	end
 
 Route103_EventScript_StartMayBattleTreecko::
@@ -351,3 +362,9 @@ Route103_Text_RouteSign:
 	.string "ROUTE 103\n"
 	.string "{DOWN_ARROW} OLDALE TOWN$"
 
+#if IS_WAYFARER
+Route103_Text_LocalStarterRequired:
+	.string "BIRCH's assistant is still busy.\p"
+	.string "I should choose my local partner at\n"
+	.string "the LAB before coming back.$"
+#endif
