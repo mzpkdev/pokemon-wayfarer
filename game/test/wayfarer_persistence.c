@@ -72,10 +72,10 @@ TEST("Wayfarer current region follows map source rather than reused Hoenn map se
     WayfarerSetSavedCurrentRegion(REGION_KANTO);
     EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_KANTO);
 
-    // A stale Hoenn context must never turn an HNS-source special map into
-    // Hoenn. Johto is the safe HNS product fallback.
+    // Entering Hoenn must not replace the last Kanto/Johto context used by
+    // HNS-source special maps.
     WayfarerSetSavedCurrentRegion(REGION_HOENN);
-    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_KANTO);
 }
 
 TEST("Wayfarer global current region and battle music use Hoenn map provenance")
@@ -97,6 +97,22 @@ TEST("Wayfarer global current region and battle music use Hoenn map provenance")
     EXPECT_EQ(GetBattleBGM(), MUS_VS_WILD);
 
     gBattleTypeFlags = previousBattleTypeFlags;
+}
+
+TEST("Wayfarer HNS side regions retain their explicit runtime identity")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_AKALA_ISLE_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_AKALA_ISLE_HNS);
+    EXPECT_EQ(GetCurrentRegion(), REGION_ALOLA);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_NEWSINJOH_HOTSPRINGS_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_NEWSINJOH_HOTSPRINGS_HNS);
+    EXPECT_EQ(GetCurrentRegion(), REGION_HISUI);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
 }
 
 TEST("Wayfarer explicit HNS map transitions update special-map fallback context")
@@ -199,9 +215,15 @@ TEST("Wayfarer heal locations update saved region through map provenance")
 
     SetLastHealLocationWarp(HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
+    EXPECT_EQ(WayfarerGetRegionForMap(MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS),
+                                     MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS)),
+              REGION_KANTO);
 
     SetLastHealLocationWarp(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
+    EXPECT_EQ(WayfarerGetRegionForMap(MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS),
+                                     MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS)),
+              REGION_JOHTO);
 }
 
 TEST("Wayfarer HNS Indigo provenance remains Johto for healing and GameClear")
@@ -484,6 +506,7 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
     gSaveBlock3Ptr->wayfarerHoenn.initialized = TRUE;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
+    gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 1 << REGION_JOHTO;
     memcpy(sWayfarerExpectedSaveBlock3, saveBlock3Bytes, sizeof(sWayfarerExpectedSaveBlock3));
 

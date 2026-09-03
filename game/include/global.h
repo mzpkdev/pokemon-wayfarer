@@ -353,6 +353,7 @@ struct WayfarerHoennPersistentState
     u8 visitedRegions;
     u8 initialized;
     u8 currentRegion;
+    u8 hnsRegionContext;
     u8 magic;
     // Raw Emerald map sections 0-218 each receive an independent encounter
     // bit. Keeping this outside ChallengeSettings prevents aliasing HNS state.
