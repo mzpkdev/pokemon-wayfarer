@@ -47,6 +47,7 @@ const startPreparedSurf = async (
   await game.arrange({
     checkpoint: "new-bark-after-intro",
     player: { facing, position },
+    story: { flags: { disableEncounters: true } },
     party: [{ species: "lapras", moves: ["surf"] }],
     determinism: { textSpeed: "instant" },
   })
