@@ -47,7 +47,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         return fixture, root
 
     @staticmethod
-    def add_map(root, name, map_id, source_version, warps=None):
+    def add_map(root, name, map_id, source_version, warps=None, region=None):
         map_dir = root / "data/maps" / name
         map_dir.mkdir()
         data = {
@@ -57,6 +57,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "warp_events": warps or [],
             "connections": [],
         }
+        if region is not None:
+            data["region"] = region
         (map_dir / "map.json").write_text(json.dumps(data))
         return map_dir / "map.json"
 
@@ -79,7 +81,9 @@ class MapjsonWayfarerTest(unittest.TestCase):
     def test_wayfarer_selects_hns_and_emerald_without_mutating_heal_data(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
-        hns = self.add_map(root, "HnsMap", "MAP_HNS", "hns")
+        hns = self.add_map(
+            root, "HnsMap", "MAP_HNS", "hns", region="REGION_JOHTO"
+        )
         emerald = self.add_map(root, "EmeraldMap", "MAP_EMERALD", "emerald")
         frlg = self.add_map(root, "FrlgMap", "MAP_FRLG", "frlg")
         (root / "data/maps/map_groups.json").write_text(
@@ -131,6 +135,12 @@ class MapjsonWayfarerTest(unittest.TestCase):
         map_sources = (root / "src/data/wayfarer_map_sources.h").read_text()
         self.assertIn("sWayfarerMapSourceOffsets[] = {0, 1, 2, 3, }", map_sources)
         self.assertIn("sWayfarerHoennMapSourceBits[] = {2, }", map_sources)
+        self.assertIn(
+            "sWayfarerMapRegionNibbles[] = "
+            "{(REGION_JOHTO | (REGION_NONE << 4)), "
+            "(REGION_NONE | (REGION_NONE << 4)), }",
+            map_sources,
+        )
 
     def test_wayfarer_rejects_unavailable_warp_destination(self):
         fixture, root = self.make_fixture()

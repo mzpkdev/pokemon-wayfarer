@@ -645,6 +645,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     ostringstream mapSourceText;
     vector<int> mapSourceOffsets;
     vector<bool> hoennMapSources;
+    vector<string> mapRegions;
 
     text << get_include_guard_start(guard_name) << get_generated_warning("data/maps/map_groups.json", false);
 
@@ -677,6 +678,8 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
                 FATAL_ERROR("%s: %s\n", map_filepath.c_str(), err_str.c_str());
             string id = json_to_string(map_data, "id", true);
             hoennMapSources.push_back(get_source_version(map_data) == "emerald");
+            string mapRegion = json_to_string(map_data, "region", true);
+            mapRegions.push_back(mapRegion.empty() ? "REGION_NONE" : mapRegion);
             map_ids.push_back(id);
             valid_map_ids.push_back(id);
             if (id.length() > max_length)
@@ -750,6 +753,15 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
             if (hoennMapSources[byte * 8 + bit])
                 value |= 1 << bit;
         mapSourceText << value << ", ";
+    }
+    mapSourceText << "};\n";
+    mapSourceText << "static const u8 sWayfarerMapRegionNibbles[] = {";
+    for (size_t byte = 0; byte * 2 < mapRegions.size(); byte++) {
+        const string &lowRegion = mapRegions[byte * 2];
+        const string &highRegion = byte * 2 + 1 < mapRegions.size()
+            ? mapRegions[byte * 2 + 1]
+            : "REGION_NONE";
+        mapSourceText << "(" << lowRegion << " | (" << highRegion << " << 4)), ";
     }
     mapSourceText << "};\n";
     write_text_file(file_dir + ".." + s + ".." + s + "src" + s + "data" + s + "wayfarer_map_sources.h", mapSourceText.str());

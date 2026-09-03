@@ -16,6 +16,8 @@
 
 #if IS_WAYFARER
 
+extern int GameClear(void);
+
 EWRAM_DATA static struct SaveSector sWayfarerTestSector = {0};
 EWRAM_DATA static u8 sWayfarerTestChunks[NUM_SECTORS_PER_SLOT][SAVE_BLOCK_3_CHUNK_SIZE] = {0};
 EWRAM_DATA static u8 sWayfarerExpectedSaveBlock3[sizeof(struct SaveBlock3)] = {0};
@@ -72,12 +74,14 @@ TEST("Wayfarer current region follows map source rather than reused Hoenn map se
     EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
 }
 
-TEST("Wayfarer Hoenn map headers retain valid Hoenn region-map entries")
+TEST("Wayfarer Hoenn Town Map uses Hoenn art grid and section semantics")
 {
     const struct MapHeader *header;
     const struct RegionMapLocation *entries;
     struct RegionMap regionMap = {0};
+    const u16 petalburgVisited = HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 7);
 
+    FlagClear(petalburgVisited);
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_PETALBURG_CITY);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_PETALBURG_CITY);
     header = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup,
@@ -89,13 +93,22 @@ TEST("Wayfarer Hoenn map headers retain valid Hoenn region-map entries")
     EXPECT_EQ(header->regionMapSectionId, 7);
     EXPECT_GT(entries[header->regionMapSectionId].width, 0);
     EXPECT_GT(entries[header->regionMapSectionId].height, 0);
+    EXPECT_EQ(GetRegionMapType(header->regionMapSectionId), REGION_MAP_HOENN);
+    EXPECT_EQ(GetRegionMapSecIdAt(2, 11), header->regionMapSectionId);
 
-    // Exercise the cursor initialization path that divides the map layout by
-    // the active region-map entry dimensions.
+    // InitRegionMap drives the complete LoadRegionMapGfx state machine,
+    // including art selection, cursor initialization, and mapsec typing.
     gMapHeader = *header;
-    InitRegionMapData(&regionMap, NULL, FALSE);
-    ShowRegionMapForPokedexAreaScreen(&regionMap);
+    InitRegionMap(&regionMap, FALSE);
     EXPECT_EQ(regionMap.mapSecId, header->regionMapSectionId);
+    EXPECT_EQ(regionMap.cursorPosX, 2);
+    EXPECT_EQ(regionMap.cursorPosY, 11);
+    EXPECT_EQ(regionMap.mapSecType, MAPSECTYPE_CITY_CANTFLY);
+
+    FlagSet(petalburgVisited);
+    InitRegionMap(&regionMap, FALSE);
+    EXPECT_EQ(regionMap.mapSecType, MAPSECTYPE_CITY_CANFLY);
+    FlagClear(petalburgVisited);
 }
 
 TEST("Wayfarer HNS Battle Frontier whiteout uses HNS lifecycle cleanup")
@@ -136,6 +149,31 @@ TEST("Wayfarer heal locations update saved region through map provenance")
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
 
     SetLastHealLocationWarp(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
+}
+
+TEST("Wayfarer HNS Indigo provenance remains Johto for healing and GameClear")
+{
+    MainCallback testCallback = gMain.callback2;
+
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS);
+    FlagClear(FLAG_IS_CHAMPION);
+    FlagClear(FLAG_IS_KANTO_CHAMPION);
+    FlagClear(FLAG_SYS_GAME_CLEAR);
+
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+    GameClear();
+    SetMainCallback2(testCallback);
+    EXPECT(FlagGet(FLAG_IS_CHAMPION));
+    EXPECT(!FlagGet(FLAG_IS_KANTO_CHAMPION));
+    EXPECT(GetGameClearStateForRegion(REGION_JOHTO));
+    EXPECT(!GetGameClearStateForRegion(REGION_KANTO));
+
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+    SetLastHealLocationWarp(HEAL_LOCATION_INDIGO_PLATEAU_HNS);
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
 }
 

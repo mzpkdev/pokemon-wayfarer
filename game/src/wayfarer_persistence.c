@@ -46,9 +46,22 @@ static bool8 IsWayfarerMapHoennSource(s16 mapGroup, s16 mapNum)
     return (sWayfarerHoennMapSourceBits[sourceIndex / 8] >> (sourceIndex & 7)) & 1;
 }
 
+static enum Region GetWayfarerExplicitMapRegion(s16 mapGroup, s16 mapNum)
+{
+    u16 sourceIndex;
+
+    if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
+     || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
+        return REGION_NONE;
+
+    sourceIndex = sWayfarerMapSourceOffsets[mapGroup] + mapNum;
+    return (sWayfarerMapRegionNibbles[sourceIndex / 2] >> ((sourceIndex & 1) * 4)) & 0xF;
+}
+
 static enum Region GetHnsMapRegionOrFallback(s16 mapGroup, s16 mapNum, enum Region fallback)
 {
     const struct MapHeader *mapHeader;
+    enum Region explicitRegion;
     enum Region sectionRegion;
 
     if (fallback != REGION_KANTO)
@@ -60,6 +73,10 @@ static enum Region GetHnsMapRegionOrFallback(s16 mapGroup, s16 mapNum, enum Regi
 
     if (IsWayfarerMapHoennSource(mapGroup, mapNum))
         return REGION_HOENN;
+
+    explicitRegion = GetWayfarerExplicitMapRegion(mapGroup, mapNum);
+    if (IsWayfarerCoreRegion(explicitRegion))
+        return explicitRegion;
 
     mapHeader = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
     if (mapHeader == NULL)
