@@ -80,7 +80,9 @@ The first successful Hoenn trip checks a dedicated Hoenn-initialized state. If
 Hoenn is not initialized, the trip performs one atomic initialization before
 releasing the player:
 
-1. Clear and initialize only the Hoenn persistent bank.
+1. Clear and initialize only the Hoenn persistent bank, explicitly setting
+   `HOENN_STARTER_CHOICE` to `HOENN_STARTER_CHOICE_NONE` and
+   `HOENN_STARTER_RECEIVED` to false.
 2. Apply the baseline map and NPC visibility expected before the adapted Route
    101 rescue.
 3. Select Brendan or May for the local rival role using the same player-gender
@@ -111,17 +113,47 @@ The rescue follows this sequence:
 4. A loss or interruption returns through normal recovery and leaves the
    rescue available to retry.
 5. A successful rescue advances only the Hoenn opening state needed to visit
-   Birch's lab and continue the campaign.
-6. Birch offers the three Hoenn starters in the lab as an optional gift.
+   Birch's lab and choose the local starter branch.
+6. Birch asks the player to select one of the three Hoenn starters for Hoenn's
+   local rival and campaign branches.
+7. After the choice is saved, Birch offers the selected Pokémon as an optional
+   gift.
 
-The starter choice may be declined or canceled. No received flag is set until
-the chosen Pokémon is successfully placed in the party or PC. If delivery
-fails, all three choices remain available. Once one starter is delivered, the
-other two cannot be claimed and later dialogue uses the received state.
+Starter choice and starter delivery use separate Hoenn values:
 
-Receiving or declining the starter does not change the player's existing
-starter, party ownership, Pokédex ownership, home region, or Trainer identity.
-The Hoenn campaign cannot require the gifted starter to remain in the party.
+- `HOENN_STARTER_CHOICE` starts at the distinct symbolic value
+  `HOENN_STARTER_CHOICE_NONE`. A committed choice records Treecko as 0, Torchic
+  as 1, or Mudkip as 2, preserving Emerald's branch mapping.
+- `HOENN_STARTER_RECEIVED` records whether Birch successfully delivered the
+  selected Pokémon.
+- Neither value reads or writes the HNS `VAR_STARTER_MON` or changes Silver's
+  party selection.
+
+Every Wayfarer Hoenn consumer of Emerald's `VAR_STARTER_MON` is rewritten or
+resolved through a Hoenn-source-scoped symbol that reads
+`HOENN_STARTER_CHOICE`. A global alias is forbidden because HNS consumers must
+continue to read `VAR_STARTER_MON`. This migration covers rival-party scripts
+and non-rival dialogue, rewards, and species helpers. It includes the known
+consumers in Route 103, Route 104, Route 110, Route 119, Rustboro City,
+Lilycove City, Petalburg City's Pokémon Center, and Mauville City's Game
+Corner, plus every other included Hoenn consumer found by the content audit.
+Standalone Emerald continues to use its original starter variable and mapping.
+
+The choice prompt may be canceled. Until a choice is committed, all three
+choices remain available, the gift remains unclaimed, and rival-dependent
+Hoenn story does not advance. Regional travel and open exploration remain
+available.
+
+Once a choice is committed, it cannot be changed. The player may accept the
+selected Pokémon immediately or leave it with Birch and continue the Hoenn
+campaign. No received state is set until that Pokémon is successfully placed in
+the party or PC. Failed delivery leaves the same selected Pokémon available to
+retry and does not reopen the other two choices.
+
+Receiving or leaving the selected starter with Birch does not change the
+player's existing starter, party ownership, Pokédex ownership, home region, or
+Trainer identity. The Hoenn campaign cannot require the gifted starter to
+remain in the party.
 
 ### Skipped Emerald introduction state
 
@@ -256,19 +288,24 @@ Static and automated checks must verify:
 5. First Hoenn arrival initializes only Hoenn and does so exactly once.
 6. Birch's rescue uses an existing party Pokémon, remains retryable after a
    loss, and never opens forced starter selection before the battle.
-7. The optional starter can be declined, retries after failed delivery, and can
-   be received exactly once.
-8. Every included map resolves the correct active region, including interiors
+7. `HOENN_STARTER_CHOICE_NONE` selects no Hoenn branch, and each committed
+   choice selects the expected rival and non-rival branches without changing
+   the HNS starter variable or a later Silver battle.
+8. A static source audit rejects any included Wayfarer Hoenn script or
+   Hoenn-only code path that still reads or writes raw `VAR_STARTER_MON`.
+9. The selected starter can be left with Birch, retries after failed delivery,
+   and can be received exactly once.
+10. Every included map resolves the correct active region, including interiors
    and transport maps.
-9. Town Map, Fly, player marker, cursor, destination entries, and Pokédex area
+11. Town Map, Fly, player marker, cursor, destination entries, and Pokédex area
    data use the same selected region.
-10. Cross-region Fly works only for visited regions and destinations and never
+12. Cross-region Fly works only for visited regions and destinations and never
     bypasses first-entry initialization.
-11. Each regional heal slot survives travel and save and reload independently.
-12. Blackout returns to the current region and runs no other region's story
+13. Each regional heal slot survives travel and save and reload independently.
+14. Blackout returns to the current region and runs no other region's story
     cleanup.
-13. Ever Grande is reachable early without opening Victory Road or the League.
-14. Sootopolis remains locked until its original late-game progression.
+15. Ever Grande is reachable early without opening Victory Road or the League.
+16. Sootopolis remains locked until its original late-game progression.
 
 The end-to-end journey starts from a fresh HNS save immediately after receiving
 the starter. Without badges, HM items, tickets, payments, required story
@@ -277,7 +314,9 @@ battles, or campaign completion, the player must:
 1. travel from Johto to Kanto and return;
 2. travel to Hoenn, save and reload, and return;
 3. re-enter Hoenn without rerunning initialization;
-4. decline Birch's starter, leave Hoenn, return, and receive exactly one starter;
+4. choose each Hoenn starter in separate runs, leave the selected gift with
+   Birch, complete the Route 103 rival battle, leave Hoenn, return, and receive
+   exactly the selected starter without changing a later Silver battle;
 5. heal once in each region, travel away, return, and verify each regional heal
    slot;
 6. black out once in each region and recover within that region;

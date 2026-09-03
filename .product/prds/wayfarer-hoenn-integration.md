@@ -41,15 +41,19 @@ The Emerald campaign begins from an adapted Route 101 Birch rescue:
 1. The player reaches Littleroot and Route 101 with their existing party.
 2. Birch's rescue uses a Pokémon from that party instead of forcing the stock
    Emerald starter-selection sequence.
-3. After the rescue, Birch offers one Hoenn starter as an optional gift.
+3. After the rescue, the player selects one Hoenn starter for Hoenn's local
+   rival branches. Birch offers that Pokémon as an optional gift, which may be
+   claimed immediately or left with him for later.
 4. Brendan or May fills Emerald's local rival role. The player does not become
    Brendan or May and does not repeat the moving-house, clock-setting, player
    creation, or initial Pokédex setup.
 5. Completing the adapted introduction establishes the minimum Hoenn campaign
    state needed for the original story to proceed.
 
-Declining or postponing the Hoenn starter does not block travel or the main
-campaign. The gift remains available until accepted.
+Canceling the local starter choice postpones only rival-dependent Hoenn story;
+travel and open exploration remain available. After the choice is committed,
+leaving the selected gift with Birch does not block the main campaign. The
+gift remains available until accepted.
 
 ### Open exploration
 
@@ -112,10 +116,15 @@ levels unless another approved feature already governs them.
   after leaving the region, saving, reloading, blacking out, or completing a
   League elsewhere.
 
-HNS field-move rules apply throughout Wayfarer. A Pokémon that can use a field
-move under HNS rules can use it in Hoenn without restoring Emerald's badge and
-HM ownership checks. Dive in Hoenn and Whirlpool in HNS retain distinct player
-behaviors even though the source games assign them to the same HM number.
+HNS field-move rules apply throughout Wayfarer. Wayfarer includes the HNS and
+Hoenn native utility learnsets together. A Pokémon that can use a field move
+under HNS rules can use it in Hoenn without restoring Emerald's general badge
+and HM ownership checks.
+
+Sootopolis is the exception. Using Dive on a Hoenn dive spot requires the
+Hoenn-specific authorization granted by Steven's Mossdeep event. In Wayfarer,
+HM08 remains Whirlpool and Steven grants HM09 for Dive. The two machines,
+moves, permissions, and field actions remain distinct.
 
 ### Region-aware travel and recovery
 
@@ -236,8 +245,9 @@ story content and must coexist with prior Kanto visits.
 - Can the player visit every town and city in Hoenn's opening network before
   advancing the Emerald campaign, then return to Route 101 and complete the
   full campaign normally?
-- Does Birch's adapted rescue work with an existing party, and does the
-  optional starter remain available after being declined?
+- Does Birch's adapted rescue work with an existing party, does each local
+  starter choice control the correct Hoenn branches without changing the HNS
+  starter, and does the optional gift remain available when left with Birch?
 - Do representative Hoenn wild encounters use the expected Emerald species and
   HNS-scaled level band at several Trainer Ratings?
 - Do ordinary Trainers, each Gym Leader, rival battles, team bosses, the Elite
