@@ -89,6 +89,7 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  disableEncounters: 0x965,
   hideSilverInNewBark: 0x04a,
   hideElmLabAide: 0x04b,
   adventureStarted: 0x1d4,
