@@ -39,6 +39,13 @@ Every included map uses its Emerald layout, tilesets, music, weather, object
 events, scripts, and connections unless this specification, the Wayfarer entry
 specification, or the existing Emerald traversal specification names a change.
 
+The generated port also owns source-scoped symbol rewrites required by the
+union build. In particular, every included Hoenn use of Emerald's shared
+`VAR_STARTER_MON` resolves to the dedicated Hoenn starter choice defined by the
+regional-entry specification. The rewrite must not change HNS consumers or the
+standalone Emerald build. The content audit enumerates every source occurrence
+and fails if an included Wayfarer Hoenn consumer retains the raw shared symbol.
+
 ### Content manifest
 
 A generated Wayfarer Hoenn manifest is the completeness authority. For every
@@ -82,7 +89,8 @@ Pokédex, Bag, party, storage, money, options, or play time.
 Existing HNS Trainer IDs remain unchanged. Every Hoenn Trainer referenced by an
 included map or script receives a stable, noncolliding Wayfarer Trainer ID. A
 generated mapping rewrites or resolves every Hoenn Trainer reference to that
-ID.
+ID. Ordinary IDs remain below the runtime foundation's partner boundary at
+2,048, while partner Trainer IDs begin at that boundary.
 
 Trainer records follow these rules:
 
@@ -141,6 +149,30 @@ Tests must cover at least one Hoenn profile for every encounter method at
 several Trainer Ratings, including the minimum and maximum production rating.
 The population before level projection must match Emerald exactly.
 
+### Native utility learnsets
+
+Wayfarer compiles the HNS and Hoenn rows from the native HM utility learnset
+specification together. It does not inherit the standalone HNS rule that
+suppresses Hoenn rows when `IS_HNS` is selected.
+
+The union behavior follows these rules:
+
+- Existing HNS utility additions remain available to their Johto and Kanto
+  encounter populations.
+- Existing Hoenn utility additions remain available to Hoenn encounter
+  populations in both normal and Generation III legacy-moves modes.
+- Duplicate additions for the same species, move, level, and mode are emitted
+  once.
+- Standalone HNS and Emerald builds retain their existing regional rows.
+- Wayfarer adds no new utility species or schedules beyond the two existing
+  regional sets.
+
+A fresh player who enters Hoenn without first catching a Johto utility user
+must be able to obtain the Hoenn-native users required by the Emerald traversal
+specification. End-to-end coverage must catch the required users from Hoenn
+encounters and cross Route 118 and the eastern sea network without relying on a
+Pokémon transferred from another region.
+
 ### Existing open-world progression
 
 The implemented Emerald open-world regional traversal specification applies to
@@ -188,9 +220,61 @@ field-move rules remain active in Hoenn. Story checks that deliberately require
 a Hoenn badge still use the Hoenn badge, but ordinary field-move execution does
 not restore Emerald's badge or HM-item ownership requirements.
 
-Dive in Hoenn and Whirlpool in HNS remain separate usable field moves. Obtaining
-or using one cannot replace the other, consume the other's item, or satisfy the
-other's script check.
+Dive in Hoenn and Whirlpool in HNS remain separate usable field moves. Wayfarer
+uses the following machine and permission contract:
+
+- HM08 remains the Whirlpool machine used by HNS content.
+- Wayfarer adds HM09 as the Dive machine.
+- Steven's Mossdeep event grants HM09 instead of attempting to replace HM08.
+- The HM09 item teaches Dive and appears as `HM09` in the TM and HM pocket.
+- A successful HM09 delivery sets a dedicated Hoenn Dive authorization.
+- If the player already owns HM09 while the authorization is missing, Steven's
+  interaction reconciles the authorization without granting a duplicate.
+- If HM09 cannot be delivered, Steven's reward and authorization remain
+  available to retry.
+- Using Dive on a Hoenn dive spot requires both a valid Dive user under HNS
+  field-move rules and the Hoenn Dive authorization.
+- Using Dive on an HNS map retains that map set's existing HNS permission rule.
+- Whirlpool continues to use HM08, Whirlpool-compatible users, and the existing
+  HNS field action.
+
+Wayfarer has a build-specific nine-machine registry. Its machine enumeration
+retains the complete HNS HM01 through HM08 sequence, including Whirlpool as
+HM08, then appends Dive as HM09. The generated constants and tables satisfy all
+of the following:
+
+- `NUM_HIDDEN_MACHINES` is 9 in Wayfarer.
+- `ITEM_HM_WHIRLPOOL` resolves to HM08 and `ITEM_HM_DIVE` resolves to the
+  distinct HM09 item rather than `ITEM_NONE`.
+- The item-to-move and move-to-item mappings resolve HM08 to Whirlpool and HM09
+  to Dive.
+- TM and HM indexing, compatibility generation, item metadata, Bag sorting and
+  display, teaching, and `IsMoveHM` recognize both entries.
+- Any range checks or storage sized from the machine count include HM09 without
+  changing the identities of HM01 through HM08.
+
+Standalone HNS retains its eight-machine registry ending in HM08 Whirlpool.
+Standalone Emerald retains its eight-machine registry ending in HM08 Dive.
+
+Wayfarer replaces the global Dive-unlocked preflight with a map-aware dispatch
+before either diving or resurfacing starts. Every Dive caller, including the
+automatic step trigger, uses that dispatch:
+
+- On a Hoenn surface or underwater map, the preflight checks the dedicated
+  Hoenn Dive authorization and does not check `FLAG_BADGE07_GET`.
+- On an HNS surface or underwater map, the preflight checks the existing HNS
+  Badge 7 rule and does not check the Hoenn authorization.
+- A map outside those registered contexts cannot inherit permission from
+  either state.
+
+No Wayfarer path may call a global HNS Badge 7 predicate before this regional
+dispatch. The same result governs both directions and is combined with the
+valid-user requirement before either field effect begins.
+
+No HNS badge, global game-clear result, HM08 ownership, or Whirlpool user can
+authorize Dive in Hoenn. HM09 ownership and Hoenn Dive authorization cannot
+authorize Whirlpool. Standalone Emerald continues to present Dive as HM08, and
+standalone HNS continues to present Whirlpool as HM08.
 
 ### Hoenn League and game clear
 
@@ -236,20 +320,43 @@ Static and automated validation must prove all of the following:
 3. Every reachable Hoenn flag and variable is valid in the Wayfarer namespace.
 4. Every Trainer reference resolves to the expected Emerald-authored party and
    a distinct defeat bit.
-5. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
+5. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
+   Trainer remains at or above 2,048, and partner battles resolve correctly.
+6. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
    party.
-6. Every authored ordinary wild profile exists in Wayfarer, preserves its
+7. Every authored ordinary wild profile exists in Wayfarer, preserves its
    source population, and uses HNS level projection.
-7. Item balls, hidden items, gifts, trades, Trainer defeats, NPC visibility,
+8. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
+   users satisfy the traversal coverage without a Johto capture.
+9. Item balls, hidden items, gifts, trades, Trainer defeats, NPC visibility,
    and story scenes persist through save and reload.
-8. Each Hoenn Gym awards the correct regional badge and only Hoenn badges
-   satisfy Hoenn badge-count checks.
-9. Sootopolis remains unavailable until its original late-game progression.
-10. A fresh player may visit the opening network first and then complete the
+10. The Wayfarer registry reports nine HMs; forward and reverse lookups map HM08
+    to Whirlpool and HM09 to Dive; both moves pass `IsMoveHM`; Steven grants
+    HM09 atomically; and standalone HNS and Emerald retain their eight-HM
+    mappings.
+11. With a valid Dive user present, the map-aware Dive preflight passes this
+    matrix for both diving and resurfacing:
+
+    | Map context | HNS Badge 7 | Hoenn authorization | Result |
+    | --- | --- | --- | --- |
+    | HNS | unset | unset | denied |
+    | HNS | unset | set | denied |
+    | HNS | set | unset | allowed |
+    | HNS | set | set | allowed |
+    | Hoenn | unset | unset | denied |
+    | Hoenn | unset | set | allowed |
+    | Hoenn | set | unset | denied |
+    | Hoenn | set | set | allowed |
+
+12. Each Hoenn Gym awards the correct regional badge and only Hoenn badges
+    satisfy Hoenn badge-count checks.
+13. Sootopolis remains unavailable until Hoenn Dive authorization and its
+    original late-game progression are satisfied.
+14. A fresh player may visit the opening network first and then complete the
     Emerald main campaign through the Hoenn Hall of Fame.
-11. Completing any regional League in every possible order leaves all other
+15. Completing any regional League in every possible order leaves all other
     regional campaigns valid.
-12. The complete required content passes the runtime foundation's ROM and
+16. The complete required content passes the runtime foundation's ROM and
     memory gates.
 
 The end-to-end campaign run must include save and reload checkpoints before and

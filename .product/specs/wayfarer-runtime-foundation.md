@@ -26,6 +26,7 @@ Engine selection and content selection are separate concerns:
 - HNS engine behavior remains selected for Wayfarer.
 - HNS map content remains included.
 - Emerald map content is included alongside HNS map content.
+- HNS and Hoenn native utility learnset rows are both included.
 - Standalone Emerald, FireRed, LeafGreen, and HNS builds keep their current
   content and behavior.
 - Adding Emerald content to Wayfarer does not make standalone HNS include that
@@ -63,6 +64,28 @@ Wayfarer includes both HNS and Emerald tileset headers, graphics, metatiles,
 palettes, animations, and door data when referenced. Mutually exclusive source
 build conditionals must not suppress one region's tileset metadata in the
 union build.
+
+### Trainer ID capacity
+
+Wayfarer separates the number of populated ordinary Trainer records from the
+reserved boundary used by partner Trainer IDs:
+
+- `TRAINERS_COUNT_WAYFARER` is one greater than the highest populated ordinary
+  HNS or Hoenn Trainer ID.
+- `MAX_TRAINERS_COUNT_WAYFARER` is 2,048.
+- Every ordinary HNS and Hoenn Trainer ID is less than
+  `MAX_TRAINERS_COUNT_WAYFARER`.
+- Partner Trainer IDs begin at `MAX_TRAINERS_COUNT_WAYFARER` and occupy the
+  following partner-only range.
+- The populated Trainer table is sized by `TRAINERS_COUNT_WAYFARER`, not by the
+  reserved partner boundary.
+- Trainer-defeat storage is sized for populated ordinary Trainers and does not
+  reserve one event flag for every value below the partner boundary.
+
+All Trainer IDs, partner-ID calculations, script operands, battle setup paths,
+and Trainer table lookups must represent the Wayfarer ranges without
+truncation. Standalone builds retain their existing counts and partner
+boundaries.
 
 ### Persistent namespaces
 
@@ -189,16 +212,18 @@ Static and automated checks must prove all of the following:
 3. Every Wayfarer map, layout, tileset, warp, connection, and heal location
    resolves.
 4. Existing HNS map identifiers and persistent constants are unchanged.
-5. Every reachable Hoenn persistent constant is nonzero, in bounds, unique
+5. Every ordinary Trainer ID is below 2,048, every partner Trainer ID is at or
+   above 2,048, and both ranges resolve through battle setup without collision.
+6. Every reachable Hoenn persistent constant is nonzero, in bounds, unique
    where required, and disjoint from HNS state.
-6. Badge, Champion, game-clear, Trainer-defeat, and visited-state helpers return
+7. Badge, Champion, game-clear, Trainer-defeat, and visited-state helpers return
    the requested region's value.
-7. New game, save, reload, and save replacement initialize and preserve the
+8. New game, save, reload, and save replacement initialize and preserve the
    Hoenn bank correctly.
-8. Compile-time size assertions pass for saved and runtime structures.
-9. The release build stays at or below `0x09F80000` and reports each required
+9. Compile-time size assertions pass for saved and runtime structures.
+10. The release build stays at or below `0x09F80000` and reports each required
    size category.
-10. Representative map loads and transitions run without heap corruption or a
+11. Representative map loads and transitions run without heap corruption or a
     second simultaneous map decompression buffer.
 
 ## References
