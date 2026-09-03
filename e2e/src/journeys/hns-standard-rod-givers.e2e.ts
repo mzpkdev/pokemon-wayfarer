@@ -185,7 +185,7 @@ describe.sequential("HNS Standard Rod givers", () => {
           standardRodOlivineContributed: true,
           standardRodRoute12Contributed: true,
         },
-        vars: { ssAquaState: 6 },
+        vars: { ssAquaState: 7 },
       },
       bag: { items: { superRod: 1 } },
       determinism: { textSpeed: "instant" },

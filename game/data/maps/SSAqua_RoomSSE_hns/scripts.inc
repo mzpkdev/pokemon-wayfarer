@@ -4,11 +4,11 @@ SSAqua_RoomSSE_hns_MapScripts::
 	.byte 0
 
 SSAqua_RoomSSE_OnTransition::
-    goto_if_ge VAR_SSAQUA_STATE, 5, SSAqua_RoomSSE_SetGirlPos
+    goto_if_ge VAR_SSAQUA_STATE, 4, SSAqua_RoomSSE_SetGirlPos
     end
 
 SSAqua_RoomSSE_OnFrame::
-	map_script_2 VAR_SSAQUA_STATE, 4, SSAqua_RoomSSE_EventScript_ReuinionScene
+	map_script_2 VAR_SSAQUA_STATE, 3, SSAqua_RoomSSE_EventScript_ReunionScene
 	.2byte 0
 
 SSAqua_RoomSSE_SetGirlPos::
@@ -16,7 +16,7 @@ SSAqua_RoomSSE_SetGirlPos::
     setobjectmovementtype LOCALID_SSAQUA_ROOM_SSE_GRANDDAUGTHER, MOVEMENT_TYPE_FACE_LEFT
     end
 
-SSAqua_RoomSSE_EventScript_ReuinionScene::
+SSAqua_RoomSSE_EventScript_ReunionScene::
 	lock
     turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
     turnobject LOCALID_SSAQUA_ROOM_SSE_GRANDFATHER, DIR_SOUTH
@@ -33,21 +33,59 @@ SSAqua_RoomSSE_EventScript_ReuinionScene::
     waitmovement 0
     turnobject LOCALID_SSAQUA_ROOM_SSE_GRANDFATHER, DIR_SOUTH
     msgbox SSAqua_RoomSSE_Text_EntertainedGranddaughter, MSGBOX_DEFAULT
-    msgbox SSAqua_RoomSSE_Text_GrandpaHaveThis, MSGBOX_DEFAULT
-    giveitem ITEM_METAL_COAT
-    closemessage
-	setvar VAR_SSAQUA_STATE, 5
+	closemessage
+	setvar VAR_SSAQUA_STATE, 4
+	call SSAqua_RoomSSE_EventScript_GivePendingReward
+	closemessage
 	release
 	end
 
 SSAqua_RoomSSE_EventScript_Grandpa::
 	lock
 	faceplayer
-	goto_if_ge VAR_SSAQUA_STATE, 4, SSAqua_RoomSSE_EventScript_GrandpaAfter
+	goto_if_eq VAR_SSAQUA_STATE, 4, SSAqua_RoomSSE_EventScript_GrandpaGivePendingReward
+	goto_if_eq VAR_SSAQUA_STATE, 5, SSAqua_RoomSSE_EventScript_GrandpaGivePendingReward
+	goto_if_ge VAR_SSAQUA_STATE, 6, SSAqua_RoomSSE_EventScript_GrandpaAfter
 	msgbox SSAqua_RoomSSE_Text_CantFindGranddaughter, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
+
+SSAqua_RoomSSE_EventScript_GrandpaGivePendingReward::
+	call SSAqua_RoomSSE_EventScript_GivePendingReward
+	closemessage
+	release
+	end
+
+SSAqua_RoomSSE_EventScript_GivePendingReward::
+	goto_if_eq VAR_SSAQUA_STATE, 4, SSAqua_RoomSSE_EventScript_GiveTicket
+	goto_if_eq VAR_SSAQUA_STATE, 5, SSAqua_RoomSSE_EventScript_GiveMetalCoat
+	return
+
+SSAqua_RoomSSE_EventScript_GiveTicket::
+	checkitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, TRUE, SSAqua_RoomSSE_EventScript_TicketCommitted
+	checkitemspace ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, SSAqua_RoomSSE_EventScript_MakeRoom
+	msgbox SSAqua_RoomSSE_Text_GrandpaHaveThis, MSGBOX_DEFAULT
+	giveitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, SSAqua_RoomSSE_EventScript_MakeRoom
+SSAqua_RoomSSE_EventScript_TicketCommitted::
+	setvar VAR_SSAQUA_STATE, 5
+	goto SSAqua_RoomSSE_EventScript_GiveMetalCoat
+
+SSAqua_RoomSSE_EventScript_GiveMetalCoat::
+	checkitemspace ITEM_METAL_COAT
+	goto_if_eq VAR_RESULT, FALSE, SSAqua_RoomSSE_EventScript_MakeRoom
+	msgbox SSAqua_RoomSSE_Text_GrandpaHaveThisToo, MSGBOX_DEFAULT
+	giveitem ITEM_METAL_COAT
+	goto_if_eq VAR_RESULT, FALSE, SSAqua_RoomSSE_EventScript_MakeRoom
+	setvar VAR_SSAQUA_STATE, 6
+	return
+
+SSAqua_RoomSSE_EventScript_MakeRoom::
+	msgbox SSAqua_RoomSSE_Text_MakeRoom, MSGBOX_DEFAULT
+	return
 
 SSAqua_RoomSSE_EventScript_GrandpaAfter::
 	msgbox SSAqua_RoomSSE_Text_GrandpaTravelling, MSGBOX_DEFAULT
@@ -91,6 +129,14 @@ SSAqua_RoomSSE_Text_EntertainedGranddaughter:
 SSAqua_RoomSSE_Text_GrandpaHaveThis:
     .string "I know! I'd like you\n"
     .string "to have this!$"
+
+SSAqua_RoomSSE_Text_GrandpaHaveThisToo:
+    .string "I have one more gift for you.$"
+
+SSAqua_RoomSSE_Text_MakeRoom:
+    .string "It looks like your BAG is full.\p"
+    .string "Please make room and talk to me\n"
+    .string "again.$"
 
 SSAqua_RoomSSE_Text_GrandpaTravelling:
     .string "We're traveling around\n"

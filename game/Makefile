@@ -298,7 +298,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -392,7 +392,7 @@ else
 TEST_SKIP_IS_FAIL := \x00
 endif
 
-check: $(TESTELF) frlg-traversal-static-test
+check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 	@cp $< $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
@@ -651,7 +651,10 @@ wild-encounter-scaling-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_*.py' -q
 
 frlg-traversal-static-test:
-	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_*.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q
+
+hns-traversal-static-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_hns_*.py' -q
 
 wild-encounter-balance-audit:
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py --balance-audit $(WILD_ENCOUNTER_BALANCE_AUDIT)

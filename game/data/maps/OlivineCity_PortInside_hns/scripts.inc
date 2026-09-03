@@ -107,15 +107,11 @@ OlivinePort_EventScript_Youngster::
 OlivinePort_EventScript_Sailor::
 	lock
 	faceplayer
-	goto_if_ge VAR_SSAQUA_STATE, 7, OlivinePort_EventScript_Sailor_AfterKanto
+	goto_if_ge VAR_SSAQUA_STATE, 8, OlivinePort_EventScript_Sailor_AfterKanto
 	msgbox OlivinePort_Text_AskBoard, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_Refused
-	checkitem ITEM_SS_TICKET
-	goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_MaidenVoyage
-	msgbox OlivinePort_Text_NoTicket, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
+	goto_if_ge VAR_SSAQUA_STATE, 1, OlivinePort_EventScript_Sailor_ResumeMaidenVoyage
+	goto OlivinePort_EventScript_Sailor_MaidenVoyage
 
 OlivinePort_EventScript_Sailor_AfterKanto::
 	message OlivinePort_Text_WhereSail
@@ -137,8 +133,11 @@ OlivinePort_EventScript_ChoseVermilion::
 	checkitem ITEM_SS_TICKET
 	bufferitemname STR_VAR_1, ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_NoCredentials
-	call OlivinePort_EventScript_EnterShip
-	warpsilent MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9
+	msgbox OlivinePort_Text_SailorGetOnBoard, MSGBOX_DEFAULT
+	closemessage
+	fadescreenswapbuffers FADE_TO_BLACK
+	setrespawn HEAL_LOCATION_VERMILION_CITY_HNS
+	warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9
 	waitstate
 	release
 	end
@@ -189,15 +188,16 @@ OlivinePort_EventScript_ChoseBattleFrontier::
 	end	
 
 OlivinePort_EventScript_Sailor_MaidenVoyage::
-	msgbox OlivinePort_Text_FlashTicket, MSGBOX_DEFAULT
-	call OlivinePort_EventScript_EnterShip
 	setvar VAR_SSAQUA_STATE, 1
 	clearflag FLAG_HIDE_SSAQUA_1F_GRANDPA
 	setflag FLAG_HIDE_SSAQUA_ROOM_SSE_GRANDDAUGHTER
-
 	clearflag FLAG_HIDE_SSAQUA_SAILOR
 	clearflag FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER
+	msgbox OlivinePort_Text_MaidenVoyage, MSGBOX_DEFAULT
+	goto OlivinePort_EventScript_Sailor_ResumeMaidenVoyage
 
+OlivinePort_EventScript_Sailor_ResumeMaidenVoyage::
+	call OlivinePort_EventScript_EnterShip
 	warpsilent MAP_SSAQUA_1F_HNS, 29, 3
 	waitstate
 	release
@@ -284,6 +284,10 @@ OlivinePort_Text_ComeAgain:
 OlivinePort_Text_FlashTicket:
     .string "{PLAYER} flashed the S.S.TICKET.\p"
     .string "That's it. Thank you!$"
+
+OlivinePort_Text_MaidenVoyage:
+    .string "The maiden voyage to VERMILION\n"
+    .string "CITY is ready to depart.$"
 
 OlivinePort_Text_NoTicket:
     .string "{PLAYER} tried to show the\n"

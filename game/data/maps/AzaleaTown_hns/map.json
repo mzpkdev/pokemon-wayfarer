@@ -382,15 +382,6 @@
       "var": "VAR_AZALEA_TOWN_STATE",
       "var_value": "5",
       "script": "AzaleaTown_EventScript_SilverTriggerTop"
-    },
-    {
-      "type": "trigger",
-      "x": 11,
-      "y": 17,
-      "elevation": 0,
-      "var": "VAR_AZALEA_TOWN_STATE",
-      "var_value": "5",
-      "script": "AzaleaTown_EventScript_SilverTriggerBot"
     }
   ],
   "bg_events": [

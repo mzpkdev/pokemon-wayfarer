@@ -9,15 +9,18 @@ GoldenrodCity_TrainStation_OnFrame::
 GoldenrodCity_TrainStation_EventScript_Attendant::
 	lock
 	faceplayer
+	goto_if_unset FLAG_RETURNED_MACHINE_PART, GoldenrodCity_TrainStation_EventScript_TrainNotRunning
 	checkitem ITEM_PASS
 	goto_if_eq VAR_RESULT, TRUE, GoldenrodCity_TrainStation_EventScript_BoardTrain
-	goto_if_set FLAG_RETURNED_MACHINE_PART, GoldenrodCity_TrainStation_EventScript_Attendant2
+	goto GoldenrodCity_TrainStation_EventScript_AttendantNoPass
+
+GoldenrodCity_TrainStation_EventScript_TrainNotRunning::
 	msgbox GoldenrodMagnetTrainStation_Text_OfficerTrainHasntComeIn, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
 
-GoldenrodCity_TrainStation_EventScript_Attendant2::
+GoldenrodCity_TrainStation_EventScript_AttendantNoPass::
 	msgbox GoldenrodMagnetTrainStation_Text_OfficerNoRailPass, MSGBOX_DEFAULT
 	closemessage
 	release

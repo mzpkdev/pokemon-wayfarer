@@ -1,7 +1,7 @@
 # HNS open-world regional traversal
 
 PRD: [HNS open-world regional traversal](../prds/hns-open-world-region-traversal.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -175,11 +175,12 @@ grandfather.
 ### Kanto regional map presentation
 
 `FLAG_VISITED_KANTO` selects both the combined Johto and Kanto map layout and
-its matching location entries. In `GetActiveRegionMapEntries`, return
-`sRegionMapEntries_Johto` while the flag is clear and `gRegionMapEntries` after
-the flag is set. Keep the matching `GetRegionMapType` and `GetMapSecIdAt`
-selection. The layout and location-entry selection must never use opposite
-flag branches.
+its matching location entries. The generated `gRegionMapEntries` table holds
+the Johto-only HNS coordinates. In `GetActiveRegionMapEntries`, return it while
+the flag is clear, and return the static combined table
+`sRegionMapEntries_JK` after the flag is set. Keep the matching
+`GetRegionMapType` and `GetMapSecIdAt` selection. The layout and location-entry
+selection must never use opposite flag branches.
 
 Before Kanto unlock, the region map, player marker, cursor, Fly map, and
 Pokedex area display use the Johto-only coordinates. After unlock, all of them

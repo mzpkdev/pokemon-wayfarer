@@ -1,4 +1,4 @@
-const abiVersion = 7
+const abiVersion = 8
 const expectedRequestSize = 424
 const expectedResultSize = 16
 const expectedStateSize = 344
@@ -20,7 +20,15 @@ export const varsStart = 0x4000
 
 export const commandStatuses = { idle: 0, pending: 1, running: 2, success: 3, error: 4 } as const
 export const arrangeStatuses = commandStatuses
-export const commands = { arrange: 1, startWildBattle: 2 } as const
+export const commands = {
+  arrange: 1,
+  startWildBattle: 2,
+  save: 3,
+  observeRegionMap: 4,
+  observeRegionMapSection: 5,
+  winBattle: 6,
+} as const
+export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
 
 export const gamePhases = ["boot", "overworld", "dialogue", "battle"] as const
 export const arrangePhases = [
@@ -55,6 +63,8 @@ export const commandErrors = [
   "pc-box",
   "pc-slot",
   "busy",
+  "full-pocket-mask",
+  "save",
 ] as const
 export const arrangeErrors = commandErrors
 
@@ -119,7 +129,16 @@ export type SessionAbi = {
   varsOffset: number
 }
 
-export type CommandResult = { requestId: number; error: number; status: number; phase: number }
+export type CommandResult = {
+  requestId: number
+  mapGroup: number
+  mapNum: number
+  x: number
+  y: number
+  error: number
+  status: number
+  phase: number
+}
 export type ArrangeResult = CommandResult
 
 export type MonFixtureWire = { species: number; moves: number[]; level: number; egg: boolean }
@@ -146,6 +165,7 @@ export type CommandRequest = {
   wildMon: MonFixtureWire
   currentBox: number
   hmsOverwrite: boolean
+  fullPocketMask: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -306,6 +326,7 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   view.setUint8(418, request.pcSlots.length)
   view.setUint8(419, request.currentBox)
   view.setUint8(420, request.hmsOverwrite ? 1 : 0)
+  view.setUint8(421, request.fullPocketMask)
   return bytes
 }
 
@@ -342,10 +363,116 @@ export const encodeStartWildBattleRequest = (
     wildMon,
     currentBox: 0,
     hmsOverwrite: false,
+    fullPocketMask: 0,
+  })
+
+export const encodeSaveRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.save,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+  })
+
+export const encodeObserveRegionMapRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.observeRegionMap,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+  })
+
+export const encodeObserveRegionMapSectionRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  x: number,
+  y: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.observeRegionMapSection,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x,
+    y,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+  })
+
+export const encodeWinBattleRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.winBattle,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
   })
 
 export const parseCommandResult = (bytes: Uint8Array): CommandResult => ({
   requestId: uint32(bytes, 0),
+  mapGroup: uint16(bytes, 4),
+  mapNum: uint16(bytes, 6),
+  x: int16(bytes, 8),
+  y: int16(bytes, 10),
   error: uint16(bytes, 12),
   status: bytes[14]!,
   phase: bytes[15]!,

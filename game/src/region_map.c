@@ -154,9 +154,9 @@ static const u8 sRegionMapPlayerIcon_KrisGfx[] = INCBIN_U8("graphics/pokenav/reg
 #include "data/region_map/region_map_entries.h"
 
 #if IS_HNS
-// Johto-only map coordinates (before FLAG_VISITED_KANTO is set).
-// The auto-generated gRegionMapEntries has JK combined coordinates.
-static const struct RegionMapLocation sRegionMapEntries_Johto[] = {
+// Combined Johto/Kanto coordinates used after FLAG_VISITED_KANTO is set.
+// The auto-generated gRegionMapEntries has the Johto-only coordinates.
+static const struct RegionMapLocation sRegionMapEntries_JK[] = {
     [MAPSEC_VIOLET_CITY]       = { 7,  5,  1, 1, COMPOUND_STRING("VIOLET CITY") },
     [MAPSEC_AZALEA_TOWN]       = { 6,  12, 1, 1, COMPOUND_STRING("AZALEA TOWN") },
     [MAPSEC_GOLDENROD_CITY]    = { 5,  7,  1, 2, COMPOUND_STRING("GOLDENROD CITY") },
@@ -288,7 +288,7 @@ const struct RegionMapLocation *GetActiveRegionMapEntries(void)
 #if IS_HNS
     const struct RegionMapLocation *entries;
     if (FlagGet(FLAG_VISITED_KANTO))
-        entries = sRegionMapEntries_Johto;
+        entries = sRegionMapEntries_JK;
     else
         entries = gRegionMapEntries;
     return entries;
