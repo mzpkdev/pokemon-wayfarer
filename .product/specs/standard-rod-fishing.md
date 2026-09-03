@@ -63,7 +63,8 @@ order:
 
 1. Resolve the active map, time-of-day fishing table, and the current rod's
    ten-entry profile.
-2. Calculate Trainer Rating eligibility for every entry. An entry with
+2. Calculate ordinary-wild projection eligibility for every entry from the
+   active product's progression input. An entry with
    `SPECIES_NONE` is ineligible in both normal and randomized modes.
 3. Sum the current quality's weights for eligible entries only. If the total is
    zero, report that the current spot has no fishing encounter and do not enter
@@ -74,9 +75,10 @@ order:
    the selected position across the ordered sequence of eligible entries, not
    across fixed raw indices. An ineligible entry can never be restored by the
    mirror.
-6. Roll the selected entry's authored level, apply Trainer Rating level
+6. Roll the selected entry's authored level, apply the active product's level
    projection and predecessor resolution, and create the encounter through the
-   existing ordinary fishing path.
+   existing ordinary fishing path. Standalone builds use Trainer Rating;
+   Wayfarer uses Trainer Level.
 
 Removing ineligible entries therefore renormalizes the remaining profile
 weights. A selected empty or locked entry never consumes a successful bite.
@@ -257,8 +259,9 @@ authored in the profile, or a computed Lure-off result that differs from the
 recorded expected percentage.
 
 The wild encounter generator's deterministic balance report covers every
-supported build, version, map profile, and time-of-day variant at every integer
-Trainer Rating from 10 through 80. For every quality it reports:
+supported build, version, map profile, and time-of-day variant. Standalone
+products cover every integer Trainer Rating from 10 through 80. Wayfarer covers
+every Trainer Level from 10 through 100. For every quality it reports:
 
 - Raw entry weights and eligible entries.
 - Renormalized entry and aggregate species probabilities.
@@ -282,8 +285,8 @@ Automated validation must cover:
 
 - Exact profile values, totals, ten-entry views, and every weighted-roll
   boundary for all three qualities.
-- Empty-entry exclusion, Trainer Rating filtering, renormalization, and Lure
-  mirroring for both full and filtered profiles.
+- Empty-entry exclusion, active-product projection filtering, renormalization,
+  and Lure mirroring for both full and filtered profiles.
 - Raw slot handoff to the randomizer, zero-data spots, rod-independent Feebas,
   and the unchanged bite probabilities and modifier cap.
 - Pokédex and Cartographer inclusion of species from each former rarity band
@@ -310,6 +313,7 @@ and Route 119 Feebas.
 ## References
 
 - [Trainer Rating wild encounter scaling specification](trainer-rating-wild-encounter-scaling.md)
+- [Wayfarer Trainer Level progression](trainer-level-progression.md)
 - [Authored under-level wild encounters](../research/authored-under-level-wild-encounters.md)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
 - [Wild encounter runtime](../../game/src/wild_encounter.c)

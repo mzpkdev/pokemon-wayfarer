@@ -5,9 +5,9 @@ Implemented: Yes
 
 ## Scope
 
-This specification defines the level-up learnset additions that let selected wild Pokémon provide Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Dive, or Whirlpool before the matching HM is obtained. It covers Emerald, FireRed, LeafGreen, and HNS in both the normal and Generation III legacy-moves modes. Dive additions apply only to Emerald. HNS receives Whirlpool additions but no Dive additions.
+This specification defines the level-up learnset additions that let selected wild Pokémon provide Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Dive, or Whirlpool before the matching HM is obtained. It covers Emerald, FireRed, LeafGreen, HNS, and Wayfarer in both the normal and Generation III legacy-moves modes. Dive additions apply to Emerald and Wayfarer's Hoenn content. HNS receives Whirlpool additions but no Dive additions, while Wayfarer receives both HNS and Hoenn additions.
 
-The feature changes species learnsets only. It does not change encounters, HM compatibility, move data, field-action eligibility, story rewards, map access, fishing availability, or Trainer Rating scaling. The existing HM field-use system remains responsible for resolving a party Pokémon that knows the move and for enforcing terrain and map context.
+The feature changes species learnsets only. It does not change encounters, HM compatibility, move data, field-action eligibility, story rewards, map access, fishing availability, Trainer Rating scaling, or Wayfarer Trainer Level scaling. The existing HM field-use system remains responsible for resolving a party Pokémon that knows the move and for enforcing terrain and map context.
 
 Fly remains excluded. Wild-species and learnset randomizers may replace the authored species or moves and are outside the native-roster guarantee.
 
@@ -20,7 +20,7 @@ Add the utility moves directly to both active learnset sources:
 - `game/src/data/pokemon/level_up_learnsets/gen_7.h` for normal mode;
 - `game/src/data/pokemon/level_up_learnsets/gen_3.h` for Generation III legacy-moves mode.
 
-Do not add a runtime moveset override, encounter-specific move field, or post-catch correction. Gate the additions by build: compile the Kanto rows only when `IS_FRLG` is true, the Johto rows only when `IS_HNS` is true, and the Hoenn rows only when both `IS_FRLG` and `IS_HNS` are false. Apply the same condition to an anchor and all of its successor additions in both learnset sources. Within a build, normal and legacy-moves mode use the same utility roster but different repeat levels because their existing native move cadences differ.
+Do not add a runtime moveset override, encounter-specific move field, or post-catch correction. Gate the additions by product. Standalone FireRed and LeafGreen compile the Kanto rows, standalone HNS compiles the Johto rows, and standalone Emerald compiles the Hoenn rows. Wayfarer compiles the HNS Johto row set and the Hoenn row set together; it does not select the standalone FireRed and LeafGreen row set. Apply the same condition to an anchor and all of its successor additions in both learnset sources. Within a build, normal and legacy-moves mode use the same utility roster but different repeat levels because their existing native move cadences differ.
 
 At a level that already contains one or more moves, place the additions after all existing entries at that level. When a row assigns several utility moves at one level, preserve the order shown. Existing entries and their relative ordering remain unchanged.
 
@@ -28,7 +28,7 @@ Normal wild creation keeps the last four distinct level-up moves available at th
 
 ### Coverage inventory
 
-The following existing encounter profiles establish the required two-place coverage. Each regional row applies only to its corresponding build: Kanto to FireRed and LeafGreen, Johto to HNS, and Hoenn to Emerald. Level ranges are authored levels before Trainer Rating projection. Floors or rooms of one dungeon count as one place. No encounter data changes are authorized.
+The following existing encounter profiles establish the required two-place coverage. Kanto rows apply to standalone FireRed and LeafGreen, Johto rows apply to standalone HNS and Wayfarer's HNS content, and Hoenn rows apply to standalone Emerald and Wayfarer's Hoenn content. Level ranges are authored levels before the active product's ordinary-wild projection. Floors or rooms of one dungeon count as one place. No encounter data changes are authorized.
 
 | Region | Anchor | Utility moves | Qualifying existing places and authored levels |
 | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ Aipom's qualifying profiles are stored as Rock Smash encounter data but are also
 
 Chinchou also supplies the existing HNS Kanto Surf crossings. Vermilion and Cinnabar fishing can produce Chinchou at authored levels 40 to 44. Its schedule below covers those catches without a Kanto encounter change.
 
-Trainer Rating projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at Rating 80.
+The active product's progression system projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every standalone Trainer Rating and Wayfarer Trainer Level projection.
 
 ### Anchor schedules
 
@@ -152,7 +152,7 @@ The feature adds no persistent state and requires no save migration. Existing Po
 
 Add deterministic learnset coverage around the existing Pokémon learnset tests. For every anchor in its applicable build, run both normal and legacy-moves selection and construct its initial moveset at every integer level from the lowest qualifying level in the coverage inventory through level 100. At every level, assert that all assigned utility moves are among the four known moves. The test must exercise the production initial-moveset path rather than a separately reimplemented last-four calculation.
 
-Add data validation in each applicable build that enumerates the named qualifying encounter profiles, all applicable version and time-of-day variants, every authored level in each selected slot, and Trainer Ratings 10 through 80. Project each level through the production scaling function, construct the caught anchor's moveset, and assert that all assigned utility moves remain present. Also assert that the profile still contains the intended anchor, so an encounter edit cannot silently invalidate coverage.
+Add data validation in each applicable build that enumerates the named qualifying encounter profiles, all applicable version and time-of-day variants, and every authored level in each selected slot. Standalone builds cover Trainer Ratings 10 through 80, while Wayfarer covers Trainer Levels 10 through 100. Project each level through the active product's production scaling function, construct the caught anchor's moveset, and assert that all assigned utility moves remain present. Also assert that the profile still contains the intended anchor, so an encounter edit cannot silently invalidate coverage.
 
 Expose the production Move Reminder result to tests through a test-only helper or a public read-only list function, or drive the Move Reminder UI and inspect the offered move IDs. For each listed successor in its applicable build and both learnset modes, assert that every assigned utility move is offered when it is not currently known. `CanBoxMonRelearnMoves` alone is insufficient because it proves only that some move is relearnable. Confirm separately that evolving an anchor which knows its utility moves preserves them. Assert that Pichu, Azurill, Mantyke, and the excluded regional base forms do not gain the role.
 

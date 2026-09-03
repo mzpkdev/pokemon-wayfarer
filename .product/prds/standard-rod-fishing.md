@@ -39,9 +39,9 @@ that would compound probabilities and make the last entries functionally
 unavailable.
 
 The profiles below total 100. When all entries are eligible, each value is the
-entry's percentage among successful fishing encounters. If Trainer Rating
-makes an entry ineligible, the game removes that entry and renormalizes the
-remaining values.
+entry's percentage among successful fishing encounters. If the active
+product's ordinary-wild projection makes an entry ineligible, the game removes
+that entry and renormalizes the remaining values.
 
 | Quality | Entry 0 | Entry 1 | Entry 2 | Entry 3 | Entry 4 | Entry 5 | Entry 6 | Entry 7 | Entry 8 | Entry 9 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -151,7 +151,8 @@ The baseline accessibility results are:
 These figures aggregate duplicate entries for the named species and do not
 count any additional availability from species resolution. Ineligible-entry
 filtering cannot be allowed to remove a required native Surf source at any
-Trainer Rating from 10 through 80.
+standalone Trainer Rating from 10 through 80 or Wayfarer Trainer Level from 10
+through 100.
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old
@@ -215,9 +216,11 @@ rod quality. They do not need to display exact slot probabilities.
 
 ## Interactions
 
-- Trainer Rating determines entry eligibility before the unified weighted
-  roll. After selection, level projection and predecessor resolution determine
-  the encounter outcome as they do for other ordinary encounters.
+- The active product's ordinary-wild progression input determines entry
+  eligibility before the unified weighted roll. After selection, level
+  projection and predecessor resolution determine the encounter outcome as
+  they do for other ordinary encounters. Standalone builds use Trainer Rating;
+  Wayfarer uses Trainer Level.
 - If one or more entries are ineligible, the game renormalizes the current
   quality's weights across the eligible entries. A selected empty or locked
   entry must not turn a successful bite into a silent failure.
@@ -239,9 +242,9 @@ rod quality. They do not need to display exact slot probabilities.
   actual fishing encounter.
 
 This feature supersedes the Old, Good, and Super partition-selection rule in
-the Trainer Rating wild encounter scaling design. Trainer Rating continues to
-own the effective level and species outcome after an authored entry is
-selected.
+the Trainer Rating wild encounter scaling design. The active product's wild
+projection continues to own the effective level and species outcome after an
+authored entry is selected.
 
 ## Constraints
 
@@ -268,6 +271,7 @@ Route 12 contribution flag.
 
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [Trainer Rating wild encounter scaling specification](../specs/trainer-rating-wild-encounter-scaling.md)
+- [Wayfarer Trainer Level progression](trainer-level-progression.md)
 - [Authored under-level wild encounters](../research/authored-under-level-wild-encounters.md)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
 - [Fishing configuration](../../game/include/config/fishing.h)

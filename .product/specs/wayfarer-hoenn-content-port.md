@@ -94,10 +94,16 @@ ID. Ordinary IDs remain below the runtime foundation's partner boundary at
 
 Trainer records follow these rules:
 
-- Species, levels, moves, held items, AI, party size, battle type, and double-
-  battle behavior match the Emerald-authored record.
-- The same authored party is selected regardless of the player's Trainer
-  Rating or HNS difficulty option.
+- Trainer ID, name, class, portrait, script owner, narrative role, AI profile,
+  battle type, and single- or double-battle format define authored Trainer
+  identity and do not change with Trainer Level.
+- The authored template supplies species, moves, held items, party size, and
+  levels. Effective levels may always be projected. An approved roster tier may
+  replace species, moves, held items, or party size only when the Trainer
+  scaling manifest names every replacement and its Trainer-Level interval.
+- Effective levels and approved roster tiers use Wayfarer Trainer Level through
+  the separately owned Trainer scaling behavior. They never use the current
+  party level or an HNS difficulty option.
 - Ordinary Trainer object coordinates, movement types, trainer types, and sight
   ranges remain unchanged.
 - A traversal change may move a scripted story actor, but it cannot silently
@@ -129,9 +135,10 @@ the Emerald values. Profile generation targets Wayfarer explicitly. A profile
 must not disappear merely because its original label belonged to the Emerald
 build.
 
-Ordinary wild Pokémon pass through the existing HNS Trainer Rating level
-projection. Hoenn badges, Hoenn story variables, and Hoenn Champion state do
-not add new Trainer Rating inputs. The effective population exposed to normal
+Ordinary wild Pokémon pass through the Wayfarer Trainer-Level projection.
+Hoenn badges, the first Hoenn Champion clear, and registered Hoenn
+accomplishments grant global Trainer Experience without changing the authored
+population. The effective population exposed to normal
 encounters is also exposed to systems such as DexNav and Pokédex area data when
 those systems already consume ordinary encounter profiles.
 
@@ -145,9 +152,9 @@ wild scaling unless an existing approved specification already says otherwise:
 - roaming encounters; and
 - battle-facility or other special populations.
 
-Tests must cover at least one Hoenn profile for every encounter method at
-several Trainer Ratings, including the minimum and maximum production rating.
-The population before level projection must match Emerald exactly.
+Tests must cover at least one Hoenn profile for every encounter method at every
+Trainer Level from 10 through 100. The population before level projection must
+match Emerald exactly.
 
 ### Native utility learnsets
 
@@ -215,7 +222,9 @@ count only Hoenn badges. Trainer cards or badge displays that show regional
 progress must identify the region rather than treating all badges as one
 contiguous array.
 
-Hoenn badges and story milestones do not alter HNS Trainer Rating. HNS
+Hoenn badges, the first Hoenn Champion clear, and registered permanent Hoenn
+milestones grant Trainer Experience as defined by the Trainer Level progression
+specification. They remain Hoenn facts for all regional story checks. HNS
 field-move rules remain active in Hoenn. Story checks that deliberately require
 a Hoenn badge still use the Hoenn badge, but ordinary field-move execution does
 not restore Emerald's badge or HM-item ownership requirements.
@@ -318,14 +327,15 @@ Static and automated validation must prove all of the following:
 2. Every warp and connection resolves and every required interior can be
    entered and exited.
 3. Every reachable Hoenn flag and variable is valid in the Wayfarer namespace.
-4. Every Trainer reference resolves to the expected Emerald-authored party and
-   a distinct defeat bit.
+4. Every Trainer reference resolves to the expected Emerald-authored identity,
+   template, permitted Trainer-Level scaling metadata, and distinct defeat bit;
+   every roster-tier replacement names its interval and changed fields.
 5. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
-6. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
-   party.
+6. Trainer scaling reads global Trainer Level rather than party level or HNS
+   difficulty, while every unmodified authored field remains unchanged.
 7. Every authored ordinary wild profile exists in Wayfarer, preserves its
-   source population, and uses HNS level projection.
+   source population, and uses Trainer-Level projection.
 8. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
    users satisfy the traversal coverage without a Johto capture.
 9. Item balls, hidden items, gifts, trades, Trainer defeats, NPC visibility,
@@ -366,6 +376,7 @@ starting the adapted Route 101 campaign.
 
 ## References
 
+- [Trainer Level progression](trainer-level-progression.md)
 - [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 - [Wayfarer regional travel and Hoenn entry](wayfarer-regional-travel-and-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)

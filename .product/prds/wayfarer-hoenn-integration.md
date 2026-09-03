@@ -8,8 +8,8 @@ its towns and routes, challenge its Trainers and Gyms, and complete its main
 campaign without starting a separate game or changing ROMs.
 
 Hoenn keeps the identity and authored content of Pokémon Emerald. Wayfarer uses
-the HNS engine and progression rules around that content, including HNS wild
-level scaling, field-move behavior, battle mechanics, and quality-of-life
+the HNS engine and Wayfarer progression rules around that content, including
+Trainer Level scaling, field-move behavior, battle mechanics, and quality-of-life
 features. The finished ROM must remain within the standard 32 MiB GBA ROM
 limit.
 
@@ -91,23 +91,27 @@ Wayfarer includes the following Emerald content as part of the Hoenn region:
 - Emerald's authored wild species, encounter methods, slot weights, and
   locations.
 
-Trainer parties keep their Emerald species, levels, moves, items, AI, and battle
-formats. Wayfarer does not add Trainer Rating scaling, badge scaling, or another
-dynamic level system to Hoenn Trainers. Ordinary Trainer positions, movement,
-trainer types, and sight ranges also remain unchanged unless a separate
-traversal requirement explicitly moves a blocking story actor.
+Trainer identity keeps the Emerald Trainer's name, class, portrait, narrative
+role, script ownership, AI profile, and battle format. Species, moves, items,
+party size, and levels remain the authored template, but Wayfarer Trainer
+scaling may project effective levels and select explicitly registered roster
+tiers from Trainer Level.
 
-Wild Pokémon use Emerald's authored populations and the existing HNS Trainer
-Rating level projection. Hoenn progress does not add new inputs to Trainer
-Rating. Fixed, gift, legendary, hidden, and scripted Pokémon keep their authored
-levels unless another approved feature already governs them.
+Ordinary Trainer positions, movement, trainer types, and sight ranges remain
+unchanged unless a traversal requirement explicitly moves a blocking story
+actor.
+
+Wild Pokémon use Emerald's authored populations and Wayfarer's Trainer-Level
+projection. Fixed, gift, legendary, hidden, and scripted Pokémon keep their
+authored levels unless another approved feature already governs them.
 
 ### Regional progression
 
 - Hoenn has eight independent badge states. They do not reuse or overwrite the
   Johto and Kanto badge states.
 - A Hoenn story check that asks for a badge count uses only Hoenn badges.
-- Hoenn badges do not alter HNS Trainer Rating.
+- Hoenn badges and the first Hoenn Champion clear grant global Trainer
+  Experience without satisfying another region's badge or Champion checks.
 - Hoenn Champion completion is independent of Johto and Kanto Champion
   completion.
 - Completing one region's League cannot start, finish, reset, or unlock another
@@ -145,8 +149,9 @@ moves, permissions, and field actions remain distinct.
 
 ## Boundaries
 
-- Wayfarer does not redesign or rebalance Emerald Trainer parties.
-- Wayfarer does not add Hoenn-based Trainer Rating milestones.
+- Trainer Level does not change Emerald-authored Trainer identity. Detailed
+  level projection and roster-tier rules belong to the Trainer scaling
+  specification.
 - Free regional exploration does not mean every dungeon, shortcut, legendary
   room, Gym interaction, or story reward is available immediately.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
@@ -162,14 +167,15 @@ moves, permissions, and field actions remain distinct.
 
 ## Balance
 
-Hoenn's ordinary and boss Trainers use their Emerald-authored levels. This
-means the player may meet battles that are much stronger or weaker than their
-current party when regions are explored out of order. Wayfarer does not correct
-that mismatch with scaling.
+Wayfarer uses one global Trainer Level wherever the player travels. Hoenn
+badges, its first Champion clear, and registered Hoenn accomplishments grant
+Trainer Experience. They raise the same Trainer Level used in Johto and Kanto
+without changing either region's local story state.
 
-Wild levels continue to follow HNS Trainer Rating wherever the player travels.
-The same rating produces the same intended wild-level band in Johto, Kanto, and
-Hoenn. Hoenn badges and story milestones do not raise it.
+Ordinary wild levels use the reparameterized HNS projection. The same Trainer
+Level produces the same intended wild-level band from equivalent authored
+profiles in Johto, Kanto, and Hoenn. Trainer and boss scaling uses Trainer Level
+through its separately specified effective-party rules.
 
 Rewards remain attached to their original Hoenn interactions. Opening a travel
 lane cannot grant a skipped reward. A one-time reward must either be delivered
@@ -249,9 +255,10 @@ story content and must coexist with prior Kanto visits.
   starter choice control the correct Hoenn branches without changing the HNS
   starter, and does the optional gift remain available when left with Birch?
 - Do representative Hoenn wild encounters use the expected Emerald species and
-  HNS-scaled level band at several Trainer Ratings?
+  Wayfarer-scaled level band at Trainer Levels 10 through 100?
 - Do ordinary Trainers, each Gym Leader, rival battles, team bosses, the Elite
-  Four, and the Champion use their authored Emerald parties without scaling?
+  Four, and the Champion preserve their authored identity while using the
+  effective levels required by Trainer scaling?
 - Do Hoenn badges, Champion state, defeated Trainers, items, NPC visibility,
   and story scenes survive travel, save and reload, blackout, and another
   region's League completion?
@@ -271,6 +278,7 @@ story content and must coexist with prior Kanto visits.
 - [Wayfarer regional travel and Hoenn entry specification](../specs/wayfarer-regional-travel-and-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)
+- [Trainer Level progression](trainer-level-progression.md)
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [Badge-free HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)

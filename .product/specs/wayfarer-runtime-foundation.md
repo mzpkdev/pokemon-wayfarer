@@ -121,6 +121,11 @@ Region-aware helpers expose badge count, Champion state, game-clear state,
 visited state, and Trainer-defeat state. Hoenn scripts use the Hoenn result.
 Existing Johto and Kanto callers keep their current result.
 
+Global Wayfarer progression fields, including Trainer Experience and the
+reduced-Experience tutorial state, live outside the Hoenn bank. They persist
+across every region and follow the lifecycle defined by the Trainer Level
+progression specification.
+
 ### Save storage and lifecycle
 
 The additional Hoenn banks live in `SaveBlock3` or an equivalent separately
@@ -219,7 +224,7 @@ Static and automated checks must prove all of the following:
 7. Badge, Champion, game-clear, Trainer-defeat, and visited-state helpers return
    the requested region's value.
 8. New game, save, reload, and save replacement initialize and preserve the
-   Hoenn bank correctly.
+   Hoenn bank and global Wayfarer progression fields correctly.
 9. Compile-time size assertions pass for saved and runtime structures.
 10. The release build stays at or below `0x09F80000` and reports each required
    size category.
@@ -232,3 +237,4 @@ Static and automated checks must prove all of the following:
 - [Wayfarer regional travel and Hoenn entry](wayfarer-regional-travel-and-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)
+- [Trainer Level progression](trainer-level-progression.md)

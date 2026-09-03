@@ -267,7 +267,8 @@ Hoenn destination.
 
 Saving and reloading on either side of regional travel restores the exact map,
 position, active region, visit state, local heal slot, Hoenn initialization,
-rival selection, rescue state, and starter-gift state.
+rival selection, rescue state, starter-gift state, global Trainer Experience,
+and its reduced-Experience tutorial state.
 
 Reloading cannot replay first-arrival initialization, duplicate the optional
 starter, reopen a consumed reward, remove a return contact, or convert an early
@@ -332,3 +333,4 @@ battles, or campaign completion, the player must:
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
+- [Trainer Level progression](trainer-level-progression.md)

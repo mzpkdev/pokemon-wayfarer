@@ -28,6 +28,11 @@ The system only covers ordinary wild encounter profiles. It does not scale hidde
 
 It does not change authored encounter data or create a player-facing Trainer Rating display. It also does not define trainer battle scaling.
 
+Wayfarer does not use Trainer Rating as a saved progression value. Its Trainer
+Experience, Trainer Level, and reparameterized ordinary-wild projection are
+defined by the [Trainer Level progression](trainer-level-progression.md) PRD.
+Standalone Emerald, FireRed/LeafGreen, and HNS retain this PRD.
+
 Adding an HNS Hoenn warp does not enroll Hoenn encounters in this system. Those profiles must be compiled for HNS first. Once they target HNS, ordinary profiles use the existing global scaling automatically. Hoenn-specific progression milestones remain a separate design decision.
 
 ## Balance
@@ -88,4 +93,5 @@ It should also check that excluded sources remain unchanged, that a later rating
 ## References
 
 - [Technical specification](../specs/trainer-rating-wild-encounter-scaling.md)
+- [Wayfarer Trainer Level progression](trainer-level-progression.md)
 - [Implementation pull request](https://github.com/mzpkdev/pokemon-wayfarer/pull/13)

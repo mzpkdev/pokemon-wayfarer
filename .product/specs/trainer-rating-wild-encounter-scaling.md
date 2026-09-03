@@ -5,7 +5,12 @@ Implemented: Yes
 
 ## Scope
 
-This specification defines the persistent Trainer Rating, its build-specific progression sources, and the effective ordinary wild population derived from it. It covers the ordinary encounter profiles compiled into Emerald, FireRed/LeafGreen, and HNS. It does not define new regional content or trainer battle scaling.
+This specification defines the persistent Trainer Rating, its build-specific progression sources, and the effective ordinary wild population derived from it. It covers the ordinary encounter profiles compiled into standalone Emerald, FireRed/LeafGreen, and HNS. It does not define new regional content or trainer battle scaling.
+
+Wayfarer replaces the saved Trainer Rating with Trainer Experience and Trainer
+Level. The [Trainer Level progression](trainer-level-progression.md)
+specification owns its progression lifecycle and adapts this specification's
+ordinary-wild projection through a transient projection coordinate.
 
 ## Behavior
 
@@ -105,4 +110,5 @@ Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS.
 
 ## References
 
+- [Wayfarer Trainer Level progression](trainer-level-progression.md)
 - [Implementation pull request](https://github.com/mzpkdev/pokemon-wayfarer/pull/13)
