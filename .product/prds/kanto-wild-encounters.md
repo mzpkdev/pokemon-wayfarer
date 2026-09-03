@@ -33,17 +33,53 @@ target method weights, including each Standard Rod quality for fishing, and
 aggregate duplicate slots by species. For counterpart species in one source
 role, neither target probability may exceed twice the other. Their combined
 target probability must remain within the greater of 2 percentage points or 20
-percent of the mean FireRed and LeafGreen source-role probability. A documented
-habitat or traversal exception may override the counterpart ratio, but not the
-combined probability budget.
+percent of the mean FireRed and LeafGreen source-role probability. The proved
+discrete ratio-only case below is the only counterpart-ratio exception. Habitat
+or traversal rationale does not waive the ratio or combined probability
+budget.
 
-When the method's discrete active weights cannot satisfy both rules, preserve
-the combined probability budget first. Choose the feasible slot assignment
+First attempt a complete merge that retains every distinct FireRed and
+LeafGreen source species and every differing version counterpart. When the
+method's fixed slot count and discrete active weights cannot satisfy complete
+retention together with the combined probability budgets, exhaustively
+enumerate the assignments before omitting a counterpart. A reduced assignment
+is allowed only when no full-retention assignment satisfies every fixed
+constraint. It keeps the production slot count, rod weights, and probability
+budget tolerances unchanged.
+
+Among valid reduced assignments, retain the greatest number of distinct
+FireRed and LeafGreen source species. Then minimize combined probability-budget
+error, followed by counterpart imbalance, the lexicographically smallest
+target slot-index sequence, and the lexicographically smallest species-constant
+sequence. The schema-version-3 balance audit names every omitted counterpart.
+For every claimed omission, it includes a deterministic, machine-verifiable
+certificate of the exhaustive search. The certificate identifies the solver
+version and canonical ordering. It derives the complete candidate space only
+from the frozen FireRed and LeafGreen source profiles, every production target
+slot and weight, and explicitly named protected constraints. The allocation
+domain covers every canonical source ecology group and member across every
+target slot, plus an unassigned source-group state for slots used by duplicates
+or permitted additions. No fixed binding or domain restriction may derive from
+the proposed final manifest, its provenance, or the selected assignment. The
+certificate records exact full and reduced candidate counts, exact rejection
+counts, the enumeration digest, the winning objective values, and enough search
+states and transitions or equivalent dynamic-programming classes to
+independently recompute the result. It also records the selected assignment and
+its exact objective values. A full-retention witness is sufficient for a
+profile that does not claim an omission. A summarized infeasibility claim
+without this certificate is not proof, and this exception does not permit an
+omission when a full-retention assignment is feasible.
+
+When complete retention satisfies the combined-budget tolerance but the
+method's discrete active weights cannot satisfy the two-to-one counterpart
+ratio, preserve the combined probability budget first. Choose the assignment
 with the smallest combined-budget error, then the smallest counterpart
-imbalance, and include that calculation in the merge report. This discrete-slot
-exception may waive the two-to-one ratio only after the report proves that no
-active assignment can satisfy the combined-budget tolerance and the ratio at
-the same time. The implementation specification must also map
+imbalance, then the lexicographically smallest target slot-index sequence, and
+then the lexicographically smallest species-constant sequence. Include the same
+exhaustive-search certificate defined above in the schema-version-3 balance
+audit. This ratio-only exception applies only after the certificate proves that
+no complete-retention assignment can satisfy the combined-budget tolerance and
+the ratio at the same time. The implementation specification must also map
 every target profile and method to its FireRed and LeafGreen source profiles so
 the comparison set cannot change during acceptance.
 

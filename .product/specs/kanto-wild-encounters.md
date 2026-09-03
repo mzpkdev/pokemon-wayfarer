@@ -186,19 +186,57 @@ combined FireRed and LeafGreen source probability by no more than the greater
 of 2 percentage points or 20 percent of that source mean. Fishing applies both
 checks independently under Old, Good, and Super Rod weights.
 
-If no active slot assignment satisfies both rules, enumerate every feasible
-assignment for that ecology source group. Choose the one with the smallest combined-budget
-error, then the smallest absolute counterpart difference, then the
-lexicographically smallest sequence of target slot indices, then the
-lexicographically smallest sequence of species constants. Record the candidate
-results in the generated merge report. Only this proved case may exceed the
-two-to-one counterpart ratio.
+First enumerate assignments that retain every distinct FireRed and LeafGreen
+source species and both members of every differing counterpart group. If at
+least one full-retention assignment satisfies the fixed production slot count,
+method or rod weights, and every combined probability-budget tolerance, an
+omission is a generation error.
+
+An omission is allowed only when exhaustive enumeration proves that no
+full-retention assignment satisfies those fixed constraints. Enumerate the
+valid reduced assignments without changing the production slot count, weights,
+or budget tolerances. Select the assignment that retains the greatest number
+of distinct FireRed and LeafGreen source species, then the one with the
+smallest combined probability-budget error, then the smallest absolute
+counterpart difference, then the lexicographically smallest sequence of target
+slot indices, then the lexicographically smallest sequence of species
+constants. The schema-version-3 balance audit names every omitted counterpart and
+includes a deterministic, machine-verifiable certificate of the exhaustive
+search. The certificate records the solver version and canonical ordering,
+then derives the complete candidate space only from the frozen FireRed and
+LeafGreen source profiles, every production target slot and weight, and
+explicitly named protected constraints. The source-group allocation domain
+covers every canonical source ecology group and member across every target
+slot, plus an unassigned source-group state for slots used by duplicates or
+permitted additions. Independently justified fixed bindings may come only from
+those frozen inputs and named constraints. No fixed binding or domain
+restriction may derive from the proposed final manifest, its provenance, or
+the selected assignment. The certificate records exact full-retention and
+reduced candidate counts, exact rejection counts, the canonical enumeration
+digest, the selected assignment, and its exact objective values under the
+ordered selection rules. It also records enough reachable states and
+transitions or equivalent dynamic-programming classes for an independent
+implementation to recompute the counts, verify that no valid full-retention
+assignment exists, and reproduce the selected winner without enumerating every
+leaf into the audit file. A full-retention witness is sufficient when no
+omission is claimed. A summarized infeasibility claim without the certificate
+is not proof. This is not a general waiver for a profile where full retention
+is feasible.
+
+When full retention can meet every combined-budget tolerance but no retained
+assignment satisfies the two-to-one counterpart ratio, choose the retained
+assignment with the smallest combined-budget error, then the smallest absolute
+counterpart difference, followed by the same slot-index and species-constant
+tie-breaks. Record the same exhaustive-search certificate and the selected
+assignment's exact objective values in the schema-version-3 balance audit. Only
+this proved case may exceed the two-to-one counterpart ratio.
 
 Generation II additions may replace only a duplicate occurrence of a shared
 FRLG species. They may not remove the last occurrence of any FRLG daytime
-species in that profile, remove a version counterpart, or occupy a role needed
-for a native-HM or Chinchou guarantee. Generation IV and later additions obey
-the same rule and also require `LATER_FAMILY_CONTINUITY` provenance.
+species in that profile, remove a version counterpart outside the proved
+reduced-assignment exception above, or occupy a role needed for a native-HM or
+Chinchou guarantee. Generation IV and later additions obey the same rule and
+also require `LATER_FAMILY_CONTINUITY` provenance.
 
 ### Authored levels
 
@@ -335,8 +373,11 @@ the existing per-slot Trainer Rating data, it contains:
   authored slot and resolved species both present for every outcome.
 - Day and night generation portfolios for every Rating and rod quality.
 - Per-profile shared-species retention and total-variation distance.
-- FRLG ecology-group budgets, counterpart ratios, discrete-slot candidate proofs, and
-  selected source level ranges.
+- FRLG ecology-group budgets, counterpart ratios, selected source level ranges,
+  and every exhaustive discrete-slot proof in the schema-version-3 audit. Each
+  proof names omitted counterparts and carries the deterministic compact search
+  certificate defined above, including exact candidate and rejection counts,
+  the enumeration digest, and the selected assignment's exact objective values.
 - The authored species union, forbidden-species results, Hoenn Sound comparison,
   Chinchou accessibility, and Rating 10 opening-level checks.
 - The manifest `changes` ledger and a list of every `DAY_ALIAS`.
