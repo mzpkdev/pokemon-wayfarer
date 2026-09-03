@@ -4,8 +4,10 @@ import { GameSession, type Direction } from "../harness/game-session"
 import { type GameMap, type StoryFlag } from "../harness/game-session/catalog"
 
 const moveOneTile = async (game: GameSession, direction: Direction): Promise<void> => {
+  await game.wait.forReady()
   const before = await game.state.read()
   for (let attempt = 0; attempt < 3; attempt++) {
+    if (attempt > 0) await game.wait.forReady()
     await game.player.move(direction)
     await game.wait.frames(12)
     const after = await game.state.read()
