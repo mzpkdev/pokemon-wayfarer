@@ -2,10 +2,15 @@
 #include "event_data.h"
 #include "load_save.h"
 #include "main.h"
+#include "event_scripts.h"
+#include "overworld.h"
+#include "region_map.h"
 #include "save.h"
+#include "script.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
+#include "constants/heal_locations.h"
 #include "constants/opponents.h"
 #include "constants/maps.h"
 
@@ -44,6 +49,94 @@ TEST("Wayfarer common-script source follows the map catalog")
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
     EXPECT(!WayfarerIsCurrentMapHoennSource());
+}
+
+TEST("Wayfarer current region follows map source rather than reused Hoenn map sections")
+{
+    WayfarerInitPersistentState();
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST);
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_HOENN);
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_KANTO);
+
+    // A stale Hoenn context must never turn an HNS-source special map into
+    // Hoenn. Johto is the safe HNS product fallback.
+    WayfarerSetSavedCurrentRegion(REGION_HOENN);
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+}
+
+TEST("Wayfarer Hoenn map headers retain valid Hoenn region-map entries")
+{
+    const struct MapHeader *header;
+    const struct RegionMapLocation *entries;
+    struct RegionMap regionMap = {0};
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_PETALBURG_CITY);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_PETALBURG_CITY);
+    header = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup,
+                                                gSaveBlock1Ptr->location.mapNum);
+    entries = GetActiveRegionMapEntries();
+
+    EXPECT(header != NULL);
+    EXPECT_NE(header->regionMapSectionId, 0);
+    EXPECT_EQ(header->regionMapSectionId, 7);
+    EXPECT_GT(entries[header->regionMapSectionId].width, 0);
+    EXPECT_GT(entries[header->regionMapSectionId].height, 0);
+
+    // Exercise the cursor initialization path that divides the map layout by
+    // the active region-map entry dimensions.
+    gMapHeader = *header;
+    InitRegionMapData(&regionMap, NULL, FALSE);
+    ShowRegionMapForPokedexAreaScreen(&regionMap);
+    EXPECT_EQ(regionMap.mapSecId, header->regionMapSectionId);
+}
+
+TEST("Wayfarer HNS Battle Frontier whiteout uses HNS lifecycle cleanup")
+{
+    const u16 hoennStoryFlag = HOENN_FLAG_ID(0x4FB);
+    const u16 hoennStoryVar = HOENN_VAR_ID(0x4096);
+
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_HOENN);
+    SetRegionVisitedState(REGION_HOENN, FALSE);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
+    FlagSet(FLAG_NO_WILD_CATCHING);
+    FlagSet(FLAG_NO_WILD_RUNNING);
+    FlagSet(hoennStoryFlag);
+    VarSet(hoennStoryVar, 2);
+
+    EXPECT_EQ(WayfarerGetCurrentRegionForScript(), REGION_JOHTO);
+    EXPECT(!WayfarerShouldWhiteOutToLavaridge());
+    RunScriptImmediately(EventScript_WhiteOut);
+
+    EXPECT(!FlagGet(FLAG_NO_WILD_CATCHING));
+    EXPECT(!FlagGet(FLAG_NO_WILD_RUNNING));
+    EXPECT(FlagGet(hoennStoryFlag));
+    EXPECT_EQ(VarGet(hoennStoryVar), 2);
+    EXPECT(!GetRegionVisitedState(REGION_HOENN));
+}
+
+TEST("Wayfarer heal locations update saved region through map provenance")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+
+    SetLastHealLocationWarp(HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST_HNS);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+
+    SetLastHealLocationWarp(HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
+
+    SetLastHealLocationWarp(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
 }
 
 TEST("Wayfarer field move flags follow map source and reset both banks")
@@ -200,6 +293,18 @@ TEST("Wayfarer invalid saved region falls back safely")
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_NONE;
     WayfarerValidatePersistentState();
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
+}
+
+TEST("Wayfarer saved HNS special map infers Johto without visiting Hoenn")
+{
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
+
+    WayfarerInitPersistentStateFromSavedMap();
+
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
+    EXPECT(GetRegionVisitedState(REGION_JOHTO));
+    EXPECT(!GetRegionVisitedState(REGION_HOENN));
 }
 
 TEST("Wayfarer SaveBlock3 chunks round trip without replacing sector payloads")

@@ -554,7 +554,7 @@ string generate_connections_text(Json groups_data, vector<string> &invalid_maps,
     return text.str();
 }
 
-string generate_headers_text(Json groups_data, vector<string> &invalid_maps, string include_path) {
+string generate_headers_text(Json groups_data, vector<string> &invalid_maps, string include_path, const map<string, Json> &maps_by_name) {
     vector<string> map_names;
 
     for (auto &group : groups_data["group_order"].array_items()) {
@@ -570,8 +570,21 @@ string generate_headers_text(Json groups_data, vector<string> &invalid_maps, str
 
     text << get_generated_warning("data/maps/map_groups.json", true);
 
-    for (string map_name : map_names)
+    string active_source = "hns";
+    for (string map_name : map_names) {
+        string map_source = get_source_version(maps_by_name.at(map_name));
+        if (version == "wayfarer" && map_source != active_source) {
+            if (map_source == "emerald")
+                text << "\t.include \"data/wayfarer_hoenn_source_constants.inc\"\n";
+            else
+                text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
+            active_source = map_source;
+        }
         text << "\t.include \"" << include_path << "/" << map_name << "/header.inc\"\n";
+    }
+
+    if (version == "wayfarer" && active_source == "emerald")
+        text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
 
     return text.str();
 }
@@ -856,7 +869,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
 
     string groups_text = generate_groups_text(groups_data, invalid_maps);
     string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
-    string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm);
+    string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
 

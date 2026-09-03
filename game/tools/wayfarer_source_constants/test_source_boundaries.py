@@ -20,7 +20,7 @@ VAR_OPERAND_RE = re.compile(
     r"goto_if_(?:eq|ne|lt|le|gt|ge)|call_if_(?:eq|ne|lt|le|gt|ge)|map_script_2)\s+"
     r"(VAR_[A-Za-z0-9_]+)"
 )
-DEFINE_RE = re.compile(r"^#define\s+(FLAG_[A-Za-z0-9_]+|VAR_[A-Za-z0-9_]+)\s+0x([0-9A-F]+)$")
+DEFINE_RE = re.compile(r"^#define\s+(FLAG_[A-Za-z0-9_]+|VAR_[A-Za-z0-9_]+|MAPSEC_[A-Za-z0-9_]+)\s+0x([0-9A-F]+)$")
 PAIR_RE = re.compile(r"\{ 0x([0-9A-F]+), 0x([0-9A-F]+) \}, // (FLAG_[A-Za-z0-9_]+|VAR_[A-Za-z0-9_]+)")
 
 
@@ -58,6 +58,7 @@ class SourceBoundaryTests(unittest.TestCase):
                 "--common-data-output", str(cls.common_data_path),
                 "--event-scripts", str(GAME / "data" / "event_scripts.s"),
                 "--scripts-dir", str(GAME / "data" / "scripts"),
+                "--maps-dir", str(MAPS),
             ],
             check=True,
         )
@@ -87,6 +88,8 @@ class SourceBoundaryTests(unittest.TestCase):
         self.assertEqual(self.hoenn["VAR_LITTLEROOT_TOWN_STATE"], 0x7050)
         self.assertEqual(self.engine["FLAG_RESCUED_BIRCH"], 0)
         self.assertEqual(self.engine["VAR_LITTLEROOT_TOWN_STATE"], 0x4050)
+        self.assertEqual(self.hoenn["MAPSEC_PETALBURG_CITY"], 7)
+        self.assertEqual(self.engine["MAPSEC_PETALBURG_CITY"], 0)
 
     def test_emerald_map_event_operands_are_mappable(self):
         checked = 0

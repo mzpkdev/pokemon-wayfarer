@@ -442,7 +442,7 @@ void Overworld_ResetStateAfterTeleport(void)
     WayfarerFieldMoveFlagClear(FLAG_SYS_USE_STRENGTH);
     WayfarerFieldMoveFlagClear(FLAG_SYS_USE_FLASH);
 #if IS_WAYFARER
-    if (GetCurrentRegion() == REGION_HOENN)
+    if (WayfarerGetCurrentMapRegion() == REGION_HOENN)
         RunScriptImmediately(EventScript_ResetMrBriney);
 #else
     RunScriptImmediately(EventScript_ResetMrBriney);
@@ -807,7 +807,12 @@ void SetLastHealLocationWarp(u8 healLocationId)
 {
     const struct HealLocation *healLocation = GetHealLocation(healLocationId);
     if (healLocation)
+    {
         SetWarpData(&gSaveBlock1Ptr->lastHealLocation, healLocation->mapGroup, healLocation->mapNum, WARP_ID_NONE, healLocation->x, healLocation->y);
+#if IS_WAYFARER
+        WayfarerSetSavedCurrentRegion(WayfarerGetRegionForMap(healLocation->mapGroup, healLocation->mapNum));
+#endif
+    }
 }
 
 void UpdateEscapeWarp(s16 x, s16 y)

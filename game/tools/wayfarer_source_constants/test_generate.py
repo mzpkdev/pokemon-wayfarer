@@ -1,4 +1,6 @@
 import importlib.util
+import json
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -33,6 +35,25 @@ class SourceConstantTests(unittest.TestCase):
         self.assertFalse(skipped)
         self.assertEqual(values["FLAG_ALIAS"], 0x23)
         self.assertEqual(values["VAR_TEST"], 0x4000)
+
+    def test_collects_only_emerald_map_section_constants(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            maps = Path(temp_dir)
+            for name, source, mapsec in (
+                ("Petalburg", "emerald", "MAPSEC_PETALBURG_CITY"),
+                ("NewBark", "hns", "MAPSEC_NEW_BARK_TOWN"),
+            ):
+                path = maps / name
+                path.mkdir()
+                (path / "map.json").write_text(json.dumps({
+                    "game_version": source,
+                    "region_map_section": mapsec,
+                }))
+
+            self.assertEqual(
+                GENERATOR.collect_hoenn_map_section_names(maps),
+                {"MAPSEC_PETALBURG_CITY"},
+            )
 
 
 if __name__ == "__main__":

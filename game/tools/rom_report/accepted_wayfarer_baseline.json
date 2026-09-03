@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "build": "wayfarer",
+  "accepted_commit": "4f3cd0ab2baeb0ee142e00dff64a215c94737d05",
+  "rom": {
+    "used_bytes": 32865136,
+    "end_address": "0x09F57B70"
+  },
+  "categories": {
+    "code": {"bytes": 2706768},
+    "scripts": {"bytes": 1956416},
+    "maps_layouts": {"bytes": 2082128},
+    "graphics": {"bytes": 2897072},
+    "audio": {"bytes": 11721048},
+    "trainer_data": {"bytes": 365384},
+    "encounter_data": {"bytes": 71808},
+    "other": {"bytes": 11064512}
+  }
+}

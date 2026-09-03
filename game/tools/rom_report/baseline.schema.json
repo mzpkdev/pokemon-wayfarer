@@ -7,6 +7,8 @@
   "required": [
     "schema_version",
     "build",
+    "accepted_commit",
+    "rom",
     "categories"
   ],
   "properties": {
@@ -15,6 +17,28 @@
     },
     "build": {
       "const": "wayfarer"
+    },
+    "accepted_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "rom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "used_bytes",
+        "end_address"
+      ],
+      "properties": {
+        "used_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_address": {
+          "type": "string",
+          "pattern": "^0x[0-9A-F]{8}$"
+        }
+      }
     },
     "categories": {
       "type": "object",

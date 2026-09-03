@@ -24,6 +24,7 @@
 #include "decompress.h"
 #include "constants/region_map_sections.h"
 #include "heal_location.h"
+#include "wayfarer_persistence.h"
 #include "constants/field_specials.h"
 #include "constants/heal_locations.h"
 #include "constants/rgb.h"
@@ -287,6 +288,10 @@ const struct RegionMapLocation *GetActiveRegionMapEntries(void)
 {
 #if IS_HNS
     const struct RegionMapLocation *entries;
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return sWayfarerHoennRegionMapEntries;
+#endif
     if (FlagGet(FLAG_VISITED_KANTO))
         entries = sRegionMapEntries_JK;
     else

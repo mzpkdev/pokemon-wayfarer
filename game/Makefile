@@ -155,6 +155,46 @@ ROM_REPORT := $(ROM:.gba=-size.json)
 E2E_ROM := pokemon-wayfarer-e2e.gba
 E2E_SYM := pokemon-wayfarer-e2e.sym
 
+WAYFARER_ROM_BASELINE ?=
+# Set this to 1 only when deliberately creating the first report for a new
+# baseline lineage. Normal release and CI builds must retain category deltas.
+WAYFARER_ROM_BASELINE_BOOTSTRAP ?= 0
+WAYFARER_ROM_BASELINE_DEFAULT := tools/rom_report/accepted_wayfarer_baseline.json
+ROM_REPORT_BASELINE_ARGS :=
+ROM_REPORT_BASELINE_DEP :=
+
+ifneq (,$(filter-out 0 1,$(WAYFARER_ROM_BASELINE_BOOTSTRAP)))
+$(error WAYFARER_ROM_BASELINE_BOOTSTRAP must be 0 or 1)
+endif
+ifneq (,$(WAYFARER_ROM_BASELINE))
+ifeq ($(WAYFARER_ROM_BASELINE_BOOTSTRAP),1)
+$(error WAYFARER_ROM_BASELINE and WAYFARER_ROM_BASELINE_BOOTSTRAP=1 are mutually exclusive)
+endif
+endif
+ifneq (,$(or $(WAYFARER_ROM_BASELINE),$(filter 1,$(WAYFARER_ROM_BASELINE_BOOTSTRAP))))
+ifneq ($(GAME_VERSION),POKEMON_WAYFARER)
+$(error Wayfarer ROM baseline options require BUILD=wayfarer)
+endif
+ifneq ($(RELEASE),1)
+$(error Wayfarer ROM baseline options require a release build)
+endif
+endif
+ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
+ifeq ($(RELEASE),1)
+ifeq ($(WAYFARER_ROM_BASELINE_BOOTSTRAP),1)
+ROM_REPORT_BASELINE_ARGS := --bootstrap-baseline
+else
+ifneq (,$(WAYFARER_ROM_BASELINE))
+ROM_REPORT_BASELINE_ARGS := --baseline $(WAYFARER_ROM_BASELINE)
+ROM_REPORT_BASELINE_DEP := $(WAYFARER_ROM_BASELINE)
+else
+ROM_REPORT_BASELINE_ARGS := --baseline $(WAYFARER_ROM_BASELINE_DEFAULT)
+ROM_REPORT_BASELINE_DEP := $(WAYFARER_ROM_BASELINE_DEFAULT)
+endif
+endif
+endif
+endif
+
 # Commonly used directories
 C_SUBDIR = src
 ASM_SUBDIR = asm
@@ -658,8 +698,8 @@ $(ROM): $(ELF)
 	$(OBJCOPY) -O binary $< $@
 	$(FIX) $@ -p --silent
 
-$(ROM_REPORT): $(ELF) tools/rom_report/rom_report.py
-	PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols $(MAP) --build $(BUILD_NAME) $(if $(filter 1,$(RELEASE)),--release) $(if $(WAYFARER_ROM_BASELINE),--baseline $(WAYFARER_ROM_BASELINE)) --output $@
+$(ROM_REPORT): $(ELF) tools/rom_report/rom_report.py $(ROM_REPORT_BASELINE_DEP)
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols $(MAP) --build $(BUILD_NAME) $(if $(filter 1,$(RELEASE)),--release) $(ROM_REPORT_BASELINE_ARGS) --output $@
 
 emerald: all
 firered: all

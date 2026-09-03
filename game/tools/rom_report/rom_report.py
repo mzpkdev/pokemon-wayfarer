@@ -15,6 +15,7 @@ SCHEMA_VERSION = 1
 ROM_START = 0x08000000
 ROM_CAPACITY_END = 0x0A000000
 WAYFARER_RELEASE_LIMIT = 0x09F80000
+DEFAULT_WAYFARER_BASELINE = Path(__file__).with_name("accepted_wayfarer_baseline.json")
 
 CATEGORY_ORDER = (
     "code",
@@ -151,6 +152,37 @@ def parse_baseline(text: str) -> dict[str, int]:
     if root.get("build") != "wayfarer":
         raise ReportError("malformed baseline: build must be 'wayfarer'")
 
+    accepted_commit = root.get("accepted_commit")
+    if (
+        not isinstance(accepted_commit, str)
+        or re.fullmatch(r"[0-9a-f]{40}", accepted_commit) is None
+    ):
+        raise ReportError(
+            "malformed baseline: accepted_commit must be a 40-character "
+            "lowercase commit hash"
+        )
+
+    rom = _require_mapping(root.get("rom"), "rom")
+    used_bytes = rom.get("used_bytes")
+    if isinstance(used_bytes, bool) or not isinstance(used_bytes, int) or used_bytes < 0:
+        raise ReportError("malformed baseline: rom.used_bytes must be a nonnegative integer")
+    end_address = rom.get("end_address")
+    if (
+        not isinstance(end_address, str)
+        or re.fullmatch(r"0x[0-9A-F]{8}", end_address) is None
+    ):
+        raise ReportError(
+            "malformed baseline: rom.end_address must be an eight-digit uppercase "
+            "hex address"
+        )
+    end_address_value = int(end_address, 16)
+    if end_address_value > WAYFARER_RELEASE_LIMIT:
+        raise ReportError(
+            "malformed baseline: rom.end_address exceeds the Wayfarer release limit"
+        )
+    if end_address_value - ROM_START != used_bytes:
+        raise ReportError("malformed baseline: rom end address does not reconcile with used bytes")
+
     categories = _require_mapping(root.get("categories"), "categories")
     expected = set(CATEGORY_ORDER)
     actual = set(categories)
@@ -173,7 +205,35 @@ def parse_baseline(text: str) -> dict[str, int]:
                 f"malformed baseline: categories.{category}.bytes must be a nonnegative integer"
             )
         result[category] = size
+
+    category_total = sum(result.values())
+    if category_total != used_bytes:
+        raise ReportError(
+            f"malformed baseline: category bytes {category_total} do not reconcile "
+            f"with used bytes {used_bytes}"
+        )
     return result
+
+
+def select_baseline_path(
+    *,
+    build: str,
+    release: bool,
+    explicit_path: Path | None,
+    bootstrap: bool,
+) -> Path | None:
+    """Select the accepted baseline without silently bootstrapping a release."""
+    if explicit_path is not None and bootstrap:
+        raise ReportError("--baseline and --bootstrap-baseline are mutually exclusive")
+    if (explicit_path is not None or bootstrap) and (build != "wayfarer" or not release):
+        raise ReportError("baseline options are only valid for Wayfarer release reports")
+    if bootstrap:
+        return None
+    if explicit_path is not None:
+        return explicit_path
+    if build == "wayfarer" and release:
+        return DEFAULT_WAYFARER_BASELINE
+    return None
 
 
 def build_report(
@@ -253,19 +313,33 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--symbols", required=True, type=Path, help="GNU symbol or linker map file")
     parser.add_argument("--build", required=True, help="build identity, such as wayfarer or hns")
     parser.add_argument("--release", action="store_true", help="apply release-only policy")
-    parser.add_argument(
+    baseline_group = parser.add_mutually_exclusive_group()
+    baseline_group.add_argument(
         "--baseline",
         type=Path,
-        help="previous accepted Wayfarer JSON report; omit for the first accepted build",
+        help="override the checked-in accepted Wayfarer baseline",
+    )
+    baseline_group.add_argument(
+        "--bootstrap-baseline",
+        action="store_true",
+        help="intentionally create a Wayfarer release report without category deltas",
     )
     parser.add_argument("--output", type=Path, help="write JSON here instead of stdout")
     arguments = parser.parse_args(argv)
 
     try:
         symbols = parse_symbols(_read_text(arguments.symbols, "symbols"))
-        baseline_sizes = None
-        if arguments.baseline is not None:
-            baseline_sizes = parse_baseline(_read_text(arguments.baseline, "baseline"))
+        baseline_path = select_baseline_path(
+            build=arguments.build,
+            release=arguments.release,
+            explicit_path=arguments.baseline,
+            bootstrap=arguments.bootstrap_baseline,
+        )
+        baseline_sizes = (
+            None
+            if baseline_path is None
+            else parse_baseline(_read_text(baseline_path, "baseline"))
+        )
         report = build_report(
             symbols,
             build=arguments.build,

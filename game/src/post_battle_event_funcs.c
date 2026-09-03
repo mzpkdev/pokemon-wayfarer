@@ -17,7 +17,7 @@ int GameClear(void)
     int i;
     bool32 ribbonGet;
 #if IS_WAYFARER
-    enum Region currentRegion = GetCurrentRegion();
+    enum Region currentRegion = WayfarerGetCurrentMapRegion();
 #endif
     struct RibbonCounter {
         u8 partyIndex;

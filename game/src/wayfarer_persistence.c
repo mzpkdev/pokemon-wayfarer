@@ -34,25 +34,52 @@ static bool8 IsStandaloneProductRegion(enum Region region)
 #endif
 
 #if IS_WAYFARER
-static enum Region GetRegionFromSavedMap(void)
+static bool8 IsWayfarerMapHoennSource(s16 mapGroup, s16 mapNum)
 {
-    const struct MapHeader *mapHeader;
-    s16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
-    s16 mapNum = gSaveBlock1Ptr->location.mapNum;
-    enum Region region;
+    u16 sourceIndex;
 
     if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
      || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
-        return REGION_JOHTO;
+        return FALSE;
+
+    sourceIndex = sWayfarerMapSourceOffsets[mapGroup] + mapNum;
+    return (sWayfarerHoennMapSourceBits[sourceIndex / 8] >> (sourceIndex & 7)) & 1;
+}
+
+static enum Region GetHnsMapRegionOrFallback(s16 mapGroup, s16 mapNum, enum Region fallback)
+{
+    const struct MapHeader *mapHeader;
+    enum Region sectionRegion;
+
+    if (fallback != REGION_KANTO)
+        fallback = REGION_JOHTO;
+
+    if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
+     || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
+        return fallback;
+
+    if (IsWayfarerMapHoennSource(mapGroup, mapNum))
+        return REGION_HOENN;
 
     mapHeader = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
     if (mapHeader == NULL)
-        return REGION_JOHTO;
+        return fallback;
 
-    region = GetRegionForSectionId(mapHeader->regionMapSectionId);
-    if (!IsWayfarerCoreRegion(region))
-        return REGION_JOHTO;
-    return region;
+    sectionRegion = GetRegionForSectionId(mapHeader->regionMapSectionId);
+    if (sectionRegion == REGION_JOHTO || sectionRegion == REGION_KANTO)
+        return sectionRegion;
+
+    // HNS has special areas whose visual map sections originated in Emerald,
+    // including its Battle Frontier. Preserve the last HNS core region for
+    // those maps, but never infer Hoenn from their presentation metadata.
+    return fallback;
+}
+
+static enum Region GetRegionFromSavedMap(void)
+{
+    return GetHnsMapRegionOrFallback(gSaveBlock1Ptr->location.mapGroup,
+                                    gSaveBlock1Ptr->location.mapNum,
+                                    REGION_JOHTO);
 }
 
 static void SetHoennLeagueFlag(u8 mask, bool8 value)
@@ -145,28 +172,31 @@ void WayfarerSetSavedCurrentRegion(enum Region region)
 }
 
 #if IS_WAYFARER
+enum Region WayfarerGetRegionForMap(s16 mapGroup, s16 mapNum)
+{
+    return GetHnsMapRegionOrFallback(mapGroup, mapNum, WayfarerGetSavedCurrentRegion());
+}
+
+enum Region WayfarerGetCurrentMapRegion(void)
+{
+    return WayfarerGetRegionForMap(gSaveBlock1Ptr->location.mapGroup,
+                                  gSaveBlock1Ptr->location.mapNum);
+}
+
 bool8 WayfarerIsCurrentMapHoennSource(void)
 {
-    s16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
-    s16 mapNum = gSaveBlock1Ptr->location.mapNum;
-    u16 sourceIndex;
-
-    if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT || mapNum < 0)
-        return FALSE;
-    sourceIndex = sWayfarerMapSourceOffsets[mapGroup] + mapNum;
-    if (sourceIndex >= sWayfarerMapSourceOffsets[mapGroup + 1])
-        return FALSE;
-    return (sWayfarerHoennMapSourceBits[sourceIndex / 8] >> (sourceIndex & 7)) & 1;
+    return IsWayfarerMapHoennSource(gSaveBlock1Ptr->location.mapGroup,
+                                   gSaveBlock1Ptr->location.mapNum);
 }
 
 u16 WayfarerGetCurrentRegionForScript(void)
 {
-    return GetCurrentRegion();
+    return WayfarerGetCurrentMapRegion();
 }
 
 u16 WayfarerShouldWhiteOutToLavaridge(void)
 {
-    return GetCurrentRegion() == REGION_HOENN
+    return WayfarerGetCurrentMapRegion() == REGION_HOENN
         && FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_WHITEOUT_TO_LAVARIDGE_FLAG));
 }
 #endif

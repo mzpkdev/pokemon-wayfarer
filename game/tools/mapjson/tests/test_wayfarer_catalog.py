@@ -118,6 +118,15 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertIn("\t.4byte HnsMap", groups)
         self.assertIn("\t.4byte EmeraldMap", groups)
         self.assertIn("gFrlg::\n\t.4byte NULL", groups)
+        headers = (root / "data/maps/headers.inc").read_text()
+        self.assertIn(
+            '\t.include "data/wayfarer_hoenn_source_constants.inc"\n'
+            '\t.include "data/maps/EmeraldMap/header.inc"',
+            headers,
+        )
+        self.assertTrue(headers.rstrip().endswith(
+            '\t.include "data/wayfarer_engine_source_constants.inc"'
+        ))
         self.assertEqual(heal_path.read_text(), heal_data)
         map_sources = (root / "src/data/wayfarer_map_sources.h").read_text()
         self.assertIn("sWayfarerMapSourceOffsets[] = {0, 1, 2, 3, }", map_sources)

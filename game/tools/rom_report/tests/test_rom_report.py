@@ -101,6 +101,109 @@ class RomReportTests(unittest.TestCase):
             all(category["delta_bytes"] is None for category in report["categories"].values())
         )
 
+    def test_wayfarer_release_selects_checked_in_baseline_by_default(self) -> None:
+        selected = rom_report.select_baseline_path(
+            build="wayfarer",
+            release=True,
+            explicit_path=None,
+            bootstrap=False,
+        )
+
+        self.assertEqual(selected, rom_report.DEFAULT_WAYFARER_BASELINE)
+        baseline_document = json.loads(selected.read_text(encoding="utf-8"))
+        baseline = rom_report.parse_baseline(json.dumps(baseline_document))
+        self.assertEqual(
+            baseline_document["accepted_commit"],
+            "4f3cd0ab2baeb0ee142e00dff64a215c94737d05",
+        )
+        self.assertEqual(baseline_document["rom"]["used_bytes"], 32_865_136)
+        self.assertEqual(baseline_document["rom"]["end_address"], "0x09F57B70")
+        self.assertEqual(sum(baseline.values()), 32_865_136)
+
+    def test_explicit_baseline_overrides_checked_in_default(self) -> None:
+        override = Path("custom-baseline.json")
+
+        selected = rom_report.select_baseline_path(
+            build="wayfarer",
+            release=True,
+            explicit_path=override,
+            bootstrap=False,
+        )
+
+        self.assertEqual(selected, override)
+
+    def test_explicit_bootstrap_disables_default_baseline(self) -> None:
+        selected = rom_report.select_baseline_path(
+            build="wayfarer",
+            release=True,
+            explicit_path=None,
+            bootstrap=True,
+        )
+
+        self.assertIsNone(selected)
+
+    def test_cli_default_override_and_bootstrap_baseline_behavior(self) -> None:
+        cases = (
+            ((), True, -2_706_512),
+            (("--baseline", str(FIXTURES / "accepted_baseline.json")), True, 1),
+            (("--bootstrap-baseline",), False, None),
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            for index, (baseline_arguments, available, code_delta) in enumerate(cases):
+                with self.subTest(baseline_arguments=baseline_arguments):
+                    output = Path(directory) / f"report-{index}.json"
+                    result = rom_report.main(
+                        [
+                            "--symbols",
+                            str(FIXTURES / "at_limit.sym"),
+                            "--build",
+                            "wayfarer",
+                            "--release",
+                            *baseline_arguments,
+                            "--output",
+                            str(output),
+                        ]
+                    )
+                    report = json.loads(output.read_text(encoding="utf-8"))
+                    self.assertEqual(result, 0)
+                    self.assertEqual(report["baseline"]["available"], available)
+                    self.assertEqual(
+                        report["categories"]["code"]["delta_bytes"], code_delta
+                    )
+
+    def test_baseline_options_reject_invalid_contexts_and_combination(self) -> None:
+        cases = (
+            ("wayfarer", True, Path("override.json"), True),
+            ("hns", True, Path("override.json"), False),
+            ("wayfarer", False, None, True),
+        )
+        for build, release, explicit_path, bootstrap in cases:
+            with self.subTest(
+                build=build,
+                release=release,
+                explicit_path=explicit_path,
+                bootstrap=bootstrap,
+            ):
+                with self.assertRaises(rom_report.ReportError):
+                    rom_report.select_baseline_path(
+                        build=build,
+                        release=release,
+                        explicit_path=explicit_path,
+                        bootstrap=bootstrap,
+                    )
+
+    def test_standalone_and_nonrelease_reports_do_not_select_a_baseline(self) -> None:
+        for build, release in (("hns", True), ("emerald", True), ("wayfarer", False)):
+            with self.subTest(build=build, release=release):
+                self.assertIsNone(
+                    rom_report.select_baseline_path(
+                        build=build,
+                        release=release,
+                        explicit_path=None,
+                        bootstrap=False,
+                    )
+                )
+
     def test_accepted_wayfarer_baseline_produces_signed_deltas(self) -> None:
         baseline = rom_report.parse_baseline(
             (FIXTURES / "accepted_baseline.json").read_text(encoding="utf-8")
@@ -128,6 +231,19 @@ class RomReportTests(unittest.TestCase):
             with self.subTest(text=text):
                 with self.assertRaises(rom_report.ReportError):
                     rom_report.parse_baseline(text)
+
+    def test_baseline_reconciliation_is_required(self) -> None:
+        baseline = json.loads(
+            (FIXTURES / "accepted_baseline.json").read_text(encoding="utf-8")
+        )
+        baseline["rom"]["used_bytes"] += 1
+        with self.assertRaisesRegex(rom_report.ReportError, "does not reconcile"):
+            rom_report.parse_baseline(json.dumps(baseline))
+
+        baseline["rom"]["used_bytes"] -= 1
+        baseline["categories"]["other"]["bytes"] -= 1
+        with self.assertRaisesRegex(rom_report.ReportError, "category bytes"):
+            rom_report.parse_baseline(json.dumps(baseline))
 
     def test_explicit_missing_baseline_is_an_error(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

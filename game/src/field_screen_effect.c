@@ -43,6 +43,7 @@
 #include "trainer_hill.h"
 #include "fldeff.h"
 #include "battle.h"
+#include "wayfarer_persistence.h"
 
 static void Task_ExitNonAnimDoor(u8);
 static void Task_ExitNonDoor(u8);
@@ -1483,7 +1484,7 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal_Frlg);
             }
 #if IS_WAYFARER
-            else if (GetCurrentRegion() == REGION_HOENN)
+            else if (WayfarerGetCurrentMapRegion() == REGION_HOENN)
             {
                 ScriptContext_SetupScript(EventScript_AfterWhiteOutHeal_Hoenn);
             }

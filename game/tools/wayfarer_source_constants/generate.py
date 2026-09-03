@@ -2,6 +2,7 @@
 
 import argparse
 import ast
+import json
 import operator
 import re
 import subprocess
@@ -54,6 +55,7 @@ def parse_args():
     parser.add_argument("--common-data-output", required=True)
     parser.add_argument("--event-scripts", required=True)
     parser.add_argument("--scripts-dir", required=True)
+    parser.add_argument("--maps-dir", required=True)
     return parser.parse_args()
 
 
@@ -78,6 +80,7 @@ def dump_values(cc, include_dir, product_macro, names):
         "#include <stdio.h>",
         '#include "constants/global.h"',
         '#include "constants/flags.h"',
+        '#include "constants/region_map_sections.h"',
         '#include "constants/vars.h"',
         "int main(void)",
         "{",
@@ -194,6 +197,18 @@ def collect_common_names(event_scripts, scripts_dir):
     return names
 
 
+def collect_hoenn_map_section_names(maps_dir):
+    names = set()
+    for path in sorted(Path(maps_dir).glob("*/map.json")):
+        data = json.loads(path.read_text())
+        if data.get("game_version", "emerald") != "emerald":
+            continue
+        name = data.get("region_map_section")
+        if isinstance(name, str) and name.startswith("MAPSEC_"):
+            names.add(name)
+    return names
+
+
 def render_common_tables(common_names, emerald_values, engine_values):
     aliases = {}
     flag_pairs = []
@@ -257,13 +272,15 @@ def main():
         name for name in emerald_macros
         if name.startswith(("FLAG_", "VAR_"))
     )
+    source_names.extend(sorted(collect_hoenn_map_section_names(args.maps_dir)))
     if not source_names:
-        raise SystemExit("no flag or variable constants were resolved")
+        raise SystemExit("no source constants were resolved")
 
     engine_names = sorted(
         name for name in engine_macros
         if name.startswith(("FLAG_", "VAR_"))
     )
+    engine_names.extend(name for name in source_names if name.startswith("MAPSEC_"))
     emerald_values = dump_values(args.cc, args.include_dir, "POKEMON_EMERALD", source_names)
     engine_values = dump_values(args.cc, args.include_dir, "POKEMON_WAYFARER", engine_names)
 
