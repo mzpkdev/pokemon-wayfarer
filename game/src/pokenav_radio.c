@@ -141,6 +141,9 @@ static void ClearRadioText(struct Pokenav_RadioGfx *gfx);
 static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station);
 static void GenerateOPTSegment(struct Pokenav_Radio *radio);
 static void GeneratePokemonMusicContent(struct Pokenav_Radio *radio, u32 *n, u32 *buf, bool32 isBen);
+#if TESTING
+bool8 PickOakPokemonTalkSpeciesForTesting(u16 headerId, enum TimeOfDay timeOfDay, u8 firstSlot, u16 *species);
+#endif
 
 static const u16 sRadioUI_Pal[] = INCBIN_U16("graphics/pokenav/hns/radio/ui.gbapal");
 static const u32 sRadioUI_Gfx[] = INCBIN_U32("graphics/pokenav/hns/radio/ui_tiles.4bpp.smol");
@@ -418,7 +421,7 @@ static void GetBuenaPasswordString(u8 *dest, u32 category, u32 word)
     }
 }
 
-static bool8 PickWildSpeciesFromProfile(u16 headerId, enum TimeOfDay timeOfDay, u16 *species)
+static bool8 PickWildSpeciesFromProfileStartingAtSlot(u16 headerId, enum TimeOfDay timeOfDay, u8 firstSlot, u16 *species)
 {
     struct WildEncounterProfileContext context =
     {
@@ -428,16 +431,11 @@ static bool8 PickWildSpeciesFromProfile(u16 headerId, enum TimeOfDay timeOfDay, 
         .fishingRod = WILD_ENCOUNTER_FISHING_ROD_NONE,
     };
     struct WildEncounterProfileView view;
-    u8 firstSlot;
     u8 offset;
 
-    if (species == NULL || !GetWildEncounterProfileView(&context, &view))
+    if (species == NULL || firstSlot < 2 || firstSlot > 4 || !GetWildEncounterProfileView(&context, &view))
         return FALSE;
 
-    // Crystal's radio picked one of authored land slots 2 through 4. Retain
-    // that single RNG draw, then walk that small window deterministically if
-    // its initial slot is not in the current effective population.
-    firstSlot = 2 + (Random() % 3);
     for (offset = 0; offset < 3; offset++)
     {
         const struct WildPokemon *entry;
@@ -462,6 +460,21 @@ static bool8 PickWildSpeciesFromProfile(u16 headerId, enum TimeOfDay timeOfDay, 
 
     return FALSE;
 }
+
+static bool8 PickWildSpeciesFromProfile(u16 headerId, enum TimeOfDay timeOfDay, u16 *species)
+{
+    // Crystal's radio picked one of authored land slots 2 through 4. Retain
+    // that single RNG draw, then walk that small window deterministically if
+    // its initial slot is not in the current effective population.
+    return PickWildSpeciesFromProfileStartingAtSlot(headerId, timeOfDay, 2 + (Random() % 3), species);
+}
+
+#if TESTING
+bool8 PickOakPokemonTalkSpeciesForTesting(u16 headerId, enum TimeOfDay timeOfDay, u8 firstSlot, u16 *species)
+{
+    return PickWildSpeciesFromProfileStartingAtSlot(headerId, timeOfDay, firstSlot, species);
+}
+#endif
 
 static u16 PickWildSpeciesFromRoute(u8 mapGroup, u8 mapNum)
 {

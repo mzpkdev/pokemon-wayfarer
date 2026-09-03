@@ -188,6 +188,11 @@ bool8 SelectCurrentWildEncounterProfileSlot(const struct WildEncounterProfileVie
 
 #if TESTING
 u16 GenerateFeebasFishingWildMonForTesting(u8 rod);
+#if IS_HNS
+// Deterministic Hoenn Sound selection with ability attraction and Lures off.
+// A failed radio override falls through to the supplied base-weight roll.
+bool8 SelectWildEncounterProfileSlotWithHoennSoundForTesting(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, bool8 isHoennSoundPlaying, u8 activationRoll, u8 selectionRoll, u16 baseRoll, u8 *slot);
+#endif
 #if RANDOMIZER_AVAILABLE == TRUE
 u16 RandomizeWildEncounterProfileEntryForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 mapNum, u8 mapGroup, enum WildPokemonArea area);
 #endif

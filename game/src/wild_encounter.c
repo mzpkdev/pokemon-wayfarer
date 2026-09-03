@@ -1624,17 +1624,12 @@ static bool8 TryGetAbilityInfluencedWildEncounterProfileSlot(const struct WildEn
 }
 
 #if IS_HNS
-static bool8 TryGetHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u8 *slot)
+static bool8 TrySelectHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, bool8 useSuppliedRoll, u8 suppliedRoll, u8 *slot)
 {
     u8 matchingSlots[LAND_WILD_COUNT];
     u8 candidate;
     u8 eligibleCount = 0;
     u8 matchingCount = 0;
-
-    if (!IsHoennSoundPlaying())
-        return FALSE;
-    if (Random() % 10 != 0)
-        return FALSE;
 
     for (candidate = view->entryStart; candidate < view->entryStart + view->entryCount; candidate++)
     {
@@ -1653,8 +1648,18 @@ static bool8 TryGetHoennSoundWildEncounterProfileSlot(const struct WildEncounter
     if (matchingCount == 0 || matchingCount == eligibleCount)
         return FALSE;
 
-    *slot = matchingSlots[Random() % matchingCount];
+    *slot = matchingSlots[(useSuppliedRoll ? suppliedRoll : Random()) % matchingCount];
     return TRUE;
+}
+
+static bool8 TryGetHoennSoundWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, u8 *slot)
+{
+    if (!IsHoennSoundPlaying())
+        return FALSE;
+    if (Random() % 10 != 0)
+        return FALSE;
+
+    return TrySelectHoennSoundWildEncounterProfileSlot(view, trainerRating, isWildRandomized, FALSE, 0, slot);
 }
 #endif
 
@@ -1843,6 +1848,18 @@ u16 GenerateFeebasFishingWildMonForTesting(u8 rod)
 {
     return GenerateFishingWildMon(HEADER_NONE, TIME_OF_DAY_DEFAULT, rod, TRUE);
 }
+
+#if IS_HNS
+bool8 SelectWildEncounterProfileSlotWithHoennSoundForTesting(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, bool8 isHoennSoundPlaying, u8 activationRoll, u8 selectionRoll, u16 baseRoll, u8 *slot)
+{
+    if (isHoennSoundPlaying
+     && activationRoll % 10 == 0
+     && TrySelectHoennSoundWildEncounterProfileSlot(view, trainerRating, isWildRandomized, TRUE, selectionRoll, slot))
+        return TRUE;
+
+    return SelectWildEncounterProfileSlot(view, trainerRating, isWildRandomized, baseRoll, slot);
+}
+#endif
 
 #if RANDOMIZER_AVAILABLE == TRUE
 u16 RandomizeWildEncounterProfileEntryForTesting(const struct WildEncounterProfileView *view, u8 slot, u8 mapNum, u8 mapGroup, enum WildPokemonArea area)

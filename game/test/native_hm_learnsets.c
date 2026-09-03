@@ -80,8 +80,8 @@ static const u16 sAipomMoves[] = { MOVE_CUT, MOVE_ROCK_SMASH };
 static const struct ExpectedLevelMove sAipomModern[] = { LM(10, MOVE_CUT), LM(10, MOVE_ROCK_SMASH), LM(18, MOVE_CUT), LM(18, MOVE_ROCK_SMASH), LM(29, MOVE_CUT), LM(29, MOVE_ROCK_SMASH), LM(39, MOVE_CUT), LM(39, MOVE_ROCK_SMASH) };
 static const struct ExpectedLevelMove sAipomLegacy[] = { LM(10, MOVE_CUT), LM(10, MOVE_ROCK_SMASH), LM(25, MOVE_CUT), LM(25, MOVE_ROCK_SMASH), LM(38, MOVE_CUT), LM(38, MOVE_ROCK_SMASH) };
 static const u16 sChinchouMoves[] = { MOVE_FLASH, MOVE_SURF, MOVE_WHIRLPOOL };
-static const struct ExpectedLevelMove sChinchouModern[] = { LM(20, MOVE_FLASH), LM(20, MOVE_SURF), LM(20, MOVE_WHIRLPOOL), LM(28, MOVE_FLASH), LM(28, MOVE_SURF), LM(28, MOVE_WHIRLPOOL), LM(34, MOVE_FLASH), LM(34, MOVE_SURF), LM(34, MOVE_WHIRLPOOL), LM(42, MOVE_FLASH), LM(42, MOVE_SURF), LM(42, MOVE_WHIRLPOOL), LM(47, MOVE_FLASH), LM(47, MOVE_SURF), LM(47, MOVE_WHIRLPOOL) };
-static const struct ExpectedLevelMove sChinchouLegacy[] = { LM(20, MOVE_FLASH), LM(20, MOVE_SURF), LM(20, MOVE_WHIRLPOOL), LM(29, MOVE_FLASH), LM(29, MOVE_SURF), LM(29, MOVE_WHIRLPOOL), LM(41, MOVE_FLASH), LM(41, MOVE_SURF), LM(41, MOVE_WHIRLPOOL) };
+static const struct ExpectedLevelMove sChinchouModern[] = { LM(9, MOVE_FLASH), LM(9, MOVE_SURF), LM(9, MOVE_WHIRLPOOL), LM(17, MOVE_FLASH), LM(17, MOVE_SURF), LM(17, MOVE_WHIRLPOOL), LM(23, MOVE_FLASH), LM(23, MOVE_SURF), LM(23, MOVE_WHIRLPOOL), LM(31, MOVE_FLASH), LM(31, MOVE_SURF), LM(31, MOVE_WHIRLPOOL), LM(39, MOVE_FLASH), LM(39, MOVE_SURF), LM(39, MOVE_WHIRLPOOL), LM(45, MOVE_FLASH), LM(45, MOVE_SURF), LM(45, MOVE_WHIRLPOOL), LM(50, MOVE_FLASH), LM(50, MOVE_SURF), LM(50, MOVE_WHIRLPOOL) };
+static const struct ExpectedLevelMove sChinchouLegacy[] = { LM(9, MOVE_FLASH), LM(9, MOVE_SURF), LM(9, MOVE_WHIRLPOOL), LM(17, MOVE_FLASH), LM(17, MOVE_SURF), LM(17, MOVE_WHIRLPOOL), LM(29, MOVE_FLASH), LM(29, MOVE_SURF), LM(29, MOVE_WHIRLPOOL), LM(41, MOVE_FLASH), LM(41, MOVE_SURF), LM(41, MOVE_WHIRLPOOL) };
 static const u16 sMareepMoves[] = { MOVE_FLASH };
 static const struct ExpectedLevelMove sMareepModern[] = { LM(5, MOVE_FLASH), LM(18, MOVE_FLASH), LM(32, MOVE_FLASH), LM(46, MOVE_FLASH) };
 static const struct ExpectedLevelMove sMareepLegacy[] = { LM(5, MOVE_FLASH), LM(30, MOVE_FLASH) };
@@ -157,7 +157,7 @@ static const struct NativeHmAnchor sAnchors[] =
 #if HAS_HNS_CONTENT
     ANCHOR(SPECIES_GLIGAR, 21, sGligarMoves, sGligarModern, sGligarLegacy),
     ANCHOR(SPECIES_AIPOM, 10, sAipomMoves, sAipomModern, sAipomLegacy),
-    ANCHOR(SPECIES_CHINCHOU, 20, sChinchouMoves, sChinchouModern, sChinchouLegacy),
+    ANCHOR(SPECIES_CHINCHOU, 9, sChinchouMoves, sChinchouModern, sChinchouLegacy),
     ANCHOR(SPECIES_MAREEP, 5, sMareepMoves, sMareepModern, sMareepLegacy),
     ANCHOR(SPECIES_WOOPER, 4, sWooperMoves, sWooperModern, sWooperLegacy),
     ANCHOR(SPECIES_SNUBBULL, 13, sSnubbullMoves, sSnubbullModern, sSnubbullLegacy),
@@ -350,8 +350,8 @@ static const struct NativeHmEncounterPlace sEncounterPlaces[] =
     PLACE(SPECIES_AIPOM, 10, 10, sRoute33Maps),
     PLACE(SPECIES_CHINCHOU, 20, 40, sOlivinePortMaps),
     PLACE(SPECIES_CHINCHOU, 20, 20, sCianwoodMaps),
-    PLACE(SPECIES_CHINCHOU, 40, 44, sVermilionMaps),
-    PLACE(SPECIES_CHINCHOU, 40, 44, sCinnabarMaps),
+    PLACE(SPECIES_CHINCHOU, 5, 5, sVermilionMaps),
+    PLACE(SPECIES_CHINCHOU, 5, 5, sCinnabarMaps),
     PLACE(SPECIES_MAREEP, 5, 7, sRoute31Maps),
     PLACE(SPECIES_MAREEP, 5, 7, sRoute32Maps),
     PLACE(SPECIES_WOOPER, 4, 19, sRoute32Maps),
@@ -848,9 +848,9 @@ static void ExpectNoJohtoAdditions(bool8 modern)
         EXPECT_NO_SCHEDULE(SPECIES_GLIGAR, MOVE_CUT, 19, 35, 55);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_CUT, 10, 18, 29, 39);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_ROCK_SMASH, 10, 18, 29, 39);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 20, 28, 34, 42, 47);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 20, 28, 34, 42, 47);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 20, 28, 34, 42, 47);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 9, 17, 23, 31, 39, 45, 50);
         EXPECT_NO_SCHEDULE(SPECIES_MAREEP, MOVE_FLASH, 5, 18, 32, 46);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_SURF, 4, 15, 29, 43);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_WATERFALL, 4, 15, 29, 43);
@@ -865,9 +865,9 @@ static void ExpectNoJohtoAdditions(bool8 modern)
         EXPECT_NO_SCHEDULE(SPECIES_GLIGAR, MOVE_CUT, 19, 44);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_CUT, 10, 25, 38);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_ROCK_SMASH, 10, 25, 38);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 20, 29, 41);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 20, 29, 41);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 20, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 9, 17, 29, 41);
         EXPECT_NO_SCHEDULE(SPECIES_MAREEP, MOVE_FLASH, 5, 30);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_SURF, 4, 21, 41);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_WATERFALL, 4, 21, 41);
@@ -998,7 +998,12 @@ TEST("Native HM anchors retain generated HM compatibility and successor exceptio
             if (anchor->moves[moveId] == MOVE_DIVE)
                 continue;
 #endif
-            EXPECT(CanLearnTeachableMove(anchor->species, anchor->moves[moveId]));
+            if (!CanLearnTeachableMove(anchor->species, anchor->moves[moveId]))
+            {
+                Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__,
+                    ":L%s:%d: species %d cannot learn native HM move %d",
+                    gTestRunnerState.test->filename, __LINE__, anchor->species, anchor->moves[moveId]);
+            }
         }
     }
 #if HAS_FRLG_CONTENT
