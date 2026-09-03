@@ -19,16 +19,8 @@ VermilionPort_Text_SuperNerd:
 VermilionPort_EventScript_Sailor::
 	lock
 	faceplayer
-	goto_if_unset FLAG_RETURNED_MACHINE_PART, VermilionPort_EventScript_SailorCantSail
-	goto_if_ge VAR_SSAQUA_STATE, 7, VermilionPort_EventScript_Sailor_AfterKanto
-	msgbox VermilionPort_Text_AskBoard, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_Refused
-	checkitem ITEM_SS_TICKET
-	goto_if_eq VAR_RESULT, TRUE, VermilionPort_EventScript_Sailor_MaidenVoyage
-	msgbox VermilionPort_Text_NoTicket, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
+	goto_if_ge VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_Sailor_AfterKanto
+	goto VermilionPort_EventScript_SailorCantSail
 
 VermilionPort_EventScript_SailorCantSail::
 	msgbox VermilionPort_Text_SailorCantSail, MSGBOX_NPC
@@ -56,8 +48,11 @@ VermilionPort_EventScript_ChoseOlivine::
 	checkitem ITEM_SS_TICKET
 	bufferitemname STR_VAR_1, ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
-	call VermilionPort_EventScript_EnterShip
-	warpsilent MAP_OLIVINE_CITY_PORT_INSIDE_HNS, 8, 16
+	msgbox VermilionPort_Text_SailorGetOnBoard, MSGBOX_DEFAULT
+	closemessage
+	fadescreenswapbuffers FADE_TO_BLACK
+	setrespawn HEAL_LOCATION_OLIVINE_CITY_HNS
+	warp MAP_OLIVINE_CITY_PORT_INSIDE_HNS, 8, 16
 	waitstate
 	release
 	end
@@ -106,15 +101,6 @@ VermilionPort_EventScript_ChoseBattleFrontier::
 	waitstate
 	release
 	end	
-
-VermilionPort_EventScript_Sailor_MaidenVoyage::
-	msgbox VermilionPort_Text_FlashTicket, MSGBOX_DEFAULT
-	call VermilionPort_EventScript_EnterShip
-	setvar VAR_SSAQUA_STATE, 1
-	warpsilent MAP_SSAQUA_1F_HNS, 29, 3
-	waitstate
-	release
-	end
 
 VermilionPort_EventScript_EnterShip::
 	msgbox VermilionPort_Text_SailorGetOnBoard, MSGBOX_DEFAULT
@@ -167,9 +153,7 @@ VermilionPort_Movement_BoatLeave:
 	step_end
 
 VermilionPort_Text_SailorCantSail:
-	.string "There's been a break-in at the\n"
-	.string "POWER PLANT, so we cannot set sail\l"
-	.string "until the THIEF is found.$"
+	.string "The S.S.AQUA isn't ready to sail.$"
 
 VermilionPort_Text_NoPass:
     .string "{PLAYER} tried to show the\n"

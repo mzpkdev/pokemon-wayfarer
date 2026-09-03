@@ -3,9 +3,14 @@ import { describe, expect, it } from "webanvil/test"
 import {
   commands,
   encodeCommandRequest,
+  encodeObserveRegionMapRequest,
+  encodeObserveRegionMapSectionRequest,
+  encodeSaveRequest,
+  encodeWinBattleRequest,
   keepCoordinate,
   keepMap,
   parseAbi,
+  parseCommandResult,
   parseStateSnapshot,
   type CommandRequest,
   type SessionAbi,
@@ -21,7 +26,7 @@ const abi: SessionAbi = {
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 7): Uint8Array => {
+const abiBytes = (version = 8): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -58,9 +63,10 @@ const request = (): CommandRequest => ({
   wildMon: { species: 155, moves: [0, 0, 0, 0], level: 5, egg: false },
   currentBox: 3,
   hmsOverwrite: true,
+  fullPocketMask: 7,
 })
 
-describe("game-session v7 protocol", () => {
+describe("game-session v8 protocol", () => {
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
     expect(() => parseAbi(abiBytes(6))).toThrow("Unsupported test ROM ABI")
@@ -85,7 +91,7 @@ describe("game-session v7 protocol", () => {
     expect(bytes[410]).toBe(5)
     expect(Array.from(bytes.slice(240, 256))).not.toContain(1)
     expect(Array.from(bytes.slice(260, 400))).toEqual(Array(140).fill(0))
-    expect(Array.from(bytes.slice(416, 424))).toEqual([1, 1, 1, 3, 1, 0, 0, 0])
+    expect(Array.from(bytes.slice(416, 424))).toEqual([1, 1, 1, 3, 1, 7, 0, 0])
   })
 
   it("preserves invalid fixture values for ROM-side negative validation", () => {
@@ -101,6 +107,64 @@ describe("game-session v7 protocol", () => {
     expect(view.getUint16(210, true)).toBe(0)
     expect(bytes[256]).toBe(14)
     expect(bytes[257]).toBe(30)
+  })
+
+  it("encodes the flash-save command without fixture mutations", () => {
+    const bytes = encodeSaveRequest(abi, 17)
+
+    expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(17)
+    expect(bytes[86]).toBe(commands.save)
+    expect(Array.from(bytes.slice(88))).toEqual(Array(336).fill(0))
+  })
+
+  it("encodes the read-only region-map observation command", () => {
+    const bytes = encodeObserveRegionMapRequest(abi, 23)
+
+    expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(23)
+    expect(bytes[86]).toBe(commands.observeRegionMap)
+    expect(Array.from(bytes.slice(88))).toEqual(Array(336).fill(0))
+  })
+
+  it("encodes a region-map grid lookup without changing the ABI layout", () => {
+    const bytes = encodeObserveRegionMapSectionRequest(abi, 24, 25, 7)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(24)
+    expect(view.getInt16(8, true)).toBe(25)
+    expect(view.getInt16(10, true)).toBe(7)
+    expect(bytes[86]).toBe(commands.observeRegionMapSection)
+    expect(bytes).toHaveLength(424)
+  })
+
+  it("encodes the test-only battle-win command without fixture mutations", () => {
+    const bytes = encodeWinBattleRequest(abi, 25)
+
+    expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(25)
+    expect(bytes[86]).toBe(commands.winBattle)
+    expect(Array.from(bytes.slice(88))).toEqual(Array(336).fill(0))
+  })
+
+  it("decodes region-map observation values from the command result", () => {
+    const bytes = new Uint8Array(abi.resultSize)
+    const view = new DataView(bytes.buffer)
+    view.setUint32(0, 23, true)
+    view.setUint16(4, 6, true)
+    view.setUint16(6, 25, true)
+    view.setInt16(8, 15, true)
+    view.setInt16(10, 11, true)
+    bytes[14] = 3
+    bytes[15] = 3
+
+    expect(parseCommandResult(bytes)).toEqual({
+      requestId: 23,
+      mapGroup: 6,
+      mapNum: 25,
+      x: 15,
+      y: 11,
+      error: 0,
+      status: 3,
+      phase: 3,
+    })
   })
 
   it("decodes only the requested PC slots from semantic state", () => {

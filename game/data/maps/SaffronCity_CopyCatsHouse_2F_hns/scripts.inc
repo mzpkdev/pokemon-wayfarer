@@ -142,13 +142,17 @@ SaffronCity_CopyCatsHouse_2F_EventScript_CopycatReturnedMachinePart_Female::
 
 SaffronCity_CopyCatsHouse_2F_EventScript_CopycatReturnDoll::
 	msgbox Copycat_Text_GiveDoll, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, TrySwapLostItemForPass
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	fadescreenswapbuffers FADE_TO_BLACK
-	removeitem ITEM_LOST_ITEM
 	clearflag FLAG_HIDE_COPYCAT_CLEFAIRY_DOLL
 	addobject LOCALID_COPYCAT_CLEFAIRY
 	fadescreenswapbuffers FADE_FROM_BLACK
 	msgbox Copycat_Text_GivePass, MSGBOX_DEFAULT
-	giveitem ITEM_PASS
+	setorcopyvar VAR_0x8000, ITEM_PASS
+	setvar VAR_0x8001, 1
+	setvar VAR_0x8007, TRUE
+	call EventScript_ObtainItemMessage
 	msgbox Copycat_Text_ExplainPass, MSGBOX_DEFAULT
 	closemessage
 	setvar VAR_FAN_CLUB_CLEFAIRY, 3

@@ -1,18 +1,14 @@
 MtMoon_Cave_hns_MapScripts::
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, MtMoon_Cave_MapScript_OnFrame
 	map_script MAP_SCRIPT_ON_TRANSITION, MtMoon_Cave_OnTransition
 	map_script MAP_SCRIPT_ON_RESUME, SetTimeEncounters
 	.byte 0
 
 MtMoon_Cave_OnTransition: 
 	callnative SetTimeBasedEncounters
+	goto_if_ne VAR_PEWTER_CITY_STATE, 0, MtMoon_Cave_EventScript_EndTransition
+	setvar VAR_PEWTER_CITY_STATE, 1
+MtMoon_Cave_EventScript_EndTransition::
 	end
-
-
-MtMoon_Cave_MapScript_OnFrame::
-	map_script_2 VAR_PEWTER_CITY_STATE, 0, MtMoon_Cave_EventScript_Silver
-	map_script_2 VAR_PEWTER_CITY_STATE, 1, MtMoon_Cave_EventScript_Silver
-	.2byte 0
 
 MtMoon_Cave_EventScript_Sign::
 	msgbox MtMoon_Cave_Text_Sign, MSGBOX_SIGN
@@ -20,19 +16,19 @@ MtMoon_Cave_EventScript_Sign::
 
 MtMoon_Cave_EventScript_Silver::
 	lock
-	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
-	playse SE_PIN
-	applymovement2 LOCALID_MTMOON_SILVER, Common_Movement_ExclamationMark
-	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
-	delay 60
-	applymovement2 LOCALID_MTMOON_SILVER MtMoon_Cave_Movement_WalkToPlayer
-	applymovement2 OBJ_EVENT_ID_PLAYER Common_Movement_WalkRight1
-	waitmovement LOCALID_MTMOON_SILVER
-	waitmovement OBJ_EVENT_ID_PLAYER
+	faceplayer
 	msgbox MtMoon_Cave_Text_Rival_Before, MSGBOX_DEFAULT
+	msgbox MtMoon_Cave_Text_Rival_BattleOffer, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, MtMoon_Cave_EventScript_SilverDeclined
+	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	goto_if_eq VAR_STARTER_MON, 0, MtMoon_Cave_EventScript_Silver_Battle_Cyndaquil
 	goto_if_eq VAR_STARTER_MON, 1, MtMoon_Cave_EventScript_Silver_Battle_Totodile
 	goto_if_eq VAR_STARTER_MON, 2, MtMoon_Cave_EventScript_Silver_Battle_Chikorita
+	release
+	end
+
+MtMoon_Cave_EventScript_SilverDeclined::
+	msgbox MtMoon_Cave_Text_Rival_Declined, MSGBOX_DEFAULT
 	release
 	end
 
@@ -52,37 +48,15 @@ MtMoon_Cave_EventScript_SilverAfterBattle::
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox MtMoon_Cave_Text_Rival_After, MSGBOX_DEFAULT
 	closemessage
-	applymovement2 LOCALID_MTMOON_SILVER, MtMoon_Cave_Movement_SilverLeave
-	waitmovement 0
+	fadescreen FADE_TO_BLACK
 	removeobject LOCALID_MTMOON_SILVER
 	setflag FLAG_HIDE_MTMOON_SILVER
 	clearflag FLAG_HIDE_INDIGO_PLATEAU_SILVER
 	setvar VAR_PEWTER_CITY_STATE, 2
+	fadescreen FADE_FROM_BLACK
 	fadedefaultbgm
 	release
 	end
-
-MtMoon_Cave_Movement_WalkToPlayer:
-	walk_left
-	walk_left
-	walk_left
-	step_end
-
-MtMoon_Cave_Movement_SilverLeave:
-	walk_right
-	walk_right
-	walk_right
-	walk_down
-	walk_down
-	walk_down
-	walk_right
-	walk_right
-	walk_right
-	walk_right
-	walk_down
-	walk_down
-	walk_down
-	step_end
 
 MtMoon_Cave_Text_Rival_Before:
 	.string "..................................\p"
@@ -91,6 +65,12 @@ MtMoon_Cave_Text_Rival_Before:
 	.string "what I was lacking with my POKéMON…\p"
 	.string "And we came up with an answer.\p"
 	.string "{PLAYER}, now we'll show you!$"
+
+MtMoon_Cave_Text_Rival_BattleOffer:
+	.string "Will you battle me?$"
+
+MtMoon_Cave_Text_Rival_Declined:
+	.string "I'll be here when you're ready.$"
 
 MtMoon_Cave_Text_Rival_Win:
 	.string "..................................\p"

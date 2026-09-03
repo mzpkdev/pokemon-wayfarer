@@ -16,6 +16,11 @@
 #define E2E_TEST_KEEP_COORDINATE INT16_MIN
 #define E2E_TEST_KEEP_TEXT_SPEED 0xFF
 
+#define E2E_TEST_FULL_POCKET_ITEMS     (1 << 0)
+#define E2E_TEST_FULL_POCKET_KEY_ITEMS (1 << 1)
+#define E2E_TEST_FULL_POCKET_TM_HM     (1 << 2)
+#define E2E_TEST_FULL_POCKET_MASK      (E2E_TEST_FULL_POCKET_ITEMS | E2E_TEST_FULL_POCKET_KEY_ITEMS | E2E_TEST_FULL_POCKET_TM_HM)
+
 enum E2ETestStatus
 {
     E2E_TEST_STATUS_IDLE,
@@ -30,6 +35,10 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_NONE,
     E2E_TEST_COMMAND_ARRANGE,
     E2E_TEST_COMMAND_START_WILD_BATTLE,
+    E2E_TEST_COMMAND_SAVE,
+    E2E_TEST_COMMAND_OBSERVE_REGION_MAP,
+    E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION,
+    E2E_TEST_COMMAND_WIN_BATTLE,
 };
 
 enum E2ETestCheckpoint
@@ -75,6 +84,8 @@ enum E2ETestError
     E2E_TEST_ERROR_PC_BOX,
     E2E_TEST_ERROR_PC_SLOT,
     E2E_TEST_ERROR_BUSY,
+    E2E_TEST_ERROR_FULL_POCKET_MASK,
+    E2E_TEST_ERROR_SAVE,
 };
 
 enum E2ETestGamePhase
@@ -232,7 +243,8 @@ struct E2ETestRequest
     u8 pcSlotCount;
     u8 currentBox;
     u8 hmsOverwrite;
-    u8 reserved[3];
+    u8 fullPocketMask;
+    u8 reserved[2];
 };
 
 struct E2ETestObservedPcSlot

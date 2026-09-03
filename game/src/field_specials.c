@@ -5486,6 +5486,13 @@ void ForcePlayerOntoBike(void)
     Overworld_ChangeMusicTo(IS_HNS ? MUS_HG_CYCLING : IS_FRLG ? MUS_RG_CYCLING : MUS_CYCLING);
 }
 
+void ForcePlayerOffBikeAndRestoreMusic(void)
+{
+    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ON_FOOT);
+    Overworld_ClearSavedMusic();
+    Overworld_PlaySpecialMapMusic();
+}
+
 bool8 IsPlayerNotInTrainerTowerLobby(void)
 {
     if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_TRAINER_TOWER_LOBBY) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_TRAINER_TOWER_LOBBY))

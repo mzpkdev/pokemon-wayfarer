@@ -287,15 +287,6 @@
     {
       "type": "trigger",
       "x": 56,
-      "y": 9,
-      "elevation": 0,
-      "var": "VAR_CHERRYGROVE_CITY_STATE",
-      "var_value": "3",
-      "script": "CherryGroveCity_EventScript_TriggerSilver_Top"
-    },
-    {
-      "type": "trigger",
-      "x": 56,
       "y": 11,
       "elevation": 0,
       "var": "VAR_CHERRYGROVE_CITY_STATE",

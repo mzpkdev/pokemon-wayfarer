@@ -606,6 +606,9 @@ gSpecials::
 	def_special IsPlayerLeftOfVermilionSailor
 	def_special CanStartOriginalSeviiTrip
 	def_special TryCompleteSeviiRubyHandoff
+#if IS_HNS
+	def_special TrySwapLostItemForPass
+#endif
 	def_special SetVermilionTrashCans
 	def_special DoSSAnneDepartureCutscene
 	def_special StartMarowakBattle
@@ -622,6 +625,7 @@ gSpecials::
 	def_special DrawElevatorCurrentFloorWindow
 	def_special GetElevatorFloor
 	def_special ForcePlayerOntoBike
+	def_special ForcePlayerOffBikeAndRestoreMusic
 	def_special Script_IsFanClubMemberFanOfPlayer
 	def_special Script_GetNumFansOfPlayerInTrainerFanClub
 	def_special Script_BufferFanClubTrainerName

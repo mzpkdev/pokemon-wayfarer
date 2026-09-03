@@ -49,13 +49,21 @@ VermilionCity_FanClub_EventScript_ClefairyGuy::
 	end
 
 VermilionCity_FanClub_EventScript_ClefairyGiveDoll::
+	checkitem ITEM_LOST_ITEM
+	goto_if_eq VAR_RESULT, TRUE, VermilionCity_FanClub_EventScript_ClefairyCommitDoll
+	checkitemspace ITEM_LOST_ITEM
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	msgbox PokemonFanClub_Text_ClefairyGuy_ReturnDoll, MSGBOX_DEFAULT
+	giveitem ITEM_LOST_ITEM
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	checkitem ITEM_LOST_ITEM
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+
+VermilionCity_FanClub_EventScript_ClefairyCommitDoll::
 	fadescreenswapbuffers FADE_TO_BLACK
 	setflag FLAG_HIDE_FAN_CLUB_CLEFAIRY_DOLL
 	removeobject LOCALID_FAN_CLUB_CLEFAIRY_DOLL
 	fadescreenswapbuffers FADE_FROM_BLACK
-	giveitem ITEM_LOST_ITEM
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
 	setvar VAR_FAN_CLUB_CLEFAIRY, 2
 	msgbox PokemonFanClub_Text_ClefairyGuy_GoingToGetOne, MSGBOX_DEFAULT
 	closemessage

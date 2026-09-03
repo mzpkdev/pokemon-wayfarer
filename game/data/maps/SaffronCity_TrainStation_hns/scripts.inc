@@ -26,19 +26,16 @@ SaffronStation_EventScript_Attendant::
 	goto_if_unset FLAG_RETURNED_MACHINE_PART, SaffronStation_EventScript_AttendantTrainNotRunning
 	checkitem ITEM_PASS
 	goto_if_eq VAR_RESULT, TRUE, SaffronStation_EventScript_BoardTrain
-	goto_if_set FLAG_RETURNED_MACHINE_PART, SaffronStation_EventScript_Attendant2
-	msgbox SaffronMagnetTrainStation_Text_OfficerNoRailPass, MSGBOX_DEFAULT
-	closemessage
-	release
-	end
+	goto SaffronStation_EventScript_AttendantNoPass
 
 SaffronStation_EventScript_AttendantTrainNotRunning::
+	setflag FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED
 	msgbox SaffronMagnetTrainStation_Text_Officer_TrainNotOperating, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
 
-SaffronStation_EventScript_Attendant2::
+SaffronStation_EventScript_AttendantNoPass::
 	msgbox SaffronMagnetTrainStation_Text_OfficerNoRailPass, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -317,7 +314,10 @@ SaffronMagnetTrainStation_Text_OfficerArrivedInSaffron:
 
 SaffronMagnetTrainStation_Text_Officer_TrainNotOperating:
 	.string "I'm sorry, but the MAGNET TRAIN\n"
-	.string "isn't operating now.$"
+	.string "isn't operating now.\p"
+	.string "The POWER PLANT isn't supplying\n"
+	.string "electricity. Please speak with its\l"
+	.string "MANAGER if you can help.$"
 
 SaffronMagnetTrainStation_Text_GymGuide:
 	.string "The MAGNET TRAIN is a super-modern\n"

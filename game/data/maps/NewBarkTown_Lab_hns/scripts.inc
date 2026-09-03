@@ -478,10 +478,8 @@ NewBarkTown_Lab_EventScript_ElmLeague::
 
 NewBarkTown_Lab_EventScript_ElmSSTicket::
 	msgbox NewBarkTown_Lab_Text_ElmGiveTicket1, MSGBOX_DEFAULT
-	giveitem ITEM_SS_TICKET
 	msgbox NewBarkTown_Lab_Text_ElmGiveTicket2, MSGBOX_DEFAULT
 	closemessage
-	clearflag FLAG_HIDE_SSAQUA_1F_GRANDPA
 	setvar VAR_NEWBARKTOWN_LABSTATE, 11
 	clearflag FLAG_HIDE_OLIVINE_PORT_OAK
 	release
@@ -935,15 +933,12 @@ NewBarkTown_Lab_Text_League:
 NewBarkTown_Lab_Text_ElmGiveTicket1:
 	.string "ELM: {PLAYER}! There you are!\p"
 	.string "I called because I have\n"
-	.string "something for you.\p"
-	.string "See? It's an S.S.TICKET.\p"
-	.string "Now you can catch POKéMON in\n"
-	.string "KANTO.$"
+	.string "some news for you.\p"
+	.string "PROF.OAK is waiting at OLIVINE's\n"
+	.string "port.$"
 
 NewBarkTown_Lab_Text_ElmGiveTicket2:
-	.string "The ship departs from OLIVINE\n"
-	.string "CITY.\p"
-	.string "But you knew that already,\n"
+	.string "You already know the way there,\n"
 	.string "{PLAYER}.\p"
 	.string "After all, you've traveled all\n"
 	.string "over with your POKéMON.\p"

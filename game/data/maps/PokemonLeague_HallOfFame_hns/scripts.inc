@@ -63,7 +63,6 @@ PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags::
 	setflag FLAG_HIDE_BATTLEFRONTIER_ENGINEER
 	setvar VAR_LEAGUE_STATE, 1
 	setvar VAR_NEWBARK_TOWN_STATE, 6
-	setvar VAR_SSAQUA_STATE, 0
 	return
 
 PokemonLeague_HallOfFame_EventScript_SetGameClearFlags::
@@ -220,4 +219,3 @@ PokemonLeague_HallOfFame_Rematch_LanceText:
     .string "{PLAYER}, it is my honor to register\n"
     .string "you, and your trusted partners,\l"
     .string "as champions once again.$"
-

@@ -111,17 +111,7 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-    {
-      "type": "trigger",
-      "x": 6,
-      "y": 15,
-      "elevation": 0,
-      "var": "VAR_KANTO_ROCKET_STORY_STATE",
-      "var_value": "1",
-      "script": "Route10_PowerPlantEntrance_Trigger_Cop"
-    }
-  ],
+  "coord_events": [],
   "bg_events": [],
   "game_version": "hns",
   "region": "REGION_KANTO"

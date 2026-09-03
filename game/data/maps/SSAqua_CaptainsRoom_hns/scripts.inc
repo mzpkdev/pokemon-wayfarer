@@ -26,7 +26,7 @@ SSAqua_CaptainsRoom_EventScript_Granddaughter::
 	closemessage
 	fadescreen FADE_TO_BLACK
 	setflag FLAG_HIDE_SSAQUA_CAPTAINS_ROOM_GRANDDAUGHTER
-	setvar VAR_SSAQUA_STATE, 4
+	setvar VAR_SSAQUA_STATE, 3
 	clearflag FLAG_HIDE_SSAQUA_ROOM_SSE_GRANDDAUGHTER
 	warp MAP_SSAQUA_ROOM_SSE_HNS, 0
 	waitstate
@@ -59,4 +59,3 @@ SSAqua_CaptainsRoom_Text_CaptainHowDoYouLike:
 	.string "How do you like S.S.AQUA's ride?\p"
 	.string "She practically skates across\n"
 	.string "the waves.$"
-
