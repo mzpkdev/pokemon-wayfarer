@@ -200,6 +200,18 @@ enum Region WayfarerGetCurrentMapRegion(void)
                                   gSaveBlock1Ptr->location.mapNum);
 }
 
+void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
+{
+    enum Region explicitRegion;
+
+    if (IsWayfarerMapHoennSource(mapGroup, mapNum))
+        return;
+
+    explicitRegion = GetWayfarerExplicitMapRegion(mapGroup, mapNum);
+    if (explicitRegion == REGION_JOHTO || explicitRegion == REGION_KANTO)
+        WayfarerSetSavedCurrentRegion(explicitRegion);
+}
+
 bool8 WayfarerIsCurrentMapHoennSource(void)
 {
     return IsWayfarerMapHoennSource(gSaveBlock1Ptr->location.mapGroup,

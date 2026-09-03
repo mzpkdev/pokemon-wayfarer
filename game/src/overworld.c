@@ -702,6 +702,10 @@ static void LoadCurrentMapData(void)
 {
     sLastMapSectionId = gMapHeader.regionMapSectionId;
     gMapHeader = *Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
+#if IS_WAYFARER
+    WayfarerUpdateHnsRegionContextForMap(gSaveBlock1Ptr->location.mapGroup,
+                                        gSaveBlock1Ptr->location.mapNum);
+#endif
     gSaveBlock1Ptr->mapLayoutId = gMapHeader.mapLayoutId;
     gMapHeader.mapLayout = GetMapLayout(gMapHeader.mapLayoutId);
 }

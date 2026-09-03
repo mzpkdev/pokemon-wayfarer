@@ -1,10 +1,13 @@
 #include "global.h"
+#include "battle.h"
 #include "event_data.h"
 #include "load_save.h"
 #include "main.h"
 #include "event_scripts.h"
 #include "overworld.h"
+#include "pokemon.h"
 #include "region_map.h"
+#include "regions.h"
 #include "save.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -13,6 +16,7 @@
 #include "constants/heal_locations.h"
 #include "constants/opponents.h"
 #include "constants/maps.h"
+#include "constants/songs.h"
 
 #if IS_WAYFARER
 
@@ -72,6 +76,54 @@ TEST("Wayfarer current region follows map source rather than reused Hoenn map se
     // Hoenn. Johto is the safe HNS product fallback.
     WayfarerSetSavedCurrentRegion(REGION_HOENN);
     EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+}
+
+TEST("Wayfarer global current region and battle music use Hoenn map provenance")
+{
+    u32 previousBattleTypeFlags = gBattleTypeFlags;
+    const struct MapHeader *header;
+
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_ROUTE111);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_ROUTE111);
+    header = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup,
+                                                gSaveBlock1Ptr->location.mapNum);
+    gMapHeader = *header;
+    gBattleTypeFlags = 0;
+
+    // Route 111's raw Hoenn section id collides with an HNS range. Global
+    // gameplay dispatch must use map provenance rather than that presentation id.
+    EXPECT_NE(GetRegionForSectionId(gMapHeader.regionMapSectionId), REGION_HOENN);
+    EXPECT_EQ(GetCurrentRegion(), REGION_HOENN);
+    EXPECT_EQ(GetBattleBGM(), MUS_VS_WILD);
+
+    gBattleTypeFlags = previousBattleTypeFlags;
+}
+
+TEST("Wayfarer explicit HNS map transitions update special-map fallback context")
+{
+    WayfarerInitPersistentState();
+
+    SetWarpDestinationToMapWarp(MAP_GROUP(MAP_PALLET_TOWN_HNS),
+                                MAP_NUM(MAP_PALLET_TOWN_HNS), WARP_ID_NONE);
+    WarpIntoMap();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+
+    SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS),
+                                MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS), WARP_ID_NONE);
+    WarpIntoMap();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+    EXPECT_EQ(GetCurrentRegion(), REGION_KANTO);
+
+    SetWarpDestinationToMapWarp(MAP_GROUP(MAP_NEW_BARK_TOWN_HNS),
+                                MAP_NUM(MAP_NEW_BARK_TOWN_HNS), WARP_ID_NONE);
+    WarpIntoMap();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
+
+    SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS),
+                                MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS), WARP_ID_NONE);
+    WarpIntoMap();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
+    EXPECT_EQ(GetCurrentRegion(), REGION_JOHTO);
 }
 
 TEST("Wayfarer Hoenn Town Map uses Hoenn art grid and section semantics")

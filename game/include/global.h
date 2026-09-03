@@ -354,6 +354,9 @@ struct WayfarerHoennPersistentState
     u8 initialized;
     u8 currentRegion;
     u8 magic;
+    // Raw Emerald map sections 0-218 each receive an independent encounter
+    // bit. Keeping this outside ChallengeSettings prevents aliasing HNS state.
+    u8 nuzlockeEncounterFlags[28];
 };
 #endif
 

@@ -16,6 +16,7 @@ void WayfarerSetSavedCurrentRegion(enum Region region);
 #if IS_WAYFARER
 enum Region WayfarerGetRegionForMap(s16 mapGroup, s16 mapNum);
 enum Region WayfarerGetCurrentMapRegion(void);
+void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum);
 bool8 WayfarerIsCurrentMapHoennSource(void);
 u16 WayfarerGetCurrentRegionForScript(void);
 u16 WayfarerShouldWhiteOutToLavaridge(void);
