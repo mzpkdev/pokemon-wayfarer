@@ -15,6 +15,7 @@
 #include "event_scripts.h"
 #include "fieldmap.h"
 #include "field_effect.h"
+#include "field_control_avatar.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
@@ -455,7 +456,7 @@ bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
         // Check if there are any hidden items on the current map that haven't been picked up
         if (events->bgEvents[i].kind == BG_EVENT_HIDDEN_ITEM
             && (!IS_HNS || events->bgEvents[i].bgUnion.hiddenItem.hiddenItemId != 0)
-            && !FlagGet(events->bgEvents[i].bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START))
+            && !FlagGet(GetHiddenItemFlagId(&events->bgEvents[i])))
         {
             itemX = (u16)events->bgEvents[i].x + MAP_OFFSET;
             distanceX = itemX - playerX;
@@ -491,7 +492,7 @@ static bool8 IsHiddenItemPresentAtCoords(const struct MapEvents *events, s16 x, 
         {
             if (IS_HNS && bgEvent[i].bgUnion.hiddenItem.hiddenItemId == 0)
                 return FALSE;
-            if (!FlagGet(bgEvent[i].bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START))
+            if (!FlagGet(GetHiddenItemFlagId(&bgEvent[i])))
                 return TRUE;
             else
                 return FALSE;

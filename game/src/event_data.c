@@ -1,6 +1,11 @@
 #include "global.h"
 #include "event_data.h"
 #include "pokedex.h"
+#include "regions.h"
+#include "wayfarer_persistence.h"
+#if IS_WAYFARER
+#include "data/wayfarer_common_source_constants.h"
+#endif
 
 #define SPECIAL_FLAGS_SIZE  (NUM_SPECIAL_FLAGS / 8)  // 8 flags per byte
 #define TEMP_FLAGS_SIZE     (NUM_TEMP_FLAGS / 8)
@@ -36,6 +41,75 @@ EWRAM_DATA static u16 sTestVars[TEST_VARS_SIZE] = {0};
 
 extern u16 *const gSpecialVars[];
 
+#if IS_WAYFARER
+static u16 ResolveWayfarerCommonFlagId(u16 id)
+{
+    u16 index;
+
+    if (!IS_WAYFARER_COMMON_FLAG_ID(id))
+        return id;
+    index = WAYFARER_COMMON_ID_INDEX(id);
+    if (index >= WAYFARER_COMMON_FLAG_COUNT)
+        return 0;
+    return sWayfarerCommonFlagIds[index][WayfarerIsCurrentMapHoennSource()];
+}
+
+static u16 ResolveWayfarerCommonVarId(u16 id)
+{
+    u16 index;
+
+    if (!IS_WAYFARER_COMMON_VAR_ID(id))
+        return id;
+    index = WAYFARER_COMMON_ID_INDEX(id);
+    if (index >= WAYFARER_COMMON_VAR_COUNT)
+        return 0;
+    return sWayfarerCommonVarIds[index][WayfarerIsCurrentMapHoennSource()];
+}
+
+static u8 *GetHoennFlagPointer(u16 id, u8 *bit)
+{
+    u16 sourceId = HOENN_FLAG_SOURCE_ID(id);
+    u16 offset;
+
+    if (sourceId >= WAYFARER_HOENN_BADGE_FLAG_START
+     && sourceId < WAYFARER_HOENN_BADGE_FLAG_START + WAYFARER_HOENN_BADGE_COUNT)
+    {
+        *bit = sourceId - WAYFARER_HOENN_BADGE_FLAG_START;
+        return &gSaveBlock3Ptr->wayfarerHoenn.badges;
+    }
+
+    if (sourceId >= WAYFARER_HOENN_VISITED_FLAG_START
+     && sourceId < WAYFARER_HOENN_VISITED_FLAG_START + WAYFARER_HOENN_VISITED_COUNT)
+    {
+        offset = sourceId - WAYFARER_HOENN_VISITED_FLAG_START;
+        *bit = offset & 7;
+        return &gSaveBlock3Ptr->wayfarerHoenn.visitedLocations[offset / 8];
+    }
+
+    if (sourceId == WAYFARER_HOENN_GAME_CLEAR_FLAG)
+    {
+        *bit = 0;
+        return &gSaveBlock3Ptr->wayfarerHoenn.leagueFlags;
+    }
+
+    if (sourceId == WAYFARER_HOENN_CHAMPION_FLAG)
+    {
+        *bit = 1;
+        return &gSaveBlock3Ptr->wayfarerHoenn.leagueFlags;
+    }
+
+    if (sourceId >= WAYFARER_HOENN_FLAGS_LOW_START && sourceId <= WAYFARER_HOENN_FLAGS_LOW_END)
+        offset = sourceId - WAYFARER_HOENN_FLAGS_LOW_START;
+    else if (sourceId >= WAYFARER_HOENN_FLAGS_HIGH_START && sourceId <= WAYFARER_HOENN_FLAGS_HIGH_END)
+        offset = WAYFARER_HOENN_FLAGS_LOW_COUNT + sourceId - WAYFARER_HOENN_FLAGS_HIGH_START;
+    else
+        return NULL;
+
+    *bit = offset & 7;
+    return &gSaveBlock3Ptr->wayfarerHoenn.persistentFlags[offset / 8];
+}
+#endif
+
 // Capped at 8: every consumer indexes 8-entry tables with the count this yields.
 const u16 gBadgeFlags[NUM_BADGES_CAPPED] =
 {
@@ -60,9 +134,12 @@ void ClearTempFieldEventData(void)
 {
     memset(&gSaveBlock1Ptr->flags[TEMP_FLAGS_START / 8], 0, TEMP_FLAGS_SIZE);
     memset(&gSaveBlock1Ptr->vars[TEMP_VARS_START - VARS_START], 0, TEMP_VARS_SIZE);
+#if IS_WAYFARER
+    memset(gSaveBlock3Ptr->wayfarerHoenn.vars, 0, TEMP_VARS_SIZE);
+#endif
     FlagClear(FLAG_SYS_ENC_UP_ITEM);
     FlagClear(FLAG_SYS_ENC_DOWN_ITEM);
-    FlagClear(FLAG_SYS_USE_STRENGTH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_STRENGTH);
     FlagClear(FLAG_SYS_CTRL_OBJ_DELETE);
     FlagClear(FLAG_NURSE_UNION_ROOM_REMINDER);
 }
@@ -73,6 +150,10 @@ void ClearDailyFlags(void)
     u16 i;
     for (i = DAILY_FLAGS_START; i <= DAILY_FLAGS_END; i++)
         FlagClear(i);
+#if IS_WAYFARER
+    for (i = WAYFARER_HOENN_DAILY_FLAGS_START; i <= WAYFARER_HOENN_DAILY_FLAGS_END; i++)
+        FlagClear(HOENN_FLAG_ID(i));
+#endif
 #else
     memset(&gSaveBlock1Ptr->flags[DAILY_FLAGS_START / 8], 0, DAILY_FLAGS_SIZE);
 #endif
@@ -189,6 +270,17 @@ bool32 CanResetRTC(void)
 
 u16 *GetVarPointer(u16 id)
 {
+#if IS_WAYFARER
+    id = ResolveWayfarerCommonVarId(id);
+    if (IS_HOENN_VAR_ID(id))
+    {
+        u16 sourceId = HOENN_VAR_SOURCE_ID(id);
+        if (sourceId >= VARS_START && sourceId <= VARS_END)
+            return &gSaveBlock3Ptr->wayfarerHoenn.vars[sourceId - VARS_START];
+        return NULL;
+    }
+#endif
+
     if (id < VARS_START)
         return NULL;
     else if (id < SPECIAL_VARS_START)
@@ -233,6 +325,15 @@ u16 VarGetObjectEventGraphicsId(u8 id)
 
 u8 *GetFlagPointer(u16 id)
 {
+#if IS_WAYFARER
+    id = ResolveWayfarerCommonFlagId(id);
+    if (IS_HOENN_FLAG_ID(id))
+    {
+        u8 bit;
+        return GetHoennFlagPointer(id, &bit);
+    }
+#endif
+
     if (id == 0)
         return NULL;
     else if (id < SPECIAL_FLAGS_START)
@@ -247,36 +348,68 @@ u8 *GetFlagPointer(u16 id)
 
 u8 FlagSet(u16 id)
 {
+#if IS_WAYFARER
+    id = ResolveWayfarerCommonFlagId(id);
+#endif
     u8 *ptr = GetFlagPointer(id);
+    u8 bit = id & 7;
+#if IS_WAYFARER
+    if (IS_HOENN_FLAG_ID(id))
+        ptr = GetHoennFlagPointer(id, &bit);
+#endif
     if (ptr)
-        *ptr |= 1 << (id & 7);
+        *ptr |= 1 << bit;
     return 0;
 }
 
 u8 FlagToggle(u16 id)
 {
+#if IS_WAYFARER
+    id = ResolveWayfarerCommonFlagId(id);
+#endif
     u8 *ptr = GetFlagPointer(id);
+    u8 bit = id & 7;
+#if IS_WAYFARER
+    if (IS_HOENN_FLAG_ID(id))
+        ptr = GetHoennFlagPointer(id, &bit);
+#endif
     if (ptr)
-        *ptr ^= 1 << (id & 7);
+        *ptr ^= 1 << bit;
     return 0;
 }
 
 u8 FlagClear(u16 id)
 {
+#if IS_WAYFARER
+    id = ResolveWayfarerCommonFlagId(id);
+#endif
     u8 *ptr = GetFlagPointer(id);
+    u8 bit = id & 7;
+#if IS_WAYFARER
+    if (IS_HOENN_FLAG_ID(id))
+        ptr = GetHoennFlagPointer(id, &bit);
+#endif
     if (ptr)
-        *ptr &= ~(1 << (id & 7));
+        *ptr &= ~(1 << bit);
     return 0;
 }
 
 bool8 FlagGet(u16 id)
 {
+#if IS_WAYFARER
+    id = ResolveWayfarerCommonFlagId(id);
+#endif
     u8 *ptr = GetFlagPointer(id);
+    u8 bit = id & 7;
+#if IS_WAYFARER
+    if (IS_HOENN_FLAG_ID(id))
+        ptr = GetHoennFlagPointer(id, &bit);
+#endif
 
     if (!ptr)
         return FALSE;
 
-    if (!(((*ptr) >> (id & 7)) & 1))
+    if (!(((*ptr) >> bit) & 1))
         return FALSE;
 
     return TRUE;

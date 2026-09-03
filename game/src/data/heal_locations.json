@@ -2,6 +2,7 @@
   "heal_locations": [
     {
       "id": "HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F",
+      "source": "EMERALD",
       "map": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F",
       "x": 4,
       "y": 2,
@@ -12,6 +13,7 @@
     },
     {
       "id": "HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE_2F",
+      "source": "EMERALD",
       "map": "MAP_LITTLEROOT_TOWN_MAYS_HOUSE_2F",
       "x": 4,
       "y": 2,
@@ -22,6 +24,7 @@
     },
     {
       "id": "HEAL_LOCATION_PETALBURG_CITY",
+      "source": "EMERALD",
       "map": "MAP_PETALBURG_CITY",
       "x": 20,
       "y": 17,
@@ -30,6 +33,7 @@
     },
     {
       "id": "HEAL_LOCATION_SLATEPORT_CITY",
+      "source": "EMERALD",
       "map": "MAP_SLATEPORT_CITY",
       "x": 19,
       "y": 20,
@@ -38,6 +42,7 @@
     },
     {
       "id": "HEAL_LOCATION_MAUVILLE_CITY",
+      "source": "EMERALD",
       "map": "MAP_MAUVILLE_CITY",
       "x": 22,
       "y": 6,
@@ -46,6 +51,7 @@
     },
     {
       "id": "HEAL_LOCATION_RUSTBORO_CITY",
+      "source": "EMERALD",
       "map": "MAP_RUSTBORO_CITY",
       "x": 16,
       "y": 39,
@@ -54,6 +60,7 @@
     },
     {
       "id": "HEAL_LOCATION_FORTREE_CITY",
+      "source": "EMERALD",
       "map": "MAP_FORTREE_CITY",
       "x": 5,
       "y": 7,
@@ -62,6 +69,7 @@
     },
     {
       "id": "HEAL_LOCATION_LILYCOVE_CITY",
+      "source": "EMERALD",
       "map": "MAP_LILYCOVE_CITY",
       "x": 24,
       "y": 15,
@@ -70,6 +78,7 @@
     },
     {
       "id": "HEAL_LOCATION_MOSSDEEP_CITY",
+      "source": "EMERALD",
       "map": "MAP_MOSSDEEP_CITY",
       "x": 28,
       "y": 17,
@@ -78,6 +87,7 @@
     },
     {
       "id": "HEAL_LOCATION_SOOTOPOLIS_CITY",
+      "source": "EMERALD",
       "map": "MAP_SOOTOPOLIS_CITY",
       "x": 43,
       "y": 32,
@@ -86,6 +96,7 @@
     },
     {
       "id": "HEAL_LOCATION_EVER_GRANDE_CITY",
+      "source": "EMERALD",
       "map": "MAP_EVER_GRANDE_CITY",
       "x": 27,
       "y": 49,
@@ -94,6 +105,7 @@
     },
     {
       "id": "HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE",
+      "source": "EMERALD",
       "map": "MAP_LITTLEROOT_TOWN",
       "x": 5,
       "y": 9,
@@ -104,6 +116,7 @@
     },
     {
       "id": "HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE",
+      "source": "EMERALD",
       "map": "MAP_LITTLEROOT_TOWN",
       "x": 14,
       "y": 9,
@@ -114,6 +127,7 @@
     },
     {
       "id": "HEAL_LOCATION_OLDALE_TOWN",
+      "source": "EMERALD",
       "map": "MAP_OLDALE_TOWN",
       "x": 6,
       "y": 17,
@@ -122,6 +136,7 @@
     },
     {
       "id": "HEAL_LOCATION_DEWFORD_TOWN",
+      "source": "EMERALD",
       "map": "MAP_DEWFORD_TOWN",
       "x": 2,
       "y": 11,
@@ -130,6 +145,7 @@
     },
     {
       "id": "HEAL_LOCATION_LAVARIDGE_TOWN",
+      "source": "EMERALD",
       "map": "MAP_LAVARIDGE_TOWN",
       "x": 9,
       "y": 7,
@@ -138,6 +154,7 @@
     },
     {
       "id": "HEAL_LOCATION_FALLARBOR_TOWN",
+      "source": "EMERALD",
       "map": "MAP_FALLARBOR_TOWN",
       "x": 14,
       "y": 8,
@@ -146,6 +163,7 @@
     },
     {
       "id": "HEAL_LOCATION_VERDANTURF_TOWN",
+      "source": "EMERALD",
       "map": "MAP_VERDANTURF_TOWN",
       "x": 16,
       "y": 4,
@@ -154,6 +172,7 @@
     },
     {
       "id": "HEAL_LOCATION_PACIFIDLOG_TOWN",
+      "source": "EMERALD",
       "map": "MAP_PACIFIDLOG_TOWN",
       "x": 8,
       "y": 16,
@@ -162,6 +181,7 @@
     },
     {
       "id": "HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE",
+      "source": "EMERALD",
       "map": "MAP_EVER_GRANDE_CITY",
       "x": 18,
       "y": 6,
@@ -172,6 +192,7 @@
     },
     {
       "id": "HEAL_LOCATION_SOUTHERN_ISLAND_EXTERIOR",
+      "source": "EMERALD",
       "map": "MAP_SOUTHERN_ISLAND_EXTERIOR",
       "x": 15,
       "y": 20,
@@ -182,6 +203,7 @@
     },
     {
       "id": "HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST",
+      "source": "EMERALD",
       "map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST",
       "x": 3,
       "y": 52,
@@ -190,6 +212,7 @@
     },
     {
       "id": "HEAL_LOCATION_PALLET_TOWN",
+      "source": "FRLG",
       "map": "MAP_PALLET_TOWN",
       "x": 6,
       "y": 8,
@@ -200,6 +223,7 @@
     },
     {
       "id": "HEAL_LOCATION_VIRIDIAN_CITY",
+      "source": "FRLG",
       "map": "MAP_VIRIDIAN_CITY",
       "x": 26,
       "y": 27,
@@ -208,6 +232,7 @@
     },
     {
       "id": "HEAL_LOCATION_PEWTER_CITY",
+      "source": "FRLG",
       "map": "MAP_PEWTER_CITY",
       "x": 17,
       "y": 26,
@@ -216,6 +241,7 @@
     },
     {
       "id": "HEAL_LOCATION_CERULEAN_CITY",
+      "source": "FRLG",
       "map": "MAP_CERULEAN_CITY",
       "x": 22,
       "y": 20,
@@ -224,6 +250,7 @@
     },
     {
       "id": "HEAL_LOCATION_LAVENDER_TOWN",
+      "source": "FRLG",
       "map": "MAP_LAVENDER_TOWN",
       "x": 6,
       "y": 6,
@@ -232,6 +259,7 @@
     },
     {
       "id": "HEAL_LOCATION_VERMILION_CITY",
+      "source": "FRLG",
       "map": "MAP_VERMILION_CITY",
       "x": 15,
       "y": 7,
@@ -240,6 +268,7 @@
     },
     {
       "id": "HEAL_LOCATION_CELADON_CITY",
+      "source": "FRLG",
       "map": "MAP_CELADON_CITY",
       "x": 48,
       "y": 12,
@@ -248,6 +277,7 @@
     },
     {
       "id": "HEAL_LOCATION_FUCHSIA_CITY",
+      "source": "FRLG",
       "map": "MAP_FUCHSIA_CITY",
       "x": 25,
       "y": 32,
@@ -256,6 +286,7 @@
     },
     {
       "id": "HEAL_LOCATION_CINNABAR_ISLAND",
+      "source": "FRLG",
       "map": "MAP_CINNABAR_ISLAND",
       "x": 14,
       "y": 12,
@@ -264,6 +295,7 @@
     },
     {
       "id": "HEAL_LOCATION_INDIGO_PLATEAU",
+      "source": "FRLG",
       "map": "MAP_INDIGO_PLATEAU_EXTERIOR",
       "x": 11,
       "y": 7,
@@ -272,6 +304,7 @@
     },
     {
       "id": "HEAL_LOCATION_SAFFRON_CITY",
+      "source": "FRLG",
       "map": "MAP_SAFFRON_CITY",
       "x": 24,
       "y": 39,
@@ -280,6 +313,7 @@
     },
     {
       "id": "HEAL_LOCATION_ROUTE4",
+      "source": "FRLG",
       "map": "MAP_ROUTE4",
       "x": 12,
       "y": 6,
@@ -288,6 +322,7 @@
     },
     {
       "id": "HEAL_LOCATION_ROUTE10",
+      "source": "FRLG",
       "map": "MAP_ROUTE10",
       "x": 13,
       "y": 21,
@@ -296,6 +331,7 @@
     },
     {
       "id": "HEAL_LOCATION_ONE_ISLAND",
+      "source": "FRLG",
       "map": "MAP_ONE_ISLAND",
       "x": 14,
       "y": 6,
@@ -304,6 +340,7 @@
     },
     {
       "id": "HEAL_LOCATION_TWO_ISLAND",
+      "source": "FRLG",
       "map": "MAP_TWO_ISLAND",
       "x": 21,
       "y": 8,
@@ -312,6 +349,7 @@
     },
     {
       "id": "HEAL_LOCATION_THREE_ISLAND",
+      "source": "FRLG",
       "map": "MAP_THREE_ISLAND",
       "x": 14,
       "y": 28,
@@ -320,6 +358,7 @@
     },
     {
       "id": "HEAL_LOCATION_FOUR_ISLAND",
+      "source": "FRLG",
       "map": "MAP_FOUR_ISLAND",
       "x": 18,
       "y": 21,
@@ -328,6 +367,7 @@
     },
     {
       "id": "HEAL_LOCATION_FIVE_ISLAND",
+      "source": "FRLG",
       "map": "MAP_FIVE_ISLAND",
       "x": 18,
       "y": 7,
@@ -336,6 +376,7 @@
     },
     {
       "id": "HEAL_LOCATION_SEVEN_ISLAND",
+      "source": "FRLG",
       "map": "MAP_SEVEN_ISLAND",
       "x": 12,
       "y": 4,
@@ -344,6 +385,7 @@
     },
     {
       "id": "HEAL_LOCATION_SIX_ISLAND",
+      "source": "FRLG",
       "map": "MAP_SIX_ISLAND",
       "x": 11,
       "y": 12,
@@ -352,6 +394,7 @@
     },
     {
       "id": "HEAL_LOCATION_NEW_BARK_TOWN_HNS",
+      "source": "HNS",
       "map": "MAP_NEW_BARK_TOWN_HNS",
       "x": 20,
       "y": 12,
@@ -360,6 +403,7 @@
     },
     {
       "id": "HEAL_LOCATION_CHERRYGROVE_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_CHERRYGROVE_CITY_HNS",
       "x": 47,
       "y": 8,
@@ -368,6 +412,7 @@
     },
     {
       "id": "HEAL_LOCATION_VIOLET_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_VIOLET_CITY_HNS",
       "x": 39,
       "y": 46,
@@ -376,6 +421,7 @@
     },
     {
       "id": "HEAL_LOCATION_AZALEA_TOWN_HNS",
+      "source": "HNS",
       "map": "MAP_AZALEA_TOWN_HNS",
       "x": 31,
       "y": 16,
@@ -384,6 +430,7 @@
     },
     {
       "id": "HEAL_LOCATION_GOLDENROD_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_GOLDENROD_CITY_HNS",
       "x": 28,
       "y": 37,
@@ -392,6 +439,7 @@
     },
     {
       "id": "HEAL_LOCATION_ECRUTEAK_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_ECRUTEAK_CITY_HNS",
       "x": 39,
       "y": 48,
@@ -400,6 +448,7 @@
     },
     {
       "id": "HEAL_LOCATION_OLIVINE_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_OLIVINE_CITY_HNS",
       "x": 15,
       "y": 44,
@@ -408,6 +457,7 @@
     },
     {
       "id": "HEAL_LOCATION_CIANWOOD_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_CIANWOOD_CITY_HNS",
       "x": 31,
       "y": 46,
@@ -416,6 +466,7 @@
     },
     {
       "id": "HEAL_LOCATION_MAHOGANY_TOWN_HNS",
+      "source": "HNS",
       "map": "MAP_MAHOGANYTOWN_HNS",
       "x": 21,
       "y": 20,
@@ -424,6 +475,7 @@
     },
     {
       "id": "HEAL_LOCATION_BLACKTHORN_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_BLACKTHORN_CITY_HNS",
       "x": 27,
       "y": 49,
@@ -432,6 +484,7 @@
     },
     {
       "id": "HEAL_LOCATION_PALLET_TOWN_HNS",
+      "source": "HNS",
       "map": "MAP_PALLET_TOWN_HNS",
       "x": 11,
       "y": 9,
@@ -440,6 +493,7 @@
     },
     {
       "id": "HEAL_LOCATION_VIRIDIAN_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_VIRIDIAN_CITY_HNS",
       "x": 30,
       "y": 37,
@@ -448,6 +502,7 @@
     },
     {
       "id": "HEAL_LOCATION_PEWTER_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_PEWTER_CITY_HNS",
       "x": 19,
       "y": 30,
@@ -456,6 +511,7 @@
     },
     {
       "id": "HEAL_LOCATION_CERULEAN_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_CERULEAN_CITY_HNS",
       "x": 25,
       "y": 30,
@@ -464,6 +520,7 @@
     },
     {
       "id": "HEAL_LOCATION_VERMILION_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_VERMILION_CITY_HNS",
       "x": 22,
       "y": 5,
@@ -472,6 +529,7 @@
     },
     {
       "id": "HEAL_LOCATION_LAVENDER_TOWN_HNS",
+      "source": "HNS",
       "map": "MAP_LAVENDER_TOWN_HNS",
       "x": 9,
       "y": 7,
@@ -480,6 +538,7 @@
     },
     {
       "id": "HEAL_LOCATION_CELADON_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_CELADON_CITY_HNS",
       "x": 48,
       "y": 12,
@@ -488,6 +547,7 @@
     },
     {
       "id": "HEAL_LOCATION_SAFFRON_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_SAFFRON_CITY_HNS",
       "x": 18,
       "y": 39,
@@ -496,6 +556,7 @@
     },
     {
       "id": "HEAL_LOCATION_FUCHSIA_CITY_HNS",
+      "source": "HNS",
       "map": "MAP_FUCHSIA_CITY_HNS",
       "x": 25,
       "y": 32,
@@ -504,6 +565,7 @@
     },
     {
       "id": "HEAL_LOCATION_CINNABAR_ISLAND_HNS",
+      "source": "HNS",
       "map": "MAP_CINNABAR_ISLAND_HNS",
       "x": 45,
       "y": 30,
@@ -512,18 +574,21 @@
     },
     {
       "id": "HEAL_LOCATION_MT_SILVER_HNS",
+      "source": "HNS",
       "map": "MAP_MT_SILVER_OUTSIDE_HNS",
       "x": 25,
       "y": 15
     },
     {
       "id": "HEAL_LOCATION_LAKE_OF_RAGE_HNS",
+      "source": "HNS",
       "map": "MAP_LAKE_OF_RAGE_HNS",
       "x": 31,
       "y": 43
     },
     {
       "id": "HEAL_LOCATION_INDIGO_PLATEAU_HNS",
+      "source": "HNS",
       "map": "MAP_INDIGO_PLATEAU_HNS",
       "x": 11,
       "y": 7,
@@ -532,12 +597,14 @@
     },
     {
       "id": "HEAL_LOCATION_SAFARI_ZONE_GATE_HNS",
+      "source": "HNS",
       "map": "MAP_SAFARI_ZONE_GATE_HNS",
       "x": 11,
       "y": 16
     },
     {
       "id": "HEAL_LOCATION_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS",
+      "source": "HNS",
       "map": "MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS",
       "x": 4,
       "y": 4,
@@ -546,42 +613,49 @@
     },
     {
       "id": "HEAL_LOCATION_ROUTE_32_HNS",
+      "source": "HNS",
       "map": "MAP_ROUTE32_HNS",
       "x": 25,
       "y": 85
     },
     {
       "id": "HEAL_LOCATION_ROUTE26NORTH_HNS",
+      "source": "HNS",
       "map": "MAP_ROUTE26NORTH_HNS",
       "x": 12,
       "y": 6
     },
     {
       "id": "HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
+      "source": "HNS",
       "map": "MAP_BATTLE_FRONTIER_OUTSIDE_EAST_HNS",
       "x": 12,
       "y": 46
     },
     {
       "id": "HEAL_LOCATION_MELEMELE_ISLE_HNS",
+      "source": "HNS",
       "map": "MAP_MELEMELE_ISLE_HNS",
       "x": 28,
       "y": 7
     },
     {
       "id": "HEAL_LOCATION_NEW_SINJOH_HNS",
+      "source": "HNS",
       "map": "MAP_NEW_SINJOH_HNS",
       "x": 39,
       "y": 42
     },
     {
       "id": "HEAL_LOCATION_ROUTE10_HNS",
+      "source": "HNS",
       "map": "MAP_ROUTE10_HNS",
       "x": 16,
       "y": 36
     },
     {
       "id": "HEAL_LOCATION_ROUTE4_HNS",
+      "source": "HNS",
       "map": "MAP_ROUTE4_HNS",
       "x": 12,
       "y": 6

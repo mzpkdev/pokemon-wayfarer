@@ -16,7 +16,11 @@
 
 #define SPECIAL_SECTOR_SENTINEL 0xB39D
 
+#if IS_WAYFARER
+#define SAVE_VERSION       6
+#else
 #define SAVE_VERSION       5
+#endif
 #define SAVE_VERSION_MAGIC 0xE8F828BC
 
 #define SECTOR_ID_SAVEBLOCK2          0
@@ -112,6 +116,12 @@ u16 GetSaveBlocksPointersBaseOffset(void);
 u32 TryReadSpecialSaveSector(u8 sector, u8 *dst);
 u32 TryWriteSpecialSaveSector(u8 sector, u8 *src);
 void Task_LinkFullSave(u8 taskId);
+
+#if TESTING
+u32 Test_GetSaveBlock3ChunkSize(u32 sectorId);
+void Test_CopySaveBlock3FromSector(u32 sectorId, struct SaveSector *sector);
+void Test_CopySaveBlock3ToSector(u32 sectorId, struct SaveSector *sector);
+#endif
 
 // save_failed_screen.c
 void DoSaveFailedScreen(u8 saveType);

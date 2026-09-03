@@ -7,6 +7,7 @@
 #include "malloc.h"
 #include "link.h"
 #include "bg.h"
+#include "battle_setup.h"
 #include "sound.h"
 #include "frontier_pass.h"
 #include "overworld.h"
@@ -732,7 +733,7 @@ static u8 GetHnSTrainerStars(struct TrainerCard *trainerCard)
         stars++;
     if (trainerCard->caughtAllHoenn)
         stars++;
-    if (FlagGet(TRAINER_FLAGS_START + TRAINER_RED_2_HNS))
+    if (HasTrainerBeenFought(TRAINER_RED_2_HNS))
         stars++;
     if (FlagGet(FLAG_IS_KANTO_CHAMPION))
         stars++;

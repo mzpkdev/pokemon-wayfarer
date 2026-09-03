@@ -13,6 +13,7 @@
 #include "constants/global.h"
 #include "constants/flags.h"
 #include "constants/vars.h"
+#include "constants/wayfarer_persistence.h"
 #include "constants/species.h"
 #include "constants/pokedex.h"
 #include "constants/apricorn_tree.h"
@@ -340,6 +341,22 @@ struct ChallengeSettings
     u8 tx_Features_ShinyChance:4;
 };
 
+#if IS_WAYFARER
+struct WayfarerHoennPersistentState
+{
+    u16 vars[WAYFARER_HOENN_VARS_COUNT];
+    u8 persistentFlags[WAYFARER_HOENN_PERSISTENT_FLAG_BYTES];
+    u8 trainerFlags[WAYFARER_HOENN_TRAINER_FLAG_BYTES];
+    u8 visitedLocations[WAYFARER_HOENN_VISITED_COUNT / 8];
+    u8 badges;
+    u8 leagueFlags;
+    u8 visitedRegions;
+    u8 initialized;
+    u8 currentRegion;
+    u8 magic;
+};
+#endif
+
 struct SaveBlock3
 {
     struct SiiRtcInfo fakeRTC;
@@ -358,6 +375,9 @@ struct SaveBlock3
 #endif
     struct ChallengeSettings challengeSettings;
     u16 registeredItemHold;
+#if IS_WAYFARER
+    struct WayfarerHoennPersistentState wayfarerHoenn;
+#endif
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;

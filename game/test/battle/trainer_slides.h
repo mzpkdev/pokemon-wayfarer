@@ -1,5 +1,6 @@
 [DIFFICULTY_NORMAL] =
 {
+#ifndef TEST_TRAINER_SLIDE_PARTNERS
     [TRAINER_LEAF_TEST] =
     {
         [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer A: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
@@ -32,7 +33,8 @@
         [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING("Trainer B: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_DYNAMAX] = COMPOUND_STRING("Trainer B: This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_PARTNER(PARTNER_STEVEN_TEST)] =
+#else
+    [PARTNER_STEVEN_TEST] =
     {
         [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Trainer Partner: This message plays before the first turn.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING("Trainer Partner: This message plays after the player lands their first critical hit.{PAUSE_UNTIL_PRESS}"),
@@ -48,5 +50,5 @@
         [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING("Trainer Partner: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
         [TRAINER_SLIDE_DYNAMAX] = COMPOUND_STRING("Trainer Partner: This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
     },
+#endif
 },
-

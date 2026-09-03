@@ -1,7 +1,7 @@
 # Wayfarer runtime foundation
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 

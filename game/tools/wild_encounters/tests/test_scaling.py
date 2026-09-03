@@ -217,6 +217,29 @@ class WildEncounterScalingTests(unittest.TestCase):
             {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 168},
         )
 
+    def test_runtime_generation_uses_content_guards_and_union_header_ids(self):
+        output = GENERATOR.render_header(
+            self.encounters,
+            self.config,
+            self.scaling,
+            [],
+            self.metadata,
+            self.standard_rod,
+            self.header_ids,
+        )
+        self.assertIn("#if HAS_EMERALD_CONTENT", output)
+        self.assertIn("#if HAS_HNS_CONTENT", output)
+        self.assertIn("#if defined(FIRERED) && HAS_FRLG_CONTENT", output)
+        self.assertIn("#if defined(LEAFGREEN) && HAS_FRLG_CONTENT", output)
+        self.assertNotIn("#ifdef EMERALD", output)
+        self.assertNotIn("#ifdef POKEMON_HNS", output)
+
+        item = {"product": "POKEMON_HNS", "header_id": 7}
+        expression = GENERATOR.runtime_header_id(item, self.header_ids)
+        self.assertEqual(expression, "(7 + HAS_EMERALD_CONTENT * 124)")
+        self.assertEqual(eval(expression.replace("HAS_EMERALD_CONTENT", "0")), 7)
+        self.assertEqual(eval(expression.replace("HAS_EMERALD_CONTENT", "1")), 131)
+
     def test_reviewed_time_binding_preserves_legacy_core_header(self):
         label = "gMtSilver_SnowNight_hns_Day"
         self.assertEqual(

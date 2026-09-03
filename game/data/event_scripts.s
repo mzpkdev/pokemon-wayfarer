@@ -56,6 +56,7 @@
 #include "constants/pokedex.h"
 #include "constants/pokemon.h"
 #include "constants/rtc.h"
+#include "constants/regions.h"
 #include "constants/roulette.h"
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
@@ -127,6 +128,9 @@ gStdScripts::
 	.4byte Std_ReceivedItem            @ STD_RECEIVED_ITEM
 gStdScripts_End::
 
+#if IS_WAYFARER
+	.include "data/wayfarer_hoenn_source_constants.inc"
+#endif
 
 	.include "data/maps/PetalburgCity/scripts.inc"
 	.include "data/maps/SlateportCity/scripts.inc"
@@ -293,9 +297,21 @@ gStdScripts_End::
 	.include "data/maps/LilycoveCity_LilycoveMuseum_1F/scripts.inc"
 	.include "data/maps/LilycoveCity_LilycoveMuseum_2F/scripts.inc"
 	.include "data/maps/LilycoveCity_ContestLobby/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 	.include "data/maps/LilycoveCity_ContestLobby_hns/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_hoenn_source_constants.inc"
+#endif
 	.include "data/maps/LilycoveCity_ContestHall/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 	.include "data/maps/LilycoveCity_ContestHall_hns/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_hoenn_source_constants.inc"
+#endif
 	.include "data/maps/LilycoveCity_PokemonCenter_1F/scripts.inc"
 	.include "data/maps/LilycoveCity_PokemonCenter_2F/scripts.inc"
 	.include "data/maps/LilycoveCity_UnusedMart/scripts.inc"
@@ -482,13 +498,25 @@ gStdScripts_End::
 	.include "data/maps/RecordCorner/scripts.inc"
 	.include "data/maps/BattleColosseum_4P/scripts.inc"
 	.include "data/maps/ContestHall/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 	.include "data/maps/ContestHall_hns/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_hoenn_source_constants.inc"
+#endif
 	.include "data/maps/InsideOfTruck/scripts.inc"
 	.include "data/maps/SSTidalCorridor/scripts.inc"
 	.include "data/maps/SSTidalLowerDeck/scripts.inc"
 	.include "data/maps/SSTidalRooms/scripts.inc"
 	.include "data/maps/BattlePyramidSquare01/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 	.include "data/maps/BattlePyramidSquare01_hns/scripts.inc"
+#if IS_WAYFARER
+	.include "data/wayfarer_hoenn_source_constants.inc"
+#endif
 	.include "data/maps/UnionRoom/scripts.inc"
 	.include "data/maps/SafariZone_Northwest/scripts.inc"
 	.include "data/maps/SafariZone_North/scripts.inc"
@@ -602,6 +630,9 @@ gStdScripts_End::
 	.include "data/maps/Route119_House/scripts.inc"
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
 
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 .if IS_FRLG
 
 @ FRLG scripts
@@ -1051,6 +1082,9 @@ gStdScripts_End::
 
 .endif
 
+#if IS_WAYFARER
+	.include "data/wayfarer_common_source_constants.inc"
+#endif
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
 	.include "data/scripts/new_game.inc"
@@ -1061,6 +1095,19 @@ gStdScripts_End::
 	.include "data/scripts/debug.inc"
 
 EventScript_WhiteOut::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerGetCurrentRegionForScript
+	goto_if_ne VAR_RESULT, REGION_HOENN, EventScript_WhiteOut_EngineCleanup
+	call EverGrandeCity_HallOfFame_EventScript_ResetEliteFour
+	goto EventScript_ResetMrBriney
+
+EventScript_WhiteOut_EngineCleanup::
+	clearflag FLAG_NO_WILD_CATCHING
+	clearflag FLAG_NO_WILD_RUNNING
+	clearflag FLAG_SMART_WILD_AI
+	clearflag FLAG_NO_SHINY
+	end
+#else
 	call EverGrandeCity_HallOfFame_EventScript_ResetEliteFour
 .if IS_HNS
 	clearflag FLAG_NO_WILD_CATCHING
@@ -1070,6 +1117,7 @@ EventScript_WhiteOut::
 .endif
 	goto EventScript_ResetMrBriney
 	end
+#endif
 
 EventScript_AfterWhiteOutHeal::
 	lockall
@@ -1090,6 +1138,28 @@ EventScript_AfterWhiteOutHealMsgPreFirstBoss::
 EventScript_AfterWhiteOutHealMsg::
 	msgbox gText_MonsHealed
 	return
+
+#if IS_WAYFARER
+EventScript_AfterWhiteOutHeal_Hoenn::
+	lockall
+	msgbox gText_FirstShouldRestoreMonsHealth
+	call EventScript_PkmnCenterNurse_TakeAndHealPkmn
+	call_if_unset FLAG_DEFEATED_RUSTBORO_GYM, EventScript_AfterWhiteOutHealMsgPreFirstBoss_Hoenn
+	call_if_set FLAG_DEFEATED_RUSTBORO_GYM, EventScript_AfterWhiteOutHealMsg_Hoenn
+	applymovement VAR_LAST_TALKED, Movement_PkmnCenterNurse_Bow
+	waitmovement 0
+	fadedefaultbgm
+	releaseall
+	end
+
+EventScript_AfterWhiteOutHealMsgPreFirstBoss_Hoenn::
+	msgbox gText_MonsHealedShouldBuyPotions
+	return
+
+EventScript_AfterWhiteOutHealMsg_Hoenn::
+	msgbox gText_MonsHealed
+	return
+#endif
 
 EventScript_AfterWhiteOutMomHeal::
 	lockall
@@ -1873,6 +1943,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/apricorn_tree.inc"
 	
 
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 .if IS_HNS
 
 @ HnS scripts

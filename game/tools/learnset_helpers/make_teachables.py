@@ -62,6 +62,7 @@ def extract_repo_tms(build: str = "") -> typing.Generator[str, None, None]:
 
     BUILD_GUARD_MAP = {
         "POKEMON_HNS": "IS_HNS",
+        "POKEMON_WAYFARER": "IS_HNS",
         "FIRERED": "IS_FRLG",
         "LEAFGREEN": "IS_FRLG",
     }

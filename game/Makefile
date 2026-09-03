@@ -24,6 +24,14 @@ ifeq (hns, $(or $(BUILD), $(MAKECMDGOALS)))
 	GAME_CODE   	:= BPEE
 	BUILD_NAME  	:= hns
 	MAP_VERSION 	:= hns
+else
+ifeq (wayfarer, $(or $(BUILD), $(MAKECMDGOALS)))
+	GAME_VERSION 	:= POKEMON_WAYFARER
+	TITLE       	:= WAYFARER
+	GAME_CODE   	:= BWFE
+	BUILD_NAME  	:= wayfarer
+	MAP_VERSION 	:= wayfarer
+endif
 endif
 endif
 endif
@@ -143,6 +151,7 @@ endif
 ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
 SYM := $(ROM:.gba=.sym)
+ROM_REPORT := $(ROM:.gba=-size.json)
 E2E_ROM := pokemon-wayfarer-e2e.gba
 E2E_SYM := pokemon-wayfarer-e2e.sym
 
@@ -166,6 +175,9 @@ SHELL := bash -o pipefail
 
 # Set flags for tools
 ASFLAGS := -mcpu=arm7tdmi -march=armv4t -meabi=5 --defsym MODERN=1 --defsym $(GAME_VERSION)=1
+ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
+  override ASFLAGS += --defsym POKEMON_HNS=1
+endif
 
 INCLUDE_DIRS := include
 INCLUDE_CPP_ARGS := $(INCLUDE_DIRS:%=-iquote %)
@@ -177,6 +189,9 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
+ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
+  override CPPFLAGS += -DPOKEMON_HNS
+endif
 ifeq ($(E2E),1)
   override CPPFLAGS += -DE2E_TESTING=1
 endif
@@ -208,7 +223,7 @@ ifeq ($(UNUSED_ERROR),0)
   endif
 endif
 
-ifeq ($(GAME_VERSION),POKEMON_HNS)
+ifneq (,$(filter $(GAME_VERSION),POKEMON_HNS POKEMON_WAYFARER))
   override CFLAGS += -Wno-error=override-init
 endif
 
@@ -298,7 +313,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit rom-report-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -399,6 +414,9 @@ check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 
 # Other rules
 rom: $(ROM)
+ifeq ($(RELEASE),1)
+rom: $(ROM_REPORT)
+endif
 ifeq ($(COMPARE),1)
 	@$(SHA1) rom.sha1
 endif
@@ -420,7 +438,7 @@ clean-assets:
 tidy: tidymodern tidycheck tidye2e tidydebug tidyrelease
 
 tidymodern:
-	rm -f poke*.gba poke*.elf poke*.map
+	rm -f poke*.gba poke*.elf poke*.map poke*-size.json
 	rm -rf $(OBJ_DIR_NAME)
 
 tidycheck:
@@ -436,9 +454,9 @@ tidydebug:
 
 tidyrelease:
 ifeq ($(RELEASE),1)
-	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME)
+	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME) $(ROM_REPORT)
 else # Manually remove the release files on clean/tidy
-	rm -f $(FILE_NAME)-release.gba $(FILE_NAME)-release.elf $(FILE_NAME)-release.map
+	rm -f $(FILE_NAME)-release.gba $(FILE_NAME)-release.elf $(FILE_NAME)-release.map $(FILE_NAME)-release-size.json
 endif
 	rm -rf $(OBJ_DIR_NAME_RELEASE)
 
@@ -502,6 +520,11 @@ $(C_BUILDDIR)/data.o: CFLAGS += -fno-show-column -fno-diagnostics-show-caret
 
 # Needed for parity with pret
 $(C_BUILDDIR)/graphics.o: override CFLAGS += -Wno-missing-braces
+
+# Keep the large reportable data owners as ordinary ELF objects in release
+# builds. LTO otherwise folds their read-only data into anonymous ltrans
+# objects, which makes deterministic ROM category accounting impossible.
+$(C_BUILDDIR)/data.o $(C_BUILDDIR)/graphics.o $(C_BUILDDIR)/tilesets.o $(C_BUILDDIR)/wild_encounter.o: override CFLAGS := $(filter-out -flto=auto -fno-fat-lto-objects,$(CFLAGS))
 
 # Dependency rules (for the *.c & *.s sources to .o files)
 # Have to be explicit or else missing files won't be reported.
@@ -635,14 +658,18 @@ $(ROM): $(ELF)
 	$(OBJCOPY) -O binary $< $@
 	$(FIX) $@ -p --silent
 
+$(ROM_REPORT): $(ELF) tools/rom_report/rom_report.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/rom_report/rom_report.py --symbols $(MAP) --build $(BUILD_NAME) $(if $(filter 1,$(RELEASE)),--release) $(if $(WAYFARER_ROM_BASELINE),--baseline $(WAYFARER_ROM_BASELINE)) --output $@
+
 emerald: all
 firered: all
 leafgreen: all
 hns: all
+wayfarer: all
 
 .PHONY: e2e
 e2e:
-	+$(MAKE) BUILD=hns E2E=1 $(E2E_ROM) $(E2E_SYM)
+	+$(MAKE) BUILD=wayfarer E2E=1 $(E2E_ROM) $(E2E_SYM)
 
 emerald-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_emerald_traversal.py' -q
@@ -655,6 +682,9 @@ frlg-traversal-static-test:
 
 hns-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_hns_*.py' -q
+
+rom-report-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/rom_report/tests -p 'test_*.py' -q
 
 wild-encounter-balance-audit:
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py --balance-audit $(WILD_ENCOUNTER_BALANCE_AUDIT)

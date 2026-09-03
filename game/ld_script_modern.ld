@@ -50,9 +50,12 @@ SECTIONS {
 
     /* BEGIN ROM DATA */
 
+    __rom_start = ORIGIN(ROM);
+
     .text ORIGIN(ROM) :
     ALIGN(4)
     {
+        __rom_category_code_start = .;
         src/rom_header.o(.text*);
         KEEP(*.o(.text.header_gf));
         KEEP(*.o(.text.header_rhh));
@@ -65,22 +68,95 @@ SECTIONS {
         KEEP(*.o(.text.consts));
         *.o(.text*);
         *.o(.eh_frame);
+        . = ALIGN(4);
     } > ROM =0
 
     script_data :
     ALIGN(4)
     {
-		data/*.o(script_data);
+        __rom_category_scripts_start = .;
+        data/*.o(script_data);
+        . = ALIGN(4);
     } > ROM =0
 
-    .rodata :
+    /*
+     * Keep these ROM budget sections contiguous.  rom_report.py verifies that
+     * they partition [__rom_start, __rom_end) exactly.  The object selectors
+     * cover regular builds; the named input-section selectors also preserve
+     * useful categories when release LTO replaces original C object names.
+     */
+    .rom_maps_layouts :
     ALIGN(4)
     {
+        __rom_category_maps_layouts_start = .;
+        data/maps.o(.rodata*);
+        data/map_events.o(.rodata*);
+        . = ALIGN(4);
+    } > ROM =0
+
+    .rom_graphics :
+    ALIGN(4)
+    {
+        __rom_category_graphics_start = .;
+        src/graphics.o(.rodata*);
+        src/tilesets.o(.rodata*);
+        *(.rodata.*Gfx*);
+        *(.rodata.*Graphics*);
+        *(.rodata.*Tiles*);
+        *(.rodata.*Tilemap*);
+        *(.rodata.*Pal*);
+        *(.rodata.*Palette*);
+        *(.rodata.*Icon*);
+        *(.rodata.*Image*);
+        *(.rodata.*Sprite*);
+        . = ALIGN(4);
+    } > ROM =0
+
+    .rom_audio :
+    ALIGN(4)
+    {
+        __rom_category_audio_start = .;
+        data/sound_data.o(.rodata*);
+        sound/songs/*.o(.rodata*);
+        . = ALIGN(4);
+    } > ROM =0
+
+    .rom_trainer_data :
+    ALIGN(4)
+    {
+        __rom_category_trainer_data_start = .;
+        src/data.o(.rodata*);
+        *(.rodata.gTrainers*);
+        *(.rodata.gTrainerParties*);
+        *(.rodata.sParty*);
+        *(.rodata.*TrainerMons*);
+        *(.rodata.*TrainerMon*);
+        . = ALIGN(4);
+    } > ROM =0
+
+    .rom_encounter_data :
+    ALIGN(4)
+    {
+        __rom_category_encounter_data_start = .;
+        src/wild_encounter.o(.rodata*);
+        *(.rodata.gWildMon*);
+        *(.rodata.s*LandMons*);
+        *(.rodata.s*WaterMons*);
+        *(.rodata.s*RockSmashMons*);
+        *(.rodata.s*FishingMons*);
+        *(.rodata.*WildEncounter*);
+        . = ALIGN(4);
+    } > ROM =0
+
+    .rom_other :
+    ALIGN(4)
+    {
+        __rom_category_other_start = .;
         *.o(.rodata*);
         *libgcc.a:*.o(.rodata*);
         *libc.a:*.o(.rodata*);
         *libc.a:*.o(.data*);
-        sound/songs/*.o(.rodata);
+        . = ALIGN(4);
     } > ROM =0
 
     .data.iwram :
@@ -97,6 +173,21 @@ SECTIONS {
         . = . + (__ewram_end - __ewram_start);
     } > ROM = 0
 
+    /*
+     * Output sections can acquire stricter alignment from their input
+     * sections.  Attribute each resulting inter-section pad to the category
+     * before it so the report still forms an exact partition of used ROM.
+     */
+    __rom_category_code_end = ADDR(script_data);
+    __rom_category_scripts_end = ADDR(.rom_maps_layouts);
+    __rom_category_maps_layouts_end = ADDR(.rom_graphics);
+    __rom_category_graphics_end = ADDR(.rom_audio);
+    __rom_category_audio_end = ADDR(.rom_trainer_data);
+    __rom_category_trainer_data_end = ADDR(.rom_encounter_data);
+    __rom_category_encounter_data_end = ADDR(.rom_other);
+
+    . = ALIGN(4);
+    __rom_category_other_end = .;
     __rom_end = .;
 
     /* DWARF debug sections.

@@ -292,6 +292,10 @@ gSpecials::
 	def_special LookThroughPorthole
 	def_special DoSoftReset
 	def_special GameClear
+#if IS_WAYFARER
+	def_special WayfarerGetCurrentRegionForScript
+	def_special WayfarerShouldWhiteOutToLavaridge
+#endif
 	def_special MoveElevator
 	def_special ShowGlassWorkshopMenu
 	def_special SpawnCameraObject

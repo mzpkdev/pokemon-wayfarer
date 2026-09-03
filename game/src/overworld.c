@@ -51,6 +51,7 @@
 #include "palette.h"
 #include "play_time.h"
 #include "random.h"
+#include "regions.h"
 #include "roamer.h"
 #include "rotating_gate.h"
 #include "rtc.h"
@@ -67,6 +68,7 @@
 #include "tileset_anims.h"
 #include "time_events.h"
 #include "trainer_hill.h"
+#include "wayfarer_persistence.h"
 #include "trainer_pokemon_sprites.h"
 #include "tv.h"
 #include "scanline_effect.h"
@@ -424,8 +426,8 @@ void Overworld_ResetStateAfterFly(void)
 #if IS_FRLG
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
 #endif
-    FlagClear(FLAG_SYS_USE_STRENGTH);
-    FlagClear(FLAG_SYS_USE_FLASH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_STRENGTH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_FLASH);
 }
 
 void Overworld_ResetStateAfterTeleport(void)
@@ -437,9 +439,14 @@ void Overworld_ResetStateAfterTeleport(void)
 #if IS_FRLG
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
 #endif
-    FlagClear(FLAG_SYS_USE_STRENGTH);
-    FlagClear(FLAG_SYS_USE_FLASH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_STRENGTH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_FLASH);
+#if IS_WAYFARER
+    if (GetCurrentRegion() == REGION_HOENN)
+        RunScriptImmediately(EventScript_ResetMrBriney);
+#else
     RunScriptImmediately(EventScript_ResetMrBriney);
+#endif
 }
 
 void Overworld_ResetStateAfterDigEscRope(void)
@@ -451,8 +458,8 @@ void Overworld_ResetStateAfterDigEscRope(void)
 #if IS_FRLG
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
 #endif
-    FlagClear(FLAG_SYS_USE_STRENGTH);
-    FlagClear(FLAG_SYS_USE_FLASH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_STRENGTH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_FLASH);
 }
 
 #if B_RESET_FLAGS_VARS_AFTER_WHITEOUT == TRUE
@@ -488,8 +495,8 @@ static void Overworld_ResetStateAfterWhiteOut(void)
 #if IS_FRLG
     VarSet(VAR_MAP_SCENE_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 0);
 #endif
-    FlagClear(FLAG_SYS_USE_STRENGTH);
-    FlagClear(FLAG_SYS_USE_FLASH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_STRENGTH);
+    WayfarerFieldMoveFlagClear(FLAG_SYS_USE_FLASH);
     if (B_RESET_FLAGS_VARS_AFTER_WHITEOUT == TRUE)
         Overworld_ResetBattleFlagsAndVars();
     // If you were defeated by Kyogre/Groudon and the step counter has
@@ -1005,7 +1012,7 @@ static void LoadMapFromWarp(bool32 a1)
     SetSavedWeatherFromCurrMapHeader();
     ChooseAmbientCrySpecies();
     if (isOutdoors)
-        FlagClear(FLAG_SYS_USE_FLASH);
+        WayfarerFieldMoveFlagClear(FLAG_SYS_USE_FLASH);
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
     RunOnTransitionMapScript();
@@ -1145,7 +1152,7 @@ void SetDefaultFlashLevel(void)
 {
     if (!gMapHeader.cave)
         gSaveBlock1Ptr->flashLevel = 0;
-    else if (FlagGet(FLAG_SYS_USE_FLASH))
+    else if (WayfarerFieldMoveFlagGet(FLAG_SYS_USE_FLASH))
         gSaveBlock1Ptr->flashLevel = 1;
     else
         gSaveBlock1Ptr->flashLevel = gMaxFlashLevel - 1;

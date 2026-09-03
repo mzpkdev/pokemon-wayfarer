@@ -68,6 +68,8 @@ export const maps = {
   "ss-aqua-room-nw": { mapGroup: 30, mapNum: 12 },
   "ss-aqua-room-sse": { mapGroup: 30, mapNum: 16 },
   "test-map-1": { mapGroup: 30, mapNum: 27 },
+  "petalburg-city": { mapGroup: 31, mapNum: 0 },
+  "petalburg-house-1": { mapGroup: 39, mapNum: 2 },
 } as const
 
 export const storyVars = {

@@ -30,6 +30,9 @@ enum DifficultyLevel GetBattlePartnerDifficultyLevel(u16 partnerId)
     if (partnerId > TRAINER_PARTNER(PARTNER_NONE))
         partnerId -= TRAINER_PARTNER(PARTNER_NONE);
 
+    if (partnerId >= PARTNER_COUNT)
+        return DIFFICULTY_NORMAL;
+
     if (difficulty == DIFFICULTY_NORMAL)
         return DIFFICULTY_NORMAL;
 
@@ -42,6 +45,8 @@ enum DifficultyLevel GetBattlePartnerDifficultyLevel(u16 partnerId)
 enum DifficultyLevel GetTrainerDifficultyLevel(u16 trainerId)
 {
     enum DifficultyLevel difficulty = GetCurrentDifficultyLevel();
+
+    trainerId = SanitizeTrainerId(trainerId);
 
     if (difficulty == DIFFICULTY_NORMAL)
         return DIFFICULTY_NORMAL;

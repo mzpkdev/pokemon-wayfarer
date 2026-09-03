@@ -640,6 +640,9 @@ extern const u8 EventScript_SelectWithoutRegisteredHoldItem[];
 extern const u8 EventScript_WhiteOut[];
 extern const u8 EventScript_AfterWhiteOutMomHeal[];
 extern const u8 EventScript_AfterWhiteOutHeal[];
+#if IS_WAYFARER
+extern const u8 EventScript_AfterWhiteOutHeal_Hoenn[];
+#endif
 extern const u8 EventScript_AfterWhiteOutHeal_Frlg[];
 extern const u8 EventScript_AfterWhiteOutHealMsgPreFirstBoss[];
 extern const u8 EventScript_ResetMrBriney[];

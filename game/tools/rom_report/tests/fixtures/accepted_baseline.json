@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "build": "wayfarer",
+  "categories": {
+    "code": {"bytes": 255},
+    "scripts": {"bytes": 257},
+    "maps_layouts": {"bytes": 512},
+    "graphics": {"bytes": 767},
+    "audio": {"bytes": 1024},
+    "trainer_data": {"bytes": 1280},
+    "encounter_data": {"bytes": 1537},
+    "other": {"bytes": 33024511}
+  }
+}
