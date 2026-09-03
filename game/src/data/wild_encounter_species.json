@@ -9,7 +9,7 @@
     {"species": "SPECIES_KANGASKHAN", "minimumOrdinaryWildLevel": 25},
     {"species": "SPECIES_TAUROS", "minimumOrdinaryWildLevel": 25},
     {"species": "SPECIES_SNEASEL", "minimumOrdinaryWildLevel": 30},
-    {"species": "SPECIES_MANTINE", "minimumOrdinaryWildLevel": 35},
+    {"species": "SPECIES_MANTINE", "minimumOrdinaryWildLevel": 14},
     {"species": "SPECIES_BAGON", "minimumOrdinaryWildLevel": 20},
     {"species": "SPECIES_TROPIUS", "minimumOrdinaryWildLevel": 20},
     {"species": "SPECIES_ABSOL", "minimumOrdinaryWildLevel": 20},

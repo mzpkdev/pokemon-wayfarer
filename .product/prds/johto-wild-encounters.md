@@ -255,6 +255,10 @@ mountain habitat.
   encounter edits, but it does not supersede any named coverage outcome. The
   full Gligar, Aipom, Chinchou, Mareep, Wooper, Snubbull, Miltank, Marill, and
   Mantine inventory remains binding.
+- Mantine uses the global minimum ordinary wild level of 14. This is the
+  minimum floor that keeps an authored level-15 Mantine eligible when it
+  projects to level 14 at Rating 10. The correction does not change its
+  authored levels or add Mantyke predecessor behavior.
 - The Olivine and Cianwood Chinchou sources remain traversal-safe. Every
   required source must preserve the exact Standard Rod records: 11% of
   successful Old Rod encounters for every Olivine day and night profile, and

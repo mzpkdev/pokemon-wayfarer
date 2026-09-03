@@ -1,7 +1,7 @@
 # Kanto wild encounters
 
 PRD: [Kanto wild encounters](../prds/kanto-wild-encounters.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 

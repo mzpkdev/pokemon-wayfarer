@@ -60,6 +60,22 @@ KANTO_REASONS = {"FRLG_SHARED", "FRLG_VERSION_COUNTERPART", "FRLG_DUPLICATE", "G
 KANTO_CHANGE_KINDS = {"MERGE", "REWEIGHT", "ADDITION", "FORBIDDEN_REMOVAL", "NIGHT_AUTHORING"}
 KANTO_TOPOLOGY_RATE_SHA256 = "1255221864ef279c99f203aab5ea477a8fbb2272752ab5f1895c10a4e2f66280"
 KANTO_BASELINE_LEDGER_SHA256 = "73a7fa085d5e54025001484f2c55179a0ed2fe9b61f8848014cfd8ea20dc215f"
+JOHTO_TOPOLOGY_RATE_LEVEL_SHA256 = "756bb769b3581e51df00ebb8724381b0791489fde3ec1956cc93b3f98961b6db"
+JOHTO_BASELINE_SLOT_SHA256 = "b0091f4b0877e5b3ef29568839f4251c76e95ef50dc3febfd26af96fcfa719ba"
+JOHTO_PROTECTED_ANCHOR_SHA256 = "bd1d8dbb5df41bf9f461df949bf75c810c35c56795ca4ed1693f5dcbbf5d3bf7"
+JOHTO_CHANGE_KINDS = (
+    "REMOVE_FORBIDDEN", "REWEIGHT_EXISTING", "CONSOLIDATE_DUPLICATE", "ADD_LOCAL_SPECIES",
+)
+JOHTO_REASONS = {
+    "METHOD_IDENTITY", "TIME_IDENTITY", "LOCAL_FAMILY", "TRANSITION_ECOLOGY",
+    "NATIVE_HM", "FORBIDDEN_GENERATION",
+}
+JOHTO_TARGET_FAILURES = {
+    "AUTHORED_OVERALL_GEN2_MIN", "AUTHORED_LAND_GEN2_MIN", "AUTHORED_SURF_GEN2_MIN",
+    "AUTHORED_FISHING_GEN2_MIN", "AUTHORED_INTERACTION_GEN2_MIN",
+    "AUTHORED_OLD_ROD_GEN2_MIN", "AUTHORED_GOOD_ROD_GEN2_MIN",
+    "AUTHORED_SUPER_ROD_GEN2_MIN",
+}
 KANTO_EQUIVALENT_SOURCES = {
     "MAP_ROUTE21_HNS": "sRoute21North",
     "MAP_VERMILION_CITY_PORT_OUTSIDE_HNS": "sSSAnneExterior",
@@ -103,6 +119,69 @@ KANTO_MAPS = {
     "MAP_SEAFOAM_ISLANDS_B1F_HNS", "MAP_CERULEAN_CAVE_1F_HNS", "MAP_CERULEAN_CAVE_B1F_HNS",
     "MAP_CERULEAN_CAVE_B2F_HNS", "MAP_VICTORY_ROAD_KANTO_1F_HNS",
     "MAP_VICTORY_ROAD_KANTO_B1F_HNS", "MAP_VICTORY_ROAD_KANTO_B2F_HNS",
+}
+JOHTO_MAPS = {
+    *(f"MAP_ROUTE{number}_HNS" for number in range(26, 49)),
+    "MAP_NEW_BARK_TOWN_HNS", "MAP_CHERRYGROVE_CITY_HNS", "MAP_VIOLET_CITY_HNS",
+    "MAP_AZALEA_TOWN_HNS", "MAP_GOLDENROD_CITY_HNS", "MAP_ECRUTEAK_CITY_HNS",
+    "MAP_OLIVINE_CITY_HNS", "MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS", "MAP_CIANWOOD_CITY_HNS",
+    "MAP_MAHOGANYTOWN_HNS", "MAP_BLACKTHORN_CITY_HNS", "MAP_CLIFF_EDGE_GATE_HNS",
+    "MAP_SAFARI_ZONE_GATE_HNS", "MAP_DARK_CAVE_NORTH_SIDE_HNS", "MAP_DARK_CAVE_SOUTH_SIDE_HNS",
+    "MAP_SPROUT_TOWER_2F_HNS", "MAP_SPROUT_TOWER_3F_HNS", "MAP_RUINS_OF_ALPH_OUTSIDE_HNS",
+    "MAP_RUINS_OF_ALPH_B1F_HNS", "MAP_UNION_CAVE_1F_HNS", "MAP_UNION_CAVE_B1F_HNS",
+    "MAP_UNION_CAVE_B2F_HNS", "MAP_SLOWPOKE_WELL_B1F_HNS", "MAP_SLOWPOKE_WELL_B2F_HNS",
+    "MAP_ILEX_FOREST_HNS", "MAP_BURNED_TOWER_1F_HNS", "MAP_BURNED_TOWER_B1F_HNS",
+    "MAP_CLIFF_EDGE_CAVE_HNS", "MAP_MT_MORTAR_1F_SOUTH_HNS", "MAP_MT_MORTAR_1F_NORTH_HNS",
+    "MAP_MT_MORTAR_B1F_HNS", "MAP_MT_MORTAR_2F_HNS", "MAP_LAKE_OF_RAGE_HNS",
+    "MAP_ICE_PATH_1F_HNS", "MAP_ICE_PATH_B1F_HNS", "MAP_ICE_PATH_B2F_HNS",
+    "MAP_ICE_PATH_B3F_HNS", "MAP_ICE_PATH_B4F_HNS", "MAP_DRAGONS_DEN_CAVERN_HNS",
+    "MAP_TOHJO_FALLS_CAVERN_HNS", "MAP_ROCKET_HIDEOUT_B1F_HNS", "MAP_WHIRL_ISLANDS_1F_HNS",
+    "MAP_WHIRL_ISLANDS_B1F_HNS", "MAP_WHIRL_ISLANDS_B1F_INNER_HNS", "MAP_WHIRL_ISLANDS_B2F_HNS",
+    "MAP_WHIRL_ISLANDS_B3F_HNS", "MAP_WHIRL_ISLANDS_DESCENT_HNS", "MAP_MT_SILVER_OUTSIDE_HNS",
+    "MAP_MT_SILVER_1F_ITEM_ROOM_HNS", "MAP_MT_SILVER_1F_MOLTRES_ROOM_HNS",
+    "MAP_MT_SILVER_1F_WATERFALL_ROOM_HNS", "MAP_MT_SILVER_2F_HNS", "MAP_MT_SILVER_3F_HNS",
+    "MAP_MT_SILVER_MOUNTAIN_SIDE_HNS", "MAP_MT_SILVER_SNOW_HNS",
+    "MAP_NATIONAL_PARK_NORMAL_HNS", "MAP_NATIONAL_PARK_BUG_CONTEST_HNS",
+    "MAP_TIN_TOWER_3F_HNS", "MAP_TIN_TOWER_4F_HNS", "MAP_TIN_TOWER_5F_HNS",
+    "MAP_TIN_TOWER_6F_HNS", "MAP_TIN_TOWER_7F_HNS", "MAP_TIN_TOWER_8F_HNS",
+    "MAP_TIN_TOWER_9F_HNS", "MAP_SAFARI_ZONE_TOP_MID_HNS", "MAP_SAFARI_ZONE_TOP_LEFT_HNS",
+    "MAP_SAFARI_ZONE_TOP_RIGHT_HNS", "MAP_SAFARI_ZONE_LOW_MID_HNS", "MAP_SAFARI_ZONE_LOW_LEFT_HNS",
+    "MAP_SAFARI_ZONE_LOW_RIGHT_HNS",
+}
+JOHTO_TRANSITION_MAPS = {
+    "MAP_ROUTE26_HNS", "MAP_ROUTE27_HNS", "MAP_ROUTE28_HNS", "MAP_TOHJO_FALLS_CAVERN_HNS",
+    *(map_name for map_name in JOHTO_MAPS if map_name.startswith("MAP_MT_SILVER_")),
+}
+JOHTO_PROTECTED_SPECIES = {
+    "SPECIES_GLIGAR", "SPECIES_AIPOM", "SPECIES_CHINCHOU", "SPECIES_MAREEP",
+    "SPECIES_WOOPER", "SPECIES_SNUBBULL", "SPECIES_MILTANK", "SPECIES_MARILL",
+    "SPECIES_MANTINE",
+}
+JOHTO_FORBIDDEN_LOCAL_ADDITIONS = {
+    "SPECIES_CHIKORITA", "SPECIES_BAYLEEF", "SPECIES_MEGANIUM",
+    "SPECIES_CYNDAQUIL", "SPECIES_QUILAVA", "SPECIES_TYPHLOSION",
+    "SPECIES_TOTODILE", "SPECIES_CROCONAW", "SPECIES_FERALIGATR",
+    "SPECIES_PICHU", "SPECIES_CLEFFA", "SPECIES_IGGLYBUFF", "SPECIES_TOGEPI",
+    "SPECIES_TYROGUE", "SPECIES_SMOOCHUM", "SPECIES_ELEKID", "SPECIES_MAGBY",
+    "SPECIES_RAIKOU", "SPECIES_ENTEI", "SPECIES_SUICUNE", "SPECIES_LUGIA",
+    "SPECIES_HO_OH", "SPECIES_CELEBI",
+}
+JOHTO_SAMPLE_RATINGS = (10, 16, 40, 55, 65, 80)
+JOHTO_METHOD_WEIGHTS = {
+    "land_mons": [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1],
+    "water_mons": [60, 30, 5, 4, 1],
+    "rock_smash_mons": [60, 30, 5, 4, 1],
+}
+JOHTO_STANDARD_ROD_WEIGHTS = {
+    "OLD_ROD": [38, 22, 10, 8, 8, 4, 3, 3, 2, 2],
+    "GOOD_ROD": [25, 18, 12, 10, 9, 7, 6, 5, 4, 4],
+    "SUPER_ROD": [12, 10, 11, 10, 10, 10, 10, 9, 9, 9],
+}
+JOHTO_OAK_TALK_MAPS = {
+    "MAP_ROUTE29_HNS", "MAP_ROUTE46_HNS", "MAP_ROUTE30_HNS", "MAP_ROUTE32_HNS",
+    "MAP_ROUTE34_HNS", "MAP_ROUTE35_HNS", "MAP_ROUTE37_HNS", "MAP_ROUTE38_HNS",
+    "MAP_ROUTE39_HNS", "MAP_ROUTE42_HNS", "MAP_ROUTE43_HNS", "MAP_ROUTE44_HNS",
+    "MAP_ROUTE45_HNS", "MAP_ROUTE36_HNS", "MAP_ROUTE31_HNS",
 }
 # The legacy generator detected any time word in a label before removing only a
 # terminal ``_Time`` suffix. Mt. Silver's SnowNight map relies on that historic
@@ -1502,6 +1581,410 @@ def validate_kanto_day_counterparts(row, day, by_label, standard_rod, location, 
     return [public]
 
 
+def _johto_generation(species, nat_dex_by_species, effective=False):
+    if effective and species in {"SPECIES_WYNAUT", "SPECIES_AZURILL"}:
+        return "GENERATION_II_FAMILIES"
+    national_dex = nat_dex_by_species.get(species)
+    if national_dex is None:
+        raise ValidationError(f"{species}: missing National Dex classification")
+    if national_dex <= 151:
+        return "GENERATION_I"
+    if national_dex <= 251:
+        return "GENERATION_II_FAMILIES"
+    if national_dex <= 386:
+        return "INDEPENDENT_GENERATION_III"
+    return "GENERATION_IV_ONWARD"
+
+
+def _johto_authored_snapshot(manifest_profiles, species_by_identity, profiles_by_label, standard_rod, nat_dex_by_species):
+    generations = {
+        name: Fraction(0)
+        for name in ("GENERATION_I", "GENERATION_II_FAMILIES", "INDEPENDENT_GENERATION_III", "GENERATION_IV_ONWARD")
+    }
+    methods = {method: {name: Fraction(0) for name in generations} for method in ACTIVE_SLOT_COUNTS}
+    method_counts = {method: 0 for method in ACTIVE_SLOT_COUNTS}
+    rods = {rod: {name: Fraction(0) for name in generations} for rod in FISHING_QUALITIES}
+    species_totals = {}
+    method_species = {method: {} for method in ACTIVE_SLOT_COUNTS}
+    rod_species = {rod: {} for rod in FISHING_QUALITIES}
+    interaction_species = {}
+    selectable_count = 0
+    for row in manifest_profiles:
+        identity = (row["map"], row["baseLabel"], row["method"], row["runtimeTime"])
+        species = species_by_identity[identity]
+        profile = profiles_by_label[row["baseLabel"]]
+        method = row["method"]
+        rod_names = FISHING_QUALITIES if method == "fishing_mons" else ("NONE",)
+        profile_shares = {name: Fraction(0) for name in generations}
+        profile_species = {}
+        selectable = False
+        for rod in rod_names:
+            weights = _source_weights(profile, method, rod, standard_rod)
+            active = [(mon, weights[index]) for index, mon in enumerate(species) if mon != "SPECIES_NONE"]
+            total = sum(weight for _, weight in active)
+            if total == 0:
+                continue
+            selectable = True
+            quality_shares = {name: Fraction(0) for name in generations}
+            quality_species = {}
+            for mon, weight in active:
+                value = Fraction(weight, total)
+                generation = _johto_generation(mon, nat_dex_by_species)
+                quality_shares[generation] += value
+                quality_species[mon] = quality_species.get(mon, Fraction(0)) + value
+            quality_scale = Fraction(1, len(rod_names))
+            for generation, value in quality_shares.items():
+                profile_shares[generation] += value * quality_scale
+                if method == "fishing_mons":
+                    rods[rod][generation] += value
+            for mon, value in quality_species.items():
+                profile_species[mon] = profile_species.get(mon, Fraction(0)) + value * quality_scale
+                if method == "fishing_mons":
+                    rod_species[rod][mon] = rod_species[rod].get(mon, Fraction(0)) + value
+        if not selectable:
+            continue
+        selectable_count += 1
+        method_counts[method] += 1
+        for generation, value in profile_shares.items():
+            generations[generation] += value
+            methods[method][generation] += value
+        for mon, value in profile_species.items():
+            species_totals[mon] = species_totals.get(mon, Fraction(0)) + value
+            method_species[method][mon] = method_species[method].get(mon, Fraction(0)) + value
+        if method == "rock_smash_mons":
+            for mon, value in profile_species.items():
+                interaction_species[mon] = interaction_species.get(mon, Fraction(0)) + value
+    if selectable_count:
+        generations = {key: value / selectable_count for key, value in generations.items()}
+        species_totals = {key: value / selectable_count for key, value in species_totals.items()}
+    for method, shares in methods.items():
+        count = method_counts[method]
+        methods[method] = {key: (value / count if count else Fraction(0)) for key, value in shares.items()}
+        method_species[method] = {
+            key: (value / count if count else Fraction(0))
+            for key, value in method_species[method].items()
+        }
+    fishing_count = method_counts["fishing_mons"]
+    if fishing_count:
+        rods = {rod: {key: value / fishing_count for key, value in shares.items()} for rod, shares in rods.items()}
+        rod_species = {
+            rod: {key: value / fishing_count for key, value in shares.items()}
+            for rod, shares in rod_species.items()
+        }
+    interaction_count = method_counts["rock_smash_mons"]
+    if interaction_count:
+        interaction_species = {key: value / interaction_count for key, value in interaction_species.items()}
+    return {
+        "profileDenominator": selectable_count,
+        "generations": generations,
+        "methods": methods,
+        "fishingQualities": rods,
+        "species": species_totals,
+        "methodSpecies": method_species,
+        "fishingQualitySpecies": rod_species,
+        "interactionSpecies": interaction_species,
+    }
+
+
+def _johto_failed_targets(snapshot):
+    failed = set()
+    checks = (
+        ("AUTHORED_OVERALL_GEN2_MIN", snapshot["generations"]["GENERATION_II_FAMILIES"], Fraction(35, 100)),
+        ("AUTHORED_LAND_GEN2_MIN", snapshot["methods"]["land_mons"]["GENERATION_II_FAMILIES"], Fraction(40, 100)),
+        ("AUTHORED_SURF_GEN2_MIN", snapshot["methods"]["water_mons"]["GENERATION_II_FAMILIES"], Fraction(20, 100)),
+        ("AUTHORED_FISHING_GEN2_MIN", snapshot["methods"]["fishing_mons"]["GENERATION_II_FAMILIES"], Fraction(15, 100)),
+        ("AUTHORED_INTERACTION_GEN2_MIN", snapshot["methods"]["rock_smash_mons"]["GENERATION_II_FAMILIES"], Fraction(50, 100)),
+    )
+    for name, value, minimum in checks:
+        if value < minimum:
+            failed.add(name)
+    for rod in FISHING_QUALITIES:
+        if snapshot["fishingQualities"][rod]["GENERATION_II_FAMILIES"] < Fraction(1, 10):
+            failed.add(f"AUTHORED_{rod}_GEN2_MIN")
+    for species, value in snapshot["interactionSpecies"].items():
+        if value > Fraction(1, 4):
+            failed.add(f"INTERACTION_SPECIES_CAP:{species}")
+    return failed
+
+
+def _johto_relevant_failure_targets(method, targets):
+    method_targets = {
+        "land_mons": {"AUTHORED_LAND_GEN2_MIN"},
+        "water_mons": {"AUTHORED_SURF_GEN2_MIN"},
+        "fishing_mons": {
+            "AUTHORED_FISHING_GEN2_MIN", "AUTHORED_OLD_ROD_GEN2_MIN",
+            "AUTHORED_GOOD_ROD_GEN2_MIN", "AUTHORED_SUPER_ROD_GEN2_MIN",
+        },
+        "rock_smash_mons": {"AUTHORED_INTERACTION_GEN2_MIN"},
+    }[method] | {"AUTHORED_OVERALL_GEN2_MIN"}
+    relevant = set(targets) & method_targets
+    if method == "rock_smash_mons":
+        relevant |= {target for target in targets if target.startswith("INTERACTION_SPECIES_CAP:")}
+    return relevant
+
+
+def _validate_johto_manifest(johto, profiles, known_species, nat_dex_by_species, standard_rod, path):
+    location = f"{path}/regions/JOHTO"
+    exact_keys(johto, {"product", "profiles", "fallbacks", "protectedAnchors", "changes"}, location)
+    if johto["product"] != "POKEMON_HNS":
+        raise ValidationError(f"{location}/product: expected POKEMON_HNS")
+    if standard_rod["qualityWeights"] != JOHTO_STANDARD_ROD_WEIGHTS:
+        raise ValidationError(f"{location}: Standard Rod quality weights changed from the frozen vectors")
+    by_label = {profile["label"]: profile for profile in profiles}
+    rows, identities, maps, labels = [], set(), set(), set()
+    profile_fields = {"map", "baseLabel", "runtimeTime", "method", "activeSlotCount", "selectable", "habitat", "transition"}
+    topology = []
+    for index, row in enumerate(_manifest_list(johto["profiles"], f"{location}/profiles")):
+        row_location = f"{location}/profiles/{index}"
+        exact_keys(row, profile_fields, row_location)
+        map_name = identifier(row["map"], f"{row_location}/map")
+        label = identifier(row["baseLabel"], f"{row_location}/baseLabel")
+        method = row["method"]
+        runtime_time = row["runtimeTime"]
+        if not isinstance(method, str) or not isinstance(runtime_time, str) or method not in ACTIVE_SLOT_COUNTS or runtime_time not in {"DAY", "NIGHT"}:
+            raise ValidationError(f"{row_location}: unsupported method or runtime time")
+        identity = (map_name, label, method, runtime_time)
+        if identity in identities:
+            raise ValidationError(f"{row_location}: duplicate Johto profile identity")
+        identities.add(identity); maps.add(map_name); labels.add(label)
+        if map_name not in JOHTO_MAPS:
+            raise ValidationError(f"{row_location}/map: not in the frozen Johto ownership manifest")
+        source = by_label.get(label)
+        if source is None or source["product"] != "POKEMON_HNS" or source["map"] != map_name or source["time"] != f"TIME_{runtime_time}" or method not in source["encounter"]:
+            raise ValidationError(f"{row_location}/baseLabel: unresolved Johto authored profile")
+        expected_count = ACTIVE_SLOT_COUNTS[method]
+        if integer(row["activeSlotCount"], f"{row_location}/activeSlotCount", 1, expected_count) != expected_count:
+            raise ValidationError(f"{row_location}/activeSlotCount: expected {expected_count}")
+        if not isinstance(row["selectable"], bool):
+            raise ValidationError(f"{row_location}/selectable: expected boolean")
+        if not isinstance(row["habitat"], str) or row["habitat"] not in HABITATS:
+            raise ValidationError(f"{row_location}/habitat: unsupported habitat")
+        if not isinstance(row["transition"], bool) or row["transition"] != (map_name in JOHTO_TRANSITION_MAPS):
+            raise ValidationError(f"{row_location}/transition: does not match the frozen border manifest")
+        mons = _active_mons(source, method)
+        if method in JOHTO_METHOD_WEIGHTS and _source_weights(source, method, "NONE", standard_rod) != JOHTO_METHOD_WEIGHTS[method]:
+            raise ValidationError(f"{row_location}: production slot weights changed from the frozen vector")
+        selectable = any(mon["species"] != "SPECIES_NONE" for mon in mons)
+        if row["selectable"] != selectable:
+            raise ValidationError(f"{row_location}/selectable: does not match the active authored slots")
+        encounter_rate = source["encounter"][method]["encounter_rate"]
+        if encounter_rate <= 0:
+            raise ValidationError(f"{row_location}: Johto manifest includes a zero-rate method")
+        topology.append([
+            map_name, label, runtime_time, method, expected_count, selectable, row["habitat"], row["transition"], encounter_rate,
+            [[mon.get("min_level", 2), mon.get("max_level", 100)] for mon in mons],
+        ])
+        rows.append(dict(row))
+    method_counts = {method: sum(row["method"] == method for row in rows) for method in ACTIVE_SLOT_COUNTS}
+    selectable_counts = {method: sum(row["method"] == method and row["selectable"] for row in rows) for method in ACTIVE_SLOT_COUNTS}
+    if maps != JOHTO_MAPS or len(rows) != 366 or len(labels) != 149:
+        raise ValidationError(f"{location}/profiles: expected exactly 93 maps, 149 authored rows, and 366 profiles")
+    if method_counts != {"land_mons": 123, "water_mons": 90, "rock_smash_mons": 64, "fishing_mons": 89}:
+        raise ValidationError(f"{location}/profiles: profile method counts mismatch {method_counts}")
+    if selectable_counts != {"land_mons": 123, "water_mons": 87, "rock_smash_mons": 64, "fishing_mons": 89}:
+        raise ValidationError(f"{location}/profiles: selectable method counts mismatch {selectable_counts}")
+    topology_digest = hashlib.sha256(json.dumps(sorted(topology), separators=(",", ":")).encode("ascii")).hexdigest()
+    if topology_digest != JOHTO_TOPOLOGY_RATE_LEVEL_SHA256:
+        raise ValidationError(f"{location}/profiles: frozen Johto topology, encounter rates, or levels changed")
+    snow_mirrors = (
+        ("gMtSilver_SnowUnused_hns_Day", "gMtSilver_Snow_hns_Day"),
+        ("gMtSilver_SnowUnused_hns_Night", "gMtSilver_SnowNight_hns_Day"),
+    )
+    for reachable, duplicate in snow_mirrors:
+        if by_label[reachable]["encounter"]["land_mons"] != by_label[duplicate]["encounter"]["land_mons"]:
+            raise ValidationError(f"{location}/profiles: duplicate Mt. Silver Snow runtime profiles must remain exact mirrors")
+
+    fallback_fields = {"map", "method", "runtimeTime", "sourceBaseLabel"}
+    actual_fallbacks, fallback_rows = set(), []
+    day_rows = [row for row in rows if row["runtimeTime"] == "DAY"]
+    authored_headers = {
+        (by_label[row["baseLabel"]]["header"], row["method"], row["runtimeTime"])
+        for row in rows
+    }
+    for index, row in enumerate(_manifest_list(johto["fallbacks"], f"{location}/fallbacks")):
+        row_location = f"{location}/fallbacks/{index}"
+        exact_keys(row, fallback_fields, row_location)
+        if any(not isinstance(row[key], str) for key in fallback_fields):
+            raise ValidationError(f"{row_location}: fallback fields must be strings")
+        key = (row["map"], row["method"], row["runtimeTime"], row["sourceBaseLabel"])
+        if key in actual_fallbacks:
+            raise ValidationError(f"{row_location}: duplicate fallback")
+        actual_fallbacks.add(key); fallback_rows.append(dict(row))
+    expected_fallbacks = set()
+    for day in day_rows:
+        map_name, method = day["map"], day["method"]
+        for runtime_time in ("MORNING", "EVENING"):
+            expected_fallbacks.add((map_name, method, runtime_time, day["baseLabel"]))
+        if (by_label[day["baseLabel"]]["header"], method, "NIGHT") not in authored_headers:
+            expected_fallbacks.add((map_name, method, "NIGHT", day["baseLabel"]))
+    if actual_fallbacks != expected_fallbacks or len(fallback_rows) != 531:
+        raise ValidationError(f"{location}/fallbacks: does not exactly describe Johto day fallback")
+
+    anchor_fields = {"species", "utilityMoves", "baseLabels", "method", "times", "levelRanges", "ratingRange"}
+    level_range_fields = {"minLevel", "maxLevel"}
+    anchors = _manifest_list(johto["protectedAnchors"], f"{location}/protectedAnchors")
+    for index, anchor in enumerate(anchors):
+        anchor_location = f"{location}/protectedAnchors/{index}"
+        exact_keys(anchor, anchor_fields, anchor_location)
+        identifier(anchor["species"], f"{anchor_location}/species", SPECIES_IDENTIFIER)
+        if anchor["species"] not in JOHTO_PROTECTED_SPECIES or not isinstance(anchor["method"], str) or anchor["method"] not in ACTIVE_SLOT_COUNTS:
+            raise ValidationError(f"{anchor_location}: unsupported Johto native-HM anchor")
+        moves = _manifest_list(anchor["utilityMoves"], f"{anchor_location}/utilityMoves")
+        if not moves or any(not isinstance(move, str) or not move.startswith("MOVE_") for move in moves) or len(set(moves)) != len(moves):
+            raise ValidationError(f"{anchor_location}/utilityMoves: expected unique move constants")
+        base_labels = _manifest_list(anchor["baseLabels"], f"{anchor_location}/baseLabels")
+        times = _manifest_list(anchor["times"], f"{anchor_location}/times")
+        if (not base_labels or any(not isinstance(value, str) for value in (*base_labels, *times))
+                or len(set(base_labels)) != len(base_labels) or set(times) - {"DAY", "NIGHT"}):
+            raise ValidationError(f"{anchor_location}: invalid base labels or times")
+        for base_label in base_labels:
+            source = by_label.get(base_label)
+            if source is None or source["product"] != "POKEMON_HNS" or source["time"].removeprefix("TIME_") not in times or anchor["method"] not in source["encounter"]:
+                raise ValidationError(f"{anchor_location}/baseLabels: unresolved qualifying Johto profile")
+        for range_index, level_range in enumerate(_manifest_list(anchor["levelRanges"], f"{anchor_location}/levelRanges")):
+            range_location = f"{anchor_location}/levelRanges/{range_index}"
+            exact_keys(level_range, level_range_fields, range_location)
+            minimum = integer(level_range["minLevel"], f"{range_location}/minLevel", 1, MAX_LEVEL)
+            maximum = integer(level_range["maxLevel"], f"{range_location}/maxLevel", 1, MAX_LEVEL)
+            if minimum > maximum:
+                raise ValidationError(f"{range_location}: inverted range")
+        exact_keys(anchor["ratingRange"], {"min", "max"}, f"{anchor_location}/ratingRange")
+        if anchor["ratingRange"] != {"min": 10, "max": 80}:
+            raise ValidationError(f"{anchor_location}/ratingRange: expected 10 through 80")
+    anchor_digest = hashlib.sha256(json.dumps(anchors, separators=(",", ":"), sort_keys=True).encode("ascii")).hexdigest()
+    if len(anchors) != 10 or {anchor["species"] for anchor in anchors} != JOHTO_PROTECTED_SPECIES or anchor_digest != JOHTO_PROTECTED_ANCHOR_SHA256:
+        raise ValidationError(f"{location}/protectedAnchors: does not match the native-HM Johto inventory")
+
+    manifest_by_identity = {(row["map"], row["baseLabel"], row["method"], row["runtimeTime"]): row for row in rows}
+    final_species = {
+        identity: [mon["species"] for mon in _active_mons(by_label[row["baseLabel"]], row["method"])]
+        for identity, row in manifest_by_identity.items()
+    }
+    change_fields = {"map", "baseLabel", "method", "time", "slot", "beforeSpecies", "afterSpecies", "changeKind", "reason", "habitatEvidence", "targetFailureBefore"}
+    changes = []
+    for index, change in enumerate(_manifest_list(johto["changes"], f"{location}/changes")):
+        change_location = f"{location}/changes/{index}"
+        exact_keys(change, change_fields, change_location)
+        identifier(change["map"], f"{change_location}/map")
+        identifier(change["baseLabel"], f"{change_location}/baseLabel")
+        if not isinstance(change["method"], str) or not isinstance(change["time"], str):
+            raise ValidationError(f"{change_location}: method and time must be strings")
+        identity = (change["map"], change["baseLabel"], change["method"], change["time"])
+        profile = manifest_by_identity.get(identity)
+        if profile is None:
+            raise ValidationError(f"{change_location}: unresolved Johto profile")
+        slot = integer(change["slot"], f"{change_location}/slot", 0, profile["activeSlotCount"] - 1)
+        for key in ("beforeSpecies", "afterSpecies"):
+            species = identifier(change[key], f"{change_location}/{key}", SPECIES_IDENTIFIER)
+            if known_species is not None and species not in known_species:
+                raise ValidationError(f"{change_location}/{key}: unknown species")
+        if (change["beforeSpecies"] == change["afterSpecies"]
+                or not isinstance(change["changeKind"], str) or change["changeKind"] not in JOHTO_CHANGE_KINDS
+                or not isinstance(change["reason"], str) or change["reason"] not in JOHTO_REASONS):
+            raise ValidationError(f"{change_location}: invalid change kind or reason")
+        evidence = _manifest_list(change["habitatEvidence"], f"{change_location}/habitatEvidence")
+        failures_before = _manifest_list(change["targetFailureBefore"], f"{change_location}/targetFailureBefore")
+        if not evidence or any(not isinstance(value, str) for value in evidence) or len(set(evidence)) != len(evidence):
+            raise ValidationError(f"{change_location}/habitatEvidence: expected at least one unique base label")
+        if change["changeKind"] in {"REWEIGHT_EXISTING", "REMOVE_FORBIDDEN"} and failures_before:
+            raise ValidationError(f"{change_location}/targetFailureBefore: expected empty list for this stage")
+        if change["changeKind"] in {"CONSOLIDATE_DUPLICATE", "ADD_LOCAL_SPECIES"} and not failures_before:
+            raise ValidationError(f"{change_location}/targetFailureBefore: expected a measured failure")
+        allowed_failures = JOHTO_TARGET_FAILURES | {
+            f"INTERACTION_SPECIES_CAP:{species}" for species in (known_species or ())
+        }
+        if (any(not isinstance(value, str) for value in failures_before)
+                or len(set(failures_before)) != len(failures_before) or set(failures_before) - allowed_failures):
+            raise ValidationError(f"{change_location}/targetFailureBefore: unsupported target identifier")
+        changes.append({**change, "_manifestIndex": rows.index(profile), "_sourceIndex": index})
+    expected_order = sorted(changes, key=lambda change: (
+        JOHTO_CHANGE_KINDS.index(change["changeKind"]), change["_manifestIndex"], change["slot"], change["afterSpecies"]
+    ))
+    if changes != expected_order:
+        raise ValidationError(f"{location}/changes: ledger is not in deterministic stage, profile, slot, species order")
+
+    baseline_species = {identity: list(species) for identity, species in final_species.items()}
+    for change in reversed(changes):
+        identity = (change["map"], change["baseLabel"], change["method"], change["time"])
+        if baseline_species[identity][change["slot"]] != change["afterSpecies"]:
+            raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: broken reverse change chain")
+        baseline_species[identity][change["slot"]] = change["beforeSpecies"]
+    baseline_rows = sorted(
+        [row["map"], row["baseLabel"], row["runtimeTime"], row["method"], slot, species]
+        for row in rows
+        for slot, species in enumerate(baseline_species[(row["map"], row["baseLabel"], row["method"], row["runtimeTime"])])
+    )
+    baseline_digest = hashlib.sha256(json.dumps(baseline_rows, separators=(",", ":")).encode("ascii")).hexdigest()
+    if baseline_digest != JOHTO_BASELINE_SLOT_SHA256:
+        raise ValidationError(f"{location}/changes: reverse ledger does not reproduce the frozen Johto baseline")
+
+    state = {identity: list(species) for identity, species in baseline_species.items()}
+    stage_snapshots = [{"stage": "BASELINE", "state": {key: list(value) for key, value in state.items()}}]
+    changes_by_stage = {kind: [] for kind in JOHTO_CHANGE_KINDS}
+    for change in changes:
+        changes_by_stage[change["changeKind"]].append(change)
+    changed_profiles = {(change["baseLabel"], change["method"]) for change in changes}
+    for kind in JOHTO_CHANGE_KINDS:
+        before_stage = {key: list(value) for key, value in state.items()}
+        for change in changes_by_stage[kind]:
+            identity = (change["map"], change["baseLabel"], change["method"], change["time"])
+            profile = manifest_by_identity[identity]
+            current = state[identity]
+            if current[change["slot"]] != change["beforeSpecies"]:
+                raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: broken forward change chain")
+            if kind == "REMOVE_FORBIDDEN":
+                if change["reason"] != "FORBIDDEN_GENERATION" or _johto_generation(change["beforeSpecies"], nat_dex_by_species) != "INDEPENDENT_GENERATION_III":
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: forbidden removal does not remove independent Generation III")
+            elif kind == "REWEIGHT_EXISTING":
+                if change["afterSpecies"] not in before_stage[identity]:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: reweight species must already exist in the profile's pre-stage multiset")
+            elif kind == "CONSOLIDATE_DUPLICATE":
+                if current.count(change["beforeSpecies"]) < 2 or change["afterSpecies"] not in current:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: consolidation must transfer a duplicate to an existing species")
+            elif kind == "ADD_LOCAL_SPECIES":
+                if current.count(change["beforeSpecies"]) < 2 or change["afterSpecies"] in current:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: local addition must replace a duplicate with a new profile species")
+                if (_johto_generation(change["afterSpecies"], nat_dex_by_species) != "GENERATION_II_FAMILIES"
+                        or change["afterSpecies"] in JOHTO_FORBIDDEN_LOCAL_ADDITIONS):
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: local additions must be ordinary Generation II candidates, excluding starters, babies, gifts, statics, and legendaries")
+            if kind in {"CONSOLIDATE_DUPLICATE", "ADD_LOCAL_SPECIES"}:
+                relevant = _johto_relevant_failure_targets(change["method"], change["targetFailureBefore"])
+                if not relevant:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: measured failure is not relevant to the changed method")
+                snapshot = _johto_authored_snapshot(rows, state, by_label, standard_rod, nat_dex_by_species)
+                actual_failures = _johto_failed_targets(snapshot)
+                if not set(change["targetFailureBefore"]) <= actual_failures:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}: targetFailureBefore was not failing before the change")
+            for evidence_label in change["habitatEvidence"]:
+                evidence_profiles = [row for row in rows if row["baseLabel"] == evidence_label and row["method"] == change["method"]]
+                if not evidence_profiles:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}/habitatEvidence: unresolved method profile {evidence_label}")
+                supported = False
+                for evidence_profile in evidence_profiles:
+                    evidence_identity = (evidence_profile["map"], evidence_profile["baseLabel"], evidence_profile["method"], evidence_profile["runtimeTime"])
+                    other_time = evidence_profile["map"] == profile["map"] and evidence_profile["runtimeTime"] != profile["runtimeTime"]
+                    unchanged_neighbor = (evidence_label, change["method"]) not in changed_profiles and evidence_profile["habitat"] == profile["habitat"] and evidence_profile["runtimeTime"] == profile["runtimeTime"]
+                    if (other_time or unchanged_neighbor) and change["afterSpecies"] in baseline_species[evidence_identity]:
+                        supported = True
+                if not supported:
+                    raise ValidationError(f"{location}/changes/{change['_sourceIndex']}/habitatEvidence: species lacks unchanged same-habitat or other-time support")
+            current[change["slot"]] = change["afterSpecies"]
+        if kind == "REWEIGHT_EXISTING":
+            for identity in state:
+                if sorted(before_stage[identity]) != sorted(state[identity]):
+                    raise ValidationError(f"{location}/changes: reweight stage changes a profile species multiset")
+        stage_snapshots.append({"stage": kind, "state": {key: list(value) for key, value in state.items()}})
+    if state != final_species:
+        raise ValidationError(f"{location}/changes: forward ledger does not reproduce wild_encounters.json")
+    public_changes = [{key: value for key, value in change.items() if not key.startswith("_")} for change in changes]
+    return {
+        "schemaVersion": 1, "product": "POKEMON_HNS", "profiles": rows,
+        "fallbacks": fallback_rows, "protectedAnchors": anchors, "changes": public_changes,
+        "baselineSpecies": baseline_species, "stageSnapshots": stage_snapshots,
+        "topologyDigest": topology_digest, "baselineDigest": baseline_digest,
+    }
+
+
 def validate_regional_manifest(document, profiles, config, known_species=None, path=DEFAULT_REGIONS, nat_dex_by_species=None):
     exact_keys(document, {"schemaVersion", "regions"}, path)
     if document["schemaVersion"] != 1 or isinstance(document["schemaVersion"], bool):
@@ -1827,7 +2310,16 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
         {"map": row["map"], "method": row["method"], "dayBaseLabel": row["dayBaseLabel"], "nightBaseLabel": row["nightBaseLabel"]}
         for row in manifest_profiles if row["nightMode"] == "DAY_ALIAS"
     ]
-    return {"schemaVersion": 1, "product": "POKEMON_HNS", "profiles": manifest_profiles, "changes": changes, "dayAliases": day_aliases, "counterpartProofs": counterpart_proofs}
+    johto = _validate_johto_manifest(
+        document["regions"]["JOHTO"], profiles, known_species,
+        nat_dex_by_species or active_national_dex(DEFAULT_SPECIES_INFO),
+        standard_rod, path,
+    )
+    return {
+        "schemaVersion": 1, "product": "POKEMON_HNS", "profiles": manifest_profiles,
+        "changes": changes, "dayAliases": day_aliases, "counterpartProofs": counterpart_proofs,
+        "johto": johto,
+    }
 
 
 def load_regional_manifest(path, profiles, config, known_species=None):
@@ -2928,6 +3420,536 @@ def build_kanto_audit(manifest, profiles, scaling, offsets, metadata, standard_r
     }
 
 
+def _johto_profile_distribution(manifest_profile, rod, rating, profiles_by_label, scaling, offset_map, by_species, standard_rod, authored_species=None):
+    profile = profiles_by_label[manifest_profile["baseLabel"]]
+    method = manifest_profile["method"]
+    selected_rod = rod if method == "fishing_mons" else "NONE"
+    weights = _source_weights(profile, method, selected_rod, standard_rod)
+    source_mons = _active_mons(profile, method)
+    species_values = [mon["species"] for mon in source_mons] if authored_species is None else authored_species
+    runtime_key = (
+        profile["product"], profile["header_id"], METHOD_AREAS[method],
+        f"TIME_{manifest_profile['runtimeTime']}", RODS[selected_rod],
+    )
+    offset = offset_map.get(runtime_key, 0)
+    prepared, slot_rows = [], []
+    for slot, (mon, species, weight) in enumerate(zip(source_mons, species_values, weights)):
+        minimum, maximum = mon.get("min_level", 2), mon.get("max_level", 100)
+        outcomes, eligible = {}, species != "SPECIES_NONE"
+        for authored_level in range(min(minimum, maximum), max(minimum, maximum) + 1):
+            if rating is None:
+                projected_level, resolved_species = authored_level, species
+            else:
+                projected_level = project_level(scaling, authored_level, rating, offset)
+                resolved_species, _ = effective_species(species, projected_level, by_species) if species != "SPECIES_NONE" else (species, [])
+                if species == "SPECIES_NONE" or projected_level < by_species[resolved_species]["minimum_level"]:
+                    eligible = False
+            outcome = outcomes.setdefault(resolved_species, {"count": 0, "minimumLevel": projected_level, "maximumLevel": projected_level})
+            outcome["count"] += 1
+            outcome["minimumLevel"] = min(outcome["minimumLevel"], projected_level)
+            outcome["maximumLevel"] = max(outcome["maximumLevel"], projected_level)
+        if eligible:
+            prepared.append((slot, species, weight, outcomes))
+        slot_rows.append({
+            "slot": slot, "weight": weight, "authoredSpecies": species,
+            "authoredMinimumLevel": minimum, "authoredMaximumLevel": maximum,
+            "eligible": eligible,
+            "effectiveOutcomes": [
+                {
+                    "species": resolved, "minimumLevel": outcome["minimumLevel"],
+                    "maximumLevel": outcome["maximumLevel"],
+                    "probabilityGivenSlot": fraction_row(Fraction(outcome["count"], sum(item["count"] for item in outcomes.values()))),
+                }
+                for resolved, outcome in sorted(outcomes.items())
+            ],
+        })
+    total_weight = sum(item[2] for item in prepared)
+    distribution = {}
+    if total_weight:
+        for _, _, weight, outcomes in prepared:
+            outcome_total = sum(outcome["count"] for outcome in outcomes.values())
+            for species, outcome in outcomes.items():
+                value = Fraction(weight * outcome["count"], total_weight * outcome_total)
+                distribution[species] = distribution.get(species, Fraction(0)) + value
+    return {
+        "map": manifest_profile["map"], "baseLabel": manifest_profile["baseLabel"],
+        "runtimeTime": manifest_profile["runtimeTime"], "method": method,
+        "fishingRod": selected_rod, "rating": rating, "selectable": bool(total_weight),
+        "slotOutcomes": slot_rows,
+        "speciesProbabilities": [
+            {"species": species, "probability": fraction_row(value)}
+            for species, value in sorted(distribution.items())
+        ],
+    }, distribution
+
+
+def _johto_effective_snapshot(manifest, rating, profiles_by_label, scaling, offset_map, by_species, standard_rod, failures):
+    generations = {name: Fraction(0) for name in ("GENERATION_I", "GENERATION_II_FAMILIES", "INDEPENDENT_GENERATION_III", "GENERATION_IV_ONWARD")}
+    methods = {method: {name: Fraction(0) for name in generations} for method in ACTIVE_SLOT_COUNTS}
+    method_counts = {method: 0 for method in ACTIVE_SLOT_COUNTS}
+    rods = {rod: {name: Fraction(0) for name in generations} for rod in FISHING_QUALITIES}
+    species_totals = {}
+    method_species = {method: {} for method in ACTIVE_SLOT_COUNTS}
+    rod_species = {rod: {} for rod in FISHING_QUALITIES}
+    interaction_species, profile_reports = {}, []
+    selectable_count = 0
+    for row in manifest["profiles"]:
+        rod_names = FISHING_QUALITIES if row["method"] == "fishing_mons" else ("NONE",)
+        profile_shares = {name: Fraction(0) for name in generations}
+        profile_species, profile_interactions, selectable = {}, {}, False
+        for rod in rod_names:
+            report, distribution = _johto_profile_distribution(
+                row, rod, rating, profiles_by_label, scaling, offset_map, by_species, standard_rod,
+            )
+            profile_reports.append(report)
+            if not distribution:
+                continue
+            selectable = True
+            shares = _generation_shares(distribution, by_species, True)
+            scale = Fraction(1, len(rod_names))
+            for generation in generations:
+                profile_shares[generation] += shares[generation] * scale
+                if row["method"] == "fishing_mons":
+                    rods[rod][generation] += shares[generation]
+            for species, value in distribution.items():
+                profile_species[species] = profile_species.get(species, Fraction(0)) + value * scale
+                if row["method"] == "fishing_mons":
+                    rod_species[rod][species] = rod_species[rod].get(species, Fraction(0)) + value
+            if row["method"] == "rock_smash_mons":
+                profile_interactions = distribution
+        if not selectable:
+            if row["selectable"]:
+                failures.append(f"Johto {row['baseLabel']}/{row['method']}/rating {rating}: all authored slots are ineligible")
+            continue
+        selectable_count += 1
+        method_counts[row["method"]] += 1
+        for generation, value in profile_shares.items():
+            generations[generation] += value
+            methods[row["method"]][generation] += value
+        for species, value in profile_species.items():
+            species_totals[species] = species_totals.get(species, Fraction(0)) + value
+            method_species[row["method"]][species] = method_species[row["method"]].get(species, Fraction(0)) + value
+        for species, value in profile_interactions.items():
+            interaction_species[species] = interaction_species.get(species, Fraction(0)) + value
+    generations = {key: value / selectable_count for key, value in generations.items()}
+    species_totals = {key: value / selectable_count for key, value in species_totals.items()}
+    methods = {
+        method: {key: value / method_counts[method] for key, value in shares.items()}
+        for method, shares in methods.items()
+    }
+    method_species = {
+        method: {key: value / method_counts[method] for key, value in shares.items()}
+        for method, shares in method_species.items()
+    }
+    fishing_count = method_counts["fishing_mons"]
+    rods = {rod: {key: value / fishing_count for key, value in shares.items()} for rod, shares in rods.items()}
+    rod_species = {
+        rod: {key: value / fishing_count for key, value in shares.items()}
+        for rod, shares in rod_species.items()
+    }
+    interaction_count = method_counts["rock_smash_mons"]
+    interaction_species = {key: value / interaction_count for key, value in interaction_species.items()}
+    return {
+        "profileDenominator": selectable_count, "generations": generations, "methods": methods,
+        "fishingQualities": rods, "species": species_totals, "methodSpecies": method_species,
+        "fishingQualitySpecies": rod_species, "interactionSpecies": interaction_species,
+        "profiles": profile_reports,
+    }
+
+
+def _johto_snapshot_report(snapshot):
+    def shares(values):
+        return {
+            "probabilities": {key: fraction_row(value) for key, value in values.items()},
+            "percentages": {key: percentage_half_up(value) for key, value in values.items()},
+        }
+    def species_shares(values):
+        return [
+            {"species": species, "probability": fraction_row(value), "percentage": percentage_half_up(value)}
+            for species, value in sorted(values.items())
+        ]
+    return {
+        "profileDenominator": snapshot["profileDenominator"],
+        "overall": shares(snapshot["generations"]),
+        "methods": {method: shares(values) for method, values in snapshot["methods"].items()},
+        "fishingQualities": {rod: shares(values) for rod, values in snapshot["fishingQualities"].items()},
+        "species": species_shares(snapshot["species"]),
+        "methodSpecies": {method: species_shares(values) for method, values in snapshot["methodSpecies"].items()},
+        "fishingQualitySpecies": {rod: species_shares(values) for rod, values in snapshot["fishingQualitySpecies"].items()},
+        "interactionSpecies": species_shares(snapshot["interactionSpecies"]),
+    }
+
+
+def _johto_validate_portfolio(snapshot, failures, prefix, effective):
+    gen = snapshot["generations"]
+    method = snapshot["methods"]
+    expected_denominator = 363
+    if snapshot["profileDenominator"] != expected_denominator:
+        failures.append(f"{prefix}: expected selectable denominator {expected_denominator}, got {snapshot['profileDenominator']}")
+    weighted_gen2 = (
+        123 * method["land_mons"]["GENERATION_II_FAMILIES"]
+        + 87 * method["water_mons"]["GENERATION_II_FAMILIES"]
+        + 89 * method["fishing_mons"]["GENERATION_II_FAMILIES"]
+        + 64 * method["rock_smash_mons"]["GENERATION_II_FAMILIES"]
+    ) / 363
+    if gen["GENERATION_II_FAMILIES"] != weighted_gen2:
+        failures.append(f"{prefix}: overall Generation II share does not match the 363-profile formula")
+    equal_quality_gen2 = sum(
+        snapshot["fishingQualities"][rod]["GENERATION_II_FAMILIES"]
+        for rod in FISHING_QUALITIES
+    ) / len(FISHING_QUALITIES)
+    if method["fishing_mons"]["GENERATION_II_FAMILIES"] != equal_quality_gen2:
+        failures.append(f"{prefix}: fishing Generation II share is not the equal-quality rod average")
+    if effective:
+        bands = {
+            "overall": (gen["GENERATION_II_FAMILIES"], Fraction(30, 100), Fraction(45, 100)),
+            "land": (method["land_mons"]["GENERATION_II_FAMILIES"], Fraction(35, 100), Fraction(55, 100)),
+            "surf": (method["water_mons"]["GENERATION_II_FAMILIES"], Fraction(15, 100), Fraction(35, 100)),
+            "fishing": (method["fishing_mons"]["GENERATION_II_FAMILIES"], Fraction(10, 100), Fraction(30, 100)),
+            "interaction": (method["rock_smash_mons"]["GENERATION_II_FAMILIES"], Fraction(45, 100), Fraction(70, 100)),
+        }
+        quality_minimum = Fraction(5, 100)
+    else:
+        bands = {
+            "overall": (gen["GENERATION_II_FAMILIES"], Fraction(35, 100), Fraction(40, 100)),
+            "land": (method["land_mons"]["GENERATION_II_FAMILIES"], Fraction(40, 100), Fraction(50, 100)),
+            "surf": (method["water_mons"]["GENERATION_II_FAMILIES"], Fraction(20, 100), Fraction(30, 100)),
+            "fishing": (method["fishing_mons"]["GENERATION_II_FAMILIES"], Fraction(15, 100), Fraction(25, 100)),
+            "interaction": (method["rock_smash_mons"]["GENERATION_II_FAMILIES"], Fraction(50, 100), Fraction(65, 100)),
+        }
+        quality_minimum = Fraction(10, 100)
+        if not Fraction(55, 100) <= gen["GENERATION_I"] <= Fraction(65, 100):
+            failures.append(f"{prefix}: authored Generation I share outside 55 to 65 percent")
+        if gen["GENERATION_IV_ONWARD"] > Fraction(5, 100):
+            failures.append(f"{prefix}: authored Generation IV onward share exceeds 5 percent")
+    for name, (value, minimum, maximum) in bands.items():
+        if not minimum <= value <= maximum:
+            failures.append(f"{prefix}: {name} Generation II family share outside required band")
+    for rod in FISHING_QUALITIES:
+        if snapshot["fishingQualities"][rod]["GENERATION_II_FAMILIES"] < quality_minimum:
+            failures.append(f"{prefix}: {rod} Generation II family share below required minimum")
+    if gen["INDEPENDENT_GENERATION_III"] != 0:
+        failures.append(f"{prefix}: independent Generation III share is not zero")
+    if sum(gen.values(), Fraction(0)) != 1:
+        failures.append(f"{prefix}: generation shares do not sum to one")
+    for name, shares in (*method.items(), *snapshot["fishingQualities"].items()):
+        if sum(shares.values(), Fraction(0)) != 1:
+            failures.append(f"{prefix}: {name} generation shares do not sum to one")
+    if "species" in snapshot:
+        species_scopes = (
+            ("overall", snapshot["species"]),
+            *snapshot["methodSpecies"].items(),
+            *snapshot["fishingQualitySpecies"].items(),
+        )
+        for name, shares in species_scopes:
+            if sum(shares.values(), Fraction(0)) != 1:
+                failures.append(f"{prefix}: {name} species shares do not sum to one")
+
+
+def _johto_state_distribution(row, rod, state, profiles_by_label, standard_rod):
+    profile = profiles_by_label[row["baseLabel"]]
+    identity = (row["map"], row["baseLabel"], row["method"], row["runtimeTime"])
+    weights = _source_weights(profile, row["method"], rod if row["method"] == "fishing_mons" else "NONE", standard_rod)
+    entries = [(species, weights[index]) for index, species in enumerate(state[identity]) if species != "SPECIES_NONE"]
+    total = sum(weight for _, weight in entries)
+    distribution = {}
+    for species, weight in entries:
+        distribution[species] = distribution.get(species, Fraction(0)) + Fraction(weight, total)
+    return distribution
+
+
+def _johto_day_night_report(manifest, profiles_by_label, standard_rod, failures):
+    rows_by_label_method = {(row["baseLabel"], row["method"]): row for row in manifest["profiles"]}
+    pairs = []
+    for day in (row for row in manifest["profiles"] if row["runtimeTime"] == "DAY"):
+        source = profiles_by_label[day["baseLabel"]]
+        night = next((row for row in manifest["profiles"] if row["method"] == day["method"] and row["runtimeTime"] == "NIGHT" and profiles_by_label[row["baseLabel"]]["header"] == source["header"]), None)
+        if day["baseLabel"] == "gMtSilver_Snow_hns_Day" and day["method"] == "land_mons":
+            night = rows_by_label_method.get(("gMtSilver_SnowNight_hns_Day", "land_mons"))
+        if night is None:
+            continue
+        rods = FISHING_QUALITIES if day["method"] == "fishing_mons" else ("NONE",)
+        for rod in rods:
+            before_day = _johto_state_distribution(day, rod, manifest["baselineSpecies"], profiles_by_label, standard_rod)
+            before_night = _johto_state_distribution(night, rod, manifest["baselineSpecies"], profiles_by_label, standard_rod)
+            final_state = manifest["stageSnapshots"][-1]["state"]
+            after_day = _johto_state_distribution(day, rod, final_state, profiles_by_label, standard_rod)
+            after_night = _johto_state_distribution(night, rod, final_state, profiles_by_label, standard_rod)
+            before, after = day_night_metrics(before_day, before_night), day_night_metrics(after_day, after_night)
+            if before["distance"] and not after["distance"]:
+                failures.append(f"Johto {day['baseLabel']}/{day['method']}/{rod}: distinct day and night profiles became identical")
+            vanished = (set(before_day) - set(before_night) - set(after_day)) | (set(before_night) - set(before_day) - set(after_night))
+            time_reasons = {
+                change["beforeSpecies"] for change in manifest["changes"]
+                if change["reason"] == "TIME_IDENTITY" and change["baseLabel"] in {day["baseLabel"], night["baseLabel"]}
+            }
+            unapproved = sorted(vanished - time_reasons)
+            if unapproved:
+                failures.append(f"Johto {day['baseLabel']}/{day['method']}/{rod}: time-exclusive species disappeared without TIME_IDENTITY reason {unapproved}")
+            leading = lambda distribution: None if not distribution else min(distribution, key=lambda species: (-distribution[species], species))
+            pairs.append({
+                "map": day["map"], "method": day["method"], "fishingRod": rod,
+                "dayBaseLabel": day["baseLabel"], "nightBaseLabel": night["baseLabel"],
+                "baseline": {
+                    "dayLeadingSpecies": leading(before_day), "nightLeadingSpecies": leading(before_night),
+                    "daySharedProbability": fraction_row(before["dayShared"]), "nightSharedProbability": fraction_row(before["nightShared"]),
+                    "totalVariationDistance": fraction_row(before["distance"]),
+                },
+                "final": {
+                    "dayLeadingSpecies": leading(after_day), "nightLeadingSpecies": leading(after_night),
+                    "daySharedProbability": fraction_row(after["dayShared"]), "nightSharedProbability": fraction_row(after["nightShared"]),
+                    "totalVariationDistance": fraction_row(after["distance"]),
+                },
+                "unapprovedExclusiveSpeciesLosses": unapproved,
+            })
+    return pairs
+
+
+def _johto_anchor_report(manifest, profiles_by_label, scaling, offset_map, by_species, standard_rod, failures):
+    final_state = manifest["stageSnapshots"][-1]["state"]
+    rows_by_label_method = {(row["baseLabel"], row["method"]): row for row in manifest["profiles"]}
+    reports = []
+    for anchor in manifest["protectedAnchors"]:
+        profile_reports = []
+        for label in anchor["baseLabels"]:
+            row = rows_by_label_method[(label, anchor["method"])]
+            identity = (row["map"], row["baseLabel"], row["method"], row["runtimeTime"])
+            source = profiles_by_label[label]
+            mons = _active_mons(source, row["method"])
+            baseline_slots = [slot for slot, species in enumerate(manifest["baselineSpecies"][identity]) if species == anchor["species"]]
+            final_slots = [slot for slot, species in enumerate(final_state[identity]) if species == anchor["species"]]
+            baseline_ranges = sorted((mons[slot].get("min_level", 2), mons[slot].get("max_level", 100)) for slot in baseline_slots)
+            final_ranges = sorted((mons[slot].get("min_level", 2), mons[slot].get("max_level", 100)) for slot in final_slots)
+            if not baseline_slots or baseline_ranges != final_ranges:
+                failures.append(f"Johto native-HM anchor {anchor['species']}/{label}: qualifying authored coverage changed")
+            rating_rows, passed = [], True
+            for rating in range(anchor["ratingRange"]["min"], anchor["ratingRange"]["max"] + 1):
+                outcomes = set()
+                for slot in final_slots:
+                    mon = mons[slot]
+                    runtime_key = (source["product"], source["header_id"], METHOD_AREAS[row["method"]], f"TIME_{row['runtimeTime']}", RODS["OLD_ROD" if row["method"] == "fishing_mons" else "NONE"])
+                    offset = offset_map.get(runtime_key, 0)
+                    for authored_level in range(min(mon.get("min_level", 2), mon.get("max_level", 100)), max(mon.get("min_level", 2), mon.get("max_level", 100)) + 1):
+                        projected = project_level(scaling, authored_level, rating, offset)
+                        effective, _ = effective_species(anchor["species"], projected, by_species)
+                        outcomes.add(effective)
+                        if projected < by_species[effective]["minimum_level"]:
+                            passed = False
+                rating_rows.append({"rating": rating, "effectiveSpecies": sorted(outcomes)})
+            if not passed:
+                failures.append(f"Johto native-HM anchor {anchor['species']}/{label}: ineligible Rating outcome")
+            profile_reports.append({
+                "baseLabel": label, "baselineSlots": baseline_slots, "finalSlots": final_slots,
+                "baselineLevelRanges": [list(value) for value in baseline_ranges],
+                "finalLevelRanges": [list(value) for value in final_ranges],
+                "ratingOutcomes": rating_rows, "passed": bool(baseline_slots) and baseline_ranges == final_ranges and passed,
+            })
+        reports.append({**anchor, "profiles": profile_reports, "passed": all(row["passed"] for row in profile_reports)})
+
+    aipom_anchor = next(anchor for anchor in manifest["protectedAnchors"] if anchor["species"] == "SPECIES_AIPOM")
+    aipom_rows = [rows_by_label_method[(label, aipom_anchor["method"])] for label in aipom_anchor["baseLabels"]]
+    def aggregate_probability(species, rows, state, rod):
+        return sum((_johto_state_distribution(row, rod, state, profiles_by_label, standard_rod).get(species, Fraction(0)) for row in rows), Fraction(0)) / len(rows)
+    aipom_baseline = aggregate_probability("SPECIES_AIPOM", aipom_rows, manifest["baselineSpecies"], "NONE")
+    aipom_final = aggregate_probability("SPECIES_AIPOM", aipom_rows, final_state, "NONE")
+    if aipom_final < aipom_baseline:
+        failures.append("Johto Aipom aggregate Headbutt probability decreased")
+    aipom = {"baseLabels": aipom_anchor["baseLabels"], "baselineProbability": fraction_row(aipom_baseline), "finalProbability": fraction_row(aipom_final), "passed": aipom_final >= aipom_baseline}
+
+    chinchou_expectations = {
+        "gOlivineCity_PortOutside_hns_Day": Fraction(11, 100),
+        "gOlivineCity_PortOutside_hns_Night": Fraction(11, 100),
+        "gCianwoodCity_hns_Day": Fraction(12, 100),
+    }
+    chinchou_rows = []
+    for label, expected in chinchou_expectations.items():
+        row = rows_by_label_method[(label, "fishing_mons")]
+        actual = _johto_state_distribution(row, "OLD_ROD", final_state, profiles_by_label, standard_rod).get("SPECIES_CHINCHOU", Fraction(0))
+        passed = actual == expected
+        if not passed:
+            failures.append(f"Johto Chinchou {label}: expected Old Rod probability {expected}, got {actual}")
+        chinchou_rows.append({"baseLabel": label, "expectedProbability": fraction_row(expected), "actualProbability": fraction_row(actual), "passed": passed})
+    return {"anchors": reports, "aipomHeadbutt": aipom, "chinchouOldRod": chinchou_rows, "passed": all(row["passed"] for row in reports) and aipom["passed"] and all(row["passed"] for row in chinchou_rows)}
+
+
+def _johto_hoenn_sound_report(manifest, profiles_by_label, scaling, offset_map, by_species, standard_rod, failures):
+    comparisons = []
+    for row in manifest["profiles"]:
+        if row["method"] not in {"land_mons", "water_mons"}:
+            continue
+        for rating in JOHTO_SAMPLE_RATINGS:
+            report, off = _johto_profile_distribution(row, "NONE", rating, profiles_by_label, scaling, offset_map, by_species, standard_rod)
+            hoenn_slots = [slot for slot in report["slotOutcomes"] if slot["eligible"] and generation_for(slot["authoredSpecies"], by_species) == "INDEPENDENT_GENERATION_III"]
+            on = dict(off)
+            if hoenn_slots and len(hoenn_slots) < sum(slot["eligible"] for slot in report["slotOutcomes"]):
+                sound = {}
+                for slot in hoenn_slots:
+                    for outcome in slot["effectiveOutcomes"]:
+                        value = Fraction(**outcome["probabilityGivenSlot"])
+                        sound[outcome["species"]] = sound.get(outcome["species"], Fraction(0)) + value / len(hoenn_slots)
+                on = {species: Fraction(9, 10) * off.get(species, 0) + Fraction(1, 10) * sound.get(species, 0) for species in set(off) | set(sound)}
+            differences = [species for species in sorted(set(off) | set(on)) if off.get(species, 0) != on.get(species, 0)]
+            if differences:
+                failures.append(f"Johto {row['baseLabel']}/{row['method']}/rating {rating}: Hoenn Sound changes the ordinary distribution")
+            comparisons.append({
+                "map": row["map"], "baseLabel": row["baseLabel"], "method": row["method"], "runtimeTime": row["runtimeTime"],
+                "rating": rating, "offSpeciesProbabilities": [{"species": species, "probability": fraction_row(value)} for species, value in sorted(off.items())],
+                "onSpeciesProbabilities": [{"species": species, "probability": fraction_row(value)} for species, value in sorted(on.items())],
+                "differences": differences, "passed": not differences,
+            })
+    return {"statesCompared": ["OFF", "ON"], "ratings": list(JOHTO_SAMPLE_RATINGS), "profileComparisons": comparisons, "differences": [row for row in comparisons if row["differences"]], "passed": all(row["passed"] for row in comparisons)}
+
+
+def _johto_oak_talk_report(manifest, profiles_by_label, scaling, offset_map, by_species, failures):
+    checks = []
+    for row in manifest["profiles"]:
+        if row["map"] not in JOHTO_OAK_TALK_MAPS or row["method"] != "land_mons":
+            continue
+        profile = profiles_by_label[row["baseLabel"]]
+        for rating in JOHTO_SAMPLE_RATINGS:
+            outcomes = set()
+            for slot in range(2, 5):
+                mon = _active_mons(profile, "land_mons")[slot]
+                minimum = min(mon.get("min_level", 2), mon.get("max_level", 100))
+                runtime_key = (profile["product"], profile["header_id"], METHOD_AREAS["land_mons"], f"TIME_{row['runtimeTime']}", RODS["NONE"])
+                projected = project_level(scaling, minimum, rating, offset_map.get(runtime_key, 0))
+                species, _ = effective_species(mon["species"], projected, by_species)
+                if species != "SPECIES_NONE" and projected >= by_species[species]["minimum_level"]:
+                    outcomes.add(species)
+            passed = bool(outcomes)
+            if not passed:
+                failures.append(f"Johto Oak Pokemon Talk {row['baseLabel']}/rating {rating}: slots 2 through 4 have no eligible effective species")
+            checks.append({"map": row["map"], "baseLabel": row["baseLabel"], "runtimeTime": row["runtimeTime"], "rating": rating, "eligibleEffectiveSpecies": sorted(outcomes), "passed": passed})
+    covered_maps = {row["map"] for row in checks}
+    if covered_maps != JOHTO_OAK_TALK_MAPS:
+        failures.append("Johto Oak Pokemon Talk route manifest is incomplete")
+    return {"routeMaps": sorted(JOHTO_OAK_TALK_MAPS), "slotWindow": [2, 3, 4], "checks": checks, "passed": covered_maps == JOHTO_OAK_TALK_MAPS and all(row["passed"] for row in checks)}
+
+
+def build_johto_audit(manifest, profiles, scaling, offsets, metadata, standard_rod, failures):
+    profiles_by_label = {profile["label"]: profile for profile in profiles}
+    by_species = {item["species"]: item for item in metadata}
+    nat_dex = {species: item["national_dex"] for species, item in by_species.items()}
+    offset_map = {(item["product"], item["header_id"], item["area"], item["time"], item["rod"]): item["level_offset"] for item in offsets}
+    baseline = _johto_authored_snapshot(manifest["profiles"], manifest["baselineSpecies"], profiles_by_label, standard_rod, nat_dex)
+    baseline_expected = {
+        "overallGen1": "72.8", "overallGen2": "25.9", "overallGen3": "0.0", "overallGen4": "1.3",
+        "landGen2": "27.9", "surfGen2": "11.9", "fishingGen2": "3.7",
+    }
+    one_decimal = lambda value: f"{round_half_up(value * 1000) // 10}.{round_half_up(value * 1000) % 10}"
+    baseline_actual = {
+        "overallGen1": one_decimal(baseline["generations"]["GENERATION_I"]),
+        "overallGen2": one_decimal(baseline["generations"]["GENERATION_II_FAMILIES"]),
+        "overallGen3": one_decimal(baseline["generations"]["INDEPENDENT_GENERATION_III"]),
+        "overallGen4": one_decimal(baseline["generations"]["GENERATION_IV_ONWARD"]),
+        "landGen2": one_decimal(baseline["methods"]["land_mons"]["GENERATION_II_FAMILIES"]),
+        "surfGen2": one_decimal(baseline["methods"]["water_mons"]["GENERATION_II_FAMILIES"]),
+        "fishingGen2": one_decimal(baseline["methods"]["fishing_mons"]["GENERATION_II_FAMILIES"]),
+    }
+    if baseline_actual != baseline_expected:
+        failures.append(f"Johto baseline portfolio mismatch: expected {baseline_expected}, got {baseline_actual}")
+
+    stage_reports = []
+    for stage in manifest["stageSnapshots"]:
+        snapshot = _johto_authored_snapshot(manifest["profiles"], stage["state"], profiles_by_label, standard_rod, nat_dex)
+        stage_changes = [change for change in manifest["changes"] if change["changeKind"] == stage["stage"]]
+        moved_probability = Fraction(0)
+        for change in stage_changes:
+            row = next(row for row in manifest["profiles"] if row["baseLabel"] == change["baseLabel"] and row["method"] == change["method"] and row["runtimeTime"] == change["time"])
+            profile = profiles_by_label[row["baseLabel"]]
+            rods = FISHING_QUALITIES if row["method"] == "fishing_mons" else ("NONE",)
+            moved_probability += sum(
+                Fraction(_source_weights(profile, row["method"], rod, standard_rod)[change["slot"]], sum(_source_weights(profile, row["method"], rod, standard_rod)))
+                for rod in rods
+            ) / len(rods)
+        stage_reports.append({
+            "stage": stage["stage"], "portfolio": _johto_snapshot_report(snapshot),
+            "changeRecordCount": len(stage_changes),
+            "changedSlotCount": len({(change["baseLabel"], change["method"], change["time"], change["slot"]) for change in stage_changes}),
+            "changedProfileCount": len({(change["baseLabel"], change["method"], change["time"]) for change in stage_changes}),
+            "totalProbabilityMoved": fraction_row(moved_probability),
+        })
+    final_snapshot = _johto_authored_snapshot(manifest["profiles"], manifest["stageSnapshots"][-1]["state"], profiles_by_label, standard_rod, nat_dex)
+    _johto_validate_portfolio(final_snapshot, failures, "Johto authored", False)
+    for species, value in final_snapshot["interactionSpecies"].items():
+        if value > Fraction(1, 4):
+            failures.append(f"Johto authored interaction species {species} exceeds 25 percent")
+    forbidden_authored = []
+    for row in manifest["profiles"]:
+        identity = (row["map"], row["baseLabel"], row["method"], row["runtimeTime"])
+        for species in manifest["stageSnapshots"][-1]["state"][identity]:
+            if species != "SPECIES_NONE" and (species in {"SPECIES_WYNAUT", "SPECIES_AZURILL"} or _johto_generation(species, nat_dex) == "INDEPENDENT_GENERATION_III"):
+                forbidden_authored.append({"baseLabel": row["baseLabel"], "method": row["method"], "species": species})
+    if forbidden_authored:
+        failures.append("Johto authored profiles contain forbidden species")
+
+    effective_reports, forbidden_effective = [], []
+    for rating in JOHTO_SAMPLE_RATINGS:
+        snapshot = _johto_effective_snapshot(manifest, rating, profiles_by_label, scaling, offset_map, by_species, standard_rod, failures)
+        _johto_validate_portfolio(snapshot, failures, f"Johto effective rating {rating}", True)
+        if snapshot["generations"]["INDEPENDENT_GENERATION_III"]:
+            forbidden_effective.append({"rating": rating, "probability": fraction_row(snapshot["generations"]["INDEPENDENT_GENERATION_III"])})
+        report = _johto_snapshot_report(snapshot)
+        report.update({"rating": rating, "profiles": snapshot["profiles"]})
+        effective_reports.append(report)
+
+    time_report = _johto_day_night_report(manifest, profiles_by_label, standard_rod, failures)
+    anchors = _johto_anchor_report(manifest, profiles_by_label, scaling, offset_map, by_species, standard_rod, failures)
+    hoenn = _johto_hoenn_sound_report(manifest, profiles_by_label, scaling, offset_map, by_species, standard_rod, failures)
+    oak = _johto_oak_talk_report(manifest, profiles_by_label, scaling, offset_map, by_species, failures)
+    nonselectable = [row for row in manifest["profiles"] if not row["selectable"]]
+    authored_slot_data = []
+    final_state = manifest["stageSnapshots"][-1]["state"]
+    for row in manifest["profiles"]:
+        identity = (row["map"], row["baseLabel"], row["method"], row["runtimeTime"])
+        source = profiles_by_label[row["baseLabel"]]
+        mons = _active_mons(source, row["method"])
+        authored_slot_data.append({
+            "map": row["map"], "baseLabel": row["baseLabel"], "runtimeTime": row["runtimeTime"],
+            "method": row["method"], "encounterRate": source["encounter"][row["method"]]["encounter_rate"],
+            "weights": (
+                {rod: list(standard_rod["qualityWeights"][rod]) for rod in FISHING_QUALITIES}
+                if row["method"] == "fishing_mons" else list(_source_weights(source, row["method"], "NONE", standard_rod))
+            ),
+            "slots": [
+                {
+                    "slot": slot, "minimumLevel": mon.get("min_level", 2), "maximumLevel": mon.get("max_level", 100),
+                    "baselineSpecies": manifest["baselineSpecies"][identity][slot], "finalSpecies": final_state[identity][slot],
+                }
+                for slot, mon in enumerate(mons)
+            ],
+        })
+    return {
+        "ownership": {
+            "maps": sorted(JOHTO_MAPS), "mapCount": len(JOHTO_MAPS), "authoredTimeRowCount": len({row["baseLabel"] for row in manifest["profiles"]}),
+            "profileCount": len(manifest["profiles"]), "selectableProfileCount": sum(row["selectable"] for row in manifest["profiles"]),
+            "methodProfileCounts": {method: sum(row["method"] == method for row in manifest["profiles"]) for method in ACTIVE_SLOT_COUNTS},
+            "selectableMethodProfileCounts": {method: sum(row["method"] == method and row["selectable"] for row in manifest["profiles"]) for method in ACTIVE_SLOT_COUNTS},
+            "nonselectableProfiles": nonselectable, "profiles": manifest["profiles"],
+            "topologyDigest": manifest["topologyDigest"], "baselineDigest": manifest["baselineDigest"],
+            "duplicateRuntimeIdentities": [
+                {"map": "MAP_MT_SILVER_SNOW_HNS", "runtimeTime": "DAY", "reachableBaseLabel": "gMtSilver_SnowUnused_hns_Day", "mirroredBaseLabel": "gMtSilver_Snow_hns_Day"},
+                {"map": "MAP_MT_SILVER_SNOW_HNS", "runtimeTime": "NIGHT", "reachableBaseLabel": "gMtSilver_SnowUnused_hns_Night", "mirroredBaseLabel": "gMtSilver_SnowNight_hns_Day"},
+            ],
+            "portfolioDenominatorFormula": "(123L + 87W + 89F + 64I) / 363",
+        },
+        "fallbacks": manifest["fallbacks"], "protectedAnchors": manifest["protectedAnchors"],
+        "changes": manifest["changes"], "stageSnapshots": stage_reports,
+        "authoredSlotData": authored_slot_data,
+        "additions": [change for change in manifest["changes"] if change["changeKind"] == "ADD_LOCAL_SPECIES"],
+        "removals": [change for change in manifest["changes"] if change["changeKind"] == "REMOVE_FORBIDDEN"],
+        "baselinePortfolio": {"expectedOneDecimalPercentages": baseline_expected, "actualOneDecimalPercentages": baseline_actual, "portfolio": _johto_snapshot_report(baseline)},
+        "authoredPortfolio": _johto_snapshot_report(final_snapshot), "effectivePortfolios": effective_reports,
+        "forbiddenSpecies": {"authored": forbidden_authored, "effective": forbidden_effective, "passed": not forbidden_authored and not forbidden_effective},
+        "dayNightProfileMetrics": time_report, "nativeHmCoverage": anchors,
+        "hoennSoundComparison": hoenn,
+        "ordinaryReaderChecks": {
+            "sharedEffectivePopulationConsumers": ["ORDINARY_ENCOUNTER", "POKEDEX_AREA", "DEXNAV", "AMBIENT_SPECIES", "MATCH_CALL", "OAK_POKEMON_TALK", "CARTOGRAPHER"],
+            "oakPokemonTalk": oak,
+        },
+    }
+
+
 def audit_method(profile, method, rod, scaling, offset, by_species, failures, standard_rod):
     slots = []
     for index, mon, weight in method_slots(profile, method, rod, standard_rod):
@@ -3275,7 +4297,8 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
 
     regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
     kanto = build_kanto_audit(regional_manifest, profiles, scaling, offsets, metadata, standard_rod, failures)
-    return {"schemaVersion": 3, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(10, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto}, "invariants": {"passed": not failures, "failures": failures}}
+    johto = build_johto_audit(regional_manifest["johto"], profiles, scaling, offsets, metadata, standard_rod, failures)
+    return {"schemaVersion": 3, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(10, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto, "JOHTO": johto}, "invariants": {"passed": not failures, "failures": failures}}
 
 
 def atomic_write(path, content):

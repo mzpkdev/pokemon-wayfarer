@@ -273,7 +273,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             "SPECIES_TAUROS": 25,
             "SPECIES_RELICANTH": 25,
             "SPECIES_SNEASEL": 30,
-            "SPECIES_MANTINE": 35,
+            "SPECIES_MANTINE": 14,
             "SPECIES_BAGON": 20,
             "SPECIES_TROPIUS": 20,
             "SPECIES_ABSOL": 20,
@@ -302,6 +302,18 @@ class WildEncounterScalingTests(unittest.TestCase):
             GENERATOR.effective_species("SPECIES_GOLEM", 14, by_species),
             ("SPECIES_GEODUDE", [("SPECIES_GOLEM", "SPECIES_GRAVELER"), ("SPECIES_GRAVELER", "SPECIES_GEODUDE")]),
         )
+        projected_mantine_level = GENERATOR.project_level(self.scaling, 15, 10, 0)
+        self.assertEqual(projected_mantine_level, 14)
+        self.assertGreaterEqual(projected_mantine_level, by_species["SPECIES_MANTINE"]["minimum_level"])
+        slot = {"species": "SPECIES_MANTINE", "minimumLevel": 15, "maximumLevel": 15}
+        summaries, _ = GENERATOR.slot_summary(slot, self.scaling, 0, by_species, [], "Mantine fixture")
+        self.assertFalse(summaries[10]["locked"])
+        too_high = copy.deepcopy(by_species)
+        too_high["SPECIES_MANTINE"]["minimum_level"] = 15
+        resolved, _ = GENERATOR.effective_species("SPECIES_MANTINE", projected_mantine_level, too_high)
+        self.assertLess(projected_mantine_level, too_high[resolved]["minimum_level"])
+        summaries, _ = GENERATOR.slot_summary(slot, self.scaling, 0, too_high, [], "Mantine floor-15 fixture")
+        self.assertTrue(summaries[10]["locked"])
 
     def test_generation_classification_uses_base_national_dex(self):
         nat_dex = GENERATOR.active_national_dex(GENERATOR.DEFAULT_SPECIES_INFO)
@@ -917,6 +929,213 @@ class WildEncounterScalingTests(unittest.TestCase):
                 GENERATOR.active_national_dex(GENERATOR.DEFAULT_SPECIES_INFO),
             )
 
+    def validate_johto_fixture(self, document, profiles=None):
+        return GENERATOR._validate_johto_manifest(
+            document["regions"]["JOHTO"],
+            self.profiles if profiles is None else profiles,
+            self.species,
+            GENERATOR.active_national_dex(GENERATOR.DEFAULT_SPECIES_INFO),
+            self.standard_rod,
+            GENERATOR.DEFAULT_REGIONS,
+        )
+
+    def test_johto_manifest_freezes_topology_fallbacks_and_baseline(self):
+        document = GENERATOR.load_json(GENERATOR.DEFAULT_REGIONS)
+        manifest = self.validate_johto_fixture(document)
+        self.assertEqual(len(manifest["profiles"]), 366)
+        self.assertEqual(len({row["map"] for row in manifest["profiles"]}), 93)
+        self.assertEqual(len({row["baseLabel"] for row in manifest["profiles"]}), 149)
+        self.assertEqual(len(manifest["fallbacks"]), 531)
+        self.assertEqual(
+            {method: sum(row["method"] == method for row in manifest["profiles"])
+             for method in GENERATOR.ACTIVE_SLOT_COUNTS},
+            {"land_mons": 123, "water_mons": 90, "rock_smash_mons": 64, "fishing_mons": 89},
+        )
+        self.assertEqual(
+            {method: sum(row["method"] == method and row["selectable"] for row in manifest["profiles"])
+             for method in GENERATOR.ACTIVE_SLOT_COUNTS},
+            {"land_mons": 123, "water_mons": 87, "rock_smash_mons": 64, "fishing_mons": 89},
+        )
+        self.assertEqual(manifest["topologyDigest"], GENERATOR.JOHTO_TOPOLOGY_RATE_LEVEL_SHA256)
+        self.assertEqual(manifest["baselineDigest"], GENERATOR.JOHTO_BASELINE_SLOT_SHA256)
+
+    def test_johto_manifest_rejects_schema_fallback_topology_anchor_and_snow_mirror_drift(self):
+        document = GENERATOR.load_json(GENERATOR.DEFAULT_REGIONS)
+
+        extra = copy.deepcopy(document)
+        extra["regions"]["JOHTO"]["profiles"][0]["unexpected"] = True
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "unexpected"):
+            self.validate_johto_fixture(extra)
+
+        fallback = copy.deepcopy(document)
+        fallback["regions"]["JOHTO"]["fallbacks"].pop()
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "day fallback"):
+            self.validate_johto_fixture(fallback)
+
+        anchor = copy.deepcopy(document)
+        anchor["regions"]["JOHTO"]["protectedAnchors"][0]["ratingRange"]["min"] = 11
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "expected 10 through 80"):
+            self.validate_johto_fixture(anchor)
+
+        rate_profiles = copy.deepcopy(self.profiles)
+        rate_target = next(row for row in rate_profiles if row["label"] == "gRoute29_hns_Day")
+        rate_target["encounter"]["land_mons"]["encounter_rate"] += 1
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "encounter rates, or levels changed"):
+            self.validate_johto_fixture(document, rate_profiles)
+
+        weight_profiles = copy.deepcopy(self.profiles)
+        weight_target = next(row for row in weight_profiles if row["label"] == "gRoute29_hns_Day")
+        land_field = next(field for field in weight_target["group"]["fields"] if field["type"] == "land_mons")
+        land_field["encounter_rates"][0] -= 1
+        land_field["encounter_rates"][1] += 1
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "production slot weights changed"):
+            self.validate_johto_fixture(document, weight_profiles)
+
+        mirror_profiles = copy.deepcopy(self.profiles)
+        mirror_target = next(row for row in mirror_profiles if row["label"] == "gMtSilver_Snow_hns_Day")
+        mirror_target["encounter"]["land_mons"]["mons"][0]["species"] = "SPECIES_MEW"
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "exact mirrors"):
+            self.validate_johto_fixture(document, mirror_profiles)
+
+    def test_johto_manifest_reconstructs_ordered_reweight_chain(self):
+        document = GENERATOR.load_json(GENERATOR.DEFAULT_REGIONS)
+        manifest = self.validate_johto_fixture(document)
+        self.assertTrue(manifest["changes"])
+        self.assertEqual(manifest["baselineDigest"], GENERATOR.JOHTO_BASELINE_SLOT_SHA256)
+        self.assertEqual(manifest["stageSnapshots"][-1]["stage"], "ADD_LOCAL_SPECIES")
+
+        unordered = copy.deepcopy(document)
+        unordered["regions"]["JOHTO"]["changes"][0], unordered["regions"]["JOHTO"]["changes"][1] = (
+            unordered["regions"]["JOHTO"]["changes"][1], unordered["regions"]["JOHTO"]["changes"][0]
+        )
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "deterministic stage"):
+            self.validate_johto_fixture(unordered)
+
+        transient_external = copy.deepcopy(document)
+        changes = transient_external["regions"]["JOHTO"]["changes"]
+        target_index = next(
+            index for index, change in enumerate(changes)
+            if change["changeKind"] == "REWEIGHT_EXISTING"
+            and change["baseLabel"] == "gRoute30_hns_Day"
+            and change["method"] == "land_mons"
+            and change["slot"] == 0
+        )
+        target = changes[target_index]
+        injected = {
+            **target,
+            "afterSpecies": "SPECIES_HOOTHOOT",
+            "habitatEvidence": ["gRoute30_hns_Night"],
+            "reason": "TIME_IDENTITY",
+        }
+        target["beforeSpecies"] = "SPECIES_HOOTHOOT"
+        changes.insert(target_index, injected)
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "pre-stage multiset"):
+            self.validate_johto_fixture(transient_external)
+
+    def test_johto_manifest_rejects_premature_addition_and_bad_habitat_evidence(self):
+        document = GENERATOR.load_json(GENERATOR.DEFAULT_REGIONS)
+        self.validate_johto_fixture(document)
+        addition_index = next(
+            index for index, change in enumerate(document["regions"]["JOHTO"]["changes"])
+            if change["changeKind"] == "ADD_LOCAL_SPECIES"
+        )
+
+        premature = copy.deepcopy(document)
+        addition_method = premature["regions"]["JOHTO"]["changes"][addition_index]["method"]
+        unrelated_target = {
+            "land_mons": "AUTHORED_FISHING_GEN2_MIN",
+            "water_mons": "AUTHORED_LAND_GEN2_MIN",
+            "fishing_mons": "AUTHORED_LAND_GEN2_MIN",
+            "rock_smash_mons": "AUTHORED_SURF_GEN2_MIN",
+        }[addition_method]
+        premature["regions"]["JOHTO"]["changes"][addition_index]["targetFailureBefore"] = [unrelated_target]
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "not relevant to the changed method"):
+            self.validate_johto_fixture(premature)
+
+        forbidden = copy.deepcopy(document)
+        forbidden_profiles = copy.deepcopy(self.profiles)
+        forbidden_change = forbidden["regions"]["JOHTO"]["changes"][addition_index]
+        forbidden_change["afterSpecies"] = "SPECIES_TREECKO"
+        forbidden_target = next(
+            row for row in forbidden_profiles if row["label"] == forbidden_change["baseLabel"]
+        )
+        forbidden_target["encounter"][forbidden_change["method"]]["mons"][forbidden_change["slot"]]["species"] = "SPECIES_TREECKO"
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "ordinary Generation II candidates"):
+            self.validate_johto_fixture(forbidden, forbidden_profiles)
+
+        unsupported = copy.deepcopy(document)
+        unsupported["regions"]["JOHTO"]["changes"][addition_index]["habitatEvidence"] = [
+            "gIcePath_1F_hns_Day"
+        ]
+        with self.assertRaisesRegex(
+            GENERATOR.ValidationError,
+            "habitatEvidence: (?:unresolved method profile|species lacks unchanged same-habitat)",
+        ):
+            self.validate_johto_fixture(unsupported)
+
+    def test_johto_baseline_portfolio_uses_exact_method_and_rod_fractions(self):
+        manifest = self.validate_johto_fixture(GENERATOR.load_json(GENERATOR.DEFAULT_REGIONS))
+        by_label = {row["label"]: row for row in self.profiles}
+        snapshot = GENERATOR._johto_authored_snapshot(
+            manifest["profiles"], manifest["baselineSpecies"], by_label,
+            self.standard_rod, GENERATOR.active_national_dex(GENERATOR.DEFAULT_SPECIES_INFO),
+        )
+        self.assertEqual(snapshot["profileDenominator"], 363)
+        self.assertEqual(snapshot["generations"]["GENERATION_II_FAMILIES"], Fraction(14101, 54450))
+        self.assertEqual(snapshot["methods"]["land_mons"]["GENERATION_II_FAMILIES"], Fraction(229, 820))
+        self.assertEqual(snapshot["methods"]["water_mons"]["GENERATION_II_FAMILIES"], Fraction(1039, 8700))
+        self.assertEqual(snapshot["methods"]["fishing_mons"]["GENERATION_II_FAMILIES"], Fraction(199, 5340))
+        self.assertEqual(
+            {rod: snapshot["fishingQualities"][rod]["GENERATION_II_FAMILIES"] for rod in GENERATOR.FISHING_QUALITIES},
+            {"OLD_ROD": Fraction(213, 8900), "GOOD_ROD": Fraction(78, 2225), "SUPER_ROD": Fraction(47, 890)},
+        )
+        self.assertEqual(snapshot["interactionSpecies"]["SPECIES_PINECO"], Fraction(603, 1280))
+
+    def test_johto_generation_classification_and_exact_band_boundaries(self):
+        nat_dex = {"SPECIES_WYNAUT": 360, "SPECIES_AZURILL": 298, "SPECIES_TREECKO": 252}
+        self.assertEqual(GENERATOR._johto_generation("SPECIES_WYNAUT", nat_dex, True), "GENERATION_II_FAMILIES")
+        self.assertEqual(GENERATOR._johto_generation("SPECIES_AZURILL", nat_dex, True), "GENERATION_II_FAMILIES")
+        self.assertEqual(GENERATOR._johto_generation("SPECIES_TREECKO", nat_dex, True), "INDEPENDENT_GENERATION_III")
+        self.assertEqual(
+            GENERATOR._johto_relevant_failure_targets("land_mons", ["AUTHORED_OVERALL_GEN2_MIN"]),
+            {"AUTHORED_OVERALL_GEN2_MIN"},
+        )
+        self.assertEqual(
+            GENERATOR._johto_relevant_failure_targets("land_mons", ["AUTHORED_FISHING_GEN2_MIN"]),
+            set(),
+        )
+
+        method_values = {
+            "land_mons": Fraction(40, 100), "water_mons": Fraction(30, 100),
+            "fishing_mons": Fraction(25, 100), "rock_smash_mons": Fraction(65, 100),
+        }
+        overall_gen2 = (
+            123 * method_values["land_mons"] + 87 * method_values["water_mons"]
+            + 89 * method_values["fishing_mons"] + 64 * method_values["rock_smash_mons"]
+        ) / 363
+        generations = {
+            "GENERATION_I": 1 - overall_gen2 - Fraction(5, 100),
+            "GENERATION_II_FAMILIES": overall_gen2,
+            "INDEPENDENT_GENERATION_III": Fraction(0), "GENERATION_IV_ONWARD": Fraction(5, 100),
+        }
+        methods = {
+            method: {**generations, "GENERATION_I": 1 - value, "GENERATION_II_FAMILIES": value, "GENERATION_IV_ONWARD": Fraction(0)}
+            for method, value in method_values.items()
+        }
+        rod_values = {"OLD_ROD": Fraction(10, 100), "GOOD_ROD": Fraction(25, 100), "SUPER_ROD": Fraction(40, 100)}
+        rods = {
+            rod: {**generations, "GENERATION_I": 1 - value, "GENERATION_II_FAMILIES": value, "GENERATION_IV_ONWARD": Fraction(0)}
+            for rod, value in rod_values.items()
+        }
+        snapshot = {"profileDenominator": 363, "generations": generations, "methods": methods, "fishingQualities": rods, "interactionSpecies": {"SPECIES_PINECO": Fraction(1, 4)}}
+        failures = []
+        GENERATOR._johto_validate_portfolio(snapshot, failures, "fixture", False)
+        self.assertEqual(failures, [])
+        snapshot["methods"]["land_mons"]["GENERATION_II_FAMILIES"] -= Fraction(1, 10000)
+        failures = []
+        GENERATOR._johto_validate_portfolio(snapshot, failures, "fixture", False)
+        self.assertTrue(any("land" in failure for failure in failures))
+
     def test_day_aliases_generate_explicit_night_header_bindings(self):
         manifest = GENERATOR.load_regional_manifest(
             GENERATOR.DEFAULT_REGIONS, self.profiles, self.config, self.species
@@ -1032,6 +1251,73 @@ class WildEncounterScalingTests(unittest.TestCase):
             for row in kanto["hoennSoundComparison"]["profileComparisons"]
         ))
         self.assertEqual(len(kanto["effectivePortfolios"]), 2 * 3 * 71)
+        johto = audit["regions"]["JOHTO"]
+        self.assertEqual(johto["ownership"]["mapCount"], 93)
+        self.assertEqual(johto["ownership"]["authoredTimeRowCount"], 149)
+        self.assertEqual(johto["ownership"]["profileCount"], 366)
+        self.assertEqual(johto["ownership"]["selectableProfileCount"], 363)
+        self.assertEqual(
+            johto["ownership"]["methodProfileCounts"],
+            {"land_mons": 123, "water_mons": 90, "rock_smash_mons": 64, "fishing_mons": 89},
+        )
+        self.assertEqual(
+            johto["ownership"]["selectableMethodProfileCounts"],
+            {"land_mons": 123, "water_mons": 87, "rock_smash_mons": 64, "fishing_mons": 89},
+        )
+        self.assertEqual(
+            {row["baseLabel"] for row in johto["ownership"]["nonselectableProfiles"]},
+            {
+                "gMtSilver_1F_ItemRoom_hns_Day", "gMtSilver_1F_ItemRoom_hns_Night",
+                "gMtSilver_MountainSide_hns_Day",
+            },
+        )
+        self.assertEqual(len(johto["fallbacks"]), 531)
+        self.assertEqual(johto["baselinePortfolio"]["actualOneDecimalPercentages"], johto["baselinePortfolio"]["expectedOneDecimalPercentages"])
+        self.assertEqual(johto["authoredPortfolio"]["profileDenominator"], 363)
+        self.assertEqual(len(johto["effectivePortfolios"]), 6)
+        self.assertTrue(all(row["profileDenominator"] == 363 for row in johto["effectivePortfolios"]))
+        self.assertEqual([row["rating"] for row in johto["effectivePortfolios"]], [10, 16, 40, 55, 65, 80])
+        probability_sum = lambda rows: sum(
+            Fraction(row["probability"]["numerator"], row["probability"]["denominator"])
+            for row in rows
+        )
+        for portfolio in [johto["authoredPortfolio"], *johto["effectivePortfolios"]]:
+            self.assertEqual(probability_sum(portfolio["species"]), 1)
+            self.assertTrue(all(probability_sum(rows) == 1 for rows in portfolio["methodSpecies"].values()))
+            self.assertTrue(all(probability_sum(rows) == 1 for rows in portfolio["fishingQualitySpecies"].values()))
+        self.assertTrue(johto["forbiddenSpecies"]["passed"])
+        self.assertTrue(johto["dayNightProfileMetrics"])
+        self.assertTrue(all(not row["unapprovedExclusiveSpeciesLosses"] for row in johto["dayNightProfileMetrics"]))
+        self.assertTrue(all(
+            row["baseline"]["totalVariationDistance"]["numerator"] == 0
+            or row["final"]["totalVariationDistance"]["numerator"] != 0
+            for row in johto["dayNightProfileMetrics"]
+        ))
+        self.assertTrue(johto["nativeHmCoverage"]["passed"])
+        self.assertTrue(johto["nativeHmCoverage"]["aipomHeadbutt"]["passed"])
+        self.assertTrue(all(row["passed"] for row in johto["nativeHmCoverage"]["chinchouOldRod"]))
+        mantine = next(row for row in johto["nativeHmCoverage"]["anchors"] if row["species"] == "SPECIES_MANTINE")
+        self.assertTrue(mantine["passed"])
+        self.assertTrue(all(
+            len(profile["ratingOutcomes"]) == 71
+            and [row["rating"] for row in profile["ratingOutcomes"]] == list(range(10, 81))
+            and all(row["effectiveSpecies"] == ["SPECIES_MANTINE"] for row in profile["ratingOutcomes"])
+            for profile in mantine["profiles"]
+        ))
+        self.assertTrue(johto["hoennSoundComparison"]["passed"])
+        self.assertEqual(len(johto["hoennSoundComparison"]["profileComparisons"]), (123 + 90) * 6)
+        self.assertTrue(johto["ordinaryReaderChecks"]["oakPokemonTalk"]["passed"])
+        self.assertEqual(
+            set(johto["ordinaryReaderChecks"]["oakPokemonTalk"]["routeMaps"]),
+            GENERATOR.JOHTO_OAK_TALK_MAPS,
+        )
+        self.assertEqual(len(johto["ownership"]["duplicateRuntimeIdentities"]), 2)
+        self.assertEqual(
+            [row["stage"] for row in johto["stageSnapshots"]],
+            ["BASELINE", *GENERATOR.JOHTO_CHANGE_KINDS],
+        )
+        self.assertTrue(any(change["changeKind"] == "CONSOLIDATE_DUPLICATE" for change in johto["changes"]))
+        self.assertTrue(any(change["changeKind"] == "ADD_LOCAL_SPECIES" for change in johto["changes"]))
         products = {row["product"]: row for row in audit["products"]}
         self.assertEqual(set(products), {"Emerald", "FireRed", "LeafGreen", "HNS"})
         for product in products.values():

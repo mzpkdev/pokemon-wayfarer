@@ -426,6 +426,93 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
         EXPECT_EQ(lowestEffectiveLevel, 9);
     }
 }
+
+TEST("Johto Mantine anchors remain eligible throughout the protected rating range")
+{
+    static const u8 sWaterWeights[WATER_WILD_COUNT] = { 60, 30, 5, 4, 1 };
+    static const struct
+    {
+        u16 map;
+        enum TimeOfDay timeOfDay;
+        u8 slotCount;
+        u8 slots[2];
+        u8 minLevels[2];
+        u8 maxLevels[2];
+    } sRecords[] =
+    {
+        { MAP_ROUTE41_HNS, TIME_DAY, 1, { 2 }, { 22 }, { 26 } },
+        { MAP_WHIRL_ISLANDS_1F_HNS, TIME_DAY, 2, { 3, 4 }, { 20, 15 }, { 24, 19 } },
+        { MAP_WHIRL_ISLANDS_1F_HNS, TIME_NIGHT, 2, { 3, 4 }, { 20, 15 }, { 24, 19 } },
+        { MAP_WHIRL_ISLANDS_B1F_HNS, TIME_DAY, 2, { 3, 4 }, { 20, 15 }, { 24, 19 } },
+        { MAP_WHIRL_ISLANDS_B1F_HNS, TIME_NIGHT, 2, { 3, 4 }, { 20, 15 }, { 24, 19 } },
+    };
+    const struct WildEncounterSpeciesMetadata *mantineMetadata = NULL;
+    u16 metadataId;
+    u8 recordId;
+
+    for (metadataId = 0; metadataId < gWildEncounterSpeciesMetadataCount; metadataId++)
+    {
+        if (gWildEncounterSpeciesMetadata[metadataId].species == SPECIES_MANTINE)
+        {
+            mantineMetadata = &gWildEncounterSpeciesMetadata[metadataId];
+            break;
+        }
+    }
+    ASSUME(mantineMetadata != NULL);
+    EXPECT_EQ(mantineMetadata->minimumLevel, 14);
+    EXPECT_EQ(mantineMetadata->predecessorSpecies, SPECIES_NONE);
+
+    for (recordId = 0; recordId < ARRAY_COUNT(sRecords); recordId++)
+    {
+        struct WildEncounterProfileView view;
+        u8 mantineSlotCount = 0;
+        u8 slot;
+        u8 expectedSlotId;
+
+        ASSUME(FindProfileForMap(sRecords[recordId].map, sRecords[recordId].timeOfDay, WILD_AREA_WATER, WILD_ENCOUNTER_FISHING_ROD_NONE, &view));
+        EXPECT_EQ(view.wildMonsInfo->encounterRate, 7);
+        EXPECT_EQ(view.entryStart, 0);
+        EXPECT_EQ(view.entryCount, WATER_WILD_COUNT);
+        for (slot = 0; slot < WATER_WILD_COUNT; slot++)
+        {
+            const struct WildPokemon *entry;
+
+            ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
+            EXPECT_EQ(view.weights[slot], sWaterWeights[slot]);
+            if (entry->species == SPECIES_MANTINE)
+                mantineSlotCount++;
+        }
+        EXPECT_EQ(mantineSlotCount, sRecords[recordId].slotCount);
+
+        for (expectedSlotId = 0; expectedSlotId < sRecords[recordId].slotCount; expectedSlotId++)
+        {
+            const struct WildPokemon *entry;
+            u16 rating;
+
+            slot = sRecords[recordId].slots[expectedSlotId];
+            ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
+            EXPECT_EQ(entry->species, SPECIES_MANTINE);
+            EXPECT_EQ(entry->minLevel, sRecords[recordId].minLevels[expectedSlotId]);
+            EXPECT_EQ(entry->maxLevel, sRecords[recordId].maxLevels[expectedSlotId]);
+
+            for (rating = 10; rating <= 80; rating++)
+            {
+                u8 authoredLevel;
+
+                EXPECT(IsWildEncounterProfileSlotEligible(&view, slot, rating, FALSE));
+                EXPECT_EQ(GetWildEncounterProfileEffectiveWeight(&view, slot, rating, FALSE), sWaterWeights[slot]);
+                for (authoredLevel = entry->minLevel; authoredLevel <= entry->maxLevel; authoredLevel++)
+                {
+                    struct WildEncounterSpeciesOutcome outcome;
+
+                    ASSUME(GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, rating, FALSE, &outcome));
+                    EXPECT_EQ(outcome.species, SPECIES_MANTINE);
+                    EXPECT_GE(outcome.level, mantineMetadata->minimumLevel);
+                }
+            }
+        }
+    }
+}
 #endif
 
 TEST("Wild encounter scaling rejects unsupported or malformed profile contexts")
