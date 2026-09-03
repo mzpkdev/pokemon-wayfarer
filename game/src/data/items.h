@@ -13741,10 +13741,15 @@ const struct ItemInfo gItemsInfo[] =
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
     },
-#else
+#endif
+#if !IS_HNS || IS_WAYFARER
     [ITEM_HM_DIVE] =
     {
+#if IS_WAYFARER
+        .name = ITEM_NAME("HM09"),
+#else
         .name = ITEM_NAME("HM08"),
+#endif
         .price = 0,
         .description = COMPOUND_STRING(
             "Dives underwater\n"

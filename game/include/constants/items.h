@@ -820,6 +820,10 @@ enum __attribute__((packed)) Item
     ITEM_HM06 = 687,
     ITEM_HM07 = 688,
     ITEM_HM08 = 689,
+#if defined(POKEMON_WAYFARER)
+    // Appended physically so the union build does not renumber existing items.
+    ITEM_HM09 = 901,
+#endif
 
 
     /* Expands to:
@@ -1081,7 +1085,11 @@ enum __attribute__((packed)) Item
     ITEM_UNUSED_BERRY_3,
     ITEM_AZURE_FLUTE,
 
+#if defined(POKEMON_WAYFARER)
+    ITEMS_COUNT = ITEM_HM09 + 1,
+#else
     ITEMS_COUNT,
+#endif
     ITEM_FIELD_ARROW = ITEMS_COUNT,
 };
 

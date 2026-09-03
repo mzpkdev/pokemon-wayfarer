@@ -6727,7 +6727,7 @@ static void TrySetCursorFistAnim(void)
 
 static void GetRestrictedReleaseMoves(u16 *moves)
 {
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
     // Dive is not an HM in HNS and retains its existing release restriction.
     *moves++ = MOVE_DIVE;
 #endif

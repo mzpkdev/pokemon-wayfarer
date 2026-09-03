@@ -56,6 +56,7 @@
 #include "tilesets.h"
 #include "tv.h"
 #include "wallclock.h"
+#include "wayfarer_persistence.h"
 #include "window.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_pyramid.h"
@@ -1565,8 +1566,16 @@ void LoadWallyZigzagoon(void)
 bool8 IsStarterInParty(void)
 {
     u8 i;
-    u16 starter = GetStarterPokemon(VarGet(VAR_STARTER_MON));
+    u16 starterVar = VAR_STARTER_MON;
+    u16 starter;
     u8 partyCount = CalculatePlayerPartyCount();
+
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        starterVar = VAR_HOENN_STARTER_CHOICE;
+#endif
+    starter = GetStarterPokemon(VarGet(starterVar));
+
     for (i = 0; i < partyCount; i++)
     {
         if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG) == starter)
@@ -4108,8 +4117,37 @@ bool8 InPokemonCenter(void)
       2: Player has met their initial fans
 */
 
-#define FANCLUB_BITFIELD (gSaveBlock1Ptr->vars[VAR_FANCLUB_FAN_COUNTER - VARS_START])
 #define FANCLUB_COUNTER    0x007F
+
+enum HoennTrainerFanClubSourceFlag
+{
+    HOENN_SOURCE_FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER = 0x2DA,
+    HOENN_SOURCE_FLAG_HIDE_FANCLUB_OLD_LADY = 0x315,
+    HOENN_SOURCE_FLAG_HIDE_FANCLUB_BOY = 0x316,
+    HOENN_SOURCE_FLAG_HIDE_FANCLUB_LITTLE_BOY = 0x317,
+    HOENN_SOURCE_FLAG_HIDE_FANCLUB_LADY = 0x318,
+};
+
+static u16 GetTrainerFanClubVarId(u16 id)
+{
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return HOENN_VAR_ID(id);
+#endif
+    return id;
+}
+
+static u16 GetTrainerFanClubFlagId(u16 id, u16 hoennSourceId)
+{
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return HOENN_FLAG_ID(hoennSourceId);
+#endif
+    return id;
+}
+
+#define FANCLUB_BITFIELD (*GetVarPointer(GetTrainerFanClubVarId(VAR_FANCLUB_FAN_COUNTER)))
+#define FANCLUB_LOSE_FAN_TIMER (*GetVarPointer(GetTrainerFanClubVarId(VAR_FANCLUB_LOSE_FAN_TIMER)))
 
 #define GET_TRAINER_FAN_CLUB_FLAG(flag)  (FANCLUB_BITFIELD >> (flag) & 1)
 #define SET_TRAINER_FAN_CLUB_FLAG(flag)  (FANCLUB_BITFIELD |= 1 << (flag))
@@ -4122,8 +4160,8 @@ bool8 InPokemonCenter(void)
 
 void ResetFanClub(void)
 {
-    gSaveBlock1Ptr->vars[VAR_FANCLUB_FAN_COUNTER - VARS_START] = 0;
-    gSaveBlock1Ptr->vars[VAR_FANCLUB_LOSE_FAN_TIMER - VARS_START] = 0;
+    FANCLUB_BITFIELD = 0;
+    FANCLUB_LOSE_FAN_TIMER = 0;
 }
 
 void TryLoseFansFromPlayTimeAfterLinkBattle(void)
@@ -4131,7 +4169,7 @@ void TryLoseFansFromPlayTimeAfterLinkBattle(void)
     if (DidPlayerGetFirstFans())
     {
         TryLoseFansFromPlayTime();
-        gSaveBlock1Ptr->vars[VAR_FANCLUB_LOSE_FAN_TIMER - VARS_START] = gSaveBlock2Ptr->playTimeHours;
+        FANCLUB_LOSE_FAN_TIMER = gSaveBlock2Ptr->playTimeHours;
     }
 }
 
@@ -4141,13 +4179,13 @@ void UpdateTrainerFanClubGameClear(void)
     {
         SetPlayerGotFirstFans();
         SetInitialFansOfPlayer();
-        gSaveBlock1Ptr->vars[VAR_FANCLUB_LOSE_FAN_TIMER - VARS_START] = gSaveBlock2Ptr->playTimeHours;
-        FlagClear(FLAG_HIDE_FANCLUB_OLD_LADY);
-        FlagClear(FLAG_HIDE_FANCLUB_BOY);
-        FlagClear(FLAG_HIDE_FANCLUB_LITTLE_BOY);
-        FlagClear(FLAG_HIDE_FANCLUB_LADY);
-        FlagClear(FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER);
-        VarSet(VAR_LILYCOVE_FAN_CLUB_STATE, 1);
+        FANCLUB_LOSE_FAN_TIMER = gSaveBlock2Ptr->playTimeHours;
+        FlagClear(GetTrainerFanClubFlagId(FLAG_HIDE_FANCLUB_OLD_LADY, HOENN_SOURCE_FLAG_HIDE_FANCLUB_OLD_LADY));
+        FlagClear(GetTrainerFanClubFlagId(FLAG_HIDE_FANCLUB_BOY, HOENN_SOURCE_FLAG_HIDE_FANCLUB_BOY));
+        FlagClear(GetTrainerFanClubFlagId(FLAG_HIDE_FANCLUB_LITTLE_BOY, HOENN_SOURCE_FLAG_HIDE_FANCLUB_LITTLE_BOY));
+        FlagClear(GetTrainerFanClubFlagId(FLAG_HIDE_FANCLUB_LADY, HOENN_SOURCE_FLAG_HIDE_FANCLUB_LADY));
+        FlagClear(GetTrainerFanClubFlagId(FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER, HOENN_SOURCE_FLAG_HIDE_LILYCOVE_FAN_CLUB_INTERVIEWER));
+        VarSet(GetTrainerFanClubVarId(VAR_LILYCOVE_FAN_CLUB_STATE), 1);
     }
 }
 
@@ -4164,7 +4202,7 @@ u8 TryGainNewFanFromCounter(u8 incrementId)
         [FANCOUNTER_USED_BATTLE_TOWER] = 1
     };
 
-    if (VarGet(VAR_LILYCOVE_FAN_CLUB_STATE) == 2)
+    if (VarGet(GetTrainerFanClubVarId(VAR_LILYCOVE_FAN_CLUB_STATE)) == 2)
     {
         if (GET_TRAINER_FAN_CLUB_COUNTER + sCounterIncrements[incrementId] > 19)
         {
@@ -4291,19 +4329,19 @@ void TryLoseFansFromPlayTime(void)
         {
             if (GetNumFansOfPlayerInTrainerFanClub() < 5)
             {
-                gSaveBlock1Ptr->vars[VAR_FANCLUB_LOSE_FAN_TIMER - VARS_START] = gSaveBlock2Ptr->playTimeHours;
+                FANCLUB_LOSE_FAN_TIMER = gSaveBlock2Ptr->playTimeHours;
                 break;
             }
             else if (i == NUM_TRAINER_FAN_CLUB_MEMBERS)
             {
                 break;
             }
-            else if (gSaveBlock2Ptr->playTimeHours - gSaveBlock1Ptr->vars[VAR_FANCLUB_LOSE_FAN_TIMER - VARS_START] < 12)
+            else if (gSaveBlock2Ptr->playTimeHours - FANCLUB_LOSE_FAN_TIMER < 12)
             {
                 return;
             }
             PlayerLoseRandomTrainerFan();
-            gSaveBlock1Ptr->vars[VAR_FANCLUB_LOSE_FAN_TIMER - VARS_START] += 12;
+            FANCLUB_LOSE_FAN_TIMER += 12;
             i++;
         }
     }
@@ -4431,7 +4469,7 @@ static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer)
 
 void UpdateTrainerFansAfterLinkBattle(void)
 {
-    if (VarGet(VAR_LILYCOVE_FAN_CLUB_STATE) == 2)
+    if (VarGet(GetTrainerFanClubVarId(VAR_LILYCOVE_FAN_CLUB_STATE)) == 2)
     {
         TryLoseFansFromPlayTimeAfterLinkBattle();
         if (gBattleOutcome == B_OUTCOME_WON)

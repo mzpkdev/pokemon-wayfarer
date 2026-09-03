@@ -5,9 +5,12 @@
 #include "field_player_avatar.h"
 #include "item.h"
 #include "pokemon.h"
+#include "string_util.h"
+#include "wayfarer_persistence.h"
 #include "test/test.h"
 #include "constants/field_move.h"
 #include "constants/items.h"
+#include "constants/maps.h"
 #include "constants/moves.h"
 
 #define ONE_TYPE_CHALLENGE_DISABLED 31
@@ -24,6 +27,10 @@ static void ResetFieldMoveTestState(void)
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_PartyLimit = 0;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_OneTypeChallenge = ONE_TYPE_CHALLENGE_DISABLED;
+    FlagClear(FLAG_BADGE07_GET);
+#if IS_WAYFARER
+    FlagClear(WAYFARER_HOENN_DIVE_AUTHORIZATION_FLAG);
+#endif
 }
 
 static u16 FindSpeciesWithHmCompatibility(enum Move move, bool32 compatible)
@@ -330,7 +337,10 @@ TEST("HM field use: party actions reserve terrain HMs for contextual use")
     EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_FLY));
     EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_FLASH));
     EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_DIG));
-#if IS_HNS
+#if IS_WAYFARER
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_DIVE));
+    EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_WHIRLPOOL));
+#elif IS_HNS
     EXPECT(IsFieldMovePartyMenuAction(FIELD_MOVE_DIVE));
     EXPECT(!IsFieldMovePartyMenuAction(FIELD_MOVE_WHIRLPOOL));
 #else
@@ -372,7 +382,65 @@ TEST("HM field use: every regional HM field action is badge-free")
         EXPECT(IsFieldMoveUnlocked(fieldMoves[i]));
 }
 
-#if IS_HNS
+#if IS_WAYFARER
+TEST("Wayfarer HM registry appends Dive as HM09 without replacing Whirlpool")
+{
+    EXPECT_EQ(NUM_HIDDEN_MACHINES, 9);
+    EXPECT_EQ(ITEM_HM08, 689);
+    EXPECT_EQ(ITEM_HM_WHIRLPOOL, ITEM_HM08);
+    EXPECT_EQ(ITEM_HM_DIVE, ITEM_HM09);
+    EXPECT_EQ(ITEM_HM09, ITEM_AZURE_FLUTE + 1);
+    EXPECT_EQ(ITEMS_COUNT, ITEM_HM09 + 1);
+    EXPECT_EQ(GetItemTMHMMoveId(ITEM_HM08), MOVE_WHIRLPOOL);
+    EXPECT_EQ(GetItemTMHMMoveId(ITEM_HM09), MOVE_DIVE);
+    EXPECT_EQ(GetTMHMItemIdFromMoveId(MOVE_WHIRLPOOL), ITEM_HM08);
+    EXPECT_EQ(GetTMHMItemIdFromMoveId(MOVE_DIVE), ITEM_HM09);
+    EXPECT_EQ(StringCompare(GetItemName(ITEM_HM09), COMPOUND_STRING("HM09")), 0);
+    EXPECT_EQ(GetItemPocket(ITEM_HM09), POCKET_TM_HM);
+    EXPECT(IsMoveHM(MOVE_WHIRLPOOL));
+    EXPECT(IsMoveHM(MOVE_DIVE));
+}
+
+TEST("Wayfarer Dive authorization dispatches by valid map source")
+{
+    static const u16 hnsMap = MAP_NEW_BARK_TOWN_HNS;
+    static const u16 hoennMap = MAP_LITTLEROOT_TOWN;
+
+    ResetFieldMoveTestState();
+    EXPECT_EQ(WayfarerGetDiveMapContext(MAP_GROUP(hnsMap), MAP_NUM(hnsMap)), WAYFARER_DIVE_MAP_HNS);
+    EXPECT_EQ(WayfarerGetDiveMapContext(MAP_GROUP(hoennMap), MAP_NUM(hoennMap)), WAYFARER_DIVE_MAP_HOENN);
+    EXPECT_EQ(WayfarerGetDiveMapContext(-1, -1), WAYFARER_DIVE_MAP_UNKNOWN);
+
+    for (u8 hnsBadge = FALSE; hnsBadge <= TRUE; hnsBadge++)
+    {
+        for (u8 hoennAuthorization = FALSE; hoennAuthorization <= TRUE; hoennAuthorization++)
+        {
+            if (hnsBadge)
+                FlagSet(FLAG_BADGE07_GET);
+            else
+                FlagClear(FLAG_BADGE07_GET);
+            if (hoennAuthorization)
+                FlagSet(WAYFARER_HOENN_DIVE_AUTHORIZATION_FLAG);
+            else
+                FlagClear(WAYFARER_HOENN_DIVE_AUTHORIZATION_FLAG);
+
+            EXPECT_EQ(WayfarerIsDiveAuthorizedForMap(MAP_GROUP(hnsMap), MAP_NUM(hnsMap)), hnsBadge);
+            EXPECT_EQ(WayfarerIsDiveAuthorizedForMap(MAP_GROUP(hoennMap), MAP_NUM(hoennMap)), hoennAuthorization);
+            EXPECT(!WayfarerIsDiveAuthorizedForMap(-1, -1));
+
+            gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(hnsMap);
+            gSaveBlock1Ptr->location.mapNum = MAP_NUM(hnsMap);
+            EXPECT_EQ(IsFieldMoveUnlocked(FIELD_MOVE_DIVE), hnsBadge);
+            gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(hoennMap);
+            gSaveBlock1Ptr->location.mapNum = MAP_NUM(hoennMap);
+            EXPECT_EQ(IsFieldMoveUnlocked(FIELD_MOVE_DIVE), hoennAuthorization);
+            gSaveBlock1Ptr->location.mapGroup = -1;
+            gSaveBlock1Ptr->location.mapNum = -1;
+            EXPECT(!IsFieldMoveUnlocked(FIELD_MOVE_DIVE));
+        }
+    }
+}
+#elif IS_HNS
 TEST("HM field use: HNS maps HM08 to Whirlpool and keeps Dive badge-gated")
 {
     u8 partyIndex;
@@ -429,6 +497,9 @@ TEST("HM field use: regional moves are forgettable while HM items remain importa
         MOVE_WATERFALL,
 #if IS_HNS
         MOVE_WHIRLPOOL,
+#if IS_WAYFARER
+        MOVE_DIVE,
+#endif
 #else
         MOVE_DIVE,
 #endif
@@ -444,6 +515,9 @@ TEST("HM field use: regional moves are forgettable while HM items remain importa
         ITEM_HM_WATERFALL,
 #if IS_HNS
         ITEM_HM_WHIRLPOOL,
+#if IS_WAYFARER
+        ITEM_HM_DIVE,
+#endif
 #else
         ITEM_HM_DIVE,
 #endif
@@ -458,7 +532,7 @@ TEST("HM field use: regional moves are forgettable while HM items remain importa
         EXPECT_EQ(GetTMHMItemIdFromMoveId(moves[i]), items[i]);
     }
 
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
     EXPECT(!CannotForgetMove(MOVE_DIVE));
 #endif
 }

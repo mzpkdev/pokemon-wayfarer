@@ -399,10 +399,10 @@ Route110_EventScript_PlayBrendanMusic::
 
 Route110_EventScript_MayBattle::
 	msgbox Route110_Text_MayLetsBattle, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route110_EventScript_MayBattleTreecko
-	case 1, Route110_EventScript_MayBattleTorchic
-	case 2, Route110_EventScript_MayBattleMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, Route110_EventScript_MayBattleTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, Route110_EventScript_MayBattleTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, Route110_EventScript_MayBattleMudkip
 	end
 
 Route110_EventScript_MayBattleTreecko::
@@ -429,10 +429,10 @@ Route110_EventScript_MayDefeated::
 
 Route110_EventScript_BrendanBattle::
 	msgbox Route110_Text_BrendanLetsBattle, MSGBOX_DEFAULT
-	switch VAR_STARTER_MON
-	case 0, Route110_EventScript_BrendanBattleTreecko
-	case 1, Route110_EventScript_BrendanBattleTorchic
-	case 2, Route110_EventScript_BrendanBattleMudkip
+	switch VAR_HOENN_STARTER_CHOICE
+	case HOENN_STARTER_CHOICE_TREECKO, Route110_EventScript_BrendanBattleTreecko
+	case HOENN_STARTER_CHOICE_TORCHIC, Route110_EventScript_BrendanBattleTorchic
+	case HOENN_STARTER_CHOICE_MUDKIP, Route110_EventScript_BrendanBattleMudkip
 	end
 
 Route110_EventScript_BrendanBattleTreecko::
@@ -986,4 +986,3 @@ Route110_Text_KeepAnEyeOutForRival:
 	.string "… … … … … …\p"
 	.string "Well, I had better get going.\n"
 	.string "See you again, {PLAYER}{KUN}!$"
-

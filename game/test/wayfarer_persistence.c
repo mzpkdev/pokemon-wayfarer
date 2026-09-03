@@ -57,6 +57,20 @@ TEST("Wayfarer common-script source follows the map catalog")
     EXPECT(!WayfarerIsCurrentMapHoennSource());
 }
 
+TEST("Wayfarer Hoenn starter state initializes to no choice and no delivery")
+{
+    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TORCHIC);
+    FlagSet(FLAG_HOENN_STARTER_RECEIVED);
+    FlagClear(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG);
+
+    WayfarerInitPersistentState();
+
+    EXPECT_EQ(VarGet(VAR_HOENN_STARTER_CHOICE), HOENN_STARTER_CHOICE_NONE);
+    EXPECT(!FlagGet(FLAG_HOENN_STARTER_RECEIVED));
+    EXPECT(FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG)));
+    EXPECT(!FlagGet(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));
+}
+
 TEST("Wayfarer current region follows map source rather than reused Hoenn map sections")
 {
     WayfarerInitPersistentState();

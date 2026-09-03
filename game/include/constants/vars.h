@@ -3,6 +3,7 @@
 
 #include "constants/vars_frlg.h"
 #include "constants/vars_hns.h"
+#include "constants/wayfarer_persistence.h"
 
 #define VARS_START 0x4000
 
@@ -54,6 +55,15 @@
 #define VAR_REPEL_STEP_COUNT                             0x4021
 #define VAR_ICE_STEP_COUNT                               0x4022
 #define VAR_STARTER_MON                                  0x4023 // 0=Treecko, 1=Torchic, 2=Mudkip
+#if IS_WAYFARER
+#define VAR_HOENN_STARTER_CHOICE                         HOENN_VAR_ID(VAR_STARTER_MON)
+#else
+#define VAR_HOENN_STARTER_CHOICE                         VAR_STARTER_MON
+#endif
+#define HOENN_STARTER_CHOICE_TREECKO                     0
+#define HOENN_STARTER_CHOICE_TORCHIC                     1
+#define HOENN_STARTER_CHOICE_MUDKIP                      2
+#define HOENN_STARTER_CHOICE_NONE                        0xFFFF
 #define VAR_MIRAGE_RND_H                                 0x4024
 #define VAR_MIRAGE_RND_L                                 0x4025
 #define VAR_SECRET_BASE_MAP                              0x4026

@@ -14,11 +14,26 @@ void WayfarerSetHoennStateInitialized(bool8 initialized);
 enum Region WayfarerGetSavedCurrentRegion(void);
 void WayfarerSetSavedCurrentRegion(enum Region region);
 #if IS_WAYFARER
+// Emerald FLAG_RECEIVED_HM_DIVE (source id 0x07B) is the dedicated
+// authorization set by Steven's Hoenn reward script.
+#define WAYFARER_HOENN_DIVE_AUTHORIZATION_FLAG HOENN_FLAG_ID(0x07B)
+
+enum WayfarerDiveMapContext
+{
+    WAYFARER_DIVE_MAP_UNKNOWN,
+    WAYFARER_DIVE_MAP_HNS,
+    WAYFARER_DIVE_MAP_HOENN,
+};
+
 enum Region WayfarerGetRegionForMap(s16 mapGroup, s16 mapNum);
 enum Region WayfarerGetCurrentMapRegion(void);
 void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum);
 bool8 WayfarerIsCurrentMapHoennSource(void);
+enum WayfarerDiveMapContext WayfarerGetDiveMapContext(s16 mapGroup, s16 mapNum);
+bool8 WayfarerIsDiveAuthorizedForMap(s16 mapGroup, s16 mapNum);
+bool8 WayfarerIsDiveAuthorizedForCurrentMap(void);
 u16 WayfarerGetCurrentRegionForScript(void);
+u16 WayfarerGetHoennBadgeCountForScript(void);
 u16 WayfarerShouldWhiteOutToLavaridge(void);
 #endif
 

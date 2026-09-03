@@ -4,6 +4,7 @@
 #include "constants/trainers.h"
 #include "constants/opponents.h"
 #include "constants/rematches.h"
+#include "constants/wayfarer_persistence.h"
 
 
 // Temporary Flags
@@ -2474,6 +2475,14 @@
 #define FLAG_VISITED_FUCHSIA_CITY                   0
 #define FLAG_VISITED_CINNABAR_ISLAND                0
 
+#endif
+
+#if IS_WAYFARER
+#define FLAG_HOENN_STARTER_RECEIVED HOENN_FLAG_ID(WAYFARER_HOENN_STARTER_RECEIVED_SOURCE_FLAG)
+#elif HAS_EMERALD_CONTENT
+#define FLAG_HOENN_STARTER_RECEIVED FLAG_UNUSED_0x4FF
+#else
+#define FLAG_HOENN_STARTER_RECEIVED 0
 #endif
 
 // Several engine systems predate multi-region badge counts and only handle 8 badges

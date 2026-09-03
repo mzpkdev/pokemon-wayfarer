@@ -70,6 +70,14 @@ export const maps = {
   "test-map-1": { mapGroup: 30, mapNum: 27 },
   "petalburg-city": { mapGroup: 31, mapNum: 0 },
   "petalburg-house-1": { mapGroup: 39, mapNum: 2 },
+  "littleroot-town": { mapGroup: 31, mapNum: 9 },
+  "lilycove-city": { mapGroup: 31, mapNum: 5 },
+  "mossdeep-city": { mapGroup: 31, mapNum: 6 },
+  "ever-grande-city": { mapGroup: 31, mapNum: 8 },
+  "underwater-route-124": { mapGroup: 31, mapNum: 50 },
+  "granite-cave-1f": { mapGroup: 55, mapNum: 7 },
+  "mt-chimney": { mapGroup: 55, mapNum: 12 },
+  "victory-road-1f": { mapGroup: 55, mapNum: 43 },
 } as const
 
 export const storyVars = {

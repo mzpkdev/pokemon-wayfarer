@@ -125,6 +125,8 @@ void WayfarerInitPersistentState(void)
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 1 << REGION_JOHTO;
+    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
+    FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));
 #endif
 }
 
@@ -244,6 +246,37 @@ bool8 WayfarerIsCurrentMapHoennSource(void)
 {
     return IsWayfarerMapHoennSource(gSaveBlock1Ptr->location.mapGroup,
                                    gSaveBlock1Ptr->location.mapNum);
+}
+
+enum WayfarerDiveMapContext WayfarerGetDiveMapContext(s16 mapGroup, s16 mapNum)
+{
+    if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
+     || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
+        return WAYFARER_DIVE_MAP_UNKNOWN;
+
+    if (IsWayfarerMapHoennSource(mapGroup, mapNum))
+        return WAYFARER_DIVE_MAP_HOENN;
+
+    return WAYFARER_DIVE_MAP_HNS;
+}
+
+bool8 WayfarerIsDiveAuthorizedForMap(s16 mapGroup, s16 mapNum)
+{
+    switch (WayfarerGetDiveMapContext(mapGroup, mapNum))
+    {
+    case WAYFARER_DIVE_MAP_HNS:
+        return FlagGet(FLAG_BADGE07_GET);
+    case WAYFARER_DIVE_MAP_HOENN:
+        return FlagGet(WAYFARER_HOENN_DIVE_AUTHORIZATION_FLAG);
+    default:
+        return FALSE;
+    }
+}
+
+bool8 WayfarerIsDiveAuthorizedForCurrentMap(void)
+{
+    return WayfarerIsDiveAuthorizedForMap(gSaveBlock1Ptr->location.mapGroup,
+                                          gSaveBlock1Ptr->location.mapNum);
 }
 
 u16 WayfarerGetCurrentRegionForScript(void)
@@ -372,6 +405,13 @@ u8 GetBadgeCountForRegion(enum Region region)
     return count;
 }
 
+#if IS_WAYFARER
+u16 WayfarerGetHoennBadgeCountForScript(void)
+{
+    return GetBadgeCountForRegion(REGION_HOENN);
+}
+#endif
+
 bool8 GetChampionStateForRegion(enum Region region)
 {
 #if IS_WAYFARER
@@ -452,6 +492,7 @@ void SetGameClearStateForRegion(enum Region region, bool8 value)
     if (region == REGION_HOENN)
     {
         SetHoennLeagueFlag(HOENN_LEAGUE_GAME_CLEAR, value);
+        SetChampionStateForRegion(region, value);
         return;
     }
     if (region == REGION_JOHTO)
