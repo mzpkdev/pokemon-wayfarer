@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-    branches: [main]
     types:
       - opened
       - reopened
@@ -37,7 +36,7 @@ jobs:
         env:
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" BUILD=hns release
+        run: make -j"$(nproc)" BUILD=wayfarer release
 
   static-analysis:
     name: Static Analysis
@@ -59,7 +58,7 @@ jobs:
         working-directory: game
         env:
           ANALYZE: 1
-        run: make -j"$(nproc)" BUILD=hns debug
+        run: make -j"$(nproc)" BUILD=wayfarer debug
 
   expansion-suite:
     name: Expansion Suite
@@ -107,7 +106,7 @@ jobs:
           TEST: 1
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
-        run: make -j"$(nproc)" check
+        run: make -j"$(nproc)" BUILD=wayfarer check
 
       - name: Upload Expansion Suite report
         if: always()

@@ -281,7 +281,7 @@ const struct Tileset gTileset_Lab_Frlg =
     .callback = NULL,
 };
 
-#if !IS_FRLG && !IS_HNS
+#if HAS_EMERALD_CONTENT
 
 const struct Tileset gTileset_Petalburg =
 {
@@ -844,7 +844,9 @@ const struct Tileset gTileset_UnionRoom =
     .callback = NULL,
 };
 
-#elif IS_FRLG
+#endif // HAS_EMERALD_CONTENT
+
+#if HAS_FRLG_CONTENT
 
 // FRLG tilesets
 const struct Tileset gTileset_BuildingFrlg =
@@ -1540,7 +1542,9 @@ const struct Tileset gTileset_HallOfFame =
     .callback = NULL,
 };
 
-#elif IS_HNS
+#endif // HAS_FRLG_CONTENT
+
+#if HAS_HNS_CONTENT
 
 
 // HnS tilesets
@@ -2711,4 +2715,4 @@ const struct Tileset gTileset_MtEmber_Hns =
     .metatileAttributes = gMetatileAttributes_MtEmber_Hns,
     .callback = InitTilesetAnim_MtEmber_Hns,
 };
-#endif // IS_FRLG || IS_HNS
+#endif // HAS_HNS_CONTENT

@@ -54,6 +54,7 @@
 #include "constants/items.h"
 #include "difficulty.h"
 #include "follower_npc.h"
+#include "wayfarer_persistence.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 #if IS_FRLG
@@ -234,6 +235,9 @@ void NewGameInitData(void)
     ClearFrontierRecord();
     ClearSav1();
     ClearSav3();
+#if IS_WAYFARER
+    WayfarerInitPersistentState();
+#endif
     gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
     gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
     SetDefaultChallengeSettings();

@@ -117,6 +117,21 @@
 	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item | (((\flag) - FLAG_HIDDEN_ITEMS_START) << 11)| (\quantity << 24) | (\underfoot << 31)
 	.endm
 
+	@ Wayfarer stores the Emerald source flag directly and reserves the top bit
+	@ of the 13-bit hidden-item id as its source discriminator.
+	.macro bg_hidden_item_event_hoenn x:req, y:req, elevation:req, item:req, flag:req, quantity=1, underfoot=FALSE
+	.if (\flag & WAYFARER_PERSISTENCE_NAMESPACE_MASK) != WAYFARER_HOENN_FLAG_NAMESPACE
+	.error "Hoenn Hidden Item flag \flag is not in the Hoenn namespace."
+	.endif
+	.if \item >= (1 << 11)
+	.error "item \item too large"
+	.endif
+	.if \quantity >= (1 << 7)
+	.error "quantity \quantity too large"
+	.endif
+	bg_event \x, \y, \elevation, BG_EVENT_HIDDEN_ITEM, \item | ((WAYFARER_HOENN_HIDDEN_ITEM_MARKER | (\flag & WAYFARER_PERSISTENCE_VALUE_MASK)) << 11) | (\quantity << 24) | (\underfoot << 31)
+	.endm
+
 	@ Defines a background secret base event for map data
 	.macro bg_secret_base_event x:req, y:req, elevation:req, secret_base_id:req
 	bg_event \x, \y, \elevation, BG_EVENT_SECRET_BASE, \secret_base_id

@@ -1,5 +1,15 @@
 #include "global.h"
 #include "regions.h"
+#if IS_WAYFARER
+#include "wayfarer_persistence.h"
+#endif
+
+#if IS_WAYFARER
+enum Region GetCurrentRegion(void)
+{
+    return WayfarerGetCurrentMapRegion();
+}
+#endif
 
 
 static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_COUNT][30] = {

@@ -27,9 +27,13 @@ static inline enum Region GetRegionForSectionId(u32 sectionId)
 #endif
 }
 
+#if IS_WAYFARER
+enum Region GetCurrentRegion(void);
+#else
 static inline enum Region GetCurrentRegion(void)
 {
     return GetRegionForSectionId(gMapHeader.regionMapSectionId);
 }
+#endif
 
 #endif // GUARD_REGIONS_H

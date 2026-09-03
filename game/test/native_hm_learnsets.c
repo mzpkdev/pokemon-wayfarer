@@ -36,7 +36,7 @@ struct NativeHmSuccessor
     { species, floor, ARRAY_COUNT(moves), moves, modern, ARRAY_COUNT(modern), legacy, ARRAY_COUNT(legacy) }
 #define SUCCESSOR(anchor, species, moves) { anchor, species, ARRAY_COUNT(moves), moves }
 
-#if IS_FRLG
+#if HAS_FRLG_CONTENT
 
 static const u16 sParasMoves[] = { MOVE_CUT };
 static const struct ExpectedLevelMove sParasModern[] = { LM(5, MOVE_CUT), LM(17, MOVE_CUT), LM(38, MOVE_CUT) };
@@ -69,40 +69,9 @@ static const u16 sGoldeenMoves[] = { MOVE_WATERFALL };
 static const struct ExpectedLevelMove sGoldeenModern[] = { LM(5, MOVE_WATERFALL), LM(21, MOVE_WATERFALL), LM(32, MOVE_WATERFALL), LM(40, MOVE_WATERFALL) };
 static const struct ExpectedLevelMove sGoldeenLegacy[] = { LM(5, MOVE_WATERFALL), LM(29, MOVE_WATERFALL), LM(38, MOVE_WATERFALL) };
 
-static const struct NativeHmAnchor sAnchors[] =
-{
-    ANCHOR(SPECIES_PARAS, 5, sParasMoves, sParasModern, sParasLegacy),
-    ANCHOR(SPECIES_RATTATA, 2, sRattataMoves, sRattataModern, sRattataLegacy),
-    ANCHOR(SPECIES_VOLTORB, 14, sVoltorbMoves, sVoltorbModern, sVoltorbLegacy),
-    ANCHOR(SPECIES_PIKACHU, 3, sPikachuMoves, sPikachuModern, sPikachuLegacy),
-    ANCHOR(SPECIES_HORSEA, 5, sHorseaMoves, sHorseaModern, sHorseaLegacy),
-    ANCHOR(SPECIES_KRABBY, 5, sKrabbyMoves, sKrabbyModern, sKrabbyLegacy),
-    ANCHOR(SPECIES_MACHOP, 16, sMachopMoves, sMachopModern, sMachopLegacy),
-    ANCHOR(SPECIES_GEODUDE, 7, sGeodudeMoves, sGeodudeModern, sGeodudeLegacy),
-    ANCHOR(SPECIES_MANKEY, 2, sMankeyMoves, sMankeyModern, sMankeyLegacy),
-    ANCHOR(SPECIES_GOLDEEN, 5, sGoldeenMoves, sGoldeenModern, sGoldeenLegacy),
-};
+#endif // HAS_FRLG_CONTENT
 
-static const struct NativeHmSuccessor sSuccessors[] =
-{
-    SUCCESSOR(SPECIES_PARAS, SPECIES_PARASECT, sParasMoves),
-    SUCCESSOR(SPECIES_RATTATA, SPECIES_RATICATE, sRattataMoves),
-    SUCCESSOR(SPECIES_VOLTORB, SPECIES_ELECTRODE, sVoltorbMoves),
-    SUCCESSOR(SPECIES_PIKACHU, SPECIES_RAICHU, sPikachuMoves),
-    SUCCESSOR(SPECIES_PIKACHU, SPECIES_RAICHU_ALOLA, sPikachuMoves),
-    SUCCESSOR(SPECIES_HORSEA, SPECIES_SEADRA, sHorseaMoves),
-    SUCCESSOR(SPECIES_HORSEA, SPECIES_KINGDRA, sHorseaMoves),
-    SUCCESSOR(SPECIES_KRABBY, SPECIES_KINGLER, sKrabbyMoves),
-    SUCCESSOR(SPECIES_MACHOP, SPECIES_MACHOKE, sMachopMoves),
-    SUCCESSOR(SPECIES_MACHOP, SPECIES_MACHAMP, sMachopMoves),
-    SUCCESSOR(SPECIES_GEODUDE, SPECIES_GRAVELER, sGeodudeMoves),
-    SUCCESSOR(SPECIES_GEODUDE, SPECIES_GOLEM, sGeodudeMoves),
-    SUCCESSOR(SPECIES_MANKEY, SPECIES_PRIMEAPE, sMankeyMoves),
-    SUCCESSOR(SPECIES_MANKEY, SPECIES_ANNIHILAPE, sMankeyMoves),
-    SUCCESSOR(SPECIES_GOLDEEN, SPECIES_SEAKING, sGoldeenMoves),
-};
-
-#elif IS_HNS
+#if HAS_HNS_CONTENT
 
 static const u16 sGligarMoves[] = { MOVE_CUT };
 static const struct ExpectedLevelMove sGligarModern[] = { LM(19, MOVE_CUT), LM(35, MOVE_CUT), LM(55, MOVE_CUT) };
@@ -132,32 +101,9 @@ static const u16 sMantineMoves[] = { MOVE_WHIRLPOOL };
 static const struct ExpectedLevelMove sMantineModern[] = { LM(15, MOVE_WHIRLPOOL), LM(27, MOVE_WHIRLPOOL), LM(46, MOVE_WHIRLPOOL) };
 static const struct ExpectedLevelMove sMantineLegacy[] = { LM(15, MOVE_WHIRLPOOL), LM(43, MOVE_WHIRLPOOL) };
 
-static const struct NativeHmAnchor sAnchors[] =
-{
-    ANCHOR(SPECIES_GLIGAR, 21, sGligarMoves, sGligarModern, sGligarLegacy),
-    ANCHOR(SPECIES_AIPOM, 10, sAipomMoves, sAipomModern, sAipomLegacy),
-    ANCHOR(SPECIES_CHINCHOU, 9, sChinchouMoves, sChinchouModern, sChinchouLegacy),
-    ANCHOR(SPECIES_MAREEP, 5, sMareepMoves, sMareepModern, sMareepLegacy),
-    ANCHOR(SPECIES_WOOPER, 4, sWooperMoves, sWooperModern, sWooperLegacy),
-    ANCHOR(SPECIES_SNUBBULL, 13, sSnubbullMoves, sSnubbullModern, sSnubbullLegacy),
-    ANCHOR(SPECIES_MILTANK, 21, sMiltankMoves, sMiltankModern, sMiltankLegacy),
-    ANCHOR(SPECIES_MARILL, 8, sMarillMoves, sMarillModern, sMarillLegacy),
-    ANCHOR(SPECIES_MANTINE, 15, sMantineMoves, sMantineModern, sMantineLegacy),
-};
+#endif // HAS_HNS_CONTENT
 
-static const struct NativeHmSuccessor sSuccessors[] =
-{
-    SUCCESSOR(SPECIES_GLIGAR, SPECIES_GLISCOR, sGligarMoves),
-    SUCCESSOR(SPECIES_AIPOM, SPECIES_AMBIPOM, sAipomMoves),
-    SUCCESSOR(SPECIES_CHINCHOU, SPECIES_LANTURN, sChinchouMoves),
-    SUCCESSOR(SPECIES_MAREEP, SPECIES_FLAAFFY, sMareepMoves),
-    SUCCESSOR(SPECIES_MAREEP, SPECIES_AMPHAROS, sMareepMoves),
-    SUCCESSOR(SPECIES_WOOPER, SPECIES_QUAGSIRE, sWooperMoves),
-    SUCCESSOR(SPECIES_SNUBBULL, SPECIES_GRANBULL, sSnubbullMoves),
-    SUCCESSOR(SPECIES_MARILL, SPECIES_AZUMARILL, sMarillMoves),
-};
-
-#else
+#if HAS_EMERALD_CONTENT
 
 static const u16 sCorphishMoves[] = { MOVE_CUT, MOVE_ROCK_SMASH };
 static const struct ExpectedLevelMove sCorphishModern[] = { LM(10, MOVE_CUT), LM(10, MOVE_ROCK_SMASH), LM(20, MOVE_CUT), LM(20, MOVE_ROCK_SMASH), LM(31, MOVE_CUT), LM(31, MOVE_ROCK_SMASH), LM(39, MOVE_CUT), LM(39, MOVE_ROCK_SMASH) };
@@ -190,8 +136,36 @@ static const u16 sCarvanhaMoves[] = { MOVE_WATERFALL, MOVE_DIVE };
 static const struct ExpectedLevelMove sCarvanhaModern[] = { LM(10, MOVE_WATERFALL), LM(10, MOVE_DIVE), LM(18, MOVE_WATERFALL), LM(18, MOVE_DIVE), LM(29, MOVE_WATERFALL), LM(29, MOVE_DIVE), LM(39, MOVE_WATERFALL), LM(39, MOVE_DIVE) };
 static const struct ExpectedLevelMove sCarvanhaLegacy[] = { LM(10, MOVE_WATERFALL), LM(10, MOVE_DIVE), LM(22, MOVE_WATERFALL), LM(22, MOVE_DIVE), LM(37, MOVE_WATERFALL), LM(37, MOVE_DIVE) };
 
+// The region rows below are selected independently so Wayfarer exercises the
+// native utility schedules for every content set it includes.
+#endif // HAS_EMERALD_CONTENT
+
 static const struct NativeHmAnchor sAnchors[] =
 {
+#if HAS_FRLG_CONTENT
+    ANCHOR(SPECIES_PARAS, 5, sParasMoves, sParasModern, sParasLegacy),
+    ANCHOR(SPECIES_RATTATA, 2, sRattataMoves, sRattataModern, sRattataLegacy),
+    ANCHOR(SPECIES_VOLTORB, 14, sVoltorbMoves, sVoltorbModern, sVoltorbLegacy),
+    ANCHOR(SPECIES_PIKACHU, 3, sPikachuMoves, sPikachuModern, sPikachuLegacy),
+    ANCHOR(SPECIES_HORSEA, 5, sHorseaMoves, sHorseaModern, sHorseaLegacy),
+    ANCHOR(SPECIES_KRABBY, 5, sKrabbyMoves, sKrabbyModern, sKrabbyLegacy),
+    ANCHOR(SPECIES_MACHOP, 16, sMachopMoves, sMachopModern, sMachopLegacy),
+    ANCHOR(SPECIES_GEODUDE, 7, sGeodudeMoves, sGeodudeModern, sGeodudeLegacy),
+    ANCHOR(SPECIES_MANKEY, 2, sMankeyMoves, sMankeyModern, sMankeyLegacy),
+    ANCHOR(SPECIES_GOLDEEN, 5, sGoldeenMoves, sGoldeenModern, sGoldeenLegacy),
+#endif
+#if HAS_HNS_CONTENT
+    ANCHOR(SPECIES_GLIGAR, 21, sGligarMoves, sGligarModern, sGligarLegacy),
+    ANCHOR(SPECIES_AIPOM, 10, sAipomMoves, sAipomModern, sAipomLegacy),
+    ANCHOR(SPECIES_CHINCHOU, 9, sChinchouMoves, sChinchouModern, sChinchouLegacy),
+    ANCHOR(SPECIES_MAREEP, 5, sMareepMoves, sMareepModern, sMareepLegacy),
+    ANCHOR(SPECIES_WOOPER, 4, sWooperMoves, sWooperModern, sWooperLegacy),
+    ANCHOR(SPECIES_SNUBBULL, 13, sSnubbullMoves, sSnubbullModern, sSnubbullLegacy),
+    ANCHOR(SPECIES_MILTANK, 21, sMiltankMoves, sMiltankModern, sMiltankLegacy),
+    ANCHOR(SPECIES_MARILL, 8, sMarillMoves, sMarillModern, sMarillLegacy),
+    ANCHOR(SPECIES_MANTINE, 15, sMantineMoves, sMantineModern, sMantineLegacy),
+#endif
+#if HAS_EMERALD_CONTENT
     ANCHOR(SPECIES_CORPHISH, 10, sCorphishMoves, sCorphishModern, sCorphishLegacy),
     ANCHOR(SPECIES_SABLEYE, 9, sSableyeMoves, sSableyeModern, sSableyeLegacy),
     ANCHOR(SPECIES_ELECTRIKE, 12, sElectrikeMoves, sElectrikeModern, sElectrikeLegacy),
@@ -202,10 +176,39 @@ static const struct NativeHmAnchor sAnchors[] =
     ANCHOR(SPECIES_ARON, 7, sAronMoves, sAronModern, sAronLegacy),
     ANCHOR(SPECIES_BARBOACH, 10, sBarboachMoves, sBarboachModern, sBarboachLegacy),
     ANCHOR(SPECIES_CARVANHA, 10, sCarvanhaMoves, sCarvanhaModern, sCarvanhaLegacy),
+#endif
 };
 
 static const struct NativeHmSuccessor sSuccessors[] =
 {
+#if HAS_FRLG_CONTENT
+    SUCCESSOR(SPECIES_PARAS, SPECIES_PARASECT, sParasMoves),
+    SUCCESSOR(SPECIES_RATTATA, SPECIES_RATICATE, sRattataMoves),
+    SUCCESSOR(SPECIES_VOLTORB, SPECIES_ELECTRODE, sVoltorbMoves),
+    SUCCESSOR(SPECIES_PIKACHU, SPECIES_RAICHU, sPikachuMoves),
+    SUCCESSOR(SPECIES_PIKACHU, SPECIES_RAICHU_ALOLA, sPikachuMoves),
+    SUCCESSOR(SPECIES_HORSEA, SPECIES_SEADRA, sHorseaMoves),
+    SUCCESSOR(SPECIES_HORSEA, SPECIES_KINGDRA, sHorseaMoves),
+    SUCCESSOR(SPECIES_KRABBY, SPECIES_KINGLER, sKrabbyMoves),
+    SUCCESSOR(SPECIES_MACHOP, SPECIES_MACHOKE, sMachopMoves),
+    SUCCESSOR(SPECIES_MACHOP, SPECIES_MACHAMP, sMachopMoves),
+    SUCCESSOR(SPECIES_GEODUDE, SPECIES_GRAVELER, sGeodudeMoves),
+    SUCCESSOR(SPECIES_GEODUDE, SPECIES_GOLEM, sGeodudeMoves),
+    SUCCESSOR(SPECIES_MANKEY, SPECIES_PRIMEAPE, sMankeyMoves),
+    SUCCESSOR(SPECIES_MANKEY, SPECIES_ANNIHILAPE, sMankeyMoves),
+    SUCCESSOR(SPECIES_GOLDEEN, SPECIES_SEAKING, sGoldeenMoves),
+#endif
+#if HAS_HNS_CONTENT
+    SUCCESSOR(SPECIES_GLIGAR, SPECIES_GLISCOR, sGligarMoves),
+    SUCCESSOR(SPECIES_AIPOM, SPECIES_AMBIPOM, sAipomMoves),
+    SUCCESSOR(SPECIES_CHINCHOU, SPECIES_LANTURN, sChinchouMoves),
+    SUCCESSOR(SPECIES_MAREEP, SPECIES_FLAAFFY, sMareepMoves),
+    SUCCESSOR(SPECIES_MAREEP, SPECIES_AMPHAROS, sMareepMoves),
+    SUCCESSOR(SPECIES_WOOPER, SPECIES_QUAGSIRE, sWooperMoves),
+    SUCCESSOR(SPECIES_SNUBBULL, SPECIES_GRANBULL, sSnubbullMoves),
+    SUCCESSOR(SPECIES_MARILL, SPECIES_AZUMARILL, sMarillMoves),
+#endif
+#if HAS_EMERALD_CONTENT
     SUCCESSOR(SPECIES_CORPHISH, SPECIES_CRAWDAUNT, sCorphishMoves),
     SUCCESSOR(SPECIES_ELECTRIKE, SPECIES_MANECTRIC, sElectrikeMoves),
     SUCCESSOR(SPECIES_LOTAD, SPECIES_LOMBRE, sLotadMoves),
@@ -216,9 +219,8 @@ static const struct NativeHmSuccessor sSuccessors[] =
     SUCCESSOR(SPECIES_ARON, SPECIES_AGGRON, sAronMoves),
     SUCCESSOR(SPECIES_BARBOACH, SPECIES_WHISCASH, sBarboachMoves),
     SUCCESSOR(SPECIES_CARVANHA, SPECIES_SHARPEDO, sCarvanhaMoves),
-};
-
 #endif
+};
 
 struct NativeHmEncounterPlace
 {
@@ -232,7 +234,7 @@ struct NativeHmEncounterPlace
 #define PLACE(species, minLevel, maxLevel, maps) \
     { species, minLevel, maxLevel, ARRAY_COUNT(maps), maps }
 
-#if IS_FRLG
+#if HAS_FRLG_CONTENT
 
 static const u16 sMtMoonMaps[] = { MAP_MT_MOON_1F, MAP_MT_MOON_B1F, MAP_MT_MOON_B2F };
 static const u16 sSafariParasMaps[] = { MAP_SAFARI_ZONE_EAST, MAP_SAFARI_ZONE_NORTH_FRLG };
@@ -256,31 +258,9 @@ static const u16 sRoute3Or4Maps[] = { MAP_ROUTE3, MAP_ROUTE4 };
 static const u16 sRoute6Maps[] = { MAP_ROUTE6 };
 static const u16 sRoute22Or25Maps[] = { MAP_ROUTE22, MAP_ROUTE25 };
 
-static const struct NativeHmEncounterPlace sEncounterPlaces[] =
-{
-    PLACE(SPECIES_PARAS, 5, 12, sMtMoonMaps),
-    PLACE(SPECIES_PARAS, 22, 23, sSafariParasMaps),
-    PLACE(SPECIES_RATTATA, 2, 5, sRoute1Maps),
-    PLACE(SPECIES_RATTATA, 2, 5, sRoute2Or22Maps),
-    PLACE(SPECIES_VOLTORB, 14, 17, sRoute10Maps),
-    PLACE(SPECIES_VOLTORB, 22, 25, sPowerPlantMaps),
-    PLACE(SPECIES_PIKACHU, 3, 5, sViridianForestMaps),
-    PLACE(SPECIES_PIKACHU, 22, 26, sPowerPlantMaps),
-    PLACE(SPECIES_HORSEA, 5, 25, sPalletTownMaps),
-    PLACE(SPECIES_HORSEA, 5, 25, sCinnabarMaps),
-    PLACE(SPECIES_KRABBY, 5, 25, sPalletTownMaps),
-    PLACE(SPECIES_KRABBY, 5, 25, sCinnabarMaps),
-    PLACE(SPECIES_MACHOP, 16, 17, sRockTunnelMaps),
-    PLACE(SPECIES_MACHOP, 31, 39, sMtEmberMaps),
-    PLACE(SPECIES_GEODUDE, 7, 10, sMtMoonGeodudeMaps),
-    PLACE(SPECIES_GEODUDE, 15, 17, sRockTunnelMaps),
-    PLACE(SPECIES_MANKEY, 2, 5, sRoute22Maps),
-    PLACE(SPECIES_MANKEY, 7, 12, sRoute3Or4Maps),
-    PLACE(SPECIES_GOLDEEN, 5, 15, sRoute6Maps),
-    PLACE(SPECIES_GOLDEEN, 5, 15, sRoute22Or25Maps),
-};
+#endif // HAS_FRLG_CONTENT
 
-#elif IS_HNS
+#if HAS_HNS_CONTENT
 
 static const u16 sRoute42Maps[] = { MAP_ROUTE42_HNS };
 static const u16 sRoute45Maps[] = { MAP_ROUTE45_HNS };
@@ -301,31 +281,9 @@ static const u16 sUnionCaveMaps[] = { MAP_UNION_CAVE_1F_HNS, MAP_UNION_CAVE_B1F_
 static const u16 sWhirlIslandMaps[] = { MAP_WHIRL_ISLANDS_1F_HNS, MAP_WHIRL_ISLANDS_B1F_HNS };
 static const u16 sRoute41Maps[] = { MAP_ROUTE41_HNS };
 
-static const struct NativeHmEncounterPlace sEncounterPlaces[] =
-{
-    PLACE(SPECIES_GLIGAR, 21, 21, sRoute42Maps),
-    PLACE(SPECIES_GLIGAR, 31, 31, sRoute45Maps),
-    PLACE(SPECIES_AIPOM, 10, 10, sAzaleaMaps),
-    PLACE(SPECIES_AIPOM, 10, 10, sRoute33Maps),
-    PLACE(SPECIES_CHINCHOU, 20, 40, sOlivinePortMaps),
-    PLACE(SPECIES_CHINCHOU, 20, 20, sCianwoodMaps),
-    PLACE(SPECIES_CHINCHOU, 5, 5, sVermilionMaps),
-    PLACE(SPECIES_CHINCHOU, 5, 5, sCinnabarMaps),
-    PLACE(SPECIES_MAREEP, 5, 7, sRoute31Maps),
-    PLACE(SPECIES_MAREEP, 5, 7, sRoute32Maps),
-    PLACE(SPECIES_WOOPER, 4, 19, sRoute32Maps),
-    PLACE(SPECIES_WOOPER, 4, 19, sRuinsOfAlphMaps),
-    PLACE(SPECIES_SNUBBULL, 13, 15, sRoute34Maps),
-    PLACE(SPECIES_SNUBBULL, 13, 15, sRoute35Maps),
-    PLACE(SPECIES_MILTANK, 21, 21, sRoute38Maps),
-    PLACE(SPECIES_MILTANK, 21, 21, sRoute39Maps),
-    PLACE(SPECIES_MARILL, 8, 9, sUnionCaveMaps),
-    PLACE(SPECIES_MARILL, 20, 20, sRoute42Maps),
-    PLACE(SPECIES_MANTINE, 15, 24, sWhirlIslandMaps),
-    PLACE(SPECIES_MANTINE, 22, 26, sRoute41Maps),
-};
+#endif // HAS_HNS_CONTENT
 
-#else
+#if HAS_EMERALD_CONTENT
 
 static const u16 sPetalburgMaps[] = { MAP_PETALBURG_CITY };
 static const u16 sRoute102Or117Maps[] = { MAP_ROUTE102, MAP_ROUTE117 };
@@ -359,8 +317,55 @@ static const u16 sRoute120OrMeteorFallsMaps[] =
 };
 static const u16 sRoute119Maps[] = { MAP_ROUTE119 };
 
+#endif // HAS_EMERALD_CONTENT
+
 static const struct NativeHmEncounterPlace sEncounterPlaces[] =
 {
+#if HAS_FRLG_CONTENT
+    PLACE(SPECIES_PARAS, 5, 12, sMtMoonMaps),
+    PLACE(SPECIES_PARAS, 22, 23, sSafariParasMaps),
+    PLACE(SPECIES_RATTATA, 2, 5, sRoute1Maps),
+    PLACE(SPECIES_RATTATA, 2, 5, sRoute2Or22Maps),
+    PLACE(SPECIES_VOLTORB, 14, 17, sRoute10Maps),
+    PLACE(SPECIES_VOLTORB, 22, 25, sPowerPlantMaps),
+    PLACE(SPECIES_PIKACHU, 3, 5, sViridianForestMaps),
+    PLACE(SPECIES_PIKACHU, 22, 26, sPowerPlantMaps),
+    PLACE(SPECIES_HORSEA, 5, 25, sPalletTownMaps),
+    PLACE(SPECIES_HORSEA, 5, 25, sCinnabarMaps),
+    PLACE(SPECIES_KRABBY, 5, 25, sPalletTownMaps),
+    PLACE(SPECIES_KRABBY, 5, 25, sCinnabarMaps),
+    PLACE(SPECIES_MACHOP, 16, 17, sRockTunnelMaps),
+    PLACE(SPECIES_MACHOP, 31, 39, sMtEmberMaps),
+    PLACE(SPECIES_GEODUDE, 7, 10, sMtMoonGeodudeMaps),
+    PLACE(SPECIES_GEODUDE, 15, 17, sRockTunnelMaps),
+    PLACE(SPECIES_MANKEY, 2, 5, sRoute22Maps),
+    PLACE(SPECIES_MANKEY, 7, 12, sRoute3Or4Maps),
+    PLACE(SPECIES_GOLDEEN, 5, 15, sRoute6Maps),
+    PLACE(SPECIES_GOLDEEN, 5, 15, sRoute22Or25Maps),
+#endif
+#if HAS_HNS_CONTENT
+    PLACE(SPECIES_GLIGAR, 21, 21, sRoute42Maps),
+    PLACE(SPECIES_GLIGAR, 31, 31, sRoute45Maps),
+    PLACE(SPECIES_AIPOM, 10, 10, sAzaleaMaps),
+    PLACE(SPECIES_AIPOM, 10, 10, sRoute33Maps),
+    PLACE(SPECIES_CHINCHOU, 20, 40, sOlivinePortMaps),
+    PLACE(SPECIES_CHINCHOU, 20, 20, sCianwoodMaps),
+    PLACE(SPECIES_CHINCHOU, 5, 5, sVermilionMaps),
+    PLACE(SPECIES_CHINCHOU, 5, 5, sCinnabarMaps),
+    PLACE(SPECIES_MAREEP, 5, 7, sRoute31Maps),
+    PLACE(SPECIES_MAREEP, 5, 7, sRoute32Maps),
+    PLACE(SPECIES_WOOPER, 4, 19, sRoute32Maps),
+    PLACE(SPECIES_WOOPER, 4, 19, sRuinsOfAlphMaps),
+    PLACE(SPECIES_SNUBBULL, 13, 15, sRoute34Maps),
+    PLACE(SPECIES_SNUBBULL, 13, 15, sRoute35Maps),
+    PLACE(SPECIES_MILTANK, 21, 21, sRoute38Maps),
+    PLACE(SPECIES_MILTANK, 21, 21, sRoute39Maps),
+    PLACE(SPECIES_MARILL, 8, 9, sUnionCaveMaps),
+    PLACE(SPECIES_MARILL, 20, 20, sRoute42Maps),
+    PLACE(SPECIES_MANTINE, 15, 24, sWhirlIslandMaps),
+    PLACE(SPECIES_MANTINE, 22, 26, sRoute41Maps),
+#endif
+#if HAS_EMERALD_CONTENT
     PLACE(SPECIES_CORPHISH, 10, 45, sPetalburgMaps),
     PLACE(SPECIES_CORPHISH, 10, 45, sRoute102Or117Maps),
     PLACE(SPECIES_SABLEYE, 9, 12, sGraniteSableyeMaps),
@@ -381,9 +386,8 @@ static const struct NativeHmEncounterPlace sEncounterPlaces[] =
     PLACE(SPECIES_BARBOACH, 10, 45, sRoute120OrMeteorFallsMaps),
     PLACE(SPECIES_CARVANHA, 10, 45, sRoute118Maps),
     PLACE(SPECIES_CARVANHA, 10, 45, sRoute119Maps),
-};
-
 #endif
+};
 
 static void SelectLearnsetMode(bool8 modern)
 {
@@ -578,7 +582,7 @@ TEST("Named native HM encounter profiles retain anchors through production Train
                             continue;
                         if (entry->minLevel < place->minLevel || entry->maxLevel > place->maxLevel)
                             continue;
-#if IS_HNS
+#if HAS_HNS_CONTENT
                         if (place->species == SPECIES_AIPOM)
                             EXPECT_EQ(area, WILD_AREA_ROCKS);
 #endif
@@ -730,7 +734,7 @@ TEST("Native HM moves survive the species mutation used by evolution")
     }
 }
 
-#if IS_FRLG || IS_HNS
+#if HAS_FRLG_CONTENT || HAS_HNS_CONTENT
 static void ExpectNoLevelUpMove(u16 species, u16 move)
 {
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
@@ -754,7 +758,7 @@ static void ExpectNoLevelUpMoveAtLevel(u16 species, u16 move, u8 level)
     }
 }
 
-#if !IS_FRLG
+#if !HAS_FRLG_CONTENT
 static u8 CountLevelUpMoveAtLevel(u16 species, u16 move, u8 level)
 {
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
@@ -780,7 +784,7 @@ static u8 CountLevelUpMoveAtLevel(u16 species, u16 move, u8 level)
             ExpectNoLevelUpMoveAtLevel(species, move, levels[levelId]); \
     } while (0)
 
-#if !IS_FRLG
+#if !HAS_FRLG_CONTENT
 static void ExpectNoKantoAdditions(bool8 modern)
 {
     if (modern)
@@ -836,7 +840,7 @@ static void ExpectNoKantoAdditions(bool8 modern)
 }
 #endif
 
-#if !IS_HNS
+#if !HAS_HNS_CONTENT
 static void ExpectNoJohtoAdditions(bool8 modern)
 {
     if (modern)
@@ -844,9 +848,9 @@ static void ExpectNoJohtoAdditions(bool8 modern)
         EXPECT_NO_SCHEDULE(SPECIES_GLIGAR, MOVE_CUT, 19, 35, 55);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_CUT, 10, 18, 29, 39);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_ROCK_SMASH, 10, 18, 29, 39);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 20, 28, 34, 42, 47);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 20, 28, 34, 42, 47);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 20, 28, 34, 42, 47);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 9, 17, 23, 31, 39, 45, 50);
         EXPECT_NO_SCHEDULE(SPECIES_MAREEP, MOVE_FLASH, 5, 18, 32, 46);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_SURF, 4, 15, 29, 43);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_WATERFALL, 4, 15, 29, 43);
@@ -861,9 +865,9 @@ static void ExpectNoJohtoAdditions(bool8 modern)
         EXPECT_NO_SCHEDULE(SPECIES_GLIGAR, MOVE_CUT, 19, 44);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_CUT, 10, 25, 38);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_ROCK_SMASH, 10, 25, 38);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 20, 29, 41);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 20, 29, 41);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 20, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 9, 17, 29, 41);
         EXPECT_NO_SCHEDULE(SPECIES_MAREEP, MOVE_FLASH, 5, 30);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_SURF, 4, 21, 41);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_WATERFALL, 4, 21, 41);
@@ -888,7 +892,7 @@ static void ExpectNoJohtoAdditions(bool8 modern)
 }
 #endif
 
-#if IS_FRLG || IS_HNS
+#if !HAS_EMERALD_CONTENT
 static void ExpectNoHoennAdditions(bool8 modern)
 {
     if (modern)
@@ -948,7 +952,7 @@ TEST("Native HM exclusions and regional build gates remain exact")
     for (mode = 0; mode < 2; mode++)
     {
         SelectLearnsetMode(mode);
-#if IS_FRLG
+#if HAS_FRLG_CONTENT
         ExpectNoLevelUpMove(SPECIES_PICHU, MOVE_FLASH);
         ExpectNoLevelUpMove(SPECIES_RATTATA_ALOLA, MOVE_CUT);
         ExpectNoLevelUpMove(SPECIES_VOLTORB_HISUI, MOVE_FLASH);
@@ -956,13 +960,19 @@ TEST("Native HM exclusions and regional build gates remain exact")
         ExpectNoLevelUpMove(SPECIES_GEODUDE_ALOLA, MOVE_ROCK_SMASH);
         ExpectNoJohtoAdditions(mode);
         ExpectNoHoennAdditions(mode);
-#elif IS_HNS
+#elif HAS_HNS_CONTENT && !HAS_EMERALD_CONTENT
         ExpectNoLevelUpMove(SPECIES_AZURILL, MOVE_WATERFALL);
         ExpectNoLevelUpMove(SPECIES_MANTYKE, MOVE_WHIRLPOOL);
         ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_SURF);
         ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_WATERFALL);
         ExpectNoKantoAdditions(mode);
         ExpectNoHoennAdditions(mode);
+#elif HAS_HNS_CONTENT && HAS_EMERALD_CONTENT
+        ExpectNoLevelUpMove(SPECIES_AZURILL, MOVE_WATERFALL);
+        ExpectNoLevelUpMove(SPECIES_MANTYKE, MOVE_WHIRLPOOL);
+        ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_SURF);
+        ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_WATERFALL);
+        ExpectNoKantoAdditions(mode);
 #else
         ExpectNoKantoAdditions(mode);
         ExpectNoJohtoAdditions(mode);
@@ -981,9 +991,22 @@ TEST("Native HM anchors retain generated HM compatibility and successor exceptio
         u8 moveId;
 
         for (moveId = 0; moveId < anchor->moveCount; moveId++)
-            EXPECT(CanLearnTeachableMove(anchor->species, anchor->moves[moveId]));
+        {
+#if IS_WAYFARER
+            // Wayfarer keeps the HNS HM registry even though its Hoenn-native
+            // level-up schedules continue to grant Dive.
+            if (anchor->moves[moveId] == MOVE_DIVE)
+                continue;
+#endif
+            if (!CanLearnTeachableMove(anchor->species, anchor->moves[moveId]))
+            {
+                Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__,
+                    ":L%s:%d: species %d cannot learn native HM move %d",
+                    gTestRunnerState.test->filename, __LINE__, anchor->species, anchor->moves[moveId]);
+            }
+        }
     }
-#if IS_FRLG
+#if HAS_FRLG_CONTENT
     EXPECT(!CanLearnTeachableMove(SPECIES_RAICHU_ALOLA, MOVE_FLASH));
     EXPECT(!CanLearnTeachableMove(SPECIES_ANNIHILAPE, MOVE_ROCK_SMASH));
 #endif

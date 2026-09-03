@@ -15,6 +15,9 @@ using std::sort; using std::find;
 #include <map>
 using std::map;
 
+#include <set>
+using std::set;
+
 #include <fstream>
 using std::ofstream; using std::ifstream;
 
@@ -100,6 +103,23 @@ string json_to_string(const Json &data, const string &field = "", bool silent = 
     return output;
 }
 
+string get_source_version(const Json &data) {
+    string source_version = json_to_string(data, "game_version", true);
+    return source_version.empty() ? "emerald" : source_version;
+}
+
+bool source_version_is_selected(const string &source_version) {
+    if (version == "wayfarer")
+        return source_version == "hns" || source_version == "emerald";
+
+    string selected_version = version == "firered" ? "frlg" : version;
+    return source_version == selected_version;
+}
+
+bool data_matches_version(const Json &data) {
+    return source_version_is_selected(get_source_version(data));
+}
+
 string get_generated_warning(const string &filename, bool isAsm) {
     string comment = isAsm ? "@" : "//";
 
@@ -138,6 +158,14 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
 
     Json layout = matched[0];
 
+    if (data_matches_version(map_data) && !data_matches_version(layout))
+        FATAL_ERROR("Layout %s is not available in the %s map catalog.\n", map_layout_id.c_str(), version.c_str());
+
+    if (data_matches_version(map_data)
+     && (!std::filesystem::exists(json_to_string(layout, "border_filepath"))
+      || !std::filesystem::exists(json_to_string(layout, "blockdata_filepath"))))
+        FATAL_ERROR("Layout %s references missing blockdata or border data.\n", map_layout_id.c_str());
+
     ostringstream text;
 
     string mapName = json_to_string(map_data, "name");
@@ -174,7 +202,7 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
 
     if (version == "ruby")
         text << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
-    else if (version == "emerald" || version == "firered" || version == "hns")
+    else if (version == "emerald" || version == "firered" || version == "hns" || version == "wayfarer")
         text << "\tmap_header_flags "
              << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
              << "allow_escaping=" << json_to_string(map_data, "allow_escaping") << ", "
@@ -347,7 +375,8 @@ string generate_map_events_text(Json map_data) {
                 if (underfoot.empty()) {
                     underfoot = "FALSE";
                 }
-                text << "\tbg_hidden_item_event "
+                bool use_hoenn_namespace = version == "wayfarer" && get_source_version(map_data) == "emerald";
+                text << (use_hoenn_namespace ? "\tbg_hidden_item_event_hoenn " : "\tbg_hidden_item_event ")
                      << json_to_string(bg_event, "x") << ", "
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "
@@ -525,7 +554,7 @@ string generate_connections_text(Json groups_data, vector<string> &invalid_maps,
     return text.str();
 }
 
-string generate_headers_text(Json groups_data, vector<string> &invalid_maps, string include_path) {
+string generate_headers_text(Json groups_data, vector<string> &invalid_maps, string include_path, const map<string, Json> &maps_by_name) {
     vector<string> map_names;
 
     for (auto &group : groups_data["group_order"].array_items()) {
@@ -541,13 +570,26 @@ string generate_headers_text(Json groups_data, vector<string> &invalid_maps, str
 
     text << get_generated_warning("data/maps/map_groups.json", true);
 
-    for (string map_name : map_names)
+    string active_source = "hns";
+    for (string map_name : map_names) {
+        string map_source = get_source_version(maps_by_name.at(map_name));
+        if (version == "wayfarer" && map_source != active_source) {
+            if (map_source == "emerald")
+                text << "\t.include \"data/wayfarer_hoenn_source_constants.inc\"\n";
+            else
+                text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
+            active_source = map_source;
+        }
         text << "\t.include \"" << include_path << "/" << map_name << "/header.inc\"\n";
+    }
+
+    if (version == "wayfarer" && active_source == "emerald")
+        text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
 
     return text.str();
 }
 
-string generate_events_text(Json groups_data, vector<string> &invalid_maps, string include_path) {
+string generate_events_text(Json groups_data, vector<string> &invalid_maps, string include_path, const map<string, Json> &maps_by_name) {
     vector<string> map_names;
 
     for (auto &group : groups_data["group_order"].array_items()) {
@@ -564,8 +606,21 @@ string generate_events_text(Json groups_data, vector<string> &invalid_maps, stri
 
     text << get_generated_warning(include_path + "/map_groups.json", true);
 
-    for (string map_name : map_names)
+    string active_source = "hns";
+    for (string map_name : map_names) {
+        string map_source = get_source_version(maps_by_name.at(map_name));
+        if (version == "wayfarer" && map_source != active_source) {
+            if (map_source == "emerald")
+                text << "\t.include \"data/wayfarer_hoenn_source_constants.inc\"\n";
+            else
+                text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
+            active_source = map_source;
+        }
         text << "\t.include \"" << include_path << "/" << map_name << "/events.inc\"\n";
+    }
+
+    if (version == "wayfarer" && active_source == "emerald")
+        text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
 
     return text.str();
 }
@@ -587,6 +642,10 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     string guard_name = "CONSTANTS_MAP_GROUPS";
     ostringstream text;
     ostringstream mapCountText;
+    ostringstream mapSourceText;
+    vector<int> mapSourceOffsets;
+    vector<bool> hoennMapSources;
+    vector<string> mapRegions;
 
     text << get_include_guard_start(guard_name) << get_generated_warning("data/maps/map_groups.json", false);
 
@@ -597,20 +656,30 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     int group_num = 0;
     vector<int> map_count_vec; //DEBUG
     for (auto &group : groups_data["group_order"].array_items()) {
+        if (group_num > numeric_limits<signed char>::max())
+            FATAL_ERROR("Map group %d exceeds the signed-byte warp limit (%d).\n", group_num, numeric_limits<signed char>::max());
+
         string groupName = json_to_string(group);
         text << "    // " << groupName << "\n";
         vector<string> map_ids;
         size_t max_length = 0;
 
         int map_count = 0; //DEBUG
+        mapSourceOffsets.push_back(hoennMapSources.size());
 
         for (auto &map_name : groups_data[groupName].array_items()) {
+            if (map_count > numeric_limits<signed char>::max())
+                FATAL_ERROR("Map %d in group %s exceeds the signed-byte warp limit (%d).\n", map_count, groupName.c_str(), numeric_limits<signed char>::max());
+
             string map_filepath = file_dir + json_to_string(map_name) + sep + "map.json";
             string err_str;
             Json map_data = Json::parse(read_text_file(map_filepath), err_str);
             if (map_data == Json())
                 FATAL_ERROR("%s: %s\n", map_filepath.c_str(), err_str.c_str());
             string id = json_to_string(map_data, "id", true);
+            hoennMapSources.push_back(get_source_version(map_data) == "emerald");
+            string mapRegion = json_to_string(map_data, "region", true);
+            mapRegions.push_back(mapRegion.empty() ? "REGION_NONE" : mapRegion);
             map_ids.push_back(id);
             valid_map_ids.push_back(id);
             if (id.length() > max_length)
@@ -629,6 +698,7 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
         group_num++;
         map_count_vec.push_back(map_count); //DEBUG
     }
+    mapSourceOffsets.push_back(hoennMapSources.size());
 
     text << "};\n\n";
 
@@ -671,35 +741,109 @@ string generate_map_constants_text(string groups_filepath, Json groups_data, vec
     mapCountText << "0};\n";                                 //DEBUG
     write_text_file(file_dir + ".." + s + ".." + s + "src" + s + "data" + s + "map_group_count.h", mapCountText.str());
 
+    mapSourceText << "// DO NOT MODIFY! Auto-generated from the selected map catalog.\n";
+    mapSourceText << "static const u16 sWayfarerMapSourceOffsets[] = {";
+    for (int offset : mapSourceOffsets)
+        mapSourceText << offset << ", ";
+    mapSourceText << "};\n";
+    mapSourceText << "static const u8 sWayfarerHoennMapSourceBits[] = {";
+    for (size_t byte = 0; byte * 8 < hoennMapSources.size(); byte++) {
+        int value = 0;
+        for (size_t bit = 0; bit < 8 && byte * 8 + bit < hoennMapSources.size(); bit++)
+            if (hoennMapSources[byte * 8 + bit])
+                value |= 1 << bit;
+        mapSourceText << value << ", ";
+    }
+    mapSourceText << "};\n";
+    mapSourceText << "static const u8 sWayfarerMapRegionNibbles[] = {";
+    for (size_t byte = 0; byte * 2 < mapRegions.size(); byte++) {
+        const string &lowRegion = mapRegions[byte * 2];
+        const string &highRegion = byte * 2 + 1 < mapRegions.size()
+            ? mapRegions[byte * 2 + 1]
+            : "REGION_NONE";
+        mapSourceText << "(" << lowRegion << " | (" << highRegion << " << 4)), ";
+    }
+    mapSourceText << "};\n";
+    write_text_file(file_dir + ".." + s + ".." + s + "src" + s + "data" + s + "wayfarer_map_sources.h", mapSourceText.str());
+
     return text.str();
 }
 
-void clean_heal_locations(vector<string> &valid_map_ids)
-{
-    std::stringstream new_json;
-    std::ifstream infile("src/data/heal_locations.json");
-    bool deleted_flag = false;
+void validate_wayfarer_heal_locations(const set<string> &included_map_ids) {
+    string err;
+    Json heal_locations = Json::parse(read_text_file("src/data/heal_locations.json"), err);
+    if (heal_locations == Json())
+        FATAL_ERROR("Failed to read heal locations: %s\n", err.c_str());
 
-    std::regex map_regex("\"respawn_map\"\\s*:\\s*\"(MAP_\\w+)\"");
-    std::regex npc_regex("LOCALID_\\w+");
-    std::smatch map_match;
-    string line;
-    while (std::getline(infile, line))
-    {
-        if (std::regex_search(line, map_match, map_regex) && !deleted_flag) {
-            auto it = find(valid_map_ids.begin(), valid_map_ids.end(), map_match[1]);
-            if (it == valid_map_ids.end())
-                deleted_flag = true;
-        }
-        if (deleted_flag && std::regex_search(line, npc_regex)) {
-            deleted_flag = false;
-            new_json << std::regex_replace(line, npc_regex, "0") << "\n";
-        } else {
-            new_json << line << "\n";
+    set<string> heal_location_ids;
+    for (const Json &heal_location : heal_locations["heal_locations"].array_items()) {
+        string id = json_to_string(heal_location, "id");
+        if (!heal_location_ids.insert(id).second)
+            FATAL_ERROR("Duplicate heal location %s in the Wayfarer catalog.\n", id.c_str());
+
+        string source = json_to_string(heal_location, "source");
+        string source_version;
+        if (source == "EMERALD")
+            source_version = "emerald";
+        else if (source == "FRLG")
+            source_version = "frlg";
+        else if (source == "HNS")
+            source_version = "hns";
+        else
+            FATAL_ERROR("Heal location %s has unknown content source %s.\n", id.c_str(), source.c_str());
+
+        if (!source_version_is_selected(source_version))
+            continue;
+
+        string map_id = json_to_string(heal_location, "map");
+        if (included_map_ids.find(map_id) == included_map_ids.end())
+            FATAL_ERROR("Heal location %s references unavailable map %s.\n", id.c_str(), map_id.c_str());
+
+        string respawn_map = json_to_string(heal_location, "respawn_map", true);
+        if (!respawn_map.empty() && included_map_ids.find(respawn_map) == included_map_ids.end())
+            FATAL_ERROR("Heal location %s references unavailable respawn map %s.\n", id.c_str(), respawn_map.c_str());
+    }
+}
+
+void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Json> &maps_by_name) {
+    set<string> included_map_ids;
+    vector<Json> included_maps;
+
+    for (const Json &group : groups_data["group_order"].array_items()) {
+        string group_name = json_to_string(group);
+        for (const Json &map_name_json : groups_data[group_name].array_items()) {
+            string map_name = json_to_string(map_name_json);
+            auto map_it = maps_by_name.find(map_name);
+            if (map_it == maps_by_name.end())
+                FATAL_ERROR("Map group %s references missing map %s.\n", group_name.c_str(), map_name.c_str());
+            if (!data_matches_version(map_it->second))
+                continue;
+
+            string map_id = json_to_string(map_it->second, "id");
+            if (!included_map_ids.insert(map_id).second)
+                FATAL_ERROR("Duplicate selected map id %s in the Wayfarer catalog.\n", map_id.c_str());
+            included_maps.push_back(map_it->second);
         }
     }
 
-    write_text_file("src/data/heal_locations.json", new_json.str());
+    const set<string> dynamic_destinations = {"MAP_DYNAMIC", "MAP_UNDEFINED"};
+    for (const Json &map_data : included_maps) {
+        string map_name = json_to_string(map_data, "name");
+        for (const Json &warp : map_data["warp_events"].array_items()) {
+            string destination = json_to_string(warp, "dest_map");
+            if (included_map_ids.find(destination) == included_map_ids.end()
+             && dynamic_destinations.find(destination) == dynamic_destinations.end())
+                FATAL_ERROR("Map %s warp references unavailable map %s.\n", map_name.c_str(), destination.c_str());
+        }
+        for (const Json &connection : map_data["connections"].array_items()) {
+            string destination = json_to_string(connection, "map");
+            if (included_map_ids.find(destination) == included_map_ids.end()
+             && dynamic_destinations.find(destination) == dynamic_destinations.end())
+                FATAL_ERROR("Map %s connection references unavailable map %s.\n", map_name.c_str(), destination.c_str());
+        }
+    }
+
+    validate_wayfarer_heal_locations(included_map_ids);
 }
 
 // Output paths are directories with trailing path separators
@@ -711,6 +855,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     Json groups_data = Json::parse(read_text_file(groups_filepath), err);
     vector<string> invalid_maps;
     vector<string> valid_map_ids;
+    map<string, Json> maps_by_name;
 
     for (const string &filepath : map_filepaths) {
         string err;
@@ -719,17 +864,11 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
         if (map_data == Json())
             FATAL_ERROR("Failed to read '%s' while processing groups: %s\n", filepath.c_str(), err.c_str());
 
-        string game_ver = json_to_string(map_data, "game_version", true);
-        if (game_ver.empty())
-            game_ver = "emerald";
-
         string map_name = json_to_string(map_data, "name");
+        if (!maps_by_name.emplace(map_name, map_data).second)
+            FATAL_ERROR("Duplicate map name %s while processing groups.\n", map_name.c_str());
 
-        string expected_game_ver = version;
-        if (expected_game_ver == "firered")
-            expected_game_ver = "frlg";
-
-        if (game_ver != expected_game_ver) {
+        if (!data_matches_version(map_data)) {
             invalid_maps.push_back(map_name);
         }
     }
@@ -737,13 +876,15 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     if (groups_data == Json())
         FATAL_ERROR("%s\n", err.c_str());
 
+    if (version == "wayfarer")
+        validate_wayfarer_map_catalog(groups_data, maps_by_name);
+
     string groups_text = generate_groups_text(groups_data, invalid_maps);
     string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
-    string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm);
-    string events_text = generate_events_text(groups_data, invalid_maps, output_asm);
+    string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm, maps_by_name);
+    string events_text = generate_events_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
 
-    clean_heal_locations(valid_map_ids);
     write_text_file(output_asm + sep + "groups.inc", groups_text);
     write_text_file(output_asm + sep + "connections.inc", connections_text);
     write_text_file(output_asm + sep + "headers.inc", headers_text);
@@ -752,13 +893,7 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
 }
 
 bool layout_matches_version(const Json &layout) {
-    string game_ver = json_to_string(layout, "game_version", true);
-    if (game_ver.empty())
-        game_ver = "emerald";
-    string expected = version;
-    if (expected == "firered")
-        expected = "frlg";
-    return game_ver == expected;
+    return data_matches_version(layout);
 }
 
 string generate_layout_headers_text(Json layouts_data) {
@@ -919,8 +1054,8 @@ int main(int argc, char *argv[]) {
 
     char *version_arg = argv[2];
     version = string(version_arg);
-    if (version != "emerald" && version != "ruby" && version != "firered" && version != "hns")
-        FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', 'hns', or 'ruby'.\n");
+    if (version != "emerald" && version != "ruby" && version != "firered" && version != "hns" && version != "wayfarer")
+        FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', 'hns', 'wayfarer', or 'ruby'.\n");
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

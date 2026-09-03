@@ -46,6 +46,7 @@
 #include "vs_seeker.h"
 #include "item.h"
 #include "script.h"
+#include "wayfarer_persistence.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -1277,16 +1278,6 @@ static void TryUpdateGymLeaderRematchFromTrainer(void)
         UpdateGymLeaderRematch();
 }
 
-static u16 GetTrainerAFlag(void)
-{
-    return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentA;
-}
-
-static u16 GetTrainerBFlag(void)
-{
-    return TRAINER_FLAGS_START + TRAINER_BATTLE_PARAM.opponentB;
-}
-
 static bool32 IsPlayerDefeated(u32 battleOutcome)
 {
     switch (battleOutcome)
@@ -1495,7 +1486,7 @@ void SetUpTwoTrainersBattle(void)
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
 {
     TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
-    return FlagGet(TRAINER_FLAGS_START + temp->params.opponentA);
+    return HasTrainerBeenFought(temp->params.opponentA);
 }
 
 bool32 GetRematchFromScriptPointer(const u8 *data)
@@ -1536,33 +1527,62 @@ bool8 GetTrainerFlag(void)
     else if (InTrainerHill())
         return GetHillTrainerFlag(gSelectedObjectEvent);
     else
-        return FlagGet(GetTrainerAFlag());
+        return HasTrainerBeenFought(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 static void SetBattledTrainersFlags(void)
 {
-    if (TRAINER_BATTLE_PARAM.opponentB != 0)
-        FlagSet(GetTrainerBFlag());
-    FlagSet(GetTrainerAFlag());
+    SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentB);
+    SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 static void UNUSED SetBattledTrainerFlag(void)
 {
-    FlagSet(GetTrainerAFlag());
+    SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
 
 bool8 HasTrainerBeenFought(u16 trainerId)
 {
+    if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
+        return FALSE;
+
+#if IS_WAYFARER
+    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET)
+        return WayfarerHoennTrainerFlagGet(trainerId);
+#endif
+
     return FlagGet(TRAINER_FLAGS_START + trainerId);
 }
 
 void SetTrainerFlag(u16 trainerId)
 {
+    if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
+        return;
+
+#if IS_WAYFARER
+    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET)
+    {
+        WayfarerHoennTrainerFlagSet(trainerId);
+        return;
+    }
+#endif
+
     FlagSet(TRAINER_FLAGS_START + trainerId);
 }
 
 void ClearTrainerFlag(u16 trainerId)
 {
+    if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
+        return;
+
+#if IS_WAYFARER
+    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET)
+    {
+        WayfarerHoennTrainerFlagClear(trainerId);
+        return;
+    }
+#endif
+
     FlagClear(TRAINER_FLAGS_START + trainerId);
 }
 
@@ -2520,4 +2540,3 @@ void SetMultiTrainerBattle(struct ScriptContext *ctx)
     TRAINER_BATTLE_PARAM.defeatTextB = (u8*)ScriptReadWord(ctx);
     gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
 };
-

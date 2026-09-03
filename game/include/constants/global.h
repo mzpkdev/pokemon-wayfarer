@@ -66,18 +66,42 @@ enum Language
     #define GAME_VERSION (VERSION_FIRE_RED)
     #define IS_FRLG 1
     #define IS_HNS 0
+    #define IS_WAYFARER 0
+    #define HAS_FRLG_CONTENT 1
+    #define HAS_HNS_CONTENT 0
+    #define HAS_EMERALD_CONTENT 0
 #elif defined(LEAFGREEN)
     #define GAME_VERSION (VERSION_LEAF_GREEN)
     #define IS_FRLG 1
     #define IS_HNS 0
+    #define IS_WAYFARER 0
+    #define HAS_FRLG_CONTENT 1
+    #define HAS_HNS_CONTENT 0
+    #define HAS_EMERALD_CONTENT 0
+#elif defined(POKEMON_WAYFARER)
+    #define GAME_VERSION (VERSION_EMERALD)
+    #define IS_FRLG 0
+    #define IS_HNS 1
+    #define IS_WAYFARER 1
+    #define HAS_FRLG_CONTENT 0
+    #define HAS_HNS_CONTENT 1
+    #define HAS_EMERALD_CONTENT 1
 #elif defined(POKEMON_HNS)
     #define GAME_VERSION (VERSION_EMERALD)
     #define IS_FRLG 0
     #define IS_HNS 1
+    #define IS_WAYFARER 0
+    #define HAS_FRLG_CONTENT 0
+    #define HAS_HNS_CONTENT 1
+    #define HAS_EMERALD_CONTENT 0
 #else
     #define GAME_VERSION (VERSION_EMERALD)
     #define IS_FRLG 0
     #define IS_HNS 0
+    #define IS_WAYFARER 0
+    #define HAS_FRLG_CONTENT 0
+    #define HAS_HNS_CONTENT 0
+    #define HAS_EMERALD_CONTENT 1
 #endif
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
 

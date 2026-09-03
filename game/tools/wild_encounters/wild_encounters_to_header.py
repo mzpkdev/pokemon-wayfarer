@@ -51,6 +51,12 @@ RODS = {
 }
 PRODUCTS = (("EMERALD", "Emerald"), ("FIRERED", "FireRed"),
             ("LEAFGREEN", "LeafGreen"), ("POKEMON_HNS", "HNS"))
+PRODUCT_GUARDS = {
+    "EMERALD": "HAS_EMERALD_CONTENT",
+    "FIRERED": "defined(FIRERED) && HAS_FRLG_CONTENT",
+    "LEAFGREEN": "defined(LEAFGREEN) && HAS_FRLG_CONTENT",
+    "POKEMON_HNS": "HAS_HNS_CONTENT",
+}
 FISHING_QUALITIES = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD")
 FISHING_SLOT_COUNT = 10
 FISHING_BASE_BITE_PERCENT = {"OLD_ROD": 25, "GOOD_ROD": 50, "SUPER_ROD": 75}
@@ -403,6 +409,10 @@ def product_for(label):
     if "_Hns" in label or "_hns" in label:
         return "POKEMON_HNS"
     return "EMERALD"
+
+
+def product_guard(product):
+    return PRODUCT_GUARDS[product]
 
 
 def time_and_header(label, config):
@@ -2547,19 +2557,22 @@ class Assembler:
 
     def write_headers(self, headers):
         self.line(f"const struct WildPokemonHeader {headers['label']}[] ="); self.line("{")
-        for label, data in headers["data"].items():
-            self.line(); self.line(f"#ifdef {product_for(label)}"); self.line("{", 1)
-            self.line(f".mapGroup = {data['mapGroup']},", 2); self.line(f".mapNum = {data['mapNum']},", 2); self.line(".encounterTypes =", 2); self.line("{", 2)
-            for time in self.config.times:
-                if not self.config.time_encounters and time != self.config.time_fallback:
+        for product, _ in PRODUCTS:
+            for label, data in headers["data"].items():
+                if product_for(label) != product:
                     continue
-                self.line(f"[{time}] =", 4); self.line("{", 4)
-                for method in self.config.mon_types:
-                    member = method.title().replace("_", "")
-                    value = data.get(time, {}).get(method, "NULL")
-                    self.line(f".{member[0].lower() + member[1:]}Info = {'&' + value if value != 'NULL' else value},", 5)
-                self.line("},", 3)
-            self.line("},", 2); self.line("},", 1); self.line("#endif")
+                self.line(); self.line(f"#if {product_guard(product)}"); self.line("{", 1)
+                self.line(f".mapGroup = {data['mapGroup']},", 2); self.line(f".mapNum = {data['mapNum']},", 2); self.line(".encounterTypes =", 2); self.line("{", 2)
+                for time in self.config.times:
+                    if not self.config.time_encounters and time != self.config.time_fallback:
+                        continue
+                    self.line(f"[{time}] =", 4); self.line("{", 4)
+                    for method in self.config.mon_types:
+                        member = method.title().replace("_", "")
+                        value = data.get(time, {}).get(method, "NULL")
+                        self.line(f".{member[0].lower() + member[1:]}Info = {'&' + value if value != 'NULL' else value},", 5)
+                    self.line("},", 3)
+                self.line("},", 2); self.line("},", 1); self.line("#endif")
         self.write_terminator(); self.line("};")
 
     def write_encounters(self):
@@ -2575,7 +2588,7 @@ class Assembler:
                 if data["mapGroup"] != map_group or data["mapNum"] != map_num:
                     raise ValidationError(f"{encounter['base_label']}: shared header spans maps")
                 time_data = data.setdefault(time, {})
-                self.line(f"#ifdef {product_for(header)}")
+                self.line(f"#if {product_guard(product_for(header))}")
                 for method in self.config.mon_types:
                     if method not in encounter:
                         continue
@@ -2603,7 +2616,14 @@ class Assembler:
             self.write_headers(headers)
 
 
-def render_scaling(output, scaling, offsets, metadata, standard_rod):
+def runtime_header_id(item, header_ids):
+    if item["product"] == "POKEMON_HNS":
+        emerald_count = len(header_ids["EMERALD"])
+        return f"({item['header_id']} + HAS_EMERALD_CONTENT * {emerald_count})"
+    return str(item["header_id"])
+
+
+def render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids):
     output.write("\nconst u8 gStandardRodFishingWeights[WILD_ENCOUNTER_FISHING_ROD_NONE][FISH_WILD_COUNT] =\n{\n")
     for quality in FISHING_QUALITIES:
         weights = ", ".join(str(weight) for weight in standard_rod["qualityWeights"][quality])
@@ -2622,7 +2642,8 @@ def render_scaling(output, scaling, offsets, metadata, standard_rod):
     output.write("const struct WildEncounterProfileOffset gWildEncounterProfileOffsets[] =\n{\n")
     if offsets:
         for item in offsets:
-            output.write(f"#ifdef {item['product']}\n    {{ {item['header_id']}, {item['area']}, {item['time']}, {item['rod']}, {item['level_offset']} }},\n#endif\n")
+            header_id = runtime_header_id(item, header_ids)
+            output.write(f"#if {product_guard(item['product'])}\n    {{ {header_id}, {item['area']}, {item['time']}, {item['rod']}, {item['level_offset']} }},\n#endif\n")
     else:
         output.write("    { 0 }, // Typed sentinel; count remains zero.\n")
     output.write("};\n")
@@ -2633,11 +2654,11 @@ def render_scaling(output, scaling, offsets, metadata, standard_rod):
     output.write("};\nconst u16 gWildEncounterSpeciesMetadataCount = ARRAY_COUNT(gWildEncounterSpeciesMetadata);\n")
 
 
-def render_header(encounters, config, scaling, offsets, metadata, standard_rod, regional_manifest=None):
+def render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest=None):
     output = io.StringIO()
     output.write("//\n// DO NOT MODIFY THIS FILE! It is auto-generated by tools/wild_encounters/wild_encounters_to_header.py\n//\n\n\n")
     assembler = Assembler(output, encounters, config, regional_manifest)
-    assembler.write_macros(); assembler.write_encounters(); render_scaling(output, scaling, offsets, metadata, standard_rod)
+    assembler.write_macros(); assembler.write_encounters(); render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids)
     return output.getvalue()
 
 
@@ -4323,7 +4344,7 @@ def atomic_write(path, content):
 
 def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, standard_rod_fishing_path=DEFAULT_STANDARD_ROD_FISHING, regions_path=DEFAULT_REGIONS, output_path=DEFAULT_OUTPUT, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
-    profiles, _ = validate_encounters(encounters, known_species, config)
+    profiles, header_ids = validate_encounters(encounters, known_species, config)
     standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
     validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
     ordinary_species = {mon["species"] for profile in profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
@@ -4331,7 +4352,7 @@ def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, s
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
     validate_standard_rod_balance(standard_rod, profiles, scaling, metadata, offsets)
     regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
-    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod, regional_manifest))
+    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest))
 
 
 def generate_wild_encounter_balance_audit(output_path=DEFAULT_AUDIT, **kwargs):

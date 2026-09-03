@@ -72,6 +72,7 @@
 #include "text_window.h"
 #include "trade.h"
 #include "union_room.h"
+#include "wayfarer_persistence.h"
 #include "window.h"
 #include "constants/battle.h"
 #include "constants/battle_frontier.h"
@@ -4307,7 +4308,7 @@ static void Task_CancelAfterAorBPress(u8 taskId)
 
 static void DisplayCantUseFlashMessage(void)
 {
-    if (FlagGet(FLAG_SYS_USE_FLASH) == TRUE)
+    if (WayfarerFieldMoveFlagGet(FLAG_SYS_USE_FLASH) == TRUE)
         DisplayPartyMenuStdMessage(PARTY_MSG_ALREADY_IN_USE);
     else
         DisplayPartyMenuStdMessage(PARTY_MSG_CANT_USE_HERE);

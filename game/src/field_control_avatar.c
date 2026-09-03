@@ -87,6 +87,17 @@ static void SetUpWalkIntoSignScript(const u8 *script, enum Direction playerDirec
 static u32 GetFacingSignpostType(u16 metatileBehvaior, enum Direction direction);
 static const u8 *GetSignpostScriptAtMapPosition(struct MapPosition *position);
 
+u16 GetHiddenItemFlagId(const struct BgEvent *bgEvent)
+{
+    u16 hiddenItemId = bgEvent->bgUnion.hiddenItem.hiddenItemId;
+
+#if IS_WAYFARER
+    if (hiddenItemId & WAYFARER_HOENN_HIDDEN_ITEM_MARKER)
+        return HOENN_FLAG_ID(hiddenItemId & WAYFARER_PERSISTENCE_VALUE_MASK);
+#endif
+    return hiddenItemId + FLAG_HIDDEN_ITEMS_START;
+}
+
 void FieldClearPlayerInput(struct FieldInput *input)
 {
     input->pressedAButton = FALSE;
@@ -492,7 +503,7 @@ static const u8 *GetInteractedBackgroundEventScript(struct MapPosition *position
     case BG_EVENT_HIDDEN_ITEM:
         if (bgEvent->bgUnion.hiddenItem.underfoot == TRUE)
             return NULL;
-        gSpecialVar_0x8004 = bgEvent->bgUnion.hiddenItem.hiddenItemId + FLAG_HIDDEN_ITEMS_START;
+        gSpecialVar_0x8004 = GetHiddenItemFlagId(bgEvent);
         gSpecialVar_0x8005 = bgEvent->bgUnion.hiddenItem.item;
         gSpecialVar_0x8009 = bgEvent->bgUnion.hiddenItem.quantity;
         if (FlagGet(gSpecialVar_0x8004) == TRUE)

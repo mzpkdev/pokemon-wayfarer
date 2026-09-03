@@ -17,7 +17,12 @@ EventScript_FieldWhiteOut::
 	special Script_FadeOutMapMusic
 	waitstate
 	fadescreen FADE_TO_BLACK
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerShouldWhiteOutToLavaridge
+	call_if_eq VAR_RESULT, TRUE, EventScript_SetRespawnLavaridgePkmnCenter
+#else
 	call_if_set FLAG_WHITEOUT_TO_LAVARIDGE, EventScript_SetRespawnLavaridgePkmnCenter
+#endif
 	special SetCB2WhiteOut
 	waitstate
 	end

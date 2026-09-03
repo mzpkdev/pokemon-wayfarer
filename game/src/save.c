@@ -15,6 +15,7 @@
 #include "constants/rematches.h"
 #include "event_data.h"
 #include "trainer_rating.h"
+#include "wayfarer_persistence.h"
 
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
@@ -23,8 +24,12 @@ static u8 CopySaveSlotData(u16, struct SaveSectorLocation *);
 static u8 TryWriteSector(u8, u8 *);
 static u8 HandleWriteSector(u16, const struct SaveSectorLocation *);
 static u8 HandleReplaceSector(u16, const struct SaveSectorLocation *);
+static u32 SaveBlock3Size(u32);
 static void CopyToSaveBlock3(u32, struct SaveSector *);
 static void CopyFromSaveBlock3(u32, struct SaveSector *);
+#if IS_WAYFARER
+static u8 ReplaceSaveBlock3Chunk(u16);
+#endif
 
 // Divide save blocks into individual chunks to be written to flash sectors
 
@@ -81,6 +86,15 @@ struct
 // These will produce an error if a save struct is larger than the space
 // alloted for it in the flash.
 STATIC_ASSERT(sizeof(struct SaveBlock3) <= SAVE_BLOCK_3_CHUNK_SIZE * NUM_SECTORS_PER_SLOT, SaveBlock3FreeSpace);
+#if IS_WAYFARER
+STATIC_ASSERT(sizeof(struct SaveBlock3) <= 1624, WayfarerSaveBlock3SectorAllocation);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn) < 1024, WayfarerHoennStateRuntimeBudget);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.vars) == 512, WayfarerHoennVarBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.persistentFlags) == 188, WayfarerHoennFlagBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.trainerFlags) == 107, WayfarerHoennTrainerBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.badges) * 8 == WAYFARER_HOENN_BADGE_COUNT, WayfarerHoennBadgeBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.visitedLocations) * 8 == WAYFARER_HOENN_VISITED_COUNT, WayfarerHoennVisitedBankSize);
+#endif
 
 // ChallengeSettings is a packed bitfield block living in SaveBlock3 ahead of
 // registeredItemHold, so growing it shifts that member and silently corrupts
@@ -772,6 +786,14 @@ u8 HandleSavingData(u8 saveType)
             HandleReplaceSector(i, gRamSaveSectorLocations);
         for (i = SECTOR_ID_SAVEBLOCK2; i <= SECTOR_ID_SAVEBLOCK1_END; i++)
             WriteSectorSignatureByte_NoOffset(i, gRamSaveSectorLocations);
+#if IS_WAYFARER
+        // SaveBlock3 is larger than the five chunks carried by SaveBlocks 1
+        // and 2. Preserve the PC data while updating its remaining chunks.
+        for (i = SECTOR_ID_PKMN_STORAGE_START;
+             i <= SECTOR_ID_PKMN_STORAGE_END && SaveBlock3Size(i) != 0;
+             i++)
+            ReplaceSaveBlock3Chunk(i);
+#endif
         break;
     case SAVE_OVERWRITE_DIFFERENT_FILE:
         // Erase Hall of Fame
@@ -878,6 +900,18 @@ bool8 WriteSaveBlock1Sector(void)
         HandleReplaceSectorAndVerify(gIncrementalSectorId + 1, gRamSaveSectorLocations);
         WriteSectorSignatureByte(sectorId, gRamSaveSectorLocations);
     }
+#if IS_WAYFARER
+    else if (sectorId <= SECTOR_ID_PKMN_STORAGE_END && SaveBlock3Size(sectorId) != 0)
+    {
+        // These partial/link saves intentionally do not save PC contents.
+        // The first sidecar iteration also commits the preceding SaveBlock1
+        // sector, matching the original fallthrough that ended the partial
+        // save before SaveBlock3 extended into storage sectors.
+        if (sectorId == SECTOR_ID_PKMN_STORAGE_START)
+            WriteSectorSignatureByte(sectorId, gRamSaveSectorLocations);
+        ReplaceSaveBlock3Chunk(sectorId);
+    }
+#endif
     else
     {
         // Beyond SaveBlock1, don't write the sector.
@@ -983,6 +1017,15 @@ u8 LoadGameSave(u8 saveType)
         InitializeTrainerRatingForSaveMigration();
         gSaveBlock1Ptr->saveVersion = 5;
     }
+
+#if IS_WAYFARER
+    if (gSaveBlock1Ptr->saveVersion < 6)
+    {
+        WayfarerInitPersistentStateFromSavedMap();
+        gSaveBlock1Ptr->saveVersion = 6;
+    }
+    WayfarerValidatePersistentState();
+#endif
 
     // Add version migration steps here:
     // if (gSaveBlock1Ptr->saveVersion < 1)
@@ -1156,11 +1199,46 @@ static u32 SaveBlock3Size(u32 sectorId)
 static void CopyToSaveBlock3(u32 sectorId, struct SaveSector *sector)
 {
     u32 size = SaveBlock3Size(sectorId);
+    if (size == 0)
+        return;
     memcpy((u8 *)&gSaveblock3 + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), sector->saveBlock3Chunk, size);
 }
 
 static void CopyFromSaveBlock3(u32 sectorId, struct SaveSector *sector)
 {
     u32 size = SaveBlock3Size(sectorId);
+    if (size == 0)
+        return;
     memcpy(sector->saveBlock3Chunk, (u8 *)&gSaveblock3 + (sectorId * SAVE_BLOCK_3_CHUNK_SIZE), size);
 }
+
+#if TESTING
+u32 Test_GetSaveBlock3ChunkSize(u32 sectorId)
+{
+    return SaveBlock3Size(sectorId);
+}
+
+void Test_CopySaveBlock3FromSector(u32 sectorId, struct SaveSector *sector)
+{
+    CopyToSaveBlock3(sectorId, sector);
+}
+
+void Test_CopySaveBlock3ToSector(u32 sectorId, struct SaveSector *sector)
+{
+    CopyFromSaveBlock3(sectorId, sector);
+}
+#endif
+
+#if IS_WAYFARER
+static u8 ReplaceSaveBlock3Chunk(u16 sectorId)
+{
+    u16 sector = sectorId + gLastWrittenSector;
+
+    sector %= NUM_SECTORS_PER_SLOT;
+    sector += NUM_SECTORS_PER_SLOT * (gSaveCounter % NUM_SAVE_SLOTS);
+
+    ReadFlashSector(sector, gReadWriteSector);
+    CopyFromSaveBlock3(sectorId, gReadWriteSector);
+    return TryWriteSector(sector, gReadWriteSector->data);
+}
+#endif

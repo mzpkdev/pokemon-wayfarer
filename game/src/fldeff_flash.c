@@ -14,6 +14,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "task.h"
+#include "wayfarer_persistence.h"
 #include "constants/songs.h"
 
 struct FlashStruct
@@ -80,7 +81,7 @@ bool32 SetUpFieldMove_Flash(void)
         gPostMenuFieldCallback = SetUpPuzzleEffectRegisteel;
         return TRUE;
     }
-    else if (gMapHeader.cave == TRUE && !FlagGet(FLAG_SYS_USE_FLASH))
+    else if (gMapHeader.cave == TRUE && !WayfarerFieldMoveFlagGet(FLAG_SYS_USE_FLASH))
     {
         gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
         gPostMenuFieldCallback = FieldCallback_Flash;
@@ -101,7 +102,7 @@ static void FieldCallback_Flash(void)
 static void FldEff_UseFlash(void)
 {
     PlaySE(SE_M_REFLECT);
-    FlagSet(FLAG_SYS_USE_FLASH);
+    WayfarerFieldMoveFlagSet(FLAG_SYS_USE_FLASH);
     ScriptContext_SetupScript(EventScript_UseFlash);
 }
 

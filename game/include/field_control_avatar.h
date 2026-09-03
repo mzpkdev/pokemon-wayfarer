@@ -1,6 +1,8 @@
 #ifndef GUARD_FIELDCONTROLAVATAR_H
 #define GUARD_FIELDCONTROLAVATAR_H
 
+struct BgEvent;
+
 struct FieldInput
 {
     bool8 pressedAButton:1;
@@ -36,6 +38,7 @@ void ClearPoisonStepCounter(void);
 void CancelSignPostMessageBox(struct FieldInput *input);
 void HandleBoulderFallThroughHole(struct ObjectEvent *object);
 void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
+u16 GetHiddenItemFlagId(const struct BgEvent *bgEvent);
 
 #define NOT_SIGNPOST 0
 #define WALK_AWAY_SIGNPOST_FRAMES 6

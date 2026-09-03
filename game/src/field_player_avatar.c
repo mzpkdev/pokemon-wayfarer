@@ -29,6 +29,7 @@
 #include "task.h"
 #include "tv.h"
 #include "wild_encounter.h"
+#include "wayfarer_persistence.h"
 #include "constants/abilities.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
@@ -1059,7 +1060,7 @@ static bool8 ShouldJumpLedge(s16 x, s16 y, enum Direction direction)
 
 static bool8 TryPushBoulder(s16 x, s16 y, enum Direction direction)
 {
-    if (FlagGet(FLAG_SYS_USE_STRENGTH))
+    if (WayfarerFieldMoveFlagGet(FLAG_SYS_USE_STRENGTH))
     {
         u8 objectEventId = GetObjectEventIdByXY(x, y);
 

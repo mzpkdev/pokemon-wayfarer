@@ -14,6 +14,9 @@
 #include "pokedex.h"
 #include "constants/pokedex.h"
 #include "battle.h"
+#if IS_WAYFARER
+#include "wayfarer_persistence.h"
+#endif
 
 EWRAM_DATA u8 NuzlockeIsCaptureBlocked = FALSE;
 EWRAM_DATA u8 NuzlockeIsSpeciesClauseActive = FALSE;
@@ -262,6 +265,45 @@ static const u8 sNuzlockeLUT[] =
 #endif
 };
 
+#if IS_WAYFARER
+// Emerald's last real region-map section is Trainer Hill (218); 219 is the
+// MAPSEC_NONE sentinel. A direct bitset is only 28 bytes and safely covers
+// every Hoenn hatch/capture location, including sections absent from the LUT.
+#define WAYFARER_HOENN_NUZLOCKE_MAPSEC_COUNT 219
+
+STATIC_ASSERT(sizeof(((struct WayfarerHoennPersistentState *)0)->nuzlockeEncounterFlags)
+              == (WAYFARER_HOENN_NUZLOCKE_MAPSEC_COUNT + 7) / 8,
+              WayfarerHoennNuzlockeEncounterFlagsSize);
+#endif
+
+static bool8 GetNuzlockeFlagLocation(u16 mapsec, u8 **ptr, u8 *mask)
+{
+    u16 id;
+
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        if (mapsec >= WAYFARER_HOENN_NUZLOCKE_MAPSEC_COUNT)
+            return FALSE;
+
+        *ptr = &gSaveBlock3Ptr->wayfarerHoenn.nuzlockeEncounterFlags[mapsec / 8];
+        *mask = 1 << (mapsec & 7);
+        return TRUE;
+    }
+#endif
+
+    if (mapsec >= ARRAY_COUNT(sNuzlockeLUT))
+        return FALSE;
+
+    id = sNuzlockeLUT[mapsec];
+    if (id >= sizeof(gSaveBlock3Ptr->challengeSettings.nuzlockeEncounterFlags) * 8)
+        return FALSE;
+
+    *ptr = &gSaveBlock3Ptr->challengeSettings.nuzlockeEncounterFlags[id / 8];
+    *mask = 1 << (id & 7);
+    return TRUE;
+}
+
 bool8 IsNuzlockeActive(void)
 {
     struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
@@ -304,30 +346,32 @@ bool8 IsNuzlockeNicknamingActive(void)
 
 u8 NuzlockeFlagSet(u16 mapsec)
 {
-    u16 id = sNuzlockeLUT[mapsec];
-    u8 *ptr = &gSaveBlock3Ptr->challengeSettings.nuzlockeEncounterFlags[id / 8];
+    u8 *ptr;
+    u8 mask;
 
-    *ptr |= 1 << (id & 7);
+    if (GetNuzlockeFlagLocation(mapsec, &ptr, &mask))
+        *ptr |= mask;
     return 0;
 }
 
 u8 NuzlockeFlagClear(u16 mapsec)
 {
-    u16 id = sNuzlockeLUT[mapsec];
-    u8 *ptr = &gSaveBlock3Ptr->challengeSettings.nuzlockeEncounterFlags[id / 8];
+    u8 *ptr;
+    u8 mask;
 
-    *ptr &= ~(1 << (id & 7));
+    if (GetNuzlockeFlagLocation(mapsec, &ptr, &mask))
+        *ptr &= ~mask;
     return 0;
 }
 
 u8 NuzlockeFlagGet(u16 mapsec)
 {
-    u16 id = sNuzlockeLUT[mapsec];
-    u8 *ptr = &gSaveBlock3Ptr->challengeSettings.nuzlockeEncounterFlags[id / 8];
+    u8 *ptr;
+    u8 mask;
 
-    if (!((*ptr >> (id & 7)) & 1))
-        return 0;
-    return 1;
+    if (!GetNuzlockeFlagLocation(mapsec, &ptr, &mask))
+        return FALSE;
+    return (*ptr & mask) != 0;
 }
 
 void NuzlockeDeletePartyMon(u8 position)

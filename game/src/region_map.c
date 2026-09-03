@@ -24,6 +24,7 @@
 #include "decompress.h"
 #include "constants/region_map_sections.h"
 #include "heal_location.h"
+#include "wayfarer_persistence.h"
 #include "constants/field_specials.h"
 #include "constants/heal_locations.h"
 #include "constants/rgb.h"
@@ -96,7 +97,7 @@ static void RegionMap_InitializeStateBasedOnSSTidalLocation(void);
 static u8 GetMapsecType(mapsec_u16_t mapSecId);
 static mapsec_u16_t CorrectSpecialMapSecId_Internal(mapsec_u16_t mapSecId);
 static mapsec_u16_t GetTerraOrMarineCaveMapSecId(void);
-#if !IS_HNS
+#if !IS_HNS || IS_WAYFARER
 static void GetMarineCaveCoords(u16 *x, u16 *y);
 #endif
 static bool32 IsPlayerInAquaHideout(mapsec_u8_t mapSecId);
@@ -150,6 +151,9 @@ static const u8 sRegionMapPlayerIcon_KrisGfx[] = INCBIN_U8("graphics/pokenav/reg
 #if IS_HNS
 #include "data/region_map/region_map_layout_johto.h"
 #include "data/region_map/region_map_layout_jk.h"
+#endif
+#if IS_WAYFARER
+#include "data/region_map/region_map_layout_wayfarer.h"
 #endif
 #include "data/region_map/region_map_entries.h"
 
@@ -287,6 +291,10 @@ const struct RegionMapLocation *GetActiveRegionMapEntries(void)
 {
 #if IS_HNS
     const struct RegionMapLocation *entries;
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return sWayfarerHoennRegionMapEntries;
+#endif
     if (FlagGet(FLAG_VISITED_KANTO))
         entries = sRegionMapEntries_JK;
     else
@@ -351,6 +359,58 @@ static const mapsec_u16_t sRegionMap_SpecialPlaceLocations[][2] =
 #endif
     {MAPSEC_NONE,                       MAPSEC_NONE}
 };
+
+#if IS_WAYFARER
+// Hoenn-source map headers retain Emerald's raw section IDs. Keep their
+// correction table independent from the HNS MAPSEC enum active in Wayfarer.
+static const mapsec_u16_t sWayfarerHoennSpecialPlaceLocations[][2] =
+{
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_105,             WAYFARER_HOENN_MAPSEC_ROUTE_105},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_124,             WAYFARER_HOENN_MAPSEC_ROUTE_124},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_125,             WAYFARER_HOENN_MAPSEC_ROUTE_125},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_126,             WAYFARER_HOENN_MAPSEC_ROUTE_126},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_127,             WAYFARER_HOENN_MAPSEC_ROUTE_127},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_128,             WAYFARER_HOENN_MAPSEC_ROUTE_128},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_129,             WAYFARER_HOENN_MAPSEC_ROUTE_129},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_SOOTOPOLIS,      WAYFARER_HOENN_MAPSEC_SOOTOPOLIS_CITY},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_SEAFLOOR_CAVERN, WAYFARER_HOENN_MAPSEC_ROUTE_128},
+    {WAYFARER_HOENN_MAPSEC_AQUA_HIDEOUT,               WAYFARER_HOENN_MAPSEC_LILYCOVE_CITY},
+    {WAYFARER_HOENN_MAPSEC_AQUA_HIDEOUT_OLD,           WAYFARER_HOENN_MAPSEC_LILYCOVE_CITY},
+    {WAYFARER_HOENN_MAPSEC_MAGMA_HIDEOUT,              WAYFARER_HOENN_MAPSEC_ROUTE_112},
+    {WAYFARER_HOENN_MAPSEC_UNDERWATER_SEALED_CHAMBER,  WAYFARER_HOENN_MAPSEC_ROUTE_134},
+    {WAYFARER_HOENN_MAPSEC_PETALBURG_WOODS,            WAYFARER_HOENN_MAPSEC_ROUTE_104},
+    {WAYFARER_HOENN_MAPSEC_JAGGED_PASS,                WAYFARER_HOENN_MAPSEC_ROUTE_112},
+    {WAYFARER_HOENN_MAPSEC_MT_PYRE,                    WAYFARER_HOENN_MAPSEC_ROUTE_122},
+    {WAYFARER_HOENN_MAPSEC_SKY_PILLAR,                 WAYFARER_HOENN_MAPSEC_ROUTE_131},
+    {WAYFARER_HOENN_MAPSEC_MIRAGE_TOWER,               WAYFARER_HOENN_MAPSEC_ROUTE_111},
+    {WAYFARER_HOENN_MAPSEC_TRAINER_HILL,               WAYFARER_HOENN_MAPSEC_ROUTE_111},
+    {WAYFARER_HOENN_MAPSEC_DESERT_UNDERPASS,           WAYFARER_HOENN_MAPSEC_ROUTE_114},
+    {WAYFARER_HOENN_MAPSEC_ALTERING_CAVE,              WAYFARER_HOENN_MAPSEC_ROUTE_103},
+    {WAYFARER_HOENN_MAPSEC_ARTISAN_CAVE,               WAYFARER_HOENN_MAPSEC_ROUTE_103},
+    {WAYFARER_HOENN_MAPSEC_ABANDONED_SHIP,             WAYFARER_HOENN_MAPSEC_ROUTE_108},
+    {WAYFARER_HOENN_MAPSEC_NONE,                       WAYFARER_HOENN_MAPSEC_NONE},
+};
+
+static const mapsec_u16_t sWayfarerHoennTerraOrMarineCaveMapSecIds[ABNORMAL_WEATHER_LOCATIONS] =
+{
+    [ABNORMAL_WEATHER_ROUTE_114_NORTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_114,
+    [ABNORMAL_WEATHER_ROUTE_114_SOUTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_114,
+    [ABNORMAL_WEATHER_ROUTE_115_WEST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_115,
+    [ABNORMAL_WEATHER_ROUTE_115_EAST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_115,
+    [ABNORMAL_WEATHER_ROUTE_116_NORTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_116,
+    [ABNORMAL_WEATHER_ROUTE_116_SOUTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_116,
+    [ABNORMAL_WEATHER_ROUTE_118_EAST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_118,
+    [ABNORMAL_WEATHER_ROUTE_118_WEST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_118,
+    [ABNORMAL_WEATHER_ROUTE_105_NORTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_105,
+    [ABNORMAL_WEATHER_ROUTE_105_SOUTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_105,
+    [ABNORMAL_WEATHER_ROUTE_125_WEST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_125,
+    [ABNORMAL_WEATHER_ROUTE_125_EAST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_125,
+    [ABNORMAL_WEATHER_ROUTE_127_NORTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_127,
+    [ABNORMAL_WEATHER_ROUTE_127_SOUTH - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_127,
+    [ABNORMAL_WEATHER_ROUTE_129_WEST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_129,
+    [ABNORMAL_WEATHER_ROUTE_129_EAST  - 1] = WAYFARER_HOENN_MAPSEC_ROUTE_129,
+};
+#endif
 
 static const mapsec_u16_t sMarineCaveMapSecIds[] =
 {
@@ -621,6 +681,7 @@ const struct RegionMapInfo gRegionMapInfos[] =
 
 static const u8 sMapHealLocations[][3] =
 {
+#if !IS_HNS
     [MAPSEC_LITTLEROOT_TOWN] = {MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F},
     [MAPSEC_OLDALE_TOWN] = {MAP_GROUP(MAP_OLDALE_TOWN), MAP_NUM(MAP_OLDALE_TOWN), HEAL_LOCATION_OLDALE_TOWN},
     [MAPSEC_DEWFORD_TOWN] = {MAP_GROUP(MAP_DEWFORD_TOWN), MAP_NUM(MAP_DEWFORD_TOWN), HEAL_LOCATION_DEWFORD_TOWN},
@@ -777,6 +838,7 @@ static const u8 sMapHealLocations[][3] =
     [MAPSEC_RIXY_CHAMBER] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_VIAPOIS_CHAMBER] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_EMBER_SPA] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
+#endif
 #if IS_HNS
     [MAPSEC_NEW_BARK_TOWN] = {MAP_GROUP(MAP_NEW_BARK_TOWN_HNS), MAP_NUM(MAP_NEW_BARK_TOWN_HNS), HEAL_LOCATION_NEW_BARK_TOWN_HNS},
     [MAPSEC_CHERRYGROVE_CITY] = {MAP_GROUP(MAP_CHERRYGROVE_CITY_HNS), MAP_NUM(MAP_CHERRYGROVE_CITY_HNS), HEAL_LOCATION_CHERRYGROVE_CITY_HNS},
@@ -834,6 +896,30 @@ static const u8 sMapHealLocations[][3] =
 #endif
 };
 
+#if IS_WAYFARER
+// Fly routing for raw Hoenn section IDs. The shared HNS-indexed table above
+// must not be indexed with Hoenn source IDs because several values collide.
+static const u8 sWayfarerHoennMapHealLocations[][3] =
+{
+    {MAP_GROUP(MAP_LITTLEROOT_TOWN), MAP_NUM(MAP_LITTLEROOT_TOWN), HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F},
+    {MAP_GROUP(MAP_OLDALE_TOWN), MAP_NUM(MAP_OLDALE_TOWN), HEAL_LOCATION_OLDALE_TOWN},
+    {MAP_GROUP(MAP_DEWFORD_TOWN), MAP_NUM(MAP_DEWFORD_TOWN), HEAL_LOCATION_DEWFORD_TOWN},
+    {MAP_GROUP(MAP_LAVARIDGE_TOWN), MAP_NUM(MAP_LAVARIDGE_TOWN), HEAL_LOCATION_LAVARIDGE_TOWN},
+    {MAP_GROUP(MAP_FALLARBOR_TOWN), MAP_NUM(MAP_FALLARBOR_TOWN), HEAL_LOCATION_FALLARBOR_TOWN},
+    {MAP_GROUP(MAP_VERDANTURF_TOWN), MAP_NUM(MAP_VERDANTURF_TOWN), HEAL_LOCATION_VERDANTURF_TOWN},
+    {MAP_GROUP(MAP_PACIFIDLOG_TOWN), MAP_NUM(MAP_PACIFIDLOG_TOWN), HEAL_LOCATION_PACIFIDLOG_TOWN},
+    {MAP_GROUP(MAP_PETALBURG_CITY), MAP_NUM(MAP_PETALBURG_CITY), HEAL_LOCATION_PETALBURG_CITY},
+    {MAP_GROUP(MAP_SLATEPORT_CITY), MAP_NUM(MAP_SLATEPORT_CITY), HEAL_LOCATION_SLATEPORT_CITY},
+    {MAP_GROUP(MAP_MAUVILLE_CITY), MAP_NUM(MAP_MAUVILLE_CITY), HEAL_LOCATION_MAUVILLE_CITY},
+    {MAP_GROUP(MAP_RUSTBORO_CITY), MAP_NUM(MAP_RUSTBORO_CITY), HEAL_LOCATION_RUSTBORO_CITY},
+    {MAP_GROUP(MAP_FORTREE_CITY), MAP_NUM(MAP_FORTREE_CITY), HEAL_LOCATION_FORTREE_CITY},
+    {MAP_GROUP(MAP_LILYCOVE_CITY), MAP_NUM(MAP_LILYCOVE_CITY), HEAL_LOCATION_LILYCOVE_CITY},
+    {MAP_GROUP(MAP_MOSSDEEP_CITY), MAP_NUM(MAP_MOSSDEEP_CITY), HEAL_LOCATION_MOSSDEEP_CITY},
+    {MAP_GROUP(MAP_SOOTOPOLIS_CITY), MAP_NUM(MAP_SOOTOPOLIS_CITY), HEAL_LOCATION_SOOTOPOLIS_CITY},
+    {MAP_GROUP(MAP_EVER_GRANDE_CITY), MAP_NUM(MAP_EVER_GRANDE_CITY), HEAL_LOCATION_EVER_GRANDE_CITY},
+};
+#endif
+
 static const u8 *const sEverGrandeCityNames[] =
 {
     gText_PokemonLeague,
@@ -844,8 +930,13 @@ static const struct MultiNameFlyDest sMultiNameFlyDestinations[] =
 {
     {
         .name = sEverGrandeCityNames,
+#if IS_WAYFARER
+        .mapSecId = WAYFARER_HOENN_MAPSEC_EVER_GRANDE_CITY,
+        .flag = HOENN_FLAG_ID(WAYFARER_HOENN_FLAG_LANDMARK_POKEMON_LEAGUE)
+#else
         .mapSecId = MAPSEC_EVER_GRANDE_CITY,
         .flag = FLAG_LANDMARK_POKEMON_LEAGUE
+#endif
     }
 };
 
@@ -1498,6 +1589,10 @@ void PokedexAreaScreen_UpdateRegionMapVariablesAndVideoRegs(s16 x, s16 y)
 enum RegionMapType GetRegionMapType(u32 mapSecId)
 {
 #if IS_HNS
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return REGION_MAP_HOENN;
+#endif
     if (FlagGet(FLAG_VISITED_KANTO))
         return REGION_MAP_JK;
     return REGION_MAP_JOHTO;
@@ -1528,12 +1623,20 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
 {
     if (y < MAPCURSOR_Y_MIN || y > MAPCURSOR_Y_MAX || x < MAPCURSOR_X_MIN || x > MAPCURSOR_X_MAX)
     {
+#if IS_WAYFARER
+        if (WayfarerIsCurrentMapHoennSource())
+            return WAYFARER_HOENN_MAPSEC_NONE;
+#endif
         return MAPSEC_NONE;
     }
     y -= MAPCURSOR_Y_MIN;
     x -= MAPCURSOR_X_MIN;
 
 #if IS_HNS
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return sWayfarerHoennRegionMapSections[y][x];
+#endif
     if (FlagGet(FLAG_VISITED_KANTO))
         return sRegionMapSections_JK[y][x];
     return sRegionMapSections_Johto[y][x];
@@ -1568,7 +1671,7 @@ static void InitMapBasedOnPlayerLocation(void)
     u16 x;
     u16 y;
     u16 dimensionScale;
-#if !IS_HNS
+#if !IS_HNS || IS_WAYFARER
     u16 xOnMap;
 #endif
     struct WarpData *warp;
@@ -1596,7 +1699,17 @@ static void InitMapBasedOnPlayerLocation(void)
         mapHeight = gMapHeader.mapLayout->height;
         x = gSaveBlock1Ptr->pos.x;
         y = gSaveBlock1Ptr->pos.y;
+#if IS_WAYFARER
+        if (WayfarerIsCurrentMapHoennSource()
+         && (sRegionMap->mapSecId == WAYFARER_HOENN_MAPSEC_UNDERWATER_SEAFLOOR_CAVERN
+          || sRegionMap->mapSecId == WAYFARER_HOENN_MAPSEC_UNDERWATER_MARINE_CAVE))
+            sRegionMap->playerIsInCave = TRUE;
+        else if (!WayfarerIsCurrentMapHoennSource()
+              && (sRegionMap->mapSecId == MAPSEC_UNDERWATER_SEAFLOOR_CAVERN
+               || sRegionMap->mapSecId == MAPSEC_UNDERWATER_MARINE_CAVE))
+#else
         if (sRegionMap->mapSecId == MAPSEC_UNDERWATER_SEAFLOOR_CAVERN || sRegionMap->mapSecId == MAPSEC_UNDERWATER_MARINE_CAVE)
+#endif
             sRegionMap->playerIsInCave = TRUE;
         break;
     case MAP_TYPE_UNDERGROUND:
@@ -1632,7 +1745,11 @@ static void InitMapBasedOnPlayerLocation(void)
         break;
     case MAP_TYPE_INDOOR:
         sRegionMap->mapSecId = gMapHeader.regionMapSectionId;
+#if IS_WAYFARER
+        if (sRegionMap->mapSecId != (WayfarerIsCurrentMapHoennSource() ? WAYFARER_HOENN_MAPSEC_DYNAMIC : MAPSEC_DYNAMIC))
+#else
         if (sRegionMap->mapSecId != MAPSEC_DYNAMIC)
+#endif
         {
             warp = &gSaveBlock1Ptr->escapeWarp;
             mapHeader = Overworld_GetMapHeaderByGroupAndId(warp->mapGroup, warp->mapNum);
@@ -1656,7 +1773,7 @@ static void InitMapBasedOnPlayerLocation(void)
         break;
     }
 
-#if !IS_HNS
+#if !IS_HNS || IS_WAYFARER
     xOnMap = x;
 #endif
 
@@ -1682,7 +1799,44 @@ static void InitMapBasedOnPlayerLocation(void)
         y = GetActiveRegionMapEntries()[sRegionMap->mapSecId].height - 1;
     }
 
-#if !IS_HNS
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        switch (sRegionMap->mapSecId)
+        {
+        case WAYFARER_HOENN_MAPSEC_ROUTE_114:
+            if (y != 0)
+                x = 0;
+            break;
+        case WAYFARER_HOENN_MAPSEC_ROUTE_126:
+        case WAYFARER_HOENN_MAPSEC_UNDERWATER_126:
+            x = 0;
+            if (gSaveBlock1Ptr->pos.x > 32)
+                x++;
+            if (gSaveBlock1Ptr->pos.x > 51)
+                x++;
+
+            y = 0;
+            if (gSaveBlock1Ptr->pos.y > 37)
+                y++;
+            if (gSaveBlock1Ptr->pos.y > 56)
+                y++;
+            break;
+        case WAYFARER_HOENN_MAPSEC_ROUTE_121:
+            x = 0;
+            if (xOnMap > 14)
+                x++;
+            if (xOnMap > 28)
+                x++;
+            if (xOnMap > 54)
+                x++;
+            break;
+        case WAYFARER_HOENN_MAPSEC_UNDERWATER_MARINE_CAVE:
+            GetMarineCaveCoords(&sRegionMap->cursorPosX, &sRegionMap->cursorPosY);
+            return;
+        }
+    }
+#elif !IS_HNS
     switch (sRegionMap->mapSecId)
     {
     case MAPSEC_ROUTE_114:
@@ -1737,16 +1891,32 @@ static void RegionMap_InitializeStateBasedOnSSTidalLocation(void)
     switch (GetSSTidalLocation(&mapGroup, &mapNum, &xOnMap, &yOnMap))
     {
     case SS_TIDAL_LOCATION_SLATEPORT:
+#if IS_WAYFARER
+        sRegionMap->mapSecId = WayfarerIsCurrentMapHoennSource() ? WAYFARER_HOENN_MAPSEC_SLATEPORT_CITY : MAPSEC_SLATEPORT_CITY;
+#else
         sRegionMap->mapSecId = MAPSEC_SLATEPORT_CITY;
+#endif
         break;
     case SS_TIDAL_LOCATION_LILYCOVE:
+#if IS_WAYFARER
+        sRegionMap->mapSecId = WayfarerIsCurrentMapHoennSource() ? WAYFARER_HOENN_MAPSEC_LILYCOVE_CITY : MAPSEC_LILYCOVE_CITY;
+#else
         sRegionMap->mapSecId = MAPSEC_LILYCOVE_CITY;
+#endif
         break;
     case SS_TIDAL_LOCATION_ROUTE124:
+#if IS_WAYFARER
+        sRegionMap->mapSecId = WayfarerIsCurrentMapHoennSource() ? WAYFARER_HOENN_MAPSEC_ROUTE_124 : MAPSEC_ROUTE_124;
+#else
         sRegionMap->mapSecId = MAPSEC_ROUTE_124;
+#endif
         break;
     case SS_TIDAL_LOCATION_ROUTE131:
+#if IS_WAYFARER
+        sRegionMap->mapSecId = WayfarerIsCurrentMapHoennSource() ? WAYFARER_HOENN_MAPSEC_ROUTE_131 : MAPSEC_ROUTE_131;
+#else
         sRegionMap->mapSecId = MAPSEC_ROUTE_131;
+#endif
         break;
     default:
     case SS_TIDAL_LOCATION_CURRENTS:
@@ -1775,6 +1945,32 @@ static void RegionMap_InitializeStateBasedOnSSTidalLocation(void)
 
 static u8 GetMapsecType(mapsec_u16_t mapSecId)
 {
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        if (mapSecId == WAYFARER_HOENN_MAPSEC_NONE)
+            return MAPSECTYPE_NONE;
+        if (mapSecId <= WAYFARER_HOENN_MAPSEC_EVER_GRANDE_CITY)
+        {
+            return FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + mapSecId))
+                       ? MAPSECTYPE_CITY_CANFLY
+                       : MAPSECTYPE_CITY_CANTFLY;
+        }
+        if (mapSecId == WAYFARER_HOENN_MAPSEC_BATTLE_FRONTIER)
+        {
+            return FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_FLAG_LANDMARK_BATTLE_FRONTIER))
+                       ? MAPSECTYPE_BATTLE_FRONTIER
+                       : MAPSECTYPE_NONE;
+        }
+        if (mapSecId == WAYFARER_HOENN_MAPSEC_SOUTHERN_ISLAND)
+        {
+            return FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_FLAG_LANDMARK_SOUTHERN_ISLAND))
+                       ? MAPSECTYPE_ROUTE
+                       : MAPSECTYPE_NONE;
+        }
+        return MAPSECTYPE_ROUTE;
+    }
+#endif
     switch (mapSecId)
     {
     case MAPSEC_NONE:
@@ -1951,6 +2147,28 @@ static mapsec_u16_t CorrectSpecialMapSecId_Internal(mapsec_u16_t mapSecId)
 {
     u32 i;
 
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        if (mapSecId == WAYFARER_HOENN_MAPSEC_MARINE_CAVE
+         || mapSecId == WAYFARER_HOENN_MAPSEC_UNDERWATER_MARINE_CAVE
+         || mapSecId == WAYFARER_HOENN_MAPSEC_TERRA_CAVE)
+        {
+            s16 idx = VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION)) - 1;
+
+            if (idx < 0 || idx >= ABNORMAL_WEATHER_LOCATIONS)
+                idx = 0;
+            return sWayfarerHoennTerraOrMarineCaveMapSecIds[idx];
+        }
+
+        for (i = 0; sWayfarerHoennSpecialPlaceLocations[i][0] != WAYFARER_HOENN_MAPSEC_NONE; i++)
+        {
+            if (sWayfarerHoennSpecialPlaceLocations[i][0] == mapSecId)
+                return sWayfarerHoennSpecialPlaceLocations[i][1];
+        }
+        return mapSecId;
+    }
+#endif
     for (i = 0; i < ARRAY_COUNT(sMarineCaveMapSecIds); i++)
     {
         if (sMarineCaveMapSecIds[i] == mapSecId)
@@ -1980,11 +2198,16 @@ static mapsec_u16_t GetTerraOrMarineCaveMapSecId(void)
     return sTerraOrMarineCaveMapSecIds[idx];
 }
 
-#if !IS_HNS
+#if !IS_HNS || IS_WAYFARER
 static void GetMarineCaveCoords(u16 *x, u16 *y)
 {
     u16 idx;
 
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        idx = VarGet(HOENN_VAR_ID(VAR_ABNORMAL_WEATHER_LOCATION));
+    else
+#endif
     idx = VarGet(VAR_ABNORMAL_WEATHER_LOCATION);
     if (idx < MARINE_CAVE_LOCATIONS_START || idx > ABNORMAL_WEATHER_LOCATIONS)
     {
@@ -2003,6 +2226,10 @@ static bool32 IsPlayerInAquaHideout(mapsec_u8_t mapSecId)
 {
     u32 i;
 
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return mapSecId == WAYFARER_HOENN_MAPSEC_AQUA_HIDEOUT_OLD;
+#endif
     for (i = 0; i < ARRAY_COUNT(sMapSecAquaHideoutOld); i++)
     {
         if (sMapSecAquaHideoutOld[i] == mapSecId)
@@ -2022,6 +2249,17 @@ static void GetPositionOfCursorWithinMapSec(void)
     u16 y;
     u16 posWithinMapSec;
 
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        if (sRegionMap->mapSecId == WAYFARER_HOENN_MAPSEC_NONE)
+        {
+            sRegionMap->posWithinMapSec = 0;
+            return;
+        }
+    }
+    else
+#endif
     if (sRegionMap->mapSecId == MAPSEC_NONE)
     {
         sRegionMap->posWithinMapSec = 0;
@@ -2318,12 +2556,23 @@ u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength)
 {
     u8 *str;
     u16 i;
+#if IS_WAYFARER
+    mapsec_u16_t secretBaseId = WayfarerIsCurrentMapHoennSource()
+                                   ? WAYFARER_HOENN_MAPSEC_SECRET_BASE
+                                   : MAPSEC_SECRET_BASE;
+    mapsec_u16_t noneId = WayfarerIsCurrentMapHoennSource()
+                             ? WAYFARER_HOENN_MAPSEC_NONE
+                             : MAPSEC_NONE;
+#else
+    const mapsec_u16_t secretBaseId = MAPSEC_SECRET_BASE;
+    const mapsec_u16_t noneId = MAPSEC_NONE;
+#endif
 
-    if (regionMapId == MAPSEC_SECRET_BASE)
+    if (regionMapId == secretBaseId)
     {
         str = GetSecretBaseMapName(dest);
     }
-    else if (regionMapId < MAPSEC_NONE)
+    else if (regionMapId < noneId)
     {
         str = StringCopy(dest, GetActiveRegionMapEntries()[regionMapId].name);
     }
@@ -2349,6 +2598,16 @@ u8 *GetMapName(u8 *dest, mapsec_u16_t regionMapId, u16 padLength)
 // TODO: probably needs a better name
 u8 *GetMapNameGeneric(u8 *dest, mapsec_u16_t mapSecId)
 {
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        if (mapSecId == WAYFARER_HOENN_MAPSEC_DYNAMIC)
+            return StringCopy(dest, gText_Ferry);
+        if (mapSecId == WAYFARER_HOENN_MAPSEC_SECRET_BASE)
+            return StringCopy(dest, gText_SecretBase);
+        return GetMapName(dest, mapSecId, 0);
+    }
+#endif
     switch (mapSecId)
     {
 #if !IS_HNS
@@ -2364,6 +2623,10 @@ u8 *GetMapNameGeneric(u8 *dest, mapsec_u16_t mapSecId)
 
 u8 *GetMapNameHandleAquaHideout(u8 *dest, mapsec_u16_t mapSecId)
 {
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource() && mapSecId == WAYFARER_HOENN_MAPSEC_AQUA_HIDEOUT_OLD)
+        return StringCopy(dest, gText_Hideout);
+#endif
     if (mapSecId == MAPSEC_AQUA_HIDEOUT_OLD)
         return StringCopy(dest, gText_Hideout);
     else
@@ -2387,6 +2650,14 @@ bool32 IsEventIslandMapSecId(mapsec_u8_t mapSecId)
 {
     u32 i;
 
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        return mapSecId == WAYFARER_HOENN_MAPSEC_BIRTH_ISLAND
+            || mapSecId == WAYFARER_HOENN_MAPSEC_FARAWAY_ISLAND
+            || mapSecId == WAYFARER_HOENN_MAPSEC_NAVEL_ROCK;
+    }
+#endif
     for (i = 0; i < ARRAY_COUNT(sMapSecIdsOffMap); i++)
     {
         if (mapSecId == sMapSecIdsOffMap[i])
@@ -2519,7 +2790,11 @@ static void DrawFlyDestTextWindow(void)
         namePrinted = FALSE;
         for (i = 0; i < ARRAY_COUNT(sMultiNameFlyDestinations); i++)
         {
-            if (sFlyMap->regionMap.mapSecId == sMultiNameFlyDestinations[i].mapSecId)
+            if (sFlyMap->regionMap.mapSecId == sMultiNameFlyDestinations[i].mapSecId
+#if IS_WAYFARER
+             && WayfarerIsCurrentMapHoennSource()
+#endif
+            )
             {
                 if (FlagGet(sMultiNameFlyDestinations[i].flag))
                 {
@@ -2594,6 +2869,24 @@ struct FlyLocation
 
 static const struct FlyLocation sFlyLocations[] =
 {
+#if IS_WAYFARER
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 0),  WAYFARER_HOENN_MAPSEC_LITTLEROOT_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 1),  WAYFARER_HOENN_MAPSEC_OLDALE_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 2),  WAYFARER_HOENN_MAPSEC_DEWFORD_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 3),  WAYFARER_HOENN_MAPSEC_LAVARIDGE_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 4),  WAYFARER_HOENN_MAPSEC_FALLARBOR_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 5),  WAYFARER_HOENN_MAPSEC_VERDANTURF_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 6),  WAYFARER_HOENN_MAPSEC_PACIFIDLOG_TOWN},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 7),  WAYFARER_HOENN_MAPSEC_PETALBURG_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 8),  WAYFARER_HOENN_MAPSEC_SLATEPORT_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 9),  WAYFARER_HOENN_MAPSEC_MAUVILLE_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 10), WAYFARER_HOENN_MAPSEC_RUSTBORO_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 11), WAYFARER_HOENN_MAPSEC_FORTREE_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 12), WAYFARER_HOENN_MAPSEC_LILYCOVE_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 13), WAYFARER_HOENN_MAPSEC_MOSSDEEP_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 14), WAYFARER_HOENN_MAPSEC_SOOTOPOLIS_CITY},
+    {REGION_MAP_HOENN, HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 15), WAYFARER_HOENN_MAPSEC_EVER_GRANDE_CITY},
+#elif !IS_HNS
     {
         .regionMapType = REGION_MAP_HOENN,
         .mapsec = MAPSEC_LITTLEROOT_TOWN,
@@ -2674,6 +2967,7 @@ static const struct FlyLocation sFlyLocations[] =
         .mapsec = MAPSEC_EVER_GRANDE_CITY,
         .flag = FLAG_VISITED_EVER_GRANDE_CITY,
     },
+#endif
     {
         .regionMapType = REGION_MAP_KANTO,
         .mapsec = MAPSEC_PALLET_TOWN,
@@ -2833,6 +3127,10 @@ static const struct FlyLocation sFlyLocations[] =
 static bool32 UseBlueFlyDestIcon(u32 mapSecId)
 {
 #if IS_HNS
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return FALSE;
+#endif
     switch (mapSecId)
     {
     // Johto
@@ -2915,6 +3213,27 @@ static void TryCreateRedOutlineFlyDestIcons(void)
     mapsec_u16_t mapSecId;
     u8 spriteId;
 
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        if (!FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_FLAG_LANDMARK_BATTLE_FRONTIER)))
+            return;
+
+        mapSecId = WAYFARER_HOENN_MAPSEC_BATTLE_FRONTIER;
+        GetMapSecDimensions(mapSecId, &x, &y, &width, &height);
+        x = (x + MAPCURSOR_X_MIN) * 8;
+        y = (y + MAPCURSOR_Y_MIN) * 8;
+        spriteId = CreateSprite(&sFlyDestIconSpriteTemplate, x, y, 10);
+        if (spriteId != MAX_SPRITES)
+        {
+            gSprites[spriteId].oam.size = SPRITE_SIZE(16x16);
+            gSprites[spriteId].callback = SpriteCB_FlyDestIcon;
+            StartSpriteAnim(&gSprites[spriteId], FLYDESTICON_RED_OUTLINE);
+            gSprites[spriteId].sIconMapSec = mapSecId;
+        }
+        return;
+    }
+#endif
     for (i = 0; sRedOutlineFlyDestinations[i][1] != MAPSEC_NONE; i++)
     {
         if (FlagGet(sRedOutlineFlyDestinations[i][0]))
@@ -3039,6 +3358,31 @@ static void CB_ExitFlyMap(void)
 
 u32 FilterFlyDestination(struct RegionMap* regionMap)
 {
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+    {
+        switch (regionMap->mapSecId)
+        {
+        case WAYFARER_HOENN_MAPSEC_SOUTHERN_ISLAND:
+            return HEAL_LOCATION_SOUTHERN_ISLAND_EXTERIOR;
+        case WAYFARER_HOENN_MAPSEC_BATTLE_FRONTIER:
+            return HEAL_LOCATION_BATTLE_FRONTIER_OUTSIDE_EAST;
+        case WAYFARER_HOENN_MAPSEC_LITTLEROOT_TOWN:
+            return gSaveBlock2Ptr->playerGender == MALE
+                       ? HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE
+                       : HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE;
+        case WAYFARER_HOENN_MAPSEC_EVER_GRANDE_CITY:
+            return FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_FLAG_LANDMARK_POKEMON_LEAGUE)) && regionMap->posWithinMapSec == 0
+                       ? HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE
+                       : HEAL_LOCATION_EVER_GRANDE_CITY;
+        default:
+            if (regionMap->mapSecId < ARRAY_COUNT(sWayfarerHoennMapHealLocations)
+             && sWayfarerHoennMapHealLocations[regionMap->mapSecId][2] != HEAL_LOCATION_NONE)
+                return sWayfarerHoennMapHealLocations[regionMap->mapSecId][2];
+            return WARP_ID_NONE;
+        }
+    }
+#endif
     switch (regionMap->mapSecId)
     {
     case MAPSEC_SOUTHERN_ISLAND:
@@ -3069,6 +3413,15 @@ void SetFlyDestination(struct RegionMap* regionMap)
 
     if (flyDestination != WARP_ID_NONE)
         SetWarpDestinationToHealLocation(flyDestination);
+#if IS_WAYFARER
+    else if (WayfarerIsCurrentMapHoennSource()
+          && regionMap->mapSecId < ARRAY_COUNT(sWayfarerHoennMapHealLocations))
+    {
+        SetWarpDestinationToMapWarp(sWayfarerHoennMapHealLocations[regionMap->mapSecId][0],
+                                    sWayfarerHoennMapHealLocations[regionMap->mapSecId][1],
+                                    WARP_ID_NONE);
+    }
+#endif
     else
         SetWarpDestinationToMapWarp(sMapHealLocations[regionMap->mapSecId][0], sMapHealLocations[regionMap->mapSecId][1], WARP_ID_NONE);
 }

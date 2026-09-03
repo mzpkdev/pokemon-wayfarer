@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pokemon-wayfarer.invalid/schemas/rom-report-baseline-v1.json",
+  "title": "Accepted Wayfarer ROM report baseline",
+  "description": "The fields required from a previously accepted Wayfarer ROM report when calculating category deltas.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "build",
+    "accepted_commit",
+    "rom",
+    "categories"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "build": {
+      "const": "wayfarer"
+    },
+    "accepted_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "rom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "used_bytes",
+        "end_address"
+      ],
+      "properties": {
+        "used_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_address": {
+          "type": "string",
+          "pattern": "^0x[0-9A-F]{8}$"
+        }
+      }
+    },
+    "categories": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "scripts",
+        "maps_layouts",
+        "graphics",
+        "audio",
+        "trainer_data",
+        "encounter_data",
+        "other"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/category"
+        },
+        "scripts": {
+          "$ref": "#/$defs/category"
+        },
+        "maps_layouts": {
+          "$ref": "#/$defs/category"
+        },
+        "graphics": {
+          "$ref": "#/$defs/category"
+        },
+        "audio": {
+          "$ref": "#/$defs/category"
+        },
+        "trainer_data": {
+          "$ref": "#/$defs/category"
+        },
+        "encounter_data": {
+          "$ref": "#/$defs/category"
+        },
+        "other": {
+          "$ref": "#/$defs/category"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "category": {
+      "type": "object",
+      "required": [
+        "bytes"
+      ],
+      "properties": {
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}

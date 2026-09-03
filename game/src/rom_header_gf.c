@@ -99,7 +99,11 @@ struct GFRomHeader
 __attribute__((section(".text.header_gf"))) USED static const struct GFRomHeader sGFRomHeader = {
     .version = GAME_VERSION,
     .language = GAME_LANGUAGE,
+#if IS_WAYFARER
+    .gameName = "pokemon wayfarer",
+#else
     .gameName = "pokemon emerald version",
+#endif
     //.monFrontPics = gMonFrontPicTable, // Handled in gSpeciesInfo
     //.monBackPics = gMonBackPicTable, // Handled in gSpeciesInfo
     //.monNormalPalettes = gMonPaletteTable, // Handled in gSpeciesInfo

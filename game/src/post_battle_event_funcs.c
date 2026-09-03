@@ -6,14 +6,19 @@
 #include "hall_of_fame_frlg.h"
 #include "load_save.h"
 #include "overworld.h"
+#include "regions.h"
 #include "script_pokemon_util.h"
 #include "tv.h"
+#include "wayfarer_persistence.h"
 #include "constants/heal_locations.h"
 
 int GameClear(void)
 {
     int i;
     bool32 ribbonGet;
+#if IS_WAYFARER
+    enum Region currentRegion = WayfarerGetCurrentMapRegion();
+#endif
     struct RibbonCounter {
         u8 partyIndex;
         u8 count;
@@ -21,14 +26,22 @@ int GameClear(void)
 
     HealPlayerParty();
 
+#if IS_WAYFARER
+    if (GetGameClearStateForRegion(currentRegion) == TRUE)
+#else
     if (FlagGet(FLAG_SYS_GAME_CLEAR) == TRUE)
+#endif
     {
         gHasHallOfFameRecords = TRUE;
     }
     else
     {
         gHasHallOfFameRecords = FALSE;
+#if IS_WAYFARER
+        SetGameClearStateForRegion(currentRegion, TRUE);
+#else
         FlagSet(FLAG_SYS_GAME_CLEAR);
+#endif
     }
 
     if (GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME) == 0)
@@ -36,12 +49,21 @@ int GameClear(void)
 
     SetContinueGameWarpStatus();
 
+#if IS_WAYFARER
+    if (currentRegion != REGION_HOENN)
+        SetContinueGameWarpToHealLocation(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
+    else if (gSaveBlock2Ptr->playerGender == MALE)
+        SetContinueGameWarpToHealLocation(HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
+    else
+        SetContinueGameWarpToHealLocation(HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE_2F);
+#else
     if (IS_HNS)
         SetContinueGameWarpToHealLocation(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
     else if (gSaveBlock2Ptr->playerGender == MALE)
         SetContinueGameWarpToHealLocation(HEAL_LOCATION_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F);
     else
         SetContinueGameWarpToHealLocation(HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE_2F);
+#endif
 
     ribbonGet = FALSE;
 
