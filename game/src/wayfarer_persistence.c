@@ -230,7 +230,10 @@ void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
     enum Region explicitRegion;
 
     if (IsWayfarerMapHoennSource(mapGroup, mapNum))
+    {
+        WayfarerSetSavedCurrentRegion(REGION_HOENN);
         return;
+    }
 
     explicitRegion = GetWayfarerExplicitMapRegion(mapGroup, mapNum);
     if (explicitRegion == REGION_JOHTO || explicitRegion == REGION_KANTO)

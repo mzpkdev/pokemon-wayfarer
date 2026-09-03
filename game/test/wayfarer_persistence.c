@@ -142,6 +142,24 @@ TEST("Wayfarer explicit HNS map transitions update special-map fallback context"
     EXPECT_EQ(GetCurrentRegion(), REGION_JOHTO);
 }
 
+TEST("Wayfarer direct Hoenn warps update the saved region without replacing HNS context")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+
+    SetWarpDestinationToMapWarp(MAP_GROUP(MAP_LITTLEROOT_TOWN),
+                                MAP_NUM(MAP_LITTLEROOT_TOWN), WARP_ID_NONE);
+    WarpIntoMap();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
+    EXPECT_EQ(GetCurrentRegion(), REGION_HOENN);
+
+    SetWarpDestinationToMapWarp(MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS),
+                                MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS), WARP_ID_NONE);
+    WarpIntoMap();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
+    EXPECT_EQ(GetCurrentRegion(), REGION_KANTO);
+}
+
 TEST("Wayfarer Hoenn Town Map uses Hoenn art grid and section semantics")
 {
     const struct MapHeader *header;
