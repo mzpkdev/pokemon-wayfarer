@@ -56,8 +56,18 @@ profile. A provenance record contains `targetTime`, `targetSlot`,
 identifies the source method and the arrays of grouped numeric slots in each
 contributing version. `levelSource` identifies one version, base label, method,
 slot, minimum level, and maximum level. `reason` is one of `FRLG_SHARED`,
-`FRLG_VERSION_COUNTERPART`, `GEN2_LOCAL_ADDITION`,
+`FRLG_VERSION_COUNTERPART`, `FRLG_DUPLICATE`, `GEN2_LOCAL_ADDITION`,
 `LATER_FAMILY_CONTINUITY`, or `NIGHT_REWEIGHT`.
+
+`FRLG_DUPLICATE` marks a surplus copy from a shared FRLG ecology group, where
+FireRed and LeafGreen have the same species and the selected assignment already
+retains that species in another target slot. The counterpart solver leaves the
+surplus slot in its unassigned source-group state. The record keeps the shared
+group and level range for traceability, but the slot does not count as another
+selected group allocation in the exhaustive proof. A live slot containing a
+species from a differing counterpart group must be mapped to that group and
+counted in its probability budget. `FRLG_DUPLICATE` does not permit a new
+species, a level change, or an omission that the solver did not select.
 
 The generator rejects duplicate profile identities, duplicate target slots,
 missing active slots, unknown source labels, source and target method
