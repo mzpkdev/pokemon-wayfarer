@@ -16,6 +16,12 @@ const finishFieldScript = async (game: GameSession, description: string): Promis
   )
 }
 
+const waitForFieldScriptStart = (game: GameSession, description: string): Promise<void> =>
+  game.wait.until(
+    (state) => state.scriptActive || state.dialogueOpen || state.battle.active,
+    `${description} start`,
+  )
+
 const startScriptedBattle = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
@@ -119,7 +125,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
-    await game.dialogue.waitForOpen()
+    await waitForFieldScriptStart(game, "Power Plant officer report")
     await finishFieldScript(game, "Power Plant officer report")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(2)
     await expect(game.story.flag("hideCeruleanGymRocket")).resolves.toBe(false)
@@ -135,7 +141,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
-    await game.dialogue.waitForOpen()
+    await waitForFieldScriptStart(game, "Cerulean Gym Rocket escape")
     await finishFieldScript(game, "Cerulean Gym Rocket escape")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(3)
     await expect(game.story.flag("hideCeruleanGymRocket")).resolves.toBe(true)
@@ -152,7 +158,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
-    await game.dialogue.waitForOpen()
+    await waitForFieldScriptStart(game, "Route 24 Rocket staging")
     await finishFieldScript(game, "Route 24 Rocket staging")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(4)
 
@@ -236,7 +242,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
-    await game.dialogue.waitForOpen()
+    await waitForFieldScriptStart(game, "Route 25 Misty return")
     await finishFieldScript(game, "Route 25 Misty return")
     await expect(game.story.var("ceruleanCityState")).resolves.toBe(3)
     await expect(game.story.var("numBadges")).resolves.toBe(0)
