@@ -24,7 +24,8 @@ static const u16 sStandardRodContributorFlags[] =
 STATIC_ASSERT(FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED == 0x304, StandardRodRoute32FlagId);
 STATIC_ASSERT(FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED == 0x305, StandardRodOlivineFlagId);
 STATIC_ASSERT(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED == 0x306, StandardRodRoute12FlagId);
-STATIC_ASSERT(FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED == 0x307, MagnetTrainRestorationStartedFlagId);
+STATIC_ASSERT(FLAG_UNUSED_39 == 0x307, HnsUnused39FlagId);
+STATIC_ASSERT(HNS_UNUSED_COUNT == 40, HnsUnusedCount);
 #else
 static const u16 sStandardRodContributorFlags[] =
 {

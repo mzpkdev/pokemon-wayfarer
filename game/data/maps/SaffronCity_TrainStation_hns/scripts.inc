@@ -29,7 +29,6 @@ SaffronStation_EventScript_Attendant::
 	goto SaffronStation_EventScript_AttendantNoPass
 
 SaffronStation_EventScript_AttendantTrainNotRunning::
-	setflag FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED
 	msgbox SaffronMagnetTrainStation_Text_Officer_TrainNotOperating, MSGBOX_DEFAULT
 	closemessage
 	release

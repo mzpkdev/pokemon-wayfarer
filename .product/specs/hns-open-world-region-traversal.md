@@ -1,7 +1,7 @@
 # HNS open-world regional traversal
 
 PRD: [HNS open-world regional traversal](../prds/hns-open-world-region-traversal.md)
-Implemented: Outdated
+Implemented: Yes
 
 ## Scope
 
