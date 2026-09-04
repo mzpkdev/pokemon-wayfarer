@@ -18,8 +18,8 @@ return-aware recovery behavior needed for the remaining circuit legs.
 
 The long-term S.S. Aqua circuit is fixed as Olivine to Vermilion to Slateport
 to Lilycove to Olivine. Regional travel remains route-based rather than
-unrestricted. Cross-region Fly and Town Map region tabs are separate deferred
-conveniences and are not required for the circuit.
+unrestricted. Wayfarer has no selectable Town Map region tabs, and Fly cannot
+cross the HNS and Hoenn boundary.
 
 The runtime foundation owns the build, map catalog, persistent-state model,
 active-region dispatch, and ROM budget. The Hoenn content port owns the adapted
@@ -58,25 +58,11 @@ Vermilion option at its existing menu index. That option continues to check
 only for the S.S. Ticket. Every other Olivine destination retains its existing
 index, gate, and behavior.
 
-### One-way confirmation
-
-Selecting Slateport first names the destination and explains that no return
-service from Hoenn is available in this milestone. The player must choose Yes
-or No after that warning.
-
-No closes the confirmation and returns to the destination menu. Cancel or Exit
-releases the player in Vermilion. None of those paths changes the current
-region, visited state, respawn location, S.S. Aqua state, ticket, or Hoenn
-state.
-
-The warning is required even if the save has visited a Hoenn map through test,
-debug, or unsupported means. No hidden flag may suppress it.
-
 ### Departure and destination
 
-After confirmation, the script rechecks the completed-voyage state and S.S.
-Ticket before committing the trip. It then uses the existing Vermilion S.S.
-Aqua boarding and departure presentation.
+After the player selects Slateport, the script rechecks the completed-voyage
+state and S.S. Ticket before committing the trip. It then uses the existing
+Vermilion S.S. Aqua boarding and departure presentation.
 
 The destination is `MAP_SLATEPORT_CITY_HARBOR`. The implementation must choose
 a Wayfarer arrival coordinate that is walkable, lies outside every coordinate
@@ -90,7 +76,7 @@ changing regional or Hoenn state.
 
 ### First-arrival initialization
 
-The confirmed trip checks `WayfarerHoennStateIsInitialized` before departure.
+The outbound trip checks `WayfarerHoennStateIsInitialized` before departure.
 If Hoenn is uninitialized, one dedicated entry routine prepares the Hoenn
 baseline before the warp:
 
@@ -160,11 +146,18 @@ Hoenn-specific completion state, and does not attempt to add a duplicate key
 item. The event may announce the S.S. Tidal service. It does not add an HNS
 destination to that ship.
 
-### Map, Fly, healing, and blackout
+### Town Map, Fly, healing, and blackout
 
-On Hoenn maps, the existing Wayfarer runtime uses the Hoenn map, location,
-visited, Fly, and Pokédex-area data selected by map provenance. This milestone
-does not add manual region switching or cross-region Fly.
+On a Hoenn map, opening the Town Map or Fly interface renders only the Hoenn
+map and uses only Hoenn location, visited, Fly, and Pokédex-area data. The
+interface has no region tab or other control that can display an HNS map. Its
+destination list contains only valid visited Hoenn Fly destinations, so Fly
+cannot leave Hoenn.
+
+On an HNS map, the existing HNS Town Map and Fly behavior remains unchanged.
+No Fly destination or map control crosses the HNS and Hoenn boundary in either
+direction. Regional transport across that boundary uses the physical S.S.
+Aqua route.
 
 The outbound trip replaces the active heal destination with
 `HEAL_LOCATION_SLATEPORT_CITY`. Subsequent Hoenn healing behaves normally. A
@@ -198,26 +191,28 @@ Static, ROM, and focused runtime tests must verify:
 4. At voyage state 8 and later, Wayfarer's Olivine menu retains Vermilion at
    its existing index, gated only by the S.S. Ticket, and preserves every other
    Olivine destination.
-5. Exit, Cancel, a missing ticket, and No at the warning change no persistent
-   or travel state.
-6. The warning is shown before every supported outbound trip.
-7. The destination coordinate is walkable, outside all coordinate events, and
+5. Exit, Cancel, and a missing ticket change no persistent or travel state.
+6. The destination coordinate is walkable, outside all coordinate events, and
    has a valid path through the harbor exit to Slateport City.
-8. A successful trip leaves `VAR_SSAQUA_STATE` at 8, keeps the S.S. Ticket, and
+7. A successful trip leaves `VAR_SSAQUA_STATE` at 8, keeps the S.S. Ticket, and
    preserves a representative snapshot of Johto and Kanto progress. The active
    region and heal destination are the intentional changes.
-9. First arrival initializes only Hoenn, commits its initialized value last,
+8. First arrival initializes only Hoenn, commits its initialized value last,
    and runs exactly once.
-10. Arrival advances no Hoenn campaign or S.S. Tidal state.
-11. Slateport is the active region and safe heal destination before control is
+9. Arrival advances no Hoenn campaign or S.S. Tidal state.
+10. Slateport is the active region and safe heal destination before control is
    returned.
-12. Saving and reloading in the harbor and in Slateport City preserves the
+11. Saving and reloading in the harbor and in Slateport City preserves the
     exact state.
-13. Blackout immediately after arrival recovers in Hoenn.
-14. Route 101 retains the content port's adapted Birch rescue and starter
+12. Blackout immediately after arrival recovers in Hoenn.
+13. Route 101 retains the content port's adapted Birch rescue and starter
     isolation.
-15. No S.S. Aqua, Fly, ferry, blackout, or Hall of Fame path returns the player
+14. No S.S. Aqua, Fly, ferry, blackout, or Hall of Fame path returns the player
     to Johto or Kanto.
+15. On a Hoenn map, the Town Map and Fly interface shows only Hoenn, exposes no
+    region selector, and lists no HNS Fly destination. HNS fixtures before and
+    after Kanto unlock retain their existing Town Map layouts and Fly behavior,
+    expose no Hoenn map selector, and list no Hoenn Fly destination.
 16. The Hoenn-port S.S. Tidal service stays unavailable until the Hoenn Champion
     result and keeps its original destinations afterward. This gate does not
     affect the existing HNS Battle Frontier special trip.
@@ -227,10 +222,10 @@ Static, ROM, and focused runtime tests must verify:
 18. The release ROM stays within the active Wayfarer size ceiling.
 
 One focused SkyEmu journey may begin from a fixture with the maiden voyage
-complete and the S.S. Ticket owned. It must select Slateport, observe and accept
-the warning, complete the normal ship departure, arrive in the harbor, exit to
-Slateport City, save, reload, and retain the Hoenn location. The journey does
-not need to replay the maiden voyage or complete the Hoenn campaign.
+complete and the S.S. Ticket owned. It must select Slateport, complete the
+normal ship departure, arrive in the harbor, exit to Slateport City, save,
+reload, and retain the Hoenn location. The journey does not need to replay the
+maiden voyage or complete the Hoenn campaign.
 
 ## Deferred follow-up
 
@@ -245,8 +240,7 @@ A future scheduled-ferry PRD owns:
 - the recovery state needed to heal and black out safely after the player can
   leave Hoenn.
 
-Separately deferred conveniences are cross-region Fly, Town Map region tabs,
-and any special early transport to Ever Grande.
+Any special early transport to Ever Grande remains separately deferred.
 
 ## References
 

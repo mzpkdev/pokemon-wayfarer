@@ -37,9 +37,7 @@ limit.
 - The Magnet Train remains the bidirectional Johto and Kanto connection.
 - Hoenn uses the same player and global Pokémon and inventory systems while
   keeping its regional story state separate.
-- This milestone has no Hoenn-to-Kanto or Hoenn-to-Johto route. The boarding
-  interaction must state that return service is unavailable and require
-  confirmation before departure.
+- This milestone has no Hoenn-to-Kanto or Hoenn-to-Johto route.
 
 The one-way boundary is deliberate implementation staging. The route order is
 already fixed, but a later PRD will define the Slateport-to-Lilycove and
@@ -62,8 +60,7 @@ The Slateport option appears after the maiden voyage is complete. Successful
 departure requires possession of the S.S. Ticket; selecting Slateport without
 it uses the existing no-credentials response and changes no state. The trip
 does not require a Kanto badge, the Machine Part, the Magnet Train Pass, a
-League result, payment, or Hoenn progress. Declining the one-way warning
-changes no state.
+League result, payment, or Hoenn progress.
 
 The Wayfarer S.S. Aqua does not provide a reverse Vermilion-to-Olivine leg
 after the maiden voyage. The Magnet Train provides bidirectional travel between
@@ -157,9 +154,11 @@ not turn that ship into a return route to Johto or Kanto.
 
 ### Map, Fly, healing, and blackout
 
-The existing Wayfarer runtime selects Hoenn map art, names, destinations, and
-Pokédex area data while the player is on a Hoenn map. This milestone does not
-add manual region tabs or cross-region Fly.
+On a Hoenn map, the Town Map and Fly interface use only Hoenn map art, names,
+visited state, and destinations. The player cannot select an HNS map or Fly
+destination while in Hoenn. On an HNS map, the existing HNS Town Map and Fly
+behavior remains unchanged. Wayfarer has no region tabs or other manual map
+switcher, and Fly never crosses the HNS and Hoenn boundary.
 
 The Vermilion-to-Slateport trip sets Slateport as the active safe recovery
 location before returning control. Later healing in Hoenn updates the ordinary
@@ -178,7 +177,8 @@ completed circuit.
 - The Slateport-to-Lilycove and Lilycove-to-Olivine circuit legs are not yet
   implemented.
 - Ferry schedules are not included in this milestone.
-- Cross-region Fly and selectable Town Map region tabs are not included.
+- Wayfarer has no selectable Town Map region tabs and Fly cannot cross the HNS
+  and Hoenn boundary.
 - The S.S. Tidal keeps its original postgame role and destinations.
 - This milestone does not add early Ever Grande transport.
 - Wayfarer does not redesign or scale Emerald Trainer parties.
@@ -191,10 +191,9 @@ completed circuit.
 
 Wayfarer's regional transport is route-based. The Magnet Train links Johto and
 Kanto in both directions, while the S.S. Aqua follows its directional circuit.
-This milestone keeps its one-way boarding warning until the scheduled-ferry
-PRD implements the remaining circuit legs and return-aware recovery.
-Cross-region Fly and selectable Town Map region tabs are separate conveniences,
-not requirements for completing the circuit.
+The scheduled-ferry PRD implements the remaining circuit legs and return-aware
+recovery. Completing the circuit does not add region tabs or cross-boundary
+Fly.
 
 ## Balance
 
@@ -210,9 +209,7 @@ interactions.
 
 - Player-facing build and save identifiers use the name "Wayfarer".
 - The Vermilion attendant identifies the destination as Slateport, Hoenn.
-- In this milestone, the attendant says before departure that return service
-  is unavailable.
-- Canceling or declining leaves the player in Vermilion with no state change.
+- Canceling leaves the player in Vermilion with no state change.
 - Hoenn entry treats the existing player as a visiting Trainer and adds no
   replacement introduction.
 - Existing Emerald music, maps, dialogue, and encounter identity remain intact
@@ -267,10 +264,13 @@ Acceptance answers these questions:
   HNS behavior?
 - After the maiden voyage, does Olivine still offer Vermilion at its existing
   menu index with only the S.S. Ticket required?
-- Does declining the one-way warning leave all state unchanged?
 - Does arrival preserve Johto and Kanto progress?
 - Does first-arrival initialization run exactly once?
 - Can the player save, reload, heal, and black out safely in Hoenn?
+- While the player is in Hoenn, does the Town Map show only Hoenn and does Fly
+  exclude every HNS destination?
+- On HNS maps before and after Kanto unlock, do the existing Town Map and Fly
+  behavior remain unchanged and exclude every Hoenn destination?
 - Does Route 101 retain the adapted Birch rescue afterward?
 - Does the Hoenn-port S.S. Tidal service remain locked until the Hoenn Champion
   result without affecting the existing HNS Battle Frontier option?
