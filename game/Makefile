@@ -333,6 +333,8 @@ WILD_ENCOUNTERS_TOOL_DIR := $(TOOLS_DIR)/wild_encounters
 WILD_ENCOUNTER_BALANCE_AUDIT := $(BUILD_DIR)/wild-encounter-balance-audit.json
 WAYFARER_HOENN_CONTENT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_content
 WAYFARER_HOENN_CONTENT_MANIFEST := $(BUILD_DIR)/wayfarer-hoenn-content-manifest.json
+WAYFARER_HOENN_ENTRY_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_entry
+WAYFARER_HOENN_ENTRY_AUDIT := $(BUILD_DIR)/wayfarer-hoenn-entry-audit.json
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
@@ -356,7 +358,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit rom-report-test
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -452,7 +454,7 @@ endif
 
 check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 ifeq ($(BUILD_NAME),wayfarer)
-check: wayfarer-hoenn-content-audit
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
@@ -461,7 +463,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
@@ -756,6 +758,16 @@ wayfarer-hoenn-content-test: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGIN
 
 wayfarer-hoenn-content-audit: wayfarer-hoenn-content-test $(WAYFARER_HOENN_CONTENT_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_CONTENT_TOOL_DIR)/generate.py --output $(WAYFARER_HOENN_CONTENT_MANIFEST)
+
+WAYFARER_HOENN_ENTRY_DEPS := $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(MAPS_DIR)/SlateportCity_Harbor/map.json $(LAYOUTS_DIR)/layouts.json $(LAYOUTS_DIR)/Harbor/map.bin $(DATA_SRC_SUBDIR)/heal_locations.json $(MAPS_DIR)/VermilionCity_PortInside_hns/scripts.inc $(MAPS_DIR)/OlivineCity_PortInside_hns/scripts.inc $(MAPS_DIR)/SlateportCity_Harbor/scripts.inc $(DATA_ASM_SUBDIR)/event_scripts.s $(DATA_ASM_SUBDIR)/scripts/new_game.inc $(DATA_ASM_SUBDIR)/scripts/players_house.inc $(DATA_ASM_SUBDIR)/scripts/wayfarer_hoenn_entry.inc $(C_SUBDIR)/data/script_menu.h $(C_SUBDIR)/wayfarer_persistence.c $(wildcard $(MAPS_DIR)/*/map.json) $(wildcard $(MAPS_DIR)/*/scripts.inc)
+
+wayfarer-hoenn-entry-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_HOENN_ENTRY_TOOL_DIR) -p 'test_*.py' -q
+
+$(WAYFARER_HOENN_ENTRY_AUDIT): $(WAYFARER_HOENN_ENTRY_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py --output $@
+
+wayfarer-hoenn-entry-audit: wayfarer-hoenn-entry-test $(WAYFARER_HOENN_ENTRY_AUDIT)
 
 # Symbol file (`make syms`)
 $(SYM): $(ELF)

@@ -374,7 +374,7 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
     }
   })
 
-  it("runs the unlocked ferry in both directions with only the Ticket", async () => {
+  it("runs the unlocked ferry from Olivine to Vermilion with only the Ticket", async () => {
     const ferryGame = await GameSession.launch()
     try {
       await ferryGame.arrange({
@@ -395,12 +395,7 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       await advanceUntilMap(ferryGame, "vermilion-port-inside")
       await expect(ferryGame.story.flag("returnedMachinePart")).resolves.toBe(false)
       await expect(ferryGame.inventory.contains("ssTicket")).resolves.toBe(true)
-
-      await ferryGame.player.interact()
-      await advanceUntilMap(ferryGame, "olivine-port-inside")
       await expect(ferryGame.story.var("ssAquaState")).resolves.toBe(8)
-      await expect(ferryGame.story.flag("returnedMachinePart")).resolves.toBe(false)
-      await expect(ferryGame.inventory.contains("ssTicket")).resolves.toBe(true)
     } finally {
       await ferryGame.close()
     }

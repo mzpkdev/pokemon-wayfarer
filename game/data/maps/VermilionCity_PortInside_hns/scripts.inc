@@ -32,7 +32,11 @@ VermilionPort_EventScript_Sailor_AfterKanto::
 	message VermilionPort_Text_WhereSail
 	multichoice 20, 0, MULTI_VERMILION_HARBOR, FALSE
 	switch VAR_RESULT
+#if IS_WAYFARER
+	case 0, VermilionPort_EventScript_ChoseSlateport
+#else
 	case 0, VermilionPort_EventScript_ChoseOlivine
+#endif
 	case 1, VermilionPort_EventScript_ChoseSouthernIsland
 	case 2, VermilionPort_EventScript_ChoseBirthIsland
 	case 3, VermilionPort_EventScript_ChoseFarawayIsland
@@ -41,6 +45,32 @@ VermilionPort_EventScript_Sailor_AfterKanto::
 	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Refused
 	release
 	end
+
+#if IS_WAYFARER
+VermilionPort_EventScript_ChoseSlateport::
+	closemessage
+	delay 20
+	goto_if_lt VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_SailorCantBoard
+	checkitem ITEM_SS_TICKET
+	bufferitemname STR_VAR_1, ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
+	specialvar VAR_RESULT, WayfarerPrepareHoennEntry
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantBoard
+	call VermilionPort_EventScript_EnterShip
+	@ EnterShip restores Vermilion as the safe location for special HNS trips.
+	@ The Hoenn leg must replace that presentation-side write before the warp.
+	setrespawn HEAL_LOCATION_SLATEPORT_CITY
+	warpsilent MAP_SLATEPORT_CITY_HARBOR, 9, 11
+	waitstate
+	release
+	end
+
+VermilionPort_EventScript_SailorCantBoard::
+	msgbox VermilionPort_Text_CantBoard, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 VermilionPort_EventScript_ChoseOlivine::
 	closemessage

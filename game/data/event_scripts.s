@@ -1944,6 +1944,13 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	
 
 #if IS_WAYFARER
+	@ Keep the entry baseline under the Hoenn source aliases. Calling the
+	@ common new-game reset from Vermilion would resolve its dynamic IDs as HNS.
+	.include "data/wayfarer_hoenn_source_constants.inc"
+	.include "data/scripts/wayfarer_hoenn_entry.inc"
+#endif
+
+#if IS_WAYFARER
 	.include "data/wayfarer_engine_source_constants.inc"
 #endif
 .if IS_HNS

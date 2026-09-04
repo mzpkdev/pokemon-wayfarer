@@ -453,7 +453,14 @@ PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV::
 	call_if_eq VAR_0x8008, MALE, PlayersHouse_1F_EventScript_DadApproachPlayerMale
 	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_DadApproachPlayerFemale
 	msgbox PlayersHouse_1F_Text_TicketFromBrineyCameForYou, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	checkitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, TRUE, PlayersHouse_1F_EventScript_AlreadyHasSSTicket
+#endif
 	giveitem ITEM_SS_TICKET
+#if IS_WAYFARER
+PlayersHouse_1F_EventScript_AlreadyHasSSTicket::
+#endif
 	msgbox PlayersHouse_1F_Text_PortsInSlateportLilycove, MSGBOX_DEFAULT
 	closemessage
 	delay 20
