@@ -223,8 +223,9 @@ projection, and predecessor resolution. The report retains the authored slot,
 authored species, projected level outcomes, eligibility, and resulting species
 so every probability can be traced back to its source.
 
-At Ratings 10, 16, 40, 55, 65, and 80, renormalize eligible weights and repeat
-the authored portfolio calculation by effective species. The results must meet:
+At standalone Ratings 10, 16, 40, 55, 65, and 80, plus Wayfarer Ratings 0, 16,
+40, 55, 63, 68, 76, and 80, renormalize eligible weights and repeat the
+authored portfolio calculation by effective species. The results must meet:
 
 | Portfolio | Required effective Generation II share |
 | --- | ---: |
@@ -271,8 +272,9 @@ Copy only the Johto-owned HNS rows from the native-HM specification into
 `protectedAnchors` as exact machine-readable records. The Kanto Chinchou rows
 at Vermilion and Cinnabar belong to the Kanto specification and do not enter
 this array. Each record names species, utility moves, qualifying base labels,
-method, applicable times, qualifying authored level ranges, and required
-Rating range 10 through 80.
+method, applicable times, qualifying authored level ranges, and the required
+standalone Rating range 10 through 80. Wayfarer extends every record through
+Rating 0.
 
 The protected species are Gligar, Aipom, Chinchou, Mareep, Wooper, Snubbull,
 Miltank, Marill, and Mantine. For every named slot and authored level, the
@@ -284,7 +286,8 @@ Mantine's global `minimumOrdinaryWildLevel` is 14. An authored level-15
 Mantine can project to level 14 at Rating 10, so 14 is the minimum valid floor
 for this protected inventory. Do not implement this as a Johto-only runtime
 exception, change the authored levels, weaken the Rating 10 through 80 anchor,
-or add Mantyke or another predecessor resolution.
+weaken the Wayfarer Rating 0 through 80 anchor, or add Mantyke or another
+predecessor resolution.
 
 Aipom remains available through the Rock Smash-backed Headbutt profiles for
 Azalea Town and Route 33 at authored level 10. Its set of qualifying Headbutt

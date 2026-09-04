@@ -258,7 +258,8 @@ recorded expected percentage.
 
 The wild encounter generator's deterministic balance report covers every
 supported build, version, map profile, and time-of-day variant at every integer
-Trainer Rating from 10 through 80. For every quality it reports:
+standalone Trainer Rating from 10 through 80. Wayfarer's interregional circuit
+extends the same report through Rating 0. For every quality it reports:
 
 - Raw entry weights and eligible entries.
 - Renormalized entry and aggregate species probabilities.

@@ -65,7 +65,12 @@ The following existing encounter profiles establish the required two-place cover
 
 Aipom's qualifying profiles are stored as Rock Smash encounter data but are also consumed by the independent Headbutt interaction. Aipom counts only through Headbutt access; Rock Smash cannot be required to obtain its native Rock Smash user.
 
-Chinchou also supplies the HNS Kanto Surf crossings. The six Vermilion, port, and Cinnabar day/night profiles author it at level 5. Trainer Rating projects those catches to levels 9 through 90 over the required Rating 10 to 80 range, so its schedule starts at level 9 and preserves all three utility moves through level 100.
+Chinchou also supplies the HNS Kanto Surf crossings. The six Vermilion, port,
+and Cinnabar day/night profiles author it at level 5. Standalone HNS projects
+those catches to levels 9 through 90 over its Rating 10 to 80 range, so its
+implemented schedule starts at level 9 and preserves all three utility moves
+through level 100. Wayfarer's Rating 0 circuit adds a level-5 entry through its
+own specification so the same sources remain usable there.
 
 Trainer Rating projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at Rating 80.
 
@@ -153,7 +158,15 @@ The feature adds no persistent state and requires no save migration. Existing Po
 
 Add deterministic learnset coverage around the existing Pokémon learnset tests. For every anchor in its applicable build, run both normal and legacy-moves selection and construct its initial moveset at every integer level from the lowest qualifying level in the coverage inventory through level 100. At every level, assert that all assigned utility moves are among the four known moves. The test must exercise the production initial-moveset path rather than a separately reimplemented last-four calculation.
 
-Add data validation in each applicable build that enumerates the named qualifying encounter profiles, all applicable version and time-of-day variants, every authored level in each selected slot, and Trainer Ratings 10 through 80. Project each level through the production scaling function, construct the caught anchor's moveset, and assert that all assigned utility moves remain present. Also assert that the profile still contains the intended anchor, so an encounter edit cannot silently invalidate coverage.
+Add data validation in each applicable standalone build that enumerates the
+named qualifying encounter profiles, all applicable version and time-of-day
+variants, every authored level in each selected slot, and Trainer Ratings 10
+through 80. Wayfarer extends this validation through Rating 0 in its
+interregional circuit specification. Project each level through the production
+scaling function, construct the caught anchor's moveset, and assert that all
+assigned utility moves remain present. Also assert that the profile still
+contains the intended anchor, so an encounter edit cannot silently invalidate
+coverage.
 
 Expose the production Move Reminder result to tests through a test-only helper or a public read-only list function, or drive the Move Reminder UI and inspect the offered move IDs. For each listed successor in its applicable build and both learnset modes, assert that every assigned utility move is offered when it is not currently known. `CanBoxMonRelearnMoves` alone is insufficient because it proves only that some move is relearnable. Confirm separately that evolving an anchor which knows its utility moves preserves them. Assert that Pichu, Azurill, Mantyke, and the excluded regional base forms do not gain the role.
 

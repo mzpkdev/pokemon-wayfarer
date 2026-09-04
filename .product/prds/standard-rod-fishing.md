@@ -151,7 +151,8 @@ The baseline accessibility results are:
 These figures aggregate duplicate entries for the named species and do not
 count any additional availability from species resolution. Ineligible-entry
 filtering cannot be allowed to remove a required native Surf source at any
-Trainer Rating from 10 through 80.
+standalone Trainer Rating from 10 through 80 or Wayfarer Rating from 0 through
+80.
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old

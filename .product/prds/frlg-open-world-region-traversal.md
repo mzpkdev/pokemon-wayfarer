@@ -10,7 +10,7 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 
 - Walking, doors, always-available local transport, and the approved native Surf crossing form the core settlement network.
 - Main-story state, Gym progress, and forced scripted or story victories cannot close the only route to a town or city in an unlocked region. That route cannot require an HM item. Only the Cinnabar crossing may require a Pokémon that already knows Surf.
-- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions and sight ranges in this pass and do not count as story-gated traversal. Player-relative trainer scaling is owned separately.
+- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions, sight ranges, and authored parties and do not count as story-gated traversal. They do not scale with player progress.
 - Fly may make settlement travel faster. Surf remains optional except for the approved Cinnabar route.
 - Cut, Rock Smash, Surf, bicycles, and local story events may gate shortcuts, hidden locations, and optional content.
 - A Pokémon that already knows another HM move may open an optional route before the matching HM is found. That route does not count toward the core settlement network.
@@ -89,6 +89,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 ## References
 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Badge-free HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
 - [Standard Rod fishing](standard-rod-fishing.md)
