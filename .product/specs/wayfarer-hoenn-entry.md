@@ -16,11 +16,17 @@ from Slateport, another physical return route, cross-region Fly, Town Map
 region tabs, or separate healing histories. A future PRD must define those
 features before Wayfarer promises free movement among all three regions.
 
+The long-term S.S. Aqua circuit is fixed as Olivine to Vermilion to Slateport
+to Lilycove to Olivine. This specification implements only the
+Vermilion-to-Slateport leg. It does not implement the remaining legs or a ferry
+schedule.
+
 The runtime foundation owns the build, map catalog, persistent-state model,
 active-region dispatch, and ROM budget. The Hoenn content port owns the adapted
 Birch rescue, starter choice, maps, Trainers, encounters, Gyms, main campaign,
 and League. The HNS traversal specification owns the maiden voyage and
-completed Olivine and Vermilion ferry service.
+standalone HNS ferry service. This specification supersedes its post-maiden
+Vermilion-to-Olivine route only in Wayfarer.
 
 ## Behavior
 
@@ -29,19 +35,28 @@ completed Olivine and Vermilion ferry service.
 The Slateport destination exists only in the Wayfarer build and only at
 `VermilionCity_PortInside_hns`.
 
-The sailor offers it when both conditions are true:
-
-1. `VAR_SSAQUA_STATE` is at least 8, meaning the maiden voyage has completed.
-2. The Bag contains `ITEM_SS_TICKET`.
+The sailor offers Slateport when `VAR_SSAQUA_STATE` is at least 8, meaning the
+maiden voyage has completed. Selecting Slateport proceeds only when the Bag
+contains `ITEM_SS_TICKET`.
 
 The route has no Kanto badge, Johto badge, Hoenn badge, Machine Part, Magnet
 Train Pass, payment, League, or Hoenn-story requirement. Missing voyage state
 keeps the existing pre-completion sailor behavior. Missing ticket uses the
 existing no-credentials result and changes no state.
 
-The normal Vermilion menu retains Olivine and every existing HNS destination.
-The Wayfarer menu retains the indices and behavior of those travel destinations
-and adds Slateport before Exit. The standalone HNS menu remains unchanged.
+In the Wayfarer menu, Slateport replaces Olivine as the regular S.S. Aqua
+destination and keeps that destination's menu index. Every other existing
+special or optional Vermilion destination retains its index and behavior. The
+standalone HNS menu, including its Olivine destination, remains unchanged.
+
+After the maiden voyage, Wayfarer provides no S.S. Aqua route from Vermilion
+back to Olivine. The Magnet Train remains the bidirectional Johto and Kanto
+connection under its existing progression.
+
+At `OlivineCity_PortInside_hns`, voyage state 8 and later retains the regular
+Vermilion option at its existing menu index. That option continues to check
+only for the S.S. Ticket. Every other Olivine destination retains its existing
+index, gate, and behavior.
 
 ### One-way confirmation
 
@@ -114,11 +129,11 @@ port's adapted Birch rescue and optional starter behavior remain unchanged.
 
 ### No return route
 
-This specification adds no S.S. Aqua object, attendant, destination, or
-departure script to Slateport or another Hoenn map. It adds no Hoenn destination
-to Olivine. It does not turn the S.S. Tidal, Mr. Briney's boat, an event-island
-ferry, Fly, Teleport, blackout, or another system into a route to Johto or
-Kanto.
+This specification adds no S.S. Aqua object, attendant, or departure script to
+Slateport, Lilycove, or another Hoenn map. It does not implement the
+Slateport-to-Lilycove or Lilycove-to-Olivine legs. It does not turn the S.S.
+Tidal, Mr. Briney's boat, an event-island ferry, Fly, Teleport, blackout, or
+another system into a route to Johto or Kanto.
 
 The player remains in Hoenn after the trip. Saving, reloading, healing,
 blacking out, entering the Hall of Fame, or using an ordinary Hoenn ferry must
@@ -133,6 +148,10 @@ in Wayfarer. The S.S. Aqua checks it but does not consume it.
 The S.S. Tidal remains a separate Hoenn ship. Its visibility, service, and
 original destinations remain gated by Hoenn Champion state. Owning the S.S.
 Ticket before completing Hoenn does not unlock it.
+
+The retained Battle Frontier option in the Olivine and Vermilion HNS menus is
+an existing special trip, not S.S. Tidal service. Its existing gate and
+behavior remain unchanged by the Hoenn Champion requirement above.
 
 If Hoenn's postgame ticket event runs while the player already owns the S.S.
 Ticket, the event treats the item requirement as satisfied, records its
@@ -167,35 +186,42 @@ reopen a consumed reward, expose the S.S. Tidal, or create a return route.
 Static, ROM, and focused runtime tests must verify:
 
 1. Standalone HNS retains its original Vermilion menu and behavior.
-2. Wayfarer exposes Slateport only when the maiden voyage is complete and the
-   S.S. Ticket is present.
-3. Olivine and all existing Vermilion destinations remain unchanged.
-4. Exit, Cancel, a missing ticket, and No at the warning change no persistent
+2. Wayfarer exposes Slateport only when the maiden voyage is complete. A
+   successful departure additionally requires the S.S. Ticket.
+3. Wayfarer replaces the regular Olivine destination with Slateport at the same
+   menu index, provides no Vermilion-to-Olivine S.S. Aqua path, and preserves
+   every other existing Vermilion destination, including the existing HNS
+   Battle Frontier special trip.
+4. At voyage state 8 and later, Wayfarer's Olivine menu retains Vermilion at
+   its existing index, gated only by the S.S. Ticket, and preserves every other
+   Olivine destination.
+5. Exit, Cancel, a missing ticket, and No at the warning change no persistent
    or travel state.
-5. The warning is shown before every supported outbound trip.
-6. The destination coordinate is walkable, outside all coordinate events, and
+6. The warning is shown before every supported outbound trip.
+7. The destination coordinate is walkable, outside all coordinate events, and
    has a valid path through the harbor exit to Slateport City.
-7. A successful trip leaves `VAR_SSAQUA_STATE` at 8, keeps the S.S. Ticket, and
+8. A successful trip leaves `VAR_SSAQUA_STATE` at 8, keeps the S.S. Ticket, and
    preserves a representative snapshot of Johto and Kanto progress. The active
    region and heal destination are the intentional changes.
-8. First arrival initializes only Hoenn, commits its initialized value last,
+9. First arrival initializes only Hoenn, commits its initialized value last,
    and runs exactly once.
-9. Arrival advances no Hoenn campaign or S.S. Tidal state.
-10. Slateport is the active region and safe heal destination before control is
+10. Arrival advances no Hoenn campaign or S.S. Tidal state.
+11. Slateport is the active region and safe heal destination before control is
    returned.
-11. Saving and reloading in the harbor and in Slateport City preserves the
+12. Saving and reloading in the harbor and in Slateport City preserves the
     exact state.
-12. Blackout immediately after arrival recovers in Hoenn.
-13. Route 101 retains the content port's adapted Birch rescue and starter
+13. Blackout immediately after arrival recovers in Hoenn.
+14. Route 101 retains the content port's adapted Birch rescue and starter
     isolation.
-14. No S.S. Aqua, Fly, ferry, blackout, or Hall of Fame path returns the player
+15. No S.S. Aqua, Fly, ferry, blackout, or Hall of Fame path returns the player
     to Johto or Kanto.
-15. The S.S. Tidal stays unavailable until the Hoenn Champion result and keeps
-    its original destinations afterward.
-16. A Hoenn Champion fixture that already owns the HNS S.S. Ticket finishes the
+16. The Hoenn-port S.S. Tidal service stays unavailable until the Hoenn Champion
+    result and keeps its original destinations afterward. This gate does not
+    affect the existing HNS Battle Frontier special trip.
+17. A Hoenn Champion fixture that already owns the HNS S.S. Ticket finishes the
     Hoenn postgame ticket event with one ticket, records the Hoenn receipt state,
     and unlocks the normal S.S. Tidal service and destinations.
-17. The release ROM stays within the active Wayfarer size ceiling.
+18. The release ROM stays within the active Wayfarer size ceiling.
 
 One focused SkyEmu journey may begin from a fixture with the maiden voyage
 complete and the S.S. Ticket owned. It must select Slateport, observe and accept
@@ -205,13 +231,14 @@ not need to replay the maiden voyage or complete the Hoenn campaign.
 
 ## Deferred follow-up
 
-A future interregional-return PRD owns:
+A future scheduled-ferry PRD owns:
 
-- an S.S. Aqua presence and attendant in Slateport;
-- Hoenn-to-Olivine and Hoenn-to-Vermilion routes;
-- the long-term S.S. Aqua itinerary;
-- S.S. Aqua and S.S. Tidal coexistence at Hoenn ports;
-- direct destination selection and improved travel presentation;
+- the Slateport-to-Lilycove S.S. Aqua leg;
+- the Lilycove-to-Olivine S.S. Aqua leg;
+- the timetable for the complete Olivine-to-Vermilion-to-Slateport-to-Lilycove-
+  to-Olivine circuit;
+- S.S. Aqua attendants and next-stop presentation at both Hoenn ports;
+- S.S. Aqua and S.S. Tidal schedules and berth coexistence;
 - cross-region Fly and Town Map region tabs;
 - separate regional healing histories and return-aware blackout behavior; and
 - any special early transport to Ever Grande.
