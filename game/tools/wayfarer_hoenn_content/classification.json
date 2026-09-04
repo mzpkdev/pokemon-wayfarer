@@ -46,9 +46,9 @@
       "globs": ["InsideOfTruck"],
       "system": "stock-emerald-introduction",
       "classification": "excluded",
-      "reason": "The stock moving-truck introduction is replaced by Wayfarer's adapted regional entry.",
-      "specification": ".product/specs/wayfarer-regional-travel-and-hoenn-entry.md",
-      "disposition": "deferred-to-another-specification"
+      "reason": "The stock moving-truck introduction is replaced by the adapted Birch-rescue campaign opening.",
+      "specification": ".product/specs/wayfarer-hoenn-content-port.md#adapted-hoenn-opening",
+      "disposition": "excluded-from-first-milestone"
     },
     {
       "globs": [
