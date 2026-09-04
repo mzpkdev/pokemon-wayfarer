@@ -5,12 +5,15 @@ Route10_PowerPlantBackRoom_hns_MapScripts::
 Route10_PowerPlantBackRoom_EventScript_Manager::
 	lock
 	faceplayer
-	goto_if_set FLAG_RETURNED_MACHINE_PART, Route10_PowerPlantBackRoom_EventScript_ManagerDone
-	goto_if_unset FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED, Route10_PowerPlantBackRoom_EventScript_ManagerInitial
-	checkitem ITEM_MACHINE_PART
-	goto_if_eq VAR_RESULT, TRUE, Route10_PowerPlantBackRoom_EventScript_ManagerCheckPart
-	clearflag FLAG_HIDDEN_ITEM_MACHINE_PART
-	msgbox Route10_PowerPlantBackRoom_Text_ManagerSearchCeruleanGym, MSGBOX_DEFAULT
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 0, Route10_PowerPlantBackRoom_EventScript_ManagerInitial
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 1, Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 2, Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 3, Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 4, Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 5, Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 6, Route10_PowerPlantBackRoom_EventScript_ManagerCheckPart
+	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantBackRoom_EventScript_ManagerDone
+	msgbox Route10_PowerPlantBackRoom_Text_ManagerMyBelovedGenerator, MSGBOX_DEFAULT
 	closemessage
 	release
 	end
@@ -18,10 +21,19 @@ Route10_PowerPlantBackRoom_EventScript_Manager::
 Route10_PowerPlantBackRoom_EventScript_ManagerInitial::
 	msgbox Route10_PowerPlantBackRoom_Text_ManagerWhoWouldRuinMyGenerator, MSGBOX_DEFAULT
 	closemessage
+	setvar VAR_KANTO_ROCKET_STORY_STATE, 1
+	release
+	end
+
+Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket::
+	msgbox Route10_PowerPlantBackRoom_Text_ManagerIWontForgiveCulprit, MSGBOX_DEFAULT
+	closemessage
 	release
 	end
 
 Route10_PowerPlantBackRoom_EventScript_ManagerCheckPart::
+	checkitem ITEM_MACHINE_PART
+	goto_if_eq VAR_RESULT, FALSE, Route10_PowerPlantBackRoom_EventScript_ManagerDuringRocket
 	msgbox Route10_PowerPlantBackRoom_Text_ManagerThatsThePart, MSGBOX_DEFAULT
 	checkitem ITEM_TM_THUNDER
 	goto_if_eq VAR_RESULT, TRUE, Route10_PowerPlantBackRoom_EventScript_ManagerCommitRepair
@@ -38,8 +50,13 @@ Route10_PowerPlantBackRoom_EventScript_ManagerCheckPart::
 Route10_PowerPlantBackRoom_EventScript_ManagerCommitRepair::
 	removeitem ITEM_MACHINE_PART
 	goto_if_eq VAR_RESULT, FALSE, Route10_PowerPlantBackRoom_EventScript_ManagerPartRemovalFailed
-	setflag FLAG_RETURNED_MACHINE_PART
+	setvar VAR_KANTO_ROCKET_STORY_STATE, 7
 	setflag FLAG_HIDDEN_ITEM_MACHINE_PART
+	setflag FLAG_RETURNED_MACHINE_PART
+	clearflag FLAG_HIDE_ROUTE25_MISTY
+	setvar VAR_CERULEAN_CITY_STATE, 2
+	setflag FLAG_HIDE_POWER_PLANT_ENGINEER
+	removeobject LOCALID_POWER_PLANT_BACK_ROOM_ENGINEER
 	msgbox Route10_PowerPlantBackRoom_Text_ManagerGeneratorRestored, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -62,16 +79,20 @@ Route10_PowerPlantBackRoom_EventScript_Engineer::
 	end
 
 Route10_PowerPlantBackRoom_Text_ManagerWhoWouldRuinMyGenerator:
-	.string "MANAGER: The generator is down,\n"
-	.string "so the MAGNET TRAIN has no power.\p"
-	.string "The SAFFRON STATION attendant has\n"
-	.string "the latest repair information.$"
+	.string "MANAGER: I, I, I'm ready to blast\n"
+	.string "someone!\p"
+	.string "Who would dare ruin my\n"
+	.string "generator?\p"
+	.string "I spent so much time on it!\p"
+	.string "If I catch him, he's going to\n"
+	.string "get a taste of my ZAP CANNON!$"
 
-Route10_PowerPlantBackRoom_Text_ManagerSearchCeruleanGym:
-	.string "MANAGER: The missing MACHINE PART\n"
-	.string "should still be in CERULEAN GYM.\p"
-	.string "Please search around the pool and\n"
-	.string "bring it back here.$"
+Route10_PowerPlantBackRoom_Text_ManagerIWontForgiveCulprit:
+	.string "MANAGER: I won't forgive him!\p"
+	.string "The culprit can cry and\n"
+	.string "apologize,\p"
+	.string "but I'll still hammer him!\p"
+	.string "Gahahahah!$"
 
 Route10_PowerPlantBackRoom_Text_ManagerThatsThePart:
 	.string "MANAGER: Ah! Yeah!\p"

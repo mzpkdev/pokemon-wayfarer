@@ -60,9 +60,12 @@ Route 30 requires no map or script change. Its existing east-side walking lane p
 
 ### Magnet Train restoration
 
-- Start: the Saffron station attendant explains that the train lacks power and directs the player to the Power Plant.
-- Stage 1: speak to the Power Plant manager, recover the existing hidden Machine Part from Cerulean Gym, and return it to the manager. No Rocket, badge, or radio story flag is checked.
+- Start: speak to the Power Plant manager. The Power Plant officer, Cerulean Gym, and Route 24 sequence then leads the player to the stolen Machine Part. The Saffron station attendant may also explain that the train lacks power and direct the player to the Power Plant, but that dialogue does not start or gate the sequence.
+- Stage 1: after the manager reports the theft, the Power Plant officer points out the suspect in Cerulean. The Rocket grunt flees Cerulean Gym, moves to the adjacent Route 24, and must be defeated before revealing the Machine Part's hiding place in the Gym. This local story requires no badge, HM item, radio upgrade, Gym completion, or unrelated story flag. It gates only its own rewards and optional shortcuts, not access to any settlement in the Kanto core network.
+- Power restored: recover the Machine Part from Cerulean Gym and return it to the manager. This reveals Misty and her date on Route 25. Their scene returns Misty and the Gym Trainers to Cerulean Gym. The handoff also removes the Power Plant rear-exit engineer and sets `FLAG_RETURNED_MACHINE_PART`, which enables power-related dialogue, radio and Poke Flute progression, Copycat's quest, Underground Path access, and Magnet Train service. The S.S. Aqua is not one of those consumers.
+- Safe rewards: a full Bag cannot consume the Machine Part or advance completion without delivering the manager's normal TM reward. Machine Part pickup and manager turn-in remain available until their item and state changes commit successfully.
 - Stage 2: speak to Copycat in Saffron, retrieve her lost doll from the Vermilion Fan Club, and return it. She gives the player the Pass.
+- Safe exchange: the Lost Item and Pass exchange commits as one retryable transaction. A failed Pass delivery leaves the Lost Item and Copycat state available to retry.
 - Unlock: both Goldenrod and Saffron stations require the returned Machine Part flag and the Pass. Once both are present, the train works in both directions without another check.
 - Separation from the ferry: returning the Machine Part is part of restoring this shortcut. It is never required by the S.S. Aqua after the maiden voyage.
 
@@ -92,6 +95,10 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Run every required settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the approved Cianwood and Cinnabar crossings.
 - Complete the S.S. Aqua maiden voyage exactly as written and receive the S.S. Ticket without unrelated story flags. Begin a second run with a Metal Coat already owned and confirm the reunion adds exactly one more.
 - After the maiden voyage, return between Olivine and Vermilion with only the S.S. Ticket and without the Machine Part. Confirm the train remains locked until both the Machine Part is returned and the Pass is obtained.
+- Complete the Power Plant, Cerulean Gym, and Route 24 Rocket sequence with no badges, HM items, radio upgrade, Gym completion, or unrelated story flags. Confirm that losing to the grunt does not advance the sequence and that the battle does not block a core settlement route.
+- Pick up the Machine Part and return it to the manager. Confirm full-pocket failures preserve the pending item, TM reward, and story state for retry. After a successful turn-in, confirm Misty appears on Route 25, her scene returns her and the Gym Trainers to Cerulean Gym, and the Power Plant rear exit is open.
+- Confirm `FLAG_RETURNED_MACHINE_PART` still enables its existing radio, Copycat, Underground Path, Magnet Train, NPC dialogue, and other power-related consumers, while repeat S.S. Aqua travel continues to require only the S.S. Ticket.
+- Complete Copycat's Lost Item exchange with success and failure cases. A failed Pass delivery must preserve the Lost Item and leave the exchange retryable.
 - After unlocking the ferry early, complete the Johto League for the first time and confirm the voyage remains complete and direct ferry service still works.
 - Before Kanto unlock, confirm the regional map uses the Johto layout and coordinates. After first arrival, confirm the combined Johto and Kanto layout, cursor, player marker, Fly destinations, and Pokédex area positions use the combined coordinates.
 - From Vermilion, follow the named Kanto land route to the other eight mainland settlements, then use native Surf to reach Cinnabar. Do not battle Silver, wake Snorlax, own a Bicycle, own HM03, or satisfy a Surf badge check.

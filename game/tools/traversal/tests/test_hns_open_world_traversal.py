@@ -313,10 +313,11 @@ class HnsTraversalContractTest(unittest.TestCase):
                 }
                 self.assertEqual(actual, wanted)
 
-    def test_new_game_owns_kanto_visibility_defaults_and_new_flag(self) -> None:
+    def test_new_game_owns_kanto_visibility_defaults_and_reuses_rocket_state(self) -> None:
         flags = read(GAME / "include/constants/flags_hns.h")
-        self.assertContains(flags, r"^#define\s+FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED\s+0x307(?:\s|$)")
-        self.assertNotIn("FLAG_UNUSED_39", flags)
+        self.assertContains(flags, r"^#define\s+FLAG_UNUSED_39\s+0x307(?:\s|$)")
+        self.assertContains(flags, r"^#define\s+HNS_UNUSED_COUNT\s+40(?:\s|$)")
+        self.assertNotIn("FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED", flags)
         reset = self.scripts.block("EventScript_ResetAllMapFlagsHnS")
         set_defaults = (
             "FLAG_HIDE_COPYCAT_CLEFAIRY_DOLL",
@@ -337,11 +338,11 @@ class HnsTraversalContractTest(unittest.TestCase):
         for flag in set_defaults:
             self.assertContains(reset, rf"^\s*setflag\s+{flag}\s*$")
         for flag in (
-            "FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED",
             "FLAG_HIDE_MTMOON_SILVER",
             "FLAG_HIDE_FAN_CLUB_CLEFAIRY_DOLL",
         ):
             self.assertContains(reset, rf"^\s*clearflag\s+{flag}\s*$")
+        self.assertNotContains(reset, r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,")
 
     def test_ss_aqua_boarding_and_corridor_are_resumable(self) -> None:
         sailor = self.scripts.block("OlivinePort_EventScript_Sailor")
@@ -544,71 +545,386 @@ class HnsTraversalContractTest(unittest.TestCase):
                 f"{map_name} must retain the shared symmetric gate trigger",
             )
 
-    def test_power_plant_entrance_is_story_neutral(self) -> None:
-        data = load_map("Route10_PowerPlantEntrance_hns")
-        self.assertFalse(at(data["coord_events"], 6, 15))
-        source = uncommented(read(MAPS / "Route10_PowerPlantEntrance_hns/scripts.inc"))
-        self.assertNotContains(source, r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,")
-        self.assertNotContains(source, r"(?:setflag|clearflag)\s+FLAG_HIDE_CERULEAN_(?:GYM|CAPE)_ROCKET")
-        self.assertIn("FLAG_RETURNED_MACHINE_PART", source)
+    def test_kanto_rocket_story_progresses_from_manager_to_route24(self) -> None:
+        manager = self.scripts.block("Route10_PowerPlantBackRoom_EventScript_Manager")
+        self.assertOrderedText(
+            manager,
+            [
+                "VAR_KANTO_ROCKET_STORY_STATE, 0",
+                "Route10_PowerPlantBackRoom_EventScript_ManagerInitial",
+                "VAR_KANTO_ROCKET_STORY_STATE, 1",
+                "VAR_KANTO_ROCKET_STORY_STATE, 2",
+                "VAR_KANTO_ROCKET_STORY_STATE, 3",
+                "VAR_KANTO_ROCKET_STORY_STATE, 4",
+                "VAR_KANTO_ROCKET_STORY_STATE, 5",
+                "VAR_KANTO_ROCKET_STORY_STATE, 6",
+                "Route10_PowerPlantBackRoom_EventScript_ManagerCheckPart",
+                "VAR_KANTO_ROCKET_STORY_STATE, 7",
+                "Route10_PowerPlantBackRoom_EventScript_ManagerDone",
+            ],
+            "the manager must dispatch every Rocket state without another prerequisite",
+        )
+        self.assertOrderedPath(
+            "Route10_PowerPlantBackRoom_EventScript_Manager",
+            [
+                r"goto_if_eq\s+VAR_KANTO_ROCKET_STORY_STATE,\s*0,",
+                r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*1",
+            ],
+            "speaking to the manager at state 0 must start the theft story",
+        )
 
-    def test_machine_part_pickup_and_manager_commit_atomically(self) -> None:
+        entrance = load_map("Route10_PowerPlantEntrance_hns")
+        self.assertEqual(
+            at(
+                entrance["coord_events"],
+                6,
+                15,
+                var="VAR_KANTO_ROCKET_STORY_STATE",
+                var_value="1",
+            ),
+            [
+                {
+                    "type": "trigger",
+                    "x": 6,
+                    "y": 15,
+                    "elevation": 0,
+                    "var": "VAR_KANTO_ROCKET_STORY_STATE",
+                    "var_value": "1",
+                    "script": "Route10_PowerPlantEntrance_Trigger_Cop",
+                }
+            ],
+        )
+        self.assertOrderedPath(
+            "Route10_PowerPlantEntrance_Trigger_Cop",
+            [
+                r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*2",
+                r"clearflag\s+FLAG_HIDE_CERULEAN_GYM_ROCKET",
+            ],
+            "the officer report must expose the Gym grunt and enter state 2",
+        )
+
+        gym = load_map("CeruleanCity_Gym_hns")
+        rocket = object_with_local_id(gym, "LOCALID_CERULEAN_GYM_ROCKET")
+        self.assertEqual(rocket["flag"], "FLAG_HIDE_CERULEAN_GYM_ROCKET")
+        on_frame = self.scripts.block("CeruleanCity_Gym_OnFrame")
+        self.assertContains(
+            on_frame,
+            r"map_script_2\s+VAR_KANTO_ROCKET_STORY_STATE,\s*2,\s*CeruleanCity_Gym_EventScript_RocketGrunt",
+        )
+        self.assertOrderedPath(
+            "CeruleanCity_Gym_EventScript_RocketGrunt",
+            [
+                r"setflag\s+FLAG_HIDE_CERULEAN_GYM_ROCKET",
+                r"clearflag\s+FLAG_HIDE_CERULEAN_CAPE_ROCKET",
+                r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*3",
+            ],
+            "the Gym escape must move the same grunt to Route 24 and enter state 3",
+        )
+        gym_escape = self.scripts.reachable_text("CeruleanCity_Gym_EventScript_RocketGrunt")
+        for unrelated in (
+            "VAR_NUM_BADGES",
+            "FLAG_DEFEATED_CERULEAN_GYM",
+            "FLAG_KANTO_RADIO_GOT",
+        ):
+            self.assertNotIn(unrelated, gym_escape)
+
+        route24 = load_map("Route24_hns")
+        self.assertEqual(
+            {
+                (event["x"], event["y"], event["var_value"], event["script"])
+                for event in route24["coord_events"]
+                if event.get("var") == "VAR_KANTO_ROCKET_STORY_STATE"
+            },
+            {
+                (x, 11, "3", "Route24_Trigger_GruntScene")
+                for x in (16, 17, 18)
+            },
+        )
+        staging = self.scripts.block("Route24_Trigger_GruntScene")
+        self.assertIn("setvar VAR_KANTO_ROCKET_STORY_STATE, 4", staging)
+        self.assertNotContains(staging, r"(?:setflag|clearflag)\s+FLAG_(?:HIDE_CERULEAN_CAPE_ROCKET|HIDDEN_ITEM_MACHINE_PART)")
+
+        progression = "\n".join(
+            self.scripts.reachable_text(root)
+            for root in (
+                "Route10_PowerPlantBackRoom_EventScript_Manager",
+                "Route10_PowerPlantEntrance_Trigger_Cop",
+                "CeruleanCity_Gym_EventScript_RocketGrunt",
+                "Route24_Trigger_GruntScene",
+                "Route24_EventScript_Grunt",
+                "CeruleanCity_Gym_EventScript_MachinePartItem",
+            )
+        )
+        for unrelated in (
+            "VAR_NUM_BADGES",
+            "FLAG_DEFEATED_CERULEAN_GYM",
+            "FLAG_KANTO_RADIO_GOT",
+            "VAR_FAN_CLUB_CLEFAIRY",
+            "FLAG_HIDE_VERMILION_SNORLAX",
+            "ITEM_HM_",
+        ):
+            self.assertNotIn(unrelated, progression)
+
+    def test_route24_grunt_loss_is_retryable_and_victory_unlocks_part(self) -> None:
+        route24 = load_map("Route24_hns")
+        grunt = object_with_local_id(route24, "LOCALID_ROUTE24_GRUNT")
+        self.assertEqual(grunt["script"], "Route24_EventScript_Grunt")
+        self.assertEqual(grunt["flag"], "FLAG_HIDE_CERULEAN_CAPE_ROCKET")
+        battle = self.scripts.block("Route24_EventScript_Grunt")
+        self.assertOrderedText(
+            battle,
+            [
+                "trainerbattle_no_intro TRAINER_GRUNT_31_HNS",
+                "setflag FLAG_HIDE_CERULEAN_CAPE_ROCKET",
+                "removeobject LOCALID_ROUTE24_GRUNT",
+                "setvar VAR_KANTO_ROCKET_STORY_STATE, 5",
+                "clearflag FLAG_HIDDEN_ITEM_MACHINE_PART",
+            ],
+            "only returning from a won grunt battle may commit state 5 and expose the part",
+        )
+        writers = self.scripts.find_in(
+            MAPS / "Route24_hns/scripts.inc",
+            "setvar VAR_KANTO_ROCKET_STORY_STATE, 5",
+        )
+        self.assertEqual(writers, ["Route24_EventScript_Grunt"])
+        before_battle = battle.split("trainerbattle_no_intro TRAINER_GRUNT_31_HNS", 1)[0]
+        self.assertNotContains(
+            before_battle,
+            r"(?:setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*5|setflag\s+FLAG_HIDE_CERULEAN_CAPE_ROCKET|clearflag\s+FLAG_HIDDEN_ITEM_MACHINE_PART)",
+            "loss must leave state 4, the grunt, and the hidden part unchanged for retry",
+        )
+
+    def test_machine_part_pickup_is_state_bounded_and_retry_safe(self) -> None:
         gym_path = MAPS / "CeruleanCity_Gym_hns/scripts.inc"
-        gym_source = uncommented(read(gym_path))
-        self.assertNotContains(gym_source, r"map_script_2\s+VAR_KANTO_ROCKET_STORY_STATE,")
-        machine_roots = self.scripts.find_in(gym_path, "ITEM_MACHINE_PART")
-        self.assertTrue(machine_roots)
-        graph = "\n".join(self.scripts.reachable_text(label) for label in machine_roots)
-        for required in (
-            "FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED",
-            "FLAG_RETURNED_MACHINE_PART",
+        gym = load_map("CeruleanCity_Gym_hns")
+        pickup_objects = [
+            obj
+            for obj in gym["object_events"]
+            if obj.get("script") == "CeruleanCity_Gym_EventScript_MachinePartItem"
+        ]
+        self.assertEqual(len(pickup_objects), 1)
+        self.assertEqual(pickup_objects[0]["flag"], "FLAG_HIDDEN_ITEM_MACHINE_PART")
+        self.assertEqual(
+            at(
+                gym["bg_events"],
+                0,
+                13,
+                script="CeruleanCity_Gym_EventScript_MachinePartItem",
+            ),
+            [
+                {
+                    "type": "sign",
+                    "x": 0,
+                    "y": 13,
+                    "elevation": 0,
+                    "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+                    "script": "CeruleanCity_Gym_EventScript_MachinePartItem",
+                }
+            ],
+        )
+        sparkle = self.scripts.reachable_text("CeruleanCity_Gym_EventScript_TryMachinePart")
+        for guard in (
+            "VAR_KANTO_ROCKET_STORY_STATE, 5",
             "FLAG_HIDDEN_ITEM_MACHINE_PART",
             "checkitem ITEM_MACHINE_PART",
-            "finditem ITEM_MACHINE_PART",
         ):
-            self.assertIn(required, graph)
-        self.assertNotIn("VAR_KANTO_ROCKET_STORY_STATE", graph)
-        pickup_paths = [
-            label
-            for label in machine_roots
-            if self.scripts.has_ordered_path(
-                label,
-                [
-                    r"finditem\s+ITEM_MACHINE_PART",
-                    r"checkitem\s+ITEM_MACHINE_PART",
-                    r"goto_if_eq\s+VAR_RESULT,\s*FALSE,",
-                    r"setflag\s+FLAG_HIDDEN_ITEM_MACHINE_PART",
-                ],
-            )
-        ]
-        self.assertTrue(pickup_paths, "Machine Part must hide only after successful pickup")
+            self.assertIn(guard, sparkle)
+        pickup = self.scripts.block("CeruleanCity_Gym_EventScript_MachinePartItem")
+        self.assertOrderedText(
+            pickup,
+            [
+                "VAR_KANTO_ROCKET_STORY_STATE, 5",
+                "FLAG_HIDDEN_ITEM_MACHINE_PART",
+                "checkitem ITEM_MACHINE_PART",
+                "finditem ITEM_MACHINE_PART",
+                "checkitem ITEM_MACHINE_PART",
+                "goto_if_eq VAR_RESULT, FALSE, CeruleanCity_Gym_EventScript_DoNothing",
+                "setflag FLAG_HIDDEN_ITEM_MACHINE_PART",
+                "setvar VAR_KANTO_ROCKET_STORY_STATE, 6",
+            ],
+            "both pickup surfaces must verify delivery before hiding the part and entering state 6",
+        )
+        state6_writers = self.scripts.find_in(
+            gym_path,
+            "setvar VAR_KANTO_ROCKET_STORY_STATE, 6",
+        )
+        self.assertEqual(state6_writers, ["CeruleanCity_Gym_EventScript_MachinePartItem"])
 
+    def test_manager_turn_in_is_atomic_and_restores_kanto_story(self) -> None:
         manager_path = MAPS / "Route10_PowerPlantBackRoom_hns/scripts.inc"
-        manager_roots = self.scripts.find_in(manager_path, "ITEM_MACHINE_PART")
-        self.assertTrue(manager_roots)
         manager_root = "Route10_PowerPlantBackRoom_EventScript_Manager"
         manager = self.scripts.reachable_text(manager_root)
-        self.assertIn("FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED", manager)
-        self.assertIn("FLAG_RETURNED_MACHINE_PART", manager)
+        self.assertIn("checkitem ITEM_MACHINE_PART", manager)
         self.assertIn("checkitem ITEM_TM_THUNDER", manager)
         self.assertIn("checkitemspace ITEM_TM_THUNDER", manager)
         self.assertOrderedPath(
             manager_root,
             [
-                r"(?:checkitem|checkitemspace)\s+ITEM_TM_THUNDER",
+                r"checkitem\s+ITEM_TM_THUNDER",
+                r"goto_if_eq\s+VAR_RESULT,\s*TRUE,\s*Route10_PowerPlantBackRoom_EventScript_ManagerCommitRepair",
                 r"removeitem\s+ITEM_MACHINE_PART",
-                r"setflag\s+FLAG_RETURNED_MACHINE_PART",
-                r"setflag\s+FLAG_HIDDEN_ITEM_MACHINE_PART",
+                r"goto_if_eq\s+VAR_RESULT,\s*FALSE,\s*Route10_PowerPlantBackRoom_EventScript_ManagerPartRemovalFailed",
+                r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*7",
             ],
-            "the normal manager reward must be secured before consuming and committing the part",
+            "an already-owned TM must satisfy the reward before the Machine Part is consumed",
         )
+        self.assertOrderedPath(
+            manager_root,
+            [
+                r"checkitemspace\s+ITEM_TM_THUNDER",
+                r"goto_if_eq\s+VAR_RESULT,\s*FALSE,",
+                r"giveitem\s+ITEM_TM_THUNDER",
+                r"goto_if_eq\s+VAR_RESULT,\s*FALSE,",
+                r"checkitem\s+ITEM_TM_THUNDER",
+                r"goto_if_eq\s+VAR_RESULT,\s*FALSE,",
+                r"removeitem\s+ITEM_MACHINE_PART",
+                r"goto_if_eq\s+VAR_RESULT,\s*FALSE,",
+                r"setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*7",
+            ],
+            "new TM delivery and Machine Part removal must both succeed before completion",
+        )
+
+        preflight = self.scripts.block("Route10_PowerPlantBackRoom_EventScript_ManagerCheckPart")
         for forbidden in (
-            "VAR_KANTO_ROCKET_STORY_STATE",
-            "VAR_CERULEAN_CITY_STATE",
-            "VAR_NUM_BADGES",
-            "FLAG_KANTO_RADIO_GOT",
+            "removeitem ITEM_MACHINE_PART",
+            "setvar VAR_KANTO_ROCKET_STORY_STATE, 7",
+            "FLAG_RETURNED_MACHINE_PART",
+            "FLAG_HIDE_ROUTE25_MISTY",
+            "FLAG_HIDE_POWER_PLANT_ENGINEER",
         ):
-            self.assertNotIn(forbidden, manager)
+            self.assertNotIn(forbidden, preflight)
+        failure = self.scripts.block("Route10_PowerPlantBackRoom_EventScript_ManagerPartRemovalFailed")
+        self.assertEqual(mutation_lines(failure), [])
+
+        commit = self.scripts.block("Route10_PowerPlantBackRoom_EventScript_ManagerCommitRepair")
+        removal_gate = commit.find(
+            "goto_if_eq VAR_RESULT, FALSE, Route10_PowerPlantBackRoom_EventScript_ManagerPartRemovalFailed"
+        )
+        self.assertNotEqual(removal_gate, -1)
+        for consequence in (
+            "setvar VAR_KANTO_ROCKET_STORY_STATE, 7",
+            "setflag FLAG_HIDDEN_ITEM_MACHINE_PART",
+            "setflag FLAG_RETURNED_MACHINE_PART",
+            "clearflag FLAG_HIDE_ROUTE25_MISTY",
+            "setvar VAR_CERULEAN_CITY_STATE, 2",
+            "setflag FLAG_HIDE_POWER_PLANT_ENGINEER",
+            "removeobject LOCALID_POWER_PLANT_BACK_ROOM_ENGINEER",
+        ):
+            with self.subTest(consequence=consequence):
+                self.assertGreater(commit.find(consequence), removal_gate)
+
+        back_room = load_map("Route10_PowerPlantBackRoom_hns")
+        engineer = [
+            obj
+            for obj in back_room["object_events"]
+            if obj.get("flag") == "FLAG_HIDE_POWER_PLANT_ENGINEER"
+        ]
+        self.assertEqual(len(engineer), 1)
+        self.assertEqual(engineer[0]["local_id"], "LOCALID_POWER_PLANT_BACK_ROOM_ENGINEER")
+        rear_warp = at(back_room["warp_events"], engineer[0]["x"], engineer[0]["y"])
+        self.assertEqual(len(rear_warp), 1, "hiding the engineer must uncover the rear-exit warp")
+
+        route25 = load_map("Route25_hns")
+        misty_actors = [
+            obj
+            for obj in route25["object_events"]
+            if obj.get("flag") == "FLAG_HIDE_ROUTE25_MISTY"
+        ]
+        self.assertEqual(len(misty_actors), 2)
+        misty_scene = self.scripts.block("Route25_EventScript_Misty")
+        self.assertOrderedText(
+            misty_scene,
+            [
+                "removeobject LOCALID_ROUTE25_MISTY",
+                "removeobject LOCALID_ROUTE25_MAN",
+                "setflag FLAG_HIDE_ROUTE25_MISTY",
+                "clearflag FLAG_HIDE_CERULEAN_GYM_TRAINERS",
+                "setflag FLAG_HIDE_CERULEAN_GYM_POKEMON",
+                "setvar VAR_CERULEAN_CITY_STATE, 3",
+            ],
+            "the state-2 cape scene must return Misty and her Trainers without completing the Gym",
+        )
+        self.assertNotIn("FLAG_DEFEATED_CERULEAN_GYM", misty_scene)
+
+    def test_returned_part_consumers_and_ss_aqua_independence(self) -> None:
+        returned_part_clears = []
+        for path in DATA.rglob("*.inc"):
+            if re.search(r"(?m)^\s*clearflag\s+FLAG_RETURNED_MACHINE_PART\b", uncommented(read(path))):
+                returned_part_clears.append(path.relative_to(DATA).as_posix())
+        self.assertEqual(
+            returned_part_clears,
+            ["scripts/new_game.inc"],
+            "only new-game initialization may clear completed Power Plant restoration",
+        )
+
+        for root in (
+            "Route10_PowerPlantEntrance_EventScript_Cop",
+            "Route10_PowerPlantEntrance_EventScript_Engineer1",
+            "Route10_PowerPlantEntrance_EventScript_Engineer2",
+            "Route10_PowerPlantEntrance_EventScript_Cop2",
+            "Route10_PowerPlantEntrance_EventScript_Engineer3",
+        ):
+            with self.subTest(power_plant=root):
+                self.assertContains(
+                    self.scripts.block(root),
+                    r"goto_if_ge\s+VAR_KANTO_ROCKET_STORY_STATE,\s*7,",
+                    "every visible Power Plant interaction must switch to terminal restored dialogue",
+                )
+
+        dialogue_roots = (
+            "CeruleanCity_EventScript_CooltrainerM1",
+            "Gate_SaffronCity_Route7_EventScript_Guard",
+            "SaffronCity_EventScript_Lass1A",
+            "SaffronCity_EventScript_PokefanM",
+            "SaffronCity_EventScript_Fisher",
+            "SaffronCity_PokemonCenter_EventScript_Fisher",
+            "SaffronCity_CopyCatsHouse_1F_EventScript_Mom",
+            "LavenderTown_PokemonCenter_EventScript_Youngster",
+        )
+        for root in dialogue_roots:
+            with self.subTest(dialogue=root):
+                self.assertIn("FLAG_RETURNED_MACHINE_PART", self.scripts.block(root))
+
+        self.assertOrderedPath(
+            "LavenderTown_RadioStation_EventScript_Director",
+            [
+                r"goto_if_set\s+FLAG_RETURNED_MACHINE_PART,",
+                r"setflag\s+FLAG_KANTO_RADIO_GOT",
+            ],
+            "restored power must unlock the Kanto radio upgrade",
+        )
+        snorlax = self.scripts.block("VermilionCity_EventScript_Snorlax")
+        self.assertIn("special CheckRadioStation", snorlax)
+        self.assertIn("VermilionCity_EventScript_SnorlaxWakeUp", snorlax)
+
+        copycat = self.scripts.block("SaffronCity_CopyCatsHouse_2F_EventScript_Copycat")
+        self.assertIn("FLAG_RETURNED_MACHINE_PART", copycat)
+        for map_name in ("Route5_hns", "Route6_hns"):
+            blockers = [
+                obj
+                for obj in load_map(map_name)["object_events"]
+                if obj.get("flag") == "FLAG_RETURNED_MACHINE_PART"
+            ]
+            self.assertTrue(blockers, f"{map_name} must hide its Underground Path blocker after repair")
+
+        for root in (
+            "SaffronStation_EventScript_Attendant",
+            "GoldenrodCity_TrainStation_EventScript_Attendant",
+        ):
+            self.assertOrderedText(
+                self.scripts.block(root),
+                ["FLAG_RETURNED_MACHINE_PART", "checkitem ITEM_PASS"],
+                "each station must check restored power before the Pass",
+            )
+
+        for ferry_root in (
+            "OlivinePort_EventScript_Sailor",
+            "VermilionPort_EventScript_Sailor",
+        ):
+            with self.subTest(ferry=ferry_root):
+                ferry = self.scripts.reachable_text(ferry_root)
+                self.assertIn("checkitem ITEM_SS_TICKET", ferry)
+                self.assertNotIn("FLAG_RETURNED_MACHINE_PART", ferry)
 
     def test_copycat_handoffs_are_retry_safe(self) -> None:
         fan_path = MAPS / "VermilionCity_FanClub_hns/scripts.inc"
@@ -660,11 +976,6 @@ class HnsTraversalContractTest(unittest.TestCase):
                 self.assertIn("VAR_TRAIN", graph)
                 self.assertNotIn("VAR_KANTO_ROCKET_STORY_STATE", graph)
                 self.assertNotIn("FLAG_KANTO_RADIO_GOT", graph)
-
-        saffron = self.scripts.reachable_text("SaffronStation_EventScript_Attendant")
-        self.assertIn("setflag FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED", saffron)
-        goldenrod = self.scripts.reachable_text("GoldenrodCity_TrainStation_EventScript_Attendant")
-        self.assertNotIn("setflag FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED", goldenrod)
 
     def test_deferred_region_and_endgame_gates_are_unchanged(self) -> None:
         mahogany = load_map("Mahoganytown_hns")
