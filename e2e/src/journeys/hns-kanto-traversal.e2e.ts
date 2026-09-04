@@ -133,7 +133,7 @@ const crossMainlandSeam = async (
     checkpoint: "new-bark-after-intro",
     player: { facing: options.entryDirection, position: options.start },
     story: {
-      flags: { returnedMachinePart: false, magnetTrainRestorationStarted: false },
+      flags: { returnedMachinePart: false },
       vars: { saffronCityState: 1, kantoRocketStoryState: 0 },
     },
   })
@@ -386,7 +386,6 @@ describe.sequential("HNS Kanto traversal", () => {
   describe("Kanto mainland routes", () => {
     const expectRestorationUnset = async (): Promise<void> => {
       await expect(game.story.flag("returnedMachinePart")).resolves.toBe(false)
-      await expect(game.story.flag("magnetTrainRestorationStarted")).resolves.toBe(false)
       await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(0)
       await expect(game.story.var("saffronCityState")).resolves.toBe(1)
     }
@@ -421,7 +420,7 @@ describe.sequential("HNS Kanto traversal", () => {
         checkpoint: "new-bark-after-intro",
         player: { facing: direction, position: { map: gate, x: startX, y: 5 } },
         story: {
-          flags: { returnedMachinePart: false, magnetTrainRestorationStarted: false },
+          flags: { returnedMachinePart: false },
           vars: { saffronCityState: 1, kantoRocketStoryState: 0 },
         },
       })

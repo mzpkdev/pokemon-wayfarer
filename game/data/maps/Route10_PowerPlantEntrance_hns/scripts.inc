@@ -2,16 +2,34 @@ Route10_PowerPlantEntrance_hns_MapScripts::
 	.byte 0
 
 Route10_PowerPlantEntrance_EventScript_Cop::
-	goto_if_set FLAG_RETURNED_MACHINE_PART, Route10_PowerPlantEntrance_EventScript_CopAfterDone
-	msgbox Route10_PowerPlantEntrance_Text_Officer1AThiefBrokeIn, MSGBOX_NPC
+	lock
+	faceplayer
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 2, Route10_PowerPlantEntrance_EventScript_CopDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 3, Route10_PowerPlantEntrance_EventScript_CopDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 4, Route10_PowerPlantEntrance_EventScript_CopDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 5, Route10_PowerPlantEntrance_EventScript_CopDuringRocket
+	goto_if_eq VAR_KANTO_ROCKET_STORY_STATE, 6, Route10_PowerPlantEntrance_EventScript_CopDuringRocket
+	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantEntrance_EventScript_CopAfterDone
+	msgbox Route10_PowerPlantEntrance_Text_Officer1AThiefBrokeIn, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+Route10_PowerPlantEntrance_EventScript_CopDuringRocket::
+	msgbox Route10_PowerPlantEntrance_Text_Officer1CeruleanShadyCharacter, MSGBOX_DEFAULT
+	msgbox Route10_PowerPlantEntrance_Text_Officer1CouldIAskForYourCooperation, MSGBOX_DEFAULT
+	closemessage
+	release
 	end
 
 Route10_PowerPlantEntrance_EventScript_CopAfterDone::
-	msgbox Route10_PowerPlantEntrance_Text_Officer1HaveToBeefUpSecurity, MSGBOX_NPC
+	msgbox Route10_PowerPlantEntrance_Text_Officer1HaveToBeefUpSecurity, MSGBOX_DEFAULT
+	closemessage
+	release
 	end
 
 Route10_PowerPlantEntrance_EventScript_Engineer1::
-	goto_if_set FLAG_RETURNED_MACHINE_PART, Route10_PowerPlantEntrance_EventScript_Engineer1Done
+	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantEntrance_EventScript_Engineer1Done
 	msgbox Route10_PowerPlantEntrance_Text_Engineer1SomeoneStoleAPart, MSGBOX_NPC
 	end
 
@@ -20,7 +38,7 @@ Route10_PowerPlantEntrance_EventScript_Engineer1Done::
 	end
 
 Route10_PowerPlantEntrance_EventScript_Engineer2::
-	goto_if_set FLAG_RETURNED_MACHINE_PART, Route10_PowerPlantEntrance_EventScript_Engineer2Done
+	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantEntrance_EventScript_Engineer2Done
 	msgbox Route10_PowerPlantEntrance_Text_Engineer2PowerPlantUpAndRunning, MSGBOX_NPC
 	end
 
@@ -29,7 +47,7 @@ Route10_PowerPlantEntrance_EventScript_Engineer2Done::
 	end
 
 Route10_PowerPlantEntrance_EventScript_Cop2::
-	goto_if_set FLAG_RETURNED_MACHINE_PART, Route10_PowerPlantEntrance_EventScript_Cop2Done
+	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantEntrance_EventScript_Cop2Done
 	msgbox Route10_PowerPlantEntrance_Text_Officer2ManagerHasBeenSadAndFurious, MSGBOX_NPC
 	end
 Route10_PowerPlantEntrance_EventScript_Cop2Done::
@@ -37,7 +55,7 @@ Route10_PowerPlantEntrance_EventScript_Cop2Done::
 	end
 
 Route10_PowerPlantEntrance_EventScript_Engineer3::
-	goto_if_set FLAG_RETURNED_MACHINE_PART, Route10_PowerPlantEntrance_EventScript_Engineer3Done
+	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantEntrance_EventScript_Engineer3Done
 	msgbox Route10_PowerPlantEntrance_Text_Engineer4MagnetTrainConsumesElectricity, MSGBOX_NPC
 	end
 
@@ -45,10 +63,62 @@ Route10_PowerPlantEntrance_EventScript_Engineer3Done::
 	msgbox Route10_PowerPlantEntrance_Text_Engineer4WeCanGetMagnetTrainRunning, MSGBOX_NPC
 	end
 
+Route10_PowerPlantEntrance_Trigger_Cop::
+	lock
+	playse SE_POKENAV_CALL
+	applymovement2 LOCALID_POWERPLANT_COP, Common_Movement_ExclamationMark
+	waitse
+	applymovement2 LOCALID_POWERPLANT_COP, Route10_PowerPlantEntrance_Movement_WalkToPlayer
+	waitmovement 0
+	turnobject LOCALID_POWERPLANT_ENGINEER, DIR_SOUTH
+	msgbox Route10_PowerPlantEntrance_Text_Officer1CeruleanShadyCharacter, MSGBOX_DEFAULT
+	closemessage
+	turnobject LOCALID_POWERPLANT_COP, DIR_WEST
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
+	delay 30
+	msgbox Route10_PowerPlantEntrance_Text_Officer1CouldIAskForYourCooperation, MSGBOX_DEFAULT
+	closemessage
+	applymovement2 LOCALID_POWERPLANT_COP, Route10_PowerPlantEntrance_Movement_WalkBack
+	waitmovement 0
+	setvar VAR_KANTO_ROCKET_STORY_STATE, 2
+	clearflag FLAG_HIDE_CERULEAN_GYM_ROCKET
+	release
+	end
+
+Route10_PowerPlantEntrance_Movement_WalkToPlayer:
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+Route10_PowerPlantEntrance_Movement_WalkBack:
+	walk_down
+	walk_down
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	face_down
+	step_end
+
 Route10_PowerPlantEntrance_Text_Officer1AThiefBrokeIn:
-	.string "The generator is out of service.\p"
-	.string "The MANAGER is in the back room\n"
-	.string "if you're here to help.$"
+	.string "A thief broke into the POWER\n"
+	.string "PLANT…\p"
+	.string "What is the world coming to?$"
+
+Route10_PowerPlantEntrance_Text_Officer1CeruleanShadyCharacter:
+	.string "I just got word from CERULEAN.\p"
+	.string "It appears that a shady\n"
+	.string "character has been loitering\l"
+	.string "around.$"
+
+Route10_PowerPlantEntrance_Text_Officer1CouldIAskForYourCooperation:
+	.string "Could I ask for your\n"
+	.string "cooperation?$"
 
 Route10_PowerPlantEntrance_Text_Officer1HaveToBeefUpSecurity:
 	.string "We'll have to beef up our\n"
@@ -68,9 +138,9 @@ Route10_PowerPlantEntrance_Text_Engineer1GeneratorUpAndRunning:
 Route10_PowerPlantEntrance_Text_Engineer2PowerPlantUpAndRunning:
 	.string "This POWER PLANT had been\n"
 	.string "abandoned in the past.\p"
-	.string "The new generator normally powers\n"
-	.string "the MAGNET TRAIN, but right now\l"
-	.string "it's out of service.$"
+	.string "We got it back up and running to\n"
+	.string "provide power to the MAGNET\l"
+	.string "TRAIN.$"
 
 Route10_PowerPlantEntrance_Text_Engineer2GeneratorIsRunningAgain:
 	.string "The generator's running again!$"
