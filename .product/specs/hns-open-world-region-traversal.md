@@ -1,7 +1,7 @@
 # HNS open-world regional traversal
 
 PRD: [HNS open-world regional traversal](../prds/hns-open-world-region-traversal.md)
-Implemented: Yes
+Implemented: Outdated
 
 ## Scope
 
@@ -69,11 +69,10 @@ story.
 
 ### Saved state and Kanto initialization
 
-Rename `FLAG_UNUSED_39` at `0x307` to
-`FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED`. The Standard Rod specification
-owns `0x304` through `0x306`; this specification consumes no other content
-flag and no new variable. Clear the new flag in
-`EventScript_ResetAllMapFlagsHnS`.
+The Standard Rod specification owns `0x304` through `0x306`. Keep `0x307` as
+`FLAG_UNUSED_39` and keep `HNS_UNUSED_COUNT` at 40. Magnet Train restoration
+uses the existing `VAR_KANTO_ROCKET_STORY_STATE` and consumes no new content
+flag or variable.
 
 Move the following initial visibility defaults from the S.S. Aqua arrival
 script to `EventScript_ResetAllMapFlagsHnS`:
@@ -240,69 +239,90 @@ loan until a gate or one of those reset paths ends it.
 
 ### Magnet Train restoration
 
-This is a self-contained HNS route that uses the new restoration-started flag,
-the existing `FLAG_HIDDEN_ITEM_MACHINE_PART`, the Machine Part item,
-`FLAG_RETURNED_MACHINE_PART`, `VAR_FAN_CLUB_CLEFAIRY`, the Lost Item, and the
-Pass. It does not read or write `VAR_KANTO_ROCKET_STORY_STATE`,
-`VAR_CERULEAN_CITY_STATE`, badges, radio progress, or Gym completion.
+This is the self-contained HNS Power Plant theft story. It uses
+`VAR_KANTO_ROCKET_STORY_STATE`, `FLAG_HIDDEN_ITEM_MACHINE_PART`, the Machine
+Part item, `FLAG_RETURNED_MACHINE_PART`, `VAR_CERULEAN_CITY_STATE`,
+`VAR_FAN_CLUB_CLEFAIRY`, the Lost Item, and the Pass. The sequence requires no
+badge, HM item, radio progress, Gym completion, or unrelated story flag. Its
+required Rocket victory gates only this story, its rewards, and optional
+shortcuts. It never closes a core route to a named Kanto settlement.
 
-1. At the Saffron station, an attendant interaction while the returned-part
-   flag is clear sets the restoration-started flag and directs the player to
-   the Power Plant. Repeats give the same useful direction without changing
-   state. Goldenrod may report that the train is down, but does not start the
-   Kanto errand.
-2. In `Route10_PowerPlantEntrance_hns`, delete the coordinate event at `(6,15)`
-   that starts the Rocket sequence and remove its state-writing script. The
-   officer and engineer interactions branch only on
-   `FLAG_RETURNED_MACHINE_PART`: before return they describe the outage or
-   direct the player to the manager; afterward they use the existing restored
-   dialogue. Walking through the entrance never changes Rocket state or actor
-   visibility.
-3. The Power Plant manager checks `FLAG_RETURNED_MACHINE_PART` first. If set,
-   he uses a terminal restored dialogue and changes no item, flag, or variable.
-   Otherwise he reports a generic outage until restoration has started. Once
-   it has started, he checks for the Machine Part. If the player lacks it, he
-   directs them to Cerulean Gym and clears
-   `FLAG_HIDDEN_ITEM_MACHINE_PART`, making the existing object and background
-   interaction at `(5,13)` and `(0,13)` available. Repeated directions may
-   clear that hide flag again, which also recovers the item if it is somehow
-   lost before turn-in.
-4. Remove the Cerulean Gym on-frame Rocket encounter and its state-writing
-   movement scene. Replace the item sparkle's Rocket-state guard. The sparkle
-   and both pickup surfaces require restoration started, returned part unset,
-   `FLAG_HIDDEN_ITEM_MACHINE_PART` clear, and no Machine Part in the Bag. The
-   background event at `(0,13)` repeats those checks because it is not hidden
-   by the object flag. The pickup uses the existing `finditem` presentation
-   and sets the hidden-item flag only after a successful grant. A full Key
-   Items pocket leaves the flag clear and both pickup surfaces retryable.
-   Remove all Rocket-state requirements and writes from this item flow.
-5. At manager turn-in, an existing `ITEM_TM_THUNDER` counts as the normal
-   reward already satisfied. Otherwise, preflight its pocket, grant it, and
-   verify success before removing the Machine Part. Only after the reward is
-   present and the Machine Part has been removed may the script set
-   `FLAG_RETURNED_MACHINE_PART` and the hidden-item flag. A full pocket changes
-   no item or completion state. Do not run the current Kanto campaign flag
-   heap or change the engineer, Misty, or Cerulean story state.
-6. Copycat retains her existing sequence after the returned-part flag is set:
+1. The Saffron station attendant may report the power failure and direct the
+   player to the Power Plant while `FLAG_RETURNED_MACHINE_PART` is clear. This
+   is optional guidance. It does not write story state or gate the manager.
+   Goldenrod may report that the train is down without starting the Kanto
+   errand.
+2. The Power Plant manager starts the theft sequence directly. At
+   `VAR_KANTO_ROCKET_STORY_STATE = 0`, his initial dialogue sets state 1.
+   States 1 through 5 use the existing culprit dialogue. State 6 checks for
+   the Machine Part, and state 7 or later uses terminal restored dialogue.
+3. Keep the `Route10_PowerPlantEntrance_hns` coordinate event at `(6,15)` for
+   state 1. The officer reports the Cerulean suspect, sets state 2, and clears
+   `FLAG_HIDE_CERULEAN_GYM_ROCKET`. Officer and engineer dialogue continues to
+   follow the active Rocket state before completion and the restored state
+   afterward.
+4. At state 2, entering Cerulean Gym runs the Rocket movement scene.
+   The grunt flees, `FLAG_HIDE_CERULEAN_GYM_ROCKET` is set,
+   `FLAG_HIDE_CERULEAN_CAPE_ROCKET` is cleared, and the sequence enters state
+   3. This scene does not check or complete Misty's Gym.
+5. Keep the three Route 24 coordinate events for state 3. They reposition the
+   nearby actors and enter state 4. The grunt interaction at state 4 runs the
+   battle. A loss leaves state 4 and the grunt available to retry. A
+   victory hides the grunt, enters state 5, and clears
+   `FLAG_HIDDEN_ITEM_MACHINE_PART` so the Gym pickup becomes available. The
+   encounter is on the optional Route 24 branch and does not block travel
+   between named settlements.
+6. The Cerulean Gym sparkle and both pickup surfaces are active only at state
+   5 while `FLAG_HIDDEN_ITEM_MACHINE_PART` is clear and the Machine Part is
+   absent from the Bag. The background event at `(0,13)` repeats the same
+   checks because an object flag cannot hide it. Give and verify
+   `ITEM_MACHINE_PART` before setting the hidden-item flag and state 6. A full
+   Key Items pocket leaves state 5, the hide flag clear, and both pickup
+   surfaces available to retry.
+7. At the state-6 manager turn-in, an existing `ITEM_TM_THUNDER` counts as the
+   normal reward already satisfied. Otherwise, preflight its pocket, grant it,
+   and verify success before removing the Machine Part. Only after the TM is
+   present and Machine Part removal succeeds may the script set state 7,
+   `FLAG_HIDDEN_ITEM_MACHINE_PART`, and `FLAG_RETURNED_MACHINE_PART`; clear
+   `FLAG_HIDE_ROUTE25_MISTY`; set `VAR_CERULEAN_CITY_STATE` to 2; and set
+   `FLAG_HIDE_POWER_PLANT_ENGINEER`. A full pocket or failed item operation
+   changes none of these completion states and leaves the handoff retryable.
+8. Clearing `FLAG_HIDE_ROUTE25_MISTY` exposes Misty and her date on Route 25.
+   The existing state-2 Route 25 scene removes both actors, sets
+   `FLAG_HIDE_ROUTE25_MISTY`, clears `FLAG_HIDE_CERULEAN_GYM_TRAINERS`, sets
+   `FLAG_HIDE_CERULEAN_GYM_POKEMON`, and advances
+   `VAR_CERULEAN_CITY_STATE` to 3. This returns Misty and the Gym Trainers to
+   Cerulean Gym without completing or requiring the Gym battle.
+9. Keep `FLAG_RETURNED_MACHINE_PART` as the shared power-restoration state.
+   Existing consumers retain their original behavior: Power Plant and city
+   dialogue switches to restored text, the Lavender Radio director can grant
+   the Kanto radio upgrade, Copycat's doll quest becomes available, the Route
+   5 and Route 6 Underground Path blockers disappear, and both Magnet Train
+   stations recognize restored power. The radio upgrade may then support its
+   existing Poke Flute and Snorlax sequence. Neither S.S. Aqua desk may read
+   this flag.
+10. Copycat retains her existing sequence after the returned-part flag is set:
    state 1 requests the doll, state 2 means the Lost Item is held, and state 3
    means the Pass was awarded. In the Vermilion Fan Club, check space, grant
    and verify `ITEM_LOST_ITEM` before hiding the doll or setting state 2.
-7. Returning the Lost Item to Copycat atomically replaces it with `ITEM_PASS`.
+11. Returning the Lost Item to Copycat atomically replaces it with `ITEM_PASS`.
    Use a small tested helper if ordinary script commands cannot guarantee the
    swap. On success, the Lost Item is absent, the Pass is present, the Copycat
    doll is shown, and state 3 is committed. On any failure, the Lost Item and
    state 2 remain available for retry.
-8. Both station attendants check `FLAG_RETURNED_MACHINE_PART` first and
+12. Both station attendants check `FLAG_RETURNED_MACHINE_PART` first and
    `ITEM_PASS` second. Only the true and present combination boards. Keep the
    existing `VAR_TRAIN` arrival animation and warps in both directions.
 
 ### Deferred-content invariants
 
-The implementation must not edit or bypass the Mahogany merchant that guards
-Route 44, the Ice Path Kimono scene, the Route 13 Alola boat, Meara, New
-Sinjoh, Snowswept Cavern, the League corridor, Mt. Silver, Vermilion Snorlax,
-or either Underground Path. Source assertions should pin the late Johto,
-Alola, and Sinjoh gates that are most vulnerable to broad state cleanup.
+The implementation must not otherwise edit or bypass the Mahogany merchant
+that guards Route 44, the Ice Path Kimono scene, the Route 13 Alola boat,
+Meara, New Sinjoh, Snowswept Cavern, the League corridor, Mt. Silver,
+Vermilion Snorlax, or either Underground Path. The returned-part consumers
+described above keep their authored state changes. Source assertions should
+pin the late Johto, Alola, and Sinjoh gates that are most vulnerable to broad
+state cleanup.
 
 ### Native Surf crossings
 
@@ -332,6 +352,10 @@ rewards and an active Cycling Road loan can be verified across reload. Add a
 synthetic full-pocket fixture or a narrow unit test for the atomic Lost Item to
 Pass helper because the existing eight-entry Bag arrangement cannot fill the
 60-slot Key Items pocket.
+
+Use one focused runtime path for the restored Rocket sequence. Cover exhaustive
+state guards, full-pocket retry branches, and returned-part consumers with
+narrow unit or source assertions instead of separate full-story E2E journeys.
 
 The acceptance suite must cover:
 
@@ -365,13 +389,28 @@ The acceptance suite must cover:
   loaned, normal far-gate cleanup, Fly or whiteout cleanup, and an owned
   Bicycle run whose item and riding state remain unchanged.
 - The full returned-part flag by Pass-presence matrix at both train stations.
-  The Machine Part and both Copycat item handoffs must also cover full-pocket
-  retry without lost items, duplicated rewards, or premature state. After
-  completion, every Power Plant interaction must remain terminal and must not
-  expose another Machine Part.
-- Walking through the Power Plant entrance before, during, and after the train
-  restoration must not write `VAR_KANTO_ROCKET_STORY_STATE`, reveal Rocket
-  actors, or start the removed Cerulean Gym encounter.
+  Both Copycat item handoffs must also cover full-pocket retry without lost
+  items, duplicated rewards, or premature state. After completion, every
+  Power Plant interaction must remain terminal and must not expose another
+  Machine Part.
+- The complete `VAR_KANTO_ROCKET_STORY_STATE` progression from 0 through 7:
+  manager start, Power Plant officer report, Cerulean Gym escape, Route 24
+  staging, grunt battle, Machine Part pickup, and manager turn-in. Run it with
+  no badges, HM items, radio progress, Gym completion, or unrelated story
+  flags. A grunt loss must preserve state 4 and allow a retry.
+- Machine Part pickup and manager turn-in with full pockets, save and reload,
+  and successful retry. A full-pocket failure must not hide or lose the
+  Machine Part, grant the TM, advance Rocket state, reveal Misty, hide the
+  rear-exit engineer, or set `FLAG_RETURNED_MACHINE_PART`.
+- Successful manager turn-in must reach Rocket state 7, reveal the Route 25
+  Misty scene, remove the Power Plant rear-exit engineer, and set the returned
+  part flag. The Route 25 scene must advance Cerulean state 2 to 3, remove
+  Misty and her date from Route 25, reveal Misty and the Gym Trainers, and hide
+  the temporary Gym Pokemon without completing the Gym.
+- Source assertions for each existing `FLAG_RETURNED_MACHINE_PART` consumer
+  must cover restored NPC dialogue, the Lavender radio and its Poke Flute path,
+  Copycat's quest, Route 5 and Route 6 Underground Path access, and both Magnet
+  Train stations. Both S.S. Aqua desks must remain independent of the flag.
 - Vermilion through Route 6 to Saffron and onward through Routes 5, 7, and 8
   with Machine Part unset; Pallet through Route 21 to Cinnabar and back with a
   prepared native Surf user; and Olivine through Routes 40 and 41 to Cianwood
