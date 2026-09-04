@@ -223,9 +223,9 @@ projection, and predecessor resolution. The report retains the authored slot,
 authored species, projected level outcomes, eligibility, and resulting species
 so every probability can be traced back to its source.
 
-At standalone Ratings 10, 16, 40, 55, 65, and 80, plus Wayfarer Ratings 0, 16,
-40, 55, 63, 68, 76, and 80, renormalize eligible weights and repeat the
-authored portfolio calculation by effective species. The results must meet:
+For Wayfarer Ratings 0, 16, 40, 55, 63, 68, 76, and 80, renormalize eligible
+weights and repeat the authored portfolio calculation by effective species.
+The results must meet:
 
 | Portfolio | Required effective Generation II share |
 | --- | ---: |
@@ -273,8 +273,7 @@ Copy only the Johto-owned HNS rows from the native-HM specification into
 at Vermilion and Cinnabar belong to the Kanto specification and do not enter
 this array. Each record names species, utility moves, qualifying base labels,
 method, applicable times, qualifying authored level ranges, and the required
-standalone Rating range 10 through 80. Wayfarer extends every record through
-Rating 0.
+Wayfarer Rating range 0 through 80.
 
 The protected species are Gligar, Aipom, Chinchou, Mareep, Wooper, Snubbull,
 Miltank, Marill, and Mantine. For every named slot and authored level, the

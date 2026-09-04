@@ -19,8 +19,8 @@ return-aware recovery behavior needed for the remaining circuit legs.
 This staged specification does not define the completed product's new-game
 start selection or final travel guarantees. The interregional League circuit
 supersedes its HNS-only entry assumption and requires Hoenn to support both a
-native new-game start and return-capable regional travel before that circuit's
-badge caps can ship.
+native new-game start and access to the shared regional travel network before
+that circuit's badge caps can ship.
 
 The long-term S.S. Aqua circuit is fixed as Olivine to Vermilion to Slateport
 to Lilycove to Olivine. Regional travel remains route-based rather than

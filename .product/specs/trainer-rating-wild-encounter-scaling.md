@@ -12,6 +12,11 @@ or trainer battle scaling. Wayfarer reuses the encounter projection but
 replaces these progression inputs through the separate interregional League
 circuit specification.
 
+The build-specific Rating 10 floor and progression table below record the
+current implementation. They are not compatibility requirements for the
+Wayfarer circuit, which may change shared code instead of adding compatibility
+branches for other products.
+
 ## Behavior
 
 ### Trainer Rating lifecycle

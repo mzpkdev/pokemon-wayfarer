@@ -431,10 +431,9 @@ Playtesting should answer these questions:
 ## Acceptance
 
 - Produce a deterministic distribution report for every mainland map, method,
-  day or night variant, and integer standalone Trainer Rating from 10 through
-  80, plus Wayfarer Rating 0 through 80. Report entry weights, eligible entries,
-  aggregate species probabilities, generation shares, and the regional and
-  per-method summaries.
+  day or night variant, and integer Wayfarer Trainer Rating from 0 through 80.
+  Report entry weights, eligible entries, aggregate species probabilities,
+  generation shares, and the regional and per-method summaries.
 - Confirm the report matches the profile-ownership manifest, includes all three
   Kanto Victory Road maps, reserves Route 23 for Kanto, and excludes the named
   Johto and Sevii profiles. Reconcile the denominator when Route 23 is authored.
@@ -461,15 +460,14 @@ Playtesting should answer these questions:
   exact minimum and maximum. For a shared species and role with different source
   ranges, confirm the deterministic lower-level source rule selected one
   complete range. List no HNS postgame level as a source.
-- Report the effective minimum and maximum levels at standalone Rating 10 and
-  Wayfarer Rating 0 for every Kanto profile, then playtest a new Kanto save
-  through the first badge. Confirm level projection uses the FireRed and
-  LeafGreen authored inputs and that the opening does not behave like the
-  former postgame Kanto curve.
-- At standalone Rating 10 and Wayfarer Rating 0, confirm the land populations
-  for Routes 1, 2, 3, and 22, Viridian Forest, and every Mt. Moon floor produce
-  no encounter above level 12. This ceiling is the current projection of the
-  highest level 12 source role in that opening set.
+- Report the effective minimum and maximum levels at Wayfarer Rating 0 for every
+  Kanto profile, then playtest a new Kanto save through the first badge. Confirm
+  level projection uses the FireRed and LeafGreen authored inputs and that the
+  opening does not behave like the former postgame Kanto curve.
+- At Wayfarer Rating 0, confirm the land populations for Routes 1, 2, 3, and 22,
+  Viridian Forest, and every Mt. Moon floor produce no encounter above level
+  12. This ceiling is the current projection of the highest level 12 source
+  role in that opening set.
 - Confirm the mainland day and night union contains 105 to 120 distinct ordinary
   species and Generation IV onward never exceeds 5 percent of regional
   probability.

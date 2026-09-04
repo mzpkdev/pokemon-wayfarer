@@ -7,9 +7,8 @@ Keep ordinary wild encounters relevant as a player advances through a campaign. 
 ## Design
 
 Trainer Rating is a persistent progression value, and the system never lowers a
-saved rating. A new Wayfarer game starts at 0. Standalone Emerald, FireRed,
-LeafGreen, and HNS games retain their implemented Rating 10 start. The rating is
-internal and has no player-facing screen.
+saved rating. A new Wayfarer game starts at 0. The rating is internal and has
+no player-facing screen.
 
 Every ordinary encounter profile compiled into Emerald, FireRed/LeafGreen, or HNS uses the same rating. The system adjusts encounter levels and can return an over-levelled evolved species to an eligible predecessor. It also respects specific species floors.
 
@@ -29,9 +28,8 @@ are:
 | Hoenn League cleared | 80 |
 
 The interregional League circuit defines the exact badge and League
-contributions. This replaces the earlier Wayfarer concept of one full regional
-campaign plus smaller breadth contributions from the other regions. Standalone
-builds retain their existing build-specific progression sources.
+contributions. This replaces the earlier concept of one full regional campaign
+plus smaller breadth contributions from the other regions.
 
 ## Boundaries
 
@@ -55,9 +53,6 @@ as the rating approaches 80.
 Rating 0 must not remove a native utility catch that supplies an approved core
 route. The Wayfarer circuit owns the level-5 Chinchou compatibility adjustment
 needed to preserve Kanto's native-Surf route.
-
-Standalone builds continue to begin at Rating 10 so this Wayfarer progression
-change does not rebalance their opening encounters.
 
 ## Content
 
@@ -107,15 +102,15 @@ In randomizer mode, the selected slot's level still scales, while the existing r
 
 ## Constraints
 
-Trainer Rating must survive saves and migrations without changing save-block layouts. A migrated save derives an appropriate rating from its existing progression, and future reads preserve the higher of the stored and derived values. Wayfarer clamps the value to the inclusive range 0 through 80. Standalone builds retain their implemented range of 10 through 80.
+Trainer Rating must survive saves and migrations without changing save-block layouts. A migrated save derives an appropriate rating from its existing progression, and future reads preserve the higher of the stored and derived values. Wayfarer clamps the value to the inclusive range 0 through 80.
 
 ## Playtesting
 
 Playtesting should confirm that Wayfarer encounters feel appropriate at Rating
-0 and at every badge and League milestone through Rating 80. Standalone testing
-retains its Rating 10 opening. Coverage should include land, water, Rock Smash,
-fishing, time-based, ability-influenced, lure, Altering Cave, and HNS Hoenn
-Sound encounters, plus the ordinary population readers.
+0 and at every badge and League milestone through Rating 80. Coverage should
+include land, water, Rock Smash, fishing, time-based, ability-influenced, lure,
+Altering Cave, and HNS Hoenn Sound encounters, plus the ordinary population
+readers.
 
 It should also check that excluded sources remain unchanged, that a later rating never produces a lower projected encounter outcome, and that existing saves migrate without losing progression.
 

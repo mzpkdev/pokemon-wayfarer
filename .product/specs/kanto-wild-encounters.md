@@ -322,9 +322,8 @@ diagnostics, but do not apply generation quotas to those breakouts. Ability
 attraction, Lures, randomizer behavior, and Hoenn Sound are off for the
 baseline portfolio.
 
-Run the effective regional portfolio for every integer standalone Rating from
-10 through 80 and every integer Wayfarer Rating from 0 through 80. Every
-rating and every rod quality must satisfy:
+For Wayfarer, run the effective regional portfolio for every integer Rating
+from 0 through 80. Every rating and every rod quality must satisfy:
 
 | Time | Generation I | Generation II families | Independent Generation III | Generation IV onward |
 | --- | ---: | ---: | ---: | ---: |
@@ -350,10 +349,9 @@ The following six HNS records remain in
 `game/src/data/standard_rod_fishing.json`: Vermilion City, Vermilion port
 outside, and Cinnabar Island by day and night. For each record, Chinchou is
 exactly 11 percent of successful Old Rod encounters with Lure off at every
-standalone Rating from 10 through 80 and Wayfarer Rating from 0 through 80. The
-25 percent bite rate makes it exactly 2.75 percent per unmodified cast. Kanto
-changes must not alter the Johto-owned Olivine and Cianwood accessibility
-records in the same file.
+Wayfarer Rating from 0 through 80. The 25 percent bite rate makes it exactly
+2.75 percent per unmodified cast. Kanto changes must not alter the Johto-owned
+Olivine and Cianwood accessibility records in the same file.
 
 Every qualifying Kanto Chinchou catch knows Surf. Wayfarer Rating 0 produces a
 level-5 catch from the authored level-5 sources, so the Wayfarer HNS Chinchou
@@ -392,8 +390,7 @@ the existing per-slot Trainer Rating data, it contains:
   certificate defined above, including exact candidate and rejection counts,
   the enumeration digest, and the selected assignment's exact objective values.
 - The authored species union, forbidden-species results, Hoenn Sound comparison,
-  Chinchou accessibility, standalone Rating 10 opening-level checks, and
-  Wayfarer Rating 0 opening-level checks.
+  Chinchou accessibility and Wayfarer Rating 0 opening-level checks.
 - The manifest `changes` ledger and a list of every `DAY_ALIAS`.
 
 Generation fails when any required report invariant fails. The report may
@@ -412,8 +409,7 @@ authored and effective species; and deterministic report ordering.
 Update existing HNS profile-count fixtures for Route 23 and the explicit night
 bindings. Run `make wild-encounter-scaling-test` and
 `make wild-encounter-balance-audit`. The generated audit must pass every Rating
-from 10 through 80 in standalone HNS, every Rating from 0 through 80 in
-Wayfarer, and all three rod qualities.
+from 0 through 80 in Wayfarer and all three rod qualities.
 
 Keep the production runtime tests for eligibility, predecessor resolution,
 weighted selection, Lures, Hoenn Sound, randomizer handoff, Pokédex, DexNav,

@@ -105,9 +105,10 @@ badge check may prevent access to the League challenge.
 
 Before the certification caps are enabled, the travel graph must provide a
 usable route from every valid starting region and every possible threshold-
-badge location to the assigned League, plus a return route after the League.
-Neither direction may require another badge or the clear currently being
-pursued. A direct fast-travel option is not required.
+badge location to the assigned League. Completing that League must release the
+player at a location connected to the wider regional travel network. The route
+may be directional and a direct fast-travel option is not required. Reaching
+the League cannot require another badge or the clear currently being pursued.
 
 Completing a League atomically records that region's Champion and game-clear
 state, applies only that region's Hall of Fame and cleanup behavior, advances
@@ -171,14 +172,11 @@ The value remains an internal high-water mark. It scales ordinary wild
 encounters through the existing projection pipeline and does not alter any
 Trainer party.
 
-Wayfarer's HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level
-5 in both normal and legacy-moves mode, after any existing level-5 entries. The
-later repeat entries remain unchanged. This Wayfarer-only addition ensures that
-the authored level-5 Chinchou fishing sources around Vermilion and Cinnabar
-still provide the native Surf user required by Kanto traversal at Rating 0.
-
-Standalone Emerald, FireRed, LeafGreen, and HNS retain the progression facts
-and minimum rating defined by the existing Trainer Rating specification.
+The HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level 5 in
+both normal and legacy-moves mode, after any existing level-5 entries. The
+later repeat entries remain unchanged. This ensures that the authored level-5
+Chinchou fishing sources around Vermilion and Cinnabar still provide the native
+Surf user required by Kanto traversal at Rating 0.
 
 ### Presentation
 
@@ -226,9 +224,9 @@ Deterministic tests must cover:
 11. Access to travel and unrelated story interactions while the badge count is
     at a certification cap.
 12. Eighth-badge routes ending in Kanto, Johto, and Hoenn can all reach the
-    Kanto League and return; equivalent sixteenth-badge routes can reach the
-    Johto League and return; and the twenty-fourth-badge route can reach the
-    Hoenn League and return.
+    Kanto League; equivalent sixteenth-badge routes can reach the Johto League;
+    and the twenty-fourth-badge route can reach the Hoenn League. Each clear
+    releases the player back into the wider regional travel network.
 13. Kanto, Johto, and Hoenn new-game choices each initialize a clean three-
     region save at Rating 0, release control in the selected region, and leave
     both other regions reachable through approved travel.

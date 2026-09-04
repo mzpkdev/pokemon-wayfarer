@@ -122,18 +122,18 @@ total.
 
 Badge certification caps cannot ship until interregional travel guarantees
 that a player can reach the assigned League from any region where the
-threshold badge can be earned and can return afterward. The journey may still
-use authored transport and routes, but it cannot depend on earning another
-badge or clearing the League that the player is trying to reach.
+threshold badge can be earned. After the League, the player must regain control
+with access to the wider regional travel network. The journey may use
+directional transport and authored routes, but it cannot depend on earning
+another badge or clearing the League that the player is trying to reach.
 
 Each regional start needs an approved opening, starter choice, safe recovery
 point, and path into its open settlement network before the circuit can ship.
 Choosing a start cannot permanently lock the player out of either other
 region.
 
-Prerelease save compatibility is not required. Standalone Emerald, FireRed,
-LeafGreen, and HNS builds retain their existing regional League rules unless a
-separate product decision changes them.
+Prerelease save compatibility is not required. This feature does not require
+shared systems to preserve behavior in other product builds.
 
 ## Playtesting
 

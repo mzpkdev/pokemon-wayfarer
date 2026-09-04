@@ -15,7 +15,8 @@ and may then take the S.S. Aqua from Vermilion to Slateport.
 This is a staged integration milestone, not the final Wayfarer start and travel
 contract. The interregional League circuit supersedes its HNS-only opening and
 one-way boundary before the completed circuit ships: Kanto, Johto, and Hoenn
-must all be available new-game starts with return-capable regional travel.
+must all be available new-game starts connected to the shared regional travel
+network.
 
 The complete S.S. Aqua route is a directional circuit:
 Olivine to Vermilion to Slateport to Lilycove to Olivine. This milestone
