@@ -119,6 +119,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
+    await game.dialogue.waitForOpen()
     await finishFieldScript(game, "Power Plant officer report")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(2)
     await expect(game.story.flag("hideCeruleanGymRocket")).resolves.toBe(false)
@@ -134,6 +135,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
+    await game.dialogue.waitForOpen()
     await finishFieldScript(game, "Cerulean Gym Rocket escape")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(3)
     await expect(game.story.flag("hideCeruleanGymRocket")).resolves.toBe(true)
@@ -150,6 +152,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
+    await game.dialogue.waitForOpen()
     await finishFieldScript(game, "Route 24 Rocket staging")
     await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(4)
 
@@ -233,6 +236,7 @@ describe.sequential("HNS Magnet Train restoration", () => {
     })
 
     await game.player.move("up")
+    await game.dialogue.waitForOpen()
     await finishFieldScript(game, "Route 25 Misty return")
     await expect(game.story.var("ceruleanCityState")).resolves.toBe(3)
     await expect(game.story.var("numBadges")).resolves.toBe(0)
