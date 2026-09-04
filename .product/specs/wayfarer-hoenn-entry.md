@@ -11,15 +11,15 @@ player may take the S.S. Aqua from Vermilion Port to Slateport Harbor. The trip
 uses the same player and save, initializes Hoenn once, and leaves the player at
 a safe Hoenn destination.
 
-This milestone is intentionally one-way. It does not provide S.S. Aqua service
-from Slateport, another physical return route, cross-region Fly, Town Map
-region tabs, or separate healing histories. A future PRD must define those
-features before Wayfarer promises free movement among all three regions.
+This milestone is intentionally one-way. It implements only the
+Vermilion-to-Slateport leg, so it provides no departure from Hoenn. The
+scheduled-ferry PRD will define Hoenn port service, schedules, and the
+return-aware recovery behavior needed for the remaining circuit legs.
 
 The long-term S.S. Aqua circuit is fixed as Olivine to Vermilion to Slateport
-to Lilycove to Olivine. This specification implements only the
-Vermilion-to-Slateport leg. It does not implement the remaining legs or a ferry
-schedule.
+to Lilycove to Olivine. Regional travel remains route-based rather than
+unrestricted. Cross-region Fly and Town Map region tabs are separate deferred
+conveniences and are not required for the circuit.
 
 The runtime foundation owns the build, map catalog, persistent-state model,
 active-region dispatch, and ROM budget. The Hoenn content port owns the adapted
@@ -127,7 +127,7 @@ The player may leave the harbor for Slateport City and use the implemented
 Emerald open-world network to reach Littleroot and Route 101. The content
 port's adapted Birch rescue and optional starter behavior remain unchanged.
 
-### No return route
+### Deferred Hoenn departures
 
 This specification adds no S.S. Aqua object, attendant, or departure script to
 Slateport, Lilycove, or another Hoenn map. It does not implement the
@@ -137,8 +137,9 @@ another system into a route to Johto or Kanto.
 
 The player remains in Hoenn after the trip. Saving, reloading, healing,
 blacking out, entering the Hall of Fame, or using an ordinary Hoenn ferry must
-not move the player back to HNS content. Any future return path requires a
-separate approved PRD and specification.
+not move the player back to HNS content. The approved Slateport-to-Lilycove and
+Lilycove-to-Olivine legs require their scheduled-ferry PRD and specification
+before implementation.
 
 ### S.S. Ticket and S.S. Tidal
 
@@ -172,7 +173,9 @@ and never to Olivine, Vermilion, or New Bark merely because those locations
 were used earlier in the save.
 
 Separate saved heal destinations for Johto, Kanto, and Hoenn are outside this
-specification because this milestone has no return travel.
+specification because this milestone has no route out of Hoenn. The
+scheduled-ferry PRD must define safe healing and blackout behavior for the
+completed circuit.
 
 ### Save and reload
 
@@ -239,9 +242,11 @@ A future scheduled-ferry PRD owns:
   to-Olivine circuit;
 - S.S. Aqua attendants and next-stop presentation at both Hoenn ports;
 - S.S. Aqua and S.S. Tidal schedules and berth coexistence;
-- cross-region Fly and Town Map region tabs;
-- separate regional healing histories and return-aware blackout behavior; and
-- any special early transport to Ever Grande.
+- the recovery state needed to heal and black out safely after the player can
+  leave Hoenn.
+
+Separately deferred conveniences are cross-region Fly, Town Map region tabs,
+and any special early transport to Ever Grande.
 
 ## References
 

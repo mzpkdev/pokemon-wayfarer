@@ -167,7 +167,8 @@ active healing location. A blackout in Hoenn must recover at a valid Hoenn
 location and must not move the player to Johto or Kanto.
 
 This milestone does not preserve a separate healing history for every region.
-That behavior belongs to the future return-travel PRD.
+The scheduled-ferry PRD must define safe healing and blackout behavior for the
+completed circuit.
 
 ## Boundaries
 
@@ -188,9 +189,12 @@ That behavior belongs to the future return-travel PRD.
 - This PRD does not define Sinnoh integration.
 - Compatibility with prerelease saves is not required.
 
-A public release that promises free travel among regions must not ship with
-this one-way boundary. Return travel requires its own approved PRD and
-implementation.
+Wayfarer's regional transport is route-based. The Magnet Train links Johto and
+Kanto in both directions, while the S.S. Aqua follows its directional circuit.
+This milestone keeps its one-way boarding warning until the scheduled-ferry
+PRD implements the remaining circuit legs and return-aware recovery.
+Cross-region Fly and selectable Town Map region tabs are separate conveniences,
+not requirements for completing the circuit.
 
 ## Balance
 
@@ -206,7 +210,8 @@ interactions.
 
 - Player-facing build and save identifiers use the name "Wayfarer".
 - The Vermilion attendant identifies the destination as Slateport, Hoenn.
-- Before departure, the attendant says that return service is unavailable.
+- In this milestone, the attendant says before departure that return service
+  is unavailable.
 - Canceling or declining leaves the player in Vermilion with no state change.
 - Hoenn entry treats the existing player as a visiting Trainer and adds no
   replacement introduction.
