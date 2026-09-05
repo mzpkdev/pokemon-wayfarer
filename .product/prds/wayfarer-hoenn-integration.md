@@ -12,6 +12,12 @@ provide travel back to Johto or Kanto. The player first completes the existing
 S.S. Aqua maiden voyage from Olivine to Vermilion, receives the S.S. Ticket,
 and may then take the S.S. Aqua from Vermilion to Slateport.
 
+This is a staged integration milestone, not the final Wayfarer start and travel
+contract. The interregional League circuit supersedes its HNS-only opening and
+one-way boundary before the completed circuit ships: Kanto, Johto, and Hoenn
+must all be available new-game starts connected to the shared regional travel
+network.
+
 The complete S.S. Aqua route is a directional circuit:
 Olivine to Vermilion to Slateport to Lilycove to Olivine. This milestone
 implements only the Vermilion-to-Slateport leg. The remaining Hoenn legs and
@@ -27,7 +33,7 @@ limit.
 
 ### Shared player and save
 
-- The HNS opening remains the start of the game.
+- The HNS opening remains the start of this staged integration milestone.
 - The player reaches Kanto through the existing S.S. Aqua maiden voyage.
 - Completing the maiden voyage and receiving the S.S. Ticket unlocks the
   next S.S. Aqua leg from Vermilion to Slateport.
@@ -107,14 +113,17 @@ reward, or defeat its opponent.
 
 Wayfarer includes the Emerald maps, NPCs, shops, healing facilities, items,
 ordinary Trainers, rivals, team encounters, Gym Leaders, Elite Four, Champion,
-and main story required to complete Hoenn. Trainer parties retain their
-Emerald-authored species, levels, moves, items, AI, and battle formats.
+and main story required to complete Hoenn. Non-League Trainer parties retain
+their Emerald-authored species, levels, moves, items, AI, and battle formats.
+The Hoenn Elite Four and Champion instead use the fixed Tier 3 parties owned by
+the interregional League circuit.
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
-locations while using the HNS Trainer Rating level projection. Hoenn progress
-does not add Trainer Rating inputs. Fixed, gift, legendary, hidden, and
-scripted Pokémon retain their authored levels unless another approved feature
-already governs them.
+locations while using the HNS Trainer Rating level projection. Hoenn badges
+count toward Wayfarer's global badge total, and the Hoenn League contributes
+its circuit milestone. Fixed, gift, legendary, hidden, and scripted Pokémon
+retain their authored levels unless another approved feature already governs
+them.
 
 Sootopolis remains a late-game town. Its Dive entrance, weather crisis, Cave
 of Origin, Gym, and related rewards retain their original Hoenn progression.
@@ -124,11 +133,13 @@ Hoenn destination.
 ### Regional progression
 
 - Hoenn has eight independent badge states.
-- Hoenn badge-count checks use only Hoenn badges.
-- Hoenn badges do not alter HNS Trainer Rating.
+- Hoenn-local story checks use only Hoenn badges unless another approved
+  feature changes that story.
+- Hoenn badges count toward global League qualification and Trainer Rating.
 - Hoenn Champion completion is independent from Johto and Kanto completion.
-- Completing one League cannot start, finish, reset, or unlock another
-  region's campaign.
+- Hoenn is the fixed Tier 3 League after the Kanto and Johto clears and all
+  twenty-four badges. Completing it finishes the interregional circuit without
+  finishing or resetting another region's local campaign.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
   saving, reloading, and blacking out.
 
@@ -181,8 +192,9 @@ completed circuit.
   and Hoenn boundary.
 - The S.S. Tidal keeps its original postgame role and destinations.
 - This milestone does not add early Ever Grande transport.
-- Wayfarer does not redesign or scale Emerald Trainer parties.
-- Wayfarer does not add Hoenn-based Trainer Rating milestones.
+- Wayfarer does not scale ordinary Emerald Trainer or Gym Leader parties.
+- The interregional circuit may author a fixed Tier 3 Hoenn League party, but
+  it does not scale that party at runtime.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
   preservation targets, not requirements for this milestone.
@@ -201,9 +213,10 @@ Hoenn's ordinary and boss Trainers use their Emerald-authored levels. The
 player may therefore meet battles much stronger or weaker than the current
 party. Wayfarer does not correct that mismatch with Trainer scaling.
 
-Wild levels continue to follow HNS Trainer Rating. Hoenn badges and story
-milestones do not raise it. Rewards remain attached to their original Hoenn
-interactions.
+Wild levels continue to follow Trainer Rating. Hoenn badges raise the global
+Wayfarer rating, and clearing the Hoenn League completes it at Rating 80.
+Other Hoenn story milestones do not raise the rating. Rewards remain attached
+to their original Hoenn interactions.
 
 ## Presentation
 
@@ -283,6 +296,7 @@ Acceptance answers these questions:
 - [Wayfarer Hoenn entry specification](../specs/wayfarer-hoenn-entry.md)
 - [Emerald open-world regional traversal](../specs/emerald-open-world-region-traversal.md)
 - [HNS open-world regional traversal](../specs/hns-open-world-region-traversal.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Trainer Rating wild encounter scaling](../specs/trainer-rating-wild-encounter-scaling.md)
 - [Badge-free HM field use](../specs/hm-field-use.md)
 - [Native HM utility learnsets](../specs/native-hm-learnsets.md)

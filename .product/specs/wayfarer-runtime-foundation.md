@@ -133,11 +133,12 @@ The complete saved structure must fit its existing save-sector allocation.
 must cover the saved structure, flag bank, variable bank, Trainer bitset, and
 all region-indexed arrays.
 
-A new game clears all Wayfarer regional state before running any regional
-initializer. The first Hoenn arrival may apply the Hoenn baseline defined by
-the entry specification, but it must not clear HNS progress. Starting a new
-game after an existing save must not retain a Hoenn item, badge, visited bit,
-Trainer result, or story value.
+A new game clears all Wayfarer regional state before dispatching the Kanto,
+Johto, or Hoenn initializer selected by the player. The first later arrival in
+another region may apply that region's visitor baseline, but it must not clear
+progress elsewhere. Starting a new game after an existing save must not retain
+a regional item, badge, visited bit, Trainer result, Champion result, or story
+value.
 
 Saving and loading must round-trip every new field. Corrupt, absent, or
 out-of-range region values fall back to the region implied by the saved map,
@@ -168,14 +169,20 @@ Johto, Kanto, and Hoenn have separate badge and Champion meanings. Completing
 or resetting one region's League cannot alter another region's badges,
 Champion state, Trainers, items, NPCs, or campaign values.
 
-Global engine state may record that some League has been completed only where
-an engine feature truly needs that fact. Hoenn scripts that reveal postgame
-content must check Hoenn Champion or Hoenn game-clear state, not a global flag
-that Johto or Kanto can set.
+The interregional League circuit may aggregate regional badges and Champion
+results for global qualification, certification caps, and Trainer Rating. It
+derives those facts from the isolated regional states and does not merge or
+duplicate their storage. Hoenn scripts that reveal local postgame content must
+still check Hoenn Champion or Hoenn game-clear state, not a global flag that
+Johto or Kanto can set.
 
 Whiteout, Hall of Fame, daily reset, and new-game code must dispatch regional
 story cleanup to the applicable region. A whiteout in Johto cannot relocate a
 Hoenn NPC. Entering the Hoenn Hall of Fame cannot run the Johto League reset.
+
+In Wayfarer, the fixed circuit order is Kanto, Johto, then Hoenn. A League
+clear may advance the global circuit only after its own regional completion
+has committed. It cannot synthesize another region's Champion result.
 
 ### ROM budget
 

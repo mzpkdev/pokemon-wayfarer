@@ -172,16 +172,16 @@ three individual quality results. Each quality must assign at least 10% of its
 regional successful-catch probability to Generation II so a valid average
 cannot hide an unusable rod tier.
 
-A second report samples the effective species outcomes at Trainer Ratings 10,
-16, 40, 55, 65, and 80. At every sampled rating, effective Generation II
-probability must remain between 30% and 45% overall, 35% and 55% for land, 15%
-and 35% for Surf, 10% and 30% for equal-quality fishing, and 45% and 70% for
-interaction profiles. Each individual rod quality must retain at least 5%
-effective Generation II fishing probability. Independent Generation III
-families must remain at exactly 0% in every effective report. These results do
-not replace the authored targets; they ensure that entry eligibility,
-predecessor resolution, and species floors do not reverse Johto's identity
-during campaign milestones.
+A second Wayfarer report samples the effective species outcomes at Ratings 0,
+16, 40, 55, 63, 68, 76, and 80. At every sampled rating, effective Generation II probability
+must remain between 30% and 45% overall, 35% and 55% for land, 15% and 35% for
+Surf, 10% and 30% for equal-quality fishing, and 45% and 70% for interaction
+profiles. Each individual rod quality must retain at least 5% effective
+Generation II fishing probability. Independent Generation III families must
+remain at exactly 0% in every effective report. These results do not replace
+the authored targets; they ensure that entry eligibility, predecessor
+resolution, and species floors do not reverse Johto's identity during campaign
+milestones.
 
 ## Content
 
@@ -331,7 +331,7 @@ The Johto rebalance is accepted when all of the following are true:
   Headbutt map coverage and aggregate probability do not regress.
 - Every qualifying native HM profile still contains its named Gligar, Aipom,
   Chinchou, Mareep, Wooper, Snubbull, Miltank, Marill, or Mantine anchor at the
-  required authored levels and at every Trainer Rating from 10 through 80.
+  required authored levels and at every Wayfarer Rating from 0 through 80.
 - Gifts, statics, babies, starters, fossils, prizes, and legendaries have not
   been added to ordinary encounter tables merely to satisfy a target.
 - Encounter generation and its existing deterministic tests pass with no

@@ -47,8 +47,8 @@ because a separate travel lane stays open.
 
 Ordinary sight-based trainers may challenge the player on a core route. Keep
 their object coordinates, trainer types, and sight ranges unchanged. Their
-future player-relative level scaling is outside this specification, and their
-battles do not satisfy or advance any travel story state.
+parties remain authored and static, and their battles do not satisfy or advance
+any travel story state.
 
 ### Johto road changes
 
@@ -426,6 +426,7 @@ The acceptance suite must cover:
 - [Johto story traversal blockers](../research/johto-story-traversal-blockers.md)
 - [HNS Kanto story traversal blockers](../research/hns-kanto-story-traversal-blockers.md)
 - [Cross-build story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [HM field-use specification](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
 - [Standard Rod fishing](../prds/standard-rod-fishing.md)

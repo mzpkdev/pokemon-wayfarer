@@ -95,8 +95,10 @@ ID. Ordinary IDs remain below the runtime foundation's partner boundary at
 
 Trainer records follow these rules:
 
-- Species, levels, moves, held items, AI, party size, battle type, and double-
-  battle behavior match the Emerald-authored record.
+- Ordinary Trainers, rivals, team encounters, and Gym Leaders match the
+  Emerald-authored species, levels, moves, held items, AI, party size, battle
+  type, and double-battle behavior. The Hoenn League parties are the fixed
+  Tier 3 exception owned by the interregional League circuit.
 - The same authored party is selected regardless of the player's Trainer
   Rating or HNS difficulty option.
 - Ordinary Trainer object coordinates, movement types, trainer types, and sight
@@ -131,10 +133,12 @@ must not disappear merely because its original label belonged to the Emerald
 build.
 
 Ordinary wild Pokémon pass through the existing HNS Trainer Rating level
-projection. Hoenn badges, Hoenn story variables, and Hoenn Champion state do
-not add new Trainer Rating inputs. The effective population exposed to normal
-encounters is also exposed to systems such as DexNav and Pokédex area data when
-those systems already consume ordinary encounter profiles.
+projection. The interregional League circuit owns the Wayfarer rating inputs:
+Hoenn badges contribute to the global badge total, and the Hoenn League
+provides the final circuit milestone. Other Hoenn story variables do not add
+rating inputs. The effective population exposed to normal encounters is also
+exposed to systems such as DexNav and Pokédex area data when those systems
+already consume ordinary encounter profiles.
 
 The following encounters retain their authored level and do not enter ordinary
 wild scaling unless an existing approved specification already says otherwise:
@@ -232,6 +236,12 @@ baseline prepared for the adapted rescue. Brendan or May remains the local
 rival according to the normal player-gender relationship without replacing the
 Wayfarer player, family, home, or Trainer identity.
 
+This existing-party rescue is the visitor branch used by the staged Hoenn
+entry milestone. It does not define Hoenn's native new-game opening. The
+interregional circuit requires a separate approved Hoenn start transaction,
+including its initial party and starter behavior, before Hoenn can appear in
+the new-game start selector.
+
 ### Main campaign and regional progression
 
 The Emerald main campaign remains completable in its intended order after the
@@ -252,15 +262,17 @@ item event, or NPC state cannot satisfy a Hoenn campaign check by numeric
 coincidence.
 
 Hoenn has eight badge results. Gym scripts award and check the corresponding
-Hoenn badge. Badge-count checks such as Norman's availability and League entry
-count only Hoenn badges. Trainer cards or badge displays that show regional
-progress must identify the region rather than treating all badges as one
-contiguous array.
+Hoenn badge. Hoenn-local checks such as Norman's availability count only Hoenn
+badges. Hoenn League entry instead uses the global twenty-four-badge circuit
+and requires the Kanto and Johto League clears. Trainer cards or badge displays
+that show regional progress identify the region. The separate circuit summary
+shows the global total.
 
-Hoenn badges and story milestones do not alter HNS Trainer Rating. HNS
-field-move rules remain active in Hoenn. Story checks that deliberately require
-a Hoenn badge still use the Hoenn badge, but ordinary field-move execution does
-not restore Emerald's badge or HM-item ownership requirements.
+Hoenn badges alter Wayfarer Trainer Rating through the global badge total.
+Other Hoenn story milestones do not. HNS field-move rules remain active in
+Hoenn. Story checks that deliberately require a Hoenn badge still use the
+Hoenn badge, but ordinary field-move execution does not restore Emerald's
+badge or HM-item ownership requirements.
 
 Dive in Hoenn and Whirlpool in HNS remain separate usable field moves. Wayfarer
 uses the following machine and permission contract:
@@ -320,7 +332,12 @@ standalone HNS continues to present Whirlpool as HM08.
 
 ### Hoenn League and game clear
 
-The Hoenn League uses a Hoenn-specific Champion and game-clear result.
+The Hoenn League is Wayfarer's fixed Tier 3 League. Entry requires all
+twenty-four badges and prior Kanto and Johto League clears, as defined by the
+interregional League circuit. It uses a Hoenn-specific Champion and game-clear
+result. Its Trainer parties are authored for Tier 3 and do not scale at
+runtime.
+
 Completing it must:
 
 1. record the Hoenn Hall of Fame entry;
@@ -368,8 +385,9 @@ Static and automated validation must prove all of the following:
 6. The adapted opening skips Emerald's replacement-player initialization and
    preserves the Wayfarer player, family, home, clock, party, Bag, money,
    Pokédex, storage, options, and Trainer ID.
-7. Every Trainer reference resolves to the expected Emerald-authored party and
-   a distinct defeat bit.
+7. Every Trainer reference resolves to the expected authored party and a
+   distinct defeat bit. Non-League Hoenn parties match Emerald, while Hoenn
+   League parties match the fixed Tier 3 content.
 8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
 9. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
@@ -398,8 +416,9 @@ Static and automated validation must prove all of the following:
     | Hoenn | set | unset | denied |
     | Hoenn | set | set | allowed |
 
-15. Each Hoenn Gym awards the correct regional badge and only Hoenn badges
-    satisfy Hoenn badge-count checks.
+15. Each Hoenn Gym awards the correct regional badge; Hoenn-local story checks
+    use Hoenn badges; and global certification, League entry, and Trainer
+    Rating use the global badge total.
 16. Sootopolis remains unavailable until Hoenn Dive authorization and its
     original late-game progression are satisfied.
 17. Opening-network topology and representative runtime map loads remain
@@ -428,6 +447,7 @@ test.
 - [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 - [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)

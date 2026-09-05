@@ -16,6 +16,12 @@ Vermilion-to-Slateport leg, so it provides no departure from Hoenn. The
 scheduled-ferry PRD will define Hoenn port service, schedules, and the
 return-aware recovery behavior needed for the remaining circuit legs.
 
+This staged specification does not define the completed product's new-game
+start selection or final travel guarantees. The interregional League circuit
+supersedes its HNS-only entry assumption and requires Hoenn to support both a
+native new-game start and access to the shared regional travel network before
+that circuit's badge caps can ship.
+
 The long-term S.S. Aqua circuit is fixed as Olivine to Vermilion to Slateport
 to Lilycove to Olivine. Regional travel remains route-based rather than
 unrestricted. Wayfarer has no selectable Town Map region tabs, and Fly cannot
@@ -246,6 +252,7 @@ Any special early transport to Ever Grande remains separately deferred.
 
 - [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 - [Wayfarer Hoenn content port](wayfarer-hoenn-content-port.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [HM field use](hm-field-use.md)

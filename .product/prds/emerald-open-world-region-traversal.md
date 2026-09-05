@@ -10,7 +10,7 @@ Sootopolis remains unlockable content. Its enclosed geography, Dive entrance, Gy
 
 - Walking, doors, always-available local transport, and the approved native Surf crossings form Hoenn's core settlement network.
 - Main-story state, Gym progress, and forced scripted or story victories cannot close the only route to a town or city in the opening network. That route cannot require an HM item. Only the named water crossings may require a Pokémon that already knows Surf.
-- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions and sight ranges in this pass and do not count as story-gated traversal. Player-relative trainer scaling is owned separately.
+- Ordinary sight-based trainers may challenge the player on a core route. They retain their existing positions, sight ranges, and authored parties and do not count as story-gated traversal. They do not scale with player progress.
 - Native Cut, Flash, Strength, Rock Smash, Waterfall, and Dive users may open optional routes before the matching HM is found. Those routes do not count toward the core settlement network.
 - A self-contained local encounter may occupy the only settlement lane only when it requires no badge, HM item, key item, or earlier story state; declining or losing leaves it available to retry; and winning is unnecessary because fleeing or another non-victory outcome completes it. Every required reward and state transition must be committed before the blocker is removed. If that commit fails, the encounter and reward remain available to retry. Any other story actor or scripted battle must leave another visible lane open.
 - This exception applies only when this PRD explicitly names the encounter as the selected core lane. It does not replace an approved bypass or optional-scene requirement.
@@ -93,6 +93,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 ## References
 
 - [Story-blocking traversal audit](../research/story-blocking-traversal-audit.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Badge-free HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
 - [Standard Rod fishing](standard-rod-fishing.md)

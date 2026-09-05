@@ -5,7 +5,17 @@ Implemented: Yes
 
 ## Scope
 
-This specification defines the persistent Trainer Rating, its build-specific progression sources, and the effective ordinary wild population derived from it. It covers the ordinary encounter profiles compiled into Emerald, FireRed/LeafGreen, and HNS. It does not define new regional content or trainer battle scaling.
+This specification defines the implemented persistent Trainer Rating,
+build-specific progression sources, and effective ordinary wild population for
+Emerald, FireRed, LeafGreen, and HNS. It does not define new regional content
+or trainer battle scaling. Wayfarer reuses the encounter projection but
+replaces these progression inputs through the separate interregional League
+circuit specification.
+
+The build-specific Rating 10 floor and progression table below record the
+current implementation. They are not compatibility requirements for the
+Wayfarer circuit, which may change shared code instead of adding compatibility
+branches for other products.
 
 ## Behavior
 
@@ -41,7 +51,12 @@ The active coverage is:
 
 Sinjoh is distinct from Sinnoh. None of the current builds contains a full Sinnoh encounter region.
 
-Adding a map connection or warp to HNS does not make a new region eligible. Its ordinary profiles must explicitly target the HNS build. Once that data is compiled into HNS, the existing global Trainer Rating pipeline applies without a new scaling implementation. Any Hoenn badges or story milestones require a separate progression design before they can affect Trainer Rating.
+Adding a map connection or warp to HNS does not make a new region eligible. Its
+ordinary profiles must explicitly target the HNS build. Once that data is
+compiled into HNS, the existing global Trainer Rating pipeline applies without
+a new scaling implementation. In Wayfarer, Hoenn badges and League completion
+enter the rating through the interregional circuit rather than this
+build-specific table.
 
 ### Effective ordinary population
 
@@ -110,4 +125,5 @@ Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS.
 
 ## References
 
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Implementation pull request](https://github.com/mzpkdev/pokemon-wayfarer/pull/13)

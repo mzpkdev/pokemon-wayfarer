@@ -256,9 +256,9 @@ records, unknown profile identities, a product or time mismatch, a species not
 authored in the profile, or a computed Lure-off result that differs from the
 recorded expected percentage.
 
-The wild encounter generator's deterministic balance report covers every
-supported build, version, map profile, and time-of-day variant at every integer
-Trainer Rating from 10 through 80. For every quality it reports:
+For Wayfarer, the wild encounter generator's deterministic balance report
+covers every included version, map profile, and time-of-day variant at every
+integer Trainer Rating from 0 through 80. For every quality it reports:
 
 - Raw entry weights and eligible entries.
 - Renormalized entry and aggregate species probabilities.

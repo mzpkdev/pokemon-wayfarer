@@ -6,21 +6,30 @@ Keep ordinary wild encounters relevant as a player advances through a campaign. 
 
 ## Design
 
-Trainer Rating is a persistent progression value. New games start at 10, the lowest supported rating, and the system never lowers a saved rating. The rating is internal and has no player-facing screen.
+Trainer Rating is a persistent progression value, and the system never lowers a
+saved rating. A new Wayfarer game starts at 0. The rating is internal and has
+no player-facing screen.
 
 Every ordinary encounter profile compiled into Emerald, FireRed/LeafGreen, or HNS uses the same rating. The system adjusts encounter levels and can return an over-levelled evolved species to an eligible predecessor. It also respects specific species floors.
 
-The campaign targets are:
+Wayfarer uses one global twenty-four-badge circuit across Kanto, Johto, and
+Hoenn. Badge origin does not affect League qualification or rating. Its targets
+are:
 
 | Progress | Trainer Rating |
 | --- | ---: |
-| New game | 10 |
-| Four badges | 16 |
-| Eight badges | 40 |
-| First League clear | 55 |
-| Substantial postgame | 65 |
+| New game | 0 |
+| 4 total badges | 16 |
+| 8 total badges | 40 |
+| Kanto League cleared | 55 |
+| 16 total badges | 63 |
+| Johto League cleared | 68 |
+| 24 total badges | 76 |
+| Hoenn League cleared | 80 |
 
-The rating can reach at most 80, leaving room for later progression.
+The interregional League circuit defines the exact badge and League
+contributions. This replaces the earlier concept of one full regional campaign
+plus smaller breadth contributions from the other regions.
 
 ## Boundaries
 
@@ -28,11 +37,22 @@ The system only covers ordinary wild encounter profiles. It does not scale hidde
 
 It does not change authored encounter data or create a player-facing Trainer Rating display. It also does not define trainer battle scaling.
 
-Adding an HNS Hoenn warp does not enroll Hoenn encounters in this system. Those profiles must be compiled for HNS first. Once they target HNS, ordinary profiles use the existing global scaling automatically. Hoenn-specific progression milestones remain a separate design decision.
+Adding an HNS Hoenn warp does not enroll Hoenn encounters in this system. Those profiles must be compiled for the active build first. Once they target
+Wayfarer, ordinary profiles use the existing global scaling automatically.
+Hoenn badges and the Hoenn League contribute to Wayfarer rating through the
+interregional circuit.
 
 ## Balance
 
-The early game begins from Rating 10 rather than zero so starter-area encounters do not become trivial on a new save. Progression follows the shared campaign milestones, then leaves headroom above the current 65 postgame target for future content.
+Wayfarer starts at Rating 0 so the value represents an unproven Trainer before
+the first badge. Its encounter curve must still keep starter-area populations
+viable at Rating 0. The first eight badges and Kanto League clear create the
+largest rating gains. Later badges and League clears provide diminishing gains
+as the rating approaches 80.
+
+Rating 0 must not remove a native utility catch that supplies an approved core
+route. The Wayfarer circuit owns the level-5 Chinchou compatibility adjustment
+needed to preserve Kanto's native-Surf route.
 
 ## Content
 
@@ -82,15 +102,20 @@ In randomizer mode, the selected slot's level still scales, while the existing r
 
 ## Constraints
 
-Trainer Rating must survive saves and migrations without changing save-block layouts. A migrated save derives an appropriate rating from its existing progression, and future reads preserve the higher of the stored and derived values. The value is clamped to the inclusive range 10 through 80.
+Trainer Rating must survive saves and migrations without changing save-block layouts. A migrated save derives an appropriate rating from its existing progression, and future reads preserve the higher of the stored and derived values. Wayfarer clamps the value to the inclusive range 0 through 80.
 
 ## Playtesting
 
-Playtesting should confirm that new-game, four-badge, eight-badge, League, and postgame encounters feel appropriate in every currently supported region. It should cover land, water, Rock Smash, fishing, time-based, ability-influenced, lure, Altering Cave, and HNS Hoenn Sound encounters, plus the ordinary population readers.
+Playtesting should confirm that Wayfarer encounters feel appropriate at Rating
+0 and at every badge and League milestone through Rating 80. Coverage should
+include land, water, Rock Smash, fishing, time-based, ability-influenced, lure,
+Altering Cave, and HNS Hoenn Sound encounters, plus the ordinary population
+readers.
 
 It should also check that excluded sources remain unchanged, that a later rating never produces a lower projected encounter outcome, and that existing saves migrate without losing progression.
 
 ## References
 
 - [Technical specification](../specs/trainer-rating-wild-encounter-scaling.md)
+- [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Implementation pull request](https://github.com/mzpkdev/pokemon-wayfarer/pull/13)
