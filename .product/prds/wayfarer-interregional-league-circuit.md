@@ -102,8 +102,9 @@ Trainer Rating starts at zero and follows the global circuit milestones:
 | 24 total badges | 76 |
 | Hoenn League cleared | 80 |
 
-The rating remains a high-water mark used by ordinary wild encounter scaling.
-League and Gym Trainer parties remain authored and static.
+The rating remains a high-water mark used by ordinary wild encounter scaling
+and the party's soft level cap and obedience rules. League and Gym Trainer
+parties remain authored and static.
 
 Rating 0 must not remove a native utility catch that supplies an approved core
 route. In particular, the level-5 Chinchou available around Vermilion and
