@@ -1,8 +1,11 @@
 #include "global.h"
 #include "event_data.h"
+#include "heal_location.h"
 #include "overworld.h"
 #include "regions.h"
+#include "script.h"
 #include "wayfarer_persistence.h"
+#include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
 #if IS_WAYFARER
@@ -14,6 +17,8 @@
 #define HOENN_LEAGUE_CHAMPION   (1 << 1)
 
 #if IS_WAYFARER
+extern const u8 WayfarerHoennEntry_EventScript_InitializeBaseline[];
+
 static bool8 IsWayfarerCoreRegion(enum Region region)
 {
     return region == REGION_JOHTO || region == REGION_KANTO || region == REGION_HOENN;
@@ -289,6 +294,92 @@ u16 WayfarerShouldWhiteOutToLavaridge(void)
     return WayfarerGetCurrentMapRegion() == REGION_HOENN
         && FlagGet(HOENN_FLAG_ID(WAYFARER_HOENN_WHITEOUT_TO_LAVARIDGE_FLAG));
 }
+
+static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 x, s16 y,
+                                                  u8 healLocationId)
+{
+    const struct MapHeader *mapHeader;
+    const struct MapLayout *mapLayout;
+    const struct MapEvents *events;
+    const struct HealLocation *healLocation;
+    u32 i;
+    u16 metatile;
+
+    if (!IsWayfarerMapHoennSource(mapGroup, mapNum))
+        return FALSE;
+
+    mapHeader = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
+    if (mapHeader == NULL || mapHeader->mapLayout == NULL || mapHeader->events == NULL)
+        return FALSE;
+
+    mapLayout = mapHeader->mapLayout;
+    if (mapLayout->map == NULL || x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
+        return FALSE;
+
+    metatile = mapLayout->map[y * mapLayout->width + x];
+    if (UNPACK_COLLISION(metatile) != 0 || UNPACK_ELEVATION(metatile) != ELEVATION_DEFAULT)
+        return FALSE;
+
+    events = mapHeader->events;
+    for (i = 0; i < events->coordEventCount; i++)
+    {
+        if (events->coordEvents[i].x == x && events->coordEvents[i].y == y)
+            return FALSE;
+    }
+
+    healLocation = GetHealLocation(healLocationId);
+    if (healLocation == NULL
+     || WayfarerGetRegionForMap(healLocation->mapGroup, healLocation->mapNum) != REGION_HOENN)
+        return FALSE;
+
+    return TRUE;
+}
+
+static bool8 PrepareWayfarerHoennEntryAt(s16 mapGroup, s16 mapNum, s16 x, s16 y,
+                                         u8 healLocationId)
+{
+    if (!IsWayfarerHoennEntryDestinationValid(mapGroup, mapNum, x, y, healLocationId))
+        return FALSE;
+
+    if (!WayfarerHoennStateIsInitialized())
+    {
+        // This script is assembled inside the fixed Hoenn source boundary.
+        // It establishes only Emerald's pre-campaign object visibility and
+        // deliberately does not initialize the shared HNS berry state.
+        RunScriptImmediately(WayfarerHoennEntry_EventScript_InitializeBaseline);
+        VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
+        FlagClear(FLAG_HOENN_STARTER_RECEIVED);
+        SetRegionVisitedState(REGION_HOENN, TRUE);
+        WayfarerSetSavedCurrentRegion(REGION_HOENN);
+        SetLastHealLocationWarp(healLocationId);
+
+        // The marker is the commit point. No operation that can fail may be
+        // added after this write.
+        WayfarerSetHoennStateInitialized(TRUE);
+        return TRUE;
+    }
+
+    // Future/debug repeat arrivals refresh travel state without touching any
+    // Hoenn campaign progress.
+    WayfarerSetSavedCurrentRegion(REGION_HOENN);
+    SetLastHealLocationWarp(healLocationId);
+    return TRUE;
+}
+
+u16 WayfarerPrepareHoennEntry(void)
+{
+    return PrepareWayfarerHoennEntryAt(MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
+                                       MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
+                                       9, 11, HEAL_LOCATION_SLATEPORT_CITY);
+}
+
+#if TESTING
+bool8 Test_WayfarerPrepareHoennEntryAt(s16 mapGroup, s16 mapNum, s16 x, s16 y,
+                                       u8 healLocationId)
+{
+    return PrepareWayfarerHoennEntryAt(mapGroup, mapNum, x, y, healLocationId);
+}
+#endif
 #endif
 
 static u16 GetFieldMoveFlagForCurrentSource(u16 flagId)

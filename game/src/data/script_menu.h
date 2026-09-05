@@ -1178,7 +1178,11 @@ static const struct MenuAction MultichoiceList_OlivineHarbor[] =
 };
 static const struct MenuAction MultichoiceList_VermilionHarbor[] =
 {
+#if IS_WAYFARER
+    {gText_SlateportCity},
+#else
     {gText_Olivine},   
+#endif
     {gText_SouthernIsland},
     {gText_BirthIsland},
     {gText_FarawayIsland},

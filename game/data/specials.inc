@@ -296,6 +296,7 @@ gSpecials::
 	def_special WayfarerGetCurrentRegionForScript
 	def_special WayfarerGetHoennBadgeCountForScript
 	def_special WayfarerShouldWhiteOutToLavaridge
+	def_special WayfarerPrepareHoennEntry
 #endif
 	def_special MoveElevator
 	def_special ShowGlassWorkshopMenu
