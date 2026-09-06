@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Source wiring checks; these do not replace emulator travel acceptance."""
 from pathlib import Path
+import json
 import re
 import unittest
 
@@ -13,9 +14,11 @@ def script(name):
 
 
 class CircuitScriptTests(unittest.TestCase):
-    def test_rollout_requires_explicit_enable(self):
+    def test_rollout_uses_the_production_johto_start_default(self):
         config = (GAME / "include/config/league_circuit.h").read_text()
-        self.assertIn("#define WAYFARER_LEAGUE_CIRCUIT_ENABLED FALSE", config)
+        self.assertIn("#define WAYFARER_LEAGUE_CIRCUIT_ENABLED 1", config)
+        self.assertIn("compile-time rollback", config)
+        self.assertNotIn("regional openings and League travel/release acceptance", config)
 
     def test_all_24_badges_and_deferred_awards_guarded_before_state(self):
         self.assertEqual(len({(r, b) for _, _, r, b in GYMS}), 24)
@@ -84,6 +87,41 @@ class CircuitScriptTests(unittest.TestCase):
         rival = script("VictoryRoadKanto_1F_hns").split("VictoryRoadKanto_1F_Trigger::\n", 1)[1].split("#endif", 1)[0]
         self.assertIn("LeagueCircuit_IsEligible", rival)
         self.assertNotIn("setflag", rival)
+
+    def test_johto_opening_establishes_the_complete_interregional_ferry_loop(self):
+        olivine = script("OlivineCity_PortInside_hns")
+        maiden = olivine.split("OlivinePort_EventScript_Sailor_MaidenVoyage::", 1)[1].split("OlivinePort_EventScript_Sailor_ResumeMaidenVoyage::", 1)[0]
+        self.assertIn("setvar VAR_SSAQUA_STATE, 1", maiden)
+        self.assertNotIn("checkitem ITEM_SS_TICKET", maiden)
+
+        reunion = script("SSAqua_RoomSSE_hns")
+        self.assertIn("giveitem ITEM_SS_TICKET", reunion)
+        arrival = script("SSAqua_1F_hns")
+        self.assertIn("setvar VAR_SSAQUA_STATE, 8", arrival)
+
+        vermilion = script("VermilionCity_PortInside_hns").split("VermilionPort_EventScript_ChoseSlateport::", 1)[1]
+        self.assertIn("goto_if_lt VAR_SSAQUA_STATE, 8", vermilion)
+        self.assertIn("checkitem ITEM_SS_TICKET", vermilion)
+        self.assertIn("WayfarerPrepareHoennEntry", vermilion)
+        self.assertIn("MAP_SLATEPORT_CITY_HARBOR", vermilion)
+
+        slateport = script("SlateportCity_Harbor").split("WayfarerHoennEntry_EventScript_SlateportAquaAttendant::", 1)[1]
+        self.assertIn("goto_if_lt 0x408B, 8", slateport)
+        self.assertIn("checkitem ITEM_SS_TICKET", slateport)
+        self.assertIn("MAP_OLIVINE_CITY_PORT_INSIDE_HNS", slateport)
+
+    def test_league_clear_continuations_preserve_the_interregional_network(self):
+        clear = (GAME / "src/post_battle_event_funcs.c").read_text()
+        self.assertIn("SetContinueGameWarpToHealLocation(HEAL_LOCATION_INDIGO_PLATEAU_HNS)", clear)
+        self.assertIn("SetContinueGameWarpToHealLocation(HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE)", clear)
+        self.assertIn("LeagueCircuit_EventScript_IndigoHallOfFame", script("PokemonLeague_HallOfFame_hns"))
+        self.assertIn("LeagueCircuit_RecordClear", (GAME / "data/scripts/league_circuit.inc").read_text())
+        self.assertIn("LeagueCircuit_RecordClear", script("EverGrandeCity_HallOfFame"))
+
+        indigo = json.loads((GAME / "data/maps/IndigoPlateau_PokemonCenter_hns/map.json").read_text())
+        self.assertIn("MAP_INDIGO_PLATEAU_HNS", {warp["dest_map"] for warp in indigo["warp_events"]})
+        ever_grande = json.loads((GAME / "data/maps/EverGrandeCity_PokemonLeague_1F/map.json").read_text())
+        self.assertIn("MAP_EVER_GRANDE_CITY", {warp["dest_map"] for warp in ever_grande["warp_events"]})
 
 
 if __name__ == "__main__":

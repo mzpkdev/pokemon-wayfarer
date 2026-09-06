@@ -1,17 +1,17 @@
 # Wayfarer interregional League circuit
 
 PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
 This specification defines Wayfarer's global badge count, badge certification
 caps, fixed Kanto to Johto to Hoenn League sequence, League eligibility, and
-Trainer Rating inputs. It also establishes Kanto, Johto, and Hoenn as the three
-Wayfarer new-game starts and the minimum travel guarantees needed by the
-circuit. It supersedes build-specific League entry, Trainer Rating progression,
-HNS-only start, and one-way regional-travel assumptions only in the completed
-Wayfarer circuit.
+Trainer Rating inputs. This release uses the existing Johto opening as
+Wayfarer's sole new-game start and defines the travel guarantees needed by the
+circuit. It supersedes build-specific League entry and Trainer Rating
+progression in the completed Wayfarer circuit. Kanto and Hoenn new-game starts
+are separate future features.
 
 Regional badge storage, Champion state, and local story dispatch remain owned
 by the Wayfarer runtime foundation and regional content specifications. The
@@ -40,24 +40,23 @@ Global aggregation does not change the meaning of a regional badge. Local
 story scripts continue to read their regional state unless this specification
 explicitly assigns a global circuit check.
 
-### Starting region
+### New-game opening and regional travel
 
-Before running a regional opening on a new Wayfarer save, the game offers
-Kanto, Johto, and Hoenn as start choices. Each choice initializes all three
-regional state banks, then dispatches the approved opening for the selected
-region. Control is released at a safe recovery point connected to that
-region's open settlement network.
+The existing Johto opening is the sole new-game start for this release. It
+initializes the three regional state banks with zero global badges, no regional
+Champion or game-clear result, and Trainer Rating 0, then releases the player
+through the established Johto settlement network and starter transaction.
 
-Every choice begins with zero global badges, no regional Champion or game-clear
-result, and Trainer Rating 0. The selected start may determine the opening
-scene, first settlement, and starter roster, but it grants no circuit progress
-and does not alter the fixed League order. Each regional content specification
-must define its exact opening and starter transaction before that choice can be
-enabled.
+The Johto start supplies the only required travel entitlement: its S.S. Aqua
+maiden voyage starts without a Ticket, awards the Ticket during the existing
+reunion flow, and reaches state 8 on arrival at Vermilion. State 8 plus the
+Ticket permits the fixed Olivine -> Vermilion -> Slateport -> Olivine circuit.
+That route must remain available without a badge, League clear, or unrelated
+story requirement.
 
-Starting in one region cannot permanently lock either other region. The travel
-graph may require an authored journey or credential, but not a badge, League
-clear, or unrelated regional story chain merely because of the start choice.
+Kanto and Hoenn new-game openings, starters, recovery points, and early ship
+credentials are future-scoped. They do not gate this circuit, its production
+switch, or any eligibility predicate.
 
 ### Circuit state and certification cap
 
@@ -105,12 +104,12 @@ Before qualification, they leave the League uncleared and direct the player to
 the current badge target. After qualification, no regional story or local
 badge check may prevent access to the League challenge.
 
-Before the certification caps are enabled, the travel graph must provide a
-usable route from every valid starting region and every possible threshold-
-badge location to the assigned League. Completing that League must release the
-player at a location connected to the wider regional travel network. The route
-may be directional and a direct fast-travel option is not required. Reaching
-the League cannot require another badge or the clear currently being pursued.
+The travel graph must provide a usable route from the Johto start and every
+possible threshold-badge location to the assigned League. Completing that
+League must release the player at a location connected to the wider regional
+travel network. The route may be directional and a direct fast-travel option is
+not required. Reaching the League cannot require another badge or the clear
+currently being pursued.
 
 Completing a League atomically records that region's Champion and game-clear
 state, applies only that region's Hall of Fame and cleanup behavior, advances
@@ -225,7 +224,7 @@ Deterministic tests must cover:
 9. High-water behavior after regional cleanup, repeated reads, save and load,
    and a League loss.
 10. Static excluded-boss party selection at several badge distributions,
-    ratings, starting regions, and circuit tiers. Ordinary Trainer and
+   ratings and circuit tiers. Ordinary Trainer and
     Gym-member projection follows its separate specification.
 11. Access to travel and unrelated story interactions while the badge count is
     at a certification cap.
@@ -233,9 +232,9 @@ Deterministic tests must cover:
     Kanto League; equivalent sixteenth-badge routes can reach the Johto League;
     and the twenty-fourth-badge route can reach the Hoenn League. Each clear
     releases the player back into the wider regional travel network.
-13. Kanto, Johto, and Hoenn new-game choices each initialize a clean three-
-    region save at Rating 0, release control in the selected region, and leave
-    both other regions reachable through approved travel.
+13. The Johto opening initializes a clean three-region save at Rating 0, gives
+    the player the existing starter transaction, and its maiden-voyage reward
+    path reaches Kanto and the completed Aqua route to Hoenn.
 14. At Wayfarer Ratings 0 through 80, the Standard Rod and production encounter
     pipeline keep the named Vermilion and Cinnabar Chinchou sources eligible at
     their required probabilities, and a caught Chinchou knows Surf.

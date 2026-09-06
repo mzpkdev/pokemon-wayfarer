@@ -34,11 +34,12 @@ content while qualified for a League. A Gym Leader whose unearned badge would
 exceed the current cap postpones the official challenge without consuming the
 battle, badge, reward, or related one-time state.
 
-A new game lets the player start in Kanto, Johto, or Hoenn. Every choice begins
-with zero badges, no League clears, and Rating 0. Kanto is the first League
+This release has one new-game start: the existing Johto opening. It begins with
+zero badges, no League clears, and Rating 0. Kanto is the first League
 destination, not a required starting region. The itinerary supplies a directed
 career structure while the player chooses the route, regions, Gym order,
-party, and loose story order between League challenges.
+party, and loose story order between League challenges. Kanto and Hoenn starts
+are future features; they do not constrain this circuit release.
 
 ## Boundaries
 
@@ -130,20 +131,21 @@ with access to the wider regional travel network. The journey may use
 directional transport and authored routes, but it cannot depend on earning
 another badge or clearing the League that the player is trying to reach.
 
-Each regional start needs an approved opening, starter choice, safe recovery
-point, and path into its open settlement network before the circuit can ship.
-Choosing a start cannot permanently lock the player out of either other
-region.
+The existing Johto opening and its S.S. Aqua maiden voyage are this release's
+entry contract. They must provide a route to Kanto, then the completed Aqua
+circuit must provide the Vermilion-to-Slateport and Slateport-to-Olivine legs.
+Future Kanto and Hoenn starts need their own approved openings when they are
+scoped; they do not gate certification enforcement or League eligibility.
 
 Prerelease save compatibility is not required. This feature does not require
 shared systems to preserve behavior in other product builds.
 
 ## Playtesting
 
-Playtesting must cover starts in all three regions and mixed badge routes at
-each tier. It should confirm that the next League goal remains clear, reaching
-a badge cap never blocks exploration, and a postponed Gym challenge remains
-available after the required League clear.
+Playtesting must cover the Johto start and mixed badge routes at each tier. It
+should confirm that the next League goal remains clear, reaching a badge cap
+never blocks exploration, and a postponed Gym challenge remains available after
+the required League clear.
 
 The three League encounters should feel like distinct increases in difficulty
 for parties built through easier, mixed, and deliberately high-risk badge
