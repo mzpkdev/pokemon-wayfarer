@@ -1749,10 +1749,13 @@ static void Task_HandlePokedexStartMenuInput(u8 taskId)
                 gMain.newKeys |= START_BUTTON;  //Exit menu
                 break;
             case 2: //LIST BOTTOM
-                sPokedexView->selectedPokemon = sPokedexView->pokemonListCount - 1;
-                sPokedexView->pokeBallRotation = sPokedexView->pokemonListCount * 16 + POKEBALL_ROTATION_BOTTOM;
-                ClearMonSprites();
-                CreateMonSpritesAtPos(sPokedexView->selectedPokemon, 0xE);
+                if (sPokedexView->pokemonListCount != 0)
+                {
+                    sPokedexView->selectedPokemon = sPokedexView->pokemonListCount - 1;
+                    sPokedexView->pokeBallRotation = sPokedexView->pokemonListCount * 16 + POKEBALL_ROTATION_BOTTOM;
+                    ClearMonSprites();
+                    CreateMonSpritesAtPos(sPokedexView->selectedPokemon, 0xE);
+                }
                 gMain.newKeys |= START_BUTTON;  //Exit menu
                 break;
             case 3: //CLOSE POKéDEX
@@ -1949,10 +1952,13 @@ static void Task_HandleSearchResultsStartMenuInput(u8 taskId)
                 gMain.newKeys |= START_BUTTON;
                 break;
             case 2: //LIST BOTTOM
-                sPokedexView->selectedPokemon = sPokedexView->pokemonListCount - 1;
-                sPokedexView->pokeBallRotation = sPokedexView->pokemonListCount * 16 + POKEBALL_ROTATION_BOTTOM;
-                ClearMonSprites();
-                CreateMonSpritesAtPos(sPokedexView->selectedPokemon, 0xE);
+                if (sPokedexView->pokemonListCount != 0)
+                {
+                    sPokedexView->selectedPokemon = sPokedexView->pokemonListCount - 1;
+                    sPokedexView->pokeBallRotation = sPokedexView->pokemonListCount * 16 + POKEBALL_ROTATION_BOTTOM;
+                    ClearMonSprites();
+                    CreateMonSpritesAtPos(sPokedexView->selectedPokemon, 0xE);
+                }
                 gMain.newKeys |= START_BUTTON;
                 break;
             case 3: //BACK TO POKéDEX
@@ -2597,6 +2603,9 @@ static u16 TryDoPokedexScroll(u16 selectedMon, u16 ignored)
     u8 i;
     u16 startingPos;
     u8 scrollDir = 0;
+
+    if (sPokedexView->pokemonListCount == 0)
+        return 0;
 
     if (JOY_HELD(DPAD_UP) && (selectedMon > 0))
     {
@@ -4688,6 +4697,8 @@ bool8 Dex_IsNationalEntryVisible(enum NationalDexOrder id)
     if (!Dex_IsValidNationalId(id))
         return FALSE;
     catalog = GetDexCatalog(Dex_GetActiveRegion());
+    if (catalog == NULL)
+        return FALSE;
     if (IsCatalogEntryVisible(catalog, id))
         return TRUE;
     for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
@@ -5947,7 +5958,7 @@ static void PrintSelectedSearchParameters(u8 taskId)
     if (IsNationalPokedexEnabled())
     {
         searchParamId = gTasks[taskId].tCursorPos_Mode + gTasks[taskId].tScrollOffset_Mode;
-        PrintSearchText(sDexModeOptions[searchParamId].title, 0x2D, 0x51);
+        PrintSearchText(searchParamId == DEX_MODE_REGIONAL ? Dex_GetActiveRegionName() : sDexModeOptions[searchParamId].title, 0x2D, 0x51);
     }
 }
 
@@ -5997,9 +6008,12 @@ static void PrintSearchParameterText(u8 taskId)
     ClearSearchParameterBoxText();
 
     for (i = 0, j = *scrollOffset; i < MAX_SEARCH_PARAM_ON_SCREEN && texts[j].title != NULL; i++, j++)
-        PrintSearchParameterTitle(i, texts[j].title);
+        PrintSearchParameterTitle(i, gTasks[taskId].tMenuItem == SEARCH_MODE && j == DEX_MODE_REGIONAL ? Dex_GetActiveRegionName() : texts[j].title);
 
-    EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
+    if (gTasks[taskId].tMenuItem == SEARCH_MODE && *cursorPos + *scrollOffset == DEX_MODE_REGIONAL)
+        EraseAndPrintSearchTextBox(Dex_GetActiveRegionDescription());
+    else
+        EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
 }
 
 static u8 GetSearchModeSelection(u8 taskId, u8 option)
