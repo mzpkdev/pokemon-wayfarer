@@ -4,14 +4,14 @@ import { CatalogValidationError, validateCatalog } from "./catalog.js"
 
 const projection = (): Record<string, unknown> => ({
   schemaVersion: 2,
-  trainerRating: { minimum: 10, maximum: 80 },
+  trainerRating: { minimum: 0, maximum: 80 },
   authoredLevel: { minimum: 1, maximum: 100 },
   products: [{ id: "emerald", displayName: "Emerald" }],
   levelProjections: [
     {
       levelOffset: 0,
-      ratings: Array.from({ length: 71 }, (_, ratingIndex) => ({
-        rating: ratingIndex + 10,
+      ratings: Array.from({ length: 81 }, (_, ratingIndex) => ({
+        rating: ratingIndex,
         projectedLevels: Array.from({ length: 100 }, (_, levelIndex) => levelIndex + 1),
       })),
     },
@@ -211,9 +211,9 @@ describe("validateCatalog", () => {
 
     const model = projection()
     const tables = model.levelProjections as Array<Record<string, unknown>>
-    tables[0]!.ratings = (tables[0]!.ratings as unknown[]).slice(0, 70)
+    tables[0]!.ratings = (tables[0]!.ratings as unknown[]).slice(0, 80)
     expect(() => validateCatalog(catalog({ wildEncounterProjection: model }))).toThrow(
-      "must contain 71 ratings",
+      "must contain 81 ratings",
     )
   })
 
