@@ -21,6 +21,19 @@ ARRIVAL_COORD = (9, 11)
 ARRIVAL_ELEVATION = 3
 HEAL_LOCATION = "HEAL_LOCATION_SLATEPORT_CITY"
 
+SLATEPORT_AQUA_LOCAL_ID = "LOCALID_SLATEPORT_HARBOR_WAYFARER_AQUA_ATTENDANT"
+SLATEPORT_AQUA_SCRIPT = "WayfarerHoennEntry_EventScript_SlateportAquaAttendant"
+SLATEPORT_AQUA_HIDE_FLAG = "FLAG_HIDE_SLATEPORT_CITY_HARBOR_WAYFARER_AQUA_ATTENDANT"
+OLIVINE_PORT_MAP = "MAP_OLIVINE_CITY_PORT_INSIDE_HNS"
+OLIVINE_PORT_COORD = (8, 16)
+OLIVINE_HEAL_LOCATION = "HEAL_LOCATION_OLIVINE_CITY_HNS"
+SLATEPORT_AQUA_COORD = (15, 11)
+SLATEPORT_AQUA_ELEVATION = 3
+SLATEPORT_AQUA_ESCAPE_RESERVED_COORDS = {
+    *( (x, 9) for x in range(7, 16) ),
+    (7, 10), (8, 10), (8, 11), (8, 12), (8, 13), (8, 14),
+}
+
 
 class AuditError(RuntimeError):
     pass
@@ -184,6 +197,68 @@ def _position(source: str, pattern: str, message: str, start: int = 0) -> int:
     match = re.search(pattern, source[start:], re.MULTILINE | re.DOTALL)
     require(match is not None, message)
     return start + match.start()
+
+
+def audit_harbor_position(game_root: Path, map_data: dict, *, coordinate: tuple[int, int], elevation: int,
+                          excluded_local_id: str) -> dict:
+    """Prove a fixed Harbor object is walkable and can reach a normal exit."""
+    x, y = coordinate
+    for event_type in ("coord_events", "warp_events"):
+        matches = [event for event in map_data[event_type] if (event.get("x"), event.get("y")) == coordinate]
+        require(not matches, f"Harbor coordinate {coordinate} overlaps {event_type}")
+    overlaps = [event for event in map_data["object_events"] if (event.get("x"), event.get("y")) == coordinate
+                and event.get("local_id") != excluded_local_id]
+    require(not overlaps, f"Harbor coordinate {coordinate} overlaps another object event")
+    layouts = read_json(game_root / "data/layouts/layouts.json")["layouts"]
+    matches = [layout for layout in layouts if layout.get("id") == map_data.get("layout")]
+    require(len(matches) == 1, f"Harbor layout {map_data.get('layout')} must resolve exactly once")
+    layout = matches[0]
+    width, height = layout["width"], layout["height"]
+    require(0 <= x < width and 0 <= y < height, f"Harbor coordinate {coordinate} is outside the layout")
+    block_data = (game_root / layout["blockdata_filepath"]).read_bytes()
+    require(len(block_data) == width * height * 2, "Harbor layout blockdata has an invalid size")
+    blocks = struct.unpack(f"<{width * height}H", block_data)
+
+    def block_at(px: int, py: int) -> tuple[int, int]:
+        value = blocks[py * width + px]
+        return (value >> 10) & 0x3, (value >> 12) & 0xF
+
+    collision, actual_elevation = block_at(x, y)
+    require(collision == 0, f"Harbor coordinate {coordinate} is collision-blocked")
+    require(actual_elevation == elevation, f"Harbor coordinate {coordinate} has elevation {actual_elevation}, not {elevation}")
+    exits = [event for event in map_data["warp_events"] if event.get("dest_map") in {"MAP_SLATEPORT_CITY", "MAP_LILYCOVE_CITY"}]
+    require(exits, "Harbor has no ordinary city exit")
+    occupied = {(event["x"], event["y"]) for event in map_data["object_events"]
+                if event.get("local_id") != excluded_local_id and event.get("elevation") in (0, elevation)}
+    exit_coords = {(event["x"], event["y"]) for event in exits}
+    pending = deque([coordinate])
+    previous: dict[tuple[int, int], tuple[int, int] | None] = {coordinate: None}
+    reached: tuple[int, int] | None = None
+    while pending:
+        current = pending.popleft()
+        if current in exit_coords:
+            reached = current
+            break
+        for candidate in ((current[0] - 1, current[1]), (current[0] + 1, current[1]),
+                          (current[0], current[1] - 1), (current[0], current[1] + 1)):
+            if candidate in previous or candidate in occupied:
+                continue
+            px, py = candidate
+            if not (0 <= px < width and 0 <= py < height):
+                continue
+            candidate_collision, candidate_elevation = block_at(px, py)
+            if candidate_collision != 0 or (candidate not in exit_coords and candidate_elevation != elevation):
+                continue
+            previous[candidate] = current
+            pending.append(candidate)
+    require(reached is not None, f"Harbor coordinate {coordinate} has no unobstructed path to an ordinary exit")
+    path = []
+    cursor: tuple[int, int] | None = reached
+    while cursor is not None:
+        path.append(list(cursor))
+        cursor = previous[cursor]
+    path.reverse()
+    return {"collision": collision, "elevation": actual_elevation, "ordinaryExit": list(reached), "path": path}
 
 
 def audit_arrival(game_root: Path) -> dict:
@@ -456,6 +531,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
 def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
     emerald_maps = []
     aqua_departures = []
+    aqua_event_maps = []
+    harbor_map_path = game_root / "data/maps/SlateportCity_Harbor/map.json"
     for map_path in sorted((game_root / "data/maps").glob("*/map.json")):
         data = read_json(map_path)
         if data.get("game_version", "emerald") != "emerald":
@@ -466,13 +543,84 @@ def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
         if re.search(r"SS_?AQUA|S\.S\.?\s*AQUA|SSAqua", source, re.IGNORECASE):
             aqua_departures.append(str(script_path.relative_to(game_root)))
         for event in data.get("object_events", []):
-            payload = " ".join(str(value) for value in event.values())
-            if re.search(r"SS_?AQUA|S\.S\.?\s*AQUA|SSAqua", payload, re.IGNORECASE):
-                aqua_departures.append(str(map_path.relative_to(game_root)))
-    require(not aqua_departures, f"Hoenn contains S.S. Aqua departure content: {sorted(set(aqua_departures))}")
+            if any(event.get(field) in (SLATEPORT_AQUA_LOCAL_ID, SLATEPORT_AQUA_SCRIPT, SLATEPORT_AQUA_HIDE_FLAG)
+                   for field in ("local_id", "script", "flag")):
+                aqua_event_maps.append(str(map_path.relative_to(game_root)))
+    expected_aqua_departures = ["data/maps/SlateportCity_Harbor/scripts.inc"]
+    require(
+        sorted(set(aqua_departures)) == expected_aqua_departures,
+        "Hoenn S.S. Aqua content is not limited to the dedicated Slateport attendant: "
+        f"{sorted(set(aqua_departures))}",
+    )
+    require(
+        sorted(set(aqua_event_maps)) == ["data/maps/SlateportCity_Harbor/map.json"],
+        "Wayfarer Aqua map event is not limited to Slateport Harbor: "
+        f"{sorted(set(aqua_event_maps))}",
+    )
+
+    harbor_map = read_json(harbor_map_path)
+    objects = harbor_map.get("object_events", [])
+    require(objects, "Slateport Harbor has no object events")
+    aqua_events = [event for event in objects if event.get("local_id") == SLATEPORT_AQUA_LOCAL_ID]
+    require(len(aqua_events) == 1, "Slateport must define exactly one dedicated Wayfarer Aqua attendant")
+    aqua_event = aqua_events[0]
+    require(objects[-1] == aqua_event, "Wayfarer Aqua attendant must be appended after original Harbor objects")
+    require(
+        aqua_event == {
+            "local_id": SLATEPORT_AQUA_LOCAL_ID,
+            "graphics_id": "OBJ_EVENT_GFX_SAILOR",
+            "x": 15,
+            "y": 11,
+            "elevation": 3,
+            "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": SLATEPORT_AQUA_SCRIPT,
+            "flag": SLATEPORT_AQUA_HIDE_FLAG,
+        },
+        "Slateport Wayfarer Aqua attendant does not match its fixed event contract",
+    )
+    require(SLATEPORT_AQUA_COORD not in SLATEPORT_AQUA_ESCAPE_RESERVED_COORDS,
+            "Slateport Aqua attendant overlaps an Aqua-escape scene position or movement lane")
+    aqua_geometry = audit_harbor_position(game_root, harbor_map, coordinate=SLATEPORT_AQUA_COORD,
+                                           elevation=SLATEPORT_AQUA_ELEVATION,
+                                           excluded_local_id=SLATEPORT_AQUA_LOCAL_ID)
+    slateport_tidal_attendants = [event for event in objects[:-1]
+                                  if event.get("script") == "SlateportCity_Harbor_EventScript_FerryAttendant"]
+    require(len(slateport_tidal_attendants) == 1, "Slateport S.S. Tidal attendant was changed or removed")
+    require(slateport_tidal_attendants[0] == {
+        "graphics_id": "OBJ_EVENT_GFX_BEAUTY", "x": 8, "y": 10, "elevation": 3,
+        "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0, "movement_range_y": 0,
+        "trainer_type": "TRAINER_TYPE_NONE", "trainer_sight_or_berry_tree_id": "0",
+        "script": "SlateportCity_Harbor_EventScript_FerryAttendant",
+        "flag": "FLAG_HIDE_SLATEPORT_CITY_HARBOR_PATRONS",
+    }, "Slateport S.S. Tidal attendant changed")
+    tidal_objects = [event for event in objects[:-1] if event.get("local_id") == "LOCALID_SLATEPORT_HARBOR_SS_TIDAL"]
+    require(len(tidal_objects) == 1, "Slateport S.S. Tidal object was changed or removed")
+    require(
+        tidal_objects[0] == {
+            "local_id": "LOCALID_SLATEPORT_HARBOR_SS_TIDAL",
+            "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
+            "x": 8,
+            "y": 9,
+            "elevation": 1,
+            "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+            "movement_range_x": 0,
+            "movement_range_y": 0,
+            "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0",
+            "script": "0x0",
+            "flag": "FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL",
+        },
+        "Slateport S.S. Tidal object changed",
+    )
 
     harbor_path = game_root / "data/maps/SlateportCity_Harbor/scripts.inc"
-    harbor = strip_comments(filter_product(read_text(harbor_path), wayfarer=True))
+    raw_harbor = read_text(harbor_path)
+    harbor = strip_comments(filter_product(raw_harbor, wayfarer=True))
+    harbor_index = ScriptIndex([(harbor_path, harbor)])
     require(
         re.search(
             r"SlateportCity_Harbor_OnTransition:.*?call_if_set\s+FLAG_SYS_GAME_CLEAR\s*,\s*"
@@ -482,14 +630,111 @@ def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
         ) is not None,
         "S.S. Tidal visibility must remain gated by Hoenn game-clear state",
     )
-    attendant = re.search(
-        r"SlateportCity_Harbor_EventScript_FerryAttendant:{1,2}(.*?)(?=\n[A-Za-z_][A-Za-z0-9_]*:{1,2})",
-        harbor,
-        re.DOTALL,
+    tidal = harbor_index.reachable_text("SlateportCity_Harbor_EventScript_FerryAttendant")
+    require("FLAG_SYS_GAME_CLEAR" in tidal, "S.S. Tidal service lost its Hoenn game-clear gate")
+    require("VAR_SSAQUA_STATE" not in tidal, "S.S. Tidal was coupled to HNS S.S. Aqua voyage state")
+    for required in (
+        "SlateportCity_Harbor_EventScript_BoardFerry",
+        "Common_EventScript_FerryDepart",
+        "LOCALID_SLATEPORT_HARBOR_SS_TIDAL",
+        "VAR_SS_TIDAL_STATE",
+        "FLAG_MET_SCOTT_ON_SS_TIDAL",
+        "SlateportCity_Harbor_EventScript_BattleFrontier",
+    ):
+        require(required in tidal, f"S.S. Tidal reachable script graph lost {required}")
+    require(SLATEPORT_AQUA_SCRIPT not in tidal, "S.S. Tidal graph reaches the Wayfarer Aqua attendant")
+
+    lilycove_map_path = game_root / "data/maps/LilycoveCity_Harbor/map.json"
+    lilycove_path = game_root / "data/maps/LilycoveCity_Harbor/scripts.inc"
+    lilycove_objects = read_json(lilycove_map_path).get("object_events", [])
+    expected_lilycove = (
+        {"local_id": "LOCALID_LILYCOVE_HARBOR_ATTENDANT", "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
+         "x": 8, "y": 10, "elevation": 3, "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+         "movement_range_x": 0, "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
+         "trainer_sight_or_berry_tree_id": "0", "script": "LilycoveCity_Harbor_EventScript_FerryAttendant",
+         "flag": "FLAG_HIDE_LILYCOVE_HARBOR_FERRY_ATTENDANT"},
+        {"local_id": "LOCALID_LILYCOVE_HARBOR_SS_TIDAL", "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
+         "x": 8, "y": 9, "elevation": 1, "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+         "movement_range_x": 0, "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
+         "trainer_sight_or_berry_tree_id": "0", "script": "0x0", "flag": "FLAG_HIDE_LILYCOVE_HARBOR_SSTIDAL"},
     )
-    require(attendant is not None, "Slateport S.S. Tidal attendant script is missing")
-    require("FLAG_SYS_GAME_CLEAR" in attendant.group(1), "S.S. Tidal service lost its Hoenn game-clear gate")
-    require("VAR_SSAQUA_STATE" not in harbor, "S.S. Tidal was coupled to HNS S.S. Aqua voyage state")
+    for expected_event in expected_lilycove:
+        require(expected_event in lilycove_objects, "Lilycove S.S. Tidal object changed or removed")
+    lilycove_index = ScriptIndex([(lilycove_path, strip_comments(read_text(lilycove_path)))])
+    lilycove_tidal = lilycove_index.reachable_text("LilycoveCity_Harbor_EventScript_FerryAttendant")
+    for required in ("FLAG_SYS_GAME_CLEAR", "LilycoveCity_Harbor_EventScript_GoToSlateport",
+                     "LilycoveCity_Harbor_EventScript_GoToBattleFrontier", "VAR_SS_TIDAL_STATE",
+                     "LilycoveCity_Harbor_EventScript_BoardFerry", "Common_EventScript_FerryDepart",
+                     "LOCALID_LILYCOVE_HARBOR_SS_TIDAL"):
+        require(required in lilycove_tidal, f"Lilycove S.S. Tidal reachable script graph lost {required}")
+
+    aqua = harbor_index.reachable_text(SLATEPORT_AQUA_SCRIPT)
+    state_pos = _position(
+        aqua,
+        r"goto_if_lt\s+VAR_SSAQUA_STATE\s*,\s*8\s*,",
+        "Slateport Aqua attendant must recheck completed voyage state",
+    )
+    ticket_pos = _position(
+        aqua,
+        r"checkitem\s+ITEM_SS_TICKET",
+        "Slateport Aqua attendant must recheck the shared S.S. Ticket",
+        state_pos,
+    )
+    ticket_failure_pos = _position(
+        aqua,
+        r"goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
+        "Slateport Aqua attendant must branch on a failed ticket recheck",
+        ticket_pos,
+    )
+    require(
+        re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b",
+                  aqua[:ticket_failure_pos]) is None,
+        "Slateport Aqua attendant changes persistent or travel state before its ticket failure branch",
+    )
+    confirmation_pos = _position(
+        aqua,
+        r"msgbox\s+WayfarerHoennEntry_Text_SlateportAquaToOlivine\s*,\s*MSGBOX_YESNO",
+        "Slateport Aqua attendant must confirm its Olivine journey",
+        ticket_failure_pos,
+    )
+    fade_pos = _position(
+        aqua,
+        r"fadescreenswapbuffers\s+FADE_TO_BLACK",
+        "Slateport Aqua attendant must use its independent fade departure",
+        confirmation_pos,
+    )
+    respawn_pos = _position(
+        aqua,
+        rf"setrespawn\s+{OLIVINE_HEAL_LOCATION}",
+        "Slateport Aqua attendant must commit Olivine recovery before warping",
+        fade_pos,
+    )
+    warp_pos = _position(
+        aqua,
+        rf"warp\s+{OLIVINE_PORT_MAP}\s*,\s*{OLIVINE_PORT_COORD[0]}\s*,\s*{OLIVINE_PORT_COORD[1]}",
+        "Slateport Aqua attendant has an invalid Olivine warp",
+        respawn_pos,
+    )
+    olivine_heal_matches = [
+        row for row in read_json(game_root / "src/data/heal_locations.json")["heal_locations"]
+        if row.get("id") == OLIVINE_HEAL_LOCATION
+    ]
+    require(len(olivine_heal_matches) == 1, "Olivine circuit heal location must resolve exactly once")
+    olivine_heal = olivine_heal_matches[0]
+    require(olivine_heal.get("source") == "HNS", "Olivine circuit heal location must retain HNS provenance")
+    require(olivine_heal.get("map") == "MAP_OLIVINE_CITY_HNS", "Olivine circuit heal location has an invalid map")
+    for forbidden in (
+        "SlateportCity_Harbor_EventScript_BoardFerry",
+        "Common_EventScript_FerryDepart",
+        "LOCALID_SLATEPORT_HARBOR_SS_TIDAL",
+        "VAR_SS_TIDAL_STATE",
+        "FLAG_MET_SCOTT_ON_SS_TIDAL",
+    ):
+        require(forbidden not in aqua, f"Slateport Aqua attendant is coupled to S.S. Tidal through {forbidden}")
+
+    standalone_index = ScriptIndex([(harbor_path, strip_comments(filter_product(raw_harbor, wayfarer=False)))])
+    standalone_aqua = standalone_index.block(SLATEPORT_AQUA_SCRIPT)
+    require(standalone_aqua.strip() == "end", "non-Wayfarer Slateport Aqua attendant may not transport")
 
     ticket_source = strip_comments(
         filter_product(read_text(game_root / "data/scripts/players_house.inc"), wayfarer=True)
@@ -520,8 +765,18 @@ def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
 
     return {
         "emeraldMapsScanned": len(emerald_maps),
-        "hoennSsAquaDepartures": [],
-        "ssTidal": {"visibilityGate": "FLAG_SYS_GAME_CLEAR", "coupledToSsAqua": False},
+        "hoennSsAquaDepartures": expected_aqua_departures,
+        "slateportAqua": {
+            "localId": SLATEPORT_AQUA_LOCAL_ID,
+            "coordinate": [aqua_event["x"], aqua_event["y"]],
+            "elevation": aqua_event["elevation"],
+            "hideFlag": SLATEPORT_AQUA_HIDE_FLAG,
+            "tileSafety": aqua_geometry,
+            "olivineHealLocation": {"map": olivine_heal["map"], "coordinate": [olivine_heal["x"], olivine_heal["y"]]},
+            "olivineHealBeforeWarp": respawn_pos < warp_pos,
+            "nonWayfarerTransport": False,
+        },
+        "ssTidal": {"visibilityGate": "FLAG_SYS_GAME_CLEAR", "coupledToSsAqua": False, "lilycovePreserved": True},
         "postgameTicket": {
             "sharedItem": "ITEM_SS_TICKET",
             "duplicateGuard": True,
@@ -607,7 +862,7 @@ def audit_initialization(game_root: Path) -> dict:
     commands = [line.strip() for line in baseline_body.splitlines() if line.strip()]
     require(commands and commands[-1] == "end", "Hoenn entry baseline must terminate with end")
     require(
-        all(command.startswith("setflag FLAG_") for command in commands[:-1]),
+        all(command.startswith(("setflag FLAG_", "clearflag FLAG_")) for command in commands[:-1]),
         "Hoenn entry baseline may only establish map-object visibility flags",
     )
     new_game_path = game_root / "data/scripts/new_game.inc"
@@ -617,6 +872,7 @@ def audit_initialization(game_root: Path) -> dict:
         emerald_new_game.block("EventScript_ResetAllMapFlags"),
     )
     baseline_flags = re.findall(r"(?m)^\s*setflag\s+(FLAG_[A-Za-z0-9_]+)", baseline_body)
+    emerald_flags = [flag for flag in emerald_flags if flag != SLATEPORT_AQUA_HIDE_FLAG]
     require(
         baseline_flags == emerald_flags,
         "Hoenn entry object-visibility baseline differs from Emerald new-game visibility",
@@ -625,6 +881,21 @@ def audit_initialization(game_root: Path) -> dict:
     require("VAR_" not in baseline_body, "Hoenn entry baseline advances a Hoenn story variable")
     for forbidden in ("FLAG_SYS_GAME_CLEAR", "FLAG_RECEIVED_SS_TICKET"):
         require(forbidden not in baseline_body, f"Hoenn entry baseline advances {forbidden}")
+    require(
+        re.search(rf"clearflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", baseline_body) is not None,
+        "Wayfarer Hoenn entry baseline must reveal the dedicated Slateport Aqua attendant",
+    )
+    raw_new_game = read_text(new_game_path)
+    standalone_new_game = strip_comments(filter_product(raw_new_game, wayfarer=False))
+    wayfarer_new_game = strip_comments(filter_product(raw_new_game, wayfarer=True))
+    require(
+        re.search(rf"setflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", standalone_new_game) is not None,
+        "non-Wayfarer Emerald initialization must hide the dedicated Slateport Aqua attendant",
+    )
+    require(
+        re.search(rf"clearflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", wayfarer_new_game) is not None,
+        "Wayfarer initialization must reveal the dedicated Slateport Aqua attendant",
+    )
     return {
         "function": "WayfarerPrepareHoennEntry",
         "implementationFunction": function,
@@ -641,6 +912,7 @@ def audit_initialization(game_root: Path) -> dict:
             "resetsBerries": False,
             "fixedHoennAliasScope": True,
             "engineAliasesRestored": True,
+            "slateportAquaAttendantVisible": True,
         },
     }
 
