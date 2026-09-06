@@ -70,6 +70,11 @@ and Cinnabar day/night profiles author it at level 5. Its schedule therefore
 starts at level 5 and preserves all three utility moves through level 100 across
 the Rating 0 to 80 range.
 
+The Olivine port and Cianwood Chinchou records are also the approved HNS
+Whirlpool source for the full Rating 0 to 80 range. Mantine remains an
+additional Whirlpool source where its global level floor permits it; Mantyke
+does not receive the utility role.
+
 Trainer Rating projects ordinary encounters above their authored levels. The authored additions must therefore preserve every assigned utility move in the active four-move set at every level from the anchor's lowest qualifying level through level 100. This is deliberately stronger than checking only the listed authored ranges and covers every current projection, including the convergence toward level 90 at Rating 80.
 
 ### Anchor schedules
@@ -158,11 +163,13 @@ Add deterministic learnset coverage around the existing Pokémon learnset tests.
 
 Add data validation in each applicable build that enumerates the named
 qualifying encounter profiles, all applicable version and time-of-day variants,
-every authored level in each selected slot, and Trainer Ratings 0 through 80.
-Project each level through the production scaling function, construct the
-caught anchor's moveset, and assert that all assigned utility moves remain
-present. Also assert that the profile still contains the intended anchor, so an
-encounter edit cannot silently invalidate coverage.
+every authored level in each selected slot, and every Trainer Rating in the
+anchor record's declared range. Project each level through the production
+scaling function, construct the caught anchor's moveset, and assert that all
+assigned utility moves remain present. Mantine's range is 10 through 80; the
+Olivine and Cianwood Chinchou anchor range is 0 through 80. Also assert that
+the profile still contains the intended anchor, so an encounter edit cannot
+silently invalidate coverage.
 
 Expose the production Move Reminder result to tests through a test-only helper or a public read-only list function, or drive the Move Reminder UI and inspect the offered move IDs. For each listed successor in its applicable build and both learnset modes, assert that every assigned utility move is offered when it is not currently known. `CanBoxMonRelearnMoves` alone is insufficient because it proves only that some move is relearnable. Confirm separately that evolving an anchor which knows its utility moves preserves them. Assert that Pichu, Azurill, Mantyke, and the excluded regional base forms do not gain the role.
 

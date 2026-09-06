@@ -1,35 +1,55 @@
 # Trainer Rating wild encounter scaling
 
 PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Yes
+Implemented: Outdated
 
 ## Scope
 
-This specification defines the implemented persistent Trainer Rating,
-build-specific progression sources, and effective ordinary wild population for
-Emerald, FireRed, LeafGreen, and HNS. It does not define new regional content
-or trainer battle scaling. Wayfarer reuses the encounter projection but
-replaces these progression inputs through the separate interregional League
-circuit specification.
-
-The build-specific Rating 10 floor and progression table below record the
-current implementation. They are not compatibility requirements for the
-Wayfarer circuit, which may change shared code instead of adding compatibility
-branches for other products.
+This specification defines persistent Trainer Rating, build-specific
+progression sources, and the effective ordinary wild population for Emerald,
+FireRed, LeafGreen, and HNS. It does not define new regional content or Trainer
+battle scaling. The Wayfarer soft level cap, experience reduction, and
+obedience behavior belong to the separate Trainer Rating party progression
+specification. Wayfarer reuses the encounter projection but replaces the
+rating's progression inputs through the interregional League circuit
+specification.
 
 ## Behavior
 
 ### Trainer Rating lifecycle
 
-Trainer Rating is an inclusive value from 10 to 80. A new game starts at 10. The saved value is clamped to that range whenever it is read.
+Wayfarer Trainer Rating is an inclusive value from 0 through 80. A new Wayfarer
+game starts at 0. Builds that have not adopted the Wayfarer circuit retain
+their existing Rating 10 floor. Every read clamps the saved value to the range
+for the active product.
 
-The game derives a rating from current progression facts, compares it with the saved value, and stores the higher value. This is a high-water mark: progression can increase the rating but no later read can reduce it. Save migration initializes the stored value from the derived rating, also within the 10 to 80 range, without changing save-block layouts.
+Before the later circuit supplies global progression, the Wayfarer foundation
+does not derive Rating from regional badge flags, a local League clear, or any
+other existing local progression fact. It initializes a new Wayfarer save to 0
+and returns the stored, clamped value. The foundation's deterministic tests may
+seed that value to exercise its consumers. No migration from earlier prerelease
+Rating behavior is required.
 
-The rating is not shown in the player interface.
+Once the circuit is implemented, it derives a global candidate from its badge
+and League facts, compares that candidate with the saved value, and stores the
+higher value. This is a high-water mark: circuit progression can increase the
+rating but no later read can reduce it.
 
 ### Progression targets
 
-Each of the first four badges contributes 4 points, and each of the next four contributes 6. The rating floor keeps the first two badge totals at 10. The shared badge contribution reaches Rating 16 after four badges and Rating 40 after eight badges. The first League clear raises the rating to 55. The current substantial postgame target is 65.
+The Trainer Rating foundation persists and exposes the shared Wayfarer Rating
+before the interregional League circuit is complete. The later circuit maps the
+global badge count and fixed League clears to that value. It starts at 0,
+reaches 16 after four badges and 40 after eight badges, and reaches 80 after all
+twenty-four badges and all three League clears. Circuit starts and League party
+tiers are not prerequisites for the foundation, its 0 through 80 bounds, or its
+consumers.
+
+Builds that have not adopted the Wayfarer circuit retain their current
+progression. Each of the first four regional badges contributes 4 points, and
+each of the next four contributes 6. Their Rating 10 floor keeps the first two
+badge totals at 10. The first League clear raises the rating to 55. Their
+current substantial postgame target is 65.
 
 | Build | First League | Postgame condition for Rating 65 |
 | --- | --- | --- |
@@ -37,7 +57,9 @@ Each of the first four badges contributes 4 points, and each of the next four co
 | FireRed/LeafGreen | Hall of Fame clear | Sapphire recovered |
 | HNS | Johto Champion | All eight Kanto badges and Kanto Champion |
 
-HNS awards one additional point for each Kanto badge and two for the Kanto Champion. No current progression source reaches the Rating 80 cap.
+HNS awards one additional point for each Kanto badge and two for the Kanto
+Champion. No progression source outside the Wayfarer circuit currently reaches
+the Rating 80 cap.
 
 ### Eligible profiles
 
@@ -90,7 +112,10 @@ Each example identifies an ordinary encounter that motivated review of the globa
 Mantine's global floor is exactly 14. An authored level-15 Mantine projects to
 level 14 at Rating 10, so any higher floor would make a protected HNS native-HM
 source ineligible. This correction does not create a regional runtime branch,
-change authored levels, or add Mantyke or another predecessor rule.
+change authored levels, or add Mantyke or another predecessor rule. Mantine is
+protected from Rating 10 through 80; it is not an all-rating traversal anchor,
+and lower ratings may exclude it because of the global floor. HNS Chinchou is
+the approved Rating 0 through 80 Whirlpool source.
 
 In wild-randomizer mode, the existing randomized species mapping continues to run from the original selected slot. Its level still projects through Trainer Rating, but predecessor resolution and species-floor eligibility filtering are bypassed.
 
@@ -126,4 +151,5 @@ Compile the affected encounter objects for Emerald, FireRed, LeafGreen, and HNS.
 ## References
 
 - [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
+- [Trainer Rating party progression](trainer-rating-party-progression.md)
 - [Implementation pull request](https://github.com/mzpkdev/pokemon-wayfarer/pull/13)

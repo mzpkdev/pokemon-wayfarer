@@ -16,7 +16,9 @@ Wayfarer circuit.
 Regional badge storage, Champion state, and local story dispatch remain owned
 by the Wayfarer runtime foundation and regional content specifications. The
 ordinary wild population and level projection remain owned by the Trainer
-Rating wild encounter scaling specification.
+Rating wild encounter scaling specification. Soft level caps, experience
+reduction, and obedience remain owned by the Trainer Rating party progression
+specification.
 
 ## Behavior
 
@@ -168,9 +170,10 @@ the League order, the required milestones are:
 | 24 badges and Kanto and Johto clears | 76 |
 | 24 badges and all three Leagues cleared | 80 |
 
-The value remains an internal high-water mark. It scales ordinary wild
-encounters through the existing projection pipeline and does not alter any
-Trainer party.
+The value remains a high-water mark. It scales ordinary wild encounters through
+the existing projection pipeline and determines the soft level cap through the
+Trainer Rating party progression specification. It does not alter any Trainer
+party.
 
 The HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level 5 in
 both normal and legacy-moves mode, after any existing level-5 entries. The
@@ -243,6 +246,7 @@ utility source becomes unavailable or loses its required move at any rating.
 ## References
 
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
+- [Trainer Rating party progression](trainer-rating-party-progression.md)
 - [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 - [Wayfarer Hoenn content port](wayfarer-hoenn-content-port.md)
 - [Kanto wild encounters](kanto-wild-encounters.md)
