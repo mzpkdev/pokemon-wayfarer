@@ -18,10 +18,10 @@ lockout, payment, badge, League, or story gate beyond completing the maiden
 voyage and holding the S.S. Ticket. It is the normal route between the three
 regions, not a temporary Hoenn-entry exception.
 
-At Slateport, the existing S.S. Tidal departure hook becomes the S.S. Aqua's
-next-stop service to Olivine. S.S. Tidal no longer operates from Slateport.
-Its Lilycove postgame service remains functional, except that it does not offer
-Slateport as a destination.
+At Slateport, a separate Wayfarer S.S. Aqua attendant in the existing harbor
+provides the next-stop service to Olivine. This addition does not replace or
+alter the existing S.S. Tidal attendant, ship, destinations, postgame gates,
+or scripts. S.S. Tidal is deferred to a separate PRD.
 
 Hoenn keeps the identity and authored content of Pokémon Emerald. Wayfarer uses
 the HNS engine and progression rules around that content, including HNS wild
@@ -148,15 +148,10 @@ Mossdeep event.
 Wayfarer has one S.S. Ticket item. The HNS maiden-voyage reunion is its normal
 source and the item is not consumed by travel.
 
-Every circuit leg checks the ticket without consuming it. The Slateport S.S.
-Tidal departure hook is repurposed for Aqua service and does not read Hoenn
-Champion state, open a Tidal destination menu, or dispatch a Tidal trip.
-S.S. Tidal is unavailable from Slateport. Its Lilycove postgame service keeps
-its existing behavior except for the removed Slateport destination.
-
-If a Hoenn postgame event would award the S.S. Ticket after the player already
-owns it, the event recognizes the existing item instead of attempting a
-duplicate grant. It does not restore S.S. Tidal service at Slateport.
+Every circuit leg checks the ticket without consuming it. The Slateport Aqua
+attendant and its route are separate from S.S. Tidal. This milestone makes no
+change to S.S. Tidal's Champion gate, destinations, ticket event, ship object,
+attendant, or scripts.
 
 ### Map, Fly, healing, and blackout
 
@@ -175,12 +170,12 @@ not keep a separate healing history for every region.
 
 - The S.S. Aqua circuit has no timetable, bidirectional port menu, fare, or
   regional, badge, League, or story gate after the maiden voyage.
-- The existing Slateport S.S. Tidal departure hook provides the S.S. Aqua's
-  next-stop service to Olivine.
+- Slateport's S.S. Aqua service is a separate Wayfarer interaction in the
+  existing Harbor map. It needs no new map, port layout, collision change, or
+  Tidal hook.
 - Wayfarer has no selectable Town Map region tabs and Fly cannot cross the HNS
   and Hoenn boundary.
-- S.S. Tidal is unavailable from Slateport. Its Lilycove postgame service
-  remains functional but does not offer Slateport as a destination.
+- S.S. Tidal remains entirely unchanged and is not part of the Aqua circuit.
 - This milestone does not add early Ever Grande transport.
 - Wayfarer does not scale ordinary Emerald Trainer or Gym Leader parties.
 - The interregional circuit may author a fixed Tier 3 Hoenn League party, but
@@ -209,7 +204,7 @@ to their original Hoenn interactions.
 ## Presentation
 
 - Player-facing build and save identifiers use the name "Wayfarer".
-- Each attendant identifies the circuit's next destination.
+- Each Aqua circuit attendant identifies the circuit's next destination.
 - Canceling leaves the player at the current port with no state change.
 - Hoenn entry treats the existing player as a visiting Trainer and adds no
   replacement introduction.
@@ -220,8 +215,8 @@ to their original Hoenn interactions.
 
 The HNS open-world traversal specification continues to own the S.S. Aqua
 maiden voyage and standalone HNS ferry behavior. This PRD owns the permanent
-post-maiden directional circuit and replaces the Wayfarer S.S. Tidal departure
-hook at Slateport. The HNS specification continues to own the Kanto settlement
+post-maiden directional circuit, including the separate Slateport Harbor Aqua
+interaction. The HNS specification continues to own the Kanto settlement
 network.
 
 The Emerald open-world traversal specification remains authoritative inside
@@ -250,11 +245,10 @@ because the source games assigned both meanings to the same numeric value.
 
 Automated acceptance is layered. Static and ROM tests own the gate matrix,
 state isolation, one-time initialization, destination validity, ticket
-behavior, every directional circuit leg, the absence of Tidal service at
-Slateport, and the retained Tidal service at Lilycove. One focused SkyEmu
-journey starts from a completed maiden voyage in Vermilion, travels the
-complete circuit, saves and reloads at Slateport Harbor, and returns to
-Olivine.
+behavior, every directional circuit leg, the separate Slateport Aqua
+interaction, and the unchanged Tidal wiring. One focused SkyEmu journey starts
+from a completed maiden voyage in Vermilion, travels the complete circuit,
+saves and reloads at Slateport Harbor, and returns to Olivine.
 
 Acceptance answers these questions:
 
@@ -272,9 +266,9 @@ Acceptance answers these questions:
 - On HNS maps before and after Kanto unlock, do the existing Town Map and Fly
   behavior remain unchanged and exclude every Hoenn destination?
 - Does Route 101 retain the adapted Birch rescue afterward?
-- Is S.S. Tidal unavailable at Slateport while its Lilycove postgame service
-  remains functional without a Slateport destination, and does the existing HNS
-  Battle Frontier option remain unchanged?
+- Does Slateport's separate Aqua interaction provide Olivine without changing
+  any S.S. Tidal route, gate, menu, ship object, attendant, or script, and does
+  the existing HNS Battle Frontier option remain unchanged?
 - Does the build remain within the active ROM limit?
 
 ## References
