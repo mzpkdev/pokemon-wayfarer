@@ -423,7 +423,7 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
             }
             EXPECT_EQ(chinchouWeight, 11);
         }
-        EXPECT_EQ(lowestEffectiveLevel, 9);
+        EXPECT_EQ(lowestEffectiveLevel, 5);
     }
 }
 
