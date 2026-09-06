@@ -541,6 +541,7 @@ TEST("Named native HM encounter profiles retain anchors through production Train
         const struct NativeHmAnchor *anchor = FindAnchor(place->species);
         u16 matchingSlots = 0;
         u16 headerId;
+        u16 minimumRating = place->species == SPECIES_MANTINE ? 10 : 0;
 
         ASSUME(anchor != NULL);
         for (headerId = 0; gWildMonHeaders[headerId].mapGroup != MAP_GROUP(MAP_UNDEFINED); headerId++)
@@ -605,7 +606,8 @@ TEST("Named native HM encounter profiles retain anchors through production Train
 
                                 rodContext.fishingRod = rodId;
                                 ASSUME(GetWildEncounterProfileView(&rodContext, &rodView));
-                                ASSUME(GetWildEncounterSpeciesOutcome(&rodView, slot, entry->minLevel, 10, FALSE, &outcome));
+                                ASSUME(GetWildEncounterSpeciesOutcome(&rodView, slot, entry->minLevel,
+                                                                       minimumRating, FALSE, &outcome));
                                 EXPECT_EQ(outcome.species, place->species);
                                 if (outcome.level >= anchor->floor)
                                 {
@@ -625,7 +627,7 @@ TEST("Named native HM encounter profiles retain anchors through production Train
                         {
                             u16 rating;
 
-                            for (rating = 10; rating <= 80; rating++)
+                            for (rating = minimumRating; rating <= 80; rating++)
                             {
                                 struct WildEncounterSpeciesOutcome outcome;
 

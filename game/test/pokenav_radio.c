@@ -33,8 +33,8 @@ TEST("Oak's Pokemon Talk announces an eligible effective species from a rebalanc
     u16 headerId = HEADER_NONE;
     u16 species = SPECIES_NONE;
 
-    VarSet(VAR_TRAINER_RATING, 10);
-    ASSUME(GetTrainerRating() == 10);
+    VarSet(VAR_TRAINER_RATING, 0);
+    ASSUME(GetTrainerRating() == 0);
     ASSUME(FindWildHeaderForMap(MAP_ROUTE30_HNS, &headerId));
 
     context.headerId = headerId;
@@ -45,7 +45,7 @@ TEST("Oak's Pokemon Talk announces an eligible effective species from a rebalanc
     ASSUME(GetWildEncounterProfileEntry(&view, 2, &entry));
 
     EXPECT_EQ(entry->species, SPECIES_LEDYBA);
-    EXPECT(IsWildEncounterProfileSlotEligible(&view, 2, 10, FALSE));
+    EXPECT(IsWildEncounterProfileSlotEligible(&view, 2, 0, FALSE));
     EXPECT(PickOakPokemonTalkSpeciesForTesting(headerId, TIME_DAY, 2, &species));
     EXPECT_EQ(species, SPECIES_LEDYBA);
 }
