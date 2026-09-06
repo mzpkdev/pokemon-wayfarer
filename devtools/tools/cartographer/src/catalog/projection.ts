@@ -193,7 +193,7 @@ export const readWildEncounterProjection = (
     filePath,
   )
   if (root.schemaVersion !== 2) fail(`${filePath}/schemaVersion`, "expected 2")
-  const trainerRating = boundedRange(root.trainerRating, `${filePath}/trainerRating`, 10, 80)
+  const trainerRating = boundedRange(root.trainerRating, `${filePath}/trainerRating`, 0, 80)
   const authoredLevel = boundedRange(root.authoredLevel, `${filePath}/authoredLevel`, 1, 100)
 
   const productRows = array(root.products, `${filePath}/products`).map((value, index) => {
