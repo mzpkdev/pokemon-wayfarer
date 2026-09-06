@@ -9,7 +9,7 @@ This specification defines Wayfarer's permanent S.S. Aqua circuit. After the
 existing HNS maiden voyage is complete, the S.S. Ticket permits one
 directional next-stop journey at every circuit port:
 
-Olivine to Vermilion to Slateport to Lilycove to Olivine.
+Olivine to Vermilion to Slateport to Olivine.
 
 The Vermilion-to-Slateport leg initializes Hoenn once. Every leg uses the same
 player and save, leaves the player at a safe destination, and remains available
@@ -39,8 +39,7 @@ The circuit exists only in the Wayfarer build. Its routes are:
 | --- | --- |
 | `OlivineCity_PortInside_hns` | Vermilion |
 | `VermilionCity_PortInside_hns` | Slateport Harbor |
-| `SlateportCity_Harbor` S.S. Tidal hook | Lilycove Harbor |
-| `LilycoveCity_Harbor` S.S. Tidal hook | Olivine |
+| `SlateportCity_Harbor` S.S. Tidal hook | Olivine |
 
 Each hook offers its destination when `VAR_SSAQUA_STATE` is at least 8, meaning
 the maiden voyage has completed. A departure proceeds only when the Bag
@@ -56,10 +55,12 @@ index. Olivine keeps Vermilion at its existing Aqua menu index. Every other
 special or optional HNS destination retains its index and behavior. The
 standalone HNS menus remain unchanged.
 
-At the Slateport and Lilycove harbor hooks, the former S.S. Tidal destination
-menus become the Aqua's one-destination next-stop service. They no longer
-require Hoenn Champion state or offer Tidal destinations. The circuit is
-directional: no hook offers its previous stop or another circuit port.
+At the Slateport harbor hook, the former S.S. Tidal destination menu becomes
+the Aqua's one-destination next-stop service to Olivine. It no longer requires
+Hoenn Champion state or offers Tidal destinations. The Lilycove S.S. Tidal
+service remains postgame content, but its menu does not offer Slateport. The
+circuit is directional: no hook offers its previous stop or another circuit
+port.
 
 ### Departure and destination
 
@@ -105,7 +106,7 @@ without altering existing Hoenn progress.
 
 First arrival does not advance `VAR_SLATEPORT_HARBOR_STATE`, the submarine
 theft, Birch, rival, team, Gym, legendary, or League state. It enables the
-repurposed Aqua hook without enabling any S.S. Tidal service.
+repurposed Aqua hook without affecting Lilycove's S.S. Tidal service.
 
 The player is a visiting Trainer. No arrival script claims that the player
 moved into the Littleroot house, repeats player creation, changes the clock, or
@@ -115,12 +116,15 @@ The player may leave the harbor for Slateport City and use the implemented
 Emerald open-world network to reach Littleroot and Route 101. The content
 port's adapted Birch rescue and optional starter behavior remain unchanged.
 
-### Hoenn departures and inactive S.S. Tidal
+### Hoenn departures and S.S. Tidal separation
 
-The existing S.S. Tidal departure hooks at Slateport and Lilycove become the
-Aqua circuit's Slateport-to-Lilycove and Lilycove-to-Olivine legs. They must
-not read Tidal Champion state, dispatch a Tidal trip, or expose a Tidal menu.
-The visible S.S. Tidal service is inactive in Wayfarer.
+The existing Slateport S.S. Tidal departure hook becomes the Aqua circuit's
+Slateport-to-Olivine leg. It must not read Tidal Champion state, dispatch a
+Tidal trip, or expose a Tidal menu. S.S. Tidal is unavailable from Slateport.
+
+Lilycove retains its existing postgame S.S. Tidal service. Its menu must not
+offer Slateport, because Slateport has no Tidal return service. The retained
+service is not part of the Aqua circuit.
 
 Mr. Briney's boat, event-island ferries, Fly, Teleport, blackout, and other
 systems do not become an interregional route. Saving, reloading, healing,
@@ -132,18 +136,18 @@ and current local heal location.
 The S.S. Ticket granted during the HNS maiden voyage is the shared ticket item
 in Wayfarer. The S.S. Aqua checks it but does not consume it.
 
-S.S. Tidal has no operating Wayfarer service. Its original destinations and
-Champion-related service are deferred to a future additive feature. Owning the
-S.S. Ticket or completing the Hoenn League does not enable it.
+S.S. Tidal has no operating service at Slateport. Lilycove retains its existing
+Champion-gated postgame service, except that Slateport is not a destination.
+Owning the S.S. Ticket does not enable Tidal at Slateport.
 
 The retained Battle Frontier option in the Olivine and Vermilion HNS menus is
 an existing special trip, not S.S. Tidal service. Its existing gate and
-behavior remain unchanged by S.S. Tidal's inactivity.
+behavior remain unchanged by S.S. Tidal's unavailability at Slateport.
 
 If Hoenn's postgame ticket event runs while the player already owns the S.S.
 Ticket, the event treats the item requirement as satisfied, records its
 Hoenn-specific completion state, and does not attempt to add a duplicate key
-item. It does not enable S.S. Tidal service.
+item. It does not enable S.S. Tidal service at Slateport.
 
 ### Town Map, Fly, healing, and blackout
 
@@ -168,7 +172,7 @@ because it was used before circuit travel.
 Saving and reloading after a circuit trip restores the exact map, position,
 active region, visited state, heal destination, initialization state, and all
 regional campaign state. Reloading cannot repeat initialization, grant an
-item, reopen a consumed reward, or enable S.S. Tidal service.
+item, reopen a consumed reward, or enable S.S. Tidal service at Slateport.
 
 ## Validation
 
@@ -177,9 +181,9 @@ Static, ROM, and focused runtime tests must verify:
 1. Standalone HNS retains its original Vermilion menu and behavior.
 2. Wayfarer exposes Slateport only when the maiden voyage is complete. A
    successful departure additionally requires the S.S. Ticket.
-3. At voyage state 8 and later, the four circuit hooks provide only Olivine to
-   Vermilion, Vermilion to Slateport, Slateport to Lilycove, and Lilycove to
-   Olivine. Every leg is gated only by the S.S. Ticket.
+3. At voyage state 8 and later, the three circuit hooks provide only Olivine to
+   Vermilion, Vermilion to Slateport, and Slateport to Olivine. Every leg is
+   gated only by the S.S. Ticket.
 4. Wayfarer preserves every other existing HNS special destination, including
    the HNS Battle Frontier trip, and standalone HNS retains its original menus.
 5. Exit, Cancel, and a missing ticket change no persistent or travel state.
@@ -203,24 +207,26 @@ Static, ROM, and focused runtime tests must verify:
     region selector, and lists no HNS Fly destination. HNS fixtures before and
     after Kanto unlock retain their existing Town Map layouts and Fly behavior,
     expose no Hoenn map selector, and list no Hoenn Fly destination.
-16. Slateport and Lilycove expose no S.S. Tidal service before or after the
-    Hoenn Champion result. Their former hooks provide the Aqua circuit instead.
-    This does not affect the existing HNS Battle Frontier special trip.
+16. Slateport exposes no S.S. Tidal service before or after the Hoenn Champion
+    result. Lilycove retains its Champion-gated Tidal service without a
+    Slateport destination. This does not affect the existing HNS Battle
+    Frontier special trip.
 17. A Hoenn Champion fixture that already owns the HNS S.S. Ticket finishes the
     Hoenn postgame ticket event with one ticket, records the Hoenn receipt state,
-    and leaves S.S. Tidal inactive.
+    and leaves S.S. Tidal unavailable at Slateport while preserving its Lilycove
+    postgame service.
 18. The release ROM stays within the active Wayfarer size ceiling.
 
 One focused SkyEmu journey may begin from a fixture with the maiden voyage
 complete and the S.S. Ticket owned. It must travel Vermilion to Slateport,
-Slateport to Lilycove, Lilycove to Olivine, and Olivine to Vermilion, saving
-and reloading at a Hoenn harbor. The journey does not need to replay the maiden
-voyage or complete the Hoenn campaign.
+Slateport to Olivine, and Olivine to Vermilion, saving and reloading at
+Slateport Harbor. The journey does not need to replay the maiden voyage or
+complete the Hoenn campaign.
 
 ## Deferred follow-up
 
-A future S.S. Tidal PRD may add a separate service, destination set, and
-Champion-related behavior without changing the Aqua circuit. Any special early
+A future S.S. Tidal PRD may revise the retained Lilycove service or add a
+separate Slateport service without changing the Aqua circuit. Any special early
 transport to Ever Grande remains separately deferred.
 
 ## References
