@@ -58,10 +58,22 @@ standalone HNS menus remain unchanged.
 At Slateport, a dedicated Wayfarer Aqua attendant offers the Aqua's
 one-destination next-stop service to Olivine. The attendant is a new object
 event on the existing `MAP_SLATEPORT_CITY_HARBOR` map, uses its own script, and
-is visible only in Wayfarer. Its placement must use an existing walkable tile
-outside warp and coordinate-event tiles, preserve paths to the harbor exits,
-and remain visually separate from the S.S. Tidal attendant and ship. It does
-not require a new map, port layout, collision edit, or static map-warp event.
+is visible only in Wayfarer. Its fixed event record is:
+
+| Field | Value |
+| --- | --- |
+| Local ID | `LOCALID_SLATEPORT_HARBOR_WAYFARER_AQUA_ATTENDANT` |
+| Graphics and facing | `OBJ_EVENT_GFX_SAILOR`, facing left |
+| Position | `(15,11)`, elevation `3` |
+| Movement | stationary |
+| Script | `WayfarerHoennEntry_EventScript_SlateportAquaAttendant` |
+| Visibility | no visibility flag |
+
+`(15,11)` is an existing walkable tile. It is outside every object, warp, and
+coordinate event, has a path to the ordinary harbor exits, and is outside the
+positions and movement lanes used by the Harbor Aqua-escape scene. The event
+does not require a new map, port layout, collision edit, or static map-warp
+event. It remains visually separate from the S.S. Tidal attendant and ship.
 
 The circuit is directional: no Aqua hook offers its previous stop or another
 circuit port. The dedicated attendant does not call, replace, guard, or modify
@@ -70,8 +82,17 @@ an S.S. Tidal script or state.
 ### Departure and destination
 
 After the player selects the next stop, the script rechecks the completed-
-voyage state and S.S. Ticket before committing the trip. It uses the existing
-boarding and departure presentation where available.
+voyage state and S.S. Ticket before committing the trip. The existing HNS
+Olivine and Vermilion legs keep their current boarding and departure
+presentation. Slateport uses the separate presentation below.
+
+The Slateport Aqua attendant uses a dedicated departure presentation. After
+the two checks and confirmation, it locks interaction, fades to black, commits
+the Olivine local heal location, and performs the scripted Olivine warp. It
+must not call `SlateportCity_Harbor_EventScript_BoardFerry` or
+`Common_EventScript_FerryDepart`, hide or move the Tidal ship or attendant, or
+reference `LOCALID_SLATEPORT_HARBOR_SS_TIDAL`. The existing Slateport Tidal
+boarding presentation remains reachable only from its original Tidal scripts.
 
 Every destination coordinate must be walkable, outside every coordinate event,
 and have an unobstructed path to an ordinary harbor exit. The travel audit
@@ -212,13 +233,25 @@ Static, ROM, and focused runtime tests must verify:
     after Kanto unlock retain their existing Town Map layouts and Fly behavior,
     expose no Hoenn map selector, and list no Hoenn Fly destination.
 16. The dedicated Slateport Aqua attendant uses an existing walkable tile that
-    is outside coordinate events and warps, has an unobstructed path to a harbor
-    exit, and does not change a map layout or collision value.
+    exactly matches its specified local ID, graphics, facing, position,
+    elevation, movement, script, and visibility. Its tile is outside every
+    existing object, coordinate event, and warp, has an unobstructed path to a
+    harbor exit, and does not overlap an Aqua-escape-scene position or movement
+    lane. It does not change a map layout or collision value.
 17. Before and after the Aqua trip, S.S. Tidal retains its original Slateport
     and Lilycove attendants, ship objects, scripts, Champion gate,
     destinations, `FLAG_MET_SCOTT_ON_SS_TIDAL` progression, and Battle Frontier
     flow. This does not affect the existing HNS Battle Frontier special trip.
-18. The release ROM stays within the active Wayfarer size ceiling.
+18. The dedicated Aqua script rechecks `VAR_SSAQUA_STATE` and
+    `ITEM_SS_TICKET`, uses its independent fade-and-warp presentation, and
+    does not call a Tidal script, `Common_EventScript_FerryDepart`, or reference
+    `LOCALID_SLATEPORT_HARBOR_SS_TIDAL`.
+19. The Hoenn-entry static audit allows and validates only this named Slateport
+    Aqua event and its dedicated script. It continues to reject Aqua content in
+    every other Emerald map and in the original Slateport Tidal script graph,
+    and it verifies the original Tidal object, attendant, visibility gate, and
+    reachable script graph independently.
+20. The release ROM stays within the active Wayfarer size ceiling.
 
 One focused SkyEmu journey may begin from a fixture with the maiden voyage
 complete and the S.S. Ticket owned. It must travel Vermilion to Slateport,

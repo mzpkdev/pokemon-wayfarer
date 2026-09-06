@@ -171,8 +171,8 @@ not keep a separate healing history for every region.
 - The S.S. Aqua circuit has no timetable, bidirectional port menu, fare, or
   regional, badge, League, or story gate after the maiden voyage.
 - Slateport's S.S. Aqua service is a separate Wayfarer interaction in the
-  existing Harbor map. It needs no new map, port layout, collision change, or
-  Tidal hook.
+  existing Harbor map. It is a fixed attendant placement, not a new map, port
+  layout, collision change, map-warp event, or Tidal hook.
 - Wayfarer has no selectable Town Map region tabs and Fly cannot cross the HNS
   and Hoenn boundary.
 - S.S. Tidal remains entirely unchanged and is not part of the Aqua circuit.
