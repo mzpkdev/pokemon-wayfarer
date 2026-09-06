@@ -2,6 +2,7 @@
 #include "event_data.h"
 #include "field_message_box.h"
 #include "pokedex.h"
+#include "string_util.h"
 #include "strings.h"
 
 bool16 ScriptGetPokedexInfo(void)
@@ -82,6 +83,7 @@ const u8 *GetPokedexRatingText(u32 count)
     if (count >= maxDex)
     {
         gSpecialVar_Result = TRUE;
+        StringCopy(gStringVar3, Dex_GetActiveRegionName());
         return gJohtoDexRatingText_Complete;
     }
 

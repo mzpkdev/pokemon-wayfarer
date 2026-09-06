@@ -18,6 +18,9 @@ void CB2_LinkTrade(void);
 int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 species2, u16 species, bool8 isModernFatefulEncounter);
 int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, u16 playerSpecies2, u16 partnerSpecies, enum Type requestedType, u16 playerSpecies, bool8 isModernFatefulEncounter);
 int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx);
+#if TESTING
+void Test_UpdatePokedexForReceivedSpecies(u16 species, u32 personality);
+#endif
 void InitTradeSequenceBgGpuRegs(void);
 void LinkTradeDrawWindow(void);
 void LoadTradeAnimGfx(void);

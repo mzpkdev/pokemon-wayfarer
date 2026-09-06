@@ -11286,15 +11286,17 @@ static void Cmd_trysetcaughtmondexflags(void)
     struct Pokemon *caughtMon = GetBattlerMon(GetCatchingBattler());
     u32 species = GetMonData(caughtMon, MON_DATA_SPECIES);
     u32 personality = GetMonData(caughtMon, MON_DATA_PERSONALITY);
+    enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
+    bool8 isVisible = Dex_HasNationalUpgrade() ? Dex_IsNationalEntryVisible(dexNum) : Dex_IsRegionalEntryVisible(dexNum);
 
-    if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_CAUGHT))
+    if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else
     {
-        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_CAUGHT, personality);
-        gBattlescriptCurrInstr = cmd->nextInstr;
+        HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
+        gBattlescriptCurrInstr = isVisible ? cmd->nextInstr : cmd->failInstr;
     }
 }
 

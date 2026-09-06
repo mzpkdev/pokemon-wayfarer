@@ -27,6 +27,7 @@ u32 Dex_GetNationalExtensionMask(void);
 bool8 Dex_UpgradeToNational(void);
 bool8 Dex_HasNationalUpgrade(void);
 const u8 *Dex_GetActiveRegionName(void);
+const u8 *Dex_GetActiveRegionTitle(void);
 const u8 *Dex_GetActiveRegionDescription(void);
 bool8 Dex_CalculateCriticalCaptureThreshold(u16 caughtCount, u16 visibleCount, u32 baseOdds, bool8 hasCatchingCharm, u8 *rollThreshold);
 u32 GetRegionalPokedexCount(u8 caseID);

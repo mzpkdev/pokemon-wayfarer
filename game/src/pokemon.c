@@ -6844,15 +6844,6 @@ u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
     return sNationalToSpeciesOrder[nationalNum - 1];
 }
 
-u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum)
-{
-    if (IS_HNS)
-        return NationalToJohtoOrder(nationalNum);
-    if (IS_FRLG)
-        return NationalToKantoOrder(nationalNum);
-    return NationalToHoennOrder(nationalNum);
-}
-
 enum KantoDexOrder NationalToKantoOrder(enum NationalDexOrder nationalNum)
 {
     u16 kantoNum;
@@ -6898,15 +6889,6 @@ enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species)
     return gSpeciesInfo[species].natDexNum;
 }
 
-u32 SpeciesToRegionalPokedexNum(u16 species)
-{
-    if (IS_HNS)
-        return SpeciesToJohtoPokedexNum(species);
-    if (IS_FRLG)
-        return SpeciesToKantoPokedexNum(species);
-    return SpeciesToHoennPokedexNum(species);
-}
-
 enum KantoDexOrder SpeciesToKantoPokedexNum(u16 species)
 {
     if (!species)
@@ -6919,15 +6901,6 @@ enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species)
     if (!species)
         return 0;
     return NationalToHoennOrder(gSpeciesInfo[species].natDexNum);
-}
-
-enum NationalDexOrder RegionalToNationalOrder(u32 regionalNum)
-{
-    if (IS_HNS)
-        return JohtoToNationalOrder(regionalNum);
-    if (IS_FRLG)
-        return KantoToNationalOrder(regionalNum);
-    return HoennToNationalOrder(regionalNum);
 }
 
 // Catalog data remains authored in the legacy regional tables.  The Pokédex
@@ -7462,11 +7435,12 @@ u16 SpeciesToPokedexNum(u16 species)
     if (IsNationalPokedexEnabled())
     {
         enum NationalDexOrder nationalDexNo = SpeciesToNationalPokedexNum(species);
-        return Dex_IsValidNationalId(nationalDexNo) ? nationalDexNo : 0xFFFF;
+        return Dex_IsNationalEntryVisible(nationalDexNo) ? nationalDexNo : 0xFFFF;
     }
     else
     {
-        return Dex_NationalToRegionalEntry(SpeciesToNationalPokedexNum(species));
+        u16 regionalEntry = Dex_NationalToRegionalEntry(SpeciesToNationalPokedexNum(species));
+        return regionalEntry == 0 ? 0xFFFF : regionalEntry;
     }
 }
 

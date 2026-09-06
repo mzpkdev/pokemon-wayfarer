@@ -240,6 +240,7 @@ static u8 ClearMonSprites(void);
 static u16 GetPokemonSpriteToDisplay(u16);
 static u32 CreatePokedexMonSprite(u16, s16, s16);
 static void CreateInterfaceSprites(u8);
+static void PrintActiveRegionLabel(u8);
 static void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite);
 static void SpriteCB_Scrollbar(struct Sprite *sprite);
 static void SpriteCB_ScrollArrow(struct Sprite *sprite);
@@ -316,6 +317,7 @@ static void HighlightSelectedSearchMenuItem(u8, u8);
 static void PrintSelectedSearchParameters(u8);
 static void DrawOrEraseSearchParameterBox(bool8);
 static void PrintSearchParameterText(u8);
+static const u8 *GetSearchParameterDescription(u8);
 static u8 GetSearchModeSelection(u8 taskId, u8 option);
 static void SetDefaultSearchModeAndOrder(u8);
 static void CreateSearchParameterScrollArrows(u8);
@@ -1324,7 +1326,7 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
 
 static const struct SearchOptionText sDexModeOptions[] =
 {
-    [DEX_MODE_REGIONAL] = {gText_DexJohtoDescription, gText_DexJohtoTitle},
+    [DEX_MODE_REGIONAL] = {gText_DexEmptyString,      gText_DexEmptyString},
     [DEX_MODE_NATIONAL] = {gText_DexNatDescription,   gText_DexNatTitle},
     {},
 };
@@ -2897,15 +2899,19 @@ static void CreateInterfaceSprites(u8 page)
             spriteId = CreateSprite(&sSeenOwnTextSpriteTemplate, 32, 76, 1);
             StartSpriteAnim(&gSprites[spriteId], 1);
 
-            // Hoenn text (seen)
-            CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 45, 1);
+            // Active regional catalog text (seen)
+            spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 45, 1);
+            gSprites[spriteId].invisible = TRUE;
+            PrintActiveRegionLabel(41);
 
             // National text (seen)
             spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 55, 1);
             StartSpriteAnim(&gSprites[spriteId], 1);
 
-            // Hoenn text (own)
-            CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 81, 1);
+            // Active regional catalog text (own)
+            spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 81, 1);
+            gSprites[spriteId].invisible = TRUE;
+            PrintActiveRegionLabel(77);
 
             // National text (own)
             spriteId = CreateSprite(&sHoennNationalTextSpriteTemplate, 17, 91, 1);
@@ -3049,6 +3055,13 @@ static void SpriteCB_SeenOwnInfo(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
+static void PrintActiveRegionLabel(u8 y)
+{
+    static const u8 color[] = { TEXT_COLOR_TRANSPARENT, TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_LIGHT_GRAY };
+
+    AddTextPrinterParameterized4(0, FONT_SMALL, 4, y, 0, 0, color, TEXT_SKIP_DRAW, Dex_GetActiveRegionTitle());
+}
+
 void SpriteCB_MoveMonForInfoScreen(struct Sprite *sprite)
 {
     sprite->oam.priority = 0;
@@ -3114,6 +3127,11 @@ static void SpriteCB_Scrollbar(struct Sprite *sprite)
 {
     if (sPokedexView->currentPage != PAGE_MAIN && sPokedexView->currentPage != PAGE_SEARCH_RESULTS)
         DestroySprite(sprite);
+    else if (sPokedexView->pokemonListCount <= 1)
+    {
+        sprite->y2 = 0;
+        sprite->invisible = TRUE;
+    }
     else
         sprite->y2 = sPokedexView->selectedPokemon * 120 / (sPokedexView->pokemonListCount - 1);
 }
@@ -4679,6 +4697,21 @@ bool8 Dex_HasNationalUpgrade(void)
 
 const u8 *Dex_GetActiveRegionName(void)
 {
+    switch (Dex_GetActiveRegion())
+    {
+    case DEX_REGION_KANTO:
+        return gText_Kanto;
+    case DEX_REGION_JOHTO:
+        return gText_Johto;
+    case DEX_REGION_HOENN:
+        return gText_Hoenn;
+    default:
+        return gText_DexEmptyString;
+    }
+}
+
+const u8 *Dex_GetActiveRegionTitle(void)
+{
     const struct DexCatalog *catalog = GetDexCatalog(Dex_GetActiveRegion());
     return catalog == NULL ? gText_DexEmptyString : catalog->name;
 }
@@ -5681,14 +5714,12 @@ static void Task_SelectSearchMenuItem(u8 taskId)
 static void Task_HandleSearchParameterInput(u8 taskId)
 {
     u8 menuItem;
-    const struct SearchOptionText *texts;
     s16 *cursorPos;
     s16 *scrollOffset;
     u16 maxOption;
     bool8 moved;
 
     menuItem = gTasks[taskId].tMenuItem;
-    texts = sSearchOptions[menuItem].texts;
     cursorPos = &gTasks[taskId].data[sSearchOptions[menuItem].taskDataCursorPos];
     scrollOffset = &gTasks[taskId].data[sSearchOptions[menuItem].taskDataScrollOffset];
     maxOption = sSearchOptions[menuItem].numOptions - 1;
@@ -5736,7 +5767,7 @@ static void Task_HandleSearchParameterInput(u8 taskId)
         if (moved)
         {
             PlaySE(SE_SELECT);
-            EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
+            EraseAndPrintSearchTextBox(GetSearchParameterDescription(taskId));
             CopyWindowToVram(0, COPYWIN_GFX);
         }
         return;
@@ -5762,7 +5793,7 @@ static void Task_HandleSearchParameterInput(u8 taskId)
         if (moved)
         {
             PlaySE(SE_SELECT);
-            EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
+            EraseAndPrintSearchTextBox(GetSearchParameterDescription(taskId));
             CopyWindowToVram(0, COPYWIN_GFX);
         }
         return;
@@ -5958,7 +5989,7 @@ static void PrintSelectedSearchParameters(u8 taskId)
     if (IsNationalPokedexEnabled())
     {
         searchParamId = gTasks[taskId].tCursorPos_Mode + gTasks[taskId].tScrollOffset_Mode;
-        PrintSearchText(searchParamId == DEX_MODE_REGIONAL ? Dex_GetActiveRegionName() : sDexModeOptions[searchParamId].title, 0x2D, 0x51);
+        PrintSearchText(searchParamId == DEX_MODE_REGIONAL ? Dex_GetActiveRegionTitle() : sDexModeOptions[searchParamId].title, 0x2D, 0x51);
     }
 }
 
@@ -6000,7 +6031,6 @@ static void DrawOrEraseSearchParameterBox(bool8 erase)
 static void PrintSearchParameterText(u8 taskId)
 {
     const struct SearchOptionText *texts = sSearchOptions[gTasks[taskId].tMenuItem].texts;
-    const s16 *cursorPos = &gTasks[taskId].data[sSearchOptions[gTasks[taskId].tMenuItem].taskDataCursorPos];
     const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[gTasks[taskId].tMenuItem].taskDataScrollOffset];
     u16 i;
     u16 j;
@@ -6008,12 +6038,21 @@ static void PrintSearchParameterText(u8 taskId)
     ClearSearchParameterBoxText();
 
     for (i = 0, j = *scrollOffset; i < MAX_SEARCH_PARAM_ON_SCREEN && texts[j].title != NULL; i++, j++)
-        PrintSearchParameterTitle(i, gTasks[taskId].tMenuItem == SEARCH_MODE && j == DEX_MODE_REGIONAL ? Dex_GetActiveRegionName() : texts[j].title);
+        PrintSearchParameterTitle(i, gTasks[taskId].tMenuItem == SEARCH_MODE && j == DEX_MODE_REGIONAL ? Dex_GetActiveRegionTitle() : texts[j].title);
+
+    EraseAndPrintSearchTextBox(GetSearchParameterDescription(taskId));
+}
+
+static const u8 *GetSearchParameterDescription(u8 taskId)
+{
+    const struct SearchOptionText *texts = sSearchOptions[gTasks[taskId].tMenuItem].texts;
+    const s16 *cursorPos = &gTasks[taskId].data[sSearchOptions[gTasks[taskId].tMenuItem].taskDataCursorPos];
+    const s16 *scrollOffset = &gTasks[taskId].data[sSearchOptions[gTasks[taskId].tMenuItem].taskDataScrollOffset];
 
     if (gTasks[taskId].tMenuItem == SEARCH_MODE && *cursorPos + *scrollOffset == DEX_MODE_REGIONAL)
-        EraseAndPrintSearchTextBox(Dex_GetActiveRegionDescription());
-    else
-        EraseAndPrintSearchTextBox(texts[*cursorPos + *scrollOffset].description);
+        return Dex_GetActiveRegionDescription();
+
+    return texts[*cursorPos + *scrollOffset].description;
 }
 
 static u8 GetSearchModeSelection(u8 taskId, u8 option)

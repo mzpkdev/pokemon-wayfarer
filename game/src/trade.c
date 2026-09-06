@@ -1576,6 +1576,15 @@ static u8 CheckValidityOfTradeMons(u8 *aliveMons, u8 playerPartyCount, u8 player
     if (gSpeciesInfo[partnerSpecies].cannotBeTraded)
         return PARTNER_MON_INVALID;
 
+#if !IS_WAYFARER
+    // Partner can't trade Egg or non-Hoenn mon if player doesn't have National Dex
+    if (!IsNationalPokedexEnabled())
+    {
+        if (sTradeMenu->isEgg[TRADE_PARTNER][partnerMonIdx] || !IsSpeciesInRegionalDex(partnerSpecies))
+            return PARTNER_MON_INVALID;
+    }
+#endif
+
     if (hasLiveMon)
         hasLiveMon = BOTH_MONS_VALID;
 
@@ -2387,6 +2396,18 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
         species[i] = GetMonData(&playerParty[i], MON_DATA_SPECIES);
     }
 
+#if !IS_WAYFARER
+    // Can't trade Eggs or non-Hoenn mons if player doesn't have National Dex
+    if (!IsNationalPokedexEnabled())
+    {
+        if (species2[monIdx] == SPECIES_EGG)
+            return CANT_TRADE_EGG_YET;
+
+        if (!IsSpeciesInRegionalDex(species2[monIdx]))
+            return CANT_TRADE_NATIONAL;
+    }
+#endif
+
     partner = &gLinkPlayers[GetMultiplayerId() ^ 1];
 #if !IS_WAYFARER
     if ((partner->version & 0xFF) != VERSION_RUBY &&
@@ -2478,7 +2499,9 @@ s32 GetGameProgressForLinkTrade(void)
 int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, u16 playerSpecies2, u16 partnerSpecies, enum Type requestedType, u16 playerSpecies, bool8 isModernFatefulEncounter)
 {
 #if !IS_WAYFARER
+    bool8 playerHasNationalDex = player.hasNationalDex;
     bool8 playerCanLinkNationally = player.canLinkNationally;
+    bool8 partnerHasNationalDex = partner.hasNationalDex;
     bool8 partnerCanLinkNationally = partner.canLinkNationally;
     enum GameVersion partnerVersion = partner.version;
 
@@ -2516,17 +2539,54 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
     if (playerSpecies2 == SPECIES_EGG && playerSpecies2 != partnerSpecies)
         return UR_TRADE_MSG_MON_CANT_BE_TRADED_NOW;
 
+#if !IS_WAYFARER
+    // If the player doesn't have the National Dex then Eggs and non-Hoenn Pokémon can't be traded
+    if (!playerHasNationalDex)
+    {
+        if (playerSpecies2 == SPECIES_EGG)
+            return UR_TRADE_MSG_EGG_CANT_BE_TRADED;
+
+        if (!IsSpeciesInRegionalDex(playerSpecies2))
+            return UR_TRADE_MSG_MON_CANT_BE_TRADED_NOW;
+
+        if (!IsSpeciesInRegionalDex(partnerSpecies))
+            return UR_TRADE_MSG_PARTNERS_MON_CANT_BE_TRADED;
+    }
+
+    // If the partner doesn't have the National Dex then the player's offer has to be a Hoenn Pokémon
+    if (!partnerHasNationalDex && !IsSpeciesInRegionalDex(playerSpecies2))
+        return UR_TRADE_MSG_PARTNER_CANT_ACCEPT_MON;
+#endif
+
     // Trade is allowed
     return UR_TRADE_MSG_NONE;
 }
 
 int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 species2, u16 species, bool8 isModernFatefulEncounter)
 {
+#if !IS_WAYFARER
+    bool8 hasNationalDex = player.hasNationalDex;
+#endif
+
     // Can't trade specific species
     if (gSpeciesInfo[species].cannotBeTraded)
         return CANT_REGISTER_MON;
 
+#if !IS_WAYFARER
+    if (hasNationalDex)
+        return CAN_REGISTER_MON;
+
+    // Eggs can only be traded if the player has the National Dex
+    if (species2 == SPECIES_EGG)
+        return CANT_REGISTER_EGG;
+
+    if (IsSpeciesInRegionalDex(species2))
+        return CAN_REGISTER_MON;
+
+    return CANT_REGISTER_MON_NOW;
+#else
     return CAN_REGISTER_MON;
+#endif
 }
 
 // Spin Trade wasnt fully implemented, but this checks if a mon would be valid to Spin Trade
@@ -3019,6 +3079,24 @@ static void CB2_InitInGameTrade(void)
     UpdatePaletteFade();
 }
 
+static void UpdatePokedexForReceivedSpecies(u16 species, u32 personality)
+{
+    enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
+
+    if (Dex_IsValidNationalId(dexNum))
+    {
+        GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
+        HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
+    }
+}
+
+#if TESTING
+void Test_UpdatePokedexForReceivedSpecies(u16 species, u32 personality)
+{
+    UpdatePokedexForReceivedSpecies(species, personality);
+}
+#endif
+
 static void UpdatePokedexForReceivedMon(u8 partyIdx)
 {
     struct Pokemon *mon;
@@ -3031,12 +3109,7 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
-        if (Dex_IsValidNationalId(dexNum))
-        {
-            GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
-            HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
-        }
+        UpdatePokedexForReceivedSpecies(species, personality);
     }
 }
 

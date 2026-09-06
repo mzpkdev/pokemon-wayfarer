@@ -1546,17 +1546,33 @@ static void DeterminePokemonToShow(void)
     u16 page;
     u16 dexNum;
     u16 j;
+    u16 localEntry;
 
     // Go through the Pokédex, and anything that has gotten caught we put into our massive array.
     // This basically packs all of the caught Pokémon into the front of the array
-    for (dexNum = Dex_GetFirstVisibleNationalEntry(), j = 0;
-         dexNum != NATIONAL_DEX_NONE;
-         dexNum = Dex_GetNextVisibleNationalEntry(dexNum))
+    if (!Dex_HasNationalUpgrade())
     {
-        if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
+        for (localEntry = 1, j = 0; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
         {
-            sCreditsData->caughtMonIds[j] = dexNum;
-            j++;
+            dexNum = Dex_RegionalEntryToNational(localEntry);
+            if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
+            {
+                sCreditsData->caughtMonIds[j] = dexNum;
+                j++;
+            }
+        }
+    }
+    else
+    {
+        for (dexNum = Dex_GetFirstVisibleNationalEntry(), j = 0;
+             dexNum != NATIONAL_DEX_NONE;
+             dexNum = Dex_GetNextVisibleNationalEntry(dexNum))
+        {
+            if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
+            {
+                sCreditsData->caughtMonIds[j] = dexNum;
+                j++;
+            }
         }
     }
 
@@ -1570,6 +1586,7 @@ static void DeterminePokemonToShow(void)
     {
         for (j = 0; j < NUM_MON_SLIDES; j++)
             sCreditsData->monToShow[j] = starter;
+        sCreditsData->numMonToShow = NUM_MON_SLIDES;
         return;
     }
     if (sCreditsData->numCaughtMon < NUM_MON_SLIDES)

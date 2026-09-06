@@ -854,16 +854,13 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
 u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 evolutionItem, struct Pokemon *tradePartner, bool32 *canStopEvo, enum EvoState evoState);
 bool8 IsMonPastEvolutionLevel(struct Pokemon *mon);
 u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum);
-u32 NationalToRegionalOrder(enum NationalDexOrder nationalNum);
 enum KantoDexOrder NationalToKantoOrder(enum NationalDexOrder nationalNum);
 enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum);
 enum JohtoDexOrder NationalToJohtoOrder(enum NationalDexOrder nationalNum);
 enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species);
-u32 SpeciesToRegionalPokedexNum(u16 species);
 enum KantoDexOrder SpeciesToKantoPokedexNum(u16 species);
 enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species);
 enum JohtoDexOrder SpeciesToJohtoPokedexNum(u16 species);
-enum NationalDexOrder RegionalToNationalOrder(u32 regionNum);
 enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum);
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
 enum NationalDexOrder JohtoToNationalOrder(enum JohtoDexOrder johtoNum);
