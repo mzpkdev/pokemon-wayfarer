@@ -332,6 +332,30 @@ TEST("Trainer scaling leaves raw player partner debug and recorded construction 
     Free(party);
 }
 
+TEST("Trainer scaling leaves excluded facility gimmick state untouched")
+{
+    u32 flags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER;
+    AllocateBattleResources();
+    gBattleStruct->opponentMonCanDynamax = (1 << PARTY_SIZE) - 1;
+    gBattleStruct->opponentMonCanTera = (1 << PARTY_SIZE) - 1;
+    CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, flags);
+    EXPECT_EQ((u32)gBattleStruct->opponentMonCanDynamax, (1 << PARTY_SIZE) - 1);
+    EXPECT_EQ((u32)gBattleStruct->opponentMonCanTera, (1 << PARTY_SIZE) - 1);
+    FreeBattleResources();
+}
+
+TEST("Trainer scaling preserves second opponent gimmick slots outside scaling contexts")
+{
+    u32 battleTypeFlags = BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_RECORDED;
+
+    gBattleTypeFlags = battleTypeFlags;
+    AllocateBattleResources();
+    CreateNPCTrainerPartyForOpponent(&gEnemyParty[PARTY_SIZE / 2], TRAINER_JOEY_2_HNS, FALSE, battleTypeFlags);
+    EXPECT_EQ((u32)gBattleStruct->opponentMonCanDynamax, 1 << (PARTY_SIZE / 2));
+    EXPECT_EQ((u32)gBattleStruct->opponentMonCanTera, 1 << (PARTY_SIZE / 2));
+    FreeBattleResources();
+}
+
 TEST("Trainer scaling randomization retains the authored mapping inputs and scales levels")
 {
     ASSUME(B_TRAINER_PARTY_SCALING);
@@ -408,10 +432,16 @@ TEST("Trainer scaling rollback bypasses level species and move changes together"
 {
     ASSUME(!B_TRAINER_PARTY_SCALING);
     PrepareScalingPartyTest(0);
+    AllocateBattleResources();
+    gBattleStruct->opponentMonCanDynamax = (1 << PARTY_SIZE) - 1;
+    gBattleStruct->opponentMonCanTera = (1 << PARTY_SIZE) - 1;
     CreateNPCTrainerPartyForOpponent(gEnemyParty, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_CHARIZARD);
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 60);
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_MOVE1), MOVE_HYPER_BEAM);
+    EXPECT_EQ((u32)gBattleStruct->opponentMonCanDynamax, (1 << PARTY_SIZE) - 1);
+    EXPECT_EQ((u32)gBattleStruct->opponentMonCanTera, (1 << PARTY_SIZE) - 1);
+    FreeBattleResources();
 }
 
 #endif

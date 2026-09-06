@@ -2004,7 +2004,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
 }
 
-static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, u32 variant)
+static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, u32 variant, bool32 reconstructGimmickSlots)
 {
     u32 personalityValue;
     s32 i;
@@ -2212,7 +2212,7 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
 
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
-    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, 0);
+    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, 0, FALSE);
 }
 
 u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool32 firstTrainer, u32 battleTypeFlags)
@@ -2220,6 +2220,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
     struct Trainer resolved;
     const struct Trainer *owner;
     u32 depth, policy = TRAINER_SCALING_EXCLUDED, rating = 0;
+    bool32 reconstructGimmickSlots = FALSE;
     u16 ownerId = trainerNum;
 
     if (trainerNum == TRAINER_SECRET_BASE || trainerNum >= TRAINERS_COUNT || IsPartnerTrainerId(trainerNum))
@@ -2244,12 +2245,17 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
         return 0;
 #if IS_WAYFARER && B_TRAINER_PARTY_SCALING
     if (!gIsDebugBattle && IsTrainerScalingBattleContext(battleTypeFlags))
+    {
+        reconstructGimmickSlots = TRUE;
         policy = GetTrainerScalingPolicy(trainerNum);
+    }
     if (policy != TRAINER_SCALING_EXCLUDED)
         rating = GetTrainerScalingSnapshot();
 #endif
     // A retry or reconstructed pool may replace a mon which previously enabled a
-    // gimmick. Clear only this opponent's half before assigning its selected slots.
+    // gimmick. Scaling owns this correction; other products and excluded contexts
+    // retain their existing construction behavior.
+    if (reconstructGimmickSlots)
     {
         u16 mask = (1 << PARTY_SIZE) - 1;
         if (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
@@ -2261,7 +2267,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
         gBattleStruct->opponentMonCanDynamax &= ~mask;
         gBattleStruct->opponentMonCanTera &= ~mask;
     }
-    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, GetTrainerDifficultyLevel(ownerId));
+    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, GetTrainerDifficultyLevel(ownerId), reconstructGimmickSlots);
 }
 
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)
