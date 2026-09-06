@@ -45,7 +45,7 @@ static struct WildEncounterProfileView MakeDexNavNormalProfile(void)
     };
 }
 
-static void ResetDexNavTrainerRating(void)
+static u8 ResetDexNavTrainerRating(void)
 {
     FlagClear(FLAG_BADGE01_GET);
     FlagClear(FLAG_BADGE02_GET);
@@ -74,16 +74,18 @@ static void ResetDexNavTrainerRating(void)
 #else
     FlagClear(FLAG_IS_CHAMPION);
 #endif
-    VarSet(VAR_TRAINER_RATING, TRAINER_RATING_MIN);
+    SetTrainerRating(TRAINER_RATING_MIN);
+    return GetTrainerRating();
 }
 
 TEST("DexNav leaves hidden data raw while ordinary profiles use effective species")
 {
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     struct WildEncounterSpeciesOutcome outcome;
+    u8 trainerRating;
 
-    ResetDexNavTrainerRating();
-    EXPECT_EQ(GetTrainerRating(), TRAINER_RATING_MIN);
+    trainerRating = ResetDexNavTrainerRating();
+    EXPECT_EQ(GetTrainerRating(), trainerRating);
 
     // The normal UI list and ordinary detector fallback both resolve entries
     // through this effective profile boundary. The authored-under-threshold
@@ -101,9 +103,10 @@ TEST("DexNav ordinary detector fallback mirrors the eligible profile only for lu
 {
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     u8 slot;
+    u8 trainerRating;
 
-    ResetDexNavTrainerRating();
-    EXPECT_EQ(GetTrainerRating(), TRAINER_RATING_MIN);
+    trainerRating = ResetDexNavTrainerRating();
+    EXPECT_EQ(GetTrainerRating(), trainerRating);
 
     // The ordinary fallback first does its normal weighted pick (slot 0 for
     // roll 0), then a 0 or 1 lure roll reverses its eligible slot sequence.
@@ -123,9 +126,10 @@ TEST("DexNav selected species preserve conditional raw source and level weights"
     struct WildEncounterProfileView profile = MakeDexNavNormalProfile();
     struct WildEncounterSpeciesOutcome outcome;
     bool8 accepted;
+    u8 trainerRating;
 
-    ResetDexNavTrainerRating();
-    EXPECT_EQ(GetTrainerRating(), TRAINER_RATING_MIN);
+    trainerRating = ResetDexNavTrainerRating();
+    EXPECT_EQ(GetTrainerRating(), trainerRating);
 
     // Both raw sources yield Magikarp. Their proposal mass is 70 * 1 for the
     // one-level source and 30 * 2 for the two-level source. The correction
@@ -133,12 +137,12 @@ TEST("DexNav selected species preserve conditional raw source and level weights"
     // level its ordinary source weight divided by its full authored range.
     EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 0, 0, &accepted, &outcome));
     EXPECT(accepted);
-    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 10, TRAINER_RATING_MIN));
+    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 10, trainerRating));
 
     EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 70, 1, &accepted, &outcome));
     EXPECT(!accepted);
 
     EXPECT(DexNavSelectProfileOutcomeWithRollsForTesting(&profile, SPECIES_MAGIKARP, 100, 0, &accepted, &outcome));
     EXPECT(accepted);
-    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 11, TRAINER_RATING_MIN));
+    EXPECT_EQ(outcome.level, ProjectWildEncounterLevel(&profile, 11, trainerRating));
 }
