@@ -19,6 +19,7 @@
 #include "constants/characters.h"
 #include "constants/trainers.h"
 #include "constants/abilities.h"
+#include "constants/opponents.h"
 
 #if defined(__INTELLISENSE__)
 #undef TestRunner_Battle_RecordAbilityPopUp
@@ -117,6 +118,8 @@ const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 #if IS_WAYFARER
     #include "league_tiers.h"
 #endif
+    #include "trainer_party_scaling_fixtures.h"
+    #include "trainer_scaling_production_fixtures.h"
 };
 
 const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =

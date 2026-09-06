@@ -62,6 +62,7 @@
 #include "test_runner.h"
 #include "text.h"
 #include "trainer_pools.h"
+#include "trainer_party_scaling.h"
 #include "trig.h"
 #include "tv.h"
 #include "util.h"
@@ -538,6 +539,7 @@ const u8 *const gStatusConditionStringsTable[][2] =
 
 void CB2_InitBattle(void)
 {
+    ResetTrainerScalingSnapshot();
     if (!gTestRunnerEnabled)
         MoveSaveBlocks_ResetHeap();
     AllocateBattleResources();
@@ -1888,6 +1890,7 @@ static void FreeRestoreBattleData(void)
     m4aSongNumStop(SE_LOW_HEALTH, FlagGet(FLAG_SYS_GBS_ENABLED));
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
+    ResetTrainerScalingSnapshot();
     FreeBattleResources();
     ResetDynamicAiFunctions();
 }
@@ -2001,7 +2004,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
 }
 
-u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
+static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, u32 variant)
 {
     u32 personalityValue;
     s32 i;
@@ -2036,6 +2039,22 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             const struct TrainerMon *partyData = trainer->party;
             struct OriginalTrainerId otId = OTID_STRUCT_RANDOM_NO_SHINY;
             u32 abilityNum = 0;
+            u16 species = partyData[monIndex].species;
+            u8 level = partyData[monIndex].lvl;
+            bool32 scale = scalingPolicy != TRAINER_SCALING_EXCLUDED;
+            bool32 randomizedSpecies = FALSE;
+            u32 gimmickSlot = i + ((!firstTrainer && (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)) ? PARTY_SIZE / 2 : 0);
+
+            if (scale)
+            {
+                level = GetTrainerScalingLevel(rating, level, scalingPolicy);
+#if RANDOMIZER_AVAILABLE == TRUE
+                randomizedSpecies = RandomizerFeatureEnabled(RANDOMIZE_TRAINER_MON);
+                species = RandomizeTrainerMon(trainer->trainerClass, i, monsCount, species);
+#endif
+                if (!randomizedSpecies)
+                    species = ResolveTrainerScalingSpecies(species, level);
+            }
 
             if (trainer->battleType != TRAINER_BATTLE_TYPE_SINGLES)
                 personalityValue = 0x80;
@@ -2046,29 +2065,39 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
 
             personalityValue += personalityHash << 8;
             if (trainer->trainerName == COMPOUND_STRING("SABRINA") && partyData[monIndex].species == SPECIES_MR_MIME)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[monIndex].species);
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, species);
             else if (partyData[monIndex].gender == TRAINER_MON_MALE)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, partyData[monIndex].species);
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_MALE, species);
             else if (partyData[monIndex].gender == TRAINER_MON_FEMALE)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, partyData[monIndex].species);
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(MON_FEMALE, species);
             else if (partyData[monIndex].gender == TRAINER_MON_RANDOM_GENDER)
-                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(Random() & 1 ? MON_MALE : MON_FEMALE, partyData[monIndex].species);
-            ModifyPersonalityForNature(&personalityValue, partyData[monIndex].nature);
+                personalityValue = (personalityValue & 0xFFFFFF00) | GeneratePersonalityForGender(Random() & 1 ? MON_MALE : MON_FEMALE, species);
+            {
+                u32 gender = GetGenderFromSpeciesAndPersonality(species, personalityValue);
+                ModifyPersonalityForNature(&personalityValue, partyData[monIndex].nature);
+                if (scale && partyData[monIndex].gender != 0)
+                {
+                    while (GetGenderFromSpeciesAndPersonality(species, personalityValue) != gender)
+                        personalityValue = personalityValue > UINT_MAX - NUM_NATURES ? personalityValue - 255 * NUM_NATURES : personalityValue + NUM_NATURES;
+                }
+            }
             if (partyData[monIndex].isShiny)
             {
                 otId.method = OT_ID_PRESET;
                 otId.value = HIHALF(personalityValue) ^ LOHALF(personalityValue);
             }
-            {
-                u16 species = partyData[monIndex].species;
-                #if RANDOMIZER_AVAILABLE == TRUE
+#if RANDOMIZER_AVAILABLE == TRUE
+            if (!scale)
                 species = RandomizeTrainerMon(trainer->trainerClass, i, monsCount, species);
-                #endif
-                CreateMon(&party[i], species, partyData[monIndex].lvl, personalityValue, otId);
-            }
+#endif
+            CreateMon(&party[i], species, level, personalityValue, otId);
             SetMonData(&party[i], MON_DATA_HELD_ITEM, &partyData[monIndex].heldItem);
 
-            CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
+            if (scale && !(HasTrainerScalingMoveException(rosterOwner, variant, monIndex)
+                        && CanRetainTrainerScalingMoves(&partyData[monIndex], species, level)))
+                GiveMonInitialMoveset(&party[i]);
+            else
+                CustomTrainerPartyAssignMoves(&party[i], &partyData[monIndex]);
             SetMonData(&party[i], MON_DATA_IVS, &(partyData[monIndex].iv));
             if (partyData[monIndex].ev != NULL)
             {
@@ -2079,7 +2108,9 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                 SetMonData(&party[i], MON_DATA_SPDEF_EV, &(partyData[monIndex].ev[4]));
                 SetMonData(&party[i], MON_DATA_SPEED_EV, &(partyData[monIndex].ev[5]));
             }
-            if (partyData[monIndex].ability != ABILITY_NONE)
+            if (scale)
+                abilityNum = GetTrainerScalingAbility(species, partyData[monIndex].ability, personalityHash);
+            else if (partyData[monIndex].ability != ABILITY_NONE)
             {
                 const struct SpeciesInfo *speciesInfo = &gSpeciesInfo[partyData[monIndex].species];
                 u32 maxAbilityNum = ARRAY_COUNT(speciesInfo->abilities);
@@ -2118,18 +2149,21 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             if (partyData[monIndex].dynamaxLevel > 0)
             {
                 u32 data = partyData[monIndex].dynamaxLevel;
-                if (partyData[monIndex].shouldUseDynamax)
-                    gBattleStruct->opponentMonCanDynamax |= 1 << i;
+                if (partyData[monIndex].shouldUseDynamax
+                 && (!scale || (GET_BASE_SPECIES_ID(species) != SPECIES_ZACIAN
+                             && GET_BASE_SPECIES_ID(species) != SPECIES_ZAMAZENTA
+                             && GET_BASE_SPECIES_ID(species) != SPECIES_ETERNATUS)))
+                    gBattleStruct->opponentMonCanDynamax |= 1 << gimmickSlot;
                 SetMonData(&party[i], MON_DATA_DYNAMAX_LEVEL, &data);
             }
-            if (partyData[monIndex].gigantamaxFactor)
+            if (partyData[monIndex].gigantamaxFactor && (!scale || DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_GIGANTAMAX)))
             {
                 u32 data = partyData[monIndex].gigantamaxFactor;
                 SetMonData(&party[i], MON_DATA_GIGANTAMAX_FACTOR, &data);
             }
             if (partyData[monIndex].teraType > 0)
             {
-                gBattleStruct->opponentMonCanTera |= 1 << i;
+                gBattleStruct->opponentMonCanTera |= 1 << gimmickSlot;
                 enum Type data = partyData[monIndex].teraType;
                 SetMonData(&party[i], MON_DATA_TERA_TYPE, &data);
             }
@@ -2176,30 +2210,63 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
     return trainer->partySize;
 }
 
+u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
+{
+    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, 0);
+}
+
+u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool32 firstTrainer, u32 battleTypeFlags)
+{
+    struct Trainer resolved;
+    const struct Trainer *owner;
+    u32 depth, policy = TRAINER_SCALING_EXCLUDED, rating = 0;
+    u16 ownerId = trainerNum;
+
+    if (trainerNum == TRAINER_SECRET_BASE || trainerNum >= TRAINERS_COUNT || IsPartnerTrainerId(trainerNum))
+        return 0;
+    owner = GetTrainerStructFromId(trainerNum);
+    resolved = *owner;
+    // Follow roster aliases without changing encounter identity or Trainer metadata.
+    for (depth = 0; owner->overrideTrainer && depth < TRAINERS_COUNT; depth++)
+    {
+        ownerId = owner->overrideTrainer;
+        if (ownerId >= TRAINERS_COUNT || IsPartnerTrainerId(ownerId))
+            return 0;
+        owner = GetTrainerStructFromId(ownerId);
+        if (resolved.partySize == 0)
+            resolved.partySize = owner->partySize;
+    }
+    if (owner->overrideTrainer)
+        return 0;
+    resolved.party = owner->party;
+    resolved.poolSize = owner->poolSize;
+    if (resolved.party == NULL || resolved.partySize == 0)
+        return 0;
+#if IS_WAYFARER && B_TRAINER_PARTY_SCALING
+    if (!gIsDebugBattle && IsTrainerScalingBattleContext(battleTypeFlags))
+        policy = GetTrainerScalingPolicy(trainerNum);
+    if (policy != TRAINER_SCALING_EXCLUDED)
+        rating = GetTrainerScalingSnapshot();
+#endif
+    // A retry or reconstructed pool may replace a mon which previously enabled a
+    // gimmick. Clear only this opponent's half before assigning its selected slots.
+    {
+        u16 mask = (1 << PARTY_SIZE) - 1;
+        if (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+        {
+            mask = (1 << (PARTY_SIZE / 2)) - 1;
+            if (!firstTrainer)
+                mask <<= PARTY_SIZE / 2;
+        }
+        gBattleStruct->opponentMonCanDynamax &= ~mask;
+        gBattleStruct->opponentMonCanTera &= ~mask;
+    }
+    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, GetTrainerDifficultyLevel(ownerId));
+}
+
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)
 {
-    u8 retVal;
-    if (trainerNum == TRAINER_SECRET_BASE)
-        return 0;
-    if (GetTrainerStructFromId(trainerNum)->overrideTrainer)
-    {
-        struct Trainer tempTrainer;
-        memcpy(&tempTrainer, GetTrainerStructFromId(trainerNum), sizeof(struct Trainer));
-        const struct Trainer *origTrainer = GetTrainerStructFromId(tempTrainer.overrideTrainer);
-
-        tempTrainer.party = origTrainer->party;
-
-        tempTrainer.poolSize = origTrainer->poolSize;
-        if (tempTrainer.partySize == 0)
-            tempTrainer.partySize = origTrainer->partySize;
-
-        retVal = CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer), firstTrainer, gBattleTypeFlags);
-    }
-    else
-    {
-        retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
-    }
-    return retVal;
+    return CreateNPCTrainerPartyForOpponent(party, trainerNum, firstTrainer, gBattleTypeFlags);
 }
 
 void CreateTrainerPartyForPlayer(void)
