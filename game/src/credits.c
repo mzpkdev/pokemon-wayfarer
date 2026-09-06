@@ -1549,7 +1549,9 @@ static void DeterminePokemonToShow(void)
 
     // Go through the Pokédex, and anything that has gotten caught we put into our massive array.
     // This basically packs all of the caught Pokémon into the front of the array
-    for (dexNum = 1, j = 0; dexNum < NATIONAL_DEX_COUNT; dexNum++)
+    for (dexNum = Dex_GetFirstVisibleNationalEntry(), j = 0;
+         dexNum != NATIONAL_DEX_NONE;
+         dexNum = Dex_GetNextVisibleNationalEntry(dexNum))
     {
         if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
         {
@@ -1564,6 +1566,12 @@ static void DeterminePokemonToShow(void)
 
     // Cap the number of Pokémon we care about to NUM_MON_SLIDES, the max we show in the credits scene (-1 for the starter)
     sCreditsData->numCaughtMon = j;
+    if (j == 0)
+    {
+        for (j = 0; j < NUM_MON_SLIDES; j++)
+            sCreditsData->monToShow[j] = starter;
+        return;
+    }
     if (sCreditsData->numCaughtMon < NUM_MON_SLIDES)
         sCreditsData->numMonToShow = j;
     else

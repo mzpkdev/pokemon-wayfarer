@@ -1452,7 +1452,9 @@ static void DeterminePokemonToShow(void)
     u16 dexNum;
     u16 j;
 
-    for (dexNum = 1, j = 0; dexNum < NATIONAL_DEX_COUNT; dexNum++)
+    for (dexNum = Dex_GetFirstVisibleNationalEntry(), j = 0;
+         dexNum != NATIONAL_DEX_NONE;
+         dexNum = Dex_GetNextVisibleNationalEntry(dexNum))
     {
         if (GetSetPokedexFlag(dexNum, FLAG_GET_CAUGHT))
         {
@@ -1465,6 +1467,12 @@ static void DeterminePokemonToShow(void)
         sCreditsData->caughtMonIds[dexNum] = NATIONAL_DEX_NONE;
 
     sCreditsData->numCaughtMon = j;
+    if (j == 0)
+    {
+        for (j = 0; j < NUM_MON_SLIDES; j++)
+            sCreditsData->monToShow[j] = starter;
+        return;
+    }
     if (sCreditsData->numCaughtMon < NUM_MON_SLIDES)
         sCreditsData->numMonToShow = j;
     else
