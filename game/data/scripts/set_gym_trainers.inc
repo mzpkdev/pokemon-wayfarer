@@ -10,6 +10,7 @@ Common_EventScript_SetGymTrainers::
 	case 8, SootopolisCity_Gym_SetGymTrainers
 	end
 	
+#if IS_FRLG
 Common_EventScript_SetGymTrainers_Frlg::
 	switch VAR_0x8008
 	case 1, EventScript_SetPewterGymTrainers
@@ -21,6 +22,7 @@ Common_EventScript_SetGymTrainers_Frlg::
 	case 7, EventScript_SetCinnabarGymTrainers
 	case 8, EventScript_SetViridianGymTrainers
 	end
+#endif
 
 RustboroCity_Gym_SetGymTrainers::
 	settrainerflag TRAINER_JOSH
@@ -103,6 +105,7 @@ SootopolisCity_Gym_SetGymTrainers::
 	settrainerflag TRAINER_DAPHNE
 	return
 
+#if IS_FRLG
 EventScript_SetPewterGymTrainers::
 	settrainerflag TRAINER_CAMPER_LIAM
 	return
@@ -167,6 +170,7 @@ EventScript_SetViridianGymTrainers::
 	settrainerflag TRAINER_COOLTRAINER_YUJI
 	settrainerflag TRAINER_COOLTRAINER_WARREN
 	return
+#endif
 
 Common_EventScript_SetGymTrainers_hns::
 	switch VAR_0x8008
