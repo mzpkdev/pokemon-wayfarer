@@ -129,9 +129,10 @@ stronger challenge than Tier 2. This relative order applies to the complete
 League sequence rather than requiring every individual Pokémon level to be
 higher than every level in the previous tier.
 
-Ordinary Trainers and Gym Leaders retain their existing authored parties and
-never select a party from global badge count, certification tier, League
-progress, or Trainer Rating.
+Ordinary Trainers and Gym members retain authored roster selection and apply
+the separate [Trainer-party scaling specification](trainer-party-scaling.md).
+Gym Leaders retain their existing authored parties and never select a party
+from global badge count, certification tier, League progress, or Trainer Rating.
 
 ### Trainer Rating
 
@@ -172,8 +173,9 @@ the League order, the required milestones are:
 
 The value remains a high-water mark. It scales ordinary wild encounters through
 the existing projection pipeline and determines the soft level cap through the
-Trainer Rating party progression specification. It does not alter any Trainer
-party.
+Trainer Rating party progression specification. Ordinary Trainers and Gym
+members consume it through the Trainer-party scaling specification; excluded
+boss and League parties remain authored.
 
 The HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level 5 in
 both normal and legacy-moves mode, after any existing level-5 entries. The
@@ -222,8 +224,9 @@ Deterministic tests must cover:
    new-game Rating 0 and final Rating 80.
 9. High-water behavior after regional cleanup, repeated reads, save and load,
    and a League loss.
-10. Static Trainer party selection at several badge distributions, ratings,
-    starting regions, and circuit tiers.
+10. Static excluded-boss party selection at several badge distributions,
+    ratings, starting regions, and circuit tiers. Ordinary Trainer and
+    Gym-member projection follows its separate specification.
 11. Access to travel and unrelated story interactions while the badge count is
     at a certification cap.
 12. Eighth-badge routes ending in Kanto, Johto, and Hoenn can all reach the

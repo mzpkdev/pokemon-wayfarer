@@ -97,8 +97,10 @@ Trainer records follow these rules:
 
 - Ordinary Trainers, rivals, team encounters, and Gym Leaders match the
   Emerald-authored species, levels, moves, held items, AI, party size, battle
-  type, and double-battle behavior. The Hoenn League parties are the fixed
-  Tier 3 exception owned by the interregional League circuit.
+  type, and double-battle behavior in source data. Ordinary Trainers and Gym
+  members then apply [Trainer-party scaling](trainer-party-scaling.md) at battle
+  creation; rivals, bosses, and Gym Leaders remain excluded. The Hoenn League
+  parties are the fixed Tier 3 exception owned by the interregional League circuit.
 - The same authored party is selected regardless of the player's Trainer
   Rating or HNS difficulty option.
 - Ordinary Trainer object coordinates, movement types, trainer types, and sight
@@ -385,13 +387,15 @@ Static and automated validation must prove all of the following:
 6. The adapted opening skips Emerald's replacement-player initialization and
    preserves the Wayfarer player, family, home, clock, party, Bag, money,
    Pokédex, storage, options, and Trainer ID.
-7. Every Trainer reference resolves to the expected authored party and a
-   distinct defeat bit. Non-League Hoenn parties match Emerald, while Hoenn
-   League parties match the fixed Tier 3 content.
+7. Every Trainer reference resolves to the expected authored source party and
+   a distinct defeat bit. Non-League Hoenn source parties match Emerald, while
+   Hoenn League parties match the fixed Tier 3 content. Eligible battle parties
+   then apply the separate Trainer-party projection.
 8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
-9. Global difficulty and Trainer Rating changes do not change a Hoenn Trainer
-   party.
+9. Global difficulty does not change Hoenn source roster selection. Trainer
+   Rating transforms only eligible ordinary and Gym-member battle parties
+   under the Trainer-party scaling specification.
 10. Every authored ordinary wild profile exists in Wayfarer, preserves its
    source population, and uses HNS level projection.
 11. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
