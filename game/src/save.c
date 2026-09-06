@@ -1012,9 +1012,13 @@ u8 LoadGameSave(u8 saveType)
 
     if (gSaveBlock1Ptr->saveVersion < 5)
     {
-        // VAR_TRAINER_RATING was previously unused. Do not trust whatever old
-        // saves contain there; initialize it only from their durable progress.
+#if IS_WAYFARER
+        // Trainer Rating is unreleased Wayfarer state. It has no local-badge
+        // compatibility derivation; the later League circuit owns advancement.
+        InitializeTrainerRatingForNewGame();
+#else
         InitializeTrainerRatingForSaveMigration();
+#endif
         gSaveBlock1Ptr->saveVersion = 5;
     }
 

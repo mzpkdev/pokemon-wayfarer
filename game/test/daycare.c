@@ -14,6 +14,20 @@
     StorePokemonInDaycare(&gPlayerParty[0], &gSaveBlock1Ptr->daycare.mons[1]);  \
     RUN_OVERWORLD_SCRIPT( special GiveEggFromDaycare; );
 
+#if IS_WAYFARER
+TEST("(Daycare) Level 100 Pokémon withdraw without gaining experience")
+{
+    ZeroPlayerPartyMons();
+    RUN_OVERWORLD_SCRIPT( givemon SPECIES_BULBASAUR, 100; );
+    StorePokemonInDaycare(&gPlayerParty[0], &gSaveBlock1Ptr->daycare.mons[0]);
+    gSaveBlock1Ptr->daycare.mons[0].steps = 1;
+    gSpecialVar_0x8004 = 0;
+
+    EXPECT_EQ(TakePokemonFromDaycare(), SPECIES_BULBASAUR);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_LEVEL), MAX_LEVEL);
+}
+#endif // IS_WAYFARER
+
 TEST("(Daycare) Pokémon generate Eggs of the lowest member of the evolutionary family")
 {
     ASSUME(P_FAMILY_PIKACHU == TRUE);

@@ -35,6 +35,7 @@
 #include "string_util.h"
 #include "pokemon_icon.h"
 #include "caps.h"
+#include "trainer_rating.h"
 #include "challenge_menu.h"
 #include "m4a.h"
 #include "mail.h"
@@ -4288,17 +4289,33 @@ static void Cmd_getexp(void)
                 if (IsValidForBattle(&gPlayerParty[*expMonId]))
                 {
                     if (wasSentOut)
+                    {
+                    #if IS_WAYFARER
+                        gBattleStruct->battlerExpReward = gBattleStruct->expValue;
+                    #else
                         gBattleStruct->battlerExpReward = GetSoftLevelCapExpValue(gPlayerParty[*expMonId].level, gBattleStruct->expValue);
+                    #endif
+                    }
                     else
                         gBattleStruct->battlerExpReward = 0;
 
                     if ((holdEffect == HOLD_EFFECT_EXP_SHARE || IsGen6ExpShareEnabled())
                         && (UseClassicExpSplit() || gBattleStruct->battlerExpReward == 0)) // only give exp share bonus in later gens if the mon wasn't sent out
                     {
+                    #if IS_WAYFARER
+                        gBattleStruct->battlerExpReward += gBattleStruct->expShareExpValue;
+                    #else
                         gBattleStruct->battlerExpReward += GetSoftLevelCapExpValue(gPlayerParty[*expMonId].level, gBattleStruct->expShareExpValue);
+                    #endif
                     }
 
                     ApplyExperienceMultipliers(&gBattleStruct->battlerExpReward, *expMonId, gBattlerFainted);
+                #if IS_WAYFARER
+                    gBattleStruct->battlerExpReward = ApplyTrainerRatingExperienceReduction(
+                        GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES),
+                        GetMonData(&gPlayerParty[*expMonId], MON_DATA_EXP),
+                        gBattleStruct->battlerExpReward);
+                #endif
 
                     if ((B_EXP_CAP_TYPE == EXP_CAP_HARD || gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap) && gBattleStruct->battlerExpReward != 0)
                     {

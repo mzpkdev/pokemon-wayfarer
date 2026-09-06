@@ -34,6 +34,7 @@
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
 #include "event_data.h"
+#include "trainer_rating.h"
 #include "link.h"
 #include "malloc.h"
 #include "berry.h"
@@ -5723,8 +5724,13 @@ enum Obedience GetAttackerObedienceForAction(void)
         return OBEYS;
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         return OBEYS;
-    if (B_OBEDIENCE_MECHANICS < GEN_8 && !IsOtherTrainer(gBattleMons[gBattlerAttacker].otId, gBattleMons[gBattlerAttacker].otName))
+    if (B_OBEDIENCE_MECHANICS < GEN_8 && !IS_WAYFARER && !IsOtherTrainer(gBattleMons[gBattlerAttacker].otId, gBattleMons[gBattlerAttacker].otName))
         return OBEYS;
+#if IS_WAYFARER
+    if (GetMonData(&gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]], MON_DATA_IS_EGG))
+        return OBEYS;
+    obedienceLevel = GetTrainerRatingSoftLevelCap();
+#else
     if (FlagGet(FLAG_BADGE08_GET)) // Rain Badge, ignore obedience altogether
         return OBEYS;
 
@@ -5744,8 +5750,9 @@ enum Obedience GetAttackerObedienceForAction(void)
         obedienceLevel = 70;
     if (FlagGet(FLAG_BADGE07_GET)) // Mind Badge
         obedienceLevel = 80;
+#endif
 
-    if (B_OBEDIENCE_MECHANICS >= GEN_8
+    if ((IS_WAYFARER || B_OBEDIENCE_MECHANICS >= GEN_8)
      && !IsOtherTrainer(gBattleMons[gBattlerAttacker].otId, gBattleMons[gBattlerAttacker].otName))
         levelReferenced = gBattleMons[gBattlerAttacker].metLevel;
     else
