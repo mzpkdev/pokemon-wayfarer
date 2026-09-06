@@ -996,9 +996,19 @@ class WildEncounterScalingTests(unittest.TestCase):
             self.validate_johto_fixture(fallback)
 
         anchor = copy.deepcopy(document)
-        anchor["regions"]["JOHTO"]["protectedAnchors"][0]["ratingRange"]["min"] = 11
-        with self.assertRaisesRegex(GENERATOR.ValidationError, "expected 10 through 80"):
+        anchor["regions"]["JOHTO"]["protectedAnchors"][0]["ratingRange"]["min"] = 1
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "expected 0 through 80"):
             self.validate_johto_fixture(anchor)
+
+        mantine = copy.deepcopy(document)
+        mantine["regions"]["JOHTO"]["protectedAnchors"][-1]["ratingRange"]["min"] = 0
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "expected 10 through 80"):
+            self.validate_johto_fixture(mantine)
+
+        chinchou = copy.deepcopy(document)
+        chinchou["regions"]["JOHTO"]["protectedAnchors"][2]["utilityMoves"].remove("MOVE_WHIRLPOOL")
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "Olivine/Cianwood HNS Whirlpool Chinchou anchor"):
+            self.validate_johto_fixture(chinchou)
 
         rate_profiles = copy.deepcopy(self.profiles)
         rate_target = next(row for row in rate_profiles if row["label"] == "gRoute29_hns_Day")
@@ -1179,13 +1189,13 @@ class WildEncounterScalingTests(unittest.TestCase):
             if row["map"] == alias["map"] and row["method"] == alias["method"]
         )
         report, night = GENERATOR.kanto_profile_distribution(
-            profile, "NIGHT", "OLD_ROD", 10,
+            profile, "NIGHT", "OLD_ROD", 0,
             {row["label"]: row for row in self.profiles}, self.scaling,
             {(row["product"], row["header_id"], row["area"], row["time"], row["rod"]): row["level_offset"] for row in self.offsets},
             self.by_species, self.standard_rod,
         )
         _, day = GENERATOR.kanto_profile_distribution(
-            profile, "DAY", "OLD_ROD", 10,
+            profile, "DAY", "OLD_ROD", 0,
             {row["label"]: row for row in self.profiles}, self.scaling,
             {(row["product"], row["header_id"], row["area"], row["time"], row["rod"]): row["level_offset"] for row in self.offsets},
             self.by_species, self.standard_rod,
@@ -1262,7 +1272,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertTrue(kanto["hoennSoundComparison"]["passed"])
         self.assertEqual(
             len(kanto["hoennSoundComparison"]["profileComparisons"]),
-            (41 + 31) * 2 * 71,
+            (41 + 31) * 2 * 81,
         )
         self.assertTrue(all(
             row["randomized"] is False
@@ -1273,7 +1283,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             and row["passed"]
             for row in kanto["hoennSoundComparison"]["profileComparisons"]
         ))
-        self.assertEqual(len(kanto["effectivePortfolios"]), 2 * 3 * 71)
+        self.assertEqual(len(kanto["effectivePortfolios"]), 2 * 3 * 81)
         johto = audit["regions"]["JOHTO"]
         self.assertEqual(johto["ownership"]["mapCount"], 93)
         self.assertEqual(johto["ownership"]["authoredTimeRowCount"], 149)
@@ -1297,9 +1307,9 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(len(johto["fallbacks"]), 531)
         self.assertEqual(johto["baselinePortfolio"]["actualOneDecimalPercentages"], johto["baselinePortfolio"]["expectedOneDecimalPercentages"])
         self.assertEqual(johto["authoredPortfolio"]["profileDenominator"], 363)
-        self.assertEqual(len(johto["effectivePortfolios"]), 6)
+        self.assertEqual(len(johto["effectivePortfolios"]), 9)
         self.assertTrue(all(row["profileDenominator"] == 363 for row in johto["effectivePortfolios"]))
-        self.assertEqual([row["rating"] for row in johto["effectivePortfolios"]], [10, 16, 40, 55, 65, 80])
+        self.assertEqual([row["rating"] for row in johto["effectivePortfolios"]], [0, 4, 8, 16, 30, 40, 55, 65, 80])
         probability_sum = lambda rows: sum(
             Fraction(row["probability"]["numerator"], row["probability"]["denominator"])
             for row in rows
@@ -1328,7 +1338,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             for profile in mantine["profiles"]
         ))
         self.assertTrue(johto["hoennSoundComparison"]["passed"])
-        self.assertEqual(len(johto["hoennSoundComparison"]["profileComparisons"]), (123 + 90) * 6)
+        self.assertEqual(len(johto["hoennSoundComparison"]["profileComparisons"]), (123 + 90) * 9)
         self.assertTrue(johto["ordinaryReaderChecks"]["oakPokemonTalk"]["passed"])
         self.assertEqual(
             set(johto["ordinaryReaderChecks"]["oakPokemonTalk"]["routeMaps"]),
@@ -1356,14 +1366,14 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertTrue(all("slotOutcomes" in sample for row in fishing for sample in row["samples"]))
         self.assertTrue(all(row["runtimeSlotCount"] == 10 for row in fishing))
         self.assertTrue(all(
-            [rating for sample in row["samples"] for rating in sample["ratings"]] == list(range(10, 81))
+            [rating for sample in row["samples"] for rating in sample["ratings"]] == list(range(0, 81))
             for row in fishing
         ))
         self.assertEqual(len(audit["nativeSurfAccessibility"]), 20)
         self.assertEqual(audit["minimumEligibleOldRodEntryProbability"], {"numerator": 1, "denominator": 50})
 
         for recovery in audit["nativeSurfAccessibility"]:
-            self.assertEqual([row["rating"] for row in recovery["ratings"]], list(range(10, 81)))
+            self.assertEqual([row["rating"] for row in recovery["ratings"]], list(range(0, 81)))
 
         def fraction(row):
             return Fraction(row["numerator"], row["denominator"])
@@ -1413,12 +1423,12 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertFalse(comparison["passed"])
         self.assertTrue(comparison["differences"])
         self.assertTrue(failures)
-        day_rating_10 = next(
+        day_rating_0 = next(
             row for row in comparison["profileComparisons"]
-            if row["time"] == "DAY" and row["rating"] == 10
+            if row["time"] == "DAY" and row["rating"] == 0
         )
-        self.assertTrue(day_rating_10["differences"])
-        self.assertFalse(day_rating_10["passed"])
+        self.assertTrue(day_rating_0["differences"])
+        self.assertFalse(day_rating_0["passed"])
 
     def test_ecology_audit_honors_certified_reduced_counterpart_omission(self):
         source_weights = [10, 10, 10, 10, 10, 10, 10, 10, 5, 5, 5, 5]
@@ -1490,7 +1500,7 @@ class WildEncounterScalingTests(unittest.TestCase):
     def test_cartographer_projection_has_runtime_bounds_and_strict_profile_identities(self):
         projection = self.cartographer
         self.assertEqual(projection["schemaVersion"], 2)
-        self.assertEqual(projection["trainerRating"], {"minimum": 10, "maximum": 80})
+        self.assertEqual(projection["trainerRating"], {"minimum": 0, "maximum": 80})
         self.assertEqual(projection["authoredLevel"], {"minimum": 1, "maximum": 100})
         self.assertEqual(
             projection["headerCounts"],
@@ -1539,7 +1549,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             offset = offset_row["levelOffset"]
             self.assertEqual(
                 [row["rating"] for row in offset_row["ratings"]],
-                list(range(10, 81)),
+                list(range(0, 81)),
             )
             for rating_row in offset_row["ratings"]:
                 self.assertEqual(len(rating_row["projectedLevels"]), 100)
@@ -1620,7 +1630,7 @@ class WildEncounterScalingTests(unittest.TestCase):
                     f"{profile_row['profileKey']}/slot {slot_index}",
                 )
                 self.assertEqual(failures, [])
-                for rating in range(10, 81):
+                for rating in range(0, 81):
                     outcomes, locked = {}, False
                     for authored_level in range(slot["minimumLevel"], slot["maximumLevel"] + 1):
                         projected_level = levels_by_offset[offset][rating][authored_level - 1]
@@ -1654,7 +1664,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             self.scaling,
             self.metadata,
             [offset],
-            10,
+            0,
             80,
         )
         self.assertEqual(
@@ -1678,7 +1688,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             self.assertLess(first.stat().st_size, 2_000_000)
             self.assertEqual(
                 GENERATOR.load_json(first)["trainerRating"],
-                {"minimum": 10, "maximum": 80},
+                {"minimum": 0, "maximum": 80},
             )
             authored_labels = {profile["label"] for profile in self.profiles}
             self.assertTrue(

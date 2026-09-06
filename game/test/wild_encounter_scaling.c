@@ -284,7 +284,7 @@ TEST("Standard Rod weighted selection covers every exact boundary")
 #if IS_HNS
 TEST("Kanto land and Surf profiles are unchanged by Hoenn Sound")
 {
-    static const u8 sRatings[] = { 10, 16, 40, 55, 65, 80 };
+    static const u8 sRatings[] = { 0, 4, 8, 16, 30, 40, 55, 65, 80 };
     static const enum TimeOfDay sTimesOfDay[] = { TIME_DAY, TIME_NIGHT };
     static const struct
     {
@@ -396,7 +396,7 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
         EXPECT_EQ(view.wildMonsInfo->encounterRate, 30);
         EXPECT_EQ(view.entryCount, FISH_WILD_COUNT);
 
-        for (rating = 10; rating <= 80; rating++)
+        for (rating = 0; rating <= 80; rating++)
         {
             u16 chinchouWeight = 0;
             u8 slot;
@@ -423,7 +423,7 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
             }
             EXPECT_EQ(chinchouWeight, 11);
         }
-        EXPECT_EQ(lowestEffectiveLevel, 9);
+        EXPECT_EQ(lowestEffectiveLevel, 5);
     }
 }
 

@@ -68,7 +68,7 @@ KANTO_TOPOLOGY_RATE_SHA256 = "1255221864ef279c99f203aab5ea477a8fbb2272752ab5f189
 KANTO_BASELINE_LEDGER_SHA256 = "73a7fa085d5e54025001484f2c55179a0ed2fe9b61f8848014cfd8ea20dc215f"
 JOHTO_TOPOLOGY_RATE_LEVEL_SHA256 = "756bb769b3581e51df00ebb8724381b0791489fde3ec1956cc93b3f98961b6db"
 JOHTO_BASELINE_SLOT_SHA256 = "b0091f4b0877e5b3ef29568839f4251c76e95ef50dc3febfd26af96fcfa719ba"
-JOHTO_PROTECTED_ANCHOR_SHA256 = "bd1d8dbb5df41bf9f461df949bf75c810c35c56795ca4ed1693f5dcbbf5d3bf7"
+JOHTO_PROTECTED_ANCHOR_SHA256 = "e3261d6645e0d8fe2417610bf7ee41d338865e09fb1ddcde92bf23ecd2ae44f0"
 JOHTO_CHANGE_KINDS = (
     "REMOVE_FORBIDDEN", "REWEIGHT_EXISTING", "CONSOLIDATE_DUPLICATE", "ADD_LOCAL_SPECIES",
 )
@@ -172,7 +172,7 @@ JOHTO_FORBIDDEN_LOCAL_ADDITIONS = {
     "SPECIES_RAIKOU", "SPECIES_ENTEI", "SPECIES_SUICUNE", "SPECIES_LUGIA",
     "SPECIES_HO_OH", "SPECIES_CELEBI",
 }
-JOHTO_SAMPLE_RATINGS = (10, 16, 40, 55, 65, 80)
+JOHTO_SAMPLE_RATINGS = (0, 4, 8, 16, 30, 40, 55, 65, 80)
 JOHTO_METHOD_WEIGHTS = {
     "land_mons": [20, 20, 10, 10, 10, 10, 5, 5, 4, 4, 1, 1],
     "water_mons": [60, 30, 5, 4, 1],
@@ -1859,8 +1859,23 @@ def _validate_johto_manifest(johto, profiles, known_species, nat_dex_by_species,
             if minimum > maximum:
                 raise ValidationError(f"{range_location}: inverted range")
         exact_keys(anchor["ratingRange"], {"min", "max"}, f"{anchor_location}/ratingRange")
-        if anchor["ratingRange"] != {"min": 10, "max": 80}:
-            raise ValidationError(f"{anchor_location}/ratingRange: expected 10 through 80")
+        expected_rating_range = {"min": 10, "max": 80} if anchor["species"] == "SPECIES_MANTINE" else {"min": 0, "max": 80}
+        if anchor["ratingRange"] != expected_rating_range:
+            raise ValidationError(
+                f"{anchor_location}/ratingRange: expected "
+                f"{expected_rating_range['min']} through 80"
+            )
+        if anchor["species"] == "SPECIES_CHINCHOU":
+            if (anchor["utilityMoves"] != ["MOVE_FLASH", "MOVE_SURF", "MOVE_WHIRLPOOL"]
+                    or anchor["baseLabels"] != [
+                        "gOlivineCity_PortOutside_hns_Day",
+                        "gOlivineCity_PortOutside_hns_Night",
+                        "gCianwoodCity_hns_Day",
+                    ]
+                    or anchor["method"] != "fishing_mons"):
+                raise ValidationError(
+                    f"{anchor_location}: expected the Olivine/Cianwood HNS Whirlpool Chinchou anchor"
+                )
     anchor_digest = hashlib.sha256(json.dumps(anchors, separators=(",", ":"), sort_keys=True).encode("ascii")).hexdigest()
     if len(anchors) != 10 or {anchor["species"] for anchor in anchors} != JOHTO_PROTECTED_SPECIES or anchor_digest != JOHTO_PROTECTED_ANCHOR_SHA256:
         raise ValidationError(f"{location}/protectedAnchors: does not match the native-HM Johto inventory")
@@ -2876,7 +2891,7 @@ def build_kanto_hoenn_sound_comparison(manifest, profiles_by_label, scaling, off
         if manifest_profile["method"] not in {"land_mons", "water_mons"}:
             continue
         for time in ("DAY", "NIGHT"):
-            for rating in range(10, min(80, scaling["projection_cap"]) + 1):
+            for rating in range(0, min(80, scaling["projection_cap"]) + 1):
                 slots = _kanto_profile_slot_distributions(
                     manifest_profile, time, rating, profiles_by_label, scaling,
                     offset_map, by_species, standard_rod,
@@ -2940,7 +2955,7 @@ def build_kanto_hoenn_sound_comparison(manifest, profiles_by_label, scaling, off
                 })
     return {
         "statesCompared": ["OFF", "ON"],
-        "ratings": list(range(10, min(80, scaling["projection_cap"]) + 1)),
+        "ratings": list(range(0, min(80, scaling["projection_cap"]) + 1)),
         "profileComparisons": comparisons,
         "differences": [
             comparison
@@ -3376,7 +3391,7 @@ def build_kanto_audit(manifest, profiles, scaling, offsets, metadata, standard_r
             authored_portfolios.append(row)
 
     effective_portfolios, forbidden_effective = [], []
-    for rating in range(10, min(80, scaling["projection_cap"]) + 1):
+    for rating in range(0, min(80, scaling["projection_cap"]) + 1):
         by_time_and_rod = {}
         for time in ("DAY", "NIGHT"):
             for rod in FISHING_QUALITIES:
@@ -3411,10 +3426,10 @@ def build_kanto_audit(manifest, profiles, scaling, offsets, metadata, standard_r
             highest = 0
             for mon in _active_mons(target, method):
                 for authored_level in range(min(mon.get("min_level", 2), mon.get("max_level", 100)), max(mon.get("min_level", 2), mon.get("max_level", 100)) + 1):
-                    highest = max(highest, project_level(scaling, authored_level, 10, offset))
+                    highest = max(highest, project_level(scaling, authored_level, 0, offset))
             passed = highest <= 12
             if not passed:
-                failures.append(f"{profile['map']}/{method}/{time}: Rating 10 opening level {highest} exceeds 12")
+                failures.append(f"{profile['map']}/{method}/{time}: Rating 0 opening level {highest} exceeds 12")
             opening_checks.append({"map": profile["map"], "method": method, "time": time, "highestEffectiveLevel": highest, "passed": passed})
 
     ecology = build_kanto_ecology_report(manifest, profiles_by_label, standard_rod, failures)
@@ -3982,7 +3997,7 @@ def audit_method(profile, method, rod, scaling, offset, by_species, failures, st
         summaries, unlock = slot_summary(slot, scaling, offset, by_species, failures, f"{profile['product']}/{profile['label']}/{method}/{rod}/slot {index}", method == "fishing_mons")
         slots.append({"slot": index, "weight": weight, "original": slot, "summaries": summaries, "unlock": unlock})
     samples = []
-    ratings = range(10, min(80, scaling["projection_cap"]) + 1) if method == "fishing_mons" else (value for value in SAMPLE_RATINGS if value <= scaling["projection_cap"])
+    ratings = range(0, min(80, scaling["projection_cap"]) + 1) if method == "fishing_mons" else (value for value in SAMPLE_RATINGS if value <= scaling["projection_cap"])
     for rating in ratings:
         locked = [slot for slot in slots if slot["summaries"][rating]["locked"]]
         eligible = [slot for slot in slots if slot not in locked]
@@ -4319,7 +4334,7 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
     regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
     kanto = build_kanto_audit(regional_manifest, profiles, scaling, offsets, metadata, standard_rod, failures)
     johto = build_johto_audit(regional_manifest["johto"], profiles, scaling, offsets, metadata, standard_rod, failures)
-    return {"schemaVersion": 3, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(10, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto, "JOHTO": johto}, "invariants": {"passed": not failures, "failures": failures}}
+    return {"schemaVersion": 3, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(0, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto, "JOHTO": johto}, "invariants": {"passed": not failures, "failures": failures}}
 
 
 def atomic_write(path, content):

@@ -88,7 +88,7 @@
     showObjects = false,
     showEncounterTrainers = true,
     encounterMode = false,
-    trainerRating = 10,
+    trainerRating = 0,
     preferredProduct = null,
     onSelectMap,
     onSelectWarp,

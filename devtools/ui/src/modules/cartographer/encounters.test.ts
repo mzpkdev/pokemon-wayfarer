@@ -93,19 +93,26 @@ describe("encounter presentation", () => {
   const lowRating = Array.from({ length: 100 }, (_, index) =>
     Math.max(1, Math.ceil((index + 1) / 2)),
   )
+  const zeroRating = Array.from({ length: 100 }, (_, index) =>
+    Math.max(1, Math.ceil((index + 1) / 4)),
+  )
+  const ratings = (levelsForRating: (rating: number) => number[]) =>
+    Array.from({ length: 81 }, (_, rating) => ({
+      rating,
+      projectedLevels: levelsForRating(rating),
+    }))
   const projection: CatalogWildEncounterProjection = {
     schemaVersion: 2,
-    trainerRating: { minimum: 10, maximum: 80 },
+    trainerRating: { minimum: 0, maximum: 80 },
     authoredLevel: { minimum: 1, maximum: 100 },
     products: [{ id: "hns", displayName: "HeartGold and SoulSilver" }],
     levelProjections: [
-      { levelOffset: 0, ratings: [{ rating: 10, projectedLevels: identity }] },
+      { levelOffset: 0, ratings: ratings(() => identity) },
       {
         levelOffset: 1,
-        ratings: [
-          { rating: 10, projectedLevels: lowRating },
-          { rating: 30, projectedLevels: identity },
-        ],
+        ratings: ratings((rating) =>
+          rating === 0 ? zeroRating : rating < 30 ? lowRating : identity,
+        ),
       },
     ],
     species: [
@@ -450,6 +457,9 @@ describe("encounter presentation", () => {
       ],
     }
 
+    expect(effectiveRosterFor(projection, encounters, "water_mons", 0)).toMatchObject([
+      { speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 5 },
+    ])
     expect(effectiveRosterFor(projection, encounters, "water_mons", 10)).toMatchObject([
       { speciesId: "SPECIES_MAGIKARP", projectedMinimumLevel: 10 },
     ])

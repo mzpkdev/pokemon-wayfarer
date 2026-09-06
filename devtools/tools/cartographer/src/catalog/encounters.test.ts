@@ -363,7 +363,7 @@ describe("generated Trainer Rating projection joins", () => {
 
   it("decorates projection species and joins exact product profile references", () => {
     expect(catalog.projection.schemaVersion).toBe(2)
-    expect(catalog.projection.trainerRating).toEqual({ minimum: 10, maximum: 80 })
+    expect(catalog.projection.trainerRating).toEqual({ minimum: 0, maximum: 80 })
     expect(
       catalog.projection.species.find((species) => species.authoredSpecies === "SPECIES_MAGIKARP"),
     ).toMatchObject({ speciesLabel: "MAGIKARP", sprite: null })

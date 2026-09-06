@@ -495,8 +495,8 @@ const wildEncounterProjectionIssue = (value: unknown): string | null => {
   if (!projection || projection.schemaVersion !== 2) return "must use projection schemaVersion 2"
   const trainerRating = asRecord(projection?.trainerRating)
   const authoredLevel = asRecord(projection?.authoredLevel)
-  if (trainerRating?.minimum !== 10 || trainerRating.maximum !== 80) {
-    return "trainerRating must cover 10 through 80"
+  if (trainerRating?.minimum !== 0 || trainerRating.maximum !== 80) {
+    return "trainerRating must cover 0 through 80"
   }
   if (authoredLevel?.minimum !== 1 || authoredLevel.maximum !== 100) {
     return "authoredLevel must cover 1 through 100"
@@ -526,11 +526,11 @@ const wildEncounterProjectionIssue = (value: unknown): string | null => {
     if (offsets.has(table.levelOffset))
       return `contains duplicate level offset ${table.levelOffset}`
     offsets.add(table.levelOffset)
-    if (table.ratings.length !== 71)
-      return `level offset ${table.levelOffset} must contain 71 ratings`
+    if (table.ratings.length !== 81)
+      return `level offset ${table.levelOffset} must contain 81 ratings`
     for (const [ratingIndex, ratingValue] of table.ratings.entries()) {
       const row = asRecord(ratingValue)
-      const expectedRating = 10 + ratingIndex
+      const expectedRating = ratingIndex
       if (
         !row ||
         row.rating !== expectedRating ||

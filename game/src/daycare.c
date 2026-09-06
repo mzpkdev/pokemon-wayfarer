@@ -5,6 +5,7 @@
 #include "daycare.h"
 #include "string_util.h"
 #include "caps.h"
+#include "trainer_rating.h"
 #include "mail.h"
 #include "pokemon_storage_system.h"
 #include "event_data.h"
@@ -360,12 +361,20 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
 
     TryFormChange(&pokemon, FORM_CHANGE_WITHDRAW);
 
-    if (GetMonData(&pokemon, MON_DATA_LEVEL) < GetCurrentLevelCap())
+    experience = GetMonData(&pokemon, MON_DATA_EXP) + ApplyTrainerRatingExperienceReduction(
+        GetMonData(&pokemon, MON_DATA_SPECIES), GetMonData(&pokemon, MON_DATA_EXP), daycareMon->steps);
+    if (GetMonData(&pokemon, MON_DATA_LEVEL) < MAX_LEVEL
+     && (IS_WAYFARER || GetMonData(&pokemon, MON_DATA_LEVEL) < GetCurrentLevelCap()))
     {
-        experience = GetMonData(&pokemon, MON_DATA_EXP) + daycareMon->steps;
-        u32 maxExp = GetExpAtLevelCap(&pokemon);
-        if (experience > maxExp)
-            experience = maxExp;
+        if (!IS_WAYFARER || gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap)
+        {
+            u32 maxExp = GetExpAtLevelCap(&pokemon);
+            u32 currentExp = GetMonData(&pokemon, MON_DATA_EXP);
+            if (currentExp >= maxExp)
+                experience = currentExp;
+            else if (experience > maxExp)
+                experience = maxExp;
+        }
         SetMonData(&pokemon, MON_DATA_EXP, &experience);
         ApplyDaycareExperience(&pokemon);
     }
@@ -400,7 +409,9 @@ static u8 GetLevelAfterDaycareSteps(struct BoxPokemon *mon, u32 steps)
 {
     struct BoxPokemon tempMon = *mon;
 
-    u32 experience = GetBoxMonData(mon, MON_DATA_EXP) + steps;
+    u32 currentExp = GetBoxMonData(mon, MON_DATA_EXP);
+    u16 species = GetBoxMonData(mon, MON_DATA_SPECIES);
+    u32 experience = currentExp + ApplyTrainerRatingExperienceReduction(species, currentExp, steps);
     SetBoxMonData(&tempMon, MON_DATA_EXP,  &experience);
     return GetLevelFromBoxMonExp(&tempMon);
 }
@@ -412,7 +423,7 @@ static u8 GetNumLevelsGainedFromSteps(struct DaycareMon *daycareMon)
 
     levelBefore = GetLevelFromBoxMonExp(&daycareMon->mon);
     levelAfter = GetLevelAfterDaycareSteps(&daycareMon->mon, daycareMon->steps);
-    if (levelAfter > GetCurrentLevelCap())
+    if ((!IS_WAYFARER || gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap) && levelAfter > GetCurrentLevelCap())
         levelAfter = GetCurrentLevelCap();
     return levelAfter - levelBefore;
 }
