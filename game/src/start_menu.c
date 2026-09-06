@@ -725,7 +725,7 @@ static bool8 HandleStartMenuInput(void)
         PlaySE(SE_SELECT);
         if (sStartMenuItems[sCurrentStartMenuActions[sStartMenuCursorPos]].func.u8_void == StartMenuPokedexCallback)
         {
-            if (GetNationalPokedexCount(FLAG_GET_SEEN) == 0)
+            if ((Dex_HasNationalUpgrade() ? Dex_GetNationalVisibleProgress(FLAG_GET_SEEN) : Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN)) == 0)
                 return FALSE;
         }
         if (sCurrentStartMenuActions[sStartMenuCursorPos] == MENU_ACTION_DEXNAV

@@ -354,8 +354,8 @@ gJohtoDexRatingText_LessThanMaxDex::
 
 gJohtoDexRatingText_Complete::
 	.string "Wow!\n"
-	.string "That is a complete Johto POKéDEX!\p"  
-	.string "Thanks to you, {PLAYER}, the Johto\n"
+	.string "That is a complete {STR_VAR_3} POKéDEX!\p"
+	.string "Thanks to you, {PLAYER}, the {STR_VAR_3}\n"
 	.string "POKéDEX is complete!\p"
 	.string "Wow...\n"
 	.string "You've done an incredible job!$"

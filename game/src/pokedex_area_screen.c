@@ -27,7 +27,6 @@
 #include "constants/region_map_sections.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
-#include "config/pokedex_plus_hgss.h"
 
 // There are two types of indicators for the area screen to show where a Pokémon can occur:
 // - Area glows, which highlight any of the maps in MAP_GROUP_TOWNS_AND_ROUTES that have the species.
@@ -146,9 +145,6 @@ bool32 ShouldShowAreaUnknownLabel(void);
 
 static const u32 sAreaGlow_Pal[] = INCBIN_U32("graphics/pokedex/area_glow.gbapal");
 static const u32 sAreaGlow_Gfx[] = INCBIN_U32("graphics/pokedex/area_glow.4bpp.smol");
-
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar.bin.smolTM");
-static void LoadHGSSScreenSelectBarSubmenu(void);
 
 static const u16 sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
 
@@ -839,8 +835,6 @@ static void Task_ShowPokedexAreaScreen(u8 taskId)
                 ShowAreaUnknownLabel();
             DoScheduledBgTilemapCopiesToVram();
         }
-        if (POKEDEX_PLUS_HGSS)
-            LoadHGSSScreenSelectBarSubmenu();
         ShowBg(2);
         ShowBg(3); // TryShowPokedexAreaMap will have done this already
         SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_OBJ_ON);
@@ -1086,10 +1080,4 @@ static void CreateAreaUnknownSprites(void)
             }
         }
     }
-}
-
-static void LoadHGSSScreenSelectBarSubmenu(void)
-{
-    CopyToBgTilemapBuffer(1, sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap, 0, 0);
-    CopyBgTilemapBufferToVram(1);
 }

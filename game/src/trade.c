@@ -1576,12 +1576,14 @@ static u8 CheckValidityOfTradeMons(u8 *aliveMons, u8 playerPartyCount, u8 player
     if (gSpeciesInfo[partnerSpecies].cannotBeTraded)
         return PARTNER_MON_INVALID;
 
-    // Partner cant trade Egg or non-Hoenn mon if player doesn't have National Dex
+#if !IS_WAYFARER
+    // Partner can't trade Egg or non-Hoenn mon if player doesn't have National Dex
     if (!IsNationalPokedexEnabled())
     {
         if (sTradeMenu->isEgg[TRADE_PARTNER][partnerMonIdx] || !IsSpeciesInRegionalDex(partnerSpecies))
             return PARTNER_MON_INVALID;
     }
+#endif
 
     if (hasLiveMon)
         hasLiveMon = BOTH_MONS_VALID;
@@ -2388,13 +2390,17 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
     u32 species[PARTY_SIZE];
     u32 species2[PARTY_SIZE];
 
+    if (partyCount < 1 || partyCount > PARTY_SIZE || monIdx < 0 || monIdx >= partyCount)
+        return CANT_TRADE_INVALID_MON;
+
     for (i = 0; i < partyCount; i++)
     {
         species2[i] = GetMonData(&playerParty[i], MON_DATA_SPECIES_OR_EGG);
         species[i] = GetMonData(&playerParty[i], MON_DATA_SPECIES);
     }
 
-    // Cant trade Eggs or non-Hoenn mons if player doesn't have National Dex
+#if !IS_WAYFARER
+    // Can't trade Eggs or non-Hoenn mons if player doesn't have National Dex
     if (!IsNationalPokedexEnabled())
     {
         if (species2[monIdx] == SPECIES_EGG)
@@ -2403,8 +2409,10 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
         if (!IsSpeciesInRegionalDex(species2[monIdx]))
             return CANT_TRADE_NATIONAL;
     }
+#endif
 
     partner = &gLinkPlayers[GetMultiplayerId() ^ 1];
+#if !IS_WAYFARER
     if ((partner->version & 0xFF) != VERSION_RUBY &&
         (partner->version & 0xFF) != VERSION_SAPPHIRE)
     {
@@ -2418,6 +2426,9 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
                 return CANT_TRADE_INVALID_MON;
         }
     }
+#else
+    (void)partner;
+#endif
 
     // Can't trade specific species
     if (gSpeciesInfo[species[monIdx]].cannotBeTraded)
@@ -2445,6 +2456,9 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
 
 s32 GetGameProgressForLinkTrade(void)
 {
+#if IS_WAYFARER
+    return TRADE_BOTH_PLAYERS_READY;
+#else
     // The usage of this value is a little unusual given it's treated as a bool,
     // but it's the result of its usage in FRLG, where 0 is FRLG, 1 is RS, and 2 is Emerald.
     s32 versionId; // 0: RSE, 2: FRLG
@@ -2482,17 +2496,19 @@ s32 GetGameProgressForLinkTrade(void)
         }
     }
     return TRADE_BOTH_PLAYERS_READY;
+#endif
 }
 
 int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, u16 playerSpecies2, u16 partnerSpecies, enum Type requestedType, u16 playerSpecies, bool8 isModernFatefulEncounter)
 {
+#if !IS_WAYFARER
     bool8 playerHasNationalDex = player.hasNationalDex;
     bool8 playerCanLinkNationally = player.canLinkNationally;
     bool8 partnerHasNationalDex = partner.hasNationalDex;
     bool8 partnerCanLinkNationally = partner.canLinkNationally;
     enum GameVersion partnerVersion = partner.version;
 
-    // If partner is not using Emerald, both players must have progressed the story
+    // If partner is not using Emerald, both players must have progressed the story.
     // to a certain point (becoming champion in RSE, finishing the Sevii islands in FRLG)
     if (partnerVersion != VERSION_EMERALD)
     {
@@ -2501,6 +2517,7 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
         else if (!partnerCanLinkNationally)
             return UR_TRADE_MSG_CANT_TRADE_WITH_PARTNER_2;
     }
+#endif
 
     // Can't trade specific species
     if (gSpeciesInfo[playerSpecies].cannotBeTraded)
@@ -2525,6 +2542,7 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
     if (playerSpecies2 == SPECIES_EGG && playerSpecies2 != partnerSpecies)
         return UR_TRADE_MSG_MON_CANT_BE_TRADED_NOW;
 
+#if !IS_WAYFARER
     // If the player doesn't have the National Dex then Eggs and non-Hoenn Pokémon can't be traded
     if (!playerHasNationalDex)
     {
@@ -2541,6 +2559,7 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
     // If the partner doesn't have the National Dex then the player's offer has to be a Hoenn Pokémon
     if (!partnerHasNationalDex && !IsSpeciesInRegionalDex(playerSpecies2))
         return UR_TRADE_MSG_PARTNER_CANT_ACCEPT_MON;
+#endif
 
     // Trade is allowed
     return UR_TRADE_MSG_NONE;
@@ -2548,12 +2567,15 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
 
 int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 species2, u16 species, bool8 isModernFatefulEncounter)
 {
+#if !IS_WAYFARER
     bool8 hasNationalDex = player.hasNationalDex;
+#endif
 
     // Can't trade specific species
     if (gSpeciesInfo[species].cannotBeTraded)
         return CANT_REGISTER_MON;
 
+#if !IS_WAYFARER
     if (hasNationalDex)
         return CAN_REGISTER_MON;
 
@@ -2565,13 +2587,19 @@ int CanRegisterMonForTradingBoard(struct RfuGameCompatibilityData player, u16 sp
         return CAN_REGISTER_MON;
 
     return CANT_REGISTER_MON_NOW;
+#else
+    return CAN_REGISTER_MON;
+#endif
 }
 
 // Spin Trade wasnt fully implemented, but this checks if a mon would be valid to Spin Trade
 // Unlike later generations, this version of Spin Trade isnt only for Eggs
 int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
 {
-    int i, version, versions, canTradeAnyMon, numMonsLeft;
+    int i, numMonsLeft;
+#if !IS_WAYFARER
+    int version, versions, canTradeAnyMon;
+#endif
     int speciesArray[PARTY_SIZE];
 
     // Make Eggs not count for numMonsLeft
@@ -2582,6 +2610,7 @@ int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
             speciesArray[i] = SPECIES_NONE;
     }
 
+#if !IS_WAYFARER
     versions = 0;
     canTradeAnyMon = TRUE;
     for (i = 0; i < GetLinkPlayerCount(); i++)
@@ -2617,6 +2646,7 @@ int CanSpinTradeMon(struct Pokemon *mon, u16 monIdx)
         if (speciesArray[monIdx] == SPECIES_NONE)
             return CANT_TRADE_EGG_YET;
     }
+#endif
 
     numMonsLeft = 0;
     for (i = 0; i < gPlayerPartyCount; i++)
@@ -3052,6 +3082,24 @@ static void CB2_InitInGameTrade(void)
     UpdatePaletteFade();
 }
 
+static void UpdatePokedexForReceivedSpecies(u16 species, u32 personality)
+{
+    enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
+
+    if (Dex_IsValidNationalId(dexNum))
+    {
+        GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
+        HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
+    }
+}
+
+#if TESTING
+void Test_UpdatePokedexForReceivedSpecies(u16 species, u32 personality)
+{
+    UpdatePokedexForReceivedSpecies(species, personality);
+}
+#endif
+
 static void UpdatePokedexForReceivedMon(u8 partyIdx)
 {
     struct Pokemon *mon;
@@ -3064,9 +3112,7 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
-        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
-        GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
-        HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
+        UpdatePokedexForReceivedSpecies(species, personality);
     }
 }
 

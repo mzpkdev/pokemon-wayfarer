@@ -1860,7 +1860,7 @@ void TryPutTodaysRivalTrainerOnAir(void)
         }
         show->rivalTrainer.badgeCount = nBadges;
         if (IsNationalPokedexEnabled())
-            show->rivalTrainer.dexCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+            show->rivalTrainer.dexCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
         else
             show->rivalTrainer.dexCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
         show->rivalTrainer.location = gMapHeader.regionMapSectionId;
@@ -3080,30 +3080,47 @@ static u16 GetRandomDifferentSpeciesAndNameSeenByPlayer(u8 varIdx, u16 excludedS
     return species;
 }
 
+static bool8 IsTVSpeciesVisible(enum NationalDexOrder dexNum)
+{
+    if (Dex_HasNationalUpgrade())
+        return Dex_IsNationalEntryVisible(dexNum);
+    return Dex_IsRegionalEntryVisible(dexNum);
+}
+
 static u16 GetRandomDifferentSpeciesSeenByPlayer(u16 excludedSpecies)
 {
     enum NationalDexOrder selectedNatDex;
     enum NationalDexOrder excludexNatDex = SpeciesToNationalPokedexNum(excludedSpecies);
     enum NationalDexOrder *natDexArray = Alloc(POKEMON_SLOTS_NUMBER * sizeof(enum NationalDexOrder));
+    u16 localEntry;
     u32 count = 0;
-    for (u32 i = 0; i < NUM_DEX_FLAG_BYTES; i++)
+    enum NationalDexOrder natDex;
+
+    if (!Dex_HasNationalUpgrade())
     {
-        u32 tmp = gSaveBlock1Ptr->dexSeen[i];
-        for (u32 j = 0; j < 8; j++)
+        for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
         {
-            if (tmp & 1)
-                natDexArray[count++] = i * 8 + j + 1;
-            tmp >>= 1;
+            natDex = Dex_RegionalEntryToNational(localEntry);
+            if (natDex != excludexNatDex && GetSetPokedexFlag(natDex, FLAG_GET_SEEN))
+                natDexArray[count++] = natDex;
         }
     }
-    if (count <= 1)
+    else
+    {
+        for (natDex = Dex_GetFirstVisibleNationalEntry();
+             natDex != NATIONAL_DEX_NONE;
+             natDex = Dex_GetNextVisibleNationalEntry(natDex))
+        {
+            if (natDex != excludexNatDex && GetSetPokedexFlag(natDex, FLAG_GET_SEEN))
+                natDexArray[count++] = natDex;
+        }
+    }
+    if (count == 0)
     {
         Free(natDexArray);
         return excludedSpecies;
     }
-    do {
-        selectedNatDex = natDexArray[RandomUniform(RNG_NONE, 0, count - 1)];
-    } while (selectedNatDex == excludexNatDex);
+    selectedNatDex = natDexArray[RandomUniform(RNG_NONE, 0, count - 1)];
     Free(natDexArray);
     return NationalPokedexNumToSpecies(selectedNatDex);
 }
@@ -3777,7 +3794,9 @@ static void DeactivateShow(u8 showIdx)
 
 static void DeactivateShowIfNotSeenSpecies(u16 species, u8 showIdx)
 {
-    if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN))
+    enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
+
+    if (!GetSetPokedexFlag(dexNum, FLAG_GET_SEEN) || !IsTVSpeciesVisible(dexNum))
         gSaveBlock1Ptr->tvShows[showIdx].common.active = FALSE;
 }
 

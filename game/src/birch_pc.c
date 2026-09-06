@@ -2,6 +2,7 @@
 #include "event_data.h"
 #include "field_message_box.h"
 #include "pokedex.h"
+#include "string_util.h"
 #include "strings.h"
 
 bool16 ScriptGetPokedexInfo(void)
@@ -13,8 +14,8 @@ bool16 ScriptGetPokedexInfo(void)
     }
     else
     {
-        gSpecialVar_0x8005 = GetNationalPokedexCount(FLAG_GET_SEEN);
-        gSpecialVar_0x8006 = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+        gSpecialVar_0x8005 = Dex_GetNationalVisibleProgress(FLAG_GET_SEEN);
+        gSpecialVar_0x8006 = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
     }
 
     return IsNationalPokedexEnabled();
@@ -52,11 +53,24 @@ static const u8 *const sBirchDexRatingTexts[BIRCH_DEX_STRINGS] =
 const u8 *GetPokedexRatingText(u32 count)
 {
     u32 i, j, k;
+    u16 entryCount = Dex_GetActiveRegionalEntryCount();
     // doesNotCountForRegionalPokedex
-    u16 maxDex = REGIONAL_DEX_COUNT - 1;
-    for (i = 0; i < REGIONAL_DEX_COUNT - 1; i++)
+    u16 maxDex = entryCount;
+
+    if (entryCount == 0)
     {
-        j = RegionalToNationalOrder(i + 1);
+        gSpecialVar_Result = FALSE;
+        return gJohtoDexRatingText_LessThan10;
+    }
+
+    for (i = 0; i < entryCount; i++)
+    {
+        j = Dex_RegionalEntryToNational(i + 1);
+        if (!Dex_IsValidNationalId(j))
+        {
+            gSpecialVar_Result = FALSE;
+            return gJohtoDexRatingText_LessThan10;
+        }
         k = NationalPokedexNumToSpecies(j);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
@@ -69,6 +83,7 @@ const u8 *GetPokedexRatingText(u32 count)
     if (count >= maxDex)
     {
         gSpecialVar_Result = TRUE;
+        StringCopy(gStringVar3, Dex_GetActiveRegionName());
         return gJohtoDexRatingText_Complete;
     }
 
@@ -136,16 +151,22 @@ const u8 *GetPokedexRatingText(u32 count)
 
 const u8 *GetNationalPokedexRatingText(u32 count)
 {
-    u32 i, j, k;
-    // doesNotCountForObtainablePokedex
-    u16 maxDex = OBTAINABLE_DEX_COUNT - 1;
-    for (i = 1; i < OBTAINABLE_DEX_COUNT - 1; i++)
+    enum NationalDexOrder id;
+    u32 k;
+    u16 maxDex = Dex_GetNationalVisibleEntryCount();
+
+    if (maxDex == 0)
     {
-        j = ObtainableToNationalOrder(i + 1);
-        k = NationalPokedexNumToSpecies(j);
+        gSpecialVar_Result = FALSE;
+        return gNationalDexRatingText_LessThan100;
+    }
+
+    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
+    {
+        k = NationalPokedexNumToSpecies(id);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
-            if (GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
+            if (GetSetPokedexFlag(id, FLAG_GET_CAUGHT) && count != 0)
                 count--;
             maxDex--;
         }
@@ -198,11 +219,11 @@ const u8 *GetNationalPokedexRatingText(u32 count)
 const u8 *GetPokedexRatingText(u32 count)
 {
     u32 i, j, k;
-    u16 maxDex = REGIONAL_DEX_COUNT - 1;
+    u16 maxDex = Dex_GetActiveRegionalEntryCount() - 1;
     // doesNotCountForRegionalPokedex
-    for (i = 0; i < REGIONAL_DEX_COUNT; i++)
+    for (i = 0; i < Dex_GetActiveRegionalEntryCount(); i++)
     {
-        j = RegionalToNationalOrder(i + 1);
+        j = Dex_RegionalEntryToNational(i + 1);
         k = NationalPokedexNumToSpecies(j);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
@@ -253,8 +274,8 @@ u16 GetFrlgPokedexCount(void)
     }
     else
     {
-        gSpecialVar_0x8005 = GetNationalPokedexCount(FLAG_GET_SEEN);
-        gSpecialVar_0x8006 = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+        gSpecialVar_0x8005 = Dex_GetNationalVisibleProgress(FLAG_GET_SEEN);
+        gSpecialVar_0x8006 = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
     }
     return IsNationalPokedexEnabled();
 }

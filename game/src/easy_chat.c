@@ -214,6 +214,8 @@ static void SpriteCB_WordSelectCursor(struct Sprite *);
 static void SetWordSelectCursorPos(u8, u8);
 static bool8 EasyChatIsNationalPokedexEnabled(void);
 static u16 GetRandomUnlockedEasyChatPokemon(void);
+static u16 GetRandomUnlockedNationalEasyChatPokemon(void);
+static u16 GetNumUnlockedNationalEasyChatPokemon(void);
 static void SetUnlockedEasyChatGroups(void);
 static void SetUnlockedWordsByAlphabet(void);
 static u8 *CopyEasyChatWordPadded(u8 *, u16, u16);
@@ -5114,7 +5116,10 @@ static bool8 IsEasyChatGroupUnlocked(u8 groupId)
 u16 EasyChat_GetNumWordsInGroup(u8 groupId)
 {
     if (groupId == EC_GROUP_POKEMON)
-        return GetNationalPokedexCount(FLAG_GET_SEEN);
+        return Dex_HasNationalUpgrade() ? Dex_GetNationalVisibleProgress(FLAG_GET_SEEN) : Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN);
+
+    if (groupId == EC_GROUP_POKEMON_NATIONAL && IsEasyChatGroupUnlocked(groupId))
+        return GetNumUnlockedNationalEasyChatPokemon();
 
     if (IsEasyChatGroupUnlocked(groupId))
         return gEasyChatGroups[groupId].numEnabledWords;
@@ -5361,6 +5366,8 @@ u16 GetRandomEasyChatWordFromUnlockedGroup(u16 groupId)
 
     if (groupId == EC_GROUP_POKEMON)
         return GetRandomUnlockedEasyChatPokemon();
+    if (groupId == EC_GROUP_POKEMON_NATIONAL)
+        return GetRandomUnlockedNationalEasyChatPokemon();
 
     return GetRandomEasyChatWordFromGroup(groupId);
 }
@@ -5520,6 +5527,13 @@ static bool8 EasyChatIsNationalPokedexEnabled(void)
     return IsNationalPokedexEnabled();
 }
 
+static bool8 IsEasyChatPokemonVisible(enum NationalDexOrder dexNum)
+{
+    if (Dex_HasNationalUpgrade())
+        return Dex_IsNationalEntryVisible(dexNum);
+    return Dex_IsRegionalEntryVisible(dexNum);
+}
+
 static u16 GetRandomUnlockedEasyChatPokemon(void)
 {
     u16 i;
@@ -5535,7 +5549,7 @@ static u16 GetRandomUnlockedEasyChatPokemon(void)
     for (i = 0; i < numWords; i++)
     {
         enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(*species);
-        if (GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
+        if (IsEasyChatPokemonVisible(dexNum) && GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
         {
             if (index)
                 index--;
@@ -5544,6 +5558,42 @@ static u16 GetRandomUnlockedEasyChatPokemon(void)
         }
 
         species++;
+    }
+
+    return EC_EMPTY_WORD;
+}
+
+static u16 GetNumUnlockedNationalEasyChatPokemon(void)
+{
+    u16 i;
+    u16 count = 0;
+    const u16 *species = gEasyChatGroups[EC_GROUP_POKEMON_NATIONAL].wordData.valueList;
+
+    for (i = 0; i < gEasyChatGroups[EC_GROUP_POKEMON_NATIONAL].numWords; i++, species++)
+        if (IsEasyChatIndexAndGroupUnlocked(*species, EC_GROUP_POKEMON_NATIONAL))
+            count++;
+    return count;
+}
+
+static u16 GetRandomUnlockedNationalEasyChatPokemon(void)
+{
+    u16 i;
+    u16 index = GetNumUnlockedNationalEasyChatPokemon();
+    const u16 *species = gEasyChatGroups[EC_GROUP_POKEMON_NATIONAL].wordData.valueList;
+
+    if (index == 0)
+        return EC_EMPTY_WORD;
+
+    index = Random() % index;
+    for (i = 0; i < gEasyChatGroups[EC_GROUP_POKEMON_NATIONAL].numWords; i++, species++)
+    {
+        if (IsEasyChatIndexAndGroupUnlocked(*species, EC_GROUP_POKEMON_NATIONAL))
+        {
+            if (index)
+                index--;
+            else
+                return EC_WORD(EC_GROUP_POKEMON_NATIONAL, *species);
+        }
     }
 
     return EC_EMPTY_WORD;
@@ -5605,7 +5655,7 @@ static void SetUnlockedEasyChatGroups(void)
     int i;
 
     sWordData->numUnlockedGroups = 0;
-    if (GetNationalPokedexCount(FLAG_GET_SEEN))
+    if (Dex_HasNationalUpgrade() ? Dex_GetNationalVisibleProgress(FLAG_GET_SEEN) : Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN))
         sWordData->unlockedGroupIds[sWordData->numUnlockedGroups++] = EC_GROUP_POKEMON;
 
     // These groups are unlocked automatically
@@ -5798,11 +5848,19 @@ static bool8 IsEasyChatIndexAndGroupUnlocked(u16 wordIndex, u8 groupId)
     switch (groupId)
     {
     case EC_GROUP_POKEMON:
-        return GetSetPokedexFlag(SpeciesToNationalPokedexNum(wordIndex), FLAG_GET_SEEN);
+    {
+        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(wordIndex);
+        return IsEasyChatPokemonVisible(dexNum) && GetSetPokedexFlag(dexNum, FLAG_GET_SEEN);
+    }
     case EC_GROUP_POKEMON_NATIONAL:
+    {
+        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(wordIndex);
+        if (!Dex_IsNationalEntryVisible(dexNum))
+            return FALSE;
         if (IsRestrictedWordSpecies(wordIndex))
-            GetSetPokedexFlag(SpeciesToNationalPokedexNum(wordIndex), FLAG_GET_SEEN);
+            return GetSetPokedexFlag(dexNum, FLAG_GET_SEEN);
         return TRUE;
+    }
     case EC_GROUP_MOVE_1:
     case EC_GROUP_MOVE_2:
         return TRUE;

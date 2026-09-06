@@ -1,0 +1,1186 @@
+#include "global.h"
+#include "event_data.h"
+#include "pokedex.h"
+#include "pokemon.h"
+#include "string_util.h"
+#include "strings.h"
+#include "trade.h"
+#include "test/test.h"
+#include "constants/pokedex.h"
+
+#if IS_WAYFARER
+static const enum NationalDexOrder sExpectedKantoOrder[KANTO_DEX_COUNT - 1] =
+{
+    NATIONAL_DEX_BULBASAUR,
+    NATIONAL_DEX_IVYSAUR,
+    NATIONAL_DEX_VENUSAUR,
+    NATIONAL_DEX_CHARMANDER,
+    NATIONAL_DEX_CHARMELEON,
+    NATIONAL_DEX_CHARIZARD,
+    NATIONAL_DEX_SQUIRTLE,
+    NATIONAL_DEX_WARTORTLE,
+    NATIONAL_DEX_BLASTOISE,
+    NATIONAL_DEX_CATERPIE,
+    NATIONAL_DEX_METAPOD,
+    NATIONAL_DEX_BUTTERFREE,
+    NATIONAL_DEX_WEEDLE,
+    NATIONAL_DEX_KAKUNA,
+    NATIONAL_DEX_BEEDRILL,
+    NATIONAL_DEX_PIDGEY,
+    NATIONAL_DEX_PIDGEOTTO,
+    NATIONAL_DEX_PIDGEOT,
+    NATIONAL_DEX_RATTATA,
+    NATIONAL_DEX_RATICATE,
+    NATIONAL_DEX_SPEAROW,
+    NATIONAL_DEX_FEAROW,
+    NATIONAL_DEX_EKANS,
+    NATIONAL_DEX_ARBOK,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_PICHU,
+#endif
+    NATIONAL_DEX_PIKACHU,
+    NATIONAL_DEX_RAICHU,
+    NATIONAL_DEX_SANDSHREW,
+    NATIONAL_DEX_SANDSLASH,
+    NATIONAL_DEX_NIDORAN_F,
+    NATIONAL_DEX_NIDORINA,
+    NATIONAL_DEX_NIDOQUEEN,
+    NATIONAL_DEX_NIDORAN_M,
+    NATIONAL_DEX_NIDORINO,
+    NATIONAL_DEX_NIDOKING,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_CLEFFA,
+#endif
+    NATIONAL_DEX_CLEFAIRY,
+    NATIONAL_DEX_CLEFABLE,
+    NATIONAL_DEX_VULPIX,
+    NATIONAL_DEX_NINETALES,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_IGGLYBUFF,
+#endif
+    NATIONAL_DEX_JIGGLYPUFF,
+    NATIONAL_DEX_WIGGLYTUFF,
+    NATIONAL_DEX_ZUBAT,
+    NATIONAL_DEX_GOLBAT,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_CROBAT,
+#endif
+    NATIONAL_DEX_ODDISH,
+    NATIONAL_DEX_GLOOM,
+    NATIONAL_DEX_VILEPLUME,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_BELLOSSOM,
+#endif
+    NATIONAL_DEX_PARAS,
+    NATIONAL_DEX_PARASECT,
+    NATIONAL_DEX_VENONAT,
+    NATIONAL_DEX_VENOMOTH,
+    NATIONAL_DEX_DIGLETT,
+    NATIONAL_DEX_DUGTRIO,
+    NATIONAL_DEX_MEOWTH,
+    NATIONAL_DEX_PERSIAN,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
+    NATIONAL_DEX_PERRSERKER,
+#endif
+    NATIONAL_DEX_PSYDUCK,
+    NATIONAL_DEX_GOLDUCK,
+    NATIONAL_DEX_MANKEY,
+    NATIONAL_DEX_PRIMEAPE,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_9_CROSS_EVOS
+    NATIONAL_DEX_ANNIHILAPE,
+#endif
+    NATIONAL_DEX_GROWLITHE,
+    NATIONAL_DEX_ARCANINE,
+    NATIONAL_DEX_POLIWAG,
+    NATIONAL_DEX_POLIWHIRL,
+    NATIONAL_DEX_POLIWRATH,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_POLITOED,
+#endif
+    NATIONAL_DEX_ABRA,
+    NATIONAL_DEX_KADABRA,
+    NATIONAL_DEX_ALAKAZAM,
+    NATIONAL_DEX_MACHOP,
+    NATIONAL_DEX_MACHOKE,
+    NATIONAL_DEX_MACHAMP,
+    NATIONAL_DEX_BELLSPROUT,
+    NATIONAL_DEX_WEEPINBELL,
+    NATIONAL_DEX_VICTREEBEL,
+    NATIONAL_DEX_TENTACOOL,
+    NATIONAL_DEX_TENTACRUEL,
+    NATIONAL_DEX_GEODUDE,
+    NATIONAL_DEX_GRAVELER,
+    NATIONAL_DEX_GOLEM,
+    NATIONAL_DEX_PONYTA,
+    NATIONAL_DEX_RAPIDASH,
+    NATIONAL_DEX_SLOWPOKE,
+    NATIONAL_DEX_SLOWBRO,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_SLOWKING,
+#endif
+    NATIONAL_DEX_MAGNEMITE,
+    NATIONAL_DEX_MAGNETON,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_MAGNEZONE,
+#endif
+    NATIONAL_DEX_FARFETCHD,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
+    NATIONAL_DEX_SIRFETCHD,
+#endif
+    NATIONAL_DEX_DODUO,
+    NATIONAL_DEX_DODRIO,
+    NATIONAL_DEX_SEEL,
+    NATIONAL_DEX_DEWGONG,
+    NATIONAL_DEX_GRIMER,
+    NATIONAL_DEX_MUK,
+    NATIONAL_DEX_SHELLDER,
+    NATIONAL_DEX_CLOYSTER,
+    NATIONAL_DEX_GASTLY,
+    NATIONAL_DEX_HAUNTER,
+    NATIONAL_DEX_GENGAR,
+    NATIONAL_DEX_ONIX,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_STEELIX,
+#endif
+    NATIONAL_DEX_DROWZEE,
+    NATIONAL_DEX_HYPNO,
+    NATIONAL_DEX_KRABBY,
+    NATIONAL_DEX_KINGLER,
+    NATIONAL_DEX_VOLTORB,
+    NATIONAL_DEX_ELECTRODE,
+    NATIONAL_DEX_EXEGGCUTE,
+    NATIONAL_DEX_EXEGGUTOR,
+    NATIONAL_DEX_CUBONE,
+    NATIONAL_DEX_MAROWAK,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_TYROGUE,
+#endif
+    NATIONAL_DEX_HITMONLEE,
+    NATIONAL_DEX_HITMONCHAN,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_HITMONTOP,
+#endif
+    NATIONAL_DEX_LICKITUNG,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_LICKILICKY,
+#endif
+    NATIONAL_DEX_KOFFING,
+    NATIONAL_DEX_WEEZING,
+    NATIONAL_DEX_RHYHORN,
+    NATIONAL_DEX_RHYDON,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_RHYPERIOR,
+    NATIONAL_DEX_HAPPINY,
+#endif
+    NATIONAL_DEX_CHANSEY,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_BLISSEY,
+#endif
+    NATIONAL_DEX_TANGELA,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_TANGROWTH,
+#endif
+    NATIONAL_DEX_KANGASKHAN,
+    NATIONAL_DEX_HORSEA,
+    NATIONAL_DEX_SEADRA,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_KINGDRA,
+#endif
+    NATIONAL_DEX_GOLDEEN,
+    NATIONAL_DEX_SEAKING,
+    NATIONAL_DEX_STARYU,
+    NATIONAL_DEX_STARMIE,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_MIME_JR,
+#endif
+    NATIONAL_DEX_MR_MIME,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
+    NATIONAL_DEX_MR_RIME,
+#endif
+    NATIONAL_DEX_SCYTHER,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_SCIZOR,
+#endif
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_8_CROSS_EVOS
+    NATIONAL_DEX_KLEAVOR,
+#endif
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_SMOOCHUM,
+#endif
+    NATIONAL_DEX_JYNX,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_ELEKID,
+#endif
+    NATIONAL_DEX_ELECTABUZZ,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_ELECTIVIRE,
+#endif
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_MAGBY,
+#endif
+    NATIONAL_DEX_MAGMAR,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_MAGMORTAR,
+#endif
+    NATIONAL_DEX_PINSIR,
+    NATIONAL_DEX_TAUROS,
+    NATIONAL_DEX_MAGIKARP,
+    NATIONAL_DEX_GYARADOS,
+    NATIONAL_DEX_LAPRAS,
+    NATIONAL_DEX_DITTO,
+    NATIONAL_DEX_EEVEE,
+    NATIONAL_DEX_VAPOREON,
+    NATIONAL_DEX_JOLTEON,
+    NATIONAL_DEX_FLAREON,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_ESPEON,
+    NATIONAL_DEX_UMBREON,
+#endif
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_LEAFEON,
+    NATIONAL_DEX_GLACEON,
+#endif
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_6_CROSS_EVOS
+    NATIONAL_DEX_SYLVEON,
+#endif
+    NATIONAL_DEX_PORYGON,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_2_CROSS_EVOS
+    NATIONAL_DEX_PORYGON2,
+#endif
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_PORYGON_Z,
+#endif
+    NATIONAL_DEX_OMANYTE,
+    NATIONAL_DEX_OMASTAR,
+    NATIONAL_DEX_KABUTO,
+    NATIONAL_DEX_KABUTOPS,
+    NATIONAL_DEX_AERODACTYL,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_MUNCHLAX,
+#endif
+    NATIONAL_DEX_SNORLAX,
+    NATIONAL_DEX_ARTICUNO,
+    NATIONAL_DEX_ZAPDOS,
+    NATIONAL_DEX_MOLTRES,
+    NATIONAL_DEX_DRATINI,
+    NATIONAL_DEX_DRAGONAIR,
+    NATIONAL_DEX_DRAGONITE,
+    NATIONAL_DEX_MEWTWO,
+    NATIONAL_DEX_MEW,
+};
+static const enum NationalDexOrder sExpectedJohtoOrder[JOHTO_DEX_COUNT - 1] =
+{
+    NATIONAL_DEX_CHIKORITA,
+    NATIONAL_DEX_BAYLEEF,
+    NATIONAL_DEX_MEGANIUM,
+    NATIONAL_DEX_CYNDAQUIL,
+    NATIONAL_DEX_QUILAVA,
+    NATIONAL_DEX_TYPHLOSION,
+    NATIONAL_DEX_TOTODILE,
+    NATIONAL_DEX_CROCONAW,
+    NATIONAL_DEX_FERALIGATR,
+    NATIONAL_DEX_PIDGEY,
+    NATIONAL_DEX_PIDGEOTTO,
+    NATIONAL_DEX_PIDGEOT,
+    NATIONAL_DEX_SPEAROW,
+    NATIONAL_DEX_FEAROW,
+    NATIONAL_DEX_HOOTHOOT,
+    NATIONAL_DEX_NOCTOWL,
+    NATIONAL_DEX_RATTATA,
+    NATIONAL_DEX_RATICATE,
+    NATIONAL_DEX_SENTRET,
+    NATIONAL_DEX_FURRET,
+    NATIONAL_DEX_PICHU,
+    NATIONAL_DEX_PIKACHU,
+    NATIONAL_DEX_RAICHU,
+    NATIONAL_DEX_CATERPIE,
+    NATIONAL_DEX_METAPOD,
+    NATIONAL_DEX_BUTTERFREE,
+    NATIONAL_DEX_WEEDLE,
+    NATIONAL_DEX_KAKUNA,
+    NATIONAL_DEX_BEEDRILL,
+    NATIONAL_DEX_LEDYBA,
+    NATIONAL_DEX_LEDIAN,
+    NATIONAL_DEX_SPINARAK,
+    NATIONAL_DEX_ARIADOS,
+    NATIONAL_DEX_GEODUDE,
+    NATIONAL_DEX_GRAVELER,
+    NATIONAL_DEX_GOLEM,
+    NATIONAL_DEX_ZUBAT,
+    NATIONAL_DEX_GOLBAT,
+    NATIONAL_DEX_CROBAT,
+    NATIONAL_DEX_CLEFFA,
+    NATIONAL_DEX_CLEFAIRY,
+    NATIONAL_DEX_CLEFABLE,
+    NATIONAL_DEX_IGGLYBUFF,
+    NATIONAL_DEX_JIGGLYPUFF,
+    NATIONAL_DEX_WIGGLYTUFF,
+    NATIONAL_DEX_TOGEPI,
+    NATIONAL_DEX_TOGETIC,
+    NATIONAL_DEX_TOGEKISS,
+    NATIONAL_DEX_SANDSHREW,
+    NATIONAL_DEX_SANDSLASH,
+    NATIONAL_DEX_EKANS,
+    NATIONAL_DEX_ARBOK,
+    NATIONAL_DEX_DUNSPARCE,
+    NATIONAL_DEX_DUDUNSPARCE,
+    NATIONAL_DEX_MAREEP,
+    NATIONAL_DEX_FLAAFFY,
+    NATIONAL_DEX_AMPHAROS,
+    NATIONAL_DEX_WOOPER,
+    NATIONAL_DEX_QUAGSIRE,
+    NATIONAL_DEX_GASTLY,
+    NATIONAL_DEX_HAUNTER,
+    NATIONAL_DEX_GENGAR,
+    NATIONAL_DEX_UNOWN,
+    NATIONAL_DEX_ONIX,
+    NATIONAL_DEX_STEELIX,
+    NATIONAL_DEX_BELLSPROUT,
+    NATIONAL_DEX_WEEPINBELL,
+    NATIONAL_DEX_VICTREEBEL,
+    NATIONAL_DEX_HOPPIP,
+    NATIONAL_DEX_SKIPLOOM,
+    NATIONAL_DEX_JUMPLUFF,
+    NATIONAL_DEX_PARAS,
+    NATIONAL_DEX_PARASECT,
+    NATIONAL_DEX_POLIWAG,
+    NATIONAL_DEX_POLIWHIRL,
+    NATIONAL_DEX_POLIWRATH,
+    NATIONAL_DEX_POLITOED,
+    NATIONAL_DEX_MAGIKARP,
+    NATIONAL_DEX_GYARADOS,
+    NATIONAL_DEX_GOLDEEN,
+    NATIONAL_DEX_SEAKING,
+    NATIONAL_DEX_SLOWPOKE,
+    NATIONAL_DEX_SLOWBRO,
+    NATIONAL_DEX_SLOWKING,
+    NATIONAL_DEX_ODDISH,
+    NATIONAL_DEX_GLOOM,
+    NATIONAL_DEX_VILEPLUME,
+    NATIONAL_DEX_BELLOSSOM,
+    NATIONAL_DEX_DROWZEE,
+    NATIONAL_DEX_HYPNO,
+    NATIONAL_DEX_ABRA,
+    NATIONAL_DEX_KADABRA,
+    NATIONAL_DEX_ALAKAZAM,
+    NATIONAL_DEX_DITTO,
+    NATIONAL_DEX_PINECO,
+    NATIONAL_DEX_FORRETRESS,
+    NATIONAL_DEX_NIDORAN_F,
+    NATIONAL_DEX_NIDORINA,
+    NATIONAL_DEX_NIDOQUEEN,
+    NATIONAL_DEX_NIDORAN_M,
+    NATIONAL_DEX_NIDORINO,
+    NATIONAL_DEX_NIDOKING,
+    NATIONAL_DEX_YANMA,
+    NATIONAL_DEX_YANMEGA,
+    NATIONAL_DEX_SUNKERN,
+    NATIONAL_DEX_SUNFLORA,
+    NATIONAL_DEX_EXEGGCUTE,
+    NATIONAL_DEX_EXEGGUTOR,
+    NATIONAL_DEX_BONSLY,
+    NATIONAL_DEX_SUDOWOODO,
+    NATIONAL_DEX_WYNAUT,
+    NATIONAL_DEX_WOBBUFFET,
+    NATIONAL_DEX_VENONAT,
+    NATIONAL_DEX_VENOMOTH,
+    NATIONAL_DEX_SCYTHER,
+    NATIONAL_DEX_SCIZOR,
+    NATIONAL_DEX_KLEAVOR,
+    NATIONAL_DEX_PINSIR,
+    NATIONAL_DEX_HERACROSS,
+    NATIONAL_DEX_KOFFING,
+    NATIONAL_DEX_WEEZING,
+    NATIONAL_DEX_GRIMER,
+    NATIONAL_DEX_MUK,
+    NATIONAL_DEX_MAGNEMITE,
+    NATIONAL_DEX_MAGNETON,
+    NATIONAL_DEX_MAGNEZONE,
+    NATIONAL_DEX_VOLTORB,
+    NATIONAL_DEX_ELECTRODE,
+    NATIONAL_DEX_AIPOM,
+    NATIONAL_DEX_AMBIPOM,
+    NATIONAL_DEX_SNUBBULL,
+    NATIONAL_DEX_GRANBULL,
+    NATIONAL_DEX_VULPIX,
+    NATIONAL_DEX_NINETALES,
+    NATIONAL_DEX_GROWLITHE,
+    NATIONAL_DEX_ARCANINE,
+    NATIONAL_DEX_STANTLER,
+    NATIONAL_DEX_WYRDEER,
+    NATIONAL_DEX_AZURILL,
+    NATIONAL_DEX_MARILL,
+    NATIONAL_DEX_AZUMARILL,
+    NATIONAL_DEX_DIGLETT,
+    NATIONAL_DEX_DUGTRIO,
+    NATIONAL_DEX_MANKEY,
+    NATIONAL_DEX_PRIMEAPE,
+    NATIONAL_DEX_ANNIHILAPE,
+    NATIONAL_DEX_MEOWTH,
+    NATIONAL_DEX_PERSIAN,
+    NATIONAL_DEX_PSYDUCK,
+    NATIONAL_DEX_GOLDUCK,
+    NATIONAL_DEX_MACHOP,
+    NATIONAL_DEX_MACHOKE,
+    NATIONAL_DEX_MACHAMP,
+    NATIONAL_DEX_TYROGUE,
+    NATIONAL_DEX_HITMONLEE,
+    NATIONAL_DEX_HITMONCHAN,
+    NATIONAL_DEX_HITMONTOP,
+    NATIONAL_DEX_GIRAFARIG,
+    NATIONAL_DEX_FARIGIRAF,
+    NATIONAL_DEX_TAUROS,
+    NATIONAL_DEX_MILTANK,
+    NATIONAL_DEX_MAGBY,
+    NATIONAL_DEX_MAGMAR,
+    NATIONAL_DEX_MAGMORTAR,
+    NATIONAL_DEX_SMOOCHUM,
+    NATIONAL_DEX_JYNX,
+    NATIONAL_DEX_ELEKID,
+    NATIONAL_DEX_ELECTABUZZ,
+    NATIONAL_DEX_ELECTIVIRE,
+    NATIONAL_DEX_MIME_JR,
+    NATIONAL_DEX_MR_MIME,
+    NATIONAL_DEX_SMEARGLE,
+    NATIONAL_DEX_FARFETCHD,
+    NATIONAL_DEX_NATU,
+    NATIONAL_DEX_XATU,
+    NATIONAL_DEX_QWILFISH,
+    NATIONAL_DEX_TENTACOOL,
+    NATIONAL_DEX_TENTACRUEL,
+    NATIONAL_DEX_KRABBY,
+    NATIONAL_DEX_KINGLER,
+    NATIONAL_DEX_SHUCKLE,
+    NATIONAL_DEX_STARYU,
+    NATIONAL_DEX_STARMIE,
+    NATIONAL_DEX_SHELLDER,
+    NATIONAL_DEX_CLOYSTER,
+    NATIONAL_DEX_CORSOLA,
+    NATIONAL_DEX_REMORAID,
+    NATIONAL_DEX_OCTILLERY,
+    NATIONAL_DEX_CHINCHOU,
+    NATIONAL_DEX_LANTURN,
+    NATIONAL_DEX_SEEL,
+    NATIONAL_DEX_DEWGONG,
+    NATIONAL_DEX_LICKITUNG,
+    NATIONAL_DEX_LICKILICKY,
+    NATIONAL_DEX_TANGELA,
+    NATIONAL_DEX_TANGROWTH,
+    NATIONAL_DEX_EEVEE,
+    NATIONAL_DEX_VAPOREON,
+    NATIONAL_DEX_JOLTEON,
+    NATIONAL_DEX_FLAREON,
+    NATIONAL_DEX_ESPEON,
+    NATIONAL_DEX_UMBREON,
+    NATIONAL_DEX_LEAFEON,
+    NATIONAL_DEX_GLACEON,
+    NATIONAL_DEX_SYLVEON,
+    NATIONAL_DEX_HORSEA,
+    NATIONAL_DEX_SEADRA,
+    NATIONAL_DEX_KINGDRA,
+    NATIONAL_DEX_GLIGAR,
+    NATIONAL_DEX_GLISCOR,
+    NATIONAL_DEX_DELIBIRD,
+    NATIONAL_DEX_SWINUB,
+    NATIONAL_DEX_PILOSWINE,
+    NATIONAL_DEX_MAMOSWINE,
+    NATIONAL_DEX_TEDDIURSA,
+    NATIONAL_DEX_URSARING,
+    NATIONAL_DEX_URSALUNA,
+    NATIONAL_DEX_PHANPY,
+    NATIONAL_DEX_DONPHAN,
+    NATIONAL_DEX_MANTYKE,
+    NATIONAL_DEX_MANTINE,
+    NATIONAL_DEX_SKARMORY,
+    NATIONAL_DEX_DODUO,
+    NATIONAL_DEX_DODRIO,
+    NATIONAL_DEX_PONYTA,
+    NATIONAL_DEX_RAPIDASH,
+    NATIONAL_DEX_CUBONE,
+    NATIONAL_DEX_MAROWAK,
+    NATIONAL_DEX_KANGASKHAN,
+    NATIONAL_DEX_RHYHORN,
+    NATIONAL_DEX_RHYDON,
+    NATIONAL_DEX_RHYPERIOR,
+    NATIONAL_DEX_MURKROW,
+    NATIONAL_DEX_HONCHKROW,
+    NATIONAL_DEX_HOUNDOUR,
+    NATIONAL_DEX_HOUNDOOM,
+    NATIONAL_DEX_SLUGMA,
+    NATIONAL_DEX_MAGCARGO,
+    NATIONAL_DEX_SNEASEL,
+    NATIONAL_DEX_WEAVILE,
+    NATIONAL_DEX_MISDREAVUS,
+    NATIONAL_DEX_MISMAGIUS,
+    NATIONAL_DEX_PORYGON,
+    NATIONAL_DEX_PORYGON2,
+    NATIONAL_DEX_PORYGON_Z,
+    NATIONAL_DEX_HAPPINY,
+    NATIONAL_DEX_CHANSEY,
+    NATIONAL_DEX_BLISSEY,
+    NATIONAL_DEX_LAPRAS,
+    NATIONAL_DEX_OMANYTE,
+    NATIONAL_DEX_OMASTAR,
+    NATIONAL_DEX_KABUTO,
+    NATIONAL_DEX_KABUTOPS,
+    NATIONAL_DEX_AERODACTYL,
+    NATIONAL_DEX_MUNCHLAX,
+    NATIONAL_DEX_SNORLAX,
+    NATIONAL_DEX_BULBASAUR,
+    NATIONAL_DEX_IVYSAUR,
+    NATIONAL_DEX_VENUSAUR,
+    NATIONAL_DEX_CHARMANDER,
+    NATIONAL_DEX_CHARMELEON,
+    NATIONAL_DEX_CHARIZARD,
+    NATIONAL_DEX_SQUIRTLE,
+    NATIONAL_DEX_WARTORTLE,
+    NATIONAL_DEX_BLASTOISE,
+    NATIONAL_DEX_ARTICUNO,
+    NATIONAL_DEX_ZAPDOS,
+    NATIONAL_DEX_MOLTRES,
+    NATIONAL_DEX_RAIKOU,
+    NATIONAL_DEX_ENTEI,
+    NATIONAL_DEX_SUICUNE,
+    NATIONAL_DEX_DRATINI,
+    NATIONAL_DEX_DRAGONAIR,
+    NATIONAL_DEX_DRAGONITE,
+    NATIONAL_DEX_LARVITAR,
+    NATIONAL_DEX_PUPITAR,
+    NATIONAL_DEX_TYRANITAR,
+    NATIONAL_DEX_LUGIA,
+    NATIONAL_DEX_HO_OH,
+    NATIONAL_DEX_MEWTWO,
+    NATIONAL_DEX_MEW,
+    NATIONAL_DEX_CELEBI,
+};
+static const enum NationalDexOrder sExpectedHoennOrder[HOENN_DEX_COUNT - 1] =
+{
+    NATIONAL_DEX_TREECKO,
+    NATIONAL_DEX_GROVYLE,
+    NATIONAL_DEX_SCEPTILE,
+    NATIONAL_DEX_TORCHIC,
+    NATIONAL_DEX_COMBUSKEN,
+    NATIONAL_DEX_BLAZIKEN,
+    NATIONAL_DEX_MUDKIP,
+    NATIONAL_DEX_MARSHTOMP,
+    NATIONAL_DEX_SWAMPERT,
+    NATIONAL_DEX_POOCHYENA,
+    NATIONAL_DEX_MIGHTYENA,
+    NATIONAL_DEX_ZIGZAGOON,
+    NATIONAL_DEX_LINOONE,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
+    NATIONAL_DEX_OBSTAGOON,
+#endif
+    NATIONAL_DEX_WURMPLE,
+    NATIONAL_DEX_SILCOON,
+    NATIONAL_DEX_BEAUTIFLY,
+    NATIONAL_DEX_CASCOON,
+    NATIONAL_DEX_DUSTOX,
+    NATIONAL_DEX_LOTAD,
+    NATIONAL_DEX_LOMBRE,
+    NATIONAL_DEX_LUDICOLO,
+    NATIONAL_DEX_SEEDOT,
+    NATIONAL_DEX_NUZLEAF,
+    NATIONAL_DEX_SHIFTRY,
+    NATIONAL_DEX_TAILLOW,
+    NATIONAL_DEX_SWELLOW,
+    NATIONAL_DEX_WINGULL,
+    NATIONAL_DEX_PELIPPER,
+    NATIONAL_DEX_RALTS,
+    NATIONAL_DEX_KIRLIA,
+    NATIONAL_DEX_GARDEVOIR,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_GALLADE,
+#endif
+    NATIONAL_DEX_SURSKIT,
+    NATIONAL_DEX_MASQUERAIN,
+    NATIONAL_DEX_SHROOMISH,
+    NATIONAL_DEX_BRELOOM,
+    NATIONAL_DEX_SLAKOTH,
+    NATIONAL_DEX_VIGOROTH,
+    NATIONAL_DEX_SLAKING,
+    NATIONAL_DEX_ABRA,
+    NATIONAL_DEX_KADABRA,
+    NATIONAL_DEX_ALAKAZAM,
+    NATIONAL_DEX_NINCADA,
+    NATIONAL_DEX_NINJASK,
+    NATIONAL_DEX_SHEDINJA,
+    NATIONAL_DEX_WHISMUR,
+    NATIONAL_DEX_LOUDRED,
+    NATIONAL_DEX_EXPLOUD,
+    NATIONAL_DEX_MAKUHITA,
+    NATIONAL_DEX_HARIYAMA,
+    NATIONAL_DEX_GOLDEEN,
+    NATIONAL_DEX_SEAKING,
+    NATIONAL_DEX_MAGIKARP,
+    NATIONAL_DEX_GYARADOS,
+    NATIONAL_DEX_AZURILL,
+    NATIONAL_DEX_MARILL,
+    NATIONAL_DEX_AZUMARILL,
+    NATIONAL_DEX_GEODUDE,
+    NATIONAL_DEX_GRAVELER,
+    NATIONAL_DEX_GOLEM,
+    NATIONAL_DEX_NOSEPASS,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_PROBOPASS,
+#endif
+    NATIONAL_DEX_SKITTY,
+    NATIONAL_DEX_DELCATTY,
+    NATIONAL_DEX_ZUBAT,
+    NATIONAL_DEX_GOLBAT,
+    NATIONAL_DEX_CROBAT,
+    NATIONAL_DEX_TENTACOOL,
+    NATIONAL_DEX_TENTACRUEL,
+    NATIONAL_DEX_SABLEYE,
+    NATIONAL_DEX_MAWILE,
+    NATIONAL_DEX_ARON,
+    NATIONAL_DEX_LAIRON,
+    NATIONAL_DEX_AGGRON,
+    NATIONAL_DEX_MACHOP,
+    NATIONAL_DEX_MACHOKE,
+    NATIONAL_DEX_MACHAMP,
+    NATIONAL_DEX_MEDITITE,
+    NATIONAL_DEX_MEDICHAM,
+    NATIONAL_DEX_ELECTRIKE,
+    NATIONAL_DEX_MANECTRIC,
+    NATIONAL_DEX_PLUSLE,
+    NATIONAL_DEX_MINUN,
+    NATIONAL_DEX_MAGNEMITE,
+    NATIONAL_DEX_MAGNETON,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_MAGNEZONE,
+#endif
+    NATIONAL_DEX_VOLTORB,
+    NATIONAL_DEX_ELECTRODE,
+    NATIONAL_DEX_VOLBEAT,
+    NATIONAL_DEX_ILLUMISE,
+    NATIONAL_DEX_ODDISH,
+    NATIONAL_DEX_GLOOM,
+    NATIONAL_DEX_VILEPLUME,
+    NATIONAL_DEX_BELLOSSOM,
+    NATIONAL_DEX_DODUO,
+    NATIONAL_DEX_DODRIO,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_BUDEW,
+#endif
+    NATIONAL_DEX_ROSELIA,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_ROSERADE,
+#endif
+    NATIONAL_DEX_GULPIN,
+    NATIONAL_DEX_SWALOT,
+    NATIONAL_DEX_CARVANHA,
+    NATIONAL_DEX_SHARPEDO,
+    NATIONAL_DEX_WAILMER,
+    NATIONAL_DEX_WAILORD,
+    NATIONAL_DEX_NUMEL,
+    NATIONAL_DEX_CAMERUPT,
+    NATIONAL_DEX_SLUGMA,
+    NATIONAL_DEX_MAGCARGO,
+    NATIONAL_DEX_TORKOAL,
+    NATIONAL_DEX_GRIMER,
+    NATIONAL_DEX_MUK,
+    NATIONAL_DEX_KOFFING,
+    NATIONAL_DEX_WEEZING,
+    NATIONAL_DEX_SPOINK,
+    NATIONAL_DEX_GRUMPIG,
+    NATIONAL_DEX_SANDSHREW,
+    NATIONAL_DEX_SANDSLASH,
+    NATIONAL_DEX_SPINDA,
+    NATIONAL_DEX_SKARMORY,
+    NATIONAL_DEX_TRAPINCH,
+    NATIONAL_DEX_VIBRAVA,
+    NATIONAL_DEX_FLYGON,
+    NATIONAL_DEX_CACNEA,
+    NATIONAL_DEX_CACTURNE,
+    NATIONAL_DEX_SWABLU,
+    NATIONAL_DEX_ALTARIA,
+    NATIONAL_DEX_ZANGOOSE,
+    NATIONAL_DEX_SEVIPER,
+    NATIONAL_DEX_LUNATONE,
+    NATIONAL_DEX_SOLROCK,
+    NATIONAL_DEX_BARBOACH,
+    NATIONAL_DEX_WHISCASH,
+    NATIONAL_DEX_CORPHISH,
+    NATIONAL_DEX_CRAWDAUNT,
+    NATIONAL_DEX_BALTOY,
+    NATIONAL_DEX_CLAYDOL,
+    NATIONAL_DEX_LILEEP,
+    NATIONAL_DEX_CRADILY,
+    NATIONAL_DEX_ANORITH,
+    NATIONAL_DEX_ARMALDO,
+    NATIONAL_DEX_IGGLYBUFF,
+    NATIONAL_DEX_JIGGLYPUFF,
+    NATIONAL_DEX_WIGGLYTUFF,
+    NATIONAL_DEX_FEEBAS,
+    NATIONAL_DEX_MILOTIC,
+    NATIONAL_DEX_CASTFORM,
+    NATIONAL_DEX_STARYU,
+    NATIONAL_DEX_STARMIE,
+    NATIONAL_DEX_KECLEON,
+    NATIONAL_DEX_SHUPPET,
+    NATIONAL_DEX_BANETTE,
+    NATIONAL_DEX_DUSKULL,
+    NATIONAL_DEX_DUSCLOPS,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_DUSKNOIR,
+#endif
+    NATIONAL_DEX_TROPIUS,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_CHINGLING,
+#endif
+    NATIONAL_DEX_CHIMECHO,
+    NATIONAL_DEX_ABSOL,
+    NATIONAL_DEX_VULPIX,
+    NATIONAL_DEX_NINETALES,
+    NATIONAL_DEX_PICHU,
+    NATIONAL_DEX_PIKACHU,
+    NATIONAL_DEX_RAICHU,
+    NATIONAL_DEX_PSYDUCK,
+    NATIONAL_DEX_GOLDUCK,
+    NATIONAL_DEX_WYNAUT,
+    NATIONAL_DEX_WOBBUFFET,
+    NATIONAL_DEX_NATU,
+    NATIONAL_DEX_XATU,
+    NATIONAL_DEX_GIRAFARIG,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_9_CROSS_EVOS
+    NATIONAL_DEX_FARIGIRAF,
+#endif
+    NATIONAL_DEX_PHANPY,
+    NATIONAL_DEX_DONPHAN,
+    NATIONAL_DEX_PINSIR,
+    NATIONAL_DEX_HERACROSS,
+    NATIONAL_DEX_RHYHORN,
+    NATIONAL_DEX_RHYDON,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_RHYPERIOR,
+#endif
+    NATIONAL_DEX_SNORUNT,
+    NATIONAL_DEX_GLALIE,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GEN_4_CROSS_EVOS
+    NATIONAL_DEX_FROSLASS,
+#endif
+    NATIONAL_DEX_SPHEAL,
+    NATIONAL_DEX_SEALEO,
+    NATIONAL_DEX_WALREIN,
+    NATIONAL_DEX_CLAMPERL,
+    NATIONAL_DEX_HUNTAIL,
+    NATIONAL_DEX_GOREBYSS,
+    NATIONAL_DEX_RELICANTH,
+    NATIONAL_DEX_CORSOLA,
+#if P_NEW_EVOS_IN_REGIONAL_DEX && P_GALARIAN_FORMS
+    NATIONAL_DEX_CURSOLA,
+#endif
+    NATIONAL_DEX_CHINCHOU,
+    NATIONAL_DEX_LANTURN,
+    NATIONAL_DEX_LUVDISC,
+    NATIONAL_DEX_HORSEA,
+    NATIONAL_DEX_SEADRA,
+    NATIONAL_DEX_KINGDRA,
+    NATIONAL_DEX_BAGON,
+    NATIONAL_DEX_SHELGON,
+    NATIONAL_DEX_SALAMENCE,
+    NATIONAL_DEX_BELDUM,
+    NATIONAL_DEX_METANG,
+    NATIONAL_DEX_METAGROSS,
+    NATIONAL_DEX_REGIROCK,
+    NATIONAL_DEX_REGICE,
+    NATIONAL_DEX_REGISTEEL,
+    NATIONAL_DEX_LATIAS,
+    NATIONAL_DEX_LATIOS,
+    NATIONAL_DEX_KYOGRE,
+    NATIONAL_DEX_GROUDON,
+    NATIONAL_DEX_RAYQUAZA,
+    NATIONAL_DEX_JIRACHI,
+    NATIONAL_DEX_DEOXYS,
+};
+
+extern const u16 gPokedexOrder_Alphabetical[NATIONAL_DEX_COUNT];
+extern const u16 gPokedexOrder_Weight[NATIONAL_DEX_COUNT];
+extern const u16 gPokedexOrder_Height[NATIONAL_DEX_COUNT];
+
+static void ExpectEveryNationalEntryExactlyOnce(const u16 *order)
+{
+    u16 id;
+    u16 i;
+
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+    {
+        u16 occurrences = 0;
+
+        for (i = 0; i < NATIONAL_DEX_COUNT; i++)
+        {
+            if (order[i] == id)
+                occurrences++;
+        }
+        EXPECT_EQ(occurrences, 1);
+    }
+}
+
+static void ExpectActiveCatalogMatchesBaseline(enum DexRegionId region, const enum NationalDexOrder *expectedOrder, u16 expectedCount)
+{
+    u16 localEntry;
+
+    EXPECT(Dex_SetActiveRegion(region));
+    EXPECT_EQ(Dex_GetActiveRegionalEntryCount(), expectedCount);
+    for (localEntry = 1; localEntry <= expectedCount; localEntry++)
+    {
+        enum NationalDexOrder id = expectedOrder[localEntry - 1];
+        EXPECT(Dex_IsValidNationalId(id));
+        EXPECT_EQ(Dex_RegionalEntryToNational(localEntry), id);
+        EXPECT_EQ(Dex_NationalToRegionalEntry(id), localEntry);
+    }
+    EXPECT_EQ(Dex_RegionEntryToNational(region, expectedCount + 1), NATIONAL_DEX_NONE);
+    EXPECT_EQ(Dex_RegionalEntryToNational(expectedCount + 1), NATIONAL_DEX_NONE);
+}
+
+TEST("Pokédex sort orders cover each canonical National entry exactly once")
+{
+    ExpectEveryNationalEntryExactlyOnce(gPokedexOrder_Alphabetical);
+    ExpectEveryNationalEntryExactlyOnce(gPokedexOrder_Weight);
+    ExpectEveryNationalEntryExactlyOnce(gPokedexOrder_Height);
+}
+
+TEST("Pokédex regional catalog facade rejects invalid active state and local entries")
+{
+    ResetPokedex();
+
+    EXPECT_EQ(Dex_GetActiveRegion(), DEX_REGION_JOHTO);
+    EXPECT_EQ(Dex_GetActiveRegionalEntryCount(), 282);
+    EXPECT_EQ(Dex_RegionalEntryToNational(0), NATIONAL_DEX_NONE);
+    EXPECT_EQ(Dex_RegionalEntryToNational(283), NATIONAL_DEX_NONE);
+    EXPECT(!Dex_SetActiveRegion(DEX_REGION_NONE));
+    EXPECT(!Dex_SetActiveRegion(DEX_REGION_COUNT));
+
+    gSaveBlock2Ptr->pokedex.activeRegion = DEX_REGION_NONE;
+    EXPECT_EQ(Dex_GetActiveRegionalEntryCount(), 0);
+    EXPECT_EQ(Dex_RegionalEntryToNational(1), NATIONAL_DEX_NONE);
+    EXPECT_EQ(Dex_GetFirstVisibleNationalEntry(), NATIONAL_DEX_NONE);
+    EXPECT_EQ(Dex_GetNationalVisibleEntryCount(), 0);
+
+    ResetPokedex();
+}
+
+TEST("Pokédex regional catalogs preserve every authored local mapping")
+{
+    ResetPokedex();
+    ExpectActiveCatalogMatchesBaseline(DEX_REGION_KANTO, sExpectedKantoOrder, 188);
+    ExpectActiveCatalogMatchesBaseline(DEX_REGION_JOHTO, sExpectedJohtoOrder, 282);
+    ExpectActiveCatalogMatchesBaseline(DEX_REGION_HOENN, sExpectedHoennOrder, 214);
+    ResetPokedex();
+}
+
+TEST("Pokédex flag access ignores invalid canonical National IDs")
+{
+    u8 seenBefore[NUM_DEX_FLAG_BYTES];
+    u8 caughtBefore[NUM_DEX_FLAG_BYTES];
+
+    ResetPokedex();
+    memcpy(seenBefore, gSaveBlock1Ptr->dexSeen, sizeof(seenBefore));
+    memcpy(caughtBefore, gSaveBlock1Ptr->dexCaught, sizeof(caughtBefore));
+
+    EXPECT_EQ(GetSetPokedexFlag(NATIONAL_DEX_NONE, FLAG_GET_SEEN), 0);
+    EXPECT_EQ(GetSetPokedexFlag(NATIONAL_DEX_COUNT + 1, FLAG_GET_CAUGHT), 0);
+    EXPECT_EQ(GetSetPokedexFlag(NATIONAL_DEX_NONE, FLAG_SET_SEEN), 0);
+    EXPECT_EQ(GetSetPokedexFlag(NATIONAL_DEX_COUNT + 1, FLAG_SET_CAUGHT), 0);
+    EXPECT_EQ(memcmp(seenBefore, gSaveBlock1Ptr->dexSeen, sizeof(seenBefore)), 0);
+    EXPECT_EQ(memcmp(caughtBefore, gSaveBlock1Ptr->dexCaught, sizeof(caughtBefore)), 0);
+}
+
+TEST("Pokédex National facade iterates the deduplicated active and extension union")
+{
+    enum NationalDexOrder id;
+    enum NationalDexOrder previous = NATIONAL_DEX_NONE;
+    u16 count = 0;
+
+    ResetPokedex();
+    EXPECT(Dex_SetActiveRegion(DEX_REGION_KANTO));
+    EXPECT_EQ(Dex_GetActiveRegionalEntryCount(), 188);
+    EXPECT(Dex_GrantNationalExtension(DEX_REGION_JOHTO));
+    EXPECT(Dex_GrantNationalExtension(DEX_REGION_HOENN));
+    EXPECT(!Dex_GrantNationalExtension(DEX_REGION_NONE));
+
+    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
+    {
+        EXPECT(Dex_IsNationalEntryVisible(id));
+        EXPECT_GT(id, previous);
+        previous = id;
+        count++;
+    }
+
+    EXPECT_EQ(count, Dex_GetNationalVisibleEntryCount());
+    EXPECT(Dex_HasNationalExtension(DEX_REGION_JOHTO));
+    EXPECT(Dex_HasNationalExtension(DEX_REGION_HOENN));
+    EXPECT_EQ(Dex_GetNextVisibleNationalEntry(previous), NATIONAL_DEX_NONE);
+
+    ResetPokedex();
+}
+
+TEST("Pokédex player-facing progress stays regional until National upgrade")
+{
+    enum NationalDexOrder extensionOnlyId = NATIONAL_DEX_NONE;
+    enum NationalDexOrder id;
+
+    ResetPokedex();
+    EXPECT(Dex_GrantNationalExtension(DEX_REGION_KANTO));
+    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
+    {
+        if (!Dex_IsRegionalEntryVisible(id))
+        {
+            extensionOnlyId = id;
+            break;
+        }
+    }
+
+    EXPECT_NE(extensionOnlyId, NATIONAL_DEX_NONE);
+    GetSetPokedexFlag(extensionOnlyId, FLAG_SET_SEEN);
+    GetSetPokedexFlag(extensionOnlyId, FLAG_SET_CAUGHT);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN), 0);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT), 0);
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_SEEN), 1);
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), 1);
+
+    EXPECT(Dex_UpgradeToNational());
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_SEEN), 1);
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), 1);
+    ResetPokedex();
+}
+
+static void TestDexExtensionMask(u32 mask)
+{
+    enum DexRegionId region;
+    bool8 expected[NATIONAL_DEX_COUNT + 1] = {0};
+    u16 expectedCount = 0;
+    enum NationalDexOrder id;
+    u16 localEntry;
+
+    ResetPokedex();
+    for (localEntry = 1; localEntry <= 282; localEntry++)
+    {
+        id = Dex_RegionEntryToNational(DEX_REGION_JOHTO, localEntry);
+        if (!expected[id])
+        {
+            expected[id] = TRUE;
+            expectedCount++;
+        }
+        GetSetPokedexFlag(id, FLAG_SET_SEEN);
+        GetSetPokedexFlag(id, FLAG_SET_CAUGHT);
+    }
+    for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
+    {
+        if (!(mask & (1u << (region - 1))))
+            continue;
+        EXPECT(Dex_GrantNationalExtension(region));
+        EXPECT(Dex_GrantNationalExtension(region));
+        for (localEntry = 1; localEntry <= (region == DEX_REGION_KANTO ? 188 : region == DEX_REGION_JOHTO ? 282 : 214); localEntry++)
+        {
+            id = Dex_RegionEntryToNational(region, localEntry);
+            if (!expected[id])
+            {
+                expected[id] = TRUE;
+                expectedCount++;
+            }
+            GetSetPokedexFlag(id, FLAG_SET_SEEN);
+            GetSetPokedexFlag(id, FLAG_SET_CAUGHT);
+        }
+    }
+
+    EXPECT_EQ(Dex_GetNationalVisibleEntryCount(), expectedCount);
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+        EXPECT_EQ(Dex_IsNationalEntryVisible(id), expected[id]);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN), 282);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT), 282);
+    EXPECT(Dex_UpgradeToNational());
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_SEEN), expectedCount);
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), expectedCount);
+    ResetPokedex();
+}
+
+TEST("Pokédex extension masks compose the empty subset without duplicate progress")
+{
+    TestDexExtensionMask(0);
+}
+
+TEST("Pokédex extension masks compose the Kanto subset without duplicate progress")
+{
+    TestDexExtensionMask(1);
+}
+
+TEST("Pokédex extension masks compose the Johto subset without duplicate progress")
+{
+    TestDexExtensionMask(2);
+}
+
+TEST("Pokédex extension masks compose the Kanto and Johto subset without duplicate progress")
+{
+    TestDexExtensionMask(3);
+}
+
+TEST("Pokédex extension masks compose the Hoenn subset without duplicate progress")
+{
+    TestDexExtensionMask(4);
+}
+
+TEST("Pokédex extension masks compose the Kanto and Hoenn subset without duplicate progress")
+{
+    TestDexExtensionMask(5);
+}
+
+TEST("Pokédex extension masks compose the Johto and Hoenn subset without duplicate progress")
+{
+    TestDexExtensionMask(6);
+}
+
+TEST("Pokédex extension masks compose every region subset without duplicate progress")
+{
+    TestDexExtensionMask(7);
+}
+
+TEST("Pokédex active region prose names omit the renderer title suffix")
+{
+    ResetPokedex();
+    EXPECT_EQ(StringCompare(Dex_GetActiveRegionName(), gText_Johto), 0);
+    EXPECT_EQ(StringCompare(Dex_GetActiveRegionTitle(), gText_DexJohtoTitle), 0);
+    EXPECT(Dex_SetActiveRegion(DEX_REGION_KANTO));
+    EXPECT_EQ(StringCompare(Dex_GetActiveRegionName(), gText_Kanto), 0);
+    EXPECT_EQ(StringCompare(Dex_GetActiveRegionTitle(), gText_DexKantoTitle), 0);
+    ResetPokedex();
+}
+
+TEST("Pokédex summary numbers use only the visible National union")
+{
+    enum NationalDexOrder id;
+    u16 hiddenSpecies = SPECIES_NONE;
+    u16 regionalSpecies;
+
+    ResetPokedex();
+    EXPECT(Dex_UpgradeToNational());
+    regionalSpecies = NationalPokedexNumToSpecies(Dex_RegionalEntryToNational(1));
+    EXPECT_NE(regionalSpecies, SPECIES_NONE);
+    EXPECT_NE(SpeciesToPokedexNum(regionalSpecies), 0xFFFF);
+
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+    {
+        if (!Dex_IsNationalEntryVisible(id))
+        {
+            hiddenSpecies = NationalPokedexNumToSpecies(id);
+            if (hiddenSpecies != SPECIES_NONE)
+                break;
+        }
+    }
+    EXPECT_NE(hiddenSpecies, SPECIES_NONE);
+    EXPECT_EQ(SpeciesToPokedexNum(hiddenSpecies), 0xFFFF);
+
+    ResetPokedex();
+}
+
+TEST("Pokédex summary numbers hide species outside the active regional catalog")
+{
+    enum NationalDexOrder id;
+    u16 hiddenSpecies = SPECIES_NONE;
+
+    ResetPokedex();
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+    {
+        if (!Dex_IsRegionalEntryVisible(id))
+        {
+            hiddenSpecies = NationalPokedexNumToSpecies(id);
+            if (hiddenSpecies != SPECIES_NONE)
+                break;
+        }
+    }
+
+    EXPECT_NE(hiddenSpecies, SPECIES_NONE);
+    EXPECT_EQ(SpeciesToPokedexNum(hiddenSpecies), 0xFFFF);
+    ResetPokedex();
+}
+
+TEST("Trade receipt records hidden species globally without exposing regional progress")
+{
+    enum NationalDexOrder hiddenId = NATIONAL_DEX_NONE;
+    enum NationalDexOrder id;
+
+    ResetPokedex();
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+    {
+        if (!Dex_IsRegionalEntryVisible(id))
+        {
+            hiddenId = id;
+            break;
+        }
+    }
+
+    EXPECT_NE(hiddenId, NATIONAL_DEX_NONE);
+    Test_UpdatePokedexForReceivedSpecies(NationalPokedexNumToSpecies(hiddenId), 0);
+    EXPECT_EQ(GetSetPokedexFlag(hiddenId, FLAG_GET_SEEN), 1);
+    EXPECT_EQ(GetSetPokedexFlag(hiddenId, FLAG_GET_CAUGHT), 1);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN), 0);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT), 0);
+
+    EXPECT(Dex_GrantNationalExtension(DEX_REGION_KANTO));
+    EXPECT(Dex_UpgradeToNational());
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_SEEN), Dex_IsNationalEntryVisible(hiddenId));
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), Dex_IsNationalEntryVisible(hiddenId));
+    ResetPokedex();
+}
+
+TEST("Pokédex script specials validate regions without side effects")
+{
+    enum DexRegionId region;
+    u32 extensionMask;
+
+    ResetPokedex();
+    extensionMask = Dex_GetNationalExtensionMask();
+    gSpecialVar_0x8004 = DEX_REGION_NONE;
+    DexScript_GrantNationalExtension();
+    EXPECT_EQ(gSpecialVar_Result, FALSE);
+    EXPECT_EQ(Dex_GetNationalExtensionMask(), extensionMask);
+
+    gSpecialVar_0x8004 = DEX_REGION_COUNT;
+    DexScript_SetActiveRegion();
+    EXPECT_EQ(gSpecialVar_Result, FALSE);
+    EXPECT_EQ(Dex_GetActiveRegion(), DEX_REGION_JOHTO);
+    DexScript_HasNationalExtension();
+    EXPECT_EQ(gSpecialVar_Result, FALSE);
+
+    for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
+    {
+        gSpecialVar_0x8004 = region;
+        DexScript_SetActiveRegion();
+        EXPECT_EQ(gSpecialVar_Result, TRUE);
+        DexScript_GetActiveRegion();
+        EXPECT_EQ(gSpecialVar_Result, region);
+        DexScript_GrantNationalExtension();
+        EXPECT_EQ(gSpecialVar_Result, TRUE);
+        DexScript_GrantNationalExtension();
+        EXPECT_EQ(gSpecialVar_Result, TRUE);
+        DexScript_HasNationalExtension();
+        EXPECT_EQ(gSpecialVar_Result, TRUE);
+    }
+    DexScript_UpgradeToNational();
+    EXPECT_EQ(gSpecialVar_Result, TRUE);
+    DexScript_HasNationalUpgrade();
+    EXPECT_EQ(gSpecialVar_Result, TRUE);
+
+    ResetPokedex();
+}
+
+TEST("Pokédex critical-capture threshold uses strict catalog-progress bands")
+{
+    u8 threshold;
+
+    EXPECT(!Dex_CalculateCriticalCaptureThreshold(0, 0, 120, FALSE, &threshold));
+    EXPECT(!Dex_CalculateCriticalCaptureThreshold(30, 650, 120, FALSE, &threshold));
+    EXPECT(Dex_CalculateCriticalCaptureThreshold(31, 650, 120, FALSE, &threshold));
+    EXPECT_EQ(threshold, 10);
+    EXPECT(Dex_CalculateCriticalCaptureThreshold(151, 650, 120, FALSE, &threshold));
+    EXPECT_EQ(threshold, 20);
+    EXPECT(Dex_CalculateCriticalCaptureThreshold(301, 650, 120, FALSE, &threshold));
+    EXPECT_EQ(threshold, 30);
+    EXPECT(Dex_CalculateCriticalCaptureThreshold(451, 650, 120, FALSE, &threshold));
+    EXPECT_EQ(threshold, 40);
+    EXPECT(Dex_CalculateCriticalCaptureThreshold(601, 650, 120, FALSE, &threshold));
+    EXPECT_EQ(threshold, 42);
+}
+
+#endif // IS_WAYFARER

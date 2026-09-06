@@ -756,26 +756,59 @@ static void GenerateStationContent(struct Pokenav_Radio *radio, u8 station)
     {
         enum NationalDexOrder natDex;
         u16 species;
+        u16 localEntry;
         u32 caughtCount = 0;
         u32 pick, seen;
 
-        for (natDex = 1; natDex <= NATIONAL_DEX_COUNT; natDex++)
+        if (!Dex_HasNationalUpgrade())
         {
-            if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
-                caughtCount++;
+            for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
+            {
+                natDex = Dex_RegionalEntryToNational(localEntry);
+                if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                    caughtCount++;
+            }
+        }
+        else
+        {
+            for (natDex = Dex_GetFirstVisibleNationalEntry();
+                 natDex != NATIONAL_DEX_NONE;
+                 natDex = Dex_GetNextVisibleNationalEntry(natDex))
+            {
+                if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                    caughtCount++;
+            }
         }
 
         if (caughtCount > 0)
         {
             pick = Random() % caughtCount;
             seen = 0;
-            for (natDex = 1; natDex <= NATIONAL_DEX_COUNT; natDex++)
+            if (!Dex_HasNationalUpgrade())
             {
-                if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
                 {
-                    if (seen == pick)
-                        break;
-                    seen++;
+                    natDex = Dex_RegionalEntryToNational(localEntry);
+                    if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                    {
+                        if (seen == pick)
+                            break;
+                        seen++;
+                    }
+                }
+            }
+            else
+            {
+                for (natDex = Dex_GetFirstVisibleNationalEntry();
+                     natDex != NATIONAL_DEX_NONE;
+                     natDex = Dex_GetNextVisibleNationalEntry(natDex))
+                {
+                    if (GetSetPokedexFlag(natDex, FLAG_GET_CAUGHT))
+                    {
+                        if (seen == pick)
+                            break;
+                        seen++;
+                    }
                 }
             }
 
