@@ -77,6 +77,9 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertLess(clear.index("LeagueCircuit_RecordClear"), clear.index("special GameClear"))
         self.assertNotIn("SetGameClearFlags", clear)
         self.assertNotIn("SetFirstGameClearFlags", clear)
+        self.assertIn("setvar VAR_LEAGUE_STATE, 1", clear)
+        self.assertLess(clear.index("LeagueCircuit_RecordClear"), clear.index("setvar VAR_LEAGUE_STATE, 1"))
+        self.assertLess(clear.index("setvar VAR_LEAGUE_STATE, 1"), clear.index("special GameClear"))
         self.assertIn("HEAL_LOCATION_INDIGO_PLATEAU_HNS", clear)
         self.assertIn("LeagueCircuit_RecordClear", script("EverGrandeCity_HallOfFame"))
 

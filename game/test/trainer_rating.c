@@ -1,4 +1,5 @@
 #include "global.h"
+#include "config/league_circuit.h"
 #include "event_data.h"
 #include "league_circuit.h"
 #include "load_save.h"
@@ -38,6 +39,7 @@ TEST("Trainer Rating preserves seeded high-water values and clamps corrupt saved
     EXPECT_EQ(VarGet(VAR_TRAINER_RATING), TRAINER_RATING_MAX);
 }
 
+#if WAYFARER_LEAGUE_CIRCUIT_ENABLED
 TEST("Trainer Rating derives every badge total and every regional clear combination")
 {
     static const u8 sBadgeRatings[] =
@@ -149,6 +151,29 @@ TEST("Trainer Rating high-water value survives production save and load after re
     EXPECT_EQ(GetTrainerRating(), 55);
     EXPECT_EQ(VarGet(VAR_TRAINER_RATING), 55);
 }
+#else
+TEST("Trainer Rating rollback preserves saved Rating without circuit badge derivation")
+{
+    u8 index;
+
+    for (index = 0; index < 8; index++)
+    {
+        SetBadgeStateForRegion(REGION_HOENN, index, TRUE);
+        SetBadgeStateForRegion(REGION_JOHTO, index, TRUE);
+    }
+    SetChampionStateForRegion(REGION_KANTO, TRUE);
+    SetChampionStateForRegion(REGION_JOHTO, TRUE);
+    SetChampionStateForRegion(REGION_HOENN, TRUE);
+
+    SetTrainerRating(0);
+    EXPECT_EQ(GetTrainerRating(), 0);
+    EXPECT_EQ(VarGet(VAR_TRAINER_RATING), 0);
+
+    SetTrainerRating(17);
+    EXPECT_EQ(GetTrainerRating(), 17);
+    EXPECT_EQ(VarGet(VAR_TRAINER_RATING), 17);
+}
+#endif
 
 TEST("Trainer Rating soft cap interpolates every seeded rating monotonically")
 {
