@@ -109,7 +109,10 @@ reward, or defeat its opponent.
 Wayfarer includes the Emerald maps, NPCs, shops, healing facilities, items,
 ordinary Trainers, rivals, team encounters, Gym Leaders, Elite Four, Champion,
 and main story required to complete Hoenn. Non-League Trainer parties retain
-their Emerald-authored species, levels, moves, items, AI, and battle formats.
+their Emerald-authored source rosters, items, AI, and battle formats. Ordinary
+Trainers and Gym members apply the separate
+[Trainer-party scaling design](trainer-party-scaling.md) to those rosters;
+rivals, bosses, and Gym Leaders retain authored battle parties.
 The Hoenn Elite Four and Champion instead use the fixed Tier 3 parties owned by
 the interregional League circuit.
 
