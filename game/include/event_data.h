@@ -9,6 +9,14 @@ void ClearDailyFlags(void);
 void DisableNationalPokedex(void);
 void EnableNationalPokedex(void);
 bool32 IsNationalPokedexEnabled(void);
+// Pokédex script region IDs: 1 = Kanto, 2 = Johto, 3 = Hoenn.
+// Mutators read VAR_0x8004 and all results are returned through VAR_RESULT.
+void DexScript_SetActiveRegion(void);
+void DexScript_GetActiveRegion(void);
+void DexScript_GrantNationalExtension(void);
+void DexScript_HasNationalExtension(void);
+void DexScript_UpgradeToNational(void);
+void DexScript_HasNationalUpgrade(void);
 void DisableMysteryEvent(void);
 void EnableMysteryEvent(void);
 bool32 IsMysteryEventEnabled(void);

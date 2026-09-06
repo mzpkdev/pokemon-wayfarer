@@ -1324,7 +1324,7 @@ static const u8 sSearchMovementMap_ShiftHoennDex[SEARCH_COUNT][4] =
 
 static const struct SearchOptionText sDexModeOptions[] =
 {
-    [DEX_MODE_HOENN]    = {gText_DexHoennDescription, gText_DexHoennTitle},
+    [DEX_MODE_REGIONAL] = {gText_DexJohtoDescription, gText_DexJohtoTitle},
     [DEX_MODE_NATIONAL] = {gText_DexNatDescription,   gText_DexNatTitle},
     {},
 };
@@ -1395,7 +1395,7 @@ static const struct SearchOptionText sDexSearchTypeOptions[] =
     {},
 };
 
-static const u8 sPokedexModes[] = {DEX_MODE_HOENN, DEX_MODE_NATIONAL};
+static const u8 sPokedexModes[] = {DEX_MODE_REGIONAL, DEX_MODE_NATIONAL};
 static const u8 sOrderOptions[] =
 {
     ORDER_NUMERICAL,
@@ -1504,13 +1504,15 @@ void ResetPokedex(void)
     sLastSelectedPokemon = 0;
     sPokeBallRotation = POKEBALL_ROTATION_TOP;
     gUnusedPokedexU8 = 0;
-    gSaveBlock2Ptr->pokedex.mode = DEX_MODE_HOENN;
+    gSaveBlock2Ptr->pokedex.mode = DEX_MODE_REGIONAL;
     gSaveBlock2Ptr->pokedex.order = 0;
     gSaveBlock2Ptr->pokedex.nationalMagic = 0;
     gSaveBlock2Ptr->pokedex.unknown2 = 0;
     gSaveBlock2Ptr->pokedex.unownPersonality = 0;
     gSaveBlock2Ptr->pokedex.spindaPersonality = 0;
     gSaveBlock2Ptr->pokedex.unknown3 = 0;
+    gSaveBlock2Ptr->pokedex.activeRegion = DEX_REGION_JOHTO;
+    gSaveBlock2Ptr->pokedex.nationalExtensionMask = 0;
     DisableNationalPokedex();
     for (i = 0; i < NUM_DEX_FLAG_BYTES; i++)
     {
@@ -1548,8 +1550,8 @@ static void ResetPokedexView(struct PokedexView *pokedexView)
     pokedexView->pokemonListCount = 0;
     pokedexView->selectedPokemon = 0;
     pokedexView->selectedPokemonBackup = 0;
-    pokedexView->dexMode = DEX_MODE_HOENN;
-    pokedexView->dexModeBackup = DEX_MODE_HOENN;
+    pokedexView->dexMode = DEX_MODE_REGIONAL;
+    pokedexView->dexModeBackup = DEX_MODE_REGIONAL;
     pokedexView->dexOrder = ORDER_NUMERICAL;
     pokedexView->dexOrderBackup = ORDER_NUMERICAL;
     pokedexView->seenCount = 0;
@@ -1612,15 +1614,15 @@ void CB2_OpenPokedex(void)
         CreateTask(Task_OpenPokedexMainPage, 0);
         sPokedexView->dexMode = gSaveBlock2Ptr->pokedex.mode;
         if (!IsNationalPokedexEnabled())
-            sPokedexView->dexMode = DEX_MODE_HOENN;
+            sPokedexView->dexMode = DEX_MODE_REGIONAL;
         sPokedexView->dexOrder = gSaveBlock2Ptr->pokedex.order;
         sPokedexView->selectedPokemon = sLastSelectedPokemon;
         sPokedexView->pokeBallRotation = sPokeBallRotation;
         sPokedexView->selectedScreen = AREA_SCREEN;
         if (!IsNationalPokedexEnabled())
         {
-            sPokedexView->seenCount = GetRegionalPokedexCount(FLAG_GET_SEEN);
-            sPokedexView->ownCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
+            sPokedexView->seenCount = Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN);
+            sPokedexView->ownCount = Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT);
         }
         else
         {
@@ -1829,7 +1831,7 @@ static void Task_WaitForExitSearch(u8 taskId)
             sPokedexView->selectedPokemon = sPokedexView->selectedPokemonBackup;
             sPokedexView->dexMode = sPokedexView->dexModeBackup;
             if (!IsNationalPokedexEnabled())
-                sPokedexView->dexMode = DEX_MODE_HOENN;
+                sPokedexView->dexMode = DEX_MODE_REGIONAL;
             sPokedexView->dexOrder = sPokedexView->dexOrderBackup;
             gTasks[taskId].func = Task_OpenPokedexMainPage;
         }
@@ -1842,7 +1844,7 @@ static void Task_ClosePokedex(u8 taskId)
     {
         gSaveBlock2Ptr->pokedex.mode = sPokedexView->dexMode;
         if (!IsNationalPokedexEnabled())
-            gSaveBlock2Ptr->pokedex.mode = DEX_MODE_HOENN;
+            gSaveBlock2Ptr->pokedex.mode = DEX_MODE_REGIONAL;
         gSaveBlock2Ptr->pokedex.order = sPokedexView->dexOrder;
         ClearMonSprites();
         FreeWindowAndBgBuffers();
@@ -2020,7 +2022,7 @@ static void Task_ReturnToPokedexFromSearchResults(u8 taskId)
         sPokedexView->selectedPokemon = sPokedexView->selectedPokemonBackup;
         sPokedexView->dexMode = sPokedexView->dexModeBackup;
         if (!IsNationalPokedexEnabled())
-            sPokedexView->dexMode = DEX_MODE_HOENN;
+            sPokedexView->dexMode = DEX_MODE_REGIONAL;
         sPokedexView->dexOrder = sPokedexView->dexOrderBackup;
         gTasks[taskId].func = Task_OpenPokedexMainPage;
         ClearMonSprites();
@@ -2036,7 +2038,7 @@ static void Task_ClosePokedexFromSearchResultsStartMenu(u8 taskId)
         sPokedexView->selectedPokemon = sPokedexView->selectedPokemonBackup;
         sPokedexView->dexMode = sPokedexView->dexModeBackup;
         if (!IsNationalPokedexEnabled())
-            sPokedexView->dexMode = DEX_MODE_HOENN;
+            sPokedexView->dexMode = DEX_MODE_REGIONAL;
         sPokedexView->dexOrder = sPokedexView->dexOrderBackup;
         gTasks[taskId].func = Task_ClosePokedex;
     }
@@ -2182,8 +2184,8 @@ static void CreatePokedexList(u8 dexMode, u8 order)
     switch (dexMode)
     {
     default:
-    case DEX_MODE_HOENN:
-        temp_dexCount = REGIONAL_DEX_COUNT;
+    case DEX_MODE_REGIONAL:
+        temp_dexCount = Dex_GetActiveRegionalEntryCount();
         temp_isHoennDex = TRUE;
         break;
     case DEX_MODE_NATIONAL:
@@ -2194,7 +2196,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         }
         else
         {
-            temp_dexCount = REGIONAL_DEX_COUNT;
+            temp_dexCount = Dex_GetActiveRegionalEntryCount();
             temp_isHoennDex = TRUE;
         }
         break;
@@ -2207,7 +2209,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             for (i = 0; i < temp_dexCount; i++)
             {
-                temp_dexNum = RegionalToNationalOrder(i + 1);
+                temp_dexNum = Dex_RegionalEntryToNational(i + 1);
                 sPokedexView->pokedexList[i].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[i].seen = GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN);
                 sPokedexView->pokedexList[i].owned = GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT);
@@ -2217,21 +2219,17 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         }
         else
         {
-            s16 r5, r10;
-            for (i = 0, r5 = 0, r10 = 0; i < temp_dexCount; i++)
+            s16 r5;
+            for (temp_dexNum = Dex_GetFirstVisibleNationalEntry(), r5 = 0;
+                 temp_dexNum != NATIONAL_DEX_NONE;
+                 temp_dexNum = Dex_GetNextVisibleNationalEntry(temp_dexNum))
             {
-                temp_dexNum = i + 1;
-                if (Dex_IsNationalEntryVisible(temp_dexNum) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
-                    r10 = 1;
-                if (r10)
-                {
-                    sPokedexView->pokedexList[r5].dexNum = temp_dexNum;
-                    sPokedexView->pokedexList[r5].seen = GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN);
-                    sPokedexView->pokedexList[r5].owned = GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT);
-                    if (sPokedexView->pokedexList[r5].seen)
-                        sPokedexView->pokemonListCount = r5 + 1;
-                    r5++;
-                }
+                sPokedexView->pokedexList[r5].dexNum = temp_dexNum;
+                sPokedexView->pokedexList[r5].seen = GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN);
+                sPokedexView->pokedexList[r5].owned = GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT);
+                if (sPokedexView->pokedexList[r5].seen)
+                    sPokedexView->pokemonListCount = r5 + 1;
+                r5++;
             }
         }
         break;
@@ -2240,7 +2238,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Alphabetical[i];
 
-            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || Dex_IsRegionalEntryVisible(temp_dexNum)) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2254,7 +2252,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Weight[i];
 
-            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || Dex_IsRegionalEntryVisible(temp_dexNum)) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2268,7 +2266,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Weight[i];
 
-            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || Dex_IsRegionalEntryVisible(temp_dexNum)) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2282,7 +2280,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Height[i];
 
-            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || Dex_IsRegionalEntryVisible(temp_dexNum)) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2296,7 +2294,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Height[i];
 
-            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || Dex_IsRegionalEntryVisible(temp_dexNum)) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2424,10 +2422,10 @@ static void CreateMonDexNum(u16 entryNum, u8 left, u8 top, u16 unused)
     u16 dexNum, offset = 2;
 
     dexNum = sPokedexView->pokedexList[entryNum].dexNum;
-    if (sPokedexView->dexMode == DEX_MODE_HOENN)
-        dexNum = NationalToRegionalOrder(dexNum);
+    if (sPokedexView->dexMode == DEX_MODE_REGIONAL)
+        dexNum = Dex_NationalToRegionalEntry(dexNum);
     memcpy(text, sText_No0000, ARRAY_COUNT(sText_No0000));
-    if (NATIONAL_DEX_COUNT > 999 && sPokedexView->dexMode != DEX_MODE_HOENN)
+    if (NATIONAL_DEX_COUNT > 999 && sPokedexView->dexMode != DEX_MODE_REGIONAL)
     {
         text[2] = CHAR_0 + dexNum / 1000;
         offset++;
@@ -2905,7 +2903,7 @@ static void CreateInterfaceSprites(u8 page)
             StartSpriteAnim(&gSprites[spriteId], 1);
 
             // Hoenn seen value - 100s
-            seenOwnedCount = GetRegionalPokedexCount(FLAG_GET_SEEN);
+            seenOwnedCount = Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN);
             drawNextDigit = FALSE;
             spriteId = CreateSprite(&sNationalDexSeenOwnNumberSpriteTemplate, counterX100s, 45, 1);
             digitNum = seenOwnedCount / 100;
@@ -2962,7 +2960,7 @@ static void CreateInterfaceSprites(u8 page)
             digitNum = ((sPokedexView->seenCount % 1000) % 100) % 10;
             StartSpriteAnim(&gSprites[spriteId], digitNum);
 
-            seenOwnedCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
+            seenOwnedCount = Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT);
 
             // Hoenn owned value - 100s
             drawNextDigit = FALSE;
@@ -3303,7 +3301,7 @@ static void Task_LoadInfoScreen(u8 taskId)
         gMain.state++;
         break;
     case 4:
-        PrintMonInfo(sPokedexListItem->dexNum, sPokedexView->dexMode == DEX_MODE_HOENN ? FALSE : TRUE, sPokedexListItem->owned, 0);
+        PrintMonInfo(sPokedexListItem->dexNum, sPokedexView->dexMode == DEX_MODE_REGIONAL ? FALSE : TRUE, sPokedexListItem->owned, 0);
         if (!sPokedexListItem->owned)
             LoadPalette(&gPlttBufferUnfaded[BG_PLTT_ID(0) + 1], BG_PLTT_ID(3) + 1, PLTT_SIZEOF(16 - 1));
         CopyWindowToVram(WIN_INFO, COPYWIN_FULL);
@@ -4183,7 +4181,7 @@ static void PrintMonInfo(u32 num, u32 value, u32 owned, u32 newEntry)
     if (newEntry)
         PrintInfoScreenText(gText_PokedexRegistration, GetStringCenterAlignXOffset(FONT_NORMAL, gText_PokedexRegistration, DISPLAY_WIDTH), 0);
     if (value == 0)
-        value = NationalToRegionalOrder(num);
+        value = Dex_NationalToRegionalEntry(num);
     else
         value = num;
 
@@ -4517,21 +4515,198 @@ s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
     return retVal;
 }
 
+struct DexCatalog
+{
+    enum DexRegionId region;
+    u16 entryCount;
+    const u8 *name;
+    const u8 *description;
+};
+
+// The catalog rows deliberately refer to the existing authored source tables
+// through Dex_RegionEntryToNational. Kanto and Johto stop before their legacy
+// terminal zero; Hoenn's table already contains only valid entries.
+static const struct DexCatalog sDexCatalogs[DEX_REGION_COUNT] =
+{
+    [DEX_REGION_KANTO] = { DEX_REGION_KANTO, KANTO_DEX_COUNT - 1, gText_DexKantoTitle, gText_DexKantoDescription },
+    [DEX_REGION_JOHTO] = { DEX_REGION_JOHTO, JOHTO_DEX_COUNT - 1, gText_DexJohtoTitle, gText_DexJohtoDescription },
+    [DEX_REGION_HOENN] = { DEX_REGION_HOENN, HOENN_DEX_COUNT - 1, gText_DexHoennTitle, gText_DexHoennDescription },
+};
+
+static const struct DexCatalog *GetDexCatalog(enum DexRegionId region)
+{
+    if (region == DEX_REGION_NONE || region >= DEX_REGION_COUNT || region >= 32)
+        return NULL;
+    if (sDexCatalogs[region].region != region || sDexCatalogs[region].entryCount == 0)
+        return NULL;
+    return &sDexCatalogs[region];
+}
+
+static bool8 IsCatalogEntryVisible(const struct DexCatalog *catalog, enum NationalDexOrder id)
+{
+    u16 localEntry;
+
+    if (catalog == NULL || !Dex_IsValidNationalId(id))
+        return FALSE;
+    for (localEntry = 1; localEntry <= catalog->entryCount; localEntry++)
+        if (Dex_RegionEntryToNational(catalog->region, localEntry) == id)
+            return TRUE;
+    return FALSE;
+}
+
 bool8 Dex_IsValidNationalId(enum NationalDexOrder id)
 {
     return id != NATIONAL_DEX_NONE && id <= NATIONAL_DEX_COUNT;
 }
 
-// Phase 1 deliberately exposes the whole canonical domain. Catalog union policy
-// replaces this predicate without changing any caller in Phase 2.
+enum DexRegionId Dex_GetActiveRegion(void)
+{
+    enum DexRegionId region = gSaveBlock2Ptr->pokedex.activeRegion;
+    return GetDexCatalog(region) != NULL ? region : DEX_REGION_NONE;
+}
+
+bool8 Dex_SetActiveRegion(enum DexRegionId region)
+{
+    if (GetDexCatalog(region) == NULL)
+        return FALSE;
+    gSaveBlock2Ptr->pokedex.activeRegion = region;
+    return TRUE;
+}
+
+u16 Dex_GetActiveRegionalEntryCount(void)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(Dex_GetActiveRegion());
+    return catalog == NULL ? 0 : catalog->entryCount;
+}
+
+enum NationalDexOrder Dex_RegionalEntryToNational(u16 localEntry)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(Dex_GetActiveRegion());
+    enum NationalDexOrder id;
+
+    if (catalog == NULL || localEntry == 0 || localEntry > catalog->entryCount)
+        return NATIONAL_DEX_NONE;
+    id = Dex_RegionEntryToNational(catalog->region, localEntry);
+    return Dex_IsValidNationalId(id) ? id : NATIONAL_DEX_NONE;
+}
+
+u16 Dex_NationalToRegionalEntry(enum NationalDexOrder id)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(Dex_GetActiveRegion());
+    u16 localEntry;
+
+    if (catalog == NULL || !Dex_IsValidNationalId(id))
+        return 0;
+    for (localEntry = 1; localEntry <= catalog->entryCount; localEntry++)
+        if (Dex_RegionEntryToNational(catalog->region, localEntry) == id)
+            return localEntry;
+    return 0;
+}
+
+bool8 Dex_IsRegionalEntryVisible(enum NationalDexOrder id)
+{
+    return Dex_NationalToRegionalEntry(id) != 0;
+}
+
+u16 Dex_GetRegionalVisibleProgress(u8 flagCase)
+{
+    u16 localEntry;
+    u16 count = 0;
+
+    if (flagCase != FLAG_GET_SEEN && flagCase != FLAG_GET_CAUGHT)
+        return 0;
+    for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
+        if (GetSetPokedexFlag(Dex_RegionalEntryToNational(localEntry), flagCase))
+            count++;
+    return count;
+}
+
+bool8 Dex_HasCompletedRegionalVisibleEntries(void)
+{
+    u16 localEntry;
+
+    if (Dex_GetActiveRegionalEntryCount() == 0)
+        return FALSE;
+    for (localEntry = 1; localEntry <= Dex_GetActiveRegionalEntryCount(); localEntry++)
+    {
+        enum NationalDexOrder id = Dex_RegionalEntryToNational(localEntry);
+        u16 species = NationalPokedexNumToSpecies(id);
+        if (species == SPECIES_NONE || (!(gSpeciesInfo[species].dexNotRequired || (gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].dexForceRequired)) && !GetSetPokedexFlag(id, FLAG_GET_CAUGHT)))
+            return FALSE;
+    }
+    return TRUE;
+}
+
+bool8 Dex_HasNationalExtension(enum DexRegionId region)
+{
+    if (GetDexCatalog(region) == NULL)
+        return FALSE;
+    return (gSaveBlock2Ptr->pokedex.nationalExtensionMask & (1u << region)) != 0;
+}
+
+bool8 Dex_GrantNationalExtension(enum DexRegionId region)
+{
+    if (GetDexCatalog(region) == NULL)
+        return FALSE;
+    gSaveBlock2Ptr->pokedex.nationalExtensionMask |= (1u << region);
+    return TRUE;
+}
+
+u32 Dex_GetNationalExtensionMask(void)
+{
+    return gSaveBlock2Ptr->pokedex.nationalExtensionMask;
+}
+
+bool8 Dex_UpgradeToNational(void)
+{
+    EnableNationalPokedex();
+    return TRUE;
+}
+
+bool8 Dex_HasNationalUpgrade(void)
+{
+    return IsNationalPokedexEnabled();
+}
+
+const u8 *Dex_GetActiveRegionName(void)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(Dex_GetActiveRegion());
+    return catalog == NULL ? gText_DexEmptyString : catalog->name;
+}
+
+const u8 *Dex_GetActiveRegionDescription(void)
+{
+    const struct DexCatalog *catalog = GetDexCatalog(Dex_GetActiveRegion());
+    return catalog == NULL ? gText_DexEmptyString : catalog->description;
+}
+
 bool8 Dex_IsNationalEntryVisible(enum NationalDexOrder id)
 {
-    return Dex_IsValidNationalId(id);
+    enum DexRegionId region;
+    const struct DexCatalog *catalog;
+
+    if (!Dex_IsValidNationalId(id))
+        return FALSE;
+    catalog = GetDexCatalog(Dex_GetActiveRegion());
+    if (IsCatalogEntryVisible(catalog, id))
+        return TRUE;
+    for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
+        if (Dex_HasNationalExtension(region) && IsCatalogEntryVisible(GetDexCatalog(region), id))
+            return TRUE;
+    return FALSE;
 }
 
 u16 Dex_GetNationalVisibleEntryCount(void)
 {
-    return NATIONAL_DEX_COUNT;
+    enum NationalDexOrder id;
+    u16 count = 0;
+
+    if (Dex_GetActiveRegion() == DEX_REGION_NONE)
+        return 0;
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+        if (Dex_IsNationalEntryVisible(id))
+            count++;
+    return count;
 }
 
 enum NationalDexOrder Dex_GetFirstVisibleNationalEntry(void)
@@ -4593,21 +4768,28 @@ bool8 Dex_GetCriticalCaptureProgress(u16 *caughtCount, u16 *visibleCount)
         return FALSE;
 
     *caughtCount = 0;
-    *visibleCount = Dex_GetNationalVisibleEntryCount();
-    if (*visibleCount == 0)
+    *visibleCount = 0;
+    if (Dex_GetActiveRegion() == DEX_REGION_NONE)
         return FALSE;
 
-    *caughtCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
+    if (Dex_HasNationalUpgrade())
+    {
+        *visibleCount = Dex_GetNationalVisibleEntryCount();
+        *caughtCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
+    }
+    else
+    {
+        *visibleCount = Dex_GetActiveRegionalEntryCount();
+        *caughtCount = Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT);
+    }
+    if (*visibleCount == 0)
+        return FALSE;
     return TRUE;
 }
 
 u32 GetRegionalPokedexCount(u8 caseID)
 {
-    if (IS_HNS)
-        return GetJohtoPokedexCount(caseID);
-    if (IS_FRLG)
-        return GetKantoPokedexCount(caseID);
-    return GetHoennPokedexCount(caseID);
+    return Dex_GetRegionalVisibleProgress(caseID);
 }
 
 u16 GetHoennPokedexCount(u8 caseID)
@@ -4678,11 +4860,7 @@ u16 GetJohtoPokedexCount(u8 caseID)
 
 bool16 HasAllRegionalMons(void)
 {
-    if (IS_HNS)
-        return HasAllJohotoMons();
-    if (IS_FRLG)
-        return HasAllKantoMons();
-    return HasAllHoennMons();
+    return Dex_HasCompletedRegionalVisibleEntries();
 }
 
 bool16 HasAllHoennMons(void)
@@ -5359,7 +5537,7 @@ static void Task_HandleSearchMenuInput(u8 taskId)
                 sPokedexView->selectedPokemonBackup = 0;
                 gSaveBlock2Ptr->pokedex.mode = GetSearchModeSelection(taskId, SEARCH_MODE);
                 if (!IsNationalPokedexEnabled())
-                    gSaveBlock2Ptr->pokedex.mode = DEX_MODE_HOENN;
+                    gSaveBlock2Ptr->pokedex.mode = DEX_MODE_REGIONAL;
                 sPokedexView->dexModeBackup = gSaveBlock2Ptr->pokedex.mode;
                 gSaveBlock2Ptr->pokedex.order = GetSearchModeSelection(taskId, SEARCH_ORDER);
                 sPokedexView->dexOrderBackup = gSaveBlock2Ptr->pokedex.order;
@@ -5861,8 +6039,8 @@ static void SetDefaultSearchModeAndOrder(u8 taskId)
     switch (sPokedexView->dexModeBackup)
     {
     default:
-    case DEX_MODE_HOENN:
-        selected = DEX_MODE_HOENN;
+    case DEX_MODE_REGIONAL:
+        selected = DEX_MODE_REGIONAL;
         break;
     case DEX_MODE_NATIONAL:
         selected = DEX_MODE_NATIONAL;

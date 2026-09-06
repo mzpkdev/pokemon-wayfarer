@@ -78,6 +78,8 @@ const u8 gText_DexHoennTitle[] = _("JOHTO DEX");
 const u8 gText_DexHoennTitle[] = _("HOENN DEX");
 #endif
 const u8 gText_DexNatTitle[] = _("NATIONAL DEX");
+const u8 gText_DexKantoTitle[] = _("KANTO DEX");
+const u8 gText_DexJohtoTitle[] = _("JOHTO DEX");
 const u8 gText_DexSortNumericalTitle[] = _("NUMERICAL MODE");
 const u8 gText_DexSortAtoZTitle[] = _("A TO Z MODE");
 const u8 gText_DexSortHeaviestTitle[] = _("HEAVIEST MODE");
@@ -109,6 +111,8 @@ const u8 gText_DexHoennDescription[] = _("JOHTO region's POKéDEX");
 const u8 gText_DexHoennDescription[] = _("HOENN region's POKéDEX");
 #endif
 const u8 gText_DexNatDescription[] = _("National edition POKéDEX");
+const u8 gText_DexKantoDescription[] = _("KANTO region's POKéDEX");
+const u8 gText_DexJohtoDescription[] = _("JOHTO region's POKéDEX");
 const u8 gText_DexSortNumericalDescription[] = _("POKéMON are listed according to their\nnumber.");
 const u8 gText_DexSortAtoZDescription[] = _("Spotted and owned POKéMON are listed\nalphabetically.");
 const u8 gText_DexSortHeaviestDescription[] = _("Owned POKéMON are listed from the\nheaviest to the lightest.");

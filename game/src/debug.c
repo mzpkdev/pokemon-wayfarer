@@ -2468,7 +2468,7 @@ static void DebugAction_FlagsVars_PokedexFlags_All(u8 taskId)
     //     GetSetPokedexFlag(i + 1, FLAG_SET_SEEN);
     // }
 /*
-    for (i = 0; i < REGIONAL_DEX_COUNT - 1; ++i)
+    for (i = 0; i < Dex_GetActiveRegionalEntryCount(); ++i)
     {
          j = RegionalToNationalOrder(i + 1);
          GetSetPokedexFlag(j, FLAG_SET_CAUGHT);

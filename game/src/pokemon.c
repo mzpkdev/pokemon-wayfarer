@@ -6930,6 +6930,32 @@ enum NationalDexOrder RegionalToNationalOrder(u32 regionalNum)
     return HoennToNationalOrder(regionalNum);
 }
 
+// Catalog data remains authored in the legacy regional tables.  The Pokédex
+// facade is the only generic consumer; explicitly named legacy content may
+// continue to use its regional helpers until it is migrated.
+enum NationalDexOrder Dex_RegionEntryToNational(enum DexRegionId region, u16 localEntry)
+{
+    switch (region)
+    {
+    case DEX_REGION_KANTO:
+        // The declaration includes one terminal zero, which is not an entry.
+        if (localEntry == 0 || localEntry >= KANTO_DEX_COUNT)
+            return NATIONAL_DEX_NONE;
+        return sKantoToNationalOrder[localEntry - 1];
+    case DEX_REGION_JOHTO:
+        // The declaration includes one terminal zero, which is not an entry.
+        if (localEntry == 0 || localEntry >= JOHTO_DEX_COUNT)
+            return NATIONAL_DEX_NONE;
+        return sJohtoToNationalOrder[localEntry - 1];
+    case DEX_REGION_HOENN:
+        if (localEntry == 0 || localEntry >= HOENN_DEX_COUNT)
+            return NATIONAL_DEX_NONE;
+        return sHoennToNationalOrder[localEntry - 1];
+    default:
+        return NATIONAL_DEX_NONE;
+    }
+}
+
 enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum)
 {
     if (!kantoNum || kantoNum >= (KANTO_DEX_COUNT + 1))
@@ -7440,10 +7466,7 @@ u16 SpeciesToPokedexNum(u16 species)
     }
     else
     {
-        species = SpeciesToRegionalPokedexNum(species);
-        if (species <= REGIONAL_DEX_COUNT)
-            return species;
-        return 0xFFFF;
+        return Dex_NationalToRegionalEntry(SpeciesToNationalPokedexNum(species));
     }
 }
 

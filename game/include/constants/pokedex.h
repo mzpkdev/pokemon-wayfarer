@@ -1965,8 +1965,6 @@ enum JohtoDexOrder
 #define JOHTO_DEX_COUNT (JOHTO_DEX_CELEBI + 1)
 
 
-#define REGIONAL_DEX_COUNT (IS_HNS ? JOHTO_DEX_COUNT : IS_FRLG ? KANTO_DEX_COUNT : HOENN_DEX_COUNT)
-
 #define DECAGRAMS_IN_POUND             4536
 #define CM_PER_INCH                    2.54
 #define CM_PER_INCH_FACTOR             (CM_PER_INCH * 100)
@@ -1982,9 +1980,18 @@ enum JohtoDexOrder
 #define DEX_Y_BOTTOM                   73
 #define DEX_MEASUREMENT_X              129
 
+enum DexRegionId
+{
+    DEX_REGION_NONE,
+    DEX_REGION_KANTO,
+    DEX_REGION_JOHTO,
+    DEX_REGION_HOENN,
+    DEX_REGION_COUNT,
+};
+
 enum
 {
-    DEX_MODE_HOENN,
+    DEX_MODE_REGIONAL,
     DEX_MODE_NATIONAL
 };
 

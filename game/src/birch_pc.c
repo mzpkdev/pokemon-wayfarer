@@ -53,10 +53,10 @@ const u8 *GetPokedexRatingText(u32 count)
 {
     u32 i, j, k;
     // doesNotCountForRegionalPokedex
-    u16 maxDex = REGIONAL_DEX_COUNT - 1;
-    for (i = 0; i < REGIONAL_DEX_COUNT - 1; i++)
+    u16 maxDex = Dex_GetActiveRegionalEntryCount() - 1;
+    for (i = 0; i < Dex_GetActiveRegionalEntryCount() - 1; i++)
     {
-        j = RegionalToNationalOrder(i + 1);
+        j = Dex_RegionalEntryToNational(i + 1);
         k = NationalPokedexNumToSpecies(j);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
@@ -197,11 +197,11 @@ const u8 *GetNationalPokedexRatingText(u32 count)
 const u8 *GetPokedexRatingText(u32 count)
 {
     u32 i, j, k;
-    u16 maxDex = REGIONAL_DEX_COUNT - 1;
+    u16 maxDex = Dex_GetActiveRegionalEntryCount() - 1;
     // doesNotCountForRegionalPokedex
-    for (i = 0; i < REGIONAL_DEX_COUNT; i++)
+    for (i = 0; i < Dex_GetActiveRegionalEntryCount(); i++)
     {
-        j = RegionalToNationalOrder(i + 1);
+        j = Dex_RegionalEntryToNational(i + 1);
         k = NationalPokedexNumToSpecies(j);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {

@@ -867,6 +867,7 @@ enum NationalDexOrder RegionalToNationalOrder(u32 regionNum);
 enum NationalDexOrder KantoToNationalOrder(enum KantoDexOrder kantoNum);
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum);
 enum NationalDexOrder JohtoToNationalOrder(enum JohtoDexOrder johtoNum);
+enum NationalDexOrder Dex_RegionEntryToNational(enum DexRegionId region, u16 localEntry);
 void DrawSpindaSpots(u32 personality, u8 *dest, bool32 isSecondFrame);
 void EvolutionRenameMon(struct Pokemon *mon, u16 oldSpecies, u16 newSpecies);
 u8 GetPlayerFlankId(void);

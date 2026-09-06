@@ -186,6 +186,36 @@ bool32 IsNationalPokedexEnabled(void)
         return FALSE;
 }
 
+void DexScript_SetActiveRegion(void)
+{
+    gSpecialVar_Result = Dex_SetActiveRegion(gSpecialVar_0x8004);
+}
+
+void DexScript_GetActiveRegion(void)
+{
+    gSpecialVar_Result = Dex_GetActiveRegion();
+}
+
+void DexScript_GrantNationalExtension(void)
+{
+    gSpecialVar_Result = Dex_GrantNationalExtension(gSpecialVar_0x8004);
+}
+
+void DexScript_HasNationalExtension(void)
+{
+    gSpecialVar_Result = Dex_HasNationalExtension(gSpecialVar_0x8004);
+}
+
+void DexScript_UpgradeToNational(void)
+{
+    gSpecialVar_Result = Dex_UpgradeToNational();
+}
+
+void DexScript_HasNationalUpgrade(void)
+{
+    gSpecialVar_Result = Dex_HasNationalUpgrade();
+}
+
 void DisableMysteryEvent(void)
 {
     FlagClear(FLAG_SYS_MYSTERY_EVENT_ENABLE);

@@ -5,6 +5,14 @@ extern u8 gUnusedPokedexU8;
 extern void (*gPokedexVBlankCB)(void);
 
 void ResetPokedex(void);
+enum DexRegionId Dex_GetActiveRegion(void);
+bool8 Dex_SetActiveRegion(enum DexRegionId region);
+u16 Dex_GetActiveRegionalEntryCount(void);
+enum NationalDexOrder Dex_RegionalEntryToNational(u16 localEntry);
+u16 Dex_NationalToRegionalEntry(enum NationalDexOrder id);
+bool8 Dex_IsRegionalEntryVisible(enum NationalDexOrder id);
+u16 Dex_GetRegionalVisibleProgress(u8 flagCase);
+bool8 Dex_HasCompletedRegionalVisibleEntries(void);
 bool8 Dex_IsValidNationalId(enum NationalDexOrder id);
 bool8 Dex_IsNationalEntryVisible(enum NationalDexOrder id);
 u16 Dex_GetNationalVisibleEntryCount(void);
@@ -13,6 +21,13 @@ enum NationalDexOrder Dex_GetNextVisibleNationalEntry(enum NationalDexOrder afte
 u16 Dex_GetNationalVisibleProgress(u8 flagCase);
 bool8 Dex_HasCompletedNationalVisibleEntries(void);
 bool8 Dex_GetCriticalCaptureProgress(u16 *caughtCount, u16 *visibleCount);
+bool8 Dex_GrantNationalExtension(enum DexRegionId region);
+bool8 Dex_HasNationalExtension(enum DexRegionId region);
+u32 Dex_GetNationalExtensionMask(void);
+bool8 Dex_UpgradeToNational(void);
+bool8 Dex_HasNationalUpgrade(void);
+const u8 *Dex_GetActiveRegionName(void);
+const u8 *Dex_GetActiveRegionDescription(void);
 bool8 Dex_CalculateCriticalCaptureThreshold(u16 caughtCount, u16 visibleCount, u32 baseOdds, bool8 hasCatchingCharm, u8 *rollThreshold);
 u32 GetRegionalPokedexCount(u8 caseID);
 u16 GetHoennPokedexCount(u8 caseID);

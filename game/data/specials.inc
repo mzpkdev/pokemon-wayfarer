@@ -530,6 +530,12 @@ gSpecials::
 	def_special IsTrainerRegistered
 	def_special ShouldDoBrailleRegicePuzzle
 	def_special EnableNationalPokedex
+	def_special DexScript_SetActiveRegion
+	def_special DexScript_GetActiveRegion
+	def_special DexScript_GrantNationalExtension
+	def_special DexScript_HasNationalExtension
+	def_special DexScript_UpgradeToNational
+	def_special DexScript_HasNationalUpgrade
 	def_special ScriptMenu_CreateLilycoveSSTidalMultichoice
 	def_special GetLilycoveSSTidalSelection
 	def_special TurnOnTVScreen

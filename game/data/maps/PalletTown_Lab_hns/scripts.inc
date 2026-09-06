@@ -18,6 +18,8 @@ PalletTown_Lab_EventScript_Oak::
 PalletTown_Lab_EventScript_OakGiveNatDex_ForPlaytesters::
 	setflag FLAG_SYS_NATIONAL_DEX
 	special EnableNationalPokedex
+	setvar VAR_0x8004, 1 @ DEX_REGION_KANTO
+	special DexScript_GrantNationalExtension
 	return
 
 PalletTown_Lab_EventScript_OakBadgeCheck::
