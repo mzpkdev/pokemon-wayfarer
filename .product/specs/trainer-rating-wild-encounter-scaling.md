@@ -23,18 +23,27 @@ game starts at 0. Builds that have not adopted the Wayfarer circuit retain
 their existing Rating 10 floor. Every read clamps the saved value to the range
 for the active product.
 
-The game derives a rating from current progression facts, compares it with the
-saved value, and stores the higher value. This is a high-water mark:
-progression can increase the rating but no later read can reduce it. Save
-migration initializes the stored value from the derived rating within the
-active product's range without changing save-block layouts.
+Before the later circuit supplies global progression, the Wayfarer foundation
+does not derive Rating from regional badge flags, a local League clear, or any
+other existing local progression fact. It initializes a new Wayfarer save to 0
+and returns the stored, clamped value. The foundation's deterministic tests may
+seed that value to exercise its consumers. No migration from earlier prerelease
+Rating behavior is required.
+
+Once the circuit is implemented, it derives a global candidate from its badge
+and League facts, compares that candidate with the saved value, and stores the
+higher value. This is a high-water mark: circuit progression can increase the
+rating but no later read can reduce it.
 
 ### Progression targets
 
-Wayfarer derives Trainer Rating from the global badge count and fixed League
-clears defined by the interregional League circuit specification. It starts at
-0, reaches 16 after four badges and 40 after eight badges, and reaches 80 after
-all twenty-four badges and all three League clears.
+The Trainer Rating foundation persists and exposes the shared Wayfarer Rating
+before the interregional League circuit is complete. The later circuit maps the
+global badge count and fixed League clears to that value. It starts at 0,
+reaches 16 after four badges and 40 after eight badges, and reaches 80 after all
+twenty-four badges and all three League clears. Circuit starts and League party
+tiers are not prerequisites for the foundation, its 0 through 80 bounds, or its
+consumers.
 
 Builds that have not adopted the Wayfarer circuit retain their current
 progression. Each of the first four regional badges contributes 4 points, and
@@ -103,7 +112,10 @@ Each example identifies an ordinary encounter that motivated review of the globa
 Mantine's global floor is exactly 14. An authored level-15 Mantine projects to
 level 14 at Rating 10, so any higher floor would make a protected HNS native-HM
 source ineligible. This correction does not create a regional runtime branch,
-change authored levels, or add Mantyke or another predecessor rule.
+change authored levels, or add Mantyke or another predecessor rule. Mantine is
+protected from Rating 10 through 80; it is not an all-rating traversal anchor,
+and lower ratings may exclude it because of the global floor. HNS Chinchou is
+the approved Rating 0 through 80 Whirlpool source.
 
 In wild-randomizer mode, the existing randomized species mapping continues to run from the original selected slot. Its level still projects through Trainer Rating, but predecessor resolution and species-floor eligibility filtering are bypassed.
 

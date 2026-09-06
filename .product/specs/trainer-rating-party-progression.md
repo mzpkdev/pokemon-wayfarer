@@ -6,10 +6,12 @@ Implemented: No
 ## Scope
 
 This specification defines the Wayfarer soft level cap, numerical experience
-reduction, and obedience rules derived from Trainer Rating. The interregional
-League circuit owns Trainer Rating derivation and persistence. The wild
-encounter scaling specification owns ordinary wild levels and species
-eligibility.
+reduction, and obedience rules derived from Trainer Rating. The Trainer Rating
+foundation owns the shared value and persistence; a later interregional League
+circuit implementation supplies its global badge and League-clear inputs. The
+wild encounter scaling specification owns ordinary wild levels and species
+eligibility. Regional starts and League party tiers are not prerequisites for
+this foundation or for the party-progression mechanics.
 
 The existing missing-badge catch penalty remains active under its existing
 rules. This specification does not replace, disable, or remap that penalty.
@@ -66,8 +68,9 @@ encounters.
 
 The soft-cap reduction applies independently to each Pokémon receiving a
 positive numerical experience award. It covers battle participation, catch
-experience, Exp. Share, Exp. Candy, and Day Care experience. Existing
-eligibility rules still decide whether the Pokémon receives an award.
+experience, Exp. Share, and Day Care experience. Existing eligibility rules
+still decide whether the Pokémon receives an award. Exp. Candy does not use
+the reduction.
 
 Calculate the amount the Pokémon would ordinarily receive first, including
 trade, held-item, global experience, and challenge-option multipliers. Apply
@@ -92,10 +95,11 @@ the entire award. An otherwise-positive reduced portion always grants at least
 one experience point. A zero award remains zero.
 
 Day Care treats the accumulated experience being applied on withdrawal as one
-award for this calculation. Exp. Candy treats the item's numerical experience
-as one award. Rare Candy remains unaffected and grants its normal level
-increase. Reaching a level above the cap through Rare Candy does not disable
-the later numerical-experience reduction.
+award for this calculation. Exp. Candy bypasses the reduction entirely: it
+grants its normal full numerical experience amount, and its existing display
+continues to report that full amount. Rare Candy remains unaffected and grants
+its normal level increase. Reaching a level above the cap through either Candy
+does not disable later numerical-experience reduction from a covered source.
 
 An enabled challenge level cap keeps its existing behavior. Apply the
 Trainer Rating reduction first, then let the challenge rule further restrict
@@ -149,11 +153,11 @@ replace that badge source with global badge count.
 
 ### Shared implementation authority
 
-All Wayfarer experience sources call one shared reduction helper so award
-ordering and rounding cannot drift. All Wayfarer obedience checks call one
-shared soft-cap resolver. The resolver reads Trainer Rating rather than a
-regional badge count or the Trainer Rating save variable as though it were
-already a Pokémon level.
+Every covered Wayfarer experience source calls one shared reduction helper so
+award ordering and rounding cannot drift. Exp. Candy and Rare Candy never call
+that helper. All Wayfarer obedience checks call one shared soft-cap resolver.
+The resolver reads Trainer Rating rather than a regional badge count or the
+Trainer Rating save variable as though it were already a Pokémon level.
 
 The existing generic `EXP_CAP_SOFT` behavior is not the authority for this
 feature. Its progressively smaller divisors do not implement the flat one-half
@@ -170,17 +174,19 @@ Deterministic tests must cover:
 
 1. Every integer Trainer Rating from 0 through 80, exact anchor values,
    round-half-up interpolation, range clamping, and monotonic caps.
-2. The eight global circuit milestone results, including level 15 at Rating 0
-   and level 100 at Rating 80.
+2. The cap curve's anchor values, including level 15 at Rating 0 and level 100
+   at Rating 80, with controlled seeded ratings for values normally supplied by
+   the later circuit.
 3. Numerical awards wholly below the cap, ending exactly at it, crossing it,
    and beginning at or above it.
 4. Even, odd, one-point, and zero reduced portions, including the positive
    one-point minimum.
-5. Battle participation, catch experience, Exp. Share, Exp. Candy, and Day Care
-   through the shared reduction rules.
+5. Battle participation, catch experience, Exp. Share, and Day Care through the
+   shared reduction rules.
 6. Trade, held-item, global experience, and challenge-option multiplier
    ordering, followed by any stricter challenge level cap.
-7. Normal Rare Candy use below, at, and above the soft cap.
+7. Normal Exp. Candy and Rare Candy use below, at, and above the soft cap,
+   including the full displayed Exp. Candy award.
 8. Same-OT Pokémon met below, exactly at, and above the cap, including a current
    level above the cap in every case.
 9. Foreign-OT Pokémon below, exactly at, and above the cap, including a foreign
@@ -197,7 +203,8 @@ Deterministic tests must cover:
 
 Compile the affected battle, party, item, Day Care, capture, and Trainer Rating
 objects for every supported product build. Build at least one complete Wayfarer
-ROM and exercise the Rating 0, League-clear, and Rating 80 boundaries.
+ROM and exercise the Rating 0, seeded mid-curve, and Rating 80 boundaries. The
+later circuit specification owns testing its badge and League-clear inputs.
 
 ## References
 

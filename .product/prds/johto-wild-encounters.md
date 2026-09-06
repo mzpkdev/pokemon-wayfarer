@@ -258,12 +258,16 @@ mountain habitat.
 - Mantine uses the global minimum ordinary wild level of 14. This is the
   minimum floor that keeps an authored level-15 Mantine eligible when it
   projects to level 14 at Rating 10. The correction does not change its
-  authored levels or add Mantyke predecessor behavior.
+  authored levels or add Mantyke predecessor behavior. Mantine is protected
+  from Rating 10 through 80 and is not the required low-rating Whirlpool
+  source.
 - The Olivine and Cianwood Chinchou sources remain traversal-safe. Every
   required source must preserve the exact Standard Rod records: 11% of
   successful Old Rod encounters for every Olivine day and night profile, and
   12% for the Cianwood daytime profile. With the 25% Old Rod bite rate, these
-  remain 2.75% and 3% per unmodified cast respectively.
+  remain 2.75% and 3% per unmodified cast respectively. Together with the HNS
+  Chinchou learnset, these are the required Rating 0 through 80 Whirlpool
+  guarantee.
 - Time-of-day selection, ability-based slot influence, Lures, repel checks,
   and ordinary population readers continue to operate on the rebalanced
   profiles.
@@ -330,8 +334,11 @@ The Johto rebalance is accepted when all of the following are true:
 - The Chinchou accessibility rows pass Standard Rod validation, and Aipom's
   Headbutt map coverage and aggregate probability do not regress.
 - Every qualifying native HM profile still contains its named Gligar, Aipom,
-  Chinchou, Mareep, Wooper, Snubbull, Miltank, Marill, or Mantine anchor at the
-  required authored levels and at every Wayfarer Rating from 0 through 80.
+  Chinchou, Mareep, Wooper, Snubbull, Miltank, or Marill anchor at the required
+  authored levels and at every Wayfarer Rating from 0 through 80. The protected
+  Mantine profiles retain their named anchor at the required authored levels
+  from Rating 10 through 80. The Olivine and Cianwood Chinchou profiles provide
+  the required Whirlpool route at every Rating from 0 through 80.
 - Gifts, statics, babies, starters, fossils, prizes, and legendaries have not
   been added to ordinary encounter tables merely to satisfy a target.
 - Encounter generation and its existing deterministic tests pass with no

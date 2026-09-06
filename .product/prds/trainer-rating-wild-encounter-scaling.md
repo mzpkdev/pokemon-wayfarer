@@ -43,6 +43,13 @@ The interregional League circuit defines the exact badge and League
 contributions. This replaces the earlier concept of one full regional campaign
 plus smaller breadth contributions from the other regions.
 
+Implementation is staged. The Trainer Rating foundation provides the shared
+0 through 80 value, its high-water storage, and the wild, party-cap, and
+obedience consumers before the circuit's regional starts and League parties
+exist. A later interregional League circuit implementation supplies the global
+badge and League-clear contributions. Those content decisions do not block the
+foundation or party-progression work.
+
 The soft-cap curve is independently tunable. Its initial milestone values copy
 the current wild encounter anchor plus 10 levels, but later encounter-balance
 changes do not automatically change party progression.
@@ -70,8 +77,11 @@ largest rating gains. Later badges and League clears provide diminishing gains
 as the rating approaches 80.
 
 Rating 0 must not remove a native utility catch that supplies an approved core
-route. The Wayfarer circuit owns the level-5 Chinchou compatibility adjustment
-needed to preserve Kanto's native-Surf route.
+route. HNS Chinchou is the approved all-rating Whirlpool source: the Olivine
+port and Cianwood fishing records retain Chinchou, and its HNS level-up schedule
+supplies Flash, Surf, and Whirlpool from level 5 through level 100. Kanto's
+level-5 Chinchou records retain the same compatibility for its native-Surf
+route.
 
 The soft cap should slow over-levelling without making a long-term partner
 unreliable. A same-OT Pokémon first obtained within the Trainer's cap remains
@@ -120,7 +130,9 @@ Each example identifies an ordinary encounter that motivated review of the globa
 Mantine's floor is 14 because an authored level-15 Mantine can project to
 level 14 at Rating 10. The floor applies globally. It does not add a
 Johto-only exception, change authored encounter levels, or introduce Mantyke
-predecessor resolution.
+predecessor resolution. Mantine is protected from Rating 10 through 80, but it
+is not a required Rating 0 Whirlpool anchor and may be ineligible below its
+floor at lower ratings.
 
 Ordinary-population readers use the same effective population as an actual encounter. This includes the Pokédex area display, Match Call, radio, local ambient species selection, and ordinary land or water DexNav populations. Hidden DexNav populations stay authored and unscaled.
 
@@ -129,10 +141,11 @@ In randomizer mode, the selected slot's level still scales, while the existing r
 ### Party progression
 
 A Pokémon whose current level is at or above the soft cap receives half of its
-otherwise-awarded numerical experience. Rare Candy remains an intentional
-bypass and grants its normal level increase. The party-progression technical
-specification defines which other experience sources use the reduction, along
-with exact ordering, threshold crossing, and rounding.
+otherwise-awarded covered numerical experience. Exp. Candy and Rare
+Candy bypass the soft cap: Exp. Candy grants its full displayed numerical award
+and Rare Candy grants its normal level increase. The party-progression technical
+specification defines the remaining covered experience sources, exact ordering,
+threshold crossing, and rounding.
 
 Obedience uses the Pokémon's ownership and acquisition history:
 
@@ -148,10 +161,10 @@ purpose; introducing party progression does not replace the catch penalty.
 
 ## Constraints
 
-Trainer Rating must survive saves and migrations without changing save-block
-layouts. A migrated save derives an appropriate rating from its existing
-progression, and future reads preserve the higher of the stored and derived
-values. Wayfarer clamps the value to the inclusive range 0 through 80.
+Trainer Rating uses the existing save-block layout. No migration or preservation
+of earlier prerelease Rating behavior is required. Wayfarer clamps the stored
+value to the inclusive range 0 through 80; the later circuit preserves the
+higher of the stored and globally derived values.
 
 The soft-cap curve must remain separate from the wild encounter curve so either
 can be tuned without silently changing the other.
@@ -168,16 +181,10 @@ It should also check that excluded sources remain unchanged, that a later rating
 
 Party-progression playtesting should cover every milestone cap, Pokémon just
 below, exactly at, and just above each cap, same-OT Pokémon obtained on both
-sides of the cap, foreign-OT Pokémon, Eggs, and Rare Candy. It should confirm
-that raising Trainer Rating restores obedience when the relevant level falls
-within the new cap and that the missing-badge catch penalty remains active.
-
-## Open questions
-
-- Rating 0 projects authored level-15 Mantine below its global level-14 species
-  floor. Decide whether early HNS Whirlpool access uses Mantyke predecessor
-  resolution or another approved utility source. Do not lower Mantine's global
-  floor without a separate balance decision.
+sides of the cap, foreign-OT Pokémon, Eggs, Exp. Candy, and Rare Candy. It
+should confirm that both Candy types retain their ordinary rewards, that
+raising Trainer Rating restores obedience when the relevant level falls within
+the new cap, and that the missing-badge catch penalty remains active.
 
 ## References
 

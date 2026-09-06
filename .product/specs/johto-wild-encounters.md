@@ -273,20 +273,25 @@ Copy only the Johto-owned HNS rows from the native-HM specification into
 at Vermilion and Cinnabar belong to the Kanto specification and do not enter
 this array. Each record names species, utility moves, qualifying base labels,
 method, applicable times, qualifying authored level ranges, and the required
-Wayfarer Rating range 0 through 80.
+Wayfarer Rating range. Most records are required from 0 through 80; Mantine's
+intentional protected range is 10 through 80.
 
 The protected species are Gligar, Aipom, Chinchou, Mareep, Wooper, Snubbull,
 Miltank, Marill, and Mantine. For every named slot and authored level, the
 production projection must yield an eligible family member with the required
-utility moves at every Rating. The species must remain obtainable in every
-qualifying place and time named by the current native-HM inventory.
+utility moves at every Rating in that record's required range. The species must
+remain obtainable in every qualifying place and time named by the current
+native-HM inventory.
 
 Mantine's global `minimumOrdinaryWildLevel` is 14. An authored level-15
 Mantine can project to level 14 at Rating 10, so 14 is the minimum valid floor
 for this protected inventory. Do not implement this as a Johto-only runtime
 exception, change the authored levels, weaken the Rating 10 through 80 anchor,
-weaken the Wayfarer Rating 0 through 80 anchor, or add Mantyke or another
-predecessor resolution.
+or add Mantyke or another predecessor resolution. Mantine is not a required
+low-rating anchor: its rows may be ineligible below Rating 10. The Olivine port
+and Cianwood Chinchou records are the explicit early HNS Whirlpool anchor.
+They must remain eligible with Flash, Surf, and Whirlpool at every Rating from
+0 through 80.
 
 Aipom remains available through the Rock Smash-backed Headbutt profiles for
 Azalea Town and Route 33 at authored level 10. Its set of qualifying Headbutt
@@ -298,7 +303,7 @@ The Standard Rod source keeps Chinchou at exactly 11 percent of successful Old
 Rod encounters in every Olivine port day and night profile and exactly 12
 percent in Cianwood by day, with Lure off and every slot eligible. Those values
 are exactly 2.75 and 3 percent per unmodified cast. All affected records in
-`game/src/data/standard_rod_fishing.json` remain exact at every Rating from 10
+`game/src/data/standard_rod_fishing.json` remain exact at every Rating from 0
 through 80.
 
 ### Radio and ordinary readers
