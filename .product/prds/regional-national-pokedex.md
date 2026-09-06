@@ -73,6 +73,23 @@ deduplicated visible set, applying the existing `dexNotRequired` and mythical
 requirement rules to that set. A newly granted extension can reveal progress
 the player already earned and can increase the denominator.
 
+### Trading and global progress
+
+Pokédex membership never limits a trade. Players may offer and receive a valid
+Pokémon across Wayfarer origins regardless of the active regional catalog,
+National-upgrade state, granted extensions, or whether either species is
+currently visible in a Pokédex list. A trade never selects an active catalog,
+grants an extension, or upgrades the Pokédex.
+
+When a player receives a valid non-Egg Pokémon, the game records its seen and
+caught state globally by canonical National ID even if that ID is outside the
+current visible regional or National set. The entry stays absent from the
+Pokédex until a later active-catalog selection or National-extension grant
+makes its catalog entry visible. It then appears once with the progress already
+recorded. This policy does not remove non-Pokédex trade restrictions such as a
+Pokémon's `cannotBeTraded` status, the last usable party member, requested
+trade type or Egg pairing, and link protocol compatibility.
+
 ### Critical captures
 
 Wayfarer enables real critical captures. The critical-capture probability uses
@@ -123,6 +140,8 @@ facade.
 - It does not change wild encounters, randomizer species availability, species
   data, encounter-selection behavior, or battle mechanics other than the real
   critical-capture behavior defined here.
+- It does not use Pokédex catalog membership, origin, National mode, or
+  extension state as a trade restriction.
 - It does not preserve prerelease HNS behavior or save layouts. No migration,
   compatibility branch, or obsolete-save conversion is required.
 - It does not restore the old HNS HGSS presentation or promise feature parity
@@ -146,9 +165,11 @@ valid grant is successful and leaves the same state in place.
 The general Pokédex possession flag remains the start-menu gate. The National
 upgrade remains the mode gate. The active-catalog selection and extension mask
 decide membership behind common APIs. The standard UI, Summary screen, ratings,
-completion checks, trades, start menu, credits, trainer-card counts, search,
-and future renderers must not reimplement union logic or retain an old
-hardcoded rule.
+completion checks, start menu, credits, trainer-card counts, search, and future
+renderers must not reimplement union logic or retain an old hardcoded rule.
+Trade eligibility deliberately does not consume the membership facade. Trade
+receipt uses the canonical ID only to record global progress, which a visible
+catalog entry displays later.
 
 Critical-capture code obtains its caught and total values from the same common
 facade. It does not choose a denominator from the build identity, the retired

@@ -18,6 +18,10 @@ consume. Spec 2 supplies the active-catalog and National-union policy, enables
 the final real critical-capture configuration, and tests catalog-dependent
 odds.
 
+Trade eligibility is not a consumer of this facade. Spec 2 removes the old
+Pokédex-membership trade gates and specifies receipt progress for catalog-hidden
+Pokémon.
+
 The resulting foundation may be developed and tested before the second spec,
 but it is not a separate player-facing release milestone. Until Spec 2 changes
 the facade policy, its foundation policy considers every valid canonical ID
@@ -150,12 +154,14 @@ the separate Gen 9 rule that gives a successful capture of an already caught
 species the critical presentation.
 
 Route all National list creation, National search filtering, progress displays,
-trainer-card count, ratings, completion logic, trade display/conversion paths,
-Summary display and shortcut handling, credits, and National completion
-consumers through this facade. The start-menu Pokédex action must always enter
-the standard renderer and retain no HGSS dispatch. The generic regional
-consumers may continue to use their existing regional path until Spec 2
-replaces it with the active-catalog facade.
+trainer-card count, ratings, completion logic, Summary display and shortcut
+handling, credits, and National completion consumers through this facade. The
+start-menu Pokédex action must always enter the standard renderer and retain no
+HGSS dispatch. Trade eligibility must not query this facade or a replacement
+membership predicate. Trade receipt may validate a converted canonical ID and
+record its global flags, as Spec 2 defines. The generic regional consumers may
+continue to use their existing regional path until Spec 2 replaces it with the
+active-catalog facade.
 
 ### Lists, sort tables, and UI capacity
 
@@ -254,9 +260,10 @@ Implementation is accepted only when all of the following pass:
 10. Randomizer candidate tests pass unchanged when a test seam suppresses a
     visible Pokédex entry, proving membership is not its availability policy.
 11. The start-menu action opens the standard renderer; Summary, ratings,
-    completion, trade, credits, and trainer-card fixtures all use canonical
-    IDs and the common facade, with no Obtainable or build-identity regional
-    rule in their Pokédex paths.
+    completion, credits, and trainer-card fixtures all use canonical IDs and
+    the common facade, with no Obtainable or build-identity regional rule in
+    their Pokédex paths. Trade eligibility is excluded from this facade and is
+    covered by Spec 2.
 12. The instrumented memory-capacity test opens and exercises the full standard
     National renderer as specified above. Every allocation succeeds, peak heap
     use stays within the `0x1C500`-byte EWRAM heap limit, the HNS link report
@@ -293,6 +300,9 @@ Implementation is accepted only when all of the following pass:
 - `game/src/pokedex.c:4513-4539` currently decrements a National ID before it
   derives a flag-array index, so an invalid zero requires the in-function guard
   specified above.
+- `game/src/trade.c:3055-3071` currently maps a received non-Egg Pokémon to a
+  canonical ID and records seen and caught flags. Spec 2 keeps that global
+  progress behavior while removing membership-based trade eligibility gates.
 - `game/src/pokemon_summary_screen.c:3437-3457` currently uses
   `OBTAINABLE_DEX_COUNT` for number width.
 - `game/src/pokemon.c:150-1437` holds current regional and Obtainable mapping

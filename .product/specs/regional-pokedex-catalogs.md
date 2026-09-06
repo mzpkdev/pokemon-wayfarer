@@ -179,6 +179,36 @@ flag remains the National-mode gate, but its grants and queries route through
 the APIs above. Neither a selected catalog nor a granted extension makes the
 Pokédex menu available without the possession flag.
 
+### Trade independence and received progress
+
+Pokédex membership is presentation and progress-accounting policy, never trade
+eligibility. Remove every active-regional, National-upgrade, extension, or
+membership gate from `CheckValidityOfTradeMons`, `CanTradeSelectedMon`,
+`GetUnionRoomTradeMessageId`, `CanRegisterMonForTradingBoard`, and
+`CanSpinTradeMon`, and remove the legacy origin-progress gate from
+`GetGameProgressForLinkTrade` for Wayfarer-to-Wayfarer trades. A player's or
+partner's Wayfarer origin, active catalog, National state, extension mask, or
+visible membership must not reject a valid trade offer, receipt, registration,
+or spin-trade choice. None of these trade paths may call the regional or
+National membership facade to decide whether a Pokémon can be traded.
+
+Keep ordinary non-Pokédex restrictions, including `cannotBeTraded`, preserving
+one usable party member, requested trade type or Egg pairing, and link protocol
+compatibility. These are separate from catalog membership. The legacy
+RSE/FRLG-style origin-progress and National-Dex checks are removed for
+Wayfarer-to-Wayfarer trades; no equivalent facade check replaces them.
+
+On a completed trade, `UpdatePokedexForReceivedMon` converts a valid received
+non-Egg species to its canonical National ID, validates that ID, and records
+seen and caught globally. It does not test regional or National membership.
+An entry outside the current visible set does not receive a temporary local
+row and does not affect current visible progress or completion. When a later
+active-catalog selection or National-extension grant makes that ID visible, the
+ordinary regional or National facade displays its existing progress once. An
+invalid received species or canonical ID follows the existing safe invalid-mon
+handling and must not access a Pokédex flag. A trade neither selects a catalog,
+grants an extension, nor upgrades National mode.
+
 ### Critical-capture progress and real roll
 
 Set `B_CRITICAL_CAPTURE = TRUE` in `include/config/battle.h`. Remove
@@ -321,16 +351,16 @@ Implementation is accepted only when all of the following pass:
    the existing progress after grant without resetting or duplicating it. The
    extension changes the denominator only by newly visible distinct IDs.
 10. Generic regional and National UI, search, area, trainer-card count,
-    Summary display and shortcut, ratings, completion, trades, start-menu, and
-    credits consumers agree with the facade. This covers the rating script and
-    Birch PC, diplomas, trainer-card stars, regional trade gates,
-    start/continue/save displays, television, Match Call, Hall of Fame, debug
-    helpers, Easy Chat, the standard and HNS credits roll, and caught-mon
-    battle checks. Credits iterate current visible membership through the
-    facade and read only the matching global caught state. A source audit finds
-    no remaining generic
-    `REGIONAL_DEX_COUNT`, build-identity regional choice, duplicate union loop,
-    or retired Obtainable conversion in any Pokédex consumer.
+    Summary display and shortcut, ratings, completion, start-menu, and credits
+    consumers agree with the facade. This covers the rating script and Birch
+    PC, diplomas, trainer-card stars, start/continue/save displays, television,
+    Match Call, Hall of Fame, debug helpers, Easy Chat, the standard and HNS
+    credits roll, and caught-mon battle checks. Credits iterate current visible
+    membership through the facade and read only the matching global caught
+    state. A source audit finds no remaining generic `REGIONAL_DEX_COUNT`,
+    build-identity regional choice, duplicate union loop, or retired Obtainable
+    conversion in any Pokédex consumer. Trade code is deliberately excluded
+    from this facade audit and must satisfy tests 21 and 22 instead.
 11. Switching the active catalog among Kanto, Johto, and Hoenn updates the
     generic regional-mode label and list without selecting a name through
     `IS_HNS` or `IS_FRLG`. Existing visual assets may remain unchanged.
@@ -371,6 +401,24 @@ Implementation is accepted only when all of the following pass:
     critical throw presentation on successful capture even when the real roll
     is disabled or cannot occur; an owned failed capture remains normal; and
     an unowned successful capture remains normal unless the real roll succeeds.
+21. Parameterized trade tests cover every ordered pair of distinct Kanto,
+    Johto, and Hoenn Wayfarer origins at local link setup and normal local
+    link-trade offer and receipt, every National-upgrade state, every
+    extension-mask state, and a valid species absent from the active catalog
+    and all granted extensions. The link setup reports neither player nor
+    partner as origin-progress-ineligible. Union Room offer and receipt,
+    trading-board registration, and spin trade also accept that species without
+    a membership, origin, National-mode, or extension rejection. Separate
+    fixtures retain the existing `cannotBeTraded`, last-usable-party-member,
+    requested-type or Egg-pairing, and link-protocol rejection behavior.
+22. A completed-trade fixture receives a valid canonical species absent from
+    active Johto and all extensions before the National upgrade. It records
+    global seen and caught flags, contributes no hidden row or visible progress,
+    then appears exactly once with both flags when its catalog becomes visible
+    by a later active-catalog selection or extension grant. Repeat the fixture
+    after the National upgrade and with an overlapping catalog ID to prove that
+    receipt progress is global and later visibility is deduplicated. Invalid
+    received species and converted IDs do not access Pokédex flags.
 
 ## References
 
@@ -393,6 +441,15 @@ Implementation is accepted only when all of the following pass:
   while `:10573-10583` applies the separate owned-species presentation rule.
 - `game/test/battle/capture.c:141-210` already exercises the owned-species
   successful and failed-capture presentation behavior.
+- `game/src/trade.c:1560-1587,2384-2443,2487-2546,2549-2570,2572-2634`
+  currently contains the membership-based link, Union Room, trading-board, and
+  spin-trade gates that this spec removes.
+- `game/src/trade.c:2446-2485` and `game/src/link.c:815-826` currently apply
+  the legacy origin-progress result during local trade setup; Wayfarer origins
+  must not produce that rejection.
+- `game/src/trade.c:3055-3071` already records received non-Egg Pokémon as
+  global canonical seen and caught flags; the implementation preserves that
+  behavior without a membership check.
 - `game/data/maps/PalletTown_Lab_hns/scripts.inc:5-23` contains the current
   Wayfarer Oak National-Dex helper and calls `EnableNationalPokedex`; this is
   the only approved gameplay wiring point.
