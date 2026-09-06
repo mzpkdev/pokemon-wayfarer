@@ -52,11 +52,24 @@ static const u8 *const sBirchDexRatingTexts[BIRCH_DEX_STRINGS] =
 const u8 *GetPokedexRatingText(u32 count)
 {
     u32 i, j, k;
+    u16 entryCount = Dex_GetActiveRegionalEntryCount();
     // doesNotCountForRegionalPokedex
-    u16 maxDex = Dex_GetActiveRegionalEntryCount() - 1;
-    for (i = 0; i < Dex_GetActiveRegionalEntryCount() - 1; i++)
+    u16 maxDex = entryCount;
+
+    if (entryCount == 0)
+    {
+        gSpecialVar_Result = FALSE;
+        return gJohtoDexRatingText_LessThan10;
+    }
+
+    for (i = 0; i < entryCount; i++)
     {
         j = Dex_RegionalEntryToNational(i + 1);
+        if (!Dex_IsValidNationalId(j))
+        {
+            gSpecialVar_Result = FALSE;
+            return gJohtoDexRatingText_LessThan10;
+        }
         k = NationalPokedexNumToSpecies(j);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
