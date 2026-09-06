@@ -2,6 +2,7 @@
 #include "event_data.h"
 #include "pokedex.h"
 #include "pokemon.h"
+#include "string_util.h"
 #include "strings.h"
 #include "trade.h"
 #include "test/test.h"
@@ -945,22 +946,35 @@ TEST("Pokédex player-facing progress stays regional until National upgrade")
     ResetPokedex();
 }
 
-TEST("Pokédex extension masks compose every subset without duplicate progress")
+static void TestDexExtensionMask(u32 mask)
 {
     enum DexRegionId region;
-    u32 mask;
+    bool8 expected[NATIONAL_DEX_COUNT + 1] = {0};
+    u16 expectedCount = 0;
+    enum NationalDexOrder id;
+    u16 localEntry;
 
-    for (mask = 0; mask < (1u << (DEX_REGION_COUNT - 1)); mask++)
+    ResetPokedex();
+    for (localEntry = 1; localEntry <= 282; localEntry++)
     {
-        bool8 expected[NATIONAL_DEX_COUNT + 1] = {0};
-        u16 expectedCount = 0;
-        enum NationalDexOrder id;
-        u16 localEntry;
-
-        ResetPokedex();
-        for (localEntry = 1; localEntry <= 282; localEntry++)
+        id = Dex_RegionEntryToNational(DEX_REGION_JOHTO, localEntry);
+        if (!expected[id])
         {
-            id = Dex_RegionEntryToNational(DEX_REGION_JOHTO, localEntry);
+            expected[id] = TRUE;
+            expectedCount++;
+        }
+        GetSetPokedexFlag(id, FLAG_SET_SEEN);
+        GetSetPokedexFlag(id, FLAG_SET_CAUGHT);
+    }
+    for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
+    {
+        if (!(mask & (1u << (region - 1))))
+            continue;
+        EXPECT(Dex_GrantNationalExtension(region));
+        EXPECT(Dex_GrantNationalExtension(region));
+        for (localEntry = 1; localEntry <= (region == DEX_REGION_KANTO ? 188 : region == DEX_REGION_JOHTO ? 282 : 214); localEntry++)
+        {
+            id = Dex_RegionEntryToNational(region, localEntry);
             if (!expected[id])
             {
                 expected[id] = TRUE;
@@ -969,35 +983,57 @@ TEST("Pokédex extension masks compose every subset without duplicate progress")
             GetSetPokedexFlag(id, FLAG_SET_SEEN);
             GetSetPokedexFlag(id, FLAG_SET_CAUGHT);
         }
-        for (region = DEX_REGION_KANTO; region < DEX_REGION_COUNT; region++)
-        {
-            if (!(mask & (1u << (region - 1))))
-                continue;
-            EXPECT(Dex_GrantNationalExtension(region));
-            EXPECT(Dex_GrantNationalExtension(region));
-            for (localEntry = 1; localEntry <= (region == DEX_REGION_KANTO ? 188 : region == DEX_REGION_JOHTO ? 282 : 214); localEntry++)
-            {
-                id = Dex_RegionEntryToNational(region, localEntry);
-                if (!expected[id])
-                {
-                    expected[id] = TRUE;
-                    expectedCount++;
-                }
-                GetSetPokedexFlag(id, FLAG_SET_SEEN);
-                GetSetPokedexFlag(id, FLAG_SET_CAUGHT);
-            }
-        }
-
-        EXPECT_EQ(Dex_GetNationalVisibleEntryCount(), expectedCount);
-        for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
-            EXPECT_EQ(Dex_IsNationalEntryVisible(id), expected[id]);
-        EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN), 282);
-        EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT), 282);
-        EXPECT(Dex_UpgradeToNational());
-        EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_SEEN), expectedCount);
-        EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), expectedCount);
     }
+
+    EXPECT_EQ(Dex_GetNationalVisibleEntryCount(), expectedCount);
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+        EXPECT_EQ(Dex_IsNationalEntryVisible(id), expected[id]);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_SEEN), 282);
+    EXPECT_EQ(Dex_GetRegionalVisibleProgress(FLAG_GET_CAUGHT), 282);
+    EXPECT(Dex_UpgradeToNational());
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_SEEN), expectedCount);
+    EXPECT_EQ(Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), expectedCount);
     ResetPokedex();
+}
+
+TEST("Pokédex extension masks compose the empty subset without duplicate progress")
+{
+    TestDexExtensionMask(0);
+}
+
+TEST("Pokédex extension masks compose the Kanto subset without duplicate progress")
+{
+    TestDexExtensionMask(1);
+}
+
+TEST("Pokédex extension masks compose the Johto subset without duplicate progress")
+{
+    TestDexExtensionMask(2);
+}
+
+TEST("Pokédex extension masks compose the Kanto and Johto subset without duplicate progress")
+{
+    TestDexExtensionMask(3);
+}
+
+TEST("Pokédex extension masks compose the Hoenn subset without duplicate progress")
+{
+    TestDexExtensionMask(4);
+}
+
+TEST("Pokédex extension masks compose the Kanto and Hoenn subset without duplicate progress")
+{
+    TestDexExtensionMask(5);
+}
+
+TEST("Pokédex extension masks compose the Johto and Hoenn subset without duplicate progress")
+{
+    TestDexExtensionMask(6);
+}
+
+TEST("Pokédex extension masks compose every region subset without duplicate progress")
+{
+    TestDexExtensionMask(7);
 }
 
 TEST("Pokédex active region prose names omit the renderer title suffix")

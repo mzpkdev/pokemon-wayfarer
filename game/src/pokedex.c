@@ -4797,8 +4797,8 @@ u16 Dex_GetNationalVisibleProgress(u8 flagCase)
     if (flagCase != FLAG_GET_SEEN && flagCase != FLAG_GET_CAUGHT)
         return 0;
 
-    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
-        if (GetSetPokedexFlag(id, flagCase))
+    for (id = 1; id <= NATIONAL_DEX_COUNT; id++)
+        if (Dex_IsNationalEntryVisible(id) && GetSetPokedexFlag(id, flagCase))
             count++;
     return count;
 }
