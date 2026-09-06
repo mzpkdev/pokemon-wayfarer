@@ -124,7 +124,21 @@ class RepositoryContractTest(unittest.TestCase):
         self.assertEqual(result["status"], "pass")
         self.assertEqual(result["travel"]["menu"]["slateportSlot"], 0)
         self.assertTrue(result["initialization"]["initializedCommittedLast"])
-        self.assertEqual(result["hoennPorts"]["hoennSsAquaDepartures"], [])
+        self.assertEqual(
+            result["hoennPorts"]["hoennSsAquaDepartures"],
+            ["data/maps/SlateportCity_Harbor/scripts.inc"],
+        )
+        self.assertEqual(
+            result["hoennPorts"]["slateportAqua"]["localId"],
+            AUDIT.SLATEPORT_AQUA_LOCAL_ID,
+        )
+        self.assertEqual(result["hoennPorts"]["slateportAqua"]["coordinate"], [15, 11])
+        self.assertEqual(result["hoennPorts"]["slateportAqua"]["tileSafety"]["collision"], 0)
+        self.assertEqual(result["hoennPorts"]["slateportAqua"]["tileSafety"]["elevation"], 3)
+        self.assertEqual(result["hoennPorts"]["slateportAqua"]["tileSafety"]["ordinaryExit"], [12, 14])
+        self.assertEqual(result["hoennPorts"]["slateportAqua"]["olivineHealLocation"]["map"], "MAP_OLIVINE_CITY_HNS")
+        self.assertFalse(result["hoennPorts"]["slateportAqua"]["nonWayfarerTransport"])
+        self.assertTrue(result["hoennPorts"]["ssTidal"]["lilycovePreserved"])
 
 
 if __name__ == "__main__":

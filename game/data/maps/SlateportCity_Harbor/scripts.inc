@@ -13,6 +13,43 @@ SlateportCity_Harbor_EventScript_ShowSSTidal::
 	clearflag FLAG_HIDE_SLATEPORT_CITY_HARBOR_SS_TIDAL
 	return
 
+WayfarerHoennEntry_EventScript_SlateportAquaAttendant::
+#if IS_WAYFARER
+	lock
+	faceplayer
+	@ This map is assembled under the Hoenn source aliases, but the completed
+	@ S.S. Aqua state belongs to the HNS save bank. Keep this operand direct.
+	goto_if_lt 0x408B, 8, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard
+	checkitem ITEM_SS_TICKET
+	bufferitemname STR_VAR_1, ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials
+	msgbox WayfarerHoennEntry_Text_SlateportAquaToOlivine, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_Cancelled
+	fadescreenswapbuffers FADE_TO_BLACK
+	setrespawn HEAL_LOCATION_OLIVINE_CITY_HNS
+	warp MAP_OLIVINE_CITY_PORT_INSIDE_HNS, 8, 16
+	waitstate
+	release
+	end
+
+WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard::
+	msgbox WayfarerHoennEntry_Text_SlateportAquaUnavailable, MSGBOX_DEFAULT
+	release
+	end
+
+WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials::
+	msgbox WayfarerHoennEntry_Text_SlateportAquaNoTicket, MSGBOX_DEFAULT
+	release
+	end
+
+WayfarerHoennEntry_EventScript_SlateportAquaAttendant_Cancelled::
+	msgbox WayfarerHoennEntry_Text_SlateportAquaComeAgain, MSGBOX_DEFAULT
+	release
+	end
+#else
+	end
+#endif
+
 SlateportCity_Harbor_EventScript_ReadyAquaEscapeScene::
 	savebgm MUS_ENCOUNTER_AQUA
 	setobjectxyperm LOCALID_SLATEPORT_HARBOR_CAPT_STERN, 12, 13
@@ -538,3 +575,21 @@ SlateportCity_Harbor_Text_HandedScannerToStern:
 SlateportCity_Harbor_Text_ThisWillHelpResearch:
 	.string "CAPT. STERN: Thanks, {PLAYER}{KUN}!\n"
 	.string "This will help our research a lot!$"
+
+WayfarerHoennEntry_Text_SlateportAquaUnavailable:
+	.string "The S.S.AQUA isn't ready to sail.$"
+
+WayfarerHoennEntry_Text_SlateportAquaNoTicket:
+	.string "{PLAYER} tried to show the\n"
+	.string "{STR_VAR_1}…\p"
+	.string "…But no {STR_VAR_1}!\p"
+	.string "Sorry!\n"
+	.string "You may board only if you have an\l"
+	.string "{STR_VAR_1}.$"
+
+WayfarerHoennEntry_Text_SlateportAquaToOlivine:
+	.string "The S.S.AQUA is bound for\n"
+	.string "OLIVINE CITY. Shall we sail?$"
+
+WayfarerHoennEntry_Text_SlateportAquaComeAgain:
+	.string "Please sail with us another time!$"
