@@ -2401,22 +2401,8 @@ def validate_standard_rod_accessibility(standard_rod, profiles, known_species, c
             )
 
 
-def build_species_metadata(document, evolutions, known_species, ordinary_species, nat_dex_by_species=None):
-    exact_keys(document, {"schemaVersion", "minimumOrdinaryWildLevels", "predecessorResolutions"}, "wild_encounter_species.json")
-    if document["schemaVersion"] != 1 or isinstance(document["schemaVersion"], bool):
-        raise ValidationError("wild_encounter_species.json/schemaVersion: expected 1")
-    floors = {}
-    rows = document["minimumOrdinaryWildLevels"]
-    if not isinstance(rows, list):
-        raise ValidationError("wild_encounter_species.json/minimumOrdinaryWildLevels: expected list")
-    for index, row in enumerate(rows):
-        location = f"wild_encounter_species.json/minimumOrdinaryWildLevels/{index}"
-        exact_keys(row, {"species", "minimumOrdinaryWildLevel"}, location)
-        species = identifier(row["species"], f"{location}/species", SPECIES_IDENTIFIER)
-        if species not in known_species or species in floors:
-            raise ValidationError(f"{location}/species: unknown or duplicate floor")
-        floors[species] = integer(row["minimumOrdinaryWildLevel"], f"{location}/minimumOrdinaryWildLevel", 1, MAX_LEVEL)
-
+def build_numeric_predecessors(resolution_rows, evolutions, known_species):
+    """Validate the shared numeric graph without applying any encounter policy."""
     candidates = {}
     for predecessor, rows in evolutions.items():
         for evolution in rows:
@@ -2427,12 +2413,13 @@ def build_species_metadata(document, evolutions, known_species, ordinary_species
             level = int(evolution["parameter"])
             if level == 0:
                 continue
-            if not 1 <= level <= MAX_LEVEL or evolution["target"] not in known_species or evolution["target"] not in evolutions:
+            if (not 1 <= level <= MAX_LEVEL or predecessor not in known_species
+                    or evolution["target"] not in known_species or evolution["target"] not in evolutions):
                 raise ValidationError(f"species_info/{predecessor}: malformed numeric evolution")
             candidates.setdefault(evolution["target"], set()).add((predecessor, level))
 
     resolutions = {}
-    rows = document["predecessorResolutions"]
+    rows = resolution_rows
     if not isinstance(rows, list):
         raise ValidationError("wild_encounter_species.json/predecessorResolutions: expected list")
     for index, row in enumerate(rows):
@@ -2461,6 +2448,27 @@ def build_species_metadata(document, evolutions, known_species, ordinary_species
                 raise ValidationError(f"species_info/{species}: numeric predecessor cycle at {current}")
             seen.add(current)
             current = predecessors[current][0]
+
+    return predecessors
+
+
+def build_species_metadata(document, evolutions, known_species, ordinary_species, nat_dex_by_species=None):
+    exact_keys(document, {"schemaVersion", "minimumOrdinaryWildLevels", "predecessorResolutions"}, "wild_encounter_species.json")
+    if document["schemaVersion"] != 1 or isinstance(document["schemaVersion"], bool):
+        raise ValidationError("wild_encounter_species.json/schemaVersion: expected 1")
+    floors = {}
+    rows = document["minimumOrdinaryWildLevels"]
+    if not isinstance(rows, list):
+        raise ValidationError("wild_encounter_species.json/minimumOrdinaryWildLevels: expected list")
+    for index, row in enumerate(rows):
+        location = f"wild_encounter_species.json/minimumOrdinaryWildLevels/{index}"
+        exact_keys(row, {"species", "minimumOrdinaryWildLevel"}, location)
+        species = identifier(row["species"], f"{location}/species", SPECIES_IDENTIFIER)
+        if species not in known_species or species in floors:
+            raise ValidationError(f"{location}/species: unknown or duplicate floor")
+        floors[species] = integer(row["minimumOrdinaryWildLevel"], f"{location}/minimumOrdinaryWildLevel", 1, MAX_LEVEL)
+
+    predecessors = build_numeric_predecessors(document["predecessorResolutions"], evolutions, known_species)
 
     reachable = set()
     for species in ordinary_species:
@@ -2493,6 +2501,68 @@ def load_species_metadata(path, species_info_path, known_species, ordinary_speci
         load_json(path), active_evolutions(species_info_path), known_species,
         ordinary_species, active_national_dex(species_info_path),
     )
+
+
+def build_trainer_species_metadata(document, evolutions, known_species, trainer_species):
+    """Cover Trainer species and their exact predecessors, with no wild floors."""
+    exact_keys(document, {"schemaVersion", "minimumOrdinaryWildLevels", "predecessorResolutions"}, "wild_encounter_species.json")
+    if document["schemaVersion"] != 1 or isinstance(document["schemaVersion"], bool):
+        raise ValidationError("wild_encounter_species.json/schemaVersion: expected 1")
+    predecessors = build_numeric_predecessors(document["predecessorResolutions"], evolutions, known_species)
+    active_by_id = {}
+    for species in evolutions:
+        if species in known_species:
+            active_by_id.setdefault(known_species[species], []).append(species)
+    trainer_species = set(trainer_species)
+    for species in sorted(trainer_species):
+        active = active_by_id.get(known_species.get(species), [])
+        if not active or known_species[species] == 0:
+            raise ValidationError(f"trainer_species/{species}: unknown or inactive species")
+        if species not in evolutions:
+            if len(active) != 1:
+                raise ValidationError(f"trainer_species/{species}: ambiguous active numeric alias")
+            if active[0] in predecessors:
+                predecessors[species] = predecessors[active[0]]
+    reachable = set()
+    for species in sorted(trainer_species):
+        current = species
+        while current not in reachable:
+            reachable.add(current)
+            if current not in predecessors:
+                break
+            current = predecessors[current][0]
+    metadata = []
+    for species in sorted(reachable, key=lambda name: (known_species[name], name)):
+        predecessor, level = predecessors.get(species, ("SPECIES_NONE", 0))
+        metadata.append({
+            "species": species,
+            "species_id": known_species[species],
+            "predecessor": predecessor,
+            "predecessor_id": known_species.get(predecessor, 0),
+            "predecessor_level": level,
+        })
+    return metadata
+
+
+def load_trainer_species_metadata(path, species_info_path, known_species, trainer_species):
+    return build_trainer_species_metadata(
+        load_json(path), active_evolutions(species_info_path), known_species, trainer_species,
+    )
+
+
+def render_trainer_predecessor_header(metadata):
+    output = io.StringIO()
+    output.write("// Generated by the Trainer inventory. Do not edit.\n")
+    output.write("static const struct TrainerScalingPredecessor sTrainerScalingPredecessors[] =\n{\n")
+    emitted = set()
+    for row in sorted(metadata, key=lambda row: (row["species_id"], row["species"])):
+        if row["predecessor_id"] and row["species_id"] not in emitted:
+            output.write(f"    {{ {row['species']}, {row['predecessor']}, {row['predecessor_level']} }},\n")
+            emitted.add(row["species_id"])
+    if not emitted:
+        output.write("    { SPECIES_NONE, SPECIES_NONE, 0 },\n")
+    output.write("};\n")
+    return output.getvalue()
 
 
 def load_offsets(rows, profiles, path):
