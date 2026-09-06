@@ -5575,7 +5575,10 @@ static const struct LevelUpMove sChinchouLevelUpLearnset[] = {
     LEVEL_UP_MOVE(45, MOVE_WHIRLPOOL),
 #endif
     LEVEL_UP_MOVE(47, MOVE_ION_DELUGE),
+#if !HAS_HNS_CONTENT
+    // The HNS utility triplets use the final available slot in this learnset.
     LEVEL_UP_MOVE(50, MOVE_CHARGE),
+#endif
 #if HAS_HNS_CONTENT
     LEVEL_UP_MOVE(50, MOVE_FLASH),
     LEVEL_UP_MOVE(50, MOVE_SURF),
