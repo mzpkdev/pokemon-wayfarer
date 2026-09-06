@@ -264,9 +264,9 @@ static void BuildGenScopeMask(void)
         {
             MarkGenScopeFamily(i, 0);
         }
-        // The flag test comes first on purpose: SpeciesToObtainablePokedexNum
-        // linearly scans the obtainable Dex, so this must not run per species.
-        else if (IsRegionalForm(i) && SpeciesToObtainablePokedexNum(i) != 0)
+        // Regional-form eligibility belongs to the randomizer's generation policy,
+        // not to Pokédex visibility or a player-facing catalog.
+        else if (IsRegionalForm(i))
         {
             MarkGenScopeFamily(i, 0);
         }

@@ -32,7 +32,6 @@ import typing
 
 
 CONFIG_ENABLED_PAT = re.compile(r"^#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
-ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"^#define HGSS_SORT_TMS_BY_NUM\s+(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
 TM_LITERACY_PAT = re.compile(r"^#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)", flags=re.MULTILINE)
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
@@ -308,11 +307,7 @@ def main():
 
     repo_tms = list(extract_repo_tms(build_target))
 
-    with open("./include/config/pokedex_plus_hgss.h", "r") as cfg_pokemon_fp:
-        cfg_pokemon = cfg_pokemon_fp.read()
-        cfg_defined = ALPHABETICAL_ORDER_ENABLED_PAT.search(cfg_pokemon)
-        if cfg_defined is None or cfg_defined.group("cfg_val") in ("FALSE", "0"):
-            repo_tms = sorted(repo_tms)
+    repo_tms = sorted(repo_tms)
 
     h_align = max(map(lambda move: len(move), chain(special_movesets["universalMoves"], repo_tms, repo_tutors))) + 2
     header = prepare_header(h_align, repo_tms, repo_tutors, special_movesets["universalMoves"])

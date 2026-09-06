@@ -1147,7 +1147,7 @@ static void PrintMoneyOnCard(void)
 static u16 GetCaughtMonsCount(void)
 {
     if (IsNationalPokedexEnabled())
-        return GetNationalPokedexCount(FLAG_GET_CAUGHT);
+        return Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
     else
         return GetRegionalPokedexCount(FLAG_GET_CAUGHT);
 }

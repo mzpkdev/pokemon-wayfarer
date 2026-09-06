@@ -36,7 +36,7 @@
 #include "pokemon_sprite_visualizer.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
-#include "pokedex_plus_hgss.h"
+#include "pokedex.h"
 #include "pokerus.h"
 #include "region_map.h"
 #include "scanline_effect.h"
@@ -201,19 +201,9 @@ static EWRAM_DATA u8 sMoveSlotToReplace = 0;
 ALIGNED(4) static EWRAM_DATA u8 sAnimDelayTaskId = 0;
 EWRAM_DATA MainCallback gInitialSummaryScreenCallback = NULL; // stores callback from the first time the screen is opened from the party or PC menu
 
-// Temporary storage for returning from Pokedex
-static EWRAM_DATA u8 sSavedSummaryMode = 0;
-static EWRAM_DATA void *sSavedMonList = NULL;
-static EWRAM_DATA u8 sSavedCurMonIndex = 0;
-static EWRAM_DATA u8 sSavedMaxMonIndex = 0;
-static EWRAM_DATA MainCallback sSavedCallback = NULL;
-
 // forward declarations
 static bool8 LoadGraphics(void);
 static void CB2_InitSummaryScreen(void);
-static void CB2_ReturnToSummaryFromPokedex(void);
-static void Task_ShowPokedexEntryFromSummary(u8 taskId);
-static void Task_OpenPokedexFromSummary(u8);
 static void InitBGs(void);
 static bool8 DecompressGraphics(void);
 static void CopyMonToSummaryStruct(struct Pokemon *);
@@ -1766,63 +1756,6 @@ static void FreeSummaryScreen(void)
     Free(sMonSummaryScreen);
 }
 
-static bool8 CanShowPokedexForCurrentMon(void)
-{
-    if (sMonSummaryScreen->mode == SUMMARY_MODE_LOCK_MOVES)
-        return FALSE;
-    return !sMonSummaryScreen->summary.isEgg && FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE;
-}
-
-static void CB2_ReturnToSummaryFromPokedex(void)
-{
-    gPaletteFade.bufferTransferDisabled = TRUE;
-    // Re-show the summary screen using saved parameters
-    ShowPokemonSummaryScreen(sSavedSummaryMode, sSavedMonList, sSavedCurMonIndex, sSavedMaxMonIndex, sSavedCallback);
-}
-
-static void Task_OpenPokedexFromSummary(u8 taskId)
-{
-    if (!gPaletteFade.active)
-    {
-        u16 species = sMonSummaryScreen->summary.species;
-        
-        // Save summary screen state before cleaning up
-        sSavedSummaryMode = sMonSummaryScreen->mode;
-        sSavedMonList = sMonSummaryScreen->monList.mons;
-        sSavedCurMonIndex = sMonSummaryScreen->curMonIndex;
-        sSavedMaxMonIndex = sMonSummaryScreen->maxMonIndex;
-        sSavedCallback = sMonSummaryScreen->callback;
-        
-        // Clean up summary screen resources
-        gLastViewedMonIndex = sMonSummaryScreen->curMonIndex;
-        SummaryScreen_DestroyAnimDelayTask();
-        ResetSpriteData();
-        DestroyShinyStarObj();
-        FreeAllSpritePalettes();
-        StopCryAndClearCrySongs();
-        if (gMonSpritesGfxPtr == NULL)
-            DestroyMonSpritesGfxManager(MON_SPR_GFX_MANAGER_A);
-        FreeSummaryScreen();
-        DestroyTask(taskId);
-        
-        // Open the Pokédex info screen for this specific Pokémon
-        OpenPokedexInfoScreen(species, CB2_ReturnToSummaryFromPokedex);
-    }
-}
-
-static void Task_ShowPokedexEntryFromSummary(u8 taskId)
-{
-    // Only open Pokedex if not an egg and player has Pokedex
-    if (CanShowPokedexForCurrentMon())
-    {
-        PlaySE(SE_SELECT);
-        StopPokemonAnimations();
-        // Begin fade out and set task to open Pokedex after cleanup
-        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-        gTasks[taskId].func = Task_OpenPokedexFromSummary;
-    }
-}
-
 static void BeginCloseSummaryScreen(u8 taskId)
 {
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
@@ -1961,11 +1894,6 @@ static void Task_HandleInput(u8 taskId)
             {
                 PlaySE(SE_SELECT);
                 SwitchToMoveSelection(taskId);
-            }
-            else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO
-                  || sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
-            {
-                Task_ShowPokedexEntryFromSummary(taskId);
             }
         }
         else if (JOY_NEW(B_BUTTON))
@@ -3432,9 +3360,9 @@ static void PrintNotEggInfo(void)
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     u16 dexNum = SpeciesToPokedexNum(summary->species);
 
-    if (dexNum != 0xFFFF && dexNum != 0)
+    if (Dex_IsValidNationalId(dexNum))
     {
-        u8 digitCount = (OBTAINABLE_DEX_COUNT > 999 && IsNationalPokedexEnabled()) ? 4 : 3;
+        u8 digitCount = (NATIONAL_DEX_COUNT > 999 && IsNationalPokedexEnabled()) ? 4 : 3;
         StringCopy(gStringVar1, &gText_NumberClear01[0]);
         ConvertIntToDecimalStringN(gStringVar2, dexNum, STR_CONV_MODE_LEADING_ZEROS, digitCount);
         StringAppend(gStringVar1, gStringVar2);
@@ -3453,7 +3381,7 @@ static void PrintNotEggInfo(void)
     else
     {
         StringCopy(gStringVar1, &gText_NumberClear01[0]);
-        if (OBTAINABLE_DEX_COUNT > 999 && IsNationalPokedexEnabled())
+        if (NATIONAL_DEX_COUNT > 999 && IsNationalPokedexEnabled())
             StringCopy(gStringVar2, &gText_FourQuestionMarks[0]);
         else
             StringCopy(gStringVar2, &gText_ThreeQuestionMarks[0]);
@@ -4998,12 +4926,6 @@ static inline void ShowUtilityPrompt(s16 mode)
             promptText = gText_Switch;
         else
             promptText = gText_Info;
-    }
-    else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO
-          || sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
-    {
-        if (CanShowPokedexForCurrentMon())
-            promptText = gText_MenuPokedex;
     }
 
     if (promptText == NULL)

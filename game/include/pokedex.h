@@ -5,7 +5,15 @@ extern u8 gUnusedPokedexU8;
 extern void (*gPokedexVBlankCB)(void);
 
 void ResetPokedex(void);
-u16 GetNationalPokedexCount(u8 caseID);
+bool8 Dex_IsValidNationalId(enum NationalDexOrder id);
+bool8 Dex_IsNationalEntryVisible(enum NationalDexOrder id);
+u16 Dex_GetNationalVisibleEntryCount(void);
+enum NationalDexOrder Dex_GetFirstVisibleNationalEntry(void);
+enum NationalDexOrder Dex_GetNextVisibleNationalEntry(enum NationalDexOrder after);
+u16 Dex_GetNationalVisibleProgress(u8 flagCase);
+bool8 Dex_HasCompletedNationalVisibleEntries(void);
+bool8 Dex_GetCriticalCaptureProgress(u16 *caughtCount, u16 *visibleCount);
+bool8 Dex_CalculateCriticalCaptureThreshold(u16 caughtCount, u16 visibleCount, u32 baseOdds, bool8 hasCatchingCharm, u8 *rollThreshold);
 u32 GetRegionalPokedexCount(u8 caseID);
 u16 GetHoennPokedexCount(u8 caseID);
 u16 GetKantoPokedexCount(u8 caseID);

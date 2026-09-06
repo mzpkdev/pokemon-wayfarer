@@ -1904,7 +1904,7 @@ void BufferSaveMenuText(u8 textId, u8 *dest, u8 color)
         break;
     case SAVE_MENU_CAUGHT:
         if (IsNationalPokedexEnabled())
-            string = ConvertIntToDecimalStringN(string, GetNationalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 4);
+            string = ConvertIntToDecimalStringN(string, Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 4);
         else
             string = ConvertIntToDecimalStringN(string, GetRegionalPokedexCount(FLAG_GET_CAUGHT), STR_CONV_MODE_LEFT_ALIGN, 3);
         *string = EOS;

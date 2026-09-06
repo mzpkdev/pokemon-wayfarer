@@ -2209,7 +2209,7 @@ static void MainMenu_FormatSavegamePokedex(void)
     if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
     {
         if (IsNationalPokedexEnabled())
-            dexCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+            dexCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
         else
             dexCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
         StringExpandPlaceholders(gStringVar4, gText_ContinueMenuPokedex);

@@ -1860,7 +1860,7 @@ void TryPutTodaysRivalTrainerOnAir(void)
         }
         show->rivalTrainer.badgeCount = nBadges;
         if (IsNationalPokedexEnabled())
-            show->rivalTrainer.dexCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+            show->rivalTrainer.dexCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
         else
             show->rivalTrainer.dexCount = GetRegionalPokedexCount(FLAG_GET_CAUGHT);
         show->rivalTrainer.location = gMapHeader.regionMapSectionId;

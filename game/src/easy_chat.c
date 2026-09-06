@@ -5114,7 +5114,7 @@ static bool8 IsEasyChatGroupUnlocked(u8 groupId)
 u16 EasyChat_GetNumWordsInGroup(u8 groupId)
 {
     if (groupId == EC_GROUP_POKEMON)
-        return GetNationalPokedexCount(FLAG_GET_SEEN);
+        return Dex_GetNationalVisibleProgress(FLAG_GET_SEEN);
 
     if (IsEasyChatGroupUnlocked(groupId))
         return gEasyChatGroups[groupId].numEnabledWords;
@@ -5605,7 +5605,7 @@ static void SetUnlockedEasyChatGroups(void)
     int i;
 
     sWordData->numUnlockedGroups = 0;
-    if (GetNationalPokedexCount(FLAG_GET_SEEN))
+    if (Dex_GetNationalVisibleProgress(FLAG_GET_SEEN))
         sWordData->unlockedGroupIds[sWordData->numUnlockedGroups++] = EC_GROUP_POKEMON;
 
     // These groups are unlocked automatically

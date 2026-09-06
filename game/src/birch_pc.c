@@ -13,8 +13,8 @@ bool16 ScriptGetPokedexInfo(void)
     }
     else
     {
-        gSpecialVar_0x8005 = GetNationalPokedexCount(FLAG_GET_SEEN);
-        gSpecialVar_0x8006 = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+        gSpecialVar_0x8005 = Dex_GetNationalVisibleProgress(FLAG_GET_SEEN);
+        gSpecialVar_0x8006 = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
     }
 
     return IsNationalPokedexEnabled();
@@ -137,11 +137,10 @@ const u8 *GetPokedexRatingText(u32 count)
 const u8 *GetNationalPokedexRatingText(u32 count)
 {
     u32 i, j, k;
-    // doesNotCountForObtainablePokedex
-    u16 maxDex = OBTAINABLE_DEX_COUNT - 1;
-    for (i = 1; i < OBTAINABLE_DEX_COUNT - 1; i++)
+    u16 maxDex = Dex_GetNationalVisibleEntryCount();
+    for (i = 1; i <= NATIONAL_DEX_COUNT; i++)
     {
-        j = ObtainableToNationalOrder(i + 1);
+        j = i;
         k = NationalPokedexNumToSpecies(j);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
@@ -253,8 +252,8 @@ u16 GetFrlgPokedexCount(void)
     }
     else
     {
-        gSpecialVar_0x8005 = GetNationalPokedexCount(FLAG_GET_SEEN);
-        gSpecialVar_0x8006 = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+        gSpecialVar_0x8005 = Dex_GetNationalVisibleProgress(FLAG_GET_SEEN);
+        gSpecialVar_0x8006 = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
     }
     return IsNationalPokedexEnabled();
 }

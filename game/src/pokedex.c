@@ -17,7 +17,6 @@
 #include "pokedex.h"
 #include "pokedex_area_screen.h"
 #include "pokedex_cry_screen.h"
-#include "pokedex_plus_hgss.h"
 #include "rtc.h"
 #include "scanline_effect.h"
 #include "sound.h"
@@ -31,7 +30,6 @@
 #include "window.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
-#include "config/pokedex_plus_hgss.h"
 
 enum
 {
@@ -1587,12 +1585,6 @@ static void ResetPokedexView(struct PokedexView *pokedexView)
 
 void CB2_OpenPokedex(void)
 {
-    if (POKEDEX_PLUS_HGSS)
-    {
-        CB2_OpenPokedexPlusHGSS();
-        return;
-    }
-
     switch (gMain.state)
     {
     case 0:
@@ -1632,8 +1624,8 @@ void CB2_OpenPokedex(void)
         }
         else
         {
-            sPokedexView->seenCount = GetNationalPokedexCount(FLAG_GET_SEEN);
-            sPokedexView->ownCount = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+            sPokedexView->seenCount = Dex_GetNationalVisibleProgress(FLAG_GET_SEEN);
+            sPokedexView->ownCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
         }
         sPokedexView->initialVOffset = 8;
         gMain.state++;
@@ -2229,7 +2221,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
             for (i = 0, r5 = 0, r10 = 0; i < temp_dexCount; i++)
             {
                 temp_dexNum = i + 1;
-                if (GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
+                if (Dex_IsNationalEntryVisible(temp_dexNum) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
                     r10 = 1;
                 if (r10)
                 {
@@ -2248,7 +2240,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Alphabetical[i];
 
-            if (temp_dexNum <= NATIONAL_DEX_COUNT && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_SEEN))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2262,7 +2254,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Weight[i];
 
-            if (temp_dexNum <= NATIONAL_DEX_COUNT && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2276,7 +2268,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Weight[i];
 
-            if (temp_dexNum <= NATIONAL_DEX_COUNT && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2290,7 +2282,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Height[i];
 
-            if (temp_dexNum <= NATIONAL_DEX_COUNT && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -2304,7 +2296,7 @@ static void CreatePokedexList(u8 dexMode, u8 order)
         {
             temp_dexNum = gPokedexOrder_Height[i];
 
-            if (temp_dexNum <= NATIONAL_DEX_COUNT && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
+            if (Dex_IsNationalEntryVisible(temp_dexNum) && (!temp_isHoennDex || NationalToRegionalOrder(temp_dexNum) != 0) && GetSetPokedexFlag(temp_dexNum, FLAG_GET_CAUGHT))
             {
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].dexNum = temp_dexNum;
                 sPokedexView->pokedexList[sPokedexView->pokemonListCount].seen = TRUE;
@@ -4010,10 +4002,7 @@ static void HighlightSubmenuScreenSelectBarItem(u8 a, u16 b)
 u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 {
     u8 taskId = 0;
-    if (POKEDEX_PLUS_HGSS)
-        taskId = CreateTask(Task_DisplayCaughtMonDexPageHGSS, 0);
-    else
-        taskId = CreateTask(Task_DisplayCaughtMonDexPage, 0);
+    taskId = CreateTask(Task_DisplayCaughtMonDexPage, 0);
 
     gTasks[taskId].tState = 0;
     gTasks[taskId].tSpecies = species;
@@ -4242,21 +4231,7 @@ void PrintMonMeasurements(u16 species, u32 owned)
 
 static u32 GetMeasurementTextPositions(u32 textElement)
 {
-    if (!POKEDEX_PLUS_HGSS)
-        return textElement;
-
-    switch (textElement)
-    {
-    case DEX_HEADER_X:
-        return (DEX_HEADER_X + DEX_HGSS_HEADER_X_PADDING);
-    case DEX_Y_TOP:
-        return (DEX_Y_TOP + DEX_HGSS_Y_TOP_PADDING);
-    case DEX_Y_BOTTOM:
-        return (DEX_Y_BOTTOM + DEX_HGSS_Y_BOTTOM_PADDING);
-    default:
-    case DEX_MEASUREMENT_X:
-        return (DEX_MEASUREMENT_X + DEX_HGSS_MEASUREMENT_X_PADDING);
-    }
+    return textElement;
 }
 
 static void PrintUnknownMonMeasurements(void)
@@ -4515,6 +4490,9 @@ s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
     u32 index, bit, mask;
     s8 retVal = 0;
 
+    if (!Dex_IsValidNationalId(nationalDexNo))
+        return 0;
+
     nationalDexNo--;
     index = nationalDexNo / 8;
     bit = nationalDexNo % 8;
@@ -4539,26 +4517,88 @@ s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
     return retVal;
 }
 
-u16 GetNationalPokedexCount(u8 caseID)
+bool8 Dex_IsValidNationalId(enum NationalDexOrder id)
 {
-    u16 count = 0;
-    u16 i;
+    return id != NATIONAL_DEX_NONE && id <= NATIONAL_DEX_COUNT;
+}
 
-    for (i = 0; i < OBTAINABLE_DEX_COUNT - 1; i++)
+// Phase 1 deliberately exposes the whole canonical domain. Catalog union policy
+// replaces this predicate without changing any caller in Phase 2.
+bool8 Dex_IsNationalEntryVisible(enum NationalDexOrder id)
+{
+    return Dex_IsValidNationalId(id);
+}
+
+u16 Dex_GetNationalVisibleEntryCount(void)
+{
+    return NATIONAL_DEX_COUNT;
+}
+
+enum NationalDexOrder Dex_GetFirstVisibleNationalEntry(void)
+{
+    return Dex_GetNextVisibleNationalEntry(NATIONAL_DEX_NONE);
+}
+
+enum NationalDexOrder Dex_GetNextVisibleNationalEntry(enum NationalDexOrder after)
+{
+    enum NationalDexOrder id;
+
+    if (after != NATIONAL_DEX_NONE && !Dex_IsValidNationalId(after))
+        return NATIONAL_DEX_NONE;
+
+    for (id = after + 1; id <= NATIONAL_DEX_COUNT; id++)
     {
-        switch (caseID)
-        {
-        case FLAG_GET_SEEN:
-            if (GetSetPokedexFlag(ObtainableToNationalOrder(i + 1), FLAG_GET_SEEN))
-                count++;
-            break;
-        case FLAG_GET_CAUGHT:
-            if (GetSetPokedexFlag(ObtainableToNationalOrder(i + 1), FLAG_GET_CAUGHT))
-                count++;
-            break;
-        }
+        if (Dex_IsNationalEntryVisible(id))
+            return id;
     }
+    return NATIONAL_DEX_NONE;
+}
+
+u16 Dex_GetNationalVisibleProgress(u8 flagCase)
+{
+    enum NationalDexOrder id;
+    u16 count = 0;
+
+    if (flagCase != FLAG_GET_SEEN && flagCase != FLAG_GET_CAUGHT)
+        return 0;
+
+    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
+        if (GetSetPokedexFlag(id, flagCase))
+            count++;
     return count;
+}
+
+bool8 Dex_HasCompletedNationalVisibleEntries(void)
+{
+    enum NationalDexOrder id;
+
+    if (Dex_GetNationalVisibleEntryCount() == 0)
+        return FALSE;
+
+    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
+    {
+        u16 species = NationalPokedexNumToSpecies(id);
+        if (species == SPECIES_NONE)
+            return FALSE;
+        if (!(gSpeciesInfo[species].dexNotRequired || (gSpeciesInfo[species].isMythical && !gSpeciesInfo[species].dexForceRequired))
+         && !GetSetPokedexFlag(id, FLAG_GET_CAUGHT))
+            return FALSE;
+    }
+    return TRUE;
+}
+
+bool8 Dex_GetCriticalCaptureProgress(u16 *caughtCount, u16 *visibleCount)
+{
+    if (caughtCount == NULL || visibleCount == NULL)
+        return FALSE;
+
+    *caughtCount = 0;
+    *visibleCount = Dex_GetNationalVisibleEntryCount();
+    if (*visibleCount == 0)
+        return FALSE;
+
+    *caughtCount = Dex_GetNationalVisibleProgress(FLAG_GET_CAUGHT);
+    return TRUE;
 }
 
 u32 GetRegionalPokedexCount(u8 caseID)
@@ -4690,17 +4730,7 @@ bool16 HasAllJohotoMons(void)
 
 bool16 HasAllMons(void)
 {
-    u32 i, j, k;
-
-    for (i = 0; i < OBTAINABLE_DEX_COUNT - 1; i++)
-    {
-        j = ObtainableToNationalOrder(i + 1);
-        k = NationalPokedexNumToSpecies(j);
-        if (!(gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired)) && !GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
-            return FALSE;
-    }
-
-    return TRUE;
+    return Dex_HasCompletedNationalVisibleEntries();
 }
 
 static void ResetOtherVideoRegisters(u16 regBits)

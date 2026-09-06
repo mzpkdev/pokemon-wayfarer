@@ -10952,33 +10952,26 @@ static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
     return odds;
 }
 
-static bool32 CriticalCapture(u32 odds)
+bool8 Dex_CalculateCriticalCaptureThreshold(u16 caughtCount, u16 visibleCount, u32 baseOdds, bool8 hasCatchingCharm, u8 *rollThreshold)
 {
-    u32 numCaught;
-    u32 totalDexCount;
+    u32 odds = baseOdds;
     u32 charmBoost = 1;
 
-    if (B_CRITICAL_CAPTURE == FALSE)
+    if (rollThreshold == NULL || visibleCount == 0)
         return FALSE;
 
-    if (B_CRITICAL_CAPTURE_LOCAL_DEX == TRUE)
-        totalDexCount = REGIONAL_DEX_COUNT;
-    else
-        totalDexCount = OBTAINABLE_DEX_COUNT;
-
-    if (CheckBagHasItem(ITEM_CATCHING_CHARM, 1))
+    if (hasCatchingCharm)
         charmBoost = (100 + B_CATCHING_CHARM_BOOST) / 100;
 
-    numCaught = GetNationalPokedexCount(FLAG_GET_CAUGHT);
-    if (numCaught > (totalDexCount * 600) / 650)
+    if (caughtCount > (visibleCount * 600) / 650)
         odds = (odds * (250 * charmBoost)) / 100;
-    else if (numCaught > (totalDexCount * 450) / 650)
+    else if (caughtCount > (visibleCount * 450) / 650)
         odds = (odds * (200 * charmBoost)) / 100;
-    else if (numCaught > (totalDexCount * 300) / 650)
+    else if (caughtCount > (visibleCount * 300) / 650)
         odds = (odds * (150 * charmBoost)) / 100;
-    else if (numCaught > (totalDexCount * 150) / 650)
+    else if (caughtCount > (visibleCount * 150) / 650)
         odds = (odds * (100 * charmBoost)) / 100;
-    else if (numCaught > (totalDexCount * 30) / 650)
+    else if (caughtCount > (visibleCount * 30) / 650)
         odds = (odds * (50 * charmBoost)) / 100;
     else
         return FALSE;
@@ -10986,11 +10979,26 @@ static bool32 CriticalCapture(u32 odds)
     if (odds > 255)
         odds = 255;
 
-    odds /= 6;
-    if (RandomUniform(RNG_BALLTHROW_CRITICAL, 0, MAX_u8) < odds)
-        return TRUE;
+    *rollThreshold = odds / 6;
+    return TRUE;
+}
 
-    return FALSE;
+static bool32 CriticalCapture(u32 odds)
+{
+    u16 caughtCount;
+    u16 visibleCount;
+    u8 rollThreshold;
+
+    if (B_CRITICAL_CAPTURE == FALSE)
+        return FALSE;
+
+    if (!Dex_GetCriticalCaptureProgress(&caughtCount, &visibleCount))
+        return FALSE;
+
+    if (!Dex_CalculateCriticalCaptureThreshold(caughtCount, visibleCount, odds, CheckBagHasItem(ITEM_CATCHING_CHARM, 1), &rollThreshold))
+        return FALSE;
+
+    return RandomUniform(RNG_BALLTHROW_CRITICAL, 0, MAX_u8) < rollThreshold;
 }
 
 static u32 ComputeBallShakeOdds(u32 odds)
