@@ -58,7 +58,9 @@ standalone HNS menus remain unchanged.
 At Slateport, a dedicated Wayfarer Aqua attendant offers the Aqua's
 one-destination next-stop service to Olivine. The attendant is a new object
 event on the existing `MAP_SLATEPORT_CITY_HARBOR` map, uses its own script, and
-is visible only in Wayfarer. Its fixed event record is:
+is isolated from non-Wayfarer Emerald builds by its own hide flag. Its fixed
+event record is appended after every existing Harbor object event so their
+ordinal local IDs cannot change:
 
 | Field | Value |
 | --- | --- |
@@ -67,13 +69,21 @@ is visible only in Wayfarer. Its fixed event record is:
 | Position | `(15,11)`, elevation `3` |
 | Movement | stationary |
 | Script | `WayfarerHoennEntry_EventScript_SlateportAquaAttendant` |
-| Visibility | no visibility flag |
+| Visibility | `FLAG_HIDE_SLATEPORT_CITY_HARBOR_WAYFARER_AQUA_ATTENDANT` |
 
 `(15,11)` is an existing walkable tile. It is outside every object, warp, and
 coordinate event, has a path to the ordinary harbor exits, and is outside the
 positions and movement lanes used by the Harbor Aqua-escape scene. The event
 does not require a new map, port layout, collision edit, or static map-warp
 event. It remains visually separate from the S.S. Tidal attendant and ship.
+
+The new map event and its script label are emitted in every Emerald-map build
+so the shared map's event indices stay stable. Non-Wayfarer Emerald
+initialization sets `FLAG_HIDE_SLATEPORT_CITY_HARBOR_WAYFARER_AQUA_ATTENDANT`.
+Wayfarer initialization and Hoenn-entry baseline initialization clear it. The
+non-Wayfarer branch of the script ends without transport. This makes the
+attendant visible and usable only in Wayfarer without modifying Tidal state or
+the original Tidal event records.
 
 The circuit is directional: no Aqua hook offers its previous stop or another
 circuit port. The dedicated attendant does not call, replace, guard, or modify
@@ -234,10 +244,11 @@ Static, ROM, and focused runtime tests must verify:
     expose no Hoenn map selector, and list no Hoenn Fly destination.
 16. The dedicated Slateport Aqua attendant uses an existing walkable tile that
     exactly matches its specified local ID, graphics, facing, position,
-    elevation, movement, script, and visibility. Its tile is outside every
-    existing object, coordinate event, and warp, has an unobstructed path to a
-    harbor exit, and does not overlap an Aqua-escape-scene position or movement
-    lane. It does not change a map layout or collision value.
+    elevation, movement, script, and hide flag, and is appended after the
+    original Harbor object records. Its tile is outside every existing object,
+    coordinate event, and warp, has an unobstructed path to a harbor exit, and
+    does not overlap an Aqua-escape-scene position or movement lane. It does
+    not change a map layout or collision value.
 17. Before and after the Aqua trip, S.S. Tidal retains its original Slateport
     and Lilycove attendants, ship objects, scripts, Champion gate,
     destinations, `FLAG_MET_SCOTT_ON_SS_TIDAL` progression, and Battle Frontier
@@ -250,7 +261,10 @@ Static, ROM, and focused runtime tests must verify:
     Aqua event and its dedicated script. It continues to reject Aqua content in
     every other Emerald map and in the original Slateport Tidal script graph,
     and it verifies the original Tidal object, attendant, visibility gate, and
-    reachable script graph independently.
+    reachable script graph independently. It also verifies that the dedicated
+    hide flag is set by non-Wayfarer Emerald initialization, cleared by
+    Wayfarer initialization and Hoenn entry, and that the non-Wayfarer script
+    branch cannot transport the player.
 20. The release ROM stays within the active Wayfarer size ceiling.
 
 One focused SkyEmu journey may begin from a fixture with the maiden voyage
