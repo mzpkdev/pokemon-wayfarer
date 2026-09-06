@@ -17,7 +17,9 @@ WayfarerHoennEntry_EventScript_SlateportAquaAttendant::
 #if IS_WAYFARER
 	lock
 	faceplayer
-	goto_if_lt VAR_SSAQUA_STATE, 8, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard
+	@ This map is assembled under the Hoenn source aliases, but the completed
+	@ S.S. Aqua state belongs to the HNS save bank. Keep this operand direct.
+	goto_if_lt 0x408B, 8, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard
 	checkitem ITEM_SS_TICKET
 	bufferitemname STR_VAR_1, ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials

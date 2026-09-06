@@ -671,8 +671,8 @@ def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
     aqua = harbor_index.reachable_text(SLATEPORT_AQUA_SCRIPT)
     state_pos = _position(
         aqua,
-        r"goto_if_lt\s+VAR_SSAQUA_STATE\s*,\s*8\s*,",
-        "Slateport Aqua attendant must recheck completed voyage state",
+        r"goto_if_lt\s+0x408B\s*,\s*8\s*,",
+        "Slateport Aqua attendant must recheck the HNS completed voyage state",
     )
     ticket_pos = _position(
         aqua,
