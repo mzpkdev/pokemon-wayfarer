@@ -12,6 +12,11 @@ VictoryRoadKanto_EventScript_Item_Dark_Pulse::
     end
 
 VictoryRoadKanto_1F_Trigger::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, TRUE, LeagueCircuit_EventScript_TravelAllowed
+#endif
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	delay 5

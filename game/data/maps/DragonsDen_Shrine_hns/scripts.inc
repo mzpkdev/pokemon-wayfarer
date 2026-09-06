@@ -93,6 +93,12 @@ DragonsDen_Shrine_Movement_MonWalkToElderRight:
 	step_end
 
 DragonsDen_Shrine_EventScript_ElderOfferQuiz::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 7
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	msgbox DragonsDen_Shrine_Text_ElderGreeting, MSGBOX_DEFAULT
 	setvar VAR_DRAGONS_DEN_QUIZ, 0
 	goto DragonsDen_Shrine_EventScript_ElderQuiz1
@@ -260,6 +266,9 @@ DragonsDen_Shrine_EventScript_ClairEnter::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox DragonsDen_Shrine_Text_RisingBadgeExplanation, MSGBOX_DEFAULT
 	setflag FLAG_BADGE08_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	addvar VAR_NUM_BADGES, 1
 
 	applymovement2 LOCALID_DRAGONSDEN3_ELDER, DragonsDen_Shrine_Movement_ElderReturnToPlayer

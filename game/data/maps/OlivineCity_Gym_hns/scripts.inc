@@ -219,6 +219,12 @@ OlivineCity_Gym_Text_GymGuidePreText:
 	.string "compassionate.$"
 
 OlivineCity_Gym_EventScript_Jasmine::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 5
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_OLIVINE_CITY_GYM, OlivineCity_Gym_EventScript_Jasmine_Defeated
@@ -233,6 +239,9 @@ OlivineCity_Gym_EventScript_JasmineVictory::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox OlivineCity_Gym_Text_JasmineBadgeSpeech, MSGBOX_DEFAULT
 	setflag FLAG_BADGE06_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_OLIVINE_CITY_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 6

@@ -375,6 +375,17 @@ def referenced_script_symbols(source: str, symbols: set[str]):
     return references
 
 
+def emerald_trainer_party_source(trainer: str, source: str):
+    # The circuit owns fixed Hoenn League levels; this audit protects Emerald content.
+    if trainer in {"TRAINER_SIDNEY", "TRAINER_PHOEBE", "TRAINER_GLACIA",
+                   "TRAINER_DRAKE", "TRAINER_WALLACE"}:
+        return re.sub(
+            r"Level: WAYFARER_LEAGUE_LEVEL\(\d+,\s*(\d+)\)",
+            r"Level: \1", source,
+        )
+    return source
+
+
 def trainer_registry(game_root: Path):
     constant_source = "\n".join(
         path.read_text(encoding="utf-8")
@@ -712,7 +723,7 @@ def build_manifest(game_root: Path, policy_path: Path, hoenn_constants: Path, en
 
     trainer_hash = fingerprint(trainer_fingerprint_rows)
     trainer_party_hash = fingerprint(
-        f"{trainer}:{hashlib.sha256(trainer_parties[trainer].encode('utf-8')).hexdigest()}"
+        f"{trainer}:{hashlib.sha256(emerald_trainer_party_source(trainer, trainer_parties[trainer]).encode('utf-8')).hexdigest()}"
         for trainer in sorted(referenced_trainer_names)
         if trainer in trainer_parties
     )

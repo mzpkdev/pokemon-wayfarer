@@ -3,6 +3,12 @@ CeladonCity_Gym_hns_MapScripts::
 
 
 CeladonCity_Gym_EventScript_Erika::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_KANTO
+	setvar VAR_0x8005, 3
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CELADON_GYM, CeladonCity_Gym_EventScript_Erika_Defeated
@@ -15,6 +21,9 @@ CeladonCity_Gym_EventScript_Erika::
 	giveitem ITEM_TM_GIGA_DRAIN
 	msgbox CeladonCity_Gym_Text_Erika_ExplainTM, MSGBOX_DEFAULT
 	setflag FLAG_BADGE12_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_CELADON_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 12

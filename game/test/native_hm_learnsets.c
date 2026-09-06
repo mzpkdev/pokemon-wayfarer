@@ -80,8 +80,8 @@ static const u16 sAipomMoves[] = { MOVE_CUT, MOVE_ROCK_SMASH };
 static const struct ExpectedLevelMove sAipomModern[] = { LM(10, MOVE_CUT), LM(10, MOVE_ROCK_SMASH), LM(18, MOVE_CUT), LM(18, MOVE_ROCK_SMASH), LM(29, MOVE_CUT), LM(29, MOVE_ROCK_SMASH), LM(39, MOVE_CUT), LM(39, MOVE_ROCK_SMASH) };
 static const struct ExpectedLevelMove sAipomLegacy[] = { LM(10, MOVE_CUT), LM(10, MOVE_ROCK_SMASH), LM(25, MOVE_CUT), LM(25, MOVE_ROCK_SMASH), LM(38, MOVE_CUT), LM(38, MOVE_ROCK_SMASH) };
 static const u16 sChinchouMoves[] = { MOVE_FLASH, MOVE_SURF, MOVE_WHIRLPOOL };
-static const struct ExpectedLevelMove sChinchouModern[] = { LM(9, MOVE_FLASH), LM(9, MOVE_SURF), LM(9, MOVE_WHIRLPOOL), LM(17, MOVE_FLASH), LM(17, MOVE_SURF), LM(17, MOVE_WHIRLPOOL), LM(23, MOVE_FLASH), LM(23, MOVE_SURF), LM(23, MOVE_WHIRLPOOL), LM(31, MOVE_FLASH), LM(31, MOVE_SURF), LM(31, MOVE_WHIRLPOOL), LM(39, MOVE_FLASH), LM(39, MOVE_SURF), LM(39, MOVE_WHIRLPOOL), LM(45, MOVE_FLASH), LM(45, MOVE_SURF), LM(45, MOVE_WHIRLPOOL), LM(50, MOVE_FLASH), LM(50, MOVE_SURF), LM(50, MOVE_WHIRLPOOL) };
-static const struct ExpectedLevelMove sChinchouLegacy[] = { LM(9, MOVE_FLASH), LM(9, MOVE_SURF), LM(9, MOVE_WHIRLPOOL), LM(17, MOVE_FLASH), LM(17, MOVE_SURF), LM(17, MOVE_WHIRLPOOL), LM(29, MOVE_FLASH), LM(29, MOVE_SURF), LM(29, MOVE_WHIRLPOOL), LM(41, MOVE_FLASH), LM(41, MOVE_SURF), LM(41, MOVE_WHIRLPOOL) };
+static const struct ExpectedLevelMove sChinchouModern[] = { LM(5, MOVE_FLASH), LM(5, MOVE_SURF), LM(5, MOVE_WHIRLPOOL), LM(9, MOVE_FLASH), LM(9, MOVE_SURF), LM(9, MOVE_WHIRLPOOL), LM(17, MOVE_FLASH), LM(17, MOVE_SURF), LM(17, MOVE_WHIRLPOOL), LM(23, MOVE_FLASH), LM(23, MOVE_SURF), LM(23, MOVE_WHIRLPOOL), LM(31, MOVE_FLASH), LM(31, MOVE_SURF), LM(31, MOVE_WHIRLPOOL), LM(39, MOVE_FLASH), LM(39, MOVE_SURF), LM(39, MOVE_WHIRLPOOL), LM(45, MOVE_FLASH), LM(45, MOVE_SURF), LM(45, MOVE_WHIRLPOOL), LM(50, MOVE_FLASH), LM(50, MOVE_SURF), LM(50, MOVE_WHIRLPOOL) };
+static const struct ExpectedLevelMove sChinchouLegacy[] = { LM(5, MOVE_FLASH), LM(5, MOVE_SURF), LM(5, MOVE_WHIRLPOOL), LM(9, MOVE_FLASH), LM(9, MOVE_SURF), LM(9, MOVE_WHIRLPOOL), LM(17, MOVE_FLASH), LM(17, MOVE_SURF), LM(17, MOVE_WHIRLPOOL), LM(29, MOVE_FLASH), LM(29, MOVE_SURF), LM(29, MOVE_WHIRLPOOL), LM(41, MOVE_FLASH), LM(41, MOVE_SURF), LM(41, MOVE_WHIRLPOOL) };
 static const u16 sMareepMoves[] = { MOVE_FLASH };
 static const struct ExpectedLevelMove sMareepModern[] = { LM(5, MOVE_FLASH), LM(18, MOVE_FLASH), LM(32, MOVE_FLASH), LM(46, MOVE_FLASH) };
 static const struct ExpectedLevelMove sMareepLegacy[] = { LM(5, MOVE_FLASH), LM(30, MOVE_FLASH) };
@@ -157,7 +157,7 @@ static const struct NativeHmAnchor sAnchors[] =
 #if HAS_HNS_CONTENT
     ANCHOR(SPECIES_GLIGAR, 21, sGligarMoves, sGligarModern, sGligarLegacy),
     ANCHOR(SPECIES_AIPOM, 10, sAipomMoves, sAipomModern, sAipomLegacy),
-    ANCHOR(SPECIES_CHINCHOU, 9, sChinchouMoves, sChinchouModern, sChinchouLegacy),
+    ANCHOR(SPECIES_CHINCHOU, 5, sChinchouMoves, sChinchouModern, sChinchouLegacy),
     ANCHOR(SPECIES_MAREEP, 5, sMareepMoves, sMareepModern, sMareepLegacy),
     ANCHOR(SPECIES_WOOPER, 4, sWooperMoves, sWooperModern, sWooperLegacy),
     ANCHOR(SPECIES_SNUBBULL, 13, sSnubbullMoves, sSnubbullModern, sSnubbullLegacy),
@@ -647,6 +647,104 @@ TEST("Named native HM encounter profiles retain anchors through production Train
     }
 }
 
+#if IS_WAYFARER
+TEST("Wayfarer Chinchou fishing catches retain utility moves from Rating zero through eighty")
+{
+    static const u16 maps[] =
+    {
+        MAP_VERMILION_CITY_HNS,
+        MAP_VERMILION_CITY_PORT_OUTSIDE_HNS,
+        MAP_CINNABAR_ISLAND_HNS,
+        MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS,
+        MAP_CIANWOOD_CITY_HNS,
+    };
+    static const u8 times[] = { TIME_DAY, TIME_NIGHT };
+    u8 mode = 0;
+    u8 mapId = 0;
+    u8 timeId = 0;
+    u8 rod = WILD_ENCOUNTER_FISHING_ROD_OLD;
+    u8 parameterMode;
+    u8 parameterMap;
+    u8 parameterTime;
+    u8 parameterRod;
+    u16 headerId;
+    bool8 foundProfile = FALSE;
+
+    for (parameterMode = 0; parameterMode < 2; parameterMode++)
+    for (parameterMap = 0; parameterMap < ARRAY_COUNT(maps); parameterMap++)
+    for (parameterTime = 0; parameterTime < ARRAY_COUNT(times); parameterTime++)
+    for (parameterRod = WILD_ENCOUNTER_FISHING_ROD_OLD; parameterRod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; parameterRod++)
+    {
+        if (parameterMap == 4 && times[parameterTime] == TIME_NIGHT)
+            continue;
+        PARAMETRIZE_LABEL("mode %d, map %d, time %d, rod %d", parameterMode, parameterMap, parameterTime, parameterRod)
+        {
+            mode = parameterMode;
+            mapId = parameterMap;
+            timeId = parameterTime;
+            rod = parameterRod;
+        }
+    }
+
+    SelectLearnsetMode(mode);
+    for (headerId = 0; gWildMonHeaders[headerId].mapGroup != MAP_GROUP(MAP_UNDEFINED); headerId++)
+    {
+        struct WildEncounterProfileContext context =
+        {
+            .headerId = headerId,
+            .timeOfDay = times[timeId],
+            .area = WILD_AREA_FISHING,
+            .fishingRod = rod,
+        };
+        struct WildEncounterProfileView view;
+        u16 rating;
+
+        if (gWildMonHeaders[headerId].mapGroup != MAP_GROUP(maps[mapId])
+         || gWildMonHeaders[headerId].mapNum != MAP_NUM(maps[mapId]))
+            continue;
+        ASSUME(GetWildEncounterProfileView(&context, &view));
+        foundProfile = TRUE;
+        for (rating = 0; rating <= 80; rating++)
+        {
+            u16 chinchouWeight = 0;
+            u16 totalWeight = GetWildEncounterProfileEligibleWeight(&view, rating, FALSE);
+            u8 slot;
+
+            for (slot = view.entryStart; slot < view.entryStart + view.entryCount; slot++)
+            {
+                const struct WildPokemon *entry;
+                u8 authoredLevel;
+
+                ASSUME(GetWildEncounterProfileEntry(&view, slot, &entry));
+                if (entry->species != SPECIES_CHINCHOU)
+                    continue;
+                chinchouWeight += GetWildEncounterProfileEffectiveWeight(&view, slot, rating, FALSE);
+                for (authoredLevel = entry->minLevel; authoredLevel <= entry->maxLevel; authoredLevel++)
+                {
+                    struct WildEncounterSpeciesOutcome outcome;
+                    struct Pokemon mon;
+
+                    ASSUME(GetWildEncounterSpeciesOutcome(&view, slot, authoredLevel, rating, FALSE, &outcome));
+                    EXPECT_EQ(outcome.species, SPECIES_CHINCHOU);
+                    EXPECT_GE(outcome.level, 5);
+                    if (mapId < 3 && rating == 0)
+                    {
+                        EXPECT_EQ(authoredLevel, 5);
+                        EXPECT_EQ(outcome.level, 5);
+                    }
+                    CreateNativeHmMon(&mon, outcome.species, outcome.level);
+                    ExpectNativeMoves(&mon, sChinchouMoves, ARRAY_COUNT(sChinchouMoves));
+                }
+            }
+            EXPECT_GT(chinchouWeight, 0);
+            if (rod == WILD_ENCOUNTER_FISHING_ROD_OLD)
+                EXPECT_EQ(chinchouWeight * 100, totalWeight * (mapId == 4 ? 12 : 11));
+        }
+    }
+    EXPECT(foundProfile);
+}
+#endif
+
 TEST("Native HM successors have exact level-one roles and exact Move Reminder utility results")
 {
     struct Pokemon mon;
@@ -850,9 +948,9 @@ static void ExpectNoJohtoAdditions(bool8 modern)
         EXPECT_NO_SCHEDULE(SPECIES_GLIGAR, MOVE_CUT, 19, 35, 55);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_CUT, 10, 18, 29, 39);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_ROCK_SMASH, 10, 18, 29, 39);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 9, 17, 23, 31, 39, 45, 50);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 9, 17, 23, 31, 39, 45, 50);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 5, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 5, 9, 17, 23, 31, 39, 45, 50);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 5, 9, 17, 23, 31, 39, 45, 50);
         EXPECT_NO_SCHEDULE(SPECIES_MAREEP, MOVE_FLASH, 5, 18, 32, 46);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_SURF, 4, 15, 29, 43);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_WATERFALL, 4, 15, 29, 43);
@@ -867,9 +965,9 @@ static void ExpectNoJohtoAdditions(bool8 modern)
         EXPECT_NO_SCHEDULE(SPECIES_GLIGAR, MOVE_CUT, 19, 44);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_CUT, 10, 25, 38);
         EXPECT_NO_SCHEDULE(SPECIES_AIPOM, MOVE_ROCK_SMASH, 10, 25, 38);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 9, 17, 29, 41);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 9, 17, 29, 41);
-        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_FLASH, 5, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_SURF, 5, 9, 17, 29, 41);
+        EXPECT_NO_SCHEDULE(SPECIES_CHINCHOU, MOVE_WHIRLPOOL, 5, 9, 17, 29, 41);
         EXPECT_NO_SCHEDULE(SPECIES_MAREEP, MOVE_FLASH, 5, 30);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_SURF, 4, 21, 41);
         EXPECT_NO_SCHEDULE(SPECIES_WOOPER, MOVE_WATERFALL, 4, 21, 41);

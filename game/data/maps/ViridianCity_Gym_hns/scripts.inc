@@ -2,11 +2,21 @@ ViridianCity_Gym_hns_MapScripts::
 	.byte 0
 
 ViridianCity_Gym_EventScript_Blue::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_KANTO
+	setvar VAR_0x8005, 7
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto_if_unset FLAG_BADGE16_GET, ViridianCity_Gym_EventScript_BlueOfficialChallenge
+#endif
 	goto_if_unset FLAG_HIDE_DOJO_BLUE, ViridianCity_Gym_EventScript_BlueAtDojo
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_BlueGotoDojo
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_Blue_Defeated
+ViridianCity_Gym_EventScript_BlueOfficialChallenge::
 	msgbox ViridianCity_Gym_Text_LeaderBlue_Before, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_BLUE_HNS, ViridianCity_Gym_Text_LeaderBlue_Win
 	message ViridianCity_Gym_Text_ReceivedEarthBadge
@@ -17,14 +27,21 @@ ViridianCity_Gym_EventScript_Blue::
 	giveitem ITEM_TM_TRICK_ROOM
 	msgbox ViridianCity_Gym_Text_LeaderBlue_ExplainTM, MSGBOX_DEFAULT
 	setflag FLAG_BADGE16_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_VIRIDIAN_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 16
 	call Common_EventScript_SetGymTrainers_hns
 	closemessage
 	setflag FLAG_HIDE_LEAGUE_BLACKBELT
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call_if_set FLAG_BADGE15_GET, ViridianCity_Gym_EventScript_MoveDefeatedBlaine
+#else
 	setflag FLAG_HIDE_SEAFOAM_BLAINE
 	clearflag FLAG_HIDE_CINNABAR_BLAINE
+#endif
 	setvar VAR_OAK_MT_SILVER_CALL, 1
 	release
 	end
@@ -147,3 +164,8 @@ ViridianCity_Gym_Text_GymStatuePlayerWon::
     .string "WINNING TRAINERS:\n"
 	.string "BLUE, RED, {PLAYER}$"
 
+
+ViridianCity_Gym_EventScript_MoveDefeatedBlaine::
+	setflag FLAG_HIDE_SEAFOAM_BLAINE
+	clearflag FLAG_HIDE_CINNABAR_BLAINE
+	return

@@ -114,6 +114,9 @@ static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
 {
     #include "battle/trainer_control.h"
+#if IS_WAYFARER
+    #include "league_tiers.h"
+#endif
 };
 
 const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =

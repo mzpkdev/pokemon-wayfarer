@@ -25,10 +25,20 @@ ReceptionGate_Text_Janine:
 
 
 ReceptionGate_EventScript_Officer::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	lock
+	faceplayer
+	call LeagueCircuit_EventScript_ShowStatus
+	release
+	end
+#endif
     msgbox VictoryRoadGate_Text_EightBadges, MSGBOX_NPC
     end
 
 ReceptionGate_Trigger::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	end
+#endif
     lock
     playse SE_PIN
     applymovement LOCALID_INDIGOJUNCTION_POLICEMAN, Common_Movement_ExclamationMark

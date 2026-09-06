@@ -13,7 +13,16 @@ PokemonLeague_KogasRoom_EventScript_Koga::
 	lock 
 	faceplayer
 	goto_if_ge VAR_LEAGUE_STATE, 3, PokemonLeague_KogasRoom_EventScript_KogaDefeated
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_KogasRoom_EventScript_KogaRematch
+#else
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_KogasRoom_EventScript_KogaRematch
+#endif
 	msgbox PokemonLeague_KogasRoom_Text_Before, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5

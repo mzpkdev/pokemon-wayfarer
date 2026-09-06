@@ -5,18 +5,22 @@
 #include "hall_of_fame.h"
 #include "hall_of_fame_frlg.h"
 #include "load_save.h"
+#include "league_circuit.h"
 #include "overworld.h"
 #include "regions.h"
 #include "script_pokemon_util.h"
 #include "tv.h"
 #include "wayfarer_persistence.h"
 #include "constants/heal_locations.h"
+#include "config/league_circuit.h"
 
 int GameClear(void)
 {
     int i;
     bool32 ribbonGet;
-#if IS_WAYFARER
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    enum Region currentRegion = ConsumeRecordedLeagueClearRegion();
+#elif IS_WAYFARER
     enum Region currentRegion = WayfarerGetCurrentMapRegion();
 #endif
     struct RibbonCounter {
@@ -24,8 +28,15 @@ int GameClear(void)
         u8 count;
     } ribbonCounts[6];
 
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (currentRegion == REGION_NONE)
+        return 0;
+#endif
     HealPlayerParty();
 
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    gHasHallOfFameRecords = GetGameStat(GAME_STAT_ENTERED_HOF) != 0;
+#else
 #if IS_WAYFARER
     if (GetGameClearStateForRegion(currentRegion) == TRUE)
 #else
@@ -43,13 +54,19 @@ int GameClear(void)
         FlagSet(FLAG_SYS_GAME_CLEAR);
 #endif
     }
+#endif
 
     if (GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME) == 0)
         SetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME, (gSaveBlock2Ptr->playTimeHours << 16) | (gSaveBlock2Ptr->playTimeMinutes << 8) | gSaveBlock2Ptr->playTimeSeconds);
 
     SetContinueGameWarpStatus();
 
-#if IS_WAYFARER
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (currentRegion == REGION_HOENN)
+        SetContinueGameWarpToHealLocation(HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE);
+    else
+        SetContinueGameWarpToHealLocation(HEAL_LOCATION_INDIGO_PLATEAU_HNS);
+#elif IS_WAYFARER
     if (currentRegion != REGION_HOENN)
         SetContinueGameWarpToHealLocation(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
     else if (gSaveBlock2Ptr->playerGender == MALE)

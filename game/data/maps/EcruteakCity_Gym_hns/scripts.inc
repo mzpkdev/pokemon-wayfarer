@@ -35,6 +35,12 @@ EcruteakCity_Gym_EventScript_Grace::
 	end
 
 EcruteakCity_Gym_EventScript_Morty::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 3
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_ECRUTEAK_CITY_GYM, EcruteakCity_Gym_EventScript_Morty_Defeated
@@ -45,6 +51,9 @@ EcruteakCity_Gym_EventScript_Morty::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox MortyText_FogBadgeSpeech, MSGBOX_DEFAULT
 	setflag FLAG_BADGE04_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_ECRUTEAK_CITY_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 4

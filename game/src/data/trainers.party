@@ -1,3 +1,9 @@
+#ifdef POKEMON_WAYFARER
+#define WAYFARER_LEAGUE_LEVEL(wayfarer, emerald) wayfarer
+#else
+#define WAYFARER_LEAGUE_LEVEL(wayfarer, emerald) emerald
+#endif
+
 /*
 Trainers and their parties defined with Competetive Syntax.
 Compatible with Pokemon Showdown exports.
@@ -4596,7 +4602,7 @@ AI: Basic Trainer / Force Setup First Turn
 Mugshot: Purple
 
 Mightyena
-Level: 46
+Level: WAYFARER_LEAGUE_LEVEL(86,46)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Roar
 - Double Edge
@@ -4604,7 +4610,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Crunch
 
 Shiftry
-Level: 48
+Level: WAYFARER_LEAGUE_LEVEL(86,48)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Torment
 - Double Team
@@ -4612,7 +4618,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Extrasensory
 
 Cacturne
-Level: 46
+Level: WAYFARER_LEAGUE_LEVEL(86,46)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Leech Seed
 - Feint Attack
@@ -4620,7 +4626,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Cotton Spore
 
 Crawdaunt
-Level: 48
+Level: WAYFARER_LEAGUE_LEVEL(86,48)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Surf
 - Swords Dance
@@ -4628,7 +4634,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Facade
 
 Absol @ Sitrus Berry
-Level: 49
+Level: WAYFARER_LEAGUE_LEVEL(87,49)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Aerial Ace
 - Rock Slide
@@ -4647,7 +4653,7 @@ AI: Basic Trainer
 Mugshot: Green
 
 Dusclops
-Level: 48
+Level: WAYFARER_LEAGUE_LEVEL(87,48)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Shadow Punch
 - Confuse Ray
@@ -4655,7 +4661,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Protect
 
 Banette
-Level: 49
+Level: WAYFARER_LEAGUE_LEVEL(87,49)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Shadow Ball
 - Grudge
@@ -4663,7 +4669,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Feint Attack
 
 Sableye
-Level: 50
+Level: WAYFARER_LEAGUE_LEVEL(88,50)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Shadow Ball
 - Double Team
@@ -4671,7 +4677,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Feint Attack
 
 Banette
-Level: 49
+Level: WAYFARER_LEAGUE_LEVEL(87,49)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Shadow Ball
 - Psychic
@@ -4679,7 +4685,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Facade
 
 Dusclops @ Sitrus Berry
-Level: 51
+Level: WAYFARER_LEAGUE_LEVEL(88,51)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Shadow Ball
 - Ice Beam
@@ -4698,7 +4704,7 @@ AI: Basic Trainer
 Mugshot: Pink
 
 Sealeo
-Level: 50
+Level: WAYFARER_LEAGUE_LEVEL(88,50)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Encore
 - Body Slam
@@ -4706,7 +4712,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Ice Ball
 
 Glalie
-Level: 50
+Level: WAYFARER_LEAGUE_LEVEL(88,50)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Light Screen
 - Crunch
@@ -4714,7 +4720,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Ice Beam
 
 Sealeo
-Level: 52
+Level: WAYFARER_LEAGUE_LEVEL(89,52)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Attract
 - Double Edge
@@ -4722,7 +4728,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Blizzard
 
 Glalie
-Level: 52
+Level: WAYFARER_LEAGUE_LEVEL(89,52)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Shadow Ball
 - Explosion
@@ -4730,7 +4736,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Ice Beam
 
 Walrein @ Sitrus Berry
-Level: 53
+Level: WAYFARER_LEAGUE_LEVEL(89,53)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Surf
 - Body Slam
@@ -4749,7 +4755,7 @@ AI: Basic Trainer
 Mugshot: Blue
 
 Shelgon
-Level: 52
+Level: WAYFARER_LEAGUE_LEVEL(89,52)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Rock Tomb
 - Dragon Claw
@@ -4757,7 +4763,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Double Edge
 
 Altaria
-Level: 54
+Level: WAYFARER_LEAGUE_LEVEL(90,54)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Double Edge
 - Dragon Breath
@@ -4765,7 +4771,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Aerial Ace
 
 Kingdra
-Level: 53
+Level: WAYFARER_LEAGUE_LEVEL(89,53)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Smokescreen
 - Dragon Dance
@@ -4773,7 +4779,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Body Slam
 
 Flygon
-Level: 53
+Level: WAYFARER_LEAGUE_LEVEL(90,53)
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Flamethrower
 - Crunch
@@ -4781,7 +4787,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Earthquake
 
 Salamence @ Sitrus Berry
-Level: 55
+Level: WAYFARER_LEAGUE_LEVEL(90,55)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Flamethrower
 - Dragon Claw
@@ -6252,7 +6258,7 @@ AI: Basic Trainer
 Mugshot: Yellow
 
 Wailord
-Level: 57
+Level: WAYFARER_LEAGUE_LEVEL(91,57)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Rain Dance
 - Water Spout
@@ -6260,7 +6266,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Blizzard
 
 Tentacruel
-Level: 55
+Level: WAYFARER_LEAGUE_LEVEL(90,55)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Toxic
 - Hydro Pump
@@ -6268,7 +6274,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Ice Beam
 
 Ludicolo
-Level: 56
+Level: WAYFARER_LEAGUE_LEVEL(91,56)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Giga Drain
 - Surf
@@ -6276,7 +6282,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Double Team
 
 Whiscash
-Level: 56
+Level: WAYFARER_LEAGUE_LEVEL(91,56)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Earthquake
 - Surf
@@ -6284,7 +6290,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Hyper Beam
 
 Gyarados
-Level: 56
+Level: WAYFARER_LEAGUE_LEVEL(91,56)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Dragon Dance
 - Earthquake
@@ -6292,7 +6298,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Surf
 
 Milotic @ Sitrus Berry
-Level: 58
+Level: WAYFARER_LEAGUE_LEVEL(92,58)
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Recover
 - Surf

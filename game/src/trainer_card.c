@@ -20,6 +20,8 @@
 #include "strings.h"
 #include "string_util.h"
 #include "trainer_card.h"
+#include "config/league_circuit.h"
+#include "league_circuit_status.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
 #include "pokedex.h"
@@ -415,6 +417,30 @@ static void CloseTrainerCard(u8 taskId)
 #define STATE_CLOSE_CARD          14
 #define STATE_WAIT_LINK_PARTNER   15
 #define STATE_CLOSE_CARD_LINK     16
+#define STATE_CIRCUIT_STATUS      17
+#define STATE_RESTORE_CARD_FRONT  18
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+static const u8 sCircuitHint[] = _("SELECT: Circuit");
+static const u8 sCircuitTitle[] = _("LEAGUE CIRCUIT");
+static const u8 sCircuitReturn[] = _("B / SELECT: Trainer Card");
+
+static void ShowLeagueCircuitOnCard(void)
+{
+    u8 text[LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE];
+
+    FormatLeagueCircuitStatus(text, FALSE);
+    FillWindowPixelBuffer(WIN_CARD_TEXT, PIXEL_FILL(TEXT_COLOR_WHITE));
+    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, 8,
+        sTrainerCardTextColors, TEXT_SKIP_DRAW, sCircuitTitle);
+    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, 32,
+        sTrainerCardTextColors, TEXT_SKIP_DRAW, text);
+    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_SMALL, 8, 120,
+        sTrainerCardTextColors, TEXT_SKIP_DRAW, sCircuitReturn);
+    DrawTrainerCardWindow(WIN_CARD_TEXT);
+    sData->mainState = STATE_CIRCUIT_STATUS;
+}
+#endif
 
 static void Task_TrainerCard(u8 taskId)
 {
@@ -478,6 +504,14 @@ static void Task_TrainerCard(u8 taskId)
             sData->mainState++;
         break;
     case STATE_HANDLE_INPUT_FRONT:
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+        if (!sData->isLink && !gReceivedRemoteLinkPlayers && JOY_NEW(SELECT_BUTTON))
+        {
+            PlaySE(SE_SELECT);
+            ShowLeagueCircuitOnCard();
+            break;
+        }
+#endif
         // Blink the : in play time
         if (!gReceivedRemoteLinkPlayers && sData->timeColonNeedDraw)
         {
@@ -570,6 +604,24 @@ static void Task_TrainerCard(u8 taskId)
             PlaySE(SE_RG_CARD_OPEN);
         }
         break;
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    case STATE_CIRCUIT_STATUS:
+        if (JOY_NEW(B_BUTTON | SELECT_BUTTON))
+        {
+            FillWindowPixelBuffer(WIN_CARD_TEXT, PIXEL_FILL(0));
+            sData->printState = 0;
+            sData->mainState = STATE_RESTORE_CARD_FRONT;
+            PlaySE(SE_SELECT);
+        }
+        break;
+    case STATE_RESTORE_CARD_FRONT:
+        if (PrintAllOnCardFront())
+        {
+            DrawTrainerCardWindow(WIN_CARD_TEXT);
+            sData->mainState = STATE_HANDLE_INPUT_FRONT;
+        }
+        break;
+#endif
    }
 }
 
@@ -1013,6 +1065,11 @@ static bool8 PrintAllOnCardFront(void)
         break;
     case 5:
         PrintProfilePhraseOnCard();
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+        if (!sData->isLink && !gReceivedRemoteLinkPlayers)
+            AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_SMALL, 8, 0,
+                sTrainerCardTextColors, TEXT_SKIP_DRAW, sCircuitHint);
+#endif
         break;
     default:
         sData->printState = 0;

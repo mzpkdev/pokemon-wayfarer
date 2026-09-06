@@ -359,6 +359,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
+RULES_NO_SCAN += league-circuit-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -386,7 +387,7 @@ ifeq ($(SETUP_PREREQS),1)
     $(error Errors occurred while building tools. See error messages above for more details)
   endif
   # Oh and also generate mapjson sources before we use `SCANINC`.
-  $(foreach line, $(shell $(MAKE) MAP_VERSION=$(MAP_VERSION) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
+  $(foreach line, $(shell $(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) TEST=$(TEST) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
   ifneq ($(.SHELLSTATUS),0)
     $(error Errors occurred while generating map-related sources. See error messages above for more details)
   endif
@@ -455,6 +456,7 @@ endif
 check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
+check: league-circuit-test
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
@@ -719,6 +721,10 @@ firered: all
 leafgreen: all
 hns: all
 wayfarer: all
+
+league-circuit-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/league_circuit -p 'test_*.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_league_tiers -p 'test_*.py' -q
 
 .PHONY: e2e
 e2e:

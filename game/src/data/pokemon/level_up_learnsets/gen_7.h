@@ -5527,6 +5527,11 @@ static const struct LevelUpMove sAriadosLevelUpLearnset[] = {
 static const struct LevelUpMove sChinchouLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
     LEVEL_UP_MOVE( 1, MOVE_SUPERSONIC),
+#if HAS_HNS_CONTENT
+    LEVEL_UP_MOVE( 5, MOVE_FLASH),
+    LEVEL_UP_MOVE( 5, MOVE_SURF),
+    LEVEL_UP_MOVE( 5, MOVE_WHIRLPOOL),
+#endif
     LEVEL_UP_MOVE( 6, MOVE_THUNDER_WAVE),
     LEVEL_UP_MOVE( 9, MOVE_ELECTRO_BALL),
 #if HAS_HNS_CONTENT

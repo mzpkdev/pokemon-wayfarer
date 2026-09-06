@@ -31,6 +31,12 @@ SaffronCity_Gym_EventScript_Jared::
 	end
 
 SaffronCity_Gym_EventScript_Sabrina::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_KANTO
+	setvar VAR_0x8005, 4
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_SAFFRON_GYM, SaffronCity_Gym_EventScript_Sabrina_Defeated
@@ -44,6 +50,9 @@ SaffronCity_Gym_EventScript_Sabrina::
 	giveitem ITEM_TM_SKILL_SWAP
 	msgbox SaffronCity_Gym_Text_Sabrina_ExplainTM, MSGBOX_DEFAULT
 	setflag FLAG_BADGE13_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_SAFFRON_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 13

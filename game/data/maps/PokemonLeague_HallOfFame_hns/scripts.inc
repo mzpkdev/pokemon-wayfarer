@@ -7,6 +7,9 @@ PokemonLeague_HallOfFame_OnFrame::
 	.2byte 0
 
 PokemonLeague_HallOfFame_EventScript_Cutscene::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto LeagueCircuit_EventScript_IndigoHallOfFame
+#endif
 	lock
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp
 	applymovement LOCALID_HALLOFFAME_LANCE, PokemonLeague_HallOfFame_Movement_LanceEnter

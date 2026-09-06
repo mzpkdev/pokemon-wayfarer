@@ -36,6 +36,11 @@ EverGrandeCity_SidneysRoom_OnFrame:
 	.2byte 0
 
 EverGrandeCity_SidneysRoom_EventScript_WalkInCloseDoor::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#endif
 	lockall
 	call PokemonLeague_EliteFour_EventScript_WalkInCloseDoor
 	setvar VAR_ELITE_4_STATE, 1
@@ -43,6 +48,11 @@ EverGrandeCity_SidneysRoom_EventScript_WalkInCloseDoor::
 	end
 
 EverGrandeCity_SidneysRoom_EventScript_Sidney::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_ELITE_4_SIDNEY, EverGrandeCity_SidneysRoom_EventScript_PostBattleSpeech
