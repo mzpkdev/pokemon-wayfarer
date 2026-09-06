@@ -149,15 +149,22 @@ const u8 *GetPokedexRatingText(u32 count)
 
 const u8 *GetNationalPokedexRatingText(u32 count)
 {
-    u32 i, j, k;
+    enum NationalDexOrder id;
+    u32 k;
     u16 maxDex = Dex_GetNationalVisibleEntryCount();
-    for (i = 1; i <= NATIONAL_DEX_COUNT; i++)
+
+    if (maxDex == 0)
     {
-        j = i;
-        k = NationalPokedexNumToSpecies(j);
+        gSpecialVar_Result = FALSE;
+        return gNationalDexRatingText_LessThan100;
+    }
+
+    for (id = Dex_GetFirstVisibleNationalEntry(); id != NATIONAL_DEX_NONE; id = Dex_GetNextVisibleNationalEntry(id))
+    {
+        k = NationalPokedexNumToSpecies(id);
         if (gSpeciesInfo[k].dexNotRequired || (gSpeciesInfo[k].isMythical && !gSpeciesInfo[k].dexForceRequired))
         {
-            if (GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
+            if (GetSetPokedexFlag(id, FLAG_GET_CAUGHT) && count != 0)
                 count--;
             maxDex--;
         }
