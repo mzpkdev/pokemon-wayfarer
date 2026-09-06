@@ -4150,6 +4150,22 @@ static void Task_HandleCaughtMonPageInput(u8 taskId)
     }
 }
 
+#ifdef E2E_TESTING
+bool32 E2ETest_IsCaughtDexReady(void)
+{
+    u8 taskId;
+
+    for (taskId = 0; taskId < NUM_TASKS; taskId++)
+    {
+        if (gTasks[taskId].isActive
+         && gTasks[taskId].func == Task_HandleCaughtMonPageInput
+         && !gPaletteFade.active)
+            return TRUE;
+    }
+    return FALSE;
+}
+#endif
+
 static void Task_ExitCaughtMonPage(u8 taskId)
 {
     if (!gPaletteFade.active)

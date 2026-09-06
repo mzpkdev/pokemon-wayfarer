@@ -2390,6 +2390,9 @@ static u32 CanTradeSelectedMon(struct Pokemon *playerParty, int partyCount, int 
     u32 species[PARTY_SIZE];
     u32 species2[PARTY_SIZE];
 
+    if (partyCount < 1 || partyCount > PARTY_SIZE || monIdx < 0 || monIdx >= partyCount)
+        return CANT_TRADE_INVALID_MON;
+
     for (i = 0; i < partyCount; i++)
     {
         species2[i] = GetMonData(&playerParty[i], MON_DATA_SPECIES_OR_EGG);
