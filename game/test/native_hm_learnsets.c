@@ -5,6 +5,9 @@
 #include "wild_encounter.h"
 #include "constants/maps.h"
 
+// Standalone builds retain the original regional anchor contract.
+#if !IS_WAYFARER
+
 struct ExpectedLevelMove
 {
     u8 level;
@@ -1122,6 +1125,8 @@ TEST("Native HM anchors retain generated HM compatibility and successor exceptio
 #endif
 }
 
+#endif // !IS_WAYFARER
+
 TEST("All species stay below both learnset limits in modern and legacy modes")
 {
     u8 mode;
@@ -1130,7 +1135,8 @@ TEST("All species stay below both learnset limits in modern and legacy modes")
     {
         u16 species;
 
-        SelectLearnsetMode(mode);
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = mode;
+        gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
         for (species = 1; species < SPECIES_EGG; species++)
         {
             const struct LevelUpMove *learnset;

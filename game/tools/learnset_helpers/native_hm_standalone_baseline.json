@@ -1,0 +1,26 @@
+{
+  "base_commit": "479b0c83aea4ad90feb0af649e83ccb1a5916770",
+  "canonicalization": "SHA-256 of UTF-8 json.dumps(preprocess(source, wayfarer=False, content=content), sort_keys=True, separators=(\",\", \":\")); P_* family/form flags enabled. NONE disables all HAS_*_CONTENT flags. FRLG covers both FireRed and LeafGreen.",
+  "modes": {
+    "modern": {
+      "source": "game/src/data/pokemon/level_up_learnsets/gen_7.h",
+      "source_sha256": "8eb9402537d20e27b31ec1b7d641eb4d90f253404a77564d989ad589300a8ac9",
+      "standalone_sha256": {
+        "EMERALD": "979127ee267ba5a637447edbad2c1dbc7b61c86fc6145ed97f88706c958d58d7",
+        "FRLG": "3daa812b0f35280b9011352d039dd90cbd4f8061d010bb7f3ff1305c7cb2b7b2",
+        "HNS": "0165548cb8c83d5b60ec3aaa45d9f79a69073c55a169b92d684696d6e332333b",
+        "NONE": "c28c90f0d0c974674696f50bb72484210d5848e59187fef18495b4535e65eadc"
+      }
+    },
+    "legacy": {
+      "source": "game/src/data/pokemon/level_up_learnsets/gen_3.h",
+      "source_sha256": "7d80627994ec94b47b4e5faa37e64ddeaee392325cb7f3b80322615715f80f35",
+      "standalone_sha256": {
+        "EMERALD": "ca9f86fdab3bfc73bb71032d0d52c87b2a931e95b1089267b21dbbd71b5c1ad2",
+        "FRLG": "eb52b075a168a7aa6b85f94eaeeaff6f413d25923567e972f85488ee6aedab21",
+        "HNS": "49f100c1a1855efe5c59bdb7f317356c91026b7adb1435cffdade359f65b2c5f",
+        "NONE": "a043ec7f162c7332b4f09d6998a80e047d2a87f3a4581b57452c0890bba5bceb"
+      }
+    }
+  }
+}
