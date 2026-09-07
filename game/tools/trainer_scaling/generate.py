@@ -14,7 +14,7 @@ TOOL = Path(__file__).resolve().parent
 MANIFEST = TOOL / 'classification.json'
 OUTPUT = ROOT / 'src/data/trainer_scaling'
 SOURCES = ('trainers_hns.party', 'trainers.party')
-POLICIES = {'EXCLUDED': 0, 'ORDINARY': 1, 'GYM_MEMBER': 2}
+POLICIES = {'EXCLUDED': 0, 'ORDINARY': 1, 'GYM_MEMBER': 2, 'GYM_LEADER': 3}
 ID_RE = re.compile(r'\bTRAINER_[A-Z0-9_]+\b')
 
 class ValidationError(ValueError):
@@ -300,7 +300,9 @@ def generate(check=False, proposal=None, no_audit=False):
     import sys
     sys.path.insert(0, str(ROOT / 'tools/wild_encounters'))
     import wild_encounters_to_header as wild
-    eligible = {row['id'] for row in rows if row['policy'] != 'EXCLUDED'}
+    # Gym Leaders have their own authored six-slot curve.  They intentionally
+    # do not feed the ordinary predecessor table (or the ordinary audit).
+    eligible = {row['id'] for row in rows if row['policy'] in ('ORDINARY', 'GYM_MEMBER')}
     species = {slot['species'] for trainer in eligible for record in records[trainer].values() for slot in record['slots']}
     metadata = wild.load_trainer_species_metadata(wild.DEFAULT_SPECIES_METADATA, wild.DEFAULT_SPECIES_INFO, wild.species_ids(wild.DEFAULT_SPECIES), species)
     write_output(OUTPUT / 'predecessors.h', wild.render_trainer_predecessor_header(metadata), check)

@@ -6,7 +6,7 @@
 #include "constants/opponents_hns.h"
 #include "constants/wayfarer_persistence.h"
 
-#define WAYFARER_HOENN_TRAINER_OFFSET 630
+#define WAYFARER_HOENN_TRAINER_OFFSET 638
 #if IS_WAYFARER
 #define TRAINER_EMERALD_ID(id) ((id) + WAYFARER_HOENN_TRAINER_OFFSET)
 #else
@@ -875,16 +875,16 @@
 
 #define TRAINERS_COUNT_EMERALD     855
 #define MAX_TRAINERS_COUNT_EMERALD 864
-#define TRAINERS_COUNT_WAYFARER     1485
+#define TRAINERS_COUNT_WAYFARER     1493
 #define MAX_TRAINERS_COUNT_WAYFARER 2048
 
 #if TRAINERS_COUNT_EMERALD != WAYFARER_HOENN_TRAINERS_COUNT
 #error "Wayfarer Hoenn Trainer storage must cover every Emerald Trainer ID"
 #endif
 
-#if IS_WAYFARER && (TRAINER_BEVERLY_5_HNS != WAYFARER_HOENN_TRAINER_OFFSET \
+#if IS_WAYFARER && (TRAINER_BLUE_DOJO_HNS != WAYFARER_HOENN_TRAINER_OFFSET \
                  || TRAINERS_COUNT_HNS != WAYFARER_HOENN_TRAINER_OFFSET + 1)
-#error "Wayfarer Hoenn Trainer IDs use a fixed offset; HNS Trainers must end at 630"
+#error "Wayfarer Hoenn Trainer IDs use a fixed offset; HNS Trainers must end at 638"
 #endif
 
 #if TRAINERS_COUNT_WAYFARER != WAYFARER_HOENN_TRAINER_OFFSET + TRAINERS_COUNT_EMERALD

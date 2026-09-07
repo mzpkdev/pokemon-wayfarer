@@ -8509,6 +8509,242 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Stun Spore
 - Attract
 
+=== TRAINER_JANINE_DOJO_HNS ===
+Name: JANINE
+Class: Leader Kanto Hns
+Pic: Leader Janine Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Purple
+Items: Full Restore / Full Restore
+
+Weezing @ Leftovers
+Level: 63
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Sludge Bomb
+- Flamethrower
+- Belch
+- Amnesia
+
+Muk
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Minimize
+- Gunk Shot
+- Toxic
+- Acid Armor
+
+Swalot
+Level: 61
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Swallow
+- Stockpile
+- Amnesia
+- Spit Up
+
+Nidoqueen @ Quick Claw
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Earthquake
+- Cross Poison
+- Thunder
+- Superpower
+
+Crobat
+Level: 63
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Air Slash
+- Venoshock
+- Toxic
+- Confuse Ray
+
+Venomoth @ Bright Powder
+Level: 64
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Signal Beam
+- Poison Fang
+- Toxic
+- Double Team
+
+=== TRAINER_SABRINA_DOJO_HNS ===
+Name: SABRINA
+Class: Leader Kanto Hns
+Pic: Leader Sabrina Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Pink
+Items: Full Restore / Full Restore
+
+Mr Mime @ Quick Claw
+Level: 65
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Magical Leaf
+- Psychic
+- Substitute
+- Reflect
+
+Jynx
+Level: 64
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Psychic
+- Ice Beam
+- Lovely Kiss
+- Grass Knot
+
+Slowbro @ Chesto Berry
+Level: 64
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Rest
+- Sleep Talk
+- Submission
+- Surf
+
+Wobbuffet @ Leftovers
+Level: 64
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Mirror Coat
+- Counter
+- Safeguard
+- Destiny Bond
+
+Espeon
+Level: 65
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Psychic
+- Morning Sun
+- Future Sight
+- Power Gem
+
+Alakazam @ Twisted Spoon
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Shadow Ball
+- Psychic
+- Recover
+- Calm Mind
+
+=== TRAINER_BLAINE_DOJO_HNS ===
+Name: BLAINE
+Class: Leader Kanto Hns
+Pic: Leader Blaine Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Dark Red
+Items: Full Restore / Full Restore
+
+Rapidash @ Quick Claw
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Bounce
+- Sunny Day
+- Flare Blitz
+- Solar Beam
+
+Magmortar @ Sitrus Berry
+Level: 65
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Thunder Punch
+- Fire Blast
+- Psychic
+- Confuse Ray
+
+Houndoom @ Miracle Seed
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Fire Blast
+- Sunny Day
+- Thunder Fang
+- Crunch
+
+Magcargo @ Leftovers
+Level: 65
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Flamethrower
+- Recover
+- Amnesia
+- Hypnosis
+
+Torkoal @ White Herb
+Level: 67
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Curse
+- Iron Defense
+- Withdraw
+- Heat Wave
+
+Camerupt @ Charcoal
+Level: 67
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Earth Power
+- Eruption
+- Yawn
+- Amnesia
+
+=== TRAINER_BLUE_DOJO_HNS ===
+Name: BLUE
+Class: Leader Kanto Hns
+Pic: Leader Blue Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Blue
+Items: Full Restore / Full Restore
+
+Rhyperior @ Sitrus Berry
+Level: 69
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Drill Run
+- Stone Edge
+- Rest
+- Toxic
+
+Pidgeot @ Sharp Beak
+Level: 68
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Hurricane
+- Giga Impact
+- Air Slash
+- Feather Dance
+
+Machamp @ Scope Lens
+Level: 67
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Cross Chop
+- Rock Slide
+- Earthquake
+- Dual Chop
+
+Exeggutor @ Leftovers
+Level: 68
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Leech Seed
+- Trick Room
+- Psychic
+- Seed Bomb
+
+Tyranitar @ Focus Band
+Level: 68
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Stone Edge
+- Payback
+- Crunch
+- Thunder Fang
+
+Arcanine @ Silk Scarf
+Level: 69
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Flamethrower
+- Curse
+- Crunch
+- Extreme Speed
+
 === TRAINER_SABRINA_HNS ===
 Name: SABRINA
 Class: Leader Kanto Hns
@@ -14642,3 +14878,238 @@ Naive Nature
 - Drill Peck  
 - Double-Edge  
 
+=== TRAINER_BROCK_DOJO_HNS ===
+Name: BROCK
+Class: Leader Kanto Hns
+Pic: Leader Brock Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Orange
+Items: Full Restore / Full Restore
+
+Golem @ Quick Claw
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Curse
+- Stone Edge
+- Body Slam
+- Earthquake
+
+Aerodactyl @ Hard Stone
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Ancient Power
+- Sky Attack
+- Earthquake
+- Fire Fang
+
+Kabutops @ Scope Lens
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Surf
+- Ancient Power
+- Night Slash
+- Swords Dance
+
+Omastar @ Focus Band
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Ancient Power
+- Ice Beam
+- Surf
+- Toxic
+
+Relicanth @ Hard Stone
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Hydro Pump
+- Rock Slide
+- Curse
+- Thunderbolt
+
+Kleavor @ Quick Claw
+Level: 66
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Swords Dance
+- Stone Axe
+- X Scissor
+- Agility
+
+=== TRAINER_MISTY_DOJO_HNS ===
+Name: MISTY
+Class: Leader Kanto Hns
+Pic: Leader Misty Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Light Blue
+Items: Full Restore / Full Restore
+
+Golduck
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Aqua Tail
+- Psychic
+- Wonder Room
+- Cross Chop
+
+Quagsire @ Quick Claw
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Muddy Water
+- Amnesia
+- Earthquake
+- Rain Dance
+
+Vaporeon @ Leftovers
+Level: 61
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Hydro Pump
+- Ice Beam
+- Acid Armor
+- Shadow Ball
+
+Milotic
+Level: 61
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Hydro Pump
+- Ice Beam
+- Rest
+- Sleep Talk
+
+Lapras @ Never Melt Ice
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Hydro Pump
+- Ice Beam
+- Rain Dance
+- Reflect
+
+Starmie @ Mystic Water
+Level: 63
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Surf
+- Psychic
+- Recover
+- Thunderbolt
+
+=== TRAINER_LTSURGE_DOJO_HNS ===
+Name: LTSURGE
+Class: Leader Kanto Hns
+Pic: Leader Surge Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Items: Full Restore / Full Restore
+Mugshot: Yellow
+
+Electrode @ Focus Band
+Level: 57
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Shock Wave
+- Rain Dance
+- Thunder Wave
+- Explosion
+
+Magnezone
+Level: 59
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Thunder
+- Reflect
+- Rain Dance
+- Double Edge
+
+Lanturn @ Leftovers
+Level: 58
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Ion Deluge
+- Hydro Pump
+- Discharge
+- Confuse ray
+
+Manectric
+Level: 58
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Wild Charge
+- Charge
+- Crunch
+- Electric Terrain
+
+Electivire @ Scope Lens
+Level: 59
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Thunderbolt
+- Fire Punch
+- Ice Punch
+- Submission
+
+Raichu @ Magnet
+Level: 60
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Thunder
+- Rain Dance
+- Body Slam
+- Surf
+
+=== TRAINER_ERIKA_DOJO_HNS ===
+Name: ERIKA
+Class: Leader Kanto Hns
+Pic: Leader Erika Hns
+Gender: Male
+Music: Hg Boy 1
+Double Battle: No
+AI: Basic Trainer
+Mugshot: Green
+Items: Full Restore / Full Restore
+
+Jumpluff @ Focus Band
+Level: 61
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Acrobatics
+- U Turn
+- Sleep Powder
+- Leech Seed
+
+Roserade
+Level: 60
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Synthesis
+- Grass Whistle
+- Toxic
+- Petal Dance
+
+Tangrowth
+Level: 60
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Power Whip
+- Wring Out
+- Grassy Terrain
+- Tickle
+
+Venusaur @ Leftovers
+Level: 61
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Sunny Day
+- Solar Beam
+- Sludge Bomb
+- Sleep Powder
+
+Victreebel @ Poison Barb
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Sludge Bomb
+- Leaf Blade
+- Swords Dance
+- Sleep Powder
+
+Bellossom @ Miracle Seed
+Level: 62
+IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+- Petal Blizzard
+- Quiver Dance
+- Stun Spore
+- Attract
