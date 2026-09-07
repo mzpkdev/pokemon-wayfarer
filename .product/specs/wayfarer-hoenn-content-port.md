@@ -1,5 +1,11 @@
 # Wayfarer Hoenn content port
 
+For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
+revision supersedes named native-utility carriers and permanent-retention
+assumptions in this document. It is not implemented yet. Regional routes,
+field-use authorization, scaling and unrelated mechanics remain unchanged;
+standalone builds retain their existing contract.
+
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
 Implemented: Yes
 

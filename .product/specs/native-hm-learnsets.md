@@ -3,6 +3,11 @@
 PRD: [Native HM utility learnsets](../prds/native-hm-learnsets.md)
 Implemented: Yes
 
+For Wayfarer, [Native HM catch windows](native-hm-catch-windows.md) is the
+approved replacement design, not yet implemented. Its roster, catch-window and
+reminder rules supersede the corresponding requirements below. This document
+records the existing implementation and retains authority for standalone builds.
+
 ## Scope
 
 This specification defines the level-up learnset additions that let selected wild Pokémon provide Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Dive, or Whirlpool before the matching HM is obtained. It covers Emerald, FireRed, LeafGreen, and HNS in both the normal and Generation III legacy-moves modes. Dive additions apply only to Emerald. HNS receives Whirlpool additions but no Dive additions.

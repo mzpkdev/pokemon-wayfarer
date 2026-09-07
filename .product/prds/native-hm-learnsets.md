@@ -1,5 +1,10 @@
 # Native HM utility learnsets
 
+For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
+PRD supersedes this document's roster, permanent-anchor, repeated-entry and
+successor-reminder requirements. That revision is not implemented yet. This
+document records the existing feature and remains applicable to standalone builds.
+
 ## Intent
 
 Let players solve field obstacles before receiving the matching HM by catching a

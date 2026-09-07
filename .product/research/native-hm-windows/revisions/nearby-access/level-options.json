@@ -1,0 +1,418 @@
+{
+  "scope": "Rejected exploratory timing options; heuristic search, not an impossibility proof or minimum-edit proof. Exact final simulator validates selected options.",
+  "focused_scenarios": [
+    "cinnabar_surf",
+    "vermilion_surf"
+  ],
+  "early_seed": "CHINCHOU",
+  "fixed_surf_species": [
+    "TENTACOOL",
+    "STARYU",
+    "KRABBY",
+    "KINGLER"
+  ],
+  "allowed_learning_levels": [
+    1,
+    60
+  ],
+  "modes": {
+    "modern": {
+      "changes": {
+        "PSYDUCK": {
+          "old": 10,
+          "new": 34
+        },
+        "SLOWPOKE": {
+          "old": 12,
+          "new": 19
+        },
+        "GYARADOS": {
+          "old": 55,
+          "new": 50
+        },
+        "CHINCHOU": {
+          "old": 12,
+          "new": 5
+        },
+        "HORSEA": {
+          "old": 31,
+          "new": 21
+        }
+      },
+      "score": [
+        320,
+        25.894545454545455,
+        -5,
+        -53
+      ]
+    },
+    "legacy": {
+      "changes": {
+        "PSYDUCK": {
+          "old": 5,
+          "new": 16
+        },
+        "WOOPER": {
+          "old": 4,
+          "new": 16
+        }
+      },
+      "score": [
+        324,
+        25.92,
+        -2,
+        -23
+      ]
+    }
+  },
+  "exact_old_rod_results": [
+    {
+      "scenario": "vermilion_surf",
+      "move": "MOVE_SURF",
+      "mode": "modern",
+      "clock": "DAY",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 3,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.10181818181818182,
+      "minimum_best_chance_exact": "28/275"
+    },
+    {
+      "scenario": "vermilion_surf",
+      "move": "MOVE_SURF",
+      "mode": "modern",
+      "clock": "NIGHT",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 3,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.09636363636363636,
+      "minimum_best_chance_exact": "53/550"
+    },
+    {
+      "scenario": "vermilion_surf",
+      "move": "MOVE_SURF",
+      "mode": "legacy",
+      "clock": "DAY",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 3,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.12727272727272726,
+      "minimum_best_chance_exact": "7/55"
+    },
+    {
+      "scenario": "vermilion_surf",
+      "move": "MOVE_SURF",
+      "mode": "legacy",
+      "clock": "NIGHT",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 3,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.1,
+      "minimum_best_chance_exact": "1/10"
+    },
+    {
+      "scenario": "cinnabar_surf",
+      "move": "MOVE_SURF",
+      "mode": "modern",
+      "clock": "DAY",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 1,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.08545454545454545,
+      "minimum_best_chance_exact": "47/550"
+    },
+    {
+      "scenario": "cinnabar_surf",
+      "move": "MOVE_SURF",
+      "mode": "modern",
+      "clock": "NIGHT",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 1,
+      "missing_TR": "none",
+      "below_minimum_TR": "17-20",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "minimum_best_chance": 0.07272727272727272,
+      "minimum_best_chance_exact": "4/55"
+    },
+    {
+      "scenario": "cinnabar_surf",
+      "move": "MOVE_SURF",
+      "mode": "legacy",
+      "clock": "DAY",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 1,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.08363636363636363,
+      "minimum_best_chance_exact": "23/275"
+    },
+    {
+      "scenario": "cinnabar_surf",
+      "move": "MOVE_SURF",
+      "mode": "legacy",
+      "clock": "NIGHT",
+      "rod": "OLD_ROD",
+      "minimum_required_chance": 0.08,
+      "profile_count": 1,
+      "missing_TR": "none",
+      "below_minimum_TR": "none",
+      "missing_TR_values": [],
+      "below_minimum_TR_values": [],
+      "minimum_best_chance": 0.1,
+      "minimum_best_chance_exact": "1/10"
+    }
+  ],
+  "revised_moves": {
+    "CUT": {
+      "RATTATA": 5,
+      "PARAS": 12,
+      "SANDSHREW": 20,
+      "AIPOM": 25,
+      "FARFETCHD": 32,
+      "GLIGAR": 40,
+      "RATICATE": 45,
+      "SANDSLASH": 50,
+      "PARASECT": 55,
+      "SCYTHER": 60,
+      "BELLSPROUT": 8,
+      "WEEPINBELL": 30,
+      "ZIGZAGOON": 5,
+      "LINOONE": 25,
+      "NINCADA": 12,
+      "CORPHISH": 18,
+      "CRAWDAUNT": 45,
+      "SABLEYE": 35,
+      "CACNEA": 28,
+      "KECLEON": 40,
+      "TROPIUS": 50,
+      "ABSOL": 60
+    },
+    "FLASH": {
+      "MAREEP": 5,
+      "LEDYBA": 9,
+      "FLAAFFY": 20,
+      "MAGNEMITE": 25,
+      "VOLTORB": 30,
+      "DROWZEE": 35,
+      "GIRAFARIG": 40,
+      "STANTLER": 45,
+      "MAGNETON": 50,
+      "ELECTRODE": 55,
+      "ABRA": 15,
+      "KADABRA": 45,
+      "ELECTRIKE": 12,
+      "MANECTRIC": 35,
+      "VOLBEAT": 1,
+      "ILLUMISE": 25,
+      "RALTS": 8,
+      "KIRLIA": 25,
+      "SPOINK": 30,
+      "SOLROCK": 45,
+      "BALTOY": 35,
+      "CLAYDOL": 55,
+      "SABLEYE": 9
+    },
+    "STRENGTH": {
+      "GEODUDE": 12,
+      "MACHOP": 16,
+      "SNUBBULL": 20,
+      "MILTANK": 25,
+      "ONIX": 30,
+      "MACHOKE": 35,
+      "GRAVELER": 45,
+      "URSARING": 50,
+      "PILOSWINE": 55,
+      "TAUROS": 40,
+      "DONPHAN": 40,
+      "MAKUHITA": 6,
+      "HARIYAMA": 30,
+      "TORKOAL": 45,
+      "SLAKOTH": 15,
+      "LOUDRED": 25,
+      "NUMEL": 35,
+      "MAWILE": 50,
+      "MIGHTYENA": 35
+    },
+    "ROCK_SMASH": {
+      "PHANPY": 8,
+      "TEDDIURSA": 14,
+      "DUNSPARCE": 20,
+      "PINECO": 25,
+      "HERACROSS": 35,
+      "FORRETRESS": 45,
+      "LARVITAR": 25,
+      "AIPOM": 10,
+      "GLIGAR": 20,
+      "GEODUDE": 5,
+      "MILTANK": 45,
+      "ARON": 7,
+      "LAIRON": 30,
+      "NOSEPASS": 25,
+      "POOCHYENA": 5,
+      "TRAPINCH": 35,
+      "CORPHISH": 40,
+      "HARIYAMA": 55,
+      "SANDSHREW": 40
+    },
+    "SURF": {
+      "PSYDUCK": {
+        "modern": 34,
+        "legacy": 16
+      },
+      "POLIWAG": {
+        "modern": 12,
+        "legacy": 12
+      },
+      "SLOWPOKE": {
+        "modern": 19,
+        "legacy": 20
+      },
+      "WOOPER": {
+        "modern": 37,
+        "legacy": 16
+      },
+      "MARILL": {
+        "modern": 9,
+        "legacy": 18
+      },
+      "POLIWHIRL": {
+        "modern": 30,
+        "legacy": 30
+      },
+      "GOLDUCK": 45,
+      "QUAGSIRE": 40,
+      "SLOWBRO": {
+        "modern": 40,
+        "legacy": 55
+      },
+      "GYARADOS": {
+        "modern": 50,
+        "legacy": 39
+      },
+      "LOTAD": 3,
+      "LOMBRE": 22,
+      "SPHEAL": 32,
+      "TENTACOOL": {
+        "modern": 16,
+        "legacy": 6
+      },
+      "TENTACRUEL": {
+        "modern": 45,
+        "legacy": 41
+      },
+      "STARYU": {
+        "modern": 42,
+        "legacy": 33
+      },
+      "KRABBY": {
+        "modern": 11,
+        "legacy": 5
+      },
+      "KINGLER": 40,
+      "CHINCHOU": {
+        "modern": 5,
+        "legacy": 5
+      },
+      "LANTURN": {
+        "modern": 51,
+        "legacy": 40
+      },
+      "SHELLDER": {
+        "modern": 13,
+        "legacy": 33
+      },
+      "CARVANHA": {
+        "modern": 15,
+        "legacy": 28
+      },
+      "SHARPEDO": 45,
+      "HORSEA": {
+        "modern": 21,
+        "legacy": 34
+      },
+      "SEADRA": {
+        "modern": 40,
+        "legacy": 40
+      },
+      "QWILFISH": {
+        "modern": 49,
+        "legacy": 40
+      },
+      "REMORAID": {
+        "modern": 40,
+        "legacy": 40
+      }
+    },
+    "WATERFALL": {
+      "WOOPER": 22,
+      "REMORAID": 10,
+      "HORSEA": 18,
+      "SEADRA": 40,
+      "GOLDEEN": 32,
+      "SEAKING": 32,
+      "BARBOACH": 10,
+      "WHISCASH": 25,
+      "LOMBRE": 40,
+      "LUVDISC": 45
+    },
+    "WHIRLPOOL": {
+      "CHINCHOU": 5,
+      "CORSOLA": 15,
+      "QWILFISH": 25,
+      "MANTINE": 35,
+      "LANTURN": 55,
+      "WAILMER": 13,
+      "WAILORD": 13,
+      "GYARADOS": 22,
+      "SHELLDER": 40,
+      "TENTACOOL": 45
+    },
+    "DIVE": {
+      "SEEL": 41,
+      "DEWGONG": 45,
+      "WAILMER": 41,
+      "WAILORD": 44,
+      "RELICANTH": 26,
+      "SPHEAL": 50,
+      "CLAMPERL": 20,
+      "HUNTAIL": 26,
+      "GOREBYSS": 26,
+      "GOLDEEN": 5,
+      "BARBOACH": 20,
+      "SEAKING": 50,
+      "GOLDUCK": 28,
+      "PSYDUCK": 22,
+      "WHISCASH": 45
+    }
+  }
+}

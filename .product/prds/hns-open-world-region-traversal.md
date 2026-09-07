@@ -1,5 +1,11 @@
 # HNS open-world regional traversal
 
+For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
+revision supersedes named native-utility carriers and permanent-retention
+assumptions in this document. It is not implemented yet. Regional routes,
+field-use authorization, scaling and unrelated mechanics remain unchanged;
+standalone builds retain their existing contract.
+
 ## Player outcome
 
 After the opening releases the player with a starter, the nine Johto settlements in this pass are reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the route to Cianwood. Route 44, Ice Path, and Blackthorn City retain their existing late-game progression.
