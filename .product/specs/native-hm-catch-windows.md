@@ -2,7 +2,8 @@
 
 PRD: [Native HM catch windows](../prds/native-hm-catch-windows.md)
 Status: Approved design.
-Implemented: No
+Implemented: Core data and production tests; full route acceptance pending.
+Implementation: [Production changes and acceptance evidence](../research/native-hm-windows/revisions/implementation/README.md)
 Current revision: [Nearby-access design and evidence](../research/native-hm-windows/revisions/nearby-access/README.md)
 Historical attachments: [Original distribution, evidence and reproduction tools](../research/native-hm-windows/attachments.md)
 

@@ -340,7 +340,7 @@ AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
 AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
 
-$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
+$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py
 
 $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc
@@ -457,6 +457,7 @@ check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
 check: league-circuit-test
+check: native-hm-windows-test
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
@@ -736,6 +737,13 @@ emerald-traversal-static-test:
 
 wild-encounter-scaling-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_*.py' -q
+
+.PHONY: native-hm-windows-test
+native-hm-windows-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(LEARNSET_HELPERS_DIR) -p 'test_native_hm_windows.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_wayfarer_native_hm_audit.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 test/data/generate_native_hm_catch_windows.py --check
+	PYTHONDONTWRITEBYTECODE=1 python3 test/extract_native_hm_coverage_fixtures.py --check
 
 .PHONY: trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 trainer-party-scaling-generate:

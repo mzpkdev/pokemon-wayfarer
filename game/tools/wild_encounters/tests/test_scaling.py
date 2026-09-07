@@ -58,6 +58,58 @@ class WildEncounterScalingTests(unittest.TestCase):
             cls.standard_rod,
         )
 
+    def test_wayfarer_encounters_match_approved_replacements_and_preserve_baseline(self):
+        source = GENERATOR.load_json(GENERATOR.DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS)
+        proposal = GENERATOR.load_json(ROOT.parent / ".product/research/native-hm-windows/revisions/nearby-access/proposal.json")
+        self.assertEqual(source["replacements"], proposal["encounter_replacements"])
+        self.assertEqual(len(source["replacements"]), 17)
+        original = copy.deepcopy(self.encounters)
+        revised, audit = GENERATOR.apply_wayfarer_encounter_replacements(self.encounters)
+        self.assertEqual(self.encounters, original)
+        self.assertEqual(len(audit), 23)
+        profiles, _ = GENERATOR.validate_encounters(revised, self.species, self.config)
+        by_label = {profile["label"]: profile for profile in profiles}
+        for row in audit:
+            self.assertEqual(by_label[row["baseLabel"]]["encounter"][row["method"]]["mons"][row["slot"]], row["new"])
+            by_label[row["baseLabel"]]["encounter"][row["method"]]["mons"][row["slot"]] = row["old"]
+        self.assertEqual(revised, original)
+        olivine = [row for row in audit if row["map"] == "MAP_OLIVINE_CITY_HNS"]
+        self.assertEqual({row["baseLabel"].rsplit("_", 1)[1]: row["old"]["species"] for row in olivine},
+                         {"Day": "SPECIES_CORSOLA", "Night": "SPECIES_KRABBY"})
+
+    def test_wayfarer_replacements_reject_drift_and_invalid_records(self):
+        records = GENERATOR.load_json(GENERATOR.DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS)["replacements"]
+        mutations = [dict(records[0], expected_species="SPECIES_PIKACHU"),
+                     dict(records[0], map="MAP_UNDEFINED"),
+                     dict(records[0], method="land_mons"),
+                     dict(records[0], slot=100),
+                     dict(records[0], min_level=101),
+                     dict(records[0], min_level=True),
+                     dict(records[0], min_level=50, max_level=20)]
+        for record in mutations:
+            with self.subTest(record=record), self.assertRaises(GENERATOR.ValidationError):
+                GENERATOR.apply_wayfarer_encounter_replacements(self.encounters, [record])
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "duplicate replacement"):
+            GENERATOR.apply_wayfarer_encounter_replacements(self.encounters, [records[0], records[0]])
+        drifted = copy.deepcopy(self.encounters)
+        for group in drifted["wild_encounter_groups"]:
+            for encounter in group["encounters"]:
+                if encounter["base_label"] == "gOlivineCity_hns_Night":
+                    encounter["fishing_mons"]["mons"][1]["species"] = "SPECIES_MAGIKARP"
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "gOlivineCity_hns_Night"):
+            GENERATOR.apply_wayfarer_encounter_replacements(drifted)
+
+    def test_wayfarer_generated_tables_guard_each_changed_method(self):
+        output = GENERATOR.render_header(self.encounters, self.config, self.scaling, [],
+                                        self.metadata, self.standard_rod, self.header_ids)
+        revised, audit = GENERATOR.apply_wayfarer_encounter_replacements(self.encounters)
+        changed = {(row["baseLabel"], row["method"]) for row in audit}
+        self.assertEqual(output.count("#if IS_WAYFARER\n"), len(changed))
+        for label, method in changed:
+            name = label + "_" + method.title().replace("_", "")
+            self.assertIn("#if IS_WAYFARER\nconst struct WildPokemon " + name + "[]", output)
+            self.assertIn("#else\nconst struct WildPokemon " + name + "[]", output)
+
     def test_standard_rod_source_is_strict_and_exact(self):
         self.assertEqual(self.standard_rod["schemaVersion"], 1)
         self.assertEqual(
