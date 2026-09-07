@@ -123,3 +123,4 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - [Badge-free HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
 - [Standard Rod fishing](standard-rod-fishing.md)
+- [HNS open-world regional traversal specification](../specs/hns-open-world-region-traversal.md)

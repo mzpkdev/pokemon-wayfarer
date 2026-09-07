@@ -14,10 +14,10 @@ Johto uses HNS maps and Hoenn uses imported Emerald maps. This specification
 defines the catalog, bindings, script changes, runtime contract and acceptance.
 It does not authorize changes to Pokémon species, teams, movesets or learnsets.
 
-Source baseline: `f7a2b95b7bde184141cf5b91215dc4e7ab9068a6`. These documents
-describe intended behavior; no production implementation or emulator validation
-is claimed. Before implementing on a later base, reconcile changed map bindings
-and authored shop lists with the retention rules below.
+Source baseline: `f7a2b95b7bde184141cf5b91215dc4e7ab9068a6`. The core production
+implementation is merged and enabled by default. Emulator validation and release
+acceptance remain pending. Reconcile changed map bindings and authored shop lists
+with the retention rules below before extending the implementation.
 
 ## Behavior
 
@@ -442,11 +442,10 @@ snapshots remain unchanged, including mints, evolution items, Kurt and BP.
   Update only intentionally affected audit manifests. Record the actual commands,
   results and ROM/RAM size change in the implementation PR.
 
-Implement profile data and host catalog checks first, then script bindings and
-the opener, then the production build and emulator checks. A documentation PR
-can validate links, constants, coverage tables and a critic review without
-claiming these future runtime checks have passed. Release acceptance requires
-the implemented behavior and checks above, including the no-tile-edit boundary.
+The core profile data, host catalog checks, script bindings and production build
+are implemented. Emulator and release-acceptance checks remain required,
+including the no-tile-edit boundary. Record the actual commands, results and
+ROM/RAM size change in the implementation PR.
 
 ## References
 
