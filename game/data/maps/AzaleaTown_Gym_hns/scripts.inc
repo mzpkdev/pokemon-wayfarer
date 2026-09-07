@@ -523,12 +523,6 @@ AzaleaTown_Gym_EventScript_May::
 	end
 
 AzaleaTown_Gym_EventScript_Bugsy::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_JOHTO
-	setvar VAR_0x8005, 1
-	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
-#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_AZALEA_TOWN_GYM, AzaleaTown_Gym_EventScript_Bugsy_Defeated
@@ -539,9 +533,6 @@ AzaleaTown_Gym_EventScript_Bugsy::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox AzaleaTown_Gym_Text_HiveBadgeSpeech, MSGBOX_DEFAULT
 	setflag FLAG_BADGE02_GET
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call LeagueCircuit_EventScript_CheckQualification
-#endif
 	setflag FLAG_DEFEATED_AZALEA_TOWN_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 2

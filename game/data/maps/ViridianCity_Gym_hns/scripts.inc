@@ -2,12 +2,6 @@ ViridianCity_Gym_hns_MapScripts::
 	.byte 0
 
 ViridianCity_Gym_EventScript_Blue::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_KANTO
-	setvar VAR_0x8005, 7
-	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
-#endif
 	lock
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -27,9 +21,6 @@ ViridianCity_Gym_EventScript_BlueOfficialChallenge::
 	giveitem ITEM_TM_TRICK_ROOM
 	msgbox ViridianCity_Gym_Text_LeaderBlue_ExplainTM, MSGBOX_DEFAULT
 	setflag FLAG_BADGE16_GET
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call LeagueCircuit_EventScript_CheckQualification
-#endif
 	setflag FLAG_DEFEATED_VIRIDIAN_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 16
@@ -75,6 +66,15 @@ ViridianCity_Gym_Text_LeaderBlue_Before:
 	.string "I wasn't in the mood at CINNABAR,\p"
 	.string "but now I'm ready to battle you.\p"
 	.string "…\p"
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	.string "You've made quite a name for\n"
+	.string "yourself on the road.\p"
+	.string "But reputations don't decide\n"
+	.string "battles.\p"
+	.string "I'll know if you are good or not by\n"
+	.string "battling you right now.\p"
+	.string "Ready, {PLAYER}?$"
+#else
 	.string "You're telling me you conquered all\n"
 	.string "the GYMS in JOHTO?\p"
 	.string "Heh! JOHTO's GYMS must be pretty\n"
@@ -83,6 +83,7 @@ ViridianCity_Gym_Text_LeaderBlue_Before:
 	.string "I'll know if you are good or not by\n"
 	.string "battling you right now.\p"
 	.string "Ready, JOHTO CHAMP?$"
+#endif
 
 ViridianCity_Gym_Text_LeaderBlue_Win:
 	.string "BLUE: What?\p"

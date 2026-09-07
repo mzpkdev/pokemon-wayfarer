@@ -49,7 +49,6 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 #endif
 	call EverGrandeCity_HallOfFame_EventScript_SetGameClearFlags
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call LeagueCircuit_EventScript_ShowStatus
 	setrespawn HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE
 	fadescreenspeed FADE_TO_BLACK, 24
 	special GameClear
@@ -108,4 +107,3 @@ EverGrandeCity_HallOfFame_Text_LetsRecordYouAndYourPartnersNames:
 	.string "name as a TRAINER who triumphed over\l"
 	.string "the POKéMON LEAGUE, and the names of\l"
 	.string "the partners who battled with you.$"
-

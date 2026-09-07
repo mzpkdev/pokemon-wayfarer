@@ -34,7 +34,9 @@ PalletTown_Lab_EventScript_Oak16Badges::
 	closemessage
 	setflag FLAG_INDIGOJUNCTION_HIDE_SILVER_GUARD
 	setvar VAR_PALLETTOWN_LABSTATE, 2
+#if !(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED)
 	call_if_unset FLAG_IS_KANTO_CHAMPION, PalletTown_Lab_EventScript_OakKantoLeague
+#endif
 	release
 	end
 

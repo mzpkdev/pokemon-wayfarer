@@ -37,6 +37,9 @@
 #include "constants/rgb.h"
 #include "constants/trainers.h"
 #include "constants/union_room.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 
 #if IS_HNS
 #define NUM_BADGES_FRONT 8
@@ -420,6 +423,21 @@ static void CloseTrainerCard(u8 taskId)
 #define STATE_CIRCUIT_STATUS      17
 #define STATE_RESTORE_CARD_FRONT  18
 
+#ifdef E2E_TESTING
+u8 E2ETest_GetTrainerCardState(void)
+{
+    if (sData == NULL)
+        return E2E_TEST_TRAINER_CARD_NONE;
+    if (sData->mainState == STATE_CIRCUIT_STATUS)
+        return E2E_TEST_TRAINER_CARD_CIRCUIT;
+    if (sData->mainState == STATE_HANDLE_INPUT_BACK)
+        return E2E_TEST_TRAINER_CARD_BACK;
+    if (sData->mainState == STATE_HANDLE_INPUT_FRONT)
+        return E2E_TEST_TRAINER_CARD_FRONT;
+    return E2E_TEST_TRAINER_CARD_LOADING;
+}
+#endif
+
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 static const u8 sCircuitHint[] = _("SELECT: Circuit");
 static const u8 sCircuitTitle[] = _("LEAGUE CIRCUIT");
@@ -429,13 +447,13 @@ static void ShowLeagueCircuitOnCard(void)
 {
     u8 text[LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE];
 
-    FormatLeagueCircuitStatus(text, FALSE);
+    FormatLeagueCircuitStatus(text);
     FillWindowPixelBuffer(WIN_CARD_TEXT, PIXEL_FILL(TEXT_COLOR_WHITE));
-    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, 8,
+    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, 4,
         sTrainerCardTextColors, TEXT_SKIP_DRAW, sCircuitTitle);
-    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_NORMAL, 8, 32,
+    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_SMALL, 8, 24,
         sTrainerCardTextColors, TEXT_SKIP_DRAW, text);
-    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_SMALL, 8, 120,
+    AddTextPrinterParameterized3(WIN_CARD_TEXT, FONT_SMALL, 8, 128,
         sTrainerCardTextColors, TEXT_SKIP_DRAW, sCircuitReturn);
     DrawTrainerCardWindow(WIN_CARD_TEXT);
     sData->mainState = STATE_CIRCUIT_STATUS;

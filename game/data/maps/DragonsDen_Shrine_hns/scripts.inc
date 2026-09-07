@@ -1,6 +1,18 @@
 DragonsDen_Shrine_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, DragonsDen_Shrine_OnLoad
 	@map_script MAP_SCRIPT_ON_FRAME_TABLE, DragonsDen_Shrine_OnFrame
 	.byte 0
+
+DragonsDen_Shrine_OnLoad::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto_if_unset FLAG_BADGE08_GET, DragonsDen_Shrine_OnLoad_End
+	setflag FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR
+	clearflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
+	goto_if_ge VAR_BLACKTHORN_CITY_STATE, 3, DragonsDen_Shrine_OnLoad_End
+	setvar VAR_BLACKTHORN_CITY_STATE, 3
+DragonsDen_Shrine_OnLoad_End::
+#endif
+	end
 
 DragonsDen_Shrine_OnFrame::
 	map_script_2 VAR_BLACKTHORN_CITY_STATE, 2, DragonsDen_Shrine_Trigger_ElderQuizTop
@@ -93,12 +105,7 @@ DragonsDen_Shrine_Movement_MonWalkToElderRight:
 	step_end
 
 DragonsDen_Shrine_EventScript_ElderOfferQuiz::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_JOHTO
-	setvar VAR_0x8005, 7
-	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
-#endif
+	goto_if_set FLAG_BADGE08_GET, DragonsDen_Shrine_EventScript_RecoverAfterRisingBadge
 	msgbox DragonsDen_Shrine_Text_ElderGreeting, MSGBOX_DEFAULT
 	setvar VAR_DRAGONS_DEN_QUIZ, 0
 	goto DragonsDen_Shrine_EventScript_ElderQuiz1
@@ -229,6 +236,7 @@ DragonsDen_Shrine_Text_PassedTest:
     .string "POKéMON LEAGUE.$"
 
 DragonsDen_Shrine_EventScript_ClairEnter::
+	goto_if_set FLAG_BADGE08_GET, DragonsDen_Shrine_EventScript_RecoverAfterRisingBadge
 	clearflag FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR
 	addobject LOCALID_DRAGONSDEN3_CLAIR
 	playse SE_DOOR
@@ -266,9 +274,6 @@ DragonsDen_Shrine_EventScript_ClairEnter::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox DragonsDen_Shrine_Text_RisingBadgeExplanation, MSGBOX_DEFAULT
 	setflag FLAG_BADGE08_GET
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call LeagueCircuit_EventScript_CheckQualification
-#endif
 	addvar VAR_NUM_BADGES, 1
 
 	applymovement2 LOCALID_DRAGONSDEN3_ELDER, DragonsDen_Shrine_Movement_ElderReturnToPlayer
@@ -286,9 +291,19 @@ DragonsDen_Shrine_EventScript_ClairEnter::
 	setflag FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR
 	removeobject LOCALID_DRAGONSDEN3_CLAIR
 	clearflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
+	goto_if_ge VAR_BLACKTHORN_CITY_STATE, 3, DragonsDen_Shrine_EventScript_RisingBadgeDone
 	setvar VAR_BLACKTHORN_CITY_STATE, 3
+DragonsDen_Shrine_EventScript_RisingBadgeDone::
 	release
 	end
+
+DragonsDen_Shrine_EventScript_RecoverAfterRisingBadge::
+	setflag FLAG_HIDE_DRAGONS_DEN_SHRINE_CLAIR
+	removeobject LOCALID_DRAGONSDEN3_CLAIR
+	clearflag FLAG_HIDE_DRAGONS_DEN_CAVERN_CLAIR
+	goto_if_ge VAR_BLACKTHORN_CITY_STATE, 3, DragonsDen_Shrine_EventScript_RisingBadgeDone
+	setvar VAR_BLACKTHORN_CITY_STATE, 3
+	goto DragonsDen_Shrine_EventScript_RisingBadgeDone
 
 DragonsDen_Shrine_Movement_ClairEnter:
 	walk_up

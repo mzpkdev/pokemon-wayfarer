@@ -190,12 +190,6 @@ CeruleanGym_Text_Note:
 
 
 CeruleanCity_Gym_EventScript_Misty::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_KANTO
-	setvar VAR_0x8005, 1
-	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
-#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CERULEAN_GYM, CeruleanCity_Gym_EventScript_Misty_Defeated
@@ -205,9 +199,6 @@ CeruleanCity_Gym_EventScript_Misty::
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
 	setflag FLAG_BADGE10_GET
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call LeagueCircuit_EventScript_CheckQualification
-#endif
 	setflag FLAG_DEFEATED_CERULEAN_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 10

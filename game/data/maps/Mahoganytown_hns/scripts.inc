@@ -4,6 +4,9 @@ Mahoganytown_hns_MapScripts::
 	.byte 0
 
 Mahoganytown_OnLoad::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call MahoganyTown_Gym_EventScript_TryArmRocketTakeover
+#endif
 	call_if_ge VAR_MAHOGANY_TOWN_STATE, 13, MahoganyTown_EventScript_FixTree
 	end
 
@@ -316,4 +319,3 @@ ElmPhoneRadioTowerRocketTakeoverText:
 	.string "No, that just can't be true.\p"
 	.string "Sorry to bug you.\n"
 	.string "Take care!$"
-

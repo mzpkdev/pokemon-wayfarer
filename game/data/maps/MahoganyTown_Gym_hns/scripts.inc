@@ -65,12 +65,6 @@ MahoganyTown_Gym_EventScript_Clarissa::
 	end
 
 MahoganyTown_Gym_EventScript_Pryce::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_JOHTO
-	setvar VAR_0x8005, 6
-	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
-#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_MAHOGANY_TOWN_GYM, MahoganyTown_Gym_EventScript_Pryce_Defeated
@@ -85,9 +79,6 @@ MahoganyTown_Gym_EventScript_PryceVictory::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox MahoganyTown_Gym_Text_GlacierBadgeSpeech, MSGBOX_DEFAULT
 	setflag FLAG_BADGE07_GET
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call LeagueCircuit_EventScript_CheckQualification
-#endif
 	setflag FLAG_DEFEATED_MAHOGANY_TOWN_GYM
     addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 7
@@ -96,14 +87,35 @@ MahoganyTown_Gym_EventScript_PryceVictory::
 	msgbox MahoganyTown_Gym_Text_HailSpeech, MSGBOX_DEFAULT
 	setvar VAR_MAHOGANY_TOWN_STATE, 15
     setrespawn HEAL_LOCATION_MAHOGANY_TOWN_HNS
-    call_if_eq VAR_NUM_BADGES, 7, MahoganyTown_Gym_EventScript_SetupElmRocketCall
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call MahoganyTown_Gym_EventScript_TryArmRocketTakeover
+#else
+	call_if_eq VAR_NUM_BADGES, 7, MahoganyTown_Gym_EventScript_SetupElmRocketCall
+#endif
 	closemessage
 	release
 	end
 
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+@ The Radio Tower takeover follows the three local west-Johto badges and the
+@ completed Mahogany Gym story.  This check is intentionally repeatable so a
+@ mixed-region badge order cannot skip the old exact-seven trigger.
+MahoganyTown_Gym_EventScript_TryArmRocketTakeover::
+	goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	goto_if_ge VAR_GOLDENROD_CITY_STATE, 6, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	goto_if_ge VAR_MAHOGANY_TOWN_STATE, 16, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	goto_if_lt VAR_MAHOGANY_TOWN_STATE, 15, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	goto_if_unset FLAG_BADGE05_GET, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	goto_if_unset FLAG_BADGE06_GET, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	goto_if_unset FLAG_BADGE07_GET, MahoganyTown_Gym_EventScript_RocketRecoveryDone
+	setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1
+MahoganyTown_Gym_EventScript_RocketRecoveryDone::
+	return
+#endif
+
 MahoganyTown_Gym_EventScript_SetupElmRocketCall::
-    setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1
-    return
+	setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1
+	return
 
 MahoganyTown_Gym_EventScript_OlivineCheckCianwood::
 	goto_if_set FLAG_DEFEATED_CIANWOOD_GYM, MahoganyTown_Gym_EventScript_Pryce_Battle3

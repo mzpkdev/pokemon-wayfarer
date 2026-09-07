@@ -24,33 +24,42 @@ enum Region GetRequiredLeagueRegion(void)
     return REGION_NONE;
 }
 
-u8 GetBadgeCertificationCap(void)
+enum LeagueAdmissionRequirement GetLeagueAdmissionRequirement(enum Region region)
 {
-    switch (GetRequiredLeagueRegion())
+    switch (region)
     {
     case REGION_KANTO:
-        return 8;
+        if (GetChampionStateForRegion(REGION_KANTO))
+            return LEAGUE_ADMISSION_UNAVAILABLE;
+        if (GetGlobalBadgeCount() < 8)
+            return LEAGUE_ADMISSION_NEEDS_8_BADGES;
+        return LEAGUE_ADMISSION_AVAILABLE;
     case REGION_JOHTO:
-        return 16;
+        if (GetChampionStateForRegion(REGION_JOHTO))
+            return LEAGUE_ADMISSION_UNAVAILABLE;
+        if (!GetChampionStateForRegion(REGION_KANTO))
+            return LEAGUE_ADMISSION_NEEDS_KANTO_CLEAR;
+        if (GetGlobalBadgeCount() < 16)
+            return LEAGUE_ADMISSION_NEEDS_16_BADGES;
+        return LEAGUE_ADMISSION_AVAILABLE;
+    case REGION_HOENN:
+        if (GetChampionStateForRegion(REGION_HOENN))
+            return LEAGUE_ADMISSION_UNAVAILABLE;
+        if (!GetChampionStateForRegion(REGION_KANTO))
+            return LEAGUE_ADMISSION_NEEDS_KANTO_CLEAR;
+        if (!GetChampionStateForRegion(REGION_JOHTO))
+            return LEAGUE_ADMISSION_NEEDS_JOHTO_CLEAR;
+        if (GetGlobalBadgeCount() < 24)
+            return LEAGUE_ADMISSION_NEEDS_24_BADGES;
+        return LEAGUE_ADMISSION_AVAILABLE;
     default:
-        return 24;
+        return LEAGUE_ADMISSION_UNAVAILABLE;
     }
 }
 
 bool8 IsEligibleForLeague(enum Region region)
 {
-    return region != REGION_NONE
-        && region == GetRequiredLeagueRegion()
-        && GetGlobalBadgeCount() >= GetBadgeCertificationCap();
-}
-
-bool8 CanChallengeGymForBadge(enum Region region, u8 badgeIndex)
-{
-    if ((region != REGION_KANTO && region != REGION_JOHTO && region != REGION_HOENN)
-     || badgeIndex >= 8)
-        return FALSE;
-    return GetBadgeStateForRegion(region, badgeIndex)
-        || GetGlobalBadgeCount() < GetBadgeCertificationCap();
+    return GetLeagueAdmissionRequirement(region) == LEAGUE_ADMISSION_AVAILABLE;
 }
 
 bool8 TryRecordLeagueClear(enum Region region)

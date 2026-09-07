@@ -26,13 +26,6 @@ IndigoPlateau_Pokecenter_OnTransition::
 
 
 IndigoPlateau_EventScript_Cooltrainer::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	lock
-	faceplayer
-	call LeagueCircuit_EventScript_ShowStatus
-	release
-	end
-#endif
 	msgbox IndigoPlateau_Text_CooltrainerM, MSGBOX_NPC
 	end
 
