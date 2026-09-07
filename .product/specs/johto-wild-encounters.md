@@ -4,8 +4,9 @@ For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes this document's permanent named native-HM anchors,
 per-anchor utility-retention tests and named-carrier accessibility shares.
 Use its roster-level known-move coverage and aggregate Old Rod minimum instead.
-That revision is not implemented yet. Unrelated ecology, authored encounter
-rules, scaling and standalone-build contracts remain unchanged.
+That revision's core implementation is complete, while full route acceptance
+remains pending. Unrelated ecology, authored encounter rules, scaling and
+standalone-build contracts remain unchanged.
 
 PRD: [Johto wild encounter ecology](../prds/johto-wild-encounters.md)
 Implemented: Outdated

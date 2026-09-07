@@ -2,9 +2,10 @@
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
-assumptions in this document. It is not implemented yet. Regional routes,
-field-use authorization, scaling and unrelated mechanics remain unchanged;
-standalone builds retain their existing contract.
+assumptions in this document. Its core implementation is complete, while full
+route acceptance remains pending. Regional routes, field-use authorization,
+scaling and unrelated mechanics remain unchanged; standalone builds retain
+their existing contract.
 
 PRD: [Trainer Rating wild encounter scaling](../prds/trainer-rating-wild-encounter-scaling.md)
 Implemented: Outdated

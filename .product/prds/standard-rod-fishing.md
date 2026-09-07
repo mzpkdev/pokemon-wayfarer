@@ -286,6 +286,7 @@ Route 12 contribution flag.
 
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [Trainer Rating wild encounter scaling specification](../specs/trainer-rating-wild-encounter-scaling.md)
+- [Standard Rod fishing specification](../specs/standard-rod-fishing.md)
 - [Authored under-level wild encounters](../research/authored-under-level-wild-encounters.md)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
 - [Fishing configuration](../../game/include/config/fishing.h)

@@ -388,6 +388,7 @@ is noticeable and enjoyable.
 ## References
 
 - [Kanto wild encounters](kanto-wild-encounters.md)
+- [Johto wild encounters specification](../specs/johto-wild-encounters.md)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [Trainer Rating wild encounter scaling specification](../specs/trainer-rating-wild-encounter-scaling.md)

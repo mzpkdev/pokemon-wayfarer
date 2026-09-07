@@ -281,6 +281,7 @@ the compiled teachable data before accepting the roster.
 - [Badge-free HM field use](hm-field-use.md)
 - [Standard Rod fishing](standard-rod-fishing.md)
 - [HM field-use technical specification](../specs/hm-field-use.md)
+- [Native HM utility learnsets specification](../specs/native-hm-learnsets.md)
 - [HM compatibility data](../../game/src/data/pokemon/all_learnables.json)
 - [Teachable learnset generation](../../game/docs/tutorials/teachable_learnsets.md)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
