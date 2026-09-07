@@ -1,7 +1,7 @@
 # Wayfarer Hoenn entry and S.S. Aqua circuit
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 

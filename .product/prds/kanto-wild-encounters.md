@@ -522,5 +522,6 @@ Playtesting should answer these questions:
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [Standard Rod fishing](standard-rod-fishing.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)
+- [Kanto wild encounters specification](../specs/kanto-wild-encounters.md)
 - [Authored wild encounter data](../../game/src/data/wild_encounters.json)
 - [Ordinary wild encounter selection](../../game/src/wild_encounter.c)

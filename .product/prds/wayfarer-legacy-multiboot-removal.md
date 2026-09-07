@@ -116,3 +116,4 @@ entry points from being built as active features.
 ## References
 
 - [Wayfarer runtime foundation specification](../specs/wayfarer-runtime-foundation.md)
+- [Wayfarer legacy multiboot removal specification](../specs/wayfarer-legacy-multiboot-removal.md)

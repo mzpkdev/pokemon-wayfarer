@@ -1,7 +1,7 @@
 # Canonical National Pokédex foundation
 
 PRD: [Regional and expanding National Pokédex](../prds/regional-national-pokedex.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
