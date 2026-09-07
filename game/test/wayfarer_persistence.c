@@ -26,6 +26,7 @@ extern int GameClear(void);
 EWRAM_DATA static struct SaveSector sWayfarerTestSector = {0};
 EWRAM_DATA static u8 sWayfarerTestChunks[NUM_SECTORS_PER_SLOT][SAVE_BLOCK_3_CHUNK_SIZE] = {0};
 EWRAM_DATA static u8 sWayfarerExpectedSaveBlock3[sizeof(struct SaveBlock3)] = {0};
+EWRAM_DATA static struct RegionMap sWayfarerTestRegionMap = {0};
 
 TEST("Wayfarer Hoenn variables use an isolated full-size bank")
 {
@@ -179,7 +180,6 @@ TEST("Wayfarer Hoenn Town Map uses Hoenn art grid and section semantics")
 {
     const struct MapHeader *header;
     const struct RegionMapLocation *entries;
-    struct RegionMap regionMap = {0};
     const u16 petalburgVisited = HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START + 7);
 
     FlagClear(petalburgVisited);
@@ -200,15 +200,15 @@ TEST("Wayfarer Hoenn Town Map uses Hoenn art grid and section semantics")
     // InitRegionMap drives the complete LoadRegionMapGfx state machine,
     // including art selection, cursor initialization, and mapsec typing.
     gMapHeader = *header;
-    InitRegionMap(&regionMap, FALSE);
-    EXPECT_EQ(regionMap.mapSecId, header->regionMapSectionId);
-    EXPECT_EQ(regionMap.cursorPosX, 2);
-    EXPECT_EQ(regionMap.cursorPosY, 11);
-    EXPECT_EQ(regionMap.mapSecType, MAPSECTYPE_CITY_CANTFLY);
+    InitRegionMap(&sWayfarerTestRegionMap, FALSE);
+    EXPECT_EQ(sWayfarerTestRegionMap.mapSecId, header->regionMapSectionId);
+    EXPECT_EQ(sWayfarerTestRegionMap.cursorPosX, 2);
+    EXPECT_EQ(sWayfarerTestRegionMap.cursorPosY, 11);
+    EXPECT_EQ(sWayfarerTestRegionMap.mapSecType, MAPSECTYPE_CITY_CANTFLY);
 
     FlagSet(petalburgVisited);
-    InitRegionMap(&regionMap, FALSE);
-    EXPECT_EQ(regionMap.mapSecType, MAPSECTYPE_CITY_CANFLY);
+    InitRegionMap(&sWayfarerTestRegionMap, FALSE);
+    EXPECT_EQ(sWayfarerTestRegionMap.mapSecType, MAPSECTYPE_CITY_CANFLY);
     FlagClear(petalburgVisited);
 }
 
