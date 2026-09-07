@@ -1,7 +1,11 @@
 # League scaling
 
 PRD: [League scaling](../prds/league-scaling.md)
-Implemented: No
+Implemented: Partial
+
+The code contract is implemented. See [implementation evidence](../research/league-scaling-implementation.md)
+for automated results and pending campaign balance acceptance. This status does
+not implement the separate TR progression revisions.
 
 ## Scope and current code
 

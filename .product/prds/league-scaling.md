@@ -1,7 +1,11 @@
 # League scaling
 
-Status: Approved design; implementation pending.
-Implemented: No
+Status: Implementation and automated validation complete; campaign balance acceptance pending.
+Implemented: Partial
+
+See [implementation evidence](../research/league-scaling-implementation.md) for
+test results and the remaining gameplay validation. TR progression revisions
+remain separate pending work.
 
 ## Intent
 
