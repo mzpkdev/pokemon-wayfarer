@@ -4,7 +4,8 @@ This report checks authored source records and projected parties. It does not es
 
 | Policy | Populated IDs |
 | --- | ---: |
-| EXCLUDED | 203 |
+| EXCLUDED | 181 |
+| GYM_LEADER | 30 |
 | GYM_MEMBER | 104 |
 | ORDINARY | 1176 |
 
@@ -14,7 +15,7 @@ This report checks authored source records and projected parties. It does not es
 | HNS unplaced | 224 |
 | Hoenn | 854 |
 | Johto | 235 |
-| Kanto | 142 |
+| Kanto | 150 |
 | Sinjoh | 8 |
 
 HNS unplaced means a compiled roster lacks a direct regional map reference. The manifest preserves that uncertainty instead of assigning a region from its Trainer name.

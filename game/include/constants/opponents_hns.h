@@ -647,8 +647,20 @@
 #define TRAINER_BEVERLY_4_HNS                 629
 #define TRAINER_BEVERLY_5_HNS                 630
 
+// These retain the original Kanto leader parties for the Fighting Dojo only.
+// The initial Kanto Gym IDs must remain uniquely enrollable by Trainer Rating
+// scaling, so Dojo rematches cannot share them.
+#define TRAINER_BROCK_DOJO_HNS                 631
+#define TRAINER_MISTY_DOJO_HNS                 632
+#define TRAINER_LTSURGE_DOJO_HNS               633
+#define TRAINER_ERIKA_DOJO_HNS                 634
+#define TRAINER_JANINE_DOJO_HNS                635
+#define TRAINER_SABRINA_DOJO_HNS               636
+#define TRAINER_BLAINE_DOJO_HNS                637
+#define TRAINER_BLUE_DOJO_HNS                  638
+
 // 618 is TRAINER_TANYA_HNS, relocated out of the TRAINER_FRONTIER_BRAIN slot (330).
-#define TRAINERS_COUNT_HNS                       631
+#define TRAINERS_COUNT_HNS                       639
 #define MAX_TRAINERS_COUNT_HNS                   864
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_HNS_H
