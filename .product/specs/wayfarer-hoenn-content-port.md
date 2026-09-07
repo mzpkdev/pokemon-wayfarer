@@ -275,6 +275,13 @@ and requires the Kanto and Johto League clears. Trainer cards or badge displays
 that show regional progress identify the region. The separate circuit summary
 shows the global total.
 
+The [free badge collection revision](wayfarer-interregional-league-circuit.md)
+is pending implementation. It requires all eight Hoenn badges to remain
+obtainable with no League clears while preserving coherent regional quests,
+including Juan's weather storyline. Norman must leave an undefeated Wattson
+in his Gym. New Mauville relocation becomes eligible once both the Balance
+and Dynamo Badges are earned, regardless of their award order.
+
 Hoenn badges alter Wayfarer Trainer Rating through the global badge total.
 Other Hoenn story milestones do not. HNS field-move rules remain active in
 Hoenn. Story checks that deliberately require a Hoenn badge still use the
@@ -426,7 +433,7 @@ Static and automated validation must prove all of the following:
     | Hoenn | set | set | allowed |
 
 15. Each Hoenn Gym awards the correct regional badge; Hoenn-local story checks
-    use Hoenn badges; and global certification, League entry, and Trainer
+    use Hoenn badges; and League entry and Trainer
     Rating use the global badge total.
 16. Sootopolis remains unavailable until Hoenn Dive authorization and its
     original late-game progression are satisfied.

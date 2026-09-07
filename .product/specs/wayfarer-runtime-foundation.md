@@ -170,7 +170,8 @@ or resetting one region's League cannot alter another region's badges,
 Champion state, Trainers, items, NPCs, or campaign values.
 
 The interregional League circuit may aggregate regional badges and Champion
-results for global qualification, certification caps, and Trainer Rating. It
+results for League qualification and Trainer Rating. League results never
+limit badge collection. The circuit
 derives those facts from the isolated regional states and does not merge or
 duplicate their storage. Hoenn scripts that reveal local postgame content must
 still check Hoenn Champion or Hoenn game-clear state, not a global flag that

@@ -31,30 +31,34 @@ Rating raises the cap, so a Pokémon that previously disobeyed can become
 obedient.
 
 Wayfarer uses one global twenty-four-badge circuit across Kanto, Johto, and
-Hoenn. Badge origin does not affect League qualification or rating. Its targets
-are:
+Hoenn. Badge origin does not affect League qualification or rating. The approved
+[circuit revision](wayfarer-interregional-league-circuit.md), pending
+implementation, allows all badges to precede any League clear. The following
+examples use the unchanged formula;
+they do not prescribe a badge or League schedule:
 
 | Progress | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
-| 4 total badges | 16 | 23 |
-| 8 total badges | 40 | 42 |
-| Kanto League cleared | 55 | 60 |
-| 16 total badges | 63 | 76 |
-| Johto League cleared | 68 | 84 |
-| 24 total badges | 76 | 95 |
-| Hoenn League cleared | 80 | 100 |
+| 4 total badges, no clears | 16 | 23 |
+| 8 total badges, no clears | 40 | 42 |
+| 8 total badges, Kanto cleared | 55 | 60 |
+| 16 total badges, Kanto cleared | 63 | 76 |
+| 16 total badges, Kanto and Johto cleared | 68 | 84 |
+| 24 total badges, no clears | 56 | 62 |
+| 24 total badges, Kanto cleared | 71 | 88 |
+| 24 total badges, Kanto and Johto cleared | 76 | 95 |
+| 24 total badges, all three Leagues cleared | 80 | 100 |
 
 The interregional League circuit defines the exact badge and League
 contributions. This replaces the earlier concept of one full regional campaign
 plus smaller breadth contributions from the other regions.
 
-Implementation is staged. The Trainer Rating foundation provides the shared
-0 through 80 value, its high-water storage, and the wild, party-cap, and
-obedience consumers before the circuit's regional starts and League parties
-exist. A later interregional League circuit implementation supplies the global
-badge and League-clear contributions. Those content decisions do not block the
-foundation or party-progression work.
+The Trainer Rating foundation and existing circuit already supply the shared
+0 through 80 value, high-water storage, and global badge and League-clear
+contributions. The pending circuit revision removes badge restrictions and
+changes presentation while retaining these inputs and formulas. Future regional
+starts and League party tuning are separate work.
 
 The soft-cap curve is independently tunable. Its initial milestone values copy
 the current wild encounter anchor plus 10 levels, but later encounter-balance

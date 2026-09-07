@@ -7,8 +7,8 @@ Implemented: No
 
 This specification defines the Wayfarer soft level cap, numerical experience
 reduction, and obedience rules derived from Trainer Rating. The Trainer Rating
-foundation owns the shared value and persistence; a later interregional League
-circuit implementation supplies its global badge and League-clear inputs. The
+foundation owns the shared value and persistence; the interregional League
+circuit supplies its global badge and League-clear inputs. The
 wild encounter scaling specification owns ordinary wild levels and species
 eligibility. Regional starts and League party tiers are not prerequisites for
 this foundation or for the party-progression mechanics.
@@ -46,18 +46,23 @@ cap = c0 + roundHalfUp((r - r0) * (c1 - c0) / (r1 - r0))
 ```
 
 The result is clamped to 1 through 100. The curve is monotonic and produces
-these global circuit milestones:
+these global circuit examples. The approved
+[circuit revision](wayfarer-interregional-league-circuit.md), pending
+implementation, allows all badges before any League clear; the formula and
+soft-cap curve are unchanged:
 
 | Progress | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
-| 4 total badges | 16 | 23 |
-| 8 total badges | 40 | 42 |
-| Kanto League cleared | 55 | 60 |
-| 16 total badges | 63 | 76 |
-| Johto League cleared | 68 | 84 |
-| 24 total badges | 76 | 95 |
-| Hoenn League cleared | 80 | 100 |
+| 4 total badges, no clears | 16 | 23 |
+| 8 total badges, no clears | 40 | 42 |
+| 8 total badges, Kanto cleared | 55 | 60 |
+| 16 total badges, Kanto cleared | 63 | 76 |
+| 16 total badges, Kanto and Johto cleared | 68 | 84 |
+| 24 total badges, no clears | 56 | 62 |
+| 24 total badges, Kanto cleared | 71 | 88 |
+| 24 total badges, Kanto and Johto cleared | 76 | 95 |
+| 24 total badges, all three Leagues cleared | 80 | 100 |
 
 These initial values equal the current wild encounter level anchor plus 10.
 The party curve remains separate source data. Changing wild encounter anchors
