@@ -6,4 +6,11 @@
 #define B_TRAINER_PARTY_SCALING TRUE
 #endif
 
+// Gym Leaders use an authored six-slot roster and a distinct level curve.
+// Keep this off until the generated roster inventory, structural audit, and
+// required playtesting have all been accepted.
+#ifndef B_GYM_LEADER_SCALING
+#define B_GYM_LEADER_SCALING FALSE
+#endif
+
 #endif

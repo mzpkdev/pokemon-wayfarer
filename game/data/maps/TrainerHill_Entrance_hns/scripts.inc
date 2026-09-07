@@ -262,7 +262,13 @@ TrainerHill_Entrance_hns_EventScript_Clerk2::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_TRAINER_HILL_HNS
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart 0
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end

@@ -2236,17 +2236,13 @@
     },
     {
       "id": "TRAINER_BLAINE_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
           "path": "src/data/trainers_hns.party",
           "symbol": "TRAINER_BLAINE_HNS",
           "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
-          "symbol": "TRAINER_BLAINE_HNS"
         },
         {
           "path": "data/maps/SeafoamIslands_Gym_hns/scripts.inc",
@@ -2308,17 +2304,13 @@
     },
     {
       "id": "TRAINER_BLUE_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
           "path": "src/data/trainers_hns.party",
           "symbol": "TRAINER_BLUE_HNS",
           "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
-          "symbol": "TRAINER_BLUE_HNS"
         },
         {
           "path": "data/maps/ViridianCity_Gym_hns/scripts.inc",
@@ -2457,7 +2449,7 @@
     },
     {
       "id": "TRAINER_BRAWLY_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -3070,7 +3062,7 @@
     },
     {
       "id": "TRAINER_BROCK_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
@@ -3080,10 +3072,6 @@
         },
         {
           "path": "data/maps/PewterCity_Gym_hns/scripts.inc",
-          "symbol": "TRAINER_BROCK_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
           "symbol": "TRAINER_BROCK_HNS"
         }
       ],
@@ -3256,7 +3244,7 @@
     },
     {
       "id": "TRAINER_BUGSY_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -4136,7 +4124,7 @@
     },
     {
       "id": "TRAINER_CHUCK_1_2_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -4153,7 +4141,7 @@
     },
     {
       "id": "TRAINER_CHUCK_1_3_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -4170,7 +4158,7 @@
     },
     {
       "id": "TRAINER_CHUCK_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -4300,7 +4288,7 @@
     },
     {
       "id": "TRAINER_CLAIR_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -6760,7 +6748,7 @@
     },
     {
       "id": "TRAINER_ERIKA_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
@@ -6770,10 +6758,6 @@
         },
         {
           "path": "data/maps/CeladonCity_Gym_hns/scripts.inc",
-          "symbol": "TRAINER_ERIKA_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
           "symbol": "TRAINER_ERIKA_HNS"
         }
       ],
@@ -7128,7 +7112,7 @@
     },
     {
       "id": "TRAINER_FALKNER_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -7275,7 +7259,7 @@
     },
     {
       "id": "TRAINER_FLANNERY_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -11045,7 +11029,7 @@
     },
     {
       "id": "TRAINER_JANINE_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
@@ -11055,10 +11039,6 @@
         },
         {
           "path": "data/maps/FuchsiaCity_Gym_hns/scripts.inc",
-          "symbol": "TRAINER_JANINE_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
           "symbol": "TRAINER_JANINE_HNS"
         }
       ],
@@ -11123,7 +11103,7 @@
     },
     {
       "id": "TRAINER_JASMINE_1_2_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -11140,7 +11120,7 @@
     },
     {
       "id": "TRAINER_JASMINE_1_3_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -11157,7 +11137,7 @@
     },
     {
       "id": "TRAINER_JASMINE_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -12359,7 +12339,7 @@
     },
     {
       "id": "TRAINER_JUAN_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -14453,17 +14433,13 @@
     },
     {
       "id": "TRAINER_LTSURGE_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
           "path": "src/data/trainers_hns.party",
           "symbol": "TRAINER_LTSURGE_HNS",
           "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
-          "symbol": "TRAINER_LTSURGE_HNS"
         },
         {
           "path": "data/maps/VermilionCity_Gym_hns/scripts.inc",
@@ -15926,7 +15902,7 @@
     },
     {
       "id": "TRAINER_MISTY_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
@@ -15936,10 +15912,6 @@
         },
         {
           "path": "data/maps/CeruleanCity_Gym_hns/scripts.inc",
-          "symbol": "TRAINER_MISTY_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
           "symbol": "TRAINER_MISTY_HNS"
         }
       ],
@@ -16013,7 +15985,7 @@
     },
     {
       "id": "TRAINER_MORTY_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -16600,7 +16572,7 @@
     },
     {
       "id": "TRAINER_NORMAN_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -17409,7 +17381,7 @@
     },
     {
       "id": "TRAINER_PRYCE_1_2_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -17426,7 +17398,7 @@
     },
     {
       "id": "TRAINER_PRYCE_1_3_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -17443,7 +17415,7 @@
     },
     {
       "id": "TRAINER_PRYCE_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -18838,7 +18810,7 @@
     },
     {
       "id": "TRAINER_ROXANNE_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -19020,17 +18992,13 @@
     },
     {
       "id": "TRAINER_SABRINA_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Kanto",
       "evidence": [
         {
           "path": "src/data/trainers_hns.party",
           "symbol": "TRAINER_SABRINA_HNS",
           "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
-        },
-        {
-          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
-          "symbol": "TRAINER_SABRINA_HNS"
         },
         {
           "path": "data/maps/SaffronCity_Gym_hns/scripts.inc",
@@ -20293,7 +20261,7 @@
     },
     {
       "id": "TRAINER_TATE_AND_LIZA_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -22081,7 +22049,7 @@
     },
     {
       "id": "TRAINER_WATTSON_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -22231,7 +22199,7 @@
     },
     {
       "id": "TRAINER_WHITNEY_1_HNS",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Johto",
       "evidence": [
         {
@@ -22439,7 +22407,7 @@
     },
     {
       "id": "TRAINER_WINONA_1",
-      "policy": "EXCLUDED",
+      "policy": "GYM_LEADER",
       "region": "Hoenn",
       "evidence": [
         {
@@ -22719,6 +22687,142 @@
         }
       ],
       "reason": "Authored Kimono story gauntlet or Plate gate with scripted totem boosts; shared Kimono Girl class does not enroll this boss."
+    },
+    {
+      "id": "TRAINER_BROCK_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BROCK_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_BROCK_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_MISTY_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_MISTY_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_MISTY_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_LTSURGE_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_LTSURGE_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_LTSURGE_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_ERIKA_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_ERIKA_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_ERIKA_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_JANINE_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_JANINE_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_JANINE_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_SABRINA_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_SABRINA_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_SABRINA_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_BLAINE_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BLAINE_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_BLAINE_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_BLUE_DOJO_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BLUE_DOJO_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        },
+        {
+          "path": "data/maps/SaffronCity_FightingDojoVIP_hns/scripts.inc",
+          "symbol": "TRAINER_BLUE_DOJO_HNS"
+        }
+      ],
+      "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
     }
   ],
   "move_exceptions": []

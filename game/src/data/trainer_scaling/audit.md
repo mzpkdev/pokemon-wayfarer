@@ -4,7 +4,8 @@ This report checks authored source records and projected parties. It does not es
 
 | Policy | Populated IDs |
 | --- | ---: |
-| EXCLUDED | 203 |
+| EXCLUDED | 181 |
+| GYM_LEADER | 30 |
 | GYM_MEMBER | 104 |
 | ORDINARY | 1176 |
 
@@ -14,7 +15,7 @@ This report checks authored source records and projected parties. It does not es
 | HNS unplaced | 224 |
 | Hoenn | 854 |
 | Johto | 235 |
-| Kanto | 142 |
+| Kanto | 150 |
 | Sinjoh | 8 |
 
 HNS unplaced means a compiled roster lacks a direct regional map reference. The manifest preserves that uncertainty instead of assigning a region from its Trainer name.
@@ -61,13 +62,13 @@ The audit evaluated 439,668 slot, Rating, and learnset-mode combinations with 0 
 
 ## Species and retained-field observations
 
-- Custom authored moves replaced: 2374 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
+- Custom authored moves replaced: 2473 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 - Authored ability requires fallback: 1 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 - Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 - Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Held item retained after species reversal: 137 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Opponent above player soft cap: 803 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- High-stat species without numeric predecessor: 1202 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
+- Held item retained after species reversal: 141 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
+- Opponent above player soft cap: 853 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
+- High-stat species without numeric predecessor: 1225 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 
 ## Representative parties
 

@@ -6,7 +6,13 @@ VerdanturfTown_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_VERDANTURF
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart VerdanturfTown_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -35,7 +41,11 @@ VerdanturfTown_Mart_EventScript_ExpertF::
 	end
 
 VerdanturfTown_Mart_EventScript_Lass::
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	msgbox VerdanturfTown_Mart_Text_NestBallLocalStock, MSGBOX_NPC
+#else
 	msgbox VerdanturfTown_Mart_Text_NestBallOnWeakenedPokemon, MSGBOX_NPC
+#endif
 	end
 
 VerdanturfTown_Mart_Text_XSpecialIsCrucial:
@@ -56,3 +66,10 @@ VerdanturfTown_Mart_Text_NestBallOnWeakenedPokemon:
 	.string "VERDANTURF is the only place you can\n"
 	.string "buy it.$"
 
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+VerdanturfTown_Mart_Text_NestBallLocalStock:
+	.string "The NEST BALL works better on\n"
+	.string "weakened POKéMON.\p"
+	.string "VERDANTURF's MART is known for\n"
+	.string "keeping them in stock.$"
+#endif

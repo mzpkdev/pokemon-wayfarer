@@ -6,7 +6,13 @@ FallarborTown_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_FALLARBOR
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart FallarborTown_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -61,4 +67,3 @@ FallarborTown_Mart_Text_SellNuggetIFound:
 	.string "This NUGGET I found here…\n"
 	.string "I suppose I'll have to sell it, seeing\l"
 	.string "as how it has no other use.$"
-

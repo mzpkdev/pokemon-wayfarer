@@ -1,0 +1,259 @@
+{
+  "assignmentSha256": "7b87886fd4b1c9bbd9b5fc3400aeed278761ce77f6a0db12b57581f01860eaa8",
+  "assumptions": [
+    "Uniform authored-level and eligible-slot rolls; runtime modulo bias, lures and lead modifiers excluded.",
+    "Known moves are modeled from preprocessed production learnsets, checked against the approved roster; C initial-moveset tests must pass independently.",
+    "Reachability and return paths follow the reviewed directional inventory; this is not an E2E route proof.",
+    "Rod and capture supplies are prerequisites. Blackthorn and Den mandatory proofs use local rank-zero sources only.",
+    "Hoenn static day populations serve both clock cases. Good and Super Rod require nonzero coverage; the 8% floor applies to Old Rod or land."
+  ],
+  "belowEightPercentUpgradedRodCells": [
+    {
+      "best": {
+        "baseLabel": "gLilycoveCity",
+        "carriers": [
+          {
+            "level": 26,
+            "probability": {
+              "denominator": 60,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          },
+          {
+            "level": 27,
+            "probability": {
+              "denominator": 30,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          }
+        ],
+        "detourRank": 0,
+        "map": "MAP_LILYCOVE_CITY",
+        "method": "fishing_mons",
+        "rod": "SUPER_ROD",
+        "successfulEncounterProbability": {
+          "denominator": 20,
+          "numerator": 1
+        },
+        "timeOfDay": "TIME_DAY",
+        "unmodifiedCastProbability": {
+          "denominator": 80,
+          "numerator": 3
+        }
+      },
+      "clock": "DAY",
+      "mode": "modern",
+      "rating": 35,
+      "rod": "SUPER_ROD",
+      "scenario": "lilycove_surf"
+    },
+    {
+      "best": {
+        "baseLabel": "gLilycoveCity",
+        "carriers": [
+          {
+            "level": 26,
+            "probability": {
+              "denominator": 60,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          },
+          {
+            "level": 27,
+            "probability": {
+              "denominator": 30,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          }
+        ],
+        "detourRank": 0,
+        "map": "MAP_LILYCOVE_CITY",
+        "method": "fishing_mons",
+        "rod": "SUPER_ROD",
+        "successfulEncounterProbability": {
+          "denominator": 20,
+          "numerator": 1
+        },
+        "timeOfDay": "TIME_DAY",
+        "unmodifiedCastProbability": {
+          "denominator": 80,
+          "numerator": 3
+        }
+      },
+      "clock": "NIGHT",
+      "mode": "modern",
+      "rating": 35,
+      "rod": "SUPER_ROD",
+      "scenario": "lilycove_surf"
+    },
+    {
+      "best": {
+        "baseLabel": "gRoute118",
+        "carriers": [
+          {
+            "level": 26,
+            "probability": {
+              "denominator": 60,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          },
+          {
+            "level": 27,
+            "probability": {
+              "denominator": 30,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          }
+        ],
+        "detourRank": 0,
+        "map": "MAP_ROUTE118",
+        "method": "fishing_mons",
+        "rod": "SUPER_ROD",
+        "successfulEncounterProbability": {
+          "denominator": 20,
+          "numerator": 1
+        },
+        "timeOfDay": "TIME_DAY",
+        "unmodifiedCastProbability": {
+          "denominator": 80,
+          "numerator": 3
+        }
+      },
+      "clock": "DAY",
+      "mode": "modern",
+      "rating": 35,
+      "rod": "SUPER_ROD",
+      "scenario": "route118_east_surf"
+    },
+    {
+      "best": {
+        "baseLabel": "gRoute118",
+        "carriers": [
+          {
+            "level": 26,
+            "probability": {
+              "denominator": 60,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          },
+          {
+            "level": 27,
+            "probability": {
+              "denominator": 30,
+              "numerator": 1
+            },
+            "species": "SPECIES_TENTACOOL"
+          }
+        ],
+        "detourRank": 0,
+        "map": "MAP_ROUTE118",
+        "method": "fishing_mons",
+        "rod": "SUPER_ROD",
+        "successfulEncounterProbability": {
+          "denominator": 20,
+          "numerator": 1
+        },
+        "timeOfDay": "TIME_DAY",
+        "unmodifiedCastProbability": {
+          "denominator": 80,
+          "numerator": 3
+        }
+      },
+      "clock": "NIGHT",
+      "mode": "modern",
+      "rating": 35,
+      "rod": "SUPER_ROD",
+      "scenario": "route118_east_surf"
+    }
+  ],
+  "changedProfileSlotCount": 23,
+  "criterion": "Aggregate probability that the effective caught species knows the required move at its projected level.",
+  "directionalCellCount": 10692,
+  "distinctBestDirectionalSources": 65,
+  "encounterReplacementCount": 17,
+  "evidenceKind": "STATIC_PRODUCTION_DATA_MODEL",
+  "invariants": {
+    "failures": [],
+    "passed": true
+  },
+  "minimumDirectionalSuccessfulEncounterProbability": {
+    "GOOD_ROD": {
+      "denominator": 25,
+      "numerator": 2
+    },
+    "OLD_ROD": {
+      "denominator": 25,
+      "numerator": 2
+    },
+    "SUPER_ROD": {
+      "denominator": 20,
+      "numerator": 1
+    }
+  },
+  "product": "WAYFARER",
+  "productionAcceptance": {
+    "fixtures": "game/test/data/native_hm_coverage.h",
+    "status": "RUN_SEPARATELY",
+    "test": "game/test/native_hm_catch_coverage.c"
+  },
+  "qualityWeights": {
+    "GOOD_ROD": [
+      25,
+      18,
+      12,
+      10,
+      9,
+      7,
+      6,
+      5,
+      4,
+      4
+    ],
+    "OLD_ROD": [
+      38,
+      22,
+      10,
+      8,
+      8,
+      4,
+      3,
+      3,
+      2,
+      2
+    ],
+    "SUPER_ROD": [
+      12,
+      10,
+      11,
+      10,
+      10,
+      10,
+      10,
+      9,
+      9,
+      9
+    ]
+  },
+  "regionalCellCount": 3888,
+  "regionalWitnessScope": "Approved regional witnesses include optional and late areas, including Whirl Islands. Their flags are explicit in the full report; none certify practical acquisition. The 11 practical scenarios exclude Whirl Islands.",
+  "schemaVersion": 1,
+  "sourceSha256": {
+    ".product/research/native-hm-windows/revisions/nearby-access/roster.json": "aa3e4aa54df962265b26a6f40e8b4c1e9a7a2242190ed355365c83c179c1adc7",
+    ".product/research/native-hm-windows/revisions/nearby-access/scenarios.json": "db0521345d9d76f5d025eff269917176b06f2bb58b455f6638d883e3077bbb80",
+    "game/src/data/pokemon/level_up_learnsets/gen_3.h": "93aa1720716cc905aecea8b33a0b7271d4bec6a70a967f8f1ed302effe0a52dc",
+    "game/src/data/pokemon/level_up_learnsets/gen_7.h": "9864e7a244d9e22aa212aa07b5588d19b509f297811088e64541eea522e12b6d",
+    "game/src/data/standard_rod_fishing.json": "a4695f55b13ec33d4b6ea54ae698ff89c6087f69e2438889b18a9ef39b12cb8e",
+    "game/src/data/wayfarer_native_hm_encounters.json": "34fe18041bbfb2167d1d8d89839c58ce849828bc0779abfa614151de7964df3d",
+    "game/src/data/wild_encounter_scaling.json": "c3995f6dc33d521785e813f6e8c7e0f49723bc91cc30dd3e887adffdbaac5bfa",
+    "game/src/data/wild_encounter_species.json": "8709560607d5e06550ff7beb17a1824662da6250e2de88fa1260e3e375c2815a",
+    "game/src/data/wild_encounters.json": "11259465ef4af74aa5823b5b7dad2ddf60e07841af1e3ff76bea456aed594e48"
+  },
+  "sourceSpeciesCount": 1333
+}

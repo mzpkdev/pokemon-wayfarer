@@ -2,6 +2,7 @@
 """Generate authored wild encounters and deterministic Trainer Rating metadata."""
 
 import argparse
+import copy
 from fractions import Fraction
 import hashlib
 import io
@@ -20,6 +21,7 @@ DEFAULT_ENCOUNTERS = ROOT / "src/data/wild_encounters.json"
 DEFAULT_SCALING = ROOT / "src/data/wild_encounter_scaling.json"
 DEFAULT_SPECIES_METADATA = ROOT / "src/data/wild_encounter_species.json"
 DEFAULT_STANDARD_ROD_FISHING = ROOT / "src/data/standard_rod_fishing.json"
+DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS = ROOT / "src/data/wayfarer_native_hm_encounters.json"
 DEFAULT_REGIONS = ROOT / "src/data/wild_encounter_regions.json"
 DEFAULT_OUTPUT = ROOT / "src/data/wild_encounters.h"
 DEFAULT_AUDIT = ROOT / "build/wild-encounter-balance-audit.json"
@@ -2589,10 +2591,69 @@ def load_offsets(rows, profiles, path):
     return sorted(result, key=lambda item: (item["product"], item["header_id"], item["area"], item["time"], item["rod"]))
 
 
+def apply_wayfarer_encounter_replacements(encounters, replacements=None):
+    if replacements is None:
+        source = load_json(DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS)
+        exact_keys(source, {"schemaVersion", "replacements"}, str(DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS))
+        if source["schemaVersion"] != 1:
+            raise ValidationError("Wayfarer encounters: unsupported schemaVersion")
+        replacements = source["replacements"]
+    if not isinstance(replacements, list) or not replacements:
+        raise ValidationError("Wayfarer encounters: expected a nonempty replacements list")
+    result = copy.deepcopy(encounters)
+    targets = [entry for group in result["wild_encounter_groups"] if group.get("for_maps", False)
+               for entry in group["encounters"]]
+    seen, audit = set(), []
+    required = {"map", "method", "slot", "expected_species", "species"}
+    for index, replacement in enumerate(replacements):
+        location = f"Wayfarer encounters/replacements/{index}"
+        if not isinstance(replacement, dict) or not required <= replacement.keys() or replacement.keys() - required - {"min_level", "max_level"}:
+            raise ValidationError(f"{location}: invalid replacement fields")
+        map_name, method, slot = (replacement[key] for key in ("map", "method", "slot"))
+        if not isinstance(map_name, str) or not map_name.startswith("MAP_") or method not in METHOD_AREAS or type(slot) is not int or slot < 0:
+            raise ValidationError(f"{location}: invalid map, method or slot")
+        identity = (map_name, method, slot)
+        if identity in seen:
+            raise ValidationError(f"{location}: duplicate replacement {identity}")
+        seen.add(identity)
+        species = replacement["species"]
+        expected = replacement["expected_species"]
+        expected = [expected] if isinstance(expected, str) else expected
+        if not isinstance(species, str) or not SPECIES_IDENTIFIER.fullmatch(species) or not isinstance(expected, list) or not expected or any(not isinstance(value, str) or not SPECIES_IDENTIFIER.fullmatch(value) for value in expected):
+            raise ValidationError(f"{location}: invalid species")
+        matches = [entry for entry in targets if entry.get("map") == map_name]
+        if not matches:
+            raise ValidationError(f"{location}: no matching map")
+        for entry in matches:
+            label = entry["base_label"]
+            if product_for(label) not in {"EMERALD", "POKEMON_HNS"}:
+                raise ValidationError(f"{location}/{label}: unsupported Wayfarer product")
+            if method not in entry or slot >= len(entry[method]["mons"]):
+                raise ValidationError(f"{location}/{label}: missing method or slot")
+            old = entry[method]["mons"][slot]
+            if old["species"] not in expected:
+                raise ValidationError(f"{location}/{label}: expected {expected}, got {old['species']}")
+            new = dict(old, species=species)
+            for bound in ("min_level", "max_level"):
+                if bound in replacement:
+                    new[bound] = replacement[bound]
+            low, high = new.get("min_level", 2), new.get("max_level", 100)
+            if type(low) is not int or type(high) is not int or not 1 <= low <= high <= MAX_LEVEL:
+                raise ValidationError(f"{location}/{label}: invalid resulting level bounds")
+            entry[method]["mons"][slot] = new
+            audit.append({"replacement": index, "map": map_name, "baseLabel": label,
+                          "method": method, "slot": slot, "old": old, "new": new})
+    return result, audit
+
+
 class Assembler:
     def __init__(self, output, data, config, regional_manifest=None):
         self.output, self.data, self.config = output, data, config
         self.regional_manifest = regional_manifest
+        wayfarer, _ = apply_wayfarer_encounter_replacements(data)
+        self.wayfarer_encounters = {entry["base_label"]: entry
+                                   for group in wayfarer["wild_encounter_groups"]
+                                   for entry in group["encounters"]}
 
     def line(self, value="", depth=0):
         self.output.write("    " * depth + value + "\n")
@@ -2678,7 +2739,15 @@ class Assembler:
                     if method not in encounter:
                         continue
                     name = encounter["base_label"] + "_" + method.title().replace("_", "")
-                    self.write_mons(name, encounter[method])
+                    wayfarer_method = self.wayfarer_encounters[encounter["base_label"]][method]
+                    if wayfarer_method != encounter[method]:
+                        self.line("#if IS_WAYFARER")
+                        self.write_mons(name, wayfarer_method)
+                        self.line("#else")
+                        self.write_mons(name, encounter[method])
+                        self.line("#endif")
+                    else:
+                        self.write_mons(name, encounter[method])
                     if method in time_data:
                         raise ValidationError(f"{encounter['base_label']}/{method}: duplicate time data")
                     time_data[method] = name + "Info"
@@ -4430,9 +4499,11 @@ def atomic_write(path, content):
 def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, standard_rod_fishing_path=DEFAULT_STANDARD_ROD_FISHING, regions_path=DEFAULT_REGIONS, output_path=DEFAULT_OUTPUT, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
+    wayfarer_encounters, _ = apply_wayfarer_encounter_replacements(encounters)
+    wayfarer_profiles, _ = validate_encounters(wayfarer_encounters, known_species, config)
     standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
     validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
-    ordinary_species = {mon["species"] for profile in profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
+    ordinary_species = {mon["species"] for profile in profiles + wayfarer_profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
     validate_standard_rod_balance(standard_rod, profiles, scaling, metadata, offsets)

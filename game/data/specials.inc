@@ -735,3 +735,8 @@ gSpecials::
 	def_special LeagueCircuit_IsEligible
 	def_special LeagueCircuit_RecordClear
 	def_special LeagueCircuit_BufferAdmissionDenial
+
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	def_special WayfarerOpenMartProfile
+	def_special WayfarerLookupMartProfileForSharedClerk
+#endif
