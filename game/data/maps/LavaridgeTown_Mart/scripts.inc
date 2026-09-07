@@ -6,7 +6,13 @@ LavaridgeTown_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_LAVARIDGE
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart LavaridgeTown_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -42,4 +48,3 @@ LavaridgeTown_Mart_Text_LocalSpecialtyOnMtChimney:
 	.string "On MT. CHIMNEY's peak, there's a local\n"
 	.string "specialty that you can buy only there.\p"
 	.string "Give it to a POKéMON--it will be elated.$"
-

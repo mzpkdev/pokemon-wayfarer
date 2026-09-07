@@ -6,7 +6,13 @@ MauvilleCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_MAUVILLE
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart MauvilleCity_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -48,4 +54,3 @@ MauvilleCity_Mart_Text_DecisionsDetermineBattle:
 	.string "instead…\p"
 	.string "The TRAINER's decisions determine how\n"
 	.string "battles turn out, I think.$"
-

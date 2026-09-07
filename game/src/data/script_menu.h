@@ -1280,6 +1280,13 @@ static const struct MenuAction MultichoiceList_BattleModeHns[] =
     {gText_Exit},
 };
 
+static const struct MenuAction MultichoiceList_MahoganyMerchant[] =
+{
+    {COMPOUND_STRING("SUPPLIES")},
+    {COMPOUND_STRING("RAGE CANDY BAR")},
+    {COMPOUND_STRING("CANCEL")},
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1474,6 +1481,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_SEVII_SHAKEDOWN_START]       = MULTICHOICE(sMultichoiceList_SeviiShakedownStart),
     [MULTI_VERMILION_SHARED_DOCK]       = MULTICHOICE(sMultichoiceList_VermilionSharedDock),
     [MULTI_VERMILION_SEVII_DOCK]        = MULTICHOICE(sMultichoiceList_VermilionSeviiDock),
+    [MULTI_MAHOGANY_MERCHANT]           = MULTICHOICE(MultichoiceList_MahoganyMerchant),
 };
 
 const u8 *const gStdStrings[] =

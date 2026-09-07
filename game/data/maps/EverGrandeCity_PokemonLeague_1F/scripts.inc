@@ -27,7 +27,13 @@ EverGrandeCity_PokemonLeague_1F_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_EVER_GRANDE_LEAGUE
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart EverGrandeCity_PokemonLeague_1F_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end

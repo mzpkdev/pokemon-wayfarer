@@ -55,7 +55,13 @@ GoldenrodDeptStore2_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_GOLDENROD_2F
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart GoldenrodDeptStore2_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end

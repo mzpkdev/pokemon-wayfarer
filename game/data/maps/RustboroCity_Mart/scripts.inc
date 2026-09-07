@@ -6,9 +6,18 @@ RustboroCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_RUSTBORO
+	special WayfarerOpenMartProfile
+	waitstate
+	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	release
+	end
+#else
 	goto_if_unset FLAG_MET_DEVON_EMPLOYEE, RustboroCity_Mart_EventScript_PokemartBasic
 	goto_if_set FLAG_MET_DEVON_EMPLOYEE, RustboroCity_Mart_EventScript_PokemartExpanded
 	end
+#endif
 
 RustboroCity_Mart_EventScript_PokemartBasic::
 	pokemart RustboroCity_Mart_Pokemart_Basic
@@ -81,4 +90,3 @@ RustboroCity_Mart_Text_GettingEscapeRopeJustInCase:
 	.string "case I get lost in a cave.\p"
 	.string "I just need to use it to get back to\n"
 	.string "the entrance.$"
-

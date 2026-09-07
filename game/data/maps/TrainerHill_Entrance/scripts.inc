@@ -244,11 +244,20 @@ TrainerHill_Entrance_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_TRAINER_HILL
+	special WayfarerOpenMartProfile
+	waitstate
+	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	release
+	end
+#else
 	goto_if_set FLAG_SYS_GAME_CLEAR, TrainerHill_Entrance_EventScript_ExpandedPokemart
 	pokemart TrainerHill_Entrance_Pokemart_Basic
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
+#endif
 
 	.align 2
 TrainerHill_Entrance_Pokemart_Basic:

@@ -6,7 +6,19 @@ VioletCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8005, MART_CLERK_FAMILY_VIOLET
+	specialvar VAR_0x8004, WayfarerLookupMartProfileForSharedClerk
+	goto_if_eq VAR_0x8004, MART_PROFILE_NONE, VioletCity_Mart_EventScript_ClerkLegacy
+	special WayfarerOpenMartProfile
+	waitstate
+	goto VioletCity_Mart_EventScript_ClerkAfterShop
+VioletCity_Mart_EventScript_ClerkLegacy:
+#endif
 	pokemart 0
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+VioletCity_Mart_EventScript_ClerkAfterShop::
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
