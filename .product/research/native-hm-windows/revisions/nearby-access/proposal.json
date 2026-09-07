@@ -1,0 +1,358 @@
+{
+  "status": "Nearby-access design revision; not implemented",
+  "notes": "Original approved snapshot remains two directories above. Root-selected revised assignments and encounter replacements are validated against traced reachable areas.",
+  "moves": {
+    "CUT": {
+      "RATTATA": 5,
+      "PARAS": 12,
+      "SANDSHREW": 20,
+      "AIPOM": 25,
+      "FARFETCHD": 32,
+      "GLIGAR": 40,
+      "RATICATE": 45,
+      "SANDSLASH": 50,
+      "PARASECT": 55,
+      "SCYTHER": 60,
+      "BELLSPROUT": 8,
+      "WEEPINBELL": 30,
+      "ZIGZAGOON": 5,
+      "LINOONE": 25,
+      "NINCADA": 12,
+      "CORPHISH": 18,
+      "CRAWDAUNT": 45,
+      "SABLEYE": 35,
+      "CACNEA": 28,
+      "KECLEON": 40,
+      "TROPIUS": 50,
+      "ABSOL": 60
+    },
+    "FLASH": {
+      "MAREEP": 5,
+      "LEDYBA": 9,
+      "FLAAFFY": 20,
+      "MAGNEMITE": 25,
+      "VOLTORB": 30,
+      "DROWZEE": 35,
+      "GIRAFARIG": 40,
+      "STANTLER": 45,
+      "MAGNETON": 50,
+      "ELECTRODE": 55,
+      "ABRA": 15,
+      "KADABRA": 45,
+      "ELECTRIKE": 12,
+      "MANECTRIC": 35,
+      "VOLBEAT": 1,
+      "ILLUMISE": 25,
+      "RALTS": 8,
+      "KIRLIA": 25,
+      "SPOINK": 30,
+      "SOLROCK": 45,
+      "BALTOY": 35,
+      "CLAYDOL": 55,
+      "SABLEYE": 9
+    },
+    "STRENGTH": {
+      "GEODUDE": 12,
+      "MACHOP": 16,
+      "SNUBBULL": 20,
+      "MILTANK": 25,
+      "ONIX": 30,
+      "MACHOKE": 35,
+      "GRAVELER": 45,
+      "URSARING": 50,
+      "PILOSWINE": 55,
+      "TAUROS": 40,
+      "DONPHAN": 40,
+      "MAKUHITA": 6,
+      "HARIYAMA": 30,
+      "TORKOAL": 45,
+      "SLAKOTH": 15,
+      "LOUDRED": 25,
+      "NUMEL": 35,
+      "MAWILE": 50,
+      "MIGHTYENA": 35
+    },
+    "ROCK_SMASH": {
+      "PHANPY": 8,
+      "TEDDIURSA": 14,
+      "DUNSPARCE": 20,
+      "PINECO": 25,
+      "HERACROSS": 35,
+      "FORRETRESS": 45,
+      "LARVITAR": 25,
+      "AIPOM": 10,
+      "GLIGAR": 20,
+      "GEODUDE": 5,
+      "MILTANK": 45,
+      "ARON": 7,
+      "LAIRON": 30,
+      "NOSEPASS": 25,
+      "POOCHYENA": 5,
+      "TRAPINCH": 35,
+      "CORPHISH": 40,
+      "HARIYAMA": 55,
+      "SANDSHREW": 40
+    },
+    "SURF": {
+      "PSYDUCK": {
+        "modern": 10,
+        "legacy": 5
+      },
+      "POLIWAG": 10,
+      "SLOWPOKE": {
+        "modern": 12,
+        "legacy": 20
+      },
+      "WOOPER": {
+        "modern": 37,
+        "legacy": 4
+      },
+      "MARILL": {
+        "modern": 7,
+        "legacy": 18
+      },
+      "POLIWHIRL": {
+        "modern": 37,
+        "legacy": 30
+      },
+      "GOLDUCK": 45,
+      "QUAGSIRE": 40,
+      "SLOWBRO": {
+        "modern": 40,
+        "legacy": 55
+      },
+      "GYARADOS": {
+        "modern": 55,
+        "legacy": 39
+      },
+      "LOTAD": 3,
+      "LOMBRE": 22,
+      "SPHEAL": 32,
+      "TENTACOOL": {
+        "modern": 16,
+        "legacy": 6
+      },
+      "TENTACRUEL": {
+        "modern": 45,
+        "legacy": 41
+      },
+      "STARYU": {
+        "modern": 42,
+        "legacy": 33
+      },
+      "KRABBY": {
+        "modern": 11,
+        "legacy": 5
+      },
+      "KINGLER": {
+        "modern": 44,
+        "legacy": 30
+      },
+      "CHINCHOU": {
+        "modern": 12,
+        "legacy": 5
+      },
+      "LANTURN": {
+        "modern": 51,
+        "legacy": 40
+      },
+      "SHELLDER": {
+        "modern": 13,
+        "legacy": 33
+      },
+      "CARVANHA": {
+        "modern": 15,
+        "legacy": 28
+      },
+      "SHARPEDO": 45,
+      "HORSEA": {
+        "modern": 31,
+        "legacy": 34
+      },
+      "SEADRA": 40,
+      "QWILFISH": {
+        "modern": 49,
+        "legacy": 40
+      },
+      "REMORAID": 40,
+      "WINGULL": 12,
+      "PELIPPER": 39,
+      "AZUMARILL": 35
+    },
+    "WATERFALL": {
+      "WOOPER": 22,
+      "REMORAID": 10,
+      "HORSEA": 18,
+      "SEADRA": 40,
+      "GOLDEEN": 32,
+      "SEAKING": 32,
+      "BARBOACH": 10,
+      "WHISCASH": 25,
+      "LOMBRE": 40,
+      "LUVDISC": 45
+    },
+    "WHIRLPOOL": {
+      "CHINCHOU": 5,
+      "CORSOLA": 15,
+      "QWILFISH": 25,
+      "MANTINE": 35,
+      "LANTURN": 55,
+      "WAILMER": 13,
+      "WAILORD": 13,
+      "GYARADOS": 22,
+      "SHELLDER": 40,
+      "TENTACOOL": 45,
+      "POLIWAG": 31,
+      "POLIWHIRL": 27,
+      "DRATINI": 6
+    },
+    "DIVE": {
+      "SEEL": 41,
+      "DEWGONG": 45,
+      "WAILMER": 41,
+      "WAILORD": 44,
+      "RELICANTH": 26,
+      "SPHEAL": 50,
+      "CLAMPERL": 20,
+      "HUNTAIL": 26,
+      "GOREBYSS": 26,
+      "GOLDEEN": 5,
+      "BARBOACH": 20,
+      "SEAKING": 50,
+      "GOLDUCK": 28,
+      "PSYDUCK": 22,
+      "WHISCASH": 45
+    }
+  },
+  "encounter_replacements": [
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
+      "slot": 0,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_SHARPEDO"
+    },
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
+      "slot": 4,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
+      "slot": 6,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 0,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_SHARPEDO"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 4,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 6,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_BLACKTHORN_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 5,
+      "expected_species": "SPECIES_POLIWAG",
+      "species": "SPECIES_POLIWHIRL"
+    },
+    {
+      "map": "MAP_BLACKTHORN_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 6,
+      "expected_species": "SPECIES_POLIWAG",
+      "species": "SPECIES_POLIWHIRL"
+    },
+    {
+      "map": "MAP_ROUTE121",
+      "method": "land_mons",
+      "slot": 8,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_ROUTE121",
+      "method": "land_mons",
+      "slot": 9,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_ROUTE117",
+      "method": "land_mons",
+      "slot": 4,
+      "expected_species": "SPECIES_MARILL",
+      "species": "SPECIES_AZUMARILL",
+      "min_level": 20,
+      "max_level": 20
+    },
+    {
+      "map": "MAP_ROUTE118",
+      "method": "land_mons",
+      "slot": 8,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_ROUTE118",
+      "method": "land_mons",
+      "slot": 9,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_CINNABAR_ISLAND_HNS",
+      "method": "fishing_mons",
+      "slot": 1,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_KINGLER",
+      "min_level": 25,
+      "max_level": 35
+    },
+    {
+      "map": "MAP_VERMILION_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 1,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_KINGLER",
+      "min_level": 25,
+      "max_level": 35
+    },
+    {
+      "map": "MAP_CIANWOOD_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 0,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_KINGLER",
+      "min_level": 35,
+      "max_level": 45
+    },
+    {
+      "map": "MAP_OLIVINE_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 1,
+      "expected_species": ["SPECIES_CORSOLA", "SPECIES_KRABBY"],
+      "species": "SPECIES_KINGLER",
+      "min_level": 35,
+      "max_level": 45
+    }
+  ]
+}

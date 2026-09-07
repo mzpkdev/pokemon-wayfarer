@@ -1,5 +1,20 @@
 # Standard Rod fishing progression
 
+For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
+revision replaces named-carrier accessibility assertions with eligible catches
+that actually know the required utility at each TR and time. Its selected
+[nearby-access proposal](../research/native-hm-windows/revisions/nearby-access/proposal.json)
+requires an 8% chance at one reachable land source or successful Old Rod fishing
+source, without summing across places. A qualifying fishing source therefore
+provides at least 2% per unmodified cast. The code-only simulation passes its
+selected scenarios; production acceptance remains pending.
+
+Only the proposal's enumerated encounter replacements override the no-table-edit
+boundaries below for Wayfarer. Apply each fishing replacement consistently to
+all matching time profiles and derived rod views, with fail-closed validation
+as defined in the catch-window spec. Global weights, bite rates, rod progression
+and selection rules remain unchanged. Standalone builds retain the contract below.
+
 PRD: [Standard Rod fishing progression](../prds/standard-rod-fishing.md)
 Implemented: Yes
 
@@ -14,6 +29,8 @@ development tools.
 It does not change authored fishing entries or levels, giver locations and
 access gates, the fishing animation or reeling minigame, the special Route 119
 Feebas encounter, or pre-feature save compatibility.
+The separate Wayfarer catch-window proposal owns its enumerated species/level
+replacements; no other map-specific population changes are included.
 
 ## Behavior
 
@@ -226,7 +243,7 @@ calculates eligible totals and displayed probabilities from that profile row.
 It no longer derives fishing slots or odds from `fishing_mons.groups` or the
 legacy shared `encounter_rates` vector.
 
-Each `nativeSurfAccessibility` record has exactly these fields:
+The original standalone `nativeSurfAccessibility` record has exactly these fields:
 
 - `product`: `EMERALD`, `FIRERED`, `LEAFGREEN`, or `POKEMON_HNS`.
 - `baseLabel`: the exact `base_label` in `wild_encounters.json`.
@@ -237,7 +254,7 @@ Each `nativeSurfAccessibility` record has exactly these fields:
 - `minimumOldRodSuccessfulEncounterPercent`: 8.
 - `minimumOldRodUnmodifiedCastPercent`: 2.
 
-The file contains one record for every label, time, and species combination in
+The standalone file contains one record for every label, time, and species combination in
 this table. A row with several labels, times, or species expands to their full
 Cartesian product except where separate expected values are shown.
 
@@ -256,7 +273,12 @@ records, unknown profile identities, a product or time mismatch, a species not
 authored in the profile, or a computed Lure-off result that differs from the
 recorded expected percentage.
 
-For Wayfarer, the wild encounter generator's deterministic balance report
+For Wayfarer, replace these permanent named-carrier assertions with the reviewed
+nearby-source, actual-known-move validation in the catch-window specification.
+Its scenario report includes the Den's required Whirlpool acquisition as well
+as Surf. Preserve the original standalone records and checks.
+
+The wild encounter generator's deterministic balance report
 covers every included version, map profile, and time-of-day variant at every
 integer Trainer Rating from 0 through 80. For every quality it reports:
 
@@ -270,8 +292,9 @@ integer Trainer Rating from 0 through 80. For every quality it reports:
   LeafGreen sources, Chinchou at the named HNS sources, and Wailmer at the named
   Emerald sources.
 
-The report consumes `nativeSurfAccessibility` rather than hardcoded profile
-names. Generation fails if profile shape or totals drift, an eligible entry has
+The standalone report consumes `nativeSurfAccessibility` rather than hardcoded
+profile names; Wayfarer uses the selected catch-window scenarios instead.
+Generation fails if profile shape or totals drift, an eligible entry has
 zero weight, any Old Rod entry falls below the PRD's minimum, or a listed
 native Surf species differs from its expected result or falls below 8 percent
 per successful Old Rod encounter or 2 percent per unmodified cast.

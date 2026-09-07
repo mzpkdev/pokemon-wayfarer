@@ -1,5 +1,11 @@
 # Emerald open-world regional traversal
 
+For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
+revision supersedes named native-utility carriers and permanent-retention
+assumptions in this document. It is not implemented yet. Regional routes,
+field-use authorization, scaling and unrelated mechanics remain unchanged;
+standalone builds retain their existing contract.
+
 ## Player outcome
 
 After the opening releases the player with a starter, every ordinary Hoenn town and city except Sootopolis is reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the route across natural water. The player may take a long route, but determination is enough.
