@@ -1,5 +1,10 @@
 # Johto wild encounter ecology
 
+Implemented: Outdated
+
+The campaign validation samples now follow +8/+8/+8 League rewards. Existing
+implementation and validation evidence must be refreshed for those milestones.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes this document's permanent named native-HM anchors,
 per-anchor utility-retention tests and named-carrier accessibility shares.
@@ -180,7 +185,7 @@ regional successful-catch probability to Generation II so a valid average
 cannot hide an unusable rod tier.
 
 A second Wayfarer report samples the effective species outcomes at Ratings 0,
-16, 40, 55, 63, 68, 76, and 80. At every sampled rating, effective Generation II probability
+16, 40, 48, 56, 64, 72, and 80. At every sampled rating, effective Generation II probability
 must remain between 30% and 45% overall, 35% and 55% for land, 15% and 35% for
 Surf, 10% and 30% for equal-quality fishing, and 45% and 70% for interaction
 profiles. Each individual rod quality must retain at least 5% effective
@@ -325,7 +330,7 @@ The Johto rebalance is accepted when all of the following are true:
   and duplicate-slot consolidation with a habitat reason.
 - A day-and-night diff confirms that existing time identities remain visible
   and identifies every runtime fallback.
-- Effective outcome reports at the six Trainer Rating milestones meet the
+- Effective outcome reports at the eight Trainer Rating milestones meet the
   numeric overall, method, and individual-rod guardrails.
 - Across every Johto-owned profile, report zero Generation III species in
   active authored slots. In every non-randomized effective population, allow

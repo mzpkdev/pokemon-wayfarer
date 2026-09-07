@@ -1,9 +1,12 @@
 # Wayfarer interregional League circuit
 
 PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
-Implemented: Partially. The original circuit is implemented; this revision's
-unrestricted badge collection, regional prerequisite repairs, and Trainer Card
-presentation are approved and pending implementation.
+Implemented: Outdated
+
+The implementation still uses +15/+5/+4 League rewards and static League
+levels; the approved contract below uses +8/+8/+8 and League scaling.
+The reward update belongs to this specification and will be implemented
+separately from League scaling.
 
 ## Scope
 
@@ -145,12 +148,14 @@ successful clear handoff only once.
 
 The Kanto League uses its authored Tier 1 parties, the Johto League uses its
 authored Tier 2 parties, and the Hoenn League uses its authored Tier 3 parties.
-The selected parties do not depend on Trainer Rating, badge distribution,
-starting region, current party, or prior losses.
-
-This revision preserves the current static party sets. League strength and
-tuning for early or delayed participation belong to a future PRD and are not
-acceptance requirements for this revision.
+Roster selection does not depend on Trainer Rating, badge distribution,
+starting region, current party, or prior losses. Species, party sizes, moves,
+held items, abilities, and AI remain authored. Levels follow the separate
+[League scaling specification](league-scaling.md): capture TR and League identity
+on admission, preserve them through save/load, and use the snapshot for the
+whole run. Its independent curve starts from the soft-cap anchors; ace offsets
+are -4, -3, -2, -1 for the Elite Four and +1 for the Champion, with supporting
+members one or two levels below the ace.
 
 Ordinary Trainers and Gym members retain authored roster selection and apply
 the separate [Trainer-party scaling specification](trainer-party-scaling.md).
@@ -174,15 +179,29 @@ Let `b` be the global badge count. The badge contribution is:
 9 <= b <= 24:  40 + (b - 8)
 ```
 
-League clears add these fixed contributions:
+First-time League clears add these fixed contributions:
 
 | Clear | Contribution |
 | --- | ---: |
-| Kanto League | 15 |
-| Johto League | 5 |
-| Hoenn League | 4 |
+| Kanto League | 8 |
+| Johto League | 8 |
+| Hoenn League | 8 |
 
-The derived result is clamped to eighty. The formula remains unchanged. Taking
+The total League contribution is +24. Update
+`CalculateLeagueCircuitTrainerRating` to add eight for each true regional
+Champion state while retaining the badge function above. Continue recording
+successful completion through `TryRecordLeagueClear`, then refresh live TR
+through the existing high-water getter. Do not increment saved TR in a script
+or add another reward on top of the derived formula. Individual Elite Four
+wins, losses, repeat clears, repeated Hall of Fame callbacks, and Hall of Fame
+revisits add nothing.
+
+The existing completion producer is sufficient for this reward change; it
+does not depend on the League scaling implementation or its run snapshot.
+Encounters, player caps and obedience, shops, and other TR consumers receive
+the new value through the existing getter.
+
+The derived result is clamped to eighty. The badge formula is unchanged. Taking
 each League at its minimum badge requirement gives these milestones:
 
 | Facts | Derived rating |
@@ -190,10 +209,10 @@ each League at its minimum badge requirement gives these milestones:
 | No badges or League clears | 0 |
 | 4 badges | 16 |
 | 8 badges | 40 |
-| 8 badges and Kanto clear | 55 |
-| 16 badges and Kanto clear | 63 |
-| 16 badges and Kanto and Johto clears | 68 |
-| 24 badges and Kanto and Johto clears | 76 |
+| 8 badges and Kanto clear | 48 |
+| 16 badges and Kanto clear | 56 |
+| 16 badges and Kanto and Johto clears | 64 |
+| 24 badges and Kanto and Johto clears | 72 |
 | 24 badges and all three Leagues cleared | 80 |
 
 Taking all badges before any League gives these additional required states:
@@ -201,8 +220,8 @@ Taking all badges before any League gives these additional required states:
 | Facts | Derived rating | Soft level cap |
 | --- | ---: | ---: |
 | 24 badges, no clears | 56 | 62 |
-| 24 badges and Kanto clear | 71 | 88 |
-| 24 badges and Kanto and Johto clears | 76 | 95 |
+| 24 badges and Kanto clear | 64 | 78 |
+| 24 badges and Kanto and Johto clears | 72 | 89 |
 | 24 badges and all three clears | 80 | 100 |
 
 Soft level caps remain defined by the party progression specification; these
@@ -213,8 +232,13 @@ the existing projection pipeline and determines the soft level cap through the
 Trainer Rating party progression specification. Ordinary Trainers and Gym
 members consume it through the Trainer-party scaling specification. Enrolled
 initial Gym Leader badge battles consume it through the separate [Gym Leader
-scaling specification](gym-leader-scaling.md); other excluded bosses, leader
-rematches, and League parties remain authored.
+scaling specification](gym-leader-scaling.md). League levels consume the run
+snapshot through the [League scaling specification](league-scaling.md). Other
+excluded bosses and leader rematches retain their authored parties.
+
+Preserve high-water semantics for prerelease saves with the old larger Kanto
+bonus; no downgrade migration is required. Validate the revised progression
+with fresh or deliberately seeded state.
 
 The HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level 5 in
 both normal and legacy-moves mode, after any existing level-5 entries. The
@@ -278,12 +302,17 @@ Deterministic tests must cover:
 7. Preservation of all badges and unrelated regional state after each League
    clear.
 8. Trainer Rating derivation at every milestone and clamp boundary, including
-   new-game Rating 0 and final Rating 80.
+   new-game Rating 0 and final Rating 80, +8 per first clear, and no reward for
+   individual wins, losses, repeated clear callbacks, or repeat clears. Cover
+   `CalculateLeagueCircuitTrainerRating` with each regional flag independently
+   and in combination, and verify the existing completion producer records the
+   contribution once without an additive script reward.
 9. High-water behavior after regional cleanup, repeated reads, save and load,
    and a League loss.
-10. Static excluded-boss party selection at several badge distributions,
-    ratings and circuit tiers. Ordinary Trainer and Gym-member projection
-    follows its separate specification.
+10. Static party selection for bosses excluded from all scaling systems at
+    several badge distributions, ratings, and circuit tiers. Ordinary Trainer,
+    Gym-member, initial Gym Leader, and League scaling each follow their
+    separate specifications.
 11. Regional prerequisites in mixed badge orders: a Kanto Gym supplying shared
     badge seven cannot make the Rocket takeover missable. Cover arriving after
     that count, revisit recovery, once-only triggering, and no regression after
@@ -311,7 +340,7 @@ Deterministic tests must cover:
 17. Consecutive Kanto, Johto, and Hoenn clears starting with twenty-four badges
     and no clears. Verify shared Indigo tier and room resets, loss/retry,
     save/load between clears, one-shot Hall of Fame handoffs, and ratings
-    56, 71, 76, and 80 with soft caps 62, 88, 95, and 100.
+    56, 64, 72, and 80 with soft caps 62, 78, 89, and 100.
 
 A gameplay traversal from the Johto opening must earn all twenty-four badges
 with zero League clears, completing retained regional prerequisites in mixed

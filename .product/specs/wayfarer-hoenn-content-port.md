@@ -7,7 +7,10 @@ field-use authorization, scaling and unrelated mechanics remain unchanged;
 standalone builds retain their existing contract.
 
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
-Implemented: Yes
+Implemented: Outdated
+
+The League policy now requires TR-based levels with unchanged Tier 3 rosters.
+The implementation still uses static League levels.
 
 ## Scope
 
@@ -108,8 +111,9 @@ Trainer records follow these rules:
   creation; rivals and bosses remain excluded. Initial Gym Leader badge battles
   use the separate [Gym Leader scaling](gym-leader-scaling.md), which owns their
   six-slot rosters and Trainer Rating selection. Leader rematches remain static.
-  The Hoenn League parties are the fixed Tier 3 exception owned by the
-  interregional League circuit.
+  The Hoenn League retains its Tier 3 source rosters and applies the separate
+  [League scaling specification](league-scaling.md) to their battle levels.
+  Species, party sizes, moves, items, abilities, and AI remain authored.
 - Other than an initial Gym Leader badge battle enrolled in the Gym Leader
   scaling specification, the same authored party is selected regardless of the
   player's Trainer Rating or HNS difficulty option.
@@ -353,8 +357,9 @@ standalone HNS continues to present Whirlpool as HM08.
 The Hoenn League is Wayfarer's fixed Tier 3 League. Entry requires all
 twenty-four badges and prior Kanto and Johto League clears, as defined by the
 interregional League circuit. It uses a Hoenn-specific Champion and game-clear
-result. Its Trainer parties are authored for Tier 3 and do not scale at
-runtime.
+result. Its Tier 3 rosters remain authored and unchanged; battle levels follow
+the [League scaling specification](league-scaling.md), using TR captured at
+run admission and retained through save/load.
 
 Completing it must:
 
@@ -408,7 +413,8 @@ Static and automated validation must prove all of the following:
    initial Gym Leader rosters match Emerald, while Hoenn League parties match
    the fixed Tier 3 content. Eligible ordinary battle parties then apply the
    separate Trainer-party projection; initial Gym Leader badge battles follow
-   the Gym Leader scaling specification.
+   the Gym Leader scaling specification. Hoenn League battle levels follow the
+   [League scaling specification](league-scaling.md) using the run snapshot.
 8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
 9. Global difficulty does not change ordinary Hoenn source roster selection.

@@ -1,7 +1,10 @@
 # Global TR Poké Marts
 
 PRD: [Poké Marts across the three regions](../prds/global-tr-pokemarts.md)
-Implemented: No
+Implemented: Outdated
+
+The League progression example now assumes +8 per first-time clear. That
+reward change is pending implementation; the current circuit uses the old rewards.
 
 ## Scope
 
@@ -398,7 +401,9 @@ including eight distinct signature/retained goods. Treat future capacity
 growth as a checked data change. Cover threshold minus one, threshold and threshold plus one;
 normal/challenge switching; equal TR with Johto-only, Kanto-only, Hoenn-only
 and mixed progress; 24 badges without League clears (TR 56) and eight badges
-plus the first League clear (TR 55). Both latter cases must have all essentials.
+plus the first League clear (TR 48). The TR 56 case has all essentials; the
+TR 48 case has the TR 45 tier and excludes Max Potion and Full Restore, which
+unlock at TR 55. Mart thresholds are unchanged.
 Use the real global TR path in integration tests, not only a stubbed tier input.
 
 Verify the 19 common items cannot appear early through signatures or retained

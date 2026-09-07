@@ -1,7 +1,10 @@
 # Ordinary Trainer and Gym-member scaling
 
 PRD: [Ordinary Trainer and Gym-member scaling](../prds/trainer-party-scaling.md)
-Implemented: No
+Implemented: Outdated
+
+The shared policy contract now includes separate League routing. League level
+scaling is pending implementation; ordinary transformation rules are unchanged.
 
 ## Scope and authority
 
@@ -17,12 +20,16 @@ Trainer records immutable.
 ## Classification contract
 
 Generate a compact policy table indexed by the active Wayfarer Trainer ID.
-Use four policies: `ORDINARY`, `GYM_MEMBER`, `GYM_LEADER`, and `EXCLUDED`.
+Use five policies: `ORDINARY`, `GYM_MEMBER`, `GYM_LEADER`, `LEAGUE`, and
+`EXCLUDED`.
 Every populated Trainer ID must have exactly one policy. `GYM_LEADER` routes
 only enrolled initial badge battles to the separate [Gym Leader scaling
 specification](gym-leader-scaling.md); it never receives this specification's
 ordinary transformation. Until that feature is enabled, its records use the
-existing `EXCLUDED` fallback. Unclassified IDs fail generation; invalid runtime
+existing `EXCLUDED` fallback. `LEAGUE` routes the fifteen enrolled circuit IDs
+to the separate [League scaling specification](league-scaling.md), including
+its run-context validation and authored fallback when scaling is disabled.
+Unclassified IDs fail generation; invalid runtime
 IDs fail closed to existing unscaled behavior.
 
 A populated ID has a nonempty party in at least one selectable difficulty
@@ -50,7 +57,9 @@ the [Gym Leader scaling specification](gym-leader-scaling.md). Enumerate their
 aliases and scripted variants explicitly: enrolled initial-badge variants use
 that policy, while rematch and other story variants remain excluded.
 Exclude all rival variants, villain bosses and admins, Elite Four, Champions,
-other story bosses, and tutorial opponents. Shared classes must not cause boss
+other story bosses, and tutorial opponents from ordinary transformation.
+Explicitly enrolled circuit IDs use `LEAGUE` routing; other Elite Four and
+Champion variants remain `EXCLUDED`. Shared classes must not cause boss
 enrollment. Ordinary scripted battles and villain grunts remain eligible.
 
 Facility, link, recorded, external-party, partner, and player-party construction
@@ -216,7 +225,7 @@ all custom-move Trainers into excluded opponents to satisfy the audit.
 
 1. Test every Rating and authored level against an independent integer oracle,
    exact anchors, signed rounding, bonuses, bounds, and monotonicity.
-2. Test ordinary, Gym-member, `GYM_LEADER` routing, and excluded policies,
+2. Test ordinary, Gym-member, `GYM_LEADER` and `LEAGUE` routing, and excluded policies,
    shared-class bosses, aliases, rematch variants, sparse IDs, and missing
    manifest records.
 3. Test multi-stage reversal, ambiguous ancestry rejection, forms, non-level

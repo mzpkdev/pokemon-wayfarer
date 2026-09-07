@@ -1,8 +1,9 @@
 # Wayfarer interregional League circuit
 
-Status: Revised design approved; implementation of unrestricted badge collection,
-regional prerequisite repairs, and Trainer Card presentation is pending. The
-existing circuit implementation still enforces certification caps.
+Implemented: Outdated
+
+The implementation still uses +15/+5/+4 League rewards and static League
+levels. This revision requires +8/+8/+8 and the separate League scaling design.
 
 ## Intent
 
@@ -73,8 +74,9 @@ Ordinary Trainers and Gym members follow the separate
 badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md);
 leader rematches retain authored, static parties. Each regional
 League has one authored party set for its fixed position in the itinerary:
-Kanto is Tier 1, Johto is Tier 2, and Hoenn is Tier 3. League parties do not
-scale at runtime.
+Kanto is Tier 1, Johto is Tier 2, and Hoenn is Tier 3. Their levels follow the
+[League scaling design](league-scaling.md), using TR locked on run admission.
+Species, party sizes, moves, held items, abilities, and AI remain authored.
 
 The fixed order describes this campaign's interregional circuit. It does not
 establish that one region's League is universally more prestigious than
@@ -83,10 +85,10 @@ another outside the circuit.
 ## Balance
 
 Players may seek easier available badges first or attempt stronger authored Gym
-teams early, subject to the retained regional prerequisites. League party
-strength and tuning for different participation times belong to a future PRD.
-This revision preserves the current static party sets and introduces no new
-League balance requirements.
+teams early, subject to the retained regional prerequisites. League levels follow the
+[League scaling design](league-scaling.md), with a gradual climb through each
+run and the same authored rosters. Playtest early and postponed attempts, plus
+the training needed between successive runs after each +8 reward.
 
 ## Presentation
 
@@ -104,18 +106,21 @@ they have many badges.
 
 ## Interactions
 
-Trainer Rating keeps its existing badge contribution and clear bonuses. These
-examples show taking each League as soon as its badge minimum is reached:
+Trainer Rating keeps its existing badge contribution. Each first-time League
+clear adds +8 TR, for +24 across the circuit. Record the reward after the
+successful run; losses, repeated completion callbacks, and repeat clears award
+no additional TR. These examples show taking each League as soon as its badge
+minimum is reached:
 
 | Progress | Trainer Rating |
 | --- | ---: |
 | New game | 0 |
 | 4 total badges | 16 |
 | 8 total badges | 40 |
-| Kanto League cleared | 55 |
-| 16 total badges and Kanto cleared | 63 |
-| Johto League cleared | 68 |
-| 24 total badges and Kanto and Johto cleared | 76 |
+| Kanto League cleared | 48 |
+| 16 total badges and Kanto cleared | 56 |
+| Johto League cleared | 64 |
+| 24 total badges and Kanto and Johto cleared | 72 |
 | Hoenn League cleared | 80 |
 
 Collecting all badges first is also valid:
@@ -123,15 +128,15 @@ Collecting all badges first is also valid:
 | With 24 badges | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | No League clears | 56 | 62 |
-| Kanto cleared | 71 | 88 |
-| Kanto and Johto cleared | 76 | 95 |
+| Kanto cleared | 64 | 78 |
+| Kanto and Johto cleared | 72 | 89 |
 | All three cleared | 80 | 100 |
 
 The rating remains a high-water mark used by ordinary wild encounter scaling
 and the party's soft level cap and obedience rules. It also drives ordinary
 Trainer and Gym-member scaling, plus the separate [initial Gym Leader badge
-battle scaling](gym-leader-scaling.md). Leader rematches and League parties
-remain authored and static.
+battle scaling](gym-leader-scaling.md). League levels use their separate
+[scaling design](league-scaling.md); leader rematches remain static.
 
 Rating 0 must not remove a native utility catch that supplies an approved core
 route. In particular, the level-5 Chinchou available around Vermilion and
