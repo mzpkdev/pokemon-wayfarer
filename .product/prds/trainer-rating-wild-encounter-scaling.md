@@ -1,5 +1,10 @@
 # Trainer Rating wild encounter and party progression
 
+Implemented: Outdated
+
+The progression examples require the approved +8/+8/+8 League rewards.
+The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
+
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention
 assumptions in this document. It is not implemented yet. Regional routes,
@@ -32,22 +37,21 @@ obedient.
 
 Wayfarer uses one global twenty-four-badge circuit across Kanto, Johto, and
 Hoenn. Badge origin does not affect League qualification or rating. The approved
-[circuit revision](wayfarer-interregional-league-circuit.md), pending
-implementation, allows all badges to precede any League clear. The following
-examples use the unchanged formula;
-they do not prescribe a badge or League schedule:
+[circuit](wayfarer-interregional-league-circuit.md) allows all badges to precede
+any League clear. These examples use +8 for each first-time League clear and
+the unchanged soft-cap curve; they do not prescribe a badge or League schedule:
 
 | Progress | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
 | 4 total badges, no clears | 16 | 23 |
 | 8 total badges, no clears | 40 | 42 |
-| 8 total badges, Kanto cleared | 55 | 60 |
-| 16 total badges, Kanto cleared | 63 | 76 |
-| 16 total badges, Kanto and Johto cleared | 68 | 84 |
+| 8 total badges, Kanto cleared | 48 | 52 |
+| 16 total badges, Kanto cleared | 56 | 62 |
+| 16 total badges, Kanto and Johto cleared | 64 | 78 |
 | 24 total badges, no clears | 56 | 62 |
-| 24 total badges, Kanto cleared | 71 | 88 |
-| 24 total badges, Kanto and Johto cleared | 76 | 95 |
+| 24 total badges, Kanto cleared | 64 | 78 |
+| 24 total badges, Kanto and Johto cleared | 72 | 89 |
 | 24 total badges, all three Leagues cleared | 80 | 100 |
 
 The interregional League circuit defines the exact badge and League
@@ -56,9 +60,10 @@ plus smaller breadth contributions from the other regions.
 
 The Trainer Rating foundation and existing circuit already supply the shared
 0 through 80 value, high-water storage, and global badge and League-clear
-contributions. The pending circuit revision removes badge restrictions and
-changes presentation while retaining these inputs and formulas. Future regional
-starts and League party tuning are separate work.
+contributions. The approved reward revision replaces the +15/+5/+4 clear
+contributions with +8/+8/+8; that reward change is pending implementation.
+Repeat clears add no TR. Future regional starts remain separate work; League
+party levels follow the [League scaling design](league-scaling.md).
 
 The soft-cap curve is independently tunable. Its initial milestone values copy
 the current wild encounter anchor plus 10 levels, but later encounter-balance
@@ -82,9 +87,11 @@ interregional circuit.
 
 Wayfarer starts at Rating 0 so the value represents an unproven Trainer before
 the first badge. Its encounter curve must still keep starter-area populations
-viable at Rating 0. The first eight badges and Kanto League clear create the
-largest rating gains. Later badges and League clears provide diminishing gains
-as the rating approaches 80.
+viable at Rating 0. The first eight badges supply 40 TR; each later badge
+supplies one. Each first-time League clear supplies +8, for +24 across the
+circuit and TR 80
+after all badges and clears. This distributes League advancement evenly,
+while the unchanged soft-cap curve determines the resulting level increases.
 
 Rating 0 must not remove a native utility catch that supplies an approved core
 route. HNS Chinchou is the approved all-rating Whirlpool source: the Olivine

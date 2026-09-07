@@ -1,5 +1,10 @@
 # Wayfarer Hoenn integration
 
+Implemented: Outdated
+
+The League policy now requires TR-based levels with unchanged Tier 3 rosters.
+The implementation still uses static League levels.
+
 ## Intent
 
 Wayfarer adds Pokémon Emerald's Hoenn region to the HNS-based game. The same
@@ -115,8 +120,8 @@ members apply the separate [Trainer-party scaling design](trainer-party-scaling.
 to those rosters; rivals and bosses retain authored battle parties. Initial
 Gym Leader badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md),
 while leader rematches retain authored, static parties.
-The Hoenn Elite Four and Champion instead use the fixed Tier 3 parties owned by
-the interregional League circuit.
+The Hoenn Elite Four and Champion use their existing Tier 3 rosters, with
+levels governed by the [League scaling design](league-scaling.md).
 
 Ordinary Hoenn wild encounters retain Emerald's species, methods, weights, and
 locations while using the HNS Trainer Rating level projection. Hoenn badges
@@ -187,8 +192,9 @@ not keep a separate healing history for every region.
   Gym Leader badge battles are separately owned by the
   [Gym Leader scaling design](gym-leader-scaling.md); leader rematches retain
   static parties.
-- The interregional circuit may author a fixed Tier 3 Hoenn League party, but
-  it does not scale that party at runtime.
+- The Hoenn League keeps its authored species, party sizes, moves, items,
+  abilities, and AI; its levels scale using TR locked for the run under the
+  [League scaling design](league-scaling.md).
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,
   multiplayer features, event islands, and other optional Emerald systems are
   preservation targets, not requirements for this milestone.

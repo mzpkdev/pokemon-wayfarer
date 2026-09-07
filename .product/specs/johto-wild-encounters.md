@@ -8,7 +8,10 @@ That revision is not implemented yet. Unrelated ecology, authored encounter
 rules, scaling and standalone-build contracts remain unchanged.
 
 PRD: [Johto wild encounter ecology](../prds/johto-wild-encounters.md)
-Implemented: Yes
+Implemented: Outdated
+
+The campaign validation samples now follow +8/+8/+8 League rewards. Existing
+implementation and validation evidence must be refreshed for those milestones.
 
 ## Scope
 
@@ -230,7 +233,7 @@ projection, and predecessor resolution. The report retains the authored slot,
 authored species, projected level outcomes, eligibility, and resulting species
 so every probability can be traced back to its source.
 
-For Wayfarer Ratings 0, 16, 40, 55, 63, 68, 76, and 80, renormalize eligible
+For Wayfarer Ratings 0, 16, 40, 48, 56, 64, 72, and 80, renormalize eligible
 weights and repeat the authored portfolio calculation by effective species.
 The results must meet:
 
@@ -336,7 +339,7 @@ contains:
 - The recorded pre-change baseline and final authored slot data under identical
   membership, weights, classification, and normalization.
 - Exact authored and effective species and generation portfolios, with each
-  rod quality and all six Rating milestones.
+  rod quality and all eight Rating milestones.
 - The ordered change ledger, portfolio snapshots after each stage, additions
   and removals, habitat evidence, and protected-anchor effects.
 - Day and night leading species, shared probabilities, distances, and every

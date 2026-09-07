@@ -1,7 +1,10 @@
 # Trainer Rating party progression
 
 PRD: [Trainer Rating wild encounter and party progression](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: No
+Implemented: Outdated
+
+The progression examples require the approved +8/+8/+8 League rewards.
+The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
 
 ## Scope
 
@@ -46,22 +49,22 @@ cap = c0 + roundHalfUp((r - r0) * (c1 - c0) / (r1 - r0))
 ```
 
 The result is clamped to 1 through 100. The curve is monotonic and produces
-these global circuit examples. The approved
-[circuit revision](wayfarer-interregional-league-circuit.md), pending
-implementation, allows all badges before any League clear; the formula and
-soft-cap curve are unchanged:
+these global circuit examples. The
+[circuit](wayfarer-interregional-league-circuit.md) allows all badges before any
+League clear. The examples include the approved +8 per first-time League clear,
+which is pending implementation. The badge formula and soft-cap curve are unchanged:
 
 | Progress | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
 | 4 total badges, no clears | 16 | 23 |
 | 8 total badges, no clears | 40 | 42 |
-| 8 total badges, Kanto cleared | 55 | 60 |
-| 16 total badges, Kanto cleared | 63 | 76 |
-| 16 total badges, Kanto and Johto cleared | 68 | 84 |
+| 8 total badges, Kanto cleared | 48 | 52 |
+| 16 total badges, Kanto cleared | 56 | 62 |
+| 16 total badges, Kanto and Johto cleared | 64 | 78 |
 | 24 total badges, no clears | 56 | 62 |
-| 24 total badges, Kanto cleared | 71 | 88 |
-| 24 total badges, Kanto and Johto cleared | 76 | 95 |
+| 24 total badges, Kanto cleared | 64 | 78 |
+| 24 total badges, Kanto and Johto cleared | 72 | 89 |
 | 24 total badges, all three Leagues cleared | 80 | 100 |
 
 These initial values equal the current wild encounter level anchor plus 10.

@@ -1,5 +1,10 @@
 # Ordinary Trainer and Gym-member scaling
 
+Implemented: Outdated
+
+The League policy now delegates runtime levels to the League scaling design;
+the implementation still uses static League levels.
+
 ## Intent
 
 Let players explore Wayfarer's regions in different orders while ordinary
@@ -111,7 +116,8 @@ active. Moves must be valid for the resulting randomized species and level.
 This design supersedes the interregional League circuit's static-party rule
 only for ordinary Trainers and Gym members. Initial Gym Leader badge battles
 are owned by the separate [Gym Leader scaling design](gym-leader-scaling.md),
-while leader rematches and League parties remain separately authored. Trainer
+while leader rematches remain static. League rosters stay authored and their
+levels follow the separate [League scaling design](league-scaling.md). Trainer
 Rating advancement belongs to the circuit; this feature can be implemented and
 tested with seeded Ratings before that producer exists. It introduces no
 substitute local-badge progression.
