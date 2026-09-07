@@ -487,4 +487,3 @@ Proposal SHA-256: `7b87886fd4b1c9bbd9b5fc3400aeed278761ce77f6a0db12b57581f01860e
 | 12-13 | `MAP_BLACKTHORN_CITY_HNS` | fishing_mons | Poliwhirl | 9.000% |
 | 14-37 | `MAP_BLACKTHORN_CITY_HNS` | fishing_mons | Poliwag, Poliwhirl | 11.000% |
 | 38-80 | `MAP_BLACKTHORN_CITY_HNS` | fishing_mons | Poliwag | 42.000% |
-

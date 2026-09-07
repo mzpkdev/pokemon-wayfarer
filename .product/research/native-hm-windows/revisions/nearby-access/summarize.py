@@ -60,7 +60,7 @@ def main():
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
-    (HERE / 'itineraries.md').write_text('\n'.join(lines) + '\n')
+    (HERE / 'itineraries.md').write_text('\n'.join(lines).rstrip() + '\n')
     print(f'Validated {len(results) * 81} nonempty scenario cells, 3,564 Old Rod floor cases, '
           f'3,888 regional cells and local Blackthorn/Den coverage; wrote {len(rows)} Old Rod summaries.')
 
