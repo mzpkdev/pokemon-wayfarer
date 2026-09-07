@@ -88,6 +88,21 @@ const startTrainerBattle = async (game: GameSession, description: string): Promi
   throw new Error(`${description} did not start: ${JSON.stringify(await game.state.read())}`)
 }
 
+const finishIndigoHallOfFame = async (
+  game: GameSession,
+  region: "kanto" | "johto",
+): Promise<void> => {
+  for (let attempt = 0; attempt < 300; attempt++) {
+    const state = await game.state.read()
+    if (state.circuit.clears[region]) return
+    await game.wait.frames(30)
+    await game.controls.press("a")
+  }
+  throw new Error(
+    `${region} League clear was not committed by the Hall of Fame: ${JSON.stringify(await game.state.read())}`,
+  )
+}
+
 describe.sequential("Wayfarer League Circuit", () => {
   let game: GameSession
 
@@ -291,5 +306,58 @@ describe.sequential("Wayfarer League Circuit", () => {
     await expect(game.state.read()).resolves.toMatchObject({ circuit: { badges: { hoenn: 3 } } })
     await expect(game.story.flag("hideMauvilleGymWattson")).resolves.toBe(true)
     await expect(game.story.flag("hideMauvilleCityWattson")).resolves.toBe(false)
+  })
+
+  it("commits all-badge Kanto and Johto clears through the live Indigo Hall of Fame", async () => {
+    const kantoGame = await GameSession.launch()
+    try {
+      await kantoGame.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "up", position: { map: "hall-of-fame", x: 5, y: 12 } },
+        story: { vars: { leagueState: 5 } },
+        party: [{ species: "lapras", level: 100 }],
+        circuit: { badges: { kanto: 8, johto: 8, hoenn: 8 } },
+        determinism: { textSpeed: "instant" },
+      })
+      await kantoGame.story.setVar("leagueState", 6)
+      await finishIndigoHallOfFame(kantoGame, "kanto")
+      await expect(kantoGame.state.read()).resolves.toMatchObject({
+        circuit: {
+          badges: { total: 24 },
+          clears: { kanto: true, johto: false, hoenn: false },
+          leagues: { kanto: "cleared", johto: "available", hoenn: "locked" },
+          trainerRating: 71,
+        },
+      })
+    } finally {
+      await kantoGame.close()
+    }
+
+    const johtoGame = await GameSession.launch()
+    try {
+      await johtoGame.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "up", position: { map: "hall-of-fame", x: 5, y: 12 } },
+        story: { vars: { leagueState: 5 } },
+        party: [{ species: "lapras", level: 100 }],
+        circuit: {
+          badges: { kanto: 8, johto: 8, hoenn: 8 },
+          clears: { kanto: true },
+        },
+        determinism: { textSpeed: "instant" },
+      })
+      await johtoGame.story.setVar("leagueState", 6)
+      await finishIndigoHallOfFame(johtoGame, "johto")
+      await expect(johtoGame.state.read()).resolves.toMatchObject({
+        circuit: {
+          badges: { total: 24 },
+          clears: { kanto: true, johto: true, hoenn: false },
+          leagues: { kanto: "cleared", johto: "cleared", hoenn: "available" },
+          trainerRating: 76,
+        },
+      })
+    } finally {
+      await johtoGame.close()
+    }
   })
 })
