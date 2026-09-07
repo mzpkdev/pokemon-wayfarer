@@ -1,4 +1,5 @@
 #include "global.h"
+#include "league_circuit.h"
 #include "overworld.h"
 #include "constants/heal_locations.h"
 #include "battle_pyramid.h"
@@ -396,6 +397,9 @@ static void (*const sMovementStatusHandler[])(struct LinkPlayerObjectEvent *, st
 // code
 void DoWhiteOut(void)
 {
+#if IS_WAYFARER
+    EndLeagueRun();
+#endif
     if (IsNuzlockeActive() || IsNuzlockeEasyActive())
     {
         if (GetFirstAliveBoxPokemon() == IN_BOX_COUNT * TOTAL_BOXES_COUNT)
@@ -651,6 +655,9 @@ const struct MapLayout *GetMapLayout(u16 mapLayoutId)
 
 void ApplyCurrentWarp(void)
 {
+#if IS_WAYFARER
+    LeagueRunHandleWarp(&gSaveBlock1Ptr->location, &sWarpDestination);
+#endif
     gLastUsedWarp = gSaveBlock1Ptr->location;
     gSaveBlock1Ptr->location = sWarpDestination;
     sFixedDiveWarp = sDummyWarpData;
@@ -2205,6 +2212,26 @@ void CB2_ContinueSavedGame(void)
     ResetSafariZoneFlag_();
     if (gSaveFileStatus == SAVE_STATUS_ERROR)
         ResetWinStreaks();
+
+#if IS_WAYFARER
+    if (ConsumeLeagueRunLoadRecovery())
+    {
+        // Rebuild the lobby normally, without restoring the invalid room's
+        // saved object templates, metatiles, or on-load scripts.
+        ClearContinueGameWarpStatus();
+        SetWarpDestination(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum,
+                           gSaveBlock1Ptr->location.warpId, gSaveBlock1Ptr->location.x,
+                           gSaveBlock1Ptr->location.y);
+        WarpIntoMap();
+        PlayTimeCounter_Start();
+        ScriptContext_Init();
+        UnlockPlayerFieldControls();
+        ResetInitialPlayerAvatarState();
+        gFieldCallback = FieldCB_FadeTryShowMapPopup;
+        SetMainCallback2(CB2_LoadMap);
+        return;
+    }
+#endif
 
     LoadSaveblockMapHeader();
     ClearDiveAndHoleWarps();

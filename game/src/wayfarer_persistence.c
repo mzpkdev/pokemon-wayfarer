@@ -1,4 +1,5 @@
 #include "global.h"
+#include "league_circuit.h"
 #include "event_data.h"
 #include "heal_location.h"
 #include "overworld.h"
@@ -125,6 +126,7 @@ static void SetHoennLeagueFlag(u8 mask, bool8 value)
 void WayfarerInitPersistentState(void)
 {
 #if IS_WAYFARER
+    ConsumeLeagueRunLoadRecovery();
     memset(&gSaveBlock3Ptr->wayfarerHoenn, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn));
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
@@ -155,6 +157,7 @@ void WayfarerValidatePersistentState(void)
     if (gSaveBlock3Ptr->wayfarerHoenn.magic != WAYFARER_HOENN_STATE_MAGIC)
     {
         WayfarerInitPersistentStateFromSavedMap();
+        LeagueRunValidateSavedLocation();
         return;
     }
 
@@ -179,6 +182,7 @@ void WayfarerValidatePersistentState(void)
         (1 << REGION_JOHTO) | (1 << REGION_KANTO) | (1 << REGION_HOENN);
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |=
         1 << gSaveBlock3Ptr->wayfarerHoenn.currentRegion;
+    LeagueRunValidateSavedLocation();
 #endif
 }
 

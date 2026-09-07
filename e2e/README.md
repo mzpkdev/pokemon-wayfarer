@@ -157,7 +157,7 @@ to prove that the withdrawn Surf user is resolved again. Tests should not treat
 fixture state or a memory snapshot as proof that capture, storage, release, or
 field use worked.
 
-The command mailbox is versioned as ABI v7. Arrangement and wild-battle commands
+The command mailbox is versioned as ABI v10. Arrangement and wild-battle commands
 share request IDs and result handling, reject commands while a harness-owned game
 state machine is active, and validate invalid species, item quantities, boxes,
 and slots in the ROM. Protocol changes must increment the ABI and update both the
@@ -172,6 +172,12 @@ and text speed. One request can patch up to eight vars and eight flags.
 
 `game.state.read()` returns the current game phase, map, player position and
 facing direction, control lock, script activity, and dialogue state.
+Its `circuit.run` snapshot reports the saved League run activity, circuit region,
+and admission TR. The League journey enters through each venue's real entrance,
+checks opponent lead levels against the observed admission TR, and exercises
+room transitions, save/load, loss/retry, and Hall of Fame completion. It uses
+`battle.win()` to advance successful runs, so these checks establish lifecycle
+and scaling behavior; they do not measure attrition or playable balance.
 `game.story.var()` and `game.story.flag()` read semantic story values through
 layout offsets published by the ROM ABI. `game.player` supplies real controller
 actions, while `game.wait` and `game.dialogue` synchronize against ROM state

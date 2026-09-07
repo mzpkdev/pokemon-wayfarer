@@ -28,10 +28,10 @@ LeagueCircuit_EventScript_HoennEntryDenied::
 	end
 
 LeagueCircuit_EventScript_IndigoHallOfFame::
-	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
 	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
 	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
 	specialvar VAR_RESULT, LeagueCircuit_RecordClear
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied

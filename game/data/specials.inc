@@ -731,6 +731,10 @@ gSpecials::
 	def_special GetMaxPartySize
 	def_special IsPartyLimitChallengeActive
 
+	def_special LeagueCircuit_GetRunRegion
+	def_special LeagueCircuit_IsCurrentRoomDefeated
+	def_special LeagueCircuit_ValidateRun
+	def_special LeagueCircuit_MarkChampionDefeated
 	def_special LeagueCircuit_GetRequiredRegion
 	def_special LeagueCircuit_IsEligible
 	def_special LeagueCircuit_RecordClear

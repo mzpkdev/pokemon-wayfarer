@@ -545,6 +545,7 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 1 << REGION_JOHTO;
+    memset(&gSaveBlock3Ptr->wayfarerHoenn.leagueRun, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn.leagueRun));
     memcpy(sWayfarerExpectedSaveBlock3, saveBlock3Bytes, sizeof(sWayfarerExpectedSaveBlock3));
 
     // If a storage sector payload is accidentally replaced instead of merely

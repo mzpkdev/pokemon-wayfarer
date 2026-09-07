@@ -17,9 +17,10 @@ def select_parties(game):
             raise ValueError(f"Expected one production party for {row['trainer']}, found {len(matches)}")
         if row['id'] <= 14:
             raise ValueError(f"League ID collides with trainer_control.party: {row['id']}")
-        selected.append(matches[0].strip())
+        condition = 'defined(POKEMON_WAYFARER) || defined(EMERALD)' if row['tier'] == 3 else 'defined(POKEMON_WAYFARER) || defined(POKEMON_HNS)'
+        selected.append('#if ' + condition + '\n' + matches[0].strip() + '\n#endif')
     preamble = (game / 'src/data/trainers.party').read_text().split('/*', 1)[0]
-    return preamble + '#ifdef POKEMON_WAYFARER\n' + '\n\n'.join(selected) + '\n#endif\n'
+    return preamble + '\n\n'.join(selected) + '\n'
 
 
 if __name__ == '__main__':

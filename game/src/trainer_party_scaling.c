@@ -8,6 +8,8 @@
 #include "constants/battle.h"
 #include "constants/trainers.h"
 #include "constants/opponents.h"
+#include "constants/regions.h"
+#include "constants/difficulty.h"
 
 struct TrainerScalingPredecessor
 {
@@ -27,6 +29,7 @@ struct TrainerScalingMoveException
 #include "data/trainer_scaling/move_exceptions.h"
 #include "data/trainer_scaling/policies.h"
 #include "data/trainer_scaling/predecessors.h"
+#include "data/trainer_scaling/league.h"
 #if B_GYM_LEADER_SCALING
 #include "data/trainer_scaling/gym_leaders.h"
 #endif
@@ -34,6 +37,61 @@ struct TrainerScalingMoveException
 
 static EWRAM_DATA bool8 sHasRatingSnapshot = FALSE;
 static EWRAM_DATA u8 sRatingSnapshot = 0;
+
+u8 GetLeagueScalingBaseline(u32 rating)
+{
+    static const u8 anchors[][2] = {{0, 15}, {4, 16}, {8, 18}, {16, 23}, {30, 30}, {40, 42}, {55, 60}, {65, 80}, {80, 100}};
+    u32 i;
+    rating = min(rating, 80);
+    for (i = 1; i < ARRAY_COUNT(anchors); i++)
+    {
+        if (rating <= anchors[i][0])
+        {
+            u32 width = anchors[i][0] - anchors[i - 1][0];
+            u32 rise = (rating - anchors[i - 1][0]) * (anchors[i][1] - anchors[i - 1][1]);
+            return anchors[i - 1][1] + (2 * rise + width) / (2 * width);
+        }
+    }
+    return 100;
+}
+
+u8 GetLeagueScalingLevel(u32 rating, s8 encounterOffset, s8 slotOffset)
+{
+    s32 level = GetLeagueScalingBaseline(rating) + encounterOffset + slotOffset;
+    return min(max(level, 1), 100);
+}
+
+const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty)
+{
+#if IS_WAYFARER
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(sLeagueScalingRosters); i++)
+    {
+        const struct LeagueScalingRoster *roster = &sLeagueScalingRosters[i];
+        if (roster->trainerId == trainerId && roster->ownerId == ownerId && roster->difficulty == difficulty)
+            return roster;
+    }
+#endif
+    return NULL;
+}
+
+bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, const struct TrainerMon *party, u32 count)
+{
+    u32 i, j;
+    if (roster == NULL || party == NULL || count != roster->count
+     || count == 0 || count > PARTY_SIZE || roster->aceSlot >= count
+     || roster->offsets[roster->aceSlot] != 0)
+        return FALSE;
+    for (i = 0; i < count; i++)
+    {
+        if (party[i].species != roster->species[i] || party[i].heldItem != roster->items[i])
+            return FALSE;
+        for (j = 0; j < MAX_MON_MOVES; j++)
+            if (party[i].moves[j] != roster->moves[i][j])
+                return FALSE;
+    }
+    return TRUE;
+}
 
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy)
 {
@@ -194,6 +252,10 @@ const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u1
 u32 GetTrainerScalingPolicy(u32 trainerId)
 {
 #if IS_WAYFARER
+    if (trainerId >= TRAINERS_COUNT)
+        return TRAINER_SCALING_EXCLUDED;
+    if (GetLeagueScalingRoster(trainerId, trainerId, DIFFICULTY_NORMAL) != NULL)
+        return TRAINER_SCALING_LEAGUE;
     if (trainerId < ARRAY_COUNT(sTrainerScalingPolicies))
         return sTrainerScalingPolicies[trainerId];
 #endif

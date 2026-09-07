@@ -39,8 +39,8 @@ EverGrandeCity_PhoebesRoom_EventScript_CloseDoor::
 EverGrandeCity_PhoebesRoom_EventScript_Phoebe::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
 	faceplayer

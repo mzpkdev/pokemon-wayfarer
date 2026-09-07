@@ -73,3 +73,39 @@ u16 LeagueCircuit_BufferAdmissionDenial(void)
     return 0;
 #endif
 }
+
+u16 LeagueCircuit_GetRunRegion(void)
+{
+#if IS_WAYFARER
+    return GetActiveLeagueRunRegion();
+#else
+    return REGION_NONE;
+#endif
+}
+
+u16 LeagueCircuit_ValidateRun(void)
+{
+#if IS_WAYFARER
+    return ValidateActiveLeagueRun();
+#else
+    return FALSE;
+#endif
+}
+
+u16 LeagueCircuit_MarkChampionDefeated(void)
+{
+#if IS_WAYFARER
+    return MarkLeagueChampionDefeated();
+#else
+    return FALSE;
+#endif
+}
+
+u16 LeagueCircuit_IsCurrentRoomDefeated(void)
+{
+#if IS_WAYFARER
+    return IsCurrentLeagueRoomDefeated();
+#else
+    return FALSE;
+#endif
+}

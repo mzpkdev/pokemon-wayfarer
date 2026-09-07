@@ -748,6 +748,7 @@ native-hm-windows-test:
 .PHONY: trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 trainer-party-scaling-generate:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py
 
 trainer-party-scaling-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling -p 'test_*.py' -q
@@ -755,6 +756,7 @@ trainer-party-scaling-test:
 
 trainer-party-scaling-audit:
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
 
 frlg-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q

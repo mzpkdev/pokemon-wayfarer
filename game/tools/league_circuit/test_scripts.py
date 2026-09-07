@@ -149,19 +149,65 @@ class CircuitScriptTests(unittest.TestCase):
         source = script("ViridianCity_Gym_hns")
         self.assertIn("call_if_set FLAG_BADGE15_GET, ViridianCity_Gym_EventScript_MoveDefeatedBlaine", source)
 
-    def test_fixed_hns_selection_and_eligibility(self):
+    def test_fixed_room_selection_uses_saved_run_and_recovers_invalid_state(self):
         for room in ("Wills", "Kogas", "Brunos", "Karens", "Champions"):
             source = script("PokemonLeague_" + room + "Room_hns")
-            self.assertIn("LeagueCircuit_IsEligible", source)
-            for pending in source.split("specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion")[1:]:
-                gate = pending.split("specialvar VAR_RESULT, LeagueCircuit_IsEligible", 1)[0]
-                self.assertIn("goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_", gate)
-                self.assertIn("goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_", gate)
+            self.assertIn("LeagueCircuit_ValidateRun", source)
+            self.assertNotIn("LeagueCircuit_GetRequiredRegion", source)
+            self.assertNotIn("LeagueCircuit_IsEligible", source)
+            if room != "Champions":
+                self.assertLess(source.index("LeagueCircuit_ValidateRun", source.index("_EventScript_")), source.index("goto_if_ge VAR_LEAGUE_STATE"))
+            for pending in source.split("specialvar VAR_0x8004, LeagueCircuit_GetRunRegion")[1:]:
+                gate = pending.split("specialvar VAR_RESULT, LeagueCircuit_ValidateRun", 1)[0]
+                self.assertIn("goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied", gate)
+                self.assertIn("goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied", gate)
             self.assertRegex(source, r"goto_if_eq VAR_0x8004, REGION_JOHTO, \w+Rematch")
         for room in ("Sidneys", "Phoebes", "Glacias", "Drakes", "Champions"):
             source = script("EverGrandeCity_" + room + "Room")
-            self.assertIn("setvar VAR_0x8004, REGION_HOENN", source)
-            self.assertIn("LeagueCircuit_IsEligible", source)
+            self.assertIn("LeagueCircuit_ValidateRun", source)
+            self.assertNotIn("LeagueCircuit_IsEligible", source)
+            self.assertIn("goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied", source)
+
+    def test_lobby_admission_remains_live_and_room_scripts_never_recapture(self):
+        self.assertIn("LeagueCircuit_IsEligible", script("EverGrandeCity_PokemonLeague_1F"))
+        for venue in ("PokemonLeague_*_hns", "EverGrandeCity_*"):
+            for path in (GAME / "data/maps").glob(venue + "/scripts.inc"):
+                self.assertNotIn("LeagueCircuit_BeginRun", path.read_text())
+
+    def test_champion_completion_and_hall_of_fame_validate_before_effects(self):
+        champion = script("EverGrandeCity_ChampionsRoom")
+        self.assertLess(champion.index("trainerbattle_no_intro TRAINER_WALLACE"), champion.index("special LeagueCircuit_MarkChampionDefeated"))
+        self.assertLess(champion.index("special LeagueCircuit_MarkChampionDefeated"), champion.index("goto EverGrandeCity_ChampionsRoom_EventScript_Defeated"))
+        for name, effect in (("PokemonLeague_HallOfFame_hns", "special GivePartyMonChampionRibbon"),
+                             ("EverGrandeCity_HallOfFame", "dofieldeffect FLDEFF_HALL_OF_FAME_RECORD")):
+            source = script(name)
+            self.assertLess(source.index("LeagueCircuit_ValidateRun"), source.index(effect))
+            self.assertNotIn("LeagueCircuit_GetRequiredRegion", source)
+        common = (GAME / "data/scripts/league_circuit.inc").read_text()
+        completion = block(common, "LeagueCircuit_EventScript_IndigoHallOfFame")
+        self.assertLess(completion.index("LeagueCircuit_GetRunRegion"), completion.index("LeagueCircuit_RecordClear"))
+        self.assertLess(completion.index("LeagueCircuit_RecordClear"), completion.index("goto_if_eq VAR_0x8004, REGION_KANTO"))
+
+    def test_defeated_rooms_restore_exits_and_champions_do_not_refight_on_resume(self):
+        wills = script("PokemonLeague_WillsRoom_hns")
+        on_load = block(wills, "EliteFourRoom_OnLoad")
+        self.assertIn("LeagueCircuit_IsCurrentRoomDefeated", on_load)
+        self.assertIn("call_if_eq VAR_RESULT, TRUE, EliteFourRoom_OpenExit", on_load)
+        exit_tiles = block(wills, "EliteFourRoom_OpenExit")
+        self.assertIn("setmetatile 6, 1, 0x28E, FALSE", exit_tiles)
+        self.assertIn("setmetatile 6, 2, 0x296, FALSE", exit_tiles)
+        for name, prefix, entrance, battle in (
+            ("PokemonLeague_ChampionsRoom_hns", "ChampionRoom", "ChampionRoom_CloseDoor", "PokemonLeague_WillsRoom_EventScript_Lance"),
+            ("EverGrandeCity_ChampionsRoom", "EverGrandeCity_ChampionsRoom", "EverGrandeCity_ChampionsRoom_EventScript_EnterRoom", "EverGrandeCity_ChampionsRoom_EventScript_Wallace"),
+        ):
+            source = script(name)
+            self.assertIn("map_script MAP_SCRIPT_ON_LOAD, " + prefix + "_OnLoad", source)
+            self.assertIn("LeagueCircuit_IsCurrentRoomDefeated", block(source, prefix + "_OnLoad"))
+            for label in (entrance, battle):
+                guard = block(source, label)
+                self.assertIn("LeagueCircuit_IsCurrentRoomDefeated", guard)
+                self.assertIn("goto_if_eq VAR_RESULT, TRUE, " + prefix + "_ResumeCompleted", guard)
+            self.assertIn("HALL_OF_FAME", block(source, prefix + "_ResumeCompleted"))
 
     def test_indigo_clear_preserves_normal_scene_and_uses_region_cleanup(self):
         source = (GAME / "data/scripts/league_circuit.inc").read_text()

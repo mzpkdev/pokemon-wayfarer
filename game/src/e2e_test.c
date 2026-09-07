@@ -45,7 +45,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 9,
+    .version = 10,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -59,7 +59,7 @@ STATIC_ASSERT(sizeof(struct E2ETestRequest) == 432, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 352, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 356, E2ETestStateSize);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -736,6 +736,11 @@ static void StartWarp(void)
 {
     SetWarpDestination(sMapGroup, sMapNum, WARP_ID_NONE, sX, sY);
     WarpIntoMap();
+    // Admission recovery can redirect the requested map to its lobby.
+    sMapGroup = gSaveBlock1Ptr->location.mapGroup;
+    sMapNum = gSaveBlock1Ptr->location.mapNum;
+    sX = gSaveBlock1Ptr->pos.x;
+    sY = gSaveBlock1Ptr->pos.y;
     gFieldCallback = FieldCB_WarpExitFadeFromBlack;
     gFieldCallback2 = NULL;
     PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_WARP, E2E_TEST_ERROR_NONE);
@@ -1048,6 +1053,9 @@ static void UpdateState(void)
     gE2ETestState.storageMode = E2E_TEST_STORAGE_MODE_NONE;
     gE2ETestState.globalBadgeCount = 0;
     gE2ETestState.trainerRating = 0;
+    gE2ETestState.leagueRunActive = FALSE;
+    gE2ETestState.leagueRunRegion = REGION_NONE;
+    gE2ETestState.leagueRunRating = 0;
     gE2ETestState.trainerCardState = E2E_TEST_TRAINER_CARD_NONE;
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
     {
@@ -1112,6 +1120,14 @@ static void UpdateState(void)
     }
     gE2ETestState.globalBadgeCount = GetGlobalBadgeCount();
     gE2ETestState.trainerRating = GetTrainerRating();
+#if IS_WAYFARER
+    if (gSaveBlock3Ptr != NULL)
+    {
+        gE2ETestState.leagueRunActive = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active;
+        gE2ETestState.leagueRunRegion = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.region;
+        gE2ETestState.leagueRunRating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
+    }
+#endif
     trainerCardState = E2ETest_GetTrainerCardState();
     gE2ETestState.trainerCardState = trainerCardState;
 

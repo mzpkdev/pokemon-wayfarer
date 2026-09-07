@@ -1,8 +1,30 @@
 EverGrandeCity_ChampionsRoom_MapScripts::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	map_script MAP_SCRIPT_ON_LOAD, EverGrandeCity_ChampionsRoom_OnLoad
+#endif
 	map_script MAP_SCRIPT_ON_TRANSITION, EverGrandeCity_ChampionsRoom_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, EverGrandeCity_ChampionsRoom_OnWarp
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, EverGrandeCity_ChampionsRoom_OnFrame
 	.byte 0
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+EverGrandeCity_ChampionsRoom_OnLoad::
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	call_if_eq VAR_RESULT, TRUE, EverGrandeCity_ChampionsRoom_OpenExit
+	end
+
+EverGrandeCity_ChampionsRoom_OpenExit::
+	setmetatile 6, 1, METATILE_EliteFour_OpenDoorChampion_Frame, FALSE
+	setmetatile 6, 2, METATILE_EliteFour_OpenDoorChampion_Opening, FALSE
+	return
+
+EverGrandeCity_ChampionsRoom_ResumeCompleted::
+	lockall
+	warp MAP_EVER_GRANDE_CITY_HALL_OF_FAME, 7, 16
+	waitstate
+	releaseall
+	end
+#endif
 
 EverGrandeCity_ChampionsRoom_OnTransition:
 	call Common_EventScript_SetupRivalGfxId
@@ -21,6 +43,10 @@ EverGrandeCity_ChampionsRoom_OnFrame:
 	.2byte 0
 
 EverGrandeCity_ChampionsRoom_EventScript_EnterRoom::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_ChampionsRoom_ResumeCompleted
+#endif
 	lockall
 	applymovement LOCALID_PLAYER, Common_Movement_WalkUp4
 	waitmovement 0
@@ -39,13 +65,18 @@ EverGrandeCity_ChampionsRoom_Movement_PlayerApproachWallace:
 
 EverGrandeCity_ChampionsRoom_EventScript_Wallace::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	goto_if_eq VAR_RESULT, TRUE, EverGrandeCity_ChampionsRoom_ResumeCompleted
 	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	playbgm MUS_ENCOUNTER_CHAMPION, FALSE
 	msgbox EverGrandeCity_ChampionsRoom_Text_IntroSpeech, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_WALLACE, EverGrandeCity_ChampionsRoom_Text_Defeat
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	special LeagueCircuit_MarkChampionDefeated
+#endif
 	goto EverGrandeCity_ChampionsRoom_EventScript_Defeated
 	end
 

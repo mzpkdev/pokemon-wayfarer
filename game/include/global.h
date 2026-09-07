@@ -342,8 +342,16 @@ struct ChallengeSettings
 };
 
 #if IS_WAYFARER
+struct LeagueRunState
+{
+    u8 active;
+    u8 region;
+    u8 ratingAtEntry;
+};
+
 struct WayfarerHoennPersistentState
 {
+    struct LeagueRunState leagueRun;
     u16 vars[WAYFARER_HOENN_VARS_COUNT];
     u8 persistentFlags[WAYFARER_HOENN_PERSISTENT_FLAG_BYTES];
     u8 trainerFlags[WAYFARER_HOENN_TRAINER_FLAG_BYTES];

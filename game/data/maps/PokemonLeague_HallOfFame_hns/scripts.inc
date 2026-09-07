@@ -9,7 +9,9 @@ PokemonLeague_HallOfFame_OnFrame::
 PokemonLeague_HallOfFame_EventScript_Cutscene::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	lock
-	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
+	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
 	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp
 	goto_if_ne VAR_0x8004, REGION_KANTO, LeagueCircuit_EventScript_IndigoEntryDenied
 #else

@@ -50,8 +50,27 @@ describe("stopProcess", () => {
     await stopProcess(child)
 
     expect(kill).toHaveBeenCalledWith(-4321, "SIGTERM")
+    expect(kill).toHaveBeenCalledWith(-4321, "SIGKILL")
     expect(child.kill).not.toHaveBeenCalled()
     kill.mockRestore()
+  })
+
+  it("accepts a process group that exits fully after SIGTERM", async () => {
+    const child = Object.assign(new events.EventEmitter(), {
+      exitCode: null,
+      signalCode: null,
+      pid: 4321,
+    }) as unknown as childProcess.ChildProcess
+    const kill = vi.spyOn(process, "kill").mockImplementation((_pid, signal) => {
+      if (signal === "SIGKILL") throw Object.assign(new Error("gone"), { code: "ESRCH" })
+      child.emit("exit", null, "SIGTERM")
+      return true
+    })
+    try {
+      await expect(stopProcess(child)).resolves.toBeUndefined()
+    } finally {
+      kill.mockRestore()
+    }
   })
 
   it("falls back to the direct child when no pid is available", async () => {

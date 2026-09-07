@@ -68,6 +68,7 @@ export type GameState = {
     clears: Record<(typeof leagueRegions)[number], boolean>
     leagues: Record<(typeof leagueRegions)[number], (typeof leagueStatuses)[number]>
     trainerRating: number
+    run: { active: boolean; region: (typeof leagueRegions)[number] | null; ratingAtEntry: number }
   }
   fieldMove: {
     move: Move | "unknown"
@@ -267,6 +268,11 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
           ]),
         ) as GameState["circuit"]["leagues"],
         trainerRating: snapshot.trainerRating,
+        run: {
+          active: snapshot.leagueRunActive,
+          region: leagueRegions[snapshot.leagueRunRegion - 1] ?? null,
+          ratingAtEntry: snapshot.leagueRunRating,
+        },
       },
       fieldMove: {
         move: nameByValue(moves, snapshot.fieldMoveMove),
