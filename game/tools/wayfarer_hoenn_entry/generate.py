@@ -93,14 +93,15 @@ def _condition_value(condition: str, symbols: dict[str, int]) -> bool:
     return bool(eval(expression, {"__builtins__": {}}, {}))
 
 
-def filter_product(source: str, *, wayfarer: bool) -> str:
-    """Select C/preprocessed-script branches for Wayfarer or standalone HNS."""
+def filter_product(source: str, *, wayfarer: bool, emerald: bool = False) -> str:
+    """Select branches for Wayfarer, standalone HNS, or standalone Emerald."""
 
     symbols = {
         "IS_WAYFARER": int(wayfarer),
-        "IS_HNS": 1,
-        "IS_EMERALD": 0,
+        "IS_HNS": int(not emerald),
+        "IS_EMERALD": int(emerald),
         "IS_FRLG": 0,
+        SLATEPORT_AQUA_HIDE_FLAG: int(wayfarer or emerald),
         "TRUE": 1,
         "FALSE": 0,
     }
@@ -886,11 +887,16 @@ def audit_initialization(game_root: Path) -> dict:
         "Wayfarer Hoenn entry baseline must reveal the dedicated Slateport Aqua attendant",
     )
     raw_new_game = read_text(new_game_path)
-    standalone_new_game = strip_comments(filter_product(raw_new_game, wayfarer=False))
+    standalone_new_game = strip_comments(filter_product(raw_new_game, wayfarer=False, emerald=True))
+    hns_new_game = strip_comments(filter_product(raw_new_game, wayfarer=False))
     wayfarer_new_game = strip_comments(filter_product(raw_new_game, wayfarer=True))
     require(
         re.search(rf"setflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", standalone_new_game) is not None,
         "non-Wayfarer Emerald initialization must hide the dedicated Slateport Aqua attendant",
+    )
+    require(
+        SLATEPORT_AQUA_HIDE_FLAG not in hns_new_game,
+        "standalone HNS initialization must not reference the Emerald-only Aqua attendant flag",
     )
     require(
         re.search(rf"clearflag\s+{SLATEPORT_AQUA_HIDE_FLAG}", wayfarer_new_game) is not None,
