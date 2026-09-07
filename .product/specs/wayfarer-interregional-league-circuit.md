@@ -154,8 +154,10 @@ acceptance requirements for this revision.
 
 Ordinary Trainers and Gym members retain authored roster selection and apply
 the separate [Trainer-party scaling specification](trainer-party-scaling.md).
-Gym Leaders retain their existing authored parties and never select a party
-from global badge count, League progress, or Trainer Rating.
+Initial Gym Leader badge battles follow the separate [Gym Leader scaling
+specification](gym-leader-scaling.md). Leader rematches retain their existing
+authored parties and never select a party from global badge count, League
+progress, or Trainer Rating.
 
 ### Trainer Rating
 
@@ -209,8 +211,10 @@ values document the effect of keeping its existing formula.
 The value remains a high-water mark. It scales ordinary wild encounters through
 the existing projection pipeline and determines the soft level cap through the
 Trainer Rating party progression specification. Ordinary Trainers and Gym
-members consume it through the Trainer-party scaling specification; excluded
-boss and League parties remain authored.
+members consume it through the Trainer-party scaling specification. Enrolled
+initial Gym Leader badge battles consume it through the separate [Gym Leader
+scaling specification](gym-leader-scaling.md); other excluded bosses, leader
+rematches, and League parties remain authored.
 
 The HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level 5 in
 both normal and legacy-moves mode, after any existing level-5 entries. The
