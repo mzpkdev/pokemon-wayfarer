@@ -1,5 +1,7 @@
 #include "global.h"
 #include "event_data.h"
+#include "config/league_circuit.h"
+#include "league_circuit.h"
 #include "pokemon.h"
 #include "trainer_rating.h"
 
@@ -106,7 +108,9 @@ u8 GetTrainerRating(void)
 {
     u8 rating = ClampTrainerRating(VarGet(VAR_TRAINER_RATING));
 
-#if !IS_WAYFARER
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    rating = max(rating, CalculateLeagueCircuitTrainerRating());
+#elif !IS_WAYFARER
     rating = max(rating, CalculateLegacyTrainerRating());
 #endif
     if (VarGet(VAR_TRAINER_RATING) != rating)

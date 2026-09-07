@@ -238,19 +238,23 @@ TEST("RandomUniform mul-based faster than mod-based (compile-time)")
 TEST("RandomUniform mul-based faster than mod-based (run-time)")
 {
     const u32 expectedMulSum = 289;
-    const u32 expectedModSum = 205;
+    const u32 expectedModSum = 239;
     u32 i;
     struct Benchmark mulBenchmark, modBenchmark;
     u32 mulSum = 0, modSum = 0;
 
     BENCHMARK(&mulBenchmark)
     {
+        // Seed after BenchmarkStart's VBlank wait to give each measured
+        // implementation the same deterministic stream.
+        SeedRng(0);
         for (i = 0; i < 32; i++)
             mulSum += RandomUniformDefault(RNG_NONE, 0, i);
     }
 
     BENCHMARK(&modBenchmark)
     {
+        SeedRng(0);
         for (i = 0; i < 32; i++)
             modSum += Random() % (i + 1);
     }

@@ -42,7 +42,21 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD
 	delay 40
 	setvar VAR_TEMP_1, 1
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_RecordClear
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+#endif
 	call EverGrandeCity_HallOfFame_EventScript_SetGameClearFlags
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_ShowStatus
+	setrespawn HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE
+	fadescreenspeed FADE_TO_BLACK, 24
+	special GameClear
+	waitstate
+	releaseall
+	end
+#endif
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, EverGrandeCity_HallOfFame_EventScript_GameClearMale
 	goto_if_eq VAR_RESULT, FEMALE, EverGrandeCity_HallOfFame_EventScript_GameClearFemale

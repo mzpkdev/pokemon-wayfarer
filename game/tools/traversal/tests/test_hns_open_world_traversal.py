@@ -28,6 +28,20 @@ def uncommented(text: str) -> str:
     return "\n".join(line.split("@", 1)[0] for line in text.splitlines())
 
 
+def without_wayfarer_circuit_branches(text: str) -> str:
+    """Keep standalone code when checking the explicitly guarded circuit exception."""
+    pattern = r"(?m)^#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED\n(.*?)^#endif[^\n]*"
+
+    def standalone(match: re.Match[str]) -> str:
+        body = match.group(1)
+        if re.search(r"(?m)^#(?:if|elif)", body):
+            raise AssertionError("nested circuit conditional needs explicit preprocessing")
+        branches = re.split(r"(?m)^#else[^\n]*\n", body)
+        return branches[1] if len(branches) == 2 else ""
+
+    return re.sub(pattern, standalone, text, flags=re.DOTALL)
+
+
 def load_map(name: str) -> dict:
     with (MAPS / name / "map.json").open(encoding="utf-8") as stream:
         return json.load(stream)
@@ -977,6 +991,18 @@ class HnsTraversalContractTest(unittest.TestCase):
                 self.assertNotIn("VAR_KANTO_ROCKET_STORY_STATE", graph)
                 self.assertNotIn("FLAG_KANTO_RADIO_GOT", graph)
 
+    def test_circuit_branch_filter_preserves_standalone_checks(self) -> None:
+        guard = "#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED\n"
+        self.assertEqual(without_wayfarer_circuit_branches(guard + "circuit\n#endif"), "")
+        self.assertEqual(
+            without_wayfarer_circuit_branches(guard + "circuit\n#else\nlegacy\n#endif"),
+            "legacy\n",
+        )
+        unrelated = "#if IS_HNS\nlegacy_badge_check\n#endif"
+        self.assertEqual(without_wayfarer_circuit_branches(unrelated), unrelated)
+        with self.assertRaises(AssertionError):
+            without_wayfarer_circuit_branches(guard + "#if OTHER\nnested\n#endif\n#endif")
+
     def test_deferred_region_and_endgame_gates_are_unchanged(self) -> None:
         mahogany = load_map("Mahoganytown_hns")
         merchant = object_with_local_id(mahogany, "LOCALID_MAHOGANY_MERCHANT")
@@ -1070,7 +1096,10 @@ class HnsTraversalContractTest(unittest.TestCase):
             "setobjectxyperm LOCALID_BLACKTHORN_BOY, 24, 27",
             self.scripts.block("BlackThornCity_EventScript_MoveGymBoy"),
         )
-        self.assertNotIn("FLAG_BADGE08_GET", self.scripts.block("BlackthornGym_EventScript_Clair"))
+        self.assertNotIn(
+            "FLAG_BADGE08_GET",
+            without_wayfarer_circuit_branches(self.scripts.block("BlackthornGym_EventScript_Clair")),
+        )
         self.assertOrderedText(
             self.scripts.block("DragonsDen_Shrine_EventScript_ClairEnter"),
             ["setflag FLAG_BADGE08_GET", "addvar VAR_NUM_BADGES, 1"],

@@ -1,4 +1,5 @@
 #include "config/general.h"
+#include "config/league_circuit.h"
 #include "config/battle.h"
 #include "config/item.h"
 #include "config/randomizer.h"
@@ -2490,3 +2491,5 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/Akala_Cave_hns/scripts.inc"
 
 .endif
+
+	.include "data/scripts/league_circuit.inc"

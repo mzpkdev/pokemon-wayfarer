@@ -38,6 +38,11 @@ EverGrandeCity_DrakesRoom_EventScript_CloseDoor::
 	return
 
 EverGrandeCity_DrakesRoom_EventScript_Drake::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_ELITE_4_DRAKE, EverGrandeCity_DrakesRoom_EventScript_PostBattleSpeech

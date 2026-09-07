@@ -44,21 +44,46 @@ PokemonLeague_WillsRoom_EventScript_Lance::
 	call_if_eq VAR_FACING, DIR_SOUTH, PokemonLeague_ChampionsRoom_EventScript_AdjustPlayerFacingSouth
 	call_if_eq VAR_FACING, DIR_WEST, PokemonLeague_ChampionsRoom_EventScript_AdjustPlayerFacingWest
 	faceplayer
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_WillsRoom_EventScript_LanceRematch
+#else
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_WillsRoom_EventScript_LanceRematch
+#endif
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_ShowStatus
+#else
 	msgbox PokemonLeague_ChampionsRoom_Text_BattleIntro, MSGBOX_DEFAULT
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
 	trainerbattle_no_intro TRAINER_LANCE_1_HNS, PokemonLeague_ChampionsRoom_Text_BattleWin
 	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto
 
 PokemonLeague_WillsRoom_EventScript_LanceRematch::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_ShowStatus
+#else
 	msgbox PokemonLeague_ChampionsRoom_Text_RematchBattleIntro, MSGBOX_DEFAULT
+#endif
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
 	trainerbattle_no_intro TRAINER_LANCE_2_HNS, PokemonLeague_ChampionsRoom_Text_BattleWin
 	goto PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto
 
 PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	clearflag FLAG_TEMP_5
+	setvar VAR_LEAGUE_STATE, 6
+	warpsilent MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS, 0
+	waitstate
+	releaseall
+	end
+#endif
 	clearflag FLAG_TEMP_5
 	msgbox PokemonLeague_ChampionsRoom_Text_BattleAfter, MSGBOX_DEFAULT
 	closemessage
@@ -129,6 +154,14 @@ PokemonLeague_WillsRoom_EventScript_LanceOnDefeatJohto::
 	end
 
 PokemonLeague_WillsRoom_EventScript_LanceOnDefeatKanto::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	clearflag FLAG_TEMP_5
+	setvar VAR_LEAGUE_STATE, 6
+	warpsilent MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS, 0
+	waitstate
+	releaseall
+	end
+#endif
 	clearflag FLAG_TEMP_5
 	msgbox PokemonLeague_ChampionsRoom_Text_BattleAfter, MSGBOX_DEFAULT
 	closemessage

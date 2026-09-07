@@ -46,6 +46,11 @@ EverGrandeCity_PokemonLeague_1F_Pokemart:
 @ The door guards only check for FLAG_BADGE06_GET because Winonas badge is the only one that can be skipped
 @ Its assumed the player has the remaining badges
 EverGrandeCity_PokemonLeague_1F_EventScript_DoorGuard::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_HOENN
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+#endif
 	lockall
 	goto_if_set FLAG_ENTERED_ELITE_FOUR, EverGrandeCity_PokemonLeague_1F_EventScript_GoForth
 	getplayerxy VAR_TEMP_0, VAR_TEMP_1
@@ -54,7 +59,9 @@ EverGrandeCity_PokemonLeague_1F_EventScript_DoorGuard::
 	message EverGrandeCity_PokemonLeague_1F_Text_MustHaveAllGymBadges
 	waitmessage
 	delay 120
-#if IS_WAYFARER
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	@ Eligibility above is the complete circuit predicate.
+#elif IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerGetHoennBadgeCountForScript
 	goto_if_lt VAR_RESULT, 8, EverGrandeCity_PokemonLeague_1F_EventScript_NotAllBadges
 #else

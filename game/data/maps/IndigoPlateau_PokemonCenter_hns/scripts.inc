@@ -18,11 +18,21 @@ IndigoPlateau_PokemonCenter_Enter::
 	end
 
 IndigoPlateau_Pokecenter_OnTransition::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setflag FLAG_HIDE_LEAGUE_BLACKBELT
+#endif
 	setrespawn HEAL_LOCATION_INDIGO_PLATEAU_HNS
 	end
 
 
 IndigoPlateau_EventScript_Cooltrainer::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	lock
+	faceplayer
+	call LeagueCircuit_EventScript_ShowStatus
+	release
+	end
+#endif
 	msgbox IndigoPlateau_Text_CooltrainerM, MSGBOX_NPC
 	end
 

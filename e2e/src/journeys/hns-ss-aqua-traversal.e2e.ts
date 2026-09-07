@@ -341,7 +341,7 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
     await expect(game.story.flag("badge9")).resolves.toBe(false)
   })
 
-  it("preserves the completed voyage while the first League clear is committed", async () => {
+  it("preserves the completed voyage while the Kanto circuit clear is committed", async () => {
     const leagueGame = await GameSession.launch()
     try {
       await leagueGame.arrange({
@@ -353,9 +353,14 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
         story: {
           vars: { leagueState: 5, ssAquaState: 8 },
           flags: {
-            isChampion: false,
-            visitedKanto: true,
-            visitedVermilionCity: true,
+            badge1: true,
+            badge2: true,
+            badge3: true,
+            badge4: true,
+            badge5: true,
+            badge6: true,
+            badge7: true,
+            badge8: true,
           },
         },
         party: [{ species: "lapras", level: 100, moves: ["surf"] }],
@@ -365,10 +370,9 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       await leagueGame.story.setVar("leagueState", 6)
       await finishFirstLeagueClearFlags(leagueGame)
 
-      await expect(leagueGame.story.flag("isChampion")).resolves.toBe(true)
+      await expect(leagueGame.story.flag("isKantoChampion")).resolves.toBe(true)
+      await expect(leagueGame.story.flag("isChampion")).resolves.toBe(false)
       await expect(leagueGame.story.var("ssAquaState")).resolves.toBe(8)
-      await expect(leagueGame.story.flag("visitedKanto")).resolves.toBe(true)
-      await expect(leagueGame.story.flag("visitedVermilionCity")).resolves.toBe(true)
     } finally {
       await leagueGame.close()
     }

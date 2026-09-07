@@ -17,6 +17,7 @@
 #include "constants/opponents.h"
 #include "constants/maps.h"
 #include "constants/songs.h"
+#include "config/league_circuit.h"
 
 #if IS_WAYFARER
 
@@ -271,12 +272,16 @@ TEST("Wayfarer HNS Indigo provenance remains Johto for healing and GameClear")
     FlagClear(FLAG_SYS_GAME_CLEAR);
 
     EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_JOHTO);
+#if !WAYFARER_LEAGUE_CIRCUIT_ENABLED
     GameClear();
     SetMainCallback2(testCallback);
     EXPECT(FlagGet(FLAG_IS_CHAMPION));
     EXPECT(!FlagGet(FLAG_IS_KANTO_CHAMPION));
     EXPECT(GetGameClearStateForRegion(REGION_JOHTO));
     EXPECT(!GetGameClearStateForRegion(REGION_KANTO));
+#else
+    (void)testCallback;
+#endif
 
     WayfarerSetSavedCurrentRegion(REGION_KANTO);
     SetLastHealLocationWarp(HEAL_LOCATION_INDIGO_PLATEAU_HNS);

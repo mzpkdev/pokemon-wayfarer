@@ -18,9 +18,10 @@ Regional travel is route-based rather than unrestricted. Wayfarer has no
 selectable Town Map region tabs, and Fly cannot cross the HNS and Hoenn
 boundary.
 
-The interregional League circuit separately owns new-game start selection and
-the availability of this circuit from those starts. It may define the necessary
-opening entitlement without changing the circuit's direction or its port hooks.
+The interregional League circuit uses the existing Johto opening for this
+release. Its completed maiden voyage supplies the Ticket and state-8
+entitlement for this circuit without changing its direction or port hooks.
+Future regional starts are outside this specification and do not gate travel.
 
 The runtime foundation owns the build, map catalog, persistent-state model,
 active-region dispatch, and ROM budget. The Hoenn content port owns the adapted

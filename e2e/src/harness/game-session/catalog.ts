@@ -135,6 +135,7 @@ export const storyFlags = {
   defeatedVioletGym: 0x227,
   cyclingRoad: 0x896,
   isChampion: 0x89f,
+  isKantoChampion: 0x8a0,
   visitedNewBarkTown: 0x8f0,
   visitedKanto: 0x8ff,
   visitedVermilionCity: 0x904,

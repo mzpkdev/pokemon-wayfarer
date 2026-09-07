@@ -27,6 +27,13 @@ EliteFourRoom_OnFrame::
 	.2byte 0
 
 EliteFourRoom_CloseDoor::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
+	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
+#endif
 	lock
 	setflag FLAG_TEMP_2
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkUp1
@@ -55,7 +62,16 @@ PokemonLeague_WillsRoom_EventScript_Will::
 	lock 
 	faceplayer
 	goto_if_ge VAR_LEAGUE_STATE, 2, PokemonLeague_WillsRoom_EventScript_WillDefeated
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_WillsRoom_EventScript_WillRematch
+#else
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_WillsRoom_EventScript_WillRematch
+#endif
 	msgbox PokemonLeague_WillsRoom_Text_Before, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5

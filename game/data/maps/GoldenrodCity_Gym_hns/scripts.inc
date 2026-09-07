@@ -39,6 +39,12 @@ GoldenrodCity_Gym_EventScript_Gym_Guy_After::
 	end
 
 GoldenrodCity_Gym_EventScript_Whitney::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 2
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_eq VAR_GOLDENROD_CITY_STATE, 3, GoldenrodCity_Gym_EventScript_WhitneyCrying
@@ -61,6 +67,12 @@ GoldenrodCity_Gym_EventScript_WhitneyCrying::
 	end
 
 GoldenrodCity_Gym_EventScript_WhitneyBadge::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 2
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	msgbox GoldenrodCity_Gym_Text_WhitneyWhatDoYouWant, MSGBOX_DEFAULT
@@ -70,6 +82,9 @@ GoldenrodCity_Gym_EventScript_WhitneyBadge::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox GoldenrodCity_Gym_Text_WhitneyPlainBadge, MSGBOX_DEFAULT
 	setflag FLAG_BADGE03_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_GOLDENROD_CITY_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 3

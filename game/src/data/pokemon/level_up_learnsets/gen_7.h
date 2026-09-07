@@ -5527,6 +5527,11 @@ static const struct LevelUpMove sAriadosLevelUpLearnset[] = {
 static const struct LevelUpMove sChinchouLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_BUBBLE),
     LEVEL_UP_MOVE( 1, MOVE_SUPERSONIC),
+#if HAS_HNS_CONTENT
+    LEVEL_UP_MOVE( 5, MOVE_FLASH),
+    LEVEL_UP_MOVE( 5, MOVE_SURF),
+    LEVEL_UP_MOVE( 5, MOVE_WHIRLPOOL),
+#endif
     LEVEL_UP_MOVE( 6, MOVE_THUNDER_WAVE),
     LEVEL_UP_MOVE( 9, MOVE_ELECTRO_BALL),
 #if HAS_HNS_CONTENT
@@ -5570,7 +5575,10 @@ static const struct LevelUpMove sChinchouLevelUpLearnset[] = {
     LEVEL_UP_MOVE(45, MOVE_WHIRLPOOL),
 #endif
     LEVEL_UP_MOVE(47, MOVE_ION_DELUGE),
+#if !HAS_HNS_CONTENT
+    // The HNS utility triplets use the final available slot in this learnset.
     LEVEL_UP_MOVE(50, MOVE_CHARGE),
+#endif
 #if HAS_HNS_CONTENT
     LEVEL_UP_MOVE(50, MOVE_FLASH),
     LEVEL_UP_MOVE(50, MOVE_SURF),

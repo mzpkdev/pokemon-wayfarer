@@ -1,0 +1,243 @@
+{
+  "integration": "No Trainer IDs or aliases added. Shared HNS venue uses *_1_HNS for Kanto Tier 1 and *_2_HNS for Johto Tier 2. Hoenn keeps existing IDs and species, items, moves, AI, and party sizes. Rerun trainer-party-scaling classification inventory after integration.",
+  "trainers": [
+    {
+      "trainer": "TRAINER_SIDNEY",
+      "id": 891,
+      "tier": 3,
+      "levels": [
+        86,
+        86,
+        86,
+        86,
+        87
+      ],
+      "emeraldLevels": [
+        46,
+        48,
+        46,
+        48,
+        49
+      ],
+      "rosterSha256": "a37508cfca2c0f76776c645bd197fc3cbe577f086d38d5d60bab8a545974079e"
+    },
+    {
+      "trainer": "TRAINER_PHOEBE",
+      "id": 892,
+      "tier": 3,
+      "levels": [
+        87,
+        87,
+        88,
+        87,
+        88
+      ],
+      "emeraldLevels": [
+        48,
+        49,
+        50,
+        49,
+        51
+      ],
+      "rosterSha256": "d014600d8ad2e9f13b019071f6b3fd18b741fb429f6b6d28c40469bd8c31e7ea"
+    },
+    {
+      "trainer": "TRAINER_GLACIA",
+      "id": 893,
+      "tier": 3,
+      "levels": [
+        88,
+        88,
+        89,
+        89,
+        89
+      ],
+      "emeraldLevels": [
+        50,
+        50,
+        52,
+        52,
+        53
+      ],
+      "rosterSha256": "f9c2943bf8502cb4f8be17ac467a840ff4cd3bdac19594aaed70e52f662fe380"
+    },
+    {
+      "trainer": "TRAINER_DRAKE",
+      "id": 894,
+      "tier": 3,
+      "levels": [
+        89,
+        90,
+        89,
+        90,
+        90
+      ],
+      "emeraldLevels": [
+        52,
+        54,
+        53,
+        53,
+        55
+      ],
+      "rosterSha256": "7cdfab18eaf00607ca59783b01298c086e16150a86f4d43e01b2e3fb80e4e0b1"
+    },
+    {
+      "trainer": "TRAINER_WALLACE",
+      "id": 965,
+      "tier": 3,
+      "levels": [
+        91,
+        90,
+        91,
+        91,
+        91,
+        92
+      ],
+      "emeraldLevels": [
+        57,
+        55,
+        56,
+        56,
+        56,
+        58
+      ],
+      "rosterSha256": "b9b6c414e2de06af370e91e04d7598d688a4e36381a40044b641dfbb08ac38e9"
+    },
+    {
+      "trainer": "TRAINER_WILL_1_HNS",
+      "id": 433,
+      "tier": 1,
+      "levels": [
+        48,
+        49,
+        48,
+        49,
+        50
+      ],
+      "rosterSha256": "8fbfa6734e8a72b656c2a72052e9b9507f050963eaa3122b6653eef4876b337a"
+    },
+    {
+      "trainer": "TRAINER_KOGA_1_HNS",
+      "id": 439,
+      "tier": 1,
+      "levels": [
+        50,
+        51,
+        50,
+        51,
+        52
+      ],
+      "rosterSha256": "7823d7361c412b2e040c1d5215e98d517592b72d30c1498d3d789633667eb868"
+    },
+    {
+      "trainer": "TRAINER_BRUNO_1_HNS",
+      "id": 435,
+      "tier": 1,
+      "levels": [
+        53,
+        52,
+        53,
+        53,
+        54
+      ],
+      "rosterSha256": "7906ad6da6f26d31f548260412d5e4311a8b94275f83711a1cb738469ec4f6cb"
+    },
+    {
+      "trainer": "TRAINER_KAREN_1_HNS",
+      "id": 437,
+      "tier": 1,
+      "levels": [
+        54,
+        53,
+        53,
+        53,
+        55
+      ],
+      "rosterSha256": "cfafad50b874e28978ea7b656f2aeb58f9270f91bcdc0f01c461085192bfc89a"
+    },
+    {
+      "trainer": "TRAINER_LANCE_1_HNS",
+      "id": 441,
+      "tier": 1,
+      "levels": [
+        54,
+        55,
+        54,
+        55,
+        54,
+        56
+      ],
+      "rosterSha256": "1524d6efb19c4cb0f07d3d7298849cd5f86f855cc13793535f1b20412b9a33b3"
+    },
+    {
+      "trainer": "TRAINER_WILL_2_HNS",
+      "id": 434,
+      "tier": 2,
+      "levels": [
+        66,
+        67,
+        67,
+        67,
+        66,
+        68
+      ],
+      "rosterSha256": "ff9a4ed973dcf0402c3c9320b481bc0c25207651162cc837a8d19ad9fcd10f29"
+    },
+    {
+      "trainer": "TRAINER_KOGA_2_HNS",
+      "id": 440,
+      "tier": 2,
+      "levels": [
+        67,
+        67,
+        67,
+        67,
+        67,
+        68
+      ],
+      "rosterSha256": "392fb0e368a199673b758a20b33e36e185fb4504de48f0a50aeb55fee0ac61fc"
+    },
+    {
+      "trainer": "TRAINER_BRUNO_2_HNS",
+      "id": 436,
+      "tier": 2,
+      "levels": [
+        67,
+        68,
+        67,
+        68,
+        67,
+        68
+      ],
+      "rosterSha256": "48db42454737858930a04b518df6f25fe900585c9884256a3de33c241c07c0db"
+    },
+    {
+      "trainer": "TRAINER_KAREN_2_HNS",
+      "id": 438,
+      "tier": 2,
+      "levels": [
+        68,
+        67,
+        68,
+        68,
+        67,
+        69
+      ],
+      "rosterSha256": "186adc6fe1a59c33b99d7f61c0a3d3d658a9d035147fc310372a4c25cdaca9a2"
+    },
+    {
+      "trainer": "TRAINER_LANCE_2_HNS",
+      "id": 442,
+      "tier": 2,
+      "levels": [
+        69,
+        68,
+        69,
+        68,
+        69,
+        70
+      ],
+      "rosterSha256": "22b096e68fa4a0a132b529b83b899f300f2b1ea077668869fcb5f8594df7cd51"
+    }
+  ]
+}

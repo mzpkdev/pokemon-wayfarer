@@ -25,10 +25,20 @@ CianwoodGym_Text_GymStatueCertified:
 	.string "{PLAYER}$"
 
 CianwoodGym_EventScript_Chuck::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 4
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto_if_unset FLAG_BADGE05_GET, CianwoodGym_EventScript_ChuckOfficialChallenge
+#endif
 	goto_if_unset FLAG_HIDE_DOJO_CHUCK, CianwoodGym_EventScript_ChuckAtDojo
 	goto_if_set FLAG_VISITED_VERMILION_CITY, CianwoodGym_EventScript_ChuckGotoDojo
+CianwoodGym_EventScript_ChuckOfficialChallenge::
 	goto_if_set FLAG_DEFEATED_CIANWOOD_GYM, CianwoodGym_EventScript_Chuck_Defeated
 	msgbox CianwoodGym_Text_ChuckIntro1, MSGBOX_DEFAULT
 	applymovement LOCALID_CIANWOOD_CHUCK, CianwoodGym_Movement_ChuckLeft
@@ -58,6 +68,9 @@ CianwoodGym_EventScript_ChuckVictory::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox CianwoodGym_Text_ChuckBadgeSpeech, MSGBOX_DEFAULT
 	setflag FLAG_BADGE05_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_CIANWOOD_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 5

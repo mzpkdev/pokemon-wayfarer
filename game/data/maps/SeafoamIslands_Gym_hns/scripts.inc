@@ -7,6 +7,12 @@ SeafoamIslands_Gym_OnTransition:
 	end
 
 SeafoamIslands_Gym_EventScript_Blaine::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_KANTO
+	setvar VAR_0x8005, 6
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_CINNABAR_ISLAND_GYM, SeafoamIslands_Gym_EventScript_Blaine_Defeated
@@ -19,6 +25,9 @@ SeafoamIslands_Gym_EventScript_Blaine::
 	giveitem ITEM_TM_OVERHEAT
 	msgbox SeafoamIslands_Gym_Text_Blaine_ExplainTM, MSGBOX_DEFAULT
 	setflag FLAG_BADGE15_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_CINNABAR_ISLAND_GYM
 	addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 15

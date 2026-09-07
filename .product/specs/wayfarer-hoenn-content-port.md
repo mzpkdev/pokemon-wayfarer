@@ -239,10 +239,9 @@ rival according to the normal player-gender relationship without replacing the
 Wayfarer player, family, home, or Trainer identity.
 
 This existing-party rescue is the visitor branch used by the staged Hoenn
-entry milestone. It does not define Hoenn's native new-game opening. The
-interregional circuit requires a separate approved Hoenn start transaction,
-including its initial party and starter behavior, before Hoenn can appear in
-the new-game start selector.
+entry milestone. It does not define a future Hoenn native new-game opening.
+That future opening, including its initial party and starter behavior, is
+separately scoped and does not gate the Johto-start interregional circuit.
 
 ### Main campaign and regional progression
 

@@ -65,6 +65,12 @@ MahoganyTown_Gym_EventScript_Clarissa::
 	end
 
 MahoganyTown_Gym_EventScript_Pryce::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, REGION_JOHTO
+	setvar VAR_0x8005, 6
+	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_DEFEATED_MAHOGANY_TOWN_GYM, MahoganyTown_Gym_EventScript_Pryce_Defeated
@@ -79,6 +85,9 @@ MahoganyTown_Gym_EventScript_PryceVictory::
 	call Common_EventScript_PlayGymBadgeFanfare
 	msgbox MahoganyTown_Gym_Text_GlacierBadgeSpeech, MSGBOX_DEFAULT
 	setflag FLAG_BADGE07_GET
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_CheckQualification
+#endif
 	setflag FLAG_DEFEATED_MAHOGANY_TOWN_GYM
     addvar VAR_NUM_BADGES, 1
 	setvar VAR_0x8008, 7

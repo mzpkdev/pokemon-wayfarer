@@ -246,6 +246,9 @@ NewBarkTown_Lab_EventScript_ChoseStarter::
 	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
 	message NewBarkTown_Lab_Text_ReceivedStarter
 	waitfanfare
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call LeagueCircuit_EventScript_Itinerary
+#endif
 	specialvar VAR_RESULT, IsNuzlockeNicknamingActive
 	goto_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_ChoseStarter_NicknameStarter_Nuzlocke
 	msgbox NewBarkTown_Lab_Text_Nickname, MSGBOX_YESNO
