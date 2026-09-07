@@ -1244,12 +1244,23 @@ static void Task_HallOfFameRecord(u8 taskId)
     sHallOfFameRecordEffectFuncs[task->tState](task);
 }
 
+static bool8 UseEmeraldHallOfFameEffect(void)
+{
+#if IS_WAYFARER
+    // Both venues run in the HNS build. Finish the effect that this venue's
+    // script started so its waitfieldeffect can resume.
+    return gMapHeader.mapLayout->layoutVersion == LAYOUT_VERSION_EMERALD;
+#else
+    return !IS_FRLG && !IS_HNS;
+#endif
+}
+
 static void HallOfFameRecordEffect_Init(struct Task *task)
 {
     u8 taskId;
     task->tState++;
     task->tBallSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, FALSE);
-    if (!IS_FRLG && !IS_HNS)
+    if (UseEmeraldHallOfFameEffect())
     {
         taskId = FindTaskIdByFunc(Task_HallOfFameRecord);
         CreateHofMonitorSprite(taskId, 120, 24, FALSE);
@@ -1264,7 +1275,7 @@ static void HallOfFameRecordEffect_WaitForBallPlacement(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 1)
     {
-        if (IS_FRLG || IS_HNS)
+        if (!UseEmeraldHallOfFameEffect())
             CreateHofMonitorSpriteFrlg(120, 25);
         task->tStartHofFlash++;
         task->tState++;
@@ -1284,7 +1295,7 @@ static void HallOfFameRecordEffect_WaitForSoundAndEnd(struct Task *task)
     if (gSprites[task->tBallSpriteId].sState > 6)
     {
         DestroySprite(&gSprites[task->tBallSpriteId]);
-        if (IS_FRLG || IS_HNS)
+        if (!UseEmeraldHallOfFameEffect())
             FieldEffectActiveListRemove(FLDEFF_HALL_OF_FAME_RECORD_FRLG);
         else
             FieldEffectActiveListRemove(FLDEFF_HALL_OF_FAME_RECORD);

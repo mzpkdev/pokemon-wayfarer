@@ -5,8 +5,17 @@ PokemonLeague_WillsRoom_hns_MapScripts::
 	.byte 0
 
 EliteFourRoom_OnLoad::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, LeagueCircuit_IsCurrentRoomDefeated
+	call_if_eq VAR_RESULT, TRUE, EliteFourRoom_OpenExit
+#endif
 	call_if_eq VAR_TEMP_0, 1, EliteFourRoom_CreateDoor
 	end
+
+EliteFourRoom_OpenExit::
+	setmetatile 6, 1, 0x28E, FALSE
+	setmetatile 6, 2, 0x296, FALSE
+	return
 
 EliteFourRoom_CreateDoor::
 	setmetatile 5, 11, 0x29D, TRUE
@@ -28,10 +37,10 @@ EliteFourRoom_OnFrame::
 
 EliteFourRoom_CloseDoor::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
 	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
 	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
 #endif
 	lock
@@ -61,15 +70,16 @@ EliteFourRoom_CloseDoor::
 PokemonLeague_WillsRoom_EventScript_Will::
 	lock 
 	faceplayer
-	goto_if_ge VAR_LEAGUE_STATE, 2, PokemonLeague_WillsRoom_EventScript_WillDefeated
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
-	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_EntryDenied
-	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_EntryDenied
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
+	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
+	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
+	goto_if_ge VAR_LEAGUE_STATE, 2, PokemonLeague_WillsRoom_EventScript_WillDefeated
 	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_WillsRoom_EventScript_WillRematch
 #else
+	goto_if_ge VAR_LEAGUE_STATE, 2, PokemonLeague_WillsRoom_EventScript_WillDefeated
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_WillsRoom_EventScript_WillRematch
 #endif
 	msgbox PokemonLeague_WillsRoom_Text_Before, MSGBOX_DEFAULT

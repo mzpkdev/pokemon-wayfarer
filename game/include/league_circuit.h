@@ -16,6 +16,16 @@ enum LeagueAdmissionRequirement
     LEAGUE_ADMISSION_UNAVAILABLE,
 };
 
+enum Region GetActiveLeagueRunRegion(void);
+bool8 ValidateActiveLeagueRun(void);
+bool32 GetLeagueRunBattleRating(u32 region, u32 encounterIndex, u8 *rating);
+void EndLeagueRun(void);
+void LeagueRunHandleWarp(const struct WarpData *source, struct WarpData *destination);
+void LeagueRunValidateSavedLocation(void);
+bool8 ConsumeLeagueRunLoadRecovery(void);
+bool8 MarkLeagueChampionDefeated(void);
+bool8 IsCurrentLeagueRoomDefeated(void);
+
 u8 GetGlobalBadgeCount(void);
 enum Region GetRequiredLeagueRegion(void);
 enum LeagueAdmissionRequirement GetLeagueAdmissionRequirement(enum Region region);

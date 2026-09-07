@@ -1,6 +1,6 @@
-import { beforeAll, describe, expect, it } from "webanvil/test"
+import { afterEach, beforeEach, describe, expect, it } from "webanvil/test"
 
-import { GameSession, type ArrangeGame } from "../harness/game-session"
+import { GameSession, type ArrangeGame, type GameMap, type Species } from "../harness/game-session"
 
 const circuitState = async (
   game: GameSession,
@@ -76,8 +76,12 @@ const finishPendingArrange = async (
   await arrange
 }
 
-const startTrainerBattle = async (game: GameSession, description: string): Promise<void> => {
-  await game.player.interact()
+const startTrainerBattle = async (
+  game: GameSession,
+  description: string,
+  interact = true,
+): Promise<void> => {
+  if (interact) await game.player.interact()
   for (let attempt = 0; attempt < 360; attempt++) {
     const state = await game.state.read()
     if (state.battle.ui === "action-menu") return
@@ -88,27 +92,170 @@ const startTrainerBattle = async (game: GameSession, description: string): Promi
   throw new Error(`${description} did not start: ${JSON.stringify(await game.state.read())}`)
 }
 
-const finishIndigoHallOfFame = async (
+const leagueBaseline = (rating: number): number => {
+  const anchors = [
+    [0, 15],
+    [4, 16],
+    [8, 18],
+    [16, 23],
+    [30, 30],
+    [40, 42],
+    [55, 60],
+    [65, 80],
+    [80, 100],
+  ] as const
+  for (let index = 1; index < anchors.length; index++) {
+    const [r1, l1] = anchors[index]!
+    const [r0, l0] = anchors[index - 1]!
+    if (rating <= r1)
+      return l0 + Math.floor(((rating - r0) * (l1 - l0) * 2 + r1 - r0) / (2 * (r1 - r0)))
+  }
+  return 100
+}
+
+const walkTo = async (game: GameSession, x: number, y: number): Promise<void> => {
+  const map = (await game.state.read()).map.name
+  for (let attempt = 0; attempt < 240; attempt++) {
+    const state = await game.state.read()
+    if (state.map.name !== map) throw new Error(`Left ${map} while walking to ${x},${y}`)
+    if (state.player.x === x && state.player.y === y) {
+      await game.wait.frames(16)
+      return
+    }
+    await game.player.move(
+      state.player.x < x
+        ? "right"
+        : state.player.x > x
+          ? "left"
+          : state.player.y < y
+            ? "down"
+            : "up",
+    )
+  }
+  throw new Error(`Could not walk to ${x},${y}: ${JSON.stringify(await game.state.read())}`)
+}
+
+const walkNorthToMap = async (game: GameSession, map: GameMap): Promise<void> => {
+  for (let attempt = 0; attempt < 200; attempt++) {
+    if ((await game.state.read()).map.name === map) {
+      await game.wait.forMap(map)
+      await finishFieldScript(game, `enter ${map}`)
+      return
+    }
+    await game.player.move("up")
+  }
+  throw new Error(`Did not reach ${map}: ${JSON.stringify(await game.state.read())}`)
+}
+
+const admitIndigo = async (game: GameSession, region: "kanto" | "johto"): Promise<number> => {
+  if ((await game.state.read()).map.name === "indigo-plateau") {
+    await walkNorthToMap(game, "indigo-league-lobby")
+    await walkTo(game, 19, 12)
+    await walkTo(game, 31, 12)
+  }
+  await walkTo(game, 31, 4)
+  await walkTo(game, 32, 4)
+  const rating = (await game.state.read()).circuit.trainerRating
+  await walkNorthToMap(game, "league-will")
+  await expect(game.state.read()).resolves.toMatchObject({
+    circuit: { trainerRating: rating, run: { active: true, region, ratingAtEntry: rating } },
+  })
+  return rating
+}
+
+const indigoRooms = [
+  "league-will",
+  "league-koga",
+  "league-bruno",
+  "league-karen",
+  "league-lance",
+] as const
+const indigoLeads: Record<"kanto" | "johto", readonly Species[]> = {
+  kanto: ["girafarig", "ariados", "hitmonchan", "umbreon", "gyarados"],
+  johto: ["gardevoir", "tentacruel", "steelix", "umbreon", "salamence"],
+}
+const indigoLeadOffsets = { kanto: [-6, -5, -3, -2, -1], johto: [-6, -4, -3, -2, 0] } as const
+
+const finishIndigoRun = async (
   game: GameSession,
   region: "kanto" | "johto",
+  rating: number,
 ): Promise<void> => {
-  for (let attempt = 0; attempt < 300; attempt++) {
+  for (const [index, map] of indigoRooms.entries()) {
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: map },
+      circuit: { run: { active: true, region, ratingAtEntry: rating } },
+    })
+    await walkTo(game, 6, index === 4 ? 9 : 7)
+    await startTrainerBattle(game, `${region} ${map}`)
+    await expect(game.state.read()).resolves.toMatchObject({
+      battle: {
+        enemy: {
+          species: indigoLeads[region][index],
+          level: Math.min(
+            100,
+            Math.max(1, leagueBaseline(rating) + indigoLeadOffsets[region][index]!),
+          ),
+        },
+      },
+      circuit: {
+        trainerRating: rating,
+        clears: { [region]: false },
+        run: { active: true, region, ratingAtEntry: rating },
+      },
+    })
+    await game.battle.win()
+    if (index === 4) break
+    await finishVictoryScript(game, `${region} ${map} victory`)
+    await expect(game.story.var("leagueState")).resolves.toBe(index + 2)
+    if (index === 0 || index === 2) {
+      await game.saveAndReload()
+      await expect(game.story.var("leagueState")).resolves.toBe(index + 2)
+      await expect(game.state.read()).resolves.toMatchObject({
+        circuit: {
+          clears: { [region]: false },
+          run: { active: true, region, ratingAtEntry: rating },
+        },
+      })
+    }
+    await walkTo(game, 5, 7)
+    await walkTo(game, 5, 3)
+    await walkTo(game, 6, 3)
+    await walkNorthToMap(game, indigoRooms[index + 1]!)
+  }
+  for (let attempt = 0; attempt < 900; attempt++) {
     const state = await game.state.read()
-    if (state.circuit.clears[region]) return
+    if (state.ready && state.map.name === "indigo-plateau" && state.circuit.clears[region]) {
+      expect(state.circuit.run.active).toBe(false)
+      await expect(game.story.var("leagueState")).resolves.toBe(1)
+      await game.saveAndReload()
+      await expect(game.state.read()).resolves.toMatchObject({
+        map: { name: "indigo-plateau" },
+        circuit: {
+          clears: { [region]: true },
+          trainerRating: state.circuit.trainerRating,
+          run: { active: false },
+        },
+      })
+      return
+    }
     await game.wait.frames(30)
     await game.controls.press("a")
   }
   throw new Error(
-    `${region} League clear was not committed by the Hall of Fame: ${JSON.stringify(await game.state.read())}`,
+    `${region} Hall of Fame did not save and return: ${JSON.stringify(await game.state.read())}`,
   )
 }
 
 describe.sequential("Wayfarer League Circuit", () => {
   let game: GameSession
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     game = await GameSession.launch()
-    return () => game.close()
+  })
+
+  afterEach(async () => {
+    await game.close()
   })
 
   it("keeps badge collection independent and enforces the ordered 8/16/24 itinerary", async () => {
@@ -308,56 +455,233 @@ describe.sequential("Wayfarer League Circuit", () => {
     await expect(game.story.flag("hideMauvilleCityWattson")).resolves.toBe(false)
   })
 
-  it("commits all-badge Kanto and Johto clears through the live Indigo Hall of Fame", async () => {
-    const kantoGame = await GameSession.launch()
-    try {
-      await kantoGame.arrange({
+  for (const route of [
+    { name: "earliest Kanto", badges: { johto: 4, hoenn: 4 }, clears: {}, region: "kanto" },
+    {
+      name: "intermediate Kanto",
+      badges: { kanto: 4, johto: 4, hoenn: 4 },
+      clears: {},
+      region: "kanto",
+    },
+    {
+      name: "earliest Johto",
+      badges: { kanto: 8, johto: 8 },
+      clears: { kanto: true },
+      region: "johto",
+    },
+    {
+      name: "intermediate Johto",
+      badges: { kanto: 8, johto: 8, hoenn: 4 },
+      clears: { kanto: true },
+      region: "johto",
+    },
+    {
+      name: "all-badges consecutive Indigo",
+      badges: { kanto: 8, johto: 8, hoenn: 8 },
+      clears: {},
+      region: "kanto",
+    },
+  ] as const) {
+    it(`preserves admission levels through every room and save/load: ${route.name}`, async () => {
+      await game.arrange({
         checkpoint: "new-bark-after-intro",
-        player: { facing: "up", position: { map: "hall-of-fame", x: 5, y: 12 } },
-        story: { vars: { leagueState: 5 } },
+        player: { facing: "up", position: { map: "indigo-league-lobby", x: 31, y: 4 } },
+        party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+        circuit: { badges: route.badges, clears: route.clears },
+        story: { vars: { ssAquaState: 8 } },
+      })
+      const rating = await admitIndigo(game, route.region)
+      await game.saveAndReload()
+      await expect(game.story.var("leagueState")).resolves.toBe(1)
+      await finishIndigoRun(game, route.region, rating)
+      await expect(game.story.var("ssAquaState")).resolves.toBe(8)
+      if (route.region === "kanto") {
+        await expect(game.story.flag("isKantoChampion")).resolves.toBe(true)
+        await expect(game.story.flag("isChampion")).resolves.toBe(false)
+      }
+      if (route.name === "all-badges consecutive Indigo") {
+        const johtoRating = await admitIndigo(game, "johto")
+        expect(johtoRating).toBeGreaterThan(rating)
+        await finishIndigoRun(game, "johto", johtoRating)
+        await expect(game.story.var("ssAquaState")).resolves.toBe(8)
+        await expect(game.story.flag("isKantoChampion")).resolves.toBe(true)
+        await expect(game.story.flag("isChampion")).resolves.toBe(true)
+        await expect(game.state.read()).resolves.toMatchObject({
+          circuit: {
+            clears: { kanto: true, johto: true, hoenn: false },
+            leagues: { hoenn: "available" },
+            run: { active: false },
+          },
+        })
+      }
+    }, 600_000)
+  }
+
+  it("keeps Hoenn admission levels through five battles, halls, and completion reload", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "hoenn-league-lobby", x: 9, y: 3 } },
+      party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+      circuit: { badges: { kanto: 8, johto: 8, hoenn: 8 }, clears: { kanto: true, johto: true } },
+    })
+    const rating = (await game.state.read()).circuit.trainerRating
+    await game.player.interact()
+    await finishFieldScript(game, "Hoenn guards grant admission")
+    await walkNorthToMap(game, "hoenn-league-hall5")
+    await walkNorthToMap(game, "league-sidney")
+    await game.saveAndReload()
+    const rooms = [
+      "league-sidney",
+      "league-phoebe",
+      "league-glacia",
+      "league-drake",
+      "league-wallace",
+    ] as const
+    const leads = ["mightyena", "dusclops", "sealeo", "shelgon", "wailord"] as const
+    const halls = [
+      "hoenn-league-hall1",
+      "hoenn-league-hall2",
+      "hoenn-league-hall3",
+      "hoenn-league-hall4",
+    ] as const
+    const offsets = [-5, -4, -3, -2, 0]
+    for (const [index, room] of rooms.entries()) {
+      if (index < 4) {
+        await walkTo(game, 6, 6)
+        await startTrainerBattle(game, room)
+      } else {
+        await startTrainerBattle(game, "automatic Wallace battle", false)
+      }
+      await expect(game.state.read()).resolves.toMatchObject({
+        map: { name: room },
+        battle: {
+          enemy: {
+            species: leads[index],
+            level: Math.min(100, leagueBaseline(rating) + offsets[index]!),
+          },
+        },
+        circuit: {
+          trainerRating: rating,
+          clears: { hoenn: false },
+          run: { active: true, region: "hoenn", ratingAtEntry: rating },
+        },
+      })
+      await game.battle.win()
+      if (index === 4) break
+      await finishVictoryScript(game, `${room} victory`)
+      await game.saveAndReload()
+      await walkTo(game, 5, 6)
+      await walkTo(game, 5, 3)
+      await walkTo(game, 6, 3)
+      await walkNorthToMap(game, halls[index]!)
+      if (index < 3) await walkNorthToMap(game, rooms[index + 1]!)
+      else {
+        // Wallace's room starts its battle script immediately on entry.
+        for (let attempt = 0; attempt < 400; attempt++) {
+          if ((await game.state.read()).map.name === "league-wallace") break
+          await game.player.move("up")
+        }
+      }
+    }
+    for (let attempt = 0; attempt < 900; attempt++) {
+      const state = await game.state.read()
+      if (state.ready && state.map.name === "ever-grande-city" && state.circuit.clears.hoenn) break
+      await game.wait.frames(30)
+      await game.controls.press("a")
+    }
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "ever-grande-city" },
+      circuit: { clears: { kanto: true, johto: true, hoenn: true }, run: { active: false } },
+    })
+    const completedRating = (await game.state.read()).circuit.trainerRating
+    await game.saveAndReload()
+    await expect(game.state.read()).resolves.toMatchObject({
+      circuit: { trainerRating: completedRating, clears: { hoenn: true }, run: { active: false } },
+    })
+  }, 600_000)
+
+  it("clears a lost attempt before save/load and admits a fresh retry", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "indigo-league-lobby", x: 31, y: 4 } },
+      party: [{ species: "pidgey", level: 1, moves: ["tackle"] }],
+      circuit: { badges: { johto: 8 } },
+    })
+    const rating = await admitIndigo(game, "kanto")
+    await walkTo(game, 6, 7)
+    await startTrainerBattle(game, "losing Kanto attempt")
+    for (let attempt = 0; attempt < 900; attempt++) {
+      const state = await game.state.read()
+      if (state.ready && state.map.name === "indigo-plateau") break
+      await game.wait.frames(30)
+      await game.controls.press("a")
+    }
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "indigo-plateau" },
+      circuit: { trainerRating: rating, clears: { kanto: false }, run: { active: false } },
+    })
+    await game.saveAndReload()
+    await expect(game.story.var("leagueState")).resolves.toBe(1)
+    expect(await admitIndigo(game, "kanto")).toBe(rating)
+    await expect(game.story.var("leagueState")).resolves.toBe(1)
+  }, 240_000)
+
+  it("recovers inconsistent saved room progression without awarding a clear", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "indigo-league-lobby", x: 31, y: 4 } },
+      party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+      circuit: { badges: { johto: 8 } },
+    })
+    const rating = await admitIndigo(game, "kanto")
+    await game.story.setVar("leagueState", 6)
+    await game.saveAndReload()
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "indigo-league-lobby" },
+      circuit: { trainerRating: rating, clears: { kanto: false }, run: { active: false } },
+    })
+    await expect(game.story.var("leagueState")).resolves.toBe(1)
+  })
+
+  it("rejects a Hall of Fame injection without an admitted run", async () => {
+    await finishPendingArrange(
+      game,
+      game.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { position: { map: "hall-of-fame", x: 5, y: 12 } },
+        story: { vars: { leagueState: 6 } },
         party: [{ species: "lapras", level: 100 }],
         circuit: { badges: { kanto: 8, johto: 8, hoenn: 8 } },
-        determinism: { textSpeed: "instant" },
-      })
-      await kantoGame.story.setVar("leagueState", 6)
-      await finishIndigoHallOfFame(kantoGame, "kanto")
-      await expect(kantoGame.state.read()).resolves.toMatchObject({
-        circuit: {
-          badges: { total: 24 },
-          clears: { kanto: true, johto: false, hoenn: false },
-          leagues: { kanto: "cleared", johto: "available", hoenn: "locked" },
-          trainerRating: 71,
-        },
-      })
-    } finally {
-      await kantoGame.close()
-    }
+      }),
+      "invalid Hall of Fame recovery",
+    )
+    await finishFieldScript(game, "invalid Hall of Fame recovery")
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "indigo-league-lobby" },
+      circuit: {
+        trainerRating: 56,
+        clears: { kanto: false, johto: false, hoenn: false },
+        run: { active: false },
+      },
+    })
+  })
 
-    const johtoGame = await GameSession.launch()
-    try {
-      await johtoGame.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: { facing: "up", position: { map: "hall-of-fame", x: 5, y: 12 } },
-        story: { vars: { leagueState: 5 } },
-        party: [{ species: "lapras", level: 100 }],
-        circuit: {
-          badges: { kanto: 8, johto: 8, hoenn: 8 },
-          clears: { kanto: true },
-        },
-        determinism: { textSpeed: "instant" },
-      })
-      await johtoGame.story.setVar("leagueState", 6)
-      await finishIndigoHallOfFame(johtoGame, "johto")
-      await expect(johtoGame.state.read()).resolves.toMatchObject({
-        circuit: {
-          badges: { total: 24 },
-          clears: { kanto: true, johto: true, hoenn: false },
-          leagues: { kanto: "cleared", johto: "cleared", hoenn: "available" },
-          trainerRating: 76,
-        },
-      })
-    } finally {
-      await johtoGame.close()
+  it("denies entry without eight badges and creates no run", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "indigo-league-lobby", x: 32, y: 4 } },
+      circuit: { badges: { johto: 7 } },
+    })
+    const rating = (await game.state.read()).circuit.trainerRating
+    for (let attempt = 0; attempt < 100; attempt++) {
+      const state = await game.state.read()
+      if (state.dialogueOpen) break
+      await game.player.move("up")
     }
+    await finishFieldScript(game, "denied Indigo admission")
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "indigo-league-lobby" },
+      circuit: { trainerRating: rating, clears: { kanto: false }, run: { active: false } },
+    })
   })
 })

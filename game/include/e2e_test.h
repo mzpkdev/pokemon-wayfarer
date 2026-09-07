@@ -360,6 +360,9 @@ struct E2ETestState
     u8 globalBadgeCount;
     u8 trainerRating;
     u8 trainerCardState;
+    bool8 leagueRunActive;
+    u8 leagueRunRegion;
+    u8 leagueRunRating;
 };
 
 struct E2ETestAbi

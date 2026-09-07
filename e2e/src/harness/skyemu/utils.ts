@@ -88,4 +88,10 @@ export const stopProcess = async (child: childProcess.ChildProcess): Promise<voi
     throw error
   }
   await exited
+  // Xvfb's wrapper may exit while the paused emulator remains alive.
+  try {
+    process.kill(-child.pid, "SIGKILL")
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== "ESRCH") throw error
+  }
 }

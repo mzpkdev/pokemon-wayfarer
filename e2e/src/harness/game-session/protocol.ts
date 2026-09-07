@@ -1,7 +1,7 @@
-const abiVersion = 9
+const abiVersion = 10
 const expectedRequestSize = 432
 const expectedResultSize = 16
-const expectedStateSize = 352
+const expectedStateSize = 356
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -245,6 +245,9 @@ export type StateSnapshot = {
   globalBadgeCount: number
   trainerRating: number
   trainerCardState: number
+  leagueRunActive: boolean
+  leagueRunRegion: number
+  leagueRunRating: number
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -628,5 +631,8 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     globalBadgeCount: bytes[349]!,
     trainerRating: bytes[350]!,
     trainerCardState: bytes[351]!,
+    leagueRunActive: bytes[352] === 1,
+    leagueRunRegion: bytes[353]!,
+    leagueRunRating: bytes[354]!,
   }
 }

@@ -24,17 +24,6 @@ const startScriptedBattle = async (game: GameSession, description: string): Prom
   throw new Error(`${description} did not start: ${JSON.stringify(await game.state.read())}`)
 }
 
-const finishFirstLeagueClearFlags = async (game: GameSession): Promise<void> => {
-  for (let attempt = 0; attempt < 300; attempt++) {
-    if ((await game.story.var("leagueState")) === 1) return
-    await game.wait.frames(30)
-    await game.controls.press("a")
-  }
-  throw new Error(
-    `first League clear flags were not committed: ${JSON.stringify(await game.state.read())}`,
-  )
-}
-
 const advanceUntilMap = async (game: GameSession, map: GameMap): Promise<void> => {
   for (let attempt = 0; attempt < 60; attempt++) {
     const state = await game.state.read()
@@ -329,43 +318,6 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
     await expect(game.story.flag("badge9")).resolves.toBe(false)
   })
 
-  it("preserves the completed voyage while the Kanto circuit clear is committed", async () => {
-    const leagueGame = await GameSession.launch()
-    try {
-      await leagueGame.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: {
-          facing: "up",
-          position: { map: "hall-of-fame", x: 5, y: 12 },
-        },
-        story: {
-          vars: { leagueState: 5, ssAquaState: 8 },
-          flags: {
-            badge1: true,
-            badge2: true,
-            badge3: true,
-            badge4: true,
-            badge5: true,
-            badge6: true,
-            badge7: true,
-            badge8: true,
-          },
-        },
-        party: [{ species: "lapras", level: 100, moves: ["surf"] }],
-        determinism: { textSpeed: "instant" },
-      })
-
-      await leagueGame.story.setVar("leagueState", 6)
-      await finishFirstLeagueClearFlags(leagueGame)
-
-      await expect(leagueGame.story.flag("isKantoChampion")).resolves.toBe(true)
-      await expect(leagueGame.story.flag("isChampion")).resolves.toBe(false)
-      await expect(leagueGame.story.var("ssAquaState")).resolves.toBe(8)
-    } finally {
-      await leagueGame.close()
-    }
-  })
-
   it("runs the unlocked ferry from Olivine to Vermilion with only the Ticket", async () => {
     const ferryGame = await GameSession.launch()
     try {
@@ -428,7 +380,7 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
     try {
       await reloadGame.arrange({
         checkpoint: "new-bark-after-intro",
-        player: { position: { map: "hall-of-fame", x: 5, y: 10 } },
+        player: { position: { map: "indigo-league-lobby", x: 19, y: 15 } },
         story: {
           vars: { ssAquaState: 8 },
           flags: { visitedKanto: true, visitedVermilionCity: true },
@@ -436,7 +388,7 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       })
 
       await reloadGame.saveAndReload()
-      await reloadGame.wait.forMap("hall-of-fame")
+      await reloadGame.wait.forMap("indigo-league-lobby")
 
       await expect(reloadGame.story.var("ssAquaState")).resolves.toBe(8)
       await expect(reloadGame.story.flag("visitedKanto")).resolves.toBe(true)

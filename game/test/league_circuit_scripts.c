@@ -1,6 +1,7 @@
 #include "global.h"
 #include "event_data.h"
 #include "league_circuit.h"
+#include "league_run_helpers.h"
 #include "string_util.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
@@ -44,18 +45,24 @@ TEST("League circuit script specials expose ordered exact-threshold eligibility"
 
     gSpecialVar_0x8004 = REGION_KANTO;
     EXPECT_EQ(LeagueCircuit_IsEligible(), TRUE);
+    EXPECT(Test_AdmitLeagueRun(gSpecialVar_0x8004));
+    Test_CompleteLeagueRooms(gSpecialVar_0x8004);
     EXPECT_EQ(LeagueCircuit_RecordClear(), TRUE);
     EXPECT_EQ(LeagueCircuit_GetRequiredRegion(), REGION_JOHTO);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
 
     gSpecialVar_0x8004 = REGION_JOHTO;
     EXPECT_EQ(LeagueCircuit_IsEligible(), TRUE);
+    EXPECT(Test_AdmitLeagueRun(gSpecialVar_0x8004));
+    Test_CompleteLeagueRooms(gSpecialVar_0x8004);
     EXPECT_EQ(LeagueCircuit_RecordClear(), TRUE);
     EXPECT_EQ(LeagueCircuit_GetRequiredRegion(), REGION_HOENN);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_JOHTO);
 
     gSpecialVar_0x8004 = REGION_HOENN;
     EXPECT_EQ(LeagueCircuit_IsEligible(), TRUE);
+    EXPECT(Test_AdmitLeagueRun(gSpecialVar_0x8004));
+    Test_CompleteLeagueRooms(gSpecialVar_0x8004);
     EXPECT_EQ(LeagueCircuit_RecordClear(), TRUE);
     EXPECT_EQ(LeagueCircuit_GetRequiredRegion(), REGION_NONE);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_HOENN);

@@ -7,6 +7,7 @@
 #define TRAINER_SCALING_ORDINARY 1
 #define TRAINER_SCALING_GYM_MEMBER 2
 #define TRAINER_SCALING_GYM_LEADER 3
+#define TRAINER_SCALING_LEAGUE 4
 
 enum GymLeaderMovePolicy
 {
@@ -46,6 +47,27 @@ struct GymLeaderScalingPlan
     u8 sourceIndices[PARTY_SIZE];
     u8 levels[PARTY_SIZE];
 };
+
+struct LeagueScalingRoster
+{
+    u16 trainerId;
+    u16 ownerId;
+    u8 region;
+    u8 difficulty;
+    u8 encounterIndex;
+    s8 encounterOffset;
+    u8 count;
+    u8 aceSlot;
+    s8 offsets[PARTY_SIZE];
+    u16 species[PARTY_SIZE];
+    u16 items[PARTY_SIZE];
+    u16 moves[PARTY_SIZE][MAX_MON_MOVES];
+};
+
+u8 GetLeagueScalingBaseline(u32 rating);
+u8 GetLeagueScalingLevel(u32 rating, s8 encounterOffset, s8 slotOffset);
+const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty);
+bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, const struct TrainerMon *party, u32 count);
 
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy);
 u32 GetTrainerScalingPolicy(u32 trainerId);

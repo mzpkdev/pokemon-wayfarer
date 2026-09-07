@@ -63,6 +63,7 @@
 #include "text.h"
 #include "trainer_pools.h"
 #include "trainer_party_scaling.h"
+#include "league_circuit.h"
 #include "trig.h"
 #include "tv.h"
 #include "util.h"
@@ -2004,7 +2005,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
     }
 }
 
-static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, u32 variant, bool32 reconstructGimmickSlots, const struct GymLeaderScalingRoster *leaderRoster, const struct GymLeaderScalingPlan *leaderPlan)
+static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags, u32 scalingPolicy, u32 rating, u32 rosterOwner, u32 variant, bool32 reconstructGimmickSlots, const struct GymLeaderScalingRoster *leaderRoster, const struct GymLeaderScalingPlan *leaderPlan, const struct LeagueScalingRoster *leagueRoster)
 {
     u32 personalityValue;
     s32 i;
@@ -2029,7 +2030,12 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             monsCount = trainer->partySize;
         }
 
-        if (leaderPlan != NULL)
+        if (leagueRoster != NULL)
+        {
+            for (i = 0; i < monsCount; i++)
+                monIndices[i] = i;
+        }
+        else if (leaderPlan != NULL)
         {
             monsCount = leaderPlan->count;
             for (i = 0; i < monsCount; i++)
@@ -2052,11 +2058,13 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
             u32 abilityNum = 0;
             u16 species = partyData[monIndex].species;
             u8 level = leaderPlan != NULL ? leaderPlan->levels[i] : partyData[monIndex].lvl;
-            bool32 scale = scalingPolicy != TRAINER_SCALING_EXCLUDED;
+            bool32 scale = scalingPolicy != TRAINER_SCALING_EXCLUDED && leagueRoster == NULL;
             bool32 isGymLeader = leaderPlan != NULL;
             bool32 randomizedSpecies = FALSE;
             u32 gimmickSlot = i + ((!firstTrainer && (battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)) ? PARTY_SIZE / 2 : 0);
 
+            if (leagueRoster != NULL)
+                level = GetLeagueScalingLevel(rating, leagueRoster->encounterOffset, leagueRoster->offsets[monIndex]);
             if (scale)
             {
                 if (!isGymLeader)
@@ -2237,7 +2245,7 @@ static u8 CreateNPCTrainerPartyInternal(struct Pokemon *party, const struct Trai
 
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags)
 {
-    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, 0, FALSE, NULL, NULL);
+    return CreateNPCTrainerPartyInternal(party, trainer, firstTrainer, battleTypeFlags, TRAINER_SCALING_EXCLUDED, 0, TRAINERS_COUNT, 0, FALSE, NULL, NULL, NULL);
 }
 
 u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool32 firstTrainer, u32 battleTypeFlags)
@@ -2249,6 +2257,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
     u16 ownerId = trainerNum;
     const struct GymLeaderScalingRoster *leaderRoster = NULL;
     struct GymLeaderScalingPlan leaderPlan;
+    const struct LeagueScalingRoster *leagueRoster = NULL;
 
     if (trainerNum == TRAINER_SECRET_BASE || trainerNum >= TRAINERS_COUNT || IsPartnerTrainerId(trainerNum))
         return 0;
@@ -2275,6 +2284,30 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
     {
         reconstructGimmickSlots = TRUE;
         policy = GetTrainerScalingPolicy(trainerNum);
+        if (policy == TRAINER_SCALING_LEAGUE)
+        {
+            policy = TRAINER_SCALING_EXCLUDED;
+#if B_LEAGUE_SCALING
+            bool32 randomizedTrainerSpecies = FALSE;
+            u8 entryRating;
+#if RANDOMIZER_AVAILABLE
+            randomizedTrainerSpecies = RandomizerFeatureEnabled(RANDOMIZE_TRAINER_MON);
+#endif
+            if (!(battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS) && !randomizedTrainerSpecies)
+            {
+                leagueRoster = GetLeagueScalingRoster(trainerNum, ownerId, GetTrainerDifficultyLevel(ownerId));
+                if (resolved.poolSize == 0
+                 && IsLeagueScalingRosterValid(leagueRoster, resolved.party, resolved.partySize)
+                 && GetLeagueRunBattleRating(leagueRoster->region, leagueRoster->encounterIndex, &entryRating))
+                {
+                    rating = entryRating;
+                    policy = TRAINER_SCALING_LEAGUE;
+                }
+                else
+                    leagueRoster = NULL;
+            }
+#endif
+        }
 #if B_GYM_LEADER_SCALING
         if (policy == TRAINER_SCALING_GYM_LEADER)
         {
@@ -2321,7 +2354,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
         if (policy == TRAINER_SCALING_ORDINARY || policy == TRAINER_SCALING_GYM_MEMBER)
             rating = GetTrainerScalingSnapshot();
 #else
-        if (policy != TRAINER_SCALING_GYM_LEADER)
+        if (policy == TRAINER_SCALING_ORDINARY || policy == TRAINER_SCALING_GYM_MEMBER)
             policy = TRAINER_SCALING_EXCLUDED;
 #endif
     }
@@ -2341,7 +2374,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
         gBattleStruct->opponentMonCanDynamax &= ~mask;
         gBattleStruct->opponentMonCanTera &= ~mask;
     }
-    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, GetTrainerDifficultyLevel(ownerId), reconstructGimmickSlots, leaderRoster, leaderRoster != NULL ? &leaderPlan : NULL);
+    return CreateNPCTrainerPartyInternal(party, &resolved, firstTrainer, battleTypeFlags, policy, rating, ownerId, GetTrainerDifficultyLevel(ownerId), reconstructGimmickSlots, leaderRoster, leaderRoster != NULL ? &leaderPlan : NULL, leagueRoster);
 }
 
 static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 firstTrainer)

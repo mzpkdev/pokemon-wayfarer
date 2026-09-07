@@ -2,6 +2,7 @@
 #include "config/league_circuit.h"
 #include "event_data.h"
 #include "league_circuit.h"
+#include "league_run_helpers.h"
 #include "load_save.h"
 #include "save.h"
 #include "test/test.h"
@@ -100,7 +101,7 @@ TEST("Trainer Rating stays at its high-water mark after cleanup and failed Leagu
     u16 savedRating;
     for (index = 0; index < 8; index++)
         SetBadgeStateForRegion(REGION_HOENN, index, TRUE);
-    EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
     EXPECT_EQ(GetTrainerRating(), 55);
     savedRating = VarGet(VAR_TRAINER_RATING);
     for (index = 0; index < 8; index++)
@@ -134,7 +135,7 @@ TEST("Trainer Rating high-water value survives production save and load after re
     WayfarerInitPersistentState();
     for (badge = 0; badge < 8; badge++)
         SetBadgeStateForRegion(REGION_HOENN, badge, TRUE);
-    EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
     EXPECT_EQ(GetTrainerRating(), 55);
     SetGameClearStateForRegion(REGION_KANTO, FALSE);
     HandleSavingData(SAVE_NORMAL);

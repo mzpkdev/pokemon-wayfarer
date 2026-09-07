@@ -1,5 +1,6 @@
 #include "global.h"
 #include "league_circuit.h"
+#include "league_run_helpers.h"
 #include "league_circuit_status.h"
 #include "string_util.h"
 #include "wayfarer_persistence.h"
@@ -63,7 +64,7 @@ TEST("League circuit status reports mixed badge thresholds and prior clear requi
     FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, sixteenWithoutClear), 0);
 
-    EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
     FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, sixteenWithKantoClear), 0);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
@@ -82,17 +83,17 @@ TEST("League circuit status reports all badges before consecutive League clears"
     FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, allBadgesNoClears), 0);
 
-    EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
     FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, kantoCleared), 0);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
 
-    EXPECT(TryRecordLeagueClear(REGION_JOHTO));
+    EXPECT(Test_CompleteAndRecordLeague(REGION_JOHTO));
     FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, johtoCleared), 0);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_JOHTO);
 
-    EXPECT(TryRecordLeagueClear(REGION_HOENN));
+    EXPECT(Test_CompleteAndRecordLeague(REGION_HOENN));
     FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, complete), 0);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_HOENN);

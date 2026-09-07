@@ -16,6 +16,10 @@ EverGrandeCity_HallOfFame_OnFrame:
 	.2byte 0
 
 EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#endif
 	lockall
 	applymovement LOCALID_HALL_OF_FAME_WALLACE, EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame1
 	applymovement LOCALID_PLAYER, EverGrandeCity_HallOfFame_Movement_WalkIntoHallOfFame1
@@ -45,7 +49,7 @@ EverGrandeCity_HallOfFame_EventScript_EnterHallOfFame::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	setvar VAR_0x8004, REGION_HOENN
 	specialvar VAR_RESULT, LeagueCircuit_RecordClear
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	call EverGrandeCity_HallOfFame_EventScript_SetGameClearFlags
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED

@@ -13,4 +13,9 @@
 #define B_GYM_LEADER_SCALING FALSE
 #endif
 
+// League scaling consumes admission TR independently of all other scaling.
+#ifndef B_LEAGUE_SCALING
+#define B_LEAGUE_SCALING TRUE
+#endif
+
 #endif

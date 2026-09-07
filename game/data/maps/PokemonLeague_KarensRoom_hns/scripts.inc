@@ -12,15 +12,16 @@ PokemonLeague_KarensRoom_OnResume::
 PokemonLeague_KarensRoom_EventScript_Karen::
 	lock 
 	faceplayer
-	goto_if_ge VAR_LEAGUE_STATE, 5, PokemonLeague_KarensRoom_EventScript_KarenDefeated
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
-	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_EntryDenied
-	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_EntryDenied
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
+	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
+	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
+	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
+	goto_if_ge VAR_LEAGUE_STATE, 5, PokemonLeague_KarensRoom_EventScript_KarenDefeated
 	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_KarensRoom_EventScript_KarenRematch
 #else
+	goto_if_ge VAR_LEAGUE_STATE, 5, PokemonLeague_KarensRoom_EventScript_KarenDefeated
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_KarensRoom_EventScript_KarenRematch
 #endif
 	msgbox PokemonLeague_KarensRoom_Text_Before, MSGBOX_DEFAULT
