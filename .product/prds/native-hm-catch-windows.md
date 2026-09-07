@@ -1,6 +1,7 @@
 # Native HM catch windows
 
-Status: Approved design; not implemented.
+Status: Core implementation complete; full route acceptance pending.
+Implementation: [Production changes and acceptance evidence](../research/native-hm-windows/revisions/implementation/README.md)
 Specification: [Native HM catch windows](../specs/native-hm-catch-windows.md)
 Current design: [Nearby-access distribution and route audit](../research/native-hm-windows/revisions/nearby-access/README.md)
 Attachments: [Original distribution and research package](../research/native-hm-windows/attachments.md)

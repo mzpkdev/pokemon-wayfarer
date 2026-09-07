@@ -84,3 +84,8 @@ their location and overwrite their generated files. Preserve this approved
 snapshot and attach the resulting implementation evidence as a named revision
 with its source commit and assignment hash. Retain original findings even when
 a later approved change resolves them.
+
+## Implementation evidence
+
+The [implementation revision](revisions/implementation/README.md) records
+production changes and validation separately from the approved design snapshots.

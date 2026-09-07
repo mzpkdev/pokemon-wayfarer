@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "replacements": [
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
+      "slot": 0,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_SHARPEDO"
+    },
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
+      "slot": 4,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_MOSSDEEP_CITY",
+      "method": "fishing_mons",
+      "slot": 6,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 0,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_SHARPEDO"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 4,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_PACIFIDLOG_TOWN",
+      "method": "fishing_mons",
+      "slot": 6,
+      "expected_species": "SPECIES_WAILMER",
+      "species": "SPECIES_KINGLER"
+    },
+    {
+      "map": "MAP_BLACKTHORN_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 5,
+      "expected_species": "SPECIES_POLIWAG",
+      "species": "SPECIES_POLIWHIRL"
+    },
+    {
+      "map": "MAP_BLACKTHORN_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 6,
+      "expected_species": "SPECIES_POLIWAG",
+      "species": "SPECIES_POLIWHIRL"
+    },
+    {
+      "map": "MAP_ROUTE121",
+      "method": "land_mons",
+      "slot": 8,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_ROUTE121",
+      "method": "land_mons",
+      "slot": 9,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_ROUTE117",
+      "method": "land_mons",
+      "slot": 4,
+      "expected_species": "SPECIES_MARILL",
+      "species": "SPECIES_AZUMARILL",
+      "min_level": 20,
+      "max_level": 20
+    },
+    {
+      "map": "MAP_ROUTE118",
+      "method": "land_mons",
+      "slot": 8,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_ROUTE118",
+      "method": "land_mons",
+      "slot": 9,
+      "expected_species": "SPECIES_WINGULL",
+      "species": "SPECIES_PELIPPER"
+    },
+    {
+      "map": "MAP_CINNABAR_ISLAND_HNS",
+      "method": "fishing_mons",
+      "slot": 1,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_KINGLER",
+      "min_level": 25,
+      "max_level": 35
+    },
+    {
+      "map": "MAP_VERMILION_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 1,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_KINGLER",
+      "min_level": 25,
+      "max_level": 35
+    },
+    {
+      "map": "MAP_CIANWOOD_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 0,
+      "expected_species": "SPECIES_MAGIKARP",
+      "species": "SPECIES_KINGLER",
+      "min_level": 35,
+      "max_level": 45
+    },
+    {
+      "map": "MAP_OLIVINE_CITY_HNS",
+      "method": "fishing_mons",
+      "slot": 1,
+      "expected_species": [
+        "SPECIES_CORSOLA",
+        "SPECIES_KRABBY"
+      ],
+      "species": "SPECIES_KINGLER",
+      "min_level": 35,
+      "max_level": 45
+    }
+  ]
+}

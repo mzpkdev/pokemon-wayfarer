@@ -536,3 +536,32 @@ TEST("HM field use: regional moves are forgettable while HM items remain importa
     EXPECT(!CannotForgetMove(MOVE_DIVE));
 #endif
 }
+
+#if IS_WAYFARER
+TEST("Wayfarer native catch carriers use normal field eligibility across catch-window boundaries")
+{
+    u8 partyIndex;
+    u16 hp = 0;
+
+    ResetFieldMoveTestState();
+    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = TRUE;
+    CreateMon(&gPlayerParty[0], SPECIES_PSYDUCK, 10, 0, OTID_STRUCT_PRESET(0));
+    GiveMonInitialMoveset(&gPlayerParty[0]);
+    gPlayerPartyCount = 1;
+    EXPECT(!CheckBagHasItem(ITEM_HM_SURF, 1));
+    EXPECT_EQ(ResolveFieldMoveUser(MOVE_SURF, &partyIndex), FIELD_MOVE_USER_FOUND);
+    EXPECT_EQ(partyIndex, 0);
+    SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
+    EXPECT_EQ(ResolveFieldMoveUser(MOVE_SURF, &partyIndex), FIELD_MOVE_USER_FOUND);
+    MakePartyMonAnEgg(0);
+    EXPECT_EQ(ResolveFieldMoveUser(MOVE_SURF, &partyIndex), FIELD_MOVE_USER_MISSING_ITEM);
+
+    CreateMon(&gPlayerParty[0], SPECIES_PSYDUCK, 22, 0, OTID_STRUCT_PRESET(0));
+    GiveMonInitialMoveset(&gPlayerParty[0]);
+    EXPECT_EQ(ResolveFieldMoveUser(MOVE_SURF, &partyIndex), FIELD_MOVE_USER_MISSING_ITEM);
+    EXPECT(AddBagItem(ITEM_HM_SURF, 1));
+    EXPECT_EQ(ResolveFieldMoveUser(MOVE_SURF, &partyIndex), FIELD_MOVE_USER_FOUND);
+    MakePartyMonAnEgg(0);
+    EXPECT_EQ(ResolveFieldMoveUser(MOVE_SURF, &partyIndex), FIELD_MOVE_USER_NO_ELIGIBLE_MON);
+}
+#endif
