@@ -75,11 +75,15 @@ rematches. Select the existing rematch roster first, then scale it normally.
 Defeated Trainers remain defeated under existing rules; this feature adds no
 rematch availability or repeatable farming system.
 
-Gym Leaders, rivals, villain bosses and admins, Elite Four members, Champions,
-other authored story bosses, tutorials, and battle facilities remain outside
-the automatic system. Player-controlled rental parties, battle partners,
-link battles, recorded battles, and imported or externally supplied parties
-also remain outside it. Boss variants and rematches retain their exclusion.
+Gym Leaders remain outside this automatic system. Their enrolled initial badge
+battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md);
+the ordinary scaler continues to exclude them, and leader rematches retain
+their authored, static parties. Rivals, villain bosses and admins, Elite Four
+members, Champions, other authored story bosses, tutorials, and battle
+facilities also remain outside the automatic system. Player-controlled rental
+parties, battle partners, link battles, recorded battles, and imported or
+externally supplied parties also remain outside it. Boss variants and rematches
+retain their exclusion.
 
 Classification must be inspectable and validated. Names and Trainer classes
 alone are insufficient to distinguish ordinary Trainers from story bosses.
@@ -105,10 +109,12 @@ predecessor resolution is bypassed while Trainer species randomization is
 active. Moves must be valid for the resulting randomized species and level.
 
 This design supersedes the interregional League circuit's static-party rule
-only for ordinary Trainers and Gym members. Gym Leaders and League parties
-remain separately authored. Trainer Rating advancement belongs to the circuit;
-this feature can be implemented and tested with seeded Ratings before that
-producer exists. It introduces no substitute local-badge progression.
+only for ordinary Trainers and Gym members. Initial Gym Leader badge battles
+are owned by the separate [Gym Leader scaling design](gym-leader-scaling.md),
+while leader rematches and League parties remain separately authored. Trainer
+Rating advancement belongs to the circuit; this feature can be implemented and
+tested with seeded Ratings before that producer exists. It introduces no
+substitute local-badge progression.
 
 ## Acceptance
 

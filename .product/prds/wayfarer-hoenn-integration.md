@@ -108,11 +108,13 @@ reward, or defeat its opponent.
 
 Wayfarer includes the Emerald maps, NPCs, shops, healing facilities, items,
 ordinary Trainers, rivals, team encounters, Gym Leaders, Elite Four, Champion,
-and main story required to complete Hoenn. Non-League Trainer parties retain
-their Emerald-authored source rosters, items, AI, and battle formats. Ordinary
-Trainers and Gym members apply the separate
-[Trainer-party scaling design](trainer-party-scaling.md) to those rosters;
-rivals, bosses, and Gym Leaders retain authored battle parties.
+and main story required to complete Hoenn. Non-League Trainer parties other
+than enrolled initial Gym Leader badge battles retain their Emerald-authored
+source rosters, items, AI, and battle formats. Ordinary Trainers and Gym
+members apply the separate [Trainer-party scaling design](trainer-party-scaling.md)
+to those rosters; rivals and bosses retain authored battle parties. Initial
+Gym Leader badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md),
+while leader rematches retain authored, static parties.
 The Hoenn Elite Four and Champion instead use the fixed Tier 3 parties owned by
 the interregional League circuit.
 
@@ -180,7 +182,11 @@ not keep a separate healing history for every region.
   and Hoenn boundary.
 - S.S. Tidal remains entirely unchanged and is not part of the Aqua circuit.
 - This milestone does not add early Ever Grande transport.
-- Wayfarer does not scale ordinary Emerald Trainer or Gym Leader parties.
+- Ordinary Trainer and Gym-member scaling is owned by the
+  [Trainer-party scaling design](trainer-party-scaling.md). Enrolled initial
+  Gym Leader badge battles are separately owned by the
+  [Gym Leader scaling design](gym-leader-scaling.md); leader rematches retain
+  static parties.
 - The interregional circuit may author a fixed Tier 3 Hoenn League party, but
   it does not scale that party at runtime.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,

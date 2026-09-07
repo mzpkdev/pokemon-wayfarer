@@ -101,14 +101,18 @@ ID. Ordinary IDs remain below the runtime foundation's partner boundary at
 
 Trainer records follow these rules:
 
-- Ordinary Trainers, rivals, team encounters, and Gym Leaders match the
-  Emerald-authored species, levels, moves, held items, AI, party size, battle
-  type, and double-battle behavior in source data. Ordinary Trainers and Gym
-  members then apply [Trainer-party scaling](trainer-party-scaling.md) at battle
-  creation; rivals, bosses, and Gym Leaders remain excluded. The Hoenn League
-  parties are the fixed Tier 3 exception owned by the interregional League circuit.
-- The same authored party is selected regardless of the player's Trainer
-  Rating or HNS difficulty option.
+- Ordinary Trainers, rivals, and team encounters match the Emerald-authored
+  species, levels, moves, held items, AI, party size, battle type, and
+  double-battle behavior in source data. Ordinary Trainers and Gym members
+  then apply [Trainer-party scaling](trainer-party-scaling.md) at battle
+  creation; rivals and bosses remain excluded. Initial Gym Leader badge battles
+  use the separate [Gym Leader scaling](gym-leader-scaling.md), which owns their
+  six-slot rosters and Trainer Rating selection. Leader rematches remain static.
+  The Hoenn League parties are the fixed Tier 3 exception owned by the
+  interregional League circuit.
+- Other than an initial Gym Leader badge battle enrolled in the Gym Leader
+  scaling specification, the same authored party is selected regardless of the
+  player's Trainer Rating or HNS difficulty option.
 - Ordinary Trainer object coordinates, movement types, trainer types, and sight
   ranges remain unchanged.
 - A traversal change may move a scripted story actor, but it cannot silently
@@ -400,14 +404,18 @@ Static and automated validation must prove all of the following:
    preserves the Wayfarer player, family, home, clock, party, Bag, money,
    Pokédex, storage, options, and Trainer ID.
 7. Every Trainer reference resolves to the expected authored source party and
-   a distinct defeat bit. Non-League Hoenn source parties match Emerald, while
-   Hoenn League parties match the fixed Tier 3 content. Eligible battle parties
-   then apply the separate Trainer-party projection.
+   a distinct defeat bit. Non-League Hoenn source parties other than enrolled
+   initial Gym Leader rosters match Emerald, while Hoenn League parties match
+   the fixed Tier 3 content. Eligible ordinary battle parties then apply the
+   separate Trainer-party projection; initial Gym Leader badge battles follow
+   the Gym Leader scaling specification.
 8. Every ordinary HNS and Hoenn Trainer remains below ID 2,048, every partner
    Trainer remains at or above 2,048, and partner battles resolve correctly.
-9. Global difficulty does not change Hoenn source roster selection. Trainer
-   Rating transforms only eligible ordinary and Gym-member battle parties
-   under the Trainer-party scaling specification.
+9. Global difficulty does not change ordinary Hoenn source roster selection.
+   Trainer Rating transforms eligible ordinary and Gym-member battle parties
+   under the Trainer-party scaling specification. Enrolled initial Gym Leader
+   badge battles follow the separate Gym Leader scaling specification; leader
+   rematches remain static.
 10. Every authored ordinary wild profile exists in Wayfarer, preserves its
    source population, and uses HNS level projection.
 11. HNS and Hoenn native utility schedules are both present, and Hoenn-sourced
@@ -464,6 +472,7 @@ test.
 - [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md)
 - [Emerald open-world regional traversal](emerald-open-world-region-traversal.md)
 - [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
+- [Gym Leader scaling](gym-leader-scaling.md)
 - [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
 - [HM field use](hm-field-use.md)
 - [Native HM utility learnsets](native-hm-learnsets.md)

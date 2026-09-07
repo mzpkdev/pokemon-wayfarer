@@ -17,9 +17,13 @@ Trainer records immutable.
 ## Classification contract
 
 Generate a compact policy table indexed by the active Wayfarer Trainer ID.
-Use three policies: `ORDINARY`, `GYM_MEMBER`, and `EXCLUDED`. Every populated
-Trainer ID must have exactly one policy. Unclassified IDs fail generation;
-invalid runtime IDs fail closed to existing unscaled behavior.
+Use four policies: `ORDINARY`, `GYM_MEMBER`, `GYM_LEADER`, and `EXCLUDED`.
+Every populated Trainer ID must have exactly one policy. `GYM_LEADER` routes
+only enrolled initial badge battles to the separate [Gym Leader scaling
+specification](gym-leader-scaling.md); it never receives this specification's
+ordinary transformation. Until that feature is enabled, its records use the
+existing `EXCLUDED` fallback. Unclassified IDs fail generation; invalid runtime
+IDs fail closed to existing unscaled behavior.
 
 A populated ID has a nonempty party in at least one selectable difficulty
 variant after roster overrides are resolved. Zero-initialized table holes do
@@ -40,11 +44,14 @@ both Gym-member and ordinary roles. Select one documented policy for that ID,
 or split its source ID before enrolling it; never infer a context-dependent
 policy silently.
 
-Exclude Gym Leaders, all rival variants, villain bosses and admins, Elite Four,
-Champions, other story bosses, and tutorial opponents. Enumerate associated
-rematches, starter variants, aliases, and scripted variants. Shared classes
-must not cause boss enrollment. Ordinary scripted battles and villain grunts
-remain eligible.
+Exclude all Gym Leaders from the ordinary transformation. Only IDs explicitly
+enrolled as initial badge battles may use the `GYM_LEADER` routing policy in
+the [Gym Leader scaling specification](gym-leader-scaling.md). Enumerate their
+aliases and scripted variants explicitly: enrolled initial-badge variants use
+that policy, while rematch and other story variants remain excluded.
+Exclude all rival variants, villain bosses and admins, Elite Four, Champions,
+other story bosses, and tutorial opponents. Shared classes must not cause boss
+enrollment. Ordinary scripted battles and villain grunts remain eligible.
 
 Facility, link, recorded, external-party, partner, and player-party construction
 paths are excluded by battle context before ID policy is considered. Include
@@ -209,8 +216,9 @@ all custom-move Trainers into excluded opponents to satisfy the audit.
 
 1. Test every Rating and authored level against an independent integer oracle,
    exact anchors, signed rounding, bonuses, bounds, and monotonicity.
-2. Test ordinary, Gym-member, and excluded policies, shared-class bosses,
-   aliases, rematch variants, sparse IDs, and missing manifest records.
+2. Test ordinary, Gym-member, `GYM_LEADER` routing, and excluded policies,
+   shared-class bosses, aliases, rematch variants, sparse IDs, and missing
+   manifest records.
 3. Test multi-stage reversal, ambiguous ancestry rejection, forms, non-level
    evolutions, no forward evolution, and no wild floor filtering.
 4. Test move regeneration and exceptions below and at thresholds, changed
@@ -245,3 +253,4 @@ repeat affected balance checks.
 - [Battle party construction](../../game/src/battle_main.c)
 - [Trainer Rating runtime](../../game/src/trainer_rating.c)
 - [Wild metadata generator](../../game/tools/wild_encounters/wild_encounters_to_header.py)
+- [Gym Leader scaling](gym-leader-scaling.md)
