@@ -359,7 +359,7 @@ MAKEFLAGS += --no-print-directory
 .DELETE_ON_ERROR:
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
-RULES_NO_SCAN += league-circuit-test
+RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -457,6 +457,7 @@ check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
 check: league-circuit-test
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
 endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
@@ -465,7 +466,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit trainer-party-scaling-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
@@ -735,6 +736,17 @@ emerald-traversal-static-test:
 
 wild-encounter-scaling-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_*.py' -q
+
+.PHONY: trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
+trainer-party-scaling-generate:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py
+
+trainer-party-scaling-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling -p 'test_*.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling/tests -p 'test_*.py' -q
+
+trainer-party-scaling-audit:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
 
 frlg-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/traversal/tests -p 'test_frlg_*.py' -q
