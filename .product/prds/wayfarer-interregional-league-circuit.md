@@ -1,15 +1,20 @@
 # Wayfarer interregional League circuit
 
+Status: Revised design approved; implementation of unrestricted badge collection,
+regional prerequisite repairs, and Trainer Card presentation is pending. The
+existing circuit implementation still enforces certification caps.
+
 ## Intent
 
 Give Wayfarer's open world a clear long-term arc without requiring the player
 to finish one region before exploring another. Badges earned in Kanto, Johto,
 and Hoenn all advance the same career, while three fixed League destinations
-provide authored difficulty peaks after each group of eight badges.
+provide optional challenges unlocked by badge progress. Players can earn all
+twenty-four badges before attempting any League.
 
 ## Design
 
-The player is told the complete League itinerary near the start of the game:
+The Trainer Card presents the complete League itinerary on demand:
 
 | Career tier | Qualification | League destination |
 | --- | ---: | --- |
@@ -22,32 +27,46 @@ totals. A player may qualify for Kanto with four Hoenn badges and four Johto
 badges, for example. Badge origin never changes its value for League
 qualification.
 
-Each tier has a badge certification cap. After receiving the eighth badge, the
-player must clear the Kanto League before another Gym can award a badge. The
-Kanto clear raises the cap to sixteen. The Johto clear raises it to twenty-four.
-Clearing the Hoenn League completes the circuit. Badges remain earned and are
-never spent or reset when a League is cleared.
-
-The cap applies only to official badge awards. The player may continue to
-travel, catch Pokémon, battle ordinary Trainers, and complete available story
-content while qualified for a League. A Gym Leader whose unearned badge would
-exceed the current cap postpones the official challenge without consuming the
-battle, badge, reward, or related one-time state.
+These badge requirements are minimums, with no badge certification caps. League
+participation never gates earning another badge. A player with twenty-four
+badges and no clears can challenge Kanto, then Johto, then Hoenn consecutively.
+Clearing Hoenn completes the circuit. Badges remain earned and are never spent
+or reset when a League is cleared.
 
 This release has one new-game start: the existing Johto opening. It begins with
 zero badges, no League clears, and Rating 0. Kanto is the first League
 destination, not a required starting region. The itinerary supplies a directed
-career structure while the player chooses the route, regions, Gym order,
-party, and loose story order between League challenges. Kanto and Hoenn starts
+career structure while the player chooses the route, regions, available Gyms,
+party, and when to attempt Leagues. Kanto and Hoenn starts
 are future features; they do not constrain this circuit release.
 
 ## Boundaries
 
-The circuit does not gate regional travel, general exploration, or unrelated
-story content. Regional story prerequisites may continue to inspect their own
-badge and story states where another approved feature has not removed them.
-Only League qualification, badge certification caps, and Trainer Rating use
-the global badge total.
+The circuit does not gate regional travel, general exploration, or badge
+collection. Coherent regional story prerequisites may remain, including
+Jasmine's medicine errand, Misty's Power Plant sequence, and Juan's weather
+storyline. A quest may span towns or a region, provided the player can discover
+and complete its prerequisites without having missed an earlier event or
+returning merely to activate an unrelated story flag. League clears must never
+be prerequisites for an initial badge.
+
+Regional prerequisites mean that not every Gym is immediately available in any
+order. Clair may still require Chuck, Jasmine, and Pryce's badges, and Norman
+may still require four Hoenn badges and Wally's tutorial. Blue's Cinnabar
+interaction alone invites him back to his Gym; the requirement to earn the
+other fifteen Kanto/Johto badges is removed.
+
+Story events must recognize satisfied regional prerequisites on a revisit,
+without replaying completed events or undoing later progress. In particular,
+the Rocket takeover must not depend on a shared badge counter being exactly
+seven, or on which region supplied that badge. Its trigger must use explicit
+regional story prerequisites, rather than a replacement global badge threshold.
+
+Undefeated Leaders must remain accessible for their initial badge. Wattson's
+New Mauville relocation requires both Norman's defeat and the Dynamo Badge,
+with either completion order recognized. The
+existing initial-badge protections for Chuck, Blue, Clair, and Blaine remain.
+Only League qualification and Trainer Rating use the global badge total.
 
 Ordinary Trainers and Gym members follow the separate
 [Trainer-party scaling design](trainer-party-scaling.md). Gym Leaders keep
@@ -62,36 +81,30 @@ another outside the circuit.
 
 ## Balance
 
-The first eight badges provide the most route freedom because all twenty-four
-Gyms are potential choices. Clearing a League removes no options, but the pool
-of unearned badges naturally narrows during later tiers. Players may seek
-easier badges first or attempt stronger authored Gym teams early.
-
-League difficulty must increase across the fixed itinerary. Kanto is balanced
-as the first major test after eight badges, Johto as the second after sixteen,
-and Hoenn as the final test after all twenty-four. Exact parties belong to
-regional Trainer content, but their intended order cannot be reversed by the
-player's starting region or badge route.
+Players may seek easier available badges first or attempt stronger authored Gym
+teams early, subject to the retained regional prerequisites. League party
+strength and tuning for different participation times belong to a future PRD.
+This revision preserves the current static party sets and introduces no new
+League balance requirements.
 
 ## Presentation
 
-At the start of each tier, the game communicates the next League destination,
-the total badge requirement, and the current total. The player can review that
-goal again without returning to the original announcement NPC or scene.
+The player presses Select on the local Trainer Card to review the circuit.
+The view shows the badge total out of twenty-four and all three Leagues, each
+with its badge minimum, prerequisite clears, and locked, available, or cleared
+state. After Hoenn, it retains the completed itinerary and reports
+`Circuit complete`. Regional badge displays retain badge identity and origin.
 
-When the player reaches a certification cap, the game directs them to the
-qualified League. A Gym Leader who cannot award another badge explains that
-the player must clear the current League tier before continuing the official
-Gym circuit.
-
-Regional badge displays retain badge identity and origin. Any career summary
-also shows the global total out of twenty-four and the next League goal. After
-the Hoenn League clear, it instead reports that the circuit is complete and
-shows no further League destination.
+There are no automatic circuit announcements: no opening itinerary, badge
+qualification popups, or post-clear status messages. NPCs do not duplicate the
+circuit overview. A League admission refusal may state its immediate unmet
+requirement. Dialogue must not assume the player is a Champion merely because
+they have many badges.
 
 ## Interactions
 
-Trainer Rating starts at zero and follows the global circuit milestones:
+Trainer Rating keeps its existing badge contribution and clear bonuses. These
+examples show taking each League as soon as its badge minimum is reached:
 
 | Progress | Trainer Rating |
 | --- | ---: |
@@ -99,10 +112,19 @@ Trainer Rating starts at zero and follows the global circuit milestones:
 | 4 total badges | 16 |
 | 8 total badges | 40 |
 | Kanto League cleared | 55 |
-| 16 total badges | 63 |
+| 16 total badges and Kanto cleared | 63 |
 | Johto League cleared | 68 |
-| 24 total badges | 76 |
+| 24 total badges and Kanto and Johto cleared | 76 |
 | Hoenn League cleared | 80 |
+
+Collecting all badges first is also valid:
+
+| With 24 badges | Trainer Rating | Soft level cap |
+| --- | ---: | ---: |
+| No League clears | 56 | 62 |
+| Kanto cleared | 71 | 88 |
+| Kanto and Johto cleared | 76 | 95 |
+| All three cleared | 80 | 100 |
 
 The rating remains a high-water mark used by ordinary wild encounter scaling
 and the party's soft level cap and obedience rules. It also drives ordinary
@@ -124,10 +146,10 @@ scripts, presentation, and save isolation. The global count is derived from
 those twenty-four badge states rather than stored as a second mutable badge
 total.
 
-Badge certification caps cannot ship until interregional travel guarantees
-that a player can reach the assigned League from any region where the
-threshold badge can be earned. After the League, the player must regain control
-with access to the wider regional travel network. The journey may use
+Interregional travel must guarantee that a player can reach an eligible League
+from any region, including after collecting all badges. After the League, the
+player must regain control with access to the wider regional travel network.
+The journey may use
 directional transport and authored routes, but it cannot depend on earning
 another badge or clearing the League that the player is trying to reach.
 
@@ -135,22 +157,24 @@ The existing Johto opening and its S.S. Aqua maiden voyage are this release's
 entry contract. They must provide a route to Kanto, then the completed Aqua
 circuit must provide the Vermilion-to-Slateport and Slateport-to-Olivine legs.
 Future Kanto and Hoenn starts need their own approved openings when they are
-scoped; they do not gate certification enforcement or League eligibility.
+scoped; they do not gate League eligibility.
 
 Prerelease save compatibility is not required. This feature does not require
 shared systems to preserve behavior in other product builds.
 
 ## Playtesting
 
-Playtesting must cover the Johto start and mixed badge routes at each tier. It
-should confirm that the next League goal remains clear, reaching a badge cap
-never blocks exploration, and a postponed Gym challenge remains available after
-the required League clear.
+Playtesting must prove a Johto-start journey to all twenty-four badges with zero
+League clears, including mixed regional orders and recoverable story events.
+Cover deferred Whitney and Clair badge rewards, Blue's invitation, and Wattson
+remaining available when Norman is defeated first. Verify that a mixed badge
+order which misses the old exact-seven Rocket trigger still reaches the story
+and Clair without replaying completed events.
 
-The three League encounters should feel like distinct increases in difficulty
-for parties built through easier, mixed, and deliberately high-risk badge
-routes. Testing should also check the travel time between the eighth,
-sixteenth, and twenty-fourth badge locations and their assigned League venues.
+With all badges earned, test consecutive Kanto, Johto, and Hoenn clears,
+including the shared Indigo venue's tier reset, loss/retry, save/load, and
+return to regional travel. Check all Trainer Card states and confirm that
+opening, badge awards, and League clears produce no circuit announcements.
 
 ## References
 

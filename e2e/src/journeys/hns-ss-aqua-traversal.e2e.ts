@@ -12,30 +12,16 @@ const finishScript = async (game: GameSession): Promise<void> => {
   throw new Error(`S.S. Aqua reward script did not release control`)
 }
 
-const winTrainerBattleWithFirstMove = async (game: GameSession): Promise<void> => {
-  let battleStarted = false
-  for (let attempt = 0; attempt < 900; attempt++) {
+const startScriptedBattle = async (game: GameSession, description: string): Promise<void> => {
+  for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
-    battleStarted ||= state.battle.active
-    if (!state.battle.active && state.ready) {
-      if (!battleStarted) throw new Error("Stanly battle did not start")
-      await finishScript(game)
-      return
-    }
-    if (state.battle.ui === "action-menu") {
-      await game.controls.press("a")
+    if (state.battle.active) return
+    if (state.dialogueOpen || state.scriptActive) {
       await game.wait.frames(30)
       await game.controls.press("a")
-      await game.wait.frames(120)
-    } else if (state.controlsLocked || state.dialogueOpen || state.battle.ui === "text") {
-      await game.controls.press("a")
-      await game.wait.frames(30)
-    } else {
-      await game.wait.frames(30)
-      if ((await game.state.read()).battle.active) await game.controls.press("a")
-    }
+    } else await game.wait.frames(12)
   }
-  throw new Error(`Stanly battle did not finish: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(`${description} did not start: ${JSON.stringify(await game.state.read())}`)
 }
 
 const finishFirstLeagueClearFlags = async (game: GameSession): Promise<void> => {
@@ -154,7 +140,9 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       })
 
       await stanlyGame.player.interact()
-      await winTrainerBattleWithFirstMove(stanlyGame)
+      await startScriptedBattle(stanlyGame, "Stanly battle")
+      await stanlyGame.battle.win()
+      await finishScript(stanlyGame)
 
       await expect(stanlyGame.story.var("ssAquaState")).resolves.toBe(1)
     } finally {
