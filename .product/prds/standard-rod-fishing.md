@@ -1,5 +1,18 @@
 # Standard Rod fishing progression
 
+For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
+revision replaces named-carrier accessibility assertions with eligible catches
+that actually know the required utility at each TR and time. Its selected
+[nearby-access proposal](../research/native-hm-windows/revisions/nearby-access/proposal.json)
+requires an 8% chance at one reachable land source or successful Old Rod fishing
+source, without summing across places. A qualifying fishing source therefore
+provides at least 2% per unmodified cast. The code-only simulation passes its
+selected scenarios; production acceptance remains pending.
+
+Only the proposal's enumerated encounter replacements override the no-table-edit
+boundaries below for Wayfarer. Global weights, bite rates, rod progression and
+selection rules remain unchanged. Standalone builds retain the contract below.
+
 ## Intent
 
 Let the first fishing rod reach every species in a location's authored fishing
@@ -109,6 +122,8 @@ rod, registration, and giver state unchanged.
 The ten fishing entries already attached to each map remain unchanged. This
 feature does not move species between entries, edit their authored levels, or
 change land, Surf, Rock Smash, hidden, fixed, scripted, or facility encounters.
+The separately selected Wayfarer catch-window replacements are the sole
+exception; they do not authorize unlisted ecology changes.
 
 Rod giver locations and their existing story or geography gates remain intact.
 The redesign does not remove their personal dialogue, relationships, tutorials,
@@ -137,7 +152,9 @@ encounters at its named source and at least a 2% chance per unmodified cast
 after the Old Rod's 25% bite rate. This limits the least accessible required
 user to an average of 50 casts. Lure use is not required for this guarantee.
 
-The baseline accessibility results are:
+The original standalone accessibility results are below. Wayfarer's selected
+catch-window roster uses its nearby-source report instead of these permanent
+named-species values.
 
 | Build and source | Native Surf user | Chance per successful Old Rod encounter | Chance per unmodified cast | Average casts |
 | --- | --- | ---: | ---: | ---: |
@@ -149,9 +166,9 @@ The baseline accessibility results are:
 | Emerald, Mossdeep or Pacifidlog | Wailmer | 18% | 4.5% | 22.2 |
 
 These figures aggregate duplicate entries for the named species and do not
-count any additional availability from species resolution. Ineligible-entry
-filtering cannot be allowed to remove a required native Surf source at any
-Wayfarer Trainer Rating from 0 through 80.
+count any additional availability from species resolution. For Wayfarer,
+ineligible-entry filtering must preserve a qualifying nearby known-move source
+at every Trainer Rating from 0 through 80 under the catch-window contract.
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old
@@ -166,8 +183,9 @@ accessibility values above.
 
 ## Content
 
-All existing fishing tables are reused without map-specific edits. The content
-work is limited to rod items, rod giver scripts, and dialogue that currently
+Standard Rod itself reuses fishing tables without map-specific edits. The
+Wayfarer catch-window revision owns its explicitly enumerated exceptions. Rod
+content work is limited to rod items, rod giver scripts, and dialogue that currently
 describes different rods as separate species unlocks.
 
 Item descriptions should communicate the progression:

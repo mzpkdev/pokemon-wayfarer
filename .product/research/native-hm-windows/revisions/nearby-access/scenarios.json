@@ -1,0 +1,322 @@
+{
+  "notes": "Whirl Islands excluded. All scenarios assume rod and capture supplies. Explicit route prerequisites are recorded in accompanying route reports; Blackthorn extended detour requires cleared Ice Path for return. Static Hoenn profiles reused for clock cases.",
+  "scenarios": [
+    {
+      "id": "cianwood_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_CIANWOOD_CITY_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_CLIFF_EDGE_CAVE_HNS",
+          "methods": [
+            "land_mons"
+          ],
+          "rank": 1
+        },
+        {
+          "map": "MAP_ROUTE47_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 1
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "olivine_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_OLIVINE_CITY_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE40_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 1
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "vermilion_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_VERMILION_CITY_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_VERMILION_CITY_PORT_OUTSIDE_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE6_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 1
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "cinnabar_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_CINNABAR_ISLAND_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "lilycove_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_LILYCOVE_CITY",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE121",
+          "methods": [
+            "land_mons",
+            "fishing_mons"
+          ],
+          "rank": 1
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "mossdeep_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_MOSSDEEP_CITY",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "pacifidlog_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_PACIFIDLOG_TOWN",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "route118_west_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_ROUTE118",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE117",
+          "methods": [
+            "land_mons",
+            "fishing_mons"
+          ],
+          "rank": 1
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "route118_east_surf",
+      "move": "SURF",
+      "maps": [
+        {
+          "map": "MAP_ROUTE118",
+          "methods": [
+            "fishing_mons",
+            "land_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE119",
+          "methods": [
+            "land_mons"
+          ],
+          "rank": 1
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "blackthorn_surf",
+      "move": "SURF",
+      "notes": "After normal Ice Path approach, cleared puzzle permits return detour; no Surf assumed.",
+      "maps": [
+        {
+          "map": "MAP_BLACKTHORN_CITY_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE44_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 2
+        },
+        {
+          "map": "MAP_ROUTE43_HNS",
+          "methods": [
+            "fishing_mons",
+            "land_mons"
+          ],
+          "rank": 3
+        },
+        {
+          "map": "MAP_ROUTE42_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 3
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    },
+    {
+      "id": "den_whirlpool",
+      "move": "WHIRLPOOL",
+      "notes": "Surf known; completed Clair encounter and Ice Path puzzle. Den fishing usable before required Whirlpool.",
+      "maps": [
+        {
+          "map": "MAP_DRAGONS_DEN_CAVERN_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_BLACKTHORN_CITY_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 0
+        },
+        {
+          "map": "MAP_ROUTE44_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 2
+        },
+        {
+          "map": "MAP_ROUTE43_HNS",
+          "methods": [
+            "fishing_mons",
+            "land_mons"
+          ],
+          "rank": 3
+        },
+        {
+          "map": "MAP_ROUTE42_HNS",
+          "methods": [
+            "fishing_mons"
+          ],
+          "rank": 3
+        }
+      ],
+      "times": [
+        "DAY",
+        "NIGHT"
+      ],
+      "minimum_chance": 0.08
+    }
+  ]
+}
