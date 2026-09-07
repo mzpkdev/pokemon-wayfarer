@@ -1,10 +1,9 @@
 #include "global.h"
-#include "event_data.h"
 #include "credits.h"
+#include "event_data.h"
 #include "heal_location.h"
 #include "league_circuit.h"
 #include "main.h"
-#include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
 #include "config/league_circuit.h"
@@ -15,13 +14,23 @@
 static void SetRegionalBadges(enum Region region, u8 count)
 {
     u8 i;
+
     for (i = 0; i < 8; i++)
         SetBadgeStateForRegion(region, i, i < count);
+}
+
+static void SetTotalBadges(u8 count)
+{
+    u8 i;
+
+    for (i = 0; i < 24; i++)
+        SetBadgeStateForRegion(REGION_KANTO + i / 8, i % 8, i < count);
 }
 
 TEST("League circuit aggregates all 729 regional badge distributions without duplicates")
 {
     u8 kanto, johto, hoenn;
+
     for (kanto = 0; kanto <= 8; kanto++)
     {
         SetRegionalBadges(REGION_KANTO, kanto);
@@ -39,78 +48,123 @@ TEST("League circuit aggregates all 729 regional badge distributions without dup
     }
 }
 
-TEST("League circuit accepts mixed badges without badges in the host region")
+TEST("League circuit permits all 24 badges without any League clear")
 {
-    SetRegionalBadges(REGION_JOHTO, 4);
-    SetRegionalBadges(REGION_HOENN, 4);
+    enum Region region;
+
+    for (region = REGION_KANTO; region <= REGION_HOENN; region++)
+    {
+        SetRegionalBadges(region, 8);
+        EXPECT_EQ(GetGlobalBadgeCount(), 8 * region);
+        EXPECT(!GetChampionStateForRegion(REGION_KANTO));
+        EXPECT(!GetChampionStateForRegion(REGION_JOHTO));
+        EXPECT(!GetChampionStateForRegion(REGION_HOENN));
+    }
+
+    EXPECT_EQ(GetGlobalBadgeCount(), 24);
     EXPECT_EQ(GetRequiredLeagueRegion(), REGION_KANTO);
     EXPECT(IsEligibleForLeague(REGION_KANTO));
     EXPECT(!IsEligibleForLeague(REGION_JOHTO));
     EXPECT(!IsEligibleForLeague(REGION_HOENN));
+}
+
+TEST("League circuit checks exact badge thresholds and preceding clears")
+{
+    SetTotalBadges(7);
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_KANTO), LEAGUE_ADMISSION_NEEDS_8_BADGES);
+    EXPECT(!IsEligibleForLeague(REGION_KANTO));
+    SetTotalBadges(8);
+    EXPECT(IsEligibleForLeague(REGION_KANTO));
+
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_JOHTO), LEAGUE_ADMISSION_NEEDS_KANTO_CLEAR);
+    SetGameClearStateForRegion(REGION_KANTO, TRUE);
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_JOHTO), LEAGUE_ADMISSION_NEEDS_16_BADGES);
+    SetTotalBadges(15);
+    EXPECT(!IsEligibleForLeague(REGION_JOHTO));
+    SetTotalBadges(16);
+    EXPECT(IsEligibleForLeague(REGION_JOHTO));
+
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_HOENN), LEAGUE_ADMISSION_NEEDS_JOHTO_CLEAR);
+    SetGameClearStateForRegion(REGION_JOHTO, TRUE);
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_HOENN), LEAGUE_ADMISSION_NEEDS_24_BADGES);
+    SetTotalBadges(23);
+    EXPECT(!IsEligibleForLeague(REGION_HOENN));
+    SetTotalBadges(24);
+    EXPECT(IsEligibleForLeague(REGION_HOENN));
+}
+
+TEST("League circuit accepts mixed badges and exact thresholds without host badges")
+{
+    SetRegionalBadges(REGION_JOHTO, 4);
+    SetRegionalBadges(REGION_HOENN, 4);
+    EXPECT_EQ(GetGlobalBadgeCount(), 8);
+    EXPECT(IsEligibleForLeague(REGION_KANTO));
     EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
+
     SetRegionalBadges(REGION_JOHTO, 0);
     SetRegionalBadges(REGION_KANTO, 8);
     SetRegionalBadges(REGION_HOENN, 8);
+    EXPECT_EQ(GetGlobalBadgeCount(), 16);
     EXPECT(IsEligibleForLeague(REGION_JOHTO));
     EXPECT(TryRecordLeagueClear(REGION_JOHTO));
-    EXPECT(!IsEligibleForLeague(REGION_HOENN));
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_JOHTO);
+
     SetRegionalBadges(REGION_JOHTO, 8);
+    EXPECT_EQ(GetGlobalBadgeCount(), 24);
     EXPECT(IsEligibleForLeague(REGION_HOENN));
     EXPECT(TryRecordLeagueClear(REGION_HOENN));
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_HOENN);
     EXPECT_EQ(GetRequiredLeagueRegion(), REGION_NONE);
-    EXPECT_EQ(GetBadgeCertificationCap(), 24);
-    EXPECT(!IsEligibleForLeague(REGION_NONE));
-    EXPECT(!IsEligibleForLeague(REGION_HOENN));
-    EXPECT(!TryRecordLeagueClear(REGION_HOENN));
 }
 
-TEST("League circuit postpones each cap and permits retry after its required clear")
+TEST("League circuit clear order stays Kanto then Johto then Hoenn with all badges earned")
 {
     enum Region region;
+
+    SetTotalBadges(24);
     for (region = REGION_KANTO; region <= REGION_HOENN; region++)
     {
         EXPECT_EQ(GetRequiredLeagueRegion(), region);
-        EXPECT_EQ(GetBadgeCertificationCap(), 8 * region);
-        SetRegionalBadges(region, 7);
-        EXPECT(!IsEligibleForLeague(region));
-        EXPECT(!TryRecordLeagueClear(region));
-        EXPECT(CanChallengeGymForBadge(region, 7));
-        SetRegionalBadges(region, 8);
-        EXPECT(CanChallengeGymForBadge(region, 7));
+        EXPECT(IsEligibleForLeague(region));
+        if (region != REGION_KANTO)
+            EXPECT(!IsEligibleForLeague(region - 1));
         if (region != REGION_HOENN)
-            EXPECT(!CanChallengeGymForBadge(region + 1, 0));
+            EXPECT(!IsEligibleForLeague(region + 1));
         EXPECT(TryRecordLeagueClear(region));
-        if (region != REGION_HOENN)
-            EXPECT(CanChallengeGymForBadge(region + 1, 0));
+        EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), region);
     }
-    EXPECT(!CanChallengeGymForBadge(REGION_NONE, 0));
-    EXPECT(!CanChallengeGymForBadge(REGION_KANTO, 8));
+    EXPECT_EQ(GetRequiredLeagueRegion(), REGION_NONE);
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_NONE), LEAGUE_ADMISSION_UNAVAILABLE);
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_HOENN), LEAGUE_ADMISSION_UNAVAILABLE);
+    EXPECT(!TryRecordLeagueClear(REGION_HOENN));
 }
 
-TEST("League circuit fails safely with excess badges and out-of-order regional clears")
+TEST("League circuit rejects mixed out-of-order clear states")
 {
-    SetRegionalBadges(REGION_KANTO, 8);
-    SetRegionalBadges(REGION_JOHTO, 8);
-    SetRegionalBadges(REGION_HOENN, 7);
-    EXPECT(!CanChallengeGymForBadge(REGION_HOENN, 7));
+    SetTotalBadges(24);
     EXPECT(!TryRecordLeagueClear(REGION_JOHTO));
     EXPECT(!TryRecordLeagueClear(REGION_HOENN));
-    SetChampionStateForRegion(REGION_JOHTO, TRUE);
-    SetChampionStateForRegion(REGION_HOENN, TRUE);
+
+    SetGameClearStateForRegion(REGION_JOHTO, TRUE);
     EXPECT_EQ(GetRequiredLeagueRegion(), REGION_KANTO);
-    EXPECT_EQ(GetBadgeCertificationCap(), 8);
-    EXPECT(!CanChallengeGymForBadge(REGION_HOENN, 7));
+    EXPECT(IsEligibleForLeague(REGION_KANTO));
+    EXPECT(!IsEligibleForLeague(REGION_JOHTO));
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_JOHTO), LEAGUE_ADMISSION_UNAVAILABLE);
+    EXPECT_EQ(GetLeagueAdmissionRequirement(REGION_HOENN), LEAGUE_ADMISSION_NEEDS_KANTO_CLEAR);
+
     EXPECT(TryRecordLeagueClear(REGION_KANTO));
-    EXPECT_EQ(GetRequiredLeagueRegion(), REGION_NONE);
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
+    EXPECT_EQ(GetRequiredLeagueRegion(), REGION_HOENN);
+    EXPECT(IsEligibleForLeague(REGION_HOENN));
 }
 
-TEST("League circuit clear preserves every badge and unrelated regional campaign state")
+TEST("League circuit clear preserves every badge and unrelated regional state")
 {
     enum Region region, other;
     u8 badge;
-    SetRegionalBadges(REGION_KANTO, 8);
-    SetRegionalBadges(REGION_JOHTO, 8);
-    SetRegionalBadges(REGION_HOENN, 8);
+
+    SetTotalBadges(24);
     FlagSet(HOENN_FLAG_ID(0x52));
     FlagSet(0x52);
     VarSet(HOENN_VAR_ID(0x4001), 1234);
@@ -118,6 +172,7 @@ TEST("League circuit clear preserves every badge and unrelated regional campaign
     for (region = REGION_KANTO; region <= REGION_HOENN; region++)
     {
         EXPECT(TryRecordLeagueClear(region));
+        EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), region);
         EXPECT(GetGameClearStateForRegion(region));
         EXPECT(!TryRecordLeagueClear(region));
         for (other = REGION_KANTO; other <= REGION_HOENN; other++)
@@ -134,30 +189,30 @@ TEST("League circuit clear preserves every badge and unrelated regional campaign
     }
 }
 
-TEST("League circuit Hall of Fame handoff consumes the committed region once")
+TEST("League circuit clear handoff is one-shot and ignores rejected clears")
 {
     ConsumeRecordedLeagueClearRegion();
-    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_NONE);
-    SetRegionalBadges(REGION_HOENN, 8);
+    SetTotalBadges(24);
     EXPECT(TryRecordLeagueClear(REGION_KANTO));
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_NONE);
-    EXPECT(!TryRecordLeagueClear(REGION_JOHTO));
+    EXPECT(!TryRecordLeagueClear(REGION_HOENN));
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_NONE);
+    EXPECT(TryRecordLeagueClear(REGION_JOHTO));
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_JOHTO);
     EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_NONE);
 }
 
 #if WAYFARER_LEAGUE_CIRCUIT_ENABLED
 extern int GameClear(void);
 
-TEST("League circuit Hall of Fame records the cleared tier despite shared venue provenance")
+TEST("League circuit Hall of Fame consumes each recorded tier and sets its return warp")
 {
     MainCallback testCallback = gMain.callback2;
     enum Region region;
     const struct HealLocation *heal;
 
-    SetRegionalBadges(REGION_KANTO, 8);
-    SetRegionalBadges(REGION_JOHTO, 8);
-    SetRegionalBadges(REGION_HOENN, 8);
+    SetTotalBadges(24);
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS);
     for (region = REGION_KANTO; region <= REGION_HOENN; region++)
@@ -166,10 +221,6 @@ TEST("League circuit Hall of Fame records the cleared tier despite shared venue 
         GameClear();
         SetMainCallback2(testCallback);
         EXPECT(GetGameClearStateForRegion(region));
-        if (region == REGION_KANTO)
-            EXPECT(!GetChampionStateForRegion(REGION_JOHTO));
-        if (region != REGION_HOENN)
-            EXPECT(!GetChampionStateForRegion(REGION_HOENN));
         EXPECT_EQ(GetGlobalBadgeCount(), 24);
         heal = GetHealLocation(region == REGION_HOENN
             ? HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE : HEAL_LOCATION_INDIGO_PLATEAU_HNS);
@@ -181,9 +232,10 @@ TEST("League circuit Hall of Fame records the cleared tier despite shared venue 
     }
 }
 
-TEST("League circuit Hall of Fame rejects unrecorded calls without regional writes")
+TEST("League circuit Hall of Fame rejects a missing clear handoff without state changes")
 {
     MainCallback testCallback = gMain.callback2;
+
     ConsumeRecordedLeagueClearRegion();
     GameClear();
     EXPECT(gMain.callback2 == testCallback);

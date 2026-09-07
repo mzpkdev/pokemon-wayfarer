@@ -1,5 +1,7 @@
 import { storyFlags, storyVars, type StoryFlag, type StoryVar } from "../catalog"
 import { varsStart } from "../protocol"
+import { encodeObserveFlagRequest } from "../protocol"
+import { type MailboxApi } from "../mailbox"
 import { type SessionRuntime } from "../runtime"
 
 export type StoryApi = {
@@ -8,15 +10,22 @@ export type StoryApi = {
   setVar: (name: StoryVar, value: number) => Promise<void>
 }
 
-export const createStoryApi = (runtime: SessionRuntime): StoryApi => ({
+export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): StoryApi => ({
   flag: async (name) => {
-    const saveBlock = await runtime.readUint32(runtime.address("gSaveBlock1Ptr"))
     const id = storyFlags[name]
-    const byte = await runtime.readBytes(
-      saveBlock + runtime.abi.flagsOffset + Math.floor(id / 8),
-      1,
+    if (id < 0x6000) {
+      const saveBlock = await runtime.readUint32(runtime.address("gSaveBlock1Ptr"))
+      const byte = await runtime.readBytes(
+        saveBlock + runtime.abi.flagsOffset + Math.floor(id / 8),
+        1,
+      )
+      return (byte[0]! & (1 << (id % 8))) !== 0
+    }
+    const result = await mailbox.execute(
+      (requestId) => encodeObserveFlagRequest(runtime.abi, requestId, id),
+      `observe story flag ${name}`,
     )
-    return (byte[0]! & (1 << (id % 8))) !== 0
+    return result.x === 1
   },
   var: async (name) => {
     const saveBlock = await runtime.readUint32(runtime.address("gSaveBlock1Ptr"))

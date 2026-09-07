@@ -1003,6 +1003,70 @@ class HnsTraversalContractTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             without_wayfarer_circuit_branches(guard + "#if OTHER\nnested\n#endif\n#endif")
 
+    def test_league_circuit_regional_hazards_are_recoverable(self) -> None:
+        rocket = self.scripts.block("MahoganyTown_Gym_EventScript_TryArmRocketTakeover")
+        self.assertOrderedText(
+            rocket,
+            [
+                "goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0",
+                "goto_if_ge VAR_GOLDENROD_CITY_STATE, 6",
+                "goto_if_ge VAR_MAHOGANY_TOWN_STATE, 16",
+                "goto_if_lt VAR_MAHOGANY_TOWN_STATE, 15",
+                "goto_if_unset FLAG_BADGE05_GET",
+                "goto_if_unset FLAG_BADGE06_GET",
+                "goto_if_unset FLAG_BADGE07_GET",
+                "setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1",
+            ],
+            "takeover recovery must require the local story matrix before arming once",
+        )
+        self.assertNotIn("VAR_NUM_BADGES", rocket)
+        for label in (
+            "CianwoodGym_EventScript_ChuckVictory",
+            "OlivineCity_Gym_EventScript_JasmineVictory",
+            "MahoganyTown_Gym_EventScript_PryceVictory",
+            "Mahoganytown_OnLoad",
+        ):
+            self.assertIn("MahoganyTown_Gym_EventScript_TryArmRocketTakeover", self.scripts.block(label))
+
+        blue = self.scripts.block("CinnabarIsland_EventScript_Blue").split("#else", 1)[0]
+        self.assertNotIn("VAR_NUM_BADGES", blue)
+        self.assertIn("goto CinnabarIsland_EventScript_BlueActive", blue)
+        invitation = self.scripts.block("CinnabarIsland_EventScript_BlueActive")
+        self.assertIn("setflag FLAG_HIDE_CINNABAR_BLUE", invitation)
+        self.assertIn("clearflag FLAG_HIDE_VIRIDIAN_BLUE", invitation)
+
+        wattson = self.scripts.block("MauvilleCity_Gym_EventScript_TryRelocateWattson")
+        self.assertOrderedText(
+            wattson,
+            [
+                "goto_if_unset FLAG_DEFEATED_PETALBURG_GYM",
+                "goto_if_unset FLAG_BADGE03_GET",
+                "setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON",
+                "clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON",
+            ],
+            "Wattson must remain in his Gym until Norman and Dynamo are both complete",
+        )
+        for label in (
+            "MauvilleCity_Gym_EventScript_WattsonDefeated",
+            "PetalburgCity_Gym_EventScript_NormanBattle",
+        ):
+            self.assertIn("MauvilleCity_Gym_EventScript_TryRelocateWattson", self.scripts.block(label))
+
+        whitney = self.scripts.block("GoldenrodCity_Gym_EventScript_Whitney")
+        self.assertIn("goto_if_defeated TRAINER_WHITNEY_1_HNS", whitney)
+        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 3", whitney)
+        reward = self.scripts.block("GoldenrodCity_Gym_EventScript_WhitneyBadge")
+        self.assertIn("goto_if_set FLAG_BADGE03_GET", reward)
+        award = self.scripts.block("GoldenrodCity_Gym_EventScript_WhitneyBadgeAward")
+        self.assertLess(award.index("setflag FLAG_BADGE03_GET"), award.index("addvar VAR_NUM_BADGES"))
+        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 5", award)
+
+        clair = self.scripts.block("DragonsDen_Shrine_EventScript_ClairEnter")
+        self.assertTrue(clair.lstrip().startswith("goto_if_set FLAG_BADGE08_GET"))
+        recovery = self.scripts.block("DragonsDen_Shrine_EventScript_RecoverAfterRisingBadge")
+        self.assertIn("goto_if_ge VAR_BLACKTHORN_CITY_STATE, 3", recovery)
+        self.assertNotIn("addvar VAR_NUM_BADGES", recovery)
+
     def test_deferred_region_and_endgame_gates_are_unchanged(self) -> None:
         mahogany = load_map("Mahoganytown_hns")
         merchant = object_with_local_id(mahogany, "LOCALID_MAHOGANY_MERCHANT")

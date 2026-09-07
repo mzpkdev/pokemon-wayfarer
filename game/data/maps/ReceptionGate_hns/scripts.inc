@@ -25,13 +25,6 @@ ReceptionGate_Text_Janine:
 
 
 ReceptionGate_EventScript_Officer::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	lock
-	faceplayer
-	call LeagueCircuit_EventScript_ShowStatus
-	release
-	end
-#endif
     msgbox VictoryRoadGate_Text_EightBadges, MSGBOX_NPC
     end
 
@@ -92,8 +85,8 @@ VictoryRoadGate_Text_NotEnoughBadges:
     .string "through.$"
 
 VictoryRoadGate_Text_EightBadges:
-    .string "Oh! The eight BADGES of JOHTO!\p"
-    .string "Please, go right on through!$"
+    .string "The road ahead leads to the\n"
+    .string "POKéMON LEAGUE. Good luck!$"
 
 VictoryRoadGate_Text_LeftBlackBelt:
     .string "This way leads to MT.SILVER.\p"

@@ -198,16 +198,11 @@ BlackthornGym_EventScript_Lola::
 
 
 BlackthornGym_EventScript_Clair::
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_JOHTO
-	setvar VAR_0x8005, 7
-	specialvar VAR_RESULT, LeagueCircuit_CanChallengeGym
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_PostponeGym
-#endif
 	lock
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	goto_if_unset FLAG_BADGE08_GET, BlackthornGym_EventScript_ClairOfficialChallenge
+	goto BlackthornGym_EventScript_Clair_Defeated
 #endif
 	goto_if_set FLAG_IS_CHAMPION, BlackthornGym_EventScript_ClairAfterLeague
 BlackthornGym_EventScript_ClairOfficialChallenge::

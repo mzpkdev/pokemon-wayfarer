@@ -17,6 +17,7 @@ export type InvalidFixtureCase =
   | "species"
   | "item-quantity"
   | "item-quantity-high"
+  | "badge-count"
 
 export type ValidationApi = {
   rejectedFixtureError: (invalid: InvalidFixtureCase) => Promise<string>
@@ -64,6 +65,8 @@ export const createValidationApi = (
         currentBox: 0,
         hmsOverwrite: false,
         fullPocketMask: 0,
+        regionalBadgeCounts: [0, 0, 0],
+        leagueClears: [false, false, false],
       }
       switch (invalid) {
         case "current-box":
@@ -83,6 +86,9 @@ export const createValidationApi = (
           break
         case "item-quantity-high":
           base.bagItems = [{ item: items.masterBall, quantity: 1_000 }]
+          break
+        case "badge-count":
+          base.regionalBadgeCounts[0] = 9
           break
       }
       return base

@@ -13,6 +13,11 @@ def script(name):
     return (GAME / "data/maps" / name / "scripts.inc").read_text()
 
 
+def block(source, label):
+    body = source.split(label + "::\n", 1)[1]
+    return re.split(r"(?m)^[A-Za-z_][A-Za-z0-9_]*::\s*$", body, maxsplit=1)[0]
+
+
 class CircuitScriptTests(unittest.TestCase):
     def test_rollout_uses_the_production_johto_start_default(self):
         config = (GAME / "include/config/league_circuit.h").read_text()
@@ -20,26 +25,113 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertIn("compile-time rollback", config)
         self.assertNotIn("regional openings and League travel/release acceptance", config)
 
-    def test_all_24_badges_and_deferred_awards_guarded_before_state(self):
+    def test_all_24_initial_badges_and_deferred_awards_are_uncapped(self):
         self.assertEqual(len({(r, b) for _, _, r, b in GYMS}), 24)
         for name, label, region, badge in GYMS:
             with self.subTest(name=name, label=label):
-                body = script(name).split(label + "::\n", 1)[1]
-                prefix = body.split("#endif", 1)[0]
-                self.assertTrue(prefix.startswith("#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED"))
-                self.assertIn("setvar VAR_0x8005, " + str(badge), prefix)
-                self.assertIn("LeagueCircuit_CanChallengeGym", prefix)
-                self.assertIn("FALSE, LeagueCircuit_EventScript_PostponeGym", prefix)
-                self.assertNotRegex(prefix, r"\b(?:trainerbattle\w*|setflag|clearflag|giveitem)\b")
+                source = script(name)
+                self.assertIn(label + "::", source)
+                self.assertNotIn("LeagueCircuit_CanChallengeGym", source)
+                self.assertNotIn("LeagueCircuit_EventScript_PostponeGym", source)
 
-    def test_each_badge_commit_announces_qualification(self):
+    def test_badge_commits_do_not_announce_circuit_status(self):
         award_count = 0
         for name in {row[0] for row in GYMS}:
             source = script(name)
-            for match in re.finditer(r"setflag FLAG_BADGE\d+_GET\n", source):
-                award_count += 1
-                self.assertTrue(source[match.end():].startswith("#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED\n\tcall LeagueCircuit_EventScript_CheckQualification\n#endif"))
+            award_count += len(re.findall(r"setflag FLAG_BADGE\d+_GET\n", source))
+            self.assertNotIn("LeagueCircuit_EventScript_CheckQualification", source)
         self.assertEqual(award_count, 24)
+
+    def test_trainer_card_is_the_only_detailed_status_surface(self):
+        sources = "\n".join(path.read_text() for path in (GAME / "data/maps").rglob("scripts.inc"))
+        self.assertNotIn("LeagueCircuit_EventScript_ShowStatus", sources)
+        self.assertNotIn("LeagueCircuit_EventScript_Itinerary", sources)
+        self.assertNotIn("LeagueCircuit_EventScript_CheckQualification", sources)
+
+        self.assertNotIn("LeagueCircuit_", block(script("NewBarkTown_Lab_hns"), "NewBarkTown_Lab_EventScript_ChoseStarter"))
+        self.assertNotIn("LeagueCircuit_", block(script("IndigoPlateau_PokemonCenter_hns"), "IndigoPlateau_EventScript_Cooltrainer"))
+        self.assertNotIn("LeagueCircuit_", block(script("ReceptionGate_hns"), "ReceptionGate_EventScript_Officer"))
+
+        pallet = block(script("PalletTown_Lab_hns"), "PalletTown_Lab_EventScript_Oak16Badges")
+        circuit_pallet = re.sub(
+            r"#if !\(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED\).*?#endif",
+            "",
+            pallet,
+            flags=re.DOTALL,
+        )
+        self.assertNotIn("PalletTown_Lab_EventScript_OakKantoLeague", circuit_pallet)
+
+    def test_rocket_takeover_recovers_from_mixed_badge_orders(self):
+        source = script("MahoganyTown_Gym_hns")
+        recovery = block(source, "MahoganyTown_Gym_EventScript_TryArmRocketTakeover")
+        self.assertIn("goto_if_ne VAR_TRIGGER_ELM_ROCKET_CALL, 0", recovery)
+        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 6", recovery)
+        self.assertIn("goto_if_ge VAR_MAHOGANY_TOWN_STATE, 16", recovery)
+        self.assertIn("goto_if_lt VAR_MAHOGANY_TOWN_STATE, 15", recovery)
+        for flag in ("FLAG_BADGE05_GET", "FLAG_BADGE06_GET", "FLAG_BADGE07_GET"):
+            self.assertIn("goto_if_unset " + flag, recovery)
+        self.assertIn("setvar VAR_TRIGGER_ELM_ROCKET_CALL, 1", recovery)
+        self.assertNotIn("VAR_NUM_BADGES", recovery)
+
+        for name, award in (
+            ("CianwoodGym_hns", "CianwoodGym_EventScript_ChuckVictory"),
+            ("OlivineCity_Gym_hns", "OlivineCity_Gym_EventScript_JasmineVictory"),
+            ("MahoganyTown_Gym_hns", "MahoganyTown_Gym_EventScript_PryceVictory"),
+        ):
+            with self.subTest(name=name):
+                self.assertIn("call MahoganyTown_Gym_EventScript_TryArmRocketTakeover", block(script(name), award))
+        self.assertIn(
+            "call MahoganyTown_Gym_EventScript_TryArmRocketTakeover",
+            block(script("Mahoganytown_hns"), "Mahoganytown_OnLoad"),
+        )
+
+    def test_blue_invitation_and_wattson_relocation_are_order_independent(self):
+        cinnabar = block(script("CinnabarIsland_hns"), "CinnabarIsland_EventScript_Blue")
+        circuit_invitation = cinnabar.split("#else", 1)[0]
+        self.assertNotIn("VAR_NUM_BADGES", circuit_invitation)
+        active = block(script("CinnabarIsland_hns"), "CinnabarIsland_EventScript_BlueActive")
+        self.assertIn("setflag FLAG_HIDE_CINNABAR_BLUE", active)
+        self.assertIn("clearflag FLAG_HIDE_VIRIDIAN_BLUE", active)
+        blue_intro = script("ViridianCity_Gym_hns").split("ViridianCity_Gym_Text_LeaderBlue_Before:\n", 1)[1]
+        blue_intro = blue_intro.split("ViridianCity_Gym_Text_LeaderBlue_Win:", 1)[0]
+        circuit_intro = blue_intro.split("#else", 1)[0]
+        self.assertNotIn("JOHTO CHAMP", circuit_intro)
+        self.assertNotIn("conquered all", circuit_intro)
+
+        helper = block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_TryRelocateWattson")
+        self.assertIn("goto_if_unset FLAG_DEFEATED_PETALBURG_GYM", helper)
+        self.assertIn("goto_if_unset FLAG_BADGE03_GET", helper)
+        self.assertIn("setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON", helper)
+        self.assertIn("clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON", helper)
+        self.assertIn("call MauvilleCity_Gym_EventScript_TryRelocateWattson", block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_WattsonDefeated"))
+        norman = block(script("PetalburgCity_Gym"), "PetalburgCity_Gym_EventScript_NormanBattle")
+        self.assertIn("call MauvilleCity_Gym_EventScript_TryRelocateWattson", norman)
+        self.assertNotIn("setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON", norman.split("#else", 1)[0])
+
+    def test_deferred_whitney_and_clair_awards_are_idempotent_and_monotonic(self):
+        whitney = script("GoldenrodCity_Gym_hns")
+        interaction = block(whitney, "GoldenrodCity_Gym_EventScript_Whitney")
+        self.assertLess(interaction.index("FLAG_BADGE03_GET"), interaction.index("TRAINER_WHITNEY_1_HNS"))
+        self.assertIn("goto_if_defeated TRAINER_WHITNEY_1_HNS", interaction)
+        award = block(whitney, "GoldenrodCity_Gym_EventScript_WhitneyBadge")
+        self.assertIn("goto_if_set FLAG_BADGE03_GET", award)
+        self.assertIn("goto_if_defeated TRAINER_WHITNEY_1_HNS", award)
+        self.assertIn("goto_if_ge VAR_GOLDENROD_CITY_STATE, 5", whitney)
+
+        shrine = script("DragonsDen_Shrine_hns")
+        shrine_on_load = block(shrine, "DragonsDen_Shrine_OnLoad")
+        self.assertIn("goto_if_unset FLAG_BADGE08_GET", shrine_on_load)
+        self.assertIn("setvar VAR_BLACKTHORN_CITY_STATE, 3", shrine_on_load)
+        self.assertIn(
+            "goto_if_set FLAG_BADGE08_GET, DragonsDen_Shrine_EventScript_RecoverAfterRisingBadge",
+            block(shrine, "DragonsDen_Shrine_EventScript_ElderOfferQuiz"),
+        )
+        recovery = block(shrine, "DragonsDen_Shrine_EventScript_RecoverAfterRisingBadge")
+        self.assertIn("goto_if_ge VAR_BLACKTHORN_CITY_STATE, 3", recovery)
+        self.assertNotIn("addvar VAR_NUM_BADGES", recovery)
+
+        clair = block(script("BlackthornCity_Gym_hns"), "BlackthornGym_EventScript_Clair")
+        self.assertIn("goto BlackthornGym_EventScript_Clair_Defeated", clair.split("#endif", 1)[0])
 
     def test_unearned_badges_skip_legacy_rematch_dispatch(self):
         cases = (
@@ -71,17 +163,39 @@ class CircuitScriptTests(unittest.TestCase):
             self.assertIn("setvar VAR_0x8004, REGION_HOENN", source)
             self.assertIn("LeagueCircuit_IsEligible", source)
 
-    def test_clear_bypasses_hns_crossregional_reset(self):
+    def test_indigo_clear_preserves_normal_scene_and_uses_region_cleanup(self):
         source = (GAME / "data/scripts/league_circuit.inc").read_text()
         clear = source.split("LeagueCircuit_EventScript_IndigoHallOfFame::", 1)[1]
         self.assertLess(clear.index("LeagueCircuit_RecordClear"), clear.index("special GameClear"))
-        self.assertNotIn("SetGameClearFlags", clear)
-        self.assertNotIn("SetFirstGameClearFlags", clear)
+        self.assertIn("SetGameClearFlags", clear)
+        self.assertIn("SetFirstGameClearFlags", clear)
         self.assertIn("setvar VAR_LEAGUE_STATE, 1", clear)
         self.assertLess(clear.index("LeagueCircuit_RecordClear"), clear.index("setvar VAR_LEAGUE_STATE, 1"))
         self.assertLess(clear.index("setvar VAR_LEAGUE_STATE, 1"), clear.index("special GameClear"))
         self.assertIn("HEAL_LOCATION_INDIGO_PLATEAU_HNS", clear)
         self.assertIn("LeagueCircuit_RecordClear", script("EverGrandeCity_HallOfFame"))
+
+        champion = script("PokemonLeague_ChampionsRoom_hns")
+        self.assertIn("PokemonLeague_ChampionsRoom_Text_BattleAfter", champion)
+        self.assertIn("PokemonLeague_ChampionsRoom_Movement_MaryEnter", champion)
+        hof = script("PokemonLeague_HallOfFame_hns")
+        for command in (
+            "PokemonLeague_HallOfFame_Movement_LanceEnter",
+            "GivePartyMonChampionRibbon",
+            "FLDEFF_HALL_OF_FAME_RECORD_FRLG",
+            "LeagueCircuit_EventScript_IndigoHallOfFame",
+        ):
+            self.assertIn(command, hof)
+
+        kanto_cleanup = block(hof, "PokemonLeague_HallOfFame_EventScript_SetGameClearFlags")
+        circuit_cleanup = re.sub(
+            r"#if !\(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED\).*?#endif",
+            "",
+            kanto_cleanup,
+            flags=re.DOTALL,
+        )
+        for flag in ("FLAG_HIDE_LATIOS", "FLAG_HIDE_LATIAS", "FLAG_HIDE_RAYQUAZA", "FLAG_HIDE_GROUDON", "FLAG_HIDE_KYOGRE"):
+            self.assertNotIn(flag, circuit_cleanup)
 
     def test_corridor_bypass_leaves_story_unwritten(self):
         gate = script("ReceptionGate_hns").split("ReceptionGate_Trigger::\n", 1)[1].split("#endif", 1)[0]

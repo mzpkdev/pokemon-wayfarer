@@ -4,9 +4,8 @@
 #include "global.h"
 
 // The caller supplies at least LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE bytes.
-#define LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE 160
+#define LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE 192
 
-void FormatLeagueCircuitStatus(u8 *dest, bool8 paged);
-void BufferLeagueCircuitStatus(void);
+void FormatLeagueCircuitStatus(u8 *dest);
 
 #endif

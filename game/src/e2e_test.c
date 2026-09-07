@@ -13,6 +13,7 @@
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "item.h"
+#include "league_circuit.h"
 #include "load_save.h"
 #include "main.h"
 #include "menu.h"
@@ -26,6 +27,8 @@
 #include "script.h"
 #include "sprite.h"
 #include "string_util.h"
+#include "trainer_rating.h"
+#include "wayfarer_persistence.h"
 #include "wild_encounter.h"
 #include "constants/field_effects.h"
 #include "constants/flags.h"
@@ -33,6 +36,7 @@
 #include "constants/maps.h"
 #include "constants/vars.h"
 #include "constants/vars_hns.h"
+#include "constants/wayfarer_persistence.h"
 #include "data/map_group_count.h"
 
 volatile struct E2ETestRequest gE2ETestRequest;
@@ -41,7 +45,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 8,
+    .version = 9,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -51,11 +55,11 @@ const struct E2ETestAbi gE2ETestAbi =
     .varsOffset = offsetof(struct SaveBlock1, vars),
 };
 
-STATIC_ASSERT(sizeof(struct E2ETestRequest) == 424, E2ETestRequestSize);
+STATIC_ASSERT(sizeof(struct E2ETestRequest) == 432, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 344, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 352, E2ETestStateSize);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -68,6 +72,12 @@ enum E2ETestInternalStage
 };
 
 static const u8 sDefaultPlayerName[] = COMPOUND_STRING("ETHAN");
+static const enum Region sCircuitRegions[E2E_TEST_LEAGUE_COUNT] =
+{
+    REGION_KANTO,
+    REGION_JOHTO,
+    REGION_HOENN,
+};
 
 static struct E2ETestRequest sRequest;
 static enum E2ETestInternalStage sStage;
@@ -315,6 +325,24 @@ static void ApplyHMsOverwriteFixture(void)
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_Nuzlocke = sRequest.hmsOverwrite;
 }
 
+static void ApplyLeagueCircuitFixture(void)
+{
+    u32 regionIndex;
+
+    for (regionIndex = 0; regionIndex < E2E_TEST_LEAGUE_COUNT; regionIndex++)
+    {
+        u32 badgeIndex;
+
+        for (badgeIndex = 0; badgeIndex < 8; badgeIndex++)
+        {
+            SetBadgeStateForRegion(sCircuitRegions[regionIndex], badgeIndex,
+                                   badgeIndex < sRequest.regionalBadgeCounts[regionIndex]);
+        }
+        SetGameClearStateForRegion(sCircuitRegions[regionIndex], sRequest.leagueClears[regionIndex]);
+    }
+    GetTrainerRating();
+}
+
 static void CopyRequest(void)
 {
     u32 i;
@@ -388,6 +416,12 @@ static void CopyRequest(void)
     sRequest.currentBox = gE2ETestRequest.currentBox;
     sRequest.hmsOverwrite = gE2ETestRequest.hmsOverwrite;
     sRequest.fullPocketMask = gE2ETestRequest.fullPocketMask;
+    for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
+    {
+        sRequest.regionalBadgeCounts[i] = gE2ETestRequest.regionalBadgeCounts[i];
+        sRequest.leagueClears[i] = gE2ETestRequest.leagueClears[i];
+    }
+    sRequest.applyLeagueCircuit = gE2ETestRequest.applyLeagueCircuit;
     memcpy(sRequest.reserved, (const void *)gE2ETestRequest.reserved, sizeof(sRequest.reserved));
 }
 
@@ -504,6 +538,20 @@ static enum E2ETestError ValidateMonFixture(const struct E2ETestMonFixture *mon,
     return E2E_TEST_ERROR_NONE;
 }
 
+static bool32 IsValidFixtureFlag(u16 id)
+{
+    if (id != 0 && id < FLAGS_COUNT)
+        return TRUE;
+    if (IS_HOENN_FLAG_ID(id))
+    {
+        u16 sourceId = HOENN_FLAG_SOURCE_ID(id);
+
+        return (sourceId >= WAYFARER_HOENN_FLAGS_LOW_START && sourceId <= WAYFARER_HOENN_FLAGS_LOW_END)
+            || (sourceId >= WAYFARER_HOENN_FLAGS_HIGH_START && sourceId <= WAYFARER_HOENN_FLAGS_HIGH_END);
+    }
+    return FALSE;
+}
+
 static enum E2ETestError ValidateArrangeRequest(void)
 {
     const struct MapHeader *mapHeader;
@@ -534,8 +582,7 @@ static enum E2ETestError ValidateArrangeRequest(void)
         return E2E_TEST_ERROR_FLAG_COUNT;
     for (i = 0; i < sRequest.flagCount; i++)
     {
-        if (sRequest.flags[i].id == 0
-         || sRequest.flags[i].id >= FLAGS_COUNT
+        if (!IsValidFixtureFlag(sRequest.flags[i].id)
          || sRequest.flags[i].value > TRUE
          || sRequest.flags[i].reserved != 0)
             return E2E_TEST_ERROR_FLAG;
@@ -595,9 +642,16 @@ static enum E2ETestError ValidateArrangeRequest(void)
         return E2E_TEST_ERROR_PARTY;
     if (sRequest.fullPocketMask & ~E2E_TEST_FULL_POCKET_MASK)
         return E2E_TEST_ERROR_FULL_POCKET_MASK;
-    if (sRequest.reserved[0] != 0
-     || sRequest.reserved[1] != 0)
-        return E2E_TEST_ERROR_PARTY;
+    if (sRequest.applyLeagueCircuit > TRUE
+     || sRequest.reserved[0] != 0
+     || sRequest.reserved[1] != 0
+     || sRequest.reserved[2] != 0)
+        return E2E_TEST_ERROR_CIRCUIT;
+    for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
+    {
+        if (sRequest.regionalBadgeCounts[i] > 8 || sRequest.leagueClears[i] > TRUE)
+            return E2E_TEST_ERROR_CIRCUIT;
+    }
 
     return E2E_TEST_ERROR_NONE;
 }
@@ -618,6 +672,7 @@ static enum E2ETestError ValidateRequest(void)
     case E2E_TEST_COMMAND_OBSERVE_REGION_MAP:
     case E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION:
     case E2E_TEST_COMMAND_WIN_BATTLE:
+    case E2E_TEST_COMMAND_OBSERVE_FLAG:
         return E2E_TEST_ERROR_NONE;
     default:
         return E2E_TEST_ERROR_COMMAND;
@@ -670,6 +725,8 @@ static bool32 ApplyOverrides(void)
     memcpy(sObservedBagItems, sRequest.bagItems, sizeof(sObservedBagItems));
     ApplyPcFixtures();
     ApplyHMsOverwriteFixture();
+    if (sRequest.applyLeagueCircuit)
+        ApplyLeagueCircuitFixture();
     ResetObservations();
 
     return TRUE;
@@ -828,6 +885,23 @@ static void BeginRequest(void)
         return;
     }
 
+    if (sRequest.command == E2E_TEST_COMMAND_OBSERVE_FLAG)
+    {
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+
+        sMapGroup = gSaveBlock1Ptr->location.mapGroup;
+        sMapNum = gSaveBlock1Ptr->location.mapNum;
+        sX = FlagGet(sRequest.mapGroup);
+        sY = 0;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
     if (gSaveBlock1Ptr == NULL || gSaveBlock2Ptr == NULL)
         SetSaveBlocksPointers(0);
 
@@ -922,6 +996,7 @@ static void UpdateState(void)
     u8 storageUiState;
     u8 storageMode;
     bool8 storageMovingMon;
+    u8 trainerCardState;
 
     gE2ETestState.frame++;
     gE2ETestState.phase = E2E_TEST_GAME_PHASE_BOOT;
@@ -971,7 +1046,15 @@ static void UpdateState(void)
     gE2ETestState.battleBagPocket = 0xFF;
     gE2ETestState.battleBagItem = ITEM_NONE;
     gE2ETestState.storageMode = E2E_TEST_STORAGE_MODE_NONE;
-    memset((void *)gE2ETestState.reserved2, 0, sizeof(gE2ETestState.reserved2));
+    gE2ETestState.globalBadgeCount = 0;
+    gE2ETestState.trainerRating = 0;
+    gE2ETestState.trainerCardState = E2E_TEST_TRAINER_CARD_NONE;
+    for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
+    {
+        gE2ETestState.regionalBadgeCounts[i] = 0;
+        gE2ETestState.leagueClears[i] = FALSE;
+        gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_LOCKED;
+    }
     gE2ETestState.mapGroup = E2E_TEST_KEEP_MAP;
     gE2ETestState.mapNum = E2E_TEST_KEEP_MAP;
     gE2ETestState.x = E2E_TEST_KEEP_COORDINATE;
@@ -1015,6 +1098,22 @@ static void UpdateState(void)
 
     if (gSaveBlock1Ptr == NULL)
         return;
+
+    for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
+    {
+        enum Region region = sCircuitRegions[i];
+
+        gE2ETestState.regionalBadgeCounts[i] = GetBadgeCountForRegion(region);
+        gE2ETestState.leagueClears[i] = GetChampionStateForRegion(region);
+        if (gE2ETestState.leagueClears[i])
+            gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_CLEARED;
+        else if (IsEligibleForLeague(region))
+            gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_AVAILABLE;
+    }
+    gE2ETestState.globalBadgeCount = GetGlobalBadgeCount();
+    gE2ETestState.trainerRating = GetTrainerRating();
+    trainerCardState = E2ETest_GetTrainerCardState();
+    gE2ETestState.trainerCardState = trainerCardState;
 
     gE2ETestState.mapGroup = gSaveBlock1Ptr->location.mapGroup;
     gE2ETestState.mapNum = gSaveBlock1Ptr->location.mapNum;
@@ -1116,6 +1215,8 @@ static void UpdateState(void)
         gE2ETestState.uiMode = E2E_TEST_UI_PAUSE_MENU;
     else if (!IsFieldMessageBoxHidden())
         gE2ETestState.uiMode = E2E_TEST_UI_DIALOGUE;
+    if (trainerCardState != E2E_TEST_TRAINER_CARD_NONE)
+        gE2ETestState.uiMode = E2E_TEST_UI_TRAINER_CARD;
     if (gE2ETestState.storageOpen)
         gE2ETestState.uiMode = E2E_TEST_UI_STORAGE;
     else if (gE2ETestState.battleUiState == E2E_TEST_BATTLE_UI_CATCH_SWAP_PROMPT

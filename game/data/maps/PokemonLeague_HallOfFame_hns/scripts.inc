@@ -8,10 +8,14 @@ PokemonLeague_HallOfFame_OnFrame::
 
 PokemonLeague_HallOfFame_EventScript_Cutscene::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	goto LeagueCircuit_EventScript_IndigoHallOfFame
-#endif
+	lock
+	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
+	goto_if_eq VAR_0x8004, REGION_JOHTO, PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp
+	goto_if_ne VAR_0x8004, REGION_KANTO, LeagueCircuit_EventScript_IndigoEntryDenied
+#else
 	lock
 	goto_if_set FLAG_IS_CHAMPION, PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp
+#endif
 	applymovement LOCALID_HALLOFFAME_LANCE, PokemonLeague_HallOfFame_Movement_LanceEnter
 	applymovement OBJ_EVENT_ID_PLAYER, PokemonLeague_HallOfFame_Movement_PlayerEnter
 	waitmovement OBJ_EVENT_ID_PLAYER
@@ -26,6 +30,9 @@ PokemonLeague_HallOfFame_EventScript_Cutscene::
 	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
 	delay 40
 	setvar VAR_TEMP_1, 1
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto LeagueCircuit_EventScript_IndigoHallOfFame
+#endif
 	call PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags
 	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
 	fadescreenspeed FADE_TO_BLACK, 24
@@ -39,7 +46,11 @@ PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp::
 	applymovement OBJ_EVENT_ID_PLAYER, PokemonLeague_HallOfFame_Movement_PlayerEnter
 	waitmovement OBJ_EVENT_ID_PLAYER
 	waitmovement LOCALID_HALLOFFAME_LANCE
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	msgbox PokemonLeague_HallOfFame_JohtoCircuit_LanceText, MSGBOX_DEFAULT
+#else
 	msgbox PokemonLeague_HallOfFame_Rematch_LanceText, MSGBOX_DEFAULT
+#endif
 	closemessage
 	special GivePartyMonChampionRibbon
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterUp
@@ -49,6 +60,9 @@ PokemonLeague_HallOfFame_EventScript_CutsceneKantoChamp::
 	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
 	delay 40
 	setvar VAR_TEMP_1, 1
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto LeagueCircuit_EventScript_IndigoHallOfFame
+#endif
 	call PokemonLeague_HallOfFame_EventScript_SetGameClearFlags
 	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
 	fadescreenspeed FADE_TO_BLACK, 24
@@ -61,6 +75,18 @@ PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags::
 	setflag FLAG_HIDE_AZALEA_TOWN_SLOWPOKE
 	setflag FLAG_HIDE_SLOWPOKE_WELL_TAILLESS_SLOWPOKES
 	clearflag FLAG_HIDE_AZALEA_TOWN_TAILED_SLOWPOKES
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	clearflag FLAG_HIDE_UNION_CAVE_LAPRAS
+	clearflag FLAG_HIDE_SUDOWOODO
+	clearflag FLAG_ITEM_GS_BALL
+	setvar VAR_COMPLETED_LUGIA, 4
+	clearflag FLAG_HIDE_LUGIA
+	setvar VAR_COMPLETED_HO_OH, 4
+	clearflag FLAG_HIDE_HO_OH
+	call PokemonLeague_HallOfFame_EventScript_SpawnJohtoRoamers
+	call_if_ge VAR_SUICUNE_ENCOUNTERS, 8, PokemonLeague_HallOfFame_EventScript_SpawnSuicune
+	call_if_set FLAG_CAUGHT_CELEBI, PokemonLeague_HallOfFame_EventScript_SpawnSecondCelebi
+#endif
 	clearflag FLAG_HIDE_LEAGUE_BLACKBELT
 	setflag FLAG_IS_CHAMPION
 	setflag FLAG_HIDE_BATTLEFRONTIER_ENGINEER
@@ -70,6 +96,7 @@ PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags::
 
 PokemonLeague_HallOfFame_EventScript_SetGameClearFlags::
 	setflag FLAG_HIDE_CERULEANCAVE_GUARD
+#if !(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED)
 	setflag FLAG_HIDE_AZALEA_TOWN_SLOWPOKE
 	setflag FLAG_HIDE_SLOWPOKE_WELL_TAILLESS_SLOWPOKES
 	clearflag FLAG_HIDE_AZALEA_TOWN_TAILED_SLOWPOKES
@@ -78,16 +105,24 @@ PokemonLeague_HallOfFame_EventScript_SetGameClearFlags::
 	clearflag FLAG_HIDE_RAYQUAZA
 	clearflag FLAG_HIDE_GROUDON
 	clearflag FLAG_HIDE_KYOGRE
+#endif
 	clearflag FLAG_HIDE_MEWTWO
 	clearflag FLAG_HIDE_VERMILION_SNORLAX
+#if !(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED)
 	clearflag FLAG_HIDE_UNION_CAVE_LAPRAS
 	clearflag FLAG_HIDE_SUDOWOODO
+#endif
 	clearflag FLAG_HIDE_ZAPDOS
 	clearflag FLAG_HIDE_ARTICUNO
 	clearflag FLAG_HIDE_MOLTRES
+#if !(IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED)
 	clearflag FLAG_ITEM_GS_BALL
+#endif
 	setflag FLAG_HIDE_BATTLEFRONTIER_ENGINEER
 	setflag FLAG_IS_KANTO_CHAMPION
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	call PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers
+#else
 	setvar VAR_COMPLETED_LUGIA, 4
 	clearflag FLAG_HIDE_LUGIA
 	setvar VAR_COMPLETED_HO_OH, 4
@@ -95,6 +130,7 @@ PokemonLeague_HallOfFame_EventScript_SetGameClearFlags::
 	call PokemonLeague_HallOfFame_EventScript_SpawnRoamers
 	call_if_ge VAR_SUICUNE_ENCOUNTERS, 8, PokemonLeague_HallOfFame_EventScript_SpawnSuicune
 	call_if_set FLAG_CAUGHT_CELEBI, PokemonLeague_HallOfFame_EventScript_SpawnSecondCelebi
+#endif
 	call_if_ge VAR_VIRIDIAN_FOREST_PICHU, 4, PokemonLeague_HallOfFame_EventScript_SpawnPichu
 	call_if_ge VAR_ALOLA_STATE, 4, PokemonLeague_HallOfFame_EventScript_SpawnAlolaMons
 	call PokemonLeague_HallOfFame_EventScript_SpawnSinjohMons
@@ -139,13 +175,21 @@ PokemonLeague_HallOfFame_EventScript_SpawnPichu::
 	clearflag FLAG_HIDE_VIRIDIAN_FOREST_SPIKY_EARED_PICHU
 	return
 
-PokemonLeague_HallOfFame_EventScript_SpawnRoamers::
+PokemonLeague_HallOfFame_EventScript_SpawnJohtoRoamers::
 	clearflag FLAG_CAUGHT_ENTEI
 	clearflag FLAG_CAUGHT_RAIKOU
 	special InitRoamer
+	return
+
+PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers::
 	copyvar VAR_0x8004, VAR_ROAMER_POKEMON_HNS
 	special InitKantoRoamers
 	setflag FLAG_LATIOS_OR_LATIAS_ROAMING
+	return
+
+PokemonLeague_HallOfFame_EventScript_SpawnRoamers::
+	call PokemonLeague_HallOfFame_EventScript_SpawnJohtoRoamers
+	call PokemonLeague_HallOfFame_EventScript_SpawnKantoRoamers
 	return
 
 PokemonLeague_HallOfFame_EventScript_SpawnSuicune::
@@ -222,3 +266,13 @@ PokemonLeague_HallOfFame_Rematch_LanceText:
     .string "{PLAYER}, it is my honor to register\n"
     .string "you, and your trusted partners,\l"
     .string "as champions once again.$"
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+PokemonLeague_HallOfFame_JohtoCircuit_LanceText:
+	.string "LANCE: Once again, you have risen\n"
+	.string "to the LEAGUE's greatest test.\p"
+	.string "You conquered KANTO, and now you\n"
+	.string "have triumphed here in JOHTO.\p"
+	.string "{PLAYER}, allow me to register you\n"
+	.string "and your partners as CHAMPIONS!$"
+#endif

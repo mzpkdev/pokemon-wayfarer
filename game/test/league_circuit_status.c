@@ -6,53 +6,95 @@
 #include "test/test.h"
 
 #if IS_WAYFARER
-TEST("League circuit status reports every target and qualification then completion")
+static const enum Region sRegions[] = { REGION_KANTO, REGION_JOHTO, REGION_HOENN };
+
+static void ResetCircuitFacts(void)
 {
-    static const enum Region regions[] = { REGION_KANTO, REGION_JOHTO, REGION_HOENN };
-    static const u8 complete[] = _("Badges: 24/24\nCertification cap: 24\nCircuit complete");
-    static const u8 completePaged[] = _("Badges: 24/24\nCertification cap: 24\pCircuit complete");
-    static const u8 waitingKanto[] = _("Badges: 0/24\nCertification cap: 8\nNext: Kanto League\nBadge target: 8");
-    static const u8 waitingJohto[] = _("Badges: 8/24\nCertification cap: 16\nNext: Johto League\nBadge target: 16");
-    static const u8 waitingHoenn[] = _("Badges: 16/24\nCertification cap: 24\nNext: Hoenn League\nBadge target: 24");
-    static const u8 qualifiedKanto[] = _("Badges: 8/24\nCertification cap: 8\nNext: Kanto League\nQualified!");
-    static const u8 qualifiedJohto[] = _("Badges: 16/24\nCertification cap: 16\nNext: Johto League\nQualified!");
-    static const u8 qualifiedHoenn[] = _("Badges: 24/24\nCertification cap: 24\nNext: Hoenn League\nQualified!");
-    static const u8 *const waiting[] =
-    {
-        waitingKanto,
-        waitingJohto,
-        waitingHoenn,
-    };
-    static const u8 *const qualified[] =
-    {
-        qualifiedKanto,
-        qualifiedJohto,
-        qualifiedHoenn,
-    };
-    u8 text[LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE];
     u8 region;
     u8 badge;
 
+    ConsumeRecordedLeagueClearRegion();
     WayfarerInitPersistentState();
-    for (region = 0; region < ARRAY_COUNT(regions); region++)
+    for (region = 0; region < ARRAY_COUNT(sRegions); region++)
     {
-        SetChampionStateForRegion(regions[region], FALSE);
+        SetChampionStateForRegion(sRegions[region], FALSE);
         for (badge = 0; badge < 8; badge++)
-            SetBadgeStateForRegion(regions[region], badge, FALSE);
+            SetBadgeStateForRegion(sRegions[region], badge, FALSE);
     }
-    for (region = 0; region < ARRAY_COUNT(regions); region++)
-    {
-        FormatLeagueCircuitStatus(text, FALSE);
-        EXPECT_EQ(StringCompare(text, waiting[region]), 0);
-        for (badge = 0; badge < 8; badge++)
-            SetBadgeStateForRegion(regions[region], badge, TRUE);
-        FormatLeagueCircuitStatus(text, FALSE);
-        EXPECT_EQ(StringCompare(text, qualified[region]), 0);
-        EXPECT(TryRecordLeagueClear(regions[region]));
-    }
-    FormatLeagueCircuitStatus(text, FALSE);
+}
+
+static void SetBadgeCount(enum Region region, u8 count)
+{
+    u8 badge;
+
+    for (badge = 0; badge < 8; badge++)
+        SetBadgeStateForRegion(region, badge, badge < count);
+}
+
+static void SetBadgeDistribution(u8 kanto, u8 johto, u8 hoenn)
+{
+    SetBadgeCount(REGION_KANTO, kanto);
+    SetBadgeCount(REGION_JOHTO, johto);
+    SetBadgeCount(REGION_HOENN, hoenn);
+}
+
+TEST("League circuit status reports mixed badge thresholds and prior clear requirements")
+{
+    static const u8 initial[] = _("Badges: 0/24\nKanto: Locked\n  8 badges + no prior clear\nJohto: Locked\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    static const u8 mixedEight[] = _("Badges: 8/24\nKanto: Available\n  8 badges + no prior clear\nJohto: Locked\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    static const u8 fifteen[] = _("Badges: 15/24\nKanto: Available\n  8 badges + no prior clear\nJohto: Locked\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    static const u8 sixteenWithoutClear[] = _("Badges: 16/24\nKanto: Available\n  8 badges + no prior clear\nJohto: Locked\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    static const u8 sixteenWithKantoClear[] = _("Badges: 16/24\nKanto: Cleared\n  8 badges + no prior clear\nJohto: Available\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    u8 text[LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE];
+
+    ResetCircuitFacts();
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, initial), 0);
+
+    SetBadgeDistribution(0, 4, 4);
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, mixedEight), 0);
+
+    SetBadgeDistribution(7, 4, 4);
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, fifteen), 0);
+
+    SetBadgeDistribution(8, 4, 4);
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, sixteenWithoutClear), 0);
+
+    EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, sixteenWithKantoClear), 0);
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
+}
+
+TEST("League circuit status reports all badges before consecutive League clears")
+{
+    static const u8 allBadgesNoClears[] = _("Badges: 24/24\nKanto: Available\n  8 badges + no prior clear\nJohto: Locked\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    static const u8 kantoCleared[] = _("Badges: 24/24\nKanto: Cleared\n  8 badges + no prior clear\nJohto: Available\n  16 badges + Kanto clear\nHoenn: Locked\n  24 badges + Kanto + Johto clears");
+    static const u8 johtoCleared[] = _("Badges: 24/24\nKanto: Cleared\n  8 badges + no prior clear\nJohto: Cleared\n  16 badges + Kanto clear\nHoenn: Available\n  24 badges + Kanto + Johto clears");
+    static const u8 complete[] = _("Badges: 24/24\nKanto: Cleared\n  8 badges + no prior clear\nJohto: Cleared\n  16 badges + Kanto clear\nHoenn: Cleared\n  24 badges + Kanto + Johto clears\nCircuit complete");
+    u8 text[LEAGUE_CIRCUIT_STATUS_BUFFER_SIZE];
+
+    ResetCircuitFacts();
+    SetBadgeDistribution(8, 8, 8);
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, allBadgesNoClears), 0);
+
+    EXPECT(TryRecordLeagueClear(REGION_KANTO));
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, kantoCleared), 0);
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_KANTO);
+
+    EXPECT(TryRecordLeagueClear(REGION_JOHTO));
+    FormatLeagueCircuitStatus(text);
+    EXPECT_EQ(StringCompare(text, johtoCleared), 0);
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_JOHTO);
+
+    EXPECT(TryRecordLeagueClear(REGION_HOENN));
+    FormatLeagueCircuitStatus(text);
     EXPECT_EQ(StringCompare(text, complete), 0);
-    BufferLeagueCircuitStatus();
-    EXPECT_EQ(StringCompare(gStringVar4, completePaged), 0);
+    EXPECT_EQ(ConsumeRecordedLeagueClearRegion(), REGION_HOENN);
 }
 #endif

@@ -33,11 +33,14 @@ CinnabarIsland_Text_Blaine:
 CinnabarIsland_EventScript_Blue::
 	lock
 	faceplayer
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto CinnabarIsland_EventScript_BlueActive
+#else
 	goto_if_eq VAR_NUM_BADGES, 15, CinnabarIsland_EventScript_BlueActive
 	msgbox CinnabarIsland_Text_BlueBefore, MSGBOX_NPC
 	release
 	end
-
+#endif
 CinnabarIsland_EventScript_BlueActive::
 	msgbox CinnabarIsland_Text_Blue, MSGBOX_NPC
 	fadescreenswapbuffers FADE_TO_BLACK
@@ -47,7 +50,6 @@ CinnabarIsland_EventScript_BlueActive::
 	fadescreenswapbuffers FADE_FROM_BLACK
 	release
 	end
-
 
 CinnabarIsland_Text_BlueBefore:
 	.string "Who are you?\p"
@@ -75,6 +77,7 @@ CinnabarIsland_Text_BlueBefore:
 	.string "If you want to battle me, you'll\n"
 	.string "need 15 badges first.\p"
 	.string "I'll take you on then.$"
+
 
 CinnabarIsland_Text_Blue:
 	.string "Who are you?\p"
@@ -120,4 +123,3 @@ CinnabarIsland_Text_GymSign:
 CinnabarIsland_Text_Sign:
 	.string "CINNABAR ISLAND\p"
 	.string "The Fiery Town of Burning Desire$"
-

@@ -731,8 +731,7 @@ gSpecials::
 	def_special GetMaxPartySize
 	def_special IsPartyLimitChallengeActive
 
-	def_special LeagueCircuit_CanChallengeGym, requests_effects=TRUE
 	def_special LeagueCircuit_GetRequiredRegion
 	def_special LeagueCircuit_IsEligible
 	def_special LeagueCircuit_RecordClear
-	def_special BufferLeagueCircuitStatus
+	def_special LeagueCircuit_BufferAdmissionDenial

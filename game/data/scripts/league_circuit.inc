@@ -1,54 +1,18 @@
 #if IS_WAYFARER
-LeagueCircuit_EventScript_ShowStatus::
-	special BufferLeagueCircuitStatus
-	message gStringVar4
-	waitmessage
-	waitbuttonpress
-	closemessage
-	return
-
-LeagueCircuit_EventScript_Itinerary::
-	msgbox LeagueCircuit_Text_Itinerary, MSGBOX_DEFAULT
-	call LeagueCircuit_EventScript_ShowStatus
-	return
-
-LeagueCircuit_EventScript_PostponeGym::
-	lockall
-	msgbox LeagueCircuit_Text_Postpone, MSGBOX_DEFAULT
-	call LeagueCircuit_EventScript_ShowStatus
-	releaseall
-	end
-
-LeagueCircuit_EventScript_CheckQualification::
-	callnative GetTrainerRating
-	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
-	specialvar VAR_RESULT, LeagueCircuit_IsEligible
-	call_if_eq VAR_RESULT, TRUE, LeagueCircuit_EventScript_ShowStatus
-	return
-
 LeagueCircuit_EventScript_EntryDenied::
 	lockall
-	call LeagueCircuit_EventScript_ShowStatus
+	special LeagueCircuit_BufferAdmissionDenial
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	releaseall
 	end
 
-LeagueCircuit_Text_Postpone:
-	.string "Your official challenge must wait.\n"
-	.string "Clear your next LEAGUE first.$"
-
-LeagueCircuit_Text_Itinerary:
-	.string "Badges from all three regions count!\p"
-	.string "KANTO LEAGUE: 8 badges.\n"
-	.string "JOHTO LEAGUE: 16 badges.\l"
-	.string "HOENN LEAGUE: 24 badges.\p"
-	.string "Clear each LEAGUE in that order\n"
-	.string "to continue earning badges.$"
 LeagueCircuit_EventScript_TravelAllowed::
 	end
 
 LeagueCircuit_EventScript_IndigoEntryDenied::
 	lockall
-	call LeagueCircuit_EventScript_ShowStatus
+	special LeagueCircuit_BufferAdmissionDenial
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	warp MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS, 0
 	waitstate
 	releaseall
@@ -56,26 +20,58 @@ LeagueCircuit_EventScript_IndigoEntryDenied::
 
 LeagueCircuit_EventScript_HoennEntryDenied::
 	lockall
-	call LeagueCircuit_EventScript_ShowStatus
+	special LeagueCircuit_BufferAdmissionDenial
+	msgbox gStringVar4, MSGBOX_DEFAULT
 	warp MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F, 0
 	waitstate
 	releaseall
 	end
 
 LeagueCircuit_EventScript_IndigoHallOfFame::
-	lockall
 	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
 	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
 	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
+	specialvar VAR_RESULT, LeagueCircuit_IsEligible
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
 	specialvar VAR_RESULT, LeagueCircuit_RecordClear
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
-	special GivePartyMonChampionRibbon
+	goto_if_eq VAR_0x8004, REGION_KANTO, LeagueCircuit_EventScript_IndigoHallOfFameKantoCleanup
+	call PokemonLeague_HallOfFame_EventScript_SetFirstGameClearFlags
+	goto LeagueCircuit_EventScript_IndigoHallOfFameFinish
+
+LeagueCircuit_EventScript_IndigoHallOfFameKantoCleanup:
+	call PokemonLeague_HallOfFame_EventScript_SetGameClearFlags
+
+LeagueCircuit_EventScript_IndigoHallOfFameFinish:
 	setvar VAR_LEAGUE_STATE, 1
-	call LeagueCircuit_EventScript_ShowStatus
 	setrespawn HEAL_LOCATION_INDIGO_PLATEAU_HNS
 	fadescreenspeed FADE_TO_BLACK, 24
 	special GameClear
 	waitstate
 	releaseall
 	end
+
+LeagueCircuit_Text_NeedEightBadges::
+	.string "You need at least eight BADGES\n"
+	.string "to enter the KANTO LEAGUE.$"
+
+LeagueCircuit_Text_NeedKantoClear::
+	.string "You must clear the KANTO LEAGUE\n"
+	.string "before taking this challenge.$"
+
+LeagueCircuit_Text_NeedSixteenBadges::
+	.string "You need at least sixteen BADGES\n"
+	.string "to enter the JOHTO LEAGUE.$"
+
+LeagueCircuit_Text_NeedJohtoClear::
+	.string "You must clear the JOHTO LEAGUE\n"
+	.string "before taking this challenge.$"
+
+LeagueCircuit_Text_NeedTwentyFourBadges::
+	.string "You need all twenty-four BADGES\n"
+	.string "to enter the HOENN LEAGUE.$"
+
+LeagueCircuit_Text_Unavailable::
+	.string "There is no LEAGUE challenge\n"
+	.string "available here.$"
 #endif
