@@ -36,20 +36,43 @@ for the first two origins, not requirements imposed on future custom flows.
 ### Professor introduction
 
 Keep the existing Oak introduction, player appearance/name setup, and
-challenge settings. Before the final send-off, Oak asks:
+challenge settings. The order is: Oak introduces the Pokémon world, the
+player chooses appearance and name, challenge setup finishes, Oak returns
+to the screen, the player chooses an origin, and Oak gives his final send-off.
 
+Ask the question while Oak and his Pokémon are visible again, immediately
+before his existing "{PLAYER}{KUN}, are you ready?" line. It is his last
+getting-acquainted question. Finish the selection before the farewell and
+player-shrink sequence begins, so no menu interrupts that closing passage.
+
+> Now, tell me...
 > Where will your journey begin?
 
-The choices are `JOHTO` and `HOENN`, in that order. The prompt describes a
-starting destination rather than claiming a birthplace, which also fits
-Hoenn's moving-house opening. A confirmation names the destination town and
-makes clear that the player can visit the other regions later. Choosing No
-returns to the region list. The choice becomes permanent when the new game
-begins; Continue never asks again.
+Show `JOHTO` and `HOENN`, in that order, using the introduction's ordinary
+choice menu. Oak acknowledges the selected region and confirms its town:
 
-Use the existing speech presentation and assets. There is one professor
-introduction, followed by the selected region's opening. Name, appearance,
-and challenge choices are not repeated by the regional scripts.
+| Choice | Oak's confirmation |
+| --- | --- |
+| Johto | "Ah, JOHTO! You'll begin in NEW BARK TOWN, then?" |
+| Hoenn | "Ah, HOENN! You'll begin in LITTLEROOT TOWN, then?" |
+
+Yes continues the conversation. No or B returns to the region list without
+a reprimand or replaying the earlier introduction. After Yes, Oak adds:
+
+> Perhaps your travels will take you to other regions, too!
+
+Then resume his existing "{PLAYER}{KUN}, are you ready? Your very own adventure
+is about to unfold." and the rest of the farewell. This gives the travel
+context in Oak's voice. The wording describes where the adventure begins;
+it does not claim a birthplace, present residence, or a prior relationship
+with Elm or Birch, so it also fits Hoenn's moving-house opening.
+
+Keep the existing music, textbox, text speed, sprites, and menu style during
+this exchange. Do not open a separate region-selection screen, show map cards,
+or insert technical explanations into Oak's dialogue. The choice becomes
+permanent when the new game begins; Continue never asks again. There is one
+professor introduction, followed by the selected origin's opening. Regional
+scripts do not repeat name, appearance, or challenge setup.
 
 ### Regional openings
 

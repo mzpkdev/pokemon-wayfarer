@@ -78,22 +78,70 @@ Guard the feature with `IS_WAYFARER`, including runtime origin dispatch inside
 shared HNS or Emerald code. Wayfarer remains an HNS-engine build with both
 content sets. Selecting Hoenn must not change a build version or engine rule.
 
-Extend `game/src/oak_speech_hns.c` after the return from challenge setup and
-before the final platform/shrink/send-off sequence. Retain Oak and the
-existing appearance, naming, and challenge menus. Do not invoke the standalone
-Birch speech after selecting Hoenn.
+Extend `game/src/oak_speech_hns.c` at the professor's return after challenge
+setup, before printing `gText_Oak_YourePlayer`. Retain the existing appearance,
+naming, and challenge menus. The presentation order is:
+
+```text
+Oak's welcome and Pokémon introduction
+Appearance -> name -> name confirmation
+Challenge setup -> existing challenge acknowledgement
+Existing platform transition brings Oak and his Pokémon back
+Origin question -> selection -> town confirmation -> travel remark
+Existing "{PLAYER}{KUN}, are you ready?" and adventure send-off
+Existing player transition, farewell, and shrink into the chosen opening
+```
+
+`Task_NewGameHnsSpeech_ReshowProfessorMon` currently restores the professor
+and Pokémon and immediately prints `gText_Oak_YourePlayer`. For Wayfarer,
+route this point into the new exchange instead. Wait for the sprite fade and
+question printing to finish before opening the list. Keep Oak and his Pokémon
+visible through selection, confirmation, and the travel remark. Only then
+print `gText_Oak_YourePlayer` once and resume
+`Task_NewGameHnsSpeech_WaitForSpriteFadeInAndTextPrinter` and the original
+send-off. Do not start that task's outgoing fade while a choice is pending.
+
+Leave `Task_NewGameHnsSpeech_WaitForTextAfterChallengeMenu`'s existing
+transition back to Oak intact; do not place the question on the player/settings
+return screen. Do not replay the welcome or invoke the standalone Birch
+speech after selecting Hoenn.
 
 | Step | Required behavior |
 | --- | --- |
-| Question | Print `Where will your journey begin?` in the existing speech textbox. |
+| Question | Print `Now, tell me...` followed by `Where will your journey begin?` in the existing speech textbox. |
 | List | Show `JOHTO`, then `HOENN`. First entry into this list highlights Johto. Up/Down select; A opens confirmation. B keeps the list open without committing. |
-| Johto confirmation | `Begin in NEW BARK TOWN?` followed by `You can visit other regions later.` and the existing Yes/No menu. |
-| Hoenn confirmation | `Begin in LITTLEROOT TOWN?` followed by the same travel sentence and Yes/No menu. |
-| Reconsider | No or B returns to the list with the candidate still highlighted. |
-| Commit | Yes records the pending origin and continues the existing send-off. |
+| Johto confirmation | Print `Ah, JOHTO! You'll begin in NEW BARK TOWN, then?` and open the existing Yes/No menu after printing finishes. |
+| Hoenn confirmation | Print `Ah, HOENN! You'll begin in LITTLEROOT TOWN, then?` and open the same Yes/No menu after printing finishes. |
+| Reconsider | No or B restores the question and list with the candidate still highlighted; add no rejection dialogue or earlier speech replay. |
+| Commit | Yes records the confirmed pending origin, closes the menu, and prints `Perhaps your travels will take you to other regions, too!` before the existing send-off. |
 
-Fit text and menus to the existing GBA windows using normal pagination. Do
-not display technical region IDs, initialization state, or a difficulty claim.
+Use these two-line textbox breaks for the new dialogue, with the existing
+font and ordinary text-printer behavior:
+
+```text
+Now, tell me...
+Where will your journey begin?
+
+Ah, JOHTO! You'll begin in
+NEW BARK TOWN, then?
+
+Ah, HOENN! You'll begin in
+LITTLEROOT TOWN, then?
+
+Perhaps your travels will take
+you to other regions, too!
+```
+
+Each blank-separated block is one textbox page; only the selected origin's
+confirmation appears. Validate the actual rendered font/window bounds and
+Yes/No placement. Retain the existing music, textbox frame, text speed,
+sprites, and menu styling, with no separate selection scene or new assets.
+Consume each menu selection before opening the next menu so the same A press
+cannot choose a region and confirm it. Advance dialogue using the existing
+speech controls; pending choices require their defined menu input.
+
+Do not display technical region IDs, initialization state, a difficulty claim,
+or the old UI-style `Begin in...` / `You can visit other regions later.` text.
 Fast-intro settings may shorten existing presentation but must still expose
 this mandatory choice. Resetting or abandoning new-game setup clears the
 pending choice. Continue and saved-game recovery never show the list.
@@ -387,7 +435,7 @@ that a mixed-region script writes the intended bank.
 
 | Area | Required evidence |
 | --- | --- |
-| Intro | Both choices, confirmation cancellation, callback round trips, fresh setup after abandoning a previous choice, fast intro, and Continue without a prompt. |
+| Intro | Both choices, confirmation cancellation, callback round trips, fresh setup after abandoning a previous choice, fast intro, and Continue without a prompt. Oak and his Pokémon are visible during the exchange; town confirmation fits the window; the travel remark precedes one uninterrupted send-off; no input carries from list selection into confirmation. |
 | New-game state | Both origins, both appearance/gender mappings, preserved challenge settings, zero TR/badges/clears, correct visited bits, correct home, and correct initialized marker. |
 | Native starters | All three local choices in each region, exact-once delivery, native first-battle loss continuation versus visitor rescue retry, correct local rival branch, and no writes to the other starter choice. |
 | Shared services | Running shoes, Pokégear, first Pokédex, later professor receipt, and pre-Center home recovery work through the actual Wayfarer UI and scripts. |
@@ -442,6 +490,7 @@ Source inspection baseline: `baa362db65`. Function and script labels below
 are navigation anchors; this document specifies changes to their current behavior.
 
 - [HNS professor speech](../../game/src/oak_speech_hns.c): challenge return and final send-off.
+- [Oak's existing dialogue](../../game/data/text/oak_speech_hns.inc): the world introduction, name confirmation, challenge acknowledgement, and closing lines.
 - [New-game initialization](../../game/src/new_game.c): `NewGameInitData`, `WarpToTruck`.
 - [Wayfarer persistence](../../game/src/wayfarer_persistence.c): initialization, validation, and `WayfarerPrepareHoennEntry`.
 - [Save state](../../game/include/global.h): `WayfarerHoennPersistentState`.
