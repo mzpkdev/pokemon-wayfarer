@@ -131,6 +131,47 @@ MahoganyTown_EventScript_WalkUp2::
 	return
 
 MahoganyTown_EventScript_Merchant::
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	lock
+	faceplayer
+MahoganyTown_EventScript_MerchantMenu::
+	message MahoganyTown_Text_MerchantMenu
+	waitmessage
+	multichoice 18, 6, MULTI_MAHOGANY_MERCHANT, FALSE
+	switch VAR_RESULT
+	case 0, MahoganyTown_EventScript_MerchantSupplies
+	case 1, MahoganyTown_EventScript_MerchantRageCandyBar
+	case 2, MahoganyTown_EventScript_MerchantExit
+	case MULTI_B_PRESSED, MahoganyTown_EventScript_MerchantExit
+	goto MahoganyTown_EventScript_MerchantExit
+
+MahoganyTown_EventScript_MerchantSupplies::
+	setvar VAR_0x8004, MART_PROFILE_MAHOGANY
+	special WayfarerOpenMartProfile
+	waitstate
+	goto MahoganyTown_EventScript_MerchantMenu
+
+MahoganyTown_EventScript_MerchantRageCandyBar::
+	goto_if_eq VAR_MAHOGANY_TOWN_STATE, 17, MahoganyTown_EventScript_MerchantAfter
+	showmoneybox 0, 0
+	msgbox MahoganyTown_Text_RageCandyBarMerchantTryOne, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantRefused
+	checkmoney 300, 0
+	goto_if_eq VAR_RESULT, FALSE, MahoganyTown_EventScript_MerchantBroke
+	removemoney 300
+	updatemoneybox 0
+	msgbox MahoganyTown_Text_RageCandyBarMerchantSavorIt, MSGBOX_DEFAULT
+	giveitem ITEM_RAGE_CANDY_BAR
+	hidemoneybox
+	closemessage
+	release
+	end
+
+MahoganyTown_EventScript_MerchantExit::
+	closemessage
+	release
+	end
+#else
 	lock
 	faceplayer
 	goto_if_eq VAR_MAHOGANY_TOWN_STATE, 17, MahoganyTown_EventScript_MerchantAfter
@@ -147,6 +188,7 @@ MahoganyTown_EventScript_Merchant::
 	closemessage
 	release
 	end
+#endif
 
 MahoganyTown_EventScript_MerchantRefused::
 	msgbox MahoganyTown_Text_RageCandyBarMerchantRefused, MSGBOX_DEFAULT
@@ -271,6 +313,11 @@ MahoganyTown_Text_RageCandyBarMerchantSoldOut:
     .string "RAGECANDYBAR's sold out.\p"
     .string "I'm packing up. Don't bother me,\n"
     .string "kiddo.$"
+
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+MahoganyTown_Text_MerchantMenu:
+	.string "Need supplies or a RAGE CANDY BAR?$"
+#endif
 
 MahoganyTown_Text_Gramps:
     .string "Are you off to see the GYARADOS\n"

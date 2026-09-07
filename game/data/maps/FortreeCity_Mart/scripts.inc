@@ -6,7 +6,13 @@ FortreeCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_FORTREE
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart FortreeCity_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -52,4 +58,3 @@ FortreeCity_Mart_Text_StockUpOnItems:
 FortreeCity_Mart_Text_RareCandyMakesMonGrow:
 	.string "A RARE CANDY makes a POKéMON grow\n"
 	.string "immediately by one level.$"
-

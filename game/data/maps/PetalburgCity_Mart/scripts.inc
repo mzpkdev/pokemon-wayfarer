@@ -6,8 +6,14 @@ PetalburgCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_PETALBURG
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	goto_if_set FLAG_PETALBURG_MART_EXPANDED_ITEMS, PetalburgCity_Mart_EventScript_ExpandedItems
 	pokemart PetalburgCity_Mart_Pokemart_Basic
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -79,4 +85,3 @@ PetalburgCity_Mart_Text_TakeSomeAntidotesWithYou:
 	.string "If you walk around with a poisoned\n"
 	.string "POKéMON, it will lose HP until it faints.\l"
 	.string "Take some ANTIDOTES with you.$"
-

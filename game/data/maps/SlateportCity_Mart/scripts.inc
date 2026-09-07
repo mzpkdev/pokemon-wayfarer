@@ -6,7 +6,13 @@ SlateportCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_SLATEPORT
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart SlateportCity_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -43,4 +49,3 @@ SlateportCity_Mart_Text_GreatBallIsBetter:
 	.string "at catching POKéMON.\p"
 	.string "With this, I should be able to get that\n"
 	.string "elusive POKéMON…$"
-

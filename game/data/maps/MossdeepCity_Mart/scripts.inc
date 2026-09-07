@@ -6,7 +6,13 @@ MossdeepCity_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_MOSSDEEP
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart MossdeepCity_Mart_Pokemart
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -33,7 +39,11 @@ MossdeepCity_Mart_EventScript_Boy::
 	end
 
 MossdeepCity_Mart_EventScript_Sailor::
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	msgbox MossdeepCity_Mart_Text_NetAndDiveBallsSpecialties, MSGBOX_NPC
+#else
 	msgbox MossdeepCity_Mart_Text_NetAndDiveBallsRare, MSGBOX_NPC
+#endif
 	end
 
 MossdeepCity_Mart_Text_ReviveIsFantastic:
@@ -56,3 +66,12 @@ MossdeepCity_Mart_Text_NetAndDiveBallsRare:
 	.string "A DIVE BALL works best on POKéMON\n"
 	.string "at the bottom of the sea.$"
 
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+MossdeepCity_Mart_Text_NetAndDiveBallsSpecialties:
+	.string "MOSSDEEP specializes in NET and DIVE\n"
+	.string "BALLS.\p"
+	.string "A NET BALL is effective against\n"
+	.string "BUG-type and WATER-type POKéMON.\p"
+	.string "A DIVE BALL works best on POKéMON\n"
+	.string "at the bottom of the sea.$"
+#endif

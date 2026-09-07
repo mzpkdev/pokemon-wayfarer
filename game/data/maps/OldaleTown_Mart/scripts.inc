@@ -6,8 +6,14 @@ OldaleTown_Mart_EventScript_Clerk::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_OLDALE
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	goto_if_set FLAG_ADVENTURE_STARTED, OldaleTown_Mart_ExpandedItems
 	pokemart OldaleTown_Mart_Pokemart_Basic
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -38,6 +44,11 @@ OldaleTown_Mart_Pokemart_Expanded:
 OldaleTown_Mart_EventScript_Woman::
 	lock
 	faceplayer
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	msgbox OldaleTown_Mart_Text_ImGoingToBuyPokeBalls, MSGBOX_DEFAULT
+	release
+	end
+#else
 	goto_if_set FLAG_ADVENTURE_STARTED, OldaleTown_Mart_EventScript_PokeBallsInStock
 	msgbox OldaleTown_Mart_Text_PokeBallsAreSoldOut, MSGBOX_DEFAULT
 	release
@@ -47,6 +58,7 @@ OldaleTown_Mart_EventScript_PokeBallsInStock::
 	msgbox OldaleTown_Mart_Text_ImGoingToBuyPokeBalls, MSGBOX_DEFAULT
 	release
 	end
+#endif
 
 OldaleTown_Mart_EventScript_Boy::
 	msgbox OldaleTown_Mart_Text_RestoreHPWithPotion, MSGBOX_NPC
@@ -65,4 +77,3 @@ OldaleTown_Mart_Text_RestoreHPWithPotion:
 	.string "and faints, it won't be able to battle.\p"
 	.string "To prevent your POKéMON from fainting,\n"
 	.string "restore its HP with a POTION.$"
-

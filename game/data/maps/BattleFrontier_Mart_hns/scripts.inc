@@ -6,7 +6,19 @@ BattleFrontier_Mart_EventScript_Clerk_hns::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8005, MART_CLERK_FAMILY_FRONTIER
+	specialvar VAR_0x8004, WayfarerLookupMartProfileForSharedClerk
+	goto_if_eq VAR_0x8004, MART_PROFILE_NONE, BattleFrontier_Mart_EventScript_Clerk_hnsLegacy
+	special WayfarerOpenMartProfile
+	waitstate
+	goto BattleFrontier_Mart_EventScript_Clerk_hnsAfterShop
+BattleFrontier_Mart_EventScript_Clerk_hnsLegacy:
+#endif
 	pokemart BattleFrontier_Mart_Pokemart_hns
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+BattleFrontier_Mart_EventScript_Clerk_hnsAfterShop::
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -62,4 +74,3 @@ BattleFrontier_Mart_Text_FacilitiesDontAllowItems_hns:
 	.string "during battles.\p"
 	.string "That rule makes things tougher than\n"
 	.string "they already are!$"
-

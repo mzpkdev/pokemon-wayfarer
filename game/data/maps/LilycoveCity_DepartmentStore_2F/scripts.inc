@@ -18,7 +18,13 @@ LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_LILYCOVE_2F_LEFT
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart LilycoveCity_DepartmentStore_2F_Pokemart1
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -43,7 +49,13 @@ LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight::
 	faceplayer
 	message gText_HowMayIServeYou
 	waitmessage
+#if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
+	setvar VAR_0x8004, MART_PROFILE_LILYCOVE_2F_RIGHT
+	special WayfarerOpenMartProfile
+	waitstate
+#else
 	pokemart LilycoveCity_DepartmentStore_2F_Pokemart2
+#endif
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -73,4 +85,3 @@ LilycoveCity_DepartmentStore_2F_Text_GoodGiftForHusband:
 LilycoveCity_DepartmentStore_2F_Text_StockUpOnItems:
 	.string "I'm leaving on a long journey soon.\n"
 	.string "I need to stock up on items.$"
-
