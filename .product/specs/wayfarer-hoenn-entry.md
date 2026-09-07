@@ -5,6 +5,11 @@ Implemented: Yes
 
 ## Scope
 
+The draft [regional start choice](wayfarer-regional-start-choice.md) defines
+Hoenn-origin ticket acquisition and regular-circuit eligibility without the
+Johto maiden voyage. That extension is not implemented. The maiden-voyage and
+visitor-initialization rules below continue to apply to Johto-origin players.
+
 This specification defines Wayfarer's permanent S.S. Aqua circuit. After the
 existing HNS maiden voyage is complete, the S.S. Ticket permits one
 directional next-stop journey at every circuit port:

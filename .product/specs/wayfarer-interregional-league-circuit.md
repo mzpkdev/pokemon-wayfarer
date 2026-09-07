@@ -10,6 +10,10 @@ separately from League scaling.
 
 ## Scope
 
+The draft [regional start choice](wayfarer-regional-start-choice.md) defines
+the separately scoped Hoenn start and its travel guarantees. That extension
+is not implemented and does not change League eligibility or Rating inputs.
+
 This specification defines Wayfarer's global badge count, unrestricted badge
 collection, fixed Kanto to Johto to Hoenn League sequence, League eligibility, and
 Trainer Rating inputs. This release uses the existing Johto opening as
