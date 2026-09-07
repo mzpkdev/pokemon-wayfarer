@@ -1,9 +1,9 @@
 {
-  "integration": "No Trainer IDs or aliases added. Shared HNS venue uses *_1_HNS for Kanto Tier 1 and *_2_HNS for Johto Tier 2. Hoenn keeps existing IDs and species, items, moves, AI, and party sizes. Rerun trainer-party-scaling classification inventory after integration.",
+  "integration": "Shared HNS venue uses *_1_HNS for Kanto Tier 1 and *_2_HNS for Johto Tier 2. Gym Leader scaling adds eight HNS trainer IDs before the fixed Hoenn range, so the retained Hoenn League IDs use its updated offset; their species, items, moves, AI, and party sizes remain unchanged. Rerun trainer-party-scaling classification inventory after integration.",
   "trainers": [
     {
       "trainer": "TRAINER_SIDNEY",
-      "id": 891,
+      "id": 899,
       "tier": 3,
       "levels": [
         86,
@@ -23,7 +23,7 @@
     },
     {
       "trainer": "TRAINER_PHOEBE",
-      "id": 892,
+      "id": 900,
       "tier": 3,
       "levels": [
         87,
@@ -43,7 +43,7 @@
     },
     {
       "trainer": "TRAINER_GLACIA",
-      "id": 893,
+      "id": 901,
       "tier": 3,
       "levels": [
         88,
@@ -63,7 +63,7 @@
     },
     {
       "trainer": "TRAINER_DRAKE",
-      "id": 894,
+      "id": 902,
       "tier": 3,
       "levels": [
         89,
@@ -83,7 +83,7 @@
     },
     {
       "trainer": "TRAINER_WALLACE",
-      "id": 965,
+      "id": 973,
       "tier": 3,
       "levels": [
         91,
