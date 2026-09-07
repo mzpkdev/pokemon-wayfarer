@@ -20,10 +20,19 @@ Route118_OnFrame:
 	map_script_2 VAR_SHOULD_END_ABNORMAL_WEATHER, 1, AbnormalWeather_EventScript_EndEventAndCleanup_1
 	.2byte 0
 
+#if !IS_HNS
+#define FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED FLAG_RECEIVED_GOOD_ROD
+#endif
+
 Route118_EventScript_GoodRodFisherman::
 	lock
 	faceplayer
-	goto_if_set FLAG_RECEIVED_GOOD_ROD, Route118_EventScript_ReceivedGoodRod
+	goto_if_set FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED, Route118_EventScript_ReceivedGoodRod
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED
+	special Script_CheckStandardRodAwardAvailability
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, Route118_EventScript_ReceivedGoodRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, Route118_EventScript_ReceivedGoodRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, Route118_EventScript_RodUpgradeFailed
 	msgbox Route118_Text_YouAgreeGoodRodIsGood, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, Route118_EventScript_ReceiveGoodRod
 	goto_if_eq VAR_RESULT, NO, Route118_EventScript_DeclineGoodRod
@@ -31,9 +40,10 @@ Route118_EventScript_GoodRodFisherman::
 
 Route118_EventScript_ReceiveGoodRod::
 	msgbox Route118_Text_IdenticalMindsTakeThis, MSGBOX_DEFAULT
-	setvar VAR_0x8004, FLAG_RECEIVED_GOOD_ROD
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED
 	special Script_TryAwardStandardRod
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, Route118_EventScript_ReceivedGoodRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, Route118_EventScript_ReceivedGoodRod
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, Route118_EventScript_RodUpgradeFailed
 	copyvar VAR_0x8000, VAR_0x8005

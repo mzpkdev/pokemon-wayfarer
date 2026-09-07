@@ -640,7 +640,10 @@ static bool32 IsActiveStandardRodContributorFlag(u16 flagId)
 #elif IS_HNS
     return flagId == FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED
         || flagId == FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED
-        || flagId == FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED;
+        || flagId == FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED
+        || flagId == FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED
+        || flagId == FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED
+        || flagId == FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED;
 #else
     return flagId == FLAG_RECEIVED_OLD_ROD
         || flagId == FLAG_RECEIVED_GOOD_ROD
@@ -657,7 +660,10 @@ static u32 CountStandardRodContributors(void)
 #elif IS_HNS
     return FlagGet(FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED)
          + FlagGet(FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED)
-         + FlagGet(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED);
+         + FlagGet(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED)
+         + FlagGet(FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED)
+         + FlagGet(FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED)
+         + FlagGet(FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED);
 #else
     return FlagGet(FLAG_RECEIVED_OLD_ROD)
          + FlagGet(FLAG_RECEIVED_GOOD_ROD)
@@ -685,23 +691,49 @@ static bool32 FindOnlyStandardRodSlot(enum Item rod, u32 *slot)
     return found;
 }
 
+static u32 GetStandardRodAwardAvailability(u16 contributorFlag, u32 *contributorCount)
+{
+    u32 count;
+    u32 rodSlot;
+
+    if (!IsActiveStandardRodContributorFlag(contributorFlag))
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+    if (FlagGet(contributorFlag))
+        return STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED;
+
+    count = CountStandardRodContributors();
+    if (contributorCount != NULL)
+        *contributorCount = count;
+    if (count > 3)
+        return STANDARD_ROD_AWARD_INVALID_STATE;
+    if (count == 3)
+    {
+        if (CountTotalItemQuantityInBag(ITEM_OLD_ROD) != 0
+         || CountTotalItemQuantityInBag(ITEM_GOOD_ROD) != 0
+         || CountTotalItemQuantityInBag(ITEM_SUPER_ROD) != 1
+         || !FindOnlyStandardRodSlot(ITEM_SUPER_ROD, &rodSlot))
+            return STANDARD_ROD_AWARD_INVALID_STATE;
+        return STANDARD_ROD_AWARD_FULLY_UPGRADED;
+    }
+
+    return STANDARD_ROD_AWARD_SUCCESS;
+}
+
 u32 TryAwardStandardRod(u16 contributorFlag, enum Item *awardedItem)
 {
     struct BagPocket *pocket = &gBagPockets[POCKET_KEY_ITEMS];
     enum Item currentRod = ITEM_NONE;
     enum Item nextRod = ITEM_NONE;
+    u32 availability;
     u32 contributorCount;
     u32 rodSlot = 0;
 
     if (awardedItem == NULL)
         return STANDARD_ROD_AWARD_INVALID_STATE;
     *awardedItem = ITEM_NONE;
-    if (!IsActiveStandardRodContributorFlag(contributorFlag))
-        return STANDARD_ROD_AWARD_INVALID_STATE;
-    if (FlagGet(contributorFlag))
-        return STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED;
-
-    contributorCount = CountStandardRodContributors();
+    availability = GetStandardRodAwardAvailability(contributorFlag, &contributorCount);
+    if (availability != STANDARD_ROD_AWARD_SUCCESS)
+        return availability;
     switch (contributorCount)
     {
     case 0:
@@ -744,6 +776,11 @@ u32 TryAwardStandardRod(u16 contributorFlag, enum Item *awardedItem)
     FlagSet(contributorFlag);
     *awardedItem = nextRod;
     return STANDARD_ROD_AWARD_SUCCESS;
+}
+
+void Script_CheckStandardRodAwardAvailability(void)
+{
+    gSpecialVar_Result = GetStandardRodAwardAvailability(gSpecialVar_0x8004, NULL);
 }
 
 void Script_TryAwardStandardRod(void)

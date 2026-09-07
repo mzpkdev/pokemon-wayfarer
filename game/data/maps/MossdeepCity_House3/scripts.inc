@@ -1,16 +1,26 @@
 MossdeepCity_House3_MapScripts::
 	.byte 0
 
+#if !IS_HNS
+#define FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED FLAG_RECEIVED_SUPER_ROD
+#endif
+
 MossdeepCity_House3_EventScript_SuperRodFisherman::
 	lock
 	faceplayer
-	goto_if_set FLAG_RECEIVED_SUPER_ROD, MossdeepCity_House3_EventScript_ReceivedSuperRod
+	goto_if_set FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED, MossdeepCity_House3_EventScript_ReceivedSuperRod
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED
+	special Script_CheckStandardRodAwardAvailability
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, MossdeepCity_House3_EventScript_ReceivedSuperRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, MossdeepCity_House3_EventScript_ReceivedSuperRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, MossdeepCity_House3_EventScript_RodUpgradeFailed
 	msgbox MossdeepCity_House3_Text_YouWantSuperRod, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, MossdeepCity_House3_EventScript_DeclineSuperRod
 	msgbox MossdeepCity_House3_Text_SuperRodIsSuper, MSGBOX_DEFAULT
-	setvar VAR_0x8004, FLAG_RECEIVED_SUPER_ROD
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED
 	special Script_TryAwardStandardRod
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, MossdeepCity_House3_EventScript_ReceivedSuperRod
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, MossdeepCity_House3_EventScript_ReceivedSuperRod
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, MossdeepCity_House3_EventScript_RodUpgradeFailed
 	copyvar VAR_0x8000, VAR_0x8005

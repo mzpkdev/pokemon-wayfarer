@@ -850,10 +850,12 @@
 #define FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED       0x304
 #define FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED       0x305
 #define FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED       0x306
-#define FLAG_UNUSED_39                              0x307
-#define HNS_UNUSED_COUNT                            40
+#define FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED       0x307
+#define FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED      0x308
+#define FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED      0x309
+#define HNS_UNUSED_COUNT                            39
 
-#define HNS_CONTENT_FLAGS_END                       0x308
+#define HNS_CONTENT_FLAGS_END                       0x30A
 
 // Extended content flags (0x36A – 0x495)
 // 300 slots for new content; 0x496–0x4FF reserved for future expansion.

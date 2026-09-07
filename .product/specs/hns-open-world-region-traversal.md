@@ -76,8 +76,9 @@ story.
 
 ### Saved state and Kanto initialization
 
-The Standard Rod specification owns `0x304` through `0x306`. Keep `0x307` as
-`FLAG_UNUSED_39` and keep `HNS_UNUSED_COUNT` at 40. Magnet Train restoration
+The [Standard Rod specification](standard-rod-fishing.md) owns `0x304` through
+`0x309` for its six permanent contributor flags. `HNS_UNUSED_COUNT` is 39 and
+`HNS_CONTENT_FLAGS_END` is `0x30A`. Magnet Train restoration
 uses the existing `VAR_KANTO_ROCKET_STORY_STATE` and consumes no new content
 flag or variable.
 

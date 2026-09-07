@@ -329,10 +329,30 @@ class HnsTraversalContractTest(unittest.TestCase):
 
     def test_new_game_owns_kanto_visibility_defaults_and_reuses_rocket_state(self) -> None:
         flags = read(GAME / "include/constants/flags_hns.h")
-        self.assertContains(flags, r"^#define\s+FLAG_UNUSED_39\s+0x307(?:\s|$)")
-        self.assertContains(flags, r"^#define\s+HNS_UNUSED_COUNT\s+40(?:\s|$)")
+        contributor_flags = {
+            "FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED": 0x304,
+            "FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED": 0x305,
+            "FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED": 0x306,
+            "FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED": 0x307,
+            "FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED": 0x308,
+            "FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED": 0x309,
+        }
+        defined_contributor_flags = {}
+        for name, expected_id in contributor_flags.items():
+            match = re.search(rf"^#define\s+{name}\s+(0x[0-9A-F]+)(?:\s|$)", flags, re.MULTILINE)
+            self.assertIsNotNone(match, name)
+            defined_contributor_flags[name] = int(match.group(1), 16)
+            self.assertEqual(defined_contributor_flags[name], expected_id)
+        self.assertEqual(len(set(defined_contributor_flags.values())), len(contributor_flags))
+        content_end = re.search(r"^#define\s+HNS_CONTENT_FLAGS_END\s+(0x[0-9A-F]+)(?:\s|$)", flags, re.MULTILINE)
+        self.assertIsNotNone(content_end)
+        self.assertEqual(int(content_end.group(1), 16), max(defined_contributor_flags.values()) + 1)
+        self.assertNotIn("FLAG_UNUSED_39", flags)
+        self.assertContains(flags, r"^#define\s+HNS_UNUSED_COUNT\s+39(?:\s|$)")
         self.assertNotIn("FLAG_HNS_MAGNET_TRAIN_RESTORATION_STARTED", flags)
         reset = self.scripts.block("EventScript_ResetAllMapFlagsHnS")
+        for flag in contributor_flags:
+            self.assertNotRegex(reset, rf"(?m)^\s*clearflag\s+{flag}\s*$")
         set_defaults = (
             "FLAG_HIDE_COPYCAT_CLEFAIRY_DOLL",
             "FLAG_HIDE_CERULEAN_GYM_TRAINERS",

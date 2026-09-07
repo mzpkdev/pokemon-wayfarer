@@ -5,12 +5,18 @@ Route12_House_EventScript_SuperRod::
 	lock
 	faceplayer
 	goto_if_set FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED, Route12_House_EventScript_SuperRodGot
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED
+	special Script_CheckStandardRodAwardAvailability
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, Route12_House_EventScript_SuperRodGot
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, Route12_House_EventScript_SuperRodGot
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, Route12_House_EventScript_RodUpgradeFailed
 	msgbox Route12_House_Text_OfferSuperRod, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, Route12_House_EventScript_SuperRodRefused
 	msgbox Route12_House_Text_GiveSuperRod, MSGBOX_DEFAULT
 	setvar VAR_0x8004, FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED
 	special Script_TryAwardStandardRod
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, Route12_House_EventScript_SuperRodGot
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, Route12_House_EventScript_SuperRodGot
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, Route12_House_EventScript_RodUpgradeFailed
 	copyvar VAR_0x8000, VAR_0x8005

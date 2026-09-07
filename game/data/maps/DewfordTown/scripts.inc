@@ -103,10 +103,19 @@ DewfordTown_EventScript_HallSign::
 	msgbox DewfordTown_Text_HallSign, MSGBOX_SIGN
 	end
 
+#if !IS_HNS
+#define FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED FLAG_RECEIVED_OLD_ROD
+#endif
+
 DewfordTown_EventScript_OldRodFisherman::
 	lock
 	faceplayer
-	goto_if_set FLAG_RECEIVED_OLD_ROD, DewfordTown_EventScript_HowsFishing
+	goto_if_set FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED, DewfordTown_EventScript_HowsFishing
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED
+	special Script_CheckStandardRodAwardAvailability
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, DewfordTown_EventScript_HowsFishing
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, DewfordTown_EventScript_FishingTutorial
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, DewfordTown_EventScript_RodUpgradeFailed
 	msgbox DewfordTown_Text_GettingItchToFish, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, DewfordTown_EventScript_GiveOldRod
 	goto_if_eq VAR_RESULT, NO, DewfordTown_EventScript_NotGettingItchToFish
@@ -114,9 +123,10 @@ DewfordTown_EventScript_OldRodFisherman::
 
 DewfordTown_EventScript_GiveOldRod::
 	msgbox DewfordTown_Text_GiveYouOneOfMyRods, MSGBOX_DEFAULT
-	setvar VAR_0x8004, FLAG_RECEIVED_OLD_ROD
+	setvar VAR_0x8004, FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED
 	special Script_TryAwardStandardRod
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED, DewfordTown_EventScript_HowsFishing
+	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_FULLY_UPGRADED, DewfordTown_EventScript_FishingTutorial
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_NO_SPACE, Common_EventScript_ShowBagIsFull
 	goto_if_eq VAR_RESULT, STANDARD_ROD_AWARD_INVALID_STATE, DewfordTown_EventScript_RodUpgradeFailed
 	copyvar VAR_0x8000, VAR_0x8005

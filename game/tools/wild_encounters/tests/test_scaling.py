@@ -196,39 +196,38 @@ class WildEncounterScalingTests(unittest.TestCase):
         with self.assertRaisesRegex(GENERATOR.ValidationError, "exactly ten source slots"):
             GENERATOR.validate_encounters(encounters, self.species, config)
 
-    def test_all_regional_giver_scripts_use_the_shared_dynamic_transaction(self):
+    def test_wayfarer_giver_scripts_use_six_dedicated_flags_and_a_capped_preflight(self):
         givers = {
-            "data/maps/DewfordTown/scripts.inc": "FLAG_RECEIVED_OLD_ROD",
-            "data/maps/Route118/scripts.inc": "FLAG_RECEIVED_GOOD_ROD",
-            "data/maps/MossdeepCity_House3/scripts.inc": "FLAG_RECEIVED_SUPER_ROD",
-            "data/maps/VermilionCity_House1_Frlg/scripts.inc": "FLAG_GOT_OLD_ROD",
-            "data/maps/FuchsiaCity_House2_Frlg/scripts.inc": "FLAG_GOT_GOOD_ROD",
-            "data/maps/Route12_FishingHouse_Frlg/scripts.inc": "FLAG_GOT_SUPER_ROD",
             "data/maps/Route32_PokemonCenter_hns/scripts.inc": "FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED",
             "data/maps/OlivineCity_House3_hns/scripts.inc": "FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED",
             "data/maps/Route12_House_hns/scripts.inc": "FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED",
+            "data/maps/DewfordTown/scripts.inc": "FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED",
+            "data/maps/Route118/scripts.inc": "FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED",
+            "data/maps/MossdeepCity_House3/scripts.inc": "FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED",
         }
         for relative_path, flag in givers.items():
             with self.subTest(path=relative_path):
                 source = (ROOT / relative_path).read_text(encoding="utf-8")
-                self.assertIn(f"goto_if_set {flag},", source)
-                self.assertIn("MSGBOX_YESNO", source)
-                self.assertIn(f"setvar VAR_0x8004, {flag}", source)
-                self.assertIn("special Script_TryAwardStandardRod", source)
-                self.assertIn("STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED", source)
-                self.assertIn("STANDARD_ROD_AWARD_NO_SPACE", source)
-                self.assertIn("STANDARD_ROD_AWARD_INVALID_STATE", source)
-                self.assertIn("copyvar VAR_0x8000, VAR_0x8005", source)
-                self.assertIn("call EventScript_ObtainItemMessage", source)
-                self.assertIn("goto_if_eq VAR_0x8005, ITEM_OLD_ROD", source)
-                self.assertIn("goto_if_eq VAR_0x8005, ITEM_GOOD_ROD", source)
-                self.assertIn("CompletedSuperRod", source)
-                self.assertNotIn(f"setflag {flag}", source)
-                self.assertNotRegex(source, r"(?:giveitem|additem|removeitem) ITEM_(?:OLD|GOOD|SUPER)_ROD")
-
-        route12 = (ROOT / "data/maps/Route12_FishingHouse_Frlg/scripts.inc").read_text(encoding="utf-8")
-        self.assertIn("goto_if_set FLAG_GOT_SUPER_ROD, Route12_FishingHouse_EventScript_CheckMagikarpRecord", route12)
-        self.assertGreaterEqual(route12.count("goto Route12_FishingHouse_EventScript_ExplainMagikarpActivity"), 2)
+                giver = source[source.index(f"goto_if_set {flag},") :]
+                self.assertIn(f"setvar VAR_0x8004, {flag}", giver)
+                self.assertIn("special Script_CheckStandardRodAwardAvailability", giver)
+                self.assertIn("STANDARD_ROD_AWARD_FULLY_UPGRADED", giver)
+                self.assertLess(
+                    giver.index("special Script_CheckStandardRodAwardAvailability"),
+                    giver.index("MSGBOX_YESNO"),
+                )
+                self.assertIn("MSGBOX_YESNO", giver)
+                self.assertIn("special Script_TryAwardStandardRod", giver)
+                self.assertIn("STANDARD_ROD_AWARD_ALREADY_CONTRIBUTED", giver)
+                self.assertIn("STANDARD_ROD_AWARD_NO_SPACE", giver)
+                self.assertIn("STANDARD_ROD_AWARD_INVALID_STATE", giver)
+                self.assertIn("copyvar VAR_0x8000, VAR_0x8005", giver)
+                self.assertIn("call EventScript_ObtainItemMessage", giver)
+                self.assertIn("goto_if_eq VAR_0x8005, ITEM_OLD_ROD", giver)
+                self.assertIn("goto_if_eq VAR_0x8005, ITEM_GOOD_ROD", giver)
+                self.assertIn("CompletedSuperRod", giver)
+                self.assertNotIn(f"setflag {flag}", giver)
+                self.assertNotRegex(giver, r"(?:giveitem|additem|removeitem) ITEM_(?:OLD|GOOD|SUPER)_ROD")
 
     def test_ordinary_generation_balance_validation_rejects_locked_recovery(self):
         GENERATOR.validate_standard_rod_balance(
