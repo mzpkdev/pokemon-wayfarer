@@ -36,6 +36,11 @@ limit.
 
 ## Design
 
+The draft [regional start choice](wayfarer-regional-start-choice.md) extends
+this Johto-origin contract with a native Hoenn opening and Hoenn-origin Aqua
+access. That extension is not implemented; the visitor flow below remains
+the contract for Johto starters entering Hoenn.
+
 ### Shared player and save
 
 - The HNS opening remains the start of this milestone.

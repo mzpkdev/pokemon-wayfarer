@@ -15,6 +15,10 @@ The implementation still uses static League levels.
 
 ## Scope
 
+The draft [regional start choice](wayfarer-regional-start-choice.md) defines
+the native Hoenn exception to the visitor-only opening below, including truck
+content and first-starter acquisition. That extension is not implemented.
+
 This specification defines the Hoenn content included in Wayfarer and the rules
 for making that content work with the HNS engine. It covers maps, NPCs, items,
 Trainers, wild encounters, Gyms, the Emerald main story, the Pokémon League,

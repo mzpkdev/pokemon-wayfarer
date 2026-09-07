@@ -15,6 +15,10 @@ twenty-four badges before attempting any League.
 
 ## Design
 
+The draft [regional start choice](wayfarer-regional-start-choice.md) defines
+the separately scoped Hoenn opening and travel entitlement. It keeps this
+document's badge, Rating, and League rules and is not implemented yet.
+
 The Trainer Card presents the complete League itinerary on demand:
 
 | Career tier | Qualification | League destination |
