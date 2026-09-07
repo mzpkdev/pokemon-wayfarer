@@ -45,6 +45,156 @@ static u32 ScalingLevelOracle(u32 rating, s32 level, bool32 gym)
     return min(100, sBaselineOracle[min(rating, 80)] + nearest + 2 * gym);
 }
 
+static const struct TrainerMon sGymLeaderPlanTestParty[PARTY_SIZE] = {
+    {.species = SPECIES_GEODUDE},
+    {.species = SPECIES_ONIX},
+    {.species = SPECIES_KABUTO},
+    {.species = SPECIES_OMANYTE},
+    {.species = SPECIES_NOSEPASS},
+    {.species = SPECIES_AERODACTYL},
+};
+
+// Retention is source order.  Construction deliberately puts the ace last.
+static const struct GymLeaderScalingRoster sGymLeaderPlanTestRoster = {
+    .trainerId = TRAINER_FALKNER_1_HNS,
+    .ownerId = TRAINER_FALKNER_1_HNS,
+    .party = sGymLeaderPlanTestParty,
+    .legacyParty = sGymLeaderPlanTestParty,
+    .legacyPartySize = 2,
+    .slots = {
+        {.battleOrder = 5, .isAce = TRUE,  .levelOffset =  0, .movePolicy = GYM_LEADER_MOVE_AUTHORED},
+        {.battleOrder = 0, .isAce = FALSE, .levelOffset = -1, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+        {.battleOrder = 3, .isAce = FALSE, .levelOffset = -2, .movePolicy = GYM_LEADER_MOVE_AUTHORED},
+        {.battleOrder = 1, .isAce = FALSE, .levelOffset = -1, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+        {.battleOrder = 4, .isAce = FALSE, .levelOffset = -2, .movePolicy = GYM_LEADER_MOVE_AUTHORED},
+        {.battleOrder = 2, .isAce = FALSE, .levelOffset = -1, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+    },
+};
+
+static const struct GymLeaderScalingRoster sTateLizaPlanTestRoster = {
+    .trainerId = TRAINER_TATE_AND_LIZA_1,
+    .ownerId = TRAINER_TATE_AND_LIZA_1,
+    .party = sGymLeaderPlanTestParty,
+    .legacyParty = sGymLeaderPlanTestParty,
+    .legacyPartySize = 2,
+    .isDoubleBattle = TRUE,
+    .slots = {
+        {.battleOrder = 0, .isAce = TRUE,  .levelOffset =  0, .movePolicy = GYM_LEADER_MOVE_AUTHORED},
+        {.battleOrder = 1, .isAce = TRUE,  .levelOffset =  0, .movePolicy = GYM_LEADER_MOVE_AUTHORED},
+        {.battleOrder = 2, .isAce = FALSE, .levelOffset = -1, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+        {.battleOrder = 3, .isAce = FALSE, .levelOffset = -1, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+        {.battleOrder = 4, .isAce = FALSE, .levelOffset = -2, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+        {.battleOrder = 5, .isAce = FALSE, .levelOffset = -2, .movePolicy = GYM_LEADER_MOVE_LEVEL_UP},
+    },
+};
+
+TEST("Gym Leader scaling has independent party thresholds and a monotonic cap-seeded curve")
+{
+    static const u8 anchors[][2] = {{0, 15}, {4, 16}, {8, 18}, {16, 23}, {30, 30}, {40, 42}, {55, 60}, {65, 80}, {80, 100}};
+    u32 rating;
+    u8 previous = 0;
+
+    EXPECT_EQ(GetGymLeaderScalingPartySize(0), 2);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(7), 2);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(8), 3);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(21), 3);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(22), 4);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(33), 4);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(34), 5);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(39), 5);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(40), 6);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(80), 6);
+    EXPECT_EQ(GetGymLeaderScalingPartySize(65535), 6);
+
+    for (rating = 0; rating <= 80; rating++)
+    {
+        u8 level = GetGymLeaderScalingLevel(rating, 0);
+        EXPECT_GE(level, previous);
+        EXPECT_GE(GetGymLeaderScalingLevel(rating, -2), 1);
+        EXPECT_EQ(GetGymLeaderScalingLevel(rating, -1), level - 1);
+        previous = level;
+    }
+    for (rating = 0; rating < ARRAY_COUNT(anchors); rating++)
+        EXPECT_EQ(GetGymLeaderScalingLevel(anchors[rating][0], 0), anchors[rating][1]);
+    EXPECT_EQ(GetGymLeaderScalingLevel(0, -2), 13);
+    EXPECT_EQ(GetGymLeaderScalingLevel(0, -1), 14);
+    EXPECT_EQ(GetGymLeaderScalingLevel(40, -2), 40);
+    EXPECT_EQ(GetGymLeaderScalingLevel(40, -1), 41);
+    EXPECT_EQ(GetGymLeaderScalingLevel(80, -2), 98);
+    EXPECT_EQ(GetGymLeaderScalingLevel(80, -1), 99);
+    EXPECT_EQ(GetGymLeaderScalingLevel(2, 0), 16); // Exact half rounds upward.
+    EXPECT_EQ(GetGymLeaderScalingLevel(12, 0), 21); // Another exact half.
+    EXPECT_EQ(GetGymLeaderScalingLevel(65535, 0), 100);
+}
+
+TEST("Gym Leader plans retain prefixes then reorder source indices without changing their levels")
+{
+    static const u8 ratings[] = {0, 8, 22, 34, 40};
+    static const u8 expectedCounts[] = {2, 3, 4, 5, 6};
+    static const u8 expectedSources[][PARTY_SIZE] = {
+        {1, 0},
+        {1, 2, 0},
+        {1, 3, 2, 0},
+        {1, 3, 2, 4, 0},
+        {1, 3, 5, 2, 4, 0},
+    };
+    struct GymLeaderScalingPlan plan;
+    u32 row, i;
+    rng_value_t before = gRngValue;
+
+    for (row = 0; row < ARRAY_COUNT(ratings); row++)
+    {
+        EXPECT(BuildGymLeaderScalingPlan(&sGymLeaderPlanTestRoster, ratings[row], &plan));
+        EXPECT_EQ(plan.count, expectedCounts[row]);
+        for (i = 0; i < plan.count; i++)
+        {
+            u8 sourceIndex = plan.sourceIndices[i];
+            EXPECT_EQ(sourceIndex, expectedSources[row][i]);
+            EXPECT_EQ(plan.levels[i], GetGymLeaderScalingLevel(ratings[row], sGymLeaderPlanTestRoster.slots[sourceIndex].levelOffset));
+        }
+        for (; i < PARTY_SIZE; i++)
+        {
+            EXPECT_EQ(plan.sourceIndices[i], 0);
+            EXPECT_EQ(plan.levels[i], 0);
+        }
+    }
+    EXPECT_EQ(memcmp(&gRngValue, &before, sizeof(before)), 0);
+}
+
+TEST("Gym Leader plans preserve Tate and Liza's two ace opening pair")
+{
+    struct GymLeaderScalingPlan plan;
+
+    EXPECT(BuildGymLeaderScalingPlan(&sTateLizaPlanTestRoster, 0, &plan));
+    EXPECT_EQ(plan.count, 2);
+    EXPECT_EQ(plan.sourceIndices[0], 0);
+    EXPECT_EQ(plan.sourceIndices[1], 1);
+    EXPECT_EQ(plan.levels[0], 15);
+    EXPECT_EQ(plan.levels[1], 15);
+    EXPECT(BuildGymLeaderScalingPlan(&sTateLizaPlanTestRoster, 40, &plan));
+    EXPECT_EQ(plan.count, PARTY_SIZE);
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+        EXPECT_EQ(plan.sourceIndices[i], i);
+}
+
+TEST("Gym Leader plans reject malformed metadata before construction")
+{
+    struct GymLeaderScalingRoster invalid = sGymLeaderPlanTestRoster;
+    struct GymLeaderScalingPlan plan;
+
+    invalid.slots[5].battleOrder = invalid.slots[4].battleOrder;
+    EXPECT(!BuildGymLeaderScalingPlan(&invalid, 0, &plan));
+    invalid = sGymLeaderPlanTestRoster;
+    invalid.slots[0].isAce = FALSE;
+    EXPECT(!BuildGymLeaderScalingPlan(&invalid, 0, &plan));
+    invalid = sGymLeaderPlanTestRoster;
+    invalid.slots[1].levelOffset = 0;
+    EXPECT(!BuildGymLeaderScalingPlan(&invalid, 0, &plan));
+    invalid = sGymLeaderPlanTestRoster;
+    invalid.legacyParty = NULL;
+    EXPECT(!BuildGymLeaderScalingPlan(&invalid, 0, &plan));
+}
+
 TEST("Trainer scaling matches an independent oracle for every Rating and authored level")
 {
     u32 level, rating, policy;
@@ -139,7 +289,7 @@ TEST("Trainer scaling policies identify roles by ID and fail closed for invalid 
     EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_JOEY_2_HNS), TRAINER_SCALING_ORDINARY);
     EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_JOEY_5_HNS), TRAINER_SCALING_ORDINARY);
     EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_ROD_HNS), TRAINER_SCALING_GYM_MEMBER);
-    EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_FALKNER_1_HNS), TRAINER_SCALING_EXCLUDED);
+    EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_FALKNER_1_HNS), TRAINER_SCALING_GYM_LEADER);
     EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_FALKNER_2_HNS), TRAINER_SCALING_EXCLUDED);
     EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_ARCHER_HNS), TRAINER_SCALING_EXCLUDED);
     EXPECT_EQ(GetTrainerScalingPolicy(TRAINER_PROTON_2_HNS), TRAINER_SCALING_EXCLUDED);
