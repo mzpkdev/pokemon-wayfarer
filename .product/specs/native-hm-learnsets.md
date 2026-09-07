@@ -4,9 +4,10 @@ PRD: [Native HM utility learnsets](../prds/native-hm-learnsets.md)
 Implemented: Yes
 
 For Wayfarer, [Native HM catch windows](native-hm-catch-windows.md) is the
-approved replacement design, not yet implemented. Its roster, catch-window and
-reminder rules supersede the corresponding requirements below. This document
-records the existing implementation and retains authority for standalone builds.
+approved replacement design. Its core implementation is complete, while full
+route acceptance remains pending. Its roster, catch-window and reminder rules
+supersede the corresponding requirements below. This document records the
+existing implementation and retains authority for standalone builds.
 
 ## Scope
 

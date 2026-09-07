@@ -1,7 +1,7 @@
 # Gym Leader scaling
 
 PRD: [Gym Leader scaling](../prds/gym-leader-scaling.md)
-Implemented: No
+Implemented: Core implementation merged; structural acceptance and Wayfarer ROM playtesting pending.
 
 ## Scope
 
@@ -243,9 +243,11 @@ Required automated checks cover:
 
 Compile the affected engine/generator paths and run targeted battle-mechanics
 tests. Playtest the cases in the PRD on a Wayfarer ROM, including size
-transitions and remaining Gyms before and after a League clear. Do not claim
-balance acceptance from generated tables alone. This documentation change
-defines those implementation checks; it does not claim they have run.
+transitions and remaining Gyms before and after a League clear. The core
+implementation and targeted automated validation are merged, but
+`B_GYM_LEADER_SCALING` remains disabled by default pending structural acceptance
+and Wayfarer ROM playtesting. Do not claim balance acceptance from generated
+tables alone.
 
 ## References
 
