@@ -25,6 +25,7 @@ describe.sequential("HNS E2E command validation", () => {
     await expect(protocol.rejectedFixtureError("species")).resolves.toBe("species")
     await expect(protocol.rejectedFixtureError("item-quantity")).resolves.toBe("item-quantity")
     await expect(protocol.rejectedFixtureError("item-quantity-high")).resolves.toBe("item-quantity")
+    await expect(protocol.rejectedFixtureError("badge-count")).resolves.toBe("circuit")
   })
 
   it("rejects a command while the storage state machine owns the game", async () => {

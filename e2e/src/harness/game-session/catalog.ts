@@ -34,6 +34,7 @@ export const maps = {
   "cerulean-city": { mapGroup: 0, mapNum: 34 },
   "vermilion-city": { mapGroup: 0, mapNum: 35 },
   "cinnabar-island": { mapGroup: 0, mapNum: 40 },
+  "goldenrod-gym": { mapGroup: 5, mapNum: 6 },
   "olivine-city": { mapGroup: 0, mapNum: 6 },
   "cianwood-city": { mapGroup: 0, mapNum: 7 },
   "elm-lab": { mapGroup: 1, mapNum: 0 },
@@ -70,8 +71,10 @@ export const maps = {
   "ss-aqua-captains-room": { mapGroup: 30, mapNum: 10 },
   "ss-aqua-room-nw": { mapGroup: 30, mapNum: 12 },
   "ss-aqua-room-sse": { mapGroup: 30, mapNum: 16 },
+  "dragons-den-shrine": { mapGroup: 24, mapNum: 32 },
   "test-map-1": { mapGroup: 30, mapNum: 27 },
   "petalburg-city": { mapGroup: 31, mapNum: 0 },
+  "mauville-gym": { mapGroup: 41, mapNum: 0 },
   "slateport-city": { mapGroup: 31, mapNum: 1 },
   "petalburg-house-1": { mapGroup: 39, mapNum: 2 },
   "slateport-city-harbor": { mapGroup: 40, mapNum: 9 },
@@ -93,6 +96,8 @@ export const storyVars = {
   ceruleanCityState: 0x4059,
   fanClubClefairy: 0x4065,
   kantoRocketStoryState: 0x406c,
+  goldenrodCityState: 0x4069,
+  mahoganyTownState: 0x4072,
   leagueState: 0x4070,
   numBadges: 0x4076,
   pewterCityState: 0x4079,
@@ -100,6 +105,8 @@ export const storyVars = {
   ssAquaState: 0x408b,
   starterMon: 0x4023,
   train: 0x408e,
+  triggerElmRocketCall: 0x40b3,
+  blackthornCityState: 0x4056,
   vermilionCityState: 0x408f,
   violetCityState: 0x4091,
 } as const
@@ -121,6 +128,10 @@ export const storyFlags = {
   hideAzaleaSilver: 0x05c,
   hideIndigoPlateauSilver: 0x0a6,
   hideMtMoonSilver: 0x0aa,
+  hideViridianBlue: 0x0af,
+  hideCinnabarBlue: 0x0d5,
+  hideDragonsDenCavernClair: 0x09f,
+  hideDragonsDenShrineClair: 0x0a2,
   hideCeruleanCapeRocket: 0x0b5,
   hideCeruleanGymRocket: 0x0b6,
   hideCeruleanGymTrainers: 0x0b7,
@@ -133,6 +144,11 @@ export const storyFlags = {
   receivedTogepiEgg: 0x1ff,
   kantoRadioGot: 0x261,
   defeatedVioletGym: 0x227,
+  defeatedGoldenrodGym: 0x229,
+  defeatedWhitneyTrainer: 0x696,
+  defeatedPetalburgGym: 0x64f4,
+  hideMauvilleCityWattson: 0x6390,
+  hideMauvilleGymWattson: 0x6391,
   cyclingRoad: 0x896,
   isChampion: 0x89f,
   isKantoChampion: 0x8a0,
@@ -242,9 +258,12 @@ export const buttons = {
   left: "Left",
   r: "R",
   right: "Right",
+  select: "Select",
   start: "Start",
   up: "Up",
 } as const satisfies Record<string, SkyEmuButton>
+
+export const leagueRegions = ["kanto", "johto", "hoenn"] as const
 
 export const textSpeeds = {
   fast: 2,
@@ -264,3 +283,4 @@ export type Move = keyof typeof moves
 export type Hm = keyof typeof hms
 export type Item = keyof typeof items
 export type PartyMenuAction = keyof typeof partyMenuActions
+export type LeagueRegion = (typeof leagueRegions)[number]

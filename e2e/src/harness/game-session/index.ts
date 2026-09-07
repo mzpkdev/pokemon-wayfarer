@@ -10,6 +10,7 @@ export type {
   StoryVar,
   Hm,
   Item,
+  LeagueRegion,
   Move,
   PartyMenuAction,
   Species,

@@ -17,16 +17,16 @@ import {
 } from "./protocol"
 
 const abi: SessionAbi = {
-  requestSize: 424,
+  requestSize: 432,
   resultSize: 16,
-  stateSize: 344,
+  stateSize: 352,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 8): Uint8Array => {
+const abiBytes = (version = 9): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -64,9 +64,11 @@ const request = (): CommandRequest => ({
   currentBox: 3,
   hmsOverwrite: true,
   fullPocketMask: 7,
+  regionalBadgeCounts: [4, 3, 1],
+  leagueClears: [true, false, false],
 })
 
-describe("game-session v8 protocol", () => {
+describe("game-session v9 protocol", () => {
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
     expect(() => parseAbi(abiBytes(6))).toThrow("Unsupported test ROM ABI")
@@ -91,7 +93,7 @@ describe("game-session v8 protocol", () => {
     expect(bytes[410]).toBe(5)
     expect(Array.from(bytes.slice(240, 256))).not.toContain(1)
     expect(Array.from(bytes.slice(260, 400))).toEqual(Array(140).fill(0))
-    expect(Array.from(bytes.slice(416, 424))).toEqual([1, 1, 1, 3, 1, 7, 0, 0])
+    expect(Array.from(bytes.slice(416, 428))).toEqual([1, 1, 1, 3, 1, 7, 4, 3, 1, 1, 0, 0])
   })
 
   it("preserves invalid fixture values for ROM-side negative validation", () => {
@@ -114,7 +116,7 @@ describe("game-session v8 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(17)
     expect(bytes[86]).toBe(commands.save)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(336).fill(0))
+    expect(Array.from(bytes.slice(88))).toEqual(Array(340).fill(0))
   })
 
   it("encodes the read-only region-map observation command", () => {
@@ -122,7 +124,7 @@ describe("game-session v8 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(23)
     expect(bytes[86]).toBe(commands.observeRegionMap)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(336).fill(0))
+    expect(Array.from(bytes.slice(88))).toEqual(Array(340).fill(0))
   })
 
   it("encodes a region-map grid lookup without changing the ABI layout", () => {
@@ -133,7 +135,7 @@ describe("game-session v8 protocol", () => {
     expect(view.getInt16(8, true)).toBe(25)
     expect(view.getInt16(10, true)).toBe(7)
     expect(bytes[86]).toBe(commands.observeRegionMapSection)
-    expect(bytes).toHaveLength(424)
+    expect(bytes).toHaveLength(428)
   })
 
   it("encodes the test-only battle-win command without fixture mutations", () => {
@@ -141,7 +143,7 @@ describe("game-session v8 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(25)
     expect(bytes[86]).toBe(commands.winBattle)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(336).fill(0))
+    expect(Array.from(bytes.slice(88))).toEqual(Array(340).fill(0))
   })
 
   it("decodes region-map observation values from the command result", () => {
@@ -187,5 +189,24 @@ describe("game-session v8 protocol", () => {
         egg: false,
       },
     ])
+  })
+
+  it("decodes semantic League Circuit state", () => {
+    const bytes = new Uint8Array(abi.stateSize)
+    bytes.set([4, 3, 1], 340)
+    bytes.set([1, 0, 0], 343)
+    bytes.set([2, 1, 0], 346)
+    bytes[349] = 8
+    bytes[350] = 55
+    bytes[351] = 4
+
+    expect(parseStateSnapshot(bytes)).toMatchObject({
+      regionalBadgeCounts: [4, 3, 1],
+      leagueClears: [true, false, false],
+      leagueStatuses: [2, 1, 0],
+      globalBadgeCount: 8,
+      trainerRating: 55,
+      trainerCardState: 4,
+    })
   })
 })

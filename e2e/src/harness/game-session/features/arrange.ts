@@ -4,6 +4,7 @@ import {
   maps,
   hms,
   items,
+  leagueRegions,
   storyFlags,
   storyVars,
   textSpeeds,
@@ -12,6 +13,7 @@ import {
   type GameMap,
   type Hm,
   type Item,
+  type LeagueRegion,
   type StoryFlag,
   type StoryVar,
   type TextSpeed,
@@ -72,6 +74,10 @@ export type ArrangeGame = {
   challenge?: {
     hmsOverwrite?: boolean
   }
+  circuit?: {
+    badges?: Partial<Record<LeagueRegion, number>>
+    clears?: Partial<Record<LeagueRegion, boolean>>
+  }
 }
 
 export type ArrangeApi = {
@@ -102,6 +108,10 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
       throw new Error("Each full Bag pocket fixture may be requested only once")
     const fullPocketMask = fullPockets.reduce((mask, pocket) => mask | fullPocketMasks[pocket], 0)
     const observedPcSlots = options.pc?.observedSlots ?? []
+    const regionalBadgeCounts = leagueRegions.map(
+      (region) => options.circuit?.badges?.[region] ?? 0,
+    )
+    const leagueClears = leagueRegions.map((region) => options.circuit?.clears?.[region] ?? false)
     const currentBox = options.pc?.currentBox ?? 0
     if (vars.length > maxPatches) {
       throw new Error(`Test ROM supports at most ${maxPatches} var overrides`)
@@ -121,6 +131,10 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
       throw new Error(`Current PC box ${currentBox} is outside 0..${totalPcBoxes - 1}`)
     if (observedPcSlots.length > maxPcSlots)
       throw new Error(`Test ROM supports at most ${maxPcSlots} observed PC slots`)
+    for (const [index, count] of regionalBadgeCounts.entries()) {
+      if (!Number.isInteger(count) || count < 0 || count > 8)
+        throw new Error(`${leagueRegions[index]} badge count ${count} is outside 0..8`)
+    }
     for (const mon of party) {
       if ((mon.moves?.length ?? 0) > maxMoves) {
         throw new Error(`Test ROM supports at most ${maxMoves} moves per party Pokémon`)
@@ -166,6 +180,9 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
           currentBox,
           hmsOverwrite: options.challenge?.hmsOverwrite ?? false,
           fullPocketMask,
+          regionalBadgeCounts,
+          leagueClears,
+          applyLeagueCircuit: options.circuit !== undefined,
         }),
       "arrange game",
     )

@@ -2,6 +2,7 @@ import {
   directions,
   hms,
   items,
+  leagueRegions,
   maps,
   moves,
   species,
@@ -17,9 +18,11 @@ import {
   catchSwapStates,
   dialogueMessages,
   gamePhases,
+  leagueStatuses,
   parseStateSnapshot,
   storageUiStates,
   storageModes,
+  trainerCardStates,
   uiModes,
 } from "../protocol"
 import { type SessionRuntime } from "../runtime"
@@ -58,6 +61,13 @@ export type GameState = {
   }
   ui: {
     mode: (typeof uiModes)[number]
+    trainerCard: (typeof trainerCardStates)[number]
+  }
+  circuit: {
+    badges: Record<(typeof leagueRegions)[number], number> & { total: number }
+    clears: Record<(typeof leagueRegions)[number], boolean>
+    leagues: Record<(typeof leagueRegions)[number], (typeof leagueStatuses)[number]>
+    trainerRating: number
   }
   fieldMove: {
     move: Move | "unknown"
@@ -235,6 +245,28 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       },
       ui: {
         mode: uiModes[snapshot.uiMode] ?? "overworld",
+        trainerCard: trainerCardStates[snapshot.trainerCardState] ?? "none",
+      },
+      circuit: {
+        badges: {
+          ...Object.fromEntries(
+            leagueRegions.map((region, index) => [
+              region,
+              snapshot.regionalBadgeCounts[index] ?? 0,
+            ]),
+          ),
+          total: snapshot.globalBadgeCount,
+        } as GameState["circuit"]["badges"],
+        clears: Object.fromEntries(
+          leagueRegions.map((region, index) => [region, snapshot.leagueClears[index] ?? false]),
+        ) as GameState["circuit"]["clears"],
+        leagues: Object.fromEntries(
+          leagueRegions.map((region, index) => [
+            region,
+            leagueStatuses[snapshot.leagueStatuses[index] ?? 0] ?? "locked",
+          ]),
+        ) as GameState["circuit"]["leagues"],
+        trainerRating: snapshot.trainerRating,
       },
       fieldMove: {
         move: nameByValue(moves, snapshot.fieldMoveMove),

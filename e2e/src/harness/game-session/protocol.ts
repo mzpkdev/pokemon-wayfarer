@@ -1,7 +1,7 @@
-const abiVersion = 8
-const expectedRequestSize = 424
+const abiVersion = 9
+const expectedRequestSize = 432
 const expectedResultSize = 16
-const expectedStateSize = 344
+const expectedStateSize = 352
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -12,6 +12,7 @@ export const maxBagItems = 8
 export const maxPcSlots = 8
 export const maxPartyMenuActions = 8
 export const maxFieldMessageTextLength = 32
+export const leagueCount = 3
 export const totalPcBoxes = 14
 export const pcBoxCapacity = 30
 export const keepMap = 0xffff
@@ -27,6 +28,7 @@ export const commands = {
   observeRegionMap: 4,
   observeRegionMapSection: 5,
   winBattle: 6,
+  observeFlag: 7,
 } as const
 export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
 
@@ -65,6 +67,7 @@ export const commandErrors = [
   "busy",
   "full-pocket-mask",
   "save",
+  "circuit",
 ] as const
 export const arrangeErrors = commandErrors
 
@@ -86,7 +89,10 @@ export const uiModes = [
   "battle",
   "catch-swap",
   "storage",
+  "trainer-card",
 ] as const
+export const leagueStatuses = ["locked", "available", "cleared"] as const
+export const trainerCardStates = ["none", "loading", "front", "back", "circuit"] as const
 export const catchSwapStates = ["none", "prompt", "choose-party", "resolved"] as const
 export const storageUiStates = [
   "none",
@@ -166,6 +172,9 @@ export type CommandRequest = {
   currentBox: number
   hmsOverwrite: boolean
   fullPocketMask: number
+  regionalBadgeCounts: number[]
+  leagueClears: boolean[]
+  applyLeagueCircuit?: boolean
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -230,6 +239,12 @@ export type StateSnapshot = {
   battleBagPocket: number
   storageMode: number
   battleBagItem: number
+  regionalBadgeCounts: number[]
+  leagueClears: boolean[]
+  leagueStatuses: number[]
+  globalBadgeCount: number
+  trainerRating: number
+  trainerCardState: number
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -327,6 +342,11 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   view.setUint8(419, request.currentBox)
   view.setUint8(420, request.hmsOverwrite ? 1 : 0)
   view.setUint8(421, request.fullPocketMask)
+  for (let index = 0; index < leagueCount; index++) {
+    view.setUint8(422 + index, request.regionalBadgeCounts[index] ?? 0)
+    view.setUint8(425 + index, request.leagueClears[index] ? 1 : 0)
+  }
+  view.setUint8(428, request.applyLeagueCircuit ? 1 : 0)
   return bytes
 }
 
@@ -364,6 +384,8 @@ export const encodeStartWildBattleRequest = (
     currentBox: 0,
     hmsOverwrite: false,
     fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
   })
 
 export const encodeSaveRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
@@ -388,6 +410,8 @@ export const encodeSaveRequest = (abi: SessionAbi, requestId: number): Uint8Arra
     currentBox: 0,
     hmsOverwrite: false,
     fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
   })
 
 export const encodeObserveRegionMapRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
@@ -412,6 +436,8 @@ export const encodeObserveRegionMapRequest = (abi: SessionAbi, requestId: number
     currentBox: 0,
     hmsOverwrite: false,
     fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
   })
 
 export const encodeObserveRegionMapSectionRequest = (
@@ -441,6 +467,8 @@ export const encodeObserveRegionMapSectionRequest = (
     currentBox: 0,
     hmsOverwrite: false,
     fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
   })
 
 export const encodeWinBattleRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
@@ -465,6 +493,38 @@ export const encodeWinBattleRequest = (abi: SessionAbi, requestId: number): Uint
     currentBox: 0,
     hmsOverwrite: false,
     fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+  })
+
+export const encodeObserveFlagRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  flagId: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.observeFlag,
+    mapGroup: flagId,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
   })
 
 export const parseCommandResult = (bytes: Uint8Array): CommandResult => ({
@@ -562,5 +622,11 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     battleBagPocket: bytes[335]!,
     storageMode: bytes[336]!,
     battleBagItem: uint16(bytes, 338),
+    regionalBadgeCounts: Array.from(bytes.slice(340, 343)),
+    leagueClears: Array.from(bytes.slice(343, 346), (value) => value === 1),
+    leagueStatuses: Array.from(bytes.slice(346, 349)),
+    globalBadgeCount: bytes[349]!,
+    trainerRating: bytes[350]!,
+    trainerCardState: bytes[351]!,
   }
 }

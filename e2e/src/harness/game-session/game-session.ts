@@ -58,7 +58,7 @@ export class GameSession {
     this.regionMap = createRegionMapApi(runtime, mailbox)
     this.state = state
     this.storage = createStorageApi(state, wait)
-    this.story = createStoryApi(runtime)
+    this.story = createStoryApi(runtime, mailbox)
     this.wait = wait
     this.saveAndReload = async () => {
       await wait.forReady()

@@ -11,6 +11,7 @@
 #define E2E_TEST_MAX_BAG_ITEMS 8
 #define E2E_TEST_MAX_PC_SLOTS 8
 #define E2E_TEST_MAX_PARTY_MENU_ACTIONS 8
+#define E2E_TEST_LEAGUE_COUNT 3
 #define E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH 32
 #define E2E_TEST_KEEP_MAP 0xFFFF
 #define E2E_TEST_KEEP_COORDINATE INT16_MIN
@@ -39,6 +40,7 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_OBSERVE_REGION_MAP,
     E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION,
     E2E_TEST_COMMAND_WIN_BATTLE,
+    E2E_TEST_COMMAND_OBSERVE_FLAG,
 };
 
 enum E2ETestCheckpoint
@@ -86,6 +88,7 @@ enum E2ETestError
     E2E_TEST_ERROR_BUSY,
     E2E_TEST_ERROR_FULL_POCKET_MASK,
     E2E_TEST_ERROR_SAVE,
+    E2E_TEST_ERROR_CIRCUIT,
 };
 
 enum E2ETestGamePhase
@@ -122,6 +125,23 @@ enum E2ETestUiMode
     E2E_TEST_UI_BATTLE,
     E2E_TEST_UI_CATCH_SWAP,
     E2E_TEST_UI_STORAGE,
+    E2E_TEST_UI_TRAINER_CARD,
+};
+
+enum E2ETestLeagueStatus
+{
+    E2E_TEST_LEAGUE_LOCKED,
+    E2E_TEST_LEAGUE_AVAILABLE,
+    E2E_TEST_LEAGUE_CLEARED,
+};
+
+enum E2ETestTrainerCardState
+{
+    E2E_TEST_TRAINER_CARD_NONE,
+    E2E_TEST_TRAINER_CARD_LOADING,
+    E2E_TEST_TRAINER_CARD_FRONT,
+    E2E_TEST_TRAINER_CARD_BACK,
+    E2E_TEST_TRAINER_CARD_CIRCUIT,
 };
 
 enum E2ETestCatchSwapState
@@ -244,7 +264,10 @@ struct E2ETestRequest
     u8 currentBox;
     u8 hmsOverwrite;
     u8 fullPocketMask;
-    u8 reserved[2];
+    u8 regionalBadgeCounts[E2E_TEST_LEAGUE_COUNT];
+    u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
+    u8 applyLeagueCircuit;
+    u8 reserved[3];
 };
 
 struct E2ETestObservedPcSlot
@@ -331,7 +354,12 @@ struct E2ETestState
     u8 battleBagPocket;
     u8 storageMode;
     u16 battleBagItem;
-    u8 reserved2[4];
+    u8 regionalBadgeCounts[E2E_TEST_LEAGUE_COUNT];
+    u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
+    u8 leagueStatuses[E2E_TEST_LEAGUE_COUNT];
+    u8 globalBadgeCount;
+    u8 trainerRating;
+    u8 trainerCardState;
 };
 
 struct E2ETestAbi
@@ -368,6 +396,7 @@ bool32 E2ETest_IsBattleTextReady(void);
 bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item);
 bool32 E2ETest_IsCaughtDexReady(void);
 bool32 E2ETest_GetCatchSwapPartyState(u8 *cursor);
+u8 E2ETest_GetTrainerCardState(void);
 
 #endif // E2E_TESTING
 
