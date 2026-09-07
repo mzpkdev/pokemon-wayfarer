@@ -15,6 +15,10 @@ class InventoryTests(unittest.TestCase):
         self.assertGreater(len(custom), 100)
         self.assertTrue(all(1 <= len(slot['moves']) <= 4 for slot in custom))
 
+    def test_real_compiler_uses_wayfarer_roster_macros(self):
+        records = gen.load_inventory()
+        self.assertEqual(records['TRAINER_PHOEBE']['DIFFICULTY_NORMAL']['slots'][0]['lvl'], 87)
+
     def test_alias_chain_and_pool_keep_original_slots(self):
         records = {'TRAINER_A': {'DIFFICULTY_NORMAL': roster([], overrideTrainer='TRAINER_B')}, 'TRAINER_B': {'DIFFICULTY_NORMAL': roster([], overrideTrainer='TRAINER_C')}, 'TRAINER_C': {'DIFFICULTY_NORMAL': roster([{'species': 'SPECIES_RATTATA', 'lvl': 10}, {'species': 'SPECIES_PIDGEY', 'lvl': 20}], poolSize=2)}}
         resolved = gen.resolve_rosters(records)['TRAINER_A']['DIFFICULTY_HARD']

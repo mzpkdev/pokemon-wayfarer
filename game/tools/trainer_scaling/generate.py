@@ -87,7 +87,7 @@ def load_inventory():
         command(['cc', '-O2', str(ROOT / 'tools/trainerproc/main.c'), '-o', str(binary)])
         for name in SOURCES:
             source = ROOT / 'src/data' / name
-            preprocessed = command(['cpp', '-traditional-cpp', '-P', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', str(source)])
+            preprocessed = command(['cpp', '-traditional-cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', str(source)])
             header = directory / (name + '.h')
             command([str(binary), '-i', f'src/data/{name}', '-o', str(header), '-'], input=preprocessed)
             parsed = parse_output(header.read_text(), f'src/data/{name}')
@@ -99,7 +99,7 @@ def load_inventory():
 def trainer_ids(names):
     # The first argument is quoted so preprocessing only expands the value.
     source = '#include "constants/opponents.h"\n' + '\n'.join(f'ID("{name}", {name})' for name in sorted(names))
-    output = command(['cpp', '-P', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-I', str(ROOT / 'include'), '-'], input=source)
+    output = command(['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-I', str(ROOT / 'include'), '-'], input=source)
     result = {}
     for name, expression in re.findall(r'ID\("(TRAINER_\w+)",\s*(.*?)\)\s*$', output, re.M):
         if not re.fullmatch(r'[0-9 ()+\-]+', expression):
@@ -164,7 +164,7 @@ def references():
     active_sources = {}
     for path in sorted(set(paths)):
         if not path.exists(): continue
-        active_sources[path] = command(['cpp', '-P', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', '-'], input=path.read_text())
+        active_sources[path] = command(['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', '-'], input=path.read_text())
     selected = list(active_sources.items())
     for path, source in selected:
         for line in source.splitlines():
@@ -174,7 +174,7 @@ def references():
     # Preprocess conditionals so standalone rematch registries do not leak in.
     source = (ROOT / 'src/battle_setup.c').read_text()
     source = '\n'.join(line for line in source.splitlines() if not line.startswith('#include'))
-    source = command(['cpp', '-P', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-'], input=source)
+    source = command(['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-'], input=source)
     for line in source.splitlines():
         if '= REMATCH(' in line:
             for trainer in ID_RE.findall(line): refs[trainer].add('src/battle_setup.c')
