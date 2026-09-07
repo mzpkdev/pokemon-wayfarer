@@ -178,7 +178,7 @@ bool32 BuildGymLeaderScalingPlan(const struct GymLeaderScalingRoster *roster, u3
 }
 
 #if IS_WAYFARER && B_GYM_LEADER_SCALING
-static const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty)
+const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty)
 {
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sGymLeaderScalingRosters); i++)

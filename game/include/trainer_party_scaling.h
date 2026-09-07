@@ -56,6 +56,7 @@ u8 GetTrainerScalingSnapshot(void);
 bool32 HasTrainerScalingMoveException(u32 owner, u32 variant, u32 slot);
 bool32 CanRetainTrainerScalingMoves(const struct TrainerMon *entry, u16 species, u8 level);
 u32 GetTrainerScalingAbility(u16 species, u32 authoredAbility, u32 personalityHash);
+const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty);
 u8 GetGymLeaderScalingPartySize(u32 rating);
 u8 GetGymLeaderScalingLevel(u32 rating, s8 levelOffset);
 bool32 BuildGymLeaderScalingPlan(const struct GymLeaderScalingRoster *roster, u32 rating, struct GymLeaderScalingPlan *plan);
