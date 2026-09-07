@@ -69,8 +69,9 @@ existing initial-badge protections for Chuck, Blue, Clair, and Blaine remain.
 Only League qualification and Trainer Rating use the global badge total.
 
 Ordinary Trainers and Gym members follow the separate
-[Trainer-party scaling design](trainer-party-scaling.md). Gym Leaders keep
-authored, static parties. Each regional
+[Trainer-party scaling design](trainer-party-scaling.md). Initial Gym Leader
+badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md);
+leader rematches retain authored, static parties. Each regional
 League has one authored party set for its fixed position in the itinerary:
 Kanto is Tier 1, Johto is Tier 2, and Hoenn is Tier 3. League parties do not
 scale at runtime.
@@ -128,8 +129,9 @@ Collecting all badges first is also valid:
 
 The rating remains a high-water mark used by ordinary wild encounter scaling
 and the party's soft level cap and obedience rules. It also drives ordinary
-Trainer and Gym-member scaling. League and Gym Leader parties remain authored
-and static.
+Trainer and Gym-member scaling, plus the separate [initial Gym Leader badge
+battle scaling](gym-leader-scaling.md). Leader rematches and League parties
+remain authored and static.
 
 Rating 0 must not remove a native utility catch that supplies an approved core
 route. In particular, the level-5 Chinchou available around Vermilion and
