@@ -5,7 +5,7 @@
 #include "constants/regions.h"
 
 void WayfarerInitPersistentState(void);
-void WayfarerInitPersistentStateFromSavedMap(void);
+bool8 WayfarerPersistentStateIsValid(void);
 void WayfarerValidatePersistentState(void);
 
 bool8 WayfarerHoennStateIsInitialized(void);

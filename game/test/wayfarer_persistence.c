@@ -4,6 +4,7 @@
 #include "load_save.h"
 #include "main.h"
 #include "event_scripts.h"
+#include "field_screen_effect.h"
 #include "overworld.h"
 #include "pokemon.h"
 #include "region_map.h"
@@ -11,6 +12,7 @@
 #include "save.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_origin.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
 #include "constants/heal_locations.h"
@@ -387,6 +389,8 @@ TEST("Wayfarer Hoenn visited state is region aware")
     const u16 littleroot = HOENN_FLAG_ID(WAYFARER_HOENN_VISITED_FLAG_START);
 
     WayfarerInitPersistentState();
+    EXPECT(!GetRegionVisitedState(REGION_JOHTO));
+    SetRegionVisitedState(REGION_JOHTO, TRUE);
     EXPECT(GetRegionVisitedState(REGION_JOHTO));
     EXPECT(!GetRegionVisitedState(REGION_KANTO));
     EXPECT(!GetRegionVisitedState(REGION_HOENN));
@@ -399,6 +403,24 @@ TEST("Wayfarer Hoenn visited state is region aware")
     EXPECT(GetRegionVisitedState(REGION_HOENN));
     EXPECT(GetLocationVisitedStateForRegion(REGION_HOENN, littleroot));
     EXPECT(!GetLocationVisitedStateForRegion(REGION_JOHTO, littleroot));
+}
+
+TEST("Wayfarer actual Kanto map entry marks the legacy visited flag as well as current region")
+{
+    WayfarerInitPersistentState();
+    FlagClear(FLAG_VISITED_KANTO);
+    WayfarerSetSavedCurrentRegion(REGION_HOENN);
+    EXPECT(!GetRegionVisitedState(REGION_KANTO));
+    WayfarerUpdateHnsRegionContextForMap(MAP_GROUP(MAP_VERMILION_CITY_PORT_INSIDE_HNS),
+                                       MAP_NUM(MAP_VERMILION_CITY_PORT_INSIDE_HNS));
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+    EXPECT(GetRegionVisitedState(REGION_KANTO));
+    EXPECT(FlagGet(FLAG_VISITED_KANTO));
+    EXPECT(gSaveBlock3Ptr->wayfarerHoenn.visitedRegions & (1 << REGION_KANTO));
+    WayfarerSetSavedCurrentRegion(REGION_JOHTO);
+    EXPECT(GetRegionVisitedState(REGION_KANTO));
+    EXPECT(GetRegionVisitedState(REGION_JOHTO));
+    EXPECT(GetRegionVisitedState(REGION_HOENN));
 }
 
 TEST("Wayfarer Hoenn Trainer defeat bits accept only mapped Hoenn ids")
@@ -444,16 +466,17 @@ TEST("Wayfarer invalid saved region falls back safely")
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
 }
 
-TEST("Wayfarer saved HNS special map infers Johto without visiting Hoenn")
+TEST("Wayfarer invalid saved origin is rejected without rebuilding regional state")
 {
-    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
-    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_BATTLE_FRONTIER_OUTSIDE_WEST_HNS);
-
-    WayfarerInitPersistentStateFromSavedMap();
-
-    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_JOHTO);
-    EXPECT(GetRegionVisitedState(REGION_JOHTO));
-    EXPECT(!GetRegionVisitedState(REGION_HOENN));
+    WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = 0xFFFF;
+    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TORCHIC);
+    FlagSet(FLAG_HOENN_STARTER_RECEIVED);
+    EXPECT(!WayfarerPersistentStateIsValid());
+    WayfarerValidatePersistentState();
+    EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.startingOriginId, 0xFFFF);
+    EXPECT_EQ(VarGet(VAR_HOENN_STARTER_CHOICE), HOENN_STARTER_CHOICE_TORCHIC);
+    EXPECT(FlagGet(FLAG_HOENN_STARTER_RECEIVED));
 }
 
 TEST("Wayfarer SaveBlock3 chunks round trip without replacing sector payloads")
@@ -541,6 +564,8 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     for (i = 0; i < sizeof(sWayfarerExpectedSaveBlock3); i++)
         saveBlock3Bytes[i] = (i * 37 + 0x5B) & 0xFF;
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
     gSaveBlock3Ptr->wayfarerHoenn.initialized = TRUE;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
@@ -622,6 +647,126 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     EXPECT(saveBlock3RoundTrip);
     EXPECT(storageRoundTrip);
     EXPECT(lastUsedSector >= SECTOR_ID_PKMN_STORAGE_START);
+}
+
+static void PrepareOriginFlashFixture(void)
+{
+    CheckForFlashMemory();
+    if (gFlashMemoryPresent != TRUE)
+    {
+        gFlashMemoryPresent = TRUE;
+        InitFlashTimer();
+    }
+    ClearSaveData();
+    Save_ResetSaveCounters();
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    memset(gPokemonStoragePtr, 0, sizeof(*gPokemonStoragePtr));
+    gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
+    gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_OLIVINE_CITY_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_OLIVINE_CITY_HNS);
+    WayfarerInitPersistentState();
+}
+
+TEST("Wayfarer save loader rejects unknown current-version origin without repairing story state")
+{
+    u8 loadStatus;
+    u16 visibleStatus;
+    bool8 unchanged;
+    bool8 flashWritten;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = 0xFFFF;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_OLIVINE_CITY_HNS;
+    gSaveBlock3Ptr->wayfarerHoenn.initialized = TRUE;
+    gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = (1 << REGION_JOHTO) | (1 << REGION_HOENN);
+    VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP);
+    FlagSet(FLAG_HOENN_STARTER_RECEIVED);
+    VarSet(VAR_NEWBARKTOWN_LABSTATE, 6);
+    memcpy(sWayfarerExpectedSaveBlock3, gSaveBlock3Ptr, sizeof(*gSaveBlock3Ptr));
+    HandleSavingData(SAVE_NORMAL);
+    flashWritten = gDamagedSaveSectors == 0;
+
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    gSaveFileStatus = SAVE_STATUS_OK;
+    loadStatus = LoadGameSave(SAVE_NORMAL);
+    visibleStatus = gSaveFileStatus;
+    unchanged = memcmp(sWayfarerExpectedSaveBlock3, gSaveBlock3Ptr, sizeof(*gSaveBlock3Ptr)) == 0
+        && VarGet(VAR_NEWBARKTOWN_LABSTATE) == 6;
+
+    ClearSaveData();
+    Save_ResetSaveCounters();
+    EXPECT(flashWritten);
+    EXPECT_EQ(loadStatus, SAVE_STATUS_CORRUPT);
+    EXPECT_EQ(visibleStatus, SAVE_STATUS_CORRUPT);
+    EXPECT(unchanged);
+}
+
+#define SAVED_CUSTOM_ORIGIN 0x7FFD
+#define SAVED_CUSTOM_MILESTONE VAR_UNUSED_HNS_0x40FD
+static u8 SavedCustomRecovery(void) { return HEAL_LOCATION_OLIVINE_CITY_HNS; }
+static void SavedCustomInitialize(void) { VarSet(SAVED_CUSTOM_MILESTONE, 1); }
+static bool8 SavedCustomTravel(void) { return VarGet(SAVED_CUSTOM_MILESTONE) == 9; }
+static const struct WayfarerOriginProfile sSavedCustomOrigin =
+{
+    .id = SAVED_CUSTOM_ORIGIN,
+    .entryRegion = REGION_JOHTO,
+    .mapGroup = MAP_GROUP(MAP_OLIVINE_CITY_HNS), .mapNum = MAP_NUM(MAP_OLIVINE_CITY_HNS),
+    .warpId = WARP_ID_NONE, .x = 20, .y = 20,
+    .scenePolicies = {ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR, ORIGIN_SCENE_VISITOR},
+    .initialRecovery = SavedCustomRecovery, .initialize = SavedCustomInitialize,
+    .openingCallback = FieldCB_WarpExitFadeFromBlack,
+    .regularAqua = SavedCustomTravel, .slateportTicket = SavedCustomTravel,
+};
+
+TEST("Wayfarer save loader resumes a registered custom origin without reapplying its initialization")
+{
+    u8 loadStatus;
+    u16 visibleStatus;
+    bool8 unchanged;
+    bool8 travel;
+    bool8 flashWritten;
+
+    ASSUME(gPokemonStoragePtr != NULL);
+    PrepareOriginFlashFixture();
+    EXPECT(Test_WayfarerRegisterOriginProfile(&sSavedCustomOrigin));
+    EXPECT(WayfarerInitializeOrigin(SAVED_CUSTOM_ORIGIN));
+    WarpIntoMap();
+    EXPECT_EQ(VarGet(SAVED_CUSTOM_MILESTONE), 1);
+    VarSet(SAVED_CUSTOM_MILESTONE, 9);
+    memcpy(sWayfarerExpectedSaveBlock3, gSaveBlock3Ptr, sizeof(*gSaveBlock3Ptr));
+    HandleSavingData(SAVE_NORMAL);
+    flashWritten = gDamagedSaveSectors == 0;
+
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+    loadStatus = LoadGameSave(SAVE_NORMAL);
+    visibleStatus = gSaveFileStatus;
+    unchanged = memcmp(sWayfarerExpectedSaveBlock3, gSaveBlock3Ptr, sizeof(*gSaveBlock3Ptr)) == 0
+        && WayfarerGetStartingOriginId() == SAVED_CUSTOM_ORIGIN
+        && VarGet(SAVED_CUSTOM_MILESTONE) == 9
+        && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_OLIVINE_CITY_HNS)
+        && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_OLIVINE_CITY_HNS)
+        && gSaveBlock1Ptr->location.x == 20 && gSaveBlock1Ptr->location.y == 20;
+    travel = WayfarerCanUseRegularAqua();
+
+    ClearSaveData();
+    Save_ResetSaveCounters();
+    Test_WayfarerRegisterOriginProfile(NULL);
+    EXPECT(flashWritten);
+    EXPECT_EQ(loadStatus, SAVE_STATUS_OK);
+    EXPECT_EQ(visibleStatus, SAVE_STATUS_OK);
+    EXPECT(unchanged);
+    EXPECT(travel);
+    EXPECT_EQ(VarGet(VAR_SSAQUA_STATE), 0);
+    EXPECT(!FlagGet(FLAG_HOENN_STARTER_RECEIVED));
+    EXPECT(!FlagGet(FLAG_JOHTO_STARTER_RECEIVED));
 }
 
 TEST("Wayfarer Hoenn persistent state stays under one KiB")

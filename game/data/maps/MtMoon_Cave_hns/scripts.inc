@@ -15,6 +15,9 @@ MtMoon_Cave_EventScript_Sign::
 	end
 
 MtMoon_Cave_EventScript_Silver::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, MtMoon_Cave_EventScript_DeferredSilver
+#endif
 	lock
 	faceplayer
 	msgbox MtMoon_Cave_Text_Rival_Before, MSGBOX_DEFAULT
@@ -98,3 +101,9 @@ MtMoon_Cave_Text_Rival_Loss:
 
 MtMoon_Cave_Text_Sign:
 	.string "MT MOON SQUARE ->$"
+
+#if IS_WAYFARER
+MtMoon_Cave_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

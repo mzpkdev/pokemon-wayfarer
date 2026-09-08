@@ -4,6 +4,9 @@
 #include "strings.h"
 #include "union_room_chat.h"
 #include "event_data.h"
+#if IS_WAYFARER
+#include "wayfarer_persistence.h"
+#endif
 
 EWRAM_DATA u8 gStringVar1[0x100] = {0};
 EWRAM_DATA u8 gStringVar2[0x100] = {0};
@@ -480,6 +483,12 @@ static const u8 *ExpandPlaceholder_KunChan(void)
 
 static const u8 *ExpandPlaceholder_RivalName(void)
 {
+#if IS_WAYFARER
+    if (WayfarerIsCurrentMapHoennSource())
+        return gSaveBlock2Ptr->playerGender == MALE
+            ? gText_ExpandedPlaceholder_May
+            : gText_ExpandedPlaceholder_Brendan;
+#endif
 #if IS_FRLG
     if (gSaveBlock1Ptr->rivalName[0] != EOS)
         return gSaveBlock1Ptr->rivalName;

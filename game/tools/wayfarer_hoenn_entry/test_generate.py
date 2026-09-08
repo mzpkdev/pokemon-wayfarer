@@ -5,6 +5,7 @@ import json
 import struct
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 
@@ -119,6 +120,54 @@ after"""
 
 
 class RepositoryContractTest(unittest.TestCase):
+    def assert_script_mutation_rejected(self, filename, old, new, audit, message):
+        original_read = AUDIT.read_text
+        target = AUDIT.GAME_ROOT / filename
+        self.assertIn(old, original_read(target))
+
+        def mutated_read(path):
+            source = original_read(path)
+            return source.replace(old, new, 1) if path == target else source
+
+        with patch.object(AUDIT, "read_text", side_effect=mutated_read):
+            with self.assertRaisesRegex(AUDIT.AuditError, message):
+                audit(AUDIT.GAME_ROOT)
+
+    def test_regular_circuit_rejects_raw_voyage_gate(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "specialvar VAR_RESULT, WayfarerCanUseRegularAqua",
+            "specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage",
+            AUDIT.audit_menus_and_routes, "profile eligibility")
+
+    def test_non_native_origin_cannot_fall_through_to_maiden_voyage(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/OlivineCity_PortInside_hns/scripts.inc",
+            "goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_CantBoard",
+            "goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_CantBoard",
+            AUDIT.audit_menus_and_routes, "reject profiles")
+
+    def test_free_ticket_is_profile_owned(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/SlateportCity_Harbor/scripts.inc",
+            "specialvar VAR_RESULT, WayfarerCanReceiveSlateportTicket",
+            "specialvar VAR_RESULT, WayfarerCanUseRegularAqua",
+            AUDIT.audit_hoenn_ports_and_ticket, "handoff policy")
+
+    def test_free_ticket_failure_cannot_depart(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/SlateportCity_Harbor/scripts.inc",
+            "goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed",
+            "goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture",
+            AUDIT.audit_hoenn_ports_and_ticket, "stop on failure")
+
+    def test_existing_ticket_skips_free_grant(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/SlateportCity_Harbor/scripts.inc",
+            "goto_if_eq VAR_RESULT, TRUE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture",
+            "goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture",
+            AUDIT.audit_hoenn_ports_and_ticket, "skip its grant")
+
     def test_repository_hoenn_entry_contract(self) -> None:
         result = AUDIT.build_audit(AUDIT.GAME_ROOT)
         self.assertEqual(result["status"], "pass")

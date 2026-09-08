@@ -64,6 +64,9 @@ Alola_Melemele_Pokecenter_Jessica::
 	lock
 	faceplayer
 	goto_if_set FLAG_COMPLETED_TAUROS_TRADE, Alola_Melemele_Pokecenter_Jessica_TradeCompleted
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, Alola_Melemele_Pokecenter_Jessica_Deferred
+#endif
 	goto_if_eq VAR_STARTER_MON, 0, Alola_Melemele_Pokecenter_Jessica_TradeWater
 	goto_if_eq VAR_STARTER_MON, 1, Alola_Melemele_Pokecenter_Jessica_TradeFire
 	goto Alola_Melemele_Pokecenter_Jessica_TradeFight
@@ -141,3 +144,13 @@ Alola_Melemele_Pokecenter_Jessica_Text_DeclineTrade:
 
 Alola_Melemele_Pokecenter_Jessica_Text_TradeCompleted:
 	.string "Hi, how's my old TORY doing?$"
+
+#if IS_WAYFARER
+Alola_Melemele_Pokecenter_Jessica_Deferred::
+	msgbox Alola_Melemele_Pokecenter_Jessica_Text_Deferred, MSGBOX_DEFAULT
+	release
+	end
+Alola_Melemele_Pokecenter_Jessica_Text_Deferred:
+	.string "I'm still deciding which POKéMON\n"
+	.string "to trade. Come back later!$"
+#endif

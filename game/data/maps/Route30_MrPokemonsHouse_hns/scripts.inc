@@ -1,12 +1,25 @@
 Route30_MrPokemonsHouse_hns_MapScripts::
+#if IS_WAYFARER
+	map_script MAP_SCRIPT_ON_TRANSITION, MrPokemonHouse_OriginOnTransition
+#endif
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, MrPokemonHouse_OnFrame
 	.byte 0
 
 MrPokemonHouse_OnFrame::
+#if IS_WAYFARER
+	map_script_2 VAR_TEMP_1, 1, MrPokemonHouse_EventScript_GiveEgg
+#else
 	map_script_2 VAR_CHERRYGROVE_CITY_STATE, 1, MrPokemonHouse_EventScript_GiveEgg
+#endif
 	.2byte 0
 
 MrPokemonHouse_EventScript_GiveEgg::
+#if IS_WAYFARER
+	setvar VAR_TEMP_1, 0
+#endif
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, MrPokemonHouse_EventScript_WaitForElm
+#endif
 	lock
 	playse SE_PIN
 	applymovement LOCALID_MRPOKEMON, Common_Movement_ExclamationMark	
@@ -20,6 +33,9 @@ MrPokemonHouse_EventScript_GiveEgg::
 	msgbox MrPokemonHouse_Text_Intro2, MSGBOX_DEFAULT
 
 	giveitem ITEM_MYSTERY_EGG
+#if IS_WAYFARER
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+#endif
 
 	msgbox MrPokemonHouse_Text_Intro3, MSGBOX_DEFAULT
 	msgbox MrPokemonHouse_Text_Intro4, MSGBOX_DEFAULT
@@ -30,12 +46,16 @@ MrPokemonHouse_EventScript_GiveEgg::
 	applymovement LOCALID_ROUTE30_OAK, MrPokemonHouse_Movement_OakToPlayer
 	waitmovement 0 
 	turnobject OBJ_EVENT_ID_PLAYER, DIR_EAST
+#if IS_WAYFARER
+	goto_if_set FLAG_SYS_POKEDEX_GET, MrPokemonHouse_EventScript_ExistingDex
+#endif
 	msgbox MrPokemonHouse_Text_OakIntro, MSGBOX_DEFAULT
 	
 
 	playfanfare MUS_OBTAIN_ITEM
 	message MrPokemonHouse_Text_GetDex
 	waitfanfare
+MrPokemonHouse_EventScript_AfterDex:
 
 	
 	msgbox MrPokemonHouse_Text_OakParting, MSGBOX_DEFAULT
@@ -262,3 +282,24 @@ MrPokemonHouse_Text_StrangeCoins:
 
 MrPokemonHouse_Text_GotExpShare:
 	.string "{PLAYER} received EXP. SHARE!$"
+
+#if IS_WAYFARER
+MrPokemonHouse_EventScript_WaitForElm::
+	end
+MrPokemonHouse_EventScript_ExistingDex::
+	msgbox MrPokemonHouse_Text_ExistingDex, MSGBOX_DEFAULT
+	goto MrPokemonHouse_EventScript_AfterDex
+MrPokemonHouse_Text_ExistingDex:
+	.string "OAK: Ah, you have a POKéDEX!\p"
+	.string "Keep recording the POKéMON\n"
+	.string "you meet on your travels.$"
+#endif
+
+#if IS_WAYFARER
+MrPokemonHouse_OriginOnTransition::
+	setvar VAR_TEMP_1, 0
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, MrPokemonHouse_EventScript_WaitForElm
+	goto_if_ne VAR_CHERRYGROVE_CITY_STATE, 1, MrPokemonHouse_EventScript_WaitForElm
+	setvar VAR_TEMP_1, 1
+	end
+#endif

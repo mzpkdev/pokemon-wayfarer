@@ -104,7 +104,7 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertIn("setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON", helper)
         self.assertIn("clearflag FLAG_HIDE_MAUVILLE_CITY_WATTSON", helper)
         self.assertIn("call MauvilleCity_Gym_EventScript_TryRelocateWattson", block(script("MauvilleCity_Gym"), "MauvilleCity_Gym_EventScript_WattsonDefeated"))
-        norman = block(script("PetalburgCity_Gym"), "PetalburgCity_Gym_EventScript_NormanBattle")
+        norman = script("PetalburgCity_Gym").split("PetalburgCity_Gym_EventScript_NormanBattle::\n", 1)[1].split("PetalburgCity_Gym_EventScript_GiveFacade::\n", 1)[0]
         self.assertIn("call MauvilleCity_Gym_EventScript_TryRelocateWattson", norman)
         self.assertNotIn("setflag FLAG_HIDE_MAUVILLE_GYM_WATTSON", norman.split("#else", 1)[0])
 
@@ -247,7 +247,7 @@ class CircuitScriptTests(unittest.TestCase):
         gate = script("ReceptionGate_hns").split("ReceptionGate_Trigger::\n", 1)[1].split("#endif", 1)[0]
         self.assertIn("\tend", gate)
         self.assertNotIn("setvar", gate)
-        rival = script("VictoryRoadKanto_1F_hns").split("VictoryRoadKanto_1F_Trigger::\n", 1)[1].split("#endif", 1)[0]
+        rival = block(script("VictoryRoadKanto_1F_hns"), "VictoryRoadKanto_1F_Trigger").split("\tlock\n", 1)[0]
         self.assertIn("LeagueCircuit_IsEligible", rival)
         self.assertNotIn("setflag", rival)
 
@@ -263,13 +263,13 @@ class CircuitScriptTests(unittest.TestCase):
         self.assertIn("setvar VAR_SSAQUA_STATE, 8", arrival)
 
         vermilion = script("VermilionCity_PortInside_hns").split("VermilionPort_EventScript_ChoseSlateport::", 1)[1]
-        self.assertIn("goto_if_lt VAR_SSAQUA_STATE, 8", vermilion)
+        self.assertIn("specialvar VAR_RESULT, WayfarerCanUseRegularAqua", vermilion)
         self.assertIn("checkitem ITEM_SS_TICKET", vermilion)
         self.assertIn("WayfarerPrepareHoennEntry", vermilion)
         self.assertIn("MAP_SLATEPORT_CITY_HARBOR", vermilion)
 
         slateport = script("SlateportCity_Harbor").split("WayfarerHoennEntry_EventScript_SlateportAquaAttendant::", 1)[1]
-        self.assertIn("goto_if_lt 0x408B, 8", slateport)
+        self.assertIn("specialvar VAR_RESULT, WayfarerCanUseRegularAqua", slateport)
         self.assertIn("checkitem ITEM_SS_TICKET", slateport)
         self.assertIn("MAP_OLIVINE_CITY_PORT_INSIDE_HNS", slateport)
 

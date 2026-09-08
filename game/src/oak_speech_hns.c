@@ -34,6 +34,10 @@
 #include "text.h"
 #include "text_window.h"
 #include "window.h"
+#if IS_WAYFARER
+#include "wayfarer_origin.h"
+#include "constants/wayfarer_origin.h"
+#endif
 
 #if IS_HNS
 
@@ -47,6 +51,19 @@ extern const u8 gText_Oak_WhatsYourName[];
 extern const u8 gText_Oak_SoItsPlayer[];
 extern const u8 gText_Oak_YourePlayer[];
 extern const u8 gText_Oak_AreYouReady[];
+#if IS_WAYFARER
+extern const u8 gText_Oak_OriginQuestion[];
+extern const u8 gText_Oak_OriginJohto[];
+extern const u8 gText_Oak_OriginHoenn[];
+extern const u8 gText_Oak_OriginTravel[];
+
+static void NewGameHnsSpeech_AskOrigin(u8 taskId);
+static void Task_NewGameHnsSpeech_ShowOriginList(u8 taskId);
+static void Task_NewGameHnsSpeech_ChooseOrigin(u8 taskId);
+static void Task_NewGameHnsSpeech_ShowOriginYesNo(u8 taskId);
+static void Task_NewGameHnsSpeech_ConfirmOrigin(u8 taskId);
+static void Task_NewGameHnsSpeech_OriginTravel(u8 taskId);
+#endif
 
 static EWRAM_DATA bool8 sStartedPokeBallTask = 0;
 
@@ -205,6 +222,19 @@ static const struct MenuAction sMenuActions_Gender[] = {
     {gText_Girl, {NULL}}
 };
 
+#if IS_WAYFARER
+static const struct MenuAction sMenuActions_Origin[] = {
+    {COMPOUND_STRING("JOHTO"), {NULL}},
+    {COMPOUND_STRING("HOENN"), {NULL}},
+};
+
+static const u16 sOakOriginIds[] = {ORIGIN_NEW_BARK, ORIGIN_LITTLEROOT};
+static const u8 *const sOakOriginConfirmations[] = {
+    gText_Oak_OriginJohto,
+    gText_Oak_OriginHoenn,
+};
+#endif
+
 static const u8 *const sMalePresetNames[] = {
     COMPOUND_STRING("GOLD"),
 };
@@ -247,6 +277,10 @@ static void VBlankCB_HnsMenu(void)
 void StartNewGameSceneHns(void)
 {
     u8 taskId;
+
+#if IS_WAYFARER
+    WayfarerResetPendingOrigin();
+#endif
 
     SetVBlankCallback(NULL);
     ResetTasks();
@@ -747,12 +781,127 @@ static void Task_NewGameHnsSpeech_ReshowProfessorMon(u8 taskId)
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
         NewGameHnsSpeech_StartFadeInTarget1OutTarget2(taskId, 2);
         NewGameHnsSpeech_StartFadePlatformOut(taskId, 1);
+#if IS_WAYFARER
+        NewGameHnsSpeech_AskOrigin(taskId);
+#else
+        NewGameHnsSpeech_ClearWindow(0);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_YourePlayer);
+        AddTextPrinterForMessage(TRUE);
+        gTasks[taskId].func = Task_NewGameHnsSpeech_WaitForSpriteFadeInAndTextPrinter;
+#endif
+    }
+}
+
+#if IS_WAYFARER
+#if defined(E2E_TESTING) && E2E_TESTING
+u8 E2ETest_GetOriginIntroStage(void)
+{
+    if (FuncIsActiveTask(Task_NewGameHnsSpeech_ChooseOrigin))
+        return 1;
+    if (FuncIsActiveTask(Task_NewGameHnsSpeech_ConfirmOrigin))
+        return 2;
+    if (FuncIsActiveTask(Task_NewGameHnsSpeech_OriginTravel))
+        return 3;
+    if (FuncIsActiveTask(Task_NewGameHnsSpeech_WaitForSpriteFadeInAndTextPrinter)
+     || FuncIsActiveTask(Task_NewGameHnsSpeech_AreYouReady)
+     || FuncIsActiveTask(Task_NewGameHnsSpeech_ShrinkPlayer)
+     || FuncIsActiveTask(Task_NewGameHnsSpeech_WaitForPlayerShrink)
+     || FuncIsActiveTask(Task_NewGameHnsSpeech_FadePlayerToWhite)
+     || FuncIsActiveTask(Task_NewGameHnsSpeech_Cleanup))
+        return 4;
+    return 0;
+}
+#endif
+
+static void NewGameHnsSpeech_AskOrigin(u8 taskId)
+{
+    NewGameHnsSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, gText_Oak_OriginQuestion);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_ShowOriginList;
+}
+
+static void Task_NewGameHnsSpeech_ShowOriginList(u8 taskId)
+{
+    u32 i;
+    u8 cursor = 0;
+
+    if (!gTasks[taskId].tIsDoneFadingSprites)
+        return;
+    gSprites[gTasks[taskId].tProfessorSpriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
+    gSprites[gTasks[taskId].tMonSpriteId].oam.objMode = ST_OAM_OBJ_NORMAL;
+    if (RunTextPrintersAndIsPrinter0Active() || JOY_HELD(A_BUTTON | B_BUTTON))
+        return;
+
+    for (i = 0; i < ARRAY_COUNT(sOakOriginIds); i++)
+        if (sOakOriginIds[i] == WayfarerGetPendingOriginCandidate())
+            cursor = i;
+    DrawMainMenuWindowBorder(&sNewGameHnsSpeechTextWindows[1], 0xF3);
+    FillWindowPixelBuffer(1, PIXEL_FILL(1));
+    PrintMenuTable(1, ARRAY_COUNT(sMenuActions_Origin), sMenuActions_Origin);
+    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Origin), cursor);
+    PutWindowTilemap(1);
+    CopyWindowToVram(1, COPYWIN_FULL);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_ChooseOrigin;
+}
+
+static void Task_NewGameHnsSpeech_ChooseOrigin(u8 taskId)
+{
+    s8 choice = Menu_ProcessInputNoWrap();
+
+    if (choice < 0)
+        return;
+    if (!WayfarerSetPendingOriginCandidate(sOakOriginIds[choice]))
+        return;
+    NewGameHnsSpeech_ClearGenderWindow(1, TRUE);
+    NewGameHnsSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, sOakOriginConfirmations[choice]);
+    AddTextPrinterForMessage(TRUE);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_ShowOriginYesNo;
+}
+
+static void Task_NewGameHnsSpeech_ShowOriginYesNo(u8 taskId)
+{
+    // Release the preceding text/menu input before accepting a new choice.
+    if (RunTextPrintersAndIsPrinter0Active() || JOY_HELD(A_BUTTON | B_BUTTON))
+        return;
+    CreateYesNoMenuParameterized(2, 1, 0xF3, 0xDF, 2, 15);
+    gTasks[taskId].func = Task_NewGameHnsSpeech_ConfirmOrigin;
+}
+
+static void Task_NewGameHnsSpeech_ConfirmOrigin(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        if (!WayfarerConfirmPendingOrigin(WayfarerGetPendingOriginCandidate()))
+        {
+            NewGameHnsSpeech_AskOrigin(taskId);
+            return;
+        }
+        NewGameHnsSpeech_ClearWindow(0);
+        StringExpandPlaceholders(gStringVar4, gText_Oak_OriginTravel);
+        AddTextPrinterForMessage(TRUE);
+        gTasks[taskId].func = Task_NewGameHnsSpeech_OriginTravel;
+        break;
+    case MENU_B_PRESSED:
+    case 1:
+        NewGameHnsSpeech_AskOrigin(taskId);
+        break;
+    }
+}
+
+static void Task_NewGameHnsSpeech_OriginTravel(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active())
+    {
         NewGameHnsSpeech_ClearWindow(0);
         StringExpandPlaceholders(gStringVar4, gText_Oak_YourePlayer);
         AddTextPrinterForMessage(TRUE);
         gTasks[taskId].func = Task_NewGameHnsSpeech_WaitForSpriteFadeInAndTextPrinter;
     }
 }
+#endif
 
 static void Task_NewGameHnsSpeech_WaitForSpriteFadeInAndTextPrinter(u8 taskId)
 {

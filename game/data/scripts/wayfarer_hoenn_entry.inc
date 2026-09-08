@@ -5,6 +5,7 @@
 @
 @ Berry trees are intentionally absent. Wayfarer owns one shared HNS berry
 @ state and initializes it at new game, not again when Hoenn is first visited.
+WayfarerHoennOrigin_EventScript_InitializeBaseline::
 WayfarerHoennEntry_EventScript_InitializeBaseline::
 	setflag FLAG_HIDE_CONTEST_POKE_BALL
 	setflag FLAG_HIDE_ROUTE_111_VICTORIA_WINSTRATE
@@ -171,3 +172,14 @@ WayfarerHoennEntry_EventScript_InitializeBaseline::
 	setflag FLAG_HIDE_SKY_PILLAR_WALLACE
 	setflag FLAG_HIDE_SKY_PILLAR_TOP_RAYQUAZA_STILL
 	end
+
+WayfarerHoennVisitor_EventScript_InitializeArrival::
+    setvar VAR_LITTLEROOT_INTRO_STATE, 7
+    setvar VAR_LITTLEROOT_RIVAL_STATE, 3
+    setvar VAR_LITTLEROOT_TOWN_STATE, 2
+    setflag FLAG_SET_WALL_CLOCK
+    setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1
+    setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_2
+    setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK
+    setflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK
+    end

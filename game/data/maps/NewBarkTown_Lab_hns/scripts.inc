@@ -1,4 +1,7 @@
+#include "constants/wayfarer_origin.h"
+
 .set PLAYER_STARTER_SPECIES,  VAR_TEMP_2
+.set PLAYER_STARTER_CANDIDATE, VAR_TEMP_3
 
 NewBarkTown_Lab_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_Lab_OnTransition
@@ -21,6 +24,11 @@ NewBarkTown_Lab_EventScript_ElmAtComputer::
 	end
 
 NewBarkTown_Lab_EventScript_TriggerStartLabLeft::	
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_PROFESSOR
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_Lab_EventScript_AuthoredEnd
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_Lab_Movement_WalkRight
 	waitmovement 0
@@ -28,6 +36,11 @@ NewBarkTown_Lab_EventScript_TriggerStartLabLeft::
 	end
 
 NewBarkTown_Lab_EventScript_TriggerStartLabRight::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_PROFESSOR
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_Lab_EventScript_AuthoredEnd
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_Lab_Movement_WalkLeft
 	waitmovement 0
@@ -35,6 +48,11 @@ NewBarkTown_Lab_EventScript_TriggerStartLabRight::
 	end
 
 NewBarkTown_Lab_EventScript_TriggerStartLab::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_PROFESSOR
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_Lab_EventScript_AuthoredEnd
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_LabMovement_WalkToElm
 	waitmovement 0
@@ -65,8 +83,17 @@ NewBarkTown_EventScript_Aide2Testimony::
 	end
 
 NewBarkTown_Lab_EventScript_Elm::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_PROFESSOR
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_Lab_EventScript_AuthoredEnd
+#endif
 	lock
 	faceplayer
+#if IS_WAYFARER
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_Lab_EventScript_VisitorElm
+#endif
+NewBarkTown_Lab_EventScript_ElmCampaign:
 	goto_if_set FLAG_HIDE_NEWBARKTOWN_LAB_AIDE, NewBarkTown_Lab_EventScript_ElmAideIsWaiting
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 7, NewBarkTown_Lab_EventScript_ElmMasterBall
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 8, NewBarkTown_Lab_EventScript_ElmKimono
@@ -83,7 +110,11 @@ NewBarkTown_Lab_EventScript_Elm_AfterEggCheck:
 	goto_if_ge VAR_NEWBARKTOWN_LABSTATE, 6, NewBarkTown_Lab_EventScript_ElmState5
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 2, CopNewBarkTown_Lab_EventScript_ElmState2
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 3, CopNewBarkTown_Lab_EventScript_ElmState2
+#if IS_WAYFARER
+	goto_if_set FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_MrPokemon
+#else
 	goto_if_set FLAG_SYS_POKEMON_GET, NewBarkTown_Lab_EventScript_MrPokemon
+#endif
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 1, NewBarkTown_Lab_EventScript_ElmChoosePokemon
 	end
 
@@ -100,6 +131,12 @@ NewBarkTown_Lab_Text_ElmAideIsWaiting:
 	.string "In VIOLET CITY!$"
 
 NewBarkTown_Lab_EventScript_ElmIntro::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_PROFESSOR
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_Lab_EventScript_AuthoredEnd
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_Lab_EventScript_VisitorIntro
+#endif
 	msgbox NewBarkTown_Lab_Text_ElmIntro, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, NewBarkTown_Lab_EventScript_ElmAccepted
 	goto_if_eq VAR_RESULT, NO, NewBarkTown_Lab_EventScript_ElmRefused
@@ -144,6 +181,10 @@ NewBarkTown_Lab_EventScript_ElmChoosePokemon::
 	end
 
 NewBarkTown_Lab_EventScript_TriggerReturnPlayer::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeJohtoOpening
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_VisitorEnd
+#endif
 	lock
 	msgbox NewBarkTown_Lab_Text_ElmWhereGoing, MSGBOX_DEFAULT
 	closemessage
@@ -161,7 +202,11 @@ NewBarkTown_Lab_EventScript_ShouldntTouch::
 
 NewBarkTown_Lab_EventScript_ChikoritaBall::
 	lock
+#if IS_WAYFARER
+	goto_if_set FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_ShouldntTouch
+#else
 	goto_if_set FLAG_SYS_POKEMON_GET, NewBarkTown_Lab_EventScript_ShouldntTouch
+#endif
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 1, NewBarkTown_Lab_EventScript_ChikoritaBall_Choice
 	msgbox NewBarkTown_Lab_Text_ShouldntTouch, MSGBOX_DEFAULT
 	release
@@ -170,7 +215,11 @@ NewBarkTown_Lab_EventScript_ChikoritaBall::
 
 NewBarkTown_Lab_EventScript_ChikoritaBall_Choice::
 	@callnative DisableStaticRandomizer
+#if IS_WAYFARER
+	setvar PLAYER_STARTER_CANDIDATE, 0
+#else
 	setvar VAR_STARTER_MON, 0
+#endif
 	setvar PLAYER_STARTER_SPECIES, SPECIES_CHIKORITA
 	showmonpic PLAYER_STARTER_SPECIES, 10, 3
 	playmoncry PLAYER_STARTER_SPECIES, CRY_MODE_NORMAL
@@ -183,7 +232,11 @@ NewBarkTown_Lab_EventScript_ChikoritaBall_Choice::
 
 NewBarkTown_Lab_EventScript_CyndaquilBall::
 	lock
+#if IS_WAYFARER
+	goto_if_set FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_ShouldntTouch
+#else
 	goto_if_set FLAG_SYS_POKEMON_GET, NewBarkTown_Lab_EventScript_ShouldntTouch
+#endif
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 1, NewBarkTown_Lab_EventScript_CyndaquilBall_Choice
 	msgbox NewBarkTown_Lab_Text_ShouldntTouch, MSGBOX_DEFAULT
 	closemessage
@@ -192,7 +245,11 @@ NewBarkTown_Lab_EventScript_CyndaquilBall::
 
 NewBarkTown_Lab_EventScript_CyndaquilBall_Choice::
 	@callnative DisableStaticRandomizer
+#if IS_WAYFARER
+	setvar PLAYER_STARTER_CANDIDATE, 1
+#else
 	setvar VAR_STARTER_MON, 1
+#endif
 	setvar PLAYER_STARTER_SPECIES, SPECIES_CYNDAQUIL
 	showmonpic PLAYER_STARTER_SPECIES, 10, 3
 	playmoncry PLAYER_STARTER_SPECIES, CRY_MODE_NORMAL
@@ -205,7 +262,11 @@ NewBarkTown_Lab_EventScript_CyndaquilBall_Choice::
 
 NewBarkTown_Lab_EventScript_TotodileBall::
 	lock
+#if IS_WAYFARER
+	goto_if_set FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_ShouldntTouch
+#else
 	goto_if_set FLAG_SYS_POKEMON_GET, NewBarkTown_Lab_EventScript_ShouldntTouch
+#endif
 	goto_if_eq VAR_NEWBARKTOWN_LABSTATE, 1, NewBarkTown_Lab_EventScript_TotodileBall_Choice
 	msgbox NewBarkTown_Lab_Text_ShouldntTouch, MSGBOX_DEFAULT
 	release
@@ -214,7 +275,11 @@ NewBarkTown_Lab_EventScript_TotodileBall::
 
 NewBarkTown_Lab_EventScript_TotodileBall_Choice::
 	@callnative DisableStaticRandomizer
+#if IS_WAYFARER
+	setvar PLAYER_STARTER_CANDIDATE, 2
+#else
 	setvar VAR_STARTER_MON, 2
+#endif
 	setvar PLAYER_STARTER_SPECIES, SPECIES_TOTODILE
 	showmonpic PLAYER_STARTER_SPECIES, 10, 3
 	playmoncry PLAYER_STARTER_SPECIES, CRY_MODE_NORMAL
@@ -236,11 +301,21 @@ NewBarkTown_Lab_EventScript_DeclinedStarter::
 NewBarkTown_Lab_EventScript_ChoseStarter::
 	@callnative EnableStaticRandomizer
 	hidemonpic
+#if IS_WAYFARER
+	copyvar VAR_STARTER_MON, PLAYER_STARTER_CANDIDATE
+	setflag FLAG_JOHTO_STARTER_CHOICE_COMMITTED
+	specialvar VAR_RESULT, WayfarerUsesNativeJohtoOpening
+	goto_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_VisitorCommitChoice
+#endif
 	removeobject VAR_LAST_TALKED
 	msgbox NewBarkTown_Lab_Text_ChoseStarter, MSGBOX_DEFAULT
 	call_if_eq VAR_STARTER_MON, 0, NewBarkTown_Lab_EventScript_GiveStarter_Chikorita
 	call_if_eq VAR_STARTER_MON, 1, NewBarkTown_Lab_EventScript_GiveStarter_Cyndaquil
 	call_if_eq VAR_STARTER_MON, 2, NewBarkTown_Lab_EventScript_GiveStarter_Totodile
+#if IS_WAYFARER
+	goto_if_eq VAR_RESULT, MON_CANT_GIVE, NewBarkTown_Lab_EventScript_NativeStorageFull
+	setflag FLAG_JOHTO_STARTER_RECEIVED
+#endif
 	setflag FLAG_SYS_POKEMON_GET
 	playfanfare MUS_OBTAIN_ITEM
 	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
@@ -416,7 +491,13 @@ NewBarkTown_Lab_EventScript_PoliceYes::
 	closemessage
 	applymovement LOCALID_ELM, NewBarkTown_Lab_Movement_ElmStepForward
 	waitmovement 0
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeJohtoOpening
+	call_if_eq VAR_RESULT, TRUE, NewBarkTown_Lab_EventScript_NativeAfterTheft
+	call_if_eq VAR_RESULT, FALSE, NewBarkTown_Lab_EventScript_VisitorAfterTheft
+#else
 	msgbox NewBarkTown_Lab_Text_ElmAfterTheft4, MSGBOX_DEFAULT
+#endif
 	closemessage
 	setvar VAR_NEWBARKTOWN_LABSTATE, 5
 	setvar VAR_NEWBARK_TOWN_STATE, 4
@@ -1014,3 +1095,103 @@ NewBarkTown_Lab_Text_Elm_CallMe:
 	.string "How's your POKéDEX coming along?\n"
 	.string "I'm busy now, but call me sometime\l"
 	.string "and I can check your progress!$"
+
+#if IS_WAYFARER
+NewBarkTown_Lab_EventScript_AuthoredEnd::
+	end
+
+NewBarkTown_Lab_EventScript_VisitorElm::
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, NewBarkTown_Lab_EventScript_VisitorIntro
+	goto_if_unset FLAG_JOHTO_STARTER_RECEIVED, NewBarkTown_Lab_EventScript_VisitorOfferGift
+	goto NewBarkTown_Lab_EventScript_ElmCampaign
+
+NewBarkTown_Lab_EventScript_VisitorIntro::
+	msgbox NewBarkTown_Lab_Text_VisitorIntro, MSGBOX_YESNO
+	goto_if_ne VAR_RESULT, YES, NewBarkTown_Lab_EventScript_VisitorEnd
+	msgbox NewBarkTown_Lab_Text_VisitorChoose, MSGBOX_DEFAULT
+	setvar VAR_NEWBARKTOWN_LABSTATE, 1
+	goto NewBarkTown_Lab_EventScript_VisitorEnd
+
+NewBarkTown_Lab_EventScript_VisitorCommitChoice::
+	setvar VAR_NEWBARKTOWN_LABSTATE, 2
+	setvar VAR_NEWBARK_TOWN_STATE, 3
+	setflag FLAG_ENABLE_PROF_BIRCH_MATCH_CALL
+	setflag FLAG_ENABLE_CONDITION
+	msgbox NewBarkTown_Lab_Text_ElmDirections1, MSGBOX_DEFAULT
+	goto NewBarkTown_Lab_EventScript_VisitorOfferGift
+
+NewBarkTown_Lab_EventScript_VisitorOfferGift::
+	msgbox NewBarkTown_Lab_Text_VisitorGift, MSGBOX_YESNO
+	goto_if_ne VAR_RESULT, YES, NewBarkTown_Lab_EventScript_ElmCampaign
+	specialvar PLAYER_STARTER_SPECIES, WayfarerGetJohtoStarterSpecies
+	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
+	copyvar VAR_TEMP_TRANSFERRED_SPECIES, PLAYER_STARTER_SPECIES
+	call_if_eq VAR_STARTER_MON, 0, NewBarkTown_Lab_EventScript_VisitorChikorita
+	call_if_eq VAR_STARTER_MON, 1, NewBarkTown_Lab_EventScript_VisitorCyndaquil
+	call_if_eq VAR_STARTER_MON, 2, NewBarkTown_Lab_EventScript_VisitorTotodile
+	goto_if_eq VAR_RESULT, MON_CANT_GIVE, NewBarkTown_Lab_EventScript_VisitorStorageFull
+	setflag FLAG_JOHTO_STARTER_RECEIVED
+	setflag FLAG_SYS_POKEMON_GET
+	call Common_EventScript_GiftMon
+	goto NewBarkTown_Lab_EventScript_ElmCampaign
+
+NewBarkTown_Lab_EventScript_VisitorChikorita::
+	call NewBarkTown_Lab_EventScript_GiveStarter_Chikorita
+	return
+NewBarkTown_Lab_EventScript_VisitorCyndaquil::
+	call NewBarkTown_Lab_EventScript_GiveStarter_Cyndaquil
+	return
+NewBarkTown_Lab_EventScript_VisitorTotodile::
+	call NewBarkTown_Lab_EventScript_GiveStarter_Totodile
+	return
+
+NewBarkTown_Lab_EventScript_NativeStorageFull::
+	clearflag FLAG_JOHTO_STARTER_CHOICE_COMMITTED
+	addobject VAR_LAST_TALKED
+	msgbox NewBarkTown_Lab_Text_VisitorStorageFull, MSGBOX_DEFAULT
+	goto NewBarkTown_Lab_EventScript_VisitorEnd
+NewBarkTown_Lab_EventScript_VisitorStorageFull::
+	msgbox NewBarkTown_Lab_Text_VisitorStorageFull, MSGBOX_DEFAULT
+	goto NewBarkTown_Lab_EventScript_ElmCampaign
+NewBarkTown_Lab_EventScript_VisitorEnd::
+	closemessage
+	releaseall
+	end
+
+NewBarkTown_Lab_EventScript_NativeAfterTheft::
+	msgbox NewBarkTown_Lab_Text_ElmAfterTheft4, MSGBOX_DEFAULT
+	setvar VAR_RESULT, TRUE
+	return
+NewBarkTown_Lab_EventScript_VisitorAfterTheft::
+	msgbox NewBarkTown_Lab_Text_VisitorAfterTheft, MSGBOX_DEFAULT
+	return
+
+NewBarkTown_Lab_Text_VisitorIntro:
+	.string "ELM: Hello! You're traveling with\n"
+	.string "your POKéMON, I see.\p"
+	.string "Could you help with my research?\n"
+	.string "MR. POKéMON has something for me.\p"
+	.string "First, choose one of these three\n"
+	.string "POKéMON for our research.\p"
+	.string "You may take it along, or leave\n"
+	.string "it in my care. Will you help?$"
+NewBarkTown_Lab_Text_VisitorChoose:
+	.string "Take a look at the three BALLS.\n"
+	.string "You can decide when you're ready.$"
+NewBarkTown_Lab_Text_VisitorGift:
+	.string "Would you like to take the\n"
+	.string "POKéMON you chose with you?\p"
+	.string "I'll keep it here if you'd\n"
+	.string "rather collect it later.$"
+NewBarkTown_Lab_Text_VisitorStorageFull:
+	.string "Your party and PC are full.\n"
+	.string "I'll look after your POKéMON.\p"
+	.string "Come back when you have room.$"
+NewBarkTown_Lab_Text_VisitorAfterTheft:
+	.string "ELM: Thank you for bringing\n"
+	.string "the EGG! I'll study it carefully.\p"
+	.string "And OAK has seen your POKéDEX?\n"
+	.string "He has an eye for good trainers.\p"
+	.string "Keep exploring JOHTO, {PLAYER}.\n"
+	.string "I'll call if I learn anything!$"
+#endif

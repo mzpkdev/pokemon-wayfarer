@@ -107,7 +107,14 @@ OlivinePort_EventScript_Youngster::
 OlivinePort_EventScript_Sailor::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_AfterKanto
+	specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage
+	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_CantBoard
+#else
 	goto_if_ge VAR_SSAQUA_STATE, 8, OlivinePort_EventScript_Sailor_AfterKanto
+#endif
 	msgbox OlivinePort_Text_AskBoard, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, OlivinePort_EventScript_Sailor_Refused
 	goto_if_ge VAR_SSAQUA_STATE, 1, OlivinePort_EventScript_Sailor_ResumeMaidenVoyage
@@ -227,6 +234,13 @@ OlivinePort_EventScript_Sailor_Refused::
 	closemessage
 	release
 	end
+
+#if IS_WAYFARER
+OlivinePort_EventScript_Sailor_CantBoard::
+	msgbox OlivinePort_Text_CantBoard, MSGBOX_DEFAULT
+	release
+	end
+#endif
 
 OlivinePort_EventScript_Sailor_NoCredentials::
 	msgbox OlivinePort_Text_NoPass, MSGBOX_DEFAULT

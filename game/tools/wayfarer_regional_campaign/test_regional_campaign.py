@@ -61,8 +61,8 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
     def test_local_starter_choice_and_delivery_commit_separately(self):
         lab = (GAME / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc").read_text()
         choice = lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_GiveStarterEvent::")
-        standalone = lab.index("#else", choice)
-        wayfarer = lab[choice:standalone]
+        native = lab.index("LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter::", choice)
+        wayfarer = lab[choice:native]
         self.assertIn("MULTI_HOENN_STARTERS", wayfarer)
         self.assertIn("setvar VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_TREECKO", wayfarer)
         self.assertIn("case MULTI_B_PRESSED", wayfarer)
@@ -81,7 +81,12 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
             "FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));",
             persistence,
         )
-        self.assertEqual(lab.count("clearflag FLAG_HIDE_ROUTE_103_RIVAL"), 3)
+        self.assertEqual(lab.count("clearflag FLAG_HIDE_ROUTE_103_RIVAL"), 4)
+        native = lab.split("LittlerootTown_ProfessorBirchsLab_EventScript_AcknowledgeNativeStarter::", 1)[1]
+        native = native.split("LittlerootTown_ProfessorBirchsLab_EventScript_NicknameStarter::", 1)[0]
+        self.assertIn("clearflag FLAG_HIDE_ROUTE_103_RIVAL", native)
+        self.assertNotIn("givemon", native)
+        self.assertIn("special WayfarerGrantSharedEquipment", native)
         self.assertIn(
             "goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_LocalStarterRequired",
             route,
@@ -90,6 +95,32 @@ class WayfarerRegionalCampaignTests(unittest.TestCase):
             route,
             r"Route103_EventScript_LocalStarterRequired::\s+lockall\s+msgbox .*?\s+releaseall\s+end",
         )
+
+    def test_native_rescue_commits_after_delivery_and_keeps_loss_continuation(self):
+        route = (GAME / "data/maps/Route101/scripts.inc").read_text()
+        native = route.split("Route101_EventScript_NativeBirchRescue::", 1)[1]
+        native = native.split("Route101_EventScript_BirchRescueAcknowledged::", 1)[0]
+        self.assertIn("special ChooseStarter", native)
+        self.assertNotIn("GetBattleOutcome", native)
+        received = native.index("goto_if_unset FLAG_HOENN_STARTER_RECEIVED")
+        self.assertIn("setflag FLAG_RESCUED_BIRCH", native[received:])
+        self.assertIn("addobject LOCALID_ROUTE101_ZIGZAGOON", route)
+        callback = (GAME / "src/battle_setup.c").read_text()
+        native_callback = callback.split("static bool8 TryGiveNativeHoennStarter(u16 choice)\n{", 1)[1]
+        native_callback = native_callback.split("#if TESTING", 1)[0]
+        self.assertNotIn("VAR_STARTER_MON", native_callback)
+        self.assertLess(native_callback.index("GiveScriptedMonToPlayer"),
+                        native_callback.index("FlagSet(FLAG_HOENN_STARTER_RECEIVED)"))
+
+    def test_hoenn_rewards_update_shared_ui_through_specials(self):
+        lab = (GAME / "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.inc").read_text()
+        town = (GAME / "data/maps/LittlerootTown/scripts.inc").read_text()
+        self.assertIn("specialvar VAR_RESULT, WayfarerHasSharedPokedex", lab)
+        self.assertIn("special WayfarerGrantSharedPokedex", lab)
+        self.assertIn("special WayfarerGrantRunningShoes", town)
+        constants = (GAME / "data/wayfarer_hoenn_source_constants.inc").read_text()
+        self.assertIn("#define VAR_HOENN_STARTER_CHOICE 0x7023", constants)
+        self.assertIn("#define FLAG_SYS_POKEDEX_GET 0x6861", constants)
 
 
 if __name__ == "__main__":

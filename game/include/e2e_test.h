@@ -41,6 +41,9 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION,
     E2E_TEST_COMMAND_WIN_BATTLE,
     E2E_TEST_COMMAND_OBSERVE_FLAG,
+    E2E_TEST_COMMAND_WARP,
+    E2E_TEST_COMMAND_LOSE_BATTLE,
+    E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY,
 };
 
 enum E2ETestCheckpoint
@@ -49,6 +52,9 @@ enum E2ETestCheckpoint
     E2E_TEST_CHECKPOINT_BEDROOM_BEFORE_CLOCK,
     E2E_TEST_CHECKPOINT_NEW_BARK_AFTER_INTRO,
     E2E_TEST_CHECKPOINT_ELM_LAB_BEFORE_INTRO,
+    E2E_TEST_CHECKPOINT_HOENN_BEFORE_RESCUE,
+    E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE,
+    E2E_TEST_CHECKPOINT_HOENN_BEFORE_POISON_WHITEOUT,
 };
 
 enum E2ETestArrangePhase
@@ -363,6 +369,26 @@ struct E2ETestState
     bool8 leagueRunActive;
     u8 leagueRunRegion;
     u8 leagueRunRating;
+    u8 originIntroStage;
+    u16 startingOriginId;
+    u16 johtoStarterChoice;
+    u16 hoennStarterChoice;
+    u16 maidenVoyageState;
+    u8 originCurrentRegion;
+    u8 originVisitedRegions;
+    bool8 originHoennInitialized;
+    bool8 johtoStarterCommitted;
+    bool8 johtoStarterReceived;
+    bool8 hoennStarterReceived;
+    s8 lastHealMapGroup;
+    s8 lastHealMapNum;
+    s8 lastHealWarpId;
+    u8 starterChooseStage;
+    s16 lastHealX;
+    s16 lastHealY;
+    u8 playerGender;
+    u8 originEquipment;
+    u16 littlerootTownState;
 };
 
 struct E2ETestAbi

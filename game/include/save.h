@@ -17,7 +17,7 @@
 #define SPECIAL_SECTOR_SENTINEL 0xB39D
 
 #if IS_WAYFARER
-#define SAVE_VERSION       6
+#define SAVE_VERSION       7
 #else
 #define SAVE_VERSION       5
 #endif

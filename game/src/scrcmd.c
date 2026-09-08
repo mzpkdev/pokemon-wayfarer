@@ -4,6 +4,9 @@
 #endif
 #include "frontier_util.h"
 #include "battle_setup.h"
+#include "wayfarer_battle_gate.h"
+#include "wayfarer_origin.h"
+#include "constants/maps.h"
 #include "battle_util.h"
 #include "berry.h"
 #include "clock.h"
@@ -2650,10 +2653,18 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
+#if IS_WAYFARER
+    if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_NEW_BARK_TOWN_LAB_HNS)
+     && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_NEW_BARK_TOWN_LAB_HNS)
+     && !FlagGet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED))
+#else
     // If we have not gotten a pokemon yet, assume this is the starter preview
     if (!FlagGet(FLAG_SYS_POKEMON_GET))
+#endif
     {
-#if IS_FRLG
+#if IS_WAYFARER
+        u8 starter = VarGet(VAR_TEMP_3);
+#elif IS_FRLG
         // FRLG's starter scripts use VAR_TEMP_1 for PLAYER_STARTER_NUM until the choice is confirmed.
         u8 starter = VarGet(VAR_TEMP_1);
 #else
@@ -2723,6 +2734,11 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
         #endif
 #endif
 
+#if IS_WAYFARER
+        species = GetJohtoStarterPokemon(starter);
+        if (varId >= VARS_START)
+            VarSet(varId, species);
+#else
         #if RANDOMIZER_AVAILABLE
         if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
         {
@@ -2738,6 +2754,7 @@ bool8 ScrCmd_showmonpic(struct ScriptContext *ctx)
             if (varId >= VARS_START)
                 VarSet(varId, species);
         }
+#endif
     }
 
     if (shinyStarter)
@@ -3211,6 +3228,15 @@ bool8 ScrCmd_dotrainerbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE);
 
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+    {
+        StopScript(ctx);
+        WayfarerAbortEmptyPartyBattle();
+        return TRUE;
+    }
+#endif
+
     BattleSetup_StartTrainerBattle();
     return TRUE;
 }
@@ -3321,6 +3347,15 @@ bool8 ScrCmd_setwildbossbattle(struct ScriptContext* ctx)
 bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+    {
+        StopScript(ctx);
+        WayfarerAbortEmptyPartyBattle();
+        return TRUE;
+    }
+#endif
 
     if (sIsScriptedWildDouble == FALSE)
         BattleSetup_StartScriptedWildBattle();

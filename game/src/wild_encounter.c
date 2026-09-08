@@ -34,6 +34,7 @@
 #include "pokenav.h"
 #include "sound.h"
 #include "trainer_rating.h"
+#include "wayfarer_origin.h"
 
 extern const u8 EventScript_SprayWoreOff[];
 
@@ -964,6 +965,11 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     enum TimeOfDay timeOfDay;
     struct Roamer *roamer;
 
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+        return FALSE;
+#endif
+
     if (sWildEncountersDisabled == TRUE)
         return FALSE;
 
@@ -1109,6 +1115,14 @@ void RockSmashWildEncounter(void)
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
 
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
+#endif
+
     if (headerId != HEADER_NONE)
     {
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_ROCKS);
@@ -1151,6 +1165,11 @@ bool8 SweetScentWildEncounter(void)
     s16 x, y;
     u32 headerId;
     enum TimeOfDay timeOfDay;
+
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+        return FALSE;
+#endif
 
     PlayerGetDestCoords(&x, &y);
     headerId = GetCurrentMapWildMonHeaderId();
@@ -1260,6 +1279,10 @@ void FishingWildEncounter(u8 rod)
     bool8 useFeebasOverride;
 
     gIsFishingEncounter = FALSE;
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+        return;
+#endif
     useFeebasOverride = CheckFeebas();
     if (!useFeebasOverride)
     {

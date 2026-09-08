@@ -3,7 +3,7 @@
   "source": "emerald",
   "expectedMapCount": 518,
   "expectedCatalogSha256": "8797f3299e66d08e025021c14c4b063d3e11ce6cc21b74ccb3ae6d833780cf6f",
-  "expectedMapContentSha256": "46daa936e53a55cbaa1a639733a923426b0ee12bdeb16ca0acc96c76758db7ab",
+  "expectedMapContentSha256": "089c769757833169cabfeb72168b755787f466e85b6629fe554401000cb59c7a",
   "expectedTrainerReferencesSha256": "895b369dfdad47019dbbfd08fb9b89da36e7c96d77d963502f1ee3078c4ef97b",
   "expectedTrainerOffset": 638,
   "expectedTrainerPartiesSha256": "4c3df217b1a40b09a5b7cadf9bf201cc5b433234dff7857b14a8ee1e5ff3645c",
@@ -44,11 +44,11 @@
     },
     {
       "globs": ["InsideOfTruck"],
-      "system": "stock-emerald-introduction",
-      "classification": "excluded",
-      "reason": "The stock moving-truck introduction is replaced by the adapted Birch-rescue campaign opening.",
-      "specification": ".product/specs/wayfarer-hoenn-content-port.md#adapted-hoenn-opening",
-      "disposition": "excluded-from-first-milestone"
+      "system": "native-hoenn-origin",
+      "classification": "required",
+      "reason": "The Littleroot origin starts in the native moving truck.",
+      "specification": ".product/specs/wayfarer-regional-start-choice.md#native-hoenn-content-and-starter-flow",
+      "disposition": "included"
     },
     {
       "globs": [

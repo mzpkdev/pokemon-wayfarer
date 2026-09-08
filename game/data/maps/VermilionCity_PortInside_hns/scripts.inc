@@ -19,7 +19,12 @@ VermilionPort_Text_SuperNerd:
 VermilionPort_EventScript_Sailor::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, TRUE, VermilionPort_EventScript_Sailor_AfterKanto
+#else
 	goto_if_ge VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_Sailor_AfterKanto
+#endif
 	goto VermilionPort_EventScript_SailorCantSail
 
 VermilionPort_EventScript_SailorCantSail::
@@ -50,7 +55,8 @@ VermilionPort_EventScript_Sailor_AfterKanto::
 VermilionPort_EventScript_ChoseSlateport::
 	closemessage
 	delay 20
-	goto_if_lt VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_SailorCantBoard
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantBoard
 	checkitem ITEM_SS_TICKET
 	bufferitemname STR_VAR_1, ITEM_SS_TICKET
 	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials

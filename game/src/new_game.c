@@ -16,6 +16,8 @@
 #include "dewford_trend.h"
 #include "berry.h"
 #include "rtc.h"
+#include "clock.h"
+#include "fake_rtc.h"
 #include "easy_chat.h"
 #include "event_data.h"
 #include "trainer_rating.h"
@@ -55,6 +57,7 @@
 #include "difficulty.h"
 #include "follower_npc.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_origin.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 #if IS_FRLG
@@ -65,7 +68,9 @@ extern const u8 EventScript_ResetAllMapFlagsHnS[];
 #endif
 
 static void ClearFrontierRecord(void);
+#if !IS_WAYFARER
 static void WarpToTruck(void);
+#endif
 static void ResetMiniGamesRecords(void);
 static void ResetItemFlags(void);
 static void ResetDexNav(void);
@@ -188,6 +193,7 @@ static void ClearFrontierRecord(void)
     gSaveBlock2Ptr->frontier.opponentNames[1][0] = EOS;
 }
 
+#if !IS_WAYFARER
 static void WarpToTruck(void)
 {
     if (IS_FRLG)
@@ -198,6 +204,8 @@ static void WarpToTruck(void)
         SetWarpDestination(MAP_GROUP(MAP_INSIDE_OF_TRUCK), MAP_NUM(MAP_INSIDE_OF_TRUCK), WARP_ID_NONE, -1, -1);
     WarpIntoMap();
 }
+
+#endif
 
 void Sav2_ClearSetDefault(void)
 {
@@ -220,7 +228,14 @@ void NewGameInitData(void)
 #if IS_FRLG
     u8 rivalName[PLAYER_NAME_LENGTH + 1];
 #endif
+#if IS_WAYFARER
+    u16 startingOriginId = WayfarerGetConfirmedPendingOrigin();
+#endif
     struct ChallengeSettings savedChallenge = gSaveBlock3Ptr->challengeSettings;
+#if IS_WAYFARER
+    if (WayfarerGetOriginProfile(startingOriginId) == NULL)
+        return;
+#endif
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
         RtcReset();
 
@@ -235,9 +250,6 @@ void NewGameInitData(void)
     ClearFrontierRecord();
     ClearSav1();
     ClearSav3();
-#if IS_WAYFARER
-    WayfarerInitPersistentState();
-#endif
     gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
     gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
     SetDefaultChallengeSettings();
@@ -249,6 +261,9 @@ void NewGameInitData(void)
     PlayTimeCounter_Reset();
     ClearPokedexFlags();
     InitEventData();
+#if IS_WAYFARER
+    WayfarerInitPersistentState();
+#endif
     InitializeTrainerRatingForNewGame();
     ClearTVShowData();
     ResetGabbyAndTy();
@@ -277,7 +292,9 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
+#if !IS_WAYFARER
     WarpToTruck();
+#endif
 #if IS_FRLG
     RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
 #elif IS_HNS
@@ -287,6 +304,11 @@ void NewGameInitData(void)
 #endif
 #if IS_FRLG
         StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
+#endif
+#if IS_WAYFARER
+    if (UseFakeRtc())
+        RtcCalcLocalTimeOffset(0, 10, 0, 0);
+    InitTimeBasedEvents();
 #endif
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
@@ -313,6 +335,10 @@ void NewGameInitData(void)
 #if IS_HNS
     StringCopy(gSaveBlock2Ptr->rivalName, gText_ExpandedPlaceholder_Silver);
     InitMomSavings();
+#endif
+#if IS_WAYFARER
+    WayfarerInitializeOrigin(startingOriginId);
+    WarpIntoMap();
 #endif
 }
 

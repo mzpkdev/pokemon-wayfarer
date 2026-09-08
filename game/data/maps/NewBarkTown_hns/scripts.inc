@@ -1,3 +1,5 @@
+#include "constants/wayfarer_origin.h"
+
 NewBarkTown_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, NewBarkTown_OnFrame
@@ -49,6 +51,12 @@ NewBarkTown_EventScript_TownSign::
 
 
 NewBarkTown_EventScript_Lass::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_EventScript_AuthoredEnd
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_EventScript_VisitorLass
+#endif
 	lock
 	faceplayer
 	goto_if_eq VAR_NEWBARK_TOWN_STATE, 2, NewBarkTown_EventScript_LassState2
@@ -142,6 +150,12 @@ NewBarkTown_EventScript_FatMan::
 	end
 
 NewBarkTown_EventScript_FatManState2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_EventScript_AuthoredEnd
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_EventScript_VisitorFatMan
+#endif
 	msgbox NewBarkTown_Text_FatManState2, MSGBOX_DEFAULT
 	closemessage
 	release
@@ -276,6 +290,12 @@ NewBarkTown_Text_Sign:
 	.string "a New Beginning Blow$"
 
 NewBarkTown_EventScript_PlayersHouseMailbox::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_EventScript_AuthoredEnd
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_EventScript_VisitorHouseMailbox
+#endif
 	msgbox NewBarkTown_Text_PlayersHouse, MSGBOX_SIGN
 	end
 
@@ -289,3 +309,41 @@ NewBarkTown_Text_PlayersHouse:
 NewBarkTown_Text_ElmsHouse:
 	.string "PROF.ELM'S HOUSE$"
 
+
+#if IS_WAYFARER
+NewBarkTown_EventScript_VisitorLass::
+	lock
+	faceplayer
+	msgbox NewBarkTown_Text_VisitorLass, MSGBOX_DEFAULT
+	release
+	end
+NewBarkTown_Text_VisitorLass:
+	.string "PROF.ELM studies POKéMON\n"
+	.string "in the lab over there.\p"
+	.string "He likes meeting trainers\n"
+	.string "from other towns.$"
+#endif
+
+#if IS_WAYFARER
+NewBarkTown_EventScript_AuthoredEnd::
+	releaseall
+	end
+#endif
+
+#if IS_WAYFARER
+NewBarkTown_EventScript_VisitorFatMan::
+	msgbox NewBarkTown_Text_VisitorFatMan, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+NewBarkTown_EventScript_VisitorHouseMailbox::
+	msgbox NewBarkTown_Text_VisitorHouse, MSGBOX_SIGN
+	end
+NewBarkTown_Text_VisitorFatMan:
+	.string "A POKéGEAR comes in handy\n"
+	.string "when you're traveling.\p"
+	.string "You can check the map and\n"
+	.string "keep in touch with friends.$"
+NewBarkTown_Text_VisitorHouse:
+	.string "A NEW BARK TOWN RESIDENT'S HOUSE$"
+#endif

@@ -59,3 +59,22 @@ gText_Oak_AreYouReady::
 	.string "with POKéMON awaits! Let's go!\p"
 	.string "I'll be seeing you later!\p"
 	.string "$"
+
+#if IS_WAYFARER
+gText_Oak_OriginQuestion::
+	.string "Now, tell me...\n"
+	.string "Where will your journey begin?$"
+
+gText_Oak_OriginJohto::
+	.string "Ah, JOHTO! You'll begin in\n"
+	.string "NEW BARK TOWN, then?$"
+
+gText_Oak_OriginHoenn::
+	.string "Ah, HOENN! You'll begin in\n"
+	.string "LITTLEROOT TOWN, then?$"
+
+gText_Oak_OriginTravel::
+	.string "Perhaps your travels will take\n"
+	.string "you to other regions, too!\p"
+	.string "$"
+#endif

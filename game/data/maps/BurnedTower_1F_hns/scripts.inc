@@ -99,6 +99,9 @@ BurnedTower_1FMortyText:
 	.string "TOWER with him.$"
 
 BurnedTower_1F_EventScript_Silver::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, BurnedTower_1F_EventScript_DeferredSilver
+#endif
 	lock
 	playse SE_PIN
 	applymovement LOCALID_BURNED_TOWER_SILVER, Common_Movement_ExclamationMark
@@ -215,3 +218,9 @@ BurnedTower_Text_RichardoBeaten:
 BurnedTower_Text_RichardoAfter:
 	.string "Maybe a life of crime isn't for\n"
 	.string "me...$"
+
+#if IS_WAYFARER
+BurnedTower_1F_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

@@ -96,7 +96,9 @@ void FormChangeTimeUpdate()
 
 static void ReturnFromStartWallClock(void)
 {
+#if !IS_WAYFARER
     InitTimeBasedEvents();
+#endif
     SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 

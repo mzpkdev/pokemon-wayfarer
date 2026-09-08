@@ -75,7 +75,17 @@ PetalburgCity_Gym_OnFrame:
 
 PetalburgCity_Gym_EventScript_ReturnFromWallyTutorial::
 	lockall
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadSoDidItWorkOutNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadSoDidItWorkOut, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadSoDidItWorkOutDone
+PetalburgCity_Gym_EventScript_ShowDadSoDidItWorkOutNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadSoDidItWorkOut, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadSoDidItWorkOutDone::
+#endif
 	msgbox PetalburgCity_Gym_Text_WallyThankYouBye, MSGBOX_DEFAULT
 	closemessage
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
@@ -87,7 +97,17 @@ PetalburgCity_Gym_EventScript_ReturnFromWallyTutorial::
 	delay 30
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadGoCollectBadgesNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadGoCollectBadges, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadGoCollectBadgesDone
+PetalburgCity_Gym_EventScript_ShowDadGoCollectBadgesNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadGoCollectBadges, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadGoCollectBadgesDone::
+#endif
 	setvar VAR_PETALBURG_GYM_STATE, 2
 	releaseall
 	end
@@ -125,7 +145,17 @@ PetalburgCity_Gym_EventScript_Norman::
 	case 8, PetalburgCity_Gym_EventScript_NormanRematch
 #endif
 PetalburgCity_Gym_EventScript_NormanBeginTutorial::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadYoureHereWithYourPokemon, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonDone
+PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadYoureHereWithYourPokemon, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadYoureHereWithYourPokemonDone::
+#endif
 	closemessage
 	switch VAR_FACING
 	case DIR_SOUTH, PetalburgCity_Gym_EventScript_BeginWallyTutorialSouth
@@ -162,20 +192,60 @@ PetalburgCity_Gym_EventScript_BeginWallyTutorial::
 	call_if_eq VAR_0x8008, 2, PetalburgCity_Gym_EventScript_WallyArriveWestEast
 	call_if_eq VAR_0x8008, 3, PetalburgCity_Gym_EventScript_WallyArriveWestEast
 	msgbox PetalburgCity_Gym_Text_WallyIdLikeAPokemon, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadOhYoureWallyRightNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadOhYoureWallyRight, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadOhYoureWallyRightDone
+PetalburgCity_Gym_EventScript_ShowDadOhYoureWallyRightNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadOhYoureWallyRight, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadOhYoureWallyRightDone::
+#endif
 	msgbox PetalburgCity_Gym_Text_WallyIveNeverCaughtAPokemon, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadHmISeeNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadHmISee, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadHmISeeDone
+PetalburgCity_Gym_EventScript_ShowDadHmISeeNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadHmISee, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadHmISeeDone::
+#endif
 	call_if_eq VAR_0x8008, 0, PetalburgCity_Gym_EventScript_NormanAddressPlayerSouth
 	call_if_eq VAR_0x8008, 1, PetalburgCity_Gym_EventScript_NormanAddressPlayerNorth
 	call_if_eq VAR_0x8008, 2, PetalburgCity_Gym_EventScript_NormanAddressPlayerWest
 	call_if_eq VAR_0x8008, 3, PetalburgCity_Gym_EventScript_NormanAddressPlayerEast
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadPlayerGoWithWallyNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadPlayerGoWithWally, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadPlayerGoWithWallyDone
+PetalburgCity_Gym_EventScript_ShowDadPlayerGoWithWallyNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadPlayerGoWithWally, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadPlayerGoWithWallyDone::
+#endif
 	call_if_eq VAR_0x8008, 0, PetalburgCity_Gym_EventScript_NormanAddressWallySouth
 	call_if_eq VAR_0x8008, 1, PetalburgCity_Gym_EventScript_NormanAddressWallyNorth
 	call_if_eq VAR_0x8008, 2, PetalburgCity_Gym_EventScript_NormanAddressWallyWest
 	call_if_eq VAR_0x8008, 3, PetalburgCity_Gym_EventScript_NormanAddressWallyEast
 	msgbox PetalburgCity_Gym_Text_IllLoanYouMyZigzagoon, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowWallyThankYouAndDadGivesPokeBallNative
+	msgbox PetalburgCity_Gym_Text_VisitorWallyThankYouAndDadGivesPokeBall, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowWallyThankYouAndDadGivesPokeBallDone
+PetalburgCity_Gym_EventScript_ShowWallyThankYouAndDadGivesPokeBallNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_WallyThankYouAndDadGivesPokeBall, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowWallyThankYouAndDadGivesPokeBallDone::
+#endif
 	msgbox PetalburgCity_Gym_Text_WallyOhWowThankYou, MSGBOX_DEFAULT
 	call_if_eq VAR_0x8008, 0, PetalburgCity_Gym_EventScript_NormanFaceDoorSouth
 	call_if_eq VAR_0x8008, 1, PetalburgCity_Gym_EventScript_NormanFaceDoorNorth
@@ -306,22 +376,62 @@ PetalburgCity_Gym_EventScript_WallyFaceDown::
 	return
 
 PetalburgCity_Gym_EventScript_NormanNoBadges::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroNative
+	msgbox PetalburgCity_Gym_Text_VisitorNormanGoToRustboro, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroDone
+PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_NormanGoToRustboro, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowNormanGoToRustboroDone::
+#endif
 	release
 	end
 
 PetalburgCity_Gym_EventScript_NormanOneBadge::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordNative
+	msgbox PetalburgCity_Gym_Text_VisitorNormanGoToDewford, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordDone
+PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_NormanGoToDewford, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowNormanGoToDewfordDone::
+#endif
 	release
 	end
 
 PetalburgCity_Gym_EventScript_NormanTwoBadges::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerNative
+	msgbox PetalburgCity_Gym_Text_VisitorYouHaveGottenStronger, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerDone
+PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_YouHaveGottenStronger, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerDone::
+#endif
 	release
 	end
 
 PetalburgCity_Gym_EventScript_NormanThreeBadges::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainNative
+	msgbox PetalburgCity_Gym_Text_VisitorYouHaveGottenStronger, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainDone
+PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_YouHaveGottenStronger, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowYouHaveGottenStrongerAgainDone::
+#endif
 	release
 	end
 
@@ -345,7 +455,17 @@ PetalburgCity_Gym_EventScript_NormanPostBattle::
 	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_GiveEnigmaBerry
 	goto_if_unset FLAG_RECEIVED_TM_FACADE, PetalburgCity_Gym_EventScript_GiveFacade2
 	goto_if_set FLAG_SYS_GAME_CLEAR, PetalburgCity_Gym_EventScript_NoAmountOfTrainingIsEnough
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadGoingToKeepTraining, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingDone
+PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadGoingToKeepTraining, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadGoingToKeepTrainingDone::
+#endif
 	release
 	end
 
@@ -355,8 +475,28 @@ PetalburgCity_Gym_EventScript_GiveFacade2::
 	end
 
 PetalburgCity_Gym_EventScript_NormanRematch::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanPreRematchNative
+	trainerbattle_rematch_double TRAINER_NORMAN_1, PetalburgCity_Gym_Text_VisitorNormanPreRematch, PetalburgCity_Gym_Text_NormanRematchDefeat, PetalburgCity_Gym_Text_VisitorNormanRematchNeedTwoMons
+	goto PetalburgCity_Gym_EventScript_ShowNormanPreRematchDone
+PetalburgCity_Gym_EventScript_ShowNormanPreRematchNative::
+#endif
 	trainerbattle_rematch_double TRAINER_NORMAN_1, PetalburgCity_Gym_Text_NormanPreRematch, PetalburgCity_Gym_Text_NormanRematchDefeat, PetalburgCity_Gym_Text_NormanRematchNeedTwoMons
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowNormanPreRematchDone::
+#endif
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanPostRematchNative
+	msgbox PetalburgCity_Gym_Text_VisitorNormanPostRematch, MSGBOX_AUTOCLOSE
+	goto PetalburgCity_Gym_EventScript_ShowNormanPostRematchDone
+PetalburgCity_Gym_EventScript_ShowNormanPostRematchNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_NormanPostRematch, MSGBOX_AUTOCLOSE
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowNormanPostRematchDone::
+#endif
 	end
 
 PetalburgCity_Gym_EventScript_ShouldGiveEnigmaBerry::
@@ -383,12 +523,42 @@ PetalburgCity_Gym_EventScript_GiveEnigmaBerry::
 	end
 
 PetalburgCity_Gym_EventScript_NormanBattle::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowNormanIntroNative
+	msgbox PetalburgCity_Gym_Text_VisitorNormanIntro, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowNormanIntroDone
+PetalburgCity_Gym_EventScript_ShowNormanIntroNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_NormanIntro, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowNormanIntroDone::
+#endif
 	trainerbattle_no_intro TRAINER_NORMAN_1, PetalburgCity_Gym_Text_NormanDefeat
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowReceivedBalanceBadgeNative
+	message PetalburgCity_Gym_Text_VisitorReceivedBalanceBadge
+	goto PetalburgCity_Gym_EventScript_ShowReceivedBalanceBadgeDone
+PetalburgCity_Gym_EventScript_ShowReceivedBalanceBadgeNative::
+#endif
 	message PetalburgCity_Gym_Text_ReceivedBalanceBadge
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowReceivedBalanceBadgeDone::
+#endif
 	waitmessage
 	call Common_EventScript_PlayGymBadgeFanfare
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowExplainBalanceBadgeTakeThisNative
+	msgbox PetalburgCity_Gym_Text_VisitorExplainBalanceBadgeTakeThis, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowExplainBalanceBadgeTakeThisDone
+PetalburgCity_Gym_EventScript_ShowExplainBalanceBadgeTakeThisNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_ExplainBalanceBadgeTakeThis, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowExplainBalanceBadgeTakeThisDone::
+#endif
 	setflag FLAG_DEFEATED_PETALBURG_GYM
 	setvar VAR_PETALBURG_GYM_STATE, 7
 	setflag FLAG_BADGE05_GET
@@ -407,7 +577,17 @@ PetalburgCity_Gym_EventScript_NormanBattle::
 	special DrawWholeMapView
 	call PetalburgCity_Gym_EventScript_GiveFacade
 	delay 30
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadHappyAndSadNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadHappyAndSad, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadHappyAndSadDone
+PetalburgCity_Gym_EventScript_ShowDadHappyAndSadNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadHappyAndSad, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadHappyAndSadDone::
+#endif
 	closemessage
 	delay 40
 	playse SE_DOOR
@@ -423,7 +603,17 @@ PetalburgCity_Gym_EventScript_GiveFacade::
 	giveitem ITEM_TM_FACADE
 	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_BagIsFull
 	setflag FLAG_RECEIVED_TM_FACADE
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowExplainFacadeNative
+	msgbox PetalburgCity_Gym_Text_VisitorExplainFacade, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowExplainFacadeDone
+PetalburgCity_Gym_EventScript_ShowExplainFacadeNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_ExplainFacade, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowExplainFacadeDone::
+#endif
 	return
 
 PetalburgCity_Gym_EventScript_WallysDadArrivesNorth::
@@ -456,7 +646,17 @@ PetalburgCity_Gym_EventScript_WallysDadArrives::
 	call_if_eq VAR_0x8008, 1, PetalburgCity_Gym_EventScript_WallysDadFaceNormanNorth
 	call_if_eq VAR_0x8008, 2, PetalburgCity_Gym_EventScript_WallysDadFaceNormanEast
 	call_if_eq VAR_0x8008, 3, PetalburgCity_Gym_EventScript_WallysDadFaceNormanWest
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowLetMeBorrowPlayerNative
+	msgbox PetalburgCity_Gym_Text_VisitorLetMeBorrowPlayer, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowLetMeBorrowPlayerDone
+PetalburgCity_Gym_EventScript_ShowLetMeBorrowPlayerNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_LetMeBorrowPlayer, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowLetMeBorrowPlayerDone::
+#endif
 	closemessage
 	setflag FLAG_DONT_TRANSITION_MUSIC
 	playbgm MUS_FOLLOW_ME, FALSE
@@ -745,7 +945,17 @@ PetalburgCity_Gym_Movement_PlayerExitWithWallyEast:
 	step_end
 
 PetalburgCity_Gym_EventScript_NoAmountOfTrainingIsEnough::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerUsesNativeHoennHousehold
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughNative
+	msgbox PetalburgCity_Gym_Text_VisitorDadNoAmountOfTrainingIsEnough, MSGBOX_DEFAULT
+	goto PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughDone
+PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughNative::
+#endif
 	msgbox PetalburgCity_Gym_Text_DadNoAmountOfTrainingIsEnough, MSGBOX_DEFAULT
+#if IS_WAYFARER
+PetalburgCity_Gym_EventScript_ShowDadNoAmountOfTrainingIsEnoughDone::
+#endif
 	release
 	end
 
@@ -1360,10 +1570,17 @@ PetalburgCity_Gym_Text_GymGuideAdvice:
 	.string "Well, hey, go for it!$"
 
 PetalburgCity_Gym_Text_GymGuidePostVictory:
+#if IS_WAYFARER
+	.string "{PLAYER}! Whoa! You've overcome\n"
+	.string "even NORMAN!\p"
+	.string "Like, whoa!\n"
+	.string "What a stunning turn of events!$"
+#else
 	.string "{PLAYER}! Whoa! You've overcome even\n"
 	.string "your own father!\p"
 	.string "Like, whoa!\n"
 	.string "What a stunning turn of events!$"
+#endif
 
 PetalburgCity_Gym_Text_RandallIntro:
 	.string "The ability to attack before the\n"
@@ -1418,6 +1635,14 @@ PetalburgCity_Gym_Text_GeorgeDefeat:
 	.string "What ATTACK power…$"
 
 PetalburgCity_Gym_Text_GeorgePostBattle:
+#if IS_WAYFARER
+	.string "Your POKéMON are well trained.\p"
+	.string "A TRAINER's abilities are earned\n"
+	.string "only through effort.\p"
+	.string "I lost because my own efforts\n"
+	.string "weren't enough.\p"
+	.string "Go on! The ONE-HIT KO ROOM is next.$"
+#else
 	.string "I should have expected no less from\n"
 	.string "our LEADER's kid.\p"
 	.string "No, wait! A TRAINER's abilities are\n"
@@ -1425,33 +1650,56 @@ PetalburgCity_Gym_Text_GeorgePostBattle:
 	.string "I lost because my own efforts\n"
 	.string "weren't enough.\p"
 	.string "Go on! The ONE-HIT KO ROOM is next.$"
+#endif
 
 PetalburgCity_Gym_Text_GeorgePostBadge:
 	.string "I'm going to keep training at GYMS.\n"
 	.string "One day, I'll become a LEADER.$"
 
 PetalburgCity_Gym_Text_BerkeIntro:
+#if IS_WAYFARER
+	.string "I'm not going to take it easy\n"
+	.string "on you!\p"
+	.string "I'll show you how horrid it is for\n"
+	.string "a POKéMON to take a critical hit!$"
+#else
 	.string "I'm not going to take it easy just\n"
 	.string "because you're our LEADER's kid.\p"
 	.string "I'll show you how horrid it is for\n"
 	.string "a POKéMON to take a critical hit!$"
+#endif
 
 PetalburgCity_Gym_Text_BerkeDefeat:
 	.string "Your power…\n"
 	.string "You're the real deal.$"
 
 PetalburgCity_Gym_Text_BerkePostBattle:
+#if IS_WAYFARER
+	.string "NORMAN really is strong.\n"
+	.string "He's a TRAINER worth my respect.\p"
+	.string "And, I sense that same strength\n"
+	.string "in you.\p"
+	.string "I hope that you'll stage a terrific\n"
+	.string "battle with him!$"
+#else
 	.string "Your father really is strong.\n"
 	.string "He's a TRAINER worth my respect.\p"
 	.string "And, I sense the same glow coming\n"
 	.string "from you as your father.\p"
 	.string "I hope that you'll stage a terrific\n"
 	.string "battle with your father!$"
+#endif
 
 PetalburgCity_Gym_Text_BerkePostBadge:
+#if IS_WAYFARER
+	.string "Since NORMAN became the LEADER,\n"
+	.string "the TRAINERS of PETALBURG CITY have\l"
+	.string "become a lot tougher.$"
+#else
 	.string "Since your dad became the LEADER,\n"
 	.string "the TRAINERS of PETALBURG CITY have\l"
 	.string "become a lot tougher.$"
+#endif
 
 PetalburgCity_Gym_Text_MaryIntro:
 	.string "Giggle…\n"
@@ -1497,19 +1745,32 @@ PetalburgCity_Gym_Text_AlexiaPostBadge:
 	.string "Hi! Have you tried using SURF?$"
 
 PetalburgCity_Gym_Text_JodyIntro:
+#if IS_WAYFARER
+	.string "Our GYM LEADER told us to go all out\n"
+	.string "and beat you.\p"
+	.string "We're all giving it our best!$"
+#else
 	.string "Our GYM LEADER told us to go all out\n"
 	.string "and beat you.\p"
 	.string "Even if you happen to be the\n"
 	.string "LEADER's kid!$"
+#endif
 
 PetalburgCity_Gym_Text_JodyDefeat:
 	.string "But… I went all out!$"
 
 PetalburgCity_Gym_Text_JodyPostBattle:
+#if IS_WAYFARER
+	.string "The way you use your POKéMON…\n"
+	.string "It's like our LEADER's style.\p"
+	.string "Go on through!\n"
+	.string "The GYM LEADER is waiting!$"
+#else
 	.string "The way you use your POKéMON…\n"
 	.string "It's like your father's style.\p"
 	.string "Go on through! The GYM LEADER, your\n"
 	.string "father, is waiting!$"
+#endif
 
 PetalburgCity_Gym_Text_JodyPostBadge:
 	.string "Sure, it's fine to make your POKéMON\n"
@@ -1605,3 +1866,159 @@ PetalburgCity_Gym_Text_NormanRematchNeedTwoMons:
 	.string "capable of battle?\p"
 	.string "Sorry, but you'll have to come back\n"
 	.string "with at least two POKéMON.$"
+
+#if IS_WAYFARER
+PetalburgCity_Gym_Text_VisitorDadYoureHereWithYourPokemon:
+	.string "NORMAN: Welcome, {PLAYER}!\p"
+	.string "I'm NORMAN, this town's GYM LEADER.\p"
+	.string "I see you're traveling with your\n"
+	.string "POKéMON.\p"
+	.string "It's good to meet a fellow TRAINER.\n"
+	.string "I look forward to seeing you grow!$"
+
+PetalburgCity_Gym_Text_VisitorNormanIntro:
+	.string "NORMAN: Hm…\n"
+	.string "So, you did get four GYM BADGES.\p"
+	.string "Fine, as I promised, we will have\n"
+	.string "a POKéMON battle.\p"
+	.string "{PLAYER}…\p"
+	.string "I'm looking forward to seeing\n"
+	.string "how much you've grown!\p"
+	.string "I will do everything in my power as\n"
+	.string "a GYM LEADER to win.\p"
+	.string "{PLAYER}, you'd better give it your\n"
+	.string "best shot, too!$"
+
+PetalburgCity_Gym_Text_VisitorDadHappyAndSad:
+	.string "NORMAN: As the GYM LEADER, I can't\n"
+	.string "express how upset I am…\p"
+	.string "But you've earned this victory.\n"
+	.string "I'm glad we could battle!$"
+
+PetalburgCity_Gym_Text_VisitorLetMeBorrowPlayer:
+	.string "NORMAN, you don't mind, do you?\p"
+	.string "I'd like to speak with {PLAYER}{KUN}\n"
+	.string "for a minute or two.$"
+
+PetalburgCity_Gym_Text_VisitorDadGoingToKeepTraining:
+	.string "NORMAN: I'm going to stay here and\n"
+	.string "redouble my training.\p"
+	.string "It would bother me as a TRAINER to\n"
+	.string "not avenge my loss to you, {PLAYER}!$"
+
+PetalburgCity_Gym_Text_VisitorNormanPreRematch:
+	.string "NORMAN: {PLAYER}…\n"
+	.string "I had a feeling that you would come.\p"
+	.string "I would never refuse to accept\n"
+	.string "a challenge from you.\p"
+	.string "Let's both give this battle\n"
+	.string "everything we've got!$"
+
+PetalburgCity_Gym_Text_VisitorNormanRematchNeedTwoMons:
+	.string "NORMAN: {PLAYER}…\n"
+	.string "I had a feeling that you would come.\p"
+	.string "I would never refuse to accept\n"
+	.string "a challenge from you.\p"
+	.string "Hm? Wait a second, {PLAYER}.\p"
+	.string "Do you only have one POKéMON that is\n"
+	.string "capable of battle?\p"
+	.string "Sorry, but you'll have to come back\n"
+	.string "with at least two POKéMON.$"
+
+PetalburgCity_Gym_Text_VisitorDadOhYoureWallyRight:
+	.string "NORMAN: Hm? You're… Uh… Oh, right.\n"
+	.string "You're WALLY, right?$"
+
+PetalburgCity_Gym_Text_VisitorDadHmISee:
+	.string "NORMAN: Hm. I see.$"
+
+PetalburgCity_Gym_Text_VisitorDadPlayerGoWithWally:
+	.string "NORMAN: {PLAYER}, you heard that,\n"
+	.string "right?\p"
+	.string "Go with WALLY and make sure that he\n"
+	.string "safely catches a POKéMON.$"
+
+PetalburgCity_Gym_Text_VisitorWallyThankYouAndDadGivesPokeBall:
+	.string "WALLY: Oh, wow!\n"
+	.string "A POKéMON!\p"
+	.string "NORMAN: I'll give you a POKé BALL,\n"
+	.string "too. Go for it!\p"
+	.string "WALLY received a POKé BALL!$"
+
+PetalburgCity_Gym_Text_VisitorDadSoDidItWorkOut:
+	.string "NORMAN: So, did it work out?$"
+
+PetalburgCity_Gym_Text_VisitorDadGoCollectBadges:
+	.string "NORMAN: Now…\p"
+	.string "{PLAYER}, if you want to become a\n"
+	.string "strong TRAINER, here's my advice.\p"
+	.string "Head for RUSTBORO CITY beyond this\n"
+	.string "town.\p"
+	.string "There, you should challenge\n"
+	.string "the GYM LEADER, ROXANNE.\p"
+	.string "After her, go on to other POKéMON\n"
+	.string "GYMS and defeat their LEADERS.\p"
+	.string "Collect BADGES from them,\n"
+	.string "understood?\p"
+	.string "Of course, I'm a GYM LEADER, too.\n"
+	.string "We'll battle one day, {PLAYER}.\p"
+	.string "But that's only after you become\n"
+	.string "stronger.$"
+
+PetalburgCity_Gym_Text_VisitorNormanGoToRustboro:
+	.string "NORMAN: Hm? Aren't you going to the\n"
+	.string "POKéMON GYM in RUSTBORO CITY?\p"
+	.string "There's no challenge for me to\n"
+	.string "battle a greenhorn TRAINER.\p"
+	.string "{PLAYER}, I want you to challenge me\n"
+	.string "when you become a lot stronger.\p"
+	.string "I'll battle you, {PLAYER}, when you\n"
+	.string "can show me four GYM BADGES, okay?$"
+
+PetalburgCity_Gym_Text_VisitorNormanGoToDewford:
+	.string "NORMAN: I see… So, you've beaten\n"
+	.string "the GYM LEADER in RUSTBORO CITY.\p"
+	.string "But there are many more TRAINERS\n"
+	.string "who are stronger than you, {PLAYER}.\p"
+	.string "Across the sea in DEWFORD TOWN is a\n"
+	.string "GYM LEADER named BRAWLY.\p"
+	.string "You should go challenge him.$"
+
+PetalburgCity_Gym_Text_VisitorYouHaveGottenStronger:
+	.string "NORMAN: Hm… {PLAYER}, you have gotten\n"
+	.string "stronger.\p"
+	.string "I can tell by the number of BADGES\n"
+	.string "that you've earned.$"
+
+PetalburgCity_Gym_Text_VisitorReceivedBalanceBadge:
+	.string "{PLAYER} received the BALANCE BADGE\n"
+	.string "from NORMAN!$"
+
+PetalburgCity_Gym_Text_VisitorExplainBalanceBadgeTakeThis:
+	.string "NORMAN: With that BADGE, the DEFENSE\n"
+	.string "of all your POKéMON will increase.\p"
+	.string "This is my gift to you. {PLAYER}, I'm\n"
+	.string "sure you can use it correctly.$"
+
+PetalburgCity_Gym_Text_VisitorExplainFacade:
+	.string "NORMAN: TM42 contains FACADE.\p"
+	.string "It doubles the power of moves if\n"
+	.string "the POKéMON is poisoned, paralyzed,\l"
+	.string "or burned.\p"
+	.string "It might be able to turn a bad\n"
+	.string "situation into an advantage.$"
+
+PetalburgCity_Gym_Text_VisitorDadNoAmountOfTrainingIsEnough:
+	.string "NORMAN: {PLAYER}, how are things going?\p"
+	.string "The world of POKéMON is deep.\p"
+	.string "I honestly think that no amount of\n"
+	.string "training would ever be enough.$"
+
+PetalburgCity_Gym_Text_VisitorNormanPostRematch:
+	.string "NORMAN: {PLAYER}…\n"
+	.string "What is your dream?\p"
+	.string "My dream…\n"
+	.string "Hahaha…\l"
+	.string "It has already come true, actually.$"
+
+#endif
