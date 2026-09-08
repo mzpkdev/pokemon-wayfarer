@@ -138,6 +138,15 @@ Route24_Text_RocketBeaten:
 	.string "I am not to you!$"
 
 Route24_Text_RocketAfter:
+#if IS_WAYFARER
+	.string "OK. Tell you mine secret will I?\n"
+	.string "MACHINE PART steal by me, hide it\l"
+	.string "I did in GYM of the CERULEAN.\p"
+	.string "Inside water put it I did. Look\n"
+	.string "for in water center of GYM at.\p"
+	.string "But you forget me not!\p"
+	.string "I find my own way from here.$"
+#else
 	.string "OK. Tell you mine secret will I?\n"
 	.string "MACHINE PART steal by me, hide it\l"
 	.string "I did in GYM of the CERULEAN.\p"
@@ -149,14 +158,23 @@ Route24_Text_RocketAfter:
 	.string "Come from JOHTO will they, mine\n"
 	.string "friends, yes. Will revenge they\l"
 	.string "are.$"
+#endif
 
 Route24_Text_RocketDisappears:
+#if IS_WAYFARER
+	.string "…\p"
+	.string "You say what? I not welcome here\n"
+	.string "anymore?\p"
+	.string "Oh, no! Should I do what now on\n"
+	.string "from, me?$"
+#else
 	.string "…\p"
 	.string "You say what? TEAM ROCKET bye-\n"
 	.string "bye a go-go? Broken it is says\l"
 	.string "you?\p"
 	.string "Oh, no! Should I do what now on\n"
 	.string "from, me?$"
+#endif
 
 
 
