@@ -18,6 +18,9 @@ u16 IdentifyFlash(void)
 
     REG_WAITCNT = (REG_WAITCNT & ~WAITCNT_SRAM_MASK) | WAITCNT_SRAM_8;
 
+    // Select both banks so emulators can detect 1 Mbit flash before the ID read.
+    SwitchFlashBank(1);
+    SwitchFlashBank(0);
     flashId = ReadFlashId();
 
     setupInfo = sSetupInfos;
