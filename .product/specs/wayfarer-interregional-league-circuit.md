@@ -8,6 +8,43 @@ levels; the approved contract below uses +8/+8/+8 and League scaling.
 The reward update belongs to this specification and will be implemented
 separately from League scaling.
 
+## Approved future Kanto and Johto lineups
+
+The [FRLG Kanto story PRD](../prds/frlg-kanto-story-on-hns-maps.md#superseded-transport-and-league-requirements)
+approves separate regional opponent lineups for the future story port:
+
+- Kanto / Tier 1: Lorelei → Bruno → Agatha → Lance → Blue.
+- Johto / Tier 2: Will → Koga → Bruno → Karen → Lance.
+
+This supersedes the shared HNS opponent-lineup requirement below when the
+story port is implemented. It does not change the shared Indigo venue,
+admission thresholds, circuit order, scaling, authored-party ownership,
+regional state isolation, save/load recovery, loss/retry, rewards, or
+Hall-of-Fame requirements. Detailed roster integration and its validation
+belong with that implementation; Blue's origin-specific narrative and remaining
+party decisions are owned by the linked story PRD.
+
+This lineup change is not implemented. The current runtime still uses the HNS
+opponents for both Indigo runs; neither code nor validation is changed by this
+documentation amendment.
+
+## Approved future Viridian badge ownership
+
+The [FRLG Kanto story PRD](../prds/frlg-kanto-story-on-hns-maps.md#badges-battles-and-rewards)
+assigns the initial Earth Badge to Giovanni after its named Rocket investigation
+finale. For that future Wayfarer port, this supersedes Blue's Cinnabar invitation
+and Gym-return requirements below, including their validation cases. Blue is
+the Kanto Champion and, for Kanto-origin players, the rival; a later Gym takeover
+is outside this implementation.
+
+Keep exactly one Earth Badge and one first-award contribution to global badge
+count/TR. Giovanni's badge requires no League clear, global badge count, or TR
+threshold. Preserve pending badge/reward recovery and access to an undefeated
+initial leader under his selected story prerequisites. Update the Blue-specific
+initial-badge validation to cover Giovanni's finale and once-only reward when
+implementing the port; do not remove protections for other Leaders. Current
+runtime still uses Blue's invitation until that port is implemented.
+
 ## Scope
 
 The draft [regional start choice](wayfarer-regional-start-choice.md) defines
@@ -98,8 +135,10 @@ audit. Include late arrivals, revisits, and an already-completed takeover, and
 ensure earlier event writes such as Whitney's cannot overwrite later takeover
 state.
 
-Blue's Cinnabar interaction is sufficient to invite him back to his Gym. It
-must not require the other fifteen Kanto/Johto badges or any League clear.
+Before the story port, Blue's Cinnabar interaction is sufficient to invite him
+back to his Gym without fifteen other HNS badges or any League clear. The
+[future Viridian ownership rule](#approved-future-viridian-badge-ownership)
+replaces this invitation contract with Giovanni's finale for that port.
 Wattson's New Mauville relocation requires both Norman's defeat and the Dynamo
 Badge. Recognize either completion order, including earning Dynamo after
 Norman's one-time victory event; an undefeated Wattson remains in his Gym.
@@ -141,8 +180,12 @@ Out-of-order League completion is unreachable through normal play. At
 twenty-four badges and zero clears, each clear immediately enables the next
 League without any intervening badge or story transaction.
 
-Kanto and Johto share the HNS Indigo venue and opponent lineup. Their existing
-Tier 1 and Tier 2 party selection must still work when challenged consecutively.
+The current implementation shares the HNS Indigo venue and opponent lineup
+between Kanto and Johto. The
+[approved future regional lineups](#approved-future-kanto-and-johto-lineups)
+replace that shared-opponent requirement for the story port while retaining
+the venue. Tier 1 and Tier 2 party selection must still work when challenged
+consecutively, both before and after that change.
 The Hall of Fame return must reset the venue for the next eligible tier without
 carrying over room, defeat, or pending-clear state that skips or blocks it.
 Save/load and loss/retry must preserve the appropriate tier and consume a
@@ -321,8 +364,10 @@ Deterministic tests must cover:
     badge seven cannot make the Rocket takeover missable. Cover arriving after
     that count, revisit recovery, once-only triggering, and no regression after
     completion. Verify that unrelated badges do not replace regional story
-    prerequisites. Cover Blue's Cinnabar invitation before fifteen HNS badges,
-    Norman before Wattson, and all retained Leader protections.
+    prerequisites. Cover Blue's Cinnabar invitation before fifteen HNS badges
+    on the current implementation; for the story port, replace that case with
+    Giovanni's finale and once-only Earth Badge under the future ownership
+    rule above. Cover Norman before Wattson and all retained Leader protections.
 12. Eighth-badge routes ending in Kanto, Johto, and Hoenn can all reach the
     Kanto League; equivalent sixteenth-badge routes with Kanto cleared can reach
     the Johto League; and twenty-fourth-badge routes with both previous clears

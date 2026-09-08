@@ -5,6 +5,22 @@ Implemented: Outdated
 The implementation still uses +15/+5/+4 League rewards and static League
 levels. This revision requires +8/+8/+8 and the separate League scaling design.
 
+## Approved future Kanto story adaptation
+
+The [FRLG Kanto story PRD](frlg-kanto-story-on-hns-maps.md#superseded-transport-and-league-requirements)
+supersedes the Blue invitation/initial Viridian badge requirements below for
+its future Wayfarer implementation. Giovanni awards the one Earth Badge through
+the specified story finale; Blue becomes Kanto's Champion opponent and serves
+as personal rival only for the planned Kanto origin. It also selects distinct
+FRLG Kanto and HNS Johto League lineups. The
+[League specification](../specs/wayfarer-interregional-league-circuit.md#approved-future-viridian-badge-ownership)
+records the scoped ownership override and validation replacement.
+
+These changes are not implemented. Blue's existing invitation and its test
+cases remain the current-runtime baseline until the story port lands. Circuit
+qualification, order, scaling, badge/reward accounting, and other Leaders'
+protections remain binding before and after that change.
+
 ## Intent
 
 Give Wayfarer's open world a clear long-term arc without requiring the player
