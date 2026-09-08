@@ -60,8 +60,9 @@ mass outbreaks, ordinary fishing, and Rock Smash/Sweet Scent when their field
 actions are already legally available. This feature grants no field permissions.
 Exclude Safari sessions, Bug Contest, facilities, tutorials, scripted/stationary
 encounters, roamers, legendary battles, doubles, battle partners and special
-capture modes such as unidentified Tower ghosts. Their entry/loss policies need
-explicit handling and must not be inferred from party state alone.
+capture modes such as unidentified Tower ghosts. Preserve their existing
+entry/loss routing and specified safe no-party guards; party state alone does
+not authorize conversion. Scripted-wild exclusion is settled policy.
 
 Apply eligibility before incompatible encounter generation and again at battle
 transition. `CreateBattleStartTask()` must admit only a deliberately initialized
@@ -593,9 +594,13 @@ other affected conditional builds. Use existing mechanics and prebuilt-ROM emula
 harnesses and record revision/configuration. Numeric tests cannot validate animation
 anchors, field return, trainer trigger behavior or recovery presentation alone.
 
+Scripted-wild exclusion and the companion spec's safe no-party guards are
+settled policy. They are not missing trainer-only integrations or open encounter-mode
+decisions; future ports must preserve those rules for their own scenes.
+
 ## Open questions
 
-1. **Exceptional defeat/recovery policy:** companion-spec excluded authored callers,
+1. **Exceptional defeat/recovery policy:** other exceptional authored callers,
    challenge/hardcore consequences at party defeat versus trainer retaliation,
    Nuzlocke replacement behavior and League-run termination. Central ownership,
    ordinary field continuation and no retaliation money charge are settled; no
