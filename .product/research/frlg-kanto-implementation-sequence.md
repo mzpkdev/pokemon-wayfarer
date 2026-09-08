@@ -177,7 +177,11 @@ pre-owned fossil keeps the local choice safe and retryable. The HNS Ruins of
 Alph rewards and revival state remain independent.
 
 The focused static map/state contract, catalog and scaling checks, TypeScript
-check, and four-case emulator journey pass. The production release uses
+check, and eleven-case emulator journey pass. The journey covers Miguel's
+empty-party refusal, win with immediate fossil interaction, loss/retry, both
+fossil choices, Exit, full-pocket retry, pre-owned reconciliation, and Grunt
+1's normal-sight, completed-sight, and empty-party paths.
+The production release uses
 32,433,956 bytes (`__rom_end = 0x09EEE724`), leaves 1,120,476 physical bytes
 free, and remains 596,188 bytes above the 512 KiB reserve. EWRAM uses 248,509
 bytes and IWRAM uses 25,556 bytes. Existing compiler/linker warnings remain

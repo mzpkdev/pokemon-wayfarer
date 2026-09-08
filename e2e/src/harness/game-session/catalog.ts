@@ -184,6 +184,7 @@ export const storyFlags = {
   hideMtMoonHelixFossil: 0x4c0,
   receivedMtMoonFossil: 0x4c1,
   mtMoonMiguelDefeated: 0x7b6,
+  mtMoonGrunt1Defeated: 0x7b2,
   receivedExistingStrength: 0x1f8,
   inKantoSafari: 0x259,
   safariGoodLuck: 0x258,
