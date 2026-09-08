@@ -9,6 +9,31 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Playtest presentation polish
+
+Rock now uses the native hit flash and HP-bar controller before committing HP,
+then shakes the surviving wild sprite alongside the existing anger marks. Native
+controller review confirmed visibility and sprite position are restored before
+turn resolution. Successful Run and wild fleeing now play `SE_FLEE`; the normal
+wild-flee script also uses sound and text without a sprite exit animation.
+
+The E2E and normal Wayfarer builds passed (`/tmp/trainer-only-polish-build.log`
+and `/tmp/trainer-only-polish-playable-build.log`). On E2E ROM
+`e925cba8d8ba3d7d1fe9643f9752d2b4944b02c30e8dbb3b4ff9f0141a60ef07`,
+the existing wild-flee callback, successful Run and lethal one-HP Rock checks
+passed 3/3 (`/tmp/trainer-only-polish-exits.log`; 20 unrelated cases deliberately
+skipped). Temporary focus markers were removed. No story matrices were rerun
+for this presentation change.
+
+The existing Rock presentation journey passed 1/1 on the same ROM
+(`/tmp/trainer-only-rock-reaction-e925.log`). Its retained screenshots show hit
+flashing, intermediate HP-bar lengths and wild-sprite movement with anger marks;
+these were visually inspected, rather than asserted through whole-screen hashes.
+The test asserts turn ownership throughout both presentation intervals. Scoped
+formatting, lint and TypeScript checks passed. The updated playable ROM is
+`../artifacts/pokemon-wayfarer-trainer-only.gba`, SHA-256
+`56eff3466e4ded3c5c8160fd7603db5679d83f92510a2bab5c566741f99d8b42`.
+
 ## Maintained suite audit
 
 [The E2E audit](trainer-only-e2e-audit.md) records the removed duplicates,
@@ -63,7 +88,7 @@ Wayfarer, HNS, FireRed and Emerald. Logs are
 `/tmp/trainer-only-audit-playable-build.log`,
 `/tmp/trainer-only-audit-hns-build.log`,
 `/tmp/trainer-only-audit-firered-build.log` and
-`/tmp/trainer-only-audit-emerald-build.log`. The current playable artifact is
+`/tmp/trainer-only-audit-emerald-build.log`. The pre-polish playable artifact was
 `../artifacts/pokemon-wayfarer-trainer-only.gba`, SHA-256
 `158305bef1b1a582b2363a5eb873915c956f56dcee96d1b7912b1ba1c1500e6e`.
 The emulator ROMs below precede only that behavior-preserving helper extraction;
