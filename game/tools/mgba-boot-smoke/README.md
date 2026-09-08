@@ -35,7 +35,7 @@ a 120-second wall-clock timeout. Override these limits with `--frames` and
 
 `mgba-smoke-results/` contains the boot log, resolved symbols, and final
 `screen.png` (unless the emulator hangs or crashes before capture). Choose another
-location with `--output`. CI runs this job on draft PRs too and uploads diagnostics.
+location with `--output`. The Smoke workflow runs the mGBA job only on PRs ready for review and uploads diagnostics.
 This is a boot check; it does not exercise gameplay or verify visual rendering.
 
 For a non-system libmgba installation, the wrapper accepts `CC`, `CFLAGS`,
