@@ -4,8 +4,8 @@ PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
 Implemented: Yes
 
 Status: Implemented for the current supported scene inventory. Scripted-wild
-exclusion and the specified no-party guards are settled policy. Future ports
-and exceptional defeat rules retain the explicit dependencies listed here;
+exclusion, the specified no-party guards and existing exceptional defeat routing
+are settled policy. Future ports retain the explicit dependencies listed here;
 source availability does not make unported scenes playable.
 Implementation status does not claim those future integrations or shipping
 balance approval. See the
@@ -138,7 +138,7 @@ and outcome between fights. Exhaustion must stop that adapted sequence without
 awarding its final reward. Preserve already earned partial victories only where
 the authored adventure defines them; do not create new checkpoints implicitly.
 Tutorials, League, Celebi and exceptional challenge losses keep their existing
-policy until explicitly supported. Classification as
+policy as settled behavior. Classification as
 an objective guard settles no-party entry, not every exceptional loss consequence.
 
 ### Defeat support by family
@@ -146,13 +146,14 @@ an objective guard settles no-party entry, not every exceptional loss consequenc
 The tables below select no-party entry for every listed family. Ordinary single
 story battles adopt safe field return only after their explicit outcome branch
 and retreat/reset staging meet this spec. The following exceptions keep their
-existing defeat behavior until separately adapted:
+existing defeat behavior as settled exclusions. Any later adaptation is a separate
+feature decision:
 
 | Family | Defeat routing |
 | --- | --- |
 | Cherrygrove Silver #1, Route 103 rival, Oak's Lab rival, Wally tutorial | Preserve authored startup/tutorial policy; no generic loss conversion. |
-| Kimono trial, Oceanic Museum grunt sequence, Space Center, Three Island gang, any required consecutive or partner fight | Preserve existing chained/partner outcome policy until explicit adaptation, even though no-party entry is refused. |
-| Tohjo Giovanni/Celebi episode | Preserve authored episode loss/recovery policy until explicitly adapted. |
+| Kimono trial, Oceanic Museum grunt sequence, Space Center, Three Island gang, any required consecutive or partner fight | Preserve existing chained/partner outcome policy; no-party entry is refused. |
+| Tohjo Giovanni/Celebi episode | Preserve authored episode loss/recovery policy. |
 | Victory Road Silver/Wally and Champion | Keep League admission/outcome constraints explicit; only independently supported chapter battles may adopt ordinary field return. |
 | Challenge/facility configurations and scripted wild objectives | Preserve core exclusions and approved exceptional outcomes. |
 | All unaudited Gym-map callers, including members, leaders, Blue and future Giovanni | Preserve existing defeat routing until individually audited and added to the core spec's caller allowlist. No badge, TM, TR/League or story credit on loss/abort. |
@@ -234,7 +235,7 @@ means the deferred-rival policy above, including hidden battle-only contact acto
 | Azalea Silver #2 | Split rival chapter from Well/Ilex and shared town progression; retain Ilex travel. | Silent |
 | Burned Tower Silver #3 | Decouple fall/discovery access from rival victory; retain a later battle at the Tower. | Silent |
 | Goldenrod Underground Silver #4 | Split Radio occupation state from rival chapter; finishing the rescue cannot erase the chapter. | Silent |
-| Victory Road Silver #5 | Defer chapter without faking Route 27 progress; preserve existing League eligibility pending explicit League integration. | Silent for deferred chapter; League admission uses `NP_LEAGUE`; retain authored loss policy. |
+| Victory Road Silver #5 | Defer chapter without faking Route 27 progress; preserve existing League eligibility and defeat rules. | Silent for deferred chapter; League admission uses `NP_LEAGUE`; retain authored loss policy. |
 | Mt. Moon Silver #6 | Preserve optional contact battle and its later Indigo unlock; no victory or decline writer on suppression. | Silent |
 | Indigo Center Silver #7 | Restore optional rematch under normal daily eligibility; suppression spends no rematch. | Silent |
 | Sprout Tower Silver non-battle scene | Keep independently eligible conversation/staging; no blanket rival hide. | Existing scene text |
@@ -371,7 +372,13 @@ This policy is settled; applying it to unported content remains part of its port
 ### Other exceptional policies and future ports
 
 League entry/finales, starter/catching tutorials, Celebi episode losses and
-exceptional challenges retain their explicit policies. Future map/character
+exceptional challenges retain their explicit policies as settled behavior. Active
+League and Nuzlocke contexts do not gain trainer-only entry or ordinary field-loss
+continuation; League whiteout ends the run and native challenge recovery remains.
+Unaudited authored callers and chains keep existing defeat routing. Any later
+retreat/retry redesign is separate work, not a pending requirement here.
+
+Future map/character
 adaptation and temporary-host recoverability must be implemented and tested before
 the corresponding scene is advertised as supported. The current Blue Gym and
 future Giovanni finale are distinct until the port resolves their ownership.

@@ -1,8 +1,8 @@
 # Trainer-only wild encounters
 
-Status: Supported implementation complete. Broader balance validation and the
-exceptional challenge/League policies remain open. Future ports are separate work;
-scripted-wild exclusions and their safe no-party handling are settled. See the
+Status: Supported implementation complete. Scripted-wild, challenge, League and
+unaudited authored-battle exclusions are settled policy. Broader balance
+validation remains; future ports are separate work. See the
 [implementation validation](../research/trainer-only-implementation-validation.md).
 
 ## Intent
@@ -89,7 +89,7 @@ For supported story battles, loss returns control safely with the objective stil
 unresolved. Victory-only script continuations must check the actual result before
 removing guards, handing over rewards or advancing story state. Authored tutorials,
 chained/partner battles, League and challenge outcomes retain their existing loss
-policy until a specific adaptation is approved.
+policy. Any future adaptation requires a separate feature decision.
 
 The [story encounter specification](../specs/trainer-only-story-encounters.md)
 owns the per-scene policy, no-party dialogue, safe retreat and recoverability
@@ -286,8 +286,8 @@ Challenge handling remains centralized. If an existing rule assumes a usable
 party member exists, resolve that case through the shared rule rather than
 importing Safari exemptions. Ordinary party defeat and trainer retaliation are
 distinct reasons within that policy: ordinary defeat returns to the field, while
-retaliation invokes blackout and recovery, subject to the explicit challenge and
-authored-outcome decisions below. Retaliation deducts no money. Ordinary supported
+retaliation invokes blackout and recovery, subject to the settled challenge and
+authored-battle exclusions below. Retaliation deducts no money. Ordinary supported
 battle losses retain their existing money charge exactly once.
 
 ## Constraints
@@ -347,20 +347,32 @@ whether catching without rocks remains practical. Compare equal-level encounters
 with Pokémon above and below the Trainer Rating softcap, including repeated failed
 escapes, berry use near the anger threshold, and peaceful turns reaching it.
 
+## Settled exceptional defeat rules
+
+Active Nuzlocke and Easy Nuzlocke, the hardcore Nuzlocke option, and active League
+runs do not allow trainer-only encounters, ordinary field-loss continuation or
+unprotected storage. Retain the existing activation checks: configured but
+not-yet-active Nuzlocke can still allow trainer-only play; the hardcore option
+blocks it immediately. This feature does not activate challenges on its own.
+
+Existing challenge recovery stays unchanged. Active ordinary Nuzlocke recovery
+withdraws a living boxed Pokémon or supplies its existing level-1 Rattata fallback;
+hardcore keeps its existing save-clear/reset condition. League defeat keeps its
+existing recovery, and whiteout ends the run. Trainer retaliation is not reachable
+through supported trainer-only entry in these excluded active contexts, so no
+new challenge-specific retaliation consequence is pending.
+
+Unaudited story battles, tutorials, partner battles and battle chains retain
+their existing authored defeat routing. Field retreat/retry applies only to the
+explicitly audited allowlist; other scenes receive no new victory continuation,
+reward or challenge exemption. Changing these rules would be a separate feature,
+not unfinished work in this implementation.
+
 ## Open questions
 
 - Validation and adjustment of the selected initial numeric tuning, including
   warning timing and the three-turn food duration's turn-order behavior.
 - Exact anger and retaliation animations and final encounter messages.
-- Challenge consequences for ordinary party defeat versus retaliation: shared
-  recovery currently includes
-  hardcore Nuzlocke save clearing/reset and ordinary Nuzlocke box withdrawal or
-  creation of a level-1 Rattata. Confirm how these apply to each defeat reason
-  before shipping. Preserve challenge rules by default; any approved exception
-  belongs in centralized recovery with the defeat reason, not a separate path.
-- League-run consequences and other exceptional authored defeat outcomes remain
-  open. Preserve their existing routing until approved. This does not reopen
-  the settled scripted-wild exclusion or its no-party guards.
 - Confirm the existing centralized respawn fallback is valid for every supported
   origin before its first Pokémon Center visit.
 

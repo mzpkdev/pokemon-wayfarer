@@ -4,8 +4,8 @@ PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
 Implemented: Yes
 
 Status: Implemented for the supported scope below. Selected balance values are
-not empirically validated; broader playtesting and excluded exceptional policies
-remain open before a shipping-complete claim. See the
+not empirically validated; broader playtesting remains before a shipping-complete
+claim. Exceptional encounter and defeat exclusions are settled policy. See the
 [implementation validation](../research/trainer-only-implementation-validation.md).
 
 ## Scope
@@ -510,10 +510,10 @@ Challenge faint processing must remain active on field-return paths. In particul
 whiteout. Do not revive challenge-dead members, bypass death flags or silently
 change hardcore loss conditions just by moving callback selection. Current actual
 blackout can clear/reset a hardcore save or move a boxed mon/create a Rattata in
-other Nuzlocke modes; current recovery also ends League runs. Their relationship
-to continued exploration and actual trainer blackout must be explicitly approved
-before those configurations ship. Until then preserve existing exceptional loss
-policy rather than silently applying ordinary sandbox continuation there.
+other Nuzlocke modes; current recovery also ends League runs. These native
+consequences are retained as settled policy. The shared gate excludes active
+challenge/League contexts from trainer-only entry and ordinary field-loss
+continuation; do not apply ordinary sandbox continuation there.
 
 ### Presentation and persistence
 
@@ -585,7 +585,7 @@ for exercising the new controller and field-return routing.
 | Outcome ordering | Capture, rock KO, successful Run and successful revival terminate before anger; retaliation before flee; at most one wild-flee check; no terminal double-resolution |
 | Capture/revival | Slot/PC/count/Dex/nickname; full six-fainted catch toPC remains unprotected; challenge PC routing; valid revival safely ends encounter and next battle normal |
 | Recovery | Retaliation uses existing current heal point/origin fallback/healer transform; true empty and fainted party text/healing; contexts cleared; retaliation deducts no money, ordinary loss charges once |
-| Exceptions | Approved challenge/hardcore/money/League policy tested at party defeat and trainer blackout separately; no accidental deletion, replacement gift or exemption |
+| Exceptions | Active challenge/hardcore/League entry exclusion and preserved native defeat routing; trainer retaliation tested in eligible contexts only; no accidental challenge exemption |
 | Regression | Safari grants, allowance30/steps500/exit/retirement/Run/Pokéblocks and Go Near turn/RNG/factor behavior unchanged; only owned non-Safari balls gain the approach adjustment; Bug Contest; standalone HNS/FRLG/Emerald defeat policies |
 | Persistence/UI | Unprotected reload, recovery then normal battle, Bag targets/animations, field controls and sprites; no meters or stale callbacks |
 
@@ -598,23 +598,38 @@ Scripted-wild exclusion and the companion spec's safe no-party guards are
 settled policy. They are not missing trainer-only integrations or open encounter-mode
 decisions; future ports must preserve those rules for their own scenes.
 
+## Settled challenge, League and authored defeat policy
+
+`WayfarerAllowsOrdinaryPartyExhaustion()` excludes active Nuzlocke/Easy Nuzlocke,
+the hardcore Nuzlocke option, active League runs and the existing special contexts.
+Use that same gate for trainer-only wild entry, ordinary field-loss continuation
+and unprotected storage. Preserve native activation checks: configured but inactive
+Nuzlocke is not the same as an active run; hardcore blocks on its option alone.
+
+Keep native challenge recovery, including the living-box-member/level-1 Rattata
+fallback and the existing hardcore save-clear/reset condition. Keep League defeat
+routing and `EndLeagueRun()` during whiteout. Supported trainer-only entry cannot
+produce retaliation in these excluded active contexts; no new retaliation policy
+is required there. The settled no-money-charge retaliation rule applies wherever
+trainer-only encounters are permitted.
+
+Unaudited authored callers, tutorials, partner fights and chains retain their
+existing loss routing. Only the audited caller allowlist may use field retreat;
+no unaudited defeat may enter a newly authorized victory/reward continuation.
+Broader challenge participation or per-scene loss redesign requires a separate
+feature decision, not completion of this task.
+
 ## Open questions
 
-1. **Exceptional defeat/recovery policy:** other exceptional authored callers,
-   challenge/hardcore consequences at party defeat versus trainer retaliation,
-   Nuzlocke replacement behavior and League-run termination. Central ownership,
-   ordinary field continuation and no retaliation money charge are settled; no
-   silent challenge exemption is approved.
-2. **Broader playtesting:** validation of the selected balance values. The
-   implemented messages, anger marks and retaliation presentation are recorded
-   with emulator evidence in the implementation validation report.
+Broader playtesting must validate the selected balance values. The implemented
+messages, anger marks and retaliation presentation are recorded with emulator
+evidence in the implementation validation report.
 
 Rock/TR scaling, passive anger, warning lookahead, proximity, food/flee and Run
 values above are selected. Berry eligibility and direct feeding are settled. Tune
 them together using the acceptance examples and record any balance revision
-explicitly. Unresolved items prevent claiming a
-shipping-complete implementation, not updating this design or building isolated
-infrastructure.
+explicitly. Implementation evidence does not substitute for shipping balance
+approval.
 
 ## References
 
