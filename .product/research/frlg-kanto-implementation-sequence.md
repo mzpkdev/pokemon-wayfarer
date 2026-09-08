@@ -128,3 +128,21 @@ production release links at 33,067,852 used bytes (`__rom_end = 0x09F8934C`),
 with 486,580 physical bytes free. EWRAM and IWRAM remain 248,557 and 25,616
 bytes. Development continues under the user waiver; recovery and rebase remain
 merge prerequisites.
+
+
+## Fuchsia Safari integration findings
+
+Surf and Gold Teeth occupy opposite accessible branches of the existing HNS
+Beach habitat. Baoba visits his former Fuchsia house and exchanges the Teeth
+for Strength; a full HM pocket leaves the Teeth with the player. Three local
+receipt flags preserve existing HNS research, Safari levels, paid admission,
+Steven's welcome, and the other Strength reward sources. No maps, layouts,
+assets, or runtime engine code were added.
+
+All 11 Safari emulator cases and five static tests pass, including real paid
+sessions in both objective orders, the initial Steven/Pokeblock Case scene,
+full-pocket retries, pre-owned rewards, and save/reload. The pre-rebase release
+uses 33,069,244 bytes (`__rom_end = 0x09F898BC`), 1,392 bytes above Hideout.
+It leaves 485,188 physical bytes free and fails the normal reserve check by
+39,100 bytes. The user requests a rebase onto latest main after this milestone's
+commit, followed by a fresh combined release measurement.

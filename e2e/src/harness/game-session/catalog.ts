@@ -10,6 +10,11 @@ export const checkpoints = {
 } as const
 
 export const maps = {
+  "fuchsia-city": { mapGroup: 0, mapNum: 39 },
+  "fuchsia-wardens-house": { mapGroup: 19, mapNum: 3 },
+  "fuchsia-safari-entrance": { mapGroup: 30, mapNum: 103 },
+  "fuchsia-safari-beach": { mapGroup: 30, mapNum: 104 },
+
   "celadon-game-corner": { mapGroup: 17, mapNum: 9 },
   "celadon-hideout-b1f": { mapGroup: 66, mapNum: 42 },
   "celadon-hideout-b2f": { mapGroup: 66, mapNum: 43 },
@@ -141,6 +146,13 @@ export const maps = {
 } as const
 
 export const storyVars = {
+  repelStepCount: 0x4021,
+  baobaResearch: 0x4054,
+  fuchsiaCityState: 0x4067,
+  kantoSafariProgress: 0x406d,
+  johtoSafariGateState: 0x4085,
+  safariSession: 0x40a4,
+
   farawayIslandStepCounter: 0x403a,
   newBarkTownLabState: 0x4074,
   newBarkTownState: 0x4075,
@@ -165,6 +177,13 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  fuchsiaGoldTeethClaimed: 0x4bc,
+  fuchsiaSurfReceived: 0x4bd,
+  fuchsiaStrengthReceived: 0x4be,
+  receivedExistingStrength: 0x1f8,
+  inKantoSafari: 0x259,
+  safariGoodLuck: 0x258,
+
   celadonHideoutKeyReceived: 0x4ba,
   celadonHideoutScopeReceived: 0x4bb,
   celadonHideoutOpened: 0x4b6,
@@ -306,6 +325,9 @@ export const hms = {
 } as const
 
 export const items = {
+  goldTeeth: 749,
+  pokeblockCase: 722,
+
   liftKey: 751,
   silphScope: 752,
   masterBall: 4,
