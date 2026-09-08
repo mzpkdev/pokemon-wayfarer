@@ -1,0 +1,93 @@
+{
+  "runs": [
+    {
+      "variant": "optimized",
+      "kind": "initial-sandbox",
+      "tests_passed": 0,
+      "tests_skipped": 12,
+      "exit_code": 1,
+      "reason": "SkyEmu exited139 before ready; software GL retry also failed; escalated execution solved startup"
+    },
+    {
+      "variant": "optimized",
+      "kind": "first-driver-attempt",
+      "tests_failed": 12,
+      "exit_code": 1,
+      "reason": "HTTP414 from640-byte gTasks query; later random encounter contaminated reused emulator; fixed smaller reads, isolated launches, fixed RNG"
+    },
+    {
+      "variant": "optimized",
+      "kind": "full",
+      "tests_passed": 11,
+      "tests_failed": 1,
+      "exit_code": 1,
+      "duration_seconds": 392.56,
+      "reason": "Gyarados normal fishing bite started a wild battle; driver had not handled Run UI"
+    },
+    {
+      "variant": "baseline",
+      "kind": "full",
+      "tests_passed": 11,
+      "tests_failed": 1,
+      "exit_code": 1,
+      "duration_seconds": 406.2,
+      "reason": "Same Gyarados normal fishing bite driver issue"
+    },
+    {
+      "variant": "optimized",
+      "kind": "targeted-full-retry",
+      "case": "gyarados-normal",
+      "tests_passed": 1,
+      "exit_code": 0,
+      "duration_seconds": 10.0
+    },
+    {
+      "variant": "baseline",
+      "kind": "targeted-full-retry",
+      "case": "gyarados-normal",
+      "tests_passed": 1,
+      "exit_code": 0,
+      "duration_seconds": 9.65
+    },
+    {
+      "variant": "optimized",
+      "kind": "supplemental-bob",
+      "tests_passed": 12,
+      "exit_code": 0,
+      "duration_seconds": 54.81
+    },
+    {
+      "variant": "baseline",
+      "kind": "supplemental-bob",
+      "tests_passed": 12,
+      "exit_code": 0,
+      "duration_seconds": 54.68
+    },
+    {
+      "variant": "optimized",
+      "kind": "final-full-default",
+      "tests_passed": 12,
+      "tests_failed": 0,
+      "exit_code": 0,
+      "duration_seconds": 93.1,
+      "stdout_log": "runtime-final-optimized.log"
+    },
+    {
+      "variant": "baseline",
+      "kind": "final-full-default",
+      "tests_passed": 12,
+      "tests_failed": 0,
+      "exit_code": 0,
+      "duration_seconds": 93.4,
+      "stdout_log": "runtime-final-baseline.log"
+    }
+  ],
+  "commands": {
+    "common": "env -u WAYLAND_DISPLAY LIBGL_ALWAYS_SOFTWARE=1 SKYEMU_ROM=<matching .gba> SKYEMU_SYMS=<matching .sym> SURF_ALIAS_EVIDENCE=<output directory> pnpm exec wa test src/journeys/wayfarer-surf-pixel-aliases.e2e.ts",
+    "full": "SURF_ALIAS_FISHING=1 SURF_ALIAS_TRANSITION=1",
+    "targeted_retry": "SURF_ALIAS_CASE=gyarados-normal (fishing and transition default enabled)",
+    "supplemental": "SURF_ALIAS_FISHING=0 SURF_ALIAS_TRANSITION=0"
+  },
+  "execution": "from e2e/; command-specific escalation required for local Xvfb/SkyEmu",
+  "note": "This is a structured transcription of observed tool stdout summaries, not a raw stdout log."
+}

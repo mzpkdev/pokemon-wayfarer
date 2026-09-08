@@ -1,0 +1,71 @@
+{
+  "baseline": {
+    "available": true
+  },
+  "build": "wayfarer",
+  "categories": {
+    "audio": {
+      "bytes": 11721048,
+      "delta_bytes": 0,
+      "end_address": "0x094634E8",
+      "start_address": "0x08935B90"
+    },
+    "code": {
+      "bytes": 2701712,
+      "delta_bytes": -5056,
+      "end_address": "0x08293990",
+      "start_address": "0x08000000"
+    },
+    "encounter_data": {
+      "bytes": 72256,
+      "delta_bytes": 448,
+      "end_address": "0x094D0E28",
+      "start_address": "0x094BF3E8"
+    },
+    "graphics": {
+      "bytes": 2904460,
+      "delta_bytes": 7388,
+      "end_address": "0x08935B90",
+      "start_address": "0x08670A04"
+    },
+    "maps_layouts": {
+      "bytes": 2082180,
+      "delta_bytes": 52,
+      "end_address": "0x08670A04",
+      "start_address": "0x08474480"
+    },
+    "other": {
+      "bytes": 11061832,
+      "delta_bytes": -2680,
+      "end_address": "0x09F5D870",
+      "start_address": "0x094D0E28"
+    },
+    "scripts": {
+      "bytes": 1968880,
+      "delta_bytes": 12464,
+      "end_address": "0x08474480",
+      "start_address": "0x08293990"
+    },
+    "trainer_data": {
+      "bytes": 376576,
+      "delta_bytes": 11192,
+      "end_address": "0x094BF3E8",
+      "start_address": "0x094634E8"
+    }
+  },
+  "reconciliation": {
+    "category_bytes": 32888944,
+    "matches_used_bytes": true
+  },
+  "release": true,
+  "rom": {
+    "capacity_end_address": "0x0A000000",
+    "end_address": "0x09F5D870",
+    "start_address": "0x08000000",
+    "unused_bytes": 665488,
+    "used_bytes": 32888944,
+    "wayfarer_release_limit_address": "0x09F80000",
+    "wayfarer_release_limit_enforced": true
+  },
+  "schema_version": 1
+}

@@ -1,0 +1,727 @@
+{
+  "representative_variants_per_rom": 12,
+  "identical_required_capture_pairs": 180,
+  "note": "PNG equality proves baseline parity at captured frames; silhouette, layering and bobbing also need visual review.",
+  "captures": [
+    {
+      "capture": "squirtle-normal-entry.png",
+      "sha256": "f7a5763e809069f2b27c673cb8e3b8eebc1b2e91fdd19b816589566750079041"
+    },
+    {
+      "capture": "squirtle-normal-up.png",
+      "sha256": "18469bc9a3311bf71f688cd060111d0001b75b6208373adc6bab2b92495cd506"
+    },
+    {
+      "capture": "squirtle-normal-left.png",
+      "sha256": "78afa9ed01c9630c4ddd36b54dc50c295538904aa7583059e86f9b4cf8d53a7d"
+    },
+    {
+      "capture": "squirtle-normal-right.png",
+      "sha256": "4c950d0cb138f2feef74c05a987109d3bd58c1a2d2e1494c66a200128f7bca4d"
+    },
+    {
+      "capture": "squirtle-normal-down.png",
+      "sha256": "90fe6e48dde017fdfe5e0112f00ed383b0f264fc39f3e4adaa5e8c68fdbf81e1"
+    },
+    {
+      "capture": "squirtle-normal-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "squirtle-normal-fishing.png",
+      "sha256": "61e5fa0f13d4fa14055b58b0c5dcb0a1d83190339b33ea19f2d24d1a76dc7290"
+    },
+    {
+      "capture": "squirtle-normal-fishing-ended.png",
+      "sha256": "b3f7d2ad33de8e3f6256c9705ef06ef47cef5c4a8e09e83106016327eaddcf93"
+    },
+    {
+      "capture": "squirtle-normal-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "squirtle-normal-remount.png",
+      "sha256": "79e53cb87d5ac879fc1a6a92ca6979f6f3a946e64a62b3edaf454f76c9b8281b"
+    },
+    {
+      "capture": "squirtle-normal-before-transition.png",
+      "sha256": "f568746046ad1bc6c288d1a461755bb94c1165039337bb9b6fdb64a17daa66c1"
+    },
+    {
+      "capture": "squirtle-normal-after-transition.png",
+      "sha256": "c5936a1f1b672d9bef520ba5fd9d705cc2764889ab66c7a3114c8d629017072d"
+    },
+    {
+      "capture": "squirtle-normal-bob-0.png",
+      "sha256": "90fe6e48dde017fdfe5e0112f00ed383b0f264fc39f3e4adaa5e8c68fdbf81e1"
+    },
+    {
+      "capture": "squirtle-normal-bob-8.png",
+      "sha256": "995c45cab5decce7818656f0b645dffd04aef3c054c5cc8440774ca0d82a9c63"
+    },
+    {
+      "capture": "squirtle-normal-bob-16.png",
+      "sha256": "6d7251daa93ce350d72a4bd97a18150ebb19f82fefb7e7cdcd298629e110a9ae"
+    },
+    {
+      "capture": "squirtle-shiny-entry.png",
+      "sha256": "14636be0e2165b31345043c6e153b40aa57118f79b8950f47ba86624fb932523"
+    },
+    {
+      "capture": "squirtle-shiny-up.png",
+      "sha256": "a035a8b1b226e847cdf4f35587c773b847bde9811b0cda6a0e41195f6a7fd225"
+    },
+    {
+      "capture": "squirtle-shiny-left.png",
+      "sha256": "e9e165c34493ac57085062fac0129931c6b6bb5372fa5bb3ecfb5de5cc62f4c0"
+    },
+    {
+      "capture": "squirtle-shiny-right.png",
+      "sha256": "6b1f90cd7b17eaad74ce67ed0e0226d237e2927f15e1c1c09221f43b17cd2e7a"
+    },
+    {
+      "capture": "squirtle-shiny-down.png",
+      "sha256": "5d6f4687f3cd071e8bb22a551ba1adeaf3fbaabbaf9d94132007ad1564ce5fe3"
+    },
+    {
+      "capture": "squirtle-shiny-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "squirtle-shiny-fishing.png",
+      "sha256": "88a3fb5f947db31fa9f4a319ef5e7386f3b24f162e5d5016f526aa59e0d678e2"
+    },
+    {
+      "capture": "squirtle-shiny-fishing-ended.png",
+      "sha256": "cbde8f6b6a41b674d2573af41b675a7ee9cacd9771d4e18e4d846e6bdacf2b06"
+    },
+    {
+      "capture": "squirtle-shiny-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "squirtle-shiny-remount.png",
+      "sha256": "85fe9fc77be9100bd1b8359ed36d7346a256305b75cc9b848b7e1272b7eacc80"
+    },
+    {
+      "capture": "squirtle-shiny-before-transition.png",
+      "sha256": "219cff0e67caf4bacef12b4edfb2225f3f1b1748edb2ded2b6855a47af8cc88d"
+    },
+    {
+      "capture": "squirtle-shiny-after-transition.png",
+      "sha256": "18447589b2a9fa11e95adb81af8fd7aa59a0f62902ba66ed94f173988e67ba27"
+    },
+    {
+      "capture": "squirtle-shiny-bob-0.png",
+      "sha256": "5d6f4687f3cd071e8bb22a551ba1adeaf3fbaabbaf9d94132007ad1564ce5fe3"
+    },
+    {
+      "capture": "squirtle-shiny-bob-8.png",
+      "sha256": "64d317864e1d2631676027244318e0ea5a8cfc81385e843580be0116f88ca6c8"
+    },
+    {
+      "capture": "squirtle-shiny-bob-16.png",
+      "sha256": "0272e3c3c636b27455ac8a524c504d2f23989c8a4b16226a3ba6bb0fef4de87e"
+    },
+    {
+      "capture": "raichuAlola-normal-entry.png",
+      "sha256": "8f660cdba55ccad053a801c647f0b715fe0c5b05bafe64e3bc3ad805fb48fec4"
+    },
+    {
+      "capture": "raichuAlola-normal-up.png",
+      "sha256": "b56cea6a96f03a038e4c047d927864f6210810a53bcc2e082ea2b4c2366067fc"
+    },
+    {
+      "capture": "raichuAlola-normal-left.png",
+      "sha256": "0ab58afcfc27818e96f72d16130a0ab7a53d2c9c220106d897a691b45f1ae880"
+    },
+    {
+      "capture": "raichuAlola-normal-right.png",
+      "sha256": "0bc75c6376b6f60a469030f468a47780883d6d33a49f718a3a625715f6f29394"
+    },
+    {
+      "capture": "raichuAlola-normal-down.png",
+      "sha256": "2ea289bd301fc11caa614b3a6d0c6db541e42500718d87e2605b90dcd78fe792"
+    },
+    {
+      "capture": "raichuAlola-normal-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "raichuAlola-normal-fishing.png",
+      "sha256": "7e41b0f2374b6a703a4f670a8484580b03c629424a6c84a0eb9da8a1498af292"
+    },
+    {
+      "capture": "raichuAlola-normal-fishing-ended.png",
+      "sha256": "79e0fc78ae8d9ca16341ba0eaa218340c9db431134cbc7c7340f5a1e390aed9c"
+    },
+    {
+      "capture": "raichuAlola-normal-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "raichuAlola-normal-remount.png",
+      "sha256": "e75788599d012b94040810fae5264d67db917829e20a451bcc033682eed03eda"
+    },
+    {
+      "capture": "raichuAlola-normal-before-transition.png",
+      "sha256": "6a3873f0ab1f60a12fe3be4e36f9f51ba1f4993eb15fb94b0bb121b17d0937a7"
+    },
+    {
+      "capture": "raichuAlola-normal-after-transition.png",
+      "sha256": "674dc75e9a38d860b7bde0759abcd46d798fbad4319d90ca8f6e281479f0e2b9"
+    },
+    {
+      "capture": "raichuAlola-normal-bob-0.png",
+      "sha256": "2ea289bd301fc11caa614b3a6d0c6db541e42500718d87e2605b90dcd78fe792"
+    },
+    {
+      "capture": "raichuAlola-normal-bob-8.png",
+      "sha256": "5e7f7f0bd15c48a4ca4807fe01a0f3e625b531844ca0a3a0e2b8b29fac727bbd"
+    },
+    {
+      "capture": "raichuAlola-normal-bob-16.png",
+      "sha256": "96ebc50577896e6c143b1bd15c16e3f06be00fc147f7d3f48a6134c1339ff758"
+    },
+    {
+      "capture": "raichuAlola-shiny-entry.png",
+      "sha256": "4b893fed9dc11288d05c63b1f85fbbebea2d50185407916d9c163df6c72d0bd6"
+    },
+    {
+      "capture": "raichuAlola-shiny-up.png",
+      "sha256": "6e1c9afe65f1e6b806f48cf60b2de46c21abbd575ffae1c1bc025f9eef89e367"
+    },
+    {
+      "capture": "raichuAlola-shiny-left.png",
+      "sha256": "977f8d894b462eca308645059affee9c2b926f52bdff0b79f68bd6b20fdde1a0"
+    },
+    {
+      "capture": "raichuAlola-shiny-right.png",
+      "sha256": "8aa26f16bdf774ab7c0053294488749b2c1e7548fbf61cb023711b817f51656c"
+    },
+    {
+      "capture": "raichuAlola-shiny-down.png",
+      "sha256": "cafe700e672aaad1048b40402213072ccb3f74eed98c3731d0c60c0b28ec1f04"
+    },
+    {
+      "capture": "raichuAlola-shiny-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "raichuAlola-shiny-fishing.png",
+      "sha256": "756a81103a8189a41fa237f652d7477ddfae05763db76f13e8a28bbfdc63f81e"
+    },
+    {
+      "capture": "raichuAlola-shiny-fishing-ended.png",
+      "sha256": "cbbf397279f167e525e924d95cc24a54b14e4562a1fa714f68bc20e63d17d858"
+    },
+    {
+      "capture": "raichuAlola-shiny-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "raichuAlola-shiny-remount.png",
+      "sha256": "0b85790434083148bf3b907656546acd76d99c36f016c876dba94ce165e0f234"
+    },
+    {
+      "capture": "raichuAlola-shiny-before-transition.png",
+      "sha256": "554f7bd66b521ab7157b469256f915598ef5fd0b88c6651fdf60da42b356cea3"
+    },
+    {
+      "capture": "raichuAlola-shiny-after-transition.png",
+      "sha256": "1704ebb3332912129d28012abf15d11a2f9cb9af93ab00ca7d68450ec406dfbe"
+    },
+    {
+      "capture": "raichuAlola-shiny-bob-0.png",
+      "sha256": "cafe700e672aaad1048b40402213072ccb3f74eed98c3731d0c60c0b28ec1f04"
+    },
+    {
+      "capture": "raichuAlola-shiny-bob-8.png",
+      "sha256": "04b47490c702e5f6150fcb9ab9524f614e5889d9dc521617576f807ca43ba9d6"
+    },
+    {
+      "capture": "raichuAlola-shiny-bob-16.png",
+      "sha256": "8df8dc881b2e5d79fa627b99fbe4f96e08ffaeeb8240455cb840afa8c5ca5352"
+    },
+    {
+      "capture": "wartortle-normal-entry.png",
+      "sha256": "29ef8c029e6a6ea8cc96e3376d4d871674af0f19700cfeb5db5417cc55688026"
+    },
+    {
+      "capture": "wartortle-normal-up.png",
+      "sha256": "264e4a4db4291eaef35e79a0e57009dff2f3c1671bc40cf41162b62f627b8b35"
+    },
+    {
+      "capture": "wartortle-normal-left.png",
+      "sha256": "880f4d7ca110676fe2c6e5b3b365e5c4de629747863579ff74537873672cf677"
+    },
+    {
+      "capture": "wartortle-normal-right.png",
+      "sha256": "ccccc2fbfb10c36cfbffe17a07fa9dd04bedd3d0cc777e0adc0f4bd9d2440c73"
+    },
+    {
+      "capture": "wartortle-normal-down.png",
+      "sha256": "8be1c9aa4e85a0e3bfdd76f9bee7e0ad432d9b9295e7a4fdcd39c18ac2d7d896"
+    },
+    {
+      "capture": "wartortle-normal-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "wartortle-normal-fishing.png",
+      "sha256": "7b9fcac1cd01887cfc339ab5f5744a700a366d5d50863a1b8ca1f59f498965c8"
+    },
+    {
+      "capture": "wartortle-normal-fishing-ended.png",
+      "sha256": "3fb39bd2c2783eeb594dd22c98013afc0e213c682a179d14bf48ac05f966970f"
+    },
+    {
+      "capture": "wartortle-normal-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "wartortle-normal-remount.png",
+      "sha256": "e0d1a9ab081e1681983dccba7a3fcd0ecca8147f5a47fe74aa57f06dc0108cae"
+    },
+    {
+      "capture": "wartortle-normal-before-transition.png",
+      "sha256": "08b0960c9824ad9c08545b94e7a0e6f2fe5e48603658ee04a216ccb24d84cf18"
+    },
+    {
+      "capture": "wartortle-normal-after-transition.png",
+      "sha256": "63957d2fe234fa4c4fd6671d94dcd2652e30cc90555c0b553d218e82cdf296e0"
+    },
+    {
+      "capture": "wartortle-normal-bob-0.png",
+      "sha256": "8be1c9aa4e85a0e3bfdd76f9bee7e0ad432d9b9295e7a4fdcd39c18ac2d7d896"
+    },
+    {
+      "capture": "wartortle-normal-bob-8.png",
+      "sha256": "2aac96882a82aef0440dd7a30f402e35d978cd68e022d878da22126ad1eedb10"
+    },
+    {
+      "capture": "wartortle-normal-bob-16.png",
+      "sha256": "3adb320389b5ffa368e3c70146617f87c3be4396898d7f0436d0c0a87fe86105"
+    },
+    {
+      "capture": "wartortle-shiny-entry.png",
+      "sha256": "acdfd0854e9747784c1990cc7ac54fab1a3f8377439bb3b56388ec0b94b59bf8"
+    },
+    {
+      "capture": "wartortle-shiny-up.png",
+      "sha256": "5ab0e217b97c74aa165e9e2286599f775f6025e2c686bf995ff4f3da18929ab0"
+    },
+    {
+      "capture": "wartortle-shiny-left.png",
+      "sha256": "1d4d89168ab7fd8482a01c0cbc943a5826809eec827ffc712fb6cf80d721c891"
+    },
+    {
+      "capture": "wartortle-shiny-right.png",
+      "sha256": "61e5405a3c62650832cd552b4f4a75c717cae8170140a11f2e18ed78235f5c71"
+    },
+    {
+      "capture": "wartortle-shiny-down.png",
+      "sha256": "4e401932e7218d4a92c810134f4ef96e2609801c6a18bb4fd30d77532f7d06a1"
+    },
+    {
+      "capture": "wartortle-shiny-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "wartortle-shiny-fishing.png",
+      "sha256": "7685dd24c961fa573369b76a052e2369ad3abd9136c6510ec771929f50d10f5e"
+    },
+    {
+      "capture": "wartortle-shiny-fishing-ended.png",
+      "sha256": "dea358978077e1e5619ce05c532edf24d9f041893581840b886edc347b3250e0"
+    },
+    {
+      "capture": "wartortle-shiny-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "wartortle-shiny-remount.png",
+      "sha256": "0789c61b3537cf095bbc1565b0c4aeeadc6b5d037e0e18e7880d0e47e0dcb5ed"
+    },
+    {
+      "capture": "wartortle-shiny-before-transition.png",
+      "sha256": "677a104c67570265a307baf301f7d4a8a0c7c2d5c6a2e1d5e7039b7ed76867b1"
+    },
+    {
+      "capture": "wartortle-shiny-after-transition.png",
+      "sha256": "c2072996de46d998c03da053f93bb5fb652a9be55ce1d08d7f113aa5d92f18ad"
+    },
+    {
+      "capture": "wartortle-shiny-bob-0.png",
+      "sha256": "4e401932e7218d4a92c810134f4ef96e2609801c6a18bb4fd30d77532f7d06a1"
+    },
+    {
+      "capture": "wartortle-shiny-bob-8.png",
+      "sha256": "dee68efd2a8fcc4f50987e2270f3c2c9410a7ed2b5650add71568264a7405bae"
+    },
+    {
+      "capture": "wartortle-shiny-bob-16.png",
+      "sha256": "c3f979d5f59da94ada7b6c24b88516d6afb886af7484d9366c06ea4148f5d662"
+    },
+    {
+      "capture": "qwilfishHisui-normal-entry.png",
+      "sha256": "7324ceffa10bd40e8f07282fb240aac09c9f676f9c6b792a8581d132e839f0b5"
+    },
+    {
+      "capture": "qwilfishHisui-normal-up.png",
+      "sha256": "edf50bace08c3458915abee4f17f107ef2eef159699875233529ac0216b09447"
+    },
+    {
+      "capture": "qwilfishHisui-normal-left.png",
+      "sha256": "4c0451fc8e7fb71449a88d8be0c0750dd7ee9aa9b84174d2ed6f921808b3334d"
+    },
+    {
+      "capture": "qwilfishHisui-normal-right.png",
+      "sha256": "5f528178136a4d43e54e6c1523faf59562da7c27672c3c52dc6cdbf63552c6f6"
+    },
+    {
+      "capture": "qwilfishHisui-normal-down.png",
+      "sha256": "024aaeff51dba200b3b244308f0eddd7bf7242e874ed00b76754b24a754cf4b1"
+    },
+    {
+      "capture": "qwilfishHisui-normal-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "qwilfishHisui-normal-fishing.png",
+      "sha256": "da6976360f4efc299fc4dd3b64b2ecf67b50a8520407f9021bb3c22c87e6f04f"
+    },
+    {
+      "capture": "qwilfishHisui-normal-fishing-ended.png",
+      "sha256": "4eba6813f7bd5fc1b720e01fb3c96f95781638dd7048fbb76c3def2c2b3c7634"
+    },
+    {
+      "capture": "qwilfishHisui-normal-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "qwilfishHisui-normal-remount.png",
+      "sha256": "8fa4ab71db0187ec44a793b32e515ef160d0835a7b9096eaf1a31b8b9901a181"
+    },
+    {
+      "capture": "qwilfishHisui-normal-before-transition.png",
+      "sha256": "1083cb61cc897722fda518aa66ba0552b3468f268cd4dc12ce5e2edfc3c294cf"
+    },
+    {
+      "capture": "qwilfishHisui-normal-after-transition.png",
+      "sha256": "b33bef683411ff952b775ec86cf7671811f6466a5583e589e2f09cf33587e2e7"
+    },
+    {
+      "capture": "qwilfishHisui-normal-bob-0.png",
+      "sha256": "024aaeff51dba200b3b244308f0eddd7bf7242e874ed00b76754b24a754cf4b1"
+    },
+    {
+      "capture": "qwilfishHisui-normal-bob-8.png",
+      "sha256": "510bcf38e7cce05f1b72c3c22f48b1a7c83efe791ac176f1aef3fce7b39fc898"
+    },
+    {
+      "capture": "qwilfishHisui-normal-bob-16.png",
+      "sha256": "edc58079e48cd8c55aa21eb8a571e709a2537e13a4725d115bcf7572af1c6212"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-entry.png",
+      "sha256": "7324ceffa10bd40e8f07282fb240aac09c9f676f9c6b792a8581d132e839f0b5"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-up.png",
+      "sha256": "edf50bace08c3458915abee4f17f107ef2eef159699875233529ac0216b09447"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-left.png",
+      "sha256": "def4aa5f8cf4145b11dea065b67d6f5abd3c89cb2818dfc8fe3619b64eb90cc3"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-right.png",
+      "sha256": "0682f09283bea69045d807ebdf48bc10100620bdc08c0d2642d87505f2645fb6"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-down.png",
+      "sha256": "27a14f1284d0f97a5cd046a97bb76f94eeabaa8ae764de3e9dcb022cf7eea51c"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-fishing.png",
+      "sha256": "ffb82a908941dcb5a9512a51a40f96a222fa0c089ada9d915dd10a4e620b4e96"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-fishing-ended.png",
+      "sha256": "5c5bf572859b4b91c3b2ccdb2f91045683f44a437c8fd928bcd213b4fbf7892c"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-remount.png",
+      "sha256": "8fa4ab71db0187ec44a793b32e515ef160d0835a7b9096eaf1a31b8b9901a181"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-before-transition.png",
+      "sha256": "86a931b764b4238cc180da82cd221bfc333c71975021c52ef417a358bbf08de0"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-after-transition.png",
+      "sha256": "d35ade727324d179bed5c41eddc533f5ef4f1a50c403eb738af14f6a0300d967"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-bob-0.png",
+      "sha256": "27a14f1284d0f97a5cd046a97bb76f94eeabaa8ae764de3e9dcb022cf7eea51c"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-bob-8.png",
+      "sha256": "8b7f31f89aea778bb7bdca409da2fcb9d2d40717b072a68c51308d9ff94db95a"
+    },
+    {
+      "capture": "qwilfishHisui-shiny-bob-16.png",
+      "sha256": "80a1cbff4e7270432cb74b0b82f4ef105648039eaa70c6461aa668731a88f794"
+    },
+    {
+      "capture": "lugia-normal-entry.png",
+      "sha256": "43daa570f1671f7861562d372cd5a9bab6f4acbc9c5c847df4c8afaad2f16181"
+    },
+    {
+      "capture": "lugia-normal-up.png",
+      "sha256": "33243ed07a7228ff33fab2b83165c51e4aff7ff768b019638d964c4940c8c2f0"
+    },
+    {
+      "capture": "lugia-normal-left.png",
+      "sha256": "be605a88cefe8b6efdb35a7972c2ba327b6c71b831eac7d103e780a2bde34c25"
+    },
+    {
+      "capture": "lugia-normal-right.png",
+      "sha256": "9a1f879c664129d54103315d812c191ed85080a2de368cae46c725d4ea2a1999"
+    },
+    {
+      "capture": "lugia-normal-down.png",
+      "sha256": "e2dca5854c9489f2cbf6fe8c97dc3b3f4e2826e65c309e078991c3bb8936dc30"
+    },
+    {
+      "capture": "lugia-normal-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "lugia-normal-fishing.png",
+      "sha256": "9aa6daaff277a9cc56e76d627c53ba1d8a86e707c6c2b365b3dd324023cbde30"
+    },
+    {
+      "capture": "lugia-normal-fishing-ended.png",
+      "sha256": "44eadf385a55c9af1e36d8ec2b34713f0a021f582e584c3035e0eb7e5e2734f8"
+    },
+    {
+      "capture": "lugia-normal-dismount.png",
+      "sha256": "21968b4cb15efd47b5edffe963b59a14244f44b3310d7dfcf47fc68e83808365"
+    },
+    {
+      "capture": "lugia-normal-remount.png",
+      "sha256": "84c391ebe1576893fe3b455ee75aeeea2289c7c5dec73e338ef25184b3d93bb6"
+    },
+    {
+      "capture": "lugia-normal-before-transition.png",
+      "sha256": "bb36f5d4f62a4fa71be0b5d8bfed45d614d6aa08aa6fa2d738b856be0b35ae1c"
+    },
+    {
+      "capture": "lugia-normal-after-transition.png",
+      "sha256": "d1e4d1a8e91c8b249bec0ac79e9fce64a5a01637501e56049006f2086d53db98"
+    },
+    {
+      "capture": "lugia-normal-bob-0.png",
+      "sha256": "e2dca5854c9489f2cbf6fe8c97dc3b3f4e2826e65c309e078991c3bb8936dc30"
+    },
+    {
+      "capture": "lugia-normal-bob-8.png",
+      "sha256": "b1d6c6985b5dd3ae065af7cdf81f9d23ed6857e30bdcc4463da35b1ecfc1007a"
+    },
+    {
+      "capture": "lugia-normal-bob-16.png",
+      "sha256": "b1c7cf37d10b27369ec2a2e205da1db88e3d2e561a3d961e5d9f0a4729affd6f"
+    },
+    {
+      "capture": "lugia-shiny-entry.png",
+      "sha256": "efcf021e50fb24bc99fa6e18ad2fd71acbd6f4d85525d5559238076b1b8a9bac"
+    },
+    {
+      "capture": "lugia-shiny-up.png",
+      "sha256": "1a8d36a5265778c4dae7ddd7e4d8b6debc60f7d9bcf37fb4d8679f2ff4061efc"
+    },
+    {
+      "capture": "lugia-shiny-left.png",
+      "sha256": "b753f9f3f9cf5d1af1bed0b58abc1662ab5f4997b4386896842464afc969321b"
+    },
+    {
+      "capture": "lugia-shiny-right.png",
+      "sha256": "bbab27e1fac6594d7b9cf804e8d973d5db0e95e0b8b7be8af4b144ecfe565ea7"
+    },
+    {
+      "capture": "lugia-shiny-down.png",
+      "sha256": "28aa6cb92ffaac2bcc7f57c09e9d6244bb7281dfa8fd430666891c89b6646168"
+    },
+    {
+      "capture": "lugia-shiny-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "lugia-shiny-fishing.png",
+      "sha256": "cfe64717e4e8f4533ea373965de8e26b16127f6beae6be366014ebce5e45ab0c"
+    },
+    {
+      "capture": "lugia-shiny-fishing-ended.png",
+      "sha256": "cb47d7e4410dd9728dec0b90f28d32e663a0d2151db00f96682e5cb6a2626f81"
+    },
+    {
+      "capture": "lugia-shiny-dismount.png",
+      "sha256": "21968b4cb15efd47b5edffe963b59a14244f44b3310d7dfcf47fc68e83808365"
+    },
+    {
+      "capture": "lugia-shiny-remount.png",
+      "sha256": "eccf06d520329f662b431b691ed00affa98c12544801c7ad735f8c97a776590d"
+    },
+    {
+      "capture": "lugia-shiny-before-transition.png",
+      "sha256": "2da7b68259cc7618c3b35f53f251e105403bf5ed8deab48342a6ec77794d2f86"
+    },
+    {
+      "capture": "lugia-shiny-after-transition.png",
+      "sha256": "d98202c903c210efe8cde9f2a286552ccddb8e5eda588fe90345f3da481bb98d"
+    },
+    {
+      "capture": "lugia-shiny-bob-0.png",
+      "sha256": "28aa6cb92ffaac2bcc7f57c09e9d6244bb7281dfa8fd430666891c89b6646168"
+    },
+    {
+      "capture": "lugia-shiny-bob-8.png",
+      "sha256": "8a37ee44ef54ae02d5841b4b28cccc571d357e1c925c5609bf8856be2d7b00e3"
+    },
+    {
+      "capture": "lugia-shiny-bob-16.png",
+      "sha256": "a2b5bf2334ad45d916c4ec98848bd9e38ec13693e926d51ad93f0d0175fa9678"
+    },
+    {
+      "capture": "gyarados-normal-entry.png",
+      "sha256": "1b022d91363b0a795e9aec66a11a7bbfefb9653b17d6c9d4ef860fae031f67c2"
+    },
+    {
+      "capture": "gyarados-normal-up.png",
+      "sha256": "f6f74f2696522c52936131343d52edafe30798b762412e22e4a63fe527115edf"
+    },
+    {
+      "capture": "gyarados-normal-left.png",
+      "sha256": "eaa9032b1a1797a82f208449ff52b71b764531c8b5abc0220ed40c9792e60109"
+    },
+    {
+      "capture": "gyarados-normal-right.png",
+      "sha256": "bb49d8c0b503d493e68915e36aa5ad56bfa62f97b2258cf54159ac6be9e6fd0e"
+    },
+    {
+      "capture": "gyarados-normal-down.png",
+      "sha256": "a363943eab492985a6caac398d157e18a3469a1d834ac4eed875bb905180a833"
+    },
+    {
+      "capture": "gyarados-normal-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "gyarados-normal-fishing.png",
+      "sha256": "f7a4288a0593527444f6044a6d5fe249d8d20023601b333a2413ff17cd3fa674"
+    },
+    {
+      "capture": "gyarados-normal-fishing-ended.png",
+      "sha256": "519c6e11addae972b510935c79b4ad5cd168d097c0a41c467d771b304c276b24"
+    },
+    {
+      "capture": "gyarados-normal-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "gyarados-normal-remount.png",
+      "sha256": "66ce5f82773ef5500e749e606a7da25af440f9bdabd8d114b51410d80a01625e"
+    },
+    {
+      "capture": "gyarados-normal-before-transition.png",
+      "sha256": "80d143dbd542024413c5e9a8bf3d6daeb6435089899400ffe8e522b84e17c881"
+    },
+    {
+      "capture": "gyarados-normal-after-transition.png",
+      "sha256": "be45d1f2328ef0090d092ecdf9b3d5d425b56608dce897c8c2deda2e09b1e14d"
+    },
+    {
+      "capture": "gyarados-normal-bob-0.png",
+      "sha256": "a363943eab492985a6caac398d157e18a3469a1d834ac4eed875bb905180a833"
+    },
+    {
+      "capture": "gyarados-normal-bob-8.png",
+      "sha256": "f4a538b74e8904924ff575ef63189b90bb5bdca5f82639c8db4ec483c187c19e"
+    },
+    {
+      "capture": "gyarados-normal-bob-16.png",
+      "sha256": "555a8099921a56cf73ef8a33f31d2057f639f86d2070c54e4535e73ae24c0419"
+    },
+    {
+      "capture": "gyarados-shiny-entry.png",
+      "sha256": "95a6c9de75cd8bd1ff3671a281bbe8bc91d9358139a13971d612e7847cb8d8ba"
+    },
+    {
+      "capture": "gyarados-shiny-up.png",
+      "sha256": "663061afbcea7a4087348bbbcfbae365114a0508fade222687628db75f85deb0"
+    },
+    {
+      "capture": "gyarados-shiny-left.png",
+      "sha256": "096198eac17104e878bf5d7db956945a89295a52a8a217a28676c53bf655d6f0"
+    },
+    {
+      "capture": "gyarados-shiny-right.png",
+      "sha256": "d3c471a1104c8bebf27a5a581d1066c43c614ebc22be3ee2204fe34244bc4dbb"
+    },
+    {
+      "capture": "gyarados-shiny-down.png",
+      "sha256": "fa5b0949c1c6fc692292df5e9277d0ab397ed7cd6720163715b1fb5c86c19e45"
+    },
+    {
+      "capture": "gyarados-shiny-rod-bag.png",
+      "sha256": "c3a3db85f8df934d280cbfdc547ff717534962777398ea4476ab7395cfc00ff7"
+    },
+    {
+      "capture": "gyarados-shiny-fishing.png",
+      "sha256": "4cb63268d033ae062beccb7e014a2b9f738b399387309af26390a88cc4c9c36b"
+    },
+    {
+      "capture": "gyarados-shiny-fishing-ended.png",
+      "sha256": "c6a923f1de0b82d07607e733f16c2ccdb01ae6ec3cd9faac68a6429c148142d1"
+    },
+    {
+      "capture": "gyarados-shiny-dismount.png",
+      "sha256": "2f484c2b7be6fe5bd368f02b35e7bb76276e5d58f162766137b38bb2d6aa49d3"
+    },
+    {
+      "capture": "gyarados-shiny-remount.png",
+      "sha256": "697a86dbaf0084871596203659bacfac1347be4e677eda9727442b8cd222d689"
+    },
+    {
+      "capture": "gyarados-shiny-before-transition.png",
+      "sha256": "70a95ae2bae0dfdd4680fa42d0d1a3150982bdd6c7c83e72947009b7a1b72c07"
+    },
+    {
+      "capture": "gyarados-shiny-after-transition.png",
+      "sha256": "83cdb9adb69b461e4b2e926a5a2c6025185e385b3b5920bb1c2a7f19cfaab44d"
+    },
+    {
+      "capture": "gyarados-shiny-bob-0.png",
+      "sha256": "fa5b0949c1c6fc692292df5e9277d0ab397ed7cd6720163715b1fb5c86c19e45"
+    },
+    {
+      "capture": "gyarados-shiny-bob-8.png",
+      "sha256": "eb5f15e6dbb0687d17e9e3f9c2a88a9169435ffa5d17213d020f5b62caf21ed1"
+    },
+    {
+      "capture": "gyarados-shiny-bob-16.png",
+      "sha256": "ee0aad183a5f4148ec6858bf1ca4b2744a2ff966d1bb21d03059f5a44e2cb1c0"
+    }
+  ]
+}

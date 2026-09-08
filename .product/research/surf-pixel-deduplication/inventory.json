@@ -1,0 +1,1258 @@
+{
+  "revision": "7aa8db0557da310fdacdf716a9fba95db76d2536",
+  "pairs": [
+    {
+      "name": "Squirtle",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0007_squirtle.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0007_squirtle_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "03f880226b5c5652d0c46257224bc18683da1ed8e3d14b19d04adca4ea0e8190",
+      "shiny_sha256": "03f880226b5c5652d0c46257224bc18683da1ed8e3d14b19d04adca4ea0e8190"
+    },
+    {
+      "name": "Wartortle",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0008_wartortle.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0008_wartortle_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "675819b691375897c836321e3b9520c87b9285b36c2aeafe1a5c7fbe30ccb8f2",
+      "shiny_sha256": "72bbb664251376929ca31d958198e030108a872bf3665126289bbd1914359d61"
+    },
+    {
+      "name": "Blastoise",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0009_blastoise.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0009_blastoise_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "c6cb6bd070760d725d7acd4fe01ba4a38c639a1daf101a577e8ab15fb9074514",
+      "shiny_sha256": "b0f37a5ff1430e618413504e2816280ec26a33d361dc245af6f278dd5b272a60"
+    },
+    {
+      "name": "Pikachu",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0025_pikachu.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0025_pikachu_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "82754e209b87813c9c6f337558d9309666c7a4d0ec265df9d59ac7cccdb0f925",
+      "shiny_sha256": "82754e209b87813c9c6f337558d9309666c7a4d0ec265df9d59ac7cccdb0f925"
+    },
+    {
+      "name": "Raichu",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0026_raichu.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0026_raichu_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "2f9b017f7c10a4123d4a788b033e5262cc55afd77f3caf6ae671d69be1e4e6ee",
+      "shiny_sha256": "2f9b017f7c10a4123d4a788b033e5262cc55afd77f3caf6ae671d69be1e4e6ee"
+    },
+    {
+      "name": "Nidoqueen",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0031_nidoqueen.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0031_nidoqueen_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "272b453d4ea11ad15427b3de08fa82a6626e9c54ea3096010c0a47605c948adb",
+      "shiny_sha256": "272b453d4ea11ad15427b3de08fa82a6626e9c54ea3096010c0a47605c948adb"
+    },
+    {
+      "name": "Nidoking",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0034_nidoking.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0034_nidoking_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "ab9d171e586f27ee79030f95c07c5c2c85f6557a34b220c67dfc72552fd14f6c",
+      "shiny_sha256": "23e85f85fadda6c8a91c5198465a018b4c8505cecf5f39b114787ace7843717b"
+    },
+    {
+      "name": "Psyduck",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0054_psyduck.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0054_psyduck_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "4b6e0a098b4edcef363873324202ac4a23291755a87473c201ac9d6ca2e2cfac",
+      "shiny_sha256": "4b6e0a098b4edcef363873324202ac4a23291755a87473c201ac9d6ca2e2cfac"
+    },
+    {
+      "name": "Golduck",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0055_golduck.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0055_golduck_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "d1cd0ac866ba1a8eb42dc3ffe0c13a865ef1e6373ec62e65f836fc85ffc0fcda",
+      "shiny_sha256": "eeca9362496371ec8cafeed49583ac4d1e3243d1d08544a3424b707d4f172b2c"
+    },
+    {
+      "name": "Poliwag",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0060_poliwag.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0060_poliwag_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "ea002773641908fe0b366af1897f96e210b9c277a5bedf0742f8a003d7cca5a0",
+      "shiny_sha256": "ea002773641908fe0b366af1897f96e210b9c277a5bedf0742f8a003d7cca5a0"
+    },
+    {
+      "name": "Poliwhirl",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0061_poliwhirl.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0061_poliwhirl_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "95fe9f77df9e1441b67df5e29b75e459b1fbaa9e00704e91be5b15eedc480ea6",
+      "shiny_sha256": "95fe9f77df9e1441b67df5e29b75e459b1fbaa9e00704e91be5b15eedc480ea6"
+    },
+    {
+      "name": "Poliwrath",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0062_poliwrath.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0062_poliwrath_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "34bc372257f99116f47c54cf0c70101b2af23e41ee5f68a6bb2a15929c7bbcb8",
+      "shiny_sha256": "34bc372257f99116f47c54cf0c70101b2af23e41ee5f68a6bb2a15929c7bbcb8"
+    },
+    {
+      "name": "Tentacool",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0072_tentacool.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0072_tentacool_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "602e46a1eeceb477b4adf7446c53ec7ed325933b891561547bdfb3441e2fa015",
+      "shiny_sha256": "602e46a1eeceb477b4adf7446c53ec7ed325933b891561547bdfb3441e2fa015"
+    },
+    {
+      "name": "Tentacruel",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0073_tentacruel.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0073_tentacruel_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "8f04029cd6b9f613f688ab43cf4ecf5fab146781b0dfefe9caa3f1c4ed9a4283",
+      "shiny_sha256": "8f04029cd6b9f613f688ab43cf4ecf5fab146781b0dfefe9caa3f1c4ed9a4283"
+    },
+    {
+      "name": "Slowpoke",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0079_slowpoke.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0079_slowpoke_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "afadfae98ac1ce1e71d353a46c66aee113690ec99443104da85bbdc8c5e60b3d",
+      "shiny_sha256": "afadfae98ac1ce1e71d353a46c66aee113690ec99443104da85bbdc8c5e60b3d"
+    },
+    {
+      "name": "Slowbro",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0080_slowbro.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0080_slowbro_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "fbf4c0b654635b6680e08bb7b3a1b4267b12286ab1b68fcd2b2bab19813241f2",
+      "shiny_sha256": "fbf4c0b654635b6680e08bb7b3a1b4267b12286ab1b68fcd2b2bab19813241f2"
+    },
+    {
+      "name": "Seel",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0086_seel.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0086_seel_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "5636e76075b65e9d98ce6541194de3d64d30fcfe0c1dbe8fd5138bc727a71fc9",
+      "shiny_sha256": "5636e76075b65e9d98ce6541194de3d64d30fcfe0c1dbe8fd5138bc727a71fc9"
+    },
+    {
+      "name": "Dewgong",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0087_dewgong.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0087_dewgong_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "6be6a425ab362fa7ba9aea3dac7235b5e62735d95dc0d6cd90c00310841390b1",
+      "shiny_sha256": "6d264ebedf1e74e9417b2d69e9e1abd7abb648084a387c14e1134adec50aac23"
+    },
+    {
+      "name": "Shellder",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0090_shellder.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0090_shellder_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "a29d869e637cc922c8f1ef09935e4507d610ec92691c4416f3c2a1bed5439226",
+      "shiny_sha256": "ceda5995b4e5635f8e86ed17213e7dbe275ac003995b7ab79425933e99252519"
+    },
+    {
+      "name": "Cloyster",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0091_cloyster.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0091_cloyster_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "c7f95dc2773d24122cb829b47b1a27b17a109b8af03b8818113bd9fa3ba75ea4",
+      "shiny_sha256": "f82f14e7edb9b5318a1f4b02b40daac737c961ad8483360b3ac407d6ceeb86f1"
+    },
+    {
+      "name": "Krabby",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0098_krabby.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0098_krabby_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "9810c2fcbfeb8b8ad1be26f36f7de121432826f8688e2cedcf560a1a23f13ccb",
+      "shiny_sha256": "724e0a8c2e7ed721ef1afa3ea04ac110bbaecfdbc20c90ef0fb105a673e147c7"
+    },
+    {
+      "name": "Kingler",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0099_kingler.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0099_kingler_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "1f608e35539594f24a838f3589491f0db5a8fbd44a45fb436d88ed4427aa5d3f",
+      "shiny_sha256": "1f608e35539594f24a838f3589491f0db5a8fbd44a45fb436d88ed4427aa5d3f"
+    },
+    {
+      "name": "Lickitung",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0108_lickitung.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0108_lickitung_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "7faf4efeee1c490e77dcd89cae6f45d561928366c054d77c51d0851673112b7c",
+      "shiny_sha256": "62cf001e2a959889cae85aab079cd2023cc82000d261a4ad287fe7438ed24598"
+    },
+    {
+      "name": "Rhydon",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0112_rhydon.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0112_rhydon_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "7f5593e9f4533a01beb13d61ebf5030c52cc5ccc86fb2fa2b8e483a0c0bfef65",
+      "shiny_sha256": "b3fb57e91ab4ceb70e394d12e437daafaf30beb75464a00f0d255086a6a35af6"
+    },
+    {
+      "name": "Kangaskhan",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0115_kangaskhan.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0115_kangaskhan_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "47ec7006d5a015eee934aee0d90138e827cd6a184e0edbd7dea9dd4e5d751455",
+      "shiny_sha256": "d826b1c183d4c3f2f44a1db73340284bc70e65a9eda9739b492eb4abb99ae4e8"
+    },
+    {
+      "name": "Horsea",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0116_horsea.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0116_horsea_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "21287a4cf620c3aaaccad3ff8c85dfc03456f7a75dcb930e6a5cbf426dcd3a2b",
+      "shiny_sha256": "21287a4cf620c3aaaccad3ff8c85dfc03456f7a75dcb930e6a5cbf426dcd3a2b"
+    },
+    {
+      "name": "Seadra",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0117_seadra.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0117_seadra_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "ce74fb130f91db49134761025a04de07450f834f806e2d189c6c660748ee781e",
+      "shiny_sha256": "ce74fb130f91db49134761025a04de07450f834f806e2d189c6c660748ee781e"
+    },
+    {
+      "name": "Goldeen",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0118_goldeen.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0118_goldeen_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "3b7b62577237e76ccd267f49f61e475911e15d982349efbf6468060f895425c0",
+      "shiny_sha256": "3b7b62577237e76ccd267f49f61e475911e15d982349efbf6468060f895425c0"
+    },
+    {
+      "name": "Seaking",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0119_seaking.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0119_seaking_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "0da39e5b58310f14d3733dd81b43abb9094c701c66f087ec2c0fd8c0cd30e7d6",
+      "shiny_sha256": "b9be68877ce83535f11987ec91f06ec8bf7e270cfadab2ea4028c4d7f856d899"
+    },
+    {
+      "name": "Staryu",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0120_staryu.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0120_staryu_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "01fcef933bd75aed48ba60e40808b53d48fd7d98e3fdd17bbac9113b085c5bef",
+      "shiny_sha256": "1d6f44c79aca27025d4e944f15eec55ae5be0a3ad1ba54bac2e00a53b3aeaa6f"
+    },
+    {
+      "name": "Starmie",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0121_starmie.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0121_starmie_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "da7d53f23189c0bcafa18f0d2c9283ce433d06b37a4c263c042828774884a37a",
+      "shiny_sha256": "77027e53588a465a8ca6f0f177f16bfb5db19e385c8baecc2388210462e3fda0"
+    },
+    {
+      "name": "Tauros",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0128_tauros.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0128_tauros_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "439d5d8cdc93bd3d0272fc4dd965c2fc33ce1abf057a89f5a236e0e1590000b1",
+      "shiny_sha256": "6002002e8144c23828b38030ca174231ae772a973d8b2365e8fdbc5af9027d88"
+    },
+    {
+      "name": "Gyarados",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0130_gyarados.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0130_gyarados_shiny.4bpp",
+      "bytes": 24576,
+      "identical": false,
+      "normal_sha256": "a6d86aa278a67423d3563b05f791c6aa1361a4b8dffdc15a1a563378a2d76d0f",
+      "shiny_sha256": "34d7baaf1f56b7091d027a2c1bd3991305e79ceaef4ebdd13c704bd249696e81"
+    },
+    {
+      "name": "Lapras",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0131_lapras.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0131_lapras_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "c3919f65fb90e970dde3086e47d27e9e93f5f1bb9da54f6d902c598e17f826e7",
+      "shiny_sha256": "5f71216cff34b2b0e3e328f4a1870cdf6b6b8c2ace40b28328f26d4f2662792c"
+    },
+    {
+      "name": "Vaporeon",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0134_vaporeon.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0134_vaporeon_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "f9fc2fd85472ee894e445fbc19b6b7e37d5d7011b05f8aada270841e7d8eb98e",
+      "shiny_sha256": "bfde023975ade2702e863b3b04e7bab936a76fdff386170a8977146d21a2be59"
+    },
+    {
+      "name": "Omanyte",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0138_omanyte.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0138_omanyte_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "cbd88908d21c5d840af1f814d735c6df90889193a11da0b32088e3d3d94b70a2",
+      "shiny_sha256": "bf981c722d89c196e15a922625f5eaadfd5ad039ba05f35b3a9cbd667fee356d"
+    },
+    {
+      "name": "Omastar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0139_omastar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0139_omastar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "bb933cbc8ae9fa58bede4fc0d245c01feddd8c72cc646fda9bea8b242125599d",
+      "shiny_sha256": "bb933cbc8ae9fa58bede4fc0d245c01feddd8c72cc646fda9bea8b242125599d"
+    },
+    {
+      "name": "Kabuto",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0140_kabuto.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0140_kabuto_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "2affd91b825da8eee03edf82d265871d22529d88a2fe83df543cbbab09e2f27c",
+      "shiny_sha256": "f860034b676efd7e3a9b50728e28e6378ebb8c0afe498cf33de2dbe34f9a8239"
+    },
+    {
+      "name": "Kabutops",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0141_kabutops.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0141_kabutops_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "6587b32325d4acf40b13455e78d69794205f669602bf88d1ed9a667900c8f718",
+      "shiny_sha256": "ee3f7fa496465be3fdd665bf36cbb231e847066731e57766b622ab0f0d406703"
+    },
+    {
+      "name": "Snorlax",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0143_snorlax.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0143_snorlax_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "bca8cfedf34e1d4332a2e667cbf34e3eeccde258cb4cdeefc7e18daad3fa32fe",
+      "shiny_sha256": "c2451abf3920a69130f59e52701f667fc60edec8af9e848210c0fd9924de5ef8"
+    },
+    {
+      "name": "Dratini",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0147_dratini.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0147_dratini_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "b3902a8f44d6d295373b2a57c1e562af2c76aeb3823a6e1eace5280cc4ca83e1",
+      "shiny_sha256": "933f15c531bcba33518608c7017060f26c2d1bb104154b8f298e37e6dbc0fb83"
+    },
+    {
+      "name": "Dragonair",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0148_dragonair.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0148_dragonair_shiny.4bpp",
+      "bytes": 24576,
+      "identical": false,
+      "normal_sha256": "a14583f80fcee76476ce494a4a9e07ee58c1874e8f1ae7d63122705fd6becf51",
+      "shiny_sha256": "9ab664ddb99408c859cfe87063ad171520c0c2e3a68813327a2ff7ecf66de927"
+    },
+    {
+      "name": "Dragonite",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0149_dragonite.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0149_dragonite_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "25137b958852a50e5c82b92dc51aa0ba890dc791f7b8e2e066387037c57e0538",
+      "shiny_sha256": "585b3204833cabca31b75d2af9e5f7759fdabf5a0e3ba50881a7144c4d1b288d"
+    },
+    {
+      "name": "Mew",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0151_mew.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0151_mew_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "93e6dbdaf7445c601f143fa49ddf4af71e1fbc6188d2fb586ab51bc7f0b3032d",
+      "shiny_sha256": "4bfa4b77fa52a06a9b5e4aaa020ded2286f5b69417fe25dbea19892adb4b75f4"
+    },
+    {
+      "name": "Totodile",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0158_totodile.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0158_totodile_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "bb626387f04021af5325b0b4b73b9d93b99310ec3574bba6332a9d82b051f6e4",
+      "shiny_sha256": "4922bab5419d050fff2edc78301379e4d9553951c44ec24a36cc170ecddd0c73"
+    },
+    {
+      "name": "Croconaw",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0159_croconaw.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0159_croconaw_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "43a36e03b312be611e4e60ff12c7905d6b92cdebf1b40abd37d32168cc4f1e05",
+      "shiny_sha256": "f27147c4b2e2eff5cdea96685fbe949f822fa880bb0f602080d90aa25c82600c"
+    },
+    {
+      "name": "Feraligatr",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0160_feraligatr.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0160_feraligatr_shiny.4bpp",
+      "bytes": 24576,
+      "identical": false,
+      "normal_sha256": "b189b22f1f220766f985d7befcfe1d022b23ec9b7a86e86a4f53994d326aab43",
+      "shiny_sha256": "62f347fcfd71c96aa32865749684938622a47229be02b829ebf608954394a3eb"
+    },
+    {
+      "name": "Sentret",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0161_sentret.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0161_sentret_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "55218d33353f8cbce9dde4ed16987164f674fb33d56b0b05e059b2321560a4a5",
+      "shiny_sha256": "61f754d4085ef72a715abee8f9458dcb52bb910e758d4b4385b2149b68d5f223"
+    },
+    {
+      "name": "Furret",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0162_furret.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0162_furret_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "703594ca817616ab9b6bedfb6aab5123c740fddbef765762cad7e5d61db88217",
+      "shiny_sha256": "84a80bb29a6fa7f4d6e45664a80cb4d991109d0610b02d24399e2c91139e29bf"
+    },
+    {
+      "name": "Chinchou",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0170_chinchou.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0170_chinchou_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "e90351ae8ce5117f9b3a006773ca53fedb1cb446b7ff5d25b34604e3da25126a",
+      "shiny_sha256": "59759a1446cd94d4b1caac6640d62231916f00114f78069b84bc34624b20270e"
+    },
+    {
+      "name": "Lanturn",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0171_lanturn.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0171_lanturn_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "204a0bd3e02a3e7877647acc11af214ad8aa6f2d90a7623d55edab0604470a1e",
+      "shiny_sha256": "41296fffafbbc82cf1778555a0a99b945fc5d893d21a161bc9867e77c41b4561"
+    },
+    {
+      "name": "Pichu",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0172_pichu.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0172_pichu_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "12840834e3ef0d13a588430d208571db9d836dce063343ba7b72cc5ad6b99e03",
+      "shiny_sha256": "5209a7e25f630d9dffabd0ba44820a85e0a09485082972d520c9bc026a5ca39f"
+    },
+    {
+      "name": "Marill",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0183_marill.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0183_marill_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "7b2d77913885e6756adaea1a24f83455d515e377141f56480a7bac6f0857c749",
+      "shiny_sha256": "13c7146578a90221685bc167568dc445c4b584deba1e185a637d48492ca29ea7"
+    },
+    {
+      "name": "Azumarill",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0184_azumarill.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0184_azumarill_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "30389528516f49655edff5cb6b8585b869f49c1bda234433e2859860da330bb2",
+      "shiny_sha256": "0a797a0b17d18662e0991840fe60598f950c56f8a41d532759f9adefebb9e984"
+    },
+    {
+      "name": "Politoed",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0186_politoed.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0186_politoed_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "b74232d3170c74b66fd8102a7580b28f6f8763c7af92a53d85cbf6602594e077",
+      "shiny_sha256": "18a9d9bb19bb688a90799ce8076eb64160935499db4cd8ac370d2242df03a44c"
+    },
+    {
+      "name": "Wooper",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0194_wooper.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0194_wooper_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "16aca799d3e567fa078b742415a4db1280c992ee838487e8127d407f41c85d4b",
+      "shiny_sha256": "abe8da30f9c2d0036b71950f2370c66ecc7bee1f52fd868d8ea84693b9b6e277"
+    },
+    {
+      "name": "Quagsire",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0195_quagsire.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0195_quagsire_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "e2ee7e3fe6435cc6205861dcb8acd8109a6699e659b180b65d761ea712064bd0",
+      "shiny_sha256": "81ad77d5928129fe1976b1d2c0bcddbb6b543b996a7fa0b0a43f8d5db0766293"
+    },
+    {
+      "name": "Slowking",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0199_slowking.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0199_slowking_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "c254465cd7f964221bee534017945138f81a8cb97310df805affb6c72460eb79",
+      "shiny_sha256": "21e291fd9e3af95b0201c5c5770eb849beba5f4d74614b77ac8b9f37656cd7b8"
+    },
+    {
+      "name": "Qwilfish",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0211_qwilfish.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0211_qwilfish_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "bab6a440f3f5624a2ab4546e1e2f9bddc889f990a21028fc8ae51e42102152ac",
+      "shiny_sha256": "bab6a440f3f5624a2ab4546e1e2f9bddc889f990a21028fc8ae51e42102152ac"
+    },
+    {
+      "name": "Sneasel",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0215_sneasel.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0215_sneasel_shiny.4bpp",
+      "bytes": 8192,
+      "identical": false,
+      "normal_sha256": "210f3f14b500d0a1b84b93614de3a01b2336eb4dfae242c9f1463be607c36e8e",
+      "shiny_sha256": "bfebb40aaf5d78e21343abcfd3299b02d5982f168df6af1f2d5eb42bab91a598"
+    },
+    {
+      "name": "Corsola",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0222_corsola.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0222_corsola_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "21001d1df3bc458f2250993a26b01b4cd4cee653b28dba58c2ac2b701f0a36dd",
+      "shiny_sha256": "9e72f595117ca313313971faefaaad779af64f328d43f3c7d4ee384b0df8f6a1"
+    },
+    {
+      "name": "Remoraid",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0223_remoraid.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0223_remoraid_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "4ff3f2683dbc797247383bd4496f647e74f07f332d62e3e7e1e2473a5a841417",
+      "shiny_sha256": "bca24e7c36b6eddc40cb3eb136e85bae77f8aad57eff9d625754ab88f3b31267"
+    },
+    {
+      "name": "Octillery",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0224_octillery.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0224_octillery_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "b4c40fa9ac8b5bd3d21f32dba10a96448c77fab15da91570915a9d5ba47f2ccc",
+      "shiny_sha256": "9f37b0a79d23fb7ddd8ddd7bd379b95bb4c406109a267938f27bb3767b50f9c0"
+    },
+    {
+      "name": "Mantine",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0226_mantine.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0226_mantine_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "20411d931cbffa9d6751366f3c93a59a78c5766305592ae67c3fc63c3266ec49",
+      "shiny_sha256": "20411d931cbffa9d6751366f3c93a59a78c5766305592ae67c3fc63c3266ec49"
+    },
+    {
+      "name": "Kingdra",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0230_kingdra.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0230_kingdra_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "bcf15dbb2b24aee69afc5283158453ef78c0c93609f9d5bd22ac2eb41acd5bf2",
+      "shiny_sha256": "f5faca41a29bbdedc9a6910b51d07b6b6d1a358a126895cbe221b6a3e134b6e9"
+    },
+    {
+      "name": "Miltank",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0241_miltank.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0241_miltank_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "46c865a5fdd613e40b28831ca31347714e8d34eb1629dfa55da781a1cd5ebca7",
+      "shiny_sha256": "c2a9591cbbf18e8cb51df7bb70954bf0df495421b415eed8db23e4992b7a5719"
+    },
+    {
+      "name": "Suicune",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0245_suicune.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0245_suicune_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "669b2c6a8a2a3f089ff0e941d9d145e862f44f1d7c434452ec577991e59238bd",
+      "shiny_sha256": "c3aad2cb598ca2c5109f558dc7759cceeebc92b6e82baa05c96e3df0abfd51e4"
+    },
+    {
+      "name": "Tyranitar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0248_tyranitar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0248_tyranitar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "1e9fb54a60fa4bdbe75e34fdd5a4eaa20340432a767708b25856242002b4b604",
+      "shiny_sha256": "b0bf680fe28cbdc82481b3460b688c1823a7e99a1036b11ac9a981ed0b976be8"
+    },
+    {
+      "name": "Lugia",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0249_lugia.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0249_lugia_shiny.4bpp",
+      "bytes": 24576,
+      "identical": true,
+      "normal_sha256": "907689a3a4048c7a8d00e390220683c1c751624d6c3c1c39b43310bdf232a28b",
+      "shiny_sha256": "907689a3a4048c7a8d00e390220683c1c751624d6c3c1c39b43310bdf232a28b"
+    },
+    {
+      "name": "Mudkip",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0258_mudkip.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0258_mudkip_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "e90da6cb3928ac45f03d4cb1aa502c98620f041c5a09407c8e9e92b7f193fc05",
+      "shiny_sha256": "3f5b72cea7bb0e79a4d6eeb9f90aa06570e62bf27f53cad10afa644c61e4ebc0"
+    },
+    {
+      "name": "Marshtomp",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0259_marshtomp.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0259_marshtomp_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "587618255b9e7dbbf7cf8d4fb5f5f11c0962288263754e4fe865b0dcdbc37615",
+      "shiny_sha256": "c328e3eddff6ed223f1153ecd04c1f160181f2c326849674f542a8b17981e985"
+    },
+    {
+      "name": "Swampert",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0260_swampert.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0260_swampert_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "f5bee77efea95a03f55329442b79870263b2892ae85b18d77e705760cf8c0705",
+      "shiny_sha256": "f5bee77efea95a03f55329442b79870263b2892ae85b18d77e705760cf8c0705"
+    },
+    {
+      "name": "Zigzagoon",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0263_zigzagoon.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0263_zigzagoon_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "c84a41e420998faeace694c4c0a25c7497317ba065e85de85a511eaf53cd5989",
+      "shiny_sha256": "b1ce6699c1d74cc6946cbf39eb9d08ca6abca37f0954a2201d08dfcb4f547ddf"
+    },
+    {
+      "name": "Linoone",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0264_linoone.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0264_linoone_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "8861553344253f046f38c503235ba2daf59f44d376e7c270c83cba8079cd883e",
+      "shiny_sha256": "258e8cdc6fd4ddd46165bb814200661e124065e5999bb95c98a1b633250b3e2d"
+    },
+    {
+      "name": "Lotad",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0270_lotad.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0270_lotad_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "dd60c341776e86279df37ff580d80acfd2ad8396fa8a6732a593b474f5ee07d2",
+      "shiny_sha256": "dd60c341776e86279df37ff580d80acfd2ad8396fa8a6732a593b474f5ee07d2"
+    },
+    {
+      "name": "Lombre",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0271_lombre.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0271_lombre_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "7988f980c5f361f68f3bb86406e6c3965ac2e18c8ca308641031b15c4f2de0e4",
+      "shiny_sha256": "bea592a88ad219687f498fad61821402806c89e58c957539653ec40ae3d526ea"
+    },
+    {
+      "name": "Ludicolo",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0272_ludicolo.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0272_ludicolo_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "52985f5d5b7abb94a9f1ec13dd1cad0e906a01acba97b3531d20a5700af9321c",
+      "shiny_sha256": "185411e32e28943fa5464a54657fc8cd0e39d57e6b0ab7880fa7890d9db91fc8"
+    },
+    {
+      "name": "Wingull",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0278_wingull.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0278_wingull_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "d857b5b7c98c9bce6b2d1e9601842aab1b0c40817d88876d634d3225acafb471",
+      "shiny_sha256": "d857b5b7c98c9bce6b2d1e9601842aab1b0c40817d88876d634d3225acafb471"
+    },
+    {
+      "name": "Pelipper",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0279_pelipper.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0279_pelipper_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "f5d71b13210627ae1b20949883c6030f4b300c0dcba6acecddc3619d0b389910",
+      "shiny_sha256": "7fb90bc75ec8198b1651dc681c96412c8c9615aae77b4a9f25be741032635536"
+    },
+    {
+      "name": "Surskit",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0283_surskit.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0283_surskit_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "37805f49f5200fb077a2e28e0618d3a12c9eb3ad1a63410406ba22d0f3ebbc6a",
+      "shiny_sha256": "37805f49f5200fb077a2e28e0618d3a12c9eb3ad1a63410406ba22d0f3ebbc6a"
+    },
+    {
+      "name": "Masquerain",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0284_masquerain.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0284_masquerain_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "15b14574f2a4910b181ca6b7b6b661574ecd1dfabcfc1959d114cc41e229c371",
+      "shiny_sha256": "311c5eb6d06a535c2e32b8bf28f080c5ccd94b0bd7e1fdb54f8a99704155914c"
+    },
+    {
+      "name": "Exploud",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0295_exploud.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0295_exploud_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "f407272a394f7dc8f2e3efd1b2a8670d85b1670901d318195fad35079f15a7dc",
+      "shiny_sha256": "f407272a394f7dc8f2e3efd1b2a8670d85b1670901d318195fad35079f15a7dc"
+    },
+    {
+      "name": "Makuhita",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0296_makuhita.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0296_makuhita_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "1f64d7f6b33fbb06c0c69d5bfdae73fc8371f5cd5cb1aa2b90bd481ec34d3820",
+      "shiny_sha256": "7728651a7e7fe8d97688ce784465453e361573000c7fc256997e7e2336c0ef84"
+    },
+    {
+      "name": "Hariyama",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0297_hariyama.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0297_hariyama_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "3cdb2ca8bbe63ea9b27f6c2361323e6b9355eaf85b03967091a62a7e8ddc4088",
+      "shiny_sha256": "3cdb2ca8bbe63ea9b27f6c2361323e6b9355eaf85b03967091a62a7e8ddc4088"
+    },
+    {
+      "name": "Azurill",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0298_azurill.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0298_azurill_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "11c865e6cc0e2d98a0591fe8af7745ade347d6da44eed06f5b51db1b394c87f2",
+      "shiny_sha256": "0956c4610780ad4df73a41a411dfce7d5af5c5b6237202757a7c7157455321d5"
+    },
+    {
+      "name": "Aggron",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0306_aggron.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0306_aggron_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "2a454cf5cf8c818cb7f1275aff73842c5471b2bfd2036a11565bc063bdf3a546",
+      "shiny_sha256": "2a454cf5cf8c818cb7f1275aff73842c5471b2bfd2036a11565bc063bdf3a546"
+    },
+    {
+      "name": "Carvanha",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0318_carvanha.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0318_carvanha_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "dab07858c632e8a62406cb790a5a3254727d26732213acf3ebfcfdad91bbb4ab",
+      "shiny_sha256": "60aaa2d609717a8a667f4659d2a880c7fc993d7542a9de593adee6008371b33f"
+    },
+    {
+      "name": "Sharpedo",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0319_sharpedo.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0319_sharpedo_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "71e3a1a078f1467d6bd2dfb7850e4a8e5afc1fdc32766a7f8504529f99434b41",
+      "shiny_sha256": "3595cc0677f8eadc536b25257b54a754e06c2cf50efafc094de049fe3613666c"
+    },
+    {
+      "name": "Wailmer",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0320_wailmer.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0320_wailmer_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "d99029ff578a0bd0b648238fd15658e62bc798d15f8c1c695c20007d40f7101c",
+      "shiny_sha256": "d99029ff578a0bd0b648238fd15658e62bc798d15f8c1c695c20007d40f7101c"
+    },
+    {
+      "name": "Wailord",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0321_wailord.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0321_wailord_shiny.4bpp",
+      "bytes": 16384,
+      "identical": false,
+      "normal_sha256": "eb23578c94a656f30985afd9977351dbc5f17b5f656f845cbd1e9cad9159e02f",
+      "shiny_sha256": "e8ef02f3dea6a94e227dffa16c11f83f2bfdade43d1c4a551e4262885a9ccf78"
+    },
+    {
+      "name": "Zangoose",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0335_zangoose.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0335_zangoose_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "4cb96209a7e486d95da3d088cb0364512da5f861267e0f625ed9994384aeee2d",
+      "shiny_sha256": "4cb96209a7e486d95da3d088cb0364512da5f861267e0f625ed9994384aeee2d"
+    },
+    {
+      "name": "Barboach",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0339_barboach.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0339_barboach_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "4512056ca7110bf597e169b2de22b9ec086340fe5c1589a3a1ade7cad58c539e",
+      "shiny_sha256": "8c6ec80bd532472ef093eb9ca0e60af4bf39eabb670fd7473c957843a8d188b6"
+    },
+    {
+      "name": "Whiscash",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0340_whiscash.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0340_whiscash_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "c8e45a4d604be509eacfb7f78a4a879ca7c8bc14fbb583b093e50155f64aa849",
+      "shiny_sha256": "c8e45a4d604be509eacfb7f78a4a879ca7c8bc14fbb583b093e50155f64aa849"
+    },
+    {
+      "name": "Corphish",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0341_corphish.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0341_corphish_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "a4f83e3f451ed1eacf2d8e674f89dffb5edf41bf6b084db46db77905938a6b90",
+      "shiny_sha256": "59666ce3780f59e2b124ae340e8e5569d17c1d92c1cab2f93cc6c265759bce8f"
+    },
+    {
+      "name": "Crawdaunt",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0342_crawdaunt.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0342_crawdaunt_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "3f17de64b49f9ff8df05830861d1bad15b65b4acf6cd6214d41ba67f09a8da39",
+      "shiny_sha256": "887dc24162ba460cbe29999b836c9298c49588a38c128542192c294ed86c39fb"
+    },
+    {
+      "name": "Feebas",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0349_feebas.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0349_feebas_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "97aba1c71553da6bfc1dc9477a5481b1cd9f599dab5d2c5aa22de7274362ca8d",
+      "shiny_sha256": "d988daa3cb43e098741d2416d640db7b20ff1fe3e2a26f31823e17d0f7569fe4"
+    },
+    {
+      "name": "Milotic",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0350_milotic.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0350_milotic_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "8fa22ba7d62852cba821345c899707db7a26a7887f26f0d88f1a5a98f2478320",
+      "shiny_sha256": "8fa22ba7d62852cba821345c899707db7a26a7887f26f0d88f1a5a98f2478320"
+    },
+    {
+      "name": "Spheal",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0363_spheal.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0363_spheal_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "5ee298ef38bdb42c7b279d16a0f85b7e96f04c711169581683a3cf391489e0aa",
+      "shiny_sha256": "5ee298ef38bdb42c7b279d16a0f85b7e96f04c711169581683a3cf391489e0aa"
+    },
+    {
+      "name": "Sealeo",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0364_sealeo.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0364_sealeo_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "27b61a9e8d4751340aa38128aa1cb4b24aa507c64bfe6be5d8a6c4aed6ef3314",
+      "shiny_sha256": "2611326347f1a376be52eec1b72aef751da769fb1bc5bed6c45b22b24be7d3cd"
+    },
+    {
+      "name": "Walrein",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0365_walrein.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0365_walrein_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "5d1bededd34db9a267a71c132116eb241eb849203f990097f2c600225a826e9d",
+      "shiny_sha256": "7bd72b57ef81c1e9740ebe6f6b37457a5a4fb05a5874308e22f7396a5fbee94e"
+    },
+    {
+      "name": "Clamperl",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0366_clamperl.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0366_clamperl_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "1f1a57732cc47ad58e50a254ee66e90a51c07c5e4d883edab849160fa666a79c",
+      "shiny_sha256": "65a5fd70792900d3888a2357624a2e18e8f7657eb667534851f480e75c1e2b60"
+    },
+    {
+      "name": "Huntail",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0367_huntail.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0367_huntail_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "f369c5e844afd2a26174aa3ed09387645bbdbc37592f8441fac376d1fd5f1423",
+      "shiny_sha256": "b90dafd8cf1c6a63f78a10ff4010cebd54e58b7cc189e90f66154421ceb76f19"
+    },
+    {
+      "name": "Gorebyss",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0368_gorebyss.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0368_gorebyss_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "848725bef0f9ef370fc42b10e88fdbfc4e4216ca232b30974300cb14bd4c96d1",
+      "shiny_sha256": "848725bef0f9ef370fc42b10e88fdbfc4e4216ca232b30974300cb14bd4c96d1"
+    },
+    {
+      "name": "Relicanth",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0369_relicanth.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0369_relicanth_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "ff62b3499b3ad9938441a8a7fb78b63008a12e85b2193add1616fbbe3cea716f",
+      "shiny_sha256": "ebbf983756cbcac3b52f48762790832c2b6e00820e8ea47dbd93bcd25282e668"
+    },
+    {
+      "name": "Luvdisc",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0370_luvdisc.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0370_luvdisc_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "4c5acc3ca907012819fefb1ecfa9337513fefc10a9cb277193de05fee80e3d52",
+      "shiny_sha256": "a8ada0d315f37582cb5cabe2d4cbfaaf83c714f220c5d98373ef6c05101bd42f"
+    },
+    {
+      "name": "Latias",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0380_latias.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0380_latias_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "132b5d2b7750259e49137152114c75b2d8d5b5976c61c4d04d35e87581a007ba",
+      "shiny_sha256": "8a9952e4a28bbfd5f57be0adac6b0cce228a992fa2123b75b4f4e3427f835778"
+    },
+    {
+      "name": "Latios",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0381_latios.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0381_latios_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "3e09f93773464a8fc67094c75aabfac374a6243ee2ef3811e5e30601ac6cf6f3",
+      "shiny_sha256": "3e09f93773464a8fc67094c75aabfac374a6243ee2ef3811e5e30601ac6cf6f3"
+    },
+    {
+      "name": "Kyogre",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0382_kyogre.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0382_kyogre_shiny.4bpp",
+      "bytes": 12288,
+      "identical": false,
+      "normal_sha256": "ee4444e838ddad722ed125a940eaee05b0e38afd46d314f445d8f1249ea3b1c8",
+      "shiny_sha256": "3d7adfbca137eb3f3e8858fd86dc763bcc33c015922d2c3dbc87c18412fa6187"
+    },
+    {
+      "name": "Rayquaza",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0384_rayquaza.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0384_rayquaza_shiny.4bpp",
+      "bytes": 24576,
+      "identical": true,
+      "normal_sha256": "0987cfcaf6e73e83c5ced38371dfe026c70227ead2e79862eb617338562d7c92",
+      "shiny_sha256": "0987cfcaf6e73e83c5ced38371dfe026c70227ead2e79862eb617338562d7c92"
+    },
+    {
+      "name": "Bibarel",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0400_bibarel.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0400_bibarel_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "231dcb3a2ff2d39e7489c688ed1246bbc5a89aa610ad351fcd7c59cc15a5f1ec",
+      "shiny_sha256": "231dcb3a2ff2d39e7489c688ed1246bbc5a89aa610ad351fcd7c59cc15a5f1ec"
+    },
+    {
+      "name": "Buizel",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0418_buizel.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0418_buizel_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "b46f57b01817cbefba065b2245e21bc0b3fda0a8ba60770984011cd9cea18382",
+      "shiny_sha256": "b46f57b01817cbefba065b2245e21bc0b3fda0a8ba60770984011cd9cea18382"
+    },
+    {
+      "name": "Floatzel",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0419_floatzel.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0419_floatzel_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "5026be12cd70380b3b7b06b4f8b9a29a47d9a1cadf24ee00d0718751c8d7b935",
+      "shiny_sha256": "5026be12cd70380b3b7b06b4f8b9a29a47d9a1cadf24ee00d0718751c8d7b935"
+    },
+    {
+      "name": "ShellosEast",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0422_shellos_east.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0422_shellos_east_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "c4c20e2c3e39bbd014d062ac73d90aa12699f8af1b66f5c2733197e6a2fd7a91",
+      "shiny_sha256": "c4c20e2c3e39bbd014d062ac73d90aa12699f8af1b66f5c2733197e6a2fd7a91"
+    },
+    {
+      "name": "ShellosWest",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0422_shellos_west.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0422_shellos_west_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "c37bc73a4bed46784cd1f19b08ac9d3a9bef3530b352ff381a4309a5b20e29e5",
+      "shiny_sha256": "c37bc73a4bed46784cd1f19b08ac9d3a9bef3530b352ff381a4309a5b20e29e5"
+    },
+    {
+      "name": "GastrodonEast",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0423_gastrodon_east.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0423_gastrodon_east_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "a927f10c5aa317eebf3a0e739cae418319048997722cb13b85e6f86e5017a1fd",
+      "shiny_sha256": "a927f10c5aa317eebf3a0e739cae418319048997722cb13b85e6f86e5017a1fd"
+    },
+    {
+      "name": "GastrodonWest",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0423_gastrodon_west.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0423_gastrodon_west_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "b303bd69c862de83e53767de434aef96ae74543cf2378c7eaf7e89a2bb14b311",
+      "shiny_sha256": "b303bd69c862de83e53767de434aef96ae74543cf2378c7eaf7e89a2bb14b311"
+    },
+    {
+      "name": "Finneon",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0456_finneon.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0456_finneon_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "cebee5cc6011b11a1e320f620df096c6f8db9c058d1645e894749cc2765b9bd8",
+      "shiny_sha256": "cebee5cc6011b11a1e320f620df096c6f8db9c058d1645e894749cc2765b9bd8"
+    },
+    {
+      "name": "Lumineon",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0457_lumineon.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0457_lumineon_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "164a5f8ec3e275c42ff471175d51784e1ebbe7b99e3b9d246f1cb3f11c21fd6e",
+      "shiny_sha256": "164a5f8ec3e275c42ff471175d51784e1ebbe7b99e3b9d246f1cb3f11c21fd6e"
+    },
+    {
+      "name": "Munchlax",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0446_munchlax.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0446_munchlax_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "948836de2b1a9d57ea9551c5e96646e0f88d836af55c21c7bcae00331ca5e685",
+      "shiny_sha256": "948836de2b1a9d57ea9551c5e96646e0f88d836af55c21c7bcae00331ca5e685"
+    },
+    {
+      "name": "Mantyke",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0458_mantyke.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0458_mantyke_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "413f6e5255d3b9f82932e6ca40867db0b92817eb963aceff8e91105431258b64",
+      "shiny_sha256": "413f6e5255d3b9f82932e6ca40867db0b92817eb963aceff8e91105431258b64"
+    },
+    {
+      "name": "Weavile",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0461_weavile.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0461_weavile_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "10b7fa4b7a7bf7b36bf79d38d20cf31f7514d3021ac448371100d5e33dde5233",
+      "shiny_sha256": "10b7fa4b7a7bf7b36bf79d38d20cf31f7514d3021ac448371100d5e33dde5233"
+    },
+    {
+      "name": "Lickilicky",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0463_lickilicky.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0463_lickilicky_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "566aacc4db3be798ec3c4c2c3f2cd409756e691576aa810b434e45799a4effa2",
+      "shiny_sha256": "566aacc4db3be798ec3c4c2c3f2cd409756e691576aa810b434e45799a4effa2"
+    },
+    {
+      "name": "Rhyperior",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0464_rhyperior.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0464_rhyperior_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "2db0d15406019e114b7f72acd0076d266286b31f1480305cb6e600f5e8235703",
+      "shiny_sha256": "2db0d15406019e114b7f72acd0076d266286b31f1480305cb6e600f5e8235703"
+    },
+    {
+      "name": "Arceus",
+      "normal": "graphics/object_events/pics/pokemon/surfable/0493_arceus.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/0493_arceus_shiny.4bpp",
+      "bytes": 24576,
+      "identical": true,
+      "normal_sha256": "11118d455054579293b444858ebccb8a086559bc2f79f5bcff15fe62446894a2",
+      "shiny_sha256": "11118d455054579293b444858ebccb8a086559bc2f79f5bcff15fe62446894a2"
+    },
+    {
+      "name": "RaichuAlola",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_raichu_alola.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_raichu_alola_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "e3c4fc91248310dbfa5970bc0e6e2639b9c015340344027d5ad4b79f50a9d01e",
+      "shiny_sha256": "e3c4fc91248310dbfa5970bc0e6e2639b9c015340344027d5ad4b79f50a9d01e"
+    },
+    {
+      "name": "SlowpokeGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_slowpoke_galar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_slowpoke_galar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "f1232863c2b1d414ca6403a5dea74138472776e3c7727b9de8b2fb952b8047b0",
+      "shiny_sha256": "f1232863c2b1d414ca6403a5dea74138472776e3c7727b9de8b2fb952b8047b0"
+    },
+    {
+      "name": "SlowbroGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_slowbro_galar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_slowbro_galar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "d3c97e748b6716ab2d4db9afa54a0f5b4256348d38657b7ebb7e0e6d21d4dde4",
+      "shiny_sha256": "d3c97e748b6716ab2d4db9afa54a0f5b4256348d38657b7ebb7e0e6d21d4dde4"
+    },
+    {
+      "name": "TaurosPaldeaCombat",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_tauros_paldea_combat.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_tauros_paldea_combat_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "dbecc537f4802cafae75ffe7030523c82bcf4e3e810011f2ca01d760a20feb2a",
+      "shiny_sha256": "dbecc537f4802cafae75ffe7030523c82bcf4e3e810011f2ca01d760a20feb2a"
+    },
+    {
+      "name": "TaurosPaldeaAqua",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_tauros_paldea_aqua.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_tauros_paldea_aqua_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "2a8e2793ef3f2cf6702e6a478de950289050c502eca2188964d8866d0acc6599",
+      "shiny_sha256": "2a8e2793ef3f2cf6702e6a478de950289050c502eca2188964d8866d0acc6599"
+    },
+    {
+      "name": "WooperPaldea",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_wooper_paldea.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_wooper_paldea_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "faff363001765bfb0a74eaa2c8274e11d992dedca34bce0ff7826ef9a5da65d4",
+      "shiny_sha256": "faff363001765bfb0a74eaa2c8274e11d992dedca34bce0ff7826ef9a5da65d4"
+    },
+    {
+      "name": "SlowkingGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_slowking_galar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_slowking_galar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "0512379a0d73c33f80ea5aaf5365860e0184e049e1f53b440c75259130a1c417",
+      "shiny_sha256": "0512379a0d73c33f80ea5aaf5365860e0184e049e1f53b440c75259130a1c417"
+    },
+    {
+      "name": "QwilfishHisui",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_qwilfish_hisui.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_qwilfish_hisui_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "108b9816977510414af2587a8455f48adb3569662bb90ff270bac1bfc3b97abe",
+      "shiny_sha256": "5bcb582cacccdc2491e76e0b45058b7830d6cb78e090b53d50a2625dcc8383a1"
+    },
+    {
+      "name": "CorsolaGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_corsola_galar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_corsola_galar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "6f7ff515578b354e1e9709c6cab490f4eac2da23b1d655aa6ff48562214a25b2",
+      "shiny_sha256": "c1cb2e9687400d0eb949f256b79b4a4644916e63fd905315025f126b7bd03bab"
+    },
+    {
+      "name": "ZigzagoonGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_zigzagoon_galar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_zigzagoon_galar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "565be580ee5ad9514aa92e7c2be65a548968ea8756114344da1338477db4b48f",
+      "shiny_sha256": "cff611a6c037c953f3a3a7802d35f453ef61118b29d5b3a115ea6bb4561d881c"
+    },
+    {
+      "name": "LinooneGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_linoone_galar.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_linoone_galar_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "2bb8ee2c0a240eda36bd277526212e63d0f7d9c66ac957fa596f671034828555",
+      "shiny_sha256": "466d9ef54b1c3ef8080a4103cb6ccb377642f1adc3eceffbbd1edf30049fb556"
+    },
+    {
+      "name": "ObstagoonGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_obstagoon.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_obstagoon_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "8d166a955caf6c4e86c3bfee7476f031294ec3bb5cfccb537c767f8113c46920",
+      "shiny_sha256": "8d166a955caf6c4e86c3bfee7476f031294ec3bb5cfccb537c767f8113c46920"
+    },
+    {
+      "name": "CursolaGalar",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_cursola.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_cursola_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "837ea39b776175751df0c368cca35199a3adb194c7b5939079d172a940e64c89",
+      "shiny_sha256": "837ea39b776175751df0c368cca35199a3adb194c7b5939079d172a940e64c89"
+    },
+    {
+      "name": "OverqwilHisui",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_overqwil.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_overqwil_shiny.4bpp",
+      "bytes": 6144,
+      "identical": true,
+      "normal_sha256": "4801f25357a47fb1cf1ce53a8ac018446dd568faf393ed350764d9534e0ffeb8",
+      "shiny_sha256": "4801f25357a47fb1cf1ce53a8ac018446dd568faf393ed350764d9534e0ffeb8"
+    },
+    {
+      "name": "Clodsire",
+      "normal": "graphics/object_events/pics/pokemon/surfable/regional_clodsire.4bpp",
+      "shiny": "graphics/object_events/pics/pokemon/surfable/regional_clodsire_shiny.4bpp",
+      "bytes": 6144,
+      "identical": false,
+      "normal_sha256": "8649aa88105e2d60a5a55a04c951f1f6a6bd4ae9fd868a6fc01bc537c995fbb0",
+      "shiny_sha256": "452c2db1d087e6ed8f21fb3106d7a766fa8663c7925b12b8bc8e4f484ff2e00b"
+    }
+  ],
+  "identical_pairs": 61,
+  "duplicate_bytes": 430080
+}
