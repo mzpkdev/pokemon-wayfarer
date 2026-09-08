@@ -18,6 +18,7 @@
 #include "constants/battle_anim.h"
 #include "text.h"
 #include "sprite.h"
+#include "task.h"
 #include "sound.h"
 #include "constants/songs.h"
 #include "item.h"
@@ -46,6 +47,7 @@ static EWRAM_DATA u8 sPhase = 0;
 static EWRAM_DATA u8 sAction = 0;
 static EWRAM_DATA u16 sMessageTimer = 0;
 static EWRAM_DATA u8 sRetaliationFrames = 0;
+static EWRAM_DATA u16 sRockDamage = 0;
 
 u32 TrainerOnlyRockDamage(u32 cap, u32 level, u32 maxHp, u32 hp)
 {
@@ -127,6 +129,19 @@ static void EndEncounter(u8 outcome)
     gCurrentActionFuncId = B_ACTION_FINISHED;
     TrainerOnlyFinishBattle();
 }
+static void Task_AngryWildMotion(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    struct Sprite *sprite = &gSprites[data[0]];
+    if (++data[1] >= 44)
+    {
+        sprite->x2 = data[2];
+        DestroyTask(taskId);
+        return;
+    }
+    sprite->x2 = data[2] + ((data[1] & 4) ? 3 : -3);
+}
+
 static void TrainerOnlyMain(void)
 {
     u32 damage, passive, escapeRoll;
@@ -217,6 +232,7 @@ static void TrainerOnlyMain(void)
             if (TrainerOnlyRunSucceeds(TrainerOnlyEscapeChance(sState.cap, sState.level, sState.escapeAttempts),
                                        gSaveBlock3Ptr->challengeSettings.tx_Challenges_LessEscapes, escapeRoll))
             {
+                PlaySE(SE_FLEE);
                 Message(sTrainerOnlyEscaped, 7);
                 return;
             }
@@ -226,21 +242,38 @@ static void TrainerOnlyMain(void)
         }
         break;
     case 9:
-            damage = TrainerOnlyRockDamage(sState.cap, sState.level, gBattleMons[wild].maxHP, gBattleMons[wild].hp);
-            gBattleMons[wild].hp -= damage;
-            SetMonData(&gEnemyParty[0], MON_DATA_HP, &gBattleMons[wild].hp);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[wild], &gEnemyParty[0], HEALTHBOX_ALL);
-            if (!gBattleMons[wild].hp) { Message(sText_KnockedOut, 7); return; }
-            sState.rocks = min(14, sState.rocks + 1);
-            sState.anger = min(100, sState.anger + 25);
-            // Reuse only the anger-mark presentation. Emitting on the real wild
-            // battler anchors both animation positions to its sprite.
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
-            BtlController_EmitBattleAnimation(wild, B_COMM_TO_CONTROLLER, B_ANIM_SAFARI_REACTION, 0);
-            MarkBattlerForControllerExec(wild);
-            sPhase = 11;
-            return;
+        sRockDamage = TrainerOnlyRockDamage(sState.cap, sState.level, gBattleMons[wild].maxHP, gBattleMons[wild].hp);
+        BtlController_EmitHitAnimation(wild, B_COMM_TO_CONTROLLER);
+        MarkBattlerForControllerExec(wild);
+        sPhase = 12;
+        return;
+    case 12:
+        // The native bar controller reads the real mon's old HP. Commit HP only
+        // after its drain completes, just as the regular damage script does.
+        BtlController_EmitHealthBarUpdate(wild, B_COMM_TO_CONTROLLER, sRockDamage);
+        MarkBattlerForControllerExec(wild);
+        sPhase = 13;
+        return;
+    case 13:
+        gBattleMons[wild].hp -= sRockDamage;
+        SetMonData(&gEnemyParty[0], MON_DATA_HP, &gBattleMons[wild].hp);
+        if (!gBattleMons[wild].hp) { Message(sText_KnockedOut, 7); return; }
+        sState.rocks = min(14, sState.rocks + 1);
+        sState.anger = min(100, sState.anger + 25);
+        // Reuse only the anger-mark presentation. Emitting on the real wild
+        // battler anchors both animation positions to its sprite.
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
+        BtlController_EmitBattleAnimation(wild, B_COMM_TO_CONTROLLER, B_ANIM_SAFARI_REACTION, 0);
+        MarkBattlerForControllerExec(wild);
+        {
+            u8 taskId = CreateTask(Task_AngryWildMotion, 10);
+            gTasks[taskId].data[0] = gBattlerSpriteIds[wild];
+            gTasks[taskId].data[2] = gSprites[gBattlerSpriteIds[wild]].x2;
+        }
+        sPhase = 11;
+        return;
     case 11:
+        if (FuncIsActiveTask(Task_AngryWildMotion)) return;
         Message(sText_Angry, 5);
         return;
     case 4:
@@ -257,7 +290,7 @@ static void TrainerOnlyMain(void)
         damage = TrainerOnlyPassiveAnger(sState.cap, sState.level);
         damage = TrainerOnlyResolveSurvivingTurn(&sState, sState.anger + damage >= 100 ? 100 : Random() % 100);
         if (damage == TRAINER_ONLY_RETALIATION) { Message(sText_Attacked, 8); return; }
-        if (damage == TRAINER_ONLY_FLED) { Message(sText_WildFled, 6); return; }
+        if (damage == TRAINER_ONLY_FLED) { PlaySE(SE_FLEE); Message(sText_WildFled, 6); return; }
         if (passive < 30 && sState.anger >= 30 && sAction != TRAINER_ONLY_ROCK)
         {
             Message(sText_GrowingAngry, 0);

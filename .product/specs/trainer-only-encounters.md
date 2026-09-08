@@ -231,7 +231,11 @@ teardown clears encounter state; clear that cause after recovery/reset.
 
 Show trainer and wild Pokémon, retaining the wild HP bar. There is no player
 Pokémon HP bar, Safari allowance/step readout, or visual fear/anger/proximity
-meter. Use ordinary messages and animations for state feedback.
+meter. Use ordinary messages and animations for state feedback. Rock hits use
+the native hit flash and gradual HP-bar drain before resolving damage. A
+surviving hit adds a brief wild-sprite shake alongside the anger marks. Wild
+fleeing and successful Run use the normal escape sound and message; like
+ordinary wild fleeing, they do not add a sprite exit animation.
 
 Bag reads real inventory. No ball grant, admission fee, throw limit or step limit
 exists. Unsupported actions, missing items, invalid targets, capture restrictions
