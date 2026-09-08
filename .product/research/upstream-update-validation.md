@@ -50,6 +50,9 @@ historical squash trailers are no longer involved.
 
 ## Validation
 
+Final full-suite and required CI status are recorded on
+[PR #76](https://github.com/mzpkdev/pokemon-wayfarer/pull/76).
+
 Both baseline and integrated release builds pass with
 `UNUSED_ERROR=1 DEPRECATED_ERROR=1 make -j8 BUILD=wayfarer release`.
 The accepted ROM baseline was not changed.
@@ -72,11 +75,44 @@ the integrated end `0x09F5B10C` leaves 151,284 bytes before that limit. Most gro
 is in the added trainer parties; the smaller changes correspond to imported code,
 scripts, learnsets, graphics, and removal of the orphan encounter table.
 
+| Check | Baseline | Integrated |
+| --- | --- | --- |
+| Wayfarer release | Pass | Pass |
+| Static analysis (`ANALYZE=1`, debug) | Pass | Pass |
+| Standalone HNS release | Not needed for comparison | Pass: 31,233,636 bytes |
+| E2E ROM build | Pass | Pass |
+| Smoke | 3 passed | 3 passed |
+| Full E2E coverage | 120 passed, 17 files | 117 passed in full run; remaining 3 passed on targeted startup retry |
+
 Targeted checks pass: trainer classification and ID uniqueness in both builds,
-HNS/Wayfarer routing checks, ten Hoenn content
-tests with the original fingerprint, summary input dispatch, native-HM fixtures,
-and 3,888 regional plus 10,692 directional modeled coverage cells. The C defeat
-regression and complete mechanics/runtime results are recorded below when run.
+HNS/Wayfarer routing, ten Hoenn content tests with the original fingerprint,
+summary input dispatch, native-HM fixtures, and 3,888 regional plus 10,692
+directional modeled coverage cells. The new C defeat-state isolation regression
+passes in the mechanics runner.
+
+The encounter suite initially passed 57 of 60 tests; the remaining three expected
+the pre-update HNS profile counts. Upstream removes exactly one orphan New Sinjoh
+profile: update counts from 169 to 168 headers and 271 to 270 source profiles,
+assert that the orphan is absent, and rerun those three checks successfully.
+
+Baseline mechanics reports 4,303 passed, 349 known failing, nine assumptions failed,
+629 TODO, six expected failing, and zero failures. The first integrated run found
+one failed Heavy Ball metadata case. It relied on a zero-odds throw succeeding
+under the old division-by-zero behavior. Isolate metadata validation from badge
+penalties and add a zero-odds regression for Wobbuffet and Beldum; all eight capture
+tests then pass. Neither the upstream odds guard nor the catch-rate clamp is reverted.
+
+The integrated full E2E run passes all 12 League lifecycle/scaling cases and 117
+tests overall. Two emulator processes aborted before readiness, skipping three
+cases in the boot and Magnet Train files. Both files pass on a targeted retry
+outside the sandbox with `LD_LIBRARY_PATH` unset. No gameplay assertion failed;
+the initial full-run exit status was nonzero because of those startup errors.
+Baseline SkyEmu also crashes inside the sandbox, so emulator tests require the
+working host environment. The retry does not establish whether the inherited
+library path or transient startup contention caused the two aborts.
+
+Two-emulator link play was not exercised; the imported trainer-card link fix is
+covered by compilation and code review, not a direct multiplayer runtime test.
 
 The optional ROM-report unit target has a pre-existing missing fixture
 `tools/rom_report/tests/fixtures/at_limit.sym` on baseline main. This does not stop
@@ -85,7 +121,10 @@ as part of the upstream update.
 
 ## Landing constraint
 
-At implementation time the GitHub repository allowed squash merging only.
-This PR requires a merge commit to preserve the repaired ancestry. Enable merge
-commits before landing; do not squash or rebase this integration. Repository
-settings are not changed by the implementation.
+At implementation time the GitHub repository allowed squash merging only. Its
+`Protect main` ruleset also required linear history and limited PRs to squash merges.
+This PR requires a merge commit to preserve the repaired ancestry. Landing requires
+enabling repository merge commits, allowing that method in the PR rule, and removing
+the linear-history requirement. Keep required checks, PR review/thread rules,
+deletion protection, and force-push protection. Do not squash or rebase this
+integration. No repository settings are changed by the implementation.
