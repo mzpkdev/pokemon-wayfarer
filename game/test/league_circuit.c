@@ -14,8 +14,16 @@
 #include "config/league_circuit.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
+#include "constants/wayfarer_origin.h"
 
 #if IS_WAYFARER
+static void InitializeValidLeaguePersistentState(void)
+{
+    WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
+}
+
 static void SetRegionalBadges(enum Region region, u8 count)
 {
     u8 i;
@@ -215,7 +223,7 @@ TEST("League run admission captures current producer once and rejects absent out
     struct WarpData source, destination;
     u8 rating = 255;
 
-    WayfarerInitPersistentState();
+    InitializeValidLeaguePersistentState();
     EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active, FALSE);
     SetTotalBadges(7);
     EXPECT(!Test_AdmitLeagueRun(REGION_KANTO));
@@ -250,7 +258,7 @@ TEST("League saved run validation preserves rating and defeated rooms across bot
     struct LeagueRunState saved;
     u8 rating;
 
-    WayfarerInitPersistentState();
+    InitializeValidLeaguePersistentState();
     SetTotalBadges(24);
     for (region = REGION_KANTO; region <= REGION_HOENN; region++)
     {
@@ -297,7 +305,7 @@ TEST("League run production save and load preserve entry rating and room progres
     Save_ResetSaveCounters();
     gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
     gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
-    WayfarerInitPersistentState();
+    InitializeValidLeaguePersistentState();
     SetTotalBadges(24);
     for (region = REGION_KANTO; region <= REGION_HOENN; region++)
     {
@@ -378,7 +386,7 @@ TEST("League load rejects invalid or missing record in every room without an awa
         lobby = i < 6 ? MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS : MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F;
         for (corruption = 0; corruption < 4; corruption++)
         {
-            WayfarerInitPersistentState();
+            InitializeValidLeaguePersistentState();
             Test_SetLeagueMap(&gSaveBlock1Ptr->location, rooms[i]);
             gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = corruption == 0 ? FALSE : TRUE;
             gSaveBlock3Ptr->wayfarerHoenn.leagueRun.region = corruption == 1 ? 255 : REGION_KANTO;
@@ -404,6 +412,7 @@ TEST("League run warp validation rejects skipped rooms and preserves ordinary Ho
     struct WarpData source, destination;
     u8 rating;
 
+    InitializeValidLeaguePersistentState();
     SetTotalBadges(24);
     EXPECT(Test_AdmitLeagueRun(REGION_KANTO));
     source = gSaveBlock1Ptr->location;
@@ -471,6 +480,7 @@ TEST("League circuit Hall of Fame consumes each recorded tier and sets its retur
     enum Region region;
     const struct HealLocation *heal;
 
+    InitializeValidLeaguePersistentState();
     SetTotalBadges(24);
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_POKEMON_LEAGUE_HALL_OF_FAME_HNS);

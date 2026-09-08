@@ -9,6 +9,8 @@
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "gba/flash_internal.h"
+#include "constants/heal_locations.h"
+#include "constants/wayfarer_origin.h"
 
 #if IS_WAYFARER
 
@@ -133,6 +135,8 @@ TEST("Trainer Rating high-water value survives production save and load after re
     gSaveBlock1Ptr->saveVersionMagic = SAVE_VERSION_MAGIC;
     gSaveBlock1Ptr->saveVersion = SAVE_VERSION;
     WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+    gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
     for (badge = 0; badge < 8; badge++)
         SetBadgeStateForRegion(REGION_HOENN, badge, TRUE);
     EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
