@@ -2,7 +2,7 @@
 
 PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)  
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [Trainer-only story encounters](trainer-only-story-encounters.md), [Trainer party scaling](trainer-party-scaling.md)  
-Implemented: No
+Implemented: Yes
 
 ## Scope and map integration
 

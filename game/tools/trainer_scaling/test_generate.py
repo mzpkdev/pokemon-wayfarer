@@ -113,6 +113,24 @@ class InventoryTests(unittest.TestCase):
                 for evidence in row['evidence']
             ))
 
+    def test_nugget_bridge_preserves_source_parties_and_ordinary_scaling(self):
+        names = ['CALE', 'ALI', 'TIMMY', 'RELI', 'ETHAN', 'ROCKET']
+        sources = ['BUG_CATCHER_CALE', 'LASS_ALI', 'YOUNGSTER_TIMMY',
+                   'LASS_RELI', 'CAMPER_ETHAN', 'TEAM_ROCKET_GRUNT_6']
+        trainers = ['TRAINER_NUGGET_BRIDGE_' + name + '_HNS' for name in names]
+        ids = gen.trainer_ids(trainers)
+        self.assertEqual([ids[trainer] for trainer in trainers], list(range(1550, 1556)))
+        authored = (gen.ROOT / 'src/data/trainers_wayfarer.party').read_text()
+        source = (gen.ROOT / 'src/data/trainers_frlg.party').read_text()
+        manifest = {row['id']: row for row in json.loads(gen.MANIFEST.read_text())['records']}
+        records = gen.load_inventory()
+        for trainer, original in zip(trainers, sources):
+            target_party = authored.split('=== ' + trainer + ' ===')[1].split('===')[0].strip()
+            source_party = source.split('=== TRAINER_' + original + ' ===')[1].split('===')[0].strip()
+            self.assertEqual(target_party, source_party)
+            self.assertEqual(records[trainer]['DIFFICULTY_NORMAL']['source'], 'src/data/trainers_wayfarer.party')
+            self.assertEqual((manifest[trainer]['policy'], manifest[trainer]['region']), ('ORDINARY', 'Kanto'))
+
     def test_cerulean_burglary_retains_authored_party_and_ordinary_scaling(self):
         trainer = 'TRAINER_CERULEAN_BURGLARY_GRUNT_HNS'
         self.assertEqual(gen.trainer_ids([trainer])[trainer], 1549)

@@ -211,3 +211,29 @@ traversal cases and the Machine Part/Misty/Magnet Train journey. The 35-test
 map-generator suite, trainer-scaling checks, two focused native trainer tests,
 TypeScript checks, and lint pass. Native critic review is clear. Rear-route
 and interior screenshots confirm the new clearing and preserved household.
+
+## Nugget Bridge integration findings
+
+Six manual Wayfarer events adapt the five ordered FRLG challengers and the
+Rocket recruiter to the dry HNS bridge. All eight original Route 24 events
+remain, including the Fisherman at `(19,12)`. New actors leave the center
+lane clear; the original Machine Part scene still advances from state 3 to
+state 4 and permits passage without completing a bridge challenge. No layout
+binary, original route script, or Route 25 reward changed.
+
+The five individual ordinary Trainer defeats determine challenge order.
+The recruiter grants one ordinary Nugget before checking the party for battle,
+with a separate receipt flag to preserve the prize across refusal, loss,
+save/reload, and repeat interactions. Prior ownership receives one additional local
+copy, while a full pocket leaves both the prize and recruitment pending.
+
+The production release uses 32,452,004 bytes (`__rom_end = 0x09EF2DA4`),
+5,012 bytes above Cerulean. It leaves 1,102,428 physical bytes free and
+578,140 bytes above the enforced 512 KiB reserve.
+
+All ten Nugget Bridge emulator cases pass. The combined ROM also passes
+14 Cerulean cases and the Machine Part/Misty journey. The 40-test map-generator
+suite, 32 trainer-scaling tests, five scaling-audit tests, two focused native
+trainer-storage/ID tests, TypeScript checks, and lint pass. Native critic review
+is clear. Screenshots confirm all six actors and their interaction tiles on
+the dry bridge.

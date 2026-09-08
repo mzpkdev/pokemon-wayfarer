@@ -1,5 +1,7 @@
 #include "global.h"
 #include "battle_setup.h"
+#include "event_data.h"
+#include "constants/flags.h"
 #include "test/test.h"
 #include "constants/opponents.h"
 
@@ -35,7 +37,9 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS, 1544);
     EXPECT_EQ(TRAINER_MT_MOON_MIGUEL_HNS, 1548);
     EXPECT_EQ(TRAINER_CERULEAN_BURGLARY_GRUNT_HNS, 1549);
-    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1550);
+    EXPECT_EQ(TRAINER_NUGGET_BRIDGE_CALE_HNS, 1550);
+    EXPECT_EQ(TRAINER_NUGGET_BRIDGE_ROCKET_HNS, 1555);
+    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1556);
     EXPECT_EQ(MAX_TRAINERS_COUNT, MAX_TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_PARTNER(PARTNER_NONE), 2048);
 }
@@ -200,6 +204,37 @@ TEST("Wayfarer Cerulean burglary defeat state is independent")
     EXPECT(!HasTrainerBeenFought(TRAINER_CERULEAN_BURGLARY_GRUNT_HNS));
     ClearTrainerFlag(TRAINER_MT_MOON_MIGUEL_HNS);
     ClearTrainerFlag(TRAINER_SAWYER_1);
+}
+
+TEST("Wayfarer Nugget Bridge defeats are ordered independent trainer flags")
+{
+    static const u16 trainers[] = {
+        TRAINER_NUGGET_BRIDGE_CALE_HNS, TRAINER_NUGGET_BRIDGE_ALI_HNS,
+        TRAINER_NUGGET_BRIDGE_TIMMY_HNS, TRAINER_NUGGET_BRIDGE_RELI_HNS,
+        TRAINER_NUGGET_BRIDGE_ETHAN_HNS, TRAINER_NUGGET_BRIDGE_ROCKET_HNS,
+    };
+    u32 i, j;
+    FlagClear(FLAG_NUGGET_BRIDGE_NUGGET_RECEIVED_HNS);
+    ClearTrainerFlag(TRAINER_CERULEAN_BURGLARY_GRUNT_HNS);
+    ClearTrainerFlag(TRAINER_GRUNT_31_HNS);
+    ClearTrainerFlag(TRAINER_SAWYER_1);
+    for (i = 0; i < ARRAY_COUNT(trainers); i++)
+    {
+        EXPECT_EQ(trainers[i], 1550 + i);
+        ClearTrainerFlag(trainers[i]);
+    }
+    for (i = 0; i < ARRAY_COUNT(trainers); i++)
+    {
+        SetTrainerFlag(trainers[i]);
+        EXPECT(FlagGet(TRAINER_FLAGS_START + 696 + i));
+        EXPECT(!FlagGet(FLAG_NUGGET_BRIDGE_NUGGET_RECEIVED_HNS));
+        for (j = 0; j < ARRAY_COUNT(trainers); j++)
+            EXPECT_EQ(HasTrainerBeenFought(trainers[j]), i == j);
+        EXPECT(!HasTrainerBeenFought(TRAINER_CERULEAN_BURGLARY_GRUNT_HNS));
+        EXPECT(!HasTrainerBeenFought(TRAINER_GRUNT_31_HNS));
+        EXPECT(!HasTrainerBeenFought(TRAINER_SAWYER_1));
+        ClearTrainerFlag(trainers[i]);
+    }
 }
 
 #endif

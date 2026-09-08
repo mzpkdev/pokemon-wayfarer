@@ -178,6 +178,14 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  nuggetBridgePrizeReceived: 0x4c3,
+  nuggetBridgeCaleDefeated: 0x7b8,
+  nuggetBridgeAliDefeated: 0x7b9,
+  nuggetBridgeTimmyDefeated: 0x7ba,
+  nuggetBridgeReliDefeated: 0x7bb,
+  nuggetBridgeEthanDefeated: 0x7bc,
+  nuggetBridgeRecruiterDefeated: 0x7bd,
+  route25NuggetReceived: 0x1e0,
   ceruleanBurglaryRecovered: 0x4c2,
   ceruleanBurglaryGruntDefeated: 0x7b7,
   fuchsiaGoldTeethClaimed: 0x4bc,
@@ -333,6 +341,9 @@ export const hms = {
 } as const
 
 export const items = {
+  nugget: 135,
+  bigNugget: 136,
+  leftovers: 472,
   helixFossil: 165,
   domeFossil: 166,
   goldTeeth: 749,

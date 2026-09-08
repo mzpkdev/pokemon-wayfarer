@@ -3144,6 +3144,7 @@
 #define FLAG_HIDE_MT_MOON_HELIX_FOSSIL_HNS                         0x4C0
 #define FLAG_GOT_FOSSIL_FROM_MT_MOON_HNS                           0x4C1
 #define FLAG_CERULEAN_BURGLARY_TM_RECEIVED_HNS                     0x4C2
+#define FLAG_NUGGET_BRIDGE_NUGGET_RECEIVED_HNS                    0x4C3
 #else
 #define FLAG_HIDE_SSANNE_1F_ROOM2_TM31                          0
 #define FLAG_HIDE_SSANNE_2F_ROOM2_STARDUST                      0
@@ -3157,6 +3158,7 @@
 #define FLAG_HIDE_MT_MOON_HELIX_FOSSIL_HNS                      0
 #define FLAG_GOT_FOSSIL_FROM_MT_MOON_HNS                        0
 #define FLAG_CERULEAN_BURGLARY_TM_RECEIVED_HNS                  0
+#define FLAG_NUGGET_BRIDGE_NUGGET_RECEIVED_HNS                     0
 #endif
 #define FLAG_HIDE_SS_ANNE                                       0
 #define FLAG_HIDE_THREE_ISLAND_ANTIBIKERS                       0

@@ -23625,6 +23625,102 @@
           "symbol": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS"
         }
       ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_CALE_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_CALE_HNS",
+          "role": "TRAINER_CLASS_BUG_CATCHER_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_CALE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_ALI_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ALI_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ALI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_TIMMY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_TIMMY_HNS",
+          "role": "TRAINER_CLASS_YOUNGSTER_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_TIMMY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_RELI_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_RELI_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_RELI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_ETHAN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ETHAN_HNS",
+          "role": "TRAINER_CLASS_CAMPER_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ETHAN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS"
+        }
+      ]
     }
   ],
   "move_exceptions": []
