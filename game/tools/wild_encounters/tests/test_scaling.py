@@ -264,9 +264,11 @@ class WildEncounterScalingTests(unittest.TestCase):
             self.assertEqual(Fraction(point["retention_numerator"], point["retention_denominator"]), expected)
 
     def test_profile_population_spans_all_builds(self):
+        # Upstream removed the orphan New Sinjoh land-encounter profile.
+        self.assertNotIn("MAP_NEW_SINJOH_HNS", {profile["map"] for profile in self.profiles})
         self.assertEqual(
             {product: len(headers) for product, headers in self.header_ids.items()},
-            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 169},
+            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 168},
         )
 
     def test_runtime_generation_uses_content_guards_and_union_header_ids(self):
@@ -319,7 +321,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(current, legacy)
         self.assertEqual(
             {product: len([profile for profile in self.profiles if profile["product"] == product]) for product, _ in GENERATOR.PRODUCTS},
-            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 271},
+            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 270},
         )
 
     def test_species_metadata_is_numeric_and_keeps_reviewed_floors(self):
@@ -1555,7 +1557,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(projection["authoredLevel"], {"minimum": 1, "maximum": 100})
         self.assertEqual(
             projection["headerCounts"],
-            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 169},
+            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 168},
         )
 
         rows = projection["profiles"]
