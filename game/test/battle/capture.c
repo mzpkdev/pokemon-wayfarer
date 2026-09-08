@@ -1,4 +1,5 @@
 #include "global.h"
+#include "capture_context.h"
 #include "event_data.h"
 #include "pokedex.h"
 #include "test/battle.h"
@@ -254,5 +255,104 @@ WILD_BATTLE_TEST("Capture: zero odds cannot catch even on the lowest shake roll"
     } THEN {
         EXPECT_EQ(recordedOdds, 0);
         EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_NONE);
+    }
+}
+
+WILD_BATTLE_TEST("Capture: absent player context skips comparisons but preserves independent ball bonuses")
+{
+    u32 item;
+    u32 expectedOdds;
+    PARAMETRIZE(item = ITEM_LEVEL_BALL, expectedOdds = 15);
+    PARAMETRIZE(item = ITEM_LOVE_BALL, expectedOdds = IS_HNS ? 60 : 15);
+
+    GIVEN {
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_8);
+        WITH_CONFIG(B_LOW_LEVEL_CATCH_BONUS, GEN_7);
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } THEN {
+        const struct CaptureContext context = { .hasPlayerBattler = FALSE, .playerBattler = MAX_u8 };
+        gLastUsedItem = item;
+        EXPECT_EQ(ComputeCaptureOdds(B_POSITION_OPPONENT_LEFT, &context), expectedOdds);
+    }
+}
+
+WILD_BATTLE_TEST("Capture: explicit completed turns control Quick and Timer bonuses without player data")
+{
+    u32 turns;
+    u32 expectedOdds;
+    u32 item;
+    PARAMETRIZE(item = ITEM_QUICK_BALL, turns = 0, expectedOdds = B_QUICK_BALL_MODIFIER >= GEN_5 ? 250 : 200);
+    PARAMETRIZE(item = ITEM_QUICK_BALL, turns = 1, expectedOdds = 50);
+    PARAMETRIZE(item = ITEM_TIMER_BALL, turns = 0, expectedOdds = 50);
+    PARAMETRIZE(item = ITEM_TIMER_BALL, turns = 1, expectedOdds = B_TIMER_BALL_MODIFIER >= GEN_5 ? 65 : 55);
+    PARAMETRIZE(item = ITEM_TIMER_BALL, turns = 2, expectedOdds = B_TIMER_BALL_MODIFIER >= GEN_5 ? 80 : 60);
+    PARAMETRIZE(item = ITEM_TIMER_BALL, turns = 255, expectedOdds = 200);
+
+    GIVEN {
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_LOW_LEVEL_CATCH_BONUS, GEN_7);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLEFFA);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } THEN {
+        const struct CaptureContext context = { .hasPlayerBattler = FALSE, .playerBattler = MAX_u8, .completedTurns = turns };
+        gLastUsedItem = item;
+        EXPECT_EQ(ComputeCaptureOdds(B_POSITION_OPPONENT_LEFT, &context), expectedOdds);
+    }
+}
+
+WILD_BATTLE_TEST("Capture: proximity uses effective species rate before Heavy Ball flat bonus")
+{
+    u32 factor;
+    u32 expectedOdds;
+    PARAMETRIZE(factor = 11, expectedOdds = 43);
+    PARAMETRIZE(factor = 15, expectedOdds = 61);
+    PARAMETRIZE(factor = 20, expectedOdds = 84);
+
+    GIVEN {
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_LOW_LEVEL_CATCH_BONUS, GEN_7);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLEFFA);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } THEN {
+        const struct CaptureContext context = { .hasPlayerBattler = FALSE, .playerBattler = MAX_u8, .initialCatchFactor = 11, .catchFactor = factor };
+        gLastUsedItem = ITEM_HEAVY_BALL;
+        EXPECT_EQ(ComputeCaptureOdds(B_POSITION_OPPONENT_LEFT, &context), expectedOdds);
+    }
+}
+
+WILD_BATTLE_TEST("Capture: Safari Balls keep legacy quantization while owned balls use proximity")
+{
+    u32 factor, safariBaseOdds, ownedOdds;
+    PARAMETRIZE(factor = 11, safariBaseOdds = 46, ownedOdds = 50);
+    PARAMETRIZE(factor = 15, safariBaseOdds = 63, ownedOdds = 68);
+    PARAMETRIZE(factor = 18, safariBaseOdds = 76, ownedOdds = 81);
+    PARAMETRIZE(factor = 20, safariBaseOdds = 85, ownedOdds = 90);
+
+    GIVEN {
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
+        WITH_CONFIG(B_LOW_LEVEL_CATCH_BONUS, GEN_7);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLEFFA);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } THEN {
+        const struct CaptureContext context = { .hasPlayerBattler = TRUE, .playerBattler = B_POSITION_PLAYER_LEFT, .initialCatchFactor = 11, .catchFactor = factor };
+        u32 savedFlags = gBattleTypeFlags;
+        gBattleTypeFlags |= BATTLE_TYPE_SAFARI;
+        gBattleStruct->safariCatchFactor = factor;
+        gLastUsedItem = ITEM_SAFARI_BALL;
+        EXPECT_EQ(ComputeCaptureOdds(B_POSITION_OPPONENT_LEFT, &context),
+                  B_SAFARI_BALL_MODIFIER == GEN_1 ? safariBaseOdds * 2
+                  : B_SAFARI_BALL_MODIFIER <= GEN_7 ? safariBaseOdds * 150 / 100 : safariBaseOdds);
+        gLastUsedItem = ITEM_POKE_BALL;
+        EXPECT_EQ(ComputeCaptureOdds(B_POSITION_OPPONENT_LEFT, &context), IS_HNS ? ownedOdds : safariBaseOdds);
+        gBattleTypeFlags = savedFlags;
     }
 }

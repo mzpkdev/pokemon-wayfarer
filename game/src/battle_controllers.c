@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #include "battle.h"
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
@@ -255,6 +256,8 @@ static void InitBtlControllersInternal(void)
             // Player 1
             if (isRecorded)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToRecordedPlayer;
+            else if (IsTrainerOnlyEncounter())
+                gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToTrainerOnly;
             else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                 gBattlerControllerFuncs[GetBattlerPosition(B_BATTLER_0)] = SetControllerToSafari;
             else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
@@ -469,6 +472,11 @@ static void SetBattlePartyIds(void)
     {
         for (enum BattlerId i = 0; i < gBattlersCount; i++)
         {
+            if (IsTrainerOnlyEncounter() && IsOnPlayerSide(i))
+            {
+                gBattlerPartyIndexes[i] = 0;
+                continue;
+            }
             for (u32 j = 0; j < PARTY_SIZE; j++)
             {
                 if (i < 2)
@@ -2467,7 +2475,7 @@ void BtlController_HandleDrawTrainerPic(enum BattlerId battler, enum TrainerPicI
                                                              xPos,
                                                              yPos,
                                                              subpriority);
-            if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
+            if (((gBattleTypeFlags & BATTLE_TYPE_SAFARI) || IsTrainerOnlyEncounter()) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                 gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
 
             // Sets sprite priority to 1 so mons don't remain in foreground
@@ -2495,7 +2503,7 @@ void BtlController_HandleTrainerSlide(enum BattlerId battler, enum TrainerPicID 
                                                          80,
                                                          (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80,
                                                          30);
-        if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
+        if (((gBattleTypeFlags & BATTLE_TYPE_SAFARI) || IsTrainerOnlyEncounter()) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
             gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
         // Sets sprite priority to 1 so mons don't remain in foreground
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.priority = 1;
@@ -2605,9 +2613,11 @@ void BtlController_HandleBallThrowAnim(enum BattlerId battler)
         allowCriticalCapture = TRUE;
         target = gBattlerTarget;
     }
-    else if (IsControllerSafari(battler) || IsControllerWally(battler) || IsControllerOakOldMan(battler))
+    else if (IsTrainerOnlyEncounter() || IsControllerSafari(battler) || IsControllerWally(battler) || IsControllerOakOldMan(battler))
     {
         animId = B_ANIM_BALL_THROW_WITH_TRAINER;
+        if (IsTrainerOnlyEncounter())
+            allowCriticalCapture = TRUE;
     }
 
     gBattleSpritesDataPtr->animationData->ballThrowCaseId = gBattleResources->bufferA[battler][1];

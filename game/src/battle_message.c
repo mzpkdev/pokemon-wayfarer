@@ -1,4 +1,6 @@
 #include "global.h"
+#include "wayfarer_loss_policy.h"
+#include "trainer_only_encounter.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_ai_util.h"
@@ -59,9 +61,12 @@ struct BattleWindowText
     u8 speed;
 };
 
+static const u8 sText_TrainerOnlyRetreated[] = _("You retreated from the battle.");
+
 #if TESTING
 EWRAM_DATA u16 sBattlerAbilities[MAX_BATTLERS_COUNT] = {0};
 #else
+
 static EWRAM_DATA u16 sBattlerAbilities[MAX_BATTLERS_COUNT] = {0};
 #endif
 EWRAM_DATA struct BattleMsgData *gBattleMsgDataPtr = NULL;
@@ -2459,9 +2464,9 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
                 stringPtr = sText_TwoWildPkmnAppeared;
             else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
                 stringPtr = sText_WildPkmnAppearedPause;
-            else if (!gSaveblock3.challengeSettings.lrToRun && gSaveblock3.challengeSettings.runType == 1)
+            else if (!IsTrainerOnlyEncounter() && !gSaveblock3.challengeSettings.lrToRun && gSaveblock3.challengeSettings.runType == 1)
                 stringPtr = sText_WildPkmnAppearedLR;
-            else if (!gSaveblock3.challengeSettings.lrToRun && gSaveblock3.challengeSettings.runType == 3)
+            else if (!IsTrainerOnlyEncounter() && !gSaveblock3.challengeSettings.lrToRun && gSaveblock3.challengeSettings.runType == 3)
                 stringPtr = sText_WildPkmnAppearedB;
             else
                 stringPtr = sText_WildPkmnAppeared;
@@ -2849,6 +2854,8 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         else
         {
             stringPtr = gBattleStringsTable[stringID];
+            if (stringID == STRINGID_PLAYERWHITEOUT3 && WayfarerShouldContinuePartyDefeat())
+                stringPtr = sText_TrainerOnlyRetreated;
         }
         break;
     }

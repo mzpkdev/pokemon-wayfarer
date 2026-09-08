@@ -1,7 +1,22 @@
-const abiVersion = 14
+export type TrainerOnlySnapshot = {
+  active: boolean
+  initialCatchFactor: number
+  catchFactor: number
+  escapeFactor: number
+  approach: number
+  anger: number
+  foodTurns: number
+  rocks: number
+  completedTurns: number
+  runAttempts: number
+  warned: boolean
+  outcome: number
+}
+
+const abiVersion = 16
 const expectedRequestSize = 432
 const expectedResultSize = 16
-const expectedStateSize = 388
+const expectedStateSize = 464
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -127,6 +142,7 @@ export const battleUiStates = [
   "catch-swap-party",
   "other",
   "text",
+  "move-menu",
 ] as const
 
 export type SessionAbi = {
@@ -151,7 +167,13 @@ export type CommandResult = {
 }
 export type ArrangeResult = CommandResult
 
-export type MonFixtureWire = { species: number; moves: number[]; level: number; egg: boolean }
+export type MonFixtureWire = {
+  species: number
+  moves: number[]
+  pp?: number[]
+  level: number
+  egg: boolean
+}
 export type PartyMonFixtureWire = MonFixtureWire & { fainted: boolean }
 export type PcSlotFixtureWire = { box: number; slot: number; mon: MonFixtureWire }
 
@@ -275,6 +297,11 @@ export type StateSnapshot = {
   lastHealY: number
   playerGender: number
   originEquipment: number
+  money: number
+  partyHp: number[]
+  partyStatus: number[]
+  partyPp: number[][]
+  trainerOnly: TrainerOnlySnapshot
   littlerootTownState: number
 }
 
@@ -324,6 +351,8 @@ const encodeMon = (view: DataView, offset: number, mon: MonFixtureWire): void =>
     view.setUint16(offset + 2 + index * 2, mon.moves[index] ?? 0, true)
   view.setUint8(offset + 10, mon.level)
   view.setUint8(offset + 11, mon.egg ? 1 : 0)
+  for (let index = 0; index < maxMoves; index++)
+    view.setUint8(offset + 12 + index, mon.pp?.[index] ?? 0xff)
 }
 
 export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): Uint8Array => {
@@ -776,5 +805,28 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     playerGender: bytes[378]!,
     originEquipment: bytes[379]!,
     littlerootTownState: uint16(bytes, 380),
+    money: uint32(bytes, 400),
+    partyHp: Array.from({ length: maxParty }, (_, index) => uint16(bytes, 404 + index * 2)),
+    partyStatus: Array.from({ length: maxParty }, (_, index) => uint32(bytes, 416 + index * 4)),
+    partyPp: Array.from({ length: maxParty }, (_, partyIndex) =>
+      Array.from(
+        { length: maxMoves },
+        (_, moveIndex) => bytes[440 + partyIndex * maxMoves + moveIndex]!,
+      ),
+    ),
+    trainerOnly: {
+      active: bytes[386] !== 0,
+      initialCatchFactor: bytes[387]!,
+      catchFactor: bytes[388]!,
+      escapeFactor: bytes[389]!,
+      approach: bytes[390]!,
+      anger: bytes[391]!,
+      foodTurns: bytes[392]!,
+      rocks: bytes[393]!,
+      completedTurns: bytes[394]!,
+      runAttempts: bytes[395]!,
+      warned: bytes[396] !== 0,
+      outcome: bytes[397]!,
+    },
   }
 }

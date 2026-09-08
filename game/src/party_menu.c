@@ -1,9 +1,11 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
 #include "malloc.h"
 #include "battle.h"
+#include "battle_util.h"
 #include "challenge_menu.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -242,9 +244,10 @@ static void CB2_UpdatePartyMenu(void);
 
 bool32 E2ETest_IsPartyMenuOpen(void)
 {
-    return gMain.callback2 == CB2_InitPartyMenu
-        || gMain.callback2 == CB2_ReloadPartyMenu
-        || gMain.callback2 == CB2_UpdatePartyMenu;
+    // The active party menu can run under the reshow-battle callback while
+    // retaining its initialized menu state. Its allocations are the reliable
+    // observable boundary for E2E, unlike a particular callback address.
+    return sPartyMenuInternal != NULL && sPartyMenuBoxes != NULL;
 }
 
 void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count)
@@ -988,13 +991,25 @@ static void PartyPaletteBufferCopy(u8 palNum)
 static void FreePartyPointers(void)
 {
     if (sPartyMenuInternal)
+    {
         Free(sPartyMenuInternal);
+        sPartyMenuInternal = NULL;
+    }
     if (sPartyBgTilemapBuffer)
+    {
         Free(sPartyBgTilemapBuffer);
+        sPartyBgTilemapBuffer = NULL;
+    }
     if (sPartyBgGfxTilemap)
+    {
         Free(sPartyBgGfxTilemap);
+        sPartyBgGfxTilemap = NULL;
+    }
     if (sPartyMenuBoxes)
+    {
         Free(sPartyMenuBoxes);
+        sPartyMenuBoxes = NULL;
+    }
     FreeAllWindowBuffers();
 }
 
@@ -5297,7 +5312,8 @@ static void Task_DisplayHPRestoredMessage(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_PkmnHPRestoredByVar2);
     DisplayPartyMenuMessage(gStringVar4, FALSE);
     ScheduleBgCopyTilemapToVram(2);
-    HandleBattleLowHpMusicChange();
+    if (!IsTrainerOnlyEncounter())
+        HandleBattleLowHpMusicChange();
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
         gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
     else
@@ -5507,7 +5523,7 @@ static void TryUseItemOnMove(u8 taskId)
     struct PartyMenu *ptr = &gPartyMenu;
     struct Pokemon *mon = &gPlayerParty[ptr->slotId];
     // In battle, set appropriate variables to be used in battle script.
-    if (gMain.inBattle)
+    if (gMain.inBattle && !IsTrainerOnlyEncounter())
     {
         if (CannotUseItemsInBattle(gSpecialVar_ItemId, mon))
         {
@@ -5527,14 +5543,20 @@ static void TryUseItemOnMove(u8 taskId)
             gTasks[taskId].func = Task_ClosePartyMenuAfterText;
         }
     }
-    // Outside of battle, only PP items are used on moves.
+    // Trainer-only PP recovery applies to the real party through the same item effect.
     else
     {
         enum Move move = MOVE_NONE;
         s16 *moveSlot = &gPartyMenu.data1;
         enum Item item = gSpecialVar_ItemId;
 
-        if (ExecuteTableBasedItemEffect(mon, item, ptr->slotId, *moveSlot))
+        if ((IsTrainerOnlyEncounter()
+             && (GetItemBattleUsage(item) != EFFECT_ITEM_RESTORE_PP
+                 || !IsAllowedToUseBag()
+                 || gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
+                 || !CheckBagHasItem(item, 1)
+                 || CannotUseItemsInBattle(item, mon)))
+         || ExecuteTableBasedItemEffect(mon, item, ptr->slotId, *moveSlot))
         {
             gPartyMenuUseExitCallback = FALSE;
             PlaySE(SE_SELECT);
@@ -5547,6 +5569,8 @@ static void TryUseItemOnMove(u8 taskId)
             gPartyMenuUseExitCallback = TRUE;
             PlaySE(SE_USE_ITEM);
             RemoveBagItem(item, 1);
+            if (IsTrainerOnlyEncounter())
+                TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_RECOVERY);
             move = GetMonData(mon, MON_DATA_MOVE1 + *moveSlot);
             StringCopy(gStringVar1, GetMoveName(move));
             GetMedicineItemEffectMessage(item, 0);
@@ -7918,6 +7942,8 @@ u8 GetPartyIdFromBattlePartyId(u8 battlePartyId)
 
 static void UpdatePartyToBattleOrder(void)
 {
+    if (IsTrainerOnlyEncounter())
+        return;
     struct Pokemon *partyBuffer = Alloc(sizeof(gPlayerParty));
     u8 i;
 
@@ -7929,6 +7955,8 @@ static void UpdatePartyToBattleOrder(void)
 
 static void UpdatePartyToFieldOrder(void)
 {
+    if (IsTrainerOnlyEncounter())
+        return;
     struct Pokemon *partyBuffer = Alloc(sizeof(gPlayerParty));
     u8 i;
 

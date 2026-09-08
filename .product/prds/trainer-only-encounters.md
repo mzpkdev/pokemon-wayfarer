@@ -115,15 +115,19 @@ The player uses balls and berries actually owned in the Bag.
 | Rock | Deal HP damage, increase flee risk, and build anger. Damage can knock out the Pokémon. There is no separate rock catch bonus: lower HP already improves catching. |
 | Go Near | Use existing Safari approach behavior: increase catch and flee factors, including repeated attempts at the closest distance. Apply the catch benefit to every ball. |
 | Bag: ball | Consume one owned, usable ball and attempt a normal capture with the proximity benefit. Preserve the ball's ordinary effects where applicable. |
-| Bag: berry | Consume one eligible berry to temporarily reduce flee risk and partially lower anger. Feeding does not heal rock damage or instantly reset anger. |
+| Bag: berry | Selecting any standard berry feeds it directly, consuming one to temporarily reduce flee risk and partially lower anger. Feeding does not heal rock damage or instantly reset anger. |
 | Run | Attempt escape. Success depends on wild level relative to the Trainer Rating softcap and improves with repeated attempts. A failed attempt consumes a turn. |
 
 Performing a valid action consumes a turn. Opening or cancelling the Bag,
 selecting an unusable item, or attempting an unavailable action consumes neither
 a turn nor an item. The Bag must clearly identify usable encounter items and
-must safely target existing party members for applicable items, including revives,
+must safely target existing party members for applicable non-berry recovery items,
+including HP/status medicine, revives and PP restoration,
 without treating an empty party slot as a target. Restoring a usable party member
 ends this encounter and returns to the field; later encounters use normal battles.
+Every standard berry from Cheri through Maranga is feedable, including standard
+Enigma and excluding the e-reader Enigma item. Use an explicit list. Berry selection
+feeds directly without a Feed/Use submenu or party-medicine option in this mode.
 
 With no balls left, the player can still run. Attempting to select a ball explains
 that none are available without advancing the encounter. Food is optional; the
@@ -229,10 +233,12 @@ cap and `L` the wild Pokémon's level, both fixed for the encounter at entry.
 | Proximity catch change | Safari catch factor gains +4, +3, +2, then +1 for every further attempt, capped at 20; owned-ball benefit scales by current/initial factor |
 
 The flee defaults above belong to trainer-only encounters. Safari shares the
-all-ball proximity catch benefit while retaining its visit rules. Escape has a
-level-versus-softcap comparison and a repeated-attempt bonus; its exact probability
-formula remains open. Invalid actions and menu cancellation advance none of these
-values.
+all-ball proximity catch benefit while retaining its visit rules. Run succeeds
+with probability `clamp(floor(50 * C / L) + 15 * priorFailedAttempts, 5, 95)` percent,
+using the entry softcap C and wild level L, each at least 1. Failed attempts consume
+a turn; even repeated failures never guarantee escape. Preserve global no-running
+and existing less-escapes challenge restrictions. Invalid actions and menu
+cancellation advance none of these values.
 
 ## Presentation
 
@@ -270,7 +276,8 @@ party member exists, resolve that case through the shared rule rather than
 importing Safari exemptions. Ordinary party defeat and trainer retaliation are
 distinct reasons within that policy: ordinary defeat returns to the field, while
 retaliation invokes blackout and recovery, subject to the explicit challenge and
-authored-outcome decisions below.
+authored-outcome decisions below. Retaliation deducts no money. Ordinary supported
+battle losses retain their existing money charge exactly once.
 
 ## Constraints
 
@@ -331,10 +338,8 @@ escapes, berry use near the anger threshold, and peaceful turns reaching it.
 
 ## Open questions
 
-- Exact Run probability formula, repeated-attempt bonus, and any probability cap.
 - Validation and adjustment of the selected initial numeric tuning, including
   warning timing and the three-turn food duration's turn-order behavior.
-- Eligible berry list; use one common calming effect for the initial eligible set.
 - Exact anger and retaliation animations and final encounter messages.
 - Challenge consequences for ordinary party defeat versus retaliation: shared
   recovery currently includes
@@ -342,9 +347,8 @@ escapes, berry use near the anger threshold, and peaceful turns reaching it.
   creation of a level-1 Rattata. Confirm how these apply to each defeat reason
   before shipping. Preserve challenge rules by default; any approved exception
   belongs in centralized recovery with the defeat reason, not a separate path.
-- Retaliation's money penalty, League-run consequences, and the companion
-  spec's excluded authored/scripted defeat outcomes remain open. Ordinary supported
-  battle losses retain their existing money charge exactly once without a recovery warp.
+- League-run consequences and the companion spec's excluded authored/scripted
+  defeat outcomes remain open. Preserve their existing routing until approved.
 - Confirm the existing centralized respawn fallback is valid for every supported
   origin before its first Pokémon Center visit.
 

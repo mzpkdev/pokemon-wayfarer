@@ -19,14 +19,14 @@ import {
 const abi: SessionAbi = {
   requestSize: 432,
   resultSize: 16,
-  stateSize: 388,
+  stateSize: 464,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 14): Uint8Array => {
+const abiBytes = (version = 16): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -68,7 +68,13 @@ const request = (): CommandRequest => ({
   leagueClears: [true, false, false],
 })
 
-describe("game-session v14 protocol", () => {
+const expectNoFixtureMutations = (bytes: Uint8Array) => {
+  expect(Array.from(bytes.slice(88, 412))).toEqual(Array(324).fill(0))
+  expect(Array.from(bytes.slice(412, 416))).toEqual([0xff, 0xff, 0xff, 0xff])
+  expect(Array.from(bytes.slice(416))).toEqual(Array(16).fill(0))
+}
+
+describe("game-session v16 protocol", () => {
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
     expect(encodeCommandRequest(abi, request())[429]).toBe(0)
     for (const id of [1, 2, 5, 6])
@@ -77,7 +83,7 @@ describe("game-session v14 protocol", () => {
 
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
-    expect(() => parseAbi(abiBytes(13))).toThrow("Unsupported test ROM ABI")
+    expect(() => parseAbi(abiBytes(15))).toThrow("Unsupported test ROM ABI")
   })
 
   it("encodes party-only fainted state, generic items, bounded PC slots, and a wild fixture", () => {
@@ -89,6 +95,7 @@ describe("game-session v14 protocol", () => {
     expect(view.getUint16(88, true)).toBe(131)
     expect(view.getUint16(90, true)).toBe(57)
     expect(bytes[98]).toBe(25)
+    expect(Array.from(bytes.slice(100, 104))).toEqual([0xff, 0xff, 0xff, 0xff])
     expect(bytes[104]).toBe(1)
     expect(view.getUint16(208, true)).toBe(4)
     expect(view.getUint16(210, true)).toBe(1)
@@ -100,6 +107,19 @@ describe("game-session v14 protocol", () => {
     expect(Array.from(bytes.slice(240, 256))).not.toContain(1)
     expect(Array.from(bytes.slice(260, 400))).toEqual(Array(140).fill(0))
     expect(Array.from(bytes.slice(416, 428))).toEqual([1, 1, 1, 3, 1, 7, 4, 3, 1, 1, 0, 0])
+  })
+
+  it("encodes optional per-move PP for party, PC, and wild fixtures", () => {
+    const configured = request()
+
+    configured.party[0]!.pp = [3, 17]
+    configured.pcSlots[0]!.mon.pp = [4]
+    configured.wildMon.pp = [2]
+    const bytes = encodeCommandRequest(abi, configured)
+
+    expect(Array.from(bytes.slice(100, 104))).toEqual([3, 17, 0xff, 0xff])
+    expect(Array.from(bytes.slice(252, 256))).toEqual([4, 0xff, 0xff, 0xff])
+    expect(Array.from(bytes.slice(412, 416))).toEqual([2, 0xff, 0xff, 0xff])
   })
 
   it("preserves invalid fixture values for ROM-side negative validation", () => {
@@ -122,7 +142,7 @@ describe("game-session v14 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(17)
     expect(bytes[86]).toBe(commands.save)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(abi.requestSize - 88).fill(0))
+    expectNoFixtureMutations(bytes)
   })
 
   it("encodes the read-only region-map observation command", () => {
@@ -130,7 +150,7 @@ describe("game-session v14 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(23)
     expect(bytes[86]).toBe(commands.observeRegionMap)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(abi.requestSize - 88).fill(0))
+    expectNoFixtureMutations(bytes)
   })
 
   it("encodes a region-map grid lookup without changing the ABI layout", () => {
@@ -149,7 +169,7 @@ describe("game-session v14 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(25)
     expect(bytes[86]).toBe(commands.winBattle)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(abi.requestSize - 88).fill(0))
+    expectNoFixtureMutations(bytes)
   })
 
   it("decodes region-map observation values from the command result", () => {
@@ -247,7 +267,42 @@ describe("game-session v14 protocol", () => {
     bytes[378] = 1
     bytes[379] = 3
     view.setUint16(380, 2, true)
+    bytes.set([5, 6, 2, 1], 382)
+    bytes.set([1, 5, 9, 7, 1, 10, 2, 3, 4, 5, 1, 0], 386)
+    view.setUint32(400, 2992, true)
+    view.setUint16(404, 0, true)
+    view.setUint32(416, 8, true)
+    bytes.set([3, 20, 0, 0], 440)
     expect(parseStateSnapshot(bytes)).toMatchObject({
+      money: 2992,
+      partyHp: [0, 0, 0, 0, 0, 0],
+      partyStatus: [8, 0, 0, 0, 0, 0],
+      partyPp: [
+        [3, 20, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+      ],
+      trainerOnly: {
+        active: true,
+        initialCatchFactor: 5,
+        catchFactor: 9,
+        escapeFactor: 7,
+        approach: 1,
+        anger: 10,
+        foodTurns: 2,
+        rocks: 3,
+        completedTurns: 4,
+        runAttempts: 5,
+        warned: true,
+        outcome: 0,
+      },
+      playerAppearanceId: 5,
+      appearanceCandidate: 6,
+      appearanceConfirmed: 2,
+      appearanceIntroStage: 1,
       originIntroStage: 2,
       startingOriginId: 2,
       johtoStarterChoice: 1,

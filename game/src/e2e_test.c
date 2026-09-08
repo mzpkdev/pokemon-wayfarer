@@ -34,6 +34,8 @@
 #include "oak_speech_hns.h"
 #include "starter_choose.h"
 #include "wild_encounter.h"
+#include "money.h"
+#include "trainer_only_encounter.h"
 #include "constants/field_effects.h"
 #include "constants/flags.h"
 #include "constants/global.h"
@@ -49,7 +51,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 14,
+    .version = 16,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -64,11 +66,16 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 429, E2ETestReque
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 388, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 464, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceIntroStage) == 385, E2ETestAppearanceIntroStageOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, trainerOnlyState) == 386, E2ETestTrainerOnlyStateOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, money) == 400, E2ETestMoneyOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, partyHp) == 404, E2ETestPartyHpOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, partyStatus) == 416, E2ETestPartyStatusOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, partyPp) == 440, E2ETestPartyPpOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -229,7 +236,11 @@ static void CreateFixtureMon(struct Pokemon *mon, const struct E2ETestMonFixture
 
     CreateMonWithIVs(mon, fixture->species, fixture->level, personality, OTID_STRUCT_PRESET(0), 0);
     for (move = 0; move < MAX_MON_MOVES; move++)
+    {
         SetMonMoveSlot(mon, fixture->moves[move], move);
+        if (fixture->pp[move] != E2E_TEST_KEEP_PP)
+            SetMonData(mon, MON_DATA_PP1 + move, &fixture->pp[move]);
+    }
     if (fixture->isEgg)
     {
         bool8 isEgg = TRUE;
@@ -387,10 +398,12 @@ static void CopyRequest(void)
 
         sRequest.party[i].mon.species = gE2ETestRequest.party[i].mon.species;
         for (move = 0; move < MAX_MON_MOVES; move++)
+        {
             sRequest.party[i].mon.moves[move] = gE2ETestRequest.party[i].mon.moves[move];
+            sRequest.party[i].mon.pp[move] = gE2ETestRequest.party[i].mon.pp[move];
+        }
         sRequest.party[i].mon.level = gE2ETestRequest.party[i].mon.level;
         sRequest.party[i].mon.isEgg = gE2ETestRequest.party[i].mon.isEgg;
-        sRequest.party[i].mon.reserved = gE2ETestRequest.party[i].mon.reserved;
         sRequest.party[i].fainted = gE2ETestRequest.party[i].fainted;
         memcpy(sRequest.party[i].reserved, (const void *)gE2ETestRequest.party[i].reserved, sizeof(sRequest.party[i].reserved));
     }
@@ -405,20 +418,24 @@ static void CopyRequest(void)
 
         sRequest.pcSlots[i].mon.species = gE2ETestRequest.pcSlots[i].mon.species;
         for (move = 0; move < MAX_MON_MOVES; move++)
+        {
             sRequest.pcSlots[i].mon.moves[move] = gE2ETestRequest.pcSlots[i].mon.moves[move];
+            sRequest.pcSlots[i].mon.pp[move] = gE2ETestRequest.pcSlots[i].mon.pp[move];
+        }
         sRequest.pcSlots[i].mon.level = gE2ETestRequest.pcSlots[i].mon.level;
         sRequest.pcSlots[i].mon.isEgg = gE2ETestRequest.pcSlots[i].mon.isEgg;
-        sRequest.pcSlots[i].mon.reserved = gE2ETestRequest.pcSlots[i].mon.reserved;
         sRequest.pcSlots[i].boxId = gE2ETestRequest.pcSlots[i].boxId;
         sRequest.pcSlots[i].boxPosition = gE2ETestRequest.pcSlots[i].boxPosition;
         memcpy(sRequest.pcSlots[i].reserved, (const void *)gE2ETestRequest.pcSlots[i].reserved, sizeof(sRequest.pcSlots[i].reserved));
     }
     sRequest.wildMon.species = gE2ETestRequest.wildMon.species;
     for (i = 0; i < MAX_MON_MOVES; i++)
+    {
         sRequest.wildMon.moves[i] = gE2ETestRequest.wildMon.moves[i];
+        sRequest.wildMon.pp[i] = gE2ETestRequest.wildMon.pp[i];
+    }
     sRequest.wildMon.level = gE2ETestRequest.wildMon.level;
     sRequest.wildMon.isEgg = gE2ETestRequest.wildMon.isEgg;
-    sRequest.wildMon.reserved = gE2ETestRequest.wildMon.reserved;
     sRequest.partyCount = gE2ETestRequest.partyCount;
     sRequest.bagItemCount = gE2ETestRequest.bagItemCount;
     sRequest.pcSlotCount = gE2ETestRequest.pcSlotCount;
@@ -534,12 +551,11 @@ static enum E2ETestError ValidateMonFixture(const struct E2ETestMonFixture *mon,
     {
         if (allowEmpty
          && mon->level == 0
-         && mon->isEgg == FALSE
-         && mon->reserved == 0)
+         && mon->isEgg == FALSE)
         {
             for (move = 0; move < MAX_MON_MOVES; move++)
             {
-                if (mon->moves[move] != MOVE_NONE)
+                if (mon->moves[move] != MOVE_NONE || mon->pp[move] != E2E_TEST_KEEP_PP)
                     return E2E_TEST_ERROR_MOVE;
             }
             return E2E_TEST_ERROR_NONE;
@@ -550,11 +566,15 @@ static enum E2ETestError ValidateMonFixture(const struct E2ETestMonFixture *mon,
         return E2E_TEST_ERROR_SPECIES;
     if (mon->level == 0 || mon->level > MAX_LEVEL)
         return E2E_TEST_ERROR_LEVEL;
-    if (mon->isEgg > TRUE || mon->reserved != 0)
+    if (mon->isEgg > TRUE)
         return E2E_TEST_ERROR_PARTY;
     for (move = 0; move < MAX_MON_MOVES; move++)
     {
         if (mon->moves[move] >= MOVES_COUNT)
+            return E2E_TEST_ERROR_MOVE;
+        if (mon->pp[move] != E2E_TEST_KEEP_PP
+         && (mon->moves[move] == MOVE_NONE
+          || mon->pp[move] > CalculatePPWithBonus(mon->moves[move], 0, move)))
             return E2E_TEST_ERROR_MOVE;
     }
     return E2E_TEST_ERROR_NONE;
@@ -821,10 +841,17 @@ static void StartWildBattle(void)
 
     CreateWildMon(sRequest.wildMon.species, sRequest.wildMon.level);
     for (move = 0; move < MAX_MON_MOVES; move++)
+    {
         SetMonMoveSlot(&gEnemyParty[0], sRequest.wildMon.moves[move], move);
+        if (sRequest.wildMon.pp[move] != E2E_TEST_KEEP_PP)
+            SetMonData(&gEnemyParty[0], MON_DATA_PP1 + move, &sRequest.wildMon.pp[move]);
+    }
     ResetObservations();
     gE2ETestRequest.status = E2E_TEST_STATUS_RUNNING;
     PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_FIELD_READY, E2E_TEST_ERROR_NONE);
+    TrainerOnlyResetEncounter();
+    if (TrainerOnlyCanEnterWildEncounter())
+        TrainerOnlyPrepareEncounter();
     BattleSetup_StartWildBattle();
     sStage = E2E_TEST_STAGE_WAIT_BATTLE;
 }
@@ -1108,7 +1135,7 @@ static void UpdateRequest(void)
         u8 cursor;
 
         if (!gMain.inBattle
-         || (!E2ETest_IsBattleTextReady() && !E2ETest_GetBattleActionMenuState(&cursor)))
+         || (!E2ETest_IsBattleTextReady() && !E2ETest_GetBattleActionMenuState(&cursor) && !E2ETest_GetTrainerOnlyActionMenuState(&cursor)))
             break;
         sStage = E2E_TEST_STAGE_IDLE;
         gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
@@ -1154,6 +1181,22 @@ static void UpdateState(void)
     gE2ETestState.playerAppearanceId = gSaveBlock3Ptr == NULL ? APPEARANCE_NONE
         : gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId;
 #endif
+    {
+        struct TrainerOnlyState trainer;
+        TrainerOnlyReadState(&trainer);
+        gE2ETestState.trainerOnlyState[0] = trainer.active;
+        gE2ETestState.trainerOnlyState[1] = trainer.initialCatchFactor;
+        gE2ETestState.trainerOnlyState[2] = trainer.catchFactor;
+        gE2ETestState.trainerOnlyState[3] = trainer.escapeFactor;
+        gE2ETestState.trainerOnlyState[4] = trainer.approach;
+        gE2ETestState.trainerOnlyState[5] = trainer.anger;
+        gE2ETestState.trainerOnlyState[6] = trainer.foodTurns;
+        gE2ETestState.trainerOnlyState[7] = trainer.rocks;
+        gE2ETestState.trainerOnlyState[8] = trainer.completedTurns;
+        gE2ETestState.trainerOnlyState[9] = trainer.escapeAttempts;
+        gE2ETestState.trainerOnlyState[10] = trainer.warned;
+        gE2ETestState.trainerOnlyState[11] = gBattleOutcome;
+    }
     gE2ETestState.frame++;
     gE2ETestState.phase = E2E_TEST_GAME_PHASE_BOOT;
     gE2ETestState.ready = FALSE;
@@ -1224,7 +1267,10 @@ static void UpdateState(void)
 
         gE2ETestState.partySpecies[i] = SPECIES_NONE;
         for (move = 0; move < MAX_MON_MOVES; move++)
+        {
             gE2ETestState.partyMoves[i][move] = MOVE_NONE;
+            gE2ETestState.partyPp[i][move] = 0;
+        }
     }
     for (i = 0; i < E2E_TEST_MAX_BAG_ITEMS; i++)
     {
@@ -1308,6 +1354,7 @@ static void UpdateState(void)
     gE2ETestState.x = gSaveBlock1Ptr->pos.x;
     gE2ETestState.y = gSaveBlock1Ptr->pos.y;
     gE2ETestState.partyCount = gPlayerPartyCount;
+    gE2ETestState.money = GetMoney(&gSaveBlock1Ptr->money);
     gE2ETestState.hmsOverwrite = HMsOverwriteOptionActive();
     for (i = 0; i < E2E_TEST_MAX_PARTY; i++)
     {
@@ -1315,8 +1362,13 @@ static void UpdateState(void)
         struct Pokemon *mon = &gPlayerParty[i];
 
         gE2ETestState.partySpecies[i] = GetMonData(mon, MON_DATA_SPECIES);
+        gE2ETestState.partyHp[i] = GetMonData(mon, MON_DATA_HP);
+        gE2ETestState.partyStatus[i] = GetMonData(mon, MON_DATA_STATUS);
         for (move = 0; move < MAX_MON_MOVES; move++)
+        {
             gE2ETestState.partyMoves[i][move] = GetMonData(mon, MON_DATA_MOVE1 + move);
+            gE2ETestState.partyPp[i][move] = GetMonData(mon, MON_DATA_PP1 + move);
+        }
         if (GetMonData(mon, MON_DATA_IS_EGG))
             gE2ETestState.partyEggMask |= 1 << i;
         if (GetMonData(mon, MON_DATA_SPECIES) != SPECIES_NONE && GetMonData(mon, MON_DATA_HP) == 0)
@@ -1362,9 +1414,14 @@ static void UpdateState(void)
         gE2ETestState.battleEnemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
         for (i = 0; i < MAX_MON_MOVES; i++)
             gE2ETestState.battleEnemyMoves[i] = GetMonData(&gEnemyParty[0], MON_DATA_MOVE1 + i);
-        if (E2ETest_GetBattleActionMenuState(&cursor))
+        if (E2ETest_GetTrainerOnlyActionMenuState(&cursor) || E2ETest_GetBattleActionMenuState(&cursor))
         {
             gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_ACTION_MENU;
+            gE2ETestState.battleCursor = cursor;
+        }
+        else if (E2ETest_GetBattleMoveMenuState(&cursor))
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_MOVE_MENU;
             gE2ETestState.battleCursor = cursor;
         }
         else if (E2ETest_GetBattleBagState(&bagUiState, &pocket, &item))
@@ -1410,7 +1467,9 @@ static void UpdateState(void)
     else if (gE2ETestState.battleUiState == E2E_TEST_BATTLE_UI_CATCH_SWAP_PROMPT
           || gE2ETestState.battleUiState == E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY)
         gE2ETestState.uiMode = E2E_TEST_UI_CATCH_SWAP;
-    else if (gMain.inBattle)
+    else if (gMain.inBattle
+          && gE2ETestState.uiMode != E2E_TEST_UI_PARTY_MENU
+          && gE2ETestState.uiMode != E2E_TEST_UI_SUMMARY)
         gE2ETestState.uiMode = E2E_TEST_UI_BATTLE;
 
     E2ETest_GetPartyMenuActions(partyMenuActions, &partyMenuActionCount);

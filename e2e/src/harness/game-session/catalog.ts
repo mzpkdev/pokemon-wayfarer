@@ -430,6 +430,7 @@ export const storyVars = {
 export const storyFlags = {
   hoennDiveAuthorized: 0x607b,
   runningShoes: 0x895,
+  noWildRunning: 0x96a,
   hoennWhiteoutToLavaridge: 0x606c,
   sharedPokegear: 0x892,
   sharedMatchCall: 0x1f3,
@@ -495,6 +496,7 @@ export const storyFlags = {
 export const species = {
   none: 0,
   pidgey: 16,
+  shedinja: 292,
   rattata: 19,
   zubat: 41,
   poliwag: 60,
@@ -560,7 +562,13 @@ export const hms = {
 } as const
 
 export const items = {
+  timerBall: 11,
+  quickBall: 12,
   masterBall: 4,
+  revive: 33,
+  antidote: 43,
+  ether: 49,
+  oranBerry: 520,
   miracleSeed: 429,
   metalCoat: 441,
   tmThunder: 606,

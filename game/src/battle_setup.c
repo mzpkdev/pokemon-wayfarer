@@ -1,4 +1,6 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
+#include "wayfarer_loss_policy.h"
 #include "battle.h"
 #include "bug_contest.h"
 #include "load_save.h"
@@ -324,7 +326,17 @@ static void CreateBattleStartTask(enum BattleTransition transition, u16 song)
 {
     u8 taskId;
 #if IS_WAYFARER
-    if (!(gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL) && !WayfarerCanStartOrdinaryBattle())
+    bool8 trainerOnly = IsTrainerOnlyEncounter()
+        && TrainerOnlyCanEnterWildEncounter()
+        && gBattleTypeFlags == 0
+        && gMain.savedCallback == CB2_EndWildBattle
+        && GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) != SPECIES_NONE
+        && GetMonData(&gEnemyParty[0], MON_DATA_HP) != 0;
+
+    if (!trainerOnly)
+        TrainerOnlyResetEncounter();
+    if (!(gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+     && !WayfarerCanStartOrdinaryBattle() && !trainerOnly)
     {
         WayfarerAbortEmptyPartyBattle();
         return;
@@ -390,6 +402,12 @@ static bool8 CheckSilphScopeInPokemonTower(u16 mapGroup, u16 mapNum)
         return FALSE;
 }
 
+bool8 BattleSetup_IsUnidentifiedGhostEncounter(void)
+{
+    return CheckSilphScopeInPokemonTower(gSaveBlock1Ptr->location.mapGroup,
+                                        gSaveBlock1Ptr->location.mapNum);
+}
+
 void BattleSetup_StartWildBattle(void)
 {
     SetNuzlockeChecks();
@@ -415,9 +433,12 @@ void BattleSetup_StartBattlePikeWildBattle(void)
 
 static void DoStandardWildBattle(bool32 isDouble)
 {
+    if (isDouble || !TrainerOnlyCanEnterWildEncounter())
+        TrainerOnlyResetEncounter();
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
+    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
     if (IsNPCFollowerWildBattle())
@@ -443,6 +464,7 @@ void DoStandardWildBattle_Debug(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
+    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
@@ -468,6 +490,7 @@ void BattleSetup_StartRoamerBattle(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
+    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_ROAMER;
     u16 song = 0;
@@ -516,6 +539,7 @@ static void DoGhostBattle(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
+    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_GHOST;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
@@ -529,6 +553,7 @@ static void DoBattlePikeWildBattle(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
+    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_PIKE;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
@@ -753,10 +778,28 @@ static void DowngradeBadPoison(void)
     }
 }
 
+bool8 BattleSetup_IsOrdinaryWildCaller(void)
+{
+    return gMain.savedCallback == CB2_EndWildBattle;
+}
+
 static void CB2_EndWildBattle(void)
 {
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
+
+    if (IsTrainerOnlyEncounter())
+    {
+        TrainerOnlyResetEncounter();
+        if (WayfarerRecoveryIsTrainerRetaliation())
+            WayfarerBeginTrainerRetaliationRecovery();
+        else
+        {
+            SetMainCallback2(CB2_ReturnToField);
+            gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
+        }
+        return;
+    }
 
     if (IsNPCFollowerWildBattle())
     {
@@ -767,14 +810,16 @@ static void CB2_EndWildBattle(void)
             HealPlayerParty();
     }
 
-    if (IsPlayerDefeated(gBattleOutcome) == TRUE && CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE && !InBattlePike())
+    if (IsPlayerDefeated(gBattleOutcome) == TRUE && CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE && !InBattlePike()
+     && !WayfarerShouldContinuePartyDefeat())
     {
         SetMainCallback2(CB2_WhiteOut);
     }
     else
     {
         SetMainCallback2(CB2_ReturnToField);
-        DowngradeBadPoison();
+        if (!WayfarerShouldContinuePartyDefeat())
+            DowngradeBadPoison();
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
     }
 }
@@ -1120,8 +1165,13 @@ enum BattleTransition GetWildBattleTransition(void)
 {
     u8 transitionType = GetBattleTransitionTypeByMap();
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-    u8 playerLevel = GetSumOfPlayerPartyLevel(1);
+    u8 playerLevel;
 
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+        return sBattleTransitionTable_Wild[transitionType][1];
+#endif
+    playerLevel = GetSumOfPlayerPartyLevel(1);
     if (enemyLevel < playerLevel)
     {
         if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
@@ -1399,6 +1449,7 @@ void ResetTrainerOpponentIds(void)
 
 void InitTrainerBattleParameter(void)
 {
+    WayfarerResetLossContext();
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
 }
@@ -1817,6 +1868,16 @@ static void HandleBattleVariantEndParty(void)
     FlagClear(B_FLAG_SKY_BATTLE);
 }
 
+static bool8 TryReturnFromSupportedTrainerLoss(void)
+{
+    if (!WayfarerShouldContinuePartyDefeat())
+        return FALSE;
+    ScriptContext_SetupScript(WayfarerGetTrainerLossRedirect());
+    WayfarerResetLossContext();
+    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    return TRUE;
+}
+
 static void CB2_EndTrainerBattle(void)
 {
     HandleBattleVariantEndParty();
@@ -1830,6 +1891,9 @@ static void CB2_EndTrainerBattle(void)
          || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
             HealPlayerParty();
     }
+
+    if (TryReturnFromSupportedTrainerLoss())
+        return;
 
     if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL)
     {
@@ -1887,6 +1951,9 @@ static void CB2_EndTrainerBattle(void)
 
 static void CB2_EndRematchBattle(void)
 {
+    if (TryReturnFromSupportedTrainerLoss())
+        return;
+
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
     {
         DowngradeBadPoison();
