@@ -13,6 +13,8 @@ SootopolisCity_MysteryEventsHouse_B1F_OnFrame:
 
 SootopolisCity_MysteryEventsHouse_B1F_EventScript_BattleVisitingTrainer::
 	lockall
+	frontier_checkvisittrainer
+	goto_if_eq VAR_RESULT, TRUE, SootopolisCity_MysteryEventsHouse_B1F_EventScript_NoVisitingTrainer
 	applymovement LOCALID_PLAYER, SootopolisCity_MysteryEventsHouse_B1F_Movement_PlayerEnterBasement
 	waitmovement 0
 	special CopyEReaderTrainerGreeting
@@ -73,3 +75,9 @@ SootopolisCity_MysteryEventsHouse_B1F_Movement_PlayerExitBasement:
 	delay_8
 	step_end
 
+
+SootopolisCity_MysteryEventsHouse_B1F_EventScript_NoVisitingTrainer::
+	warp MAP_SOOTOPOLIS_CITY_MYSTERY_EVENTS_HOUSE_1F, 3, 1
+	waitstate
+	releaseall
+	end

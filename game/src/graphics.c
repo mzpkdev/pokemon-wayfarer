@@ -2187,7 +2187,9 @@ const u8 gTradeGba_Gfx[] = INCBIN_U8("graphics/trade/gba.4bpp");
 
 static const u16 sEmptyPal[16] = {0};
 
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 #include "data/graphics/berry_fix.h"
+#endif
 
 // Trade
 const u16 gTradeMenu_Pal[] = INCBIN_U16("graphics/trade/menu.gbapal");

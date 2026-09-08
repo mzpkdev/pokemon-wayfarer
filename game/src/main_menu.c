@@ -542,7 +542,9 @@ enum
     ACTION_OPTION,
     ACTION_MYSTERY_GIFT,
     ACTION_MYSTERY_EVENTS,
+#if ENABLE_EREADER_TRANSFER
     ACTION_EREADER,
+#endif
     ACTION_INVALID
 };
 
@@ -1035,6 +1037,7 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                 action = ACTION_NEW_GAME;
                 break;
             case 2:
+#if ENABLE_EREADER_TRANSFER
                 if (gTasks[taskId].tWirelessAdapterConnected)
                 {
                     action = ACTION_MYSTERY_GIFT;
@@ -1053,6 +1056,14 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
                 {
                     action = ACTION_EREADER;
                 }
+#else
+                action = ACTION_MYSTERY_GIFT;
+                if (!wirelessAdapterConnected)
+                {
+                    action = ACTION_INVALID;
+                    gTasks[taskId].tMenuType = HAS_NO_SAVED_GAME;
+                }
+#endif
                 break;
             case 3:
                 if (wirelessAdapterConnected)
@@ -1123,10 +1134,12 @@ static void Task_HandleMainMenuAPressed(u8 taskId)
             SetMainCallback2(CB2_InitMysteryEventMenu);
             DestroyTask(taskId);
             break;
+#if ENABLE_EREADER_TRANSFER
         case ACTION_EREADER:
             SetMainCallback2(CB2_InitEReader);
             DestroyTask(taskId);
             break;
+#endif
         case ACTION_INVALID:
             gTasks[taskId].tCurrItem = 0;
             gTasks[taskId].func = Task_DisplayMainMenuInvalidActionError;

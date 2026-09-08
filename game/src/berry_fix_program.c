@@ -1,4 +1,5 @@
 #include "global.h"
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 #include "gpu_regs.h"
 #include "multiboot.h"
 #include "malloc.h"
@@ -381,3 +382,4 @@ static void BerryFix_HideScene(void)
     HideBg(0);
     HideBg(1);
 }
+#endif

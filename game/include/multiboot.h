@@ -1,5 +1,6 @@
 #ifndef GUARD_MULTIBOOT_H
 #define GUARD_MULTIBOOT_H
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 
 #define MULTIBOOT_MASTER_INFO            0x62
 #define MULTIBOOT_CLIENT_INFO            0x72
@@ -17,5 +18,7 @@ int MultiBootMain(struct MultiBootParam *mp);
 void MultiBootStartProbe(struct MultiBootParam *mp);
 void MultiBootStartMaster(struct MultiBootParam *mp, const u8 *srcp, int length, u8 palette_color, s8 palette_speed);
 int MultiBootCheckComplete(struct MultiBootParam *mp);
+
+#endif
 
 #endif // GUARD_MULTIBOOT_H

@@ -1,4 +1,6 @@
 #include "global.h"
+
+#if ENABLE_EREADER_TRANSFER
 #include "malloc.h"
 #include "decompress.h"
 #include "ereader_helpers.h"
@@ -869,3 +871,5 @@ void EReaderHelper_ClearSendRecvMgr(void)
 {
     CpuFill32(0, &sSendRecvMgr, sizeof(sSendRecvMgr));
 }
+
+#endif // ENABLE_EREADER_TRANSFER
