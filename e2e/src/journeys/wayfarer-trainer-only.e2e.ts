@@ -352,6 +352,25 @@ describe.sequential("Wayfarer trainer-only controller", () => {
       })
       await game.battle.startWild({ species: "pidgey", level: 5 })
       await useBagItem(game, "oranBerry")
+      // The native Pokéblock animation holds the food effect until
+      // the throw, projectile, and target's eating reaction have played.
+      // Preserve evenly spaced frames from that animation interval for
+      // visual inspection without adding a test-only animation decoder.
+      let foodApplied = false
+      for (let sample = 0; sample < 90; sample++) {
+        const animating = await game.state.read()
+        expect(animating.battle.trainerOnly.completedTurns).toBe(0)
+        if (animating.battle.trainerOnly.foodTurns > 0) {
+          foodApplied = true
+          break
+        }
+        await fs.promises.writeFile(
+          `/tmp/trainer-only-berry-feed-${String(sample).padStart(2, "0")}.png`,
+          await game.screenshot(),
+        )
+        await game.wait.frames(4)
+      }
+      expect(foodApplied).toBe(true)
       await advance(
         game,
         (state) =>
