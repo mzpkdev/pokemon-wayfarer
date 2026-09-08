@@ -1,0 +1,50 @@
+{
+  "implementation_commit": "ac16061af0",
+  "normal_build": "passed",
+  "release_build": "passed",
+  "e2e_build": "passed",
+  "standalone_build_matrix": {
+    "passed": 8,
+    "failed": 0
+  },
+  "legacy_static_tests": {
+    "passed": 7
+  },
+  "rom_report_tests": {
+    "passed": 21
+  },
+  "mechanics": {
+    "exit_code": 0,
+    "passed": 4325,
+    "known_failing": 349,
+    "todo": 629,
+    "assumptions_failed": 9,
+    "expect_failing": 6,
+    "total": 5318
+  },
+  "runtime": {
+    "mgba_normal_boot": "passed at frame 531",
+    "skyemu_smoke": {
+      "passed": 7,
+      "files": 3
+    },
+    "isolated_visitor_storage": {
+      "passed": 1,
+      "seconds": 25.5
+    },
+    "isolated_native_openings": {
+      "passed": 2,
+      "seconds": 65.07
+    },
+    "broad_parallel_journeys": "failed/stalled; stopped after more than ten minutes; not a green gate"
+  },
+  "typecheck": "passed",
+  "unfulfilled": [
+    "Cable trade and Cable Club Colosseum battle hardware smoke",
+    "Wireless Adapter trade/battle and Mystery Gift receive/send hardware smoke",
+    "GameCube activity during startup",
+    "Prepared-save visiting trainer and Trainer Hill sector runtime fixtures",
+    "Enabled reset-RTC runtime case",
+    "Complete broader journey suite"
+  ]
+}
