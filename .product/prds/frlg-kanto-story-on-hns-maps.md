@@ -24,8 +24,9 @@ This release does not implement transitions between historical world states
 or rebuild the entire overworld to match FRLG. A later Blue takeover of Viridian Gym is a potential future feature, not an
 event assumed to have already happened. Cinnabar remains intact; an eruption
 is neither planned by this PRD nor required for story coherence.
-ROM space recovery will happen before implementation and does not drive cuts
-to this product design.
+ROM space recovery is required before merge and does not drive cuts to this
+product design. The story task may implement and validate content before that
+recovery, then rebase on it before merging.
 
 ## Design
 
@@ -407,7 +408,10 @@ remains the baseline, not proof that an open choice has been made.
 
 ## Constraints
 
-Space recovery is an implementation prerequisite handled by separate work.
+Space recovery is a merge prerequisite handled by separate work. Development
+on the story task may exceed the 512 KiB reserve while recovery is pending;
+this does not waive the production release check or the 32 MiB address-space
+limit. Rebase on recovery and validate the complete release budget before merge.
 The finished feature must fit Wayfarer's standard 32 MiB release budget and
 reserve policy, but this PRD makes no byte estimate or claim that a port fits
 today. Measure the selected content in release builds during implementation.

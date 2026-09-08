@@ -30,7 +30,7 @@ Each milestone needs a bounded specification before code, followed by relevant v
 5. Integrate remaining local adventures and retained HNS adaptations, including Safari/Teeth, Mt. Moon, burglary and Nugget Bridge. Specify event collisions and reward ownership individually.
 6. Integrate Giovanni finale, one Earth Badge, Blue chapter retirement and separate League lineups. Resolve party/leadership choices before dependent content. Add Celebi gates using actual Giovanni and relevant Goldenrod completion, with adapted time/identity dialogue.
 
-Content expansion depends on measured release headroom and the separately owned space-recovery prerequisite. Do not implement unrelated optimization, reduce agreed content or weaken the reserve to unblock these rows.
+The user approved content implementation before separately owned space recovery. Track measured usage throughout development and keep the production reserve check intact. Recovery and a passing release budget are merge prerequisites: rebase this task on recovery before merging. Do not implement unrelated optimization or reduce agreed content to fit the current margin.
 
 ## Product decisions still required
 
@@ -51,11 +51,11 @@ the stored accepted report. EWRAM is 248,557 bytes and IWRAM 25,616 bytes.
 The release emits existing compiler/linker warnings; this measurement does
 not claim a warning-free baseline.
 
-No documented recovery project is implemented at this revision. That explicit
-prerequisite remains unmet; the measurement alone does not prove that any
-particular full import exceeds the budget. Content imports need their own
-measured deltas after recovery. Bounded dialogue substitutions can proceed
-without weakening the limit or claiming that the full port fits.
+No documented recovery project is implemented at this revision. Recovery is
+now a merge prerequisite rather than an implementation blocker, following the
+user’s approval. The measurement alone does not prove that any particular full
+import exceeds the budget. Measure content deltas during development, retain
+any failing production-budget result, and revalidate after rebasing on recovery.
 
 ## Anne integration findings
 
