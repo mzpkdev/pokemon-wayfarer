@@ -236,6 +236,11 @@ teardown clears encounter state; clear that cause after recovery/reset.
 | Lower left | Go Near |
 | Lower right | Run |
 
+Reuse the normal last-used-ball widget and configured R-button shortcut, including
+its ball cycling and visibility setting. A valid shortcut throw consumes one
+owned ball and enters the same capture path as Bag. A failed throw spends one
+completed turn; unavailable or restricted throws spend neither a ball nor a turn.
+
 Show trainer and wild Pokémon, retaining the wild HP bar. There is no player
 Pokémon HP bar, Safari allowance/step readout, or visual fear/anger/proximity
 meter. Use ordinary messages and animations for state feedback. Rock hits use

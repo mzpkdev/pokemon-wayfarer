@@ -394,6 +394,7 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler);
 void BtlController_HandleBattleAnimation(enum BattlerId battler);
 
 // player controller
+bool32 HandleLastUsedBallCycleInput(enum BattlerId battler, u8 action);
 void SetControllerToPlayer(enum BattlerId battler);
 void PlayerBufferExecCompleted(enum BattlerId battler);
 void SetBattleEndCallbacks(enum BattlerId battler);

@@ -170,6 +170,20 @@ static void TrainerOnlyMain(void)
         break;
     case 1:
         sAction = gBattleResources->bufferB[player][1];
+        if (sAction == TRAINER_ONLY_QUICK_BALL)
+        {
+            // This shortcut bypasses Bag, so it owns its one item consumption.
+            // The shared widget revalidates the same capture restrictions.
+            if (!CanThrowLastUsedBall() || !RemoveBagItem(gBallToDisplay, 1))
+            {
+                sPhase = 0;
+                return;
+            }
+            gSpecialVar_ItemId = gBallToDisplay;
+            sAction = TRAINER_ONLY_BALL;
+            sPhase = 3;
+            return;
+        }
         if (sAction == TRAINER_ONLY_BALL)
         {
             gSpecialVar_ItemId = ITEM_NONE;

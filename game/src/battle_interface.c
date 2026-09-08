@@ -3147,7 +3147,8 @@ void TryAddLastUsedBallItemSprites(void)
                                                        LAST_BALL_WIN_X_0,
                                                        LAST_USED_WIN_Y, 5);
         gSprites[gBattleStruct->ballSpriteIds[1]].sHide = FALSE;
-        gSprites[gBattleStruct->moveInfoSpriteId].sHide = TRUE;
+        if (gBattleStruct->moveInfoSpriteId < MAX_SPRITES)
+            gSprites[gBattleStruct->moveInfoSpriteId].sHide = TRUE;
         gLastUsedBallMenuPresent = TRUE;
     }
     if (B_LAST_USED_BALL_CYCLE == TRUE)
