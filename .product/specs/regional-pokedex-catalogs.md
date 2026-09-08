@@ -77,11 +77,13 @@ u8 activeRegion; // enum DexRegionId value
 u32 nationalExtensionMask;
 ```
 
-Initialize a new save to the Johto catalog and an empty extension mask. This
-initialization is unconditional for the current Wayfarer build and has no new
-compile-time feature flag. It is safe for the new-save reset path to write
-these defaults repeatedly before play begins. `ResetPokedex` owns the reset,
-and the existing new-game path that calls it is the only initialization site.
+Initialize shared new-save state to the Johto catalog and an empty extension
+mask in `ResetPokedex`. The [starting-origin contract](wayfarer-regional-start-choice.md)
+then lets the selected stock profile choose its initial catalog: Johto for
+New Bark, Hoenn for Littleroot. This override runs once before play begins;
+travel, Continue, and later professor receipts preserve the player's catalog
+selection and extension mask. Custom profiles own any initial catalog choice
+through their initializer.
 Add a save-layout and save/load test that verifies both fields serialize and
 restore exactly on a current-build save.
 

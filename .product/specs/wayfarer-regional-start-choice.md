@@ -462,10 +462,65 @@ documentation change.
 
 ## Open questions
 
-The [paper exercise](../research/custom-origin-framework-exercise.md) leaves
-these contracts to resolve before general custom-origin authoring is
-implementation-ready. They concern the extension boundary, not new playable
-origins in the first release:
+### Task-worktree implementation decisions
+
+The implementation in `task/regional-start-implementation` uses
+`wayfarer_origin.h` as the registration and launcher boundary. This section
+records its concrete API; it does not change the main-branch implementation
+status above. Emulator acceptance is recorded separately from source audits.
+
+- `WayfarerOriginProfile` owns entry map/warp, initial recovery, one-time
+  initialization, a field opening callback, four regional scene policies, and
+  Aqua eligibility and ticket predicates. Opening presentation is independent
+  of the regional rescue policy. The Oak front end maps its two menu entries
+  to stable IDs explicitly.
+- Scene interception points are Johto household, Johto professor, Hoenn
+  household, and Hoenn rescue. `WayfarerDispatchOriginScene` reads the scene
+  from `VAR_0x8004`. Native and visitor results select the corresponding stock
+  handler. An authored result transfers to the profile's selected script, or
+  ends that stock interaction when the callback returns no script. Authors
+  own the saved first-contact/retry state and must explicitly yield to a stock
+  policy when its prerequisites are established.
+- The launcher validates registered IDs, map and warp bounds, entry geography,
+  recovery, and required callbacks. It applies initialization only to an
+  unassigned save. Test registration is compiled only with `TESTING`; test
+  profiles are absent from Oak's menu and release builds.
+- Johto choice commitment and successful delivery use
+  `FLAG_JOHTO_STARTER_CHOICE_COMMITTED` and `FLAG_JOHTO_STARTER_RECEIVED` at
+  HNS flag IDs `0x930` and `0x931`, only in Wayfarer. Hoenn retains its existing
+  dedicated bank. A selected local slot remains independent of substituted
+  challenge species and the other region's choice.
+- Reward scripts own separate receipts for independently successful grants.
+  Pokémon and item receipts commit after the delivery API reports success;
+  retry uses the committed choice and does not rewind campaign state. Shared
+  equipment helpers only set availability flags, and Pokédex acknowledgement
+  preserves existing records and unlocked modes. There is no generic reward
+  transaction engine or universal starter milestone.
+- `WayfarerCanStartOrdinaryBattle` checks the actual usable party. Wild
+  encounter generation and Trainer approaches reject empty parties before
+  starting scenes. Unexpected forced entry abandons its script and returns
+  to validated local recovery without a battle result or a reward. Authored
+  openings must still prevent inappropriate access with their own map logic.
+- `WayfarerReplaceRecoveryDestination` replaces both active and fallback
+  recovery before an opening location becomes unavailable. Ordinary recovery
+  retains a valid local destination; only an invalid destination uses the
+  saved fallback. New Bark's initial destination uses its actual bedroom
+  heal location, rather than the legacy town heal point outside Elm's lab.
+- Stock profile initialization selects the matching initial Pokédex catalog
+  after the shared reset: Johto for New Bark, Hoenn for Littleroot. Later
+  professors, travel, and Continue preserve catalog selection and extensions.
+  This supersedes the earlier unconditional Johto default for playable starts
+  in the regional Pokédex specification.
+- Shared defaults and the explicitly HNS-sourced baseline run before profile
+  setup. Hoenn baseline scripts use fixed Hoenn operands. Save version 7
+  rejects incompatible prerelease layouts and unknown origin IDs before
+  Continue; no origin is inferred from a saved map.
+
+The [paper exercise](../research/custom-origin-framework-exercise.md) originally
+identified the questions below. The task decisions above define the engine
+interfaces; each future origin still needs authored content, stock-campaign
+prerequisite handling, and integration tests. These questions remain review
+criteria for that work, rather than additional playable origins in this release:
 
 - What are the named regional scene interception points and handler results,
   including precedence between custom first-contact scenes, visitor handlers,
