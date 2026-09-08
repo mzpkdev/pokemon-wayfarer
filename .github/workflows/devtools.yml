@@ -69,6 +69,11 @@ jobs:
         if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
         run: pnpm --filter @wayfarer/ui run build
 
+      - name: Complete documentation-only validation
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
+        run: |
+          echo 'Only approved documentation paths changed. The documentation UI build passed; catalog and browser checks are not needed.' >> "$GITHUB_STEP_SUMMARY"
+
       - name: Check
         if: steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true'
         working-directory: devtools

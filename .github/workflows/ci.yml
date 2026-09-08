@@ -16,44 +16,46 @@ permissions:
   pull-requests: read
 
 jobs:
-  changes:
-    name: Classify changes
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      docs-only: ${{ steps.changes.outputs.docs-only }}
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          # A PR must not be able to change its own classification policy.
-          ref: ${{ github.event.pull_request.base.sha || github.sha }}
-          persist-credentials: false
-      - name: Classify changes
-        # Bootstrap on a base without the classifier falls back to full CI.
-        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
-        id: changes
-        uses: ./.github/actions/classify-changes
-
   build:
-    needs: changes
-    if: always() && (needs.changes.result != 'success' || needs.changes.outputs.docs-only != 'true')
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Check out trusted classification policy
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # A PR must not be able to change its own classification policy.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Classify changes
+        # Missing or failed classification falls back to normal validation.
+        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
+        id: changes
+        continue-on-error: true
+        uses: ./.github/actions/classify-changes
+
+      - name: Complete documentation-only validation
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
+        run: |
+          echo 'Only approved documentation paths changed. No ROM or gameplay checks are needed for this job.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout repository
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Set up build dependencies
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: ./.github/actions/setup-build-dependencies
         with:
           package-set: base
 
       - name: Build Wayfarer ROM
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         working-directory: game
         env:
           UNUSED_ERROR: 1
@@ -61,24 +63,45 @@ jobs:
         run: make -j"$(nproc)" BUILD=wayfarer release
 
   static-analysis:
-    needs: changes
-    if: always() && (needs.changes.result != 'success' || needs.changes.outputs.docs-only != 'true')
     name: Static Analysis
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Check out trusted classification policy
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # A PR must not be able to change its own classification policy.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Classify changes
+        # Missing or failed classification falls back to normal validation.
+        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
+        id: changes
+        continue-on-error: true
+        uses: ./.github/actions/classify-changes
+
+      - name: Complete documentation-only validation
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
+        run: |
+          echo 'Only approved documentation paths changed. No ROM or gameplay checks are needed for this job.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout repository
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Set up build dependencies
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: ./.github/actions/setup-build-dependencies
         with:
           package-set: base
 
       - name: Analyze Wayfarer ROM source
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         working-directory: game
         env:
           ANALYZE: 1
@@ -86,26 +109,50 @@ jobs:
 
   expansion-suite:
     name: Expansion Suite
-    needs: changes
-    if: >-
-      always() &&
-      github.event_name == 'pull_request' && github.event.pull_request.draft == false &&
-      (needs.changes.result != 'success' || needs.changes.outputs.docs-only != 'true')
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Check out trusted classification policy
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # A PR must not be able to change its own classification policy.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Classify changes
+        # Missing or failed classification falls back to normal validation.
+        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
+        id: changes
+        continue-on-error: true
+        uses: ./.github/actions/classify-changes
+
+      - name: Complete documentation-only validation
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
+        run: |
+          echo 'Only approved documentation paths changed. No ROM or gameplay checks are needed for this job.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Explain draft validation policy
+        if: github.event.pull_request.draft == true && (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        run: |
+          echo 'This PR needs gameplay validation. This job defers those checks until the PR is ready for review; gameplay tests have not run.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout repository
+        if: github.event.pull_request.draft == false && (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Set up build dependencies
+        if: github.event.pull_request.draft == false && (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: ./.github/actions/setup-build-dependencies
         with:
           package-set: base
 
       - name: Cache build tools
+        if: github.event.pull_request.draft == false && (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
         with:
           path: |
@@ -128,6 +175,7 @@ jobs:
           key: tools-check-${{ runner.os }}-${{ hashFiles('game/tools/*/Makefile', 'game/tools/**/*.c', 'game/tools/**/*.cpp', 'game/tools/**/*.h') }}
 
       - name: Run mechanics tests
+        if: github.event.pull_request.draft == false && (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         working-directory: game
         env:
           MGBA_ROM_TEST_HYDRA_REPORT: ${{ github.workspace }}/expansion-suite-report.ndjson
@@ -137,7 +185,7 @@ jobs:
         run: make -j"$(nproc)" BUILD=wayfarer check
 
       - name: Upload Expansion Suite report
-        if: always()
+        if: always() && github.event.pull_request.draft == false && (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: expansion-suite-report
@@ -145,39 +193,64 @@ jobs:
           if-no-files-found: warn
 
   e2e:
-    needs: changes
-    if: always() && (needs.changes.result != 'success' || needs.changes.outputs.docs-only != 'true')
     name: E2E
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
     steps:
-      - name: Checkout repository
+      - name: Check out trusted classification policy
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # A PR must not be able to change its own classification policy.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Classify changes
+        # Missing or failed classification falls back to normal validation.
+        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
+        id: changes
+        continue-on-error: true
+        uses: ./.github/actions/classify-changes
+
+      - name: Complete documentation-only validation
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
+        run: |
+          echo 'Only approved documentation paths changed. No ROM or gameplay checks are needed for this job.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Checkout repository
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Set up Node.js
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24.11.0
 
       - name: Set up build and E2E dependencies
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         uses: ./.github/actions/setup-build-dependencies
         with:
           package-set: e2e
 
       - name: Install pnpm
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         run: npm install --global pnpm@11.9.0
 
       - name: Install E2E workspace dependencies
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         run: pnpm install --frozen-lockfile
 
       - name: Build playable E2E ROM
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         working-directory: game
         run: make -j"$(nproc)" e2e
 
       - name: Run SkyEmu E2E tests
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         env:
           SKYEMU_ROM: ${{ github.workspace }}/game/pokemon-wayfarer-e2e.gba
           SKYEMU_SYMS: ${{ github.workspace }}/game/pokemon-wayfarer-e2e.sym
