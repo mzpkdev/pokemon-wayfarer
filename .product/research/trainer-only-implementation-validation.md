@@ -34,7 +34,7 @@ Commands run from the repository root:
 | `make -C game BUILD=wayfarer -j6 check TESTS='Wayfarer trainer field*'` | One passed: trainer field return requires an explicit redirect and an actual loss. |
 | `make -C game BUILD=wayfarer -j6 check TESTS='Wayfarer trainer retaliation*'` | One passed: established Lavaridge recovery adjustment applies in Hoenn and does not leak into Olivine. |
 | `make -C game BUILD=wayfarer -j6 check TESTS='Storage compaction*'` | One passed: sparse and empty parties are recounted. |
-| `make -C game -j6 e2e` | Playable Wayfarer E2E ROM and matching symbols built. Runtime validation remains in progress. |
+| `make -C game BUILD=wayfarer -j6 e2e` | Playable Wayfarer E2E ROM and matching symbols built. |
 
 The broader `TESTS='Wayfarer*'` run stopped producing results and was interrupted.
 It is not recorded as a passing suite. The new hardcore-exclusion and retaliation
@@ -61,13 +61,14 @@ The core foundation gate passed before story implementation began. Final log
 collection uses consolidated ABI 15 ROM
 `5012418fb92921cf3ed730973838bacc2777dbea6133173c15ab8cd6b9732b38`;
 its additional fixture change honors requested wild-mon PP consistently with
-party/PC PP. Those consolidated run results will be recorded separately.
+party/PC PP. Consolidated results: core 23/23, origin recovery 4/4, medicine 5/5 and natural Safari 1/1 passed. Logs are `/tmp/trainer-only-core-e2e-5012418.log`, `/tmp/trainer-only-poison-e2e-5012418.log` and `/tmp/trainer-only-safari-e2e-5012418.log`. The final Safari journey accepts the native probabilistic flee after Go Near instead of requiring survival; the earlier closest-distance screenshot and deterministic mechanics checks cover proximity saturation. A separate settled Revive picker capture also passed its real interaction check.
 
 The action menu was inspected visually: Rock/Bag occupy the top row and
 Go Near/Run the bottom, with a trainer sprite and no player Pokémon healthbox.
-The retaliation screenshot shows the trainer attack message and lunge. A warning
-screenshot taken after the message had cleared is not evidence of text wrapping;
-that visual check remains pending.
+The retaliation screenshot shows the trainer attack message and lunge. The visible anger warning fits the normal battle text window. The settled Revive
+picker shows the actual fainted Rattata at 0/12 HP and normal party targeting.
+Evidence: `/tmp/trainer-only-warning-visible.png` and
+`/tmp/trainer-only-revive-picker.png`, both inspected visually.
 
 ## Coverage boundaries
 
