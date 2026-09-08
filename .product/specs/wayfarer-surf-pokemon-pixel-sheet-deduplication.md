@@ -1,7 +1,9 @@
 # Wayfarer Surf Pokémon pixel sheet deduplication
 
 PRD: [Wayfarer Surf Pokémon pixel sheet deduplication](../prds/wayfarer-surf-pokemon-pixel-sheet-deduplication.md)
-Implemented: No
+Implemented: Yes
+
+Validation: [paired release and runtime evidence](../research/surf-pixel-deduplication/validation.md)
 
 ## Scope
 

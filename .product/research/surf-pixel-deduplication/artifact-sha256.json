@@ -1,0 +1,22 @@
+{
+  "baseline": {
+    "pokewayfarer-release.gba": "e4b6b344d9677a665564189ab647c30c84803f2218049ba165ed866cc28f3abd",
+    "pokewayfarer-release.elf": "0ea71c5df4140eaa362918ae1daa2baa1fcdb8942b7068eaaa829be30d350a19",
+    "pokewayfarer-release.map": "b8d95e8af80e0e781ab7330266ab30bef7cb86ebbdd9a527baaef5c7b765303e",
+    "pokewayfarer-release.sym": "a1123346f929ac89c4a8f1793e91229e5bf3b711b727dec28f879d715d9be4c4",
+    "pokewayfarer-release-size.json": "75665bf60379567983204f76109bfca3a62c765102bca222aa12ffbce697ff84",
+    "pokemon-wayfarer-e2e.gba": "f73cd5f0dfd509f4601f28ac5f6fa0e1d5420a051cf677c4bc0aec6190414b50",
+    "pokemon-wayfarer-e2e.elf": "52b5b515c55e20adacbd89916da4b6427a877b4de72e56c8341113ee0d5a9641",
+    "pokemon-wayfarer-e2e.sym": "33a8fe9fb560712c1ec6d382b1ce9a837defdb32e5cb996f7f5589a27a79e838"
+  },
+  "optimized": {
+    "pokewayfarer-release.gba": "c8ebbb013be38999e08c6216c1c48d0d1ee96023924f1b8611ec521eeade9f0c",
+    "pokewayfarer-release.elf": "dd6c32fbdd7f55389f8393f4050699613aecbe49ded8b7df8009cfe10eec29ed",
+    "pokewayfarer-release.map": "2b51d72c73f5eec77ec12ed2e8b46923c89e3b9a38f4f5686d4b5b7a57e629f5",
+    "pokewayfarer-release.sym": "fa2a7f1d7bda19498f0609fbd04bb848eacb9b6308ac2a7b3cc78d39c7928d2f",
+    "pokewayfarer-release-size.json": "e9259b5b78428fe29638cf339a7180abecc6017157c6dfd77cbeb0d67c08b866",
+    "pokemon-wayfarer-e2e.gba": "6fea80bdb355695cbb6149f40c9657c6e79e4948c06dbbaadd8bfade690ccce3",
+    "pokemon-wayfarer-e2e.elf": "f21266c79bcf270f2dbefa83e0bf2336f00369ed0342d02763c45406e91ead5a",
+    "pokemon-wayfarer-e2e.sym": "a9a59eca644dd482badfee1fd83ff3c80e537fffce81fbf66991bcfa5fb50da1"
+  }
+}

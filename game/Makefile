@@ -358,7 +358,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 .PHONY: all rom agbcc modern compare check debug release
@@ -464,6 +464,22 @@ endif
 	@cp $(TESTELF) $(HEADLESSELF)
 	$(PATCHELF) $(HEADLESSELF) gTestRunnerHeadless '\x01' gTestRunnerSkipIsFail "$(TEST_SKIP_IS_FAIL)"
 	$(ROMTESTHYDRA) $(ROMTEST) $(OBJCOPY) $(HEADLESSELF)
+
+# Validate both generated sheets, including shiny data no longer consumed by INCBIN.
+SURF_PIC_ALIAS_TEST := tools/surfable/tests/test_surfable_pokemon_pic_aliases.py
+SURF_PIC_ALIAS_MANIFEST := src/data/object_events/surfable/surfable_pokemon_pic_aliases.h
+SURF_PIC_ALIAS_ASSETS := $(shell python3 $(SURF_PIC_ALIAS_TEST) --list-assets)
+.PHONY: surfable-pokemon-pixel-alias-test
+$(SURF_PIC_ALIAS_ASSETS): | tools/gbagfx
+surfable-pokemon-pixel-alias-test: $(SURF_PIC_ALIAS_TEST) $(SURF_PIC_ALIAS_MANIFEST) $(SURF_PIC_ALIAS_ASSETS)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(SURF_PIC_ALIAS_TEST)
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/surfable/tests -p 'test_*.py' -q
+
+ifeq ($(BUILD_NAME),wayfarer)
+check: surfable-pokemon-pixel-alias-test
+# Order-only keeps the linker script as $< and avoids forcing an unchanged relink.
+$(ELF) $(TESTELF): | surfable-pokemon-pixel-alias-test
+endif
 
 # Other rules
 rom: $(ROM)
@@ -803,3 +819,9 @@ wayfarer-hoenn-entry-audit: wayfarer-hoenn-entry-test $(WAYFARER_HOENN_ENTRY_AUD
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
+ifeq ($(BUILD_NAME),wayfarer)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(SURF_PIC_ALIAS_TEST) --symbols $@
+endif
+ifeq ($(BUILD_NAME),wayfarer)
+$(SYM): $(SURF_PIC_ALIAS_TEST) $(SURF_PIC_ALIAS_MANIFEST)
+endif
