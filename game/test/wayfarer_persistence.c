@@ -13,6 +13,7 @@
 #include "script.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
 #include "constants/heal_locations.h"
@@ -564,6 +565,7 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     for (i = 0; i < sizeof(sWayfarerExpectedSaveBlock3); i++)
         saveBlock3Bytes[i] = (i * 37 + 0x5B) & 0xFF;
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
+    gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = APPEARANCE_GOLD;
     gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
     gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_NEW_BARK_TOWN_HNS;
     gSaveBlock3Ptr->wayfarerHoenn.initialized = TRUE;
@@ -668,6 +670,41 @@ static void PrepareOriginFlashFixture(void)
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_OLIVINE_CITY_HNS);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_OLIVINE_CITY_HNS);
     WayfarerInitPersistentState();
+}
+
+TEST("Wayfarer all six appearances round trip through flash away from home")
+{
+    u32 id;
+    ASSUME(gPokemonStoragePtr != NULL);
+    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    {
+        u8 loadStatus;
+        bool8 written;
+        PrepareOriginFlashFixture();
+        gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = ORIGIN_NEW_BARK;
+        gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation = HEAL_LOCATION_OLIVINE_CITY_HNS;
+        gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = id;
+        gSaveBlock2Ptr->playerGender = WayfarerGetAppearanceProfile(id)->gender;
+        gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_PALLET_TOWN_HNS);
+        gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_PALLET_TOWN_HNS);
+        WayfarerUpdateHnsRegionContextForMap(MAP_GROUP(MAP_PALLET_TOWN_HNS), MAP_NUM(MAP_PALLET_TOWN_HNS));
+        HandleSavingData(SAVE_NORMAL);
+        written = gDamagedSaveSectors == 0;
+        ClearSav1();
+        ClearSav2();
+        ClearSav3();
+        WayfarerResetPendingAppearance();
+        loadStatus = LoadGameSave(SAVE_NORMAL);
+        ClearSaveData();
+        Save_ResetSaveCounters();
+        EXPECT(written);
+        EXPECT_EQ(loadStatus, SAVE_STATUS_OK);
+        EXPECT_EQ(WayfarerGetPlayerAppearanceId(), id);
+        EXPECT_EQ(gSaveBlock2Ptr->playerGender, (id - 1) % 2);
+        EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+        EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_NONE);
+        EXPECT(WayfarerPersistentStateIsValid());
+    }
 }
 
 TEST("Wayfarer save loader rejects unknown current-version origin without repairing story state")

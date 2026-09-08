@@ -10,6 +10,7 @@
 #include "pokemon.h"
 #include "pokedex.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 #include "wayfarer_persistence.h"
 #include "test/test.h"
 #include "constants/heal_locations.h"
@@ -73,6 +74,7 @@ TEST("Wayfarer new origins initialize independent regional state and recovery")
             gSaveBlock2Ptr->playerGender = gender;
             gSaveBlock3Ptr->challengeSettings.tx_Mode_Mints = 1;
             EXPECT(WayfarerConfirmPendingOrigin(origin));
+            EXPECT(WayfarerConfirmPendingAppearance(gender == FEMALE ? APPEARANCE_KRIS : APPEARANCE_GOLD));
             NewGameInitData();
             EXPECT_EQ(WayfarerGetStartingOriginId(), origin);
             EXPECT_EQ(Dex_GetActiveRegion(), origin == ORIGIN_LITTLEROOT ? DEX_REGION_HOENN : DEX_REGION_JOHTO);
@@ -113,6 +115,7 @@ TEST("Wayfarer test-only same-region origin owns setup scenes travel and replace
 {
     EXPECT(Test_WayfarerRegisterOriginProfile(&sCustomOrigin));
     EXPECT(WayfarerConfirmPendingOrigin(TEST_ORIGIN));
+    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_GOLD));
     NewGameInitData();
     EXPECT_EQ(WayfarerGetStartingOriginId(), TEST_ORIGIN);
     EXPECT_EQ(gSaveBlock1Ptr->location.mapGroup, MAP_GROUP(MAP_OLIVINE_CITY_HNS));
@@ -173,6 +176,7 @@ TEST("Wayfarer authored Hoenn scenes intercept real rescue lab and household scr
     custom.scenePolicies[ORIGIN_SCENE_HOENN_HOUSEHOLD] = ORIGIN_SCENE_AUTHORED;
     EXPECT(Test_WayfarerRegisterOriginProfile(&custom));
     EXPECT(WayfarerConfirmPendingOrigin(TEST_ORIGIN));
+    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_GOLD));
     NewGameInitData();
     memcpy(&before, &gSaveBlock3Ptr->wayfarerHoenn, sizeof(before));
     for (i = 0; i < ARRAY_COUNT(entryScripts); i++)
@@ -192,6 +196,7 @@ TEST("Wayfarer authored Hoenn scenes intercept real rescue lab and household scr
 TEST("Wayfarer native Hoenn first Dex exposes starter records and later handoffs preserve catalogs")
 {
     EXPECT(WayfarerConfirmPendingOrigin(ORIGIN_LITTLEROOT));
+    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_GOLD));
     NewGameInitData();
     GetSetPokedexFlag(NATIONAL_DEX_TORCHIC, FLAG_SET_SEEN);
     GetSetPokedexFlag(NATIONAL_DEX_TORCHIC, FLAG_SET_CAUGHT);

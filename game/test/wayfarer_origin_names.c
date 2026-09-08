@@ -2,6 +2,7 @@
 #include "string_util.h"
 #include "strings.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 #include "test/test.h"
 #include "constants/maps.h"
 
@@ -9,15 +10,18 @@
 TEST("Wayfarer rival names follow script source for both origins and appearances")
 {
     u16 origin;
+    u8 appearance;
     u8 gender;
     u8 text[32];
 
     for (origin = ORIGIN_NEW_BARK; origin <= ORIGIN_LITTLEROOT; origin++)
     {
         gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = origin;
-        for (gender = MALE; gender <= FEMALE; gender++)
+        for (appearance = APPEARANCE_GOLD; appearance <= APPEARANCE_MAY; appearance++)
         {
-            gSaveBlock2Ptr->playerGender = gender;
+            EXPECT(WayfarerConfirmPendingAppearance(appearance));
+            gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = appearance;
+            gender = WayfarerGetAppearanceProfile(appearance)->gender;
             StringCopy(gSaveBlock2Ptr->rivalName, gText_ExpandedPlaceholder_Silver);
             gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB);
             gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB);
