@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_pokemon_sprites.h"
 #include "reshow_battle_screen.h"
 #include "battle.h"
 #include "palette.h"
@@ -282,7 +283,7 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
-            DecompressTrainerBackPic((gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE, battler);
+            DecompressTrainerBackPic(GetLocalPlayerBackTrainerPicId(), battler);
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
             DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC_BACK, battler);
         else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
@@ -329,7 +330,7 @@ void CreateBattlerSprite(enum BattlerId battler)
         }
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
         {
-            enum TrainerPicID trainerPicId = (gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+            enum TrainerPicID trainerPicId = GetLocalPlayerBackTrainerPicId();
             SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, position);
             gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate, 0x50,
                                                 (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80,

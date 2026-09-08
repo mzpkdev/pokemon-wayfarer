@@ -797,7 +797,7 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_OW_MON] =                   &gObjectEventGraphicsInfo_Follower,
     [OBJ_EVENT_GFX_LIGHT_SPRITE] =             &gObjectEventGraphicsInfo_BallLight,
     [OBJ_EVENT_GFX_APRICORN_TREE] =            &gObjectEventGraphicsInfo_ApricornTree,
-#if IS_FRLG
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_RED_NORMAL] =               &gObjectEventGraphicsInfo_RedNormal,
     [OBJ_EVENT_GFX_RED_BIKE] =                 &gObjectEventGraphicsInfo_RedBike,
     [OBJ_EVENT_GFX_RED_SURF] =                 &gObjectEventGraphicsInfo_RedSurf,
@@ -812,6 +812,9 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_GREEN_FISH] =               &gObjectEventGraphicsInfo_GreenFish,
     [OBJ_EVENT_GFX_GREEN_VS_SEEKER] =          &gObjectEventGraphicsInfo_GreenVSSeeker,
     [OBJ_EVENT_GFX_GREEN_VS_SEEKER_BIKE] =     &gObjectEventGraphicsInfo_GreenVSSeekerBike,
+#endif
+
+#if IS_FRLG
     [OBJ_EVENT_GFX_LITTLE_BOY_FRLG]          = &gObjectEventGraphicsInfo_LittleBoyFrlg,
     [OBJ_EVENT_GFX_LITTLE_GIRL_FRLG]         = &gObjectEventGraphicsInfo_LittleGirlFrlg,
     [OBJ_EVENT_GFX_YOUNGSTER_FRLG]           = &gObjectEventGraphicsInfo_YoungsterFrlg,

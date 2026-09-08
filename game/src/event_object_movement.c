@@ -524,11 +524,13 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Lugia,                 OBJ_EVENT_PAL_TAG_LUGIA},
     {gObjectEventPal_RubySapphireBrendan,   OBJ_EVENT_PAL_TAG_RS_BRENDAN},
     {gObjectEventPal_RubySapphireMay,       OBJ_EVENT_PAL_TAG_RS_MAY},
-#if IS_FRLG
+#if IS_FRLG || IS_WAYFARER
     {gObjectEventPal_PlayerFrlg,            OBJ_EVENT_PAL_TAG_PLAYER_RED},
     {gObjectEventPal_PlayerReflectionFrlg,  OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION},
     {gObjectEventPal_PlayerFrlg,            OBJ_EVENT_PAL_TAG_PLAYER_GREEN},
     {gObjectEventPal_PlayerReflectionFrlg,  OBJ_EVENT_PAL_TAG_PLAYER_GREEN_REFLECTION},
+#endif
+#if IS_FRLG
     {gObjectEventPal_NpcBlue,               OBJ_EVENT_PAL_TAG_NPC_BLUE},
     {gObjectEventPal_NpcPink,               OBJ_EVENT_PAL_TAG_NPC_PINK},
     {gObjectEventPal_NpcGreen,              OBJ_EVENT_PAL_TAG_NPC_GREEN},
@@ -666,7 +668,20 @@ static const u16 sReflectionPaletteTags_Kris_hns[] = {
     OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS,
 };
 
+#if IS_WAYFARER
+static const u16 sReflectionPaletteTags_PlayerFrlg[] = {
+    OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION,
+    OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION,
+    OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION,
+    OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION,
+};
+#endif
+
 static const struct PairedPalettes sPlayerReflectionPaletteSets[] = {
+#if IS_WAYFARER
+    {OBJ_EVENT_PAL_TAG_PLAYER_RED, sReflectionPaletteTags_PlayerFrlg},
+    {OBJ_EVENT_PAL_TAG_PLAYER_GREEN, sReflectionPaletteTags_PlayerFrlg},
+#endif
     {OBJ_EVENT_PAL_TAG_BRENDAN,           sReflectionPaletteTags_Brendan},
     {OBJ_EVENT_PAL_TAG_MAY,               sReflectionPaletteTags_May},
     {OBJ_EVENT_PAL_TAG_PLAYER_UNDERWATER, sReflectionPaletteTags_PlayerUnderwater},
@@ -753,6 +768,10 @@ static const u16 sReflectionPaletteTags_RedLeaf[] = {
 };
 
 static const struct PairedPalettes sSpecialObjectReflectionPaletteSets[] = {
+#if IS_WAYFARER
+    {OBJ_EVENT_PAL_TAG_PLAYER_RED, sReflectionPaletteTags_PlayerFrlg},
+    {OBJ_EVENT_PAL_TAG_PLAYER_GREEN, sReflectionPaletteTags_PlayerFrlg},
+#endif
     {OBJ_EVENT_PAL_TAG_BRENDAN,          sReflectionPaletteTags_Brendan},
     {OBJ_EVENT_PAL_TAG_MAY,              sReflectionPaletteTags_May},
     {OBJ_EVENT_PAL_TAG_QUINTY_PLUMP,     sReflectionPaletteTags_QuintyPlump},
@@ -3292,7 +3311,11 @@ static void SetPlayerAvatarObjectEventIdAndObjectId(u8 objectEventId, u8 spriteI
 {
     gPlayerAvatar.objectEventId = objectEventId;
     gPlayerAvatar.spriteId = spriteId;
+#if IS_WAYFARER
+    gPlayerAvatar.gender = gSaveBlock2Ptr->playerGender;
+#else
     gPlayerAvatar.gender = GetPlayerAvatarGenderByGraphicsId(gObjectEvents[objectEventId].graphicsId);
+#endif
     SetPlayerAvatarExtraStateTransition(gObjectEvents[objectEventId].graphicsId, PLAYER_AVATAR_FLAG_CONTROLLABLE);
 }
 
@@ -3590,6 +3613,15 @@ u8 LoadPlayerObjectEventPalette(enum Gender gender)
         break;
     }
     return LoadObjectEventPalette(paletteTag);
+}
+
+u8 LoadLocalPlayerObjectEventPalette(void)
+{
+#if IS_WAYFARER
+    return LoadObjectEventPalette(GetObjectEventGraphicsInfo(GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL))->paletteTag);
+#else
+    return LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
+#endif
 }
 
 static void UNUSED LoadObjectEventPaletteSet(u16 *paletteTags)

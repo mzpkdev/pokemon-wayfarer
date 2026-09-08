@@ -78,3 +78,8 @@ gText_Oak_OriginTravel::
 	.string "you to other regions, too!\p"
 	.string "$"
 #endif
+
+#if IS_WAYFARER
+gText_Oak_Appearance::
+    .string "What do you look like?$"
+#endif

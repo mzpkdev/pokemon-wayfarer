@@ -1,7 +1,7 @@
-const abiVersion = 12
+const abiVersion = 13
 const expectedRequestSize = 432
 const expectedResultSize = 16
-const expectedStateSize = 384
+const expectedStateSize = 388
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -252,6 +252,10 @@ export type StateSnapshot = {
   leagueRunRegion: number
   leagueRunRating: number
   starterChooseStage: number
+  playerAppearanceId: number
+  appearanceCandidate: number
+  appearanceConfirmed: number
+  appearanceIntroStage: number
   originIntroStage: number
   startingOriginId: number
   johtoStarterChoice: number
@@ -747,6 +751,10 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     leagueRunRegion: bytes[353]!,
     leagueRunRating: bytes[354]!,
     starterChooseStage: bytes[373]!,
+    playerAppearanceId: bytes[382]!,
+    appearanceCandidate: bytes[383]!,
+    appearanceConfirmed: bytes[384]!,
+    appearanceIntroStage: bytes[385]!,
     originIntroStage: bytes[355]!,
     startingOriginId: uint16(bytes, 356),
     johtoStarterChoice: uint16(bytes, 358),

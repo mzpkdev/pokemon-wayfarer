@@ -352,6 +352,7 @@ struct LeagueRunState
 struct WayfarerHoennPersistentState
 {
     u16 startingOriginId;
+    u8 playerAppearanceId;
     u8 fallbackHealLocation;
     struct LeagueRunState leagueRun;
     u16 vars[WAYFARER_HOENN_VARS_COUNT];

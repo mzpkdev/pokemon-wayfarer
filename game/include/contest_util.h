@@ -1,6 +1,7 @@
 #ifndef GUARD_CONTEST_UTIL_H
 #define GUARD_CONTEST_UTIL_H
 
+u16 GetContestTrainerGraphicsId(u8 contestant);
 void BufferContestantTrainerName(void);
 void BufferContestantMonNickname(void);
 void StartContest(void);

@@ -1,4 +1,7 @@
 #include "global.h"
+#if IS_WAYFARER
+#include "wayfarer_appearance.h"
+#endif
 #include "naming_screen.h"
 #include "malloc.h"
 #include "palette.h"
@@ -182,6 +185,9 @@ struct NamingScreenData
     u8 *destBuffer;
     u16 monSpecies;
     u16 monGender;
+#if IS_WAYFARER
+    u8 playerAppearanceId;
+#endif
     u32 monPersonality;
     bool8 isShiny;
     MainCallback returnCallback;
@@ -418,7 +424,7 @@ static bool8 IsWideLetter(u8);
 
 static const u8 sText_MoveOkBack[] = _("{DPAD_NONE}MOVE  {A_BUTTON}OK  {B_BUTTON}BACK");
 
-void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGender, u32 monPersonality, bool8 isShiny, MainCallback returnCallback)
+static void DoNamingScreenInternal(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGender, u32 monPersonality, bool8 isShiny, MainCallback returnCallback, bool8 pendingPlayer)
 {
     sNamingScreen = Alloc(sizeof(struct NamingScreenData));
     if (!sNamingScreen)
@@ -428,6 +434,9 @@ void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGende
     else
     {
         sNamingScreen->templateNum = templateNum;
+#if IS_WAYFARER
+        sNamingScreen->playerAppearanceId = templateNum == NAMING_SCREEN_PLAYER ? (pendingPlayer ? WayfarerGetConfirmedPendingAppearance() : WayfarerGetPlayerAppearanceId()) : 0;
+#endif
         sNamingScreen->monSpecies = monSpecies;
         sNamingScreen->monGender = monGender;
         sNamingScreen->monPersonality = monPersonality;
@@ -441,6 +450,11 @@ void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGende
 
         SetMainCallback2(CB2_LoadNamingScreen);
     }
+}
+
+void DoNamingScreen(u8 templateNum, u8 *destBuffer, u16 monSpecies, u16 monGender, u32 monPersonality, bool8 isShiny, MainCallback returnCallback)
+{
+    DoNamingScreenInternal(templateNum, destBuffer, monSpecies, monGender, monPersonality, isShiny, returnCallback, FALSE);
 }
 
 static void CB2_LoadNamingScreen(void)
@@ -1425,13 +1439,26 @@ static void NamingScreen_NoIcon(void)
 
 }
 
+#if IS_WAYFARER
+void DoNamingScreenForPendingPlayer(u8 *destBuffer, MainCallback returnCallback)
+{
+    DoNamingScreenInternal(NAMING_SCREEN_PLAYER, destBuffer, gSaveBlock2Ptr->playerGender, 0, 0, FALSE, returnCallback, TRUE);
+}
+#endif
+
 static void NamingScreen_CreatePlayerIcon(void)
 {
     u16 rivalGfxId;
     u8 spriteId;
 
+#if IS_WAYFARER
+    rivalGfxId = WayfarerGetAppearanceGraphicsId(sNamingScreen->playerAppearanceId, PLAYER_AVATAR_STATE_NORMAL);
+#else
     rivalGfxId = GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, sNamingScreen->monSpecies);
+#endif
     spriteId = CreateObjectGraphicsSprite(rivalGfxId, SpriteCallbackDummy, 56, 37, 0);
+    if (spriteId == MAX_SPRITES)
+        return;
     gSprites[spriteId].oam.priority = 3;
     StartSpriteAnim(&gSprites[spriteId], ANIM_STD_GO_SOUTH);
 }

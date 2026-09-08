@@ -513,7 +513,7 @@ const u16 gFieldEffectObjectPalette_CaveDust[] = INCBIN_U16("graphics/field_effe
 
 const u32 gObjectEventPic_ApricornTree[] = INCBIN_U32("graphics/object_events/pics/misc/apricorn_tree.4bpp");
 
-#if IS_FRLG
+#if IS_FRLG || IS_WAYFARER
 
 const u16 gObjectEventPic_RedNormal[] = INCBIN_U16("graphics/object_events/pics/people/red/red_normal.4bpp");
 const u16 gObjectEventPic_RedBike[] = INCBIN_U16("graphics/object_events/pics/people/red/red_bike.4bpp");
@@ -532,6 +532,9 @@ const u16 gObjectEventPic_GreenVSSeekerBike[] = INCBIN_U16("graphics/object_even
 
 const u16 gObjectEventPal_PlayerFrlg[] = INCBIN_U16("graphics/object_events/palettes/player_frlg.gbapal");
 const u16 gObjectEventPal_PlayerReflectionFrlg[] = INCBIN_U16("graphics/object_events/palettes/player_reflection_frlg.gbapal");
+#endif
+
+#if IS_FRLG
 const u16 gObjectEventPal_NpcBlue[] = INCBIN_U16("graphics/object_events/palettes/npc_blue.gbapal");
 const u16 gObjectEventPal_NpcPink[] = INCBIN_U16("graphics/object_events/palettes/npc_pink.gbapal");
 const u16 gObjectEventPal_NpcGreen[] = INCBIN_U16("graphics/object_events/palettes/npc_green.gbapal");

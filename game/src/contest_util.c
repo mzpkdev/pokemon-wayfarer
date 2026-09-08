@@ -1,4 +1,5 @@
 #include "global.h"
+#include "field_player_avatar.h"
 #include "malloc.h"
 #include "battle.h"
 #include "battle_gfx_sfx_util.h"
@@ -2273,11 +2274,23 @@ static void Task_LinkContest_WaitDisconnect(u8 taskId)
     A section of contest script functions starts here
 */
 
+u16 GetContestTrainerGraphicsId(u8 contestant)
+{
+#if IS_WAYFARER
+    if (contestant == gContestPlayerMonIndex)
+        return GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL);
+#endif
+    return gContestMons[contestant].trainerGfxId;
+}
+
 void SetContestTrainerGfxIds(void)
 {
-    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_0 - VARS_START] = gContestMons[0].trainerGfxId;
-    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_1 - VARS_START] = gContestMons[1].trainerGfxId;
-    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_2 - VARS_START] = gContestMons[2].trainerGfxId;
+    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_0 - VARS_START] = GetContestTrainerGraphicsId(0);
+    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_1 - VARS_START] = GetContestTrainerGraphicsId(1);
+    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_2 - VARS_START] = GetContestTrainerGraphicsId(2);
+#if IS_WAYFARER
+    gSaveBlock1Ptr->vars[VAR_OBJ_GFX_ID_3 - VARS_START] = GetContestTrainerGraphicsId(3);
+#endif
 }
 
 // Unused
@@ -2481,10 +2494,10 @@ void SetLinkContestPlayerGfx(void)
             }
         }
 
-        VarSet(VAR_OBJ_GFX_ID_0, gContestMons[0].trainerGfxId);
-        VarSet(VAR_OBJ_GFX_ID_1, gContestMons[1].trainerGfxId);
-        VarSet(VAR_OBJ_GFX_ID_2, gContestMons[2].trainerGfxId);
-        VarSet(VAR_OBJ_GFX_ID_3, gContestMons[3].trainerGfxId);
+        VarSet(VAR_OBJ_GFX_ID_0, GetContestTrainerGraphicsId(0));
+        VarSet(VAR_OBJ_GFX_ID_1, GetContestTrainerGraphicsId(1));
+        VarSet(VAR_OBJ_GFX_ID_2, GetContestTrainerGraphicsId(2));
+        VarSet(VAR_OBJ_GFX_ID_3, GetContestTrainerGraphicsId(3));
     }
 }
 
@@ -2509,6 +2522,13 @@ void LoadLinkContestPlayerPalettes(void)
         {
             objectEventId = GetObjectEventIdByLocalIdAndMap(sContestantLocalIds[i], gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
             sprite = &gSprites[gObjectEvents[objectEventId].spriteId];
+#if IS_WAYFARER
+            if (i == gContestPlayerMonIndex)
+            {
+                sprite->oam.paletteNum = LoadObjectEventPalette(GetObjectEventGraphicsInfo(GetContestTrainerGraphicsId(i))->paletteTag);
+                continue;
+            }
+#endif
             version = (u8)gLinkPlayers[i].version;
             if (version == VERSION_RUBY || version == VERSION_SAPPHIRE)
             {

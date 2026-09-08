@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_appearance.h"
 #include "main.h"
 #include "text.h"
 #include "menu.h"
@@ -2479,7 +2480,36 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag)
         sRegionMap->playerIconSprite = NULL;
         return;
     }
-    #if IS_HNS
+    #if IS_WAYFARER
+    switch (WayfarerGetPlayerAppearanceId())
+    {
+    case APPEARANCE_GOLD:
+        sheet.data = sRegionMapPlayerIcon_GoldGfx;
+        palette.data = sRegionMapPlayerIcon_GoldPal;
+        break;
+    case APPEARANCE_KRIS:
+        sheet.data = sRegionMapPlayerIcon_KrisGfx;
+        palette.data = sRegionMapPlayerIcon_KrisPal;
+        break;
+    case APPEARANCE_RED:
+        sheet.data = sRegionMapPlayerIcon_RedGfx;
+        palette.data = sRegionMapPlayerIcon_RedPal;
+        break;
+    case APPEARANCE_LEAF:
+        sheet.data = sRegionMapPlayerIcon_LeafGfx;
+        palette.data = sRegionMapPlayerIcon_LeafPal;
+        break;
+    case APPEARANCE_BRENDAN:
+        break;
+    case APPEARANCE_MAY:
+        sheet.data = sRegionMapPlayerIcon_MayGfx;
+        palette.data = sRegionMapPlayerIcon_MayPal;
+        break;
+    default:
+        sRegionMap->playerIconSprite = NULL;
+        return;
+    }
+    #elif IS_HNS
     if (gSaveBlock2Ptr->playerGender == FEMALE)
     {
         sheet.data = sRegionMapPlayerIcon_KrisGfx;

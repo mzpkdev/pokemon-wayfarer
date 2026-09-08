@@ -1,4 +1,6 @@
 #include "global.h"
+#include "event_object_movement.h"
+#include "field_player_avatar.h"
 #include "gpu_regs.h"
 #include "main.h"
 #include "trainer_card.h"
@@ -176,6 +178,7 @@ static void PrintAreaDescription(u8);
 static void ShowHideZoomingArea(bool8, bool8);
 static void SpriteCB_PlayerHead(struct Sprite *);
 
+#if !IS_WAYFARER
 #if IS_HNS
 static const u16 sMaleHead_Pal[]                 = INCBIN_U16("graphics/frontier_pass/map_heads_hns.gbapal");
 static const u16 sFemaleHead_Pal[]               = INCBIN_U16("graphics/frontier_pass/map_heads_hns.gbapal");
@@ -184,6 +187,7 @@ static const u32 sHeads_Gfx[]                    = INCBIN_U32("graphics/frontier
 static const u16 sMaleHead_Pal[]                 = INCBIN_U16("graphics/frontier_pass/map_heads.gbapal");
 static const u16 sFemaleHead_Pal[]               = INCBIN_U16("graphics/frontier_pass/map_heads_female.gbapal");
 static const u32 sHeads_Gfx[]                    = INCBIN_U32("graphics/frontier_pass/map_heads.4bpp.smol");
+#endif
 #endif
 static const u32 sMapScreen_Gfx[]                = INCBIN_U32("graphics/frontier_pass/map_screen.4bpp.smol");
 static const u32 sCursor_Gfx[]                   = INCBIN_U32("graphics/frontier_pass/cursor.4bpp.smol");
@@ -373,11 +377,14 @@ static const struct CompressedSpriteSheet sCursorSpriteSheets[] =
     {gFrontierPassMedals_Gfx, 0x380, TAG_MEDAL_SILVER},
 };
 
+
+#if !IS_WAYFARER
 static const struct CompressedSpriteSheet sHeadsSpriteSheet[] =
 {
     {sHeads_Gfx, 0x100, TAG_HEAD_MALE},
     {}
 };
+#endif
 
 static const struct SpritePalette sSpritePalettes[] =
 {
@@ -385,8 +392,10 @@ static const struct SpritePalette sSpritePalettes[] =
     {gFrontierPassMapCursor_Pal,    TAG_MAP_INDICATOR},
     {gFrontierPassMedalsSilver_Pal, TAG_MEDAL_SILVER},
     {gFrontierPassMedalsGold_Pal,   TAG_MEDAL_GOLD},
+#if !IS_WAYFARER
     {sMaleHead_Pal,                 TAG_HEAD_MALE},
     {sFemaleHead_Pal,               TAG_HEAD_FEMALE},
+#endif
     {}
 };
 
@@ -1481,6 +1490,9 @@ static bool32 ExitFrontierMap(void)
         {
             DestroySprite(sMapData->playerHeadSprite);
             FreeSpriteTilesByTag(TAG_HEAD_MALE);
+#if IS_WAYFARER
+            FreeSpritePaletteByTag(TAG_HEAD_MALE);
+#endif
         }
         FreeAllWindowBuffers();
         break;
@@ -1651,7 +1663,9 @@ static u8 MapNumToFrontierFacilityId(u16 mapNum) // id + 1, zero means not a fro
 
 static void InitFrontierMapSprites(void)
 {
+#if !IS_WAYFARER
     struct SpriteTemplate sprite;
+#endif
     u8 spriteId;
     u8 id;
     s16 x = 0, y;
@@ -1714,6 +1728,25 @@ static void InitFrontierMapSprites(void)
             }
         }
 
+#if IS_WAYFARER
+        const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL));
+        // The first 128 bytes are the head of the uncompressed 16x32 facing-down frame.
+        const struct SpriteSheet headSheet = {graphicsInfo->images[0].data, 0x80, TAG_HEAD_MALE};
+        LoadSpriteSheet(&headSheet);
+        LoadObjectEventPaletteCopy(graphicsInfo->paletteTag, TAG_HEAD_MALE);
+        if (id == 0)
+        {
+            x = x * 8 + 20;
+            y = y * 8 + 36;
+        }
+        spriteId = CreateSprite(&sSpriteTemplate_PlayerHead, x, y, 0);
+        if (spriteId == MAX_SPRITES)
+        {
+            FreeSpriteTilesByTag(TAG_HEAD_MALE);
+            FreeSpritePaletteByTag(TAG_HEAD_MALE);
+            return;
+        }
+#else
         LoadCompressedSpriteSheet(sHeadsSpriteSheet);
         sprite = sSpriteTemplate_PlayerHead;
         sprite.paletteTag = gSaveBlock2Ptr->playerGender + TAG_HEAD_MALE; // TAG_HEAD_FEMALE if gender is FEMALE
@@ -1727,11 +1760,14 @@ static void InitFrontierMapSprites(void)
             y *= 8;
             spriteId = CreateSprite(&sprite, x + 20, y + 36, 0);
         }
+#endif
 
         sMapData->playerHeadSprite = &gSprites[spriteId];
         sMapData->playerHeadSprite->oam.priority = 0;
+#if !IS_WAYFARER
         if (gSaveBlock2Ptr->playerGender != MALE)
             StartSpriteAnim(sMapData->playerHeadSprite, 1);
+#endif
     }
 }
 

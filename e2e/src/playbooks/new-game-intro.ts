@@ -2,12 +2,57 @@ import { type GameSession } from "../harness/game-session"
 
 export type StartingOrigin = "johto" | "hoenn"
 
-export const reachOriginQuestion = async (game: GameSession): Promise<void> => {
+export type AppearanceStyle = 1 | 2 | 3 | 4 | 5 | 6
+
+export const reachAppearanceQuestion = async (game: GameSession): Promise<void> => {
   await game.wait.frames(3_600)
   await game.controls.press("start")
   await game.wait.frames(240)
   await game.controls.press("a")
   await game.wait.frames(4_800)
+  for (let interaction = 0; interaction < 40; interaction++) {
+    if ((await game.state.read()).appearance.introStage === 1) return
+    await game.controls.press("a")
+    await game.wait.frames(60)
+  }
+  throw new Error(`Appearance list did not appear: ${JSON.stringify(await game.state.read())}`)
+}
+
+export const selectAppearance = async (
+  game: GameSession,
+  style: AppearanceStyle,
+): Promise<void> => {
+  await game.wait.until((state) => state.appearance.introStage === 1, "appearance picker", 1_800)
+  for (let step = 0; step < 6; step++) {
+    if ((await game.state.read()).appearance.candidate === style) {
+      await game.controls.press("a")
+      await game.wait.until(
+        (state) => state.appearance.confirmed === style,
+        "confirmed appearance",
+        600,
+      )
+      return
+    }
+    await game.controls.press("down")
+    await game.wait.until(
+      (state) => state.appearance.introStage === 1,
+      "appearance previews settled",
+      600,
+    )
+  }
+  throw new Error(`Could not highlight Style ${style}`)
+}
+
+export const reachOriginQuestion = async (
+  game: GameSession,
+  style: AppearanceStyle = 1,
+): Promise<void> => {
+  await reachAppearanceQuestion(game)
+  await selectAppearance(game, style)
+  await advanceToOriginQuestion(game)
+}
+
+export const advanceToOriginQuestion = async (game: GameSession): Promise<void> => {
   for (let interaction = 0; interaction < 32; interaction++) {
     if ((await game.state.read()).origin.introStage === 1) return
     await game.controls.press("a")
@@ -62,9 +107,13 @@ export const finishOriginIntroduction = async (
 export const playThroughNewGameIntro = async (
   game: GameSession,
   origin: StartingOrigin,
+  style: AppearanceStyle = 1,
 ): Promise<void> => {
-  await reachOriginQuestion(game)
+  await reachOriginQuestion(game, style)
   if (origin === "hoenn") await game.controls.press("down")
   await game.controls.press("a")
   await finishOriginIntroduction(game, origin)
+  const state = await game.state.read()
+  if (state.appearance.id !== style || state.origin.gender !== (style % 2 === 0 ? 1 : 0))
+    throw new Error(`Appearance handoff failed: ${JSON.stringify(state)}`)
 }

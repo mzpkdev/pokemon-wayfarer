@@ -389,6 +389,10 @@ struct E2ETestState
     u8 playerGender;
     u8 originEquipment;
     u16 littlerootTownState;
+    u8 playerAppearanceId;
+    u8 appearanceCandidate;
+    u8 appearanceConfirmed;
+    u8 appearanceIntroStage;
 };
 
 struct E2ETestAbi

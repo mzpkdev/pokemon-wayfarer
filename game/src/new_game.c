@@ -58,6 +58,7 @@
 #include "follower_npc.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 #if IS_FRLG
@@ -230,10 +231,12 @@ void NewGameInitData(void)
 #endif
 #if IS_WAYFARER
     u16 startingOriginId = WayfarerGetConfirmedPendingOrigin();
+    u8 appearanceId = WayfarerGetConfirmedPendingAppearance();
 #endif
     struct ChallengeSettings savedChallenge = gSaveBlock3Ptr->challengeSettings;
 #if IS_WAYFARER
-    if (WayfarerGetOriginProfile(startingOriginId) == NULL)
+    if (WayfarerGetOriginProfile(startingOriginId) == NULL
+     || WayfarerGetAppearanceProfile(appearanceId) == NULL)
         return;
 #endif
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
@@ -263,6 +266,8 @@ void NewGameInitData(void)
     InitEventData();
 #if IS_WAYFARER
     WayfarerInitPersistentState();
+    gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = appearanceId;
+    gSaveBlock2Ptr->playerGender = WayfarerGetAppearanceProfile(appearanceId)->gender;
 #endif
     InitializeTrainerRatingForNewGame();
     ClearTVShowData();

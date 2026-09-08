@@ -30,6 +30,7 @@
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 #include "oak_speech_hns.h"
 #include "starter_choose.h"
 #include "wild_encounter.h"
@@ -48,7 +49,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 12,
+    .version = 13,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -62,7 +63,11 @@ STATIC_ASSERT(sizeof(struct E2ETestRequest) == 432, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 384, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 388, E2ETestStateSize);
+STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, appearanceIntroStage) == 385, E2ETestAppearanceIntroStageOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -1012,6 +1017,8 @@ static void BeginRequest(void)
     gSaveBlock2Ptr->playerGender = sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE
         ? FEMALE : MALE;
 #if IS_WAYFARER
+    WayfarerResetPendingAppearance();
+    WayfarerConfirmPendingAppearance(gSaveBlock2Ptr->playerGender == FEMALE ? APPEARANCE_KRIS : APPEARANCE_GOLD);
     WayfarerResetPendingOrigin();
     WayfarerConfirmPendingOrigin(sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_BEFORE_RESCUE
         || sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE
@@ -1124,6 +1131,11 @@ static void UpdateState(void)
     gE2ETestState.originIntroStage = 0;
 #if IS_WAYFARER
     gE2ETestState.originIntroStage = E2ETest_GetOriginIntroStage();
+    gE2ETestState.appearanceCandidate = WayfarerGetPendingAppearanceCandidate();
+    gE2ETestState.appearanceConfirmed = WayfarerGetConfirmedPendingAppearance();
+    gE2ETestState.appearanceIntroStage = E2ETest_GetAppearanceIntroStage();
+    gE2ETestState.playerAppearanceId = gSaveBlock3Ptr == NULL ? APPEARANCE_NONE
+        : gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId;
 #endif
     gE2ETestState.frame++;
     gE2ETestState.phase = E2E_TEST_GAME_PHASE_BOOT;

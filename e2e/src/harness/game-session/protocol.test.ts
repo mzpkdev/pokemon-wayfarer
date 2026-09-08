@@ -19,14 +19,14 @@ import {
 const abi: SessionAbi = {
   requestSize: 432,
   resultSize: 16,
-  stateSize: 384,
+  stateSize: 388,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 12): Uint8Array => {
+const abiBytes = (version = 13): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -68,7 +68,7 @@ const request = (): CommandRequest => ({
   leagueClears: [true, false, false],
 })
 
-describe("game-session v12 protocol", () => {
+describe("game-session v13 protocol", () => {
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
     expect(() => parseAbi(abiBytes(6))).toThrow("Unsupported test ROM ABI")
@@ -213,6 +213,17 @@ describe("game-session v12 protocol", () => {
       leagueRunActive: true,
       leagueRunRegion: 2,
       leagueRunRating: 40,
+    })
+  })
+
+  it("keeps saved appearance separate from the pending candidate and confirmation", () => {
+    const bytes = new Uint8Array(abi.stateSize)
+    bytes.set([4, 6, 2, 1], 382)
+    expect(parseStateSnapshot(bytes)).toMatchObject({
+      playerAppearanceId: 4,
+      appearanceCandidate: 6,
+      appearanceConfirmed: 2,
+      appearanceIntroStage: 1,
     })
   })
 

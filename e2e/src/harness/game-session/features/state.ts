@@ -28,6 +28,7 @@ import {
 import { type SessionRuntime } from "../runtime"
 
 export type GameState = {
+  appearance: { id: number; candidate: number; confirmed: number; introStage: number }
   frame: number
   origin: {
     starterChooseStage: number
@@ -232,6 +233,12 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
             },
     }))
     return {
+      appearance: {
+        id: snapshot.playerAppearanceId,
+        candidate: snapshot.appearanceCandidate,
+        confirmed: snapshot.appearanceConfirmed,
+        introStage: snapshot.appearanceIntroStage,
+      },
       frame: snapshot.frame,
       origin: {
         starterChooseStage: snapshot.starterChooseStage,

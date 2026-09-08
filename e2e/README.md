@@ -157,7 +157,7 @@ to prove that the withdrawn Surf user is resolved again. Tests should not treat
 fixture state or a memory snapshot as proof that capture, storage, release, or
 field use worked.
 
-The command mailbox is versioned as ABI v10. Arrangement and wild-battle commands
+The command mailbox is versioned as ABI v13. Arrangement and wild-battle commands
 share request IDs and result handling, reject commands while a harness-owned game
 state machine is active, and validate invalid species, item quantities, boxes,
 and slots in the ROM. Protocol changes must increment the ABI and update both the
@@ -183,8 +183,30 @@ layout offsets published by the ROM ABI. `game.player` supplies real controller
 actions, while `game.wait` and `game.dialogue` synchronize against ROM state
 instead of fixed frame delays.
 
-The mailbox, checkpoints, and telemetry only exist in the HNS E2E ROM. Normal and
-release ROMs do not compile them. Other map versions are outside this capability.
+The `e2e` Makefile target builds Wayfarer (`BUILD=wayfarer`, `E2E_TESTING=1`).
+The mailbox, checkpoints, and telemetry are available in this ROM; normal and
+release ROMs do not compile them. Standalone FRLG and Emerald are outside this
+harness's capability. HNS-named fixtures describe inherited Johto maps and do not
+mean the ROM is a standalone HNS build.
+
+The new-game playbook accepts an explicit origin and appearance:
+`playThroughNewGameIntro(game, "hoenn", 4)` selects Style 4 and checks its saved
+identity and mapped story gender. The appearance journey exercises all 12
+style/origin combinations and saves and reloads each one. Run it with:
+
+```sh
+SKYEMU_ROM="$PWD/game/pokemon-wayfarer-e2e.gba" \
+SKYEMU_SYMS="$PWD/game/pokemon-wayfarer-e2e.sym" \
+SKYEMU_CAPTURE_DIR="$PWD/e2e/artifacts/trainer-appearance" \
+pnpm --dir e2e exec wa test src/journeys/wayfarer-trainer-appearance.e2e.ts
+```
+
+The picker test writes six native emulator PNG captures when `SKYEMU_CAPTURE_DIR`
+is set. Inspect these images to judge layout, palettes, and character art. Passing
+state assertions or generating captures alone does not establish visual acceptance.
+Action animations, callback round trips, regional travel, and live link rendering
+also require the spec's separate acceptance checks. Build ROM targets serially:
+their generated maps share files.
 
 ## Layout
 

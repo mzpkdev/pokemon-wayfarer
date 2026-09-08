@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_pokemon_sprites.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
@@ -1924,9 +1925,14 @@ enum TrainerPicID LinkPlayerGetTrainerPicId(u32 multiplayerId)
     return trainerPicId;
 }
 
-static enum TrainerPicID PlayerGetTrainerBackPicId(void)
+enum TrainerPicID PlayerGetTrainerBackPicId(void)
 {
     enum TrainerPicID trainerPicId;
+
+#if IS_WAYFARER
+    if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+        return GetLocalPlayerBackTrainerPicId();
+#endif
 
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
@@ -1986,6 +1992,10 @@ static void PlayerHandleDrawTrainerPic(enum BattlerId battler)
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
     {
         trainerPicId = PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender);
+#if IS_WAYFARER
+        if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+            trainerPicId = GetLocalPlayerFrontTrainerPicId();
+#endif
         isFrontPic = TRUE;
     }
     else // Use back pic in all the other usual circumstances.
@@ -2330,7 +2340,11 @@ static void PlayerHandleOneReturnValue_Duplicate(enum BattlerId battler)
 
 static void PlayerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
+#if IS_WAYFARER
+    const u32 paletteIndex = PlayerGetTrainerBackPicId();
+#else
     const u32 paletteIndex = PlayerGetTrainerBackPicId() - TRAINER_PIC_FRONT_COUNT;
+#endif
     const u16 *trainerPal = gTrainerBacksprites[paletteIndex].palette.data;
     BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
 }
