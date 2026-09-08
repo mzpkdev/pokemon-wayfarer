@@ -4,8 +4,8 @@ PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
 Implemented: No
 
 Status: Draft. Initial balance values are selected for implementation/playtesting,
-not empirically validated. Escape tuning and the exceptional recovery policies
-listed in Open questions still need decisions before gameplay ships.
+not empirically validated. Exceptional recovery policies, animation validation
+and playtesting listed in Open questions remain outstanding before gameplay ships.
 
 ## Scope
 
@@ -164,12 +164,14 @@ party change and on the next encounter. A capture follows normal party/PC delive
 with six fainted Pokémon it may go to PC and leave the player unprotected. Do not
 force a catch into a full party or promise that every capture restores protection.
 
-Inside trainer-only Bag, allow legal recovery items with a real eligible party
-target as well as balls/food. Reuse the existing item effect and challenge rules;
-never heal a challenge-dead Pokémon through a new exception. A literal-empty
-party has no recovery target. Selecting a berry must distinguish feeding the wild
-Pokémon from any supported normal party use; no item is consumed until intent and
-target are committed. A fed berry never runs its normal medicine callback.
+Inside trainer-only Bag, allow legal non-berry recovery items with a real eligible
+party target as well as balls/food. Reuse normal HP, status, revive and applicable
+PP recovery effects, target selection and challenge rules. Never heal a
+challenge-dead Pokémon through a new exception. A literal-empty party has no
+recovery target. Selecting a standard berry feeds the wild Pokémon directly;
+there is no Feed/Use submenu or party-medicine use for berries in this mode.
+Feeding consumes one berry only when committed and never runs its medicine callback.
+This approved choice supersedes the earlier feed-versus-party-use distinction.
 
 Selected transition rule: if a legal recovery action creates a usable party
 Pokémon, finish that item action and safely return to field without a capture,
@@ -234,10 +236,12 @@ already removes an allowed ball, while some direct throwing actions remove one
 again. Choose one owner and prevent repeat callback consumption. Rocks are not
 inventory items. Recovery items use their normal targeting/consumption owner.
 
-Use an explicit feedable-berry table, not `battleUsage` or pocket membership.
-All eligible berries initially share one food effect. Exact berry eligibility
-remains open. Preserve normal challenge item rules: the current no-items rule
-exempts Poké Balls, not feeding or Revives. Reuse storage/capture/Nuzlocke/type
+Use an explicit feedable-berry table containing every standard berry from Cheri
+through Maranga, including standard Enigma and excluding the e-reader Enigma item.
+Do not infer eligibility from `battleUsage` or pocket membership. Every listed
+berry shares the selected food effect, and selection feeds directly. Preserve
+global Bag restrictions and normal challenge item rules: the current no-items
+rule exempts Poké Balls, not feeding or Revives. Reuse storage/capture/Nuzlocke/type
 checks and challenge-dependent PC delivery without Safari exceptions.
 
 ### Initial balance and TR scaling
@@ -381,20 +385,19 @@ No actor animation or callback advances the counter a second time.
 
 ### Escape and warnings
 
-Run attempts use the ordinary escape success/failure presentation and attempt-state
-concept, with a trainer-only calculation based on L relative to C. Stronger wild
-Pokémon are harder to escape; repeated committed attempts improve the chance.
-Do not directly call the normal Speed-based formula against zeroed player data,
-or inherit active-Pokémon escape abilities/items. The exact starting probability,
-attempt increment, cap and any eventual guarantee are still open; successful Run
-must not be assumed in tests. No added terrain/trapping rules are in scope.
+Run attempts use the ordinary escape success/failure presentation. With entry
+snapshots C and L clamped to at least 1, the success chance in percent is
+`clamp(floor(50 * C / L) + 15 * priorFailedAttempts, 5, 95)`. Use wide unsigned
+arithmetic. Prior failures start at zero and count only committed failed Run
+attempts. There is no eventual guarantee: even at 95%, Run can fail. No added
+terrain/trapping rules are in scope.
 
 Audit `TryRunFromBattle()` and `IsRunningFromBattleImpossible()` separately: both
 currently read player Pokémon state. Extract only shared escape result/attempt
-handling. Preserve applicable global no-running flags and challenge restrictions
-through explicit trainer-only checks; do not import Pokémon ability/type/status
-checks. The less-escapes challenge's numeric interaction belongs with the open
-escape tuning decision, not an accidental bypass or a fake player Speed value.
+handling. Preserve applicable global no-running flags and the existing
+less-escapes challenge restriction. The selected ordinary formula grants no
+challenge exemption. Do not call the normal Speed formula against zeroed data,
+inherit active-Pokémon abilities/items, or invent player stats for a challenge.
 
 A committed Run rolls escape once. Success ends immediately. Failure prints
 "Can't escape!", increments the attempt history once and consumes a turn with
@@ -469,10 +472,9 @@ recovery cause after use so an ordinary defeat never inherits retaliation state.
 
 Current money loss runs in battle script `getmoneyreward`, not `DoWhiteOut()`.
 Retain that existing charge exactly once for ordinary battle losses even without
-relocation. Never rerun it merely during field-return cleanup. Retaliation after
-that loss is a distinct later event; whether it has a second ordinary monetary
-penalty remains an explicit policy question. If enabled, use the shared formula,
-not a fabricated party-faint script; its current empty-party level floor is one.
+relocation. Never rerun it merely during field-return cleanup. Trainer retaliation
+deducts no money, including when it follows an earlier ordinary party loss.
+Central recovery must not invoke the ordinary loss charge for retaliation.
 
 Challenge faint processing must remain active on field-return paths. In particular,
 `NuzlockeDeleteFaintedPartyPokemon` occurs in battle teardown independently of
@@ -542,17 +544,17 @@ for exercising the new controller and field-return routing.
 | Story integration | Companion-spec rival restoration, guard dialogue, public lanes, victory-only writers and safe loss retry pass; excluded League/facility/partner outcomes retain explicit policy |
 | Storage | Final usable/last member Deposit/Move-to-box; safe fainted/Egg remainders; cursor cancel/count/compaction; retain Release/Mail/capacity/challenge and non-Wayfarer rules |
 | Engine | Mode survives initialization; no phantom send-out, automatic team defeat, invalid party index or regular move against trainer |
-| Bag | Balls, food and legal recovery targeting; cancel/blocked/no-item states; exactly one consumption; no empty target or challenge revive bypass; no Safari counters |
+| Bag | All standard berries feed directly, including Enigma and excluding e-reader Enigma; no Feed/Use submenu; balls and legal non-berry HP/status/revive/PP recovery targeting; cancel/blocked/no-item states; exactly one consumption; no empty target or challenge revive bypass; no Safari counters |
 | Scaling | Shared cap resolver across all anchors/intermediate TR; C/L frozen; damage clamping/rounding/minimum/lethal HP; anger ceil/clamp; wide arithmetic at extreme levels/HP |
 | Balance examples | C15/L30/HP80 -> damage5/T10; C30/L30/HP80 -> damage10/T5; low-level cap20% and high-level floor5%; at-cap passive5 plus rock25 |
 | Peaceful pressure | Failed balls, valid Go Near, feeding and failed Run add passive anger; menus/invalid actions do not; no rock prerequisite for retaliation |
 | Warning | Largest-next-gain lookahead at all T values; +40 rock cannot skip prior warning; post-berry warning reentry; failed escape can trigger warned retaliation |
-| Run | Formula once approved: relative-strength ordering, repeated-attempt bonus, cancellation invariance, one roll/history update, failure text/turn, success terminal; no active-Pokémon modifiers |
+| Run | Approved formula at equal/lower/higher L/C; +15 per prior failure; bounds5..95 and no guarantee; cancellation invariance, one roll/history update, failure text/turn, success terminal; global/less-escapes restrictions and no active-Pokémon modifiers |
 | Food/fear | -20 anger then T; feed may manage anger at item cost; -10 flee for3 checks incl feeding; refresh not stack; preserve damage/proximity/rock fear; flee bounds5..75 |
 | Proximity | F0 floor/min1; increments4/3/2/1 then repeated1; E increments4; factor caps20; stage3 remains committed; Safari Ball legacy odds unchanged; owned-ball effective species rate F/F0 neutral at entry, floor before flat ball bonus, wide arithmetic/guarantee/no double bonus; F0=1/5/20 and repeated attempts after saturation |
 | Outcome ordering | Capture, rock KO, successful Run and successful revival terminate before anger; retaliation before flee; at most one wild-flee check; no terminal double-resolution |
 | Capture/revival | Slot/PC/count/Dex/nickname; full six-fainted catch toPC remains unprotected; challenge PC routing; valid revival safely ends encounter and next battle normal |
-| Recovery | Retaliation uses existing current heal point/origin fallback/healer transform; true empty and fainted party text/healing; contexts cleared; no extra battle-loss charge |
+| Recovery | Retaliation uses existing current heal point/origin fallback/healer transform; true empty and fainted party text/healing; contexts cleared; retaliation deducts no money, ordinary loss charges once |
 | Exceptions | Approved challenge/hardcore/money/League policy tested at party defeat and trainer blackout separately; no accidental deletion, replacement gift or exemption |
 | Regression | Safari grants, allowance30/steps500/exit/retirement/Run/Pokéblocks and Go Near turn/RNG/factor behavior unchanged; only owned non-Safari balls gain the approach adjustment; Bug Contest; standalone HNS/FRLG/Emerald defeat policies |
 | Persistence/UI | Unprotected reload, recovery then normal battle, Bag targets/animations, field controls and sprites; no meters or stale callbacks |
@@ -564,21 +566,18 @@ anchors, field return, trainer trigger behavior or recovery presentation alone.
 
 ## Open questions
 
-1. **Escape tuning:** exact TR-cap/level formula, initial probabilities, attempt
-   increment, bounds and any eventual guarantee. Run can fail, repeated attempts
-   help, and failure consumes a passive-anger turn; those decisions are settled.
-2. **Exceptional defeat/recovery policy:** companion-spec excluded authored callers,
+1. **Exceptional defeat/recovery policy:** companion-spec excluded authored callers,
    challenge/hardcore consequences at party defeat versus trainer retaliation,
-   Nuzlocke replacement behavior, League-run termination and retaliation money
-   charging after an earlier ordinary loss. Central ownership and ordinary
-   field continuation are settled; no silent challenge exemption is approved.
-3. **Berry/content:** eligible feeding list, final messages and previewed anger/
-   retaliation animation primitives. All feedable berries share the selected
-   initial calming effect.
+   Nuzlocke replacement behavior and League-run termination. Central ownership,
+   ordinary field continuation and no retaliation money charge are settled; no
+   silent challenge exemption is approved.
+2. **Presentation and playtesting:** final messages, previewed anger/retaliation
+   animation primitives and validation of the selected balance values.
 
-Rock/TR scaling, passive anger, warning lookahead, proximity and food/flee values
-above are no longer unspecified. Tune them together using the acceptance examples
-and record any balance revision explicitly. Unresolved items prevent claiming a
+Rock/TR scaling, passive anger, warning lookahead, proximity, food/flee and Run
+values above are selected. Berry eligibility and direct feeding are settled. Tune
+them together using the acceptance examples and record any balance revision
+explicitly. Unresolved items prevent claiming a
 shipping-complete implementation, not updating this design or building isolated
 infrastructure.
 

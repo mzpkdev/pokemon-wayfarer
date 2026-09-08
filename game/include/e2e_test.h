@@ -16,6 +16,7 @@
 #define E2E_TEST_KEEP_MAP 0xFFFF
 #define E2E_TEST_KEEP_COORDINATE INT16_MIN
 #define E2E_TEST_KEEP_TEXT_SPEED 0xFF
+#define E2E_TEST_KEEP_PP 0xFF
 
 #define E2E_TEST_FULL_POCKET_ITEMS     (1 << 0)
 #define E2E_TEST_FULL_POCKET_KEY_ITEMS (1 << 1)
@@ -197,6 +198,7 @@ enum E2ETestBattleUiState
     E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY,
     E2E_TEST_BATTLE_UI_OTHER,
     E2E_TEST_BATTLE_UI_TEXT,
+    E2E_TEST_BATTLE_UI_MOVE_MENU,
 };
 
 struct E2ETestVarPatch
@@ -218,7 +220,7 @@ struct E2ETestMonFixture
     u16 moves[MAX_MON_MOVES];
     u8 level;
     u8 isEgg;
-    u32 reserved;
+    u8 pp[MAX_MON_MOVES];
 };
 
 struct E2ETestPartyMonFixture
@@ -389,6 +391,11 @@ struct E2ETestState
     u8 playerGender;
     u8 originEquipment;
     u16 littlerootTownState;
+    u8 trainerOnlyState[12];
+    u32 money;
+    u16 partyHp[E2E_TEST_MAX_PARTY];
+    u32 partyStatus[E2E_TEST_MAX_PARTY];
+    u8 partyPp[E2E_TEST_MAX_PARTY][MAX_MON_MOVES];
 };
 
 struct E2ETestAbi
@@ -421,6 +428,8 @@ bool32 E2ETest_IsSummaryScreenOpen(void);
 void E2ETest_SetStorageCurrentBox(u8 boxId);
 void E2ETest_GetStorageUiState(u8 *uiState, u8 *mode, u8 *cursorArea, u8 *cursorPosition, bool8 *movingMon);
 bool32 E2ETest_GetBattleActionMenuState(u8 *cursor);
+bool32 E2ETest_GetBattleMoveMenuState(u8 *cursor);
+bool32 E2ETest_GetTrainerOnlyActionMenuState(u8 *cursor);
 bool32 E2ETest_IsBattleTextReady(void);
 bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item);
 bool32 E2ETest_IsCaughtDexReady(void);

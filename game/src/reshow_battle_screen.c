@@ -15,6 +15,7 @@
 #include "battle_interface.h"
 #include "battle_anim.h"
 #include "data.h"
+#include "trainer_only_encounter.h"
 
 // this file's functions
 static void CB2_ReshowBattleScreenAfterMenu(void);
@@ -281,7 +282,7 @@ static bool8 LoadBattlerSpriteGfx(enum BattlerId battler)
             else
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
+        else if (((gBattleTypeFlags & BATTLE_TYPE_SAFARI) || IsTrainerOnlyEncounter()) && position == B_POSITION_PLAYER_LEFT)
             DecompressTrainerBackPic((gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE, battler);
         else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL && position == B_POSITION_PLAYER_LEFT)
             DecompressTrainerBackPic(CATCH_TUTORIAL_TRAINER_PIC_BACK, battler);
@@ -302,7 +303,9 @@ void CreateBattlerSprite(enum BattlerId battler)
         u8 posY;
         enum BattlerPosition position = GetBattlerPosition(battler);
 
-        if (IsGhostBattleWithoutScope())
+        if (IsTrainerOnlyEncounter() && IsOnPlayerSide(battler))
+            posY = 80;
+        else if (IsGhostBattleWithoutScope())
             posY = GetGhostSpriteDefault_Y(battler);
         else if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             posY = GetSubstituteSpriteDefault_Y(battler);
@@ -327,7 +330,7 @@ void CreateBattlerSprite(enum BattlerId battler)
 
             StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
         }
-        else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)
+        else if (((gBattleTypeFlags & BATTLE_TYPE_SAFARI) || IsTrainerOnlyEncounter()) && position == B_POSITION_PLAYER_LEFT)
         {
             enum TrainerPicID trainerPicId = (gSaveBlock2Ptr->playerGender == FEMALE) ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
             SetMultiuseSpriteTemplateToTrainerBack(trainerPicId, position);
@@ -374,6 +377,9 @@ static void CreateHealthboxSprite(enum BattlerId battler)
     if (battler < gBattlersCount)
     {
         u8 healthboxSpriteId;
+
+        if (IsTrainerOnlyEncounter() && IsOnPlayerSide(battler))
+            return;
 
         enum BattlerPosition position = GetBattlerPosition(battler);
         if (gBattleTypeFlags & BATTLE_TYPE_SAFARI && position == B_POSITION_PLAYER_LEFT)

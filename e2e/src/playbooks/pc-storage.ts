@@ -46,18 +46,22 @@ const moveBoxCursor = async (game: GameSession, target: number): Promise<void> =
   const targetColumn = target % boxColumns
   while (row < targetRow) {
     await game.controls.press("down")
+    await game.wait.frames(12)
     row++
   }
   while (row > targetRow) {
     await game.controls.press("up")
+    await game.wait.frames(12)
     row--
   }
   while (column < targetColumn) {
     await game.controls.press("right")
+    await game.wait.frames(12)
     column++
   }
   while (column > targetColumn) {
     await game.controls.press("left")
+    await game.wait.frames(12)
     column--
   }
   await game.wait.until(
@@ -74,25 +78,24 @@ export const depositPartyMon = async (game: GameSession, partyIndex: number): Pr
   for (let index = cursor; index > partyIndex; index--) await game.controls.press("up")
   await game.controls.press("a")
   await game.wait.until((state) => state.storage.ui === "mon-menu", "deposit Pokémon menu")
+  await game.wait.frames(30)
   await game.controls.press("a")
   await game.wait.until((state) => state.storage.ui === "deposit-box", "deposit box picker")
+  await game.wait.frames(30)
   await game.controls.press("a")
   await game.storage.waitForReady()
 }
 
 export const withdrawSlot = async (game: GameSession, slot: number): Promise<void> => {
   await game.storage.waitForReady()
+  const partyCount = (await game.state.read()).party.length
   await moveBoxCursor(game, slot)
   await game.controls.press("a")
   await game.wait.until((state) => state.storage.ui === "mon-menu", "withdraw Pokémon menu")
+  await game.wait.frames(120)
   await game.controls.press("a")
   await game.wait.until(
-    (state) =>
-      state.storage.ui === "ready" &&
-      state.pc.slots.some(
-        (observed) =>
-          observed.box === state.pc.currentBox && observed.slot === slot && observed.mon === null,
-      ),
+    (state) => state.storage.ui === "ready" && state.party.length === partyCount + 1,
     "withdraw Pokémon into the party",
     3_600,
   )

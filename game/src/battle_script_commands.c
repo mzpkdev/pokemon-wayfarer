@@ -1,4 +1,7 @@
 #include "global.h"
+#include "capture_context.h"
+#include "trainer_only_encounter.h"
+#include "wayfarer_loss_policy.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
@@ -4142,6 +4145,7 @@ static void Cmd_getexp(void)
     {
     case 0: // check if should receive exp at all
         if (IsOnPlayerSide(gBattlerFainted)
+            || IsTrainerOnlyEncounter()
             || IsAiVsAiBattle()
             || !BattleTypeAllowsExp()
             || FlagGet(FLAG_DISABLE_EXP_GAIN))
@@ -6304,6 +6308,7 @@ static void Cmd_getmoneyreward(void)
         if (!IsEnoughMoney(&gSaveBlock1Ptr->money, money))
             money = GetMoney(&gSaveBlock1Ptr->money);
         RemoveMoney(&gSaveBlock1Ptr->money, money);
+        WayfarerRecordBattleLossMoney();
     }
 
     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 5, money);
@@ -10636,7 +10641,7 @@ struct BallData
 
 #define CAPTURE_GUARANTEED -1
 
-static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallData *ball)
+static void ComputeBallData(u32 wildMonBattler, const struct CaptureContext *context, struct BallData *ball)
 {
     u32 i;
     u32 ballId = ItemIdToBallId(gLastUsedItem);
@@ -10708,18 +10713,18 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
     case BALL_TIMER:
         if (B_TIMER_BALL_MODIFIER >= GEN_5)
         {
-            ball->multiplier = 4096 + gBattleResults.battleTurnCounter * 1229;
+            ball->multiplier = 4096 + min(context->completedTurns, 10) * 1229;
             ball->divider = 4096;
         }
         else
         {
-            ball->multiplier = 100 + gBattleResults.battleTurnCounter * 10;
+            ball->multiplier = 100 + min(context->completedTurns, 30) * 10;
         }
         if (ball->multiplier > (4 * ball->divider))
             ball->multiplier = 4 * ball->divider;
         break;
     case BALL_QUICK:
-        if (gBattleResults.battleTurnCounter == 0)
+        if (context->completedTurns == 0)
             ball->multiplier = (B_QUICK_BALL_MODIFIER >= GEN_5 ? 500 : 400);
         break;
     case BALL_REPEAT:
@@ -10727,11 +10732,11 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
             ball->multiplier = (B_REPEAT_BALL_MODIFIER >= GEN_7 ? 350 : 300);
         break;
     case BALL_LEVEL:
-        if (gBattleMons[playerBattler].level >= 4 * battleMon->level)
+        if (context->hasPlayerBattler && gBattleMons[context->playerBattler].level >= 4 * battleMon->level)
             ball->multiplier = 800;
-        else if (gBattleMons[playerBattler].level > 2 * battleMon->level)
+        else if (context->hasPlayerBattler && gBattleMons[context->playerBattler].level > 2 * battleMon->level)
             ball->multiplier = 400;
-        else if (gBattleMons[playerBattler].level > battleMon->level)
+        else if (context->hasPlayerBattler && gBattleMons[context->playerBattler].level > battleMon->level)
             ball->multiplier = 200;
 #if IS_HNS
         if (ball->multiplier < 400
@@ -10780,10 +10785,10 @@ static void ComputeBallData(u32 wildMonBattler, u32 playerBattler, struct BallDa
         break;
     }
     case BALL_LOVE:
-        if (battleMon->species == gBattleMons[playerBattler].species)
+        if (context->hasPlayerBattler && battleMon->species == gBattleMons[context->playerBattler].species)
         {
             u8 gender1 = GetMonGender(GetBattlerMon(wildMonBattler));
-            u8 gender2 = GetMonGender(GetBattlerMon(playerBattler));
+            u8 gender2 = GetMonGender(GetBattlerMon(context->playerBattler));
 
             if (gender1 != gender2 && gender1 != MON_GENDERLESS && gender2 != MON_GENDERLESS)
                 ball->multiplier = 800;
@@ -10894,10 +10899,10 @@ static const u8 sBadgeLevel[] = {
     100,
 };
 
-static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
+u32 ComputeCaptureOdds(u32 wildMonBattler, const struct CaptureContext *context)
 {
     struct BallData ball;
-    ComputeBallData(wildMonBattler, playerBattler, &ball);
+    ComputeBallData(wildMonBattler, context, &ball);
 
     if (ball.guaranteedCapture)
         return CAPTURE_GUARANTEED;
@@ -10905,13 +10910,12 @@ static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
     u32 odds = (battleMon->maxHP * 3 -  battleMon->hp * 2);
     s32 catchRate;
 
-    // HnS lets the player throw any ball in the Safari Zone, so the flattened
-    // safari catch factor only applies to Safari Balls themselves. Every other
-    // ball uses the species' real catch rate, as it did in HnS 1.0.
+    // Safari Balls retain their original quantized rate. Owned balls apply
+    // proximity to the species rate before the flat ball bonus.
     if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && (!IS_HNS || gLastUsedItem == ITEM_SAFARI_BALL))
         catchRate = gBattleStruct->safariCatchFactor * 1275 / 100;
     else
-        catchRate = gSpeciesInfo[battleMon->species].catchRate;
+        catchRate = CaptureApplyProximity(gSpeciesInfo[battleMon->species].catchRate, context->initialCatchFactor, context->catchFactor);
 
     catchRate += ball.flatBonus;
     if (catchRate <= 0)
@@ -10929,7 +10933,7 @@ static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
     }
     if (badgeCount > NUM_BADGES_CAPPED)
         badgeCount = NUM_BADGES_CAPPED;
-    if (GetConfig(B_MISSING_BADGE_CATCH_MALUS) == GEN_8 && badgeCount < NUM_BADGES_CAPPED && gBattleMons[playerBattler].level < battleMon->level)
+    if (GetConfig(B_MISSING_BADGE_CATCH_MALUS) == GEN_8 && badgeCount < NUM_BADGES_CAPPED && context->hasPlayerBattler && gBattleMons[context->playerBattler].level < battleMon->level)
         odds = odds * 410 / 4096;
     if (GetConfig(B_MISSING_BADGE_CATCH_MALUS) == GEN_9 && badgeCount < NUM_BADGES_CAPPED)
     {
@@ -10952,6 +10956,8 @@ static u32 ComputeCaptureOdds(u32 wildMonBattler, u32 playerBattler)
     if (battleMon->status1 & STATUS1_CAN_MOVE)
         odds = odds * 15 / 10;
 
+    if (context->initialCatchFactor != 0 && odds > 255)
+        odds = 255;
     return odds;
 }
 
@@ -11043,7 +11049,19 @@ static void Cmd_handleballthrow(void)
     else
     {
         gBallToDisplay = gLastThrownBall = gLastUsedItem;
-        u32 odds = ComputeCaptureOdds(gBattlerTarget, gBattlerAttacker);
+        struct CaptureContext context = {
+            .hasPlayerBattler = TRUE,
+            .playerBattler = gBattlerAttacker,
+            .completedTurns = gBattleResults.battleTurnCounter,
+        };
+        if (IsTrainerOnlyEncounter())
+            TrainerOnlyGetCaptureContext(&context);
+        else if (IS_HNS && (gBattleTypeFlags & BATTLE_TYPE_SAFARI) && gLastUsedItem != ITEM_SAFARI_BALL)
+        {
+            context.initialCatchFactor = CaptureInitialCatchFactor(gSpeciesInfo[gBattleMons[gBattlerTarget].species].catchRate);
+            context.catchFactor = gBattleStruct->safariCatchFactor;
+        }
+        u32 odds = ComputeCaptureOdds(gBattlerTarget, &context);
         if (gTestRunnerEnabled)
             TestRunner_Battle_RecordCatchChance(odds);
 

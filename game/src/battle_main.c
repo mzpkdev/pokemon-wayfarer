@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "challenge_menu.h"
@@ -3827,7 +3828,7 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_DRAW_SPRITES:
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-            if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && IsOnPlayerSide(battler))
+            if (((gBattleTypeFlags & BATTLE_TYPE_SAFARI) || IsTrainerOnlyEncounter()) && IsOnPlayerSide(battler))
             {
                 memset(&gBattleMons[battler], 0, sizeof(struct BattlePokemon));
             }
@@ -3976,7 +3977,7 @@ static void DoBattleIntro(void)
             else
             {
                 u8 runType = gSaveblock3.challengeSettings.runType;
-                if (runType == 1 || runType == 3)
+                if (!IsTrainerOnlyEncounter() && (runType == 1 || runType == 3))
                     gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_QUICK_RUN;
                 else if (B_FAST_INTRO_PKMN_TEXT == TRUE)
                     gBattleStruct->eventState.battleIntro = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT;
@@ -4065,7 +4066,7 @@ static void DoBattleIntro(void)
         }
         break;
     case BATTLE_INTRO_STATE_PRINT_PLAYER_SEND_OUT_TEXT:
-        if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
+        if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI) && !IsTrainerOnlyEncounter())
         {
             if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
                 battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
@@ -4123,6 +4124,12 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
+            if (IsTrainerOnlyEncounter())
+            {
+                gBattleStruct->partyState[B_SIDE_OPPONENT][0].sentOut = TRUE;
+                TrainerOnlyStartController();
+                return;
+            }
             gBattleStruct->eventState.beforeFirstTurn = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
@@ -4162,7 +4169,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     case FIRST_TURN_EVENTS_START:
         LoadIndicatorSpritesGfx();
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
-        if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
+        if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI) && !IsTrainerOnlyEncounter())
         {
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             {
@@ -5919,6 +5926,11 @@ static void HandleEndTurn_MonFled(void)
     gBattleMainFunc = HandleEndTurn_FinishBattle;
 }
 
+void TrainerOnlyFinishBattle(void)
+{
+    gBattleMainFunc = HandleEndTurn_FinishBattle;
+}
+
 static void HandleEndTurn_FinishBattle(void)
 {
     if (gCurrentActionFuncId == B_ACTION_TRY_FINISH || gCurrentActionFuncId == B_ACTION_FINISHED)
@@ -5956,7 +5968,8 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_CATCH_TUTORIAL
                                   | BATTLE_TYPE_FRONTIER))
-            && !(gBattleTypeFlags & BATTLE_TYPE_GHOST && IsGhostBattleWithoutScope()))
+            && !(gBattleTypeFlags & BATTLE_TYPE_GHOST && IsGhostBattleWithoutScope())
+            && !IsTrainerOnlyEncounter())
         {
             for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
             {
@@ -6117,6 +6130,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
                                   | BATTLE_TYPE_FRONTIER
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_CATCH_TUTORIAL))
+            && !IsTrainerOnlyEncounter()
             && (B_EVOLUTION_AFTER_WHITEOUT >= GEN_6
                 || gBattleOutcome == B_OUTCOME_WON
                 || gBattleOutcome == B_OUTCOME_CAUGHT))

@@ -49,6 +49,7 @@
 #include "constants/items.h"
 #include "constants/songs.h"
 #include "nuzlocke.h"
+#include "trainer_only_encounter.h"
 
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
@@ -1196,6 +1197,8 @@ void ItemUseInBattle_PokeBall(u8 taskId)
     case BALL_THROW_ABLE:
     default:
         RemoveBagItem(gSpecialVar_ItemId, 1);
+        if (IsTrainerOnlyEncounter())
+            TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_BALL);
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             Task_FadeAndCloseBagMenu(taskId);
         else
@@ -1240,6 +1243,142 @@ void ItemUseInBattle_PokeBall(u8 taskId)
     }
 }
 
+bool32 TrainerOnlyIsFeedableBerry(enum Item item)
+{
+    static const enum Item feedable[] = {
+        ITEM_CHERI_BERRY,
+        ITEM_CHESTO_BERRY,
+        ITEM_PECHA_BERRY,
+        ITEM_RAWST_BERRY,
+        ITEM_ASPEAR_BERRY,
+        ITEM_LEPPA_BERRY,
+        ITEM_ORAN_BERRY,
+        ITEM_PERSIM_BERRY,
+        ITEM_LUM_BERRY,
+        ITEM_SITRUS_BERRY,
+        ITEM_FIGY_BERRY,
+        ITEM_WIKI_BERRY,
+        ITEM_MAGO_BERRY,
+        ITEM_AGUAV_BERRY,
+        ITEM_IAPAPA_BERRY,
+        ITEM_RAZZ_BERRY,
+        ITEM_BLUK_BERRY,
+        ITEM_NANAB_BERRY,
+        ITEM_WEPEAR_BERRY,
+        ITEM_PINAP_BERRY,
+        ITEM_POMEG_BERRY,
+        ITEM_KELPSY_BERRY,
+        ITEM_QUALOT_BERRY,
+        ITEM_HONDEW_BERRY,
+        ITEM_GREPA_BERRY,
+        ITEM_TAMATO_BERRY,
+        ITEM_CORNN_BERRY,
+        ITEM_MAGOST_BERRY,
+        ITEM_RABUTA_BERRY,
+        ITEM_NOMEL_BERRY,
+        ITEM_SPELON_BERRY,
+        ITEM_PAMTRE_BERRY,
+        ITEM_WATMEL_BERRY,
+        ITEM_DURIN_BERRY,
+        ITEM_BELUE_BERRY,
+        ITEM_CHILAN_BERRY,
+        ITEM_OCCA_BERRY,
+        ITEM_PASSHO_BERRY,
+        ITEM_WACAN_BERRY,
+        ITEM_RINDO_BERRY,
+        ITEM_YACHE_BERRY,
+        ITEM_CHOPLE_BERRY,
+        ITEM_KEBIA_BERRY,
+        ITEM_SHUCA_BERRY,
+        ITEM_COBA_BERRY,
+        ITEM_PAYAPA_BERRY,
+        ITEM_TANGA_BERRY,
+        ITEM_CHARTI_BERRY,
+        ITEM_KASIB_BERRY,
+        ITEM_HABAN_BERRY,
+        ITEM_COLBUR_BERRY,
+        ITEM_BABIRI_BERRY,
+        ITEM_ROSELI_BERRY,
+        ITEM_LIECHI_BERRY,
+        ITEM_GANLON_BERRY,
+        ITEM_SALAC_BERRY,
+        ITEM_PETAYA_BERRY,
+        ITEM_APICOT_BERRY,
+        ITEM_LANSAT_BERRY,
+        ITEM_STARF_BERRY,
+        ITEM_ENIGMA_BERRY,
+        ITEM_MICLE_BERRY,
+        ITEM_CUSTAP_BERRY,
+        ITEM_JABOCA_BERRY,
+        ITEM_ROWAP_BERRY,
+        ITEM_KEE_BERRY,
+        ITEM_MARANGA_BERRY,
+    };
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(feedable); i++)
+        if (item == feedable[i])
+            return TRUE;
+    return FALSE;
+}
+
+bool32 TrainerOnlyIsRecoveryItem(enum Item item)
+{
+    switch (GetItemBattleUsage(item))
+    {
+    case EFFECT_ITEM_RESTORE_HP:
+    case EFFECT_ITEM_CURE_STATUS:
+    case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
+    case EFFECT_ITEM_REVIVE:
+    case EFFECT_ITEM_RESTORE_PP:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+void ItemUseInTrainerOnly_Food(u8 taskId)
+{
+    if (!TrainerOnlyIsFeedableBerry(gSpecialVar_ItemId)
+     || !IsAllowedToUseBag()
+     || gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
+     || !CheckBagHasItem(gSpecialVar_ItemId, 1))
+    {
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, CloseItemMessage);
+        return;
+    }
+    RemoveBagItem(gSpecialVar_ItemId, 1);
+    TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_FOOD);
+    Task_FadeAndCloseBagMenu(taskId);
+}
+
+static void ItemUseCB_TrainerOnlyRecovery(u8 taskId, TaskFunc task)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    if (gPartyMenu.slotId >= PARTY_SIZE
+     || GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE
+     || GetMonData(mon, MON_DATA_IS_EGG)
+     || !TrainerOnlyIsRecoveryItem(gSpecialVar_ItemId)
+     || !IsAllowedToUseBag()
+     || gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
+     || (GetItemBattleUsage(gSpecialVar_ItemId) != EFFECT_ITEM_RESTORE_PP
+         && CannotUseItemsInBattle(gSpecialVar_ItemId, mon)))
+    {
+        gPartyMenuUseExitCallback = FALSE;
+        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        ScheduleBgCopyTilemapToVram(2);
+        gTasks[taskId].func = task;
+        return;
+    }
+    if (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_RESTORE_PP)
+    {
+        ItemUseCB_PPRecovery(taskId, task);
+        return;
+    }
+    ItemUseCB_Medicine(taskId, task);
+    if (gPartyMenuUseExitCallback)
+        TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_RECOVERY);
+}
+
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 {
     if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
@@ -1256,7 +1395,22 @@ static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 
 void ItemUseInBattle_PartyMenu(u8 taskId)
 {
-    gItemUseCB = ItemUseCB_BattleScript;
+    if (IsTrainerOnlyEncounter())
+    {
+        u32 i;
+        for (i = 0; i < PARTY_SIZE; i++)
+            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
+             && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
+                break;
+        if (i == PARTY_SIZE)
+        {
+            DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, CloseItemMessage);
+            return;
+        }
+        gItemUseCB = ItemUseCB_TrainerOnlyRecovery;
+    }
+    else
+        gItemUseCB = ItemUseCB_BattleScript;
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
@@ -1281,6 +1435,8 @@ static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 
 static bool32 SelectedMonHasVolatile(enum Item itemId)
 {
+    if (IsTrainerOnlyEncounter())
+        return FALSE;
     if (gPartyMenu.slotId == 0)
         return IteamHealsMonVolatile(0, itemId);
     else if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
@@ -1297,7 +1453,9 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     u32 i, battlerTarget;
     u16 hp = GetMonData(mon, MON_DATA_HP);
 
-    if (gPartyMenu.slotId == 0)
+    if (IsTrainerOnlyEncounter())
+        battlerTarget = MAX_POSITION_COUNT;
+    else if (gPartyMenu.slotId == 0)
         battlerTarget = B_POSITION_PLAYER_LEFT;
     else if (gPartyMenu.slotId == 1)
         battlerTarget = B_POSITION_PLAYER_RIGHT;

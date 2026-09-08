@@ -14,6 +14,9 @@ when the player has no usable Pokémon. This companion owns authored encounter
 eligibility, deferred scenes, refusal dialogue and progression protection. The
 [core encounter spec](trainer-only-encounters.md) owns wild encounters, party
 eligibility, ordinary defeat, inventory and centralized blackout/recovery.
+Ordinary supported losses retain their existing money charge exactly once. Later
+trainer-only retaliation uses central recovery without another money deduction;
+this does not authorize changes to excluded challenge, League or authored outcomes.
 
 The [source encounter audit](../research/trainer-only-story-encounter-gates.md)
 provides script locations and state writers for every family below, inspected at

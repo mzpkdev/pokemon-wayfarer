@@ -430,14 +430,32 @@ bool32 E2ETest_GetBattleActionMenuState(u8 *cursor)
     return FALSE;
 }
 
-bool32 E2ETest_IsBattleTextReady(void)
+bool32 E2ETest_GetBattleMoveMenuState(u8 *cursor)
 {
     u32 battler;
 
     for (battler = 0; battler < gBattlersCount; battler++)
     {
         if (GetBattlerSide(battler) == B_SIDE_PLAYER
-         && gBattlerControllerFuncs[battler] == Controller_WaitForString)
+         && gBattlerControllerFuncs[battler] == HandleInputChooseMove)
+        {
+            *cursor = gMoveSelectionCursor[battler];
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+bool32 E2ETest_IsBattleTextReady(void)
+{
+    u32 battler;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        // Battle text shares one message window. Faint and loss messages can be
+        // owned by the opposing controller, so their acknowledgement is no less
+        // actionable to an E2E journey.
+        if (gBattlerControllerFuncs[battler] == Controller_WaitForString)
             return TRUE;
     }
     return FALSE;

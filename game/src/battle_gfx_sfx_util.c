@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #include "battle.h"
 #include "battle_controllers.h"
 #include "battle_ai_main.h"
@@ -908,6 +909,11 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         (*state1)++;
         break;
     case 3:
+        if (IsTrainerOnlyEncounter() && IsOnPlayerSide(*battler))
+        {
+            (*battler)++;
+            break;
+        }
         if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && *battler == 0)
             gHealthboxSpriteIds[*battler] = CreateSafariPlayerHealthboxSprites();
         else
@@ -921,6 +927,11 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         }
         break;
     case 4:
+        if (IsTrainerOnlyEncounter() && IsOnPlayerSide(*battler))
+        {
+            (*battler)++;
+            break;
+        }
         InitBattlerHealthboxCoords(*battler);
         if (GetBattlerPosition(*battler) <= B_POSITION_OPPONENT_LEFT)
             DummyBattleInterfaceFunc(gHealthboxSpriteIds[*battler], FALSE);
@@ -935,6 +946,11 @@ bool8 BattleInitAllSprites(u8 *state1, u8 *battler)
         }
         break;
     case 5:
+        if (IsTrainerOnlyEncounter() && IsOnPlayerSide(*battler))
+        {
+            (*battler)++;
+            break;
+        }
         if (!IsOnPlayerSide(*battler) || !(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
             UpdateHealthboxAttribute(gHealthboxSpriteIds[*battler], GetBattlerMon(*battler), HEALTHBOX_ALL);
         SetHealthboxSpriteInvisible(gHealthboxSpriteIds[*battler]);
