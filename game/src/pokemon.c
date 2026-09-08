@@ -2034,7 +2034,7 @@ static const u32 sNationalToSpeciesOrder[NATIONAL_DEX_COUNT] =
     NATIONAL_TO_SPECIES(DECIDUEYE_HISUI),
 #endif
 #if P_PALDEAN_FORMS
-    [NATIONAL_DEX_TAUROS_PALDEA - 1] = SPECIES_TAUROS_PALDEA_AQUA,
+    [NATIONAL_DEX_TAUROS_PALDEA - 1] = SPECIES_TAUROS_PALDEA_COMBAT,
     NATIONAL_TO_SPECIES(WOOPER_PALDEA),
 #endif
 #endif
@@ -3175,6 +3175,11 @@ void CreateEnemyEventMon(void)
     s32 species = gSpecialVar_0x8004;
     s32 level = gSpecialVar_0x8005;
     s32 itemId = gSpecialVar_0x8006;
+
+    #if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_FIXED_MON))
+        species = RandomizeMon(RANDOMIZER_REASON_FIXED_ENCOUNTER, GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE), Random32(), species);
+    #endif
 
     ZeroEnemyPartyMons();
 

@@ -305,6 +305,25 @@ class WayfarerHoennContentAuditTest(unittest.TestCase):
         self.assertIn("expectedWildProfilesSha256 changed", failures)
         self.assertIn("expectedTrainerPartiesSha256 changed", failures)
 
+    def test_dynamic_punch_tutors_name_the_gym_in_their_own_region(self):
+        symbols, _, blocks = GENERATOR.script_symbols(GAME_ROOT)
+        for map_name, entry, taught, city, wrong_city in (
+            ("MossdeepCity", "MossdeepCity_EventScript_DynamicPunchTutor",
+             "MoveTutor_Text_DynamicPunchTaught", "MOSSDEEP", "CERULEAN"),
+            ("Route4_hns", "Route4_EventScript_DynamicPunchTutor_Hns",
+             "MoveTutor_Text_DynamicPunchTaughtHns", "CERULEAN", "MOSSDEEP"),
+        ):
+            with self.subTest(map=map_name):
+                events = json.loads((GAME_ROOT / "data/maps" / map_name / "map.json").read_text())
+                self.assertIn(entry, GENERATOR.event_script_references(events))
+                reachable = GENERATOR.reachable_script_blocks({entry}, symbols, blocks)
+                by_name = {symbol: source for symbol, _, source, _ in reachable}
+                self.assertIn(taught, by_name)
+                self.assertIn(city + " GYM", by_name[taught])
+                self.assertNotIn(wrong_city + " GYM", "\n".join(by_name.values()))
+                self.assertIn("MOVE_DYNAMIC_PUNCH", by_name[entry])
+                self.assertIn("FLAG_MOVE_TUTOR_TAUGHT_DYNAMICPUNCH", by_name[entry])
+
     def test_repository_catalog_has_all_518_maps_and_effective_shared_tables(self):
         manifest = GENERATOR.build_manifest(
             GAME_ROOT,

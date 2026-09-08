@@ -875,20 +875,24 @@
 
 #define TRAINERS_COUNT_EMERALD     855
 #define MAX_TRAINERS_COUNT_EMERALD 864
-#define TRAINERS_COUNT_WAYFARER     1493
+#define TRAINERS_COUNT_WAYFARER     (TRAINERS_COUNT_HNS + TRAINERS_COUNT_EMERALD - 1)
 #define MAX_TRAINERS_COUNT_WAYFARER 2048
 
 #if TRAINERS_COUNT_EMERALD != WAYFARER_HOENN_TRAINERS_COUNT
 #error "Wayfarer Hoenn Trainer storage must cover every Emerald Trainer ID"
 #endif
 
-#if IS_WAYFARER && (TRAINER_BLUE_DOJO_HNS != WAYFARER_HOENN_TRAINER_OFFSET \
-                 || TRAINERS_COUNT_HNS != WAYFARER_HOENN_TRAINER_OFFSET + 1)
-#error "Wayfarer Hoenn Trainer IDs use a fixed offset; HNS Trainers must end at 638"
+#if IS_WAYFARER && TRAINER_BLUE_DOJO_HNS != WAYFARER_HOENN_TRAINER_OFFSET
+#error "Wayfarer Hoenn Trainer IDs must retain their fixed offset"
 #endif
 
-#if TRAINERS_COUNT_WAYFARER != WAYFARER_HOENN_TRAINER_OFFSET + TRAINERS_COUNT_EMERALD
-#error "Wayfarer Trainer count must cover the fixed HNS and Hoenn ranges"
+#if IS_WAYFARER && (TRAINER_FALKNER_POSTOBC_HNS != WAYFARER_HOENN_TRAINER_OFFSET + TRAINERS_COUNT_EMERALD \
+                 || TRAINER_ERIKA_POSTOBC_HNS + 1 != TRAINERS_COUNT_WAYFARER)
+#error "New HNS Trainers must follow the fixed Hoenn range"
+#endif
+
+#if TRAINERS_COUNT_HNS > MAX_TRAINERS_COUNT_HNS
+#error "HNS Trainer defeat flags exceed their reserved storage"
 #endif
 
 #if TRAINERS_COUNT_WAYFARER > MAX_TRAINERS_COUNT_WAYFARER

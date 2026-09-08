@@ -255,3 +255,7 @@ MoveTutor_Text_HeadbuttDeclined:
 MoveTutor_Text_HeadbuttTaught:
 	.string "Rattle trees with HEADBUTT.\n"
 	.string "Sometimes, sleeping POKéMON fall out.$"
+
+MoveTutor_Text_DynamicPunchTaughtHns:
+	.string "I want you to win at the CERULEAN GYM\n"
+	.string "using that DYNAMICPUNCH!$"

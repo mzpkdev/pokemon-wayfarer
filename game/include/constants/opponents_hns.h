@@ -660,7 +660,42 @@
 #define TRAINER_BLUE_DOJO_HNS                  638
 
 // 618 is TRAINER_TANYA_HNS, relocated out of the TRAINER_FRONTIER_BRAIN slot (330).
-#define TRAINERS_COUNT_HNS                       639
+
+// Wayfarer's Hoenn IDs already occupy 639 through 1492. Append new HNS
+// teams after that range while retaining their compact IDs in HNS builds.
+#if IS_WAYFARER
+#define HNS_POSTOBC_TRAINER_ID(id) ((id) + WAYFARER_HOENN_TRAINERS_COUNT - 1)
+#else
+#define HNS_POSTOBC_TRAINER_ID(id) (id)
+#endif
+
+// Post-OBC (Battle Championship) rematch teams for the Gym Leaders, Elite Four,
+// Lance, Blue and Red. Appended at the end of the list for the same save-index
+// reason as the phone rematch tiers above.
+#define TRAINER_FALKNER_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(639)
+#define TRAINER_BUGSY_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(640)
+#define TRAINER_WHITNEY_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(641)
+#define TRAINER_MORTY_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(642)
+#define TRAINER_CHUCK_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(643)
+#define TRAINER_JASMINE_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(644)
+#define TRAINER_PRYCE_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(645)
+#define TRAINER_CLAIR_OBC_HNS                 HNS_POSTOBC_TRAINER_ID(646)
+#define TRAINER_BROCK_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(647)
+#define TRAINER_LTSURGE_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(648)
+#define TRAINER_JANINE_POSTOBC_HNS            HNS_POSTOBC_TRAINER_ID(649)
+#define TRAINER_SABRINA_POSTOBC_HNS           HNS_POSTOBC_TRAINER_ID(650)
+#define TRAINER_BLAINE_POSTOBC_HNS            HNS_POSTOBC_TRAINER_ID(651)
+#define TRAINER_BLUE_POSTOBC_HNS              HNS_POSTOBC_TRAINER_ID(652)
+#define TRAINER_WILL_POSTOBC_HNS              HNS_POSTOBC_TRAINER_ID(653)
+#define TRAINER_KOGA_POSTOBC_HNS              HNS_POSTOBC_TRAINER_ID(654)
+#define TRAINER_BRUNO_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(655)
+#define TRAINER_KAREN_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(656)
+#define TRAINER_LANCE_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(657)
+#define TRAINER_RED_POSTOBC_HNS               HNS_POSTOBC_TRAINER_ID(658)
+#define TRAINER_MISTY_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(659)
+#define TRAINER_ERIKA_POSTOBC_HNS             HNS_POSTOBC_TRAINER_ID(660)
+
+#define TRAINERS_COUNT_HNS                       661
 #define MAX_TRAINERS_COUNT_HNS                   864
 
 #endif  // GUARD_CONSTANTS_OPPONENTS_HNS_H

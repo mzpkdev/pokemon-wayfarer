@@ -25,6 +25,24 @@ SOURCES = {
 }
 UTILITIES = {'MOVE_' + move for move in (
     'CUT', 'FLASH', 'SURF', 'STRENGTH', 'ROCK_SMASH', 'WATERFALL', 'WHIRLPOOL', 'DIVE')}
+UPSTREAM_DELTA = json.loads(Path(__file__).with_name('native_hm_upstream_delta.json').read_text())
+
+
+def with_upstream_moves(entries, mode, symbol, wayfarer=True):
+    """Apply the pinned upstream move changes to the historical HM design input."""
+    result = [entry[:] for entry in entries]
+    changes = UPSTREAM_DELTA.get(mode, {}).get(symbol, {})
+    for entry in changes.get('removed', []):
+        result.remove(entry)
+    exclusions = (UPSTREAM_DELTA.get('wayfarer_exclusions', {}).get(mode, {}).get(symbol, {})
+                  if wayfarer else {})
+    for entry in changes.get('added', []):
+        if entry in exclusions.get('added', []):
+            continue
+        index = next((i for i, existing in enumerate(result) if existing[0] > entry[0]),
+                     len(result))
+        result.insert(index, entry[:])
+    return result
 
 
 def preprocess(source, wayfarer=False, content=None):
@@ -65,6 +83,11 @@ class NativeHmWindowsDataTest(unittest.TestCase):
         for mode, count in [('modern', 137), ('legacy', 147)]:
             self.assertEqual(sum(len(row['modes'][mode]['added']) for row in self.roster), count)
 
+    def test_upstream_delta_preserves_utility_assignments(self):
+        for symbol, changes in UPSTREAM_DELTA['modern'].items():
+            for entry in changes['removed'] + changes['added']:
+                self.assertNotIn(entry[1], UTILITIES, (symbol, entry))
+
     def test_complete_ordered_roster_and_native_preservation(self):
         assignments = {}
         for move, species in self.proposal['moves'].items():
@@ -91,7 +114,8 @@ class NativeHmWindowsDataTest(unittest.TestCase):
                     self.assertEqual(row['modes'][mode]['added'],
                                      {move: level for level, move in additions})
                     actual = self.production[mode][source[mode + '_symbol']]
-                    self.assertEqual(actual, expected)
+                    self.assertEqual(actual, with_upstream_moves(
+                        expected, mode, source[mode + '_symbol']))
                     for _, move in additions:
                         self.assertEqual(sum(m == move for _, m in actual), 1)
             self.assertLessEqual(len(roles), 2, species)
@@ -128,7 +152,8 @@ class NativeHmWindowsDataTest(unittest.TestCase):
                     tables = preprocess(self.sources[mode], content=content)
                     canonical = json.dumps(tables, sort_keys=True, separators=(',', ':')).encode()
                     self.assertEqual(hashlib.sha256(canonical).hexdigest(),
-                                     record['standalone_sha256'][content or 'NONE'])
+                                     (UPSTREAM_DELTA['modern_standalone_sha256'] if mode == 'modern'
+                                      else record['standalone_sha256'])[content or 'NONE'])
 
     def test_evolution_paths_use_at_most_two_utility_types(self):
         edges = {}
@@ -202,7 +227,8 @@ class NativeHmWindowsDataTest(unittest.TestCase):
             for species, record in self.baseline.items():
                 symbol = record[mode + '_symbol']
                 if symbol in native:
-                    self.assertEqual(native[symbol], record[mode], (mode, species))
+                    self.assertEqual(native[symbol], with_upstream_moves(
+                        record[mode], mode, symbol, wayfarer=False), (mode, species))
 
 
 if __name__ == '__main__':

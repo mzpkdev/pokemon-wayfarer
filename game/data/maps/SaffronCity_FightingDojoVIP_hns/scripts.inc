@@ -39,6 +39,14 @@ SaffronCity_FightingDojoVIP_EventScript_Falkner::
 	msgbox SaffronCity_FightingDojoVIP_Text_Falkner_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Falkner_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Falkner_Rematch::
 	trainerbattle_no_intro TRAINER_FALKNER_2_HNS, SaffronCity_FightingDojoVIP_Text_Falkner_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -48,12 +56,32 @@ SaffronCity_FightingDojoVIP_EventScript_Falkner::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Falkner_PostOBC::
+	trainerbattle_no_intro TRAINER_FALKNER_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Falkner_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Bugsy::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Bugsy_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Bugsy_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Bugsy_Rematch::
 	trainerbattle_no_intro TRAINER_BUGSY_2_HNS, SaffronCity_FightingDojoVIP_Text_Bugsy_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -63,12 +91,32 @@ SaffronCity_FightingDojoVIP_EventScript_Bugsy::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Bugsy_PostOBC::
+	trainerbattle_no_intro TRAINER_BUGSY_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Bugsy_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Whitney::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Whitney_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Whitney_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Whitney_Rematch::
 	trainerbattle_no_intro TRAINER_WHITNEY_2_HNS, SaffronCity_FightingDojoVIP_Text_Whitney_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -78,12 +126,32 @@ SaffronCity_FightingDojoVIP_EventScript_Whitney::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Whitney_PostOBC::
+	trainerbattle_no_intro TRAINER_WHITNEY_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Whitney_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Morty::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Morty_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Morty_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Morty_Rematch::
 	trainerbattle_no_intro TRAINER_MORTY_2_HNS, SaffronCity_FightingDojoVIP_Text_Morty_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -93,12 +161,32 @@ SaffronCity_FightingDojoVIP_EventScript_Morty::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Morty_PostOBC::
+	trainerbattle_no_intro TRAINER_MORTY_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Morty_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Chuck::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Chuck_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Chuck_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Chuck_Rematch::
 	trainerbattle_no_intro TRAINER_CHUCK_2_HNS, SaffronCity_FightingDojoVIP_Text_Chuck_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -108,12 +196,32 @@ SaffronCity_FightingDojoVIP_EventScript_Chuck::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Chuck_PostOBC::
+	trainerbattle_no_intro TRAINER_CHUCK_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Chuck_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Jasmine::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Jasmine_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Jasmine_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Jasmine_Rematch::
 	trainerbattle_no_intro TRAINER_JASMINE_2_HNS, SaffronCity_FightingDojoVIP_Text_Jasmine_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -123,12 +231,32 @@ SaffronCity_FightingDojoVIP_EventScript_Jasmine::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Jasmine_PostOBC::
+	trainerbattle_no_intro TRAINER_JASMINE_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Jasmine_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Pryce::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Pryce_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Pryce_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Pryce_Rematch::
 	trainerbattle_no_intro TRAINER_PRYCE_2_HNS, SaffronCity_FightingDojoVIP_Text_Pryce_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -138,12 +266,32 @@ SaffronCity_FightingDojoVIP_EventScript_Pryce::
 	release
 	end
 
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Pryce_PostOBC::
+	trainerbattle_no_intro TRAINER_PRYCE_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Pryce_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 SaffronCity_FightingDojoVIP_EventScript_Clair::
 	lock
 	faceplayer
 	msgbox SaffronCity_FightingDojoVIP_Text_Clair_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Clair_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Clair_Rematch::
 	trainerbattle_no_intro TRAINER_CLAIR_2_HNS, SaffronCity_FightingDojoVIP_Text_Clair_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
@@ -153,13 +301,9 @@ SaffronCity_FightingDojoVIP_EventScript_Clair::
 	release
 	end
 
-SaffronCity_FightingDojoVIP_EventScript_Brock::
-	lock
-	faceplayer
-	msgbox SaffronCity_FightingDojoVIP_Text_Brock_Rematch, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
-	closemessage
-	trainerbattle_no_intro TRAINER_BROCK_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Brock_RematchDefeat
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Clair_PostOBC::
+	trainerbattle_no_intro TRAINER_CLAIR_OBC_HNS, SaffronCity_FightingDojoVIP_Text_Clair_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -167,6 +311,46 @@ SaffronCity_FightingDojoVIP_EventScript_Brock::
 	closemessage
 	release
 	end
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Brock::
+	lock
+	faceplayer
+	msgbox SaffronCity_FightingDojoVIP_Text_Brock_Rematch, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
+	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Brock_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Brock_Rematch::
+#if IS_WAYFARER
+	trainerbattle_no_intro TRAINER_BROCK_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Brock_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_BROCK_HNS, SaffronCity_FightingDojoVIP_Text_Brock_RematchDefeat
+#endif
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Brock_PostOBC::
+	trainerbattle_no_intro TRAINER_BROCK_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Brock_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Misty::
 	lock
@@ -174,7 +358,19 @@ SaffronCity_FightingDojoVIP_EventScript_Misty::
 	msgbox SaffronCity_FightingDojoVIP_Text_Misty_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Misty_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Misty_Rematch::
+#if IS_WAYFARER
 	trainerbattle_no_intro TRAINER_MISTY_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Misty_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_MISTY_HNS, SaffronCity_FightingDojoVIP_Text_Misty_RematchDefeat
+#endif
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -182,6 +378,18 @@ SaffronCity_FightingDojoVIP_EventScript_Misty::
 	closemessage
 	release
 	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Misty_PostOBC::
+	trainerbattle_no_intro TRAINER_MISTY_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Misty_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Surge::
 	lock
@@ -189,7 +397,19 @@ SaffronCity_FightingDojoVIP_EventScript_Surge::
 	msgbox SaffronCity_FightingDojoVIP_Text_Surge_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Surge_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Surge_Rematch::
+#if IS_WAYFARER
 	trainerbattle_no_intro TRAINER_LTSURGE_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Surge_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_LTSURGE_HNS, SaffronCity_FightingDojoVIP_Text_Surge_RematchDefeat
+#endif
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -197,6 +417,18 @@ SaffronCity_FightingDojoVIP_EventScript_Surge::
 	closemessage
 	release
 	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Surge_PostOBC::
+	trainerbattle_no_intro TRAINER_LTSURGE_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Surge_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Erika::
 	lock
@@ -204,7 +436,19 @@ SaffronCity_FightingDojoVIP_EventScript_Erika::
 	msgbox SaffronCity_FightingDojoVIP_Text_Erika_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Erika_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Erika_Rematch::
+#if IS_WAYFARER
 	trainerbattle_no_intro TRAINER_ERIKA_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Erika_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_ERIKA_HNS, SaffronCity_FightingDojoVIP_Text_Erika_RematchDefeat
+#endif
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -212,6 +456,18 @@ SaffronCity_FightingDojoVIP_EventScript_Erika::
 	closemessage
 	release
 	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Erika_PostOBC::
+	trainerbattle_no_intro TRAINER_ERIKA_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Erika_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Janine::
 	lock
@@ -219,7 +475,19 @@ SaffronCity_FightingDojoVIP_EventScript_Janine::
 	msgbox SaffronCity_FightingDojoVIP_Text_Janine_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Janine_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Janine_Rematch::
+#if IS_WAYFARER
 	trainerbattle_no_intro TRAINER_JANINE_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Janine_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_JANINE_HNS, SaffronCity_FightingDojoVIP_Text_Janine_RematchDefeat
+#endif
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -227,6 +495,18 @@ SaffronCity_FightingDojoVIP_EventScript_Janine::
 	closemessage
 	release
 	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Janine_PostOBC::
+	trainerbattle_no_intro TRAINER_JANINE_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Janine_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Sabrina::
 	lock
@@ -234,7 +514,19 @@ SaffronCity_FightingDojoVIP_EventScript_Sabrina::
 	msgbox SaffronCity_FightingDojoVIP_Text_Sabrina_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Sabrina_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Sabrina_Rematch::
+#if IS_WAYFARER
 	trainerbattle_no_intro TRAINER_SABRINA_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Sabrina_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_SABRINA_HNS, SaffronCity_FightingDojoVIP_Text_Sabrina_RematchDefeat
+#endif
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -242,6 +534,18 @@ SaffronCity_FightingDojoVIP_EventScript_Sabrina::
 	closemessage
 	release
 	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Sabrina_PostOBC::
+	trainerbattle_no_intro TRAINER_SABRINA_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Sabrina_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Blaine::
 	lock
@@ -249,7 +553,19 @@ SaffronCity_FightingDojoVIP_EventScript_Blaine::
 	msgbox SaffronCity_FightingDojoVIP_Text_Blaine_Rematch, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Blaine_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Blaine_Rematch::
+#if IS_WAYFARER
 	trainerbattle_no_intro TRAINER_BLAINE_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Blaine_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_BLAINE_HNS, SaffronCity_FightingDojoVIP_Text_Blaine_RematchDefeat
+#endif
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -258,13 +574,9 @@ SaffronCity_FightingDojoVIP_EventScript_Blaine::
 	release
 	end
 
-SaffronCity_FightingDojoVIP_EventScript_Blue::
-	lock
-	faceplayer
-	msgbox SaffronCity_FightingDojoVIP_Text_Blue_Rematch, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
-	closemessage
-	trainerbattle_no_intro TRAINER_BLUE_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Blue_RematchDefeat
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Blaine_PostOBC::
+	trainerbattle_no_intro TRAINER_BLAINE_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Blaine_RematchDefeat
 	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
 	waitmovement 0
 	givebp 10
@@ -272,6 +584,46 @@ SaffronCity_FightingDojoVIP_EventScript_Blue::
 	closemessage
 	release
 	end
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Blue::
+	lock
+	faceplayer
+	msgbox SaffronCity_FightingDojoVIP_Text_Blue_Rematch, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, SaffronCity_FightingDojoVIP_EventScript_Declined
+	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, SaffronCity_FightingDojoVIP_EventScript_Blue_Rematch
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC
+	goto_if_set FLAG_USED_TELEPORTER, SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC
+#endif
+
+SaffronCity_FightingDojoVIP_EventScript_Blue_Rematch::
+#if IS_WAYFARER
+	trainerbattle_no_intro TRAINER_BLUE_DOJO_HNS, SaffronCity_FightingDojoVIP_Text_Blue_RematchDefeat
+#else
+	trainerbattle_no_intro TRAINER_BLUE_HNS, SaffronCity_FightingDojoVIP_Text_Blue_RematchDefeat
+#endif
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+#if !IS_WAYFARER
+SaffronCity_FightingDojoVIP_EventScript_Blue_PostOBC::
+	trainerbattle_no_intro TRAINER_BLUE_POSTOBC_HNS, SaffronCity_FightingDojoVIP_Text_Blue_RematchDefeat
+	applymovement2 VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	givebp 10
+	msgbox BattleFrontier_Text_ObtainedXBattlePoints, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 @===============MONS===============================================================================================================
 

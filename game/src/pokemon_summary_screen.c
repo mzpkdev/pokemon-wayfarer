@@ -1887,7 +1887,11 @@ static void Task_HandleInput(u8 taskId)
         {
             ChangePage(taskId, 1);
         }
-        else if (JOY_NEW(A_BUTTON))
+        // L=A retains the physical L bit. Let Skills handle it as the EV shortcut.
+        else if (JOY_NEW(A_BUTTON)
+              && !(sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS
+                && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A
+                && JOY_NEW(L_BUTTON)))
         {
             if (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES
                         || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES)

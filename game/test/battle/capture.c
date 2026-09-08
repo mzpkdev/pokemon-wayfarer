@@ -218,6 +218,8 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
     }
 
     GIVEN {
+        // This checks stored ball identity, so keep every ball's capture odds positive.
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -230,5 +232,27 @@ WILD_BATTLE_TEST("Capture: ball data is properly set in captured pokemon")
         }
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_POKEBALL), GetItemSecondaryId(item));
+    }
+}
+
+WILD_BATTLE_TEST("Capture: zero odds cannot catch even on the lowest shake roll")
+{
+    u32 species;
+    u32 recordedOdds;
+
+    PARAMETRIZE(species = SPECIES_WOBBUFFET);
+    PARAMETRIZE(species = SPECIES_BELDUM);
+
+    GIVEN {
+        WITH_CONFIG(B_MISSING_BADGE_CATCH_MALUS, GEN_9);
+        PLAYER(SPECIES_WOBBUFFET) { Level(100); }
+        OPPONENT(species) { Level(100); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_HEAVY_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
+    } SCENE {
+        CATCHING_CHANCE(&recordedOdds);
+    } THEN {
+        EXPECT_EQ(recordedOdds, 0);
+        EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_NONE);
     }
 }

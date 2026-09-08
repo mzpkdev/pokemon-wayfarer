@@ -1,0 +1,223 @@
+{
+  "upstream_base": "93c5eee2ab",
+  "upstream_commit": "8cb27a9fb01a0f80063c6285fa5805ae9c594329",
+  "modern": {
+    "sPolitoedLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          1,
+          "MOVE_EARTH_POWER"
+        ]
+      ]
+    },
+    "sElectrodeLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          56,
+          "MOVE_FLASH_CANNON"
+        ]
+      ]
+    },
+    "sElectivireLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          63,
+          "MOVE_VOLT_TACKLE"
+        ]
+      ]
+    },
+    "sTaurosLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          50,
+          "MOVE_BLAZE_KICK"
+        ]
+      ]
+    },
+    "sCyndaquilLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          20,
+          "MOVE_MUD_SHOT"
+        ],
+        [
+          25,
+          "MOVE_ROLLOUT"
+        ]
+      ]
+    },
+    "sQuilavaLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          21,
+          "MOVE_MUD_SHOT"
+        ],
+        [
+          27,
+          "MOVE_ROLLOUT"
+        ]
+      ]
+    },
+    "sTyphlosionLevelUpLearnset": {
+      "removed": [
+        [
+          61,
+          "MOVE_ROLLOUT"
+        ],
+        [
+          69,
+          "MOVE_DOUBLE_EDGE"
+        ],
+        [
+          74,
+          "MOVE_BURN_UP"
+        ],
+        [
+          82,
+          "MOVE_ERUPTION"
+        ]
+      ],
+      "added": [
+        [
+          21,
+          "MOVE_MUD_SHOT"
+        ],
+        [
+          27,
+          "MOVE_ROLLOUT"
+        ],
+        [
+          60,
+          "MOVE_DOUBLE_EDGE"
+        ],
+        [
+          64,
+          "MOVE_BURN_UP"
+        ],
+        [
+          72,
+          "MOVE_ERUPTION"
+        ]
+      ]
+    },
+    "sNoctowlLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          38,
+          "MOVE_HYPER_VOICE"
+        ]
+      ]
+    },
+    "sSwinubLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          15,
+          "MOVE_ICE_BALL"
+        ]
+      ]
+    },
+    "sPiloswineLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          15,
+          "MOVE_ICE_BALL"
+        ]
+      ]
+    },
+    "sMamoswineLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          42,
+          "MOVE_ICICLE_SPEAR"
+        ]
+      ]
+    },
+    "sSkarmoryLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          60,
+          "MOVE_DRILL_PECK"
+        ]
+      ]
+    },
+    "sHoundourLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          21,
+          "MOVE_FLAME_BURST"
+        ]
+      ]
+    },
+    "sHoundoomLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          21,
+          "MOVE_FLAME_BURST"
+        ]
+      ]
+    },
+    "sDonphanLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          41,
+          "MOVE_RAPID_SPIN"
+        ],
+        [
+          52,
+          "MOVE_PLAY_ROUGH"
+        ]
+      ]
+    },
+    "sMiltankLevelUpLearnset": {
+      "removed": [],
+      "added": [
+        [
+          45,
+          "MOVE_PLAY_ROUGH"
+        ]
+      ]
+    }
+  },
+  "modern_standalone_sha256": {
+    "HNS": "19df9f6de2631eaa5a53fff450fb8d3e0cf4b2a5b64c4df336a774a3a1bc56f0",
+    "EMERALD": "fff7d0748ee5884d0a39f3b61f4007a452a3b594e7cef4390e584f71e94aca5d",
+    "FRLG": "06c228e3134094813a96813243b2d9faa171788d115b187f33d3415854e1c628",
+    "NONE": "bb93137826c7bc100cb94971f3517c1fccff0d245b28b7c1ed5bda229aecd912"
+  },
+  "wayfarer_exclusions": {
+    "modern": {
+      "sDonphanLevelUpLearnset": {
+        "added": [
+          [
+            52,
+            "MOVE_PLAY_ROUGH"
+          ]
+        ],
+        "reason": "Preserve approved Strength catch levels 52 through 100."
+      },
+      "sTaurosLevelUpLearnset": {
+        "added": [
+          [
+            50,
+            "MOVE_BLAZE_KICK"
+          ]
+        ],
+        "reason": "Preserve approved Strength catch levels 55 through 62."
+      }
+    }
+  }
+}

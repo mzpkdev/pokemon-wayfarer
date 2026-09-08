@@ -76,8 +76,9 @@ class Model:
             for species, source in baseline.items():
                 entries = tables[source[mode + '_symbol']]
                 row = self.roster.get(species)
-                if row and entries != row['modes'][mode]['entries']:
-                    raise g.ValidationError(f'{species}/{mode}: production learnset differs from approved roster')
+                if row and entries != helper.with_upstream_moves(
+                        row['modes'][mode]['entries'], mode, source[mode + '_symbol']):
+                    raise g.ValidationError(f'{species}/{mode}: production learnset differs from approved roster plus pinned upstream delta')
                 for level in range(1, 101):
                     moves = []
                     for learned, move in entries:
@@ -192,7 +193,7 @@ def build_report():
         'productionAcceptance': {'status': 'RUN_SEPARATELY', 'test': 'game/test/native_hm_catch_coverage.c',
                                  'fixtures': 'game/test/data/native_hm_coverage.h'},
         'assumptions': ['Uniform authored-level and eligible-slot rolls; runtime modulo bias, lures and lead modifiers excluded.',
-                        'Known moves are modeled from preprocessed production learnsets, checked against the approved roster; C initial-moveset tests must pass independently.',
+                        'Known moves are modeled from preprocessed production learnsets, checked against the approved roster plus pinned upstream move delta; C initial-moveset tests must pass independently.',
                         'Reachability and return paths follow the reviewed directional inventory; this is not an E2E route proof.',
                         'Rod and capture supplies are prerequisites. Blackthorn and Den mandatory proofs use local rank-zero sources only.',
                         'Hoenn static day populations serve both clock cases. Good and Super Rod require nonzero coverage; the 8% floor applies to Old Rod or land.'],
@@ -204,6 +205,7 @@ def build_report():
         'sourceSha256': {str(p.relative_to(g.ROOT.parent)): digest(p) for p in
                          (g.DEFAULT_ENCOUNTERS, g.DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS, g.DEFAULT_SCALING,
                           g.DEFAULT_SPECIES_METADATA, g.DEFAULT_STANDARD_ROD_FISHING, REVISION / 'roster.json', REVISION / 'scenarios.json',
+                          LEARNSET_HELPER.with_name('native_hm_upstream_delta.json'),
                           g.ROOT / 'src/data/pokemon/level_up_learnsets/gen_7.h', g.ROOT / 'src/data/pokemon/level_up_learnsets/gen_3.h')},
         'encounterReplacements': model.replacements,
         'qualityWeights': model.rods['qualityWeights'],
