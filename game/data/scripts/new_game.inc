@@ -326,6 +326,9 @@ EventScript_ResetAllMapFlags::
 	call EventScript_ResetAllBerries
 	end
 
+#if IS_WAYFARER
+	.include "data/wayfarer_engine_source_constants.inc"
+#endif
 #if IS_HNS
 EventScript_ResetAllMapFlagsHnS::
 	setflag FLAG_HIDE_BATTLE_TOWER_OPPONENT
@@ -485,6 +488,9 @@ EventScript_ResetAllMapFlagsHnS::
 	end
 #endif
 
+#if IS_WAYFARER
+	.include "data/wayfarer_common_source_constants.inc"
+#endif
 #if IS_FRLG
 EventScript_ResetAllMapFlagsFrlg::
 	setflag FLAG_HIDE_OAK_IN_HIS_LAB
@@ -538,4 +544,18 @@ EventScript_ResetAllMapFlagsFrlg::
 	setflag FLAG_HIDE_SAFFRON_CITY_POKECENTER_SABRINA_JOURNALS
 	setvar VAR_MASSAGE_COOLDOWN_STEP_COUNTER, 500
 	end
+#endif
+
+#if IS_WAYFARER && TESTING
+Test_WayfarerOrigin_InterceptScene::
+    setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+    specialvar VAR_RESULT, WayfarerDispatchOriginScene
+    goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, Test_WayfarerOrigin_InterceptEnd
+    setvar VAR_UNUSED_HNS_0x40FD, 1
+Test_WayfarerOrigin_InterceptEnd:
+    end
+
+Test_WayfarerOrigin_AuthoredScene::
+    setvar VAR_UNUSED_HNS_0x40FE, 2
+    end
 #endif

@@ -29,6 +29,9 @@
 #include "string_util.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_origin.h"
+#include "oak_speech_hns.h"
+#include "starter_choose.h"
 #include "wild_encounter.h"
 #include "constants/field_effects.h"
 #include "constants/flags.h"
@@ -45,7 +48,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 10,
+    .version = 12,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -59,7 +62,7 @@ STATIC_ASSERT(sizeof(struct E2ETestRequest) == 432, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 356, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 384, E2ETestStateSize);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -482,6 +485,18 @@ static bool32 ResolveCheckpoint(void)
         sX = 6;
         sY = 8;
         break;
+    case E2E_TEST_CHECKPOINT_HOENN_BEFORE_RESCUE:
+    case E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE:
+    case E2E_TEST_CHECKPOINT_HOENN_BEFORE_POISON_WHITEOUT:
+#if IS_WAYFARER
+        sMapGroup = MAP_GROUP(MAP_ROUTE101);
+        sMapNum = MAP_NUM(MAP_ROUTE101);
+        sX = 9;
+        sY = 19;
+        break;
+#else
+        return FALSE;
+#endif
     default:
         return FALSE;
     }
@@ -661,6 +676,7 @@ static enum E2ETestError ValidateRequest(void)
     switch (sRequest.command)
     {
     case E2E_TEST_COMMAND_ARRANGE:
+    case E2E_TEST_COMMAND_WARP:
         return ValidateArrangeRequest();
     case E2E_TEST_COMMAND_START_WILD_BATTLE:
         if (ValidateMonFixture(&sRequest.wildMon, FALSE) != E2E_TEST_ERROR_NONE)
@@ -668,10 +684,13 @@ static enum E2ETestError ValidateRequest(void)
         if (sRequest.wildMon.isEgg)
             return E2E_TEST_ERROR_PARTY;
         return E2E_TEST_ERROR_NONE;
+    case E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY:
+        return sRequest.mapGroup <= 1 ? E2E_TEST_ERROR_NONE : E2E_TEST_ERROR_PC_SLOT;
     case E2E_TEST_COMMAND_SAVE:
     case E2E_TEST_COMMAND_OBSERVE_REGION_MAP:
     case E2E_TEST_COMMAND_OBSERVE_REGION_MAP_SECTION:
     case E2E_TEST_COMMAND_WIN_BATTLE:
+    case E2E_TEST_COMMAND_LOSE_BATTLE:
     case E2E_TEST_COMMAND_OBSERVE_FLAG:
         return E2E_TEST_ERROR_NONE;
     default:
@@ -682,7 +701,8 @@ static enum E2ETestError ValidateRequest(void)
 static void ApplyCheckpointDefaults(void)
 {
     StringCopy(gSaveBlock2Ptr->playerName, sDefaultPlayerName);
-    gSaveBlock2Ptr->playerGender = MALE;
+    gSaveBlock2Ptr->playerGender = sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE
+        ? FEMALE : MALE;
 
     switch (sRequest.checkpoint)
     {
@@ -691,6 +711,12 @@ static void ApplyCheckpointDefaults(void)
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
         break;
     case E2E_TEST_CHECKPOINT_NEW_BARK_AFTER_INTRO:
+        VarSet(VAR_NEWBARK_TOWN_STATE, 2);
+        VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
+#if IS_WAYFARER
+        FlagSet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED);
+#endif
+        break;
     case E2E_TEST_CHECKPOINT_ELM_LAB_BEFORE_INTRO:
         VarSet(VAR_NEWBARK_TOWN_STATE, 2);
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
@@ -719,6 +745,18 @@ static bool32 ApplyOverrides(void)
         SeedRng2(sRequest.rngSeed);
     }
     ApplyPartyFixtures();
+    if (sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_BEFORE_POISON_WHITEOUT)
+    {
+        u16 hp = 1;
+        u32 status = STATUS1_POISON;
+
+        gSaveBlock3Ptr->challengeSettings.tx_Mode_PoisonSurvive = 0;
+        for (i = 0; i < gPlayerPartyCount; i++)
+        {
+            SetMonData(&gPlayerParty[i], MON_DATA_HP, &hp);
+            SetMonData(&gPlayerParty[i], MON_DATA_STATUS, &status);
+        }
+    }
     if (!ApplyBagFixtures())
         return FALSE;
     sObservedBagItemCount = sRequest.bagItemCount;
@@ -786,7 +824,8 @@ static void BeginRequest(void)
         return;
     }
 
-    if (sRequest.command == E2E_TEST_COMMAND_WIN_BATTLE)
+    if (sRequest.command == E2E_TEST_COMMAND_WIN_BATTLE
+     || sRequest.command == E2E_TEST_COMMAND_LOSE_BATTLE)
     {
         if (!gMain.inBattle)
         {
@@ -794,7 +833,10 @@ static void BeginRequest(void)
             return;
         }
 
-        BattleDebug_WonBattle();
+        if (sRequest.command == E2E_TEST_COMMAND_LOSE_BATTLE)
+            BattleDebug_LostBattle();
+        else
+            BattleDebug_WonBattle();
         gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
         PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
         return;
@@ -803,6 +845,61 @@ static void BeginRequest(void)
     if (gMain.inBattle || IsStorageStateMachineActive())
     {
         FailRequest(E2E_TEST_ERROR_BUSY);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY)
+    {
+        struct Pokemon mon;
+        struct BoxPokemon empty = {0};
+        const struct E2ETestMonFixture fixture = {
+            .species = SPECIES_PIDGEY, .moves = {MOVE_TACKLE}, .level = 5,
+        };
+        u32 box, slot;
+
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+        if (sRequest.mapGroup)
+        {
+            while (gPlayerPartyCount < PARTY_SIZE)
+            {
+                CreateFixtureMon(&gPlayerParty[gPlayerPartyCount], &fixture, gPlayerPartyCount + 100, FALSE);
+                gPlayerPartyCount++;
+            }
+            CreateFixtureMon(&mon, &fixture, 200, FALSE);
+            for (box = 0; box < TOTAL_BOXES_COUNT; box++)
+                for (slot = 0; slot < IN_BOX_COUNT; slot++)
+                    SetBoxMonAt(box, slot, &mon.box);
+        }
+        else
+        {
+            SetBoxMonAt(0, 0, &empty);
+            VarSet(VAR_PC_BOX_TO_SEND_MON, 0);
+            sObservedPcSlotCount = 1;
+            sObservedPcSlots[0].boxId = 0;
+            sObservedPcSlots[0].boxPosition = 0;
+        }
+        sMapGroup = gSaveBlock1Ptr->location.mapGroup;
+        sMapNum = gSaveBlock1Ptr->location.mapNum;
+        sX = gSaveBlock1Ptr->pos.x;
+        sY = gSaveBlock1Ptr->pos.y;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_WARP)
+    {
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+        gE2ETestRequest.status = E2E_TEST_STATUS_RUNNING;
+        StartWarp();
         return;
     }
 
@@ -912,6 +1009,15 @@ static void BeginRequest(void)
 
     gE2ETestRequest.status = E2E_TEST_STATUS_RUNNING;
     PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_NEW_GAME, E2E_TEST_ERROR_NONE);
+    gSaveBlock2Ptr->playerGender = sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE
+        ? FEMALE : MALE;
+#if IS_WAYFARER
+    WayfarerResetPendingOrigin();
+    WayfarerConfirmPendingOrigin(sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_BEFORE_RESCUE
+        || sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE
+        || sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_BEFORE_POISON_WHITEOUT
+        ? ORIGIN_LITTLEROOT : ORIGIN_NEW_BARK);
+#endif
     SetMainCallback2(CB2_NewGame);
     sStage = E2E_TEST_STAGE_WAIT_NEW_GAME;
 }
@@ -948,6 +1054,17 @@ static void UpdateRequest(void)
         StartWarp();
         break;
     case E2E_TEST_STAGE_WAIT_FIELD:
+        if (sRequest.command == E2E_TEST_COMMAND_WARP
+         && gMain.callback1 == CB1_Overworld && gMain.callback2 == CB2_Overworld
+         && gSaveBlock1Ptr->location.mapGroup == sMapGroup
+         && gSaveBlock1Ptr->location.mapNum == sMapNum
+         && ScriptContext_IsEnabled())
+        {
+            sStage = E2E_TEST_STAGE_IDLE;
+            gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+            PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_FIELD_READY, E2E_TEST_ERROR_NONE);
+            break;
+        }
         if (!IsSettledOverworld()
          || gSaveBlock1Ptr->location.mapGroup != sMapGroup
          || gSaveBlock1Ptr->location.mapNum != sMapNum)
@@ -1003,6 +1120,11 @@ static void UpdateState(void)
     bool8 storageMovingMon;
     u8 trainerCardState;
 
+    gE2ETestState.starterChooseStage = E2ETest_GetStarterChooseStage();
+    gE2ETestState.originIntroStage = 0;
+#if IS_WAYFARER
+    gE2ETestState.originIntroStage = E2ETest_GetOriginIntroStage();
+#endif
     gE2ETestState.frame++;
     gE2ETestState.phase = E2E_TEST_GAME_PHASE_BOOT;
     gE2ETestState.ready = FALSE;
@@ -1123,6 +1245,27 @@ static void UpdateState(void)
 #if IS_WAYFARER
     if (gSaveBlock3Ptr != NULL)
     {
+        gE2ETestState.startingOriginId = WayfarerGetStartingOriginId();
+        gE2ETestState.johtoStarterChoice = VarGet(VAR_STARTER_MON);
+        gE2ETestState.hoennStarterChoice = VarGet(VAR_HOENN_STARTER_CHOICE);
+        gE2ETestState.maidenVoyageState = VarGet(VAR_SSAQUA_STATE);
+        gE2ETestState.originCurrentRegion = WayfarerGetSavedCurrentRegion();
+        gE2ETestState.originVisitedRegions = GetRegionVisitedState(REGION_KANTO)
+            | (GetRegionVisitedState(REGION_JOHTO) << 1)
+            | (GetRegionVisitedState(REGION_HOENN) << 2);
+        gE2ETestState.originHoennInitialized = WayfarerHoennStateIsInitialized();
+        gE2ETestState.johtoStarterCommitted = FlagGet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED);
+        gE2ETestState.johtoStarterReceived = FlagGet(FLAG_JOHTO_STARTER_RECEIVED);
+        gE2ETestState.hoennStarterReceived = FlagGet(FLAG_HOENN_STARTER_RECEIVED);
+        gE2ETestState.lastHealMapGroup = gSaveBlock1Ptr->lastHealLocation.mapGroup;
+        gE2ETestState.lastHealMapNum = gSaveBlock1Ptr->lastHealLocation.mapNum;
+        gE2ETestState.lastHealWarpId = gSaveBlock1Ptr->lastHealLocation.warpId;
+        gE2ETestState.lastHealX = gSaveBlock1Ptr->lastHealLocation.x;
+        gE2ETestState.lastHealY = gSaveBlock1Ptr->lastHealLocation.y;
+        gE2ETestState.playerGender = gSaveBlock2Ptr->playerGender;
+        gE2ETestState.originEquipment = FlagGet(FLAG_RECEIVED_RUNNING_SHOES)
+            | (FlagGet(FLAG_SYS_POKEDEX_GET) << 1);
+        gE2ETestState.littlerootTownState = VarGet(HOENN_VAR_ID(VAR_LITTLEROOT_TOWN_STATE));
         gE2ETestState.leagueRunActive = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active;
         gE2ETestState.leagueRunRegion = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.region;
         gE2ETestState.leagueRunRating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;

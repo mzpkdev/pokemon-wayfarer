@@ -6,6 +6,7 @@
 #include "regions.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_origin.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
@@ -19,6 +20,7 @@
 
 #if IS_WAYFARER
 extern const u8 WayfarerHoennEntry_EventScript_InitializeBaseline[];
+extern const u8 WayfarerHoennVisitor_EventScript_InitializeArrival[];
 
 static bool8 IsWayfarerCoreRegion(enum Region region)
 {
@@ -131,21 +133,22 @@ void WayfarerInitPersistentState(void)
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
-    gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 1 << REGION_JOHTO;
+    gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 0;
     VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
     FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));
 #endif
 }
 
-void WayfarerInitPersistentStateFromSavedMap(void)
+bool8 WayfarerPersistentStateIsValid(void)
 {
 #if IS_WAYFARER
-    enum Region savedMapRegion = GetRegionFromSavedMap();
-    WayfarerInitPersistentState();
-    gSaveBlock3Ptr->wayfarerHoenn.currentRegion = savedMapRegion;
-    if (savedMapRegion == REGION_KANTO || savedMapRegion == REGION_JOHTO)
-        gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = savedMapRegion;
-    gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << savedMapRegion;
+    return gSaveBlock3Ptr->wayfarerHoenn.magic == WAYFARER_HOENN_STATE_MAGIC
+        && WayfarerGetOriginProfile(WayfarerGetStartingOriginId()) != NULL
+        && GetHealLocation(gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation) != NULL
+        && gSaveBlock3Ptr->wayfarerHoenn.initialized <= TRUE
+        && (!WayfarerUsesNativeHoennOpening() || gSaveBlock3Ptr->wayfarerHoenn.initialized == TRUE);
+#else
+    return TRUE;
 #endif
 }
 
@@ -154,15 +157,8 @@ void WayfarerValidatePersistentState(void)
 #if IS_WAYFARER
     enum Region savedMapRegion = GetRegionFromSavedMap();
 
-    if (gSaveBlock3Ptr->wayfarerHoenn.magic != WAYFARER_HOENN_STATE_MAGIC)
-    {
-        WayfarerInitPersistentStateFromSavedMap();
-        LeagueRunValidateSavedLocation();
+    if (!WayfarerPersistentStateIsValid())
         return;
-    }
-
-    if (gSaveBlock3Ptr->wayfarerHoenn.initialized > TRUE)
-        gSaveBlock3Ptr->wayfarerHoenn.initialized = FALSE;
 
     if (!IsWayfarerCoreRegion(gSaveBlock3Ptr->wayfarerHoenn.currentRegion))
         gSaveBlock3Ptr->wayfarerHoenn.currentRegion = savedMapRegion;
@@ -221,6 +217,7 @@ void WayfarerSetSavedCurrentRegion(enum Region region)
     if (region == REGION_KANTO || region == REGION_JOHTO)
         gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = region;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << region;
+    SetRegionVisitedState(region, TRUE);
 #endif
 }
 
@@ -351,6 +348,7 @@ static bool8 PrepareWayfarerHoennEntryAt(s16 mapGroup, s16 mapNum, s16 x, s16 y,
         // It establishes only Emerald's pre-campaign object visibility and
         // deliberately does not initialize the shared HNS berry state.
         RunScriptImmediately(WayfarerHoennEntry_EventScript_InitializeBaseline);
+        RunScriptImmediately(WayfarerHoennVisitor_EventScript_InitializeArrival);
         VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
         FlagClear(FLAG_HOENN_STARTER_RECEIVED);
         SetRegionVisitedState(REGION_HOENN, TRUE);
@@ -619,7 +617,7 @@ bool8 GetRegionVisitedState(enum Region region)
 {
 #if IS_WAYFARER
     if (region == REGION_JOHTO)
-        return TRUE;
+        return (gSaveBlock3Ptr->wayfarerHoenn.visitedRegions >> REGION_JOHTO) & 1;
     if (region == REGION_KANTO)
         return FlagGet(FLAG_VISITED_KANTO);
     if (region == REGION_HOENN)
@@ -648,12 +646,12 @@ void SetRegionVisitedState(enum Region region, bool8 value)
         else
             FlagClear(FLAG_VISITED_KANTO);
     }
-    else if (region == REGION_HOENN)
+    else if (region == REGION_HOENN || region == REGION_JOHTO)
     {
         if (value)
-            gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << REGION_HOENN;
+            gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << region;
         else
-            gSaveBlock3Ptr->wayfarerHoenn.visitedRegions &= ~(1 << REGION_HOENN);
+            gSaveBlock3Ptr->wayfarerHoenn.visitedRegions &= ~(1 << region);
     }
 #elif IS_HNS
     if (region == REGION_KANTO)

@@ -1,3 +1,5 @@
+#include "constants/wayfarer_origin.h"
+
 NewBarkTown_PlayersHouse_2F_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_PlayersHouse_2F_OnTransition
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, NewBarkTown_PlayersHouse_2F_OnWarp
@@ -17,6 +19,12 @@ NewBarkTown_PlayersHouse_2F_OnWarp_SetDecoration::
 	end
 
 NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger1::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_2F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_2F_VisitorSkip
+#endif
     lock
 	playse SE_PIN
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark
@@ -34,6 +42,12 @@ NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger1::
 	end
 
 NewBarkTown_PlayersHouse_2F_Script_ClockSetupTrigger2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_2F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_2F_VisitorSkip
+#endif
     lock
 	playse SE_PIN
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_ExclamationMark
@@ -86,3 +100,19 @@ NewBarkTown_PlayersHouse_2F_Text_NES:
     .string "{PLAYER} played with the NES.\p"
     .string "…Okay!\n"
     .string "It's time to go!$"
+
+#if IS_WAYFARER
+NewBarkTown_PlayersHouse_2F_VisitorSkip::
+	releaseall
+	end
+#endif
+
+NewBarkTown_PlayersHouse_2F_EventScript_WallClock::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_2F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, PlayersHouse_2F_EventScript_CheckWallClock
+#endif
+	goto LittlerootTown_BrendansHouse_2F_EventScript_WallClock
+	end

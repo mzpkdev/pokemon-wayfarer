@@ -396,8 +396,11 @@ def audit_menus_and_routes(game_root: Path) -> dict:
 
     wayfarer_root = wayfarer_index.reachable_text("VermilionPort_EventScript_Sailor")
     hns_root = hns_index.reachable_text("VermilionPort_EventScript_Sailor")
-    require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", wayfarer_root) is not None,
-            "Wayfarer Vermilion must gate its menu on completed voyage state")
+    require(re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*VermilionPort_EventScript_Sailor_AfterKanto", wayfarer_root) is not None,
+            "Wayfarer Vermilion must gate its menu on profile eligibility")
+    require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", hns_root) is not None
+            and "WayfarerCanUseRegularAqua" not in hns_root,
+            "standalone HNS Vermilion must retain its completed-voyage gate")
     require("MULTI_VERMILION_HARBOR" in wayfarer_root, "Wayfarer Vermilion does not use the guarded harbor menu")
     require("MAP_OLIVINE_CITY_PORT_INSIDE_HNS" not in wayfarer_root,
             "Wayfarer exposes a Vermilion-to-Olivine S.S. Aqua route")
@@ -427,8 +430,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     departure = wayfarer_index.reachable_text(slateport_label)
     state_pos = _position(
         departure,
-        r"goto_if_(?:lt|le|ne)\s+VAR_SSAQUA_STATE\s*,\s*8\s*,",
-        "Slateport selection must recheck completed voyage state",
+        r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
+        "Slateport selection must recheck profile eligibility",
     )
     ticket_pos = _position(
         departure,
@@ -444,7 +447,7 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     )
     require(
         re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b",
-                  departure[:failure_pos]) is None,
+                  re.sub(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua", "", departure[:failure_pos])) is None,
         "Slateport selection changes persistent or travel state before the ticket failure branch",
     )
     preflight_pos = _position(
@@ -482,12 +485,23 @@ def audit_menus_and_routes(game_root: Path) -> dict:
 
     standalone_olivine_index = ScriptIndex([(olivine_path, filter_product(raw_olivine, wayfarer=False))])
     olivine_root = olivine_index.reachable_text("OlivinePort_EventScript_Sailor")
-    require(
-        olivine_root == standalone_olivine_index.reachable_text("OlivinePort_EventScript_Sailor"),
-        "Wayfarer changed Olivine harbor behavior",
-    )
-    require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", olivine_root) is not None,
-            "Wayfarer Olivine does not retain its post-voyage menu")
+    standalone_olivine_root = standalone_olivine_index.reachable_text("OlivinePort_EventScript_Sailor")
+    require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", standalone_olivine_root) is not None
+            and "WayfarerCanUseRegularAqua" not in standalone_olivine_root
+            and "WayfarerCanUseAquaMaidenVoyage" not in standalone_olivine_root,
+            "standalone HNS Olivine must retain its native voyage gates")
+    require("WayfarerCanUseRegularAqua" in olivine_root,
+            "Wayfarer Olivine must query profile regular-service eligibility")
+    root_block = olivine_index.block("OlivinePort_EventScript_Sailor")
+    require(re.search(r"WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*OlivinePort_EventScript_Sailor_AfterKanto", root_block) is not None,
+            "eligible Olivine travelers must enter the regular menu")
+    require(re.search(r"WayfarerCanUseAquaMaidenVoyage\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*OlivinePort_EventScript_Sailor_CantBoard", root_block) is not None,
+            "Olivine must reject profiles that do not author the maiden voyage")
+    for label in ("OlivinePort_EventScript_Sailor_MaidenVoyage",
+                  "OlivinePort_EventScript_Sailor_ResumeMaidenVoyage",
+                  "OlivinePort_EventScript_Sailor_AfterKanto"):
+        require(olivine_index.reachable_text(label).split() == standalone_olivine_index.reachable_text(label).split(),
+                f"Wayfarer changed native voyage or destination behavior at {label}")
     require("checkitem ITEM_SS_TICKET" in olivine_root, "Olivine-to-Vermilion lost its ticket gate")
     require("MAP_VERMILION_CITY_PORT_INSIDE_HNS" in olivine_root,
             "Wayfarer Olivine lost its Vermilion route")
@@ -516,7 +530,7 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         },
         "departure": {
             "selectionLabel": slateport_label,
-            "voyageStateMinimum": 8,
+            "eligibilityPredicate": "WayfarerCanUseRegularAqua",
             "ticket": "ITEM_SS_TICKET",
             "ticketConsumed": False,
             "healBeforeWarp": respawn_pos < warp_pos,
@@ -672,8 +686,8 @@ def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
     aqua = harbor_index.reachable_text(SLATEPORT_AQUA_SCRIPT)
     state_pos = _position(
         aqua,
-        r"goto_if_lt\s+0x408B\s*,\s*8\s*,",
-        "Slateport Aqua attendant must recheck the HNS completed voyage state",
+        r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,",
+        "Slateport Aqua attendant must recheck profile eligibility",
     )
     ticket_pos = _position(
         aqua,
@@ -689,9 +703,24 @@ def audit_hoenn_ports_and_ticket(game_root: Path) -> dict:
     )
     require(
         re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b",
-                  aqua[:ticket_failure_pos]) is None,
+                  re.sub(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCan(?:UseRegularAqua|ReceiveSlateportTicket)", "", aqua[:ticket_failure_pos])) is None,
         "Slateport Aqua attendant changes persistent or travel state before its ticket failure branch",
     )
+    require("0x408B" not in aqua and "VAR_SSAQUA_STATE" not in aqua,
+            "Slateport must not access the HNS voyage bank directly")
+    root = harbor_index.block(SLATEPORT_AQUA_SCRIPT)
+    require(re.search(r"checkitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture", root) is not None,
+            "Slateport must skip its grant when the shared Ticket is already owned")
+    require(re.search(r"WayfarerCanReceiveSlateportTicket\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials", root) is not None,
+            "Slateport free Ticket must use the profile's handoff policy")
+    require(re.search(r"giveitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed", root) is not None,
+            "Slateport Ticket grant must stop on failure and remain retryable")
+    failed = harbor_index.block("WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed")
+    require(re.search(r"\b(?:warp|warpsilent|setflag|setvar|giveitem)\b", failed) is None
+            and "release" in failed and "end" in failed,
+            "failed Slateport Ticket delivery must leave the player at the port")
+    require("removeitem" not in aqua and "setflag" not in aqua and "setvar" not in aqua,
+            "Slateport circuit must preserve its Ticket and stock story milestones")
     confirmation_pos = _position(
         aqua,
         r"msgbox\s+WayfarerHoennEntry_Text_SlateportAquaToOlivine\s*,\s*MSGBOX_YESNO",
@@ -819,8 +848,23 @@ def audit_initialization(game_root: Path) -> dict:
             enclosing = _enclosing_function(source, marker.start())
             if enclosing is not None:
                 candidates.append((path, enclosing[0], enclosing[1], marker.group(0)))
-    require(len(candidates) == 1, f"expected one Hoenn entry initialization commit, found {len(candidates)}")
-    path, function, body, marker_text = candidates[0]
+    require(len(candidates) == 2, f"expected native and visitor Hoenn initialization commits, found {len(candidates)}")
+    commits = {entry[1]: entry for entry in candidates}
+    require(set(commits) == {"InitializeLittleroot", "PrepareWayfarerHoennEntryAt"},
+            "Hoenn initialization may only commit in the native profile or visitor entry")
+    native_path, native_function, native_body, native_marker = commits["InitializeLittleroot"]
+    require(native_path == game_root / "src/wayfarer_origin.c",
+            "native Hoenn initialization must be owned by the origin profile")
+    native_before, native_after = native_body.split(native_marker, 1)
+    require(native_after.strip() == ";", "native Hoenn initialized marker must be committed last")
+    require("RunScriptImmediately(WayfarerHoennOrigin_EventScript_InitializeBaseline)" in native_before,
+            "native Hoenn initialization must use its source-fixed baseline")
+    require("WayfarerHoennVisitor_EventScript_InitializeArrival" not in native_body,
+            "native Hoenn must not skip its opening with visitor arrival state")
+    require("VarSet(VAR_NEWBARK_TOWN_STATE, 2)" in native_before
+            and "VarSet(VAR_NEWBARKTOWN_LABSTATE, 0)" in native_before,
+            "native Hoenn must establish dormant pre-Elm Johto state")
+    path, function, body, marker_text = commits["PrepareWayfarerHoennEntryAt"]
     marker_pos = body.index(marker_text)
     after = body[marker_pos + len(marker_text) :]
     require(
@@ -905,6 +949,8 @@ def audit_initialization(game_root: Path) -> dict:
     return {
         "function": "WayfarerPrepareHoennEntry",
         "implementationFunction": function,
+        "nativeInitializationFunction": native_function,
+        "nativeInitializedCommittedLast": True,
         "path": str(path.relative_to(game_root)),
         "idempotent": True,
         "currentRegion": "REGION_HOENN",

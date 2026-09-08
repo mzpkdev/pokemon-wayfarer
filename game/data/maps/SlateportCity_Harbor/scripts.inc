@@ -17,12 +17,17 @@ WayfarerHoennEntry_EventScript_SlateportAquaAttendant::
 #if IS_WAYFARER
 	lock
 	faceplayer
-	@ This map is assembled under the Hoenn source aliases, but the completed
-	@ S.S. Aqua state belongs to the HNS save bank. Keep this operand direct.
-	goto_if_lt 0x408B, 8, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard
 	checkitem ITEM_SS_TICKET
-	bufferitemname STR_VAR_1, ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, TRUE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture
+	specialvar VAR_RESULT, WayfarerCanReceiveSlateportTicket
 	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials
+	msgbox WayfarerHoennEntry_Text_SlateportAquaFreeTicket, MSGBOX_DEFAULT
+	giveitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed
+
+WayfarerHoennEntry_EventScript_SlateportAquaAttendant_OfferDeparture::
 	msgbox WayfarerHoennEntry_Text_SlateportAquaToOlivine, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, WayfarerHoennEntry_EventScript_SlateportAquaAttendant_Cancelled
 	fadescreenswapbuffers FADE_TO_BLACK
@@ -38,7 +43,13 @@ WayfarerHoennEntry_EventScript_SlateportAquaAttendant_CantBoard::
 	end
 
 WayfarerHoennEntry_EventScript_SlateportAquaAttendant_NoCredentials::
+	bufferitemname STR_VAR_1, ITEM_SS_TICKET
 	msgbox WayfarerHoennEntry_Text_SlateportAquaNoTicket, MSGBOX_DEFAULT
+	release
+	end
+
+WayfarerHoennEntry_EventScript_SlateportAquaAttendant_TicketFailed::
+	msgbox WayfarerHoennEntry_Text_SlateportAquaTicketFailed, MSGBOX_DEFAULT
 	release
 	end
 
@@ -593,3 +604,13 @@ WayfarerHoennEntry_Text_SlateportAquaToOlivine:
 
 WayfarerHoennEntry_Text_SlateportAquaComeAgain:
 	.string "Please sail with us another time!$"
+
+WayfarerHoennEntry_Text_SlateportAquaFreeTicket:
+	.string "The S.S.AQUA sails from here to\n"
+	.string "OLIVINE, then VERMILION, and back.\p"
+	.string "Here's a free S.S.TICKET for\n"
+	.string "you and your POKéMON!$"
+
+WayfarerHoennEntry_Text_SlateportAquaTicketFailed:
+	.string "Make room for your S.S.TICKET,\n"
+	.string "then come speak to me again.$"

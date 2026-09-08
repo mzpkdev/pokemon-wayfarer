@@ -149,6 +149,9 @@ AzaleaTown_EventScript_AzaleaSign::
 	end
 
 AzaleaTown_EventScript_SilverTriggerTop::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver
+#endif
 	lock
 	clearflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	addobject LOCALID_AZALEA_TOWN_SILVER
@@ -176,6 +179,9 @@ AzaleaTown_EventScript_SilverTriggerTop::
 	end
 
 AzaleaTown_EventScript_SilverTriggerBot::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver
+#endif
 	lock
 	clearflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	addobject LOCALID_AZALEA_TOWN_SILVER
@@ -448,3 +454,9 @@ AzaleaTown_Text_CharcoalKilnSign:
 AzaleaTown_Text_IlexForestSign:
 	.string "ILEX FOREST\p"
 	.string "Enter through the gate.$"
+
+#if IS_WAYFARER
+AzaleaTown_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

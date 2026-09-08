@@ -58,6 +58,9 @@ IndigoPlateau_Text_CooltrainerM:
     .string "lose, you have to start all over!$"
 
 IndigoPlateau_EventScript_Silver::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, IndigoPlateau_PokemonCenter_EventScript_DeferredSilver
+#endif
 	lock
 	faceplayer 
 	goto_if_set FLAG_DAILY_BEAT_SILVER, IndigoPlateau_EventScript_SilverBeat
@@ -165,3 +168,9 @@ IndigoPlateau_Text_TeleportGuyNo:
 
 IndigoPlateau_Text_Abra:
     .string "ABRA: Aabra…$"
+
+#if IS_WAYFARER
+IndigoPlateau_PokemonCenter_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

@@ -216,10 +216,16 @@ Route101_EventScript_RouteSign::
 	end
 
 Route101_EventScript_BirchsBag::
+#if IS_WAYFARER
+    setvar VAR_0x8004, ORIGIN_SCENE_HOENN_RESCUE
+    specialvar VAR_RESULT, WayfarerDispatchOriginScene
+    goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, Route101_EventScript_AuthoredRescue
+#endif
 	lock
 	faceplayer
-	setflag FLAG_SYS_POKEMON_GET
 #if IS_WAYFARER
+    goto_if_eq VAR_RESULT, ORIGIN_SCENE_NATIVE, Route101_EventScript_NativeBirchRescue
+	setflag FLAG_SYS_POKEMON_GET
 	setwildbattle SPECIES_ZIGZAGOON, 2
 	dowildbattle
 	specialvar VAR_RESULT, GetBattleOutcome
@@ -230,7 +236,15 @@ Route101_EventScript_BirchsBag::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 #else
+	setflag FLAG_SYS_POKEMON_GET
+	goto Route101_EventScript_NativeBirchRescue
+#endif
+	goto Route101_EventScript_BirchRescueAcknowledged
+
+Route101_EventScript_NativeBirchRescue::
+#if !IS_WAYFARER
 	setflag FLAG_RESCUED_BIRCH
+#endif
 	fadescreen FADE_TO_BLACK
 	removeobject LOCALID_ROUTE101_ZIGZAGOON
 	setobjectxy LOCALID_PLAYER, 6, 13
@@ -238,7 +252,13 @@ Route101_EventScript_BirchsBag::
 	waitmovement 0
 	special ChooseStarter
 	waitstate
+#if IS_WAYFARER
+	goto_if_unset FLAG_HOENN_STARTER_RECEIVED, Route101_EventScript_NativeStarterNotDelivered
+	setflag FLAG_RESCUED_BIRCH
+	setflag FLAG_SYS_POKEMON_GET
 #endif
+
+Route101_EventScript_BirchRescueAcknowledged::
 	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchApproachPlayer
 	waitmovement 0
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
@@ -314,3 +334,16 @@ Route101_Text_WildPokemonInTallGrass:
 Route101_Text_RouteSign:
 	.string "ROUTE 101\n"
 	.string "{UP_ARROW} OLDALE TOWN$"
+
+#if IS_WAYFARER
+Route101_EventScript_AuthoredRescue::
+    end
+#endif
+
+#if IS_WAYFARER
+Route101_EventScript_NativeStarterNotDelivered::
+    addobject LOCALID_ROUTE101_ZIGZAGOON
+    fadescreen FADE_FROM_BLACK
+    release
+    end
+#endif

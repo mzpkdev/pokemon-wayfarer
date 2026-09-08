@@ -19,14 +19,14 @@ import {
 const abi: SessionAbi = {
   requestSize: 432,
   resultSize: 16,
-  stateSize: 356,
+  stateSize: 384,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 10): Uint8Array => {
+const abiBytes = (version = 12): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -68,7 +68,7 @@ const request = (): CommandRequest => ({
   leagueClears: [true, false, false],
 })
 
-describe("game-session v10 protocol", () => {
+describe("game-session v12 protocol", () => {
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
     expect(() => parseAbi(abiBytes(6))).toThrow("Unsupported test ROM ABI")
@@ -213,6 +213,42 @@ describe("game-session v10 protocol", () => {
       leagueRunActive: true,
       leagueRunRegion: 2,
       leagueRunRating: 40,
+    })
+  })
+
+  it("decodes origin identity independently from location, choices, and recovery", () => {
+    const bytes = new Uint8Array(abi.stateSize)
+    const view = new DataView(bytes.buffer)
+    bytes[355] = 2
+    view.setUint16(356, 2, true)
+    view.setUint16(358, 1, true)
+    view.setUint16(360, 2, true)
+    view.setUint16(362, 0, true)
+    bytes.set([2, 6, 1, 1, 0, 1, 32, 3], 364)
+    view.setInt16(374, 7, true)
+    view.setInt16(376, 4, true)
+    bytes[378] = 1
+    bytes[379] = 3
+    view.setUint16(380, 2, true)
+    expect(parseStateSnapshot(bytes)).toMatchObject({
+      originIntroStage: 2,
+      startingOriginId: 2,
+      johtoStarterChoice: 1,
+      hoennStarterChoice: 2,
+      maidenVoyageState: 0,
+      originCurrentRegion: 2,
+      originVisitedRegions: 6,
+      originHoennInitialized: true,
+      johtoStarterCommitted: true,
+      johtoStarterReceived: false,
+      hoennStarterReceived: true,
+      lastHealMapGroup: 32,
+      lastHealMapNum: 3,
+      lastHealX: 7,
+      lastHealY: 4,
+      playerGender: 1,
+      originEquipment: 3,
+      littlerootTownState: 2,
     })
   })
 })

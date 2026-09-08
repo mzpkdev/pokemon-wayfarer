@@ -1070,7 +1070,11 @@ class HnsTraversalContractTest(unittest.TestCase):
             "MauvilleCity_Gym_EventScript_WattsonDefeated",
             "PetalburgCity_Gym_EventScript_NormanBattle",
         ):
-            self.assertIn("MauvilleCity_Gym_EventScript_TryRelocateWattson", self.scripts.block(label))
+            self.assertIn(
+                "call MauvilleCity_Gym_EventScript_TryRelocateWattson",
+                self.scripts.reachable_text(label),
+                f"{label} must reach the shared Wattson relocation check after victory",
+            )
 
         whitney = self.scripts.block("GoldenrodCity_Gym_EventScript_Whitney")
         self.assertIn("goto_if_defeated TRAINER_WHITNEY_1_HNS", whitney)

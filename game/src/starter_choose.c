@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "starter_choose.h"
+#include "wayfarer_origin.h"
 #include "strings.h"
 #include "task.h"
 #include "text.h"
@@ -350,6 +351,11 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
 };
 
 static u16 sOneTypeChallengeStarters[STARTER_MON_COUNT];
+static struct ChallengeSettings sCachedChallengeSettings;
+#if RANDOMIZER_AVAILABLE
+static u32 sCachedRandomizerSeed;
+#endif
+static u8 sCachedTrainerId[4];
 
 #define SPECIES_BITMAP_SIZE   ((NUM_SPECIES + 8) / 8)
 #define SetSpeciesBit(map, s) ((map)[(s) / 8] |= 1 << ((s) % 8))
@@ -440,13 +446,58 @@ u16 GetStarterPokemon(u16 chosenStarterId)
 
     if (IsOneTypeChallengeActive())
     {
-        if (sOneTypeChallengeStarters[0] == SPECIES_NONE)
+        if (sOneTypeChallengeStarters[0] == SPECIES_NONE
+         || memcmp(&sCachedChallengeSettings, &gSaveBlock3Ptr->challengeSettings, sizeof(sCachedChallengeSettings)) != 0
+#if RANDOMIZER_AVAILABLE
+         || sCachedRandomizerSeed != GetRandomizerSeed()
+#endif
+         || memcmp(sCachedTrainerId, gSaveBlock2Ptr->playerTrainerId, sizeof(sCachedTrainerId)) != 0)
+        {
             PickOneTypeChallengeStarters();
+            sCachedChallengeSettings = gSaveBlock3Ptr->challengeSettings;
+#if RANDOMIZER_AVAILABLE
+            sCachedRandomizerSeed = GetRandomizerSeed();
+#endif
+            memcpy(sCachedTrainerId, gSaveBlock2Ptr->playerTrainerId, sizeof(sCachedTrainerId));
+        }
         return sOneTypeChallengeStarters[chosenStarterId];
     }
 
+#if IS_WAYFARER && RANDOMIZER_AVAILABLE
+    if (WayfarerUsesNativeHoennOpening() && RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
+        return RandomizeMon(RANDOMIZER_REASON_STARTER_AND_GIFT_MON,
+                            GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE),
+                            GetRandomizerSeed() ^ sStarterMon[chosenStarterId],
+                            sStarterMon[chosenStarterId]);
+#endif
     return sStarterMon[chosenStarterId];
 }
+
+#if IS_WAYFARER
+u16 WayfarerGetJohtoStarterSpecies(void)
+{
+    return GetJohtoStarterPokemon(VarGet(VAR_STARTER_MON));
+}
+
+u16 GetJohtoStarterPokemon(u16 chosenStarterId)
+{
+    static const u16 starters[] = {SPECIES_CHIKORITA, SPECIES_CYNDAQUIL, SPECIES_TOTODILE};
+    u16 species;
+
+    if (chosenStarterId >= ARRAY_COUNT(starters))
+        chosenStarterId = 0;
+    if (IsOneTypeChallengeActive())
+        return GetStarterPokemon(chosenStarterId);
+    species = starters[chosenStarterId];
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
+        species = RandomizeMon(RANDOMIZER_REASON_STARTER_AND_GIFT_MON,
+                               GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE),
+                               GetRandomizerSeed() ^ species, species);
+#endif
+    return species;
+}
+#endif
 
 static void VblankCB_StarterChoose(void)
 {
@@ -758,3 +809,21 @@ static void SpriteCB_StarterPokemon(struct Sprite *sprite)
     if (sprite->y < STARTER_PKMN_POS_Y)
         sprite->y += 2;
 }
+
+#if E2E_TESTING
+u8 E2ETest_GetStarterChooseStage(void)
+{
+    if (FindTaskIdByFunc(Task_HandleStarterChooseInput) != TASK_NONE)
+        return 1;
+    if (FindTaskIdByFunc(Task_HandleConfirmStarterInput) != TASK_NONE)
+        return 2;
+    return 0;
+}
+#endif
+
+#if TESTING
+void Test_ResetStarterChooseCache(void)
+{
+    memset(sOneTypeChallengeStarters, 0, sizeof(sOneTypeChallengeStarters));
+}
+#endif

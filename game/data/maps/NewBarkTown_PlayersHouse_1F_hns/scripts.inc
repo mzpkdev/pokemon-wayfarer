@@ -1,8 +1,16 @@
+#include "constants/wayfarer_origin.h"
+
 NewBarkTown_PlayersHouse_1F_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, NewBarkTown_PlayersHouse_1F_OnTransition
 	.byte 0
 
 NewBarkTown_PlayersHouse_1F_OnTransition::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_1F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_1F_VisitorSkip
+#endif
 	call_if_eq VAR_NEWBARK_TOWN_STATE, 1, NewBarkTown_PlayersHouse_1F_SetMomStandingAtTable
 	call_if_eq VAR_NEWBARK_TOWN_STATE, 2, NewBarkTown_PlayersHouse_1F_SetMomStandingAtTable
 	call_if_eq VAR_NEWBARK_TOWN_STATE, 3, NewBarkTown_PlayersHouse_1F_SetMomStandingAtTable
@@ -18,6 +26,12 @@ NewBarkTown_PlayersHouse_1F_SetMomStandingAtTable::
 	return
 
 NewBarkTown_PlayersHouse_1F_EventScript_Mom::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_1F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_1F_Visitor
+#endif
 	lock
 	faceplayer
 	goto_if_set FLAG_MOM_VISITED, NewBarkTown_PlayersHouse_1F_EventScript_Mom_Regular
@@ -29,6 +43,12 @@ NewBarkTown_PlayersHouse_1F_EventScript_Mom::
 	end
 
 NewBarkTown_PlayersHouse_1F_EventScript_MomsFriend::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_1F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_1F_Visitor
+#endif
 	lock
 	faceplayer
 	msgbox NewBarkTown_PlayersHouse_1F_Text_MomsFriend, MSGBOX_DEFAULT
@@ -193,6 +213,12 @@ NewBarkTown_PlayersHouse_1F_Text_NoMoneyToWithdraw:
 	.string "for you yet, honey.$"
 
 NewBarkTown_PlayersHouse_1F_EventScript_MomsIntroTrigger1::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_1F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_1F_VisitorSkip
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_PlayersHouse_1F_PlayerIntroMovement1
 	waitmovement 0
@@ -200,6 +226,12 @@ NewBarkTown_PlayersHouse_1F_EventScript_MomsIntroTrigger1::
 	end
 
 NewBarkTown_PlayersHouse_1F_EventScript_MomsIntroTrigger2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_1F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_1F_VisitorSkip
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, NewBarkTown_PlayersHouse_1F_PlayerIntroMovement2
 	waitmovement 0
@@ -208,6 +240,12 @@ NewBarkTown_PlayersHouse_1F_EventScript_MomsIntroTrigger2::
 
 
 NewBarkTown_PlayersHouse_1F_EventScript_MomsIntro::
+#if IS_WAYFARER
+	setvar VAR_0x8004, ORIGIN_SCENE_JOHTO_HOUSEHOLD
+	specialvar VAR_RESULT, WayfarerDispatchOriginScene
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, NewBarkTown_PlayersHouse_1F_VisitorSkip
+	goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, NewBarkTown_PlayersHouse_1F_VisitorSkip
+#endif
 	playse SE_PIN
 	applymovement LOCALID_MOM, Common_Movement_ExclamationMark
 	delay 55
@@ -235,11 +273,16 @@ NewBarkTown_PlayersHouse_1F_EventScript_GivePokeGear::
 	playfanfare MUS_OBTAIN_ITEM
 	message NewBarkTown_PlayersHouse_1F_Text_ObtainedPokeGear
 	waitfanfare
+#if IS_WAYFARER
+	special WayfarerGrantSharedEquipment
+	setflag FLAG_REGISTER_RIVAL_POKENAV
+#else
 	setflag FLAG_SYS_POKENAV_GET
 	setflag FLAG_HAS_MATCH_CALL
 	setflag FLAG_RECEIVED_POKENAV
 	setflag FLAG_ADDED_MATCH_CALL_TO_POKENAV
 	setflag FLAG_REGISTER_RIVAL_POKENAV
+#endif
 	msgbox NewBarkTown_PlayersHouse_1F_Text_ExplainPokeGear, MSGBOX_DEFAULT
 	closemessage
 	delay 30
@@ -348,3 +391,21 @@ NewBarkTown_PlayersHouse_1F_Text_MomLeaving:
 	.string "You need to work as a team.\p"
 	.string "Now, go on!\n"
 	.string "I'm behind you all the way!$"
+
+#if IS_WAYFARER
+NewBarkTown_PlayersHouse_1F_Visitor::
+	lockall
+	faceplayer
+	msgbox NewBarkTown_PlayersHouse_1F_Text_Visitor, MSGBOX_DEFAULT
+	call Common_EventScript_OutOfCenterPartyHeal
+	closemessage
+	releaseall
+	end
+NewBarkTown_PlayersHouse_1F_VisitorSkip::
+	releaseall
+	end
+NewBarkTown_PlayersHouse_1F_Text_Visitor:
+	.string "Welcome to NEW BARK TOWN!\p"
+	.string "You and your POKéMON can rest\n"
+	.string "here before your next journey.$"
+#endif

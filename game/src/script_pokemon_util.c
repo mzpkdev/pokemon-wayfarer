@@ -12,6 +12,7 @@
 #include "challenge_menu.h"
 #include "event_data.h"
 #include "starter_choose.h"
+#include "wayfarer_persistence.h"
 #include "international_string_util.h"
 #include "item.h"
 #include "link.h"
@@ -655,7 +656,14 @@ u32 ScriptGiveMon(u16 species, u8 level, enum Item item)
     }
 #endif
     if (IsOneTypeChallengeActive() && !FlagGet(FLAG_SYS_POKEMON_GET))
-        species = GetStarterPokemon(VarGet(VAR_STARTER_MON));
+    {
+        u16 starterVar = VAR_STARTER_MON;
+#if IS_WAYFARER
+        if (WayfarerIsCurrentMapHoennSource())
+            starterVar = VAR_HOENN_STARTER_CHOICE;
+#endif
+        species = GetStarterPokemon(VarGet(starterVar));
+    }
     CreateRandomMon(&mon, species, level);
     if (item)
     {

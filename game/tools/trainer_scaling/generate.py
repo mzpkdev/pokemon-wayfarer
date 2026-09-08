@@ -164,7 +164,7 @@ def references():
     active_sources = {}
     for path in sorted(set(paths)):
         if not path.exists(): continue
-        active_sources[path] = command(['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', '-'], input=path.read_text())
+        active_sources[path] = command(['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', '-I', str(ROOT / 'include'), '-iquote', str(path.parent), '-'], input=path.read_text())
     selected = list(active_sources.items())
     for path, source in selected:
         for line in source.splitlines():

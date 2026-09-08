@@ -346,6 +346,9 @@ GoldenrodCity_UndergroundSwitches_EventScript_RemoveWall6::
 	return
 
 GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
+#endif
 	lock
 	playse SE_EXIT
 	waitse
@@ -379,6 +382,9 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
 
 
 GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBot::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
+#endif
 	lock
 	playse SE_EXIT
 	waitse
@@ -649,3 +655,9 @@ GoldenrodUnderground_Text_Switch2Off:
 
 GoldenrodUnderground_Text_Switch3Off:
     .string "SWITCH 3 deactivated.$"
+
+#if IS_WAYFARER
+GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

@@ -12,6 +12,9 @@ VictoryRoadKanto_EventScript_Item_Dark_Pulse::
     end
 
 VictoryRoadKanto_1F_Trigger::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, VictoryRoadKanto_1F_EventScript_DeferredSilver
+#endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
@@ -160,3 +163,9 @@ VictoryRoad_Text_RivalAfter:
     .string "And I'll beat you down with all my\n"
     .string "power.\p"
     .string "…Humph! You keep at it until then.$"
+
+#if IS_WAYFARER
+VictoryRoadKanto_1F_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

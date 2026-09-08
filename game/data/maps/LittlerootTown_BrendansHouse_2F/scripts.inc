@@ -235,7 +235,7 @@ LittlerootTown_BrendansHouse_2F_Movement_PlayerWatchBrendanEast:
 
 LittlerootTown_BrendansHouse_2F_EventScript_PC::
 	lockall
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
 	goto LittlerootTown_BrendansHouse_2F_EventScript_CheckPlayersPC
 #endif
 	checkplayergender
@@ -244,7 +244,7 @@ LittlerootTown_BrendansHouse_2F_EventScript_PC::
 	end
 
 LittlerootTown_BrendansHouse_2F_EventScript_CheckPlayersPC::
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
 	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_HNS
 #else
 	setvar VAR_0x8004, PC_LOCATION_BRENDANS_HOUSE
@@ -258,7 +258,7 @@ LittlerootTown_BrendansHouse_2F_EventScript_CheckPlayersPC::
 	end
 
 LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC::
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
 	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_HNS
 #else
 	setvar VAR_0x8004, PC_LOCATION_BRENDANS_HOUSE

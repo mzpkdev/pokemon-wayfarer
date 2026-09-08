@@ -19,6 +19,7 @@
 #include "starter_choose.h"
 #include "script_pokemon_util.h"
 #include "palette.h"
+#include "pokemon.h"
 #include "window.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -47,6 +48,8 @@
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_origin.h"
+#include "wayfarer_battle_gate.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -319,7 +322,15 @@ static void Task_BattleStart(u8 taskId)
 
 static void CreateBattleStartTask(enum BattleTransition transition, u16 song)
 {
-    u8 taskId = CreateTask(Task_BattleStart, 1);
+    u8 taskId;
+#if IS_WAYFARER
+    if (!(gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL) && !WayfarerCanStartOrdinaryBattle())
+    {
+        WayfarerAbortEmptyPartyBattle();
+        return;
+    }
+#endif
+    taskId = CreateTask(Task_BattleStart, 1);
 
     gTasks[taskId].tTransition = transition;
     PlayMapChosenOrBattleBGM(song);
@@ -1228,22 +1239,89 @@ enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id)
 
 void ChooseStarter(void)
 {
+#if IS_WAYFARER
+    if (WayfarerUsesNativeHoennOpening() && FlagGet(FLAG_HOENN_STARTER_RECEIVED))
+    {
+        if (!WayfarerCanStartOrdinaryBattle())
+        {
+            WayfarerAbortEmptyPartyBattle();
+            return;
+        }
+        SetMainCallback2(CB2_GiveStarter);
+        return;
+    }
+#endif
     SetMainCallback2(CB2_ChooseStarter);
     gMain.savedCallback = CB2_GiveStarter;
 }
+
+#if IS_WAYFARER
+static bool8 TryGiveNativeHoennStarter(u16 choice)
+{
+    struct Pokemon mon;
+
+    if (FlagGet(FLAG_HOENN_STARTER_RECEIVED))
+        return TRUE;
+    if (choice > HOENN_STARTER_CHOICE_MUDKIP)
+        return FALSE;
+    VarSet(VAR_HOENN_STARTER_CHOICE, choice);
+    CreateRandomMon(&mon, GetStarterPokemon(choice), 5);
+    if (GiveScriptedMonToPlayer(&mon, PARTY_SIZE) == MON_CANT_GIVE)
+    {
+        VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
+        return FALSE;
+    }
+    FlagSet(FLAG_HOENN_STARTER_RECEIVED);
+    FlagSet(FLAG_SYS_POKEMON_GET);
+    return TRUE;
+}
+
+#if TESTING
+bool8 Test_WayfarerGiveNativeHoennStarter(u16 choice)
+{
+    return TryGiveNativeHoennStarter(choice);
+}
+#endif
+#endif
 
 static void CB2_GiveStarter(void)
 {
     u16 starterMon;
 
-    *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
-    starterMon = GetStarterPokemon(gSpecialVar_Result);
-    ScriptGiveMon(starterMon, 5, ITEM_NONE);
+#if IS_WAYFARER
+    if (WayfarerUsesNativeHoennOpening())
+    {
+        if (!TryGiveNativeHoennStarter(gSpecialVar_Result))
+        {
+            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+            return;
+        }
+    }
+    else
+#endif
+    {
+        *GetVarPointer(VAR_STARTER_MON) = gSpecialVar_Result;
+        starterMon = GetStarterPokemon(gSpecialVar_Result);
+        ScriptGiveMon(starterMon, 5, ITEM_NONE);
+    }
     ResetTasks();
     PlayBattleBGM();
     SetMainCallback2(CB2_StartFirstBattle);
     BattleTransition_Start(B_TRANSITION_BLUR);
 }
+
+#if IS_WAYFARER
+static void Task_AbortEmptyStarterBattle(u8 taskId)
+{
+    DestroyTask(taskId);
+    WayfarerAbortEmptyPartyBattle();
+}
+
+static void FieldCB_AbortEmptyStarterBattle(void)
+{
+    CreateTask(Task_AbortEmptyStarterBattle, 0);
+}
+#endif
 
 static void CB2_StartFirstBattle(void)
 {
@@ -1252,6 +1330,16 @@ static void CB2_StartFirstBattle(void)
 
     if (IsBattleTransitionDone() == TRUE)
     {
+#if IS_WAYFARER
+        if (!WayfarerCanStartOrdinaryBattle())
+        {
+            SetVBlankCallback(NULL);
+            SetHBlankCallback(NULL);
+            gFieldCallback = FieldCB_AbortEmptyStarterBattle;
+            SetMainCallback2(CB2_ReturnToField);
+            return;
+        }
+#endif
         gBattleTypeFlags = BATTLE_TYPE_FIRST_BATTLE;
         gMain.savedCallback = CB2_EndFirstBattle;
         FreeAllWindowBuffers();

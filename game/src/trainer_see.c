@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "trainer_see.h"
+#include "wayfarer_origin.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
@@ -437,6 +438,11 @@ bool8 CheckForTrainersWantingBattle(void)
     u8 i;
     u8 trainerObjects[OBJECT_EVENTS_COUNT] = {0};
     u8 trainerObjectsCount = 0;
+
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattle())
+        return FALSE;
+#endif
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;

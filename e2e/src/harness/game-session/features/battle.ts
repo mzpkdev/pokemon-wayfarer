@@ -1,4 +1,9 @@
-import { encodeStartWildBattleRequest, encodeWinBattleRequest, maxMoves } from "../protocol"
+import {
+  encodeStartWildBattleRequest,
+  encodeWinBattleRequest,
+  encodeLoseBattleRequest,
+  maxMoves,
+} from "../protocol"
 import { type MailboxApi } from "../mailbox"
 import { type SessionRuntime } from "../runtime"
 import { toWireMon, type MonFixture } from "./fixtures"
@@ -11,6 +16,7 @@ export type WildBattleFixture = Omit<MonFixture, "egg" | "level"> & {
 export type BattleApi = {
   startWild: (wild: WildBattleFixture) => Promise<void>
   win: () => Promise<void>
+  lose: () => Promise<void>
 }
 
 export const createBattleApi = (runtime: SessionRuntime, mailbox: MailboxApi): BattleApi => ({
@@ -22,6 +28,12 @@ export const createBattleApi = (runtime: SessionRuntime, mailbox: MailboxApi): B
     await mailbox.execute(
       (requestId) => encodeStartWildBattleRequest(runtime.abi, requestId, toWireMon(wild)),
       "start wild battle",
+    )
+  },
+  lose: async () => {
+    await mailbox.execute(
+      (requestId) => encodeLoseBattleRequest(runtime.abi, requestId),
+      "lose current battle",
     )
   },
   win: async () => {

@@ -21,6 +21,7 @@
 #include "palette.h"
 #include "party_menu.h"
 #include "player_pc.h"
+#include "wayfarer_persistence.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -496,7 +497,11 @@ static void PlayerPC_TurnOff(u8 taskId)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_PALLET_TOWN_PLAYERS_HOUSE_2F_FRLG)
             ScriptContext_SetupScript(EventScript_PalletTown_PlayersHouse_2F_ShutDownPC);
+#if IS_WAYFARER
+        else if (!WayfarerIsCurrentMapHoennSource())
+#else
         else if (IS_HNS)
+#endif
             ScriptContext_SetupScript(NewBarkTown_PlayersHouse_2F_EventScript_TurnOffPlayerPC);
         else if (gSaveBlock2Ptr->playerGender == MALE)
             ScriptContext_SetupScript(LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC);

@@ -307,8 +307,16 @@ PlayersHouse_1F_Movement_MomReturnToSeatFemale:
 	step_end
 
 PlayersHouse_1F_EventScript_Mom::
+#if IS_WAYFARER
+    setvar VAR_0x8004, ORIGIN_SCENE_HOENN_HOUSEHOLD
+    specialvar VAR_RESULT, WayfarerDispatchOriginScene
+    goto_if_eq VAR_RESULT, ORIGIN_SCENE_AUTHORED, PlayersHouse_1F_EventScript_AuthoredHousehold
+#endif
 	lock
 	faceplayer
+#if IS_WAYFARER
+    goto_if_eq VAR_RESULT, ORIGIN_SCENE_VISITOR, PlayersHouse_1F_EventScript_Visitor
+#endif
 	goto_if_eq VAR_LITTLEROOT_HOUSES_STATE_MAY, 4, PlayersHouse_1F_EventScript_DontPushYourselfTooHard
 	goto_if_eq VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 4, PlayersHouse_1F_EventScript_DontPushYourselfTooHard
 	goto_if_set FLAG_HAS_MATCH_CALL, PlayersHouse_1F_EventScript_TryRegisterMom
@@ -700,3 +708,20 @@ PlayersHouse_1F_Movement_PlayerApproachTVForLatiFemale:
 EventScript_RunningShoesManual::
 	msgbox PlayersHouse_1F_Text_RunningShoesManual, MSGBOX_SIGN
 	end
+
+#if IS_WAYFARER
+PlayersHouse_1F_EventScript_Visitor::
+    msgbox PlayersHouse_1F_Text_Visitor, MSGBOX_DEFAULT
+    special HealPlayerParty
+    release
+    end
+
+PlayersHouse_1F_Text_Visitor:
+    .string "Welcome! You and your POKéMON\n"
+    .string "can rest here before heading out.$"
+#endif
+
+#if IS_WAYFARER
+PlayersHouse_1F_EventScript_AuthoredHousehold::
+    end
+#endif

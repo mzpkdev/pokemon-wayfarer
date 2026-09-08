@@ -70,6 +70,8 @@
 #include "time_events.h"
 #include "trainer_hill.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_origin.h"
+#include "title_screen.h"
 #include "trainer_pokemon_sprites.h"
 #include "tv.h"
 #include "scanline_effect.h"
@@ -794,12 +796,15 @@ static bool32 IsWhiteoutCutscene(void)
 
 void SetWarpDestinationToLastHealLocation(void)
 {
+#if IS_WAYFARER
+    WayfarerEnsureRecoveryDestination();
+#endif
     if (IsWhiteoutCutscene())
         SetWhiteoutRespawnWarpAndHealerNPC(&sWarpDestination);
     else
         sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
 
-#if IS_HNS
+#if IS_HNS && !IS_WAYFARER
     if (sWarpDestination.mapGroup == 0 && sWarpDestination.mapNum == 0)
     {
         const struct HealLocation *fallback = GetHealLocation(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
@@ -811,6 +816,9 @@ void SetWarpDestinationToLastHealLocation(void)
 
 void SetWarpDestinationForTeleport(void)
 {
+#if IS_WAYFARER
+    WayfarerEnsureRecoveryDestination();
+#endif
     sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
 }
 
@@ -1996,6 +2004,13 @@ static bool8 RunFieldCallback(void)
 
 void CB2_NewGame(void)
 {
+#if IS_WAYFARER
+    if (WayfarerGetOriginProfile(WayfarerGetConfirmedPendingOrigin()) == NULL)
+    {
+        SetMainCallback2(CB2_InitTitleScreen);
+        return;
+    }
+#endif
     FieldClearVBlankHBlankCallbacks();
     StopMapMusic();
     ResetSafariZoneFlag_();
@@ -2004,17 +2019,23 @@ void CB2_NewGame(void)
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
+#if IS_WAYFARER
+    gFieldCallback = WayfarerEnterOriginOpening;
+#else
     if (IS_FRLG || IS_HNS)
         gFieldCallback = FieldCB_WarpExitFadeFromBlack;
     else
         gFieldCallback = ExecuteTruckSequence;
+#endif
     gFieldCallback2 = NULL;
     DoMapLoadLoop(&gMain.state);
     SetFieldVBlankCallback();
     SetMainCallback1(CB1_Overworld);
     SetMainCallback2(CB2_Overworld);
+#if !IS_WAYFARER
     if (UseFakeRtc())
         RtcCalcLocalTimeOffset(0, 10, 0, 0);
+#endif
 }
 
 void CB2_WhiteOut(void)
@@ -2207,6 +2228,14 @@ void CB2_ContinueSavedGame(void)
 {
     u8 trainerHillMapId;
 
+#if IS_WAYFARER
+    if (!WayfarerPersistentStateIsValid())
+    {
+        gSaveFileStatus = SAVE_STATUS_CORRUPT;
+        SetMainCallback2(CB2_InitTitleScreen);
+        return;
+    }
+#endif
     FieldClearVBlankHBlankCallbacks();
     StopMapMusic();
     ResetSafariZoneFlag_();

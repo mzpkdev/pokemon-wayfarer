@@ -745,3 +745,19 @@ gSpecials::
 	def_special WayfarerOpenMartProfile
 	def_special WayfarerLookupMartProfileForSharedClerk
 #endif
+
+#if IS_WAYFARER
+    def_special WayfarerDispatchOriginScene
+    def_special WayfarerUsesNativeJohtoHousehold
+    def_special WayfarerUsesNativeHoennHousehold
+    def_special WayfarerUsesNativeJohtoOpening
+    def_special WayfarerUsesNativeHoennOpening
+    def_special WayfarerCanUseRegularAqua
+    def_special WayfarerCanReceiveSlateportTicket
+    def_special WayfarerCanUseAquaMaidenVoyage
+    def_special WayfarerGetJohtoStarterSpecies
+    def_special WayfarerGrantSharedEquipment
+    def_special WayfarerGrantRunningShoes
+    def_special WayfarerHasSharedPokedex
+    def_special WayfarerGrantSharedPokedex
+#endif

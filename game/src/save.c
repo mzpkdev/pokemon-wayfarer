@@ -962,6 +962,23 @@ u8 LoadGameSave(u8 saveType)
         break;
     }
 
+#if IS_WAYFARER
+    // Prerelease layouts have no compatibility baseline. Reject before any
+    // migration or regional repair can mutate the loaded story state.
+    if (saveType != SAVE_HALL_OF_FAME && (status == SAVE_STATUS_OK || status == SAVE_STATUS_ERROR))
+    {
+        if (gSaveBlock1Ptr->saveVersionMagic != SAVE_VERSION_MAGIC
+         || gSaveBlock1Ptr->saveVersion != SAVE_VERSION
+         || !WayfarerPersistentStateIsValid())
+        {
+            gSaveFileStatus = SAVE_STATUS_CORRUPT;
+            return SAVE_STATUS_CORRUPT;
+        }
+        WayfarerValidatePersistentState();
+    }
+    return status;
+#endif
+
     // Save version migration: detect pre-versioned saves and run upgrades
     if (gSaveBlock1Ptr->saveVersionMagic != SAVE_VERSION_MAGIC)
     {
@@ -1021,15 +1038,6 @@ u8 LoadGameSave(u8 saveType)
 #endif
         gSaveBlock1Ptr->saveVersion = 5;
     }
-
-#if IS_WAYFARER
-    if (gSaveBlock1Ptr->saveVersion < 6)
-    {
-        WayfarerInitPersistentStateFromSavedMap();
-        gSaveBlock1Ptr->saveVersion = 6;
-    }
-    WayfarerValidatePersistentState();
-#endif
 
     // Add version migration steps here:
     // if (gSaveBlock1Ptr->saveVersion < 1)

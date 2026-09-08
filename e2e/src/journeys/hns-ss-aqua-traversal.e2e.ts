@@ -25,17 +25,12 @@ const startScriptedBattle = async (game: GameSession, description: string): Prom
 }
 
 const advanceUntilMap = async (game: GameSession, map: GameMap): Promise<void> => {
-  for (let attempt = 0; attempt < 60; attempt++) {
+  for (let attempt = 0; attempt < 100; attempt++) {
     const state = await game.state.read()
-    if (state.map.name === map) {
-      await game.wait.forMap(map)
-      return
-    }
+    if (state.map.name === map && state.ready) return
     await game.wait.frames(30)
-    if ((await game.state.read()).map.name === map) {
-      await game.wait.forMap(map)
-      return
-    }
+    const current = await game.state.read()
+    if (current.map.name === map && current.ready) return
     await game.controls.press("a")
   }
   throw new Error(`S.S. Aqua did not reach ${map}: ${JSON.stringify(await game.state.read())}`)

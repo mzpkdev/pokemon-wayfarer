@@ -210,6 +210,9 @@ CherryGroveCity_EventScript_Sign::
 	end	
 
 CherryGroveCity_EventScript_TriggerSilver_Top::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, CherryGroveCity_Movement_Trigger_Silver_Top
 	waitmovement 0
@@ -217,6 +220,9 @@ CherryGroveCity_EventScript_TriggerSilver_Top::
 	end
 
 CherryGroveCity_EventScript_TriggerSilver_Bottom::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
+#endif
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, CherryGroveCity_Movement_Trigger_Silver_Bottom
 	waitmovement 0
@@ -224,6 +230,9 @@ CherryGroveCity_EventScript_TriggerSilver_Bottom::
 	end
 
 CherryGroveCity_EventScript_TriggerSilver::
+#if IS_WAYFARER
+	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
+#endif
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	applymovement LOCALID_CHERRYGROVE_SILVER, CherryGroveCity_Movement_Silver_Enter
@@ -570,3 +579,9 @@ CherryGroveCity_Movement_Silver_Leave2:
 	walk_fast_left
 	walk_fast_left
 	step_end
+
+#if IS_WAYFARER
+CherrygroveCity_EventScript_DeferredSilver::
+	releaseall
+	end
+#endif

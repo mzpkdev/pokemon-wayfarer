@@ -888,6 +888,9 @@ LittlerootTown_EventScript_Mom::
 LittlerootTown_EventScript_SetReceivedRunningShoes::
 	removeobject LOCALID_LITTLEROOT_MOM
 	setflag FLAG_SYS_B_DASH
+#if IS_WAYFARER
+	special WayfarerGrantRunningShoes
+#endif
 	setvar VAR_LITTLEROOT_TOWN_STATE, 4
 	release
 	end

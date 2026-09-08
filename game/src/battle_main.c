@@ -6634,3 +6634,16 @@ void BattleDebug_WonBattle(void)
     gBattleOutcome |= B_OUTCOME_WON;
     gBattleMainFunc = sEndTurnFuncsTable[gBattleOutcome & 0x7F];
 }
+
+#if defined(E2E_TESTING) && E2E_TESTING
+void BattleDebug_LostBattle(void)
+{
+    u32 i;
+    u16 hp = 0;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+        SetMonData(&gPlayerParty[i], MON_DATA_HP, &hp);
+    gBattleOutcome = B_OUTCOME_LOST;
+    gBattleMainFunc = sEndTurnFuncsTable[B_OUTCOME_LOST];
+}
+#endif
