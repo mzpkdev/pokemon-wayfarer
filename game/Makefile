@@ -80,6 +80,19 @@ endif
 
 include config.mk
 
+# Standalone products retain their original hardware compatibility.
+LEGACY_MULTIBOOT_CAPABILITIES := ENABLE_COLOSSEUM_MULTIBOOT ENABLE_BERRY_GLITCH_FIX_MULTIBOOT ENABLE_EREADER_TRANSFER
+ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
+LEGACY_MULTIBOOT_DEFAULT := 0
+else
+LEGACY_MULTIBOOT_DEFAULT := 1
+endif
+$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(eval $(capability) ?= $(LEGACY_MULTIBOOT_DEFAULT)))
+$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(if $(and $(filter 1,$(words $($(capability)))),$(filter 0 1,$($(capability)))),,$(error $(capability) must be 0 or 1)))
+ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
+$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(if $(filter 1,$($(capability))),$(error Wayfarer requires $(capability)=0)))
+endif
+
 # Default make rule
 all: rom
 
@@ -229,6 +242,7 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(GAME_VERSION) -std=gnu17
+override CPPFLAGS += $(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),-D$(capability)=$($(capability)))
 ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
   override CPPFLAGS += -DPOKEMON_HNS
 endif
@@ -361,6 +375,7 @@ MAKEFLAGS += --no-print-directory
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
+RULES_NO_SCAN += legacy-multiboot-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -425,6 +440,13 @@ OBJS_REL := $(patsubst $(OBJ_DIR)/%,%,$(OBJS))
 SUBDIRS  := $(sort $(dir $(OBJS) $(dir $(TEST_OBJS))))
 $(shell mkdir -p $(SUBDIRS))
 
+# Make does not otherwise notice command-line capability changes in an existing
+# object directory. Keep C and preprocessed assembly on the same configuration.
+$(OBJ_DIR)/.legacy-multiboot-config: FORCE
+	@echo '$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(capability)=$($(capability)))' | cmp -s $@ - || echo '$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(capability)=$($(capability)))' > $@
+
+$(OBJS) $(TEST_OBJS): $(OBJ_DIR)/.legacy-multiboot-config
+
 # Pretend rules that are actually flags defer to `make all`
 modern: all
 compare: all
@@ -454,7 +476,7 @@ else
 TEST_SKIP_IS_FAIL := \x00
 endif
 
-check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test
+check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
 check: league-circuit-test
@@ -740,6 +762,9 @@ firered: all
 leafgreen: all
 hns: all
 wayfarer: all
+
+legacy-multiboot-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/legacy_multiboot -p 'test_*.py' -q
 
 league-circuit-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/league_circuit -p 'test_*.py' -q

@@ -1,4 +1,6 @@
 #include "global.h"
+
+#if ENABLE_EREADER_TRANSFER
 #include "malloc.h"
 #include "decompress.h"
 #include "ereader_helpers.h"
@@ -516,3 +518,5 @@ static void Task_EReader(u8 taskId)
         break;
     }
 }
+
+#endif // ENABLE_EREADER_TRANSFER

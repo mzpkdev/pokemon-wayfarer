@@ -13,6 +13,8 @@ SevenIsland_House_Room2_OnFrame::
 
 SevenIsland_House_Room2_EventScript_BattleVisitingTrainer::
 	lockall
+	frontier_checkvisittrainer
+	goto_if_eq VAR_RESULT, TRUE, SevenIsland_House_Room2_EventScript_NoVisitingTrainer
 	applymovement LOCALID_PLAYER, SevenIsland_House_Room2_Movement_PlayerEnterRoom
 	waitmovement 0
 	special CopyEReaderTrainerGreeting
@@ -72,3 +74,9 @@ SevenIsland_House_Room2_Movement_PlayerExitRoom::
 	walk_up
 	delay_8
 	step_end
+
+SevenIsland_House_Room2_EventScript_NoVisitingTrainer::
+	warp MAP_SEVEN_ISLAND_HOUSE_ROOM1, 4, 1
+	waitstate
+	releaseall
+	end

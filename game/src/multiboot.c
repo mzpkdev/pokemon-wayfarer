@@ -1,4 +1,5 @@
 #include "global.h"
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 #include "gba/gba.h"
 #include "multiboot.h"
 
@@ -469,3 +470,4 @@ static void MultiBootWaitSendDone(void)
 
     MultiBootWaitCycles(600);
 }
+#endif

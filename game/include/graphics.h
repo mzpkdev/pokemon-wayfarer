@@ -187,6 +187,7 @@ extern const u16 gWallClockFemale_Pal[];
 extern const u32 gWallClockStart_Tilemap[];
 extern const u32 gWallClockView_Tilemap[];
 
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 extern const u32 gBerryFixGbaConnect_Gfx[];
 extern const u32 gBerryFixGbaConnect_Tilemap[];
 extern const u16 gBerryFixGbaConnect_Pal[];
@@ -205,6 +206,7 @@ extern const u16 gBerryFixGbaTransferError_Pal[];
 extern const u32 gBerryFixWindow_Gfx[];
 extern const u32 gBerryFixWindow_Tilemap[];
 extern const u16 gBerryFixWindow_Pal[];
+#endif
 
 extern const u32 gBattleTextboxTiles[];
 extern const u32 gBattleTextboxTilemap[];

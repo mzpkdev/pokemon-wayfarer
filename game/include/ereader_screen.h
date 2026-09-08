@@ -1,6 +1,10 @@
 #ifndef GUARD_EREADER_SCREEN_H
 #define GUARD_EREADER_SCREEN_H
 
+#if ENABLE_EREADER_TRANSFER
+
 void CreateEReaderTask(void);
+
+#endif // ENABLE_EREADER_TRANSFER
 
 #endif // GUARD_EREADER_SCREEN_H

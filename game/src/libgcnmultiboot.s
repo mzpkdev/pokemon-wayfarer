@@ -1,3 +1,4 @@
+#if ENABLE_COLOSSEUM_MULTIBOOT
 @ This library can be used to download and execute a multi-boot image from
 @ a GameCube using the JOY Bus protocol over the link cable.
 
@@ -639,3 +640,4 @@ pool_RubyUSAGameCode: .ascii "AXVE"
 pool_MultiBootLoadAddr: .4byte EWRAM_START
 
 	.align 2, 0 @ Don't pad with nop.
+#endif

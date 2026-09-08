@@ -20,6 +20,7 @@
 #include "constants/battle_frontier.h"
 #include "constants/battle_special.h"
 
+static bool32 HasValidEReaderTrainer(void);
 static void HandleSpecialTrainerBattleEnd(void);
 static void Task_StartBattleAfterTransition(u8 taskId);
 static void UNUSED FillEReaderTrainerWithPlayerData(void);
@@ -95,6 +96,12 @@ void DoSpecialTrainerBattle(void)
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_SECRET_BASE));
         break;
     case SPECIAL_BATTLE_EREADER:
+        if (!HasValidEReaderTrainer())
+        {
+            gSpecialVar_Result = 0;
+            SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+            return;
+        }
     #if FREE_BATTLE_TOWER_E_READER == FALSE
         ZeroEnemyPartyMons();
         for (i = 0; i < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.ereaderTrainer.party); i++)
@@ -137,7 +144,8 @@ void DoSpecialTrainerBattle(void)
 
 void SetEReaderTrainerGfxId(void)
 {
-    SetBattleFacilityTrainerGfxId(TRAINER_EREADER, 0);
+    if (HasValidEReaderTrainer())
+        SetBattleFacilityTrainerGfxId(TRAINER_EREADER, 0);
 }
 
 // This is a leftover debugging function that is used to populate the E-Reader
@@ -182,6 +190,8 @@ static void UNUSED FillEReaderTrainerWithPlayerData(void)
 
 u8 GetEreaderTrainerFrontSpriteId(void)
 {
+    if (!HasValidEReaderTrainer())
+        return 0;
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     return gFacilityClassToPicIndex[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #else
@@ -191,6 +201,8 @@ u8 GetEreaderTrainerFrontSpriteId(void)
 
 enum TrainerClassID GetEreaderTrainerClassId(void)
 {
+    if (!HasValidEReaderTrainer())
+        return 0;
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];
 #else
@@ -203,6 +215,11 @@ void GetEreaderTrainerName(u8 *dst)
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     s32 i;
 
+    if (!HasValidEReaderTrainer())
+    {
+        dst[0] = EOS;
+        return;
+    }
     for (i = 0; i < 5; i++)
         dst[i] = gSaveBlock2Ptr->frontier.ereaderTrainer.name[i];
 
@@ -243,8 +260,19 @@ void ValidateEReaderTrainer(void)
         gSpecialVar_Result = TRUE;
     }
 #else
-    gSpecialVar_Result = FALSE;
+    gSpecialVar_Result = TRUE;
 #endif //FREE_BATTLE_TOWER_E_READER
+}
+
+static bool32 HasValidEReaderTrainer(void)
+{
+    u16 savedResult = gSpecialVar_Result;
+    bool32 valid;
+
+    ValidateEReaderTrainer();
+    valid = gSpecialVar_Result == FALSE;
+    gSpecialVar_Result = savedResult;
+    return valid;
 }
 
 #if FREE_BATTLE_TOWER_E_READER == FALSE
@@ -270,6 +298,9 @@ void ClearEReaderTrainer(struct BattleTowerEReaderTrainer *ereaderTrainer)
 
 void CopyEReaderTrainerGreeting(void)
 {
+    gStringVar4[0] = EOS;
+    if (!HasValidEReaderTrainer())
+        return;
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     FrontierSpeechToString(gSaveBlock2Ptr->frontier.ereaderTrainer.greeting);
 #endif //FREE_BATTLE_TOWER_E_READER
@@ -277,6 +308,9 @@ void CopyEReaderTrainerGreeting(void)
 
 static void CopyEReaderTrainerFarewellMessage(void)
 {
+    gStringVar4[0] = EOS;
+    if (!HasValidEReaderTrainer())
+        return;
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     if (gBattleOutcome == B_OUTCOME_DREW)
         gStringVar4[0] = EOS;

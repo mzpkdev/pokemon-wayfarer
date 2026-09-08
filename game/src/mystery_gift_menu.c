@@ -461,6 +461,7 @@ void CB2_InitMysteryGift(void)
     RunTasks();
 }
 
+#if ENABLE_EREADER_TRANSFER
 void CB2_InitEReader(void)
 {
     if (HandleMysteryGiftOrEReaderSetup(TRUE))
@@ -470,6 +471,8 @@ void CB2_InitEReader(void)
         CreateEReaderTask();
     }
 }
+#endif
+
 
 void MainCB_FreeAllBuffersAndReturnToInitTitleScreen(void)
 {
@@ -488,16 +491,20 @@ void PrintMysteryGiftOrEReaderHeader(bool8 isEReader, bool32 useCancel)
     const u8 *title;
     const u8 *options;
     FillWindowPixelBuffer(WIN_HEADER, 0);
+#if ENABLE_EREADER_TRANSFER
     if (!isEReader)
+#endif
     {
         title = gText_MysteryGift;
         options = !useCancel ? gText_PickOKExit : gText_PickOKCancel;
     }
+#if ENABLE_EREADER_TRANSFER
     else
     {
         title = gJPText_MysteryGift;
         options = gJPText_DecideStop;
     }
+#endif
 
     AddTextPrinterParameterized4(WIN_HEADER, FONT_NORMAL, 4, 1, 0, 0, sTextColors_Header, TEXT_SKIP_DRAW, title);
     AddTextPrinterParameterized4(WIN_HEADER, FONT_SMALL, GetStringRightAlignXOffset(FONT_SMALL, options, 0xDE), 1, 0, 0, sTextColors_Header, TEXT_SKIP_DRAW, options);

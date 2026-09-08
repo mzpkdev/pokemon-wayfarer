@@ -1,7 +1,7 @@
 # Wayfarer legacy multiboot removal
 
 PRD: [Wayfarer legacy multiboot removal](../prds/wayfarer-legacy-multiboot-removal.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -256,6 +256,11 @@ are shared.
    and the currently supported wireless Mystery Gift receive/send flow. Where
    automated link-hardware coverage is unavailable, record a two-instance
    emulator or physical-hardware smoke result instead of omitting the check.
+
+## Validation evidence
+
+See [build, size, and runtime results](../research/wayfarer-legacy-multiboot-validation.md),
+including the hardware and prepared-save gates that remain unverified.
 
 ## References
 

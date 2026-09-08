@@ -1,6 +1,9 @@
 #ifndef GUARD_BERRY_FIX_PROGRAM_H
 #define GUARD_BERRY_FIX_PROGRAM_H
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 
 void CB2_InitBerryFixProgram(void);
+
+#endif
 
 #endif // GUARD_BERRY_FIX_PROGRAM_H

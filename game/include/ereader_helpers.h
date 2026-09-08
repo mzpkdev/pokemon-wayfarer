@@ -1,6 +1,8 @@
 #ifndef GUARD_EREADER_HELPERS_H
 #define GUARD_EREADER_HELPERS_H
 
+#if ENABLE_EREADER_TRANSFER
+
 #include "trainer_hill.h"
 
 enum {
@@ -58,5 +60,7 @@ void EReaderHelper_SerialCallback(void);
 void EReaderHelper_SaveRegsState(void);
 void EReaderHelper_RestoreRegsState(void);
 void EReaderHelper_ClearSendRecvMgr(void);
+
+#endif // ENABLE_EREADER_TRANSFER
 
 #endif // GUARD_EREADER_HELPERS_H

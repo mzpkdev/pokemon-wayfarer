@@ -65,7 +65,9 @@ static void ScheduleStopScanlineEffect(void);
 static void LoadMainTitleScreenPalsAndResetBgs(void);
 static void CB2_FadeOutTransitionToSaveClearScreen(void);
 static void CB2_FadeOutTransitionToResetRtcScreen(void);
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 static void CB2_FadeOutTransitionToBerryFix(void);
+#endif
 static void LoadSpriteGfxAndPals(void);
 #if defined(FIRERED)
 static void SpriteCallback_TitleScreenFlame(struct Sprite *sprite);
@@ -647,7 +649,9 @@ static void SetTitleScreenScene_FadeIn(s16 *data)
 
 #define KEYSTROKE_DELSAVE (B_BUTTON | SELECT_BUTTON | DPAD_UP)
 #define KEYSTROKE_RESET_RTC (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 #define KEYSTROKE_BERRY_FIX (B_BUTTON | SELECT_BUTTON)
+#endif
 
 static void SetTitleScreenScene_Run(s16 *data)
 {
@@ -677,12 +681,14 @@ static void SetTitleScreenScene_Run(s16 *data)
             DestroyTask(FindTaskIdByFunc(Task_TitleScreenMain));
             SetMainCallback2(CB2_FadeOutTransitionToResetRtcScreen);
         }
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
         else if (JOY_HELD(KEYSTROKE_BERRY_FIX) == KEYSTROKE_BERRY_FIX)
         {
             DeactivateSlashSprite(tSlashSpriteId);
             DestroyTask(FindTaskIdByFunc(Task_TitleScreenMain));
             SetMainCallback2(CB2_FadeOutTransitionToBerryFix);
         }
+#endif
         else if (JOY_NEW(A_BUTTON | START_BUTTON))
         {
             SetTitleScreenScene(data, TITLESCREENSCENE_CRY);
@@ -966,6 +972,7 @@ static void CB2_FadeOutTransitionToSaveClearScreen(void)
         SetMainCallback2(CB2_InitClearSaveDataScreen);
 }
 
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 static void CB2_FadeOutTransitionToBerryFix(void)
 {
     if (!UpdatePaletteFade())
@@ -974,6 +981,7 @@ static void CB2_FadeOutTransitionToBerryFix(void)
         SetMainCallback2(CB2_InitBerryFixProgram);
     }
 }
+#endif
 
 static void LoadSpriteGfxAndPals(void)
 {

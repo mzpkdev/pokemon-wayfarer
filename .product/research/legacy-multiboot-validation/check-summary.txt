@@ -1,0 +1,22 @@
+Command: make -C game -j12 BUILD=wayfarer check
+Exit code: 0
+
+  Tests with ASSUMPTIONS_FAILED:
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing eligible battler with bursting flames doesn't increase tracker.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Pawniard KO-ing a Bisharp that holds Leader's Crest doesn't increase tracker.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing multiple Bisharps holding Leader's Crest increases tracker multiple times.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing eligible battler with passive damage doesn't increase tracker.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Leader's Crest doesn't increase tracker.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing eligible battler from contact effects doesn't increase tracker.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hold Leader's Crest doesn't increase tracker.
+  - test/battle/evolution_tracker.c:6 - Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader's Crest increases tracker.
+  - test/trainer_party_scaling.c:583: ASSUME failed - Trainer scaling rollback bypasses level species and move changes together.
+
+- Tests KNOWN_FAILING:   349
+- ASSUMPTIONS_FAILED:    9
+- Tests TO_DO:           629
+- Tests EXPECT_FAILING:  6
+- Tests PASSED:          4325
+- Tests TOTAL:           5318
+
+make: Leaving directory '/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/legacy-multiboot-removal-implementation/pokemon-wayfarer/game'

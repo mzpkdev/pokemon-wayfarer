@@ -227,7 +227,9 @@ static const u16 *const *const sPrizeListSets[] =
     sPrizeLists2
 };
 
+#if ENABLE_EREADER_TRANSFER
 static const u16 sEReader_Pal[] = INCBIN_U16("graphics/trainer_hill/ereader.gbapal");
+#endif
 static const u8 sRecordWinColors[] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
 
 static const struct TrainerHillChallenge *const sChallengeData[NUM_TRAINER_HILL_MODES] =
@@ -453,10 +455,14 @@ static void TrainerHillStartChallenge(void)
 {
     TrainerHillDummy();
 #if FREE_TRAINER_HILL == FALSE
+#if ENABLE_EREADER_TRANSFER
     if (!ReadTrainerHillAndValidate())
         gSaveBlock1Ptr->trainerHill.field_3D6E_0f = 1;
     else
         gSaveBlock1Ptr->trainerHill.field_3D6E_0f = 0;
+#else
+    gSaveBlock1Ptr->trainerHill.field_3D6E_0f = 1;
+#endif
 
     gSaveBlock1Ptr->trainerHill.unk_3D6C = 0;
     SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill.timer);
@@ -1060,8 +1066,10 @@ static void SetAllTrainerFlags(void)
 // Palette never loaded, OnTrainerHillEReaderChallengeFloor always FALSE
 void TryLoadTrainerHillEReaderPalette(void)
 {
+#if ENABLE_EREADER_TRANSFER
     if (OnTrainerHillEReaderChallengeFloor() == TRUE)
         LoadPalette(sEReader_Pal, BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+#endif
 }
 
 static void GetGameSaved(void)

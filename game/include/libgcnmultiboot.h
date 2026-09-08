@@ -1,5 +1,6 @@
 #ifndef GUARD_LIBGCNMULTIBOOT_H
 #define GUARD_LIBGCNMULTIBOOT_H
+#if ENABLE_COLOSSEUM_MULTIBOOT
 
 struct GcmbStruct
 {
@@ -13,5 +14,7 @@ void GameCubeMultiBoot_ExecuteProgram(struct GcmbStruct *pStruct);
 void GameCubeMultiBoot_Init(struct GcmbStruct *pStruct);
 void GameCubeMultiBoot_HandleSerialInterrupt(struct GcmbStruct *pStruct);
 void GameCubeMultiBoot_Quit(void);
+
+#endif
 
 #endif // GUARD_LIBGCNMULTIBOOT_H

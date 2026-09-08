@@ -42,7 +42,9 @@ enum {
 
 #define CLEAR_SAVE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_UP)
 #define RESET_RTC_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 #define BERRY_UPDATE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON)
+#endif
 #define A_B_START_SELECT (A_BUTTON | B_BUTTON | START_BUTTON | SELECT_BUTTON)
 
 static void MainCB2(void);
@@ -52,7 +54,9 @@ static void Task_TitleScreenPhase3(u8);
 static void CB2_GoToMainMenu(void);
 static void CB2_GoToClearSaveDataScreen(void);
 static void CB2_GoToResetRtcScreen(void);
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 static void CB2_GoToBerryFixScreen(void);
+#endif
 static void CB2_GoToCopyrightScreen(void);
 static void UpdateLegendaryMarkingColor(u8);
 
@@ -820,12 +824,14 @@ static void Task_TitleScreenPhase3(u8 taskId)
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         SetMainCallback2(CB2_GoToResetRtcScreen);
     }
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
     else if (JOY_HELD(BERRY_UPDATE_BUTTON_COMBO) == BERRY_UPDATE_BUTTON_COMBO)
     {
         FadeOutBGM(4);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         SetMainCallback2(CB2_GoToBerryFixScreen);
     }
+#endif
     else
     {
         SetGpuReg(REG_OFFSET_BG2Y_L, 0);
@@ -869,6 +875,7 @@ static void CB2_GoToResetRtcScreen(void)
         SetMainCallback2(CB2_InitResetRtcScreen);
 }
 
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 static void CB2_GoToBerryFixScreen(void)
 {
     if (!UpdatePaletteFade())
@@ -877,6 +884,7 @@ static void CB2_GoToBerryFixScreen(void)
         SetMainCallback2(CB2_InitBerryFixProgram);
     }
 }
+#endif
 
 static void UpdateLegendaryMarkingColor(u8 frameNum)
 {

@@ -1,4 +1,5 @@
 #include "global.h"
+#if ENABLE_BERRY_GLITCH_FIX_MULTIBOOT
 #include "graphics.h"
 #include "decompress.h"
 
@@ -48,3 +49,4 @@ static void UNUSED LoadBerryFixGraphics(u32 idx)
     REG_BG0CNT = BGCNT_SCREENBASE(31);
     REG_DISPCNT = DISPCNT_BG0_ON;
 }
+#endif

@@ -136,7 +136,9 @@ enum {
 #define TAG_FLYGON_SILHOUETTE 2002
 #define TAG_RAYQUAZA_ORB      2003
 
+#if ENABLE_COLOSSEUM_MULTIBOOT
 #define COLOSSEUM_GAME_CODE 0x65366347 // "Gc6e" in ASCII
+#endif
 
 // Used by various tasks and sprites
 #define tState data[0]
@@ -182,7 +184,9 @@ static EWRAM_DATA enum Gender sIntroCharacterGender = 0;
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
 COMMON_DATA u32 gIntroFrameCounter = 0;
+#if ENABLE_COLOSSEUM_MULTIBOOT
 COMMON_DATA struct GcmbStruct gMultibootProgramStruct = {0};
+#endif
 
 static const u16 sIntroDrops_Pal[]            = INCBIN_U16("graphics/intro/scene_1/drops.gbapal");
 static const u16 sIntroLogo_Pal[]             = INCBIN_U16("graphics/intro/scene_1/logo.gbapal");
@@ -1045,10 +1049,12 @@ static void LoadCopyrightGraphics(u16 tilesetAddress, u16 tilemapAddress, u16 pa
     LoadPalette(gIntroCopyright_Pal, paletteOffset, PLTT_SIZE_4BPP);
 }
 
+#if ENABLE_COLOSSEUM_MULTIBOOT
 static void SerialCB_CopyrightScreen(void)
 {
     GameCubeMultiBoot_HandleSerialInterrupt(&gMultibootProgramStruct);
 }
+#endif
 
 static u8 SetUpCopyrightScreen(void)
 {
@@ -1087,8 +1093,10 @@ static u8 SetUpCopyrightScreen(void)
         EnableInterrupts(INTR_FLAG_VBLANK);
         SetVBlankCallback(VBlankCB_Intro);
         REG_DISPCNT = DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON;
+#if ENABLE_COLOSSEUM_MULTIBOOT
         SetSerialCallback(SerialCB_CopyrightScreen);
         GameCubeMultiBoot_Init(&gMultibootProgramStruct);
+#endif
     // REG_DISPCNT needs to be overwritten the second time, because otherwise the intro won't show up on VBA 1.7.2 and John GBA Lite emulators.
     // The REG_DISPCNT overwrite is NOT needed in m-GBA, No$GBA, VBA 1.8.0, My Boy and Pizza Boy GBA emulators.
     case COPYRIGHT_EMULATOR_BLEND:
@@ -1096,11 +1104,15 @@ static u8 SetUpCopyrightScreen(void)
     default:
         UpdatePaletteFade();
         gMain.state++;
+#if ENABLE_COLOSSEUM_MULTIBOOT
         GameCubeMultiBoot_Main(&gMultibootProgramStruct);
+#endif
         break;
     case COPYRIGHT_START_FADE:
+#if ENABLE_COLOSSEUM_MULTIBOOT
         GameCubeMultiBoot_Main(&gMultibootProgramStruct);
         if (gMultibootProgramStruct.gcmb_field_2 != 1)
+#endif
         {
             BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
             gMain.state++;
@@ -1116,6 +1128,7 @@ static u8 SetUpCopyrightScreen(void)
         CreateTask(Task_Scene1_Load, 0);
         SetMainCallback2(MainCB2_Intro);
 #endif
+#if ENABLE_COLOSSEUM_MULTIBOOT
         if (gMultibootProgramStruct.gcmb_field_2 != 0)
         {
             if (gMultibootProgramStruct.gcmb_field_2 == 2)
@@ -1134,6 +1147,9 @@ static u8 SetUpCopyrightScreen(void)
             GameCubeMultiBoot_Quit();
             SetSerialCallback(SerialCB);
         }
+#else
+        SetSerialCallback(SerialCB);
+#endif
         return 0;
     }
 

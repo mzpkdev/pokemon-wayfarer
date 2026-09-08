@@ -1,0 +1,20 @@
+{
+  "normal": {
+    "rom_end": "0x9f473a8",
+    "used_bytes": 32797608,
+    "payloads": {
+      "PokemonColosseum": null,
+      "BerryGlitchFix": null,
+      "EReader": null
+    }
+  },
+  "release": {
+    "rom_end": "0x9f2a70c",
+    "used_bytes": 32679692,
+    "payloads": {
+      "PokemonColosseum": null,
+      "BerryGlitchFix": null,
+      "EReader": null
+    }
+  }
+}

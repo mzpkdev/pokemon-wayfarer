@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "rom_end": "0x9f5d9a0",
+    "used_bytes": 32889248,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": 15348,
+      "EReader": 12512
+    }
+  },
+  "disabled": {
+    "rom_end": "0x9f2a70c",
+    "used_bytes": 32679692,
+    "payloads": {
+      "PokemonColosseum": null,
+      "BerryGlitchFix": null,
+      "EReader": null
+    }
+  },
+  "saved_bytes": 209556,
+  "additional_beyond_payloads": 17856,
+  "category_savings": {
+    "audio": 0,
+    "code": 8680,
+    "encounter_data": 0,
+    "graphics": 6424,
+    "maps_layouts": 0,
+    "other": 194452,
+    "scripts": 0,
+    "trainer_data": 0
+  }
+}

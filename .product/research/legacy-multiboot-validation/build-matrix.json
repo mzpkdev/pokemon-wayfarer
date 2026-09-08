@@ -1,0 +1,178 @@
+[
+  {
+    "name": "emerald-default",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=emerald",
+      "ENABLE_COLOSSEUM_MULTIBOOT=1",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=1",
+      "ENABLE_EREADER_TRANSFER=1"
+    ],
+    "exit_code": 0,
+    "seconds": 60,
+    "rom_end": "0x9ba7e1c",
+    "used_bytes": 28999196,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": 15348,
+      "EReader": 12512
+    }
+  },
+  {
+    "name": "firered-default",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=firered",
+      "ENABLE_COLOSSEUM_MULTIBOOT=1",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=1",
+      "ENABLE_EREADER_TRANSFER=1"
+    ],
+    "exit_code": 0,
+    "seconds": 75,
+    "rom_end": "0x9c6cc8c",
+    "used_bytes": 29805708,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": 15348,
+      "EReader": 12512
+    }
+  },
+  {
+    "name": "leafgreen-default",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=leafgreen",
+      "ENABLE_COLOSSEUM_MULTIBOOT=1",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=1",
+      "ENABLE_EREADER_TRANSFER=1"
+    ],
+    "exit_code": 0,
+    "seconds": 60,
+    "rom_end": "0x9c6cd80",
+    "used_bytes": 29805952,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": 15348,
+      "EReader": 12512
+    }
+  },
+  {
+    "name": "hns-default",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=hns",
+      "ENABLE_COLOSSEUM_MULTIBOOT=1",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=1",
+      "ENABLE_EREADER_TRANSFER=1"
+    ],
+    "exit_code": 0,
+    "seconds": 107,
+    "rom_end": "0x9e27fdc",
+    "used_bytes": 31621084,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": 15348,
+      "EReader": 12512
+    }
+  },
+  {
+    "name": "emerald-no-colosseum",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=emerald",
+      "ENABLE_COLOSSEUM_MULTIBOOT=0",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=1",
+      "ENABLE_EREADER_TRANSFER=1"
+    ],
+    "exit_code": 0,
+    "seconds": 168,
+    "rom_end": "0x9b7faac",
+    "used_bytes": 28834476,
+    "payloads": {
+      "PokemonColosseum": null,
+      "BerryGlitchFix": 15348,
+      "EReader": 12512
+    }
+  },
+  {
+    "name": "emerald-no-berry",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=emerald",
+      "ENABLE_COLOSSEUM_MULTIBOOT=1",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=0",
+      "ENABLE_EREADER_TRANSFER=1"
+    ],
+    "exit_code": 0,
+    "seconds": 76,
+    "rom_end": "0x9ba1848",
+    "used_bytes": 28973128,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": null,
+      "EReader": 12512
+    }
+  },
+  {
+    "name": "emerald-no-ereader",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=emerald",
+      "ENABLE_COLOSSEUM_MULTIBOOT=1",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=1",
+      "ENABLE_EREADER_TRANSFER=0"
+    ],
+    "exit_code": 0,
+    "seconds": 51,
+    "rom_end": "0x9ba3754",
+    "used_bytes": 28981076,
+    "payloads": {
+      "PokemonColosseum": 163840,
+      "BerryGlitchFix": 15348,
+      "EReader": null
+    }
+  },
+  {
+    "name": "emerald-none",
+    "command": [
+      "make",
+      "-C",
+      "game",
+      "-j12",
+      "BUILD=emerald",
+      "ENABLE_COLOSSEUM_MULTIBOOT=0",
+      "ENABLE_BERRY_GLITCH_FIX_MULTIBOOT=0",
+      "ENABLE_EREADER_TRANSFER=0"
+    ],
+    "exit_code": 0,
+    "seconds": 38,
+    "rom_end": "0x9b74e20",
+    "used_bytes": 28790304,
+    "payloads": {
+      "PokemonColosseum": null,
+      "BerryGlitchFix": null,
+      "EReader": null
+    }
+  }
+]
