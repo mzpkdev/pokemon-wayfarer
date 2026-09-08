@@ -159,6 +159,11 @@ Mail, capacity, challenge/dead-Pokémon and non-Wayfarer rules. Trades/daycare a
 not included. Safely place or restore a cursor-held Pokémon before PC exit, and
 compact/recount after transfers; cancellation must never lose a Pokémon.
 
+The Wayfarer start menu always exposes Pokémon, regardless of party contents
+or the starter-received flag. An empty party opens the safe Cancel-only party
+screen. This menu check does not set starter or chapter flags; non-Wayfarer
+builds retain their existing flag-based visibility.
+
 Outside encounters, existing legal Revives, Centers, healing and withdrawal can
 restore protection. Center healing must finish and release field control with
 an empty party or an Egg-only party excluded from the healing animation. Show

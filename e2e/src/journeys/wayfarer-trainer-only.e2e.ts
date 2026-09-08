@@ -8,6 +8,9 @@ import {
 } from "../playbooks/pc-storage"
 import { catchWithMasterBallAndSwap } from "../playbooks/battle-catch-swap"
 import { GameSession } from "../harness/game-session"
+import { storyFlags } from "../harness/game-session/catalog"
+
+Object.assign(storyFlags, { "party-menu-starter": 0x860, "party-menu-dex": 0x861 })
 import { type PartyMonFixture } from "../harness/game-session/features/fixtures"
 import { type GameState } from "../harness/game-session/features/state"
 
@@ -111,8 +114,27 @@ describe.sequential("Wayfarer trainer-only controller", () => {
         checkpoint: "new-bark-after-intro",
         party: [],
         bag: { items: { masterBall: 1 } },
+        story: { flags: { "party-menu-starter": false, "party-menu-dex": false } as never },
         determinism: { textSpeed: "instant" },
       })
+      const browseParty = async (image: string) => {
+        await game.controls.press("start")
+        await game.wait.until((state) => state.ui.mode === "pause-menu", "Pokemon start entry")
+        await game.wait.frames(60)
+        await fs.promises.writeFile(`/tmp/${image}-start.png`, await game.screenshot())
+        await game.controls.press("a")
+        await game.wait.until((state) => state.partyMenu.open, "field party screen")
+        await game.wait.frames(60)
+        await fs.promises.writeFile(`/tmp/${image}-party.png`, await game.screenshot())
+        expect(await game.story.flag("party-menu-starter" as never)).toBe(false)
+        await game.controls.press("b")
+        await game.wait.until((state) => state.ui.mode === "pause-menu", "return to start menu")
+        await game.wait.frames(60)
+        await game.controls.press("b")
+        await game.wait.forReady()
+      }
+      await browseParty("trainer-only-empty-menu")
+      expect((await game.state.read()).party).toHaveLength(0)
       await game.battle.startWild({ species: "pidgey", level: 5 })
       await select(game, 1)
       await game.wait.until((state) => state.battle.ui === "bag", "trainer-only Bag")
@@ -130,6 +152,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
       expect(caught.party).toMatchObject([{ species: "pidgey", fainted: false, egg: false }])
       expect(caught.bag.items.masterBall).toBe(0)
       expect(caught.battle.trainerOnly.active).toBe(false)
+      await browseParty("trainer-only-first-catch-menu")
       await game.battle.startWild({ species: "rattata", level: 5 })
       await menu(game)
       expect((await game.state.read()).battle.trainerOnly.active).toBe(false)
