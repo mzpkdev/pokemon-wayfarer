@@ -140,6 +140,52 @@ class RepositoryContractTest(unittest.TestCase):
             "specialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage",
             AUDIT.audit_menus_and_routes, "profile eligibility")
 
+    def test_anne_is_not_hidden_behind_regular_service(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "\tgoto VermilionPort_EventScript_Sailor_AfterKanto",
+            "\tspecialvar VAR_RESULT, WayfarerCanUseRegularAqua\n"
+            "\tgoto_if_eq VAR_RESULT, TRUE, VermilionPort_EventScript_Sailor_AfterKanto",
+            AUDIT.audit_menus_and_routes, "whole-menu eligibility")
+
+    def test_seventh_harbor_entry_is_not_covered_by_dialogue(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "msgbox VermilionPort_Text_WhereSail, MSGBOX_DEFAULT\n\tclosemessage",
+            "message VermilionPort_Text_WhereSail",
+            AUDIT.audit_menus_and_routes, "dismiss the prompt")
+
+    def test_special_destinations_keep_regular_service_eligibility(self):
+        for destination in ("SouthernIsland", "BirthIsland", "FarawayIsland", "BattleFrontier"):
+            with self.subTest(destination=destination):
+                start = f"VermilionPort_EventScript_Chose{destination}::\n#if IS_WAYFARER\n"
+                self.assert_script_mutation_rejected(
+                    "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+                    start + "\tspecialvar VAR_RESULT, WayfarerCanUseRegularAqua",
+                    start + "\tspecialvar VAR_RESULT, WayfarerCanUseAquaMaidenVoyage",
+                    AUDIT.audit_menus_and_routes, "regular profile eligibility")
+
+    def test_anne_missing_ticket_cannot_board(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "VermilionPort_EventScript_BoardAnne::\n\tclosemessage\n\tcheckitem ITEM_SS_TICKET",
+            "VermilionPort_EventScript_BoardAnne::\n\tclosemessage\n\tcheckitem ITEM_EON_TICKET",
+            AUDIT.audit_menus_and_routes, "shared Ticket")
+
+    def test_anne_cannot_consume_ticket(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "\twarp MAP_SSANNE_1F_CORRIDOR, 19, 2",
+            "\tremoveitem ITEM_SS_TICKET\n\twarp MAP_SSANNE_1F_CORRIDOR, 19, 2",
+            AUDIT.audit_menus_and_routes, "changes story")
+
+    def test_anne_appends_after_exit(self):
+        self.assert_script_mutation_rejected(
+            "src/data/script_menu.h",
+            "    {gText_Exit},\n#if IS_WAYFARER\n    {gText_BoardSSAnne},",
+            "    {gText_BoardSSAnne},\n#if IS_WAYFARER\n    {gText_Exit},",
+            AUDIT.audit_menus_and_routes, "standalone HNS Vermilion menu changed")
+
     def test_non_native_origin_cannot_fall_through_to_maiden_voyage(self):
         self.assert_script_mutation_rejected(
             "data/maps/OlivineCity_PortInside_hns/scripts.inc",
@@ -172,6 +218,7 @@ class RepositoryContractTest(unittest.TestCase):
         result = AUDIT.build_audit(AUDIT.GAME_ROOT)
         self.assertEqual(result["status"], "pass")
         self.assertEqual(result["travel"]["menu"]["slateportSlot"], 0)
+        self.assertEqual(result["travel"]["menu"]["anneSlot"], 6)
         self.assertTrue(result["initialization"]["initializedCommittedLast"])
         self.assertEqual(
             result["hoennPorts"]["hoennSsAquaDepartures"],

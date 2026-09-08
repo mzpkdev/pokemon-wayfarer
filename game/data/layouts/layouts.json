@@ -6056,7 +6056,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SSANNE_2F_CORRIDOR",
@@ -6070,7 +6071,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SSANNE_3F_CORRIDOR",
@@ -6084,7 +6086,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SSANNE_B1F_CORRIDOR",
@@ -6098,7 +6101,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SSANNE_DECK",
@@ -6112,7 +6116,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_DIGLETTS_CAVE_B1F",
@@ -6770,7 +6775,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SSANNE_CAPTAINS_OFFICE",
@@ -6784,7 +6790,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_UNDERGROUND_PATH_ENTRANCE",
@@ -6854,7 +6861,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SSANNE_ROOM2",
@@ -6868,7 +6876,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_CELADON_CITY_DEPARTMENT_STORE_ELEVATOR",

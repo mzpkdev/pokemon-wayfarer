@@ -10,6 +10,11 @@ export const checkpoints = {
 } as const
 
 export const maps = {
+  "ss-anne-1f": { mapGroup: 66, mapNum: 5 },
+  "ss-anne-2f": { mapGroup: 66, mapNum: 6 },
+  "ss-anne-b1f": { mapGroup: 66, mapNum: 8 },
+  "ss-anne-captains-office": { mapGroup: 66, mapNum: 11 },
+  "ss-anne-1f-room-2": { mapGroup: 66, mapNum: 13 },
   "new-bark-town": { mapGroup: 0, mapNum: 0 },
   "cherrygrove-city": { mapGroup: 0, mapNum: 1 },
   "azalea-town": { mapGroup: 0, mapNum: 3 },
@@ -153,6 +158,8 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  ssAnneCaptainReward: 0x49d,
+  ssAnneBlueMet: 0x4a3,
   hoennWhiteoutToLavaridge: 0x606c,
   sharedPokegear: 0x892,
   sharedMatchCall: 0x1f3,

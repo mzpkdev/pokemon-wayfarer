@@ -21,14 +21,14 @@ The [independent-story PRD](../prds/frlg-kanto-independent-story-beats.md) suppl
 
 ## Sequential milestones
 
-Each milestone needs a bounded specification before code, followed by relevant validation, native critic review and a commit. Later rows may be split further after inspecting their code.
+Each milestone needs a bounded specification before code, followed by relevant validation, native critic review and a commit. Later rows may be split further after inspecting their code. At the user’s request, Cinnabar is last; other settled story work proceeds first.
 
 1. Measure the current release budget and inventory dependencies. Adapt settled Machine Part chronology without changing its quest state or choosing a new Power Plant layout.
 2. Integrate persistent Anne interiors and their state, direct boarding/return, Ticket handling and the appended Vermilion menu entry. Revise the exact-menu audit together with the working feature. Do not expose a menu option with an absent destination. A required following Bill-rescue submilestone integrates his rescue and no-duplicate Ticket reward after the Bill/grandfather placement decision. His rescue remains playable for existing Ticket holders. Anne boarding ships independently of that placement decision and accepts existing Tickets without Bill completion.
-3. Port intact FRLG Cinnabar and its interiors, including Mansion/Key/Blaine and fossil services. Validate HNS route seams in Porymap, healing, Fly, exits and release cost.
-4. Integrate Celadon Hideout and independent Silph investigations with isolated state and recoverable rewards. Add Tower/Fuji/physical Flute after radio services and the retained Vermilion Snorlax are reconciled, including placement and keeping radio awakening distinct from the Route 12/16 physical-Flute encounters. Ordinary Silph services follow liberation; Steven reward design stays pending.
-5. Integrate remaining local adventures and retained HNS adaptations, including Safari/Teeth, Mt. Moon, burglary and Nugget Bridge. Specify event collisions and reward ownership individually.
-6. Integrate Giovanni finale, one Earth Badge, Blue chapter retirement and separate League lineups. Resolve party/leadership choices before dependent content. Add Celebi gates using actual Giovanni and relevant Goldenrod completion, with adapted time/identity dialogue.
+3. Integrate Celadon Hideout and independent Silph investigations with isolated state and recoverable rewards. Add Tower/Fuji/physical Flute after radio services and the retained Vermilion Snorlax are reconciled, including placement and keeping radio awakening distinct from the Route 12/16 physical-Flute encounters. Ordinary Silph services follow liberation; Steven reward design stays pending.
+4. Integrate remaining local adventures and retained HNS adaptations, including Safari/Teeth, Mt. Moon, burglary and Nugget Bridge. Specify event collisions and reward ownership individually.
+5. Integrate Giovanni finale, one Earth Badge, Blue chapter retirement and separate League lineups. Resolve party/leadership choices before dependent content. Add Celebi gates using actual Giovanni and relevant Goldenrod completion, with adapted time/identity dialogue.
+6. Port intact FRLG Cinnabar and its interiors, including Mansion/Key/Blaine and fossil services. Validate HNS route seams in Porymap, healing, Fly, exits and release cost.
 
 The user approved content implementation before separately owned space recovery. Track measured usage throughout development and keep the production reserve check intact. Recovery and a passing release budget are merge prerequisites: rebase this task on recovery before merging. Do not implement unrelated optimization or reduce agreed content to fit the current margin.
 
@@ -63,11 +63,11 @@ The existing ship consists of 25 interior maps plus `SSAnne_Exterior_Frlg`.
 The interior graph's two external exit warps are in `SSAnne_1F_Corridor_Frlg`.
 The exterior owns the old departure presentation and must not become a second
 Vermilion dock. Boarding and both exits need explicit adapted destinations;
-return-tile walkability and an ordinary exit path still need verification.
+the selected return tile `(8, 9)` and its path to the public exit are now covered by static collision/event checks and save/reload emulator coverage.
 
-`game/tools/mapjson/mapjson.cpp` currently selects only HNS and Emerald
-sources for Wayfarer. A named selective FRLG manifest must preserve existing
-map IDs and close all included warps without enabling the entire FRLG catalog.
+`game/tools/mapjson/mapjson.cpp` now also accepts explicit Wayfarer opt-ins
+for the 25 Anne maps and nine layouts. Catalog tests check preserved source
+slots and closed included warps without enabling the entire FRLG catalog.
 The mixed-layout renderer supports FRLG layout metadata, but that does not
 establish that all required tilesets and scripts are linked correctly.
 
@@ -85,9 +85,9 @@ state. Blue's three source corridor triggers must not start rival battles for
 visitors. An authored visitor introduction and future Kanto chapter integration
 need explicit scene ownership; map discovery cannot advance Blue's chapters.
 
-The exact Vermilion menu audit remains unchanged until the complete boarding
-feature is implemented. The feature must keep original indices and all old
-eligibility checks while making Anne independently reachable with the Ticket.
+The exact Vermilion menu audit now checks the appended Anne slot, original
+indices, and each old service eligibility check. Its 16 tests pass; standalone
+HNS retains its original six-slot expectation.
 
 
 The Machine Part chronology milestone also passes the same release command:
@@ -98,3 +98,13 @@ Standalone HNS Route 24 preprocessing is identical to the baseline, Wayfarer
 executable commands are identical, and all 24 existing HNS traversal tests pass.
 This validation covers the dialogue substitution, not an emulator playthrough
 or the unimplemented story imports.
+
+
+The final Anne release passes with default release LTO: 33,007,476 used bytes,
+`__rom_end = 0x09F7A774`, 546,956 unused bytes, and 22,668 bytes above the
+mandatory reserve. This adds 118,628 bytes relative to the Machine Part milestone. The implementation includes the
+selected General FRLG and Anne tilesets, all required NPC graphics, the ship door
+animation, and valid ship entries in both HNS region-map tables. Eight map-catalog
+tests, 29 trainer-scaling generator tests, five native trainer-state tests, ten
+Anne emulator cases, and two existing Aqua emulator journeys pass. The native
+critic review is clear; E2E lint, type checking, and changed-file formatting pass.

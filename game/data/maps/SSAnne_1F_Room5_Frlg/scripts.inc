@@ -2,7 +2,11 @@ SSAnne_1F_Room5_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_1F_Room5_EventScript_Arthur::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS, SSAnne_1F_Room5_Text_ArthurIntro, SSAnne_1F_Room5_Text_ArthurDefeat
+#else
 	trainerbattle_single TRAINER_GENTLEMAN_ARTHUR, SSAnne_1F_Room5_Text_ArthurIntro, SSAnne_1F_Room5_Text_ArthurDefeat
+#endif
 	msgbox SSAnne_1F_Room5_Text_ArthurPostBattle, MSGBOX_AUTOCLOSE
 	end
 

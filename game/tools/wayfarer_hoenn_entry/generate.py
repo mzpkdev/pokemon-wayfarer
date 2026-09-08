@@ -379,8 +379,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     wayfarer_olivine = _extract_initializer(wayfarer_menu_source, "MultichoiceList_OlivineHarbor")
     require(hns_vermilion == ["gText_Olivine", *expected_optional], "standalone HNS Vermilion menu changed")
     require(
-        wayfarer_vermilion == ["gText_SlateportCity", *expected_optional],
-        "Wayfarer Vermilion must replace only menu slot 0 with Slateport",
+        wayfarer_vermilion == ["gText_SlateportCity", *expected_optional, "gText_BoardSSAnne"],
+        "Wayfarer Vermilion must preserve slots 0-5 and append Anne at slot 6",
     )
     expected_olivine = ["gText_Vermilion", *expected_optional]
     require(hns_olivine == expected_olivine, "standalone HNS Olivine menu changed")
@@ -396,8 +396,9 @@ def audit_menus_and_routes(game_root: Path) -> dict:
 
     wayfarer_root = wayfarer_index.reachable_text("VermilionPort_EventScript_Sailor")
     hns_root = hns_index.reachable_text("VermilionPort_EventScript_Sailor")
-    require(re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*VermilionPort_EventScript_Sailor_AfterKanto", wayfarer_root) is not None,
-            "Wayfarer Vermilion must gate its menu on profile eligibility")
+    require(wayfarer_index.block("VermilionPort_EventScript_Sailor").split() ==
+            "lock faceplayer goto VermilionPort_EventScript_Sailor_AfterKanto".split(),
+            "Wayfarer Vermilion must expose Anne without a whole-menu eligibility gate")
     require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", hns_root) is not None
             and "WayfarerCanUseRegularAqua" not in hns_root,
             "standalone HNS Vermilion must retain its completed-voyage gate")
@@ -411,20 +412,54 @@ def audit_menus_and_routes(game_root: Path) -> dict:
 
     after_wayfarer = wayfarer_index.block("VermilionPort_EventScript_Sailor_AfterKanto")
     after_hns = hns_index.block("VermilionPort_EventScript_Sailor_AfterKanto")
+    require(re.search(
+        r"msgbox\s+VermilionPort_Text_WhereSail\s*,\s*MSGBOX_DEFAULT\s+"
+        r"closemessage\s+multichoice\s+20\s*,\s*0\s*,\s*MULTI_VERMILION_HARBOR",
+        after_wayfarer,
+    ) is not None, "Wayfarer must dismiss the prompt before showing all seven harbor entries")
     wayfarer_cases = _case_targets(after_wayfarer)
     hns_cases = _case_targets(after_hns)
-    require(set(wayfarer_cases) == set(range(6)), "Wayfarer Vermilion menu case indices changed")
+    require(set(wayfarer_cases) == set(range(7)), "Wayfarer Vermilion menu case indices changed")
     require(set(hns_cases) == set(range(6)), "standalone HNS Vermilion menu case indices changed")
     require(
         [wayfarer_cases[index] for index in range(1, 6)] == [hns_cases[index] for index in range(1, 6)],
         "Wayfarer changed an optional Vermilion destination slot",
     )
+    # Compare each original service graph after removing only its verified new gate.
+    ungated_source = filter_product(raw_vermilion, wayfarer=True)
+    gate = (r"^\s*specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+"
+            r"goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*"
+            r"VermilionPort_EventScript_SailorCantSail\s*")
+    for index in range(1, 5):
+        label = wayfarer_cases[index]
+        body = wayfarer_index.block(label)
+        match = re.match(gate, body)
+        require(match is not None, f"Vermilion slot {index} must preserve regular profile eligibility")
+        ungated_source = ungated_source.replace(body, "\n" + body[match.end():], 1)
+    ungated_index = ScriptIndex([(vermilion_path, ungated_source)])
     for index in range(1, 6):
         label = wayfarer_cases[index]
         require(
-            wayfarer_index.reachable_text(label) == hns_index.reachable_text(label),
+            ungated_index.reachable_text(label).split() == hns_index.reachable_text(label).split(),
             f"Wayfarer changed optional Vermilion destination behavior at slot {index}",
         )
+    require(wayfarer_cases[6] == "VermilionPort_EventScript_BoardAnne", "Anne must use slot 6")
+    anne = wayfarer_index.block(wayfarer_cases[6])
+    ticket_check = _position(anne, r"checkitem\s+ITEM_SS_TICKET", "Anne must require the shared Ticket")
+    ticket_failure = _position(
+        anne, r"goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*VermilionPort_EventScript_Sailor_NoCredentials",
+        "Anne must refuse a missing Ticket", ticket_check)
+    require(re.fullmatch(r"\s*closemessage\s+checkitem\s+ITEM_SS_TICKET\s+"
+                         r"bufferitemname\s+STR_VAR_1\s*,\s*ITEM_SS_TICKET\s*", anne[:ticket_failure]) is not None,
+            "Anne changes state or adds eligibility before the Ticket refusal")
+    fade = _position(anne, r"fadescreenswapbuffers\s+FADE_TO_BLACK", "Anne boarding must fade", ticket_failure)
+    _position(anne, r"warp\s+MAP_SSANNE_1F_CORRIDOR\s*,\s*19\s*,\s*2\s",
+              "Anne must warp directly to its audited interior", fade)
+    anne_graph = wayfarer_index.reachable_text(wayfarer_cases[6])
+    require(re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|special|specialvar)\b", anne_graph) is None,
+            "Anne boarding changes story, recovery, or Aqua state")
+    require("EnterShip" not in anne_graph and "WayfarerCanUseRegularAqua" not in anne_graph,
+            "Anne boarding cannot use Aqua eligibility or departure")
     slateport_label = wayfarer_cases[0]
     require("Slateport" in slateport_label, "Wayfarer Vermilion slot 0 does not select Slateport")
     departure = wayfarer_index.reachable_text(slateport_label)
@@ -526,6 +561,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
             "standaloneHnsVermilion": hns_vermilion,
             "wayfarerOlivine": wayfarer_olivine,
             "slateportSlot": 0,
+            "anneSlot": 6,
+            "regularEligibilitySlots": list(range(5)),
             "preservedOptionalSlots": list(range(1, 6)),
         },
         "departure": {

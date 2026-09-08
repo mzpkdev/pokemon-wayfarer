@@ -532,10 +532,14 @@ const u16 gObjectEventPic_GreenVSSeekerBike[] = INCBIN_U16("graphics/object_even
 
 const u16 gObjectEventPal_PlayerFrlg[] = INCBIN_U16("graphics/object_events/palettes/player_frlg.gbapal");
 const u16 gObjectEventPal_PlayerReflectionFrlg[] = INCBIN_U16("graphics/object_events/palettes/player_reflection_frlg.gbapal");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPal_NpcBlue[] = INCBIN_U16("graphics/object_events/palettes/npc_blue.gbapal");
 const u16 gObjectEventPal_NpcPink[] = INCBIN_U16("graphics/object_events/palettes/npc_pink.gbapal");
 const u16 gObjectEventPal_NpcGreen[] = INCBIN_U16("graphics/object_events/palettes/npc_green.gbapal");
 const u16 gObjectEventPal_NpcWhite[] = INCBIN_U16("graphics/object_events/palettes/npc_white.gbapal");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPal_NpcBlueReflection[] = INCBIN_U16("graphics/object_events/palettes/npc_blue_reflection.gbapal");
 const u16 gObjectEventPal_NpcPinkReflection[] = INCBIN_U16("graphics/object_events/palettes/npc_pink_reflection.gbapal");
 const u16 gObjectEventPal_NpcGreenReflection[] = INCBIN_U16("graphics/object_events/palettes/npc_green_reflection.gbapal");
@@ -553,25 +557,45 @@ const u16 gObjectEventPic_Koga[] = INCBIN_U16("graphics/object_events/pics/peopl
 const u16 gObjectEventPic_Brock[] = INCBIN_U16("graphics/object_events/pics/people/brock.4bpp");
 const u16 gObjectEventPic_LtSurge[] = INCBIN_U16("graphics/object_events/pics/people/lt_surge.4bpp");
 const u16 gObjectEventPic_Bill[] = INCBIN_U16("graphics/object_events/pics/people/bill.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_LittleBoyFrlg[] = INCBIN_U16("graphics/object_events/pics/people/little_boy_frlg.4bpp");
 const u16 gObjectEventPic_LittleGirlFrlg[] = INCBIN_U16("graphics/object_events/pics/people/little_girl_frlg.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_SittingBoy[] = INCBIN_U16("graphics/object_events/pics/people/sitting_boy.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_LassFrlg[] = INCBIN_U16("graphics/object_events/pics/people/lass_frlg.4bpp");
 const u16 gObjectEventPic_YoungsterFrlg[] = INCBIN_U16("graphics/object_events/pics/people/youngster_frlg.4bpp");
 const u16 gObjectEventPic_Boy[] = INCBIN_U16("graphics/object_events/pics/people/boy.4bpp");
 const u16 gObjectEventPic_Woman1Frlg[] = INCBIN_U16("graphics/object_events/pics/people/woman_1_frlg.4bpp");
 const u16 gObjectEventPic_Woman3Frlg[] = INCBIN_U16("graphics/object_events/pics/people/woman_3_frlg.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_BugCatcherFrlg[] = INCBIN_U16("graphics/object_events/pics/people/bug_catcher_frlg.4bpp");
 const u16 gObjectEventPic_BattleGirl[] = INCBIN_U16("graphics/object_events/pics/people/battle_girl.4bpp");
 const u16 gObjectEventPic_FatManFrlg[] = INCBIN_U16("graphics/object_events/pics/people/fat_man_frlg.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_BaldingMan[] = INCBIN_U16("graphics/object_events/pics/people/balding_man.4bpp");
 const u16 gObjectEventPic_Woman2Frlg[] = INCBIN_U16("graphics/object_events/pics/people/woman_2_frlg.4bpp");
 const u16 gObjectEventPic_OldMan1[] = INCBIN_U16("graphics/object_events/pics/people/old_man_1.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_OldManLyingDown[] = INCBIN_U16("graphics/object_events/pics/people/old_man_lying_down.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_WorkerM[] = INCBIN_U16("graphics/object_events/pics/people/worker_m.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_WorkerF[] = INCBIN_U16("graphics/object_events/pics/people/worker_f.4bpp");
 const u16 gObjectEventPic_BeautyFrlg[] = INCBIN_U16("graphics/object_events/pics/people/beauty_frlg.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_Chef[] = INCBIN_U16("graphics/object_events/pics/people/chef.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_OldMan2[] = INCBIN_U16("graphics/object_events/pics/people/old_man_2.4bpp");
 const u16 gObjectEventPic_OldWomanFrlg[] = INCBIN_U16("graphics/object_events/pics/people/old_woman_frlg.4bpp");
 const u16 gObjectEventPic_CamperFrlg[] = INCBIN_U16("graphics/object_events/pics/people/camper_frlg.4bpp");
@@ -587,10 +611,14 @@ const u16 gObjectEventPic_SwimmerMLand[] = INCBIN_U16("graphics/object_events/pi
 const u16 gObjectEventPic_SwimmerFLand[] = INCBIN_U16("graphics/object_events/pics/people/swimmer_f_land.4bpp");
 const u16 gObjectEventPic_Blackbelt[] = INCBIN_U16("graphics/object_events/pics/people/blackbelt.4bpp");
 const u16 gObjectEventPic_Scientist[] = INCBIN_U16("graphics/object_events/pics/people/scientist.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_GentlemanFrlg[] = INCBIN_U16("graphics/object_events/pics/people/gentleman_frlg.4bpp");
 const u16 gObjectEventPic_SailorFrlg[] = INCBIN_U16("graphics/object_events/pics/people/sailor_frlg.4bpp");
 const u16 gObjectEventPic_Captain[] = INCBIN_U16("graphics/object_events/pics/people/captain.4bpp");
 const u16 gObjectEventPic_Fisher[] = INCBIN_U16("graphics/object_events/pics/people/fisher.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_TeachyTVHost[] = INCBIN_U16("graphics/object_events/pics/people/teachy_tv_host.4bpp");
 const u16 gObjectEventPic_TuberFFrlg[] = INCBIN_U16("graphics/object_events/pics/people/tuber_f_frlg.4bpp");
 const u16 gObjectEventPic_TuberMWater[] = INCBIN_U16("graphics/object_events/pics/people/tuber_m_water.4bpp");
@@ -601,7 +629,11 @@ const u16 gObjectEventPic_GymGuy[] = INCBIN_U16("graphics/object_events/pics/peo
 const u16 gObjectEventPic_Man[] = INCBIN_U16("graphics/object_events/pics/people/man.4bpp");
 const u16 gObjectEventPic_Rocker[] = INCBIN_U16("graphics/object_events/pics/people/rocker.4bpp");
 const u16 gObjectEventPic_ProfOak[] = INCBIN_U16("graphics/object_events/pics/people/prof_oak.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_Blue[] = INCBIN_U16("graphics/object_events/pics/people/blue.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_NurseFrlg[] = INCBIN_U16("graphics/object_events/pics/people/nurse_frlg.4bpp");
 const u16 gObjectEventPic_CableClubReceptionist[] = INCBIN_U16("graphics/object_events/pics/people/cable_club_receptionist.4bpp");
 const u16 gObjectEventPic_UnionRoomReceptionist[] = INCBIN_U16("graphics/object_events/pics/people/union_room_receptionist.4bpp");
@@ -664,11 +696,19 @@ const u16 gObjectEventPic_VoltorbOld[] = INCBIN_U16("graphics/object_events/pics
 const u16 gObjectEventPic_SlowpokeOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/slowpoke.4bpp");
 const u16 gObjectEventPic_SlowbroOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/slowbro.4bpp");
 const u16 gObjectEventPic_MachopOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/machop.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_WigglytuffOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/wigglytuff.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_DoduoOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/doduo.4bpp");
 const u16 gObjectEventPic_FearowOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/fearow.4bpp");
 const u16 gObjectEventPic_KabutoOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/kabuto.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_MachokeOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/machoke.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_SnorlaxOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/snorlax.4bpp");
 const u16 gObjectEventPic_SpearowOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/spearow.4bpp");
 const u16 gObjectEventPic_CuboneOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/cubone.4bpp");

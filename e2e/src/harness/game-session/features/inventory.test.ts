@@ -52,6 +52,9 @@ describe("game-session inventory", () => {
     await expect(inventory.contains("tmThunder")).resolves.toBe(true)
     await expect(inventory.contains("ssTicket")).resolves.toBe(true)
     await expect(inventory.contains("pass")).resolves.toBe(false)
+    await expect(inventory.contains("cut")).resolves.toBe(false)
+    pocketContents.get(4)!.item = 682
+    await expect(inventory.contains("cut")).resolves.toBe(true)
     expect(Math.max(...bagReadLengths)).toBeLessThanOrEqual(32)
   })
 

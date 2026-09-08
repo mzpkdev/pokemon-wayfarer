@@ -28,7 +28,9 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINERS_COUNT, TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_FALKNER_POSTOBC_HNS, 1493);
     EXPECT_EQ(TRAINER_ERIKA_POSTOBC_HNS, 1514);
-    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1515);
+    EXPECT_EQ(TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS, 1515);
+    EXPECT_EQ(TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS, 1530);
+    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1531);
     EXPECT_EQ(MAX_TRAINERS_COUNT, MAX_TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_PARTNER(PARTNER_NONE), 2048);
 }
@@ -76,6 +78,55 @@ TEST("Wayfarer appended HNS rematch defeat flags are isolated from Hoenn")
     EXPECT(HasTrainerBeenFought(TRAINER_MAY_PLACEHOLDER));
     ClearTrainerFlag(TRAINER_ERIKA_POSTOBC_HNS);
     EXPECT(!HasTrainerBeenFought(TRAINER_ERIKA_POSTOBC_HNS));
+}
+
+TEST("Wayfarer S.S. Anne trainer defeat flags are compact HNS flags")
+{
+    static const u16 sAnneTrainers[] =
+    {
+        TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS,
+        TRAINER_SS_ANNE_LASS_ANN_HNS,
+        TRAINER_SS_ANNE_LASS_DAWN_HNS,
+        TRAINER_SS_ANNE_SAILOR_EDMOND_HNS,
+        TRAINER_SS_ANNE_SAILOR_TREVOR_HNS,
+        TRAINER_SS_ANNE_SAILOR_LEONARD_HNS,
+        TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS,
+        TRAINER_SS_ANNE_SAILOR_HUEY_HNS,
+        TRAINER_SS_ANNE_SAILOR_DYLAN_HNS,
+        TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS,
+        TRAINER_SS_ANNE_FISHERMAN_DALE_HNS,
+        TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS,
+        TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS,
+        TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS,
+        TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS,
+        TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS,
+    };
+    u32 i;
+    u32 j;
+
+    ClearTrainerFlag(TRAINER_SAWYER_1);
+    for (i = 0; i < ARRAY_COUNT(sAnneTrainers); i++)
+    {
+        EXPECT_EQ(sAnneTrainers[i], 1515 + i);
+        ClearTrainerFlag(sAnneTrainers[i]);
+    }
+
+    // Every imported Anne team maps to a distinct compact HNS defeated flag.
+    // The fixed Hoenn range must remain independent of each of those flags.
+    for (i = 0; i < ARRAY_COUNT(sAnneTrainers); i++)
+    {
+        SetTrainerFlag(sAnneTrainers[i]);
+        for (j = 0; j < ARRAY_COUNT(sAnneTrainers); j++)
+            EXPECT_EQ(HasTrainerBeenFought(sAnneTrainers[j]), i == j);
+        EXPECT(!HasTrainerBeenFought(TRAINER_SAWYER_1));
+        ClearTrainerFlag(sAnneTrainers[i]);
+    }
+
+    SetTrainerFlag(TRAINER_SAWYER_1);
+    for (i = 0; i < ARRAY_COUNT(sAnneTrainers); i++)
+        EXPECT(!HasTrainerBeenFought(sAnneTrainers[i]));
+    EXPECT(HasTrainerBeenFought(TRAINER_SAWYER_1));
+    ClearTrainerFlag(TRAINER_SAWYER_1);
 }
 
 #endif

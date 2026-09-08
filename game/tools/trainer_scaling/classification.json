@@ -23113,6 +23113,262 @@
         }
       ],
       "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS",
+          "role": "TRAINER_CLASS_FISHERMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room1_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_FISHERMAN_DALE_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_DALE_HNS",
+          "role": "TRAINER_CLASS_FISHERMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_DALE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room5_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room7_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_LASS_ANN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_LASS_ANN_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_LASS_ANN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_LASS_DAWN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_LASS_DAWN_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_LASS_DAWN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_DYLAN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DYLAN_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room3_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DYLAN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_EDMOND_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_EDMOND_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_Deck_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_EDMOND_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_HUEY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_HUEY_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_HUEY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_LEONARD_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_LEONARD_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_LEONARD_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room1_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_TREVOR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_TREVOR_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_Deck_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_TREVOR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS",
+          "role": "TRAINER_CLASS_YOUNGSTER_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS"
+        }
+      ]
     }
   ],
   "move_exceptions": []

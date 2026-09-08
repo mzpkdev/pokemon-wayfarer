@@ -636,6 +636,32 @@ gStdScripts_End::
 
 #if IS_WAYFARER
 	.include "data/wayfarer_engine_source_constants.inc"
+	.include "data/scripts/item_ball_scripts_wayfarer.inc"
+	.include "data/maps/SSAnne_1F_Corridor_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Corridor_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_3F_Corridor_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_B1F_Corridor_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_Deck_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_Kitchen_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_CaptainsOffice_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room1_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room2_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room3_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room4_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room5_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room7_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Room1_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Room2_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Room3_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Room4_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Room5_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_2F_Room6_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_B1F_Room1_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_B1F_Room2_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_B1F_Room3_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_B1F_Room4_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_B1F_Room5_Frlg/scripts.inc"
+	.include "data/maps/SSAnne_1F_Room6_Frlg/scripts.inc"
 #endif
 .if IS_FRLG
 

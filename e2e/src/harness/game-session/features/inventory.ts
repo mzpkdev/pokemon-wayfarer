@@ -1,4 +1,4 @@
-import { items, type Item } from "../catalog"
+import { hms, items, type Hm, type Item } from "../catalog"
 import { type SessionRuntime } from "../runtime"
 
 const keyItemsPocketId = 5
@@ -21,7 +21,7 @@ const uint32 = (bytes: Uint8Array, offset: number): number =>
 export type StandardRod = "oldRod" | "goodRod" | "superRod"
 
 export type InventoryApi = {
-  contains: (item: Item) => Promise<boolean>
+  contains: (item: Item | Hm) => Promise<boolean>
   rodSlots: () => Promise<Record<StandardRod, number>>
 }
 
@@ -79,7 +79,7 @@ const readPocketSlots = async (runtime: SessionRuntime, pocket: BagPocket): Prom
 
 export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
   contains: async (name) => {
-    const item = items[name]
+    const item = { ...items, ...hms }[name]
     // HNS traversal credentials and rewards live in Items, TM/HM, or Key Items.
     for (const pocketId of [3, 4, 5]) {
       const pocket = await readBagPocket(runtime, pocketId)

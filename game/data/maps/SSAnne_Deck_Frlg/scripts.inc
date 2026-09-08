@@ -14,18 +14,31 @@ SSAnne_Deck_EventScript_Sailor::
 	end
 
 SSAnne_Deck_EventScript_Edmond::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_SS_ANNE_SAILOR_EDMOND_HNS, SSAnne_Deck_Text_EdmondIntro, SSAnne_Deck_Text_EdmondDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_EDMOND, SSAnne_Deck_Text_EdmondIntro, SSAnne_Deck_Text_EdmondDefeat
+#endif
 	msgbox SSAnne_Deck_Text_EdmondPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAnne_Deck_EventScript_Trevor::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_SS_ANNE_SAILOR_TREVOR_HNS, SSAnne_Deck_Text_TrevorIntro, SSAnne_Deck_Text_TrevorDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_TREVOR, SSAnne_Deck_Text_TrevorIntro, SSAnne_Deck_Text_TrevorDefeat
+#endif
 	msgbox SSAnne_Deck_Text_TrevorPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAnne_Deck_Text_ShipDepartingSoon::
+#if IS_WAYFARER
+	.string "The party's over, but the ship is\n"
+	.string "staying in VERMILION for visitors.$"
+#else
 	.string "The party's over.\n"
 	.string "The ship will be departing soon.$"
+#endif
 
 SSAnne_Deck_Text_ScrubbingDecksHardWork::
 	.string "Whew!\n"
@@ -57,4 +70,3 @@ SSAnne_Deck_Text_TrevorDefeat::
 SSAnne_Deck_Text_TrevorPostBattle::
 	.string "My pa said there are 100 kinds of\n"
 	.string "POKéMON. I think there are more.$"
-

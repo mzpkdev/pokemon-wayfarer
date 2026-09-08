@@ -20,12 +20,11 @@ VermilionPort_EventScript_Sailor::
 	lock
 	faceplayer
 #if IS_WAYFARER
-	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
-	goto_if_eq VAR_RESULT, TRUE, VermilionPort_EventScript_Sailor_AfterKanto
+	goto VermilionPort_EventScript_Sailor_AfterKanto
 #else
 	goto_if_ge VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_Sailor_AfterKanto
-#endif
 	goto VermilionPort_EventScript_SailorCantSail
+#endif
 
 VermilionPort_EventScript_SailorCantSail::
 	msgbox VermilionPort_Text_SailorCantSail, MSGBOX_NPC
@@ -34,7 +33,12 @@ VermilionPort_EventScript_SailorCantSail::
 	end
 
 VermilionPort_EventScript_Sailor_AfterKanto::
+#if IS_WAYFARER
+	msgbox VermilionPort_Text_WhereSail, MSGBOX_DEFAULT
+	closemessage
+#else
 	message VermilionPort_Text_WhereSail
+#endif
 	multichoice 20, 0, MULTI_VERMILION_HARBOR, FALSE
 	switch VAR_RESULT
 #if IS_WAYFARER
@@ -47,11 +51,31 @@ VermilionPort_EventScript_Sailor_AfterKanto::
 	case 3, VermilionPort_EventScript_ChoseFarawayIsland
 	case 4, VermilionPort_EventScript_ChoseBattleFrontier
 	case 5, VermilionPort_EventScript_Sailor_Refused
+#if IS_WAYFARER
+	case 6, VermilionPort_EventScript_BoardAnne
+#endif
 	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Refused
 	release
 	end
 
 #if IS_WAYFARER
+VermilionPort_EventScript_BoardAnne::
+	closemessage
+	checkitem ITEM_SS_TICKET
+	bufferitemname STR_VAR_1, ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
+	msgbox VermilionPort_Text_BoardAnne, MSGBOX_DEFAULT
+	closemessage
+	fadescreenswapbuffers FADE_TO_BLACK
+	warp MAP_SSANNE_1F_CORRIDOR, 19, 2
+	waitstate
+	release
+	end
+
+VermilionPort_Text_BoardAnne:
+	.string "We'll take you aboard the\n"
+	.string "S.S. ANNE.$"
+
 VermilionPort_EventScript_ChoseSlateport::
 	closemessage
 	delay 20
@@ -94,6 +118,10 @@ VermilionPort_EventScript_ChoseOlivine::
 	end
 
 VermilionPort_EventScript_ChoseSouthernIsland::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantSail
+#endif
 	closemessage
 	delay 20
 	checkitem ITEM_EON_TICKET
@@ -106,6 +134,10 @@ VermilionPort_EventScript_ChoseSouthernIsland::
 	end
 
 VermilionPort_EventScript_ChoseBirthIsland::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantSail
+#endif
 	closemessage
 	delay 20
 	checkitem ITEM_AURORA_TICKET
@@ -118,6 +150,10 @@ VermilionPort_EventScript_ChoseBirthIsland::
 	end
 
 VermilionPort_EventScript_ChoseFarawayIsland::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantSail
+#endif
 	closemessage
 	delay 20
 	checkitem ITEM_OLD_SEA_MAP
@@ -130,6 +166,10 @@ VermilionPort_EventScript_ChoseFarawayIsland::
 	end	
 
 VermilionPort_EventScript_ChoseBattleFrontier::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_SailorCantSail
+#endif
 	closemessage
 	delay 20
 	call VermilionPort_EventScript_EnterShip

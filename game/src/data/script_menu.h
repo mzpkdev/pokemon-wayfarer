@@ -1176,6 +1176,10 @@ static const struct MenuAction MultichoiceList_OlivineHarbor[] =
     {gText_BattleFrontier},
     {gText_Exit},
 };
+#if IS_WAYFARER
+static const u8 gText_BoardSSAnne[] = _("Board S.S. Anne");
+#endif
+
 static const struct MenuAction MultichoiceList_VermilionHarbor[] =
 {
 #if IS_WAYFARER
@@ -1188,6 +1192,9 @@ static const struct MenuAction MultichoiceList_VermilionHarbor[] =
     {gText_FarawayIsland},
     {gText_BattleFrontier},
     {gText_Exit},
+#if IS_WAYFARER
+    {gText_BoardSSAnne},
+#endif
 };
 
 static const struct MenuAction MultichoiceList_7Floors[] = 

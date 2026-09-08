@@ -3,25 +3,28 @@
 PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
 Implemented: Yes
 
-The persistent Anne/menu extension below is approved future behavior and is
-not implemented. This status describes the existing Aqua circuit only.
+The persistent Anne extension is owned by the
+[persistent Anne specification](frlg-kanto-persistent-anne.md). Its boarding
+flow extends this circuit's Vermilion menu without changing the circuit routes.
 
 ## Approved future Vermilion menu extension
 
 The [FRLG Kanto story PRD](../prds/frlg-kanto-story-on-hns-maps.md#vermilion-boarding-existing-sailor-and-dock)
-adds Board S.S. Anne to Vermilion's existing sailor menu. For that implementation,
-this overrides the exact-six-entry/slot-0-only restriction below: keep current
-slots 0–5 and append Anne at slot 6. Retain every existing destination and its
-eligibility. Make the new Anne option available to any S.S. Ticket holder
-without letting that access bypass the original services' regular-Aqua gate.
-Olivine, Slateport, and standalone HNS behavior remain unchanged.
+authorizes Board S.S. Anne at Vermilion slot 6, following the original slots
+0–5. This supersedes the earlier exact-six-entry restriction. Slateport remains
+slot 0 and Exit remains slot 5. Olivine, Slateport and standalone HNS retain
+their existing menus.
 
-The future implementation must update the exact-list and dispatch-case checks
-in `game/tools/wayfarer_hoenn_entry/generate.py` to validate the added option,
-preserved original indices, and per-service eligibility. Preserve standalone
-HNS expectations. Until the Anne change is implemented, current six-entry
-runtime behavior and its audit remain the implemented baseline. This
-documentation change neither modifies that audit nor claims the Anne works.
+The Vermilion menu is reachable before regular Aqua eligibility. Slots 0–4
+check `WayfarerCanUseRegularAqua` in their own service branches, preserving the
+original special-destination credentials and route behavior. Anne requires
+only the shared S.S. Ticket and uses a separate direct interior warp.
+
+`game/tools/wayfarer_hoenn_entry/generate.py` validates the seven Wayfarer
+entries, original indices, per-service eligibility and Anne's independent
+Ticket check. It compares the original optional-service script graphs after
+removing only the verified eligibility guards. Its standalone HNS expectations
+remain six entries with the original whole-menu gate.
 
 ## Scope
 
@@ -79,7 +82,7 @@ existing no-credentials result and changes no state.
 In Wayfarer, Slateport replaces Olivine at the regular Vermilion Aqua menu
 index. Olivine keeps Vermilion at its existing Aqua menu index. Every other
 special or optional HNS destination retains its index and behavior. The
-[approved future Anne extension](#approved-future-vermilion-menu-extension)
+[Anne extension](#approved-future-vermilion-menu-extension)
 adds a new slot without moving those existing entries. The
 standalone HNS menus remain unchanged.
 

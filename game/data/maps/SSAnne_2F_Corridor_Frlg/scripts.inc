@@ -4,21 +4,61 @@ SSAnne_2F_Corridor_Frlg_MapScripts::
 SSAnne_2F_Corridor_EventScript_RivalTriggerLeft::
 	lockall
 	setvar VAR_TEMP_1, 0
+
+#if IS_WAYFARER
+	goto SSAnne_2F_Corridor_EventScript_VisitorTrigger
+#else
 	goto SSAnne_2F_Corridor_EventScript_RivalTrigger
+#endif
 	end
 
 SSAnne_2F_Corridor_EventScript_RivalTriggerMid::
 	lockall
 	setvar VAR_TEMP_1, 1
+
+#if IS_WAYFARER
+	goto SSAnne_2F_Corridor_EventScript_VisitorTrigger
+#else
 	goto SSAnne_2F_Corridor_EventScript_RivalTrigger
+#endif
 	end
 
 SSAnne_2F_Corridor_EventScript_RivalTriggerRight::
 	lockall
 	setvar VAR_TEMP_1, 2
+
+#if IS_WAYFARER
+	goto SSAnne_2F_Corridor_EventScript_VisitorTrigger
+#else
 	goto SSAnne_2F_Corridor_EventScript_RivalTrigger
+#endif
 	end
 
+#if IS_WAYFARER
+SSAnne_2F_Corridor_EventScript_VisitorTrigger::
+	textcolor NPC_TEXT_COLOR_MALE
+	playse SE_EXIT
+	delay 5
+	addobject LOCALID_SS_ANNE_RIVAL
+	delay 10
+	applymovement LOCALID_SS_ANNE_RIVAL, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	delay 20
+	call_if_eq VAR_TEMP_1, 0, SSAnne_2F_Corridor_EventScript_RivalApproachLeft
+	call_if_eq VAR_TEMP_1, 1, SSAnne_2F_Corridor_EventScript_RivalApproachMid
+	call_if_eq VAR_TEMP_1, 2, SSAnne_2F_Corridor_EventScript_RivalApproachRight
+	msgbox SSAnne_2F_Corridor_Text_VisitorIntro
+	setflag FLAG_SS_ANNE_BLUE_MET_HNS
+	closemessage
+	delay 10
+	call_if_eq VAR_TEMP_1, 0, SSAnne_2F_Corridor_EventScript_RivalExitLeft
+	call_if_eq VAR_TEMP_1, 1, SSAnne_2F_Corridor_EventScript_RivalExitMid
+	call_if_eq VAR_TEMP_1, 2, SSAnne_2F_Corridor_EventScript_RivalExitRight
+	removeobject LOCALID_SS_ANNE_RIVAL
+	setvar VAR_MAP_SCENE_S_S_ANNE_2F_CORRIDOR, 1
+	releaseall
+	end
+#else
 SSAnne_2F_Corridor_EventScript_RivalTrigger::
 	textcolor NPC_TEXT_COLOR_MALE
 	playse SE_EXIT
@@ -49,6 +89,7 @@ SSAnne_2F_Corridor_EventScript_RivalTrigger::
 	setvar VAR_MAP_SCENE_S_S_ANNE_2F_CORRIDOR, 1
 	releaseall
 	end
+#endif
 
 SSAnne_2F_Corridor_EventScript_RivalApproachLeft::
 	applymovement LOCALID_SS_ANNE_RIVAL, SSAnne_2F_Corridor_Movement_RivalApproachLeft
@@ -67,6 +108,7 @@ SSAnne_2F_Corridor_EventScript_RivalApproachRight::
 	waitmovement 0
 	return
 
+#if !IS_WAYFARER
 SSAnne_2F_Corridor_EventScript_RivalSquirtle::
 	trainerbattle_no_intro TRAINER_RIVAL_SS_ANNE_SQUIRTLE, SSAnne_2F_Corridor_Text_RivalDefeat
 	return
@@ -78,6 +120,7 @@ SSAnne_2F_Corridor_EventScript_RivalBulbasaur::
 SSAnne_2F_Corridor_EventScript_RivalCharmander::
 	trainerbattle_no_intro TRAINER_RIVAL_SS_ANNE_CHARMANDER, SSAnne_2F_Corridor_Text_RivalDefeat
 	return
+#endif
 
 SSAnne_2F_Corridor_EventScript_RivalExitLeft::
 	applymovement LOCALID_SS_ANNE_RIVAL, SSAnne_2F_Corridor_Movement_RivalExitLeft
@@ -185,6 +228,16 @@ SSAnne_2F_Corridor_Text_RivalIntro::
 	.string "Crawl around in grassy areas, and\n"
 	.string "look hard for them.$"
 
+#if IS_WAYFARER
+SSAnne_2F_Corridor_Text_VisitorIntro::
+	.string "BLUE: Hey! I'm BLUE. I didn't expect\n"
+	.string "to see another visiting TRAINER here.\p"
+	.string "This ship is a good place to meet\n"
+	.string "people from all over.\p"
+	.string "I heard the CAPTAIN knows a useful\n"
+	.string "technique. You should say hello.$"
+#endif
+
 SSAnne_2F_Corridor_Text_RivalDefeat::
 	.string "Humph!\p"
 	.string "At least you're raising your\n"
@@ -204,4 +257,3 @@ SSAnne_2F_Corridor_Text_RivalPostBattle::
 	.string "Yup, it'll be handy.\p"
 	.string "You should go see him, too.\n"
 	.string "Smell ya!$"
-

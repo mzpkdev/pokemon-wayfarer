@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 TOOL = Path(__file__).resolve().parent
 MANIFEST = TOOL / 'classification.json'
 OUTPUT = ROOT / 'src/data/trainer_scaling'
-SOURCES = ('trainers_hns.party', 'trainers.party')
+SOURCES = ('trainers_hns.party', 'trainers.party', 'trainers_wayfarer.party')
 POLICIES = {'EXCLUDED': 0, 'ORDINARY': 1, 'GYM_MEMBER': 2, 'GYM_LEADER': 3}
 ID_RE = re.compile(r'\bTRAINER_[A-Z0-9_]+\b')
 
@@ -149,7 +149,13 @@ def resolve_rosters(records):
 
 def references():
     groups = json.loads((ROOT / 'data/maps/map_groups.json').read_text())
-    maps = {name for group in groups.get('group_order', []) if not group.endswith('_Frlg') for name in groups.get(group, [])}
+    maps = set()
+    for group in groups.get('group_order', []):
+        for name in groups.get(group, []):
+            map_data = json.loads((ROOT / 'data/maps' / name / 'map.json').read_text())
+            if (map_data.get('game_version', 'emerald') in {'hns', 'emerald'}
+                    or map_data.get('wayfarer_include') is True):
+                maps.add(name)
     refs = defaultdict(set)
     non_opponents = set()
     for header in (ROOT / 'include/constants').glob('*.h'):

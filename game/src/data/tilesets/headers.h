@@ -1544,6 +1544,34 @@ const struct Tileset gTileset_HallOfFame =
 
 #endif // HAS_FRLG_CONTENT
 
+#if IS_WAYFARER
+
+// The persistent S.S. Anne uses exactly these two FRLG tilesets. Keep this
+// narrow so Wayfarer does not pull the full FRLG tileset catalog into its ROM.
+const struct Tileset gTileset_General_Frlg =
+{
+    .isCompressed = TRUE,
+    .isSecondary = FALSE,
+    .tiles = gTilesetTiles_General_Frlg,
+    .palettes = gTilesetPalettes_General_Frlg,
+    .metatiles = gMetatiles_General_Frlg,
+    .metatileAttributes = gMetatileAttributes_General_Frlg,
+    .callback = InitTilesetAnim_General_Frlg,
+};
+
+const struct Tileset gTileset_SSAnne =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_SSAnne,
+    .palettes = gTilesetPalettes_SSAnne,
+    .metatiles = gMetatiles_SSAnne,
+    .metatileAttributes = gMetatileAttributes_SSAnne,
+    .callback = NULL,
+};
+
+#endif // IS_WAYFARER
+
 #if HAS_HNS_CONTENT
 
 

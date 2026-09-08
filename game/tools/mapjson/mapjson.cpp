@@ -117,7 +117,20 @@ bool source_version_is_selected(const string &source_version) {
 }
 
 bool data_matches_version(const Json &data) {
+    if (version == "wayfarer" && data["wayfarer_include"].bool_value())
+        return true;
+
     return source_version_is_selected(get_source_version(data));
+}
+
+string get_warp_destination(const Json &warp) {
+    if (version == "wayfarer") {
+        string wayfarer_destination = json_to_string(warp, "wayfarer_dest_map", true);
+        if (!wayfarer_destination.empty())
+            return wayfarer_destination;
+    }
+
+    return json_to_string(warp, "dest_map");
 }
 
 string get_generated_warning(const string &filename, bool isAsm) {
@@ -317,7 +330,7 @@ string generate_map_events_text(Json map_data) {
                  << json_to_string(warp_event, "y") << ", "
                  << json_to_string(warp_event, "elevation") << ", "
                  << json_to_string(warp_event, "dest_warp_id") << ", "
-                 << json_to_string(warp_event, "dest_map") << "\n";
+                 << get_warp_destination(warp_event) << "\n";
         }
         text << "\n";
     } else {
@@ -830,7 +843,7 @@ void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Js
     for (const Json &map_data : included_maps) {
         string map_name = json_to_string(map_data, "name");
         for (const Json &warp : map_data["warp_events"].array_items()) {
-            string destination = json_to_string(warp, "dest_map");
+            string destination = get_warp_destination(warp);
             if (included_map_ids.find(destination) == included_map_ids.end()
              && dynamic_destinations.find(destination) == dynamic_destinations.end())
                 FATAL_ERROR("Map %s warp references unavailable map %s.\n", map_name.c_str(), destination.c_str());

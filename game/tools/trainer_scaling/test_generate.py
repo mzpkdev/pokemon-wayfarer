@@ -1,7 +1,47 @@
 """Structural gates for reviewed Trainer classification and roster ownership."""
 import copy
+import json
 import unittest
 import generate as gen
+
+
+SS_ANNE_TRAINERS = (
+    'TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS',
+    'TRAINER_SS_ANNE_LASS_ANN_HNS',
+    'TRAINER_SS_ANNE_LASS_DAWN_HNS',
+    'TRAINER_SS_ANNE_SAILOR_EDMOND_HNS',
+    'TRAINER_SS_ANNE_SAILOR_TREVOR_HNS',
+    'TRAINER_SS_ANNE_SAILOR_LEONARD_HNS',
+    'TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS',
+    'TRAINER_SS_ANNE_SAILOR_HUEY_HNS',
+    'TRAINER_SS_ANNE_SAILOR_DYLAN_HNS',
+    'TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS',
+    'TRAINER_SS_ANNE_FISHERMAN_DALE_HNS',
+    'TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS',
+    'TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS',
+    'TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS',
+    'TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS',
+    'TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS',
+)
+
+SS_ANNE_PARTIES = {
+    'TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS': (('SPECIES_NIDORAN_M', 21),),
+    'TRAINER_SS_ANNE_LASS_ANN_HNS': (('SPECIES_PIDGEY', 18), ('SPECIES_NIDORAN_F', 18)),
+    'TRAINER_SS_ANNE_LASS_DAWN_HNS': (('SPECIES_RATTATA', 18), ('SPECIES_PIKACHU', 18)),
+    'TRAINER_SS_ANNE_SAILOR_EDMOND_HNS': (('SPECIES_MACHOP', 18), ('SPECIES_SHELLDER', 18)),
+    'TRAINER_SS_ANNE_SAILOR_TREVOR_HNS': (('SPECIES_MACHOP', 17), ('SPECIES_TENTACOOL', 17)),
+    'TRAINER_SS_ANNE_SAILOR_LEONARD_HNS': (('SPECIES_SHELLDER', 21),),
+    'TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS': (('SPECIES_HORSEA', 17), ('SPECIES_SHELLDER', 17), ('SPECIES_TENTACOOL', 17)),
+    'TRAINER_SS_ANNE_SAILOR_HUEY_HNS': (('SPECIES_TENTACOOL', 18), ('SPECIES_STARYU', 18)),
+    'TRAINER_SS_ANNE_SAILOR_DYLAN_HNS': (('SPECIES_HORSEA', 17), ('SPECIES_HORSEA', 17), ('SPECIES_HORSEA', 17)),
+    'TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS': (('SPECIES_MACHOP', 20),),
+    'TRAINER_SS_ANNE_FISHERMAN_DALE_HNS': (('SPECIES_GOLDEEN', 17), ('SPECIES_TENTACOOL', 17), ('SPECIES_GOLDEEN', 17)),
+    'TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS': (('SPECIES_TENTACOOL', 17), ('SPECIES_STARYU', 17), ('SPECIES_SHELLDER', 17)),
+    'TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS': (('SPECIES_GROWLITHE', 18), ('SPECIES_GROWLITHE', 18)),
+    'TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS': (('SPECIES_NIDORAN_M', 19), ('SPECIES_NIDORAN_F', 19)),
+    'TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS': (('SPECIES_PIKACHU', 23),),
+    'TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS': (('SPECIES_GROWLITHE', 17), ('SPECIES_PONYTA', 17)),
+}
 
 
 def roster(slots=None, **fields):
@@ -18,6 +58,39 @@ class InventoryTests(unittest.TestCase):
     def test_real_compiler_uses_wayfarer_roster_macros(self):
         records = gen.load_inventory()
         self.assertEqual(records['TRAINER_PHOEBE']['DIFFICULTY_NORMAL']['slots'][0]['lvl'], 87)
+
+    def test_persistent_anne_trainer_catalog_is_complete_and_wayfarer_only(self):
+        records = gen.load_inventory()
+        ids = gen.trainer_ids(SS_ANNE_TRAINERS)
+        self.assertEqual(
+            [ids[trainer] for trainer in SS_ANNE_TRAINERS],
+            list(range(1515, 1531)),
+        )
+        self.assertEqual(set(SS_ANNE_PARTIES), set(SS_ANNE_TRAINERS))
+        self.assertEqual(len(set(ids.values())), 16)
+        for trainer in SS_ANNE_TRAINERS:
+            roster = records[trainer]['DIFFICULTY_NORMAL']
+            self.assertEqual(roster['source'], 'src/data/trainers_wayfarer.party')
+            actual_party = tuple(
+                (slot['species'], slot['lvl'])
+                for slot in roster['slots'][:roster['partySize']]
+            )
+            self.assertEqual(actual_party, SS_ANNE_PARTIES[trainer])
+
+        manifest = json.loads(gen.MANIFEST.read_text())
+        rows = {
+            row['id']: row
+            for row in manifest['records']
+            if row['id'] in SS_ANNE_TRAINERS
+        }
+        self.assertEqual(set(rows), set(SS_ANNE_TRAINERS))
+        for trainer, row in rows.items():
+            self.assertEqual(row['policy'], 'ORDINARY')
+            self.assertTrue(any(
+                evidence['path'] == 'src/data/trainers_wayfarer.party'
+                and evidence['symbol'] == trainer
+                for evidence in row['evidence']
+            ))
 
     def test_alias_chain_and_pool_keep_original_slots(self):
         records = {'TRAINER_A': {'DIFFICULTY_NORMAL': roster([], overrideTrainer='TRAINER_B')}, 'TRAINER_B': {'DIFFICULTY_NORMAL': roster([], overrideTrainer='TRAINER_C')}, 'TRAINER_C': {'DIFFICULTY_NORMAL': roster([{'species': 'SPECIES_RATTATA', 'lvl': 10}, {'species': 'SPECIES_PIDGEY', 'lvl': 20}], poolSize=2)}}
