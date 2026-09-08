@@ -4,10 +4,10 @@ This report checks authored source records and projected parties. It does not es
 
 | Policy | Populated IDs |
 | --- | ---: |
-| EXCLUDED | 203 |
+| EXCLUDED | 204 |
 | GYM_LEADER | 30 |
 | GYM_MEMBER | 104 |
-| ORDINARY | 1192 |
+| ORDINARY | 1204 |
 
 | Region | Populated IDs |
 | --- | ---: |
@@ -15,7 +15,7 @@ This report checks authored source records and projected parties. It does not es
 | HNS unplaced | 245 |
 | Hoenn | 854 |
 | Johto | 236 |
-| Kanto | 166 |
+| Kanto | 179 |
 | Sinjoh | 8 |
 
 HNS unplaced means a compiled roster lacks a direct regional map reference. The manifest preserves that uncertainty instead of assigning a region from its Trainer name.
@@ -28,7 +28,7 @@ Baseline anchors: 0:7, 4:8, 8:10, 16:15, 30:22, 40:34, 55:52, 65:72, 80:92. Each
 
 Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.
 
-The audit evaluated 444,852 slot, Rating, and learnset-mode combinations with 0 structural failures.
+The audit evaluated 450,198 slot, Rating, and learnset-mode combinations with 0 structural failures.
 
 ## Highest early parties
 
@@ -62,7 +62,7 @@ The audit evaluated 444,852 slot, Rating, and learnset-mode combinations with 0 
 
 ## Species and retained-field observations
 
-- Custom authored moves replaced: 2478 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
+- Custom authored moves replaced: 2532 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 - Authored ability requires fallback: 1 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 - Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
 - Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.

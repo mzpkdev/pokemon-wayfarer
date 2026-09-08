@@ -864,7 +864,11 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
 #endif
 #if IS_FRLG
     [OBJ_EVENT_GFX_WORKER_F]                 = &gObjectEventGraphicsInfo_WorkerF,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_ROCKET_M]                 = &gObjectEventGraphicsInfo_RocketM,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_ROCKET_F]                 = &gObjectEventGraphicsInfo_RocketF,
     [OBJ_EVENT_GFX_GBA_KID]                  = &gObjectEventGraphicsInfo_GBAKid,
     [OBJ_EVENT_GFX_SUPER_NERD]               = &gObjectEventGraphicsInfo_SuperNerd,
@@ -917,7 +921,11 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_KOGA]                     = &gObjectEventGraphicsInfo_Koga,
     [OBJ_EVENT_GFX_SABRINA]                  = &gObjectEventGraphicsInfo_Sabrina,
     [OBJ_EVENT_GFX_BLAINE]                   = &gObjectEventGraphicsInfo_Blaine,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_GIOVANNI]                 = &gObjectEventGraphicsInfo_Giovanni,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_MOM_FRLG]                 = &gObjectEventGraphicsInfo_MomFrlg,
     [OBJ_EVENT_GFX_CELIO]                    = &gObjectEventGraphicsInfo_Celio,
     [OBJ_EVENT_GFX_TEACHY_TV_HOST]           = &gObjectEventGraphicsInfo_TeachyTVHost,

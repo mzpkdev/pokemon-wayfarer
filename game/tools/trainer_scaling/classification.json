@@ -23369,6 +23369,215 @@
           "symbol": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS"
         }
       ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS",
+          "role": "TRAINER_CLASS_BOSS_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS"
+        }
+      ],
+      "reason": "Authored Celadon Hideout boss encounter; outside ordinary Trainer Rating scaling."
     }
   ],
   "move_exceptions": []

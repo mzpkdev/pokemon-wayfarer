@@ -637,6 +637,7 @@ gStdScripts_End::
 #if IS_WAYFARER
 	.include "data/wayfarer_engine_source_constants.inc"
 	.include "data/scripts/item_ball_scripts_wayfarer.inc"
+	.include "data/scripts/wayfarer_celadon_hideout.inc"
 	.include "data/maps/SSAnne_1F_Corridor_Frlg/scripts.inc"
 	.include "data/maps/SSAnne_2F_Corridor_Frlg/scripts.inc"
 	.include "data/maps/SSAnne_3F_Corridor_Frlg/scripts.inc"

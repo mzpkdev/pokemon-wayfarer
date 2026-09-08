@@ -760,4 +760,6 @@ gSpecials::
     def_special WayfarerGrantRunningShoes
     def_special WayfarerHasSharedPokedex
     def_special WayfarerGrantSharedPokedex
+    def_special WayfarerCanStartOrdinaryBattleForScript
+    def_special WayfarerGetRocketHideoutElevatorFloorForScript
 #endif

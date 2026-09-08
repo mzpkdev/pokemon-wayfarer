@@ -10,6 +10,12 @@ export const checkpoints = {
 } as const
 
 export const maps = {
+  "celadon-game-corner": { mapGroup: 17, mapNum: 9 },
+  "celadon-hideout-b1f": { mapGroup: 66, mapNum: 42 },
+  "celadon-hideout-b2f": { mapGroup: 66, mapNum: 43 },
+  "celadon-hideout-b3f": { mapGroup: 66, mapNum: 44 },
+  "celadon-hideout-b4f": { mapGroup: 66, mapNum: 45 },
+  "celadon-hideout-elevator": { mapGroup: 66, mapNum: 46 },
   "ss-anne-1f": { mapGroup: 66, mapNum: 5 },
   "ss-anne-2f": { mapGroup: 66, mapNum: 6 },
   "ss-anne-b1f": { mapGroup: 66, mapNum: 8 },
@@ -135,6 +141,7 @@ export const maps = {
 } as const
 
 export const storyVars = {
+  farawayIslandStepCounter: 0x403a,
   newBarkTownLabState: 0x4074,
   newBarkTownState: 0x4075,
   azaleaTownState: 0x4053,
@@ -158,6 +165,16 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  celadonHideoutKeyReceived: 0x4ba,
+  celadonHideoutScopeReceived: 0x4bb,
+  celadonHideoutOpened: 0x4b6,
+  celadonHideoutLiftEnabled: 0x4b7,
+  celadonHideoutGiovanniTrainerDefeated: 0x7b1,
+  celadonHideoutGiovanniDefeated: 0x4b8,
+  celadonHideoutEntranceGruntDefeated: 0x7a5,
+  celadonHideoutKeyGruntDefeated: 0x7b0,
+  celadonHideoutLeftGuardDefeated: 0x7ae,
+  celadonHideoutRightGuardDefeated: 0x7af,
   ssAnneCaptainReward: 0x49d,
   ssAnneBlueMet: 0x4a3,
   hoennWhiteoutToLavaridge: 0x606c,
@@ -289,6 +306,8 @@ export const hms = {
 } as const
 
 export const items = {
+  liftKey: 751,
+  silphScope: 752,
   masterBall: 4,
   miracleSeed: 429,
   metalCoat: 441,

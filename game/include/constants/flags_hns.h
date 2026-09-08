@@ -2376,7 +2376,11 @@
 #define FLAG_WORLD_MAP_UNDERGROUND_PATH_EAST_WEST_TUNNEL        0
 #define FLAG_WORLD_MAP_DIGLETTS_CAVE_B1F                        0
 #define FLAG_WORLD_MAP_VICTORY_ROAD_1F                          0
+#if IS_WAYFARER
+#define FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F                       0x4B9
+#else
 #define FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F                       0
+#endif
 #define FLAG_WORLD_MAP_SILPH_CO_1F                              0
 #define FLAG_WORLD_MAP_POKEMON_MANSION_1F                       0
 #define FLAG_WORLD_MAP_SAFARI_ZONE_CENTER                       0
@@ -2518,7 +2522,11 @@
 #define FLAG_0x83D                                              0
 #define FLAG_BEAT_RIVAL_IN_OAKS_LAB                             0
 #define FLAG_BOUGHT_MAGIKARP                                    0
+#if IS_WAYFARER
+#define FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT                        0x4B7
+#else
 #define FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT                        0
+#endif
 #define FLAG_CINNABAR_GYM_QUIZ_1                                0
 #define FLAG_CINNABAR_GYM_QUIZ_2                                0
 #define FLAG_CINNABAR_GYM_QUIZ_3                                0
@@ -2668,10 +2676,26 @@
 #define FLAG_HIDDEN_ITEM_POKEMON_TOWER_7F_SOOTHE_BELL           FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_POWER_PLANT_MAX_ELIXIR                 FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_POWER_PLANT_THUNDER_STONE              FLAG_HIDDEN_ITEMS_START
-#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B1F_PP_UP               FLAG_HIDDEN_ITEMS_START
-#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B3F_NUGGET              FLAG_HIDDEN_ITEMS_START
-#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NEST_BALL           FLAG_HIDDEN_ITEMS_START
-#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NET_BALL            FLAG_HIDDEN_ITEMS_START
+#if IS_WAYFARER
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B1F_PP_UP               0x4B2
+#else
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B1F_PP_UP               0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B3F_NUGGET              0x4B3
+#else
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B3F_NUGGET              0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NEST_BALL           0x4B4
+#else
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NEST_BALL           0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NET_BALL            0x4B5
+#else
+#define FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NET_BALL            0
+#endif
 #define FLAG_HIDDEN_ITEM_ROUTE10_CHERI_BERRY                    FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_ROUTE10_MAX_ETHER                      FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_ROUTE10_NANAB_BERRY                    FLAG_HIDDEN_ITEMS_START
@@ -2865,10 +2889,18 @@
 #define FLAG_HIDE_FUCHSIA_CITY_WARDENS_HOUSE_RARE_CANDY         0
 #define FLAG_HIDE_GAME_CORNER_ROCKET                            0
 #define FLAG_HIDE_HELIX_FOSSIL                                  0
+#if IS_WAYFARER
+#define FLAG_HIDE_HIDEOUT_GIOVANNI                              0x4B8
+#else
 #define FLAG_HIDE_HIDEOUT_GIOVANNI                              0
+#endif
 #define FLAG_HIDE_ICEFALL_CAVE_LORELEI                          0
 #define FLAG_HIDE_ICEFALL_CAVE_ROCKETS                          0
+#if IS_WAYFARER
+#define FLAG_HIDE_LIFT_KEY                                      0x4B0
+#else
 #define FLAG_HIDE_LIFT_KEY                                      0
+#endif
 #define FLAG_HIDE_LORELEI_IN_HER_HOUSE                          0
 #define FLAG_HIDE_LOSTELLE_IN_BERRY_FOREST                      0
 #define FLAG_HIDE_LOSTELLE_IN_HER_HOME                          0
@@ -2936,18 +2968,66 @@
 #define FLAG_HIDE_RESORT_GORGEOUS_INSIDE_SELPHY                 0
 #define FLAG_HIDE_RESORT_GORGEOUS_SELPHY                        0
 #define FLAG_HIDE_RIVAL_IN_LAB                                  0
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B1F_ESCAPE_ROPE                0x4A4
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B1F_ESCAPE_ROPE                0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B1F_HYPER_POTION               0x4A5
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B1F_HYPER_POTION               0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B2F_MOON_STONE                 0x4A7
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B2F_MOON_STONE                 0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B2F_SUPER_POTION               0x4A9
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B2F_SUPER_POTION               0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B2F_TM12                       0x4A8
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B2F_TM12                       0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B2F_X_SPEED                    0x4A6
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B2F_X_SPEED                    0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B3F_BLACK_GLASSES              0x4AC
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B3F_BLACK_GLASSES              0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B3F_RARE_CANDY                 0x4AA
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B3F_RARE_CANDY                 0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B3F_TM21                       0x4AB
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B3F_TM21                       0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B4F_CALCIUM                    0x4AF
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B4F_CALCIUM                    0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B4F_MAX_ETHER                  0x4AE
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B4F_MAX_ETHER                  0
+#endif
+#if IS_WAYFARER
+#define FLAG_HIDE_ROCKET_HIDEOUT_B4F_TM49                       0x4AD
+#else
 #define FLAG_HIDE_ROCKET_HIDEOUT_B4F_TM49                       0
+#endif
 #define FLAG_HIDE_ROCK_TUNNEL_1F_ESCAPE_ROPE                    0
 #define FLAG_HIDE_ROCK_TUNNEL_1F_PEARL                          0
 #define FLAG_HIDE_ROCK_TUNNEL_1F_REPEL                          0
@@ -3030,7 +3110,11 @@
 #define FLAG_HIDE_SILPH_CO_8F_IRON                              0
 #define FLAG_HIDE_SILPH_RIVAL                                   0
 #define FLAG_HIDE_SILPH_ROCKETS                                 0
+#if IS_WAYFARER
+#define FLAG_HIDE_SILPH_SCOPE                                   0x4B1
+#else
 #define FLAG_HIDE_SILPH_SCOPE                                   0
+#endif
 #define FLAG_HIDE_SIX_ISLAND_OUTCAST_ISLAND_PP_UP               0
 #define FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL                   0
 #define FLAG_HIDE_SIX_ISLAND_RUIN_VALLEY_FULL_RESTORE           0
@@ -3050,6 +3134,9 @@
 #define FLAG_HIDE_SS_ANNE_RIVAL                                 0x4A2
 #define FLAG_SS_ANNE_CAPTAIN_REWARD_HNS                         0x49D
 #define FLAG_SS_ANNE_BLUE_MET_HNS                               0x4A3
+#define FLAG_CELADON_ROCKET_HIDEOUT_ENTRANCE_OPEN_HNS            0x4B6
+#define FLAG_CELADON_ROCKET_HIDEOUT_LIFT_KEY_RECEIVED_HNS         0x4BA
+#define FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS      0x4BB
 #else
 #define FLAG_HIDE_SSANNE_1F_ROOM2_TM31                          0
 #define FLAG_HIDE_SSANNE_2F_ROOM2_STARDUST                      0

@@ -215,8 +215,12 @@ const u16 gMetatileAttributes_UnionRoom[] = INCBIN_U16("data/tilesets/secondary/
 
 #if HAS_FRLG_CONTENT
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u16 gMetatiles_Building_Frlg[] = INCBIN_U16("data/tilesets/primary/building_frlg/metatiles.bin");
 const u16 gMetatileAttributes_Building_Frlg[] = INCBIN_U16("data/tilesets/primary/building_frlg/metatile_attributes.bin");
+#endif
+#if HAS_FRLG_CONTENT
 
 const u16 gMetatiles_GenericBuilding1[] = INCBIN_U16("data/tilesets/secondary/generic_building_1_frlg/metatiles.bin");
 const u16 gMetatileAttributes_GenericBuilding1[] = INCBIN_U16("data/tilesets/secondary/generic_building_1_frlg/metatile_attributes.bin");
@@ -339,8 +343,12 @@ const u16 gMetatileAttributes_PowerPlant[] = INCBIN_U16("data/tilesets/secondary
 const u16 gMetatiles_SeaCottage[] = INCBIN_U16("data/tilesets/secondary/sea_cottage_frlg/metatiles.bin");
 const u16 gMetatileAttributes_SeaCottage[] = INCBIN_U16("data/tilesets/secondary/sea_cottage_frlg/metatile_attributes.bin");
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u16 gMetatiles_SilphCo[] = INCBIN_U16("data/tilesets/secondary/silph_co_frlg/metatiles.bin");
 const u16 gMetatileAttributes_SilphCo[] = INCBIN_U16("data/tilesets/secondary/silph_co_frlg/metatile_attributes.bin");
+#endif
+#if HAS_FRLG_CONTENT
 
 const u16 gMetatiles_UndergroundPath[] = INCBIN_U16("data/tilesets/secondary/underground_path_frlg/metatiles.bin");
 const u16 gMetatileAttributes_UndergroundPath[] = INCBIN_U16("data/tilesets/secondary/underground_path_frlg/metatile_attributes.bin");

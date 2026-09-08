@@ -2292,6 +2292,8 @@ static const struct SpriteFrameImage sPicTable_PushableBoulderFrlg[] = {
     overworld_frame(gObjectEventPic_PushableBoulderFrlg, 2, 2, 0),
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 static const struct SpriteFrameImage sPicTable_RocketM[] = {
     overworld_frame(gObjectEventPic_RocketM, 2, 4, 0),
     overworld_frame(gObjectEventPic_RocketM, 2, 4, 1),
@@ -2303,6 +2305,8 @@ static const struct SpriteFrameImage sPicTable_RocketM[] = {
     overworld_frame(gObjectEventPic_RocketM, 2, 4, 7),
     overworld_frame(gObjectEventPic_RocketM, 2, 4, 8),
 };
+#endif
+#if IS_FRLG
 
 static const struct SpriteFrameImage sPicTable_Celio[] = {
     overworld_frame(gObjectEventPic_Celio, 2, 4, 0),
@@ -2388,6 +2392,8 @@ static const struct SpriteFrameImage sPicTable_Koga[] = {
     overworld_frame(gObjectEventPic_Koga, 2, 4, 2),
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 static const struct SpriteFrameImage sPicTable_Giovanni[] = {
     overworld_frame(gObjectEventPic_Giovanni, 2, 4, 0),
     overworld_frame(gObjectEventPic_Giovanni, 2, 4, 1),
@@ -2399,6 +2405,8 @@ static const struct SpriteFrameImage sPicTable_Giovanni[] = {
     overworld_frame(gObjectEventPic_Giovanni, 2, 4, 7),
     overworld_frame(gObjectEventPic_Giovanni, 2, 4, 8),
 };
+#endif
+#if IS_FRLG
 
 static const struct SpriteFrameImage sPicTable_Blaine[] = {
     overworld_frame(gObjectEventPic_Blaine, 2, 4, 0),

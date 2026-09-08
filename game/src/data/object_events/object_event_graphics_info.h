@@ -5884,6 +5884,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PushableBoulderFrl
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RocketM = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5902,6 +5904,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RocketM = {
     .images = sPicTable_RocketM,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Celio = {
     .tileTag = TAG_NONE,
@@ -6036,6 +6040,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Koga = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giovanni = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -6054,6 +6060,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giovanni = {
     .images = sPicTable_Giovanni,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Blaine = {
     .tileTag = TAG_NONE,

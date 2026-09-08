@@ -219,9 +219,75 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "show_map_name": True,
             "floor_number": 0,
             "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-            "object_events": [],
-            "coord_events": [],
-            "bg_events": [],
+            "object_events": [
+                {
+                    "graphics_id": "OBJ_EVENT_GFX_OLD_MAN",
+                    "x": 1,
+                    "y": 1,
+                    "elevation": 0,
+                    "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+                    "movement_range_x": 0,
+                    "movement_range_y": 0,
+                    "trainer_type": "TRAINER_TYPE_NONE",
+                    "trainer_sight_or_berry_tree_id": "0",
+                    "script": "EventScript_Always",
+                    "flag": "0",
+                },
+                {
+                    "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+                    "x": 2,
+                    "y": 1,
+                    "elevation": 0,
+                    "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+                    "movement_range_x": 0,
+                    "movement_range_y": 0,
+                    "trainer_type": "TRAINER_TYPE_NONE",
+                    "trainer_sight_or_berry_tree_id": "0",
+                    "script": "EventScript_WayfarerOnly",
+                    "flag": "0",
+                    "wayfarer_only": True,
+                },
+            ],
+            "coord_events": [
+                {
+                    "type": "trigger",
+                    "x": 1,
+                    "y": 1,
+                    "elevation": 0,
+                    "var": "VAR_TEMP_1",
+                    "var_value": "0",
+                    "script": "EventScript_AlwaysCoord",
+                },
+                {
+                    "type": "trigger",
+                    "x": 2,
+                    "y": 1,
+                    "elevation": 0,
+                    "var": "VAR_TEMP_1",
+                    "var_value": "0",
+                    "script": "EventScript_WayfarerOnlyCoord",
+                    "wayfarer_only": True,
+                },
+            ],
+            "bg_events": [
+                {
+                    "type": "sign",
+                    "x": 1,
+                    "y": 1,
+                    "elevation": 0,
+                    "player_facing_dir": "BG_EVENT_PLAYER_FACING_UP",
+                    "script": "EventScript_AlwaysBg",
+                },
+                {
+                    "type": "sign",
+                    "x": 2,
+                    "y": 1,
+                    "elevation": 0,
+                    "player_facing_dir": "BG_EVENT_PLAYER_FACING_UP",
+                    "script": "EventScript_WayfarerOnlyBg",
+                    "wayfarer_only": True,
+                },
+            ],
         })
         frlg.write_text(json.dumps(anne_data))
         def generate_map(version):
@@ -242,12 +308,28 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         events = (root / "data/maps/AnneInterior/events.inc").read_text()
         self.assertIn("warp_def 1, 2, 0, 0, MAP_DYNAMIC", events)
+        self.assertIn("EventScript_Always", events)
+        self.assertIn("EventScript_WayfarerOnly", events)
+        self.assertIn("EventScript_AlwaysCoord", events)
+        self.assertIn("EventScript_WayfarerOnlyCoord", events)
+        self.assertIn("EventScript_AlwaysBg", events)
+        self.assertIn("EventScript_WayfarerOnlyBg", events)
+        self.assertIn(
+            "object_event 2, OBJ_EVENT_GFX_ROCKET_M", events
+        )
 
         result = generate_map("firered")
 
         self.assertEqual(result.returncode, 0, result.stderr)
         events = (root / "data/maps/AnneInterior/events.inc").read_text()
         self.assertIn("warp_def 1, 2, 0, 0, MAP_EXTERIOR", events)
+        self.assertIn("EventScript_Always", events)
+        self.assertNotIn("EventScript_WayfarerOnly", events)
+        self.assertIn("EventScript_AlwaysCoord", events)
+        self.assertNotIn("EventScript_WayfarerOnlyCoord", events)
+        self.assertIn("EventScript_AlwaysBg", events)
+        self.assertNotIn("EventScript_WayfarerOnlyBg", events)
+        self.assertNotIn("object_event 2, OBJ_EVENT_GFX_ROCKET_M", events)
 
     def test_persistent_anne_return_and_rewards_use_saved_wayfarer_state(self):
         """Keep the direct Anne return and every imported one-time item auditable."""
@@ -644,6 +726,377 @@ class MapjsonWayfarerTest(unittest.TestCase):
             },
         )
 
+    def test_celadon_hideout_catalog_events_and_assets_are_wayfarer_scoped(self):
+        """Keep the narrow Hideout import and its runtime dependencies exact."""
+        maps_root = GAME_ROOT / "data/maps"
+        hideout_names = {
+            "RocketHideout_B1F_Frlg",
+            "RocketHideout_B2F_Frlg",
+            "RocketHideout_B3F_Frlg",
+            "RocketHideout_B4F_Frlg",
+            "RocketHideout_Elevator_Frlg",
+        }
+        hideout_maps = {
+            name: json.loads((maps_root / name / "map.json").read_text())
+            for name in hideout_names
+        }
+        self.assertTrue(all(
+            map_data["game_version"] == "frlg"
+            and map_data.get("wayfarer_include") is True
+            for map_data in hideout_maps.values()
+        ))
+
+        groups = json.loads((maps_root / "map_groups.json").read_text())
+        dungeons = groups["gMapGroup_Dungeons_Frlg"]
+        self.assertEqual(
+            dungeons[42:47],
+            [
+                "RocketHideout_B1F_Frlg",
+                "RocketHideout_B2F_Frlg",
+                "RocketHideout_B3F_Frlg",
+                "RocketHideout_B4F_Frlg",
+                "RocketHideout_Elevator_Frlg",
+            ],
+        )
+
+        layouts = {
+            layout["id"]: layout
+            for layout in json.loads(
+                (GAME_ROOT / "data/layouts/layouts.json").read_text()
+            )["layouts"]
+        }
+        expected_layouts = {
+            "LAYOUT_ROCKET_HIDEOUT_B1F",
+            "LAYOUT_ROCKET_HIDEOUT_B2F",
+            "LAYOUT_ROCKET_HIDEOUT_B3F",
+            "LAYOUT_ROCKET_HIDEOUT_B4F",
+            "LAYOUT_ROCKET_HIDEOUT_ELEVATOR",
+        }
+        self.assertEqual({map_data["layout"] for map_data in hideout_maps.values()}, expected_layouts)
+        for layout_id in expected_layouts:
+            layout = layouts[layout_id]
+            self.assertEqual(layout["game_version"], "frlg")
+            self.assertTrue(layout["wayfarer_include"])
+            self.assertEqual(layout["layout_version"], "frlg")
+            self.assertEqual(layout["primary_tileset"], "gTileset_BuildingFrlg")
+            self.assertEqual(layout["secondary_tileset"], "gTileset_SilphCo")
+
+        b1f = hideout_maps["RocketHideout_B1F_Frlg"]
+        self.assertEqual(
+            {
+                (warp["x"], warp["y"], warp["elevation"], warp["wayfarer_dest_map"])
+                for warp in b1f["warp_events"]
+                if warp.get("wayfarer_dest_map") == "MAP_DYNAMIC"
+            },
+            {(12, 2, 3, "MAP_DYNAMIC")},
+        )
+
+        game_corner = json.loads(
+            (maps_root / "CeladonCity_GameCorner_hns/map.json").read_text()
+        )
+        wayfarer_objects = [
+            event for event in game_corner["object_events"]
+            if event.get("wayfarer_only") is True
+        ]
+        self.assertEqual(
+            wayfarer_objects,
+            [{
+                "local_id": "LOCALID_CELADON_GAME_CORNER_HIDEOUT_GRUNT",
+                "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+                "x": 10,
+                "y": 2,
+                "elevation": 0,
+                "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+                "movement_range_x": 0,
+                "movement_range_y": 0,
+                "trainer_type": "TRAINER_TYPE_NORMAL",
+                "trainer_sight_or_berry_tree_id": "0",
+                "script": "CeladonGameCorner_EventScript_HideoutGrunt",
+                "flag": "0",
+                "wayfarer_only": True,
+            }],
+        )
+        self.assertEqual(
+            [event for event in game_corner["bg_events"] if event.get("wayfarer_only") is True],
+            [{
+                "type": "sign",
+                "x": 11,
+                "y": 1,
+                "elevation": 0,
+                "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+                "script": "CeladonGameCorner_EventScript_RocketHideoutPoster",
+                "wayfarer_only": True,
+            }],
+        )
+        lass = next(
+            event for event in game_corner["object_events"]
+            if (event["x"], event["y"]) == (12, 2)
+        )
+        self.assertNotIn("wayfarer_only", lass)
+
+        def grid(layout_id, x, y):
+            layout = layouts[layout_id]
+            blocks = (GAME_ROOT / layout["blockdata_filepath"]).read_bytes()
+            self.assertEqual(len(blocks), layout["width"] * layout["height"] * 2)
+            value = struct.unpack_from("<H", blocks, 2 * (y * layout["width"] + x))[0]
+            return (value & 0x3FF, (value >> 10) & 0x3, (value >> 12) & 0xF)
+
+        # The HNS floor leaves the guarded wall and both adjacent approach
+        # cells in the public, elevation-three space. B1F's arrival likewise
+        # has an adjacent walkable tile; the elevator's real door metatile
+        # connects the selected map to the narrowed door animation table.
+        for coordinate in ((10, 2), (11, 2), (12, 2)):
+            _, collision, elevation = grid("LAYOUT_CELADON_CITY_GAME_CORNER_HNS", *coordinate)
+            self.assertEqual((collision, elevation), (0, 3), coordinate)
+        self.assertEqual(grid("LAYOUT_CELADON_CITY_GAME_CORNER_HNS", 11, 1), (0x289, 1, 0))
+        for coordinate in ((12, 2), (12, 3)):
+            _, collision, elevation = grid("LAYOUT_ROCKET_HIDEOUT_B1F", *coordinate)
+            self.assertEqual((collision, elevation), (0, 3), coordinate)
+        self.assertEqual(grid("LAYOUT_ROCKET_HIDEOUT_B1F", 24, 25), (0x2AB, 1, 0))
+
+        expected_flags = {
+            "FLAG_HIDE_ROCKET_HIDEOUT_B1F_ESCAPE_ROPE": 0x4A4,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B1F_HYPER_POTION": 0x4A5,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B2F_X_SPEED": 0x4A6,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B2F_MOON_STONE": 0x4A7,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B2F_TM12": 0x4A8,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B2F_SUPER_POTION": 0x4A9,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B3F_RARE_CANDY": 0x4AA,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B3F_TM21": 0x4AB,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B3F_BLACK_GLASSES": 0x4AC,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B4F_TM49": 0x4AD,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B4F_MAX_ETHER": 0x4AE,
+            "FLAG_HIDE_ROCKET_HIDEOUT_B4F_CALCIUM": 0x4AF,
+            "FLAG_HIDE_LIFT_KEY": 0x4B0,
+            "FLAG_HIDE_SILPH_SCOPE": 0x4B1,
+            "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B1F_PP_UP": 0x4B2,
+            "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B3F_NUGGET": 0x4B3,
+            "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NEST_BALL": 0x4B4,
+            "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NET_BALL": 0x4B5,
+            "FLAG_CELADON_ROCKET_HIDEOUT_ENTRANCE_OPEN_HNS": 0x4B6,
+            "FLAG_CAN_USE_ROCKET_HIDEOUT_LIFT": 0x4B7,
+            "FLAG_HIDE_HIDEOUT_GIOVANNI": 0x4B8,
+            "FLAG_WORLD_MAP_ROCKET_HIDEOUT_B1F": 0x4B9,
+            "FLAG_CELADON_ROCKET_HIDEOUT_LIFT_KEY_RECEIVED_HNS": 0x4BA,
+            "FLAG_CELADON_ROCKET_HIDEOUT_SILPH_SCOPE_RECEIVED_HNS": 0x4BB,
+        }
+        expected_reward_flags = {
+            name for name in expected_flags
+            if name.startswith("FLAG_HIDE_ROCKET_HIDEOUT")
+            or name in {
+                "FLAG_HIDE_LIFT_KEY",
+                "FLAG_HIDE_SILPH_SCOPE",
+                "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B1F_PP_UP",
+                "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B3F_NUGGET",
+                "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NEST_BALL",
+                "FLAG_HIDDEN_ITEM_ROCKET_HIDEOUT_B4F_NET_BALL",
+            }
+        }
+        self.assertEqual(
+            {
+                event["flag"]
+                for map_data in hideout_maps.values()
+                for event_type in ("object_events", "bg_events")
+                for event in map_data.get(event_type, [])
+                if event.get("flag") in expected_reward_flags
+            },
+            expected_reward_flags,
+        )
+        macro_output = subprocess.run(
+            [
+                "cpp", "-dM", "-DPOKEMON_WAYFARER",
+                "-I", str(GAME_ROOT / "include"),
+                "-include", "global.h",
+                "-include", "constants/flags.h",
+                "-include", "constants/vars.h",
+                "-",
+            ],
+            cwd=GAME_ROOT,
+            input="",
+            text=True,
+            capture_output=True,
+            check=True,
+        ).stdout
+        macros = dict(re.findall(r"^#define\s+(\w+)\s+(.+)$", macro_output, re.MULTILINE))
+        for name, value in expected_flags.items():
+            self.assertEqual(macros[name], f"0x{value:03X}")
+        self.assertEqual(macros["VAR_CELADON_ROCKET_HIDEOUT_ELEVATOR_FLOOR"], "0x40D9")
+        self.assertEqual(macros["VAR_ELEVATOR_FLOOR"], "0x403A")
+        self.assertEqual(macros["VAR_FARAWAY_ISLAND_STEP_COUNTER"], "0x403A")
+
+        hideout_script = (GAME_ROOT / "data/scripts/wayfarer_celadon_hideout.inc").read_text()
+        trainer_battle_labels = {
+            "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS": "CeladonGameCorner_EventScript_HideoutGrunt_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS": "RocketHideout_B1F_EventScript_Grunt1_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS": "RocketHideout_B1F_EventScript_Grunt2_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS": "RocketHideout_B1F_EventScript_Grunt3_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS": "RocketHideout_B1F_EventScript_Grunt4_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS": "RocketHideout_B1F_EventScript_Grunt5_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS": "RocketHideout_B2F_EventScript_Grunt_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS": "RocketHideout_B3F_EventScript_Grunt1_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS": "RocketHideout_B3F_EventScript_Grunt2_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS": "RocketHideout_B4F_EventScript_Grunt1_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS": "RocketHideout_B4F_EventScript_Grunt2_TrainerBattle",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS": "RocketHideout_B4F_EventScript_Grunt3_TrainerBattle",
+        }
+        trainer_ids = [*trainer_battle_labels, "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS"]
+        for trainer_id in trainer_ids:
+            self.assertIn(trainer_id, hideout_script)
+        for trainer_id, trainer_battle_label in trainer_battle_labels.items():
+            self.assertRegex(
+                hideout_script,
+                rf"(?s)goto_if_defeated {trainer_id}, \w+_PostDialogue.*?"
+                rf"{trainer_battle_label}::\s*\n\s*trainerbattle_single {trainer_id},",
+            )
+        self.assertEqual(
+            hideout_script.count("specialvar VAR_RESULT, WayfarerCanStartOrdinaryBattleForScript"),
+            13,
+        )
+        self.assertEqual(hideout_script.count("specialvar VAR_RESULT, GetBattleOutcome"), 13)
+        self.assertNotIn("checktrainerflag", hideout_script)
+        self.assertNotIn("checkflag", hideout_script)
+        self.assertNotIn("VAR_ELEVATOR_FLOOR", hideout_script)
+        self.assertIn("VAR_CELADON_ROCKET_HIDEOUT_ELEVATOR_FLOOR", hideout_script)
+        resolver_source = (GAME_ROOT / "src/wayfarer_celadon_hideout.c").read_text()
+        trainer_script_starts = {
+            "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS": "CeladonGameCorner_EventScript_HideoutGrunt",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS": "RocketHideout_B1F_EventScript_Grunt1",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS": "RocketHideout_B1F_EventScript_Grunt2",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS": "RocketHideout_B1F_EventScript_Grunt3",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS": "RocketHideout_B1F_EventScript_Grunt4",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS": "RocketHideout_B1F_EventScript_Grunt5",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS": "RocketHideout_B2F_EventScript_Grunt",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS": "RocketHideout_B3F_EventScript_Grunt1",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS": "RocketHideout_B3F_EventScript_Grunt2",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS": "RocketHideout_B4F_EventScript_Grunt1",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS": "RocketHideout_B4F_EventScript_Grunt2",
+            "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS": "RocketHideout_B4F_EventScript_Grunt3",
+        }
+        resolver_table = re.search(
+            r"(?s)sCeladonHideoutTrainerBattleScripts\[\]\s*=\s*\{(.*?)\};",
+            resolver_source,
+        )
+        self.assertIsNotNone(resolver_table)
+        self.assertEqual(
+            set(re.findall(r"\{(\w+),\s*(\w+)\}", resolver_table.group(1))),
+            {
+                (trainer_script_starts[trainer_id], trainer_battle_label)
+                for trainer_id, trainer_battle_label in trainer_battle_labels.items()
+            },
+        )
+        self.assertNotIn("GIOVANNI", resolver_source)
+        trainer_see_source = (GAME_ROOT / "src/trainer_see.c").read_text()
+        self.assertRegex(
+            trainer_see_source,
+            r"(?s)else\s*\{\s*trainerBattlePtr = NULL;\s*#if IS_WAYFARER\s*"
+            r"// Hideout scripts.*?WayfarerResolveCeladonHideoutTrainerBattleScript\(trainerScriptStart\);",
+        )
+
+        def preprocess(path, define):
+            result = subprocess.run(
+                [
+                    "cpp", "-P", f"-D{define}",
+                    "-I", str(GAME_ROOT / "include"),
+                    "-include", "global.h", str(path),
+                ],
+                cwd=GAME_ROOT,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+            return result.stdout
+
+        sections_data = json.loads(
+            (GAME_ROOT / "src/data/region_map/region_map_sections.json").read_text()
+        )
+        hns_hideout = next(
+            section for section in sections_data["hns_map_sections"]
+            if section["id"] == "MAPSEC_ROCKET_HIDEOUT"
+        )
+        self.assertEqual(
+            hns_hideout,
+            {
+                "height": 1,
+                "id": "MAPSEC_ROCKET_HIDEOUT",
+                "name": "ROCKET HIDEOUT",
+                "width": 1,
+                "x": 15,
+                "y": 2,
+                "wayfarer_x": 11,
+                "wayfarer_y": 6,
+            },
+        )
+        entries_path = GAME_ROOT / "src/data/region_map/region_map_entries.h"
+        wayfarer_entries = preprocess(entries_path, "POKEMON_WAYFARER")
+        hns_entries = preprocess(entries_path, "POKEMON_HNS")
+        self.assertRegex(
+            wayfarer_entries,
+            r"(?s)\[MAPSEC_ROCKET_HIDEOUT\]\s*=\s*\{\s*\.x = 11,\s*\.y = 6,"
+        )
+        self.assertRegex(
+            hns_entries,
+            r"(?s)\[MAPSEC_ROCKET_HIDEOUT\]\s*=\s*\{\s*\.x = 15,\s*\.y = 2,"
+        )
+        region_map_output = preprocess(GAME_ROOT / "src/region_map.c", "POKEMON_WAYFARER")
+        self.assertRegex(
+            region_map_output,
+            r"(?s)sRegionMapEntries_JK\[\].*?\[MAPSEC_ROCKET_HIDEOUT\]\s*=\s*"
+            r"\{\s*22,\s*5,\s*1,\s*1,",
+        )
+
+        wayfarer_headers = preprocess(
+            GAME_ROOT / "src/data/tilesets/headers.h", "POKEMON_WAYFARER"
+        )
+        hns_headers = preprocess(
+            GAME_ROOT / "src/data/tilesets/headers.h", "POKEMON_HNS"
+        )
+        for tileset in ("gTileset_BuildingFrlg", "gTileset_SilphCo"):
+            self.assertRegex(wayfarer_headers, rf"const struct Tileset {tileset}\b")
+            self.assertNotRegex(hns_headers, rf"const struct Tileset {tileset}\b")
+
+        for source, names in {
+            "src/data/tilesets/graphics.h": (
+                "gTilesetTiles_Building_Frlg", "gTilesetPalettes_Building_Frlg",
+                "gTilesetTiles_Condominiums", "gTilesetPalettes_Condominiums",
+            ),
+            "src/data/tilesets/metatiles.h": (
+                "gMetatiles_Building_Frlg", "gMetatileAttributes_Building_Frlg",
+                "gMetatiles_SilphCo", "gMetatileAttributes_SilphCo",
+            ),
+        }.items():
+            wayfarer_output = preprocess(GAME_ROOT / source, "POKEMON_WAYFARER")
+            hns_output = preprocess(GAME_ROOT / source, "POKEMON_HNS")
+            for name in names:
+                self.assertRegex(wayfarer_output, rf"\b{name}\b")
+                self.assertNotRegex(hns_output, rf"\b{name}\b")
+
+        pointer_output = preprocess(
+            GAME_ROOT / "src/data/object_events/object_event_graphics_info_pointers.h",
+            "POKEMON_WAYFARER",
+        )
+        object_output = preprocess(
+            GAME_ROOT / "src/event_object_movement.c", "POKEMON_WAYFARER"
+        )
+        for graphics_id in ("OBJ_EVENT_GFX_ROCKET_M", "OBJ_EVENT_GFX_GIOVANNI"):
+            pointer = re.search(
+                rf"\[\s*{graphics_id}\s*\]\s*=\s*&(gObjectEventGraphicsInfo_\w+),",
+                pointer_output,
+            )
+            self.assertIsNotNone(pointer, graphics_id)
+            self.assertRegex(
+                object_output,
+                rf"const struct ObjectEventGraphicsInfo {pointer.group(1)}\b",
+            )
+
+        door_output = preprocess(GAME_ROOT / "src/field_door.c", "POKEMON_WAYFARER")
+        hns_door_output = preprocess(GAME_ROOT / "src/field_door.c", "POKEMON_HNS")
+        self.assertRegex(
+            door_output,
+            r"\{\s*0x2AB,\s*&gTileset_SilphCo,\s*1,\s*2,\s*"
+            r"sDoorAnimTiles_HideoutElevator,\s*sDoorAnimPalettes_HideoutElevator\s*\}",
+        )
+        self.assertNotIn("sDoorAnimTiles_HideoutElevator", hns_door_output)
+
     def test_wayfarer_rejects_unavailable_warp_destination(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
@@ -869,6 +1322,16 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "LAYOUT_SSANNE_CAPTAINS_OFFICE", "LAYOUT_SSANNE_DECK",
             "LAYOUT_SSANNE_KITCHEN", "LAYOUT_SSANNE_ROOM1", "LAYOUT_SSANNE_ROOM2",
         }
+        hideout_names = {
+            "RocketHideout_B1F_Frlg", "RocketHideout_B2F_Frlg",
+            "RocketHideout_B3F_Frlg", "RocketHideout_B4F_Frlg",
+            "RocketHideout_Elevator_Frlg",
+        }
+        hideout_layout_ids = {
+            "LAYOUT_ROCKET_HIDEOUT_B1F", "LAYOUT_ROCKET_HIDEOUT_B2F",
+            "LAYOUT_ROCKET_HIDEOUT_B3F", "LAYOUT_ROCKET_HIDEOUT_B4F",
+            "LAYOUT_ROCKET_HIDEOUT_ELEVATOR",
+        }
         included = []
         for group_num, group_name in enumerate(groups["group_order"]):
             self.assertLessEqual(group_num, 127)
@@ -883,22 +1346,46 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(len(included_ids), len(included))
         self.assertTrue(any(item.get("game_version") == "hns" for item in included))
         self.assertTrue(any(item.get("game_version", "emerald") == "emerald" for item in included))
+        included_frlg_names = {
+            item["name"] for item in included if item.get("game_version") == "frlg"
+        }
+        self.assertEqual(included_frlg_names, anne_interior_names | hideout_names)
         self.assertEqual(
-            {item["name"] for item in included if item.get("game_version") == "frlg"},
+            {name for name in included_frlg_names if name.startswith("SSAnne_")},
             anne_interior_names,
+        )
+        self.assertEqual(
+            {name for name in included_frlg_names if name.startswith("RocketHideout_")},
+            hideout_names,
         )
         self.assertNotIn("SSAnne_Exterior_Frlg", {item["name"] for item in included})
         layouts = json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())["layouts"]
+        selected_frlg_layout_ids = {
+            layout["id"] for layout in layouts
+            if layout.get("game_version") == "frlg" and layout.get("wayfarer_include") is True
+        }
         self.assertEqual(
-            {layout["id"] for layout in layouts
-             if layout.get("game_version") == "frlg" and layout.get("wayfarer_include") is True},
+            selected_frlg_layout_ids,
+            anne_layout_ids | hideout_layout_ids,
+        )
+        self.assertEqual(
+            {layout_id for layout_id in selected_frlg_layout_ids if layout_id.startswith("LAYOUT_SSANNE_")},
             anne_layout_ids,
+        )
+        self.assertEqual(
+            {layout_id for layout_id in selected_frlg_layout_ids if layout_id.startswith("LAYOUT_ROCKET_HIDEOUT_")},
+            hideout_layout_ids,
         )
         dungeons = groups["gMapGroup_Dungeons_Frlg"]
         self.assertEqual(dungeons[5], "SSAnne_1F_Corridor_Frlg")
         self.assertEqual(dungeons[6], "SSAnne_2F_Corridor_Frlg")
         self.assertEqual(dungeons[8], "SSAnne_B1F_Corridor_Frlg")
         self.assertEqual(dungeons[11], "SSAnne_CaptainsOffice_Frlg")
+        self.assertEqual(dungeons[42:47], [
+            "RocketHideout_B1F_Frlg", "RocketHideout_B2F_Frlg",
+            "RocketHideout_B3F_Frlg", "RocketHideout_B4F_Frlg",
+            "RocketHideout_Elevator_Frlg",
+        ])
         for map_data in included:
             for warp in map_data.get("warp_events", []):
                 destination = warp.get("wayfarer_dest_map", warp["dest_map"])

@@ -269,3 +269,301 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 Ponyta
 Level: 17
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Raticate
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Zubat
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Drowzee
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Machop
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Raticate
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Raticate
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Grimer
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Minimize
+- Sludge
+- Disable
+- Harden
+
+Koffing
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Smog
+- Tackle
+- Poison Gas
+
+Koffing
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Smog
+- Tackle
+- Poison Gas
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Rattata
+Level: 19
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Raticate
+Level: 19
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Raticate
+Level: 19
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Rattata
+Level: 19
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Grimer
+Level: 22
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Minimize
+- Sludge
+- Disable
+- Harden
+
+Koffing
+Level: 22
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Sludge
+- Smog
+- Tackle
+- Poison Gas
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Zubat
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Bite
+- Astonish
+- Supersonic
+- Leech Life
+
+Koffing
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Smog
+- Tackle
+- Poison Gas
+
+Grimer
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Sludge
+- Disable
+- Harden
+- Pound
+
+Zubat
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Bite
+- Astonish
+- Supersonic
+- Leech Life
+
+Raticate
+Level: 17
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Hyper Fang
+- Quick Attack
+- Tail Whip
+- Tackle
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Rattata
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Raticate
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Drowzee
+Level: 20
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Machop
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Machop
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Sandshrew
+Level: 23
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Ekans
+Level: 23
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Sandslash
+Level: 23
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Ekans
+Level: 23
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Sandshrew
+Level: 23
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Arbok
+Level: 23
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS ===
+Name: GRUNT
+Class: Team Rocket Frlg
+Pic: Rocket Grunt M Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Koffing
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Zubat
+Level: 21
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS ===
+Name: GIOVANNI
+Class: Boss Frlg
+Pic: Leader Giovanni Frlg
+Gender: Male
+Music: Aqua
+Double Battle: No
+AI: Check Bad Move
+
+Onix
+Level: 25
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+
+Rhyhorn
+Level: 24
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+
+Kangaskhan
+Level: 29
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe

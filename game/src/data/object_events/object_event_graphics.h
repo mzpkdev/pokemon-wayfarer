@@ -547,7 +547,11 @@ const u16 gObjectEventPal_NpcWhiteReflection[] = INCBIN_U16("graphics/object_eve
 
 const u16 gObjectEventPic_Pokedex[] = INCBIN_U16("graphics/object_events/pics/misc/pokedex.4bpp");
 const u16 gObjectEventPic_TownMap[] = INCBIN_U16("graphics/object_events/pics/misc/town_map.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_Giovanni[] = INCBIN_U16("graphics/object_events/pics/people/giovanni.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_Blaine[] = INCBIN_U16("graphics/object_events/pics/people/blaine.4bpp");
 const u16 gObjectEventPic_Sabrina[] = INCBIN_U16("graphics/object_events/pics/people/sabrina.4bpp");
 const u16 gObjectEventPic_Daisy[] = INCBIN_U16("graphics/object_events/pics/people/daisy.4bpp");
@@ -642,7 +646,11 @@ const u16 gObjectEventPic_Bruno[] = INCBIN_U16("graphics/object_events/pics/peop
 const u16 gObjectEventPic_Clerk[] = INCBIN_U16("graphics/object_events/pics/people/clerk.4bpp");
 const u16 gObjectEventPic_MGDeliveryman[] = INCBIN_U16("graphics/object_events/pics/people/mg_deliveryman.4bpp");
 const u16 gObjectEventPic_TrainerTowerDude[] = INCBIN_U16("graphics/object_events/pics/people/trainer_tower_dude.4bpp");
+#endif
+#if IS_FRLG || IS_WAYFARER
 const u16 gObjectEventPic_RocketM[] = INCBIN_U16("graphics/object_events/pics/people/rocket_m.4bpp");
+#endif
+#if IS_FRLG
 const u16 gObjectEventPic_Celio[] = INCBIN_U16("graphics/object_events/pics/people/celio.4bpp");
 const u16 gObjectEventPic_Agatha[] = INCBIN_U16("graphics/object_events/pics/people/agatha.4bpp");
 const u16 gObjectEventPic_Misty[] = INCBIN_U16("graphics/object_events/pics/people/misty.4bpp");

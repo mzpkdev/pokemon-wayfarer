@@ -43,6 +43,27 @@ SS_ANNE_PARTIES = {
     'TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS': (('SPECIES_GROWLITHE', 17), ('SPECIES_PONYTA', 17)),
 }
 
+CELADON_HIDEOUT_TRAINERS = tuple(
+    [f'TRAINER_CELADON_HIDEOUT_GRUNT_{number}_HNS' for number in range(7, 19)]
+    + ['TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS']
+)
+
+CELADON_HIDEOUT_PARTIES = {
+    'TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS': (('SPECIES_RATICATE', 20), ('SPECIES_ZUBAT', 20)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS': (('SPECIES_DROWZEE', 21), ('SPECIES_MACHOP', 21)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS': (('SPECIES_RATICATE', 21), ('SPECIES_RATICATE', 21)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS': (('SPECIES_GRIMER', 20), ('SPECIES_KOFFING', 20), ('SPECIES_KOFFING', 20)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS': (('SPECIES_RATTATA', 19), ('SPECIES_RATICATE', 19), ('SPECIES_RATICATE', 19), ('SPECIES_RATTATA', 19)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS': (('SPECIES_GRIMER', 22), ('SPECIES_KOFFING', 22)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS': (('SPECIES_ZUBAT', 17), ('SPECIES_KOFFING', 17), ('SPECIES_GRIMER', 17), ('SPECIES_ZUBAT', 17), ('SPECIES_RATICATE', 17)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS': (('SPECIES_RATTATA', 20), ('SPECIES_RATICATE', 20), ('SPECIES_DROWZEE', 20)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS': (('SPECIES_MACHOP', 21), ('SPECIES_MACHOP', 21)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS': (('SPECIES_SANDSHREW', 23), ('SPECIES_EKANS', 23), ('SPECIES_SANDSLASH', 23)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS': (('SPECIES_EKANS', 23), ('SPECIES_SANDSHREW', 23), ('SPECIES_ARBOK', 23)),
+    'TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS': (('SPECIES_KOFFING', 21), ('SPECIES_ZUBAT', 21)),
+    'TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS': (('SPECIES_ONIX', 25), ('SPECIES_RHYHORN', 24), ('SPECIES_KANGASKHAN', 29)),
+}
+
 
 def roster(slots=None, **fields):
     return dict(slots=slots if slots is not None else [{'species': 'SPECIES_RATTATA', 'lvl': 10}], partySize=1, trainerClass='TRAINER_CLASS_YOUNGSTER', **fields)
@@ -86,6 +107,42 @@ class InventoryTests(unittest.TestCase):
         self.assertEqual(set(rows), set(SS_ANNE_TRAINERS))
         for trainer, row in rows.items():
             self.assertEqual(row['policy'], 'ORDINARY')
+            self.assertTrue(any(
+                evidence['path'] == 'src/data/trainers_wayfarer.party'
+                and evidence['symbol'] == trainer
+                for evidence in row['evidence']
+            ))
+
+    def test_celadon_hideout_trainer_catalog_is_complete_and_classified(self):
+        records = gen.load_inventory()
+        ids = gen.trainer_ids(CELADON_HIDEOUT_TRAINERS)
+        self.assertEqual(
+            [ids[trainer] for trainer in CELADON_HIDEOUT_TRAINERS],
+            list(range(1531, 1544)),
+        )
+        self.assertEqual(set(CELADON_HIDEOUT_PARTIES), set(CELADON_HIDEOUT_TRAINERS))
+        self.assertEqual(len(set(ids.values())), 13)
+        for trainer in CELADON_HIDEOUT_TRAINERS:
+            roster = records[trainer]['DIFFICULTY_NORMAL']
+            self.assertEqual(roster['source'], 'src/data/trainers_wayfarer.party')
+            actual_party = tuple(
+                (slot['species'], slot['lvl'])
+                for slot in roster['slots'][:roster['partySize']]
+            )
+            self.assertEqual(actual_party, CELADON_HIDEOUT_PARTIES[trainer])
+
+        manifest = json.loads(gen.MANIFEST.read_text())
+        rows = {
+            row['id']: row
+            for row in manifest['records']
+            if row['id'] in CELADON_HIDEOUT_TRAINERS
+        }
+        self.assertEqual(set(rows), set(CELADON_HIDEOUT_TRAINERS))
+        for trainer, row in rows.items():
+            expected_policy = 'EXCLUDED' if trainer.endswith('GIOVANNI_HNS') else 'ORDINARY'
+            self.assertEqual(row['policy'], expected_policy)
+            if expected_policy == 'EXCLUDED':
+                self.assertTrue(row['reason'])
             self.assertTrue(any(
                 evidence['path'] == 'src/data/trainers_wayfarer.party'
                 and evidence['symbol'] == trainer

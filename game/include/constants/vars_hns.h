@@ -119,7 +119,11 @@
 #else
 #define VAR_UNUSED_HNS_0x40D8                            0x40D8
 #endif
+#if IS_WAYFARER
+#define VAR_CELADON_ROCKET_HIDEOUT_ELEVATOR_FLOOR         0x40D9
+#else
 #define VAR_UNUSED_HNS_0x40D9                           0x40D9
+#endif
 #define VAR_UNUSED_HNS_0x40DA                           0x40DA
 #define VAR_UNUSED_HNS_0x40DB                           0x40DB
 #define VAR_UNUSED_HNS_0x40DC                           0x40DC

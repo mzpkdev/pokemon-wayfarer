@@ -849,6 +849,8 @@ const struct Tileset gTileset_UnionRoom =
 #if HAS_FRLG_CONTENT
 
 // FRLG tilesets
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const struct Tileset gTileset_BuildingFrlg =
 {
     .isCompressed = TRUE,
@@ -859,6 +861,8 @@ const struct Tileset gTileset_BuildingFrlg =
     .metatileAttributes = gMetatileAttributes_Building_Frlg,
     .callback = NULL,
 };
+#endif
+#if HAS_FRLG_CONTENT
 
 const struct Tileset gTileset_General_Frlg =
 {
@@ -1311,6 +1315,8 @@ const struct Tileset gTileset_SeaCottage =
     .callback = NULL,
 };
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const struct Tileset gTileset_SilphCo =
 {
     .isCompressed = TRUE,
@@ -1321,6 +1327,8 @@ const struct Tileset gTileset_SilphCo =
     .metatileAttributes = gMetatileAttributes_SilphCo,
     .callback = InitTilesetAnim_SilphCo,
 };
+#endif
+#if HAS_FRLG_CONTENT
 
 const struct Tileset gTileset_UndergroundPath =
 {

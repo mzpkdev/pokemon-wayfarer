@@ -108,3 +108,23 @@ animation, and valid ship entries in both HNS region-map tables. Eight map-catal
 tests, 29 trainer-scaling generator tests, five native trainer-state tests, ten
 Anne emulator cases, and two existing Aqua emulator journeys pass. The native
 critic review is clear; E2E lint, type checking, and changed-file formatting pass.
+
+
+## Celadon Hideout integration findings
+
+The five FRLG interiors use the BuildingFrlg primary and SilphCo secondary
+assets. The HNS Game Corner entrance uses a concealed wall panel and source
+grunt in existing free space; the source B1 stair exits west and returns to the
+panel approach. No layout binary changed. Twelve ordinary trainer entries use
+an exact sight resolver so their local entry checks retain normal defeated-trainer
+suppression. Separate visibility and receipt flags keep Lift Key and Scope
+handoffs retryable, and the elevator's dedicated variable leaves Faraway Island
+state untouched.
+
+Fourteen Hideout and ten Anne emulator cases, six native trainer-state tests,
+nine catalog tests, 15 trainer-scaling tests and 16 harbor-menu tests pass. The
+production release links at 33,067,852 used bytes (`__rom_end = 0x09F8934C`),
+60,376 bytes above Anne. Its unchanged reserve check fails by 37,708 bytes,
+with 486,580 physical bytes free. EWRAM and IWRAM remain 248,557 and 25,616
+bytes. Development continues under the user waiver; recovery and rebase remain
+merge prerequisites.
