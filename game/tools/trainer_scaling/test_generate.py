@@ -113,6 +113,18 @@ class InventoryTests(unittest.TestCase):
                 for evidence in row['evidence']
             ))
 
+    def test_cerulean_burglary_retains_authored_party_and_ordinary_scaling(self):
+        trainer = 'TRAINER_CERULEAN_BURGLARY_GRUNT_HNS'
+        self.assertEqual(gen.trainer_ids([trainer])[trainer], 1549)
+        roster = gen.load_inventory()[trainer]['DIFFICULTY_NORMAL']
+        self.assertEqual(roster['source'], 'src/data/trainers_wayfarer.party')
+        self.assertEqual(tuple((slot['species'], slot['lvl'])
+                              for slot in roster['slots'][:roster['partySize']]),
+                         (('SPECIES_MACHOP', 17), ('SPECIES_DROWZEE', 17)))
+        row = next(row for row in json.loads(gen.MANIFEST.read_text())['records']
+                   if row['id'] == trainer)
+        self.assertEqual((row['policy'], row['region']), ('ORDINARY', 'Kanto'))
+
     def test_celadon_hideout_trainer_catalog_is_complete_and_classified(self):
         records = gen.load_inventory()
         ids = gen.trainer_ids(CELADON_HIDEOUT_TRAINERS)

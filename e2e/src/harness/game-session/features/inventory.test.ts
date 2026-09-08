@@ -19,6 +19,7 @@ describe("game-session inventory", () => {
     const runtime = {
       abi: {} as SessionRuntime["abi"],
       address: (symbol: string) => {
+        if (symbol === "gSaveBlock2Ptr") return 0x0200_0100
         if (symbol !== "gBagPockets") throw new Error(`Unexpected symbol ${symbol}`)
         return pocketsAddress
       },
@@ -35,13 +36,17 @@ describe("game-session inventory", () => {
             bagReadLengths.push(length)
             const contents = new Uint8Array(pocketLength)
             contents.set(uint16Bytes(pocket.item), 0)
+            contents.set(uint16Bytes(3 ^ 0x1234), 2)
             return contents.slice(address - pocket.address, address - pocket.address + length)
           }
         }
         return new Uint8Array(length)
       },
-      readUint16: async () => 0,
-      readUint32: async () => 0,
+      readUint16: async (address: number) => {
+        expect(address).toBe(0x0200_6000 + 0xac)
+        return 0x1234
+      },
+      readUint32: async () => 0x0200_6000,
       writeBytes: async () => {},
       advance: async () => {},
       press: async () => {},
@@ -50,6 +55,8 @@ describe("game-session inventory", () => {
 
     await expect(inventory.contains("metalCoat")).resolves.toBe(true)
     await expect(inventory.contains("tmThunder")).resolves.toBe(true)
+    await expect(inventory.count("tmThunder")).resolves.toBe(3)
+    await expect(inventory.count("tmDig")).resolves.toBe(0)
     await expect(inventory.contains("ssTicket")).resolves.toBe(true)
     await expect(inventory.contains("pass")).resolves.toBe(false)
     await expect(inventory.contains("cut")).resolves.toBe(false)

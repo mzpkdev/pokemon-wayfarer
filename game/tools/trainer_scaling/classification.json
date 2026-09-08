@@ -23609,6 +23609,22 @@
       "region": "Kanto",
       "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_MIGUEL_HNS", "role": "TRAINER_CLASS_SUPER_NERD_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_MIGUEL_HNS"}],
       "reason": "Authored Mt. Moon fossil objective battle; outside ordinary Trainer Rating scaling."
+    },
+    {
+      "id": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_cerulean_burglary.inc",
+          "symbol": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS"
+        }
+      ]
     }
   ],
   "move_exceptions": []

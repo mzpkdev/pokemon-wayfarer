@@ -70,6 +70,7 @@ export const maps = {
   "vermilion-port-inside": { mapGroup: 15, mapNum: 3 },
   "vermilion-fan-club": { mapGroup: 15, mapNum: 5 },
   "goldenrod-train-station": { mapGroup: 5, mapNum: 14 },
+  "cerulean-house-2": { mapGroup: 72, mapNum: 1 },
   "cerulean-gym": { mapGroup: 14, mapNum: 5 },
   "saffron-train-station": { mapGroup: 18, mapNum: 2 },
   "copycats-house-2f": { mapGroup: 18, mapNum: 8 },
@@ -177,6 +178,8 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  ceruleanBurglaryRecovered: 0x4c2,
+  ceruleanBurglaryGruntDefeated: 0x7b7,
   fuchsiaGoldTeethClaimed: 0x4bc,
   fuchsiaSurfReceived: 0x4bd,
   fuchsiaStrengthReceived: 0x4be,
@@ -341,6 +344,8 @@ export const items = {
   miracleSeed: 429,
   metalCoat: 441,
   tmThunder: 606,
+  tmDig: 609,
+  tmFocusPunch: 582,
   bicycle: 706,
   oldRod: 709,
   goodRod: 710,

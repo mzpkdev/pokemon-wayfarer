@@ -4,6 +4,7 @@ import { type SessionRuntime } from "../runtime"
 const keyItemsPocketId = 5
 const keyItemsCapacity = 60
 const itemSlotSize = 4
+const saveBlock2EncryptionKeyOffset = 0xac
 // SkyEmu encodes each requested byte as a query parameter. Keep requests
 // comfortably below common HTTP request-line limits.
 const maxBagReadBytes = 32
@@ -22,6 +23,7 @@ export type StandardRod = "oldRod" | "goodRod" | "superRod"
 
 export type InventoryApi = {
   contains: (item: Item | Hm) => Promise<boolean>
+  count: (item: Item | Hm) => Promise<number>
   rodSlots: () => Promise<Record<StandardRod, number>>
 }
 
@@ -89,6 +91,21 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
       }
     }
     return false
+  },
+  count: async (name) => {
+    const item = { ...items, ...hms }[name]
+    const saveBlock2 = await runtime.readUint32(runtime.address("gSaveBlock2Ptr"))
+    const encryptionKey = await runtime.readUint16(saveBlock2 + saveBlock2EncryptionKeyOffset)
+    let count = 0
+    for (const pocketId of [3, 4, 5]) {
+      const pocket = await readBagPocket(runtime, pocketId)
+      const slots = await readPocketSlots(runtime, pocket)
+      for (let slot = 0; slot < pocket.capacity; slot++) {
+        if (uint16(slots, slot * itemSlotSize) === item)
+          count += uint16(slots, slot * itemSlotSize + 2) ^ encryptionKey
+      }
+    }
+    return count
   },
   rodSlots: async () => {
     const pocket = await readKeyItemsPocket(runtime)

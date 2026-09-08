@@ -186,3 +186,28 @@ The production release uses
 free, and remains 596,188 bytes above the 512 KiB reserve. EWRAM uses 248,509
 bytes and IWRAM uses 25,556 bytes. Existing compiler/linker warnings remain
 outside this milestone.
+
+## Cerulean burglary integration findings
+
+Cerulean keeps the HNS city, household, and unrelated story state. Its selected
+FRLG robbed-house interior preserves the source rubble and rear hole; all
+three front warp records return to the HNS city, while the source center tile
+is the active front exit. The Wayfarer city clone appends a stable layout ID.
+Porymap changed only the four cells at x34..35, y17..18 to adjacent passable
+grass, opening the rear approach without changing the original HNS layout.
+
+One ordinary Rocket battle and one local receipt flag own the Dig reward.
+Dig retains the current consumable-TM policy: another source's copy does not
+suppress this episode's reward. A full pocket preserves the defeated Rocket
+for delivery retry, and receipt hides him only after the local copy is granted.
+
+The production release uses 32,446,992 bytes (`__rom_end = 0x09EF1A10`),
+13,036 bytes above Mt. Moon. It leaves 1,107,440 physical bytes free and
+583,152 bytes above the unchanged 512 KiB reserve. EWRAM uses 248,509 bytes
+and IWRAM uses 25,556 bytes.
+
+All 14 Cerulean emulator cases pass, together with 18 existing Kanto
+traversal cases and the Machine Part/Misty/Magnet Train journey. The 35-test
+map-generator suite, trainer-scaling checks, two focused native trainer tests,
+TypeScript checks, and lint pass. Native critic review is clear. Rear-route
+and interior screenshots confirm the new clearing and preserved household.

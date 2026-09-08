@@ -380,9 +380,13 @@ const u16 gMetatileAttributes_FanClubDaycare[] = INCBIN_U16("data/tilesets/secon
 const u16 gMetatiles_Condominiums[] = INCBIN_U16("data/tilesets/secondary/condominiums_frlg/metatiles.bin");
 const u16 gMetatileAttributes_Condominiums[] = INCBIN_U16("data/tilesets/secondary/condominiums_frlg/metatile_attributes.bin");
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u16 gMetatiles_BurgledHouse[] = INCBIN_U16("data/tilesets/secondary/burgled_house_frlg/metatiles.bin");
 const u16 gMetatileAttributes_BurgledHouse[] = INCBIN_U16("data/tilesets/secondary/burgled_house_frlg/metatile_attributes.bin");
 
+#endif
+#if HAS_FRLG_CONTENT
 const u16 gMetatiles_MtEmber[] = INCBIN_U16("data/tilesets/secondary/mt_ember_frlg/metatiles.bin");
 const u16 gMetatileAttributes_MtEmber[] = INCBIN_U16("data/tilesets/secondary/mt_ember_frlg/metatile_attributes.bin");
 

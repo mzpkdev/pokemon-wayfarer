@@ -1359,7 +1359,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         included_frlg_names = {
             item["name"] for item in included if item.get("game_version") == "frlg"
         }
-        self.assertEqual(included_frlg_names, anne_interior_names | hideout_names)
+        self.assertEqual(included_frlg_names, anne_interior_names | hideout_names | {"CeruleanCity_House2_Frlg"})
         self.assertEqual(
             {name for name in included_frlg_names if name.startswith("SSAnne_")},
             anne_interior_names,
@@ -1376,7 +1376,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         }
         self.assertEqual(
             selected_frlg_layout_ids,
-            anne_layout_ids | hideout_layout_ids,
+            anne_layout_ids | hideout_layout_ids | {"LAYOUT_CERULEAN_CITY_HOUSE2"},
         )
         self.assertEqual(
             {layout_id for layout_id in selected_frlg_layout_ids if layout_id.startswith("LAYOUT_SSANNE_")},

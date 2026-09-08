@@ -426,6 +426,21 @@
       "trainer_sight_or_berry_tree_id": "3",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_CERULEAN_BURGLARY_GRUNT",
+      "graphics_id": "OBJ_EVENT_GFX_ROCKET_M",
+      "x": 37,
+      "y": 23,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "WayfarerCeruleanBurglary_EventScript_Grunt",
+      "flag": "FLAG_CERULEAN_BURGLARY_TM_RECEIVED_HNS",
+      "wayfarer_only": true
     }
   ],
   "warp_events": [
@@ -448,7 +463,9 @@
       "y": 22,
       "elevation": 0,
       "dest_map": "MAP_CERULEAN_CITY_HOUSE2_HNS",
-      "dest_warp_id": "0"
+      "dest_warp_id": "0",
+      "wayfarer_dest_map": "MAP_CERULEAN_CITY_HOUSE2",
+      "wayfarer_dest_warp_id": "1"
     },
     {
       "x": 20,
@@ -498,6 +515,15 @@
       "elevation": 0,
       "dest_map": "MAP_CERULEAN_CITY_BIKE_SHOP_HNS",
       "dest_warp_id": "0"
+    },
+    {
+      "warp_id": "WARP_ID_CERULEAN_BURGLARY_REAR",
+      "x": 35,
+      "y": 18,
+      "elevation": 3,
+      "dest_map": "MAP_CERULEAN_CITY_HOUSE2",
+      "dest_warp_id": "3",
+      "wayfarer_only": true
     }
   ],
   "coord_events": [],
@@ -549,8 +575,18 @@
       "elevation": 0,
       "item": "ITEM_NUGGET",
       "flag": "FLAG_HIDDEN_ITEM_CERULEAN_CITY_NUGGET"
+    },
+    {
+      "type": "sign",
+      "x": 35,
+      "y": 19,
+      "elevation": 3,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_SOUTH",
+      "script": "WayfarerCeruleanBurglary_EventScript_RearEntry",
+      "wayfarer_only": true
     }
   ],
   "game_version": "hns",
-  "region": "REGION_KANTO"
+  "region": "REGION_KANTO",
+  "wayfarer_layout": "LAYOUT_CERULEAN_CITY_BURGLARY_WAYFARER"
 }

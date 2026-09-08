@@ -1418,6 +1418,8 @@ const struct Tileset gTileset_Condominiums =
     .callback = NULL,
 };
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const struct Tileset gTileset_BurgledHouse =
 {
     .isCompressed = TRUE,
@@ -1429,6 +1431,8 @@ const struct Tileset gTileset_BurgledHouse =
     .callback = NULL,
 };
 
+#endif
+#if HAS_FRLG_CONTENT
 const struct Tileset gTileset_MtEmber =
 {
     .isCompressed = TRUE,

@@ -29,7 +29,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeruleanCity_House2_EventScript_Hiker",
-      "flag": "0"
+      "flag": "0",
+      "wayfarer_exclude": true
     },
     {
       "type": "object",
@@ -43,7 +44,53 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CeruleanCity_House2_EventScript_Lass",
-      "flag": "0"
+      "flag": "0",
+      "wayfarer_exclude": true
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_HNS",
+      "x": 8,
+      "y": 5,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "WayfarerCeruleanBurglary_EventScript_Woman",
+      "flag": "0",
+      "wayfarer_only": true,
+      "local_id": "LOCALID_CERULEAN_BURGLARY_WOMAN"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN_HNS",
+      "x": 1,
+      "y": 2,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "WayfarerCeruleanBurglary_EventScript_Man",
+      "flag": "0",
+      "wayfarer_only": true,
+      "local_id": "LOCALID_CERULEAN_BURGLARY_MAN"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_MON_BASE+SPECIES_DIGLETT",
+      "x": 2,
+      "y": 4,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "CeruleanCity_House2_EventScript_Diglett",
+      "flag": "0",
+      "wayfarer_only": true,
+      "local_id": "LOCALID_CERULEAN_BURGLARY_DIGLETT"
     }
   ],
   "warp_events": [
@@ -52,28 +99,36 @@
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_CERULEAN_CITY",
-      "dest_warp_id": "1"
+      "dest_warp_id": "1",
+      "wayfarer_dest_map": "MAP_CERULEAN_CITY_HNS",
+      "wayfarer_dest_warp_id": "2"
     },
     {
       "x": 3,
       "y": 7,
       "elevation": 0,
       "dest_map": "MAP_CERULEAN_CITY",
-      "dest_warp_id": "1"
+      "dest_warp_id": "1",
+      "wayfarer_dest_map": "MAP_CERULEAN_CITY_HNS",
+      "wayfarer_dest_warp_id": "2"
     },
     {
       "x": 4,
       "y": 7,
       "elevation": 1,
       "dest_map": "MAP_CERULEAN_CITY",
-      "dest_warp_id": "1"
+      "dest_warp_id": "1",
+      "wayfarer_dest_map": "MAP_CERULEAN_CITY_HNS",
+      "wayfarer_dest_warp_id": "2"
     },
     {
       "x": 4,
       "y": 1,
       "elevation": 0,
       "dest_map": "MAP_CERULEAN_CITY",
-      "dest_warp_id": "9"
+      "dest_warp_id": "9",
+      "wayfarer_dest_map": "MAP_CERULEAN_CITY_HNS",
+      "wayfarer_dest_warp_id": "10"
     }
   ],
   "coord_events": [],
@@ -86,5 +141,6 @@
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "CeruleanCity_House2_EventScript_WallHole"
     }
-  ]
+  ],
+  "wayfarer_include": true
 }

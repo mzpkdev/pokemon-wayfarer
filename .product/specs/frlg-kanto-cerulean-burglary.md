@@ -2,7 +2,7 @@
 
 PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)  
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [trainer party scaling](trainer-party-scaling.md), [trainer-only story encounters](trainer-only-story-encounters.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [compressed map-layout runtime loading](compressed-map-layout-runtime-loading.md)  
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -40,6 +40,11 @@ activate the Rocket, grant a reward, or change story state.
 | Imported house front warps 0, 1, and 2 | HNS city front warp 2 |
 | Imported house rear warp 3, `(4,1)` | Appended HNS city arrival warp at `(35,18)` |
 | Inspect city wall `(35,19)` facing south from `(35,18)` | Scripted warp to imported house `(4,2)`, below its rear hole |
+
+The source front doorway triggers only at its center tile `(3,7)`. Its
+side tiles are ordinary floor despite the retained warp entries; players can
+walk sideways to the center and leave normally. Preserve that authored behavior
+and redirect all three destination records.
 
 Resolve `wayfarer_dest_map` and a narrow `wayfarer_dest_warp_id` override
 consistently. Keep all standalone destinations and indices. The exterior

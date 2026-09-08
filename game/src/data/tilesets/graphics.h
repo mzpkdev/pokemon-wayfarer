@@ -2769,6 +2769,8 @@ const u16 gTilesetPalettes_FanClubDaycare[][16] =
     INCBIN_U16("data/tilesets/secondary/fan_club_daycare_frlg/palettes/15.gbapal"),
 };
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u32 gTilesetTiles_BurgledHouse[] = INCBIN_U32("data/tilesets/secondary/burgled_house_frlg/tiles.4bpp.fastSmol");
 
 const u16 gTilesetPalettes_BurgledHouse[][16] =
@@ -2791,6 +2793,8 @@ const u16 gTilesetPalettes_BurgledHouse[][16] =
     INCBIN_U16("data/tilesets/secondary/burgled_house_frlg/palettes/15.gbapal"),
 };
 
+#endif
+#if HAS_FRLG_CONTENT
 const u32 gTilesetTiles_BerryForest[] = INCBIN_U32("data/tilesets/secondary/berry_forest_frlg/tiles.4bpp.fastSmol");
 
 const u16 gTilesetPalettes_BerryForest[][16] =

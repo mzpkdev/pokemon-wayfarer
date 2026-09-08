@@ -124,7 +124,9 @@ bool data_matches_version(const Json &data) {
 }
 
 bool event_matches_version(const Json &event) {
-    return !event["wayfarer_only"].bool_value() || version == "wayfarer";
+    if (version == "wayfarer")
+        return !event["wayfarer_exclude"].bool_value();
+    return !event["wayfarer_only"].bool_value();
 }
 
 string get_warp_destination(const Json &warp) {
@@ -135,6 +137,15 @@ string get_warp_destination(const Json &warp) {
     }
 
     return json_to_string(warp, "dest_map");
+}
+
+string get_wayfarer_override(const Json &data, const string &field) {
+    if (version == "wayfarer") {
+        string override_value = json_to_string(data, "wayfarer_" + field, true);
+        if (!override_value.empty())
+            return override_value;
+    }
+    return json_to_string(data, field);
 }
 
 string get_generated_warning(const string &filename, bool isAsm) {
@@ -161,7 +172,7 @@ string get_include_guard_end(const string &name) {
 }
 
 string generate_map_header_text(Json map_data, Json layouts_data) {
-    string map_layout_id = json_to_string(map_data, "layout");
+    string map_layout_id = get_wayfarer_override(map_data, "layout");
 
     vector<Json> matched;
 
@@ -339,7 +350,7 @@ string generate_map_events_text(Json map_data) {
                  << json_to_string(warp_event, "x") << ", "
                  << json_to_string(warp_event, "y") << ", "
                  << json_to_string(warp_event, "elevation") << ", "
-                 << json_to_string(warp_event, "dest_warp_id") << ", "
+                 << get_wayfarer_override(warp_event, "dest_warp_id") << ", "
                  << get_warp_destination(warp_event) << "\n";
         }
         text << "\n";
@@ -865,6 +876,8 @@ void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Js
     for (const Json &map_data : included_maps) {
         string map_name = json_to_string(map_data, "name");
         for (const Json &warp : map_data["warp_events"].array_items()) {
+            if (!event_matches_version(warp))
+                continue;
             string destination = get_warp_destination(warp);
             if (included_map_ids.find(destination) == included_map_ids.end()
              && dynamic_destinations.find(destination) == dynamic_destinations.end())
