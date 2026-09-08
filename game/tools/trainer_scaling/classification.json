@@ -22823,6 +22823,296 @@
         }
       ],
       "reason": "Fighting Dojo clone kept outside the initial-badge Gym Leader scaling encounter set."
+    },
+    {
+      "id": "TRAINER_BLAINE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BLAINE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_BLUE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BLUE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_BROCK_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BROCK_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_BRUNO_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BRUNO_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_ELITE_FOUR_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_BUGSY_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_BUGSY_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_CHUCK_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_CHUCK_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_CLAIR_OBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_CLAIR_OBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_ERIKA_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_ERIKA_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_FALKNER_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_FALKNER_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_JANINE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_JANINE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_JASMINE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_JASMINE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_KAREN_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_KAREN_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_ELITE_FOUR_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_KOGA_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_KOGA_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_ELITE_FOUR_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_LANCE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_LANCE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_CHAMPION_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_LTSURGE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_LTSURGE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_MISTY_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_MISTY_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_MORTY_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_MORTY_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_PRYCE_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_PRYCE_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_RED_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "Johto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_RED_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_PKMN_TRAINER_1_HNS"
+        },
+        {
+          "path": "data/maps/MtSilver_SummitDay_hns/scripts.inc",
+          "symbol": "TRAINER_RED_POSTOBC_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_SABRINA_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_SABRINA_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_KANTO_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_WHITNEY_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_WHITNEY_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_LEADER_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_WILL_POSTOBC_HNS",
+      "policy": "EXCLUDED",
+      "region": "HNS unplaced",
+      "evidence": [
+        {
+          "path": "src/data/trainers_hns.party",
+          "symbol": "TRAINER_WILL_POSTOBC_HNS",
+          "role": "TRAINER_CLASS_ELITE_FOUR_HNS"
+        }
+      ],
+      "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
     }
   ],
   "move_exceptions": []

@@ -31,7 +31,24 @@ MtSilver_SummitDay_EventScript_Red::
 	faceplayer
 	msgbox MtSilver_SummitDay_Text_Red, MSGBOX_DEFAULT
 	closemessage
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, MtSilver_SummitDay_EventScript_RedStandard
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, MtSilver_SummitDay_EventScript_RedPostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, MtSilver_SummitDay_EventScript_RedPostOBC
+	goto_if_set FLAG_USED_TELEPORTER, MtSilver_SummitDay_EventScript_RedPostOBC
+#endif
+
+MtSilver_SummitDay_EventScript_RedStandard::
 	trainerbattle_no_intro TRAINER_RED_2_HNS, MtSilver_SummitDay_Text_RedBeaten
+	goto MtSilver_SummitDay_EventScript_RedOnDefeat
+
+#if !IS_WAYFARER
+MtSilver_SummitDay_EventScript_RedPostOBC::
+	trainerbattle_no_intro TRAINER_RED_POSTOBC_HNS, MtSilver_SummitDay_Text_RedBeaten
+	goto MtSilver_SummitDay_EventScript_RedOnDefeat
+#endif
+
+MtSilver_SummitDay_EventScript_RedOnDefeat::
 	playse SE_M_BLIZZARD
 	setrespawn HEAL_LOCATION_NEW_BARK_TOWN_HNS
 	msgbox MtSilver_SummitDay_Text_Red, MSGBOX_DEFAULT

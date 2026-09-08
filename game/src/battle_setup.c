@@ -448,6 +448,12 @@ void DoStandardWildBattle_Debug(void)
 
 void BattleSetup_StartRoamerBattle(void)
 {
+    SetNuzlockeChecks();
+    // A roamer is a one-off encounter that happens to be standing on a route the
+    // player has usually already spent, so it never obeys the Nuzlocke zone flag.
+    // Only the One Type Challenge still applies.
+    NuzlockeIsCaptureBlocked = FALSE;
+    NuzlockeIsSpeciesClauseActive = FALSE;
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
@@ -1547,8 +1553,11 @@ bool8 HasTrainerBeenFought(u16 trainerId)
         return FALSE;
 
 #if IS_WAYFARER
-    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET)
+    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
         return WayfarerHoennTrainerFlagGet(trainerId);
+    // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
+    if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
+        trainerId -= TRAINERS_COUNT_EMERALD - 1;
 #endif
 
     return FlagGet(TRAINER_FLAGS_START + trainerId);
@@ -1560,11 +1569,14 @@ void SetTrainerFlag(u16 trainerId)
         return;
 
 #if IS_WAYFARER
-    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET)
+    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagSet(trainerId);
         return;
     }
+    // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
+    if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
+        trainerId -= TRAINERS_COUNT_EMERALD - 1;
 #endif
 
     FlagSet(TRAINER_FLAGS_START + trainerId);
@@ -1576,11 +1588,14 @@ void ClearTrainerFlag(u16 trainerId)
         return;
 
 #if IS_WAYFARER
-    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET)
+    if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagClear(trainerId);
         return;
     }
+    // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
+    if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
+        trainerId -= TRAINERS_COUNT_EMERALD - 1;
 #endif
 
     FlagClear(TRAINER_FLAGS_START + trainerId);

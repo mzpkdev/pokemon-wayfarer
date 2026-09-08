@@ -31,11 +31,28 @@ PokemonLeague_BrunosRoom_EventScript_Bruno::
 	goto PokemonLeague_BrunosRoom_EventScript_BrunoOnDefeat
 
 PokemonLeague_BrunosRoom_EventScript_BrunoRematch::
+#if !IS_WAYFARER
+	goto_if_unset FLAG_IS_KANTO_CHAMPION, PokemonLeague_BrunosRoom_EventScript_BrunoRematchStandard
+	goto_if_ge VAR_SINJOH_STORYLINE, 13, PokemonLeague_BrunosRoom_EventScript_BrunoRematchPostOBC
+	goto_if_ge VAR_ALOLA_STATE, 4, PokemonLeague_BrunosRoom_EventScript_BrunoRematchPostOBC
+	goto_if_set FLAG_USED_TELEPORTER, PokemonLeague_BrunosRoom_EventScript_BrunoRematchPostOBC
+#endif
+
+PokemonLeague_BrunosRoom_EventScript_BrunoRematchStandard::
 	msgbox PokemonLeague_BrunosRoom_Text_RematchBefore, MSGBOX_DEFAULT
 	setflag FLAG_TEMP_3
 	setflag FLAG_TEMP_5
 	trainerbattle_no_intro TRAINER_BRUNO_2_HNS, PokemonLeague_BrunosRoom_Text_Beaten
 	goto PokemonLeague_BrunosRoom_EventScript_BrunoOnDefeat
+
+#if !IS_WAYFARER
+PokemonLeague_BrunosRoom_EventScript_BrunoRematchPostOBC::
+	msgbox PokemonLeague_BrunosRoom_Text_RematchBefore, MSGBOX_DEFAULT
+	setflag FLAG_TEMP_3
+	setflag FLAG_TEMP_5
+	trainerbattle_no_intro TRAINER_BRUNO_POSTOBC_HNS, PokemonLeague_BrunosRoom_Text_Beaten
+	goto PokemonLeague_BrunosRoom_EventScript_BrunoOnDefeat
+#endif
 
 PokemonLeague_BrunosRoom_EventScript_BrunoOnDefeat::
 	clearflag FLAG_TEMP_5	
