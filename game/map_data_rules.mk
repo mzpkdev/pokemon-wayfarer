@@ -37,7 +37,7 @@ MAP_JSONS := $(patsubst $(MAPS_DIR)/%/,$(MAPS_DIR)/%/map.json,$(MAP_DIRS))
 
 $(DATA_ASM_BUILDDIR)/maps.o: $(DATA_ASM_SUBDIR)/maps.s $(LAYOUTS_DIR)/layouts.inc $(LAYOUTS_DIR)/layouts_table.inc $(MAPS_DIR)/headers.inc $(MAPS_DIR)/groups.inc $(MAPS_DIR)/connections.inc $(MAP_CONNECTIONS) $(MAP_HEADERS)
 	$(PREPROC) $< charmap.txt | $(CPP) $(CPPFLAGS) -I include - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
-$(DATA_ASM_BUILDDIR)/event_scripts.o: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_CONSTANTS)
+$(DATA_ASM_BUILDDIR)/event_scripts.o: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_CONSTANTS) $(INCLUDECONSTS_OUTDIR)/map_event_ids.h
 $(DATA_ASM_BUILDDIR)/map_events.o: $(DATA_ASM_SUBDIR)/map_events.s $(MAPS_DIR)/events.inc $(MAP_EVENTS) $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS)
 	$(PREPROC) $< charmap.txt | $(CPP) $(CPPFLAGS) -I include - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
 
@@ -57,8 +57,8 @@ $(LAYOUTS_OUTDIR)/layouts.inc $(LAYOUTS_OUTDIR)/layouts_table.inc $(INCLUDECONST
 
 # Generate constants for map events, which depend on data that's distributed across the map.json files.
 # There's a lot of map.json files, so we print an abbreviated output with echo.
-$(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS) $(MAPJSON)
-	@$(MAPJSON) event_constants $(MAP_DETAIL_VERSION) $(filter-out $(MAPJSON),$^) $(INCLUDECONSTS_OUTDIR)/map_event_ids.h
+$(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS) .map_version $(MAPJSON)
+	@$(MAPJSON) event_constants $(MAP_DETAIL_VERSION) $(filter-out .map_version $(MAPJSON),$^) $(INCLUDECONSTS_OUTDIR)/map_event_ids.h
 	@echo "$(MAPJSON) event_constants $(MAP_DETAIL_VERSION) <MAP_JSONS> $(INCLUDECONSTS_OUTDIR)/map_event_ids.h"
 
 .map_version : FORCE
