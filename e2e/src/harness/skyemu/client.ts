@@ -29,6 +29,15 @@ export class SkyEmuClient {
     this.baseUrl = `http://127.0.0.1:${port}`
   }
 
+  async screenshot(): Promise<Uint8Array> {
+    const response = await fetch(`${this.baseUrl}/screen`)
+    if (!response.ok) throw new Error(`SkyEmu screenshot failed with HTTP ${response.status}`)
+    const bytes = new Uint8Array(await response.arrayBuffer())
+    if (bytes[0] !== 0x89 || bytes[1] !== 0x50 || bytes[2] !== 0x4e || bytes[3] !== 0x47)
+      throw new Error("SkyEmu screenshot did not return a PNG")
+    return bytes
+  }
+
   async health(): Promise<SkyEmuHealth> {
     const [ping, status] = await Promise.all([fetch(`${this.baseUrl}/ping`), this.status()])
     if (!ping.ok) throw new Error(`SkyEmu health check failed with HTTP ${ping.status}`)

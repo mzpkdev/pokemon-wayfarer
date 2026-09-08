@@ -54,10 +54,10 @@ export class GameSession {
     this.controls = createControlsApi(runtime)
     this.dialogue = createDialogueApi(state, wait)
     this.inventory = createInventoryApi(runtime)
-    this.player = createPlayerApi(runtime)
+    this.player = createPlayerApi(runtime, mailbox)
     this.regionMap = createRegionMapApi(runtime, mailbox)
     this.state = state
-    this.storage = createStorageApi(state, wait)
+    this.storage = createStorageApi(state, wait, runtime, mailbox)
     this.story = createStoryApi(runtime, mailbox)
     this.wait = wait
     this.saveAndReload = async () => {
@@ -136,6 +136,8 @@ export class GameSession {
       throw error
     }
   }
+
+  readonly screenshot = async (): Promise<Uint8Array> => this.running.client.screenshot()
 
   readonly close = async (): Promise<void> => {
     await this.running.stop()

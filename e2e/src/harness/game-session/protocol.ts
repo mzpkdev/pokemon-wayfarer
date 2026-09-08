@@ -1,7 +1,7 @@
-const abiVersion = 10
+const abiVersion = 12
 const expectedRequestSize = 432
 const expectedResultSize = 16
-const expectedStateSize = 356
+const expectedStateSize = 384
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -29,6 +29,9 @@ export const commands = {
   observeRegionMapSection: 5,
   winBattle: 6,
   observeFlag: 7,
+  warp: 8,
+  loseBattle: 9,
+  giftStorageCapacity: 10,
 } as const
 export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
 
@@ -248,6 +251,25 @@ export type StateSnapshot = {
   leagueRunActive: boolean
   leagueRunRegion: number
   leagueRunRating: number
+  starterChooseStage: number
+  originIntroStage: number
+  startingOriginId: number
+  johtoStarterChoice: number
+  hoennStarterChoice: number
+  maidenVoyageState: number
+  originCurrentRegion: number
+  originVisitedRegions: number
+  originHoennInitialized: boolean
+  johtoStarterCommitted: boolean
+  johtoStarterReceived: boolean
+  hoennStarterReceived: boolean
+  lastHealMapGroup: number
+  lastHealMapNum: number
+  lastHealX: number
+  lastHealY: number
+  playerGender: number
+  originEquipment: number
+  littlerootTownState: number
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -500,6 +522,32 @@ export const encodeWinBattleRequest = (abi: SessionAbi, requestId: number): Uint
     leagueClears: [false, false, false],
   })
 
+export const encodeLoseBattleRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.loseBattle,
+    mapGroup: keepMap,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+  })
+
 export const encodeObserveFlagRequest = (
   abi: SessionAbi,
   requestId: number,
@@ -518,6 +566,70 @@ export const encodeObserveFlagRequest = (
     flags: [],
     checkpoint: 0,
     facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+  })
+
+export const encodeGiftStorageCapacityRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  full: boolean,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.giftStorageCapacity,
+    mapGroup: full ? 1 : 0,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+  })
+
+export const encodeWarpRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  mapGroup: number,
+  mapNum: number,
+  x: number,
+  y: number,
+  facing: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.warp,
+    mapGroup,
+    mapNum,
+    x,
+    y,
+    facing,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 1,
     textSpeed: 0,
     party: [],
     bagItems: [],
@@ -634,5 +746,24 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     leagueRunActive: bytes[352] === 1,
     leagueRunRegion: bytes[353]!,
     leagueRunRating: bytes[354]!,
+    starterChooseStage: bytes[373]!,
+    originIntroStage: bytes[355]!,
+    startingOriginId: uint16(bytes, 356),
+    johtoStarterChoice: uint16(bytes, 358),
+    hoennStarterChoice: uint16(bytes, 360),
+    maidenVoyageState: uint16(bytes, 362),
+    originCurrentRegion: bytes[364]!,
+    originVisitedRegions: bytes[365]!,
+    originHoennInitialized: bytes[366] !== 0,
+    johtoStarterCommitted: bytes[367] !== 0,
+    johtoStarterReceived: bytes[368] !== 0,
+    hoennStarterReceived: bytes[369] !== 0,
+    lastHealMapGroup: bytes[370]!,
+    lastHealMapNum: bytes[371]!,
+    lastHealX: int16(bytes, 374),
+    lastHealY: int16(bytes, 376),
+    playerGender: bytes[378]!,
+    originEquipment: bytes[379]!,
+    littlerootTownState: uint16(bytes, 380),
   }
 }

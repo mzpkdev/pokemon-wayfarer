@@ -29,6 +29,25 @@ import { type SessionRuntime } from "../runtime"
 
 export type GameState = {
   frame: number
+  origin: {
+    starterChooseStage: number
+    introStage: number
+    id: number
+    currentRegion: number
+    visitedRegions: number
+    hoennInitialized: boolean
+    johtoChoice: number
+    hoennChoice: number
+    johtoCommitted: boolean
+    johtoReceived: boolean
+    hoennReceived: boolean
+    maidenVoyageState: number
+    recovery: { map: GameMap | "unknown"; x: number; y: number }
+    gender: number
+    runningShoes: boolean
+    pokedex: boolean
+    littlerootTownState: number
+  }
   phase: (typeof gamePhases)[number]
   ready: boolean
   map: {
@@ -214,6 +233,29 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
     }))
     return {
       frame: snapshot.frame,
+      origin: {
+        starterChooseStage: snapshot.starterChooseStage,
+        introStage: snapshot.originIntroStage,
+        id: snapshot.startingOriginId,
+        currentRegion: snapshot.originCurrentRegion,
+        visitedRegions: snapshot.originVisitedRegions,
+        hoennInitialized: snapshot.originHoennInitialized,
+        johtoChoice: snapshot.johtoStarterChoice,
+        hoennChoice: snapshot.hoennStarterChoice,
+        johtoCommitted: snapshot.johtoStarterCommitted,
+        johtoReceived: snapshot.johtoStarterReceived,
+        hoennReceived: snapshot.hoennStarterReceived,
+        maidenVoyageState: snapshot.maidenVoyageState,
+        recovery: {
+          map: mapName(snapshot.lastHealMapGroup, snapshot.lastHealMapNum),
+          x: snapshot.lastHealX,
+          y: snapshot.lastHealY,
+        },
+        gender: snapshot.playerGender,
+        runningShoes: (snapshot.originEquipment & 1) !== 0,
+        pokedex: (snapshot.originEquipment & 2) !== 0,
+        littlerootTownState: snapshot.littlerootTownState,
+      },
       map: {
         name: mapName(snapshot.mapGroup, snapshot.mapNum),
         mapGroup: snapshot.mapGroup,

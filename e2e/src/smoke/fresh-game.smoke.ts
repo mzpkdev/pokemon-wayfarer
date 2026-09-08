@@ -13,7 +13,7 @@ describe.sequential("a new game", () => {
 
   context("when started from the title screen", () => {
     it("reaches the player's bedroom in New Bark Town", async () => {
-      await playThroughNewGameIntro(game)
+      await playThroughNewGameIntro(game, "johto")
       await game.wait.forMap("players-bedroom")
 
       await expect(game.state.read()).resolves.toMatchObject({

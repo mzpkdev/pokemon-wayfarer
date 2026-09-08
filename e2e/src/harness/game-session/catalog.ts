@@ -4,6 +4,9 @@ export const checkpoints = {
   "bedroom-before-clock": 1,
   "new-bark-after-intro": 2,
   "elm-lab-before-intro": 3,
+  "hoenn-before-rescue": 4,
+  "hoenn-female-before-rescue": 5,
+  "hoenn-before-poison-whiteout": 6,
 } as const
 
 export const maps = {
@@ -43,6 +46,9 @@ export const maps = {
   "players-bedroom": { mapGroup: 1, mapNum: 4 },
   "cherrygrove-pokemon-center": { mapGroup: 2, mapNum: 0 },
   "olivine-house-3": { mapGroup: 7, mapNum: 6 },
+  "olivine-pokemon-center": { mapGroup: 7, mapNum: 0 },
+  "vermilion-pokemon-center": { mapGroup: 15, mapNum: 0 },
+  "slateport-pokemon-center": { mapGroup: 40, mapNum: 11 },
   "olivine-port-inside": { mapGroup: 7, mapNum: 8 },
   "blackthorn-move-deleter": { mapGroup: 10, mapNum: 5 },
   "vermilion-port-inside": { mapGroup: 15, mapNum: 3 },
@@ -102,7 +108,17 @@ export const maps = {
   "route-118": { mapGroup: 31, mapNum: 33 },
   "petalburg-house-1": { mapGroup: 39, mapNum: 2 },
   "slateport-city-harbor": { mapGroup: 40, mapNum: 9 },
+  "inside-of-truck": { mapGroup: 56, mapNum: 40 },
+  "brendans-house-1f": { mapGroup: 32, mapNum: 0 },
+  "brendans-house-2f": { mapGroup: 32, mapNum: 1 },
+  "mays-house-1f": { mapGroup: 32, mapNum: 2 },
+  "mays-house-2f": { mapGroup: 32, mapNum: 3 },
+  "birch-lab": { mapGroup: 32, mapNum: 4 },
+  "route-101": { mapGroup: 31, mapNum: 16 },
+  "route-103": { mapGroup: 31, mapNum: 18 },
   "littleroot-town": { mapGroup: 31, mapNum: 9 },
+  "lavaridge-town": { mapGroup: 31, mapNum: 12 },
+  "lavaridge-pokemon-center": { mapGroup: 35, mapNum: 5 },
   "lilycove-city": { mapGroup: 31, mapNum: 5 },
   "mossdeep-city": { mapGroup: 31, mapNum: 6 },
   "mossdeep-house-3": { mapGroup: 45, mapNum: 6 },
@@ -137,6 +153,9 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  hoennWhiteoutToLavaridge: 0x606c,
+  sharedPokegear: 0x892,
+  sharedMatchCall: 0x1f3,
   disableEncounters: 0x965,
   hideSilverInNewBark: 0x04a,
   hideElmLabAide: 0x04b,
@@ -211,6 +230,9 @@ export const species = {
   gyarados: 130,
   lapras: 131,
   dratini: 147,
+  treecko: 252,
+  torchic: 255,
+  mudkip: 258,
   chikorita: 152,
   cyndaquil: 155,
   totodile: 158,
@@ -240,6 +262,7 @@ export const moves = {
   tackle: 33,
   surf: 57,
   strength: 70,
+  teleport: 100,
   waterfall: 127,
   flash: 148,
   rockSmash: 249,
@@ -284,6 +307,7 @@ export const partyMenuActions = {
   dive: 40,
   waterfall: 41,
   whirlpool: 42,
+  teleport: 43,
 } as const
 
 export const directions = {
