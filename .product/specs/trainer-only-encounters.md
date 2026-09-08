@@ -183,7 +183,8 @@ choice makes emergency revival useful and avoids partially initialized battles.
 
 Use a dedicated controller and transient context, for example
 `trainer_only_encounter.c/.h` and `battle_controller_trainer_only.c`. State includes
-mode identity, frozen soft cap/wild level, approach stage, surviving rock count,
+mode identity, frozen soft cap/wild level, approach counter, initial/current catch
+factors, approach escape factor, surviving rock count,
 anger, food duration, escape attempts, completed-turn count, warning state and
 pending outcome. No
 separate trainer HP stat is added. All state is encounter-local and resets on
@@ -256,10 +257,13 @@ interpolating. Relative danger is `L / C`.
 | Additional anger per surviving rock | 25 |
 | Initial anger / retaliation threshold | 0 / 100 |
 | Berry anger reduction | 20, floored at zero, before passive anger |
-| Proximity stages d | 0, 1, 2, 3 |
-| Catch-odds multiplier by stage | 1, 1.5, 2, 2.5 |
-| Wild flee chance | `clamp(15 + 10*d + 5*r - food, 5, 75)` percent |
-| r | Surviving rock hits this encounter, capped at 14 (enough to saturate fleeing even at stage 0 with active food) |
+| Approach counter d | Starts at 0, increments up to 3; repeated actions at 3 still commit |
+| Initial catch factor F0 | `max(1, floor(speciesCatchRate * 100 / 1275))`, as in HNS Safari |
+| Current catch factor F | Starts at F0; each Go Near adds `[4, 3, 2, 1][d]` before incrementing d, capped at 20 |
+| Approach escape factor E | Starts at 3; each Go Near adds 4, capped at 20 |
+| Owned-ball approach adjustment | `F / F0`; see capture application below |
+| Wild flee chance | `clamp(5*E + 5*r - food, 5, 75)` percent |
+| r | Surviving rock hits this encounter, capped at 14 (enough to saturate fleeing at initial E with active food) |
 | food | 10 while food effect is active, otherwise 0 |
 | Food duration | 3 committed turns including feeding; another feeding refreshes to 3, never stacks flee reductions |
 
@@ -291,26 +295,44 @@ Enough food can manage anger at an inventory cost; that is allowed sandbox play.
 
 ### Proximity shared with Safari
 
-Extract one bounded catch adjustment for HNS/Wayfarer Safari and trainer-only mode.
-Use multipliers 2/2, 3/2, 4/2 and 5/2, rounding down once at the end of
-`ComputeCaptureOdds()` after its existing HP, ball, badge, low-level and status
-modifiers, before critical/shake processing. Guaranteed-capture early returns
-bypass it. Neutral stage preserves each ball's existing unapproached odds.
+Reuse HNS/Wayfarer Safari's existing Go Near factor update and action semantics.
+The earlier fixed 1/1.5/2/2.5 multipliers and free action at stage 3 are superseded.
+Initialize F0, F, E and d as above. Every Go Near first increases F and E, then
+increments d if it is below 3. The first three actions use catch increments 4, 3
+and 2; the fourth and every later action use 1. Catch and escape factors saturate
+at 20 independently. Even with both factors saturated, the action still spends
+a turn and receives normal surviving-turn resolution. No free invalid-action
+path is introduced at the closest distance.
 
-Preserve Safari Ball's base factor quantization, but do not also increment its
-catch factor for proximity: that would apply the benefit twice. Other balls retain
-their real species catch rates and ordinary effects. Clamp final ordinary odds to
-the existing guaranteed-capture boundary with safe intermediate arithmetic.
+Retain Safari's existing closer/closest-distance messages and movement counter.
+A closest-distance message does not mean that factors stop changing. Trainer-only
+Go Near also adds its normal passive anger on every nonterminal attempt, advances
+its completed-turn counter, and permits retaliation or fleeing. It adds no separate
+rock anger. Berry feeding preserves F, E and d; its selected temporary fear and
+anger effects still apply. The rock/berry overlay and 5..75% final flee bounds
+belong to trainer-only mode; Safari retains its own actual flee calculation,
+Pokéblock effects and visit rules. Sharing approach updates does not copy the
+whole Safari encounter loop.
 
-At stage 3, further Go Near attempts show the closest-distance message without a
-turn, factor increment or RNG. Berry feeding retains proximity. In trainer-only
-mode successful approaching adds only the ordinary passive anger for its turn.
+For HNS/Wayfarer Safari Balls during actual Safari visits, preserve the existing
+factor-to-catch-rate conversion and rounding exactly, including repeated approaches.
+Do not multiply those odds by another approach bonus. For other owned balls in
+Safari, and all legal balls in trainer-only mode, use `floor(speciesCatchRate * F / F0)` as the effective species catch rate
+before the existing flat ball bonus, minimum-rate clamp and HP/ball/status/global
+odds calculation. Preserve that calculation's order and rounding. At F=F0 the
+adjustment is exactly neutral. Use wide intermediates; do not cap the effective
+rate at 255 or narrow it to an 8-bit species field. Clamp final capture odds to
+the existing guaranteed-capture boundary. Guaranteed-capture early returns remain unchanged. A Safari Ball used
+outside a Safari visit follows that mode's ordinary ball path, not Safari's
+flattened species-rate path.
 
-The trainer-only numeric flee formula above is not a Safari rebalance. Safari
-retains its existing +4 escape-factor increment per valid approach (20 percentage
-points), initial factor, Pokéblock response and session rules, capped by its current
-limits. Both modes share the three-stage catch adjustment and capped-action behavior;
-Safari receives no rocks, passive anger, berry feeding or new Run calculation.
+F0 remains the positive encounter-entry reference for this ratio. HNS Pokéblocks
+alter escape behavior, not the catch factor; preserve that existing behavior.
+FRLG bait/rock resets and factor rules remain outside this change. For example,
+a species with F0=5 has factors 5,9,12,14,15 after zero through four approaches;
+the owned-ball adjustment is 1,1.8,2.4,2.8,3 respectively. Factor saturation gives
+a species-dependent maximum benefit, rather than the discarded universal 2.5x
+cap. Existing Safari Ball quantization remains specific to its original path.
 
 Ball effects needing an active player Pokémon skip only the unavailable comparison
 and retain independent bonuses. Do not use fainted party stats, Eggs or C as a
@@ -527,12 +549,12 @@ for exercising the new controller and field-return routing.
 | Warning | Largest-next-gain lookahead at all T values; +40 rock cannot skip prior warning; post-berry warning reentry; failed escape can trigger warned retaliation |
 | Run | Formula once approved: relative-strength ordering, repeated-attempt bonus, cancellation invariance, one roll/history update, failure text/turn, success terminal; no active-Pokémon modifiers |
 | Food/fear | -20 anger then T; feed may manage anger at item cost; -10 flee for3 checks incl feeding; refresh not stack; preserve damage/proximity/rock fear; flee bounds5..75 |
-| Proximity | Multipliers1/1.5/2/2.5 for all HNS/Wayfarer balls; floor once after existing modifiers; neutral unchanged; guarantee preserved; no double factor; stage3 invalid action |
+| Proximity | F0 floor/min1; increments4/3/2/1 then repeated1; E increments4; factor caps20; stage3 remains committed; Safari Ball legacy odds unchanged; owned-ball effective species rate F/F0 neutral at entry, floor before flat ball bonus, wide arithmetic/guarantee/no double bonus; F0=1/5/20 and repeated attempts after saturation |
 | Outcome ordering | Capture, rock KO, successful Run and successful revival terminate before anger; retaliation before flee; at most one wild-flee check; no terminal double-resolution |
 | Capture/revival | Slot/PC/count/Dex/nickname; full six-fainted catch toPC remains unprotected; challenge PC routing; valid revival safely ends encounter and next battle normal |
 | Recovery | Retaliation uses existing current heal point/origin fallback/healer transform; true empty and fainted party text/healing; contexts cleared; no extra battle-loss charge |
 | Exceptions | Approved challenge/hardcore/money/League policy tested at party defeat and trainer blackout separately; no accidental deletion, replacement gift or exemption |
-| Regression | Safari grants, allowance30/steps500/exit/retirement/Run/Pokéblocks unchanged except shared proximity; Bug Contest; standalone HNS/FRLG/Emerald defeat policies |
+| Regression | Safari grants, allowance30/steps500/exit/retirement/Run/Pokéblocks and Go Near turn/RNG/factor behavior unchanged; only owned non-Safari balls gain the approach adjustment; Bug Contest; standalone HNS/FRLG/Emerald defeat policies |
 | Persistence/UI | Unprotected reload, recovery then normal battle, Bag targets/animations, field controls and sprites; no meters or stale callbacks |
 
 Build Wayfarer and HNS sequentially because map generation shares files. Compile

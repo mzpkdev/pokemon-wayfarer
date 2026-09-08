@@ -113,7 +113,7 @@ The player uses balls and berries actually owned in the Bag.
 | Action | Required behavior |
 | --- | --- |
 | Rock | Deal HP damage, increase flee risk, and build anger. Damage can knock out the Pokémon. There is no separate rock catch bonus: lower HP already improves catching. |
-| Go Near | Build a capped, persistent proximity bonus to catching, with increased flee risk. Reuse the Safari approach mechanic and apply its catch benefit to every ball. |
+| Go Near | Use existing Safari approach behavior: increase catch and flee factors, including repeated attempts at the closest distance. Apply the catch benefit to every ball. |
 | Bag: ball | Consume one owned, usable ball and attempt a normal capture with the proximity benefit. Preserve the ball's ordinary effects where applicable. |
 | Bag: berry | Consume one eligible berry to temporarily reduce flee risk and partially lower anger. Feeding does not heal rock damage or instantly reset anger. |
 | Run | Attempt escape. Success depends on wild level relative to the Trainer Rating softcap and improves with repeated attempts. A failed attempt consumes a turn. |
@@ -189,7 +189,9 @@ Safari-specific challenge exceptions belong to Safari visits.
 
 Safari retains its action set, admission, ball grants, step limit, total throw
 allowance including owned balls, and exit behavior. The intended shared change is
-that Go Near benefits every ball in HNS/Wayfarer Safari encounters too. This does
+that Go Near benefits every ball in HNS/Wayfarer Safari encounters too. Safari
+keeps its existing turn cost, factor updates and flee checks even at the closest
+distance. Existing Safari Ball odds remain unchanged. This does
 not redesign FRLG bait and rock mechanics or add anger and retaliation to Safari.
 
 No new origin, starter gift, berry distribution, shop, encounter table, trainer HP
@@ -202,8 +204,11 @@ trade damage for a higher chance of losing the encounter through fleeing,
 knockout, or trainer defeat. Food spends inventory to keep the encounter going
 and reduce anger without erasing the physical consequences of earlier rocks.
 
-Species catch rates and ball effects remain meaningful. Proximity is capped and
-must not double-apply Safari's existing catch adjustment.
+Species catch rates and ball effects remain meaningful. Go Near uses Safari's
+existing factor limits, not a separate three-action or 2.5x cap. Every attempt
+spends a turn, including attempts after the closest-distance message or factor
+saturation. Trainer-only passive anger continues on those turns. Do not apply
+the approach benefit twice to Safari Balls.
 
 The following are selected initial playtest defaults. They are tuning values, not
 claims that balance has been validated. Let `C` be the Trainer Rating soft level
@@ -217,11 +222,11 @@ cap and `L` the wild Pokémon's level, both fixed for the encounter at entry.
 | Retaliation threshold | 100 anger |
 | Berry anger change | Reduce by 20, floored at zero, then apply passive anger |
 | Base flee chance | 15% |
-| Proximity flee change | +10 percentage points per approach stage |
+| Proximity flee change | Safari escape factor starts at 3 and gains 4 per attempt, capped at 20; contributes factor × 5 percentage points before trainer-only rock/food effects and final bounds |
 | Rock flee change | +5 percentage points per rock |
 | Food flee change | -10 percentage points for three turns; feeding refreshes duration without stacking |
 | Final flee chance | Clamp to 5% through 75% |
-| Proximity catch multiplier | ×1, ×1.5, ×2, ×2.5 at stages zero through three |
+| Proximity catch change | Safari catch factor gains +4, +3, +2, then +1 for every further attempt, capped at 20; owned-ball benefit scales by current/initial factor |
 
 The flee defaults above belong to trainer-only encounters. Safari shares the
 all-ball proximity catch benefit while retaining its visit rules. Escape has a
@@ -312,7 +317,9 @@ Acceptance examples:
   unusable. Safely using a revive on a fainted party member ends the encounter and
   restores normal battle eligibility.
 - Go Near improves owned-ball capture odds in both modes, while an actual Safari
-  visit still enforces its own allowance and step limit.
+  visit still enforces its own allowance and step limit. A fourth or later Go Near
+  still consumes a turn in both modes; trainer-only mode also builds passive anger.
+  Factor saturation never turns Go Near into a free action.
 - Retaliation before visiting a Pokémon Center uses the established recovery
   destination and text explaining the trainer's defeat.
 
