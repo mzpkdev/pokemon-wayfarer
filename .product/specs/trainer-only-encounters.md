@@ -176,6 +176,9 @@ challenge-dead Pokémon through a new exception. A literal-empty party has no
 recovery target. Selecting a standard berry feeds the wild Pokémon directly;
 there is no Feed/Use submenu or party-medicine use for berries in this mode.
 Feeding consumes one berry only when committed and never runs its medicine callback.
+After Bag closes, play the existing Pokéblock throw animation unchanged, including
+its projectile and wild eating motion. Apply food effects after the animation,
+then resolve the single committed turn. Cancelling Bag plays no throw.
 This approved choice supersedes the earlier feed-versus-party-use distinction.
 
 Selected transition rule: if a legal recovery action creates a usable party

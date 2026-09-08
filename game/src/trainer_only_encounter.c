@@ -208,8 +208,9 @@ static void TrainerOnlyMain(void)
             sPhase = 4;
             return;
         case TRAINER_ONLY_FOOD:
-            TrainerOnlyApplyFood(&sState);
-            Message(sText_Eating, 5);
+            BtlController_EmitBattleAnimation(player, B_COMM_TO_CONTROLLER, B_ANIM_POKEBLOCK_THROW, 0);
+            MarkBattlerForControllerExec(player);
+            sPhase = 14;
             return;
         case TRAINER_ONLY_RECOVERY:
 #if IS_WAYFARER
@@ -241,6 +242,10 @@ static void TrainerOnlyMain(void)
             return;
         }
         break;
+    case 14:
+        TrainerOnlyApplyFood(&sState);
+        Message(sText_Eating, 5);
+        return;
     case 9:
         sRockDamage = TrainerOnlyRockDamage(sState.cap, sState.level, gBattleMons[wild].maxHP, gBattleMons[wild].hp);
         BtlController_EmitHitAnimation(wild, B_COMM_TO_CONTROLLER);

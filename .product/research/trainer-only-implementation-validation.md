@@ -9,6 +9,25 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Native feeding animation
+
+Committed berry feeding now plays the existing Pokéblock throw unchanged after
+Bag returns. The controller waits for the trainer throw, projectile and wild
+sway before applying food and resolving the single turn. No new graphics or
+berry-specific projectile were added.
+
+The feeding case and four existing Bag-cancellation fixtures passed 5/5 on
+E2E ROM `d998b8746cbba57b6536ca3ba6c20db629d0114547960effd201be795f938d27`
+(`/tmp/trainer-only-feed-e2e.log`; 18 unrelated cases deliberately skipped).
+Temporary focus markers were removed. Feeding retains exactly-one-berry and
+one-completed-turn assertions, and now checks that the turn remains pending
+through the animation. Root inspected sampled frames showing the trainer arm,
+Pokéblock arc and wild motion. Scoped format/lint and TypeScript checks passed.
+
+E2E and playable Wayfarer builds passed (`/tmp/trainer-only-feed-build.log` and
+`/tmp/trainer-only-feed-playable-build.log`). The playable ROM SHA-256 is
+`53ef300a1f72619288f15b0b351421523116bbaaf569b788bb191541c355f809`.
+
 ## Empty-party Pokémon Center fix
 
 The ball-placement effect spawned before checking its remaining count. Zero
