@@ -30,10 +30,22 @@ void TrainerOnlyBufferExecCompleted(enum BattlerId battler)
 static void ChooseAction(enum BattlerId battler)
 {
     u8 cursor = gActionSelectionCursor[battler];
+    if (HandleLastUsedBallCycleInput(battler, TRAINER_ONLY_QUICK_BALL))
+        return;
+    if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == FALSE
+        && JOY_NEW(B_LAST_USED_BALL_BUTTON) && CanThrowLastUsedBall())
+    {
+        PlaySE(SE_SELECT);
+        TryHideLastUsedBall();
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, TRAINER_ONLY_QUICK_BALL, 0);
+        BtlController_Complete(battler);
+        return;
+    }
     if (JOY_NEW(A_BUTTON))
     {
         static const u8 actions[] = {TRAINER_ONLY_ROCK, TRAINER_ONLY_BALL, TRAINER_ONLY_NEAR, TRAINER_ONLY_RUN};
         PlaySE(SE_SELECT);
+        TryHideLastUsedBall();
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, actions[cursor], 0);
         BtlController_Complete(battler);
         return;
@@ -116,6 +128,7 @@ static void RunCommand(enum BattlerId battler)
         BattlePutTextOnWindow(sText_Menu, B_WIN_ACTION_MENU);
         BattlePutTextOnWindow(sText_Prompt, B_WIN_ACTION_PROMPT);
         for (u32 i = 0; i < 4; i++) ActionSelectionDestroyCursorAt(i);
+        TryRestoreLastUsedBall();
         ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
         gBattle_BG0_X = 0;
         gBattle_BG0_Y = DISPLAY_HEIGHT;

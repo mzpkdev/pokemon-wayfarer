@@ -235,18 +235,8 @@ static u32 GetNextBall(u32 ballId)
     return ballId;
 }
 
-static void HandleInputChooseAction(enum BattlerId battler)
+bool32 HandleLastUsedBallCycleInput(enum BattlerId battler, u8 action)
 {
-    enum Item itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
-
-    DoBounceEffect(battler, BOUNCE_HEALTHBOX, 7, 1);
-    DoBounceEffect(battler, BOUNCE_MON, 7, 1);
-
-    if (JOY_REPEAT(DPAD_ANY) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
-        gPlayerDpadHoldFrames++;
-    else
-        gPlayerDpadHoldFrames = 0;
-
     if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE
     && !(B_LAST_USED_BALL_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
@@ -299,12 +289,29 @@ static void HandleInputChooseAction(enum BattlerId battler)
                 PlaySE(SE_SELECT);
                 ArrowsChangeColorLastBallCycle(FALSE);
                 TryHideLastUsedBall();
-                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_THROW_BALL, 0);
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, action, 0);
                 BtlController_Complete(battler);
             }
-            return;
+            return TRUE;
         }
     }
+    return FALSE;
+}
+
+static void HandleInputChooseAction(enum BattlerId battler)
+{
+    enum Item itemId = gBattleResources->bufferA[battler][2] | (gBattleResources->bufferA[battler][3] << 8);
+
+    DoBounceEffect(battler, BOUNCE_HEALTHBOX, 7, 1);
+    DoBounceEffect(battler, BOUNCE_MON, 7, 1);
+
+    if (JOY_REPEAT(DPAD_ANY) && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A)
+        gPlayerDpadHoldFrames++;
+    else
+        gPlayerDpadHoldFrames = 0;
+
+    if (HandleLastUsedBallCycleInput(battler, B_ACTION_THROW_BALL))
+        return;
 
     if (JOY_NEW(A_BUTTON))
     {

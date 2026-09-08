@@ -9,6 +9,30 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## R-button ball shortcut
+
+The trainer-only menu now restores and hides the native last-used-ball widget.
+It shares the ordinary controller's cycling input handler and emits a distinct
+shortcut action. That action rechecks native capture eligibility, removes one
+owned ball, and enters the existing trainer-only capture path. The widget's
+move-info sprite access now checks its sentinel, since trainer-only encounters
+have no move-info widget.
+
+Three focused cases passed on E2E ROM
+`e51e59655bd70b561fc03d30ea1215e8f37490d5ef8415595313ebb29f11e654`
+(`/tmp/trainer-only-quick-e2e-final.log`): trainer-only R Quick Ball failure
+consumes one ball and one completed turn; no-ball R leaves the turn unchanged;
+and the ordinary party-battle R shortcut still consumes its ball and returns
+after failure. Root visually inspected the widget beside the trainer-only menu.
+Cycling and capture-restriction delegation were source-reviewed; these are not
+claims of separate emulator cases. The initial test driver waited at battle
+intro text; the final driver acknowledges it before checking the action menu.
+
+Scoped format/lint and TypeScript checks passed. E2E and playable Wayfarer builds
+passed (`/tmp/trainer-only-quick-build.log` and
+`/tmp/trainer-only-quick-playable-build.log`). The playable ROM SHA-256 is
+`5caec3419347235ddd35d48bc04fe5ab96478bbeafc6c06308ffcded2b99c57e`.
+
 ## Native feeding animation
 
 Committed berry feeding now plays the existing Pokéblock throw unchanged after
