@@ -30,6 +30,14 @@ extern const u8 RocketHideout_B4F_EventScript_Grunt2[];
 extern const u8 RocketHideout_B4F_EventScript_Grunt2_TrainerBattle[];
 extern const u8 RocketHideout_B4F_EventScript_Grunt3[];
 extern const u8 RocketHideout_B4F_EventScript_Grunt3_TrainerBattle[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt1[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt1TrainerBattle[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt2[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt2TrainerBattle[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt3[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt3TrainerBattle[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt4[];
+extern const u8 WayfarerMtMoon_EventScript_Grunt4TrainerBattle[];
 
 struct WayfarerTrainerBattleScript
 {
@@ -51,6 +59,10 @@ static const struct WayfarerTrainerBattleScript sCeladonHideoutTrainerBattleScri
     {RocketHideout_B4F_EventScript_Grunt1, RocketHideout_B4F_EventScript_Grunt1_TrainerBattle},
     {RocketHideout_B4F_EventScript_Grunt2, RocketHideout_B4F_EventScript_Grunt2_TrainerBattle},
     {RocketHideout_B4F_EventScript_Grunt3, RocketHideout_B4F_EventScript_Grunt3_TrainerBattle},
+    {WayfarerMtMoon_EventScript_Grunt1, WayfarerMtMoon_EventScript_Grunt1TrainerBattle},
+    {WayfarerMtMoon_EventScript_Grunt2, WayfarerMtMoon_EventScript_Grunt2TrainerBattle},
+    {WayfarerMtMoon_EventScript_Grunt3, WayfarerMtMoon_EventScript_Grunt3TrainerBattle},
+    {WayfarerMtMoon_EventScript_Grunt4, WayfarerMtMoon_EventScript_Grunt4TrainerBattle},
 };
 
 u16 WayfarerCanStartOrdinaryBattleForScript(void)

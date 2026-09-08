@@ -161,3 +161,24 @@ and IWRAM uses 25,556 bytes.
 The space-recovery prerequisite is satisfied for this revision. Further
 content still needs its own release measurement; this result does not
 authorize merging or establish the cost of unimplemented imports.
+
+## Mt. Moon fossil integration findings
+
+The selected HNS cave retains its 15 original object templates, four exits,
+Silver interaction, hidden Revive, sign, isolated fossil tableau, and layout
+binary. Wayfarer appends four optional Rocket grunts, Miguel, and two local
+fossil objects only through event selection. The largest relevant spawn window
+contains 12 non-player templates, within the 15-template capacity.
+
+The normal Items pocket owns the Wayfarer Helix and Dome transaction while
+standalone HNS retains its configured Key Item metadata. Miguel's win reveals
+both loaded fossil objects immediately; a full Items pocket or a selected
+pre-owned fossil keeps the local choice safe and retryable. The HNS Ruins of
+Alph rewards and revival state remain independent.
+
+The focused static map/state contract, catalog and scaling checks, TypeScript
+check, and four-case emulator journey pass. The production release uses
+32,433,956 bytes (`__rom_end = 0x09EEE724`), leaves 1,120,476 physical bytes
+free, and remains 596,188 bytes above the 512 KiB reserve. EWRAM uses 248,509
+bytes and IWRAM uses 25,556 bytes. Existing compiler/linker warnings remain
+outside this milestone.

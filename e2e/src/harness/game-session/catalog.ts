@@ -180,6 +180,10 @@ export const storyFlags = {
   fuchsiaGoldTeethClaimed: 0x4bc,
   fuchsiaSurfReceived: 0x4bd,
   fuchsiaStrengthReceived: 0x4be,
+  hideMtMoonDomeFossil: 0x4bf,
+  hideMtMoonHelixFossil: 0x4c0,
+  receivedMtMoonFossil: 0x4c1,
+  mtMoonMiguelDefeated: 0x7b6,
   receivedExistingStrength: 0x1f8,
   inKantoSafari: 0x259,
   safariGoodLuck: 0x258,
@@ -325,6 +329,8 @@ export const hms = {
 } as const
 
 export const items = {
+  helixFossil: 165,
+  domeFossil: 166,
   goldTeeth: 749,
   pokeblockCase: 722,
 

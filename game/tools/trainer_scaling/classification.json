@@ -23578,6 +23578,37 @@
         }
       ],
       "reason": "Authored Celadon Hideout boss encounter; outside ordinary Trainer Rating scaling."
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_MIGUEL_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_MIGUEL_HNS", "role": "TRAINER_CLASS_SUPER_NERD_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_MIGUEL_HNS"}],
+      "reason": "Authored Mt. Moon fossil objective battle; outside ordinary Trainer Rating scaling."
     }
   ],
   "move_exceptions": []

@@ -3281,7 +3281,9 @@ const struct ItemInfo gItemsInfo[] =
             "A piece of an\n"
             "ancient marine\n"
             "Pokémon's seashell."),
-    #if I_KEY_FOSSILS >= GEN_4
+    // Wayfarer's local Mt. Moon reward is retryable against the normal Items
+    // pocket. Keep standalone HNS's configured Gen III Key Item behavior.
+    #if I_KEY_FOSSILS >= GEN_4 || IS_WAYFARER
         .price = (I_PRICE >= GEN_7) ? 7000: 1000,
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_FOSSIL,
@@ -3304,7 +3306,7 @@ const struct ItemInfo gItemsInfo[] =
             "A piece of an\n"
             "ancient marine\n"
             "Pokémon's shell."),
-    #if I_KEY_FOSSILS >= GEN_4
+    #if I_KEY_FOSSILS >= GEN_4 || IS_WAYFARER
         .price = (I_PRICE >= GEN_7) ? 7000: 1000,
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_FOSSIL,

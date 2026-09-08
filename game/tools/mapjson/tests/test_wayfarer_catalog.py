@@ -971,7 +971,17 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS": "RocketHideout_B4F_EventScript_Grunt1",
             "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS": "RocketHideout_B4F_EventScript_Grunt2",
             "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS": "RocketHideout_B4F_EventScript_Grunt3",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS": "WayfarerMtMoon_EventScript_Grunt1",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS": "WayfarerMtMoon_EventScript_Grunt2",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS": "WayfarerMtMoon_EventScript_Grunt3",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS": "WayfarerMtMoon_EventScript_Grunt4",
         }
+        trainer_battle_labels.update({
+            "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS": "WayfarerMtMoon_EventScript_Grunt1TrainerBattle",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS": "WayfarerMtMoon_EventScript_Grunt2TrainerBattle",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS": "WayfarerMtMoon_EventScript_Grunt3TrainerBattle",
+            "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS": "WayfarerMtMoon_EventScript_Grunt4TrainerBattle",
+        })
         resolver_table = re.search(
             r"(?s)sCeladonHideoutTrainerBattleScripts\[\]\s*=\s*\{(.*?)\};",
             resolver_source,
