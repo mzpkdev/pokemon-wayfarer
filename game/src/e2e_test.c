@@ -711,6 +711,12 @@ static void ApplyCheckpointDefaults(void)
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
         break;
     case E2E_TEST_CHECKPOINT_NEW_BARK_AFTER_INTRO:
+        VarSet(VAR_NEWBARK_TOWN_STATE, 2);
+        VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
+#if IS_WAYFARER
+        FlagSet(FLAG_JOHTO_STARTER_CHOICE_COMMITTED);
+#endif
+        break;
     case E2E_TEST_CHECKPOINT_ELM_LAB_BEFORE_INTRO:
         VarSet(VAR_NEWBARK_TOWN_STATE, 2);
         VarSet(VAR_NEWBARKTOWN_LABSTATE, 0);
