@@ -9,6 +9,32 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Empty-party Pokémon Center fix
+
+The ball-placement effect spawned before checking its remaining count. Zero
+became -1, leaving the animation active and reading past the six ball positions.
+The shared placement loop now skips spawning when the count is zero and completes
+normally. Shared completion also releases an unused glow palette when no ball
+sprite existed to free it. Actual party counts and existing Egg rules remain;
+fainted members are still healed normally.
+
+The native Cherrygrove nurse regression disables fast healing and confirms the
+animated branch before checking completion and subsequent walking. On the prior
+`e925cba8…` ROM, the empty-party case timed out after accepting healing
+(`/tmp/trainer-only-pokemon-center-old-normal-e925.log`). That exploratory run's
+fainted-party failure was a dialogue matcher error, not a healing defect. Earlier
+fast-heal and unaccepted-menu probes are not reproduction evidence.
+
+Both final cases passed on E2E ROM
+`0f2aa50d6131444f36f0a8bd6dff51cfb27205e947823891fe5c289b09377687`
+(`/tmp/trainer-only-pokemon-center-final-0f2a.log`): empty-party completion and
+real fainted-member recovery, each followed by field movement. Egg-only and
+other map layouts share the reviewed engine guard; they were not separate
+emulator cases. Scoped formatting, lint and E2E TypeScript checks passed. E2E and normal Wayfarer builds passed
+(`/tmp/trainer-only-center-final-build.log` and
+`/tmp/trainer-only-center-playable-build.log`). The updated playable ROM SHA-256
+is `514a52d04968b55f2480addb379bc472a76eba509c3629c86213ba15ac43f53f`.
+
 ## Playtest presentation polish
 
 Rock now uses the native hit flash and HP-bar controller before committing HP,

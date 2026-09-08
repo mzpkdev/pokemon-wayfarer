@@ -160,7 +160,11 @@ not included. Safely place or restore a cursor-held Pokémon before PC exit, and
 compact/recount after transfers; cancellation must never lose a Pokémon.
 
 Outside encounters, existing legal Revives, Centers, healing and withdrawal can
-restore protection. Reevaluate the canonical usable-party predicate after each
+restore protection. Center healing must finish and release field control with
+an empty party or an Egg-only party excluded from the healing animation. Show
+balls only for actual members included by the existing healing configuration;
+fainted members still receive normal healing. Reevaluate the canonical
+usable-party predicate after each
 party change and on the next encounter. A capture follows normal party/PC delivery:
 with six fainted Pokémon it may go to PC and leave the player unprotected. Do not
 force a catch into a full party or promise that every capture restores protection.
