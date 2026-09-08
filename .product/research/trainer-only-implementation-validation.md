@@ -9,6 +9,17 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Settled exceptional defeat policy
+
+The user confirmed the existing challenge, League and unaudited authored-battle
+exclusions as settled behavior. The PRD and specs now state the current shared
+entry/field-loss/storage gate, native challenge recovery, League whiteout ending
+the run, and unchanged unaudited scene routing. Configured but inactive Nuzlocke
+retains its native activation semantics; hardcore blocks on its option alone.
+These are documentation decisions about existing code, not newly enabled challenge
+support. No gameplay changed or new emulator coverage is claimed. Broader balance
+validation and future port implementation remain separate work.
+
 ## Scripted-wild policy clarification
 
 The user confirmed the existing scripted-wild exclusions and no-party guards as
