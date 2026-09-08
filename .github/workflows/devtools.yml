@@ -25,11 +25,27 @@ jobs:
     timeout-minutes: 15
     permissions:
       contents: read
+      pull-requests: read
 
     steps:
+      - name: Check out trusted classification policy
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # A PR must not be able to change its own classification policy.
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Classify changes
+        # Bootstrap on a base without the classifier falls back to full CI.
+        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
+        id: changes
+        continue-on-error: true
+        uses: ./.github/actions/classify-changes
+
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          ref: ${{ github.sha }}
           persist-credentials: false
 
       - name: Set up pnpm
@@ -45,17 +61,26 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: ${{ steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true' && '1' || '0' }}
         run: pnpm install --frozen-lockfile
 
+      - name: Build documentation UI
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
+        run: pnpm --filter @wayfarer/ui run build
+
       - name: Check
+        if: steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true'
         working-directory: devtools
         run: pnpm run check
 
       - name: Test
+        if: steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true'
         working-directory: devtools
         run: pnpm run test
 
       - name: Build catalog and app
+        if: steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true'
         working-directory: devtools
         run: |
           pnpm run clean
@@ -73,10 +98,12 @@ jobs:
           test -f ui/dist/index.html
 
       - name: Install Chromium
+        if: steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true'
         working-directory: devtools
         run: pnpm dlx playwright@1.58.2 install --with-deps chromium
 
       - name: Run browser regression
+        if: steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true'
         working-directory: devtools
         env:
           CI: true

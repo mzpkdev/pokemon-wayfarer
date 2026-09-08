@@ -14,6 +14,12 @@ Never hex-edit or directly byte-patch `game/data/layouts/**/map.bin`. Make stati
 
 The ROM hack is not yet publicly released. Backward compatibility with save data from prerelease builds is not required. Do not add migrations or preserve obsolete save layouts solely for prerelease saves, because doing so creates technical debt before the first release. Revisit this policy only when an explicit product decision or public release establishes a save-compatibility baseline.
 
+## Merge policy and upstream updates
+
+Normal pull requests use squash merges only, with linear history required on `main`.
+
+For `game/` upstream imports, follow [the upstream integration guide](docs/upstream-integration.md). Temporarily enable merge commits in the repository settings and the `Protect main` ruleset, and disable the linear-history requirement. Land the update with a merge commit, never squash or rebase, so upstream ancestry survives. Verify the imported upstream commit is an ancestor of `main`, then immediately restore squash-only merging and the linear-history requirement. Keep required checks and all other protections intact throughout.
+
 ## Agent workflow
 
 A root agent, meaning an agent not spawned by another agent, acts as an orchestrator. Delegate bounded discovery, implementation, research, and review to native Codex subagents so the root context stays focused on decisions and synthesis. The root agent must inspect the resulting work, reconcile overlaps, and run relevant verification before reporting completion.

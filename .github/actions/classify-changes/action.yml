@@ -1,0 +1,15 @@
+name: Classify PR changes
+description: Verify all changed paths before allowing documentation-only validation
+outputs:
+  docs-only:
+    description: True only for a verified, complete documentation-only PR
+    value: ${{ steps.classify.outputs.docs-only }}
+runs:
+  using: composite
+  steps:
+    - name: Inspect complete PR file list
+      id: classify
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: python3 .github/scripts/ci_changes.py
