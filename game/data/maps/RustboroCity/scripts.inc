@@ -692,6 +692,13 @@ RustboroCity_EventScript_PlayBrendanMusic::
 	return
 
 RustboroCity_EventScript_RivalTrigger0::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger0WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger0WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -708,6 +715,13 @@ RustboroCity_EventScript_RivalTrigger0::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger1::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger1WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger1WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -724,6 +738,13 @@ RustboroCity_EventScript_RivalTrigger1::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger2WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger2WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -740,6 +761,13 @@ RustboroCity_EventScript_RivalTrigger2::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger3::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger3WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger3WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -756,6 +784,13 @@ RustboroCity_EventScript_RivalTrigger3::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger4::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger4WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger4WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -772,6 +807,13 @@ RustboroCity_EventScript_RivalTrigger4::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger5::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger5WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger5WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -788,6 +830,13 @@ RustboroCity_EventScript_RivalTrigger5::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger6::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger6WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger6WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -804,6 +853,13 @@ RustboroCity_EventScript_RivalTrigger6::
 	goto RustboroCity_EventScript_RivalEncounter
 
 RustboroCity_EventScript_RivalTrigger7::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_RivalTrigger7WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_RivalTrigger7WayfarerAllowed::
+#endif
 	lockall
 	call RustboroCity_EventScript_PlayRivalMusic
 	applymovement LOCALID_RUSTBORO_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -818,6 +874,15 @@ RustboroCity_EventScript_RivalTrigger7::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	goto RustboroCity_EventScript_RivalEncounter
+
+#if IS_WAYFARER
+RustboroCity_EventScript_WayfarerRivalLossRetreat::
+	setobjectxyperm LOCALID_RUSTBORO_RIVAL, 16, 50
+	setobjectmovementtype LOCALID_RUSTBORO_RIVAL, MOVEMENT_TYPE_LOOK_AROUND
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	goto EventScript_WayfarerStoryLossRetreat
+#endif
 
 RustboroCity_EventScript_RivalEncounter::
 	checkplayergender
@@ -841,6 +906,14 @@ RustboroCity_EventScript_MayEncounter::
 	setvar VAR_RUSTBORO_CITY_STATE, 8
 	setvar VAR_ROUTE104_STATE, 2
 	setvar VAR_0x8008, 0
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL_CONVERSATION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_MayInitialPromptWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_MayInitialPromptWayfarerAllowed::
+#endif
 	msgbox RustboroCity_Text_MayPassedBrineyWantToBattle, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, RustboroCity_EventScript_BattleMay
 	msgbox RustboroCity_Text_MayOhHaventRaisedPokemonEnough, MSGBOX_DEFAULT
@@ -850,6 +923,14 @@ RustboroCity_EventScript_MayEncounter::
 
 RustboroCity_EventScript_MayAskToBattle::
 	setvar VAR_0x8008, 1
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL_CONVERSATION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_MayRepeatPromptWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_MayRepeatPromptWayfarerAllowed::
+#endif
 	msgbox RustboroCity_Text_MayWantToBattle, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, RustboroCity_EventScript_BattleMay
 	msgbox RustboroCity_Text_MayOhHaventRaisedPokemonEnough, MSGBOX_DEFAULT
@@ -908,6 +989,14 @@ RustboroCity_EventScript_BrendanEncounter::
 	setflag FLAG_ENABLE_RIVAL_MATCH_CALL
 	setvar VAR_RUSTBORO_CITY_STATE, 8
 	setvar VAR_ROUTE104_STATE, 2
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL_CONVERSATION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_BrendanInitialPromptWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_BrendanInitialPromptWayfarerAllowed::
+#endif
 	msgbox RustboroCity_Text_BrendanPassedBrineyWantToBattle, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, RustboroCity_EventScript_BattleBrendan
 	msgbox RustboroCity_Text_BrendanNoConfidenceInPokemon, MSGBOX_DEFAULT
@@ -916,6 +1005,14 @@ RustboroCity_EventScript_BrendanEncounter::
 	end
 
 RustboroCity_EventScript_BrendanAskToBattle::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL_CONVERSATION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RustboroCity_EventScript_BrendanRepeatPromptWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+RustboroCity_EventScript_BrendanRepeatPromptWayfarerAllowed::
+#endif
 	msgbox RustboroCity_Text_BrendanWantToBattle, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, RustboroCity_EventScript_BattleBrendan
 	msgbox RustboroCity_Text_BrendanNoConfidenceInPokemon, MSGBOX_DEFAULT

@@ -494,7 +494,7 @@ endif
 
 check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test
 ifeq ($(BUILD_NAME),wayfarer)
-check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit wayfarer-story-encounters-audit
 check: league-circuit-test
 check: native-hm-windows-test
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
@@ -522,7 +522,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit wayfarer-story-encounters-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
@@ -842,6 +842,12 @@ WAYFARER_HOENN_CONTENT_DEPS := $(WAYFARER_HOENN_CONTENT_TOOL_DIR)/generate.py $(
 
 $(WAYFARER_HOENN_CONTENT_MANIFEST): $(WAYFARER_HOENN_CONTENT_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_CONTENT_TOOL_DIR)/generate.py --output $@
+
+.PHONY: wayfarer-story-encounters-audit
+wayfarer-story-encounters-audit:
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_story_encounters/generate.py --check
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_story_encounters -p 'test_*.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_only/test_story_contracts.py
 
 wayfarer-hoenn-content-test: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS)
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_HOENN_CONTENT_TOOL_DIR) -p 'test_*.py' -q

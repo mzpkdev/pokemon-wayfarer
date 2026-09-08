@@ -32,6 +32,7 @@ u32 TrainerOnlyPassiveAnger(u32 cap, u32 level);
 u32 TrainerOnlyFleeChance(const struct TrainerOnlyState *state);
 void TrainerOnlyApplyApproach(struct TrainerOnlyState *state);
 u32 TrainerOnlyEscapeChance(u32 cap, u32 level, u32 failures);
+bool32 TrainerOnlyRunSucceeds(u32 chance, bool32 lessEscapes, u32 roll);
 u32 TrainerOnlyWarningThreshold(u32 passiveAnger);
 #if E2E_TESTING
 void TrainerOnlyReadState(struct TrainerOnlyState *out);

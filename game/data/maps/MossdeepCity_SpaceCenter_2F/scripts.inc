@@ -29,6 +29,14 @@ MossdeepCity_SpaceCenter_2F_OnFrame:
 	.2byte 0
 
 MossdeepCity_SpaceCenter_2F_EventScript_ThreeMagmaGrunts::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SPACE_CENTER_GRUNTS
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, MossdeepCity_SpaceCenter_2F_EventScript_ThreeMagmaGruntsWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+MossdeepCity_SpaceCenter_2F_EventScript_ThreeMagmaGruntsWayfarerAllowed::
+#endif
 	playse SE_PIN
 	applymovement LOCALID_PLAYER, Common_Movement_ExclamationMark
 	waitmovement 0
@@ -177,6 +185,14 @@ MossdeepCity_SpaceCenter_2F_EventScript_Maxie::
 	end
 
 MossdeepCity_SpaceCenter_2F_EventScript_Steven::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SPACE_CENTER_OFFER
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, MossdeepCity_SpaceCenter_2F_EventScript_StevenWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+MossdeepCity_SpaceCenter_2F_EventScript_StevenWayfarerAllowed::
+#endif
 	lockall
 	goto_if_set FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER, MossdeepCity_SpaceCenter_2F_EventScript_ReadyForBattlePrompt
 	setflag FLAG_INTERACTED_WITH_STEVEN_SPACE_CENTER

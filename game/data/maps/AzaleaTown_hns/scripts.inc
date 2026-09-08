@@ -4,6 +4,9 @@ AzaleaTown_hns_MapScripts::
 	.byte 0
 
 AzaleaTown_OnTransition::
+	@ The retry trigger uses this map-local temporary condition so its coordinate
+	@ remains live after Ilex/GS Ball advances the shared town state.
+	setvar VAR_TEMP_C, 0
 	goto_if_eq VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_MapScript_Hide_Silver
 	end
 	
@@ -150,8 +153,22 @@ AzaleaTown_EventScript_AzaleaSign::
 
 AzaleaTown_EventScript_SilverTriggerTop::
 #if IS_WAYFARER
+	@ The Ilex and GS Ball branches may advance the host town state while this
+	@ rival chapter is deferred.  Its own completion flag, rather than state 5,
+	@ owns retirement; never rewind the host state to make it available again.
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver
+	goto_if_ge VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerTopStateReady
+	goto AzaleaTown_EventScript_DeferredSilver
+AzaleaTown_EventScript_SilverTriggerTopStateReady::
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_AZALEA
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, AzaleaTown_EventScript_SilverTriggerTopAllowed
+	goto AzaleaTown_EventScript_DeferredSilver
+#else
+	@ Preserve the original HNS state-5-only scene when this port is not built.
+	goto_if_ne VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerNoOp
 #endif
+AzaleaTown_EventScript_SilverTriggerTopAllowed::
 	lock
 	clearflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	addobject LOCALID_AZALEA_TOWN_SILVER
@@ -173,7 +190,12 @@ AzaleaTown_EventScript_SilverTriggerTop::
 	playse SE_EXIT
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
+#if IS_WAYFARER
+	setflag FLAG_WAYFARER_SILVER_AZALEA_COMPLETE
+	goto_if_ge VAR_AZALEA_TOWN_STATE, 6, AzaleaTown_EventScript_SilverProgressPreserved
+#endif
 	setvar VAR_AZALEA_TOWN_STATE, 6
+AzaleaTown_EventScript_SilverProgressPreserved::
 	fadedefaultbgm
 	release
 	end
@@ -181,7 +203,17 @@ AzaleaTown_EventScript_SilverTriggerTop::
 AzaleaTown_EventScript_SilverTriggerBot::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver
+	goto_if_ge VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerBotStateReady
+	goto AzaleaTown_EventScript_DeferredSilver
+AzaleaTown_EventScript_SilverTriggerBotStateReady::
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_AZALEA
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, AzaleaTown_EventScript_SilverTriggerBotAllowed
+	goto AzaleaTown_EventScript_DeferredSilver
+#else
+	goto_if_ne VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerNoOp
 #endif
+AzaleaTown_EventScript_SilverTriggerBotAllowed::
 	lock
 	clearflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	addobject LOCALID_AZALEA_TOWN_SILVER
@@ -204,7 +236,12 @@ AzaleaTown_EventScript_SilverTriggerBot::
 	playse SE_EXIT
 	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
 	removeobject LOCALID_AZALEA_TOWN_SILVER
+#if IS_WAYFARER
+	setflag FLAG_WAYFARER_SILVER_AZALEA_COMPLETE
+	goto_if_ge VAR_AZALEA_TOWN_STATE, 6, AzaleaTown_EventScript_SilverProgressPreservedBot
+#endif
 	setvar VAR_AZALEA_TOWN_STATE, 6
+AzaleaTown_EventScript_SilverProgressPreservedBot::
 	fadedefaultbgm
 	release
 	end
@@ -220,6 +257,24 @@ AzaleaTown_Silver_Battle_Totodile::
 AzaleaTown_Silver_Battle_Chikorita::
 	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_2_HNS, AzaleaTown_Text_RivalWin
 	return
+
+AzaleaTown_EventScript_SilverRetreat::
+#if IS_WAYFARER
+
+	setflag FLAG_HIDE_AZALEA_TOWN_SILVER
+	removeobject LOCALID_AZALEA_TOWN_SILVER
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
+
+AzaleaTown_EventScript_SilverTriggerNoOp::
+	end
 
 
 AzaleaTown_EventScript_GSBall::

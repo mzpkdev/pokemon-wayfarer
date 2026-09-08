@@ -19,6 +19,14 @@ Route103_EventScript_OpenAlteringCave::
 
 Route103_EventScript_Rival::
 #if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route103_EventScript_RivalWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+Route103_EventScript_RivalWayfarerAllowed::
+#endif
+#if IS_WAYFARER
 	goto_if_gt VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_MUDKIP, Route103_EventScript_LocalStarterRequired
 #endif
 	lockall

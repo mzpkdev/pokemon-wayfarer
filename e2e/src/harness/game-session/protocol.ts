@@ -13,7 +13,7 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 16
+const abiVersion = 17
 const expectedRequestSize = 432
 const expectedResultSize = 16
 const expectedStateSize = 464
@@ -47,6 +47,8 @@ export const commands = {
   warp: 8,
   loseBattle: 9,
   giftStorageCapacity: 10,
+  observeVar: 11,
+  setVar: 12,
 } as const
 export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
 
@@ -87,6 +89,7 @@ export const commandErrors = [
   "save",
   "circuit",
   "appearance",
+  "rematch-trainer",
 ] as const
 export const arrangeErrors = commandErrors
 
@@ -202,6 +205,7 @@ export type CommandRequest = {
   leagueClears: boolean[]
   applyLeagueCircuit?: boolean
   appearanceId?: number
+  rematchTrainerId?: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -408,6 +412,7 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   }
   view.setUint8(428, request.applyLeagueCircuit ? 1 : 0)
   view.setUint8(429, request.appearanceId ?? 0)
+  view.setUint16(430, request.rematchTrainerId ?? 0, true)
   return bytes
 }
 
@@ -594,6 +599,67 @@ export const encodeObserveFlagRequest = (
     command: commands.observeFlag,
     mapGroup: flagId,
     mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+  })
+
+export const encodeObserveVarRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  varId: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.observeVar,
+    mapGroup: varId,
+    mapNum: keepMap,
+    x: keepCoordinate,
+    y: keepCoordinate,
+    rngSeed: 0,
+    useRngSeed: false,
+    vars: [],
+    flags: [],
+    checkpoint: 0,
+    facing: 0,
+    textSpeed: 0,
+    party: [],
+    bagItems: [],
+    pcSlots: [],
+    wildMon: emptyMon(),
+    currentBox: 0,
+    hmsOverwrite: false,
+    fullPocketMask: 0,
+    regionalBadgeCounts: [0, 0, 0],
+    leagueClears: [false, false, false],
+  })
+
+export const encodeSetVarRequest = (
+  abi: SessionAbi,
+  requestId: number,
+  varId: number,
+  value: number,
+): Uint8Array =>
+  encodeCommandRequest(abi, {
+    requestId,
+    command: commands.setVar,
+    mapGroup: varId,
+    mapNum: value,
     x: keepCoordinate,
     y: keepCoordinate,
     rngSeed: 0,

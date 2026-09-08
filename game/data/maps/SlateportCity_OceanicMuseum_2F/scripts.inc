@@ -2,6 +2,14 @@ SlateportCity_OceanicMuseum_2F_MapScripts::
 	.byte 0
 
 SlateportCity_OceanicMuseum_2F_EventScript_CaptStern::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_OCEANIC_MUSEUM_STERN
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, SlateportCity_OceanicMuseum_2F_EventScript_CaptSternWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+SlateportCity_OceanicMuseum_2F_EventScript_CaptSternWayfarerAllowed::
+#endif
 	lock
 	faceplayer
 	msgbox SlateportCity_OceanicMuseum_2F_Text_ThankYouForTheParts, MSGBOX_DEFAULT

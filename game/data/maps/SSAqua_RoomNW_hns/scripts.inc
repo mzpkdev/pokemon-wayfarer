@@ -12,9 +12,18 @@ SSAqua_RoomNW_SetTrainerPos::
     end
 
 SSAqua_RoomNW_EventScript_Stanly::
+#if IS_WAYFARER
+	goto_if_defeated TRAINER_STANLY_HNS, SSAqua_RoomNW_EventScript_StanlyAlreadyDefeated
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SSAQUA_STANLY
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, SSAqua_RoomNW_EventScript_StanlyAllowed
+	goto SSAqua_RoomNW_EventScript_StanlyNoParty
+#endif
+SSAqua_RoomNW_EventScript_StanlyAllowed::
     lock
     faceplayer
     msgbox SSAqua_RoomNW_Text_SailorStanlySeen, MSGBOX_DEFAULT
+SSAqua_RoomNW_EventScript_StanlyBattle::
     trainerbattle_no_intro TRAINER_STANLY_HNS, SSAqua_RoomNW_Text_SailorStanlyBeaten
 	msgbox SSAqua_RoomNW_Text_SailorStanlyAfterBattle, MSGBOX_DEFAULT
     closemessage
@@ -24,6 +33,25 @@ SSAqua_RoomNW_EventScript_Stanly::
     removeobject LOCALID_SSAQUA_SLEEPYSAILOR
     fadescreenswapbuffers FADE_FROM_BLACK
 	end
+
+SSAqua_RoomNW_EventScript_StanlyAlreadyDefeated::
+	msgbox SSAqua_RoomNW_Text_SailorStanlyAfterBattle, MSGBOX_AUTOCLOSE
+	closemessage
+	releaseall
+	end
+
+SSAqua_RoomNW_EventScript_StanlyNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+#else
+	end
+#endif
+
 
 SSAqua_RoomNW_EventScript_Edward::
     trainerbattle_single TRAINER_EDWARD_HNS, SSAqua_RoomNW_Text_GentlemanEdwardSeen, SSAqua_RoomNW_Text_GentlemanEdwardBeaten

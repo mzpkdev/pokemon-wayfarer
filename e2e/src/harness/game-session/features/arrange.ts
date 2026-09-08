@@ -2,6 +2,7 @@ import {
   checkpoints,
   directions,
   maps,
+  rematchTrainers,
   hms,
   items,
   leagueRegions,
@@ -57,6 +58,7 @@ export type ArrangeGame = {
   story?: {
     flags?: Partial<Record<StoryFlag, boolean>>
     vars?: Partial<Record<StoryVar, number>>
+    rematchTrainer?: keyof typeof rematchTrainers
   }
   determinism?: {
     rngSeed?: number
@@ -162,6 +164,9 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
 
     const position = options.player?.position
     const map = position?.map ? maps[position.map] : undefined
+    const rematchTrainerId = options.story?.rematchTrainer
+      ? rematchTrainers[options.story.rematchTrainer]
+      : 0
     await mailbox.execute(
       (requestId) =>
         encodeArrangeRequest(runtime.abi, {
@@ -190,6 +195,7 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
           regionalBadgeCounts,
           leagueClears,
           applyLeagueCircuit: options.circuit !== undefined,
+          rematchTrainerId,
         }),
       "arrange game",
     )

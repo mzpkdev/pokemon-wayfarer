@@ -7,6 +7,11 @@
 
 #define HEADER_NONE 0xFFFF
 
+#if TESTING
+void SetWildStartInterceptionForTesting(bool8 enabled);
+u32 GetWildStartsForTesting(void);
+#endif
+
 enum WildPokemonArea {
     WILD_AREA_LAND,
     WILD_AREA_WATER,
@@ -139,6 +144,7 @@ extern u8 gChainFishingDexNavStreak;
 
 void DisableWildEncounters(bool8 disabled);
 bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior);
+void RockSmashWildEncounter(void);
 bool8 SweetScentWildEncounter(void);
 bool8 DoesCurrentMapHaveFishingMons(u8 rod);
 void FishingWildEncounter(u8 rod);

@@ -57,6 +57,25 @@ bool8 WayfarerShouldContinuePartyDefeat(void)
 #endif
 }
 
+bool8 WayfarerShouldRetreatFromSupportedTrainerOutcome(void)
+{
+#if IS_WAYFARER
+    const u32 allowedFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER;
+
+    // A matching redirect is a caller-level contract. Within the same ordinary
+    // field configuration, only an actual win may enter authored post-battle
+    // success code; loss, draw, forfeit and abnormal endings all use its safe
+    // retreat. Challenge and partner routing remains unchanged.
+    return WayfarerAllowsOrdinaryPartyExhaustion()
+        && sTrainerLossRedirect != NULL
+        && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        && !(gBattleTypeFlags & ~allowedFlags)
+        && gBattleOutcome != B_OUTCOME_WON;
+#else
+    return FALSE;
+#endif
+}
+
 void WayfarerResetLossContext(void)
 {
 #if IS_WAYFARER

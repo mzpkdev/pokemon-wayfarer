@@ -191,12 +191,40 @@ class HnsTraversalContractTest(unittest.TestCase):
         self.assertIn("setflag FLAG_HIDE_SILVER_CHERRYGROVE", cherry_battle)
 
         azalea = load_map("AzaleaTown_hns")["coord_events"]
-        self.assertFalse(at(azalea, 11, 17, var="VAR_AZALEA_TOWN_STATE", var_value="5"))
-        kept = at(azalea, 11, 16, var="VAR_AZALEA_TOWN_STATE", var_value="5")
+        self.assertFalse(at(azalea, 11, 17, var="VAR_TEMP_C", var_value="0"))
+        kept = at(azalea, 11, 16, var="VAR_TEMP_C", var_value="0")
         self.assertEqual([event["script"] for event in kept], ["AzaleaTown_EventScript_SilverTriggerTop"])
+        trigger = self.scripts.block("AzaleaTown_EventScript_SilverTriggerTop")
+        self.assertOrderedText(
+            trigger,
+            [
+                "goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver",
+                "goto_if_ge VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerTopStateReady",
+            ],
+            "Wayfarer keeps a pending Azalea chapter after host progress",
+        )
+        self.assertIn(
+            "goto_if_ne VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerNoOp",
+            self.scripts.block("AzaleaTown_EventScript_SilverTriggerTopStateReady"),
+        )
+        self.assertOrderedPath(
+            "AzaleaTown_EventScript_SilverTriggerTop",
+            [
+                "goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, AzaleaTown_EventScript_DeferredSilver",
+                "goto_if_ge VAR_AZALEA_TOWN_STATE, 5, AzaleaTown_EventScript_SilverTriggerTopStateReady",
+                "specialvar VAR_RESULT, WayfarerStoryCanStartScene",
+                "goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, AzaleaTown_EventScript_SilverTriggerTopAllowed",
+            ],
+            "Wayfarer gates the independent pending chapter before Silver's scene staging",
+        )
         battle = self.scripts.reachable_text("AzaleaTown_EventScript_SilverTriggerTop")
         self.assertIn("setvar VAR_AZALEA_TOWN_STATE, 6", battle)
         self.assertIn("setflag FLAG_HIDE_AZALEA_TOWN_SILVER", battle)
+        self.assertIn("setflag FLAG_WAYFARER_SILVER_AZALEA_COMPLETE", battle)
+        self.assertIn(
+            "setvar VAR_TEMP_C, 0",
+            self.scripts.block("AzaleaTown_OnTransition"),
+        )
 
     def test_route_30_staging_and_lane_are_unchanged(self) -> None:
         data = load_map("Route30_hns")
@@ -704,9 +732,11 @@ class HnsTraversalContractTest(unittest.TestCase):
         grunt = object_with_local_id(route24, "LOCALID_ROUTE24_GRUNT")
         self.assertEqual(grunt["script"], "Route24_EventScript_Grunt")
         self.assertEqual(grunt["flag"], "FLAG_HIDE_CERULEAN_CAPE_ROCKET")
-        battle = self.scripts.block("Route24_EventScript_Grunt")
+        # The completed-trainer branch is a separate safe terminal. The normal
+        # branch falls through into this exact trainerbattle block, whose return
+        # data continues with the one victory-only progression sequence.
         self.assertOrderedText(
-            battle,
+            self.scripts.block("Route24_EventScript_GruntBattle"),
             [
                 "trainerbattle_no_intro TRAINER_GRUNT_31_HNS",
                 "setflag FLAG_HIDE_CERULEAN_CAPE_ROCKET",
@@ -720,8 +750,13 @@ class HnsTraversalContractTest(unittest.TestCase):
             MAPS / "Route24_hns/scripts.inc",
             "setvar VAR_KANTO_ROCKET_STORY_STATE, 5",
         )
-        self.assertEqual(writers, ["Route24_EventScript_Grunt"])
-        before_battle = battle.split("trainerbattle_no_intro TRAINER_GRUNT_31_HNS", 1)[0]
+        self.assertEqual(writers, ["Route24_EventScript_GruntBattle"])
+        before_battle = "\n".join(
+            (
+                self.scripts.block("Route24_EventScript_Grunt"),
+                self.scripts.block("Route24_EventScript_GruntAllowed"),
+            )
+        )
         self.assertNotContains(
             before_battle,
             r"(?:setvar\s+VAR_KANTO_ROCKET_STORY_STATE,\s*5|setflag\s+FLAG_HIDE_CERULEAN_CAPE_ROCKET|clearflag\s+FLAG_HIDDEN_ITEM_MACHINE_PART)",
@@ -1292,8 +1327,20 @@ class HnsTraversalContractTest(unittest.TestCase):
             },
             {(x, 7, "VAR_ROUTE27_STATE", "2", "VictoryRoadKanto_1F_Trigger") for x in (27, 28, 29)},
         )
+        victory_trigger = self.scripts.block("VictoryRoadKanto_1F_Trigger")
         self.assertOrderedText(
-            self.scripts.block("VictoryRoadKanto_1F_Trigger"),
+            victory_trigger,
+            [
+                "specialvar VAR_0x8004, LeagueCircuit_GetRequiredRegion",
+                "specialvar VAR_RESULT, LeagueCircuit_IsEligible",
+                "goto_if_eq VAR_RESULT, TRUE, LeagueCircuit_EventScript_TravelAllowed",
+                "specialvar VAR_RESULT, WayfarerStoryCanStartScene",
+                "goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, VictoryRoadKanto_1F_Trigger_Allowed",
+            ],
+            "the League eligibility check must run before the Wayfarer scene gate",
+        )
+        self.assertOrderedPath(
+            "VictoryRoadKanto_1F_Trigger",
             [
                 "msgbox VictoryRoad_Text_RivalBefore",
                 "msgbox VictoryRoad_Text_RivalAfter",

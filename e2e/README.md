@@ -164,7 +164,7 @@ to prove that the withdrawn Surf user is resolved again. Tests should not treat
 fixture state or a memory snapshot as proof that capture, storage, release, or
 field use worked.
 
-The command mailbox is versioned as ABI v16. Arrangement and wild-battle commands
+The command mailbox is versioned as ABI v17. Arrangement and wild-battle commands
 share request IDs and result handling, reject commands while a harness-owned game
 state machine is active, and validate invalid species, item quantities, boxes,
 and slots in the ROM. Protocol changes must increment the ABI and update both the

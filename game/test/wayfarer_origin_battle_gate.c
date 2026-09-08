@@ -1,5 +1,8 @@
 #include "global.h"
 #include "event_data.h"
+#include "battle_setup.h"
+#include "follower_npc.h"
+#include "item.h"
 #include "pokemon.h"
 #include "script_pokemon_util.h"
 #include "trainer_see.h"
@@ -9,6 +12,7 @@
 #include "random.h"
 #include "test/test.h"
 #include "constants/species.h"
+#include "constants/items.h"
 
 #if IS_WAYFARER
 TEST("Wayfarer empty party admits trainer-only wild encounters without enabling trainers")
@@ -80,4 +84,45 @@ TEST("Trainer-only wild generation ignores an unusable Synchronize lead")
         EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY), personality);
     }
 }
+TEST("Trainer-only eligibility excludes unidentified Tower ghosts until the real Scope is owned")
+{
+    ZeroPlayerPartyMons();
+    gPlayerPartyCount = 0;
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_POKEMON_TOWER_3F);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_POKEMON_TOWER_3F);
+    EXPECT(!CheckBagHasItem(ITEM_SILPH_SCOPE, 1));
+    EXPECT(BattleSetup_IsUnidentifiedGhostEncounter());
+    EXPECT(!TrainerOnlyCanEnterWildEncounter());
+    TrainerOnlyPrepareEncounter();
+    EXPECT(!IsTrainerOnlyEncounter());
+
+    EXPECT(AddBagItem(ITEM_SILPH_SCOPE, 1));
+    EXPECT(!BattleSetup_IsUnidentifiedGhostEncounter());
+    EXPECT(TrainerOnlyCanEnterWildEncounter());
+    EXPECT(RemoveBagItem(ITEM_SILPH_SCOPE, 1));
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_ROUTE30_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_ROUTE30_HNS);
+    EXPECT(!BattleSetup_IsUnidentifiedGhostEncounter());
+    EXPECT(TrainerOnlyCanEnterWildEncounter());
+}
+
+#if FNPC_ENABLE_NPC_FOLLOWERS
+TEST("Trainer-only eligibility excludes an active battle partner but allows a nonbattle follower")
+{
+    ZeroPlayerPartyMons();
+    gPlayerPartyCount = 0;
+    SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
+    SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, 1);
+    EXPECT(FollowerNPCIsBattlePartner());
+    EXPECT(!TrainerOnlyCanEnterWildEncounter());
+    TrainerOnlyPrepareEncounter();
+    EXPECT(!IsTrainerOnlyEncounter());
+
+    SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, 0);
+    EXPECT(!FollowerNPCIsBattlePartner());
+    EXPECT(TrainerOnlyCanEnterWildEncounter());
+    ClearFollowerNPCData();
+}
+#endif
+
 #endif

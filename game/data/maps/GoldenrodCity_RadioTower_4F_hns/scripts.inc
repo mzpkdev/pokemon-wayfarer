@@ -30,7 +30,19 @@ GoldenrodRaidoTower4_EventScript_Proton::
 	msgbox GoldenrodCity_RadioTower_4F4_Text_Proton_After, MSGBOX_AUTOCLOSE
 	end
 
+GoldenrodCity_RadioTower_4F_EventScript_ProtonRetreat::
+#if IS_WAYFARER
 
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+
+#else
+	end
+#endif
 GoldenrodCity_RadioTower_4F4_EventScript_Fisher::
 	lock
 	faceplayer
@@ -89,12 +101,8 @@ GoldenrodCity_RadioTower_4F4_EventScript_Meowth::
 
 GoldenrodCity_RadioTower_4F4_Text_Proton_Seen:
 	.string "PROTON: Now wait just one second!\p"
-	.string "Aren't you the one who got in our\n"
-	.string "way at SLOWPOKE WELL?\p"
-	.string "I see... You're doing all this\n"
-	.string "because you want to make me angry.\l"
-	.string "Be careful!\p"
-	.string "But since you seem to wish it, I'll\n"
+	.string "You keep getting in our way.\p"
+	.string "Since you seem to wish it, I'll\n"
 	.string "show you the full extent of a TEAM\l"
 	.string "ROCKET EXECUTIVE's wrath!$"
 

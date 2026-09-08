@@ -12,6 +12,9 @@ enum WayfarerRecoveryCause
 bool8 WayfarerAllowsOrdinaryPartyExhaustion(void);
 bool8 WayfarerAllowsUnprotectedStorage(void);
 bool8 WayfarerShouldContinuePartyDefeat(void);
+// An explicit story loss redirect also prevents a non-victory result such as an
+// abort, flee or forced end from falling through into an authored success path.
+bool8 WayfarerShouldRetreatFromSupportedTrainerOutcome(void);
 void WayfarerResetLossContext(void);
 void WayfarerSetTrainerLossRedirect(const u8 *script);
 const u8 *WayfarerGetTrainerLossRedirect(void);

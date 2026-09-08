@@ -47,6 +47,14 @@ MtChimney_EventScript_ArchieBusyFighting::
 	return
 
 MtChimney_EventScript_Maxie::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_MT_CHIMNEY_MAXIE
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, MtChimney_EventScript_MaxieWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+MtChimney_EventScript_MaxieWayfarerAllowed::
+#endif
 	lockall
 	playbgm MUS_ENCOUNTER_MAGMA, FALSE
 	msgbox MtChimney_Text_MeteoriteWillActivateVolcano, MSGBOX_DEFAULT
@@ -58,6 +66,7 @@ MtChimney_EventScript_Maxie::
 	applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_Delay48
 	waitmovement 0
 	msgbox MtChimney_Text_MaxieIntro, MSGBOX_DEFAULT
+MtChimney_EventScript_MaxieTrainerBattle::
 	trainerbattle_no_intro TRAINER_MAXIE_MT_CHIMNEY, MtChimney_Text_MaxieDefeat
 	msgbox MtChimney_Text_MaxieYouHaventSeenLastOfMagma, MSGBOX_DEFAULT
 	closemessage
@@ -87,6 +96,15 @@ MtChimney_EventScript_Maxie::
 	clearflag FLAG_HIDE_MT_CHIMNEY_LAVA_COOKIE_LADY
 	releaseall
 	end
+
+#if IS_WAYFARER
+MtChimney_EventScript_WayfarerMaxieLossRetreat::
+	setobjectxyperm LOCALID_MT_CHIMNEY_MAXIE, 13, 6
+	setobjectmovementtype LOCALID_MT_CHIMNEY_MAXIE, MOVEMENT_TYPE_FACE_RIGHT
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	goto EventScript_WayfarerStoryLossRetreat
+#endif
 
 MtChimney_EventScript_ArchieApproachPlayerEast::
 	applymovement LOCALID_MT_CHIMNEY_ARCHIE, MtChimney_Movement_ArchieApproachPlayerEast

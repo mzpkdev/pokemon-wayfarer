@@ -98,10 +98,31 @@ BurnedTower_1FMortyText:
 	.string "decided to investigate the\l"
 	.string "TOWER with him.$"
 
+@ The original HNS actor had no interaction.  Only the Wayfarer port exposes
+@ its deferred battle branch; the standalone map stays inert.
+BurnedTower_1F_EventScript_SilverObject::
+#if IS_WAYFARER
+	goto BurnedTower_1F_EventScript_Silver
+#else
+	end
+#endif
+
 BurnedTower_1F_EventScript_Silver::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, BurnedTower_1F_EventScript_DeferredSilver
+	goto_if_set FLAG_WAYFARER_SILVER_BURNED_TOWER_COMPLETE, BurnedTower_1F_EventScript_DeferredSilver
+	goto_if_set FLAG_WAYFARER_BURNED_TOWER_DISCOVERED, BurnedTower_1F_EventScript_SilverBattleGate
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_BURNED_TOWER
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, BurnedTower_1F_EventScript_SilverAllowed
+	goto BurnedTower_1F_EventScript_LocalDiscovery
+BurnedTower_1F_EventScript_SilverBattleGate::
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_BURNED_TOWER
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, BurnedTower_1F_EventScript_SilverAllowed
+	goto BurnedTower_1F_EventScript_DeferredSilver
 #endif
+BurnedTower_1F_EventScript_SilverAllowed::
 	lock
 	playse SE_PIN
 	applymovement LOCALID_BURNED_TOWER_SILVER, Common_Movement_ExclamationMark
@@ -118,6 +139,43 @@ BurnedTower_1F_EventScript_Silver::
 	playbgm MUS_HG_RIVAL_EXIT, FALSE
 	msgbox BurnedTowerSilver_AfterText1, MSGBOX_DEFAULT
 	closemessage
+#if IS_WAYFARER
+	goto_if_set FLAG_WAYFARER_BURNED_TOWER_DISCOVERED, BurnedTower_1F_EventScript_SilverAfterDiscovery
+	setflag FLAG_WAYFARER_SILVER_BURNED_TOWER_COMPLETE
+	setflag FLAG_WAYFARER_BURNED_TOWER_DISCOVERED
+	goto BurnedTower_1F_EventScript_DropToB1F
+
+BurnedTower_1F_EventScript_SilverAfterDiscovery::
+	setflag FLAG_WAYFARER_SILVER_BURNED_TOWER_COMPLETE
+	removeobject LOCALID_BURNED_TOWER_SILVER
+	fadedefaultbgm
+	release
+	end
+
+BurnedTower_1F_EventScript_LocalDiscovery::
+	lock
+	setflag FLAG_WAYFARER_BURNED_TOWER_DISCOVERED
+	setvar VAR_0x8004, 1  @ vertical pan
+	setvar VAR_0x8005, 1  @ horizontal pan
+	setvar VAR_0x8006, 20  @ num shakes
+	setvar VAR_0x8007, 6  @ shake delay
+	special ShakeCamera
+	waitstate
+	playse SE_CLICK
+	setmetatile 16, 12, 0x37E, FALSE
+	special DrawWholeMapView
+	waitse
+	delay 60
+	special SpawnCameraObject
+	removeobject OBJ_EVENT_ID_PLAYER
+	playse SE_FALL
+	delay 60
+	msgbox BurnedTowerDiscoveryText, MSGBOX_AUTOCLOSE
+	waitmessage
+	warphole MAP_BURNED_TOWER_B1F_HNS
+	goto BurnedTower_1F_EventScript_BurnedTowerFinishDiscovery
+#endif
+BurnedTower_1F_EventScript_DropToB1F::
 	setvar VAR_0x8004, 1  @ vertical pan
 	setvar VAR_0x8005, 1  @ horizontal pan
 	setvar VAR_0x8006, 20  @ num shakes
@@ -136,7 +194,12 @@ BurnedTower_1F_EventScript_Silver::
 	msgbox BurnedTowerSilver_AfterText2, MSGBOX_AUTOCLOSE
 	waitmessage
 	warphole MAP_BURNED_TOWER_B1F_HNS
+BurnedTower_1F_EventScript_BurnedTowerFinishDiscovery::
+#if IS_WAYFARER
+	goto_if_ge VAR_ECRUTEAK_CITY_STATE, 3, BurnedTower_1F_EventScript_BurnedTowerProgressPreserved
+#endif
 	setvar VAR_ECRUTEAK_CITY_STATE, 3
+BurnedTower_1F_EventScript_BurnedTowerProgressPreserved::
 	waitstate
 	release
 	end
@@ -152,6 +215,18 @@ BurnedTower_1F_Silver_Battle_Totodile::
 BurnedTower_1F_Silver_Battle_Chikorita::
 	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_3_HNS, BurnedTowerSilver_WinText
 	return
+
+BurnedTower_1F_EventScript_SilverRetreat::
+#if IS_WAYFARER
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+#else
+	end
+#endif
+
 
 BurnedTowerSilver_BeforeText:
 	.string "..............................\p"
@@ -186,6 +261,10 @@ BurnedTowerSilver_AfterText2:
 	.string "What are you doing falling\n"
 	.string "into a hole? Some genius!\p"
 	.string "Serves you right!$"
+
+BurnedTowerDiscoveryText:
+	.string "The floor gives way beneath\n"
+	.string "{PLAYER}!$"
 
 BurnedTower_1F_EventScript_Nard::
 	trainerbattle_single TRAINER_NARD_HNS, BurnedTower_Text_NardSeen, BurnedTower_Text_NardBeaten

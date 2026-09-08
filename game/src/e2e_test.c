@@ -51,7 +51,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 16,
+    .version = 17,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -63,6 +63,7 @@ const struct E2ETestAbi gE2ETestAbi =
 
 STATIC_ASSERT(sizeof(struct E2ETestRequest) == 432, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 429, E2ETestRequestAppearanceOffset);
+STATIC_ASSERT(offsetof(struct E2ETestRequest, rematchTrainerId) == 430, E2ETestRequestRematchTrainerOffset);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
@@ -449,7 +450,12 @@ static void CopyRequest(void)
     }
     sRequest.applyLeagueCircuit = gE2ETestRequest.applyLeagueCircuit;
     sRequest.appearanceId = gE2ETestRequest.appearanceId;
-    memcpy(sRequest.reserved, (const void *)gE2ETestRequest.reserved, sizeof(sRequest.reserved));
+    memcpy(sRequest.rematchTrainerId, (const void *)gE2ETestRequest.rematchTrainerId, sizeof(sRequest.rematchTrainerId));
+}
+
+static u16 GetRequestedRematchTrainerId(void)
+{
+    return sRequest.rematchTrainerId[0] | (sRequest.rematchTrainerId[1] << 8);
 }
 
 static void PublishResult(u8 status, u8 phase, u16 error)
@@ -594,6 +600,23 @@ static bool32 IsValidFixtureFlag(u16 id)
     return FALSE;
 }
 
+static bool32 IsValidFixtureVar(u16 id)
+{
+    if (id >= VARS_START && id <= VARS_END)
+        return TRUE;
+
+#if IS_WAYFARER
+    if (IS_HOENN_VAR_ID(id))
+    {
+        u16 sourceId = HOENN_VAR_SOURCE_ID(id);
+
+        return sourceId >= VARS_START && sourceId <= VARS_END;
+    }
+#endif
+
+    return FALSE;
+}
+
 static enum E2ETestError ValidateArrangeRequest(void)
 {
     const struct MapHeader *mapHeader;
@@ -624,7 +647,7 @@ static enum E2ETestError ValidateArrangeRequest(void)
         return E2E_TEST_ERROR_VAR_COUNT;
     for (i = 0; i < sRequest.varCount; i++)
     {
-        if (sRequest.vars[i].id < VARS_START || sRequest.vars[i].id > VARS_END)
+        if (!IsValidFixtureVar(sRequest.vars[i].id))
             return E2E_TEST_ERROR_VAR;
     }
     if (sRequest.flagCount > E2E_TEST_MAX_FLAGS)
@@ -691,10 +714,12 @@ static enum E2ETestError ValidateArrangeRequest(void)
         return E2E_TEST_ERROR_PARTY;
     if (sRequest.fullPocketMask & ~E2E_TEST_FULL_POCKET_MASK)
         return E2E_TEST_ERROR_FULL_POCKET_MASK;
-    if (sRequest.applyLeagueCircuit > TRUE
-     || sRequest.reserved[0] != 0
-     || sRequest.reserved[1] != 0)
+    if (sRequest.applyLeagueCircuit > TRUE)
         return E2E_TEST_ERROR_CIRCUIT;
+    if (GetRequestedRematchTrainerId() != TRAINER_NONE
+     && (GetRequestedRematchTrainerId() >= TRAINERS_COUNT
+      || FirstBattleTrainerIdToRematchTableId(gRematchTable, GetRequestedRematchTrainerId()) == -1))
+        return E2E_TEST_ERROR_REMATCH_TRAINER;
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
     {
         if (sRequest.regionalBadgeCounts[i] > 8 || sRequest.leagueClears[i] > TRUE)
@@ -726,6 +751,10 @@ static enum E2ETestError ValidateRequest(void)
     case E2E_TEST_COMMAND_LOSE_BATTLE:
     case E2E_TEST_COMMAND_OBSERVE_FLAG:
         return E2E_TEST_ERROR_NONE;
+    case E2E_TEST_COMMAND_OBSERVE_VAR:
+        return IsValidFixtureVar(sRequest.mapGroup) ? E2E_TEST_ERROR_NONE : E2E_TEST_ERROR_VAR;
+    case E2E_TEST_COMMAND_SET_VAR:
+        return IsValidFixtureVar(sRequest.mapGroup) ? E2E_TEST_ERROR_NONE : E2E_TEST_ERROR_VAR;
     default:
         return E2E_TEST_ERROR_COMMAND;
     }
@@ -800,6 +829,13 @@ static bool32 ApplyOverrides(void)
     memcpy(sObservedBagItems, sRequest.bagItems, sizeof(sObservedBagItems));
     ApplyPcFixtures();
     ApplyHMsOverwriteFixture();
+    if (GetRequestedRematchTrainerId() != TRAINER_NONE)
+    {
+        s32 rematchTableId = FirstBattleTrainerIdToRematchTableId(gRematchTable, GetRequestedRematchTrainerId());
+
+        SetTrainerFlag(GetRequestedRematchTrainerId());
+        UpdateRematchIfDefeated(rematchTableId);
+    }
     if (sRequest.applyLeagueCircuit)
         ApplyLeagueCircuitFixture();
     ResetObservations();
@@ -886,7 +922,10 @@ static void BeginRequest(void)
         return;
     }
 
-    if (gMain.inBattle || IsStorageStateMachineActive())
+    // Observation is read-only and VarGet is valid while a battle or field
+    // dialogue owns input. Storage retains its stricter command boundary.
+    if ((gMain.inBattle && sRequest.command != E2E_TEST_COMMAND_OBSERVE_VAR)
+     || IsStorageStateMachineActive())
     {
         FailRequest(E2E_TEST_ERROR_BUSY);
         return;
@@ -1042,6 +1081,41 @@ static void BeginRequest(void)
         sMapGroup = gSaveBlock1Ptr->location.mapGroup;
         sMapNum = gSaveBlock1Ptr->location.mapNum;
         sX = FlagGet(sRequest.mapGroup);
+        sY = 0;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_OBSERVE_VAR)
+    {
+        if (gSaveBlock1Ptr == NULL)
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+
+        sMapGroup = gSaveBlock1Ptr->location.mapGroup;
+        sMapNum = gSaveBlock1Ptr->location.mapNum;
+        sX = VarGet(sRequest.mapGroup);
+        sY = 0;
+        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
+        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        return;
+    }
+
+    if (sRequest.command == E2E_TEST_COMMAND_SET_VAR)
+    {
+        if (!IsSettledOverworld())
+        {
+            FailRequest(E2E_TEST_ERROR_BUSY);
+            return;
+        }
+
+        VarSet(sRequest.mapGroup, sRequest.mapNum);
+        sMapGroup = gSaveBlock1Ptr->location.mapGroup;
+        sMapNum = gSaveBlock1Ptr->location.mapNum;
+        sX = VarGet(sRequest.mapGroup);
         sY = 0;
         gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
         PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);

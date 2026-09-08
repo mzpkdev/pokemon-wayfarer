@@ -1,11 +1,12 @@
 # Trainer-only wild encounters
 
 PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
-Implemented: No
+Implemented: Yes
 
-Status: Draft. Initial balance values are selected for implementation/playtesting,
-not empirically validated. Exceptional recovery policies, animation validation
-and playtesting listed in Open questions remain outstanding before gameplay ships.
+Status: Implemented for the supported scope below. Selected balance values are
+not empirically validated; broader playtesting and excluded exceptional policies
+remain open before a shipping-complete claim. See the
+[implementation validation](../research/trainer-only-implementation-validation.md).
 
 ## Scope
 
@@ -180,6 +181,12 @@ mid-battle. Revalidate real party state; an item that does not restore a usable
 member continues the turn normally. This terminal recovery takes precedence over
 anger/flee resolution, like a successful capture. This explicit implementation
 choice makes emergency revival useful and avoids partially initialized battles.
+
+Safe recovery also returns field control when an undefeated trainer can see the
+return position. Defer those automatic sight approaches until the player moves
+out of their sight area; talking to a trainer can still explicitly start a battle.
+This transient protection applies only to successful trainer-only item recovery
+and does not change trainer defeat flags, rewards or exceptional loss routing.
 
 ### Separate controller and state
 
@@ -490,10 +497,11 @@ policy rather than silently applying ordinary sandbox continuation there.
 
 Use normal messages for nervousness, anger, feeding, distance, failed escape and
 the impending attack. Rock animates a throw/impact and HP change, then a surviving
-Pokémon reaction. Preview Rage/Leer-derived primitives, explicitly anchored to
-wild/trainer sprites; do not execute the move or its full script with nonexistent
-Pokémon targets. Retaliation visibly attacks the trainer before the shared fade.
-Final animation selection and localized text need in-game validation.
+Pokémon reaction. The selected reaction uses two existing anger-mark effects
+anchored to the real wild sprite, waiting for the animation before anger text and
+turn resolution. Lethal rocks skip this reaction. Do not execute a move or its full
+script with nonexistent Pokémon targets. Retaliation visibly attacks the trainer
+before the shared fade. Validate animation anchors and localized text in-game.
 
 Persist ordinary inventory, party and existing progression only. Save/reload while
 unprotected must stay unprotected until real recovery; do not heal, teleport, grant
@@ -571,8 +579,9 @@ anchors, field return, trainer trigger behavior or recovery presentation alone.
    Nuzlocke replacement behavior and League-run termination. Central ownership,
    ordinary field continuation and no retaliation money charge are settled; no
    silent challenge exemption is approved.
-2. **Presentation and playtesting:** final messages, previewed anger/retaliation
-   animation primitives and validation of the selected balance values.
+2. **Broader playtesting:** validation of the selected balance values. The
+   implemented messages, anger marks and retaliation presentation are recorded
+   with emulator evidence in the implementation validation report.
 
 Rock/TR scaling, passive anger, warning lookahead, proximity, food/flee and Run
 values above are selected. Berry eligibility and direct feeding are settled. Tune

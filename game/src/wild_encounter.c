@@ -48,11 +48,34 @@ static bool8 HasWildEncounterLead(void)
 #endif
 }
 
+#if TESTING
+static bool8 sInterceptWildStartForTesting;
+static u32 sWildStartsForTesting;
+
+void SetWildStartInterceptionForTesting(bool8 enabled)
+{
+    sInterceptWildStartForTesting = enabled;
+    sWildStartsForTesting = 0;
+}
+
+u32 GetWildStartsForTesting(void)
+{
+    return sWildStartsForTesting;
+}
+#endif
+
 static void StartEligibleWildBattle(void)
 {
 #if IS_WAYFARER
     if (!WayfarerCanStartOrdinaryBattle())
         TrainerOnlyPrepareEncounter();
+#endif
+#if TESTING
+    if (sInterceptWildStartForTesting)
+    {
+        sWildStartsForTesting++;
+        return;
+    }
 #endif
     BattleSetup_StartWildBattle();
 }

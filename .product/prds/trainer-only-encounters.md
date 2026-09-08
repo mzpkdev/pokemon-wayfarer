@@ -1,7 +1,8 @@
 # Trainer-only wild encounters
 
-Status: Draft. This document records the agreed direction; implementation and
-balance validation are pending.
+Status: Supported implementation complete. Broader balance validation and the
+explicitly excluded policy/port decisions remain open. See the
+[implementation validation](../research/trainer-only-implementation-validation.md).
 
 ## Intent
 
@@ -125,6 +126,8 @@ must safely target existing party members for applicable non-berry recovery item
 including HP/status medicine, revives and PP restoration,
 without treating an empty party slot as a target. Restoring a usable party member
 ends this encounter and returns to the field; later encounters use normal battles.
+Trainers watching that return position allow the player to leave their sight area
+before approaching again; the player can still talk to them to start a battle.
 Every standard berry from Cheri through Maranga is feedable, including standard
 Enigma and excluding the e-reader Enigma item. Use an explicit list. Berry selection
 feeds directly without a Feed/Use submenu or party-medicine option in this mode.

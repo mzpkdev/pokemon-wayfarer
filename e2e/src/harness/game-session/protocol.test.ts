@@ -5,6 +5,8 @@ import {
   encodeCommandRequest,
   encodeObserveRegionMapRequest,
   encodeObserveRegionMapSectionRequest,
+  encodeObserveVarRequest,
+  encodeSetVarRequest,
   encodeSaveRequest,
   encodeWinBattleRequest,
   keepCoordinate,
@@ -26,7 +28,7 @@ const abi: SessionAbi = {
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 16): Uint8Array => {
+const abiBytes = (version = 17): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -66,6 +68,7 @@ const request = (): CommandRequest => ({
   fullPocketMask: 7,
   regionalBadgeCounts: [4, 3, 1],
   leagueClears: [true, false, false],
+  rematchTrainerId: 177,
 })
 
 const expectNoFixtureMutations = (bytes: Uint8Array) => {
@@ -74,7 +77,7 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(416))).toEqual(Array(16).fill(0))
 }
 
-describe("game-session v16 protocol", () => {
+describe("game-session v17 protocol", () => {
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
     expect(encodeCommandRequest(abi, request())[429]).toBe(0)
     for (const id of [1, 2, 5, 6])
@@ -83,7 +86,7 @@ describe("game-session v16 protocol", () => {
 
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
-    expect(() => parseAbi(abiBytes(15))).toThrow("Unsupported test ROM ABI")
+    expect(() => parseAbi(abiBytes(16))).toThrow("Unsupported test ROM ABI")
   })
 
   it("encodes party-only fainted state, generic items, bounded PC slots, and a wild fixture", () => {
@@ -107,6 +110,8 @@ describe("game-session v16 protocol", () => {
     expect(Array.from(bytes.slice(240, 256))).not.toContain(1)
     expect(Array.from(bytes.slice(260, 400))).toEqual(Array(140).fill(0))
     expect(Array.from(bytes.slice(416, 428))).toEqual([1, 1, 1, 3, 1, 7, 4, 3, 1, 1, 0, 0])
+    expect(bytes[429]).toBe(0)
+    expect(view.getUint16(430, true)).toBe(177)
   })
 
   it("encodes optional per-move PP for party, PC, and wild fixtures", () => {
@@ -162,6 +167,27 @@ describe("game-session v16 protocol", () => {
     expect(view.getInt16(10, true)).toBe(7)
     expect(bytes[86]).toBe(commands.observeRegionMapSection)
     expect(bytes).toHaveLength(abi.requestSize)
+  })
+
+  it("encodes a read-only banked-variable observation without changing the ABI layout", () => {
+    const bytes = encodeObserveVarRequest(abi, 26, 0x7023)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(26)
+    expect(view.getUint16(4, true)).toBe(0x7023)
+    expect(bytes[86]).toBe(commands.observeVar)
+    expectNoFixtureMutations(bytes)
+  })
+
+  it("encodes a bounded banked-variable write without changing the ABI layout", () => {
+    const bytes = encodeSetVarRequest(abi, 27, 0x7023, 0xffff)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(27)
+    expect(view.getUint16(4, true)).toBe(0x7023)
+    expect(view.getUint16(6, true)).toBe(0xffff)
+    expect(bytes[86]).toBe(commands.setVar)
+    expectNoFixtureMutations(bytes)
   })
 
   it("encodes the test-only battle-win command without fixture mutations", () => {
