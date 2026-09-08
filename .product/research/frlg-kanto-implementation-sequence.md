@@ -146,3 +146,18 @@ uses 33,069,244 bytes (`__rom_end = 0x09F898BC`), 1,392 bytes above Hideout.
 It leaves 485,188 physical bytes free and fails the normal reserve check by
 39,100 bytes. The user requests a rebase onto latest main after this milestone's
 commit, followed by a fresh combined release measurement.
+
+## Release after recovery rebase
+
+The five completed task commits rebased cleanly onto main `1e2c5c3122`,
+which includes Surf pixel deduplication and legacy multiboot removal.
+`git range-diff` confirms all five patches are unchanged by the rebase.
+The combined production release passes with the normal reserve enforced:
+32,429,816 used bytes (`__rom_end = 0x09EED6F8`), 1,124,616 physical bytes
+free, and 600,328 bytes above the 512 KiB reserve. This recovers 639,428
+bytes relative to the pre-rebase Safari release. EWRAM uses 248,509 bytes
+and IWRAM uses 25,556 bytes.
+
+The space-recovery prerequisite is satisfied for this revision. Further
+content still needs its own release measurement; this result does not
+authorize merging or establish the cost of unimplemented imports.
