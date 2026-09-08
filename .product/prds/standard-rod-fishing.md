@@ -11,7 +11,7 @@ selected scenarios; production acceptance remains pending.
 
 Only the proposal's enumerated encounter replacements override the no-table-edit
 boundaries below for Wayfarer. Global weights, bite rates, rod progression and
-selection rules remain unchanged. Standalone builds retain the contract below.
+selection rules remain unchanged.
 
 ## Intent
 
@@ -24,7 +24,8 @@ without filling the Key Items pocket with obsolete equipment, and it makes the
 existing fishing content available without rewriting encounter tables map by
 map.
 
-This behavior applies to Emerald, FireRed and LeafGreen, and HNS.
+This PRD covers only the HNS/Wayfarer build, including its connected Johto,
+Kanto, and Hoenn regions.
 
 ## Design
 
@@ -45,7 +46,7 @@ The former partitions describe rarity bands only. They no longer determine
 which species a rod can encounter.
 
 Each quality state has one global ten-entry weight profile shared by every map
-and time-of-day variant in every supported build. The game selects directly
+and time-of-day variant in Wayfarer. The game selects directly
 from the ten eligible entries using that profile. It must not first roll for a
 former partition and then apply that partition's old internal weights, because
 that would compound probabilities and make the last entries functionally
@@ -87,25 +88,37 @@ The base chance that a fish bites remains tied to rod quality:
 Existing bite modifiers apply after the quality's base chance and keep their
 existing cap.
 
-The three existing rod givers in each build retain their locations and
-progression conditions, but no giver owns a fixed quality. Each giver can
-contribute once. The quality awarded depends on how many distinct rod givers
-have already contributed in that build:
+All six existing rod givers in Wayfarer's connected world share one global
+progression. They retain their locations and access conditions:
 
-| Prior contributors | Award from an unused giver |
+| Region | Contributor |
+| --- | --- |
+| Johto | Route 32 Pokémon Center Fishing Guru |
+| Johto | Olivine City House 3 fisherman |
+| Kanto | Route 12 house fisherman |
+| Hoenn | Dewford Town fisherman |
+| Hoenn | Route 118 fisherman |
+| Hoenn | Mossdeep City House 3 fisherman |
+
+No giver owns a fixed quality. Any first three distinct contributors, including
+Hoenn-first and mixed-region routes, award the same progression:
+
+| Prior successful contributors | Award from an unused giver |
 | ---: | --- |
 | 0 | Old Rod |
 | 1 | Good Rod, replacing the Old Rod |
 | 2 | Super Rod, replacing the Good Rod |
+| 3 | No further upgrade; use capped dialogue or the existing follow-up |
 
 The same giver cannot advance the rod twice. After contributing, that NPC uses
-repeat dialogue or their existing follow-up activity. Declining an offer does
-not consume the contribution, and a failed item transaction does not mark the
-giver as used.
+repeat dialogue or their existing follow-up activity. Declining an offer or a
+failed transaction does not consume the contribution. After the third award,
+unused givers acknowledge the completed rod or offer their follow-up; they do
+not award another item, report an invalid state, or set a contribution flag.
 
-The reward is based on permanent per-giver contribution state, not the
-player's current item possession. This makes every order valid while preserving
-a reason to find three different fishing specialists.
+Permanent per-giver flags record successful awards only. All six flags and the
+current rod persist across regional travel. Traveling to Hoenn, Johto, or Kanto
+never resets progression or starts a separate regional sequence.
 
 The player owns at most one of the three rod items after an award or upgrade.
 If the replaced rod appears in either registered-item shortcut slot, the
@@ -146,29 +159,18 @@ species used as a required traversal recovery must receive a separate
 accessibility check and cannot rely on a trophy-level probability.
 
 Under the selected profile, the least likely Old Rod entries have a 2% chance
-among successful encounters. Every species relied upon for native Surf
-coverage has at least an 8% aggregate chance among successful Old Rod
-encounters at its named source and at least a 2% chance per unmodified cast
-after the Old Rod's 25% bite rate. This limits the least accessible required
-user to an average of 50 casts. Lure use is not required for this guarantee.
+among successful encounters. Required traversal recovery follows the approved
+Native HM catch-window contract: an eligible catch must actually know the
+required utility at the relevant Trainer Rating and time. One reachable source
+must provide at least 8% per successful Old Rod encounter, or the qualifying
+land-source chance, without adding probabilities across locations. A fishing
+source therefore provides at least 2% per unmodified cast at the Old Rod's 25%
+bite rate, averaging no more than 50 casts. Lure use is not required.
 
-The original standalone accessibility results are below. Wayfarer's selected
-catch-window roster uses its nearby-source report instead of these permanent
-named-species values.
-
-| Build and source | Native Surf user | Chance per successful Old Rod encounter | Chance per unmodified cast | Average casts |
-| --- | --- | ---: | ---: | ---: |
-| FireRed and LeafGreen, Pallet or Cinnabar | The version's less common Horsea or Krabby assignment | 8% | 2% | 50 |
-| FireRed and LeafGreen, Pallet or Cinnabar | The version's more common Horsea or Krabby assignment | 14% | 3.5% | 28.6 |
-| HNS, Olivine port, Vermilion, or Cinnabar | Chinchou | 11% | 2.75% | 36.4 |
-| HNS, Cianwood during the day | Chinchou | 12% | 3% | 33.3 |
-| Emerald, Lilycove | Wailmer | 19% | 4.75% | 21.1 |
-| Emerald, Mossdeep or Pacifidlog | Wailmer | 18% | 4.5% | 22.2 |
-
-These figures aggregate duplicate entries for the named species and do not
-count any additional availability from species resolution. For Wayfarer,
-ineligible-entry filtering must preserve a qualifying nearby known-move source
-at every Trainer Rating from 0 through 80 under the catch-window contract.
+The selected nearby-source report owns the qualifying catches and includes
+Surf and the Den's required Whirlpool acquisition. Ineligible-entry filtering
+must preserve a qualifying nearby known-move source at every Trainer Rating
+from 0 through 80 under that contract.
 
 An upgrade should be noticeable during ordinary play. Good Rod should make the
 former Good and Super entries collectively more common than they are with Old
@@ -178,8 +180,8 @@ collection gate.
 
 The selected profiles remain global rather than map-specific. Acceptance
 requires a deterministic distribution report and playtesting that confirm the
-authored species results, the rarity-band shifts, and the native Surf
-accessibility values above.
+authored species results, the rarity-band shifts, and the approved catch-window
+accessibility thresholds.
 
 ## Content
 
@@ -203,13 +205,13 @@ regional flavor, then uses progression-aware text for the award:
   to Good Rod quality.
 - A third contributor completes the rod's improvement to Super Rod quality.
 - A used contributor switches to repeat dialogue or their follow-up activity.
+- An unused contributor met after Super Rod acknowledges the completed rod
+  without an award or a failure message.
 
-The FireRed and LeafGreen givers remain members of the Fishing Guru family. A
-successful contribution from the Route 12 giver unlocks his Magikarp size-record
-activity regardless of whether he awarded the Old, Good, or Super Rod. Emerald's
-Dewford giver keeps his fishing tutorial, and the tutorial must remain useful
-even when he is the second or third contributor. HNS Olivine keeps the seaside
-setting and the fisherman's 30 years of experience as the basis for his help.
+Dewford keeps its fishing tutorial. It must remain useful whether he gives the
+first rod, either upgrade, or meets a player whose rod is already complete.
+Olivine keeps the seaside setting and the fisherman's 30 years of experience
+as the basis for his help.
 
 Dialogue must not identify a location with a fixed rod tier or claim that
 different rods reveal exclusive groups of Pokémon. Lines that discuss quality
@@ -268,8 +270,8 @@ global quality profiles and change runtime selection, but it must not require
 new per-map fishing data.
 
 Rod quality uses the existing mutually exclusive rod items rather than a new
-quality save field. Each build needs one permanent contribution flag for each
-of its three rod givers. The number of set flags determines the next award, and
+quality save field. Wayfarer needs six distinct permanent contribution flags,
+one for each giver. The number of set flags determines the next award, and
 the physical rod item determines the quality available for use.
 
 The award or replacement, transfer of either registered-item shortcut, and the
@@ -277,10 +279,14 @@ giver's contribution flag form one atomic transaction. The giver flag is set
 only after the item and registration changes succeed. A failed transaction
 leaves all three unchanged and remains retryable.
 
-HNS must not use current rod possession as the contribution state for its Old
-and Good Rod NPCs. Its three giver states must remain permanent across regional
-progression; a flag cleared during the Kanto transition cannot serve as the
-Route 12 contribution flag.
+Contribution state must use dedicated nonzero flags, not current rod possession
+or regional item-received aliases. Regional transitions, including the S.S.
+Aqua transition, must never clear any of the six contribution flags.
+
+Acceptance covers all 120 ordered selections of three distinct givers from the
+six, plus refusal, repeat visits, Hoenn-first routes, mixed-region routes,
+travel between awards, and unused givers after Super Rod. Capped Dewford visits
+must retain access to the tutorial without consuming his contribution.
 
 ## References
 

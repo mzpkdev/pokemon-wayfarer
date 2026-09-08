@@ -13,16 +13,24 @@ Only the proposal's enumerated encounter replacements override the no-table-edit
 boundaries below for Wayfarer. Apply each fishing replacement consistently to
 all matching time profiles and derived rod views, with fail-closed validation
 as defined in the catch-window spec. Global weights, bite rates, rod progression
-and selection rules remain unchanged. Standalone builds retain the contract below.
+and selection rules remain unchanged.
 
 PRD: [Standard Rod fishing progression](../prds/standard-rod-fishing.md)
 Implemented: Yes
 
+The six-contributor progression, dedicated Hoenn flags, and post-Super-Rod
+handling are implemented. Validation passed 23 Standard Rod mechanics tests,
+including all 120 distinct giver orders, and six Wayfarer emulator journeys.
+The journeys cover Hoenn awards and repeat visits, mixed-region upgrades,
+Dewford's capped tutorial, and Kanto-to-Hoenn travel followed by save/reload.
+The Wayfarer release ROM builds and passes its size check. The separate native
+HM catch-window production acceptance noted above remains pending.
+
 ## Scope
 
 This specification defines the three global Standard Rod weight profiles, the
-runtime selection order, order-independent upgrades from the nine existing rod
-givers, and the validation needed for Emerald, FireRed, LeafGreen, and HNS. It
+runtime selection order, order-independent upgrades from six existing rod
+givers across Johto, Kanto, and Hoenn, and validation for the HNS/Wayfarer build. It
 also defines the changes required in ordinary fishing population readers and
 development tools.
 
@@ -50,12 +58,11 @@ The exact weights are:
 | Super Rod | 12 | 10 | 11 | 10 | 10 | 10 | 10 | 9 | 9 | 9 | 100 |
 
 Add `game/src/data/standard_rod_fishing.json` as the single authored source for
-these profiles and the recovery cases defined below. Its top-level shape is:
+these profiles. Its top-level shape includes:
 
 - `schemaVersion`, which must equal 1.
 - `qualityWeights`, with exactly the keys `OLD_ROD`, `GOOD_ROD`, and
   `SUPER_ROD` and the corresponding vectors above.
-- `nativeSurfAccessibility`, the exact recovery-case records defined below.
 
 Keep the existing `fishing_mons.groups` object in `wild_encounters.json` as
 rarity-band metadata. Its single legacy `encounter_rates` vector no longer
@@ -126,57 +133,68 @@ such a spot.
 
 ### Givers and contribution flags
 
-The existing three givers in each build are the only contributors:
+Wayfarer has one global progression with these six contributors:
 
-| Build | Contributor | Permanent contribution flag |
+| Region | Contributor | Permanent contribution flag |
 | --- | --- | --- |
-| Emerald | Dewford Town fisherman | `FLAG_RECEIVED_OLD_ROD` |
-| Emerald | Route 118 fisherman | `FLAG_RECEIVED_GOOD_ROD` |
-| Emerald | Mossdeep City House 3 fisherman | `FLAG_RECEIVED_SUPER_ROD` |
-| FireRed and LeafGreen | Vermilion City House 1 Fishing Guru | `FLAG_GOT_OLD_ROD` |
-| FireRed and LeafGreen | Fuchsia City House 2 Fishing Guru's brother | `FLAG_GOT_GOOD_ROD` |
-| FireRed and LeafGreen | Route 12 Fishing House Fishing Guru's brother | `FLAG_GOT_SUPER_ROD` |
-| HNS | Route 32 Pokémon Center Fishing Guru | `FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED` at `0x304` |
-| HNS | Olivine City House 3 fisherman | `FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED` at `0x305` |
-| HNS | Route 12 house fisherman | `FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED` at `0x306` |
+| Johto | Route 32 Pokémon Center Fishing Guru | `FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED` |
+| Johto | Olivine City House 3 fisherman | `FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED` |
+| Kanto | Route 12 house fisherman | `FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED` |
+| Hoenn | Dewford Town fisherman | `FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED` |
+| Hoenn | Route 118 fisherman | `FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED` |
+| Hoenn | Mossdeep City House 3 fisherman | `FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED` |
 
-Emerald and FireRed/LeafGreen retain their current giver flags. HNS renames the
-three adjacent unused general-purpose flags at `0x304` through `0x306`. It must
-not use rod possession or `FLAG_GOT_SUPER_ROD` as contribution state. The S.S.
-Aqua transition currently clears `FLAG_GOT_SUPER_ROD`; it must not clear any of
-the three new contribution flags.
+The six flags occupy `0x304` through `0x309` in the table's order. Both script
+flag checks and helper arguments use these dedicated flags: the HNS
+`FLAG_RECEIVED_OLD_ROD`, `FLAG_RECEIVED_GOOD_ROD`, and `FLAG_RECEIVED_SUPER_ROD`
+aliases resolve to zero and cannot record contributions. Do not use rod
+possession or `FLAG_GOT_SUPER_ROD` as contribution state. The S.S. Aqua
+transition currently clears `FLAG_GOT_SUPER_ROD`; no regional transition may
+clear any of the six dedicated contribution flags.
 
-Each giver script checks only its own contribution flag to decide whether it is
-unused. If it is already set, the giver uses repeat dialogue or its existing
-follow-up activity. If it is unset, the giver offers a contribution. Declining
+Each flag records a successful award by that NPC, not an interaction. A giver
+whose flag is set uses repeat dialogue or its existing follow-up. For an unset
+flag, check the global cap before offering an award: after three successful
+contributions, use capped dialogue or the existing follow-up without changing
+items, registrations, or flags. Otherwise offer a contribution; declining
 changes nothing.
 
-The number of set contribution flags in the active build determines a
-successful award:
+Count successful contribution flags across all six givers:
 
 | Flags already set | Required current rod | Award |
 | ---: | --- | --- |
 | 0 | None | Add Old Rod |
 | 1 | Old Rod | Replace it with Good Rod |
 | 2 | Good Rod | Replace it with Super Rod |
+| 3 | Super Rod | Already fully upgraded; no award or flag change |
 
-The giver's original rod tier does not affect the award. All six visit orders
-within a build produce Old, then Good, then Super quality.
+The giver's original tier and region never affect the award. All 120 ordered
+triples of distinct givers produce Old, then Good, then Super quality. Regional
+travel preserves the item and all six contribution flags, with no regional
+reset or separate sequence.
 
 ### Atomic rod transaction
 
 One C helper owns the complete award transaction. A giver supplies its
-build-specific contribution flag, and the helper returns one of these outcomes
+dedicated contribution flag, and the helper returns one of these outcomes
 plus the awarded item ID on success:
 
 - Success.
 - Giver already contributed.
+- Rod already fully upgraded.
 - No Key Items space for the first award.
 - Invalid rod state.
 
-Before changing state, the helper validates the contribution flag, contributor
-count, required current rod, and absence of either other rod item. It does not
-repair or migrate an inconsistent save.
+Before changing state, validate the supplied flag against the six contributors
+and return the repeat outcome for an already-used giver. For an unused giver,
+check the three-contribution cap before award-index or next-tier validation.
+A consistent capped save returns the fully-upgraded outcome, never an invalid
+award result. Validate that this state contains exactly one Super Rod and no
+other rod; inconsistent saves still return the invalid-state outcome.
+
+Below the cap, validate the contributor count, required current rod, and absence
+of either other rod item. The helper does not repair or migrate an inconsistent
+save.
 
 For the first contribution, the helper adds one Old Rod through the ordinary
 Bag API. If no Key Items slot is available, it returns the no-space result and
@@ -198,7 +216,9 @@ Bag, registration, and flag writes, so an error leaves all three unchanged.
 Scripts use the returned item ID for the normal item-received presentation and
 quality-specific success text. A no-space result uses the ordinary Bag-full
 message and remains retryable. An invalid state uses a neutral failure message,
-sets no flag, and remains retryable after the state is corrected.
+sets no flag, and remains retryable after the state is corrected. The capped
+outcome uses normal completion or follow-up dialogue, with no award fanfare and
+no contribution flag change.
 
 ### Content and follow-up behavior
 
@@ -214,10 +234,10 @@ name the location as a fixed tier, claim that Old Rod catches only Magikarp, or
 claim that different rods unlock exclusive species.
 
 Keep Dewford's fishing tutorial and make its mechanical explanation correct at
-any awarded quality. Keep Olivine's seaside setting and the fisherman's 30 years
-of experience. In FireRed and LeafGreen, a successful contribution from the
-Route 12 giver unlocks the Magikarp size-record activity through that giver's
-existing contribution flag, regardless of the quality awarded.
+any awarded quality. The tutorial must also remain available when an unused
+Dewford giver meets a player who already has Super Rod; it must not depend only
+on Dewford's successful-contribution flag. Keep Olivine's seaside setting and
+the fisherman's 30 years of experience.
 
 The player-facing item names, icons, fanfares, fishing animations, and item-use
 flow remain Old Rod, Good Rod, and Super Rod. The term Standard Rod is not added
@@ -243,43 +263,13 @@ calculates eligible totals and displayed probabilities from that profile row.
 It no longer derives fishing slots or odds from `fishing_mons.groups` or the
 legacy shared `encounter_rates` vector.
 
-The original standalone `nativeSurfAccessibility` record has exactly these fields:
-
-- `product`: `EMERALD`, `FIRERED`, `LEAFGREEN`, or `POKEMON_HNS`.
-- `baseLabel`: the exact `base_label` in `wild_encounters.json`.
-- `timeOfDay`: the resolved runtime time constant.
-- `species`: the exact species constant to aggregate across duplicate entries.
-- `expectedOldRodSuccessfulEncounterPercent`: the exact Lure-off result with
-  all required entries eligible.
-- `minimumOldRodSuccessfulEncounterPercent`: 8.
-- `minimumOldRodUnmodifiedCastPercent`: 2.
-
-The standalone file contains one record for every label, time, and species combination in
-this table. A row with several labels, times, or species expands to their full
-Cartesian product except where separate expected values are shown.
-
-| Product | Base labels | Times | Species and expected successful Old Rod chance |
-| --- | --- | --- | --- |
-| `FIRERED` | `sPalletTown_FireRed`, `sCinnabarIsland_FireRed` | `TIME_DAY` | `SPECIES_HORSEA` 14%, `SPECIES_KRABBY` 8% |
-| `LEAFGREEN` | `sPalletTown_LeafGreen`, `sCinnabarIsland_LeafGreen` | `TIME_DAY` | `SPECIES_HORSEA` 8%, `SPECIES_KRABBY` 14% |
-| `POKEMON_HNS` | `gOlivineCity_PortOutside_hns_Day`, `gOlivineCity_PortOutside_hns_Night`, `gVermilionCity_hns_Day`, `gVermilionCity_hns_Night`, `gVermilionCity_PortOutside_hns_Day`, `gVermilionCity_PortOutside_hns_Night`, `gCinnabarIsland_hns_Day`, `gCinnabarIsland_hns_Night` | Time encoded by the label | `SPECIES_CHINCHOU` 11% |
-| `POKEMON_HNS` | `gCianwoodCity_hns_Day` | `TIME_DAY` | `SPECIES_CHINCHOU` 12% |
-| `EMERALD` | `gLilycoveCity` | `TIME_DAY` | `SPECIES_WAILMER` 19% |
-| `EMERALD` | `gMossdeepCity`, `gPacifidlogTown` | `TIME_DAY` | `SPECIES_WAILMER` 18% |
-
-For HNS labels ending in `_Day` or `_Night`, each record stores the resolved
-`TIME_DAY` or `TIME_NIGHT` value respectively. The generator rejects duplicate
-records, unknown profile identities, a product or time mismatch, a species not
-authored in the profile, or a computed Lure-off result that differs from the
-recorded expected percentage.
-
-For Wayfarer, replace these permanent named-carrier assertions with the reviewed
-nearby-source, actual-known-move validation in the catch-window specification.
-Its scenario report includes the Den's required Whirlpool acquisition as well
-as Surf. Preserve the original standalone records and checks.
+Traversal accessibility uses the reviewed nearby-source, actual-known-move
+validation in the Native HM catch-window specification. Its selected scenario
+report includes Surf and the Den's required Whirlpool acquisition. This
+contract defines no permanent named-carrier records for other builds.
 
 The wild encounter generator's deterministic balance report
-covers every included version, map profile, and time-of-day variant at every
+covers every Wayfarer map profile and time-of-day variant at every
 integer Trainer Rating from 0 through 80. For every quality it reports:
 
 - Raw entry weights and eligible entries.
@@ -288,16 +278,15 @@ integer Trainer Rating from 0 through 80. For every quality it reports:
   mirror rule.
 - Probability per successful encounter and per unmodified cast using the 25,
   50, and 75 percent base bite rates.
-- Expected unmodified casts for Horsea and Krabby at the named FireRed and
-  LeafGreen sources, Chinchou at the named HNS sources, and Wailmer at the named
-  Emerald sources.
+- Expected unmodified casts for qualifying fishing catches in the selected
+  catch-window scenarios.
 
-The standalone report consumes `nativeSurfAccessibility` rather than hardcoded
-profile names; Wayfarer uses the selected catch-window scenarios instead.
-Generation fails if profile shape or totals drift, an eligible entry has
-zero weight, any Old Rod entry falls below the PRD's minimum, or a listed
-native Surf species differs from its expected result or falls below 8 percent
-per successful Old Rod encounter or 2 percent per unmodified cast.
+Wayfarer uses the selected catch-window scenarios to validate traversal
+accessibility. Generation fails if profile shape or totals drift, an eligible
+entry has zero weight, any Old Rod entry falls below the PRD's minimum, or a
+required scenario lacks a qualifying reachable source under the catch-window
+contract. A qualifying fishing source must provide at least 8 percent per
+successful Old Rod encounter and 2 percent per unmodified cast.
 
 ### Validation
 
@@ -311,24 +300,29 @@ Automated validation must cover:
   and the unchanged bite probabilities and modifier cap.
 - Pokédex and Cartographer inclusion of species from each former rarity band
   for every quality.
-- All six giver visit orders in each build, refusal, repeat interaction, and
+- All 120 ordered triples of distinct givers from the six, including
+  Hoenn-first and mixed-region orders, refusal, repeat interaction, and
   quality-specific presentation.
+- Every unused giver after the three-award cap: normal capped or follow-up
+  dialogue, no invalid-state message, no additional item, no registration
+  change, and no contribution flag consumption. Include Dewford's tutorial.
 - A full-pocket first award failure, full-pocket Good and Super upgrades, Bag
   slot reuse, both registered-item shortcuts, invalid-state rollback, and
   contributor flag ordering.
-- Persistence of all three HNS contributions through the S.S. Aqua transition
-  and the FireRed/LeafGreen Route 12 Magikarp activity after any successful
-  award.
+- Six distinct nonzero contribution flags, matching each script check and
+  helper argument, with flags set only after successful awards.
+- Persistence of the current rod and all six contributor states through travel
+  among Johto, Kanto, and Hoenn, including the S.S. Aqua transition and travel
+  between awards. Revisit contributors after travel.
 - Deterministic generator output and all accessibility thresholds in the
   parent PRD.
 
-Run generator and mechanics tests for Emerald, FireRed, LeafGreen, and HNS
-sequentially because the builds share generated map files. Compile the affected
-encounter, fishing, Bag, item-use, Pokédex, and map-script objects for all four
-builds, then build at least one complete release ROM. Playtest each quality,
-one nonstandard giver order per build, the two registered-item shortcuts, the
-FRLG Magikarp follow-up, the HNS regional transition, a filtered fishing table,
-and Route 119 Feebas.
+Run generator and mechanics tests for HNS/Wayfarer. Compile the affected
+encounter, fishing, Bag, item-use, Pokédex, and map-script objects, then build a
+complete HNS release ROM. Playtest each quality, Hoenn-first and mixed-region
+giver orders, an unused giver after Super Rod, Dewford's capped tutorial, both
+registered-item shortcuts, regional travel and repeat visits, a filtered
+fishing table, and Route 119 Feebas.
 
 ## References
 
