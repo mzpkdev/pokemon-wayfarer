@@ -1,6 +1,7 @@
 #include "global.h"
 #include "wayfarer_loss_policy.h"
 #include "trainer_only_encounter.h"
+#include "wayfarer_story_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
 #include "constants/heal_locations.h"
@@ -2775,6 +2776,7 @@ static void InitObjectEventsLocal(void)
     SetPlayerAvatarTransitionFlags(player->transitionFlags);
     ResetInitialPlayerAvatarState();
     TrySpawnObjectEvents(0, 0);
+    WayfarerStoryReconcileCurrentMap();
     FollowerNPC_HandleSprite();
     UpdateFollowingPokemon();
     TryRunOnWarpIntoMapScript();
@@ -2783,6 +2785,7 @@ static void InitObjectEventsLocal(void)
 static void InitObjectEventsReturnToField(void)
 {
     SpawnObjectEventsOnReturnToField(0, 0);
+    WayfarerStoryReconcileCurrentMap();
     RotatingGate_InitPuzzleAndGraphics();
     RunOnReturnToFieldMapScript();
 }

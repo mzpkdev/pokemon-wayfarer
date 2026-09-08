@@ -127,9 +127,18 @@ EcruteakCity_Theater_Text_Rocket3:
 	.string "Wahahaha!$"
 
 EcruteakCity_Theater_EventScript_Rocket::
+#if IS_WAYFARER
+	goto_if_defeated TRAINER_GRUNT_33_HNS, EcruteakCity_Theater_EventScript_RocketAlreadyDefeated
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_THEATER_ROCKET
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, EcruteakCity_Theater_EventScript_RocketAllowed
+	goto EcruteakCity_Theater_EventScript_RocketNoParty
+#endif
+EcruteakCity_Theater_EventScript_RocketAllowed::
 	lock
 	faceplayer
 	msgbox EcruteakCity_Theater_Text_RocketSeen, MSGBOX_DEFAULT
+EcruteakCity_Theater_EventScript_RocketBattle::
 	trainerbattle_no_intro TRAINER_GRUNT_33_HNS, EcruteakCity_Theater_Text_RocketBeaten
 	msgbox EcruteakCity_Theater_Text_RocketAfter, MSGBOX_DEFAULT
 	closemessage
@@ -146,7 +155,39 @@ EcruteakCity_Theater_EventScript_Rocket::
 	setvar VAR_ECRUTEAK_CITY_THEATER, 2
 	release
 	end
+
+EcruteakCity_Theater_EventScript_RocketAlreadyDefeated::
+	msgbox EcruteakCity_Theater_Text_RocketAfter, MSGBOX_AUTOCLOSE
+	closemessage
+	releaseall
+	end
+
+EcruteakCity_Theater_EventScript_RocketNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
+
+EcruteakCity_Theater_EventScript_RocketRetreat::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
 	
+#else
+	end
+#endif
+
 EcruteakCity_Theater_EventScript_PostRocketLeft::
 	applymovement LOCALID_ECRUTEAK_ZUKI, Common_Movement_WalkLeft1
 	waitmovement 0
@@ -483,6 +524,13 @@ EcruteakCity_Theater_Text_FancyPanel:
 	.string "decorated with flowers.$"
 
 EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_KIMONO_TRIAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, EcruteakCity_Theater_Trigger_PreBattleCutsceneLeftAllowed
+	goto EcruteakCity_Theater_EventScript_KimonoNoParty
+#endif
+EcruteakCity_Theater_Trigger_PreBattleCutsceneLeftAllowed::
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiLeft
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiLeft
@@ -493,6 +541,13 @@ EcruteakCity_Theater_Trigger_PreBattleCutsceneLeft::
 	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
 
 EcruteakCity_Theater_Trigger_PreBattleCutsceneTop::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_KIMONO_TRIAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, EcruteakCity_Theater_Trigger_PreBattleCutsceneTopAllowed
+	goto EcruteakCity_Theater_EventScript_KimonoNoParty
+#endif
+EcruteakCity_Theater_Trigger_PreBattleCutsceneTopAllowed::
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiTop
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiTop
@@ -503,6 +558,13 @@ EcruteakCity_Theater_Trigger_PreBattleCutsceneTop::
 	goto EcruteakCity_Theater_EventScript_LegendaryCutscene
 
 EcruteakCity_Theater_Trigger_PreBattleCutsceneRight::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_KIMONO_TRIAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, EcruteakCity_Theater_Trigger_PreBattleCutsceneRightAllowed
+	goto EcruteakCity_Theater_EventScript_KimonoNoParty
+#endif
+EcruteakCity_Theater_Trigger_PreBattleCutsceneRightAllowed::
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, EcruteakCity_Theater_Movement_PlayerWalkToZukiRight
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, EcruteakCity_Theater_Movement_MonWalkToZukiRight
@@ -691,6 +753,13 @@ EcruteakCity_Theater_EventScript_LegendaryCutscene::
 	waitmovement 0
 	setvar VAR_ECRUTEAK_CITY_THEATER, 6
 EcruteakCity_Theater_EventScript_ZukiBattle::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_KIMONO_TRIAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, EcruteakCity_Theater_EventScript_ZukiBattleAllowed
+	goto EcruteakCity_Theater_EventScript_KimonoNoParty
+#endif
+EcruteakCity_Theater_EventScript_ZukiBattleAllowed::
 	msgbox EcruteakCity_Theater_Text_ZukiSeenAgain, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, FALSE, EcruteakCity_Theater_EventScript_LegendaryDenied
 	call_if_eq VAR_FACING, DIR_SOUTH, EcruteakCity_Theater_Movement_SouthCorrection
@@ -700,6 +769,19 @@ EcruteakCity_Theater_EventScript_ZukiBattle::
 	trainerbattle_no_intro TRAINER_ZUKI_HNS, EcruteakCity_Theater_Text_KimonoGirlBeaten
 	applymovement2 LOCALID_ECRUTEAK_ZUKI, EcruteakCity_Theater_Movement_ZukiWalkUp
 	waitmovement 0
+	goto EcruteakCity_Theater_EventScript_NaokoBattle
+EcruteakCity_Theater_EventScript_KimonoNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+#else
+	end
+#endif
+
 EcruteakCity_Theater_EventScript_NaokoBattle::
 	playse SE_M_PETAL_DANCE
 	applymovement2 LOCALID_ECRUTEAK_NAOKO, EcruteakCity_Theater_Movement_KimonoSpin
@@ -1082,4 +1164,3 @@ EcruteakCity_Theater_Text_ZukiAfterAll:
 EcruteakCity_Theater_Text_KimonoGirlsBeforeBattle:
 	.string "Talk to ZUKI in the middle\n"
 	.string "when you are ready.$"
-

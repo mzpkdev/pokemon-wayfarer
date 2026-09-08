@@ -104,3 +104,19 @@ TEST("Trainer-only feeding calms before passive anger and refreshes without eras
     EXPECT_EQ(state.anger, 0);
     EXPECT_EQ(state.foodTurns, 3);
 }
+
+TEST("Trainer-only Less Escapes vetoes an otherwise successful single roll")
+{
+    struct TrainerOnlyState state = {.cap = 30, .level = 30, .escapeFactor = 3};
+    u32 chance = TrainerOnlyEscapeChance(state.cap, state.level, state.escapeAttempts);
+    EXPECT(TrainerOnlyRunSucceeds(chance, FALSE, 512));
+    EXPECT(!TrainerOnlyRunSucceeds(chance, TRUE, 512));
+    EXPECT(TrainerOnlyRunSucceeds(chance, TRUE, 0));
+    // A veto is a failed committed Run, so its surviving-turn resolver still
+    // applies passive anger and advances time. The controller owns attempts.
+    EXPECT_EQ(TrainerOnlyResolveSurvivingTurn(&state, 99), TRAINER_ONLY_ONGOING);
+    EXPECT_EQ(state.anger, 5);
+    EXPECT_EQ(state.completedTurns, 1);
+    EXPECT(!TrainerOnlyRunSucceeds(chance, FALSE, 99));
+    EXPECT(!TrainerOnlyRunSucceeds(chance, TRUE, 99));
+}

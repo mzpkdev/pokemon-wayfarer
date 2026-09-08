@@ -2,6 +2,14 @@ SeafloorCavern_Room9_MapScripts::
 	.byte 0
 
 SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SEAFLOOR_ARCHIE
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, SeafloorCavern_Room9_EventScript_ArchieAwakenKyogreWayfarerAllowed
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
+	goto Common_EventScript_ReleaseNoOp
+SeafloorCavern_Room9_EventScript_ArchieAwakenKyogreWayfarerAllowed::
+#endif
 	lockall
 	setvar VAR_0x8004, LOCALID_SEAFLOOR_CAVERN_ARCHIE
 	setvar VAR_0x8005, LOCALID_SEAFLOOR_CAVERN_MAXIE
@@ -26,6 +34,7 @@ SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre::
 	applymovement VAR_0x8004, Common_Movement_FacePlayer
 	waitmovement 0
 	msgbox SeafloorCavern_Room9_Text_ArchieYouMustDisappear, MSGBOX_DEFAULT
+SeafloorCavern_Room9_EventScript_ArchieTrainerBattle::
 	trainerbattle_no_intro TRAINER_ARCHIE, SeafloorCavern_Room9_Text_ArchieDefeat
 	msgbox SeafloorCavern_Room9_Text_ArchieWithThisRedOrb, MSGBOX_DEFAULT
 	setweather WEATHER_NONE
@@ -212,6 +221,14 @@ SeafloorCavern_Room9_Movement_MagmaGruntArrive:
 	walk_fast_right
 	walk_fast_right
 	step_end
+
+#if IS_WAYFARER
+SeafloorCavern_Room9_EventScript_WayfarerArchieLossRetreat::
+	removeobject LOCALID_SEAFLOOR_CAVERN_ARCHIE
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	goto EventScript_WayfarerStoryLossRetreat
+#endif
 
 SeafloorCavern_Room9_Movement_Delay32:
 	delay_16

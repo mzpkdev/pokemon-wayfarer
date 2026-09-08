@@ -22,13 +22,23 @@ TEST("Wayfarer trainer field loss requires an explicit redirect and real defeat"
     EXPECT(!WayfarerShouldContinuePartyDefeat());
     WayfarerSetTrainerLossRedirect(sLossRedirect);
     EXPECT(WayfarerShouldContinuePartyDefeat());
+    EXPECT(WayfarerShouldRetreatFromSupportedTrainerOutcome());
     gBattleOutcome = B_OUTCOME_WON;
     EXPECT(!WayfarerShouldContinuePartyDefeat());
+    EXPECT(!WayfarerShouldRetreatFromSupportedTrainerOutcome());
     gBattleOutcome = B_OUTCOME_DREW;
     EXPECT(!WayfarerShouldContinuePartyDefeat());
+    EXPECT(WayfarerShouldRetreatFromSupportedTrainerOutcome());
+    gBattleOutcome = B_OUTCOME_FORFEITED;
+    EXPECT(WayfarerShouldRetreatFromSupportedTrainerOutcome());
+    // A forced/abnormal end must not fall through to a supported caller's
+    // victory continuation merely because it is neither a normal loss nor win.
+    gBattleOutcome = B_OUTCOME_PLAYER_TELEPORTED;
+    EXPECT(WayfarerShouldRetreatFromSupportedTrainerOutcome());
     gBattleOutcome = B_OUTCOME_LOST;
     gBattleTypeFlags |= BATTLE_TYPE_INGAME_PARTNER;
     EXPECT(!WayfarerShouldContinuePartyDefeat());
+    EXPECT(!WayfarerShouldRetreatFromSupportedTrainerOutcome());
     WayfarerResetLossContext();
     EXPECT_EQ(WayfarerGetTrainerLossRedirect(), NULL);
 }

@@ -101,11 +101,20 @@ SproutTower_3F_EventScript_TriggerSceneRight::
 	end
 
 SproutTower_3F_EventScript_SageLi::
+	goto_if_set FLAG_RECEIVED_HM_FLASH, SproutTower_3F_EventScript_SageLi_Beaten
+#if IS_WAYFARER
+	goto_if_defeated TRAINER_LI_HNS, SproutTower_3F_EventScript_SageLi_Beaten
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SPROUT_ELDER_LI
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, SproutTower_3F_EventScript_SageLiAllowed
+	goto SproutTower_3F_EventScript_SageLiNoParty
+#endif
+SproutTower_3F_EventScript_SageLiAllowed::
 	lock
 	faceplayer
-	goto_if_set FLAG_RECEIVED_HM_FLASH, SproutTower_3F_EventScript_SageLi_Beaten
 	msgbox SproutTower_Text_SageLi_Seen, MSGBOX_DEFAULT
 	closemessage
+SproutTower_3F_EventScript_SageLi_Battle::
 	trainerbattle_no_intro TRAINER_LI_HNS, SproutTower_Text_SageLi_Beaten
 	msgbox SproutTower_Text_SageLi_TakeFlash, MSGBOX_DEFAULT
 	giveitem ITEM_HM_FLASH
@@ -114,6 +123,32 @@ SproutTower_3F_EventScript_SageLi::
 	closemessage
 	release
 	end
+
+SproutTower_3F_EventScript_SageLiNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
+
+SproutTower_3F_EventScript_SageLiRetreat::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
 
 SproutTower_3F_EventScript_SageLi_Beaten::
 	msgbox SproutTower_Text_SageLi_AfterBattle, MSGBOX_DEFAULT

@@ -32,11 +32,25 @@ Route119_EventScript_MoveInstituteWorkersDownstairs::
 	return
 
 Route119_EventScript_RivalTrigger1::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE119_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route119_EventScript_RivalTrigger1WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+Route119_EventScript_RivalTrigger1WayfarerAllowed::
+#endif
 	setvar VAR_TEMP_1, 1
 	goto Route119_EventScript_RivalEncounter
 	end
 
 Route119_EventScript_RivalTrigger2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE119_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route119_EventScript_RivalTrigger2WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+Route119_EventScript_RivalTrigger2WayfarerAllowed::
+#endif
 	setvar VAR_TEMP_1, 2
 	goto Route119_EventScript_RivalEncounter
 	end
@@ -63,6 +77,16 @@ Route119_EventScript_RivalEncounter::
 	goto_if_eq VAR_RESULT, FEMALE, Route119_EventScript_BattleBrendan
 	releaseall
 	end
+
+#if IS_WAYFARER
+Route119_EventScript_WayfarerRivalLossRetreat::
+	setobjectxyperm LOCALID_ROUTE119_RIVAL, 25, 32
+	setobjectmovementtype LOCALID_ROUTE119_RIVAL, MOVEMENT_TYPE_FACE_UP
+	removeobject LOCALID_ROUTE119_RIVAL_ON_BIKE
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	goto EventScript_WayfarerStoryLossRetreat
+#endif
 
 Route119_EventScript_PlayMayMusic::
 	playbgm MUS_ENCOUNTER_MAY, TRUE

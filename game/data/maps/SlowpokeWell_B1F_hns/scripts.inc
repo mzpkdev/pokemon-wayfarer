@@ -39,10 +39,19 @@ SlowpokeWell_B1F_EventScript_Eto::
 	end
 
 SlowpokeWell_B1F_EventScript_Proton::
+#if IS_WAYFARER
+	goto_if_defeated TRAINER_PROTON_1_HNS, SlowpokeWell_B1F_EventScript_ProtonAlreadyDefeated
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SLOWPOKE_WELL_PROTON
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, SlowpokeWell_B1F_EventScript_ProtonAllowed
+	goto SlowpokeWell_B1F_EventScript_ProtonNoParty
+#endif
+SlowpokeWell_B1F_EventScript_ProtonAllowed::
 	lock
 	faceplayer
 	msgbox SlowpokeWell_B1F_Text_ProtonSeen, MSGBOX_DEFAULT
 	closemessage
+SlowpokeWell_B1F_EventScript_ProtonBattle::
 	trainerbattle_no_intro TRAINER_PROTON_1_HNS, SlowpokeWell_B1F_Text_ProtonBeaten
 	msgbox SlowpokeWell_B1F_Text_ProtonAfter, MSGBOX_AUTOCLOSE
 	closemessage
@@ -71,6 +80,37 @@ SlowpokeWell_B1F_EventScript_Proton::
 	waitstate
 	end
 
+SlowpokeWell_B1F_EventScript_ProtonAlreadyDefeated::
+	msgbox SlowpokeWell_B1F_Text_ProtonAfter, MSGBOX_AUTOCLOSE
+	closemessage
+	releaseall
+	end
+
+SlowpokeWell_B1F_EventScript_ProtonNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
+
+SlowpokeWell_B1F_EventScript_ProtonRetreat::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
 SlowpokeWell_B1F_Movement_Kurt:
 	walk_left
 	walk_left

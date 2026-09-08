@@ -6,6 +6,7 @@
 #include "random.h"
 #include "task.h"
 #include "trainer_see.h"
+#include "wayfarer_story_encounter.h"
 #include "util.h"
 #include "constants/event_objects.h"
 #include "constants/flags.h"
@@ -405,7 +406,7 @@ bool8 TryRunOnFrameMapScript(void)
 {
     const u8 *ptr = MapHeaderCheckScriptTable(MAP_SCRIPT_ON_FRAME_TABLE);
 
-    if (!ptr)
+    if (!ptr || WayfarerStoryShouldSuppressOnFrameScript(ptr))
         return FALSE;
 
     ScriptContext_SetupScript(ptr);

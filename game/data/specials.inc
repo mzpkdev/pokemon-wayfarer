@@ -766,4 +766,7 @@ gSpecials::
     def_special GetWayfarerVermilionSeviiDestination
     def_special WayfarerCanSailToBirthIsland
     def_special WayfarerCanSailToNavelRock
+    def_special WayfarerStoryCanStartScene
+    def_special WayfarerStoryShowSelectedNoPartyDialogue
+    def_special WayfarerStoryShowRetreatDialogue
 #endif

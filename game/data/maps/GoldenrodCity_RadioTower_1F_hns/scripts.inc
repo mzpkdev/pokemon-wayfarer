@@ -2,9 +2,18 @@ GoldenrodCity_RadioTower_1F_hns_MapScripts::
 	.byte 0
 
 RadioTower1F_EventScript_Grunt::
+#if IS_WAYFARER
+	goto_if_defeated TRAINER_GRUNT_2_HNS, RadioTower1F_EventScript_GruntAlreadyDefeated
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RADIO_1F_GRUNT
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RadioTower1F_EventScript_GruntAllowed
+	goto RadioTower1F_EventScript_GruntNoParty
+#endif
+RadioTower1F_EventScript_GruntAllowed::
 	lock
 	faceplayer
 	msgbox RadioTower1F_Text_GruntM3Seen, MSGBOX_DEFAULT
+RadioTower1F_EventScript_GruntBattle::
 	trainerbattle_no_intro TRAINER_GRUNT_2_HNS,  RadioTower1F_Text_GruntM3Beaten
 	msgbox RadioTower1F_Text_GruntM3After, MSGBOX_AUTOCLOSE
 	turnobject LOCALID_GOLDENROD_RADIOTOWER_GRUNT, DIR_EAST
@@ -15,6 +24,25 @@ RadioTower1F_EventScript_Grunt::
 	setflag FLAG_HIDE_ROCKET_GOLDENROD_RADIOTOWER_1
 	release
 	end
+
+RadioTower1F_EventScript_GruntAlreadyDefeated::
+	msgbox RadioTower1F_Text_GruntM3After, MSGBOX_AUTOCLOSE
+	closemessage
+	releaseall
+	end
+
+RadioTower1F_EventScript_GruntNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+
+#else
+	end
+#endif
 
 RadioTower1F_Movement_Rocket::
 	walk_in_place_right
@@ -442,5 +470,3 @@ GoldenrodCity_RadioTower_1F_Text_PrizeWeveBeenHolding:
 
 GoldenrodCity_RadioTower_1F_Text_PleaseVisitAgain2:
 	.string "Please do visit again.$"
-
-

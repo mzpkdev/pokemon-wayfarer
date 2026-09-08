@@ -8,6 +8,7 @@
 #include "pokemon.h"
 #include "random.h"
 #include "trainer_rating.h"
+#include "trainer_see.h"
 #include "trainer_only_encounter.h"
 #include "wayfarer_origin.h"
 #include "window.h"
@@ -66,6 +67,10 @@ u32 TrainerOnlyFleeChance(const struct TrainerOnlyState *state)
 u32 TrainerOnlyEscapeChance(u32 cap, u32 level, u32 failures)
 {
     return min(95, max(5, 50 * max(1, cap) / max(1, level) + 15 * min(255, failures)));
+}
+bool32 TrainerOnlyRunSucceeds(u32 chance, bool32 lessEscapes, u32 roll)
+{
+    return (!lessEscapes || !(roll & 512)) && roll % 100 < chance;
 }
 u32 TrainerOnlyWarningThreshold(u32 passiveAnger) { return min(75, 100 - (25 + passiveAnger)); }
 void TrainerOnlyApplyApproach(struct TrainerOnlyState *state)
@@ -193,7 +198,12 @@ static void TrainerOnlyMain(void)
             return;
         case TRAINER_ONLY_RECOVERY:
 #if IS_WAYFARER
-            if (WayfarerCanStartOrdinaryBattle()) { Message(sText_ProtectionRestored, 7); return; }
+            if (WayfarerCanStartOrdinaryBattle())
+            {
+                ArmTrainerRecoverySightSuppression();
+                Message(sText_ProtectionRestored, 7);
+                return;
+            }
 #endif
             Message(sText_UsedItem, 5);
             return;
@@ -204,8 +214,8 @@ static void TrainerOnlyMain(void)
                 return;
             }
             escapeRoll = Random();
-            if ((!gSaveBlock3Ptr->challengeSettings.tx_Challenges_LessEscapes || !(escapeRoll & 512))
-                && escapeRoll % 100 < TrainerOnlyEscapeChance(sState.cap, sState.level, sState.escapeAttempts))
+            if (TrainerOnlyRunSucceeds(TrainerOnlyEscapeChance(sState.cap, sState.level, sState.escapeAttempts),
+                                       gSaveBlock3Ptr->challengeSettings.tx_Challenges_LessEscapes, escapeRoll))
             {
                 Message(sTrainerOnlyEscaped, 7);
                 return;
@@ -223,8 +233,16 @@ static void TrainerOnlyMain(void)
             if (!gBattleMons[wild].hp) { Message(sText_KnockedOut, 7); return; }
             sState.rocks = min(14, sState.rocks + 1);
             sState.anger = min(100, sState.anger + 25);
-            Message(sText_Angry, 5);
+            // Reuse only the anger-mark presentation. Emitting on the real wild
+            // battler anchors both animation positions to its sprite.
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MON_ANGRY;
+            BtlController_EmitBattleAnimation(wild, B_COMM_TO_CONTROLLER, B_ANIM_SAFARI_REACTION, 0);
+            MarkBattlerForControllerExec(wild);
+            sPhase = 11;
             return;
+    case 11:
+        Message(sText_Angry, 5);
+        return;
     case 4:
         HandleAction_RunBattleScript();
         if (gCurrentActionFuncId != B_ACTION_EXEC_SCRIPT)

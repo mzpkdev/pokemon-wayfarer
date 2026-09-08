@@ -1,6 +1,7 @@
 #include "global.h"
 #include "trainer_only_encounter.h"
 #include "wayfarer_loss_policy.h"
+#include "wayfarer_story_encounter.h"
 #include "battle.h"
 #include "bug_contest.h"
 #include "load_save.h"
@@ -1459,6 +1460,10 @@ void TrainerBattleLoadArgs(const u8 *data)
     InitTrainerBattleParameter();
     memcpy(gTrainerBattleParameter.data, data, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = (u8*)data + sizeof(TrainerBattleParameter);
+    // Loss return is opt-in by the exact trainerbattle caller.  It must be armed
+    // here, before a supported battle can complete, and never inferred from the
+    // trainer id, class, or map.
+    WayfarerStoryConfigureTrainerBattleCaller(data);
 }
 
 void TrainerBattleLoadArgsTrainerA(const u8 *data)
@@ -1868,9 +1873,9 @@ static void HandleBattleVariantEndParty(void)
     FlagClear(B_FLAG_SKY_BATTLE);
 }
 
-static bool8 TryReturnFromSupportedTrainerLoss(void)
+static bool8 TryReturnFromSupportedTrainerOutcome(void)
 {
-    if (!WayfarerShouldContinuePartyDefeat())
+    if (!WayfarerShouldRetreatFromSupportedTrainerOutcome())
         return FALSE;
     ScriptContext_SetupScript(WayfarerGetTrainerLossRedirect());
     WayfarerResetLossContext();
@@ -1892,7 +1897,7 @@ static void CB2_EndTrainerBattle(void)
             HealPlayerParty();
     }
 
-    if (TryReturnFromSupportedTrainerLoss())
+    if (TryReturnFromSupportedTrainerOutcome())
         return;
 
     if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL)
@@ -1951,7 +1956,7 @@ static void CB2_EndTrainerBattle(void)
 
 static void CB2_EndRematchBattle(void)
 {
-    if (TryReturnFromSupportedTrainerLoss())
+    if (TryReturnFromSupportedTrainerOutcome())
         return;
 
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)

@@ -5,11 +5,24 @@ GoldenrodCity_UndergroundSwitches_hns_MapScripts::
 GoldenrodUnderground1_OnLoad::
 	setvar VAR_TEMP_0, 0
 	call_if_set FLAG_COMPLETED_SWITCHES, GoldenrodUnderground1_ClearTheWay
+#if IS_WAYFARER
+	call GoldenrodCity_UndergroundSwitches_EventScript_RestorePendingSilver
+#endif
 	clearflag FLAG_GOLDENROD_SWITCH_1
 	clearflag FLAG_GOLDENROD_SWITCH_2
 	clearflag FLAG_GOLDENROD_SWITCH_3
 	clearflag FLAG_GOLDENROD_SWITCH_ORDER
 	end
+
+GoldenrodCity_UndergroundSwitches_EventScript_RestorePendingSilver::
+#if IS_WAYFARER
+	goto_if_set FLAG_WAYFARER_SILVER_GOLDENROD_UNDERGROUND_COMPLETE, GoldenrodCity_UndergroundSwitches_EventScript_RestorePendingSilverDone
+	goto_if_lt VAR_GOLDENROD_CITY_STATE, 10, GoldenrodCity_UndergroundSwitches_EventScript_RestorePendingSilverDone
+	clearflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
+	addobject LOCALID_GOLDENROD_UNDERGROUND_SILVER
+#endif
+GoldenrodCity_UndergroundSwitches_EventScript_RestorePendingSilverDone::
+	return
 
 GoldenrodUnderground1_ClearTheWay::
 	call GoldenrodCity_UndergroundSwitches_EventScript_CreateWall1
@@ -348,7 +361,12 @@ GoldenrodCity_UndergroundSwitches_EventScript_RemoveWall6::
 GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_GOLDENROD_UNDERGROUND
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTopAllowed
+	goto GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
 #endif
+GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTopAllowed::
 	lock
 	playse SE_EXIT
 	waitse
@@ -376,7 +394,12 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
 	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
 	removeobject LOCALID_GOLDENROD_UNDERGROUND_SILVER
 	fadedefaultbgm
+#if IS_WAYFARER
+	setflag FLAG_WAYFARER_SILVER_GOLDENROD_UNDERGROUND_COMPLETE
+	goto_if_ge VAR_GOLDENROD_CITY_STATE, 9, GoldenrodCity_UndergroundSwitches_EventScript_SilverProgressPreserved
+#endif
 	setvar VAR_GOLDENROD_CITY_STATE, 9
+GoldenrodCity_UndergroundSwitches_EventScript_SilverProgressPreserved::
 	release
 	end
 
@@ -384,7 +407,12 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerTop::
 GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBot::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_GOLDENROD_UNDERGROUND
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBotAllowed
+	goto GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
 #endif
+GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBotAllowed::
 	lock
 	playse SE_EXIT
 	waitse
@@ -412,7 +440,12 @@ GoldenrodCity_UndergroundSwitches_EventScript_SilverTriggerBot::
 	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
 	removeobject LOCALID_GOLDENROD_UNDERGROUND_SILVER
 	fadedefaultbgm
+#if IS_WAYFARER
+	setflag FLAG_WAYFARER_SILVER_GOLDENROD_UNDERGROUND_COMPLETE
+	goto_if_ge VAR_GOLDENROD_CITY_STATE, 9, GoldenrodCity_UndergroundSwitches_EventScript_SilverProgressPreservedBot
+#endif
 	setvar VAR_GOLDENROD_CITY_STATE, 9
+GoldenrodCity_UndergroundSwitches_EventScript_SilverProgressPreservedBot::
 	release
 	end
 
@@ -427,6 +460,56 @@ GoldenrodCity_UndergroundSwitches_EventScript_Totodile::
 GoldenrodCity_UndergroundSwitches_EventScript_Chikorita::
 	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_4_HNS, GoldenrodUnderground_Text_SilverWin
 	return
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverReturn::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_GOLDENROD_UNDERGROUND
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnAllowed
+	goto GoldenrodCity_UndergroundSwitches_EventScript_DeferredSilver
+GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnAllowed::
+	lock
+	faceplayer
+	msgbox GoldenrodUnderground_Text_SilverReturn, MSGBOX_DEFAULT
+	closemessage
+	call_if_eq VAR_STARTER_MON, 0, GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnCyndaquil
+	call_if_eq VAR_STARTER_MON, 1, GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnTotodile
+	call_if_eq VAR_STARTER_MON, 2, GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnChikorita
+	setflag FLAG_WAYFARER_SILVER_GOLDENROD_UNDERGROUND_COMPLETE
+	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
+	removeobject LOCALID_GOLDENROD_UNDERGROUND_SILVER
+	fadedefaultbgm
+	release
+	end
+#else
+	end
+#endif
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnCyndaquil::
+	trainerbattle_no_intro TRAINER_RIVAL_CYNDAQUIL_4_HNS, GoldenrodUnderground_Text_SilverWin
+	return
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnTotodile::
+	trainerbattle_no_intro TRAINER_RIVAL_TOTODILE_4_HNS, GoldenrodUnderground_Text_SilverWin
+	return
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnChikorita::
+	trainerbattle_no_intro TRAINER_RIVAL_CHIKORITA_4_HNS, GoldenrodUnderground_Text_SilverWin
+	return
+
+GoldenrodCity_UndergroundSwitches_EventScript_SilverRetreat::
+#if IS_WAYFARER
+	setflag FLAG_HIDE_GOLDENROD_UNDERGROUND_SILVER
+	removeobject LOCALID_GOLDENROD_UNDERGROUND_SILVER
+	special WayfarerStoryShowRetreatDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+#else
+	end
+#endif
+
 
 
 
@@ -537,6 +620,12 @@ GoldenrodUnderground_Text_SilverBefore:
     .string "That was just a fluke.\p"
     .string "I've been training my team and now\n"
     .string "I will repay my debts!$"
+
+GoldenrodUnderground_Text_SilverReturn:
+    .string "...I've been looking for you.\p"
+    .string "Don't get in my way.\p"
+    .string "This time, I'll prove how strong\n"
+    .string "my POKéMON have become!$"
 
 GoldenrodUnderground_Text_SilverWin:
     .string "…Why… Why do I lose?\p"

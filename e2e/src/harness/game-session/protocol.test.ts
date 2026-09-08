@@ -5,6 +5,8 @@ import {
   encodeCommandRequest,
   encodeObserveRegionMapRequest,
   encodeObserveRegionMapSectionRequest,
+  encodeObserveVarRequest,
+  encodeSetVarRequest,
   encodeSaveRequest,
   encodeWinBattleRequest,
   keepCoordinate,
@@ -66,6 +68,7 @@ const request = (): CommandRequest => ({
   fullPocketMask: 7,
   regionalBadgeCounts: [4, 3, 1],
   leagueClears: [true, false, false],
+  rematchTrainerId: 177,
 })
 
 const expectNoFixtureMutations = (bytes: Uint8Array) => {
@@ -101,6 +104,7 @@ describe("game-session v15 protocol", () => {
     expect(Array.from(bytes.slice(240, 256))).not.toContain(1)
     expect(Array.from(bytes.slice(260, 400))).toEqual(Array(140).fill(0))
     expect(Array.from(bytes.slice(416, 428))).toEqual([1, 1, 1, 3, 1, 7, 4, 3, 1, 1, 0, 0])
+    expect(view.getUint16(429, true)).toBe(177)
   })
 
   it("encodes optional per-move PP for party, PC, and wild fixtures", () => {
@@ -156,6 +160,27 @@ describe("game-session v15 protocol", () => {
     expect(view.getInt16(10, true)).toBe(7)
     expect(bytes[86]).toBe(commands.observeRegionMapSection)
     expect(bytes).toHaveLength(abi.requestSize)
+  })
+
+  it("encodes a read-only banked-variable observation without changing the ABI layout", () => {
+    const bytes = encodeObserveVarRequest(abi, 26, 0x7023)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(26)
+    expect(view.getUint16(4, true)).toBe(0x7023)
+    expect(bytes[86]).toBe(commands.observeVar)
+    expectNoFixtureMutations(bytes)
+  })
+
+  it("encodes a bounded banked-variable write without changing the ABI layout", () => {
+    const bytes = encodeSetVarRequest(abi, 27, 0x7023, 0xffff)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(27)
+    expect(view.getUint16(4, true)).toBe(0x7023)
+    expect(view.getUint16(6, true)).toBe(0xffff)
+    expect(bytes[86]).toBe(commands.setVar)
+    expectNoFixtureMutations(bytes)
   })
 
   it("encodes the test-only battle-win command without fixture mutations", () => {

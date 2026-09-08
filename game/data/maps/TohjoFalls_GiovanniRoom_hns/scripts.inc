@@ -32,6 +32,13 @@ TohjoFalls_GiovanniRoom_CancelScene::
 TohjoFalls_EventScript_GiovanniSceneRight::
 	specialvar VAR_RESULT, CheckCelebi
 	goto_if_eq VAR_RESULT, FALSE, TohjoFalls_GiovanniRoom_CancelScene
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_TOHJO_GIOVANNI_EXCEPTION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, TohjoFalls_EventScript_GiovanniSceneRightAllowed
+	goto TohjoFalls_EventScript_GiovanniSceneNoParty
+#endif
+TohjoFalls_EventScript_GiovanniSceneRightAllowed::
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, Common_Movement_WalkLeft1
 	waitmovement 0
@@ -42,6 +49,13 @@ TohjoFalls_EventScript_GiovanniSceneRight::
 TohjoFalls_EventScript_GiovanniSceneLeft::
 	specialvar VAR_RESULT, CheckCelebi
 	goto_if_eq VAR_RESULT, FALSE, TohjoFalls_GiovanniRoom_CancelScene
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_TOHJO_GIOVANNI_EXCEPTION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, TohjoFalls_EventScript_GiovanniSceneLeftAllowed
+	goto TohjoFalls_EventScript_GiovanniSceneNoParty
+#endif
+TohjoFalls_EventScript_GiovanniSceneLeftAllowed::
 	lock
 	applymovement2 OBJ_EVENT_ID_PLAYER, Common_Movement_WalkRight1
 	waitmovement 0
@@ -52,6 +66,13 @@ TohjoFalls_EventScript_GiovanniSceneLeft::
 TohjoFalls_EventScript_GiovanniScene::
 	specialvar VAR_RESULT, CheckCelebi
 	goto_if_eq VAR_RESULT, FALSE, TohjoFalls_GiovanniRoom_CancelScene
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_TOHJO_GIOVANNI_EXCEPTION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, TohjoFalls_EventScript_GiovanniSceneAllowed
+	goto TohjoFalls_EventScript_GiovanniSceneNoParty
+#endif
+TohjoFalls_EventScript_GiovanniSceneAllowed::
 	lock
 	applymovement2 OBJ_EVENT_ID_FOLLOWER, TohjoFalls_Movement_CelebiBegin
 	playse SE_LEDGE
@@ -106,6 +127,7 @@ TohjoFalls_EventScript_GiovanniScene::
 	applymovement2 LOCALID_TOHJOFALLS_GIOVANNI, Common_Movement_WalkDown1
 	waitmovement 0
 	msgbox TohjoFalls_GiovanniRoom_Text_GiovanniBeforeBattle, MSGBOX_DEFAULT
+TohjoFalls_EventScript_GiovanniBattle::
 	trainerbattle_no_intro TRAINER_GIOVANNI_HNS, TohjoFalls_GiovanniRoom_Text_GiovanniDefeat
 	playbgm MUS_HG_RADIO_ROCKET, FALSE
 	applymovement2 LOCALID_TOHJOFALLS_GIOVANNI, TohjoFalls_Movement_GiovanniTakenAback
@@ -156,6 +178,18 @@ TohjoFalls_EventScript_GiovanniScene::
 	setvar VAR_TOHJO_FALLS_GIOVANNI_STATE, 2
 	release
 	end
+
+TohjoFalls_EventScript_GiovanniSceneNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+#else
+	end
+#endif
 
 TohjoFalls_Movement_CelebiBegin:
 	jump_in_place_up

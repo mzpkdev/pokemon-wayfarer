@@ -354,16 +354,37 @@ Route110_EventScript_EndChallenge::
 	return
 
 Route110_EventScript_RivalTrigger1::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE110_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route110_EventScript_RivalTrigger1WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+Route110_EventScript_RivalTrigger1WayfarerAllowed::
+#endif
 	setvar VAR_0x8008, 1
 	goto Route110_EventScript_RivalScene
 	end
 
 Route110_EventScript_RivalTrigger2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE110_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route110_EventScript_RivalTrigger2WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+Route110_EventScript_RivalTrigger2WayfarerAllowed::
+#endif
 	setvar VAR_0x8008, 2
 	goto Route110_EventScript_RivalScene
 	end
 
 Route110_EventScript_RivalTrigger3::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE110_RIVAL
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route110_EventScript_RivalTrigger3WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+Route110_EventScript_RivalTrigger3WayfarerAllowed::
+#endif
 	setvar VAR_0x8008, 3
 	goto Route110_EventScript_RivalScene
 	end
@@ -388,6 +409,15 @@ Route110_EventScript_RivalScene::
 	goto_if_eq VAR_RESULT, FEMALE, Route110_EventScript_BrendanBattle
 	releaseall
 	end
+
+#if IS_WAYFARER
+Route110_EventScript_WayfarerRivalLossRetreat::
+	setobjectxyperm LOCALID_ROUTE110_RIVAL, 34, 54
+	setobjectmovementtype LOCALID_ROUTE110_RIVAL, MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	goto EventScript_WayfarerStoryLossRetreat
+#endif
 
 Route110_EventScript_PlayMayMusic::
 	playbgm MUS_ENCOUNTER_MAY, TRUE

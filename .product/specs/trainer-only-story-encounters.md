@@ -1,11 +1,14 @@
 # Trainer-only story encounters
 
 PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
-Implemented: No
+Implemented: Yes
 
-Status: Draft. Encounter policies and English dialogue below are selected design.
-Future ports, scripted wild objectives and exceptional defeat rules retain the
-explicit dependencies listed here; source availability does not make them playable.
+Status: Implemented for the current supported scene inventory. Future ports,
+scripted wild objectives and exceptional defeat rules retain the explicit
+dependencies listed here; source availability does not make them playable.
+Implementation status does not claim those future integrations or shipping
+balance approval. See the
+[implementation validation](../research/trainer-only-implementation-validation.md).
 
 ## Scope
 
@@ -93,6 +96,11 @@ encounters after the player leaves their activation area and enters again.
 Delay overlapping object restoration until its tile is clear; a map reload must
 also handle an overlapping saved player position safely. Delayed restoration
 never makes a pending rival permanently absent.
+
+When trainer-only item recovery restores a usable party, ordinary trainers already
+watching the return position must also allow a safe field return. Defer their
+automatic approaches until the player leaves their sight area. Direct talk still
+allows an explicit retry; this does not mark a trainer defeated or change rewards.
 
 ### Objective boundaries, outcomes and retreat
 
@@ -297,9 +305,9 @@ source maps are evidence, not an instruction to expose those maps in the current
 ROM. Rival chapters retain their approved locations; ship, Lavender/Tower and
 Giovanni/Blue adaptation must be resolved by that port first.
 
-The newer Kanto port draft, `frlg-kanto-story-on-hns-maps.md` in task
-`frlg-kanto-hns-story-port`, proposes an origin-specific Blue campaign with forward
-chapter retirement. It is an unmerged dependency, not a change implemented here.
+The Kanto port design, `frlg-kanto-story-on-hns-maps.md` (PR #82), specifies
+an origin-specific Blue campaign with forward chapter retirement. Its gameplay
+port is absent from this implementation base; those chapters remain a dependency.
 The older FRLG independence PRD and this inventory must not override the eventual
 port-owned origin/chapter rules.
 
@@ -381,6 +389,14 @@ future Giovanni finale are distinct until the port resolves their ownership.
 | Dialogue | Check all four ordinary variants, stable assignment/overrides, rematches, reload and unchanged gameplay RNG. Check hostile existing-text reuse, wrapping/pagination, repeat approach, completed-state text and silent rivals; no hostile refusal from a resolved objective actor. |
 | Exceptions and ports | Confirm excluded scripted wild, tutorials, League/challenge and unported scenes keep safe explicit handling. Test each port against resolved geography and host access before enabling it. |
 | Regression | Usable-party scenes retain intended story order/rewards; standalone HNS/FRLG/Emerald are unchanged. No unrelated traversal gate returns. |
+
+Cover each authored entrance and distinct lifecycle in the emulator. Distribute
+starter, gender and unusable-party variants across those cases instead of taking
+their full Cartesian product when the same guard runs before variant selection.
+Mechanics tests own exhaustive predicate and arithmetic combinations; source
+audits still check every registered caller and starter branch. Keep separate
+emulator cases for different staging, restoration, continuation and retreat
+behavior, even when their refusal text is identical.
 
 Map/event inspection must accompany emulator walkthroughs: script evidence alone
 cannot prove collision, elevation or alternate-entry safety. Record supported

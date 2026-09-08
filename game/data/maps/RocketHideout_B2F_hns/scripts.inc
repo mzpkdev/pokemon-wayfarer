@@ -184,6 +184,13 @@ RocketHideout_B2F_Trigger_PlayerMoveRight::
 	return
 
 RocketHideout_B2F_Trigger_Ariana::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_MAHOGANY_CONFRONTATION
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RocketHideout_B2F_Trigger_ArianaAllowed
+	goto RocketHideout_B2F_Trigger_ArianaNoParty
+#endif
+RocketHideout_B2F_Trigger_ArianaAllowed::
 	lock 
 	setobjectxyperm LOCALID_ROCKETHIDEOUT2_LANCE, 6, 26
 	setobjectxyperm LOCALID_ROCKETHIDEOUT2_DRAGONITE, 5, 26
@@ -219,6 +226,18 @@ RocketHideout_B2F_Trigger_Ariana::
 	closemessage
 	goto RocketHideout_B2F_EventScript_ReadyForBattlePrompt
 	end
+
+RocketHideout_B2F_Trigger_ArianaNoParty::
+#if IS_WAYFARER
+
+	special WayfarerStoryShowSelectedNoPartyDialogue
+	waitmessage
+	waitbuttonpress
+	releaseall
+	end
+#else
+	end
+#endif
 	
 RocketHideout_B2F_Movement_PlayerMeetAriana:
 	walk_down

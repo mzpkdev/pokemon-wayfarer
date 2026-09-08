@@ -18,6 +18,13 @@ VictoryRoad_1F_EventScript_SetEntranceWallyPos2::
 	return
 
 VictoryRoad_1F_EventScript_WallyBattleTrigger1::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, VictoryRoad_1F_EventScript_WallyBattleTrigger1WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+VictoryRoad_1F_EventScript_WallyBattleTrigger1WayfarerAllowed::
+#endif
 	lockall
 	setvar VAR_0x8008, 1
 	addobject LOCALID_VICTORY_ROAD_ENTRANCE_WALLY
@@ -27,6 +34,13 @@ VictoryRoad_1F_EventScript_WallyBattleTrigger1::
 	end
 
 VictoryRoad_1F_EventScript_WallyBattleTrigger2::
+#if IS_WAYFARER
+	setvar VAR_0x8004, WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY
+	specialvar VAR_RESULT, WayfarerStoryCanStartScene
+	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, VictoryRoad_1F_EventScript_WallyBattleTrigger2WayfarerAllowed
+	goto Common_EventScript_ReleaseNoOp
+VictoryRoad_1F_EventScript_WallyBattleTrigger2WayfarerAllowed::
+#endif
 	lockall
 	setvar VAR_0x8008, 2
 	addobject LOCALID_VICTORY_ROAD_ENTRANCE_WALLY
@@ -39,6 +53,7 @@ VictoryRoad_1F_EventScript_WallyEntranceBattle::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	msgbox VictoryRoad_1F_Text_WallyNotGoingToLoseAnymore, MSGBOX_DEFAULT
+VictoryRoad_1F_EventScript_WallyEntranceTrainerBattle::
 	trainerbattle_no_intro TRAINER_WALLY_VR_1, VictoryRoad_1F_Text_WallyEntranceDefeat
 	msgbox VictoryRoad_1F_Text_WallyPostEntranceBattle, MSGBOX_DEFAULT
 	clearflag FLAG_HIDE_VICTORY_ROAD_ENTRANCE_WALLY

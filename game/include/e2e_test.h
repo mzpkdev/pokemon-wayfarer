@@ -45,6 +45,8 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_WARP,
     E2E_TEST_COMMAND_LOSE_BATTLE,
     E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY,
+    E2E_TEST_COMMAND_OBSERVE_VAR,
+    E2E_TEST_COMMAND_SET_VAR,
 };
 
 enum E2ETestCheckpoint
@@ -96,6 +98,7 @@ enum E2ETestError
     E2E_TEST_ERROR_FULL_POCKET_MASK,
     E2E_TEST_ERROR_SAVE,
     E2E_TEST_ERROR_CIRCUIT,
+    E2E_TEST_ERROR_REMATCH_TRAINER,
 };
 
 enum E2ETestGamePhase
@@ -275,7 +278,10 @@ struct E2ETestRequest
     u8 regionalBadgeCounts[E2E_TEST_LEAGUE_COUNT];
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 applyLeagueCircuit;
-    u8 reserved[3];
+    // Little-endian base trainer id. A nonzero valid rematch-table base trainer
+    // is arranged as fought and ready through UpdateRematchIfDefeated().
+    u8 rematchTrainerId[2];
+    u8 reserved;
 };
 
 struct E2ETestObservedPcSlot
