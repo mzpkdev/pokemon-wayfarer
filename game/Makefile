@@ -360,6 +360,7 @@ MAKEFLAGS += --no-print-directory
 
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
+RULES_NO_SCAN += summary-screen-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -453,7 +454,7 @@ else
 TEST_SKIP_IS_FAIL := \x00
 endif
 
-check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test
+check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
 check: league-circuit-test
@@ -739,6 +740,9 @@ wild-encounter-scaling-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_*.py' -q
 
 .PHONY: native-hm-windows-test
+summary-screen-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/summary_screen -p 'test_*.py' -q
+
 native-hm-windows-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(LEARNSET_HELPERS_DIR) -p 'test_native_hm_windows.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WILD_ENCOUNTERS_TOOL_DIR)/tests -p 'test_wayfarer_native_hm_audit.py' -q

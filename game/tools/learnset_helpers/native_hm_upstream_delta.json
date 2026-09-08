@@ -197,5 +197,27 @@
     "EMERALD": "fff7d0748ee5884d0a39f3b61f4007a452a3b594e7cef4390e584f71e94aca5d",
     "FRLG": "06c228e3134094813a96813243b2d9faa171788d115b187f33d3415854e1c628",
     "NONE": "bb93137826c7bc100cb94971f3517c1fccff0d245b28b7c1ed5bda229aecd912"
+  },
+  "wayfarer_exclusions": {
+    "modern": {
+      "sDonphanLevelUpLearnset": {
+        "added": [
+          [
+            52,
+            "MOVE_PLAY_ROUGH"
+          ]
+        ],
+        "reason": "Preserve approved Strength catch levels 52 through 100."
+      },
+      "sTaurosLevelUpLearnset": {
+        "added": [
+          [
+            50,
+            "MOVE_BLAZE_KICK"
+          ]
+        ],
+        "reason": "Preserve approved Strength catch levels 55 through 62."
+      }
+    }
   }
 }

@@ -28,13 +28,17 @@ UTILITIES = {'MOVE_' + move for move in (
 UPSTREAM_DELTA = json.loads(Path(__file__).with_name('native_hm_upstream_delta.json').read_text())
 
 
-def with_upstream_moves(entries, mode, symbol):
+def with_upstream_moves(entries, mode, symbol, wayfarer=True):
     """Apply the pinned upstream move changes to the historical HM design input."""
     result = [entry[:] for entry in entries]
     changes = UPSTREAM_DELTA.get(mode, {}).get(symbol, {})
     for entry in changes.get('removed', []):
         result.remove(entry)
+    exclusions = (UPSTREAM_DELTA.get('wayfarer_exclusions', {}).get(mode, {}).get(symbol, {})
+                  if wayfarer else {})
     for entry in changes.get('added', []):
+        if entry in exclusions.get('added', []):
+            continue
         index = next((i for i, existing in enumerate(result) if existing[0] > entry[0]),
                      len(result))
         result.insert(index, entry[:])
@@ -224,7 +228,7 @@ class NativeHmWindowsDataTest(unittest.TestCase):
                 symbol = record[mode + '_symbol']
                 if symbol in native:
                     self.assertEqual(native[symbol], with_upstream_moves(
-                        record[mode], mode, symbol), (mode, species))
+                        record[mode], mode, symbol, wayfarer=False), (mode, species))
 
 
 if __name__ == '__main__':

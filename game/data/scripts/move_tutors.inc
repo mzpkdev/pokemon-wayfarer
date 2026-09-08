@@ -202,3 +202,15 @@ MoveTutor_AfterChooseBoxMon::
 	special CanTeachMoveBoxMon
 	waitstate
 	return
+
+Route4_EventScript_DynamicPunchTutor_Hns::
+	lock
+	faceplayer
+	move_tutor MOVE_DYNAMIC_PUNCH, MoveTutor_Text_DynamicPunchTeach, MoveTutor_Text_DynamicPunchWhichMon, MoveTutor_EventScript_DynamicPunchDeclined, MoveTutor_EventScript_DynamicPunchTaughtHns, FLAG_MOVE_TUTOR_TAUGHT_DYNAMICPUNCH
+	release
+	end
+
+MoveTutor_EventScript_DynamicPunchTaughtHns::
+	msgbox MoveTutor_Text_DynamicPunchTaughtHns, MSGBOX_DEFAULT
+	release
+	end

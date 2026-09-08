@@ -1,4 +1,5 @@
 // Approved roster SHA256: aa3e4aa54df962265b26a6f40e8b4c1e9a7a2242190ed355365c83c179c1adc7
+// Pinned upstream move delta SHA256: 8f6ff1f3ff802c5c6c48f1d89342eb47ed7a0baa263b9f71bb4567e5c0af7698
 // Regenerate with python3 game/test/data/generate_native_hm_catch_windows.py
 static const struct ExpectedCatchEntry sEntries_ABRA_legacy[] = {
     { 1, MOVE_TELEPORT },
@@ -1057,6 +1058,7 @@ static const struct ExpectedCatchEntry sEntries_DONPHAN_modern[] = {
     { 30, MOVE_MAGNITUDE },
     { 37, MOVE_SCARY_FACE },
     { 40, MOVE_STRENGTH },
+    { 41, MOVE_RAPID_SPIN },
     { 43, MOVE_EARTHQUAKE },
     { 50, MOVE_GIGA_IMPACT },
 };
@@ -1070,8 +1072,9 @@ static const struct ExpectedCatchMoves sMoves_DONPHAN_modern[] = {
     { 30, { MOVE_ASSURANCE, MOVE_KNOCK_OFF, MOVE_SLAM, MOVE_MAGNITUDE } },
     { 37, { MOVE_KNOCK_OFF, MOVE_SLAM, MOVE_MAGNITUDE, MOVE_SCARY_FACE } },
     { 40, { MOVE_SLAM, MOVE_MAGNITUDE, MOVE_SCARY_FACE, MOVE_STRENGTH } },
-    { 43, { MOVE_MAGNITUDE, MOVE_SCARY_FACE, MOVE_STRENGTH, MOVE_EARTHQUAKE } },
-    { 50, { MOVE_SCARY_FACE, MOVE_STRENGTH, MOVE_EARTHQUAKE, MOVE_GIGA_IMPACT } },
+    { 41, { MOVE_MAGNITUDE, MOVE_SCARY_FACE, MOVE_STRENGTH, MOVE_RAPID_SPIN } },
+    { 43, { MOVE_SCARY_FACE, MOVE_STRENGTH, MOVE_RAPID_SPIN, MOVE_EARTHQUAKE } },
+    { 50, { MOVE_STRENGTH, MOVE_RAPID_SPIN, MOVE_EARTHQUAKE, MOVE_GIGA_IMPACT } },
 };
 static const struct ExpectedCatchEntry sEntries_DRATINI_legacy[] = {
     { 1, MOVE_WRAP },
@@ -1381,6 +1384,7 @@ static const struct ExpectedCatchEntry sEntries_ELECTRODE_modern[] = {
     { 47, MOVE_EXPLOSION },
     { 54, MOVE_GYRO_BALL },
     { 55, MOVE_FLASH },
+    { 56, MOVE_FLASH_CANNON },
     { 58, MOVE_MIRROR_COAT },
 };
 static const struct ExpectedCatchMoves sMoves_ELECTRODE_modern[] = {
@@ -1399,7 +1403,8 @@ static const struct ExpectedCatchMoves sMoves_ELECTRODE_modern[] = {
     { 47, { MOVE_ROLLOUT, MOVE_MAGNET_RISE, MOVE_DISCHARGE, MOVE_EXPLOSION } },
     { 54, { MOVE_MAGNET_RISE, MOVE_DISCHARGE, MOVE_EXPLOSION, MOVE_GYRO_BALL } },
     { 55, { MOVE_DISCHARGE, MOVE_EXPLOSION, MOVE_GYRO_BALL, MOVE_FLASH } },
-    { 58, { MOVE_EXPLOSION, MOVE_GYRO_BALL, MOVE_FLASH, MOVE_MIRROR_COAT } },
+    { 56, { MOVE_EXPLOSION, MOVE_GYRO_BALL, MOVE_FLASH, MOVE_FLASH_CANNON } },
+    { 58, { MOVE_GYRO_BALL, MOVE_FLASH, MOVE_FLASH_CANNON, MOVE_MIRROR_COAT } },
 };
 static const struct ExpectedCatchEntry sEntries_FARFETCHD_legacy[] = {
     { 1, MOVE_PECK },
@@ -4034,6 +4039,7 @@ static const struct ExpectedCatchEntry sEntries_MILTANK_modern[] = {
     { 35, MOVE_CAPTIVATE },
     { 41, MOVE_GYRO_BALL },
     { 45, MOVE_ROCK_SMASH },
+    { 45, MOVE_PLAY_ROUGH },
     { 48, MOVE_HEAL_BELL },
     { 50, MOVE_WAKE_UP_SLAP },
 };
@@ -4050,9 +4056,9 @@ static const struct ExpectedCatchMoves sMoves_MILTANK_modern[] = {
     { 29, { MOVE_ROLLOUT, MOVE_BODY_SLAM, MOVE_STRENGTH, MOVE_ZEN_HEADBUTT } },
     { 35, { MOVE_BODY_SLAM, MOVE_STRENGTH, MOVE_ZEN_HEADBUTT, MOVE_CAPTIVATE } },
     { 41, { MOVE_STRENGTH, MOVE_ZEN_HEADBUTT, MOVE_CAPTIVATE, MOVE_GYRO_BALL } },
-    { 45, { MOVE_ZEN_HEADBUTT, MOVE_CAPTIVATE, MOVE_GYRO_BALL, MOVE_ROCK_SMASH } },
-    { 48, { MOVE_CAPTIVATE, MOVE_GYRO_BALL, MOVE_ROCK_SMASH, MOVE_HEAL_BELL } },
-    { 50, { MOVE_GYRO_BALL, MOVE_ROCK_SMASH, MOVE_HEAL_BELL, MOVE_WAKE_UP_SLAP } },
+    { 45, { MOVE_CAPTIVATE, MOVE_GYRO_BALL, MOVE_ROCK_SMASH, MOVE_PLAY_ROUGH } },
+    { 48, { MOVE_GYRO_BALL, MOVE_ROCK_SMASH, MOVE_PLAY_ROUGH, MOVE_HEAL_BELL } },
+    { 50, { MOVE_ROCK_SMASH, MOVE_PLAY_ROUGH, MOVE_HEAL_BELL, MOVE_WAKE_UP_SLAP } },
 };
 static const struct ExpectedCatchEntry sEntries_NINCADA_legacy[] = {
     { 1, MOVE_SCRATCH },
@@ -4565,6 +4571,7 @@ static const struct ExpectedCatchEntry sEntries_PILOSWINE_modern[] = {
     { 8, MOVE_POWDER_SNOW },
     { 11, MOVE_MUD_SLAP },
     { 14, MOVE_ENDURE },
+    { 15, MOVE_ICE_BALL },
     { 18, MOVE_MUD_BOMB },
     { 21, MOVE_ICY_WIND },
     { 24, MOVE_ICE_FANG },
@@ -4580,9 +4587,10 @@ static const struct ExpectedCatchMoves sMoves_PILOSWINE_modern[] = {
     { 1, { MOVE_PECK, MOVE_ODOR_SLEUTH, MOVE_MUD_SPORT, MOVE_POWDER_SNOW } },
     { 11, { MOVE_ODOR_SLEUTH, MOVE_MUD_SPORT, MOVE_POWDER_SNOW, MOVE_MUD_SLAP } },
     { 14, { MOVE_MUD_SPORT, MOVE_POWDER_SNOW, MOVE_MUD_SLAP, MOVE_ENDURE } },
-    { 18, { MOVE_POWDER_SNOW, MOVE_MUD_SLAP, MOVE_ENDURE, MOVE_MUD_BOMB } },
-    { 21, { MOVE_MUD_SLAP, MOVE_ENDURE, MOVE_MUD_BOMB, MOVE_ICY_WIND } },
-    { 24, { MOVE_ENDURE, MOVE_MUD_BOMB, MOVE_ICY_WIND, MOVE_ICE_FANG } },
+    { 15, { MOVE_POWDER_SNOW, MOVE_MUD_SLAP, MOVE_ENDURE, MOVE_ICE_BALL } },
+    { 18, { MOVE_MUD_SLAP, MOVE_ENDURE, MOVE_ICE_BALL, MOVE_MUD_BOMB } },
+    { 21, { MOVE_ENDURE, MOVE_ICE_BALL, MOVE_MUD_BOMB, MOVE_ICY_WIND } },
+    { 24, { MOVE_ICE_BALL, MOVE_MUD_BOMB, MOVE_ICY_WIND, MOVE_ICE_FANG } },
     { 28, { MOVE_MUD_BOMB, MOVE_ICY_WIND, MOVE_ICE_FANG, MOVE_TAKE_DOWN } },
     { 37, { MOVE_ICY_WIND, MOVE_ICE_FANG, MOVE_TAKE_DOWN, MOVE_MIST } },
     { 41, { MOVE_ICE_FANG, MOVE_TAKE_DOWN, MOVE_MIST, MOVE_THRASH } },

@@ -4461,7 +4461,9 @@ static const struct LevelUpMove sTaurosLevelUpLearnset[] = {
 #endif
     LEVEL_UP_MOVE(41, MOVE_ZEN_HEADBUTT),
     LEVEL_UP_MOVE(48, MOVE_SWAGGER),
+#if !IS_WAYFARER // Preserve the approved Strength catch window.
     LEVEL_UP_MOVE(50, MOVE_BLAZE_KICK),
+#endif
     LEVEL_UP_MOVE(55, MOVE_THRASH),
     LEVEL_UP_MOVE(63, MOVE_DOUBLE_EDGE),
     LEVEL_UP_MOVE(71, MOVE_GIGA_IMPACT),
@@ -7581,7 +7583,9 @@ static const struct LevelUpMove sDonphanLevelUpLearnset[] = {
     LEVEL_UP_MOVE(41, MOVE_RAPID_SPIN),
     LEVEL_UP_MOVE(43, MOVE_EARTHQUAKE),
     LEVEL_UP_MOVE(50, MOVE_GIGA_IMPACT),
+#if !IS_WAYFARER // Preserve the approved Strength catch window.
     LEVEL_UP_MOVE(52, MOVE_PLAY_ROUGH),
+#endif
     LEVEL_UP_END
 };
 #endif //P_FAMILY_PHANPY
