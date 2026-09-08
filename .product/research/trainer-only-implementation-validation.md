@@ -9,6 +9,30 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Always-visible Pokémon menu
+
+Wayfarer's normal and debug start menus now always include Pokémon. They no
+longer depend on `FLAG_SYS_POKEMON_GET`, so a first capture before receiving a
+starter is browsable, and an empty party can open its existing Cancel-only
+screen. The menu does not set that flag or advance starter/chapter state.
+Non-Wayfarer builds retain their native flag check.
+
+The existing first-capture journey now clears both starter and Pokédex flags,
+opens and cancels the empty-party screen, catches a real Pidgey, and browses it
+before confirming the next encounter uses normal battles. It checks the starter
+flag remains false after each party-menu visit. This focused case passed on
+E2E ROM `0a9eede1c27fe540cf4d6853c6186016d40ed84ac2dcac7076f550e0297bc98c`
+(`/tmp/trainer-only-party-menu-e2e-final.log`; 1 passed, 22 unrelated cases
+skipped). Temporary focus was removed. Root inspected both party screens;
+scoped formatting, lint and TypeScript checks passed. The initial driver sent
+Cancel before the returned start menu finished opening; waiting for its normal
+transition corrected the test without a gameplay change.
+
+E2E and playable Wayfarer builds passed
+(`/tmp/trainer-only-party-menu-build.log` and
+`/tmp/trainer-only-party-menu-playable-build.log`). The playable ROM SHA-256 is
+`12332936f0d8c7007826e982e9c0501d1a0a44c20908590cc90eaeaab8b296b9`.
+
 ## R-button ball shortcut
 
 The trainer-only menu now restores and hides the native last-used-ball widget.
