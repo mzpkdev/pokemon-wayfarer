@@ -384,6 +384,9 @@ describe.sequential("Wayfarer trainer-only controller", () => {
       await game.battle.startWild({ species: "pidgey", level: 5 })
       await useBagItem(game, "revive")
       await game.wait.until((state) => state.ui.mode === "party-menu", "real Revive target picker")
+      // Party-menu allocations are live before their first rendered frame.
+      // Capture the settled target screen, rather than its palette transition.
+      await game.wait.frames(60)
       await fs.promises.writeFile("/tmp/trainer-only-revive-picker.png", await game.screenshot())
       await game.controls.press("a")
       for (let attempt = 0; attempt < 30; attempt++) {
