@@ -102,6 +102,25 @@ When a usable Pokémon returns, ordinary challenge eligibility resumes. Do not
 immediately replay a sight challenge from a still-running loss script; restore
 normal field input and trigger evaluation after cleanup.
 
+Trainer field-return routing is opt-in per battle caller, not the default for
+every trainer battle type. Maintain an explicit supported-caller allowlist. A
+caller enters it only with an explicit loss redirect/retreat handler selected
+before the original event script can resume, and after its loss/abort path
+releases control safely and all
+victory-only continuations check a real winning outcome. Unclassified scripted
+callers retain existing defeat routing. Low-level battle-type flags or shared
+trainer IDs alone cannot authorize script resumption after a loss.
+
+All unaudited Gym-map callers, including members, Gym Leaders and badge-awarding
+callers, are excluded from field-return until
+individually adapted, including rematches and every region. This includes current
+Viridian Blue; its no-party refusal policy does not authorize new defeat routing.
+For example, Morty and Falkner currently place badges/TMs/state writes after
+`trainerbattle_no_intro`. A loss must never resume those writers. An adaptation
+must gate badge flags, TM/item handoffs, TR/League credit, local story state and
+reward dialogue on actual victory, preserving existing reward retry rules. Keep
+existing Gym defeat recovery until that caller passes the required audit and tests.
+
 The companion spec applies the completed scene audit to rivals, objective guards
 and roadblocks. Implement its caller-specific startup and result handling before
 enabling field-return loss for those story battles. Successful battle completion
@@ -165,7 +184,8 @@ choice makes emergency revival useful and avoids partially initialized battles.
 Use a dedicated controller and transient context, for example
 `trainer_only_encounter.c/.h` and `battle_controller_trainer_only.c`. State includes
 mode identity, frozen soft cap/wild level, approach stage, surviving rock count,
-anger, food duration, escape attempts, warning state and pending outcome. No
+anger, food duration, escape attempts, completed-turn count, warning state and
+pending outcome. No
 separate trainer HP stat is added. All state is encounter-local and resets on
 entry, abort, exit and reload; only normal inventory/party/progression persist.
 
@@ -195,8 +215,8 @@ teardown clears encounter state; clear that cause after recovery/reset.
 | Position | Action |
 | --- | --- |
 | Upper left | Rock |
-| Upper right | Go Near |
-| Lower left | Bag |
+| Upper right | Bag |
+| Lower left | Go Near |
 | Lower right | Run |
 
 Show trainer and wild Pokémon, retaining the wild HP bar. There is no player
@@ -295,8 +315,47 @@ Safari receives no rocks, passive anger, berry feeding or new Run calculation.
 Ball effects needing an active player Pokémon skip only the unavailable comparison
 and retain independent bonuses. Do not use fainted party stats, Eggs or C as a
 fictional active Pokémon for Level/Love Ball or other player-dependent bonuses.
-Badge/global rules remain in force. C is a reference for the explicitly designed
-rock, anger and escape mechanics only.
+Independent badge/global rules remain in force. C is a reference for the
+explicitly designed rock, anger and escape mechanics only.
+
+### Capture context and ball turn count
+
+Pass an explicit capture context through `ComputeBallData()` and
+`ComputeCaptureOdds()`, including whether a valid active player battler exists.
+Trainer-only mode sets `hasPlayerBattler=false`; player-dependent branches must
+check it before indexing battle data. Do not pass a dummy index, create a fake
+battler, or substitute the TR cap or fainted party stats. Existing normal battles
+keep their real battler context and existing behavior.
+
+| Modifier | Trainer-only behavior |
+| --- | --- |
+| Level Ball player-level comparison | Start from neutral (1x) for the absent comparison; retain the independent HNS wild-type bonus where applicable. |
+| Love Ball player-dependent species/sex comparisons | Start from neutral (1x) for those conditions; retain the independent HNS wild-type bonus and never inspect an absent battler. |
+| Gen 8 missing-badge malus requiring player level below wild level | Omit this comparison-dependent malus when no player battler exists. |
+| Gen 9 missing-badge malus | Retain the existing badge-count/wild-level calculation, which needs no player battler. |
+| Wild-level, species, HP/status, environment, Pokédex and other independent ball/capture effects | Retain their normal conditions, rounding and restrictions. |
+| Guaranteed capture | Preserve existing permitted guaranteed-capture behavior. |
+
+This explicitly narrows the earlier neutral-fallback rule: only effects requiring
+missing player data are neutralized. It is not a general badge or challenge
+exemption. The shared Safari proximity change does not opt Safari into these
+trainer-only capture-context or turn-counter changes.
+
+The trainer-only controller owns an encounter-local completed-turn counter,
+initialized to zero before the first menu. Pass its value explicitly to the ball
+calculation, or synchronize the existing capture counter through one owner; do
+not also increment it through ordinary battle end-turn callbacks. Quick Ball uses
+its normal first-turn bonus only while the counter is zero. Timer Ball uses the
+existing configured formula and cap with this counter; do not invent new tuning.
+
+A ball reads the counter before its action resolves. After each committed turn
+that leaves the encounter ongoing, increment once before the next menu, with
+saturation at 255 to prevent wraparound. Rocks, valid approaches, feeding, failed balls,
+failed Run and legal recovery actions that leave the encounter ongoing all count.
+Menus, cancellations and invalid actions never count. Terminal actions need no
+further increment. Thus an immediate Quick Ball qualifies, Go Near followed by a
+Quick Ball does not, and a Timer Ball after two completed actions reads two.
+No actor animation or callback advances the counter a second time.
 
 ### Escape and warnings
 
@@ -456,6 +515,8 @@ for exercising the new controller and field-return routing.
 | Party loss | Wild and ordinary trainer losses return to current field without healing/warp; one money charge; preserved faint state; no mid-battle trainer-only second chance |
 | Field exhaustion | Last member faints to poison; challenge cleanup preserved; no ordinary poison-step blackout; subsequent encounters and reload remain unprotected |
 | Trainers | No sight battle without protection; generic talk refusal without recovery warp; intentional bypass; no defeated flag/gate unlock; reenable after recovery; no replaying loss scene |
+| Gym losses | Every Gym Leader/badge caller defaults to existing defeat routing; opt-in adapters prove loss/abort cannot grant badge, TM, TR/League credit or story progress, and victory/reward retry still works |
+| Capture context | No player reads in trainer-only Level/Love and Gen8 malus paths; Gen9/independent bonuses retained; normal and Safari regressions; Quick first action and Timer after0/1/2 turns; cancellation invariance and no double counter increment |
 | Story integration | Companion-spec rival restoration, guard dialogue, public lanes, victory-only writers and safe loss retry pass; excluded League/facility/partner outcomes retain explicit policy |
 | Storage | Final usable/last member Deposit/Move-to-box; safe fainted/Egg remainders; cursor cancel/count/compaction; retain Release/Mail/capacity/challenge and non-Wayfarer rules |
 | Engine | Mode survives initialization; no phantom send-out, automatic team defeat, invalid party index or regular move against trainer |

@@ -71,7 +71,8 @@ for that role; only its battle branch is gated. If that branch is deliberately
 selected without protection, use `NP_RIVAL` as a fallback. It is not a message to
 show every time the player crosses a suppressed trigger.
 
-A deferred chapter remains at its approved location and in its narrative order.
+A deferred chapter remains at its approved location and in its narrative order,
+subject to its owning regional campaign's eligibility and explicit retirement rules.
 Crossing the trigger must not simulate either victory or an authored decline,
 consume a daily rematch, give the chapter's reward, or move the rival to the next
 chapter. Rival state must not share a progression writer with a host adventure
@@ -142,7 +143,8 @@ existing defeat behavior until separately adapted:
 | Tohjo Giovanni/Celebi episode | Preserve authored episode loss/recovery policy until explicitly adapted. |
 | Victory Road Silver/Wally and Champion | Keep League admission/outcome constraints explicit; only independently supported chapter battles may adopt ordinary field return. |
 | Challenge/facility configurations and scripted wild objectives | Preserve core exclusions and approved exceptional outcomes. |
-| Other listed single rival/objective trainer battles | Support field return after defeat with success-only writes, safe retreat, actor reset and no retrigger loop. |
+| All unaudited Gym-map callers, including members, leaders, Blue and future Giovanni | Preserve existing defeat routing until individually audited and added to the core spec's caller allowlist. No badge, TM, TR/League or story credit on loss/abort. |
+| Other listed single rival/objective trainer battles | Opt into field return per caller only after success-only writes, safe retreat, actor reset and no retrigger loop are implemented and tested. |
 
 At a directly requested excluded tutorial battle, use `NP_ORDINARY` before party
 substitution or scene staging. Silently suppressed rival triggers remain silent. At League battle admission, use `NP_LEAGUE`, without changing
@@ -291,6 +293,26 @@ These requirements activate with the corresponding Wayfarer story port. FRLG
 source maps are evidence, not an instruction to expose those maps in the current
 ROM. Rival chapters retain their approved locations; ship, Lavender/Tower and
 Giovanni/Blue adaptation must be resolved by that port first.
+
+The newer Kanto port draft, `frlg-kanto-story-on-hns-maps.md` in task
+`frlg-kanto-hns-story-port`, proposes an origin-specific Blue campaign with forward
+chapter retirement. It is an unmerged dependency, not a change implemented here.
+The older FRLG independence PRD and this inventory must not override the eventual
+port-owned origin/chapter rules.
+
+For that proposed model, only Kanto-origin players have personal Blue chapters.
+Visitors keep the port's introduction and Champion roles without acquiring pending
+personal fights. No-party suppression never counts as starting a later chapter
+and therefore never retires another chapter. Actually starting an eligible later
+Blue scene retires earlier ones under the port's rules, even if that battle is
+lost. Recovery restores only still-eligible, unretired chapters; it cannot resurrect
+a retired scene. Retirement gives no skipped victory, reward or host-adventure
+completion. These Blue-specific rules do not change Silver or Hoenn rivals.
+
+References below to preserving a Blue chapter mean preserving it while the owning
+campaign still makes it eligible. Temporary-host access remains a port dependency;
+this feature does not promise restoration of every past chapter or settle ship
+geography. Reconcile against the accepted port specification before implementing.
 
 | Future family | Required policy | No-party dialogue |
 | --- | --- | --- |

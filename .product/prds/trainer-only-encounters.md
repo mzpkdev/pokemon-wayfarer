@@ -53,7 +53,9 @@ require it. Going without usable Pokémon grants no story completion.
 Off-screen battle-only rivals do not spawn or trigger while the player has no
 usable party. Persistent battle-only rivals are temporarily hidden, including
 their collision. Suppression is silent. When the party recovers, pending chapters
-become available at their existing locations under their narrative prerequisites.
+become available at their existing locations under their narrative prerequisites
+and the owning campaign's explicit retirement rules. No-party suppression itself
+never advances or retires a chapter.
 Completing another adventure, ending an occupation or departing on a ship must
 not erase a pending rival chapter. Shared town-state variables need to be split
 where they currently tie rival completion to that adventure.
@@ -77,7 +79,9 @@ This covers the audited Well, Mahogany, Radio Tower, Theater, Hoenn rescue and
 villain encounters, plus local challenge rewards. The companion spec also records
 future FRLG/Sevii rival and objective policies for those ports. Source availability
 does not bring those maps into the current release. Gym and League objectives
-retain their explicit entry and defeat rules.
+retain their explicit entry and defeat rules. Gym losses keep existing recovery
+until each badge-awarding caller is individually adapted and verified to grant
+no badge, TM, progression or victory credit on defeat.
 
 For supported story battles, loss returns control safely with the objective still
 unresolved. Victory-only script continuations must check the actual result before
@@ -127,7 +131,11 @@ player does not need a Pokéblock Case or berries to attempt a catch.
 
 Ball effects that need an active player Pokémon use a neutral fallback for that
 modifier alone. Other applicable effects still work. The game must not invent a
-substitute Pokémon level or treat an empty slot as a battling Pokémon.
+substitute Pokémon level or treat an empty slot as a battling Pokémon. Level/Love
+Ball comparisons use a neutral bonus. The Gen 8 badge penalty requiring a player
+level comparison is omitted; independent badge rules remain. Quick and Timer
+Balls count completed committed actions, starting at zero; menu navigation and
+invalid actions do not consume their window.
 
 ### Fear and anger
 
