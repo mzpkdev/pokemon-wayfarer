@@ -3,9 +3,10 @@
 PRD: [Trainer-only encounters](../prds/trainer-only-encounters.md)
 Implemented: Yes
 
-Status: Implemented for the current supported scene inventory. Future ports,
-scripted wild objectives and exceptional defeat rules retain the explicit
-dependencies listed here; source availability does not make them playable.
+Status: Implemented for the current supported scene inventory. Scripted-wild
+exclusion and the specified no-party guards are settled policy. Future ports
+and exceptional defeat rules retain the explicit dependencies listed here;
+source availability does not make unported scenes playable.
 Implementation status does not claim those future integrations or shipping
 balance approval. See the
 [implementation validation](../research/trainer-only-implementation-validation.md).
@@ -213,7 +214,7 @@ these trainers remain optional and do not become objective guards.
 | `NP_GIDEON` | "The Sapphire stays with me. Now get out!" | Warehouse Gideon. |
 | `NP_SELPHY` | "A battle? Come back with a Pokémon that's ready!" | Lost Cave Selphy, before her rescue battle staging. |
 | `NP_LEAGUE` | "You need a Pokémon that can battle before you enter this challenge." | League battle admission; other League prerequisites still apply. |
-| `NP_INVESTIGATE` | "You need a Pokémon that can battle before you investigate." | Safe Route 120 scripted-encounter refusal pending its dedicated integration. |
+| `NP_INVESTIGATE` | "You need a Pokémon that can battle before you investigate." | Settled Route 120 scripted-encounter refusal without a usable party. |
 | `NP_RETREAT` | "You can't keep battling. You step back." | Supported authored defeat return, after safe retreat staging. |
 
 No message is needed for walking along an open public lane. Retained bystanders,
@@ -352,19 +353,22 @@ geography. Reconcile against the accepted port specification before implementing
 | Lost Cave Selphy | Guard before on-frame rescue battle staging; no house relocation or rescue completion on refusal. | `NP_SELPHY` |
 | Selphy home requests and other non-battle reward actors | Retain local completed-rescue/request predicates. | Existing eligible dialogue |
 
-### Explicit unresolved integrations
+### Settled scripted-wild exclusions
 
 Route 120 Steven/Kecleon is a scripted wild encounter whose existing non-loss
 resolution, including fleeing, grants the Scope and clears the bridge. The core
-mode excludes scripted wild encounters. It needs a deliberate compatible
-exception or another approved local resolution. Until then preserve a safe,
-retryable guard; do not grant the Scope, mark completion, hide Steven indiscriminately
-or promise no-party passage. Use `NP_INVESTIGATE` for this temporary safe refusal,
-with the same once-per-approach rearming rule. The encounter-mode decision remains open.
+mode excludes scripted wild encounters. This is the settled behavior: require a
+usable party and otherwise preserve a safe, retryable guard. Do not grant the
+Scope, mark completion, hide Steven indiscriminately or promise no-party passage.
+Use `NP_INVESTIGATE` with the same once-per-approach rearming rule. The player
+returns after recovering a usable Pokémon; no trainer-only conversion is pending.
 
 Tower Marowak, Lostelle and Mahogany Electrode objectives likewise retain scripted
 wild policies. Preserve their local completion predicates without treating them
 as ordinary trainer guards or automatically converting them into trainer-only mode.
+This policy is settled; applying it to unported content remains part of its port.
+
+### Other exceptional policies and future ports
 
 League entry/finales, starter/catching tutorials, Celebi episode losses and
 exceptional challenges retain their explicit policies. Future map/character

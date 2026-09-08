@@ -9,6 +9,16 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Scripted-wild policy clarification
+
+The user confirmed the existing scripted-wild exclusions and no-party guards as
+settled behavior. Steven/Kecleon keeps its safe, retryable refusal without a
+usable party; native eligible resolution owns Scope/bridge completion. Electrode,
+Marowak and Lostelle retain their scripted encounter rules, with unported scenes
+still belonging to future ports. The PRD and both specs no longer describe this
+as a temporary policy or pending trainer-only conversion. No gameplay changed;
+this clarification required a documentation consistency check, not new ROM tests.
+
 ## Always-visible Pokémon menu
 
 Wayfarer's normal and debug start menus now always include Pokémon. They no

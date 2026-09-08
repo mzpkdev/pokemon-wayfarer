@@ -1,7 +1,8 @@
 # Trainer-only wild encounters
 
 Status: Supported implementation complete. Broader balance validation and the
-explicitly excluded policy/port decisions remain open. See the
+exceptional challenge/League policies remain open. Future ports are separate work;
+scripted-wild exclusions and their safe no-party handling are settled. See the
 [implementation validation](../research/trainer-only-implementation-validation.md).
 
 ## Intent
@@ -189,6 +190,13 @@ encounters qualify when their field actions are already legally available; this
 feature grants no new field permissions. Excluded encounters' existing eligibility
 or a deliberately specified guard must handle an unusable party safely.
 
+Scripted-wild exclusion is a settled product rule, not a deferred conversion.
+Route 120 Steven/Kecleon requires a usable party: without one, give the specified
+safe, retryable refusal and grant neither the Scope nor bridge completion.
+Mahogany Electrode and the future Tower Marowak/Lostelle scenes retain their
+existing scripted-wild eligibility and completion rules. Their exclusion does
+not promise that unported scenes are already available.
+
 The feature does not bypass encounter availability, progression gates, normal
 challenge restrictions, or capture restrictions. Walking past inactive ordinary
 trainers is intentional, but does not satisfy any requirement to defeat them.
@@ -350,8 +358,9 @@ escapes, berry use near the anger threshold, and peaceful turns reaching it.
   creation of a level-1 Rattata. Confirm how these apply to each defeat reason
   before shipping. Preserve challenge rules by default; any approved exception
   belongs in centralized recovery with the defeat reason, not a separate path.
-- League-run consequences and the companion spec's excluded authored/scripted
-  defeat outcomes remain open. Preserve their existing routing until approved.
+- League-run consequences and other exceptional authored defeat outcomes remain
+  open. Preserve their existing routing until approved. This does not reopen
+  the settled scripted-wild exclusion or its no-party guards.
 - Confirm the existing centralized respawn fallback is valid for every supported
   origin before its first Pokémon Center visit.
 
