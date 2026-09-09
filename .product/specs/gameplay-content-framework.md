@@ -77,6 +77,21 @@ Pipeline:
 6. Emit temporary files, compare with existing outputs, and replace only changed
    outputs atomically. Failure must not leave a partially updated output set.
 
+The map adapter inventories effective selected content after product-specific
+overlays, event retention/removal, script replacement, and path filtering. Raw
+source events are provenance, not automatically live bindings. Reuse the map
+compiler's effective projection or consume a machine-readable export of it;
+do not reimplement overlay rules separately in each audit. Retain both the
+original source reference and effective event/handler identity in host output.
+An event removed by an overlay must not register a service or trainer encounter.
+
+Imported nurse, PC, daycare, ferry, and environmental bindings may be reported as
+opaque authored handlers without a v1 service declaration. Discovery must not
+require registering every handler as a supported service or imply that the
+framework validates its gameplay semantics. For supported declarations, resolve
+bindings against effective events. A script replacement invalidates a binding
+to the old handler even when its source event still exists.
+
 Use an output directory keyed by product and a digest of the effective defines,
 adapter/schema versions, and relevant inputs under `game/build/gameplay-content/`.
 Generated includes must participate in Make dependencies before consuming C or
@@ -379,6 +394,38 @@ before a capability gate. Future travel profiles must preserve authored route
 direction and story voyages. No reachability proof, travel migration, or universal
 species index is delivered by v1.
 
+#### Sevii import and tooling candidate
+
+[PR #92](https://github.com/mzpkdev/pokemon-wayfarer/pull/92), examined separately
+at open head `85748ebb6731a562b110cfef18034f664518f006`, adds a concrete candidate
+for later adapters. It is not part of the research main baseline or a prerequisite
+for phases A-D. If it lands before implementation, the selected-content inventory
+must observe its effective overlay; this does not require migrating its gameplay
+services or encounter-data generation in v1.
+
+| Candidate surface | Proposed refactor | Behavior or ownership to retain |
+| --- | --- | --- |
+| `wayfarer_sevii_maps.json`, map compiler, port audit | Derive structural IDs/layouts and effective event/path views once | Explicit map scope, retained/removed events, replacement handlers, protected event-island exclusions |
+| Sevii script-table generator | Reuse inventory, include resolution, and deterministic emission infrastructure | Reviewed Wayfarer-owned handlers and empty tables; no import of FRLG story bodies |
+| Python wild generator and Cartographer encounter join | Publish one resolved FRLG source-pair view consumed by both tools | Species choice, slot order, source levels, weights, rates, omissions, and day/night alias policy |
+| Fixed-stock marts and other NPC services | Add domain adapters only when separately specified | Exact stock and existing healing, PC, daycare, and follow-up behavior |
+| Ferry menus and routes | Later travel profiles with explicit destination identity | Direction, cancellation, ticket/origin conditions, and protected Birth Island/Navel Rock routes |
+
+Source event snapshots/indexes in the port manifest are deliberate drift guards.
+A later compiler adapter may generate normalized review snapshots or fingerprints,
+but must still reject relevant source changes until reviewed. An automatically
+refreshed fingerprint cannot silently approve a changed retained event. Import
+scope and retain/remove decisions remain authored even when structural fields
+move to generated reports.
+
+The Python/TypeScript encounter consolidation is a future data-adapter task,
+separate from v1 trainer battle contracts. Preserve independent golden examples
+and source comparison tests when both consumers share a generated view; agreement
+between two consumers of the same incorrect output is not proof of correctness.
+The regional port is trainer-free and adds no required trainer migration coverage.
+Expected benefits are less repeated authoring and tooling drift; savings in map,
+layout, or graphics ROM are not implied by host inventory consolidation.
+
 ### 8. Resource acceptance
 
 Before each runtime phase, create paired clean release builds with identical
@@ -429,6 +476,13 @@ from the new generator. Retain meaningful mechanics and emulator journeys. Add
 negative fixtures for duplicate IDs/JSON keys, inactive references, wrong source
 bank, conflicting shared callers, invalid curve points, oversized indexes, stale
 review, and unsupported battle modes. Test enabled and disabled feature paths.
+
+Phase A includes a synthetic overlay fixture with a removed trainer, a replaced
+service handler, a retained opaque nurse handler, and a filtered warp. Assert that
+only effective bindings/paths enter selected inventory, that raw provenance stays
+available, and that an old-handler declaration fails resolution. A source event
+change must invalidate its reviewed fingerprint. This tests the import contract
+without depending on PR #92 or importing its content into this task.
 
 For progression, compare all Rating values, trainer authored levels 1..100 for
 each existing scaling policy, existing Gym/League offset ranges, and wild effective

@@ -30,6 +30,25 @@ The [#85 ROM budget comment](https://github.com/mzpkdev/pokemon-wayfarer/pull/85
 | [#64: all-badge access](https://github.com/mzpkdev/pokemon-wayfarer/pull/64) separates Gym access from ordered League admission. [#75: regional starts](https://github.com/mzpkdev/pokemon-wayfarer/pull/75) persists origin independently of current region. | Explicit state ownership and eligibility inputs. | Origin, visited state, current geography, badge ownership, and League completion cannot collapse into one region/progress field. |
 | [#70: marts](https://github.com/mzpkdev/pokemon-wayfarer/pull/70) composes Rating essentials, town specialties, retained stock, and challenge supplements. | Profiles, bounded composition, and service bindings. | Preserve authored specialties, specialist counters, item ordering, capacity, and fallback behavior. |
 | [#85: trainer-only encounters](https://github.com/mzpkdev/pokemon-wayfarer/pull/85) explicitly audits callers and preserves loss/story continuations. | Encounter identity distinct from trainer identity, reviewed outcome contracts, and templates for future content. | Unknown legacy callers must retain existing routing. A trainer classification does not prove that its script can safely return after defeat. |
+| [#92: Sevii import](https://github.com/mzpkdev/pokemon-wayfarer/pull/92) projects selected FRLG maps into Wayfarer and resolves encounter sources in Python and TypeScript. | Effective build inventory, import provenance, and one host encounter projection consumed by ROM tooling and Cartographer. | Retain/remove intent and drift guards remain authored and enforced; fixed-stock shops and trainer-free content do not inherit unrelated TR or trainer policies. |
+
+## Regional import and tooling candidate: #92
+
+[PR #92](https://github.com/mzpkdev/pokemon-wayfarer/pull/92) was separately verified OPEN at `85748ebb6731a562b110cfef18034f664518f006`; the Sevii task checkout matched that revision. These findings do not describe the main baseline above.
+
+Its [maps manifest](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/game/src/data/wayfarer_sevii_maps.json) selects source content and records retained events and map scripts. The [script generator](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/game/tools/wayfarer_sevii_scripts/generate.py) emits Wayfarer script tables and includes reviewed Wayfarer-owned scripts rather than copying FRLG script bodies. The [port audit](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/game/tools/wayfarer_sevii_port/audit.py) checks exclusions, exact retained source identity, script ownership, and absence of retained trainers.
+
+The shared inventory should represent the effective Wayfarer overlay alongside source provenance. Reading raw FRLG events alone would report removed trainers and story content as active. Selection, removal, and replacement are author decisions; a future adapter must preserve their drift guards instead of automatically accepting source changes.
+
+There is a concrete tooling duplication: [Python encounter generation](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/game/tools/wild_encounters/wild_encounters_to_header.py) resolves frozen FRLG source pairs in `load_wayfarer_sevii_profiles`, while [Cartographer's TypeScript catalog](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/devtools/tools/cartographer/src/catalog/encounters.ts) materializes those pairs in `withWayfarerSeviiSource`. A later host projection could provide the resolved slots, identities, and provenance to both consumers, with parity fixtures proving identical species, levels, rates, and day/night aliases. The existing encounter manifest already references source rows rather than authoring a second roster.
+
+Service scope needs care:
+
+- Sevii's [service scripts](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/game/data/scripts/wayfarer_sevii/services.inc) use fixed-stock marts. The v1 TR mart pilot must not enroll them or change their stock implicitly.
+- Nurse, PC, daycare, and [environmental scripts](https://github.com/mzpkdev/pokemon-wayfarer/blob/85748ebb6731a562b110cfef18034f664518f006/game/data/scripts/wayfarer_sevii/environment.inc) can remain opaque, owned script references in a future inventory. Discovering them does not establish a generic service behavior contract.
+- Ferry behavior remains deferred with the travel domain. The import is trainer-free, so trainer encounter contracts offer no direct benefit to these maps.
+
+This is an optional regional-import/tooling pilot, not a required Sevii production migration or a dependency for #92. Its first measurable benefit would be fewer independent resolution implementations and consistent effective-content views. No ROM saving is established or promised.
 
 ## Direct source findings
 

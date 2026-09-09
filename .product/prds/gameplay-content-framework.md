@@ -92,6 +92,16 @@ and additional reward services are extension directions. They require their own
 consumer contracts and measurements before production migration. Existing
 Pokédex, effective encounter, field-move, and origin APIs remain authoritative.
 
+[Sevii exploration, PR #92](https://github.com/mzpkdev/pokemon-wayfarer/pull/92),
+is a concrete later adoption candidate for regional content imports and consistent
+tooling. Shared inventory must describe the resulting Wayfarer maps after source
+events are removed or replaced, while keeping the reviewed import choices and
+source provenance. Its fixed-stock shops, healing/PC/daycare services, environmental
+scripts, and ferries keep their existing behavior until an appropriate domain
+adapter is specified. V1 does not convert those shops to TR stock or require the
+Sevii port to wait for this framework. Its trainer-free maps do not expand the
+required trainer encounter migration.
+
 ## Interactions
 
 Preserve randomizer behavior, challenge rules, authored boss exclusions, rematch
