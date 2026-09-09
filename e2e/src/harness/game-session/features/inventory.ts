@@ -24,6 +24,7 @@ export type StandardRod = "oldRod" | "goodRod" | "superRod"
 export type InventoryApi = {
   contains: (item: Item | Hm) => Promise<boolean>
   count: (item: Item | Hm) => Promise<number>
+  freeFixtureSlot: (pocket: "items" | "tmHm" | "keyItems") => Promise<void>
   rodSlots: () => Promise<Record<StandardRod, number>>
 }
 
@@ -97,7 +98,7 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
     const saveBlock2 = await runtime.readUint32(runtime.address("gSaveBlock2Ptr"))
     const encryptionKey = await runtime.readUint16(saveBlock2 + saveBlock2EncryptionKeyOffset)
     let count = 0
-    for (const pocketId of [3, 4, 5]) {
+    for (const pocketId of [0, 1, 2, 3, 4, 5]) {
       const pocket = await readBagPocket(runtime, pocketId)
       const slots = await readPocketSlots(runtime, pocket)
       for (let slot = 0; slot < pocket.capacity; slot++) {
@@ -106,6 +107,23 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
       }
     }
     return count
+  },
+  freeFixtureSlot: async (name) => {
+    const fixture = { items: [3, 472], tmHm: [4, 582], keyItems: [5, 709] }[name]!
+    const pocket = await readBagPocket(runtime, fixture[0]!)
+    const slots = await readPocketSlots(runtime, pocket)
+    const saveBlock2 = await runtime.readUint32(runtime.address("gSaveBlock2Ptr"))
+    const key = await runtime.readUint16(saveBlock2 + saveBlock2EncryptionKeyOffset)
+    const matchingSlots: number[] = []
+    for (let slot = 0; slot < pocket.capacity; slot++) {
+      if (uint16(slots, slot * itemSlotSize) === fixture[1] &&
+          (uint16(slots, slot * itemSlotSize + 2) ^ key) === 1)
+        matchingSlots.push(slot)
+    }
+    if (matchingSlots.length < 2)
+      throw new Error(`Pocket ${name} does not contain the duplicate full-pocket fixture`)
+    await runtime.writeBytes(pocket.itemSlots + matchingSlots[0]! * itemSlotSize,
+      new Uint8Array([0, 0, key & 0xff, key >> 8]))
   },
   rodSlots: async () => {
     const pocket = await readKeyItemsPocket(runtime)

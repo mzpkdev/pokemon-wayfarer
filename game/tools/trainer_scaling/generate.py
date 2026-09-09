@@ -164,6 +164,13 @@ def references():
     paths = [ROOT / 'data/maps' / name / 'scripts.inc' for name in sorted(maps)]
     # Common script units are assembly includes rather than C #includes.
     event_source = (ROOT / 'data/event_scripts.s').read_text()
+    event_selection = '\n'.join(line for line in event_source.splitlines()
+                                if not line.startswith('#include'))
+    event_selection = re.sub(r'^\.(if|else|endif)\b', r'#\1', event_selection, flags=re.M)
+    event_selection = command(['cpp', '-P', '-DIS_WAYFARER=1', '-DIS_HNS=1',
+                               '-DIS_FRLG=0', '-DIS_EMERALD=0', '-'], input=event_selection)
+    linked_maps = set(re.findall(r'\.include\s+"(data/maps/[^"]+)"', event_selection))
+    paths = [path for path in paths if str(path.relative_to(ROOT)) in linked_maps]
     for relative in re.findall(r'\.include\s+"(data/scripts/[^"]+)"', event_source):
         if '_frlg' not in relative:
             paths.append(ROOT / relative)

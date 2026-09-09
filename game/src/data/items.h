@@ -14758,6 +14758,21 @@ const struct ItemInfo gItemsInfo[] =
         .iconPalette = gItemIconPalette_GoldTeeth,
     },
 
+#if IS_WAYFARER
+    [ITEM_SILPH_CARD_KEY] =
+    {
+        .name = ITEM_NAME("SILPH KEY"),
+        .price = 0,
+        .description = COMPOUND_STRING("A card-type key for\n" "doors inside SILPH\n" "CO.'s office."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .iconPic = gItemIcon_CardKey,
+        .iconPalette = gItemIconPalette_CardKey,
+    },
+#endif
+
     [ITEM_CARD_KEY] =
     {
         .name = ITEM_NAME("CARD KEY"),

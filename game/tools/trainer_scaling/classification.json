@@ -23721,6 +23721,472 @@
           "symbol": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS"
         }
       ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_23_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_23_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_23_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_24_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_24_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_24_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_25_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_25_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_25_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_26_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_26_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_26_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_27_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_27_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_27_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_28_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_28_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_28_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_29_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_29_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_29_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_30_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_30_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_30_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_31_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_31_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_31_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_32_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_32_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_32_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_33_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_33_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_33_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_34_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_34_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_34_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_35_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_35_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_35_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_36_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_36_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_36_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_37_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_37_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_37_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_38_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_38_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_38_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_39_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_39_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_39_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_40_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_40_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_40_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_41_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_41_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_41_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_BEAU_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_BEAU_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_BEAU_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_CONNOR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_CONNOR_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_CONNOR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_ED_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_ED_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_ED_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_JERRY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JERRY_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JERRY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_JOSE_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSE_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_JOSHUA_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSHUA_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSHUA_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_PARKER_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_PARKER_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_PARKER_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_RODNEY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_RODNEY_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_RODNEY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_TAYLOR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TAYLOR_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TAYLOR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_TRAVIS_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TRAVIS_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TRAVIS_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_DALTON_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_DALTON_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_DALTON_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GIOVANNI_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GIOVANNI_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GIOVANNI_HNS"
+        }
+      ],
+      "reason": "Authored Silph liberation objective battle; outside ordinary Trainer Rating scaling."
     }
   ],
   "move_exceptions": []

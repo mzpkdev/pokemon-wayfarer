@@ -6250,7 +6250,7 @@
       "layout_version": "frlg"
     },
     {
-      "id": "LAYOUT_SILPH_CO_2F",
+    "id": "LAYOUT_SILPH_CO_2F",
       "name": "SilphCo_2F_Layout",
       "width": 36,
       "height": 22,
@@ -6261,10 +6261,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_3F",
+    "id": "LAYOUT_SILPH_CO_3F",
       "name": "SilphCo_3F_Layout",
       "width": 36,
       "height": 22,
@@ -6275,10 +6276,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_4F",
+    "id": "LAYOUT_SILPH_CO_4F",
       "name": "SilphCo_4F_Layout",
       "width": 36,
       "height": 22,
@@ -6289,10 +6291,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_5F",
+    "id": "LAYOUT_SILPH_CO_5F",
       "name": "SilphCo_5F_Layout",
       "width": 36,
       "height": 22,
@@ -6303,10 +6306,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_6F",
+    "id": "LAYOUT_SILPH_CO_6F",
       "name": "SilphCo_6F_Layout",
       "width": 31,
       "height": 19,
@@ -6317,10 +6321,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_7F",
+    "id": "LAYOUT_SILPH_CO_7F",
       "name": "SilphCo_7F_Layout",
       "width": 31,
       "height": 19,
@@ -6331,10 +6336,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_8F",
+    "id": "LAYOUT_SILPH_CO_8F",
       "name": "SilphCo_8F_Layout",
       "width": 31,
       "height": 19,
@@ -6345,10 +6351,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_9F",
+    "id": "LAYOUT_SILPH_CO_9F",
       "name": "SilphCo_9F_Layout",
       "width": 31,
       "height": 19,
@@ -6359,10 +6366,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_10F",
+    "id": "LAYOUT_SILPH_CO_10F",
       "name": "SilphCo_10F_Layout",
       "width": 17,
       "height": 19,
@@ -6373,10 +6381,11 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
-      "id": "LAYOUT_SILPH_CO_11F",
+    "id": "LAYOUT_SILPH_CO_11F",
       "name": "SilphCo_11F_Layout",
       "width": 17,
       "height": 20,
@@ -6387,7 +6396,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
       "id": "LAYOUT_POKEMON_MANSION_1F",
@@ -7586,7 +7596,7 @@
       "layout_version": "frlg"
     },
     {
-      "id": "LAYOUT_SILPH_CO_ELEVATOR",
+    "id": "LAYOUT_SILPH_CO_ELEVATOR",
       "name": "SilphCo_Elevator_Layout",
       "width": 5,
       "height": 7,
@@ -7597,7 +7607,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+    "layout_version": "frlg",
+    "wayfarer_include": true
     },
     {
       "id": "LAYOUT_ONE_ISLAND",

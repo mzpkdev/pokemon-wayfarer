@@ -762,4 +762,5 @@ gSpecials::
     def_special WayfarerGrantSharedPokedex
     def_special WayfarerCanStartOrdinaryBattleForScript
     def_special WayfarerGetRocketHideoutElevatorFloorForScript
+    def_special WayfarerInitSilphElevatorForScript
 #endif

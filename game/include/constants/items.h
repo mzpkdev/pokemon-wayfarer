@@ -1086,7 +1086,8 @@ enum __attribute__((packed)) Item
     ITEM_AZURE_FLUTE,
 
 #if defined(POKEMON_WAYFARER)
-    ITEMS_COUNT = ITEM_HM09 + 1,
+    ITEM_SILPH_CARD_KEY = ITEM_HM09 + 1,
+    ITEMS_COUNT = ITEM_SILPH_CARD_KEY + 1,
 #else
     ITEMS_COUNT,
 #endif

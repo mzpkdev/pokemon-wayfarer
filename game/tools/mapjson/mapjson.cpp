@@ -313,7 +313,7 @@ string generate_map_events_text(Json map_data) {
             // If no type field is present, assume it's a regular object event.
             if (type == "" || type == "object") {
                 text << "\tobject_event " << object_count << ", "
-                     << json_to_string(obj_event, "graphics_id") << ", "
+                     << get_wayfarer_override(obj_event, "graphics_id") << ", "
                      << json_to_string(obj_event, "x") << ", "
                      << json_to_string(obj_event, "y") << ", "
                      << json_to_string(obj_event, "elevation") << ", "
@@ -323,10 +323,10 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(obj_event, "trainer_type") << ", "
                      << json_to_string(obj_event, "trainer_sight_or_berry_tree_id") << ", "
                      << json_to_string(obj_event, "script") << ", "
-                     << json_to_string(obj_event, "flag") << "\n";
+                     << get_wayfarer_override(obj_event, "flag") << "\n";
             } else if (type == "clone") {
                 text << "\tclone_event " << object_count << ", "
-                     << json_to_string(obj_event, "graphics_id") << ", "
+                     << get_wayfarer_override(obj_event, "graphics_id") << ", "
                      << json_to_string(obj_event, "x") << ", "
                      << json_to_string(obj_event, "y") << ", "
                      << json_to_string(obj_event, "target_local_id") << ", "
@@ -370,7 +370,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(coord_event, "x") << ", "
                      << json_to_string(coord_event, "y") << ", "
                      << json_to_string(coord_event, "elevation") << ", "
-                     << json_to_string(coord_event, "var") << ", "
+                     << get_wayfarer_override(coord_event, "var") << ", "
                      << json_to_string(coord_event, "var_value") << ", "
                      << json_to_string(coord_event, "script") << "\n";
             }

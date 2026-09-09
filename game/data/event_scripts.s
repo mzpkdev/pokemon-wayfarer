@@ -642,6 +642,8 @@ gStdScripts_End::
 	.include "data/scripts/wayfarer_mt_moon.inc"
 	.include "data/scripts/wayfarer_cerulean_burglary.inc"
 	.include "data/scripts/wayfarer_nugget_bridge.inc"
+	.include "data/scripts/wayfarer_silph.inc"
+	.include "data/scripts/silphco_doors.inc"
 	.include "data/maps/CeruleanCity_House2_Frlg/scripts.inc"
 	.include "data/maps/SSAnne_1F_Corridor_Frlg/scripts.inc"
 	.include "data/maps/SSAnne_2F_Corridor_Frlg/scripts.inc"

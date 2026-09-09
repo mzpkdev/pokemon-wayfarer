@@ -255,7 +255,10 @@ No new Trainer enters the Hoenn fixed runtime bank, and shared scaling changes
 are out of scope.
 
 Every ordinary encounter and Giovanni checks the canonical usable-party
-predicate before sight resolution, player lock, movement, or battle staging.
+predicate before sight resolution, scene movement, dialogue, or battle staging.
+The stepped 11F coordinate triggers begin with `lockall`, as required to
+synchronize the engine's coordinate-script control handoff, then immediately
+perform this predicate before any scene action. A refusal releases that lock.
 An empty party, fainted-only party, Eggs-only party, and a party containing
 only fainted Pokemon and Eggs receive the ordinary retryable no-party
 response. A mixed party with a healthy non-Egg Pokemon can battle. A refusal
@@ -282,6 +285,9 @@ Preserve staff, floor utility, and recovery dialogue from the source building.
 Occupied and recovered variants must make sense whether Silph or Celadon is
 completed first. Staff recovery remains local to Silph and does not modify
 unrelated Saffron scenes.
+
+The 9F healer remains available during occupation and after liberation. The
+recovered interaction uses recovery dialogue and retains the healing offer.
 
 The 7F Lapras employee remains reachable through the authored Card Key and
 warp-panel route without Blue. Give the authored Level 25 Lapras without a

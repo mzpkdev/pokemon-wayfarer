@@ -39,7 +39,9 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINER_CERULEAN_BURGLARY_GRUNT_HNS, 1549);
     EXPECT_EQ(TRAINER_NUGGET_BRIDGE_CALE_HNS, 1550);
     EXPECT_EQ(TRAINER_NUGGET_BRIDGE_ROCKET_HNS, 1555);
-    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1556);
+    EXPECT_EQ(TRAINER_SILPH_GRUNT_23_HNS, 1556);
+    EXPECT_EQ(TRAINER_SILPH_GIOVANNI_HNS, 1586);
+    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1587);
     EXPECT_EQ(MAX_TRAINERS_COUNT, MAX_TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_PARTNER(PARTNER_NONE), 2048);
 }
@@ -234,6 +236,27 @@ TEST("Wayfarer Nugget Bridge defeats are ordered independent trainer flags")
         EXPECT(!HasTrainerBeenFought(TRAINER_GRUNT_31_HNS));
         EXPECT(!HasTrainerBeenFought(TRAINER_SAWYER_1));
         ClearTrainerFlag(trainers[i]);
+    }
+}
+
+TEST("Wayfarer Silph defeats and liberation receipts are isolated")
+{
+    u32 i, j;
+    FlagClear(FLAG_SILPH_LIBERATED_HNS);
+    FlagClear(FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS);
+    ClearTrainerFlag(TRAINER_NUGGET_BRIDGE_ROCKET_HNS);
+    for (i = 1556; i <= 1586; i++)
+        ClearTrainerFlag(i);
+    for (i = 1556; i <= 1586; i++)
+    {
+        SetTrainerFlag(i);
+        EXPECT(FlagGet(TRAINER_FLAGS_START + 702 + i - 1556));
+        for (j = 1556; j <= 1586; j++)
+            EXPECT_EQ(HasTrainerBeenFought(j), i == j);
+        EXPECT(!FlagGet(FLAG_SILPH_LIBERATED_HNS));
+        EXPECT(!FlagGet(FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS));
+        EXPECT(!HasTrainerBeenFought(TRAINER_NUGGET_BRIDGE_ROCKET_HNS));
+        ClearTrainerFlag(i);
     }
 }
 

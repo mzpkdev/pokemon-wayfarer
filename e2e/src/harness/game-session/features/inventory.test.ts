@@ -11,11 +11,15 @@ const uint16Bytes = (value: number): number[] => [value & 0xff, value >> 8]
 describe("game-session inventory", () => {
   it("finds traversal items across the HNS Items, TM/HM, and Key Items pockets", async () => {
     const pocketContents = new Map([
+      [0, { address: 0x0200_7000, capacity: 4, item: 30 }],
+      [1, { address: 0x0200_8000, capacity: 4, item: 3 }],
+      [2, { address: 0x0200_9000, capacity: 4, item: 0 }],
       [3, { address: 0x0200_3000, capacity: 4, item: 441 }],
       [4, { address: 0x0200_4000, capacity: 4, item: 606 }],
       [5, { address: 0x0200_5000, capacity: 60, item: 727 }],
     ])
     const bagReadLengths: number[] = []
+    const writes: { address: number; bytes: Uint8Array }[] = []
     const runtime = {
       abi: {} as SessionRuntime["abi"],
       address: (symbol: string) => {
@@ -37,6 +41,12 @@ describe("game-session inventory", () => {
             const contents = new Uint8Array(pocketLength)
             contents.set(uint16Bytes(pocket.item), 0)
             contents.set(uint16Bytes(3 ^ 0x1234), 2)
+            if (pocket.item === 472) {
+              for (const offset of [0, 4]) {
+                contents.set(uint16Bytes(472), offset)
+                contents.set(uint16Bytes(1 ^ 0x1234), offset + 2)
+              }
+            }
             return contents.slice(address - pocket.address, address - pocket.address + length)
           }
         }
@@ -47,7 +57,7 @@ describe("game-session inventory", () => {
         return 0x1234
       },
       readUint32: async () => 0x0200_6000,
-      writeBytes: async () => {},
+      writeBytes: async (address, bytes) => { writes.push({ address, bytes }) },
       advance: async () => {},
       press: async () => {},
     } satisfies SessionRuntime
@@ -57,12 +67,19 @@ describe("game-session inventory", () => {
     await expect(inventory.contains("tmThunder")).resolves.toBe(true)
     await expect(inventory.count("tmThunder")).resolves.toBe(3)
     await expect(inventory.count("tmDig")).resolves.toBe(0)
+    await expect(inventory.count("hyperPotion")).resolves.toBe(3)
+    await expect(inventory.count("ultraBall")).resolves.toBe(3)
     await expect(inventory.contains("ssTicket")).resolves.toBe(true)
     await expect(inventory.contains("pass")).resolves.toBe(false)
     await expect(inventory.contains("cut")).resolves.toBe(false)
     pocketContents.get(4)!.item = 682
     await expect(inventory.contains("cut")).resolves.toBe(true)
     expect(Math.max(...bagReadLengths)).toBeLessThanOrEqual(32)
+    await expect(inventory.freeFixtureSlot("items")).rejects.toThrow("duplicate full-pocket fixture")
+    expect(writes).toHaveLength(0)
+    pocketContents.get(3)!.item = 472
+    await inventory.freeFixtureSlot("items")
+    expect(writes).toEqual([{ address: 0x0200_3000, bytes: new Uint8Array([0, 0, 0x34, 0x12]) }])
   })
 
   it("counts Standard Rod slots through the validated HNS Key Items pocket", async () => {

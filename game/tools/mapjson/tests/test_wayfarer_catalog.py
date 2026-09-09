@@ -1342,6 +1342,18 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "LAYOUT_ROCKET_HIDEOUT_B3F", "LAYOUT_ROCKET_HIDEOUT_B4F",
             "LAYOUT_ROCKET_HIDEOUT_ELEVATOR",
         }
+        silph_names = {
+            "SilphCo_2F_Frlg", "SilphCo_3F_Frlg", "SilphCo_4F_Frlg",
+            "SilphCo_5F_Frlg", "SilphCo_6F_Frlg", "SilphCo_7F_Frlg",
+            "SilphCo_8F_Frlg", "SilphCo_9F_Frlg", "SilphCo_10F_Frlg",
+            "SilphCo_11F_Frlg", "SilphCo_Elevator_Frlg",
+        }
+        silph_layout_ids = {
+            "LAYOUT_SILPH_CO_2F", "LAYOUT_SILPH_CO_3F", "LAYOUT_SILPH_CO_4F",
+            "LAYOUT_SILPH_CO_5F", "LAYOUT_SILPH_CO_6F", "LAYOUT_SILPH_CO_7F",
+            "LAYOUT_SILPH_CO_8F", "LAYOUT_SILPH_CO_9F", "LAYOUT_SILPH_CO_10F",
+            "LAYOUT_SILPH_CO_11F", "LAYOUT_SILPH_CO_ELEVATOR",
+        }
         included = []
         for group_num, group_name in enumerate(groups["group_order"]):
             self.assertLessEqual(group_num, 127)
@@ -1359,7 +1371,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
         included_frlg_names = {
             item["name"] for item in included if item.get("game_version") == "frlg"
         }
-        self.assertEqual(included_frlg_names, anne_interior_names | hideout_names | {"CeruleanCity_House2_Frlg"})
+        self.assertEqual(included_frlg_names,
+                         anne_interior_names | hideout_names | silph_names | {"CeruleanCity_House2_Frlg"})
         self.assertEqual(
             {name for name in included_frlg_names if name.startswith("SSAnne_")},
             anne_interior_names,
@@ -1367,6 +1380,10 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(
             {name for name in included_frlg_names if name.startswith("RocketHideout_")},
             hideout_names,
+        )
+        self.assertEqual(
+            {name for name in included_frlg_names if name.startswith("SilphCo_")},
+            silph_names,
         )
         self.assertNotIn("SSAnne_Exterior_Frlg", {item["name"] for item in included})
         layouts = json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())["layouts"]
@@ -1376,7 +1393,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         }
         self.assertEqual(
             selected_frlg_layout_ids,
-            anne_layout_ids | hideout_layout_ids | {"LAYOUT_CERULEAN_CITY_HOUSE2"},
+            anne_layout_ids | hideout_layout_ids | silph_layout_ids | {"LAYOUT_CERULEAN_CITY_HOUSE2"},
         )
         self.assertEqual(
             {layout_id for layout_id in selected_frlg_layout_ids if layout_id.startswith("LAYOUT_SSANNE_")},
@@ -1385,6 +1402,10 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(
             {layout_id for layout_id in selected_frlg_layout_ids if layout_id.startswith("LAYOUT_ROCKET_HIDEOUT_")},
             hideout_layout_ids,
+        )
+        self.assertEqual(
+            {layout_id for layout_id in selected_frlg_layout_ids if layout_id.startswith("LAYOUT_SILPH_CO_")},
+            silph_layout_ids,
         )
         dungeons = groups["gMapGroup_Dungeons_Frlg"]
         self.assertEqual(dungeons[5], "SSAnne_1F_Corridor_Frlg")
@@ -1395,6 +1416,12 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "RocketHideout_B1F_Frlg", "RocketHideout_B2F_Frlg",
             "RocketHideout_B3F_Frlg", "RocketHideout_B4F_Frlg",
             "RocketHideout_Elevator_Frlg",
+        ])
+        self.assertEqual(dungeons[48:59], [
+            "SilphCo_2F_Frlg", "SilphCo_3F_Frlg", "SilphCo_4F_Frlg",
+            "SilphCo_5F_Frlg", "SilphCo_6F_Frlg", "SilphCo_7F_Frlg",
+            "SilphCo_8F_Frlg", "SilphCo_9F_Frlg", "SilphCo_10F_Frlg",
+            "SilphCo_11F_Frlg", "SilphCo_Elevator_Frlg",
         ])
         for map_data in included:
             for warp in map_data.get("warp_events", []):
