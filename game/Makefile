@@ -442,7 +442,7 @@ ifeq ($(SETUP_PREREQS),1)
     $(error Errors occurred while building tools. See error messages above for more details)
   endif
   # Oh and also generate mapjson sources before we use `SCANINC`.
-  $(foreach line, $(shell $(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) TEST=$(TEST) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
+  $(foreach line, $(shell $(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) TEST=$(TEST) RELEASE=$(RELEASE) DEBUG=$(DEBUG) E2E=$(E2E) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
   ifneq ($(.SHELLSTATUS),0)
     $(error Errors occurred while generating map-related sources. See error messages above for more details)
   endif

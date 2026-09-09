@@ -22,6 +22,7 @@ def inputs(root):
                 'include/config/*.h',
                 'include/constants/global.h', 'include/constants/flags*.h',
                 'include/constants/wayfarer_persistence.h',
+                'include/constants/wayfarer_marts.h',
                 'tools/gameplay_content/**/*.py', 'tools/mapjson/*.cpp',
                 'tools/mapjson/*.h', 'tools/trainerproc/*.c',
                 'tools/trainer_scaling/generate.py')

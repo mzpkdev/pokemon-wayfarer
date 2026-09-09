@@ -4,6 +4,7 @@ import re
 
 from .common import ContentError, PRODUCTS, assign_indexes, load_json
 from .maps import resolve_object, load_maps
+from .mart_stock import load_profile_ids
 
 # Shared entry points own dispatch families; declarations own map membership.
 SHARED_CLERKS = {
@@ -40,7 +41,9 @@ def validate_service(service, path):
         if 'profile' in service or 'contribution' not in service:
             raise ContentError('SCHEMA', path, key, 'rod requires contribution and forbids profile')
         contribution = service['contribution']
-        _keys(contribution, {'namespace', 'flag'}, set(), path, key)
+        _keys(contribution, {'namespace', 'flag'}, {'aliasOf'}, path, key)
+        if 'aliasOf' in contribution and (not isinstance(contribution['aliasOf'], str) or not re.fullmatch(r'MAP_[A-Z0-9_]+/[^/\s]+', contribution['aliasOf'])):
+            raise ContentError('SCHEMA', path, key, contribution['aliasOf'])
         # Existing Standard Rod flags all belong to global persistence, including
         # contributions physically located in Hoenn in a Wayfarer game.
         if contribution['namespace'] != 'global':
@@ -85,8 +88,8 @@ def compile_services(root, product, defines, maps, *, cpp='cpp', cppflags=(), va
     root = Path(root)
     by_name = {m['name']: m for m in maps}
     rows, disabled = [], []
-    seen_bindings, seen_flags = set(), set()
-    profiles = set(re.findall(r'\[(MART_PROFILE_[A-Z0-9_]+)\]', (root / 'src/data/wayfarer_marts.h').read_text()))
+    seen_bindings = set()
+    profiles = load_profile_ids(root, cpp, cppflags) if defines.get('IS_WAYFARER', 0) and defines.get('WAYFARER_TR_MARTS_ENABLED', 0) else set()
     for path, service in load_declarations(root):
         if product not in service['products']:
             continue
@@ -105,20 +108,14 @@ def compile_services(root, product, defines, maps, *, cpp='cpp', cppflags=(), va
         row = dict(service, key=[product, map_record['sourceNamespace'], 'service', map_record['id'] + '/' + key],
                    map=map_record['id'], mapName=map_record['name'], sourceNamespace=map_record['sourceNamespace'],
                    physicalRegion=map_record['physicalRegion'], sourcePath=str(path.relative_to(root)), event=event)
-        if service['kind'] == 'rod_contribution':
-            flag = service['contribution']['flag']
-            identity = (service['contribution']['namespace'], flag)
-            if identity in seen_flags:
-                raise ContentError('CONFLICT', path, key, identity)
-            seen_flags.add(identity)
-        elif service['profile'] not in profiles:
+        if service['kind'] == 'mart' and service['profile'] not in profiles:
             raise ContentError('UNRESOLVED', path, key, service['profile'])
         rows.append(row)
     rows = assign_indexes(rows)
     if validate_scripts:
         _validate_service_scripts(root, product, rows, maps, cpp, cppflags)
     legacy_rods = _hns_legacy_contributors(root, product, rows, maps, cpp, cppflags, validate_scripts)
-    rods = sorted([row for row in rows if row['kind'] == 'rod_contribution'] + legacy_rods, key=lambda row: row['key'])
+    rods = _canonical_contributors([row for row in rows if row['kind'] == 'rod_contribution'] + legacy_rods)
     marts = [row for row in rows if row['kind'] == 'mart']
     symbols = [binding_symbol(row) for row in marts]
     if len(symbols) != len(set(symbols)):
@@ -146,6 +143,42 @@ def compile_services(root, product, defines, maps, *, cpp='cpp', cppflags=(), va
                         'gameplay_mart_bindings.inc': ''.join(f'.set {binding_symbol(row)}, {row["profile"]}\n' for row in marts)}}
 
 
+def _canonical_contributors(rows):
+    """Resolve explicit map/service aliases; only canonical flags count."""
+    by_key = {row['map'] + '/' + row['id']: row for row in rows}
+    roots = {}
+
+    def resolve(key, visiting):
+        if key in roots:
+            return roots[key]
+        row = by_key[key]
+        if key in visiting:
+            raise ContentError('CONFLICT', row['sourcePath'], row['id'], 'contribution alias cycle')
+        alias = row['contribution'].get('aliasOf')
+        if alias is None:
+            roots[key] = key
+            return key
+        if alias not in by_key:
+            raise ContentError('UNRESOLVED', row['sourcePath'], row['id'], alias)
+        target = by_key[alias]
+        if any(row['contribution'][field] != target['contribution'][field] for field in ('namespace', 'flag')):
+            raise ContentError('CONFLICT', row['sourcePath'], row['id'], 'contribution alias identity ' + alias)
+        roots[key] = resolve(alias, visiting | {key})
+        row['canonicalContribution'] = roots[key]
+        return roots[key]
+
+    for key in by_key:
+        resolve(key, set())
+    canonical = [by_key[key] for key in sorted(set(roots.values()))]
+    identities = set()
+    for row in canonical:
+        identity = (row['contribution']['namespace'], row.get('contributionValue', row['contribution']['flag']))
+        if identity in identities:
+            raise ContentError('CONFLICT', row['sourcePath'], row['id'], 'shared contribution requires aliasOf')
+        identities.add(identity)
+    return sorted(canonical, key=lambda row: row['key'])
+
+
 def _hns_legacy_contributors(root, product, rows, maps, cpp, cppflags, validate_scripts):
     # IS_HNS has always recognized the Wayfarer six-flag set, even when the
     # standalone map catalog cannot reach its Hoenn givers. Keep that membership
@@ -153,10 +186,11 @@ def _hns_legacy_contributors(root, product, rows, maps, cpp, cppflags, validate_
     if product != 'hns':
         return []
     canonical_maps = {row['name']: row for row in load_maps(root, 'wayfarer')}
-    live_flags = {row['contribution']['flag'] for row in rows if row['kind'] == 'rod_contribution'}
+    live_flags = {row['contribution']['flag'] for row in rows if row['kind'] == 'rod_contribution' and 'aliasOf' not in row['contribution']}
+    live_services = {(row['mapName'], row['id']) for row in rows}
     retained = []
     for path, service in load_declarations(root):
-        if service['kind'] != 'rod_contribution' or 'wayfarer' not in service['products'] or service['contribution']['flag'] in live_flags:
+        if service['kind'] != 'rod_contribution' or 'wayfarer' not in service['products'] or service['contribution']['flag'] in live_flags or (path.parent.name, service['id']) in live_services:
             continue
         canonical = canonical_maps.get(path.parent.name)
         if canonical is None:
@@ -209,7 +243,6 @@ def _validate_service_scripts(root, product, rows, maps, cpp, cppflags):
     rods = [row for row in rows if row['kind'] == 'rod_contribution']
     header = '#define TRUE 1\n#define FALSE 0\n#include "constants/global.h"\n#include "constants/flags.h"\n#include "config/wayfarer_marts.h"\n'
     cache = {}
-    selected_flags = set()
     rod_bindings = {(row['map'], row['binding']['script']) for row in rods}
     for row in rods:
         source = root / 'data/maps' / row['mapName'] / 'scripts.inc'
@@ -222,9 +255,6 @@ def _validate_service_scripts(root, product, rows, maps, cpp, cppflags):
         value = int(expected.group(1).strip(), 0)
         if value <= 0 or value >= 0x4000:
             raise ContentError('UNSUPPORTED_CONTEXT', row['sourcePath'], row['id'], flag)
-        if value in selected_flags:
-            raise ContentError('CONFLICT', row['sourcePath'], row['id'], flag)
-        selected_flags.add(value)
         reachable = _reachable(_script_sections(processed), row['binding']['script'])
         operands = []
         current_operand = None

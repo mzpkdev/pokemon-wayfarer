@@ -18,6 +18,7 @@ PROFILE_COUNT = 36
 TIER_RATINGS = (0, 4, 16, 30, 40, 55)
 sys.path.insert(0, str(GAME_ROOT / "tools"))
 from gameplay_content.configuration import preprocess
+from gameplay_content.mart_stock import parse_profiles
 
 # The audit consumes the same selected inventory used to emit service bindings.
 INVENTORY_PATH = GAME_ROOT / "build/gameplay-content/wayfarer/current/inventory.json"
@@ -68,40 +69,6 @@ def parse_common_items(text: str) -> tuple[list[dict], list[dict]]:
     ]
     return common, pp
 
-
-def parse_profiles(text: str) -> dict[str, dict]:
-    profiles: dict[str, dict] = {}
-    table = block_after(text, "sWayfarerMartProfiles")
-    for profile_id, macro, arguments in re.findall(
-        r"\[(MART_PROFILE_[A-Z0-9_]+)\]\s*=\s*(MART_PROFILE_[A-Z_]+)\(([^)]*)\)", table
-    ):
-        args = [value.strip() for value in arguments.split(",")]
-        if macro == "MART_PROFILE_WITH_RETAINED":
-            signature, retained, common_mask, pp_recovery, category = args
-        elif macro == "MART_PROFILE_NO_RETAINED":
-            signature, common_mask, pp_recovery, category = args
-            retained = None
-        elif macro == "MART_PROFILE_FACILITY":
-            retained, category = args
-            signature = None
-            common_mask = "MART_COMMON_ALL"
-            pp_recovery = "TRUE"
-        elif macro == "MART_PROFILE_EMPTY_FACILITY":
-            (category,) = args
-            signature = None
-            retained = None
-            common_mask = "MART_COMMON_ALL"
-            pp_recovery = "TRUE"
-        else:
-            raise ValueError(f"unsupported profile macro {macro}")
-        profiles[profile_id] = {
-            "signature_array": signature,
-            "retained_array": retained,
-            "common_category_mask": common_mask,
-            "supports_pp_recovery": pp_recovery == "TRUE",
-            "category_mask": category,
-        }
-    return profiles
 
 
 def parse_bindings(text: str) -> dict[str, dict]:

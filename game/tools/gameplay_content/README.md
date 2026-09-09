@@ -47,6 +47,10 @@ Services are authored in map-local `gameplay.json` sidecars. Script-only binding
 require exactly one matching effective object; use an authored symbolic local ID
 when that script is shared. Generated mart assembler aliases and shared-clerk rows
 come from these declarations. Stock remains in `src/data/wayfarer_marts.h`.
+An intentional shared rod contribution uses
+`contribution.aliasOf: "MAP_CANONICAL/service_id"`; its flag and namespace must
+match that selected declaration. Both interactions are validated, but the shared
+contribution counts once. Alias cycles and missing targets fail generation.
 
 Standalone HNS already accepts the same six rod contribution flags as Wayfarer,
 although only three giver maps are selected there. Its domain adapter derives the

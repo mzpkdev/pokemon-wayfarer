@@ -19,7 +19,8 @@ class ServiceFixtures(unittest.TestCase):
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
         for path, text in {
-            'src/data/wayfarer_marts.h': '[MART_PROFILE_TEST] = stock,',
+            'src/data/wayfarer_marts.h': 'static const struct Stock sWayfarerMartProfiles[] = { [MART_PROFILE_TEST] = MART_PROFILE_EMPTY_FACILITY(MART_CATEGORY_TOWN), };',
+            'include/constants/wayfarer_marts.h': '#define MART_PROFILE_TEST 1\n',
             'include/constants/global.h': '',
             'include/constants/flags.h': '#define FLAG_TEST 123\n#define FLAG_OTHER 124\n',
             'include/config/wayfarer_marts.h': '',
@@ -58,6 +59,64 @@ class ServiceFixtures(unittest.TestCase):
     def test_unrelated_handler_flag_cannot_validate_binding(self):
         self.write([self.service], 'GiveRod::\n setvar VAR_0x8004, FLAG_OTHER\n special Script_TryAwardStandardRod\n end\nUnrelated::\n setvar VAR_0x8004, FLAG_TEST\n end\n')
         with self.assertRaisesRegex(ContentError, 'rod script contribution'):
+            self.compile()
+
+    def add_alias(self, target='MAP_TEST/giver', flag='FLAG_TEST'):
+        alias = dict(self.service, id='alias', binding={'script': 'OtherRod'},
+                     contribution={'namespace': 'global', 'flag': flag, 'aliasOf': target})
+        self.map['objects'].append(dict(self.map['objects'][0], script='OtherRod', runtimeId=2))
+        self.write([self.service, alias], f'GiveRod::\n setvar VAR_0x8004, FLAG_TEST\n special Script_TryAwardStandardRod\n end\nOtherRod::\n setvar VAR_0x8004, {flag}\n special Script_TryAwardStandardRod\n end\n')
+        return alias
+
+    def test_explicit_shared_contribution_counts_once(self):
+        self.add_alias()
+        result = self.compile()
+        self.assertEqual(result['report']['rodCount'], 1)
+        self.assertEqual(len(result['report']['services']), 2)
+        self.assertEqual(result['outputs']['gameplay_services.h'].count('X(FLAG_TEST)'), 1)
+
+    def test_alias_requires_matching_identity_and_existing_target(self):
+        self.add_alias(flag='FLAG_OTHER')
+        with self.assertRaisesRegex(ContentError, 'alias identity'):
+            self.compile()
+        self.map['objects'].pop()
+        self.add_alias(target='MAP_MISSING/giver')
+        with self.assertRaisesRegex(ContentError, 'UNRESOLVED'):
+            self.compile()
+
+    def test_alias_cycles_rejected(self):
+        alias = self.add_alias()
+        self.service['contribution']['aliasOf'] = 'MAP_TEST/alias'
+        self.write([self.service, alias])
+        with self.assertRaisesRegex(ContentError, 'alias cycle'):
+            self.compile()
+
+    def test_undeclared_shared_identity_rejected(self):
+        alias = self.add_alias()
+        del alias['contribution']['aliasOf']
+        self.write([self.service, alias])
+        with self.assertRaisesRegex(ContentError, 'requires aliasOf'):
+            self.compile()
+
+    def test_comment_and_inactive_stock_profiles_are_not_live(self):
+        mart = {'id': 'shop', 'products': ['wayfarer'], 'kind': 'mart', 'binding': {'script': 'GiveRod'}, 'profile': 'MART_PROFILE_BOGUS'}
+        self.write([mart], 'GiveRod::\n end\n')
+        path = self.root / 'src/data/wayfarer_marts.h'
+        text = path.read_text().replace('};', '// [MART_PROFILE_BOGUS] = MART_PROFILE_EMPTY_FACILITY(MART_CATEGORY_TOWN),\n};')
+        path.write_text(text)
+        with self.assertRaisesRegex(ContentError, 'UNRESOLVED'):
+            self.compile()
+        path.write_text(text.replace('// [MART_PROFILE_BOGUS]', '\n#if 0\n[MART_PROFILE_BOGUS]').replace('\n};', '\n#endif\n};'))
+        with self.assertRaisesRegex(ContentError, 'UNRESOLVED'):
+            self.compile()
+        path.write_text('#if 0\n' + text.replace('// ', '') + '\n#endif\n')
+        with self.assertRaisesRegex(ContentError, 'UNRESOLVED'):
+            self.compile()
+
+    def test_stock_profile_requires_numeric_production_constant(self):
+        path = self.root / 'include/constants/wayfarer_marts.h'
+        path.write_text('')
+        with self.assertRaisesRegex(ContentError, 'UNRESOLVED'):
             self.compile()
 
     def test_nonunique_script_rejected(self):
