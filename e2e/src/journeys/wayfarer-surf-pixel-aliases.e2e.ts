@@ -166,7 +166,10 @@ describe.sequential("Wayfarer representative Surf pixel aliases", () => {
         await game.arrange({
           checkpoint: "new-bark-after-intro",
           player: { facing: "up", position: { map: "blackthorn-city", x: 18, y: 26 } },
-          story: { vars: { blackthornCityState: 2 } },
+          // This is a presentation journey. Suppress random water encounters so
+          // its movement, bobbing, fishing animation, dismount, and connection
+          // assertions cannot be interrupted by unrelated battle routing.
+          story: { flags: { disableEncounters: true }, vars: { blackthornCityState: 2 } },
           party: [{ species: name as FixtureSpecies, level: 30, moves: ["surf"] }],
           bag: { items: { oldRod: 1 } },
           determinism: { textSpeed: "instant", rngSeed: 1 },

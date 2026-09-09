@@ -1,6 +1,7 @@
 import { describe, expect, it } from "webanvil/test"
 
-import { GameSession, type GameMap } from "../harness/game-session"
+import { GameSession, partyMenuActions, type GameMap } from "../harness/game-session"
+import { openFieldPartyMenuActions, selectFieldPartyAction } from "../playbooks/field-party-menu"
 import { advanceOpeningUntil, receiveBirchStarter } from "../playbooks/regional-opening"
 import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
 
@@ -19,6 +20,23 @@ const depart = async (game: GameSession, destination: GameMap): Promise<void> =>
   await finishDeparture(game, destination)
 }
 
+const teleportToRecovery = async (game: GameSession): Promise<void> => {
+  await openFieldPartyMenuActions(game)
+  expect((await game.state.read()).partyMenu.actions).toContain(partyMenuActions.teleport)
+  await selectFieldPartyAction(game, partyMenuActions.teleport)
+  await advanceOpeningUntil(
+    game,
+    (state) => state.ready && !state.partyMenu.open,
+    "Teleport did not return to the registered recovery location",
+  )
+}
+
+const recoveryPositions = {
+  "olivine-city": { x: 20, y: 20 },
+  "vermilion-city": { x: 10, y: 10 },
+  "slateport-city": { x: 19, y: 21 },
+} as const
+
 describe.sequential("Littleroot-origin regular Aqua circuit", () => {
   it("grants its Ticket, visits both HNS ports, and returns without maiden-voyage progress", async () => {
     const game = await GameSession.launch()
@@ -26,6 +44,7 @@ describe.sequential("Littleroot-origin regular Aqua circuit", () => {
       await game.arrange({
         checkpoint: "hoenn-before-rescue",
         player: { facing: "right", position: { map: "route-101", x: 9, y: 19 } },
+        party: [{ species: "pidgey", moves: ["teleport", "tackle"] }],
         determinism: { textSpeed: "instant" },
       })
       await receiveBirchStarter(game, 1)
@@ -67,17 +86,25 @@ describe.sequential("Littleroot-origin regular Aqua circuit", () => {
         expect(await game.inventory.contains("ssTicket")).toBe(true)
         await game.saveAndReload()
         expect((await game.state.read()).origin).toEqual(state.origin)
-        await game.battle.startWild({ species: "pidgey", level: 2, moves: ["tackle"] })
-        await game.battle.lose()
-        const center = port === "slateport-city-harbor" ? "slateport-pokemon-center" : recovery
-        await advanceOpeningUntil(
-          game,
-          (current) => current.ready && current.map.name === center,
-          `blackout did not reach the local recovery point after ${port}`,
+        // Ordinary wild losses remain unhealed in the field. Teleport exercises
+        // the same persisted recovery destination without changing that policy.
+        // The port interiors do not offer the field action, so resume on that
+        // port's outdoor map after its arrival has registered the target.
+        await game.player.warp(
+          recovery,
+          recoveryPositions[recovery].x,
+          recoveryPositions[recovery].y,
+          "down",
         )
-        expect((await game.state.read()).origin.id).toBe(2)
+        await game.wait.forReady()
+        await teleportToRecovery(game)
+        expect((await game.state.read()).map.name).toBe(recovery)
+        expect((await game.state.read()).origin).toMatchObject({
+          id: 2,
+          recovery: { map: recovery },
+        })
         expect(await game.inventory.contains("ssTicket")).toBe(true)
-        expect((await game.state.read()).party.every((mon) => !mon.fainted)).toBe(true)
+        expect((await game.state.read()).party).toEqual(partner)
         await game.player.warp(port, state.player.x, state.player.y, "down")
       }
       expect((await game.state.read()).origin.visitedRegions).toBe(7)

@@ -16,6 +16,60 @@
 
 enum EncounterSource { SOURCE_LAND, SOURCE_OUTBREAK, SOURCE_FISHING, SOURCE_ROCK_SMASH, SOURCE_SWEET_SCENT };
 
+// Function-test assertions return to the runner immediately. Keep this small
+// integration harness self-contained even when an expectation fails, since its
+// TESTING interception intentionally changes process-wide wild-battle state.
+struct EncounterSourceTestSnapshot
+{
+    struct MapHeader mapHeader;
+    struct BackupMapLayout backupMapLayout;
+    struct PlayerAvatar playerAvatar;
+    struct ObjectEvent playerObjectEvent;
+    struct WarpData location;
+    struct Pokemon playerParty[PARTY_SIZE];
+    struct Pokemon enemyParty[PARTY_SIZE];
+    u16 repelSteps;
+    u16 specialResult;
+    u8 playerPartyCount;
+    u8 enemyPartyCount;
+    bool8 isFishingEncounter;
+};
+
+static void SnapshotEncounterSourceTestState(struct EncounterSourceTestSnapshot *snapshot)
+{
+    snapshot->mapHeader = gMapHeader;
+    snapshot->backupMapLayout = gBackupMapLayout;
+    snapshot->playerAvatar = gPlayerAvatar;
+    snapshot->playerObjectEvent = gObjectEvents[0];
+    snapshot->location = gSaveBlock1Ptr->location;
+    memcpy(snapshot->playerParty, gPlayerParty, sizeof(snapshot->playerParty));
+    memcpy(snapshot->enemyParty, gEnemyParty, sizeof(snapshot->enemyParty));
+    snapshot->repelSteps = VarGet(VAR_REPEL_STEP_COUNT);
+    snapshot->specialResult = gSpecialVar_Result;
+    snapshot->playerPartyCount = gPlayerPartyCount;
+    snapshot->enemyPartyCount = gEnemyPartyCount;
+    snapshot->isFishingEncounter = gIsFishingEncounter;
+}
+
+static void RestoreEncounterSourceTestState(const struct EncounterSourceTestSnapshot *snapshot)
+{
+    // Disable the testing hook before anything can return to the next test.
+    SetWildStartInterceptionForTesting(FALSE);
+    TrainerOnlyResetEncounter();
+    gMapHeader = snapshot->mapHeader;
+    gBackupMapLayout = snapshot->backupMapLayout;
+    gPlayerAvatar = snapshot->playerAvatar;
+    gObjectEvents[0] = snapshot->playerObjectEvent;
+    gSaveBlock1Ptr->location = snapshot->location;
+    memcpy(gPlayerParty, snapshot->playerParty, sizeof(snapshot->playerParty));
+    memcpy(gEnemyParty, snapshot->enemyParty, sizeof(snapshot->enemyParty));
+    VarSet(VAR_REPEL_STEP_COUNT, snapshot->repelSteps);
+    gSpecialVar_Result = snapshot->specialResult;
+    gPlayerPartyCount = snapshot->playerPartyCount;
+    gEnemyPartyCount = snapshot->enemyPartyCount;
+    gIsFishingEncounter = snapshot->isFishingEncounter;
+}
+
 static void SetSourceParty(u32 variant)
 {
     u16 hp = 0;
@@ -104,37 +158,37 @@ TEST("Trainer-only native encounter sources generate and initialize without a us
         for (u32 j = 0; j < 3; j++)
             PARAMETRIZE(source = i, variant = j);
 
-    struct MapHeader oldHeader = gMapHeader;
-    struct BackupMapLayout oldLayout = gBackupMapLayout;
+    struct EncounterSourceTestSnapshot snapshot;
     u32 seed;
     bool32 started = FALSE;
+    bool32 passed = TRUE;
+
+    SnapshotEncounterSourceTestState(&snapshot);
 
     PrepareSource(source, variant);
-    EXPECT_NE(GetCurrentMapWildMonHeaderId(), HEADER_NONE);
-    EXPECT(SelectGrassFromActualLayout());
+    passed &= GetCurrentMapWildMonHeaderId() != HEADER_NONE;
+    passed &= SelectGrassFromActualLayout();
     for (seed = 0; seed < 256 && !started; seed++)
     {
         SeedRng(seed);
         started = TrySource(source);
     }
-    EXPECT(started);
-    EXPECT_EQ(GetWildStartsForTesting(), 1);
-    EXPECT(IsTrainerOnlyEncounter());
-    EXPECT_NE(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_NONE);
-    EXPECT_GT(GetMonData(&gEnemyParty[0], MON_DATA_HP), 0);
-    EXPECT_EQ(gPlayerPartyCount, variant == 0 ? 0 : 1);
+    passed &= started;
+    passed &= GetWildStartsForTesting() == 1;
+    passed &= IsTrainerOnlyEncounter();
+    passed &= GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) != SPECIES_NONE;
+    passed &= GetMonData(&gEnemyParty[0], MON_DATA_HP) > 0;
+    passed &= gPlayerPartyCount == (variant == 0 ? 0 : 1);
     if (source == SOURCE_OUTBREAK)
     {
-        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), SPECIES_DITTO);
-        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 7);
-        EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_MOVE1), MOVE_TRANSFORM);
+        passed &= GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) == SPECIES_DITTO;
+        passed &= GetMonData(&gEnemyParty[0], MON_DATA_LEVEL) == 7;
+        passed &= GetMonData(&gEnemyParty[0], MON_DATA_MOVE1) == MOVE_TRANSFORM;
     }
     if (source == SOURCE_FISHING)
-        EXPECT(gIsFishingEncounter);
-    SetWildStartInterceptionForTesting(FALSE);
-    TrainerOnlyResetEncounter();
-    gMapHeader = oldHeader;
-    gBackupMapLayout = oldLayout;
+        passed &= gIsFishingEncounter;
+    RestoreEncounterSourceTestState(&snapshot);
+    EXPECT(passed);
 }
 
 TEST("Trainer-only native sources ignore fainted and Egg lead stats items and Repel comparisons")
@@ -143,8 +197,10 @@ TEST("Trainer-only native sources ignore fainted and Egg lead stats items and Re
     for (u32 i = SOURCE_LAND; i <= SOURCE_SWEET_SCENT; i++)
         PARAMETRIZE(source = i);
 
-    struct MapHeader oldHeader = gMapHeader;
-    struct BackupMapLayout oldLayout = gBackupMapLayout;
+    struct EncounterSourceTestSnapshot snapshot;
+    bool32 passed = TRUE;
+
+    SnapshotEncounterSourceTestState(&snapshot);
     for (u32 seed = 0; seed < 8; seed++)
     {
         u32 personality = 0, species = 0, level = 0;
@@ -152,8 +208,9 @@ TEST("Trainer-only native sources ignore fainted and Egg lead stats items and Re
         for (u32 variant = 0; variant < 3; variant++)
         {
             bool32 started;
+
             PrepareSource(source, variant);
-            EXPECT(SelectGrassFromActualLayout());
+            passed &= SelectGrassFromActualLayout();
             SeedRng(seed);
             started = TrySource(source);
             if (variant == 0)
@@ -165,16 +222,24 @@ TEST("Trainer-only native sources ignore fainted and Egg lead stats items and Re
             }
             else
             {
-                EXPECT_EQ(started, emptyStarted);
-                EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY), personality);
-                EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_SPECIES), species);
-                EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), level);
+                u32 actualPersonality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
+                u32 actualSpecies = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+                u32 actualLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
+
+                if (started != emptyStarted
+                 || actualPersonality != personality
+                 || actualSpecies != species
+                 || actualLevel != level)
+                {
+                    Test_MgbaPrintf("trainer-only source mismatch: source %d seed %d variant %d; started %d/%d personality %d/%d species %d/%d level %d/%d",
+                                    source, seed, variant, started, emptyStarted,
+                                    actualPersonality, personality, actualSpecies, species, actualLevel, level);
+                    passed = FALSE;
+                }
             }
         }
     }
-    SetWildStartInterceptionForTesting(FALSE);
-    TrainerOnlyResetEncounter();
-    gMapHeader = oldHeader;
-    gBackupMapLayout = oldLayout;
+    RestoreEncounterSourceTestState(&snapshot);
+    EXPECT(passed);
 }
 #endif

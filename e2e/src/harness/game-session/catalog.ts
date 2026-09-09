@@ -451,6 +451,7 @@ export const storyVars = {
   goldenrodCityState: 0x4069,
   mahoganyTownState: 0x4072,
   leagueState: 0x4070,
+  hoennEliteFourState: 0x709c,
   ecruteakCityState: 0x4061,
   ecruteakCityTheater: 0x4062,
   numBadges: 0x4076,

@@ -9,6 +9,36 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## PR #85 CI regression follow-up
+
+Older journey fixtures still expected ordinary-wild defeat to cause blackout.
+They now check the agreed in-field loss, fainted party, normal fee and persisted
+home target. Native Teleport checks each saved port recovery destination after
+reload. Battle outcome injections wait for the initialized action menu; Hoenn
+League saving waits for banked `VAR_ELITE_4_STATE` (`0x709c`) to reach 1 after
+Sidney's entrance door closes. Surf presentation checks suppress unrelated
+random encounters. Traversal tests still execute native loss/victory scripts,
+including Silver's temporary retreat without chapter completion.
+
+Targeted emulator runs passed 99 tests across the affected journeys: HM 9,
+Surf aliases 12, S.S. Aqua 13, Johto traversal 37, Kanto traversal 18,
+origin/recovery 5, Hoenn League 1 and protocol validation 4. The full run
+(`/tmp/pr85-e2e-bounded.log`, four workers) passed 267/270; its three failures
+came from an obsolete expected error string and the resulting shared-fixture
+cascade. That expectation was corrected and its whole four-test file passed
+separately. No other full-run failures remained. Lint and type checking passed.
+The immutable E2E ROM is the compact-record ROM identified below.
+
+The full mechanics suite reproduced an order-dependent PID mismatch followed
+by hundreds of cascading failures. Battle tests left `VBlankCB_Battle` installed;
+it advanced RNG during a later seeded function test. The runner now detaches
+callbacks at every test boundary. Native-source fixtures restore their temporary
+state and disable interception before asserting, preventing a failed assertion
+from intercepting subsequent battles. Species, level and PID comparisons remain.
+This changes test isolation only, not gameplay RNG or encounter behavior.
+The focused trainer-only suite had passed 13/13; full-suite validation of the
+callback-boundary fix is in progress in `/tmp/pr85-mechanics-final.log`.
+
 ## Compact ordinary caller records
 
 The reviewed 851-caller manifest and its command fingerprints are unchanged.
