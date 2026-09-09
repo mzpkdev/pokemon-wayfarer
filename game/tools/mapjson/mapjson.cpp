@@ -832,10 +832,15 @@ void validate_wayfarer_heal_locations(const set<string> &included_map_ids) {
         else
             FATAL_ERROR("Heal location %s has unknown content source %s.\n", id.c_str(), source.c_str());
 
-        if (!source_version_is_selected(source_version))
-            continue;
-
         string map_id = json_to_string(heal_location, "map");
+        if (version == "wayfarer" && source_version == "frlg") {
+            if (!wayfarer_sevii_release_link_enabled
+             || wayfarer_sevii_map_ids.find(map_id) == wayfarer_sevii_map_ids.end())
+                continue;
+        } else if (!source_version_is_selected(source_version)) {
+            continue;
+        }
+
         if (included_map_ids.find(map_id) == included_map_ids.end())
             FATAL_ERROR("Heal location %s references unavailable map %s.\n", id.c_str(), map_id.c_str());
 

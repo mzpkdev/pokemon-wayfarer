@@ -480,7 +480,7 @@ endif
 
 check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test
 ifeq ($(BUILD_NAME),wayfarer)
-check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
 check: league-circuit-test
 check: native-hm-windows-test
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
@@ -508,7 +508,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit trainer-party-scaling-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)

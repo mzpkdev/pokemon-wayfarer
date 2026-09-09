@@ -180,10 +180,27 @@ def block_bodies(path: Path) -> dict[str, bytes]:
     return bodies
 
 
-def hook_key(hook: Any) -> tuple[str, str]:
-    if not isinstance(hook, dict) or not isinstance(hook.get("path"), str) or not isinstance(hook.get("label"), str):
-        raise AuditError("allowed_ferry_hooks entries must have path and label strings")
-    return hook["path"], hook["label"]
+def ferry_hook(hook: Any) -> tuple[tuple[str, str], dict[str, str]]:
+    required = ("path", "label", "sha256", "source_warp", "wayfarer_warp")
+    if not isinstance(hook, dict) or any(not isinstance(hook.get(key), str) for key in required):
+        raise AuditError("allowed_ferry_hooks entries must define the guarded return-warp replacement")
+    return (hook["path"], hook["label"]), {key: hook[key] for key in required}
+
+
+def validate_ferry_hook_change(body: bytes, hook: dict[str, str]) -> None:
+    """Allow only the reviewed Wayfarer preprocessor replacement of one warp."""
+    if sha256_bytes(body) == hook["sha256"]:
+        return
+    source_warp = hook["source_warp"]
+    guarded_warp = (
+        f"#if IS_WAYFARER\n\t{hook['wayfarer_warp']}\n#else\n\t{source_warp}\n#endif"
+    )
+    current = body.decode("utf-8")
+    if current.count(guarded_warp) != 1:
+        raise AuditError("event-island ferry hook has an unapproved change")
+    restored = current.replace(guarded_warp, f"\t{source_warp}")
+    if sha256_bytes(restored.encode("utf-8")) != hook["sha256"]:
+        raise AuditError("event-island ferry hook has an unapproved change")
 
 
 def baseline_source_path(root: Path, recorded_path: str) -> Path:
@@ -204,7 +221,7 @@ def validate_event_island_baseline(root: Path, baseline_path: Path) -> dict[str,
     baseline = load_json(baseline_path)
     if baseline.get("schema_version") != 1 or not isinstance(baseline.get("files"), list):
         raise AuditError("event-island baseline requires schema_version 1 and files")
-    hooks = {hook_key(hook) for hook in baseline.get("allowed_ferry_hooks", [])}
+    hooks = dict(ferry_hook(hook) for hook in baseline.get("allowed_ferry_hooks", []))
     rows = []
     for index, record in enumerate(baseline["files"]):
         if not isinstance(record, dict) or not isinstance(record.get("path"), str) or not isinstance(record.get("sha256"), str):
@@ -217,7 +234,7 @@ def validate_event_island_baseline(root: Path, baseline_path: Path) -> dict[str,
         protected = record.get("protected_blocks", [])
         if not isinstance(protected, list):
             raise AuditError(f"event-island baseline {record['path']}: protected_blocks must be a list")
-        file_hooks = {label for hook_path, label in hooks if hook_path == record["path"]}
+        file_hooks = {label: hook for (hook_path, label), hook in hooks.items() if hook_path == record["path"]}
         if file_hooks or protected:
             blocks = block_bodies(path)
             protected_names = set()
@@ -232,9 +249,13 @@ def validate_event_island_baseline(root: Path, baseline_path: Path) -> dict[str,
                     raise AuditError(f"event-island protected label disappeared: {record['path']}:{label}")
                 if sha256_bytes(blocks[label]) != block["sha256"]:
                     raise AuditError(f"event-island protected block changed: {record['path']}:{label}")
-            unapproved = sorted(set(blocks) - protected_names - file_hooks)
+            unapproved = sorted(set(blocks) - protected_names - set(file_hooks))
             if unapproved:
                 raise AuditError(f"event-island unapproved script block: {record['path']}:{unapproved[0]}")
+            for label, hook in file_hooks.items():
+                if label not in blocks:
+                    raise AuditError(f"event-island ferry hook disappeared: {record['path']}:{label}")
+                validate_ferry_hook_change(blocks[label], hook)
         elif actual_sha != record["sha256"]:
             raise AuditError(f"event-island baseline file changed: {record['path']}")
         expected_normalized = record.get("normalized_sha256")

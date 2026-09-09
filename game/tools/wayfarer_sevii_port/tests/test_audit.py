@@ -106,17 +106,24 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
     def test_allows_only_named_ferry_hook_in_baseline(self):
         script = self.root / "data/maps/BirthIsland_Harbor_hns/scripts.inc"
         script.parent.mkdir()
-        original = b"Protected::\n\tend\nSailor::\n\tend\n"
+        original = b"Protected::\n\tend\nSailor::\n\twarp MAP_LILYCOVE_CITY_HARBOR, 8, 11\n"
         script.write_bytes(original)
         baseline = self.root / "baseline.json"
         blocks = AUDIT.block_bodies(script)
         baseline.write_text(json.dumps({"schema_version": 1, "files": [{
             "path": "data/maps/BirthIsland_Harbor_hns/scripts.inc", "sha256": digest(original),
             "protected_blocks": [{"label": "Protected", "sha256": digest(blocks["Protected"])}],
-        }], "allowed_ferry_hooks": [{"path": "data/maps/BirthIsland_Harbor_hns/scripts.inc", "label": "Sailor"}]}))
-        script.write_text("Protected::\n\tend\nSailor::\n\tgoto WayfarerReturn\n")
+        }], "allowed_ferry_hooks": [{
+            "path": "data/maps/BirthIsland_Harbor_hns/scripts.inc", "label": "Sailor",
+            "sha256": digest(blocks["Sailor"]), "source_warp": "warp MAP_LILYCOVE_CITY_HARBOR, 8, 11",
+            "wayfarer_warp": "warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9",
+        }]}))
+        script.write_text("Protected::\n\tend\nSailor::\n#if IS_WAYFARER\n\twarp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9\n#else\n\twarp MAP_LILYCOVE_CITY_HARBOR, 8, 11\n#endif\n")
         result = AUDIT.validate_event_island_baseline(self.root, baseline)
         self.assertEqual(result["file_count"], 1)
+        script.write_text("Protected::\n\tend\nSailor::\n\tgiveitem ITEM_MASTER_BALL\n")
+        with self.assertRaisesRegex(AUDIT.AuditError, "ferry hook has an unapproved change"):
+            AUDIT.validate_event_island_baseline(self.root, baseline)
         script.write_text("Protected::\n\tgoto Bad\nSailor::\n\tend\n")
         with self.assertRaisesRegex(AUDIT.AuditError, "protected block changed"):
             AUDIT.validate_event_island_baseline(self.root, baseline)

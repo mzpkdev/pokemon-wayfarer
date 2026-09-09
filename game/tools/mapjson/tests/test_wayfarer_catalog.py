@@ -260,6 +260,52 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("cannot select event-island map", result.stderr)
 
+    def test_wayfarer_validates_selected_frlg_heal_locations(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        hns = self.add_map(root, "HnsMap", "MAP_HNS", "hns")
+        frlg = self.add_map(root, "OneIsland_PokemonCenter_1F", "MAP_SEVII", "frlg")
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps(
+                {
+                    "group_order": ["gHns", "gFrlg"],
+                    "gHns": ["HnsMap"],
+                    "gFrlg": ["OneIsland_PokemonCenter_1F"],
+                    "connections_include_order": [],
+                }
+            )
+        )
+        (root / "src/data/heal_locations.json").write_text(
+            json.dumps(
+                {
+                    "heal_locations": [
+                        {
+                            "id": "HEAL_SEVII",
+                            "source": "FRLG",
+                            "map": "MAP_SEVII",
+                            "respawn_map": "MAP_MISSING",
+                            "respawn_npc": "LOCALID_NURSE",
+                        }
+                    ]
+                }
+            )
+        )
+        manifest = self.write_sevii_manifest(
+            root,
+            [
+                {
+                    "source_map": "OneIsland_PokemonCenter_1F",
+                    "map_id": "MAP_SEVII",
+                    "layout": "LAYOUT_SEVII",
+                }
+            ],
+            release_link_enabled=True,
+        )
+
+        result = self.run_groups(root, "wayfarer", [hns, frlg], manifest)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("references unavailable respawn map MAP_MISSING", result.stderr)
+
     def test_wayfarer_layouts_include_both_sources_and_emit_map_flags(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)

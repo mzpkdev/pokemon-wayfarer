@@ -635,11 +635,17 @@
   "allowed_ferry_hooks": [
     {
       "path": "game/data/maps/BirthIsland_Harbor_hns/scripts.inc",
-      "label": "BirthIsland_Harbor_hns_EventScript_Sailor"
+      "label": "BirthIsland_Harbor_hns_EventScript_Sailor",
+      "sha256": "2f79f22b71a356d96d7fba823148d30de43ebace9a8afacf7c560f5b30799ebf",
+      "source_warp": "warp MAP_LILYCOVE_CITY_HARBOR, 8, 11",
+      "wayfarer_warp": "warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9"
     },
     {
       "path": "game/data/maps/NavelRock_Harbor/scripts.inc",
-      "label": "NavelRock_Harbor_EventScript_Sailor"
+      "label": "NavelRock_Harbor_EventScript_Sailor",
+      "sha256": "98f8aa912d1ecbf1385aa2468ae2d00df44da4778ef537b9dc7b51897dab3ee9",
+      "source_warp": "warp MAP_LILYCOVE_CITY_HARBOR, 8, 11",
+      "wayfarer_warp": "warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9"
     }
   ]
 }
