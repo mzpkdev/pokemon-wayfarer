@@ -22,6 +22,8 @@ DEFAULT_SCALING = ROOT / "src/data/wild_encounter_scaling.json"
 DEFAULT_SPECIES_METADATA = ROOT / "src/data/wild_encounter_species.json"
 DEFAULT_STANDARD_ROD_FISHING = ROOT / "src/data/standard_rod_fishing.json"
 DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS = ROOT / "src/data/wayfarer_native_hm_encounters.json"
+DEFAULT_WAYFARER_SEVII_ENCOUNTERS = ROOT / "src/data/wayfarer_sevii_wild_encounters.json"
+DEFAULT_WAYFARER_SEVII_MAPS = ROOT / "src/data/wayfarer_sevii_maps.json"
 DEFAULT_REGIONS = ROOT / "src/data/wild_encounter_regions.json"
 DEFAULT_OUTPUT = ROOT / "src/data/wild_encounters.h"
 DEFAULT_AUDIT = ROOT / "build/wild-encounter-balance-audit.json"
@@ -52,12 +54,14 @@ RODS = {
     "SUPER_ROD": "WILD_ENCOUNTER_FISHING_ROD_SUPER",
 }
 PRODUCTS = (("EMERALD", "Emerald"), ("FIRERED", "FireRed"),
-            ("LEAFGREEN", "LeafGreen"), ("POKEMON_HNS", "HNS"))
+            ("LEAFGREEN", "LeafGreen"), ("POKEMON_HNS", "HNS"),
+            ("POKEMON_WAYFARER", "Wayfarer"))
 PRODUCT_GUARDS = {
     "EMERALD": "HAS_EMERALD_CONTENT",
     "FIRERED": "defined(FIRERED) && HAS_FRLG_CONTENT",
     "LEAFGREEN": "defined(LEAFGREEN) && HAS_FRLG_CONTENT",
     "POKEMON_HNS": "HAS_HNS_CONTENT",
+    "POKEMON_WAYFARER": "IS_WAYFARER",
 }
 FISHING_QUALITIES = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD")
 FISHING_SLOT_COUNT = 10
@@ -404,6 +408,8 @@ def trainer_rating_bounds(path, projection_cap):
 
 
 def product_for(label):
+    if "_Wayfarer" in label:
+        return "POKEMON_WAYFARER"
     if "FireRed" in label:
         return "FIRERED"
     if "LeafGreen" in label:
@@ -2373,6 +2379,129 @@ def profiles_with_day_aliases(profiles, regional_manifest, config):
     return result + [aliases[label] for label in sorted(aliases)]
 
 
+def load_wayfarer_sevii_profiles(path, profiles, header_ids, config, standard_rod):
+    """Resolve the frozen FRLG Sevii pairs into normal Wayfarer profiles.
+
+    The manifest deliberately contains source labels and topology, never a
+    second authored Pokémon roster.  This keeps every generated entry
+    reproducible from the two version rows in wild_encounters.json.
+    """
+    document = load_json(path)
+    exact_keys(document, {"schemaVersion", "product", "mapsWithoutEncounters", "profiles"}, path)
+    if document["schemaVersion"] != 1 or document["product"] != "POKEMON_WAYFARER":
+        raise ValidationError(f"{path}: unsupported Sevii encounter manifest")
+    source_by_label = {profile["label"]: profile for profile in profiles}
+    result, identities, maps, provenance = [], set(), set(), []
+    expected_fields = {
+        "map", "method", "dayBaseLabel", "nightBaseLabel", "fireRedSource", "leafGreenSource",
+        "activeSlotCount", "encounterRate", "encounterRateSource", "sourceResolution",
+    }
+    for index, row in enumerate(_manifest_list(document["profiles"], f"{path}/profiles")):
+        location = f"{path}/profiles/{index}"
+        exact_keys(row, expected_fields, location)
+        map_name = identifier(row["map"], f"{location}/map")
+        method = row["method"]
+        if method not in ACTIVE_SLOT_COUNTS:
+            raise ValidationError(f"{location}/method: unsupported method")
+        identity = (map_name, method)
+        if identity in identities:
+            raise ValidationError(f"{location}: duplicate map and method")
+        identities.add(identity); maps.add(map_name)
+        day_label = identifier(row["dayBaseLabel"], f"{location}/dayBaseLabel")
+        night_label = identifier(row["nightBaseLabel"], f"{location}/nightBaseLabel")
+        if (time_and_header(day_label, config)[0] != "TIME_DAY"
+                or time_and_header(night_label, config)[0] != "TIME_NIGHT"
+                or time_and_header(day_label, config)[1] != time_and_header(night_label, config)[1]):
+            raise ValidationError(f"{location}: explicit day/night labels must share one header")
+        fire_label = identifier(row["fireRedSource"], f"{location}/fireRedSource")
+        leaf_label = identifier(row["leafGreenSource"], f"{location}/leafGreenSource")
+        fire, leaf = source_by_label.get(fire_label), source_by_label.get(leaf_label)
+        if (fire is None or leaf is None or fire["product"] != "FIRERED" or leaf["product"] != "LEAFGREEN"
+                or fire["map"] != map_name or leaf["map"] != map_name
+                or method not in fire["encounter"] or method not in leaf["encounter"]):
+            raise ValidationError(f"{location}: unresolved FRLG source pair")
+        if map_name in {"MAP_BIRTH_ISLAND", "MAP_NAVEL_ROCK"}:
+            raise ValidationError(f"{location}: protected event-island encounter ownership")
+        if map_name == "MAP_SIX_ISLAND_ALTERING_CAVE" and ("_2_" in fire_label or "_2_" in leaf_label):
+            raise ValidationError(f"{location}: only default Altering Cave is permitted")
+        expected_count = ACTIVE_SLOT_COUNTS[method]
+        if integer(row["activeSlotCount"], f"{location}/activeSlotCount", 1, expected_count) != expected_count:
+            raise ValidationError(f"{location}/activeSlotCount: expected {expected_count}")
+        if row["sourceResolution"] != "FRLG_PAIR" or row["encounterRateSource"] not in {"FIRERED", "LEAFGREEN"}:
+            raise ValidationError(f"{location}: unsupported source resolution")
+        selected_source = fire if row["encounterRateSource"] == "FIRERED" else leaf
+        encounter_rate = integer(row["encounterRate"], f"{location}/encounterRate", 0, 255)
+        if encounter_rate != selected_source["encounter"][method]["encounter_rate"]:
+            raise ValidationError(f"{location}/encounterRate: does not match selected source")
+
+        fire_mons, leaf_mons = _active_mons(fire, method), _active_mons(leaf, method)
+        grouped = {}
+        for slot, (fire_mon, leaf_mon) in enumerate(zip(fire_mons, leaf_mons)):
+            grouped.setdefault((fire_mon["species"], leaf_mon["species"]), []).append(slot)
+        # A source pair has no target-weight changes available to make room.
+        # Retain a shared species in-place; for a differing canonical pair,
+        # alternate its two source members through its fixed source-slot
+        # sequence when it has room for both.  A one-slot pair has a proved
+        # FireRed tie-break omission.  This is deterministic, preserves every
+        # method weight and source range, and avoids a hand-authored roster.
+        group_position = {pair: 0 for pair in grouped}
+        mons, slots = [], []
+        omissions = []
+        for target_slot, (fire_mon, leaf_mon) in enumerate(zip(fire_mons, leaf_mons)):
+            pair = (fire_mon["species"], leaf_mon["species"])
+            source_slots = grouped[pair]
+            position = group_position[pair]
+            group_position[pair] += 1
+            if pair[0] == pair[1]:
+                species = pair[0]
+            elif len(source_slots) == 1:
+                species = pair[0]
+                omissions.append({"sourceSlots": source_slots, "omittedSpecies": pair[1], "reason": "ONE_FIXED_SLOT_FIRERED_TIEBREAK"})
+            else:
+                species = pair[position % 2]
+            if fire_mon["species"] == leaf_mon["species"]:
+                level = select_source_level_range(fire_mon, leaf_mon)
+            elif species == fire_mon["species"]:
+                level = {"version": "FIRERED", "minLevel": fire_mon.get("min_level", 2), "maxLevel": fire_mon.get("max_level", 100)}
+            elif species == leaf_mon["species"]:
+                level = {"version": "LEAFGREEN", "minLevel": leaf_mon.get("min_level", 2), "maxLevel": leaf_mon.get("max_level", 100)}
+            else:
+                raise ValidationError(f"{location}: source resolver selected a species absent from its FRLG pair")
+            mons.append({"min_level": level["minLevel"], "max_level": level["maxLevel"], "species": species})
+            slots.append({
+                "targetSlot": target_slot, "species": species, "levelSource": level,
+                "fireRedSlots": list(source_slots), "leafGreenSlots": list(source_slots),
+            })
+        encounter = {"base_label": day_label, "map": map_name, method: {"encounter_rate": encounter_rate, "mons": mons}}
+        header = time_and_header(day_label, config)[1]
+        header_id = header_ids["POKEMON_WAYFARER"].setdefault(header, len(header_ids["POKEMON_WAYFARER"]))
+        result.append({
+            "label": day_label, "map": map_name, "product": "POKEMON_WAYFARER", "time": "TIME_DAY",
+            "header": header, "header_id": header_id, "encounter": encounter, "group": fire["group"],
+            "night_label": night_label, "method": method, "source": row, "slots": slots,
+            "sourceHashes": {
+                "FIRERED": hashlib.sha256(json.dumps(fire["encounter"][method], sort_keys=True, separators=(",", ":")).encode("ascii")).hexdigest(),
+                "LEAFGREEN": hashlib.sha256(json.dumps(leaf["encounter"][method], sort_keys=True, separators=(",", ":")).encode("ascii")).hexdigest(),
+            },
+            "counterpartProof": {"strategy": "FIXED_SLOT_FRLG_PAIR", "canonicalGroups": [
+                {"sourceSlots": slots, "sourceSpecies": list(pair)} for pair, slots in sorted(grouped.items())
+            ], "omittedCounterparts": omissions},
+        })
+        provenance.append({"map": map_name, "method": method, "slots": slots, "proof": result[-1]["counterpartProof"]})
+    if len(result) != 99 or len(maps) != 58:
+        raise ValidationError(f"{path}/profiles: expected exactly 58 maps and 99 profiles")
+    counts = {method: sum(row["method"] == method for row in result) for method in ACTIVE_SLOT_COUNTS}
+    if counts != {"land_mons": 49, "water_mons": 20, "rock_smash_mons": 10, "fishing_mons": 20}:
+        raise ValidationError(f"{path}/profiles: method profile counts drifted {counts}")
+    absent = _manifest_list(document["mapsWithoutEncounters"], f"{path}/mapsWithoutEncounters")
+    selected_maps = {
+        entry["map_id"] for entry in _manifest_list(load_json(DEFAULT_WAYFARER_SEVII_MAPS)["maps"], f"{DEFAULT_WAYFARER_SEVII_MAPS}/maps")
+    }
+    if len(absent) != 77 or maps & set(absent) or maps | set(absent) != selected_maps or len(selected_maps) != 135:
+        raise ValidationError(f"{path}/mapsWithoutEncounters: expected the explicit 77-map complement")
+    return sorted(result, key=lambda profile: (profile["map"], profile["method"])), provenance
+
+
 def validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, path=DEFAULT_STANDARD_ROD_FISHING):
     profiles_by_label = {profile["label"]: profile for profile in profiles}
     old_weights = standard_rod["qualityWeights"]["OLD_ROD"]
@@ -2647,9 +2776,10 @@ def apply_wayfarer_encounter_replacements(encounters, replacements=None):
 
 
 class Assembler:
-    def __init__(self, output, data, config, regional_manifest=None):
+    def __init__(self, output, data, config, regional_manifest=None, sevii_profiles=()):
         self.output, self.data, self.config = output, data, config
         self.regional_manifest = regional_manifest
+        self.sevii_profiles = sevii_profiles
         wayfarer, _ = apply_wayfarer_encounter_replacements(data)
         self.wayfarer_encounters = {entry["base_label"]: entry
                                    for group in wayfarer["wild_encounter_groups"]
@@ -2752,6 +2882,28 @@ class Assembler:
                         raise ValidationError(f"{encounter['base_label']}/{method}: duplicate time data")
                     time_data[method] = name + "Info"
                 self.line("#endif")
+            if group.get("for_maps", False):
+                for profile in self.sevii_profiles:
+                    header = profile["header"]
+                    data = headers["data"].setdefault(header, {
+                        "mapGroup": f"MAP_GROUP({profile['map']})",
+                        "mapNum": f"MAP_NUM({profile['map']})",
+                    })
+                    if data["mapGroup"] != f"MAP_GROUP({profile['map']})" or data["mapNum"] != f"MAP_NUM({profile['map']})":
+                        raise ValidationError(f"{profile['label']}: synthetic header spans maps")
+                    method = profile["method"]
+                    name = profile["label"] + "_" + method.title().replace("_", "")
+                    self.line("#if IS_WAYFARER")
+                    self.write_mons(name, profile["encounter"][method])
+                    self.line("#endif")
+                    day_data = data.setdefault("TIME_DAY", {})
+                    if method in day_data:
+                        raise ValidationError(f"{profile['label']}/{method}: duplicate Wayfarer day data")
+                    day_data[method] = name + "Info"
+                    night_data = data.setdefault("TIME_NIGHT", {})
+                    if method in night_data:
+                        raise ValidationError(f"{profile['night_label']}/{method}: duplicate Wayfarer night alias")
+                    night_data[method] = name + "Info"
             if group.get("for_maps", False) and self.regional_manifest is not None:
                 for profile in self.regional_manifest["profiles"]:
                     if profile["nightMode"] != "DAY_ALIAS":
@@ -2774,6 +2926,10 @@ def runtime_header_id(item, header_ids):
     if item["product"] == "POKEMON_HNS":
         emerald_count = len(header_ids["EMERALD"])
         return f"({item['header_id']} + HAS_EMERALD_CONTENT * {emerald_count})"
+    if item["product"] == "POKEMON_WAYFARER":
+        emerald_count = len(header_ids["EMERALD"])
+        hns_count = len(header_ids["POKEMON_HNS"])
+        return f"({item['header_id']} + HAS_EMERALD_CONTENT * {emerald_count} + HAS_HNS_CONTENT * {hns_count})"
     return str(item["header_id"])
 
 
@@ -2808,10 +2964,10 @@ def render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids)
     output.write("};\nconst u16 gWildEncounterSpeciesMetadataCount = ARRAY_COUNT(gWildEncounterSpeciesMetadata);\n")
 
 
-def render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest=None):
+def render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest=None, sevii_profiles=()):
     output = io.StringIO()
     output.write("//\n// DO NOT MODIFY THIS FILE! It is auto-generated by tools/wild_encounters/wild_encounters_to_header.py\n//\n\n\n")
-    assembler = Assembler(output, encounters, config, regional_manifest)
+    assembler = Assembler(output, encounters, config, regional_manifest, sevii_profiles)
     assembler.write_macros(); assembler.write_encounters(); render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids)
     return output.getvalue()
 
@@ -4389,23 +4545,25 @@ def build_cartographer_projection(encounters_path=DEFAULT_ENCOUNTERS, scaling_pa
     known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
     standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
+    sevii_profiles, _ = load_wayfarer_sevii_profiles(DEFAULT_WAYFARER_SEVII_ENCOUNTERS, profiles, header_ids, config, standard_rod)
     validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
     ordinary_species = {
         mon["species"]
-        for profile in profiles
+        for profile in profiles + sevii_profiles
         for method in config.mon_types
         for mon in profile["encounter"].get(method, {}).get("mons", [])
     }
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
-    # Cartographer joins projection rows one-to-one with authored rows in
-    # wild_encounters.json.  Validate DAY_ALIAS bindings as part of the regional
-    # manifest, but materialize them only for generated C and balance-audit
-    # runtime identities.
-    load_regional_manifest(regions_path, profiles, config, known_species)
+    # Cartographer joins projection rows one-to-one with authored rows.  The
+    # regional manifest's exhaustive counterpart solver is intentionally kept
+    # in the generated-C and balance-audit paths, where it validates runtime
+    # aliases.  It is not an input to this read-only projection and running it
+    # here turns a deterministic catalog export into an unnecessary multi-minute
+    # operation.
     minimum_rating, maximum_rating = trainer_rating_bounds(trainer_rating_path, scaling["projection_cap"])
     return build_cartographer_projection_model(
-        profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating, standard_rod,
+        profiles + sevii_profiles, header_ids, config, scaling, metadata, offsets, minimum_rating, maximum_rating, standard_rod,
     )
 
 
@@ -4413,8 +4571,9 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
     standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
+    sevii_profiles, sevii_provenance = load_wayfarer_sevii_profiles(DEFAULT_WAYFARER_SEVII_ENCOUNTERS, profiles, header_ids, config, standard_rod)
     validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
-    ordinary_species = {mon["species"] for profile in profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
+    ordinary_species = {mon["species"] for profile in profiles + sevii_profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
     by_species = {item["species"]: item for item in metadata}
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
@@ -4424,7 +4583,7 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
         if Fraction(weight, 100) < Fraction(1, 200):
             failures.append(f"OLD_ROD/slot {slot}: below the 0.5 percent minimum when eligible")
     for product, display in PRODUCTS:
-        selected = [profile for profile in profiles if profile["product"] == product]
+        selected = [profile for profile in profiles + sevii_profiles if profile["product"] == product]
         if not selected:
             failures.append(f"{display}: no ordinary wild profiles")
         population = []
@@ -4473,7 +4632,19 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
     regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
     kanto = build_kanto_audit(regional_manifest, profiles, scaling, offsets, metadata, standard_rod, failures)
     johto = build_johto_audit(regional_manifest["johto"], profiles, scaling, offsets, metadata, standard_rod, failures)
-    return {"schemaVersion": 3, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(0, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto, "JOHTO": johto}, "invariants": {"passed": not failures, "failures": failures}}
+    sevii = {
+        "product": "POKEMON_WAYFARER", "mapCount": len({profile["map"] for profile in sevii_profiles}),
+        "dayProfileCount": len(sevii_profiles), "nightAliasCount": len(sevii_profiles),
+        "mapsWithoutEncounters": load_json(DEFAULT_WAYFARER_SEVII_ENCOUNTERS)["mapsWithoutEncounters"],
+        "profiles": [{
+            "map": profile["map"], "method": profile["method"], "dayBaseLabel": profile["label"],
+            "nightBaseLabel": profile["night_label"], "fireRedSource": profile["source"]["fireRedSource"],
+            "leafGreenSource": profile["source"]["leafGreenSource"], "encounterRate": profile["encounter"][profile["method"]]["encounter_rate"],
+            "sourceHashes": profile["sourceHashes"], "slots": profile["slots"], "counterpartProof": profile["counterpartProof"],
+            "resolvedTimes": {time: profile["label"] for time in ("TIME_MORNING", "TIME_DAY", "TIME_EVENING", "TIME_NIGHT")},
+        } for profile in sevii_profiles], "provenance": sevii_provenance,
+    }
+    return {"schemaVersion": 4, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(0, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto, "JOHTO": johto}, "sevii": sevii, "invariants": {"passed": not failures, "failures": failures}}
 
 
 def atomic_write(path, content):
@@ -4502,13 +4673,14 @@ def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, s
     wayfarer_encounters, _ = apply_wayfarer_encounter_replacements(encounters)
     wayfarer_profiles, _ = validate_encounters(wayfarer_encounters, known_species, config)
     standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
+    sevii_profiles, _ = load_wayfarer_sevii_profiles(DEFAULT_WAYFARER_SEVII_ENCOUNTERS, profiles, header_ids, config, standard_rod)
     validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
-    ordinary_species = {mon["species"] for profile in profiles + wayfarer_profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
+    ordinary_species = {mon["species"] for profile in profiles + wayfarer_profiles + sevii_profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
     validate_standard_rod_balance(standard_rod, profiles, scaling, metadata, offsets)
     regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
-    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest))
+    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest, sevii_profiles))
 
 
 def generate_wild_encounter_balance_audit(output_path=DEFAULT_AUDIT, **kwargs):

@@ -356,7 +356,7 @@ AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
 AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
 
-$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
+$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_sevii_wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py
 
 $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc
@@ -833,7 +833,7 @@ wayfarer-hoenn-content-test: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGIN
 wayfarer-hoenn-content-audit: wayfarer-hoenn-content-test $(WAYFARER_HOENN_CONTENT_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_CONTENT_TOOL_DIR)/generate.py --output $(WAYFARER_HOENN_CONTENT_MANIFEST)
 
-WAYFARER_HOENN_ENTRY_DEPS := $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(MAPS_DIR)/SlateportCity_Harbor/map.json $(MAPS_DIR)/LilycoveCity_Harbor/map.json $(LAYOUTS_DIR)/layouts.json $(LAYOUTS_DIR)/Harbor/map.bin $(DATA_SRC_SUBDIR)/heal_locations.json $(MAPS_DIR)/VermilionCity_PortInside_hns/scripts.inc $(MAPS_DIR)/OlivineCity_PortInside_hns/scripts.inc $(MAPS_DIR)/SlateportCity_Harbor/scripts.inc $(MAPS_DIR)/LilycoveCity_Harbor/scripts.inc $(DATA_ASM_SUBDIR)/event_scripts.s $(DATA_ASM_SUBDIR)/scripts/new_game.inc $(DATA_ASM_SUBDIR)/scripts/players_house.inc $(DATA_ASM_SUBDIR)/scripts/wayfarer_hoenn_entry.inc $(C_SUBDIR)/data/script_menu.h $(C_SUBDIR)/wayfarer_persistence.c $(C_SUBDIR)/wayfarer_origin.c $(wildcard $(MAPS_DIR)/*/map.json) $(wildcard $(MAPS_DIR)/*/scripts.inc)
+WAYFARER_HOENN_ENTRY_DEPS := $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(MAPS_DIR)/SlateportCity_Harbor/map.json $(MAPS_DIR)/LilycoveCity_Harbor/map.json $(LAYOUTS_DIR)/layouts.json $(LAYOUTS_DIR)/Harbor/map.bin $(DATA_SRC_SUBDIR)/heal_locations.json $(MAPS_DIR)/VermilionCity_PortInside_hns/scripts.inc $(MAPS_DIR)/OlivineCity_PortInside_hns/scripts.inc $(MAPS_DIR)/SlateportCity_Harbor/scripts.inc $(MAPS_DIR)/LilycoveCity_Harbor/scripts.inc $(DATA_ASM_SUBDIR)/event_scripts.s $(DATA_ASM_SUBDIR)/scripts/new_game.inc $(DATA_ASM_SUBDIR)/scripts/players_house.inc $(DATA_ASM_SUBDIR)/scripts/wayfarer_hoenn_entry.inc $(C_SUBDIR)/data/script_menu.h $(C_SUBDIR)/wayfarer_persistence.c $(C_SUBDIR)/wayfarer_origin.c $(C_SUBDIR)/wayfarer_sevii_ferry.c $(wildcard $(MAPS_DIR)/*/map.json) $(wildcard $(MAPS_DIR)/*/scripts.inc)
 
 wayfarer-hoenn-entry-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_HOENN_ENTRY_TOOL_DIR) -p 'test_*.py' -q
@@ -843,10 +843,11 @@ $(WAYFARER_HOENN_ENTRY_AUDIT): $(WAYFARER_HOENN_ENTRY_DEPS)
 
 wayfarer-hoenn-entry-audit: wayfarer-hoenn-entry-test $(WAYFARER_HOENN_ENTRY_AUDIT)
 
-WAYFARER_SEVII_PORT_DEPS := $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py $(DATA_SRC_SUBDIR)/wayfarer_sevii_maps.json $(WAYFARER_SEVII_PORT_TOOL_DIR)/event_island_baseline.json $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
+WAYFARER_SEVII_PORT_DEPS := $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py $(DATA_SRC_SUBDIR)/wayfarer_sevii_maps.json $(DATA_SRC_SUBDIR)/wayfarer_sevii_wild_encounters.json $(WAYFARER_SEVII_PORT_TOOL_DIR)/event_island_baseline.json $(WAYFARER_SEVII_SCRIPT_TOOL) $(WAYFARER_SEVII_EVENT_SCRIPTS) $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
 
 wayfarer-sevii-port-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_wayfarer_catalog.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/wayfarer_sevii_scripts -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_SEVII_PORT_TOOL_DIR)/tests -p 'test_*.py' -q
 
 $(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)

@@ -9,7 +9,7 @@ import type {
   CatalogWildEncounterProjection,
 } from "./types"
 
-const products = ["EMERALD", "FIRERED", "LEAFGREEN", "POKEMON_HNS"] as const
+const products = ["EMERALD", "FIRERED", "LEAFGREEN", "POKEMON_HNS", "POKEMON_WAYFARER"] as const
 const methods = ["land_mons", "water_mons", "rock_smash_mons", "fishing_mons"] as const
 const rods = ["NONE", "OLD_ROD", "GOOD_ROD", "SUPER_ROD"] as const
 const runtimeTimes = ["TIME_MORNING", "TIME_DAY", "TIME_EVENING", "TIME_NIGHT"] as const

@@ -64,7 +64,7 @@ export type CatalogEncounterSprite = {
   source: string
 }
 
-export type CatalogEncounterProduct = "EMERALD" | "FIRERED" | "LEAFGREEN" | "POKEMON_HNS"
+export type CatalogEncounterProduct = "EMERALD" | "FIRERED" | "LEAFGREEN" | "POKEMON_HNS" | "POKEMON_WAYFARER"
 
 export type CatalogEncounterTimeOfDay = "morning" | "day" | "evening" | "night"
 
