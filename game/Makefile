@@ -337,7 +337,9 @@ endif
 LEARNSET_HELPERS_DIR := $(TOOLS_DIR)/learnset_helpers
 LEARNSET_HELPERS_DATA_DIR := $(LEARNSET_HELPERS_DIR)/porymoves_files
 LEARNSET_HELPERS_BUILD_DIR := $(LEARNSET_HELPERS_DIR)/build
-LEARNSET_HELPERS_BUILD_VERSION := $(LEARNSET_HELPERS_BUILD_DIR)/.game_version
+LEARNSET_HELPERS_BUILD_VERSION := $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.$(GAME_VERSION)
+LEARNSET_HELPERS_BUILD_VERSIONS := $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.POKEMON_EMERALD $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.FIRERED $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.LEAFGREEN $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.POKEMON_HNS $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.POKEMON_WAYFARER
+.NOTINTERMEDIATE: $(LEARNSET_HELPERS_BUILD_VERSION)
 ALL_LEARNABLES_JSON := $(DATA_SRC_SUBDIR)/pokemon/all_learnables.json
 ALL_TUTORS_JSON := $(LEARNSET_HELPERS_BUILD_DIR)/all_tutors.json
 ALL_TEACHING_TYPES_JSON := $(LEARNSET_HELPERS_BUILD_DIR)/all_teaching_types.json
@@ -708,8 +710,14 @@ TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(INCLUDE_DIRS)/constants/tms_hms.h $(I
 $(LEARNSET_HELPERS_BUILD_DIR):
 	@mkdir -p $@
 
-$(LEARNSET_HELPERS_BUILD_VERSION): FORCE | $(LEARNSET_HELPERS_BUILD_DIR)
-	@(echo "$(GAME_VERSION)" | cmp -s $@ -) || echo "$(GAME_VERSION)" > $@
+# This stamp is an input to generated headers and scaninc dependency files.
+# A FORCE prerequisite made it perpetually newer even when the version text had
+# not changed, so trainerproc rewrote trainers.h and Make restarted its include
+# scan indefinitely. Product-specific stamps preserve the needed switch signal
+# without refreshing an unchanged build graph.
+$(LEARNSET_HELPERS_BUILD_VERSION): | $(LEARNSET_HELPERS_BUILD_DIR)
+	@rm -f $(filter-out $@,$(LEARNSET_HELPERS_BUILD_VERSIONS))
+	@echo "$(GAME_VERSION)" > $@
 
 $(ALL_LEARNABLES_JSON):  | $(wildcard $(LEARNSET_HELPERS_DATA_DIR)/*.json)
 	python3 $(LEARNSET_HELPERS_DIR)/make_learnables.py $(LEARNSET_HELPERS_DATA_DIR) $@
