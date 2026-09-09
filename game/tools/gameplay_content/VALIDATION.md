@@ -79,8 +79,12 @@ file were built together with `make -j8 e2e`. Their SHA-256 values are
 `391129495bbeec0f8d9d880f31b06cd96ef9c09dce0ac31491e166c24f4d4f4e` for
 the ROM and `a3a38cad24e0ed0fc301fab7d7206eb0dc192f18cf5ee9b8eee0764f5ad6fc5d`
 for the symbol file. The HNS standard rod-giver journey passed 6 of 6 tests in
-36.49 seconds with a fresh writable XDG directory. No whole-suite E2E result is
-recorded here.
+36.49 seconds with a fresh writable XDG directory. A scoped League run passed
+three cases in 135.50 seconds: itinerary/snapshot/save-load, all five earliest-Kanto
+rooms with admission levels preserved through save/load, and defeat/save-load/retry.
+Nine other League cases were filtered out. The earlier full League invocation was
+interrupted by a 600-second shell timeout and provides no behavioral verdict; no
+whole-suite E2E result is claimed.
 
 The main reproducible entry points were:
 
@@ -101,6 +105,13 @@ SKYEMU_ROM=../game/pokemon-wayfarer-e2e.gba \
 SKYEMU_SYMS=../game/pokemon-wayfarer-e2e.sym \
 ./node_modules/.bin/wa test src/journeys/hns-standard-rod-givers.e2e.ts
 ```
+
+The League subset used the same environment and matched artifacts, invoking the
+installed Vitest CLI directly with `run --config webanvil.config.ts --reporter
+verbose --no-file-parallelism src/journeys/wayfarer-league-circuit.e2e.ts` and the
+name filter `keeps badge collection independent|preserves admission levels through
+every room and save/load: earliest Kanto|clears a lost attempt before save/load and
+admits a fresh retry`.
 
 The disabled trainer-scaling rollback check fails at
 `test/trainer_party_scaling.c:592` with `EXPECT_EQ(1, 63)`. The same failure was
