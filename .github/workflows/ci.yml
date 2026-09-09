@@ -147,11 +147,11 @@ jobs:
               raise SystemExit("Pull request and base ROM reports use different capacity limits")
 
           with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
-              output.write("ready=true\\n")
-              output.write(f"base-used-bytes={base['used']}\\n")
-              output.write(f"head-used-bytes={head['used']}\\n")
-              output.write(f"capacity-bytes={head['capacity']}\\n")
-              output.write(f"limit-bytes={head['limit']}\\n")
+              output.write("ready=true\n")
+              output.write(f"base-used-bytes={base['used']}\n")
+              output.write(f"head-used-bytes={head['used']}\n")
+              output.write(f"capacity-bytes={head['capacity']}\n")
+              output.write(f"limit-bytes={head['limit']}\n")
           PY
 
   rom-budget:
