@@ -74,6 +74,25 @@ surface captures are under `e2e/artifacts/trainer-appearance/`. These local
 artifacts document the runs that produced them and must not be presented as
 validation of later untested changes.
 
+## Cycling Road reload regression
+
+PR #88's ready-for-review E2E run exposed a lost bicycle mode after saving and
+reloading a Cycling Road loan. The local reproduction failed the same assertion
+with 17 other Kanto traversal tests passing. Continue restores saved object
+events after clearing the live avatar flags; the appearance resolver had treated
+that empty state as on foot.
+
+The resolver now restores a uniquely matching movement mode from the selected
+appearance's saved graphics when live flags are absent. Menu returns keep their
+live movement flags. A mechanics regression covers all four appearances and all
+five persistent movement modes, and checks that their graphics are unambiguous.
+
+After rebuilding the E2E ROM, the full Kanto traversal, appearance water, and
+appearance underwater files passed: 26/26 tests in 54.82 seconds. This includes
+the real loan save/reload and gate cleanup, plus surfing menu-return coverage.
+Logs: `/tmp/pr88-bike-before.log`, `/tmp/pr88-bike-build.log`, and
+`/tmp/pr88-bike-after.log`. Independent review found no confirmed defect.
+
 ## Resource measurements
 
 The passing four-style release used 32,252,320 ROM bytes, 248,517 EWRAM bytes,

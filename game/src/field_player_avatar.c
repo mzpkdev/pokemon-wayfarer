@@ -1717,10 +1717,30 @@ void SetPlayerAvatarStateMask(u8 flags)
 u8 GetPlayerAvatarStateTransitionByGraphicsId(u16 graphicsId, u8 gender)
 {
 #if IS_WAYFARER
-    // Sprite recreation restores movement from the avatar, never from an aliased sheet.
     u8 state = gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ON_FOOT | PLAYER_AVATAR_FLAG_MACH_BIKE
         | PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
-    return state ? state : PLAYER_AVATAR_FLAG_ON_FOOT;
+    u8 savedState = PLAYER_AVATAR_FLAG_ON_FOOT;
+    bool8 foundSavedState = FALSE;
+
+    // Menu returns retain the live movement state before recreating the player
+    // sprite. A game reload clears the avatar first, so recover that state from
+    // the saved player graphics, which are specific to the selected appearance.
+    if (state != 0)
+        return state;
+
+    for (state = PLAYER_AVATAR_STATE_NORMAL; state <= PLAYER_AVATAR_STATE_UNDERWATER; state++)
+    {
+        if (graphicsId == WayfarerGetAppearanceGraphicsId(WayfarerGetPlayerAppearanceId(), state))
+        {
+            // A shared sheet cannot identify a mode after a reload. Preserve
+            // the safe on-foot fallback rather than picking the first match.
+            if (foundSavedState)
+                return PLAYER_AVATAR_FLAG_ON_FOOT;
+            savedState = 1 << state;
+            foundSavedState = TRUE;
+        }
+    }
+    return foundSavedState ? savedState : PLAYER_AVATAR_FLAG_ON_FOOT;
 #else
     u8 i;
 

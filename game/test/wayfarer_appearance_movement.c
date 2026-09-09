@@ -21,6 +21,34 @@ TEST("Wayfarer sprite recreation preserves Acro and underwater state even with s
     gPlayerAvatar.flags = oldFlags;
 }
 
+TEST("Wayfarer reload restores movement from the saved selected appearance graphics")
+{
+    u8 index, state, otherState;
+    u8 oldAppearance = gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId;
+    u8 oldFlags = gPlayerAvatar.flags;
+    u8 oldGender = gSaveBlock2Ptr->playerGender;
+
+    // Continue reloads object events before it recreates the avatar. With no
+    // live flags, the saved player graphics must restore the same mode.
+    gPlayerAvatar.flags = 0;
+    for (index = 0; index < APPEARANCE_COUNT; index++)
+    {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
+        gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = id;
+        gSaveBlock2Ptr->playerGender = WayfarerGetAppearanceProfile(id)->gender;
+        for (state = PLAYER_AVATAR_STATE_NORMAL; state <= PLAYER_AVATAR_STATE_UNDERWATER; state++)
+        {
+            for (otherState = state + 1; otherState <= PLAYER_AVATAR_STATE_UNDERWATER; otherState++)
+                EXPECT_NE(WayfarerGetAppearanceGraphicsId(id, state), WayfarerGetAppearanceGraphicsId(id, otherState));
+            EXPECT_EQ(GetPlayerAvatarStateTransitionByGraphicsId(
+                WayfarerGetAppearanceGraphicsId(id, state), gSaveBlock2Ptr->playerGender), 1 << state);
+        }
+    }
+    gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = oldAppearance;
+    gPlayerAvatar.flags = oldFlags;
+    gSaveBlock2Ptr->playerGender = oldGender;
+}
+
 TEST("Wayfarer current movement graphics resolve all four saved appearances")
 {
     u8 index, state;
