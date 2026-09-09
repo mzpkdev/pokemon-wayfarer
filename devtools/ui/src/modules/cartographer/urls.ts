@@ -18,6 +18,7 @@ export type CartographerViewState = {
 }
 
 export type CartographerUrlState = {
+  build: string | null
   region: string | null
   selectedMap: string | null
   view: CartographerViewState | null
@@ -53,6 +54,7 @@ export const parseCartographerUrlState = (href: string): CartographerUrlState =>
   const y = numberParameter(url, "y")
   const zoom = numberParameter(url, "zoom")
   return {
+    build: parameter(url, "build"),
     region: parameter(url, "region"),
     selectedMap: parameter(url, "map"),
     view: x === null || y === null || zoom === null ? null : { center: [x, y], zoom },
@@ -63,9 +65,10 @@ export const parseCartographerUrlState = (href: string): CartographerUrlState =>
 
 export const cartographerUrlWithState = (href: string, state: CartographerUrlState): string => {
   const url = new URL(href, documentOrigin())
-  for (const name of ["region", "map", "x", "y", "zoom", "rating", "product"]) {
+  for (const name of ["build", "region", "map", "x", "y", "zoom", "rating", "product"]) {
     url.searchParams.delete(name)
   }
+  if (state.build) url.searchParams.set("build", state.build)
   if (state.region) url.searchParams.set("region", state.region)
   if (state.selectedMap) url.searchParams.set("map", state.selectedMap)
   url.searchParams.set("rating", String(clampTrainerRating(state.trainerRating)))

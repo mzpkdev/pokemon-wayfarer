@@ -56,10 +56,38 @@ const projection = (): Record<string, unknown> => ({
 })
 
 const catalog = (overrides: Record<string, unknown> = {}): Record<string, unknown> => {
+  const maps = Array.isArray(overrides.maps) ? overrides.maps : []
+  const builds = Object.hasOwn(overrides, "builds")
+    ? overrides.builds
+    : [
+        {
+          id: "emerald",
+          label: "Emerald",
+          mapCount: maps.filter(
+            (map) =>
+              typeof map === "object" &&
+              map !== null &&
+              Array.isArray((map as Record<string, unknown>).builds) &&
+              (map as Record<string, unknown>).builds.includes("emerald"),
+          ).length,
+          maps: maps.flatMap((map) => {
+            if (
+              typeof map !== "object" ||
+              map === null ||
+              !Array.isArray((map as Record<string, unknown>).builds) ||
+              !(map as Record<string, unknown>).builds.includes("emerald") ||
+              typeof (map as Record<string, unknown>).name !== "string"
+            )
+              return []
+            return [(map as Record<string, unknown>).name]
+          }),
+        },
+      ]
   return {
-    schemaVersion: 8,
+    schemaVersion: 9,
     pixelsPerMetatile: 16,
     wildEncounterProjection: projection(),
+    builds,
     regions: [],
     maps: [],
     topology: { conflicts: [] },
@@ -74,6 +102,7 @@ const mapWithWildEncounters = (
     name: "Route101",
     id: "MAP_ROUTE101",
     region: "routes",
+    builds: ["emerald"],
     image: { widthPixels: 16, heightPixels: 16 },
     layout: { widthMetatiles: 1, heightMetatiles: 1 },
     objects: [],
@@ -199,7 +228,7 @@ const wildEncounters = (): Record<string, unknown> => {
 describe("validateCatalog", () => {
   it("rejects stale catalog schemas before the viewport can interpret their topology", () => {
     expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow(CatalogValidationError)
-    expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow("schemaVersion must be 8")
+    expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow("schemaVersion must be 9")
   })
 
   it("rejects empty and dimensionally incomplete projection lookup tables", () => {
@@ -320,7 +349,32 @@ describe("validateCatalog", () => {
   })
 
   it("accepts the current empty diagnostic contract", () => {
-    expect(validateCatalog(catalog()).schemaVersion).toBe(8)
+    expect(validateCatalog(catalog()).schemaVersion).toBe(9)
+  })
+
+  it("rejects malformed or inconsistent build membership metadata", () => {
+    expect(() => validateCatalog(catalog({ builds: [null] }))).toThrow(
+      "builds[0] must include an ID, label, map count, and map names",
+    )
+
+    const value = catalog({
+      builds: [{ id: "hns", label: "HNS", mapCount: 0, maps: [] }],
+      regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
+      maps: [mapWithWildEncounters(wildEncounters())],
+    })
+
+    expect(() => validateCatalog(value)).toThrow('Route101 refers to undeclared build "emerald"')
+
+    const incompleteSummary = catalog({
+      builds: [{ id: "emerald", label: "Emerald", mapCount: 0, maps: [] }],
+      regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
+      maps: [mapWithWildEncounters(wildEncounters())],
+    })
+
+    expect(() => validateCatalog(incompleteSummary)).toThrow("emerald has an incorrect map count")
+    expect(() => validateCatalog(incompleteSummary)).toThrow(
+      "emerald has an incorrect map membership list",
+    )
   })
 
   it("accepts source-backed wild encounter sets and runtime time-of-day resolution", () => {

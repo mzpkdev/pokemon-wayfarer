@@ -59,6 +59,7 @@ test("previews scaled encounters without remounting the map", async ({ page }) =
   await page.keyboard.press("Escape")
   await expect(waterPopulationButton).toBeFocused()
 
+  await page.getByRole("combobox", { name: "Game build" }).selectOption("firered")
   await mapSearch.fill("CeruleanCity_Frlg")
   await page.getByRole("option", { name: /CeruleanCity_Frlg/ }).click()
   const version = page.getByRole("combobox", { name: "Game version" })
@@ -122,7 +123,7 @@ test("shows the cartographer", async ({ page }) => {
       response.status() === 200,
   )
   await page.getByRole("button", { name: /Alola 7 maps/ }).click()
-  await expect(page.getByRole("heading", { name: "Alola", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Wayfarer · Alola", exact: true })).toBeVisible()
   await alolaOverview
   await expect(page.getByLabel("Interactive cartographer").locator("canvas").first()).toBeVisible()
 
@@ -349,4 +350,46 @@ test("shows the cartographer", async ({ page }) => {
   await expect(
     metatileBrowser.locator('button[aria-label*="gTileset_BattleDome:"]').first(),
   ).toHaveAttribute("aria-label", "gTileset_BattleDome:0x140")
+})
+
+test("browses a region within the selected game build", async ({ page }) => {
+  await page.goto("/?region=hoenn")
+
+  const build = page.getByRole("combobox", { name: "Game build" })
+  const regions = page.getByRole("navigation", { name: "Regions" })
+  const mapSearch = page.getByRole("combobox", { name: "Name or map section" })
+
+  await expect(build).toHaveValue("wayfarer")
+  await expect(page.getByRole("heading", { name: "Wayfarer · Hoenn", exact: true })).toBeVisible()
+
+  await build.selectOption("emerald")
+  await expect(page.getByRole("heading", { name: "Emerald · Hoenn", exact: true })).toBeVisible()
+  await expect(regions.getByRole("button")).toHaveCount(1)
+  await expect(regions.getByRole("button", { name: /Hoenn \d+ maps/ })).toBeVisible()
+  await expect(page).toHaveURL(/build=emerald.*region=hoenn/)
+
+  await mapSearch.fill("LakeOfRage")
+  await expect(page.getByRole("option", { name: /LakeOfRage_hns/ })).toHaveCount(0)
+
+  await build.selectOption("hns")
+  await expect(page.getByRole("heading", { name: "HNS · Hoenn", exact: true })).toBeVisible()
+  await expect(page).toHaveURL(/build=hns.*region=hoenn/)
+  await mapSearch.fill("Route29")
+  await page.getByRole("option", { name: /Route29_hns/ }).click()
+  await expect(page.getByRole("heading", { name: "HNS · Johto", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Route29_hns", exact: true })).toBeVisible()
+
+  await build.selectOption("emerald")
+  await expect(page.getByRole("heading", { name: "Emerald · Hoenn", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "No map selected", exact: true })).toBeVisible()
+  await expect(page).toHaveURL(/build=emerald.*region=hoenn/)
+  await expect(page).not.toHaveURL(/map=Route29_hns/)
+
+  await page.reload()
+  await expect(build).toHaveValue("emerald")
+  await expect(page.getByRole("heading", { name: "Emerald · Hoenn", exact: true })).toBeVisible()
+
+  await page.goto("/?build=not-a-build&region=johto")
+  await expect(build).toHaveValue("wayfarer")
+  await expect(page.getByRole("heading", { name: "Wayfarer · Johto", exact: true })).toBeVisible()
 })

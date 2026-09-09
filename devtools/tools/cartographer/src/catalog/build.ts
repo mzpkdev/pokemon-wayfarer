@@ -9,7 +9,14 @@ import {
   renderMap,
   writeNearestNeighborOverview,
 } from "../renderer"
-import { catalogRegions, categoryFor, mapOutputPaths, regionFor } from "./classify"
+import {
+  buildsForSourceVersion,
+  catalogBuilds,
+  catalogRegions,
+  categoryFor,
+  mapOutputPaths,
+  regionFor,
+} from "./classify"
 import { catalogObjects, objectSourceTables } from "./objects"
 import type { ObjectSourceTables } from "./objects"
 import { mapScriptBodies } from "./scripts"
@@ -66,6 +73,7 @@ const createCatalogMap = (
     name,
     id: source.id,
     region: region.id,
+    builds: buildsForSourceVersion(source.game_version),
     category,
     sourceGroup: group,
     sourceRegion: null,
@@ -168,7 +176,7 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
   }
 
   const catalog: MapCatalog = {
-    schemaVersion: 8,
+    schemaVersion: 9,
     format: "pokemon-wayfarer-exterior-map-catalog",
     pixelsPerMetatile: 16,
     source: sourceState(root),
@@ -190,6 +198,10 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
       conflicts: topologyConflicts(maps),
     },
     wildEncounterProjection,
+    builds: catalogBuilds.map((build) => {
+      const names = maps.filter((map) => map.builds.includes(build.id)).map((map) => map.name)
+      return { ...build, mapCount: names.length, maps: names }
+    }),
     regions: catalogRegions.map((region) => {
       const names = maps.filter((map) => map.region === region.id).map((map) => map.name)
       return { ...region, mapCount: names.length, maps: names }

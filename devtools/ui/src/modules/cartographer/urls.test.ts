@@ -27,8 +27,9 @@ describe("Cartographer URL state", () => {
     expect(parseCartographerUrlState("https://example.test/").trainerRating).toBe(0)
   })
 
-  it("round-trips rating and product while preserving unrelated parameters", () => {
+  it("round-trips build, rating, and product while preserving unrelated parameters", () => {
     const href = cartographerUrlWithState("https://example.test/?tool=cartographer", {
+      build: "wayfarer",
       region: "kanto",
       selectedMap: "Route1_frlg",
       view: null,
@@ -36,8 +37,11 @@ describe("Cartographer URL state", () => {
       product: "firered",
     })
 
-    expect(href).toBe("/?tool=cartographer&region=kanto&map=Route1_frlg&rating=44&product=firered")
+    expect(href).toBe(
+      "/?tool=cartographer&build=wayfarer&region=kanto&map=Route1_frlg&rating=44&product=firered",
+    )
     expect(parseCartographerUrlState(`https://example.test${href}`)).toMatchObject({
+      build: "wayfarer",
       trainerRating: 44,
       product: "firered",
     })
