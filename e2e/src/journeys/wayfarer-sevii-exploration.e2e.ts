@@ -7,7 +7,13 @@ const vermilionDock = { map: "vermilion-port-inside", x: 8, y: 9 } as const
 const waitForFerry = async (game: GameSession, destination: GameMap): Promise<void> => {
   for (let attempt = 0; attempt < 100; attempt++) {
     const state = await game.state.read()
-    if (state.ready && state.map.name === destination) return
+    // A ferry warp reports its target map before overworld controls are ready.
+    // Do not press A during that transition: on arrival the player faces the
+    // harbor sailor and would immediately select a second destination.
+    if (state.map.name === destination) {
+      await game.wait.forMap(destination)
+      return
+    }
     await game.wait.frames(30)
     await game.controls.press("a")
   }
@@ -94,13 +100,13 @@ describe.sequential("Wayfarer Sevii exploration", () => {
 
   it("loads representative numbered-island, dungeon, service, and tower maps", async () => {
     const locations = [
-      { map: "one-island", x: 12, y: 18 },
-      { map: "four-island-pokemon-center-1f", x: 7, y: 8 },
-      { map: "mt-ember-exterior", x: 13, y: 39 },
-      { map: "icefall-cave-entrance", x: 14, y: 8 },
-      { map: "lost-cave-entrance", x: 5, y: 5 },
-      { map: "tanoby-key", x: 7, y: 8 },
-      { map: "trainer-tower-lobby", x: 8, y: 13 },
+      { map: "sevii-one-island", x: 12, y: 18 },
+      { map: "sevii-four-island-pokemon-center-1-f", x: 7, y: 8 },
+      { map: "sevii-mt-ember-exterior", x: 13, y: 39 },
+      { map: "sevii-four-island-icefall-cave-entrance", x: 14, y: 8 },
+      { map: "sevii-five-island-lost-cave-entrance", x: 5, y: 5 },
+      { map: "sevii-seven-island-sevault-canyon-tanoby-key", x: 7, y: 8 },
+      { map: "sevii-trainer-tower-lobby", x: 8, y: 13 },
     ] as const
 
     for (const location of locations) {
@@ -122,11 +128,11 @@ describe.sequential("Wayfarer Sevii exploration", () => {
 
     await openSeviiMenu(game)
     await chooseSeviiRow(game, 0)
-    await waitForFerry(game, "one-island-harbor")
+    await waitForFerry(game, "sevii-one-island-harbor")
 
     await expect(game.state.read()).resolves.toMatchObject({
       ready: true,
-      map: { name: "one-island-harbor" },
+      map: { name: "sevii-one-island-harbor" },
       player: { x: 8, y: 5 },
     })
     expect(await game.story.var("ssAquaState")).toBe(before.aquaState)
@@ -207,6 +213,15 @@ describe.sequential("Wayfarer Sevii exploration", () => {
     })
     await game.saveAndReload()
     await game.wait.forMap("navel-rock-harbor")
-    expect(await dockSnapshot(game)).toEqual(before)
+    const after = await dockSnapshot(game)
+    expect({ ...after, origin: undefined }).toEqual({ ...before, origin: undefined })
+    // Navel Rock is existing Emerald content. Loading it has always selected
+    // Wayfarer's Hoenn context; the Vermilion connection must not rewrite that
+    // legacy region-map/Fly classification.
+    expect(after.origin).toMatchObject({
+      ...before.origin,
+      currentRegion: 3,
+      visitedRegions: before.origin.visitedRegions | 4,
+    })
   })
 })
