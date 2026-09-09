@@ -1,7 +1,9 @@
 # FRLG Nugget Bridge on HNS Route 24
 
-PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)  
-Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [Trainer-only story encounters](trainer-only-story-encounters.md), [Trainer party scaling](trainer-party-scaling.md)  
+PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
+
+Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [Trainer-only story encounters](trainer-only-story-encounters.md), [Trainer party scaling](trainer-party-scaling.md)
+
 Implemented: Yes
 
 Implemented on `task/frlg-kanto-story-implementation` in [PR #86](https://github.com/mzpkdev/pokemon-wayfarer/pull/86); not yet merged or released. See the [milestone index](frlg-kanto-story-milestones.md) for the bounded delivery scope.

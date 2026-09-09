@@ -1,7 +1,9 @@
 # Persistent S.S. Anne on Wayfarer
 
-PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)  
-Supporting requirements: [Wayfarer Hoenn entry and S.S. Aqua circuit](wayfarer-hoenn-entry.md), Vermilion harbor menu audit; [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), independently playable local adventures  
+PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
+
+Supporting requirements: [Wayfarer Hoenn entry and S.S. Aqua circuit](wayfarer-hoenn-entry.md), Vermilion harbor menu audit; [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), independently playable local adventures
+
 Implemented: Yes
 
 Implemented on `task/frlg-kanto-story-implementation` in [PR #86](https://github.com/mzpkdev/pokemon-wayfarer/pull/86); not yet merged or released. See the [milestone index](frlg-kanto-story-milestones.md) for the bounded delivery scope.

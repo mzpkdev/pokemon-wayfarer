@@ -1,7 +1,9 @@
 # Fuchsia Safari, Surf, and Gold Teeth on Wayfarer
 
-PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)  
-Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [HM field use](hm-field-use.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)  
+PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)
+
+Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [HM field use](hm-field-use.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
+
 Implemented: Yes
 
 Implemented on `task/frlg-kanto-story-implementation` in [PR #86](https://github.com/mzpkdev/pokemon-wayfarer/pull/86); not yet merged or released. See the [milestone index](frlg-kanto-story-milestones.md) for the bounded delivery scope.
