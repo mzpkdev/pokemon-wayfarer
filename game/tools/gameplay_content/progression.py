@@ -75,9 +75,20 @@ def render_runtime(curves=None):
         lines.append(f"static const u8 sProgressionPoints{index}[][2] = {{")
         lines.extend(f"    {{ {r}, {v} }}," for r, v in points)
         lines.append("};")
-    lines.append("static const struct ProgressionCurve sProgressionCurves[] = {")
-    for name in runtime_ids:
-        index = payloads.index(curves[name])
-        lines.append(f"    [GAMEPLAY_CURVE_{name.upper()}] = {{ sProgressionPoints{index}, ARRAY_COUNT(sProgressionPoints{index}) }},")
-    lines.append("};")
+    lines.append("")
+    lines.append("static inline bool32 GetGameplayProgressionCurve(u16 curveId, const u8 (**points)[2], u32 *count)")
+    lines.append("{")
+    lines.append("    switch (curveId)")
+    lines.append("    {")
+    for index, points in enumerate(payloads):
+        for name in runtime_ids:
+            if curves[name] == points:
+                lines.append(f"    case GAMEPLAY_CURVE_{name.upper()}:")
+        lines.append(f"        *points = sProgressionPoints{index};")
+        lines.append(f"        *count = ARRAY_COUNT(sProgressionPoints{index});")
+        lines.append("        return TRUE;")
+    lines.append("    default:")
+    lines.append("        return FALSE;")
+    lines.append("    }")
+    lines.append("}")
     return "\n".join(lines) + "\n"
