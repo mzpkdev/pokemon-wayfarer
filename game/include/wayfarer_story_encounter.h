@@ -64,6 +64,14 @@ enum WayfarerStoryEncounterFlags
 #define WAYFARER_STORY_NO_COORD (-1)
 #define WAYFARER_STORY_ANY_ELEVATION 0xFF
 
+struct WayfarerOrdinaryEncounter
+{
+    const u8 *caller;
+    u16 stableKey;
+    u8 dialogue;
+    u8 flags;
+};
+
 struct WayfarerStoryEncounter
 {
     // Exact pointer passed to TrainerBattleLoadArgs: the assembler call label + 1.
@@ -95,14 +103,14 @@ struct WayfarerStoryEncounter
 
 // Registry construction is intentionally split by scope.  The ordinary manifest
 // is owned by the root integration; each region owns only its own data include.
-extern const struct WayfarerStoryEncounter gWayfarerStoryOrdinaryEncounters[];
+extern const struct WayfarerOrdinaryEncounter gWayfarerStoryOrdinaryEncounters[];
 extern const u32 gWayfarerStoryOrdinaryEncounterCount;
 extern const struct WayfarerStoryEncounter gWayfarerStoryJohtoEncounters[];
 extern const u32 gWayfarerStoryJohtoEncounterCount;
 extern const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[];
 extern const u32 gWayfarerStoryHoennEncounterCount;
 
-const struct WayfarerStoryEncounter *WayfarerStoryFindCaller(const u8 *caller);
+bool8 WayfarerStoryFindCaller(const u8 *caller, struct WayfarerStoryEncounter *out);
 const struct WayfarerStoryEncounter *WayfarerStoryFindScene(u16 sceneId);
 
 // Called by the trainerbattle command and TrainerBattleLoadArgs respectively.

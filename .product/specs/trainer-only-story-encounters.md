@@ -141,6 +141,16 @@ Tutorials, League, Celebi and exceptional challenge losses keep their existing
 policy as settled behavior. Classification as
 an objective guard settles no-party entry, not every exceptional loss consequence.
 
+### Ordinary caller storage
+
+Keep the reviewed ordinary-caller manifest and command fingerprints as the source
+of authorization. Store each ordinary runtime entry in eight bytes: exact caller
+address, stable dialogue key, dialogue kind and behavior flags. Ordinary policy,
+shared loss retreat and unused scene fields are defaults, not repeated per caller.
+Full regional story entries retain their scene and object metadata. Caller lookup
+writes into caller-owned storage; persistent active encounter state owns its copy.
+Compaction must preserve every reviewed caller, stable dialogue and loss policy.
+
 ### Defeat support by family
 
 The tables below select no-party entry for every listed family. Ordinary single

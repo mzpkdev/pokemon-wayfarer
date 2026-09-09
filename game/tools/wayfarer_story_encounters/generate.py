@@ -33,11 +33,10 @@ def render(rows):
              "#if IS_WAYFARER",
              "extern const u8 EventScript_WayfarerStoryLossRetreat[];"]
     lines += [f'extern const u8 {row["caller"]}[];' for row in rows]
-    lines += ["#define ORDINARY_ENTRY(_caller, _key, _dialogue, _flags, _loss) \\",
-              "    { .caller = (_caller) + 1, .stableKey = (_key), .policy = WAYFARER_STORY_POLICY_ORDINARY, \\",
-              "      .dialogue = WAYFARER_STORY_DIALOGUE_ ## _dialogue, .flags = (_flags), .lossRedirect = (_loss), \\",
-              "      .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD },",
-              "const struct WayfarerStoryEncounter gWayfarerStoryOrdinaryEncounters[] =", "{"]
+    lines += ["#define ORDINARY_ENTRY(_caller, _key, _dialogue, _flags) \\",
+              "    { .caller = (_caller) + 1, .stableKey = (_key), \\",
+              "      .dialogue = WAYFARER_STORY_DIALOGUE_ ## _dialogue, .flags = (_flags) },",
+              "const struct WayfarerOrdinaryEncounter gWayfarerStoryOrdinaryEncounters[] =", "{"]
     for row in rows:
         loss = row["lossReturn"]
         flags = []
@@ -46,10 +45,9 @@ def render(rows):
         if loss:
             flags.append("WAYFARER_STORY_FLAG_LOSS_RETURN")
         flag_expr = " | ".join(flags) or "0"
-        redirect = "EventScript_WayfarerStoryLossRetreat" if loss else "NULL"
-        lines += [f'    ORDINARY_ENTRY({row["caller"]}, {row["stableKey"]}, {row["dialogue"]}, {flag_expr}, {redirect})']
+        lines += [f'    ORDINARY_ENTRY({row["caller"]}, {row["stableKey"]}, {row["dialogue"]}, {flag_expr})']
     lines += ["};", "const u32 gWayfarerStoryOrdinaryEncounterCount = ARRAY_COUNT(gWayfarerStoryOrdinaryEncounters);",
-              "#undef ORDINARY_ENTRY", "#else", "const struct WayfarerStoryEncounter gWayfarerStoryOrdinaryEncounters[] = {{0}};",
+              "#undef ORDINARY_ENTRY", "#else", "const struct WayfarerOrdinaryEncounter gWayfarerStoryOrdinaryEncounters[] = {{0}};",
               "const u32 gWayfarerStoryOrdinaryEncounterCount = 0;", "#endif", ""]
     return "\n".join(lines)
 

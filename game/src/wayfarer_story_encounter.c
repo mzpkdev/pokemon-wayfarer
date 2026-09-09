@@ -22,13 +22,12 @@ struct WayfarerStoryRegistry
 
 static const struct WayfarerStoryRegistry sRegistries[] =
 {
-    {gWayfarerStoryOrdinaryEncounters, gWayfarerStoryOrdinaryEncounterCount},
     {gWayfarerStoryJohtoEncounters, gWayfarerStoryJohtoEncounterCount},
     {gWayfarerStoryHoennEncounters, gWayfarerStoryHoennEncounterCount},
 };
 
 // Ordinary callers have no map-object or frame-script lifecycle. Keeping them
-// out of these scans prevents the 854-entry ordinary allowlist from becoming an
+// out of these scans prevents the ordinary allowlist from becoming an
 // overworld per-frame cost.
 static const struct WayfarerStoryRegistry sFieldRegistries[] =
 {
@@ -36,6 +35,7 @@ static const struct WayfarerStoryRegistry sFieldRegistries[] =
     {gWayfarerStoryHoennEncounters, gWayfarerStoryHoennEncounterCount},
 };
 
+static EWRAM_DATA struct WayfarerStoryEncounter sActiveEncounterStorage = {0};
 static EWRAM_DATA const struct WayfarerStoryEncounter *sActiveEncounter = NULL;
 static EWRAM_DATA u16 sRearmSceneId = 0;
 static EWRAM_DATA bool8 sUsablePartyStateKnown = FALSE;
@@ -164,9 +164,20 @@ static bool8 IsPlayerInActivationArea(const struct WayfarerStoryEncounter *entry
           && player->currentCoords.y - MAP_OFFSET >= entry->y && player->currentCoords.y - MAP_OFFSET < entry->y + height));
 }
 
+static void SetActiveEncounter(const struct WayfarerStoryEncounter *entry)
+{
+    if (entry == NULL)
+    {
+        sActiveEncounter = NULL;
+        return;
+    }
+    sActiveEncounterStorage = *entry;
+    sActiveEncounter = &sActiveEncounterStorage;
+}
+
 static void NoteNoPartyRefusal(const struct WayfarerStoryEncounter *entry)
 {
-    sActiveEncounter = entry;
+    SetActiveEncounter(entry);
     if (entry != NULL && (entry->flags & WAYFARER_STORY_FLAG_REARM_ON_LEAVE))
         sRearmSceneId = entry->sceneId;
 }
@@ -181,14 +192,35 @@ static bool8 PreservesCompletedTrainerText(const struct WayfarerStoryEncounter *
     return HasTrainerBeenFought(trainerBattle.params.opponentA);
 }
 
-const struct WayfarerStoryEncounter *WayfarerStoryFindCaller(const u8 *caller)
+bool8 WayfarerStoryFindCaller(const u8 *caller, struct WayfarerStoryEncounter *out)
 {
     u32 registry;
 
     // Coordinate-only entries deliberately have a NULL caller. A missing caller
     // must remain unauthorized rather than accidentally selecting the first one.
     if (caller == NULL)
-        return NULL;
+        return FALSE;
+    for (u32 i = 0; i < gWayfarerStoryOrdinaryEncounterCount; i++)
+    {
+        const struct WayfarerOrdinaryEncounter *entry = &gWayfarerStoryOrdinaryEncounters[i];
+        if (entry->caller == caller)
+        {
+            *out = (struct WayfarerStoryEncounter) {
+                .caller = entry->caller,
+                .stableKey = entry->stableKey,
+                .dialogue = entry->dialogue,
+                .flags = entry->flags,
+                .policy = WAYFARER_STORY_POLICY_ORDINARY,
+                .x = WAYFARER_STORY_NO_COORD,
+                .y = WAYFARER_STORY_NO_COORD,
+            };
+#if IS_WAYFARER
+            if (entry->flags & WAYFARER_STORY_FLAG_LOSS_RETURN)
+                out->lossRedirect = EventScript_WayfarerStoryLossRetreat;
+#endif
+            return TRUE;
+        }
+    }
     for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
     {
         u32 i;
@@ -196,10 +228,13 @@ const struct WayfarerStoryEncounter *WayfarerStoryFindCaller(const u8 *caller)
         {
             const struct WayfarerStoryEncounter *entry = &sRegistries[registry].entries[i];
             if (entry->caller == caller)
-                return entry;
+            {
+                *out = *entry;
+                return TRUE;
+            }
         }
     }
-    return NULL;
+    return FALSE;
 }
 
 const struct WayfarerStoryEncounter *WayfarerStoryFindScene(u16 sceneId)
@@ -233,7 +268,8 @@ bool8 WayfarerStoryCanUseEncounter(const struct WayfarerStoryEncounter *entry)
 bool8 WayfarerStoryTryStartTrainerBattle(const u8 *caller)
 {
 #if IS_WAYFARER
-    const struct WayfarerStoryEncounter *entry = WayfarerStoryFindCaller(caller);
+    struct WayfarerStoryEncounter resolved;
+    const struct WayfarerStoryEncounter *entry = WayfarerStoryFindCaller(caller, &resolved) ? &resolved : NULL;
 
     // An omitted caller is deliberately not reclassified. Its existing script owns
     // its exceptional/tutorial/challenge behavior until it is explicitly audited.
@@ -245,7 +281,7 @@ bool8 WayfarerStoryTryStartTrainerBattle(const u8 *caller)
     if (!IsNarrativelyEligible(entry)
      && entry->policy == WAYFARER_STORY_POLICY_DEFERRED_RIVAL)
     {
-        sActiveEncounter = entry;
+        SetActiveEncounter(entry);
         return FALSE;
     }
 
@@ -272,11 +308,12 @@ bool8 WayfarerStoryTryStartTrainerBattle(const u8 *caller)
 void WayfarerStoryConfigureTrainerBattleCaller(const u8 *caller)
 {
 #if IS_WAYFARER
-    const struct WayfarerStoryEncounter *entry = WayfarerStoryFindCaller(caller);
+    struct WayfarerStoryEncounter resolved;
+    const struct WayfarerStoryEncounter *entry = WayfarerStoryFindCaller(caller, &resolved) ? &resolved : NULL;
 
     if (entry == NULL)
         return;
-    sActiveEncounter = entry;
+    SetActiveEncounter(entry);
     if ((entry->flags & WAYFARER_STORY_FLAG_LOSS_RETURN) && entry->lossRedirect != NULL)
         WayfarerSetTrainerLossRedirect(entry->lossRedirect);
 #endif
@@ -522,6 +559,21 @@ bool8 Test_WayfarerStoryElevationsAreCompatibleForObjectRestore(u8 a, u8 b)
 bool8 Test_WayfarerStoryRegistryIsValid(void)
 {
     u32 registry;
+
+    for (u32 i = 0; i < gWayfarerStoryOrdinaryEncounterCount; i++)
+    {
+        const struct WayfarerOrdinaryEncounter *entry = &gWayfarerStoryOrdinaryEncounters[i];
+        if (entry->caller == NULL
+         || (entry->flags & ~(WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_ALLOW_POST_BATTLE_TEXT)))
+            return FALSE;
+        for (u32 j = i + 1; j < gWayfarerStoryOrdinaryEncounterCount; j++)
+            if (entry->caller == gWayfarerStoryOrdinaryEncounters[j].caller)
+                return FALSE;
+        for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
+            for (u32 j = 0; j < sRegistries[registry].count; j++)
+                if (entry->caller == sRegistries[registry].entries[j].caller)
+                    return FALSE;
+    }
 
     for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
     {
