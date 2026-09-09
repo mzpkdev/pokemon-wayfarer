@@ -123,4 +123,6 @@ TEST("Gameplay progression reports bounded query timing against phase B baseline
         EXPECT_EQ(beforeValue, afterValue);
     }
     Test_MgbaPrintf("Progression TEST maximum cycle deltas: league baseline=%d level=%d ordinary=%d Gym=%d", maximum[0], maximum[1], maximum[2], maximum[3]);
+    for (rating = 0; rating < ARRAY_COUNT(maximum); rating++)
+        EXPECT_LE(maximum[rating], 256);
 }
