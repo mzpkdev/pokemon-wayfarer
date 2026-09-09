@@ -18,7 +18,7 @@ const circuitState = async (
 const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 360; attempt++) {
     const state = await game.state.read()
-    if (state.ready && !state.dialogueOpen && !state.battle.active) return
+    if (state.ready && !state.scriptActive && !state.dialogueOpen && !state.battle.active) return
     if (state.battle.active) throw new Error(`${description} unexpectedly entered battle`)
     if (state.dialogueOpen || state.scriptActive) {
       await game.wait.frames(20)
@@ -529,6 +529,12 @@ describe.sequential("Wayfarer League Circuit", () => {
     await finishFieldScript(game, "Hoenn guards grant admission")
     await walkNorthToMap(game, "hoenn-league-hall5")
     await walkNorthToMap(game, "league-sidney")
+    // The room's frame script closes the entrance after the map first becomes ready.
+    await game.wait.until(
+      async () => (await game.story.var("hoennEliteFourState")) === 1,
+      "Sidney entrance door closed",
+    )
+    await finishFieldScript(game, "Sidney entrance scene")
     await game.saveAndReload()
     const rooms = [
       "league-sidney",

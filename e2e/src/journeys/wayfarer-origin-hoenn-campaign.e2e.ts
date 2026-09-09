@@ -159,7 +159,10 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
       await game.player.interact()
       await advanceOpeningUntil(
         game,
-        (state) => state.battle.active,
+        // `gMain.inBattle` rises during initialization, before the new battle
+        // resets the preceding loss outcome. A forced win there would combine
+        // LOST with WON into a draw and cause a second whiteout.
+        (state) => state.battle.ui === "action-menu",
         "Visitor rescue was not retryable after loss",
       )
       await game.battle.win()

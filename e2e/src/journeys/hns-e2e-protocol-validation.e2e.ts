@@ -52,7 +52,7 @@ describe.sequential("HNS E2E command validation", () => {
     await openPcStorage(game, "move")
 
     await expect(game.arrange({ checkpoint: "new-bark-after-intro" })).rejects.toThrow(
-      "Test ROM command failed during validate: busy",
+      "Test ROM command arrange game failed during validate: busy",
     )
     await expect(game.state.read()).resolves.toMatchObject({
       storage: { open: true, ready: true, ui: "ready", mode: "move" },
@@ -69,7 +69,7 @@ describe.sequential("HNS E2E command validation", () => {
     await game.battle.startWild({ species: "rattata", level: 5 })
 
     await expect(game.arrange({ checkpoint: "new-bark-after-intro" })).rejects.toThrow(
-      "Test ROM command failed during validate: busy",
+      "Test ROM command arrange game failed during validate: busy",
     )
     await game.battle.win()
     await finishBattle(game, "protocol busy-command battle")

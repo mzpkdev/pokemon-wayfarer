@@ -78,7 +78,7 @@ const startPreparedSurf = async (
 const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 120; attempt++) {
     const state = await game.state.read()
-    if (state.ready && !state.dialogueOpen) return
+    if (!state.battle.active && state.ready && !state.dialogueOpen && !state.scriptActive) return
     await game.wait.frames(state.dialogueOpen ? 30 : 12)
     await game.controls.press("a")
   }
@@ -196,40 +196,14 @@ const acceptSilverBattle = async (game: GameSession): Promise<void> => {
   throw new Error("Mt. Moon Silver battle did not start")
 }
 
-const finishSilverBattle = async (game: GameSession): Promise<void> => {
-  let handledFaintedPartyCount = 0
-  for (let attempt = 0; attempt < 4_000; attempt++) {
+const waitForBattleAction = async (game: GameSession, description: string): Promise<void> => {
+  for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
-    if (!state.battle.active && state.ready) return
-    const faintedPartyCount = state.party.filter((mon) => mon.fainted).length
-    if (state.battle.ui === "other" && faintedPartyCount > handledFaintedPartyCount) {
-      await game.controls.press("a")
-      await game.wait.frames(60)
-      await game.controls.press("b")
-      await game.wait.frames(30)
-      await game.controls.press("right")
-      await game.wait.frames(30)
-      await game.controls.press("a")
-      await game.wait.frames(60)
-      await game.controls.press("a")
-      await game.wait.frames(120)
-      if ((await game.state.read()).battle.ui !== "other")
-        handledFaintedPartyCount = faintedPartyCount
-    } else if (state.battle.ui === "action-menu") {
-      handledFaintedPartyCount = faintedPartyCount
-      if (state.battle.cursor === 1 || state.battle.cursor === 3) await game.controls.press("left")
-      if (state.battle.cursor === 2 || state.battle.cursor === 3) await game.controls.press("up")
-      await game.controls.press("a")
-    } else if (state.battle.ui === "bag" || state.battle.ui === "bag-context")
-      await game.controls.press("b")
-    else if (state.battle.ui === "other") await game.controls.press("a")
-    else if (state.battle.ui === "text" || state.dialogueOpen) await game.controls.press("a")
+    if (state.battle.ui === "action-menu") return
+    if (state.battle.ui === "text" || state.dialogueOpen) await game.controls.press("a")
     else await game.wait.frames(12)
   }
-  const state = await game.state.read()
-  throw new Error(
-    `Mt. Moon Silver battle did not return to the overworld: active=${state.battle.active}, ui=${state.battle.ui}, cursor=${state.battle.cursor}, party=${state.party.map((mon) => `${mon.species}:${mon.fainted}`).join(",")}`,
-  )
+  throw new Error(`${description} action menu was not reached: ${JSON.stringify(await game.state.read())}`)
 }
 
 const finishSilverVictoryScript = async (game: GameSession): Promise<void> => {
@@ -301,16 +275,21 @@ describe.sequential("HNS Kanto traversal", () => {
       await expect(game.story.var("ssAquaState")).resolves.toBe(8)
     })
 
-    it("keeps Silver available after a trainer-battle loss and clears transport state", async () => {
+    it("keeps Silver available after a trainer-battle loss without a transport reset", async () => {
       await arrangeMtMoonSilver(game, [{ species: "rattata", moves: ["tackle"], level: 1 }], {
         cyclingRoad: true,
       })
       await acceptSilverBattle(game)
-      await finishSilverBattle(game)
+      await waitForBattleAction(game, "Mt. Moon Silver loss")
+      await game.battle.lose()
+      await game.controls.press("a")
+      await finishFieldScript(game, "Mt. Moon Silver loss continuation")
 
       await expect(game.story.var("pewterCityState")).resolves.toBe(1)
       await expect(game.story.flag("hideMtMoonSilver")).resolves.toBe(false)
-      await expect(game.story.flag("cyclingRoad")).resolves.toBe(false)
+      // Supported trainer losses return locally; they do not take the whiteout
+      // path that clears transport state.
+      await expect(game.story.flag("cyclingRoad")).resolves.toBe(true)
       await expect(game.story.var("kantoRocketStoryState")).resolves.toBe(4)
       await expect(game.story.var("fanClubClefairy")).resolves.toBe(2)
       await expect(game.story.var("ssAquaState")).resolves.toBe(8)
@@ -321,7 +300,9 @@ describe.sequential("HNS Kanto traversal", () => {
         hideIndigoPlateauSilver: true,
       })
       await acceptSilverBattle(game)
+      await waitForBattleAction(game, "Mt. Moon Silver victory")
       await game.battle.win()
+      await game.controls.press("a")
       await finishSilverVictoryScript(game)
 
       await expect(game.story.var("pewterCityState")).resolves.toBe(2)
