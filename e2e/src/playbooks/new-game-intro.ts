@@ -2,7 +2,14 @@ import { type GameSession } from "../harness/game-session"
 
 export type StartingOrigin = "johto" | "hoenn"
 
-export type AppearanceStyle = 1 | 2 | 3 | 4 | 5 | 6
+export const appearanceStyles = {
+  1: { id: 1, gender: 0 },
+  2: { id: 2, gender: 1 },
+  3: { id: 5, gender: 0 },
+  4: { id: 6, gender: 1 },
+} as const
+
+export type AppearanceStyle = keyof typeof appearanceStyles
 
 export const reachAppearanceQuestion = async (game: GameSession): Promise<void> => {
   await game.wait.frames(3_600)
@@ -23,11 +30,11 @@ export const selectAppearance = async (
   style: AppearanceStyle,
 ): Promise<void> => {
   await game.wait.until((state) => state.appearance.introStage === 1, "appearance picker", 1_800)
-  for (let step = 0; step < 6; step++) {
-    if ((await game.state.read()).appearance.candidate === style) {
+  for (let step = 0; step < Object.keys(appearanceStyles).length; step++) {
+    if ((await game.state.read()).appearance.candidate === appearanceStyles[style].id) {
       await game.controls.press("a")
       await game.wait.until(
-        (state) => state.appearance.confirmed === style,
+        (state) => state.appearance.confirmed === appearanceStyles[style].id,
         "confirmed appearance",
         600,
       )
@@ -114,6 +121,7 @@ export const playThroughNewGameIntro = async (
   await game.controls.press("a")
   await finishOriginIntroduction(game, origin)
   const state = await game.state.read()
-  if (state.appearance.id !== style || state.origin.gender !== (style % 2 === 0 ? 1 : 0))
+  if (state.appearance.id !== appearanceStyles[style].id ||
+    state.origin.gender !== appearanceStyles[style].gender)
     throw new Error(`Appearance handoff failed: ${JSON.stringify(state)}`)
 }

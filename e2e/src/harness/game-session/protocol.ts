@@ -1,4 +1,4 @@
-const abiVersion = 13
+const abiVersion = 14
 const expectedRequestSize = 432
 const expectedResultSize = 16
 const expectedStateSize = 388
@@ -71,6 +71,7 @@ export const commandErrors = [
   "full-pocket-mask",
   "save",
   "circuit",
+  "appearance",
 ] as const
 export const arrangeErrors = commandErrors
 
@@ -178,6 +179,7 @@ export type CommandRequest = {
   regionalBadgeCounts: number[]
   leagueClears: boolean[]
   applyLeagueCircuit?: boolean
+  appearanceId?: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -376,6 +378,7 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
     view.setUint8(425 + index, request.leagueClears[index] ? 1 : 0)
   }
   view.setUint8(428, request.applyLeagueCircuit ? 1 : 0)
+  view.setUint8(429, request.appearanceId ?? 0)
   return bytes
 }
 

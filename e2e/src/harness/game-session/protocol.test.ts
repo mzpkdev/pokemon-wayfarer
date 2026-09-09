@@ -26,7 +26,7 @@ const abi: SessionAbi = {
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 13): Uint8Array => {
+const abiBytes = (version = 14): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -68,10 +68,16 @@ const request = (): CommandRequest => ({
   leagueClears: [true, false, false],
 })
 
-describe("game-session v13 protocol", () => {
+describe("game-session v14 protocol", () => {
+  it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
+    expect(encodeCommandRequest(abi, request())[429]).toBe(0)
+    for (const id of [1, 2, 5, 6])
+      expect(encodeCommandRequest(abi, { ...request(), appearanceId: id })[429]).toBe(id)
+  })
+
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
-    expect(() => parseAbi(abiBytes(6))).toThrow("Unsupported test ROM ABI")
+    expect(() => parseAbi(abiBytes(13))).toThrow("Unsupported test ROM ABI")
   })
 
   it("encodes party-only fainted state, generic items, bounded PC slots, and a wild fixture", () => {
@@ -218,9 +224,9 @@ describe("game-session v13 protocol", () => {
 
   it("keeps saved appearance separate from the pending candidate and confirmation", () => {
     const bytes = new Uint8Array(abi.stateSize)
-    bytes.set([4, 6, 2, 1], 382)
+    bytes.set([5, 6, 2, 1], 382)
     expect(parseStateSnapshot(bytes)).toMatchObject({
-      playerAppearanceId: 4,
+      playerAppearanceId: 5,
       appearanceCandidate: 6,
       appearanceConfirmed: 2,
       appearanceIntroStage: 1,

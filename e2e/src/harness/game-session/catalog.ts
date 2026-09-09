@@ -428,6 +428,8 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  hoennDiveAuthorized: 0x607b,
+  runningShoes: 0x68c0,
   hoennWhiteoutToLavaridge: 0x606c,
   sharedPokegear: 0x892,
   sharedMatchCall: 0x1f3,
@@ -563,6 +565,10 @@ export const items = {
   metalCoat: 441,
   tmThunder: 606,
   bicycle: 706,
+  machBike: 707,
+  acroBike: 708,
+  vsSeeker: 714,
+  wailmerPail: 720,
   oldRod: 709,
   goodRod: 710,
   superRod: 711,
