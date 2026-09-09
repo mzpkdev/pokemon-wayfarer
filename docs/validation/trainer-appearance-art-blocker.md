@@ -1,5 +1,10 @@
 # Rejected action art candidates
 
+Historical record: the user subsequently approved four-style v1 with Gold,
+Kris, Brendan, and May. Red and Leaf are deferred, so this art gap no longer
+blocks the four-style release. It remains a requirement before either deferred
+style can be registered. The saved IDs 3 and 4 remain reserved and invalid.
+
 These are rejected imagegen outputs, retained for review. They are not game assets
 and must not be referenced by production graphics tables. Neither candidate was
 loaded in an emulator. Rejected PNGs are retained locally in
@@ -36,7 +41,7 @@ incorrect direction/pose ordering. It is not a pixel-exact edit of the source.
 Rejected. Resizing and palette quantization alone cannot repair the incorrect
 animation poses.
 
-## Remaining requirement
+## Requirement for deferred styles
 
 Red and Leaf still need authored and visually verified Acro tricks, underwater,
 and watering art. Inspection of Red's existing surf and item sheets against

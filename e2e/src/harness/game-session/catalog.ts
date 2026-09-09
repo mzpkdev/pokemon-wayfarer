@@ -429,7 +429,7 @@ export const storyVars = {
 
 export const storyFlags = {
   hoennDiveAuthorized: 0x607b,
-  runningShoes: 0x68c0,
+  runningShoes: 0x895,
   hoennWhiteoutToLavaridge: 0x606c,
   sharedPokegear: 0x892,
   sharedMatchCall: 0x1f3,

@@ -195,11 +195,16 @@ identity and mapped story gender. The appearance journey exercises all eight
 style/origin combinations and saves and reloads each one. Run it with:
 
 ```sh
+XDG_DATA_HOME=/tmp/skyemu-appearance \
 SKYEMU_ROM="$PWD/game/pokemon-wayfarer-e2e.gba" \
 SKYEMU_SYMS="$PWD/game/pokemon-wayfarer-e2e.sym" \
 SKYEMU_CAPTURE_DIR="$PWD/e2e/artifacts/trainer-appearance" \
 pnpm --dir e2e exec wa test src/journeys/wayfarer-trainer-appearance.e2e.ts src/journeys/wayfarer-appearance-picker.e2e.ts
 ```
+
+Use a writable `XDG_DATA_HOME` when the normal user data directory is read-only;
+SkyEmu writes its cache there. The reset, visuals, water, and underwater
+appearance journeys provide separate controller-driven acceptance checks.
 
 The picker test writes four native emulator PNG captures when `SKYEMU_CAPTURE_DIR`
 is set. A second test captures May’s naming icon, name confirmation, and restored
