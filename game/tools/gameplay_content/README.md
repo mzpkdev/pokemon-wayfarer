@@ -39,6 +39,8 @@ configuration file. It checks ROM boundaries against both artifacts, uses the
 existing ROM reporter, and records static RAM sections and artifact hashes.
 `--base` rejects mismatched product/configuration/toolchain metadata and computes
 storage deltas. CPU, stack, and gameplay acceptance need separate evidence.
+See [VALIDATION.md](VALIDATION.md) for the recorded A through C measurements and
+their current acceptance boundary.
 
 Encounter policy adoption remains gated on the integrated trainer-only baseline
 from PR #85. Discovery alone grants no new battle outcome behavior.
