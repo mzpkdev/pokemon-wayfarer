@@ -9,6 +9,7 @@ import {
   receiveBirchStarter,
   receiveElmStarter,
 } from "../playbooks/regional-opening"
+import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
 
 describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () => {
   it("continues the native rescue through Route 103, shared Dex, and Mom's running shoes", async () => {
@@ -116,7 +117,7 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
       })
       await receiveElmStarter(game, 1)
       await game.player.warp("vermilion-port-inside", 8, 9, "down")
-      await game.player.interact()
+      await beginWayfarerRegularAquaDeparture(game)
       await advanceOpeningUntil(
         game,
         (state) => state.ready && state.map.name === "slateport-city-harbor",

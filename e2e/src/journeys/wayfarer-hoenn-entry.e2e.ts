@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type Direction, type GameMap } from "../harness/game-session"
+import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
 
 const moveOneTile = async (game: GameSession, direction: Direction): Promise<void> => {
   await game.wait.forReady()
@@ -54,7 +55,7 @@ describe.sequential("Wayfarer Hoenn entry", () => {
       determinism: { textSpeed: "instant" },
     })
 
-    await game.player.interact()
+    await beginWayfarerRegularAquaDeparture(game)
     await completeDeparture(game, "slateport-city-harbor")
 
     await expect(game.state.read()).resolves.toMatchObject({
