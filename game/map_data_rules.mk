@@ -24,17 +24,13 @@ WAYFARER_SEVII_SCRIPT_TOOL := $(TOOLS_DIR)/wayfarer_sevii_scripts/generate.py
 WAYFARER_SEVII_EVENT_SCRIPTS := $(DATA_ASM_SUBDIR)/wayfarer_sevii_event_scripts.inc
 
 # The map sources themselves are shared between versions, so a version switch
-# must still invalidate their generated includes.  Do not make that invalidation
-# unconditional, though: `generated` runs before scaninc reads the dependency
-# files, and a FORCE edge here used to remake map_groups.h on every invocation.
-# The resulting timestamp churn invalidated hundreds of otherwise-current .d
-# files.  Evaluate the content once and only add FORCE when the selected map
-# version actually differs from the recorded value.
-MAP_VERSION_STAMP := .map_version
-MAP_VERSION_STAMP_NEEDS_UPDATE := $(shell test -r $(MAP_VERSION_STAMP) && test "`cat $(MAP_VERSION_STAMP)`" = "$(MAP_VERSION)" || echo yes)
-ifneq ($(MAP_VERSION_STAMP_NEEDS_UPDATE),)
-$(MAP_VERSION_STAMP): FORCE
-endif
+# must invalidate their generated includes. Use mutually-exclusive stamps rather
+# than one shared `.map_version`: an unrelated default build must not repeatedly
+# invalidate a Wayfarer dependency scan. Creating a new version stamp removes
+# the previous one, so returning to that version still regenerates its maps.
+MAP_VERSION_STAMP := .map_version.$(MAP_VERSION)
+MAP_VERSION_STAMPS := .map_version.emerald .map_version.firered .map_version.hns .map_version.wayfarer
+.NOTINTERMEDIATE: $(MAP_VERSION_STAMP)
 
 AUTO_GEN_TARGETS += $(INCLUDECONSTS_OUTDIR)/map_groups.h
 AUTO_GEN_TARGETS += $(INCLUDECONSTS_OUTDIR)/layouts.h
@@ -66,6 +62,8 @@ $(DATA_ASM_BUILDDIR)/map_events.o: $(DATA_ASM_SUBDIR)/map_events.s $(MAPS_DIR)/e
 $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_DATA) &: $(WAYFARER_SOURCE_CONSTANTS_TOOL) $(wildcard $(INCLUDECONSTS_OUTDIR)/flags*.h) $(wildcard $(INCLUDECONSTS_OUTDIR)/vars*.h) $(INCLUDECONSTS_OUTDIR)/global.h $(INCLUDECONSTS_OUTDIR)/region_map_sections.h $(DATA_ASM_SUBDIR)/event_scripts.s $(wildcard $(DATA_ASM_SUBDIR)/scripts/*.inc) $(MAP_JSONS)
 	python3 $(WAYFARER_SOURCE_CONSTANTS_TOOL) --cpp $(CPP) --cc $${HOSTCC:-cc} --include-dir include --hoenn-output $(WAYFARER_HOENN_SOURCE_CONSTANTS) --engine-output $(WAYFARER_ENGINE_SOURCE_CONSTANTS) --common-output $(WAYFARER_COMMON_SOURCE_CONSTANTS) --common-data-output $(WAYFARER_COMMON_SOURCE_DATA) --event-scripts $(DATA_ASM_SUBDIR)/event_scripts.s --scripts-dir $(DATA_ASM_SUBDIR)/scripts --maps-dir $(MAPS_DIR)
 
+# mapjson preserves identical output timestamps. Mark each grouped rule current
+# only after Make selected it because a semantic input was newer.
 $(MAPS_OUTDIR)/%/header.inc $(MAPS_OUTDIR)/%/events.inc $(MAPS_OUTDIR)/%/connections.inc &: $(MAPS_DIR)/%/map.json $(INCLUDECONSTS_OUTDIR)/map_groups.h $(MAPJSON) $(WAYFARER_SEVII_MANIFEST)
 	$(MAPJSON) map $(MAP_DETAIL_VERSION) $< $(LAYOUTS_DIR)/layouts.json $(@D) $(WAYFARER_SEVII_MANIFEST_ARG)
 	@touch $(@D)/header.inc $(@D)/events.inc $(@D)/connections.inc
@@ -88,7 +86,8 @@ $(INCLUDECONSTS_OUTDIR)/map_event_ids.h: $(MAP_JSONS) $(MAPJSON)
 	@touch $@
 
 $(MAP_VERSION_STAMP):
-	@(echo "$(MAP_VERSION)" | cmp $@ -) || echo "$(MAP_VERSION)" > .map_version
+	@rm -f $(filter-out $@,$(MAP_VERSION_STAMPS))
+	@echo "$(MAP_VERSION)" > $@
 
 FORCE:
 .PHONY : FORCE
