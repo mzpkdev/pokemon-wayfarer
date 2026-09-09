@@ -2,12 +2,20 @@ SSAnne_B1F_Room4_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_B1F_Room4_EventScript_Leonard::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_SS_ANNE_SAILOR_LEONARD_HNS, SSAnne_B1F_Room4_Text_LeonardIntro, SSAnne_B1F_Room4_Text_LeonardDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_LEONARD, SSAnne_B1F_Room4_Text_LeonardIntro, SSAnne_B1F_Room4_Text_LeonardDefeat
+#endif
 	msgbox SSAnne_B1F_Room4_Text_LeonardPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAnne_B1F_Room4_EventScript_Duncan::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS, SSAnne_B1F_Room4_Text_DuncanIntro, SSAnne_B1F_Room4_Text_DuncanDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_DUNCAN, SSAnne_B1F_Room4_Text_DuncanIntro, SSAnne_B1F_Room4_Text_DuncanDefeat
+#endif
 	msgbox SSAnne_B1F_Room4_Text_DuncanPostBattle, MSGBOX_AUTOCLOSE
 	end
 

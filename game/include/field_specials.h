@@ -5,6 +5,7 @@ extern bool8 gBikeCyclingChallenge;
 extern u8 gBikeCollisions;
 extern u16 gScrollableMultichoice_ScrollOffset;
 
+void WayfarerInitSilphElevatorForScript(void);
 u8 GetLeadMonIndex(void);
 bool8 IsDestinationBoxFull(void);
 u16 GetPCBoxToSendMon(void);

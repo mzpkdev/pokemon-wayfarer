@@ -1176,6 +1176,16 @@ static const struct MenuAction MultichoiceList_OlivineHarbor[] =
     {gText_BattleFrontier},
     {gText_Exit},
 };
+#if IS_WAYFARER
+static const u8 gText_BoardSSAnne[] = _("Board S.S. Anne");
+static const struct MenuAction MultichoiceList_MtMoonFossilWayfarer[] =
+{
+    {sText_HelixFossil},
+    {sText_DomeFossil},
+    {gText_Exit},
+};
+#endif
+
 static const struct MenuAction MultichoiceList_VermilionHarbor[] =
 {
 #if IS_WAYFARER
@@ -1188,6 +1198,9 @@ static const struct MenuAction MultichoiceList_VermilionHarbor[] =
     {gText_FarawayIsland},
     {gText_BattleFrontier},
     {gText_Exit},
+#if IS_WAYFARER
+    {gText_BoardSSAnne},
+#endif
 };
 
 static const struct MenuAction MultichoiceList_7Floors[] = 
@@ -1482,6 +1495,9 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_VERMILION_SHARED_DOCK]       = MULTICHOICE(sMultichoiceList_VermilionSharedDock),
     [MULTI_VERMILION_SEVII_DOCK]        = MULTICHOICE(sMultichoiceList_VermilionSeviiDock),
     [MULTI_MAHOGANY_MERCHANT]           = MULTICHOICE(MultichoiceList_MahoganyMerchant),
+#if IS_WAYFARER
+    [MULTI_MT_MOON_FOSSIL_WAYFARER]     = MULTICHOICE(MultichoiceList_MtMoonFossilWayfarer),
+#endif
 };
 
 const u8 *const gStdStrings[] =

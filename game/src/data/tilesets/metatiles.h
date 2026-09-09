@@ -215,8 +215,12 @@ const u16 gMetatileAttributes_UnionRoom[] = INCBIN_U16("data/tilesets/secondary/
 
 #if HAS_FRLG_CONTENT
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u16 gMetatiles_Building_Frlg[] = INCBIN_U16("data/tilesets/primary/building_frlg/metatiles.bin");
 const u16 gMetatileAttributes_Building_Frlg[] = INCBIN_U16("data/tilesets/primary/building_frlg/metatile_attributes.bin");
+#endif
+#if HAS_FRLG_CONTENT
 
 const u16 gMetatiles_GenericBuilding1[] = INCBIN_U16("data/tilesets/secondary/generic_building_1_frlg/metatiles.bin");
 const u16 gMetatileAttributes_GenericBuilding1[] = INCBIN_U16("data/tilesets/secondary/generic_building_1_frlg/metatile_attributes.bin");
@@ -339,8 +343,12 @@ const u16 gMetatileAttributes_PowerPlant[] = INCBIN_U16("data/tilesets/secondary
 const u16 gMetatiles_SeaCottage[] = INCBIN_U16("data/tilesets/secondary/sea_cottage_frlg/metatiles.bin");
 const u16 gMetatileAttributes_SeaCottage[] = INCBIN_U16("data/tilesets/secondary/sea_cottage_frlg/metatile_attributes.bin");
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u16 gMetatiles_SilphCo[] = INCBIN_U16("data/tilesets/secondary/silph_co_frlg/metatiles.bin");
 const u16 gMetatileAttributes_SilphCo[] = INCBIN_U16("data/tilesets/secondary/silph_co_frlg/metatile_attributes.bin");
+#endif
+#if HAS_FRLG_CONTENT
 
 const u16 gMetatiles_UndergroundPath[] = INCBIN_U16("data/tilesets/secondary/underground_path_frlg/metatiles.bin");
 const u16 gMetatileAttributes_UndergroundPath[] = INCBIN_U16("data/tilesets/secondary/underground_path_frlg/metatile_attributes.bin");
@@ -372,9 +380,13 @@ const u16 gMetatileAttributes_FanClubDaycare[] = INCBIN_U16("data/tilesets/secon
 const u16 gMetatiles_Condominiums[] = INCBIN_U16("data/tilesets/secondary/condominiums_frlg/metatiles.bin");
 const u16 gMetatileAttributes_Condominiums[] = INCBIN_U16("data/tilesets/secondary/condominiums_frlg/metatile_attributes.bin");
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const u16 gMetatiles_BurgledHouse[] = INCBIN_U16("data/tilesets/secondary/burgled_house_frlg/metatiles.bin");
 const u16 gMetatileAttributes_BurgledHouse[] = INCBIN_U16("data/tilesets/secondary/burgled_house_frlg/metatile_attributes.bin");
 
+#endif
+#if HAS_FRLG_CONTENT
 const u16 gMetatiles_MtEmber[] = INCBIN_U16("data/tilesets/secondary/mt_ember_frlg/metatiles.bin");
 const u16 gMetatileAttributes_MtEmber[] = INCBIN_U16("data/tilesets/secondary/mt_ember_frlg/metatile_attributes.bin");
 
@@ -409,6 +421,16 @@ const u16 gMetatiles_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_
 const u16 gMetatileAttributes_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_fame_frlg/metatile_attributes.bin");
 
 #endif // HAS_FRLG_CONTENT
+
+#if IS_WAYFARER
+
+const u16 gMetatiles_General_Frlg[] = INCBIN_U16("data/tilesets/primary/general_frlg/metatiles.bin");
+const u16 gMetatileAttributes_General_Frlg[] = INCBIN_U16("data/tilesets/primary/general_frlg/metatile_attributes.bin");
+
+const u16 gMetatiles_SSAnne[] = INCBIN_U16("data/tilesets/secondary/ss_anne_frlg/metatiles.bin");
+const u16 gMetatileAttributes_SSAnne[] = INCBIN_U16("data/tilesets/secondary/ss_anne_frlg/metatile_attributes.bin");
+
+#endif // IS_WAYFARER
 
 #if HAS_HNS_CONTENT
 

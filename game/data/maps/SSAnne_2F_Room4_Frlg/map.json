@@ -70,5 +70,6 @@
     }
   ],
   "coord_events": [],
-  "bg_events": []
+  "bg_events": [],
+  "wayfarer_include": true
 }

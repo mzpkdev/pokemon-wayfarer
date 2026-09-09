@@ -190,6 +190,9 @@
 #define MULTI_VERMILION_SHARED_DOCK         179
 #define MULTI_VERMILION_SEVII_DOCK          180
 #define MULTI_MAHOGANY_MERCHANT              181
+#if IS_WAYFARER
+#define MULTI_MT_MOON_FOSSIL_WAYFARER         182
+#endif
 
 #define MULTI_NONE 255
 

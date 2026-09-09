@@ -23113,6 +23113,1080 @@
         }
       ],
       "reason": "Authored HNS post-OBC boss rematch; outside Wayfarer Gym Leader and League scaling encounters."
+    },
+    {
+      "id": "TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS",
+          "role": "TRAINER_CLASS_FISHERMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room1_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_BARNY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_FISHERMAN_DALE_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_DALE_HNS",
+          "role": "TRAINER_CLASS_FISHERMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_FISHERMAN_DALE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room5_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_ARTHUR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_BROOKS_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_LAMAR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS",
+          "role": "TRAINER_CLASS_GENTLEMAN_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room7_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_GENTLEMAN_THOMAS_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_LASS_ANN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_LASS_ANN_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_LASS_ANN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_LASS_DAWN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_LASS_DAWN_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_2F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_LASS_DAWN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DUNCAN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_DYLAN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DYLAN_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room3_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_DYLAN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_EDMOND_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_EDMOND_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_Deck_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_EDMOND_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_HUEY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_HUEY_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_HUEY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_LEONARD_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_LEONARD_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room4_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_LEONARD_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_B1F_Room1_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_PHILLIP_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_SAILOR_TREVOR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_TREVOR_HNS",
+          "role": "TRAINER_CLASS_SAILOR_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_Deck_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_SAILOR_TREVOR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS",
+          "role": "TRAINER_CLASS_YOUNGSTER_FRLG"
+        },
+        {
+          "path": "data/maps/SSAnne_1F_Room2_Frlg/scripts.inc",
+          "symbol": "TRAINER_SS_ANNE_YOUNGSTER_TYLER_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_8_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_9_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_10_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_11_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_12_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_13_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_14_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_15_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_16_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_17_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GRUNT_18_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS",
+          "role": "TRAINER_CLASS_BOSS_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_celadon_hideout.inc",
+          "symbol": "TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS"
+        }
+      ],
+      "reason": "Authored Celadon Hideout boss encounter; outside ordinary Trainer Rating scaling."
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_1_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_2_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_3_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS", "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_ROCKET_GRUNT_4_HNS"}]
+    },
+    {
+      "id": "TRAINER_MT_MOON_MIGUEL_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [{"path": "src/data/trainers_wayfarer.party", "symbol": "TRAINER_MT_MOON_MIGUEL_HNS", "role": "TRAINER_CLASS_SUPER_NERD_FRLG"}, {"path": "data/scripts/wayfarer_mt_moon.inc", "symbol": "TRAINER_MT_MOON_MIGUEL_HNS"}],
+      "reason": "Authored Mt. Moon fossil objective battle; outside ordinary Trainer Rating scaling."
+    },
+    {
+      "id": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_cerulean_burglary.inc",
+          "symbol": "TRAINER_CERULEAN_BURGLARY_GRUNT_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_CALE_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_CALE_HNS",
+          "role": "TRAINER_CLASS_BUG_CATCHER_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_CALE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_ALI_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ALI_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ALI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_TIMMY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_TIMMY_HNS",
+          "role": "TRAINER_CLASS_YOUNGSTER_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_TIMMY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_RELI_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_RELI_HNS",
+          "role": "TRAINER_CLASS_LASS_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_RELI_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_ETHAN_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ETHAN_HNS",
+          "role": "TRAINER_CLASS_CAMPER_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ETHAN_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS",
+          "role": "TRAINER_CLASS_TEAM_ROCKET_FRLG"
+        },
+        {
+          "path": "data/scripts/wayfarer_nugget_bridge.inc",
+          "symbol": "TRAINER_NUGGET_BRIDGE_ROCKET_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_23_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_23_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_23_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_24_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_24_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_24_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_25_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_25_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_25_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_26_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_26_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_26_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_27_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_27_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_27_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_28_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_28_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_28_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_29_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_29_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_29_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_30_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_30_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_30_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_31_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_31_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_31_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_32_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_32_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_32_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_33_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_33_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_33_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_34_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_34_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_34_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_35_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_35_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_35_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_36_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_36_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_36_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_37_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_37_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_37_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_38_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_38_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_38_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_39_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_39_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_39_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_40_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_40_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_40_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GRUNT_41_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GRUNT_41_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GRUNT_41_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_BEAU_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_BEAU_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_BEAU_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_CONNOR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_CONNOR_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_CONNOR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_ED_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_ED_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_ED_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_JERRY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JERRY_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JERRY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_JOSE_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSE_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSE_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_JOSHUA_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSHUA_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_JOSHUA_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_PARKER_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_PARKER_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_PARKER_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_RODNEY_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_RODNEY_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_RODNEY_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_TAYLOR_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TAYLOR_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TAYLOR_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_SCIENTIST_TRAVIS_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TRAVIS_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_SCIENTIST_TRAVIS_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_DALTON_HNS",
+      "policy": "ORDINARY",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_DALTON_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_DALTON_HNS"
+        }
+      ]
+    },
+    {
+      "id": "TRAINER_SILPH_GIOVANNI_HNS",
+      "policy": "EXCLUDED",
+      "region": "Kanto",
+      "evidence": [
+        {
+          "path": "src/data/trainers_wayfarer.party",
+          "symbol": "TRAINER_SILPH_GIOVANNI_HNS"
+        },
+        {
+          "path": "data/scripts/wayfarer_silph.inc",
+          "symbol": "TRAINER_SILPH_GIOVANNI_HNS"
+        }
+      ],
+      "reason": "Authored Silph liberation objective battle; outside ordinary Trainer Rating scaling."
     }
   ],
   "move_exceptions": []

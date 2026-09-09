@@ -120,9 +120,15 @@ FuchsiaCity_Text_GymSign:
 	.string "The Poisonous Ninja Master$"
 
 FuchsiaCity_Text_SafariZoneOfficeSign:
+#if IS_WAYFARER
+	.string "There's a notice here…\p"
+	.string "DEVON SAFARI OFFICE\n"
+	.string "WELCOME, RESEARCHERS.$"
+#else
 	.string "There's a notice here…\p"
 	.string "SAFARI ZONE OFFICE is closed until\n"
 	.string "further notice.$"
+#endif
 
 FuchsiaCity_Text_SafariZone:
 	.string "SAFARI ZONE\n"
@@ -130,9 +136,15 @@ FuchsiaCity_Text_SafariZone:
 	.string "DEVON CORP.$"
 
 FuchsiaCity_Text_SafariZoneClosedSign:
+#if IS_WAYFARER
+	.string "WARDEN BAOBA is visiting\n"
+	.string "FUCHSIA CITY.\p"
+	.string "DEVON's SAFARI ZONE is open.$"
+#else
 	.string "The WARDEN is traveling abroad.\p"
 	.string "Therefore, the SAFARI ZONE is\n"
 	.string "closed.$"
+#endif
 
 FuchsiaCity_Text_NoLitteringSign:
 	.string "No littering.\p"

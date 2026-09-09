@@ -117,7 +117,35 @@ bool source_version_is_selected(const string &source_version) {
 }
 
 bool data_matches_version(const Json &data) {
+    if (version == "wayfarer" && data["wayfarer_include"].bool_value())
+        return true;
+
     return source_version_is_selected(get_source_version(data));
+}
+
+bool event_matches_version(const Json &event) {
+    if (version == "wayfarer")
+        return !event["wayfarer_exclude"].bool_value();
+    return !event["wayfarer_only"].bool_value();
+}
+
+string get_warp_destination(const Json &warp) {
+    if (version == "wayfarer") {
+        string wayfarer_destination = json_to_string(warp, "wayfarer_dest_map", true);
+        if (!wayfarer_destination.empty())
+            return wayfarer_destination;
+    }
+
+    return json_to_string(warp, "dest_map");
+}
+
+string get_wayfarer_override(const Json &data, const string &field) {
+    if (version == "wayfarer") {
+        string override_value = json_to_string(data, "wayfarer_" + field, true);
+        if (!override_value.empty())
+            return override_value;
+    }
+    return json_to_string(data, field);
 }
 
 string get_generated_warning(const string &filename, bool isAsm) {
@@ -144,7 +172,7 @@ string get_include_guard_end(const string &name) {
 }
 
 string generate_map_header_text(Json map_data, Json layouts_data) {
-    string map_layout_id = json_to_string(map_data, "layout");
+    string map_layout_id = get_wayfarer_override(map_data, "layout");
 
     vector<Json> matched;
 
@@ -274,14 +302,18 @@ string generate_map_events_text(Json map_data) {
     if (map_data["object_events"].array_items().size() > 0) {
         objects_label = mapName + "_ObjectEvents";
         text << objects_label << ":\n";
+        unsigned int object_count = 0;
         for (unsigned int i = 0; i < map_data["object_events"].array_items().size(); i++) {
             auto obj_event = map_data["object_events"].array_items()[i];
+            if (!event_matches_version(obj_event))
+                continue;
+            object_count++;
             string type = json_to_string(obj_event, "type", true);
 
             // If no type field is present, assume it's a regular object event.
             if (type == "" || type == "object") {
-                text << "\tobject_event " << i + 1 << ", "
-                     << json_to_string(obj_event, "graphics_id") << ", "
+                text << "\tobject_event " << object_count << ", "
+                     << get_wayfarer_override(obj_event, "graphics_id") << ", "
                      << json_to_string(obj_event, "x") << ", "
                      << json_to_string(obj_event, "y") << ", "
                      << json_to_string(obj_event, "elevation") << ", "
@@ -291,10 +323,10 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(obj_event, "trainer_type") << ", "
                      << json_to_string(obj_event, "trainer_sight_or_berry_tree_id") << ", "
                      << json_to_string(obj_event, "script") << ", "
-                     << json_to_string(obj_event, "flag") << "\n";
+                     << get_wayfarer_override(obj_event, "flag") << "\n";
             } else if (type == "clone") {
-                text << "\tclone_event " << i + 1 << ", "
-                     << json_to_string(obj_event, "graphics_id") << ", "
+                text << "\tclone_event " << object_count << ", "
+                     << get_wayfarer_override(obj_event, "graphics_id") << ", "
                      << json_to_string(obj_event, "x") << ", "
                      << json_to_string(obj_event, "y") << ", "
                      << json_to_string(obj_event, "target_local_id") << ", "
@@ -312,12 +344,14 @@ string generate_map_events_text(Json map_data) {
         warps_label = mapName + "_MapWarps";
         text << warps_label << ":\n";
         for (auto &warp_event : map_data["warp_events"].array_items()) {
+            if (!event_matches_version(warp_event))
+                continue;
             text << "\twarp_def "
                  << json_to_string(warp_event, "x") << ", "
                  << json_to_string(warp_event, "y") << ", "
                  << json_to_string(warp_event, "elevation") << ", "
-                 << json_to_string(warp_event, "dest_warp_id") << ", "
-                 << json_to_string(warp_event, "dest_map") << "\n";
+                 << get_wayfarer_override(warp_event, "dest_warp_id") << ", "
+                 << get_warp_destination(warp_event) << "\n";
         }
         text << "\n";
     } else {
@@ -328,13 +362,15 @@ string generate_map_events_text(Json map_data) {
         coords_label = mapName + "_MapCoordEvents";
         text << coords_label << ":\n";
         for (auto &coord_event : map_data["coord_events"].array_items()) {
+            if (!event_matches_version(coord_event))
+                continue;
             string type = json_to_string(coord_event, "type");
             if (type == "trigger") {
                 text << "\tcoord_event "
                      << json_to_string(coord_event, "x") << ", "
                      << json_to_string(coord_event, "y") << ", "
                      << json_to_string(coord_event, "elevation") << ", "
-                     << json_to_string(coord_event, "var") << ", "
+                     << get_wayfarer_override(coord_event, "var") << ", "
                      << json_to_string(coord_event, "var_value") << ", "
                      << json_to_string(coord_event, "script") << "\n";
             }
@@ -357,6 +393,8 @@ string generate_map_events_text(Json map_data) {
         bgs_label = mapName + "_MapBGEvents";
         text << bgs_label << ":\n";
         for (auto &bg_event : map_data["bg_events"].array_items()) {
+            if (!event_matches_version(bg_event))
+                continue;
             string type = json_to_string(bg_event, "type");
             if (type == "sign") {
                 text << "\tbg_sign_event "
@@ -465,17 +503,25 @@ void process_event_constants(const vector<string> &map_filepaths, string output_
         // Get IDs from the object/clone events.
         ostringstream map_ids_text;
         auto obj_events = map_data["object_events"].array_items();
+        unsigned int generated_object_index = 0;
         for (unsigned int i = 0; i < obj_events.size(); i++) {
             auto obj_event = obj_events[i];
+            if (!event_matches_version(obj_event))
+                continue;
+            generated_object_index++;
             if (obj_event.object_items().find("local_id") != obj_event.object_items().end())
-                map_ids_text << "#define " << json_to_string(obj_event, "local_id") << " " << i + 1 << "\n";
+                map_ids_text << "#define " << json_to_string(obj_event, "local_id") << " " << generated_object_index << "\n";
         }
         // Get IDs from the warp events.
         auto warp_events = map_data["warp_events"].array_items();
+        unsigned int generated_warp_index = 0;
         for (unsigned int i = 0; i < warp_events.size(); i++) {
             auto warp_event = warp_events[i];
+            if (!event_matches_version(warp_event))
+                continue;
             if (warp_event.object_items().find("warp_id") != warp_event.object_items().end())
-                map_ids_text << "#define " << json_to_string(warp_event, "warp_id") << " " << i << "\n";
+                map_ids_text << "#define " << json_to_string(warp_event, "warp_id") << " " << generated_warp_index << "\n";
+            generated_warp_index++;
         }
         // Only output if we found any IDs
         string temp = map_ids_text.str();
@@ -830,7 +876,9 @@ void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Js
     for (const Json &map_data : included_maps) {
         string map_name = json_to_string(map_data, "name");
         for (const Json &warp : map_data["warp_events"].array_items()) {
-            string destination = json_to_string(warp, "dest_map");
+            if (!event_matches_version(warp))
+                continue;
+            string destination = get_warp_destination(warp);
             if (included_map_ids.find(destination) == included_map_ids.end()
              && dynamic_destinations.find(destination) == dynamic_destinations.end())
                 FATAL_ERROR("Map %s warp references unavailable map %s.\n", map_name.c_str(), destination.c_str());

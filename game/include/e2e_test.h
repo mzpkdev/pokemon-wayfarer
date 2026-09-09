@@ -20,7 +20,8 @@
 #define E2E_TEST_FULL_POCKET_ITEMS     (1 << 0)
 #define E2E_TEST_FULL_POCKET_KEY_ITEMS (1 << 1)
 #define E2E_TEST_FULL_POCKET_TM_HM     (1 << 2)
-#define E2E_TEST_FULL_POCKET_MASK      (E2E_TEST_FULL_POCKET_ITEMS | E2E_TEST_FULL_POCKET_KEY_ITEMS | E2E_TEST_FULL_POCKET_TM_HM)
+#define E2E_TEST_FULL_POCKET_BALLS     (1 << 3)
+#define E2E_TEST_FULL_POCKET_MASK      (E2E_TEST_FULL_POCKET_ITEMS | E2E_TEST_FULL_POCKET_KEY_ITEMS | E2E_TEST_FULL_POCKET_TM_HM | E2E_TEST_FULL_POCKET_BALLS)
 
 enum E2ETestStatus
 {
@@ -197,6 +198,7 @@ enum E2ETestBattleUiState
     E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY,
     E2E_TEST_BATTLE_UI_OTHER,
     E2E_TEST_BATTLE_UI_TEXT,
+    E2E_TEST_BATTLE_UI_FORFEIT_PROMPT,
 };
 
 struct E2ETestVarPatch
@@ -421,6 +423,7 @@ bool32 E2ETest_IsSummaryScreenOpen(void);
 void E2ETest_SetStorageCurrentBox(u8 boxId);
 void E2ETest_GetStorageUiState(u8 *uiState, u8 *mode, u8 *cursorArea, u8 *cursorPosition, bool8 *movingMon);
 bool32 E2ETest_GetBattleActionMenuState(u8 *cursor);
+bool32 E2ETest_GetBattleForfeitPromptState(u8 *cursor);
 bool32 E2ETest_IsBattleTextReady(void);
 bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item);
 bool32 E2ETest_IsCaughtDexReady(void);

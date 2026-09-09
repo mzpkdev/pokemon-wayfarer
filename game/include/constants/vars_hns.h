@@ -113,10 +113,24 @@
 #define VAR_UNUSED_HNS_0x40C9                            0x40C9
 #define VAR_UNUSED_HNS_0x40CA                            0x40CA
 
-#define VAR_UNUSED_HNS_0x40D8                           0x40D8
+#if IS_WAYFARER
+#undef VAR_MAP_SCENE_S_S_ANNE_2F_CORRIDOR
+#define VAR_MAP_SCENE_S_S_ANNE_2F_CORRIDOR               0x40D8
+#else
+#define VAR_UNUSED_HNS_0x40D8                            0x40D8
+#endif
+#if IS_WAYFARER
+#define VAR_CELADON_ROCKET_HIDEOUT_ELEVATOR_FLOOR         0x40D9
+#else
 #define VAR_UNUSED_HNS_0x40D9                           0x40D9
-#define VAR_UNUSED_HNS_0x40DA                           0x40DA
-#define VAR_UNUSED_HNS_0x40DB                           0x40DB
+#endif
+#if IS_WAYFARER
+#define VAR_SILPH_ELEVATOR_FLOOR_HNS 0x40DA
+#define VAR_SILPH_GIOVANNI_SCENE_HNS 0x40DB
+#else
+#define VAR_UNUSED_HNS_0x40DA 0x40DA
+#define VAR_UNUSED_HNS_0x40DB 0x40DB
+#endif
 #define VAR_UNUSED_HNS_0x40DC                           0x40DC
 #define VAR_UNUSED_HNS_0x40DD                           0x40DD
 #define VAR_UNUSED_HNS_0x40DE                           0x40DE

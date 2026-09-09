@@ -33,7 +33,7 @@ export const commands = {
   loseBattle: 9,
   giftStorageCapacity: 10,
 } as const
-export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
+export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2, balls: 1 << 3 } as const
 
 export const gamePhases = ["boot", "overworld", "dialogue", "battle"] as const
 export const arrangePhases = [
@@ -126,6 +126,7 @@ export const battleUiStates = [
   "catch-swap-party",
   "other",
   "text",
+  "forfeit-prompt",
 ] as const
 
 export type SessionAbi = {

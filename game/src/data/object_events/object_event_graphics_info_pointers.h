@@ -812,22 +812,38 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_GREEN_FISH] =               &gObjectEventGraphicsInfo_GreenFish,
     [OBJ_EVENT_GFX_GREEN_VS_SEEKER] =          &gObjectEventGraphicsInfo_GreenVSSeeker,
     [OBJ_EVENT_GFX_GREEN_VS_SEEKER_BIKE] =     &gObjectEventGraphicsInfo_GreenVSSeekerBike,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_LITTLE_BOY_FRLG]          = &gObjectEventGraphicsInfo_LittleBoyFrlg,
     [OBJ_EVENT_GFX_LITTLE_GIRL_FRLG]         = &gObjectEventGraphicsInfo_LittleGirlFrlg,
     [OBJ_EVENT_GFX_YOUNGSTER_FRLG]           = &gObjectEventGraphicsInfo_YoungsterFrlg,
     [OBJ_EVENT_GFX_BOY]                      = &gObjectEventGraphicsInfo_Boy,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_BUG_CATCHER_FRLG]         = &gObjectEventGraphicsInfo_BugCatcherFrlg,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_LASS_FRLG]                = &gObjectEventGraphicsInfo_LassFrlg,
     [OBJ_EVENT_GFX_WOMAN_1_FRLG]             = &gObjectEventGraphicsInfo_Woman1Frlg,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_BATTLE_GIRL]              = &gObjectEventGraphicsInfo_BattleGirl,
     [OBJ_EVENT_GFX_MAN]                      = &gObjectEventGraphicsInfo_Man,
     [OBJ_EVENT_GFX_ROCKER]                   = &gObjectEventGraphicsInfo_Rocker,
     [OBJ_EVENT_GFX_FAT_MAN_FRLG]             = &gObjectEventGraphicsInfo_FatManFrlg,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_WOMAN_2_FRLG]             = &gObjectEventGraphicsInfo_Woman2Frlg,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_BEAUTY_FRLG]              = &gObjectEventGraphicsInfo_BeautyFrlg,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_BALDING_MAN]              = &gObjectEventGraphicsInfo_BaldingMan,
     [OBJ_EVENT_GFX_WOMAN_3_FRLG]             = &gObjectEventGraphicsInfo_Woman3Frlg,
     [OBJ_EVENT_GFX_OLD_MAN_1]                = &gObjectEventGraphicsInfo_OldMan1,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_OLD_MAN_2]                = &gObjectEventGraphicsInfo_OldMan2,
     [OBJ_EVENT_GFX_OLD_MAN_LYING_DOWN]       = &gObjectEventGraphicsInfo_OldManLyingDown,
     [OBJ_EVENT_GFX_OLD_WOMAN_FRLG]           = &gObjectEventGraphicsInfo_OldWomanFrlg,
@@ -842,9 +858,17 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_SWIMMER_F_WATER]          = &gObjectEventGraphicsInfo_SwimmerFWater,
     [OBJ_EVENT_GFX_SWIMMER_M_LAND]           = &gObjectEventGraphicsInfo_SwimmerMLand,
     [OBJ_EVENT_GFX_SWIMMER_F_LAND]           = &gObjectEventGraphicsInfo_SwimmerFLand,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_WORKER_M]                 = &gObjectEventGraphicsInfo_WorkerM,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_WORKER_F]                 = &gObjectEventGraphicsInfo_WorkerF,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_ROCKET_M]                 = &gObjectEventGraphicsInfo_RocketM,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_ROCKET_F]                 = &gObjectEventGraphicsInfo_RocketF,
     [OBJ_EVENT_GFX_GBA_KID]                  = &gObjectEventGraphicsInfo_GBAKid,
     [OBJ_EVENT_GFX_SUPER_NERD]               = &gObjectEventGraphicsInfo_SuperNerd,
@@ -852,13 +876,25 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_BLACKBELT]                = &gObjectEventGraphicsInfo_Blackbelt,
     [OBJ_EVENT_GFX_SCIENTIST]                = &gObjectEventGraphicsInfo_Scientist,
     [OBJ_EVENT_GFX_HIKER_FRLG]               = &gObjectEventGraphicsInfo_HikerFrlg,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_FISHER]                   = &gObjectEventGraphicsInfo_Fisher,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_CHANNELER]                = &gObjectEventGraphicsInfo_Channeler,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_CHEF]                     = &gObjectEventGraphicsInfo_Chef,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_POLICEMAN]                = &gObjectEventGraphicsInfo_Policeman,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_GENTLEMAN_FRLG]           = &gObjectEventGraphicsInfo_GentlemanFrlg,
     [OBJ_EVENT_GFX_SAILOR_FRLG]              = &gObjectEventGraphicsInfo_SailorFrlg,
     [OBJ_EVENT_GFX_CAPTAIN]                  = &gObjectEventGraphicsInfo_Captain,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_NURSE_FRLG]               = &gObjectEventGraphicsInfo_NurseFrlg,
     [OBJ_EVENT_GFX_CABLE_CLUB_RECEPTIONIST]  = &gObjectEventGraphicsInfo_CableClubReceptionist,
     [OBJ_EVENT_GFX_UNION_ROOM_RECEPTIONIST]  = &gObjectEventGraphicsInfo_UnionRoomReceptionist,
@@ -866,7 +902,11 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_MG_DELIVERYMAN]           = &gObjectEventGraphicsInfo_MGDeliveryman,
     [OBJ_EVENT_GFX_TRAINER_TOWER_DUDE]       = &gObjectEventGraphicsInfo_TrainerTowerDude,
     [OBJ_EVENT_GFX_PROF_OAK]                 = &gObjectEventGraphicsInfo_ProfOak,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_BLUE]                     = &gObjectEventGraphicsInfo_Blue,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_BILL]                     = &gObjectEventGraphicsInfo_Bill,
     [OBJ_EVENT_GFX_LANCE]                    = &gObjectEventGraphicsInfo_Lance,
     [OBJ_EVENT_GFX_AGATHA]                   = &gObjectEventGraphicsInfo_Agatha,
@@ -881,7 +921,11 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_KOGA]                     = &gObjectEventGraphicsInfo_Koga,
     [OBJ_EVENT_GFX_SABRINA]                  = &gObjectEventGraphicsInfo_Sabrina,
     [OBJ_EVENT_GFX_BLAINE]                   = &gObjectEventGraphicsInfo_Blaine,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_GIOVANNI]                 = &gObjectEventGraphicsInfo_Giovanni,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_MOM_FRLG]                 = &gObjectEventGraphicsInfo_MomFrlg,
     [OBJ_EVENT_GFX_CELIO]                    = &gObjectEventGraphicsInfo_Celio,
     [OBJ_EVENT_GFX_TEACHY_TV_HOST]           = &gObjectEventGraphicsInfo_TeachyTVHost,
@@ -924,10 +968,18 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_SLOWPOKE]                 = &gObjectEventGraphicsInfo_Slowpoke,
     [OBJ_EVENT_GFX_SLOWBRO]                  = &gObjectEventGraphicsInfo_Slowbro,
     [OBJ_EVENT_GFX_MACHOP]                   = &gObjectEventGraphicsInfo_Machop,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_WIGGLYTUFF]               = &gObjectEventGraphicsInfo_Wigglytuff,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_DODUO]                    = &gObjectEventGraphicsInfo_Doduo,
     [OBJ_EVENT_GFX_FEAROW]                   = &gObjectEventGraphicsInfo_Fearow,
+#endif
+#if IS_FRLG || IS_WAYFARER
     [OBJ_EVENT_GFX_MACHOKE]                  = &gObjectEventGraphicsInfo_Machoke,
+#endif
+#if IS_FRLG
     [OBJ_EVENT_GFX_LAPRAS]                   = &gObjectEventGraphicsInfo_Lapras,
     [OBJ_EVENT_GFX_ZAPDOS]                   = &gObjectEventGraphicsInfo_Zapdos,
     [OBJ_EVENT_GFX_MOLTRES]                  = &gObjectEventGraphicsInfo_Moltres,

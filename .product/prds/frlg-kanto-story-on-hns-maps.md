@@ -1,6 +1,9 @@
 # FRLG Kanto story on HNS maps
 
-Status: Draft product design. Not implemented. FRLG is Kanto's narrative
+Status: Partially implemented through the bounded [story milestones](../specs/frlg-kanto-story-milestones.md).
+PR #86 delivers the completed milestones listed there; future milestones and
+their unresolved decisions do not block that scoped PR. The full umbrella
+design remains incomplete and is not yet released. FRLG is Kanto's narrative
 baseline and HNS is its general geographic base. The full FRLG Cinnabar port is
 selected; the S.S. Anne remains permanently available, with travel design
 owned by a separate specification. Selected HNS story adaptations are
@@ -24,8 +27,9 @@ This release does not implement transitions between historical world states
 or rebuild the entire overworld to match FRLG. A later Blue takeover of Viridian Gym is a potential future feature, not an
 event assumed to have already happened. Cinnabar remains intact; an eruption
 is neither planned by this PRD nor required for story coherence.
-ROM space recovery will happen before implementation and does not drive cuts
-to this product design.
+ROM space recovery is required before merge and does not drive cuts to this
+product design. The story task may implement and validate content before that
+recovery, then rebase on it before merging.
 
 ## Design
 
@@ -84,7 +88,7 @@ no Wayfarer feature commitment. Any future eruption would need its own design.
 | Celadon Rocket Hideout | Connect imported hideout interiors to the HNS Game Corner. Preserve discovery of the entrance, local key and lift progression, Giovanni, and the Silph Scope reward. Mahogany's HNS Rocket Hideout remains a separate Johto location. |
 | Pokémon Tower and Fuji | Restore the Tower adventure in Lavender, including the Scope-dependent ghost identification, Marowak resolution, Rocket rescue, Fuji's return, and Flute handoff. Resolve its relationship to the HNS radio station explicitly. |
 | Snorlax | Preserve the two FRLG encounters associated with Routes 12 and 16 and the Flute requirement, adapting event placement to HNS geography. Neither encounter may close the only ordinary travel route. Resolve the existing HNS Vermilion Snorlax separately rather than accidentally duplicating the same encounter. |
-| Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the deferred Master Ball reward. |
+| Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the immediate post-liberation Master Ball reward. |
 | Safari Zone and Warden | Use HNS Fuchsia's existing Safari areas for the Surf destination and Gold Teeth search. Keep returning the Teeth for Strength as a separate local objective. Do not import the entire FRLG Safari merely to reproduce coordinates. |
 | Mansion and Blaine | Add the Mansion exploration and Secret Key reward. Preserve its causal connection to Blaine's challenge; Blaine belongs in the intact Cinnabar Gym for the FRLG baseline. Use the selected full FRLG island and interiors. |
 | Giovanni's finale | Preserve the final confrontation after the two major investigations. Giovanni owns the initial Viridian challenge and Earth Badge. Blue is the rival only for Kanto-origin players and the Kanto Champion for all origins; a later Gym takeover is future work. |
@@ -259,10 +263,15 @@ region's progression. A prior acquisition must not auto-complete the story.
 Repeated conversations cannot repeatedly award one-time items or Pokémon.
 Bag and party capacity failures leave rewards claimable later.
 
-Retain the independent-story design's readiness requirements for the Master
-Ball and legendary captures, with thresholds decided separately. A deferred
-Master Ball does not delay Silph's rescue or Giovanni's finale. No Sevii
-delivery requirement is imported for Mewtwo.
+The [Silph President Master Ball specification](../specs/silph-president-master-ball.md)
+provides an immediate post-liberation reward with no readiness threshold,
+success-only receipt, and full-pocket retry. Elm's later reward remains, so
+two Master Balls are intentional. An unclaimed Silph Master Ball does not
+delay Silph's recovery or Giovanni's finale.
+
+Retain the independent-story design's readiness requirements for legendary
+captures, with thresholds decided separately. No Sevii delivery requirement
+is imported for Mewtwo.
 
 ### Transport and regional access
 
@@ -407,7 +416,10 @@ remains the baseline, not proof that an open choice has been made.
 
 ## Constraints
 
-Space recovery is an implementation prerequisite handled by separate work.
+Space recovery is a merge prerequisite handled by separate work. Development
+on the story task may exceed the 512 KiB reserve while recovery is pending;
+this does not waive the production release check or the 32 MiB address-space
+limit. Rebase on recovery and validate the complete release budget before merge.
 The finished feature must fit Wayfarer's standard 32 MiB release budget and
 reserve policy, but this PRD makes no byte estimate or claim that a port fits
 today. Measure the selected content in release builds during implementation.

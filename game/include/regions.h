@@ -11,6 +11,12 @@ static inline enum Region GetRegionForSectionId(u32 sectionId)
 {
 #if IS_HNS
     // Must precede the Johto test: the Hisui mapsecs sit inside the Johto range.
+#if IS_WAYFARER
+    // Anne is appended after the HNS ranges so its imported interiors retain
+    // their Kanto identity without renumbering existing map sections.
+    if (sectionId == MAPSEC_S_S_ANNE)
+        return REGION_KANTO;
+#endif
     if (sectionId >= HISUI_MAPSEC_START && sectionId <= HISUI_MAPSEC_END)
         return REGION_HISUI;
     if (sectionId >= JOHTO_MAPSEC_START && sectionId <= JOHTO_MAPSEC_END)

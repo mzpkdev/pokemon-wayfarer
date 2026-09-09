@@ -849,6 +849,8 @@ const struct Tileset gTileset_UnionRoom =
 #if HAS_FRLG_CONTENT
 
 // FRLG tilesets
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const struct Tileset gTileset_BuildingFrlg =
 {
     .isCompressed = TRUE,
@@ -859,6 +861,8 @@ const struct Tileset gTileset_BuildingFrlg =
     .metatileAttributes = gMetatileAttributes_Building_Frlg,
     .callback = NULL,
 };
+#endif
+#if HAS_FRLG_CONTENT
 
 const struct Tileset gTileset_General_Frlg =
 {
@@ -1311,6 +1315,8 @@ const struct Tileset gTileset_SeaCottage =
     .callback = NULL,
 };
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const struct Tileset gTileset_SilphCo =
 {
     .isCompressed = TRUE,
@@ -1321,6 +1327,8 @@ const struct Tileset gTileset_SilphCo =
     .metatileAttributes = gMetatileAttributes_SilphCo,
     .callback = InitTilesetAnim_SilphCo,
 };
+#endif
+#if HAS_FRLG_CONTENT
 
 const struct Tileset gTileset_UndergroundPath =
 {
@@ -1410,6 +1418,8 @@ const struct Tileset gTileset_Condominiums =
     .callback = NULL,
 };
 
+#endif
+#if HAS_FRLG_CONTENT || IS_WAYFARER
 const struct Tileset gTileset_BurgledHouse =
 {
     .isCompressed = TRUE,
@@ -1421,6 +1431,8 @@ const struct Tileset gTileset_BurgledHouse =
     .callback = NULL,
 };
 
+#endif
+#if HAS_FRLG_CONTENT
 const struct Tileset gTileset_MtEmber =
 {
     .isCompressed = TRUE,
@@ -1543,6 +1555,34 @@ const struct Tileset gTileset_HallOfFame =
 };
 
 #endif // HAS_FRLG_CONTENT
+
+#if IS_WAYFARER
+
+// The persistent S.S. Anne uses exactly these two FRLG tilesets. Keep this
+// narrow so Wayfarer does not pull the full FRLG tileset catalog into its ROM.
+const struct Tileset gTileset_General_Frlg =
+{
+    .isCompressed = TRUE,
+    .isSecondary = FALSE,
+    .tiles = gTilesetTiles_General_Frlg,
+    .palettes = gTilesetPalettes_General_Frlg,
+    .metatiles = gMetatiles_General_Frlg,
+    .metatileAttributes = gMetatileAttributes_General_Frlg,
+    .callback = InitTilesetAnim_General_Frlg,
+};
+
+const struct Tileset gTileset_SSAnne =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_SSAnne,
+    .palettes = gTilesetPalettes_SSAnne,
+    .metatiles = gMetatiles_SSAnne,
+    .metatileAttributes = gMetatileAttributes_SSAnne,
+    .callback = NULL,
+};
+
+#endif // IS_WAYFARER
 
 #if HAS_HNS_CONTENT
 

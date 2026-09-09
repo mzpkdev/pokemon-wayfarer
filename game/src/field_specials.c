@@ -5284,6 +5284,35 @@ void GetElevatorFloor(void)
     VarSet(VAR_ELEVATOR_FLOOR, floor);
 }
 
+#if IS_WAYFARER
+void WayfarerInitSilphElevatorForScript(void)
+{
+    static const u8 floors[][2] = {
+        {MAP_GROUP(MAP_SILPH_CO_2F), MAP_NUM(MAP_SILPH_CO_2F)},
+        {MAP_GROUP(MAP_SILPH_CO_3F), MAP_NUM(MAP_SILPH_CO_3F)},
+        {MAP_GROUP(MAP_SILPH_CO_4F), MAP_NUM(MAP_SILPH_CO_4F)},
+        {MAP_GROUP(MAP_SILPH_CO_5F), MAP_NUM(MAP_SILPH_CO_5F)},
+        {MAP_GROUP(MAP_SILPH_CO_6F), MAP_NUM(MAP_SILPH_CO_6F)},
+        {MAP_GROUP(MAP_SILPH_CO_7F), MAP_NUM(MAP_SILPH_CO_7F)},
+        {MAP_GROUP(MAP_SILPH_CO_8F), MAP_NUM(MAP_SILPH_CO_8F)},
+        {MAP_GROUP(MAP_SILPH_CO_9F), MAP_NUM(MAP_SILPH_CO_9F)},
+        {MAP_GROUP(MAP_SILPH_CO_10F), MAP_NUM(MAP_SILPH_CO_10F)},
+        {MAP_GROUP(MAP_SILPH_CO_11F), MAP_NUM(MAP_SILPH_CO_11F)},
+    };
+    u32 i;
+    u16 floor = 4;
+    u16 selection;
+    for (i = 0; i < ARRAY_COUNT(floors); i++)
+        if (gSaveBlock1Ptr->dynamicWarp.mapGroup == floors[i][0]
+         && gSaveBlock1Ptr->dynamicWarp.mapNum == floors[i][1])
+            floor = 5 + i;
+    VarSet(VAR_SILPH_ELEVATOR_FLOOR_HNS, floor);
+    selection = 14 - floor;
+    sElevatorScroll = selection > 4 ? min(selection - 4, 5) : 0;
+    sElevatorCursorPos = selection - sElevatorScroll;
+}
+#endif
+
 u16 InitElevatorFloorSelectMenuPos(void)
 {
     sElevatorScroll = 0;

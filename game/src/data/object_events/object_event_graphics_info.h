@@ -4754,6 +4754,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Policeman = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LittleBoyFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -4772,7 +4774,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LittleBoyFrlg = {
     .images = sPicTable_LittleBoyFrlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LittleGirlFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,
@@ -4791,6 +4792,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LittleGirlFrlg = {
     .images = sPicTable_LittleGirlFrlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SittingBoy = {
     .tileTag = TAG_NONE,
@@ -4811,6 +4814,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SittingBoy = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LassFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_BLUE,
@@ -4829,7 +4834,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_LassFrlg = {
     .images = sPicTable_LassFrlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_YoungsterFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_BLUE,
@@ -4848,7 +4852,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_YoungsterFrlg = {
     .images = sPicTable_YoungsterFrlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman1Frlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_GREEN,
@@ -4867,7 +4870,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman1Frlg = {
     .images = sPicTable_Woman1Frlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman3Frlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -4886,7 +4888,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman3Frlg = {
     .images = sPicTable_Woman3Frlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Boy = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_GREEN,
@@ -4905,6 +4906,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Boy = {
     .images = sPicTable_Boy,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BattleGirl = {
     .tileTag = TAG_NONE,
@@ -4963,6 +4966,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_FatManFrlg = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BaldingMan = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -4981,7 +4986,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BaldingMan = {
     .images = sPicTable_BaldingMan,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman2Frlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5000,7 +5004,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Woman2Frlg = {
     .images = sPicTable_Woman2Frlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OldMan1 = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,
@@ -5019,7 +5022,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OldMan1 = {
     .images = sPicTable_OldMan1,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WorkerM = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5038,6 +5040,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WorkerM = {
     .images = sPicTable_WorkerM,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_WorkerF = {
     .tileTag = TAG_NONE,
@@ -5077,6 +5081,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BeautyFrlg = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Chef = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5095,6 +5101,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Chef = {
     .images = sPicTable_Chef,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OldMan2 = {
     .tileTag = TAG_NONE,
@@ -5381,6 +5389,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Scientist = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GentlemanFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5399,7 +5409,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_GentlemanFrlg = {
     .images = sPicTable_GentlemanFrlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SailorFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,
@@ -5418,7 +5427,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SailorFrlg = {
     .images = sPicTable_SailorFrlg,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Captain = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5437,7 +5445,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Captain = {
     .images = sPicTable_Captain,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Fisher = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5456,6 +5463,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Fisher = {
     .images = sPicTable_Fisher,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TeachyTVHost = {
     .tileTag = TAG_NONE,
@@ -5875,6 +5884,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_PushableBoulderFrl
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RocketM = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -5893,6 +5904,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RocketM = {
     .images = sPicTable_RocketM,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Celio = {
     .tileTag = TAG_NONE,
@@ -6027,6 +6040,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Koga = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giovanni = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,
@@ -6045,6 +6060,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Giovanni = {
     .images = sPicTable_Giovanni,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Blaine = {
     .tileTag = TAG_NONE,
@@ -6160,6 +6177,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Lance = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Blue = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_GREEN,
@@ -6178,6 +6197,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Blue = {
     .images = sPicTable_Blue,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_TownMap = {
     .tileTag = TAG_NONE,
@@ -6692,6 +6713,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Machop = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Wigglytuff = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,
@@ -6710,6 +6733,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Wigglytuff = {
     .images = sPicTable_Wigglytuff,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Doduo = {
     .tileTag = TAG_NONE,
@@ -6996,6 +7021,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Cubone = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
+#endif
+#if IS_FRLG || IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Machoke = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_BLUE,
@@ -7014,6 +7041,8 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Machoke = {
     .images = sPicTable_Machoke,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
+#endif
+#if IS_FRLG
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Kabuto = {
     .tileTag = TAG_NONE,

@@ -2,7 +2,11 @@ SSAnne_B1F_Room2_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_B1F_Room2_EventScript_Huey::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_SS_ANNE_SAILOR_HUEY_HNS, SSAnne_B1F_Room2_Text_HueyIntro, SSAnne_B1F_Room2_Text_HueyDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_HUEY, SSAnne_B1F_Room2_Text_HueyIntro, SSAnne_B1F_Room2_Text_HueyDefeat
+#endif
 	msgbox SSAnne_B1F_Room2_Text_HueyPostBattle, MSGBOX_AUTOCLOSE
 	end
 

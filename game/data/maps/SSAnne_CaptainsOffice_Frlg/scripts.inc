@@ -2,6 +2,53 @@ SSAnne_CaptainsOffice_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_CaptainsOffice_EventScript_Captain::
+#if IS_WAYFARER
+	lock
+	faceplayer
+	goto_if_set FLAG_SS_ANNE_CAPTAIN_REWARD_HNS, SSAnne_CaptainsOffice_EventScript_AlreadyGotCut
+	msgbox SSAnne_CaptainsOffice_Text_CaptainIFeelSeasick
+	textcolor NPC_TEXT_COLOR_NEUTRAL
+	message SSAnne_CaptainsOffice_Text_RubbedCaptainsBack
+	waitmessage
+	playfanfare MUS_HEAL
+	waitfanfare
+	call EventScript_RestorePrevTextColor
+	delay 50
+	applymovement LOCALID_SS_ANNE_CAPTAIN, Common_Movement_FacePlayer
+	waitmovement 0
+	msgbox SSAnne_CaptainsOffice_Text_ThankYouHaveHMForCut
+	checkitem ITEM_HM_CUT
+	goto_if_eq VAR_RESULT, TRUE, SSAnne_CaptainsOffice_EventScript_ReconcileCut
+	setorcopyvar VAR_0x8000, ITEM_HM_CUT
+	setorcopyvar VAR_0x8001, 1
+	call Std_ObtainItem
+	goto_if_eq VAR_RESULT, FALSE, SSAnne_CaptainsOffice_EventScript_NoRoomForCut
+	checkitem ITEM_HM_CUT
+	goto_if_eq VAR_RESULT, FALSE, SSAnne_CaptainsOffice_EventScript_NoRoomForCut
+	msgbox SSAnne_CaptainsOffice_Text_ExplainCut
+	setflag FLAG_SS_ANNE_CAPTAIN_REWARD_HNS
+	release
+	end
+
+SSAnne_CaptainsOffice_EventScript_ReconcileCut::
+	msgbox SSAnne_CaptainsOffice_Text_AlreadyHaveCut
+	setflag FLAG_SS_ANNE_CAPTAIN_REWARD_HNS
+	release
+	end
+
+SSAnne_CaptainsOffice_EventScript_NoRoomForCut::
+	msgbox SSAnne_CaptainsOffice_Text_YouHaveNoRoomForThis
+	closemessage
+	applymovement LOCALID_SS_ANNE_CAPTAIN, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	release
+	end
+
+SSAnne_CaptainsOffice_EventScript_AlreadyGotCut::
+	msgbox SSAnne_CaptainsOffice_Text_SSAnneRemainsInPort
+	release
+	end
+#else
 	lock
 	goto_if_set FLAG_GOT_HM01, SSAnne_CaptainsOffice_EventScript_AlreadyGotCut
 	msgbox SSAnne_CaptainsOffice_Text_CaptainIFeelSeasick
@@ -37,6 +84,7 @@ SSAnne_CaptainsOffice_EventScript_AlreadyGotCut::
 	msgbox SSAnne_CaptainsOffice_Text_SSAnneWillSetSailSoon
 	release
 	end
+#endif
 
 SSAnne_CaptainsOffice_EventScript_TrashCan::
 	msgbox SSAnne_CaptainsOffice_Text_YuckShouldntHaveLooked, MSGBOX_SIGN
@@ -92,6 +140,20 @@ SSAnne_CaptainsOffice_Text_SSAnneWillSetSailSoon::
 	.string "The S.S. ANNE will set sail soon!\p"
 	.string "Farewell, until our return to\n"
 	.string "VERMILION CITY!$"
+
+#if IS_WAYFARER
+SSAnne_CaptainsOffice_Text_SSAnneRemainsInPort::
+	.string "CAPTAIN: …Whew!\p"
+	.string "I'm feeling much better now.\n"
+	.string "Enjoy the rest of your visit aboard\l"
+	.string "the S.S. ANNE!$"
+
+SSAnne_CaptainsOffice_Text_AlreadyHaveCut::
+	.string "CAPTAIN: Ah, you already carry the\n"
+	.string "CUT technique!\p"
+	.string "Then put it to good use and enjoy\n"
+	.string "your visit aboard the S.S. ANNE!$"
+#endif
 
 SSAnne_CaptainsOffice_Text_YouHaveNoRoomForThis::
 	.string "Oh, no!\n"

@@ -317,6 +317,16 @@ static bool32 ApplyBagFixtures(void)
                 BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_TM_FOCUS_PUNCH, 1);
         }
     }
+    if (sRequest.fullPocketMask & E2E_TEST_FULL_POCKET_BALLS)
+    {
+        struct BagPocket *pocket = &gBagPockets[POCKET_POKE_BALLS];
+
+        for (i = 0; i < pocket->capacity; i++)
+        {
+            if (BagPocket_GetSlotData(pocket, i).itemId == ITEM_NONE)
+                BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_POKE_BALL, 1);
+        }
+    }
 
     return TRUE;
 }
@@ -1336,6 +1346,11 @@ static void UpdateState(void)
         if (E2ETest_GetBattleActionMenuState(&cursor))
         {
             gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_ACTION_MENU;
+            gE2ETestState.battleCursor = cursor;
+        }
+        else if (E2ETest_GetBattleForfeitPromptState(&cursor))
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_FORFEIT_PROMPT;
             gE2ETestState.battleCursor = cursor;
         }
         else if (E2ETest_GetBattleBagState(&bagUiState, &pocket, &item))

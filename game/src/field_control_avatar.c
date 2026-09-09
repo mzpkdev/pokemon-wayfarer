@@ -1142,7 +1142,11 @@ static void SetupWarp(struct MapHeader *unused, s8 warpEventId, struct MapPositi
         UpdateEscapeWarp(position->x, position->y);
         mapHeader = Overworld_GetMapHeaderByGroupAndId(warpEvent->mapGroup, warpEvent->mapNum);
         if (mapHeader->events->warps[warpEvent->warpId].mapNum == MAP_NUM(MAP_DYNAMIC))
-            SetDynamicWarp(mapHeader->events->warps[warpEventId].warpId, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, warpEventId);
+            // SetDynamicWarp's first parameter is intentionally unused. The
+            // source warp id belongs to the current map, so indexing it into
+            // the destination's event array can be out of range (for example,
+            // the Rocket Hideout's elevator doors).
+            SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, warpEventId);
     }
 }
 

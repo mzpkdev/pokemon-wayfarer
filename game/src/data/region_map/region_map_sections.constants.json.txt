@@ -8,7 +8,11 @@
 
 enum {
 ## for map_section in map_sections
-{% if existsIn(map_section, "in_hns") %}{% else %}
+{% if existsIn(map_section, "in_hns") %}{% else if existsIn(map_section, "wayfarer_hns") %}
+#if !IS_WAYFARER
+    {{ map_section.id }} = 0,
+#endif
+{% else %}
     {{ map_section.id }} = 0,
 {% endif %}
 ## endfor
@@ -20,6 +24,13 @@ enum {
     {{ map_section.id }},
 {% endif %}
 ## endfor
+#if IS_WAYFARER
+## for map_section in map_sections
+{% if existsIn(map_section, "wayfarer_hns") %}
+    {{ map_section.id }},
+{% endif %}
+## endfor
+#endif
     MAPSEC_NONE,
     MAPSEC_COUNT,
 };
