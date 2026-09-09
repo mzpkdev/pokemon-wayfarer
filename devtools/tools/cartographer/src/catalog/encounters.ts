@@ -69,6 +69,10 @@ type SourceMethod = {
 type SourceEncounter = {
   map: string
   base_label: string
+  projectionAlias?: {
+    baseLabel: string
+    runtimeTime: CatalogEncounterProjectionProfile["runtimeTime"]
+  }
   [method: string]: unknown
 }
 
@@ -330,8 +334,15 @@ const withWayfarerSeviiSource = (document: unknown, manifest: unknown): unknown 
       0,
       255,
     )
-    for (const label of [day, night]) {
-      const target: SourceEncounter = targets.get(label) ?? { map, base_label: label }
+    for (const [label, projectionAlias] of [
+      [day, undefined],
+      [night, { baseLabel: day, runtimeTime: "TIME_NIGHT" }],
+    ] as const) {
+      const target: SourceEncounter = targets.get(label) ?? {
+        map,
+        base_label: label,
+        projectionAlias,
+      }
       target[method] = { encounter_rate: encounterRate, mons }
       targets.set(label, target)
     }
@@ -390,12 +401,18 @@ const joinedProfiles = (
   method: SourceMethod,
   profiles: ReadonlyMap<string, CatalogEncounterProjectionProfile> | undefined,
   consumedProfiles: Set<string>,
+  projectionAlias?: SourceEncounter["projectionAlias"],
 ): CatalogEncounterProjectionProfile[] => {
   if (!profiles) return []
   const rodsForMethod: CatalogEncounterFishingRod[] =
     metadata.field.type === "fishing_mons" ? profileRods : ["NONE"]
   return rodsForMethod.map((rod) => {
-    const key = profileLookupKey(product, baseLabel, metadata.field.type, rod)
+    const key = profileLookupKey(
+      product,
+      projectionAlias?.baseLabel ?? baseLabel,
+      metadata.field.type,
+      rod,
+    )
     const profile = profiles.get(key)
     if (!profile) throw sourceError("", `projection has no exact profile join for ${key}`)
     const runtimeSlotCount = rod === "NONE" ? metadata.field.encounter_rates.length : 10
@@ -417,11 +434,11 @@ const joinedProfiles = (
         `projection profile ${profile.profileKey} disagrees on ${mismatches.join(", ")}`,
       )
     }
-    if (consumedProfiles.has(profile.profileKey)) {
+    if (!projectionAlias && consumedProfiles.has(profile.profileKey)) {
       throw sourceError("", `projection profile joined more than once: ${profile.profileKey}`)
     }
-    consumedProfiles.add(profile.profileKey)
-    return profile
+    if (!projectionAlias) consumedProfiles.add(profile.profileKey)
+    return projectionAlias ? { ...profile, runtimeTime: projectionAlias.runtimeTime } : profile
   })
 }
 
@@ -471,6 +488,7 @@ export const catalogWildEncounters = (
           method,
           profiles,
           consumedProfiles,
+          encounter.projectionAlias,
         )
         methodProfiles.push(joined)
         return {

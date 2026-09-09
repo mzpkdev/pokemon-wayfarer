@@ -350,6 +350,7 @@ describe("generated Trainer Rating projection joins", () => {
         ["MAP_ROUTE102", "Route102"],
         ["MAP_MT_SILVER_SNOW_HNS", "MtSilverSnow_hns"],
         ["MAP_ROUTE18", "Route18"],
+        ["MAP_FIVE_ISLAND", "FiveIsland"],
       ]),
       temporaryDirectory,
       projectionPath,
@@ -451,6 +452,23 @@ describe("generated Trainer Rating projection joins", () => {
     )
     expect(new Set(route18?.runtimeTimes.map((time) => time.product))).toEqual(
       new Set(["FIRERED", "LEAFGREEN"]),
+    )
+  })
+
+  it("reuses the authored Sevii day profile for its generated night alias", () => {
+    const waterSets = catalog.encountersByMap
+      .get("FiveIsland")
+      ?.sets.filter((set) => set.methods.some((method) => method.type === "water_mons"))
+    const day = waterSets?.find((set) => set.baseLabel === "sFiveIsland_Wayfarer_Day")
+    const night = waterSets?.find((set) => set.baseLabel === "sFiveIsland_Wayfarer_Night")
+    const dayProfile = day?.methods.find((method) => method.type === "water_mons")?.profiles[0]
+    const nightProfile = night?.methods.find((method) => method.type === "water_mons")?.profiles[0]
+
+    expect(day).toMatchObject({ product: "POKEMON_WAYFARER", runtimeTime: "day" })
+    expect(night).toMatchObject({ product: "POKEMON_WAYFARER", runtimeTime: "night" })
+    expect(nightProfile).toEqual(dayProfile)
+    expect(nightProfile?.profileKey).toBe(
+      "POKEMON_WAYFARER/sFiveIsland_Wayfarer_Day/water_mons/NONE",
     )
   })
 
