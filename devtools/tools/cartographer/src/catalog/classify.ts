@@ -1,6 +1,6 @@
 import * as path from "node:path"
 
-import type { CatalogRegion } from "./types"
+import type { CatalogBuild, CatalogBuildId, CatalogRegion } from "./types"
 
 const kantoNamedMaps = new Set([
   "CeladonCity",
@@ -30,6 +30,32 @@ const hoenn: CatalogRegion = { id: "hoenn", label: "Hoenn" }
 const alola: CatalogRegion = { id: "alola", label: "Alola" }
 
 export const catalogRegions: CatalogRegion[] = [johto, kanto, hoenn, alola]
+
+/**
+ * Build targets mirror mapjson's source_version_is_selected logic. FireRed and
+ * LeafGreen share the FRLG map source; Wayfarer combines Emerald and HNS maps.
+ */
+export const catalogBuilds: CatalogBuild[] = [
+  { id: "wayfarer", label: "Wayfarer" },
+  { id: "emerald", label: "Emerald" },
+  { id: "firered", label: "FireRed" },
+  { id: "leafgreen", label: "LeafGreen" },
+  { id: "hns", label: "HNS" },
+]
+
+const buildsBySourceVersion: Record<string, CatalogBuildId[]> = {
+  emerald: ["emerald", "wayfarer"],
+  frlg: ["firered", "leafgreen"],
+  hns: ["hns", "wayfarer"],
+}
+
+/** Resolve source metadata into the game builds that include a map. */
+export const buildsForSourceVersion = (sourceVersion: string | undefined): CatalogBuildId[] => {
+  const source = sourceVersion ?? "emerald"
+  const builds = buildsBySourceVersion[source]
+  if (!builds) throw new Error(`Unsupported map source version ${JSON.stringify(source)}`)
+  return builds
+}
 
 const hoennHnsMapSections = new Set([
   "MAPSEC_BATTLE_FRONTIER",

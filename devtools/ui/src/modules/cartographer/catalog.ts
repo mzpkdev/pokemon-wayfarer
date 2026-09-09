@@ -275,6 +275,7 @@ export type CatalogMap = {
   name: string
   id: string
   region: string
+  builds: string[]
   category: string
   sourceGroup: string
   sourceRegion: string | null
@@ -332,6 +333,12 @@ export type MapCatalog = {
     conflicts: CatalogTopologyDiagnostic[]
   }
   wildEncounterProjection: CatalogWildEncounterProjection
+  builds: Array<{
+    id: string
+    label: string
+    mapCount: number
+    maps: string[]
+  }>
   regions: Array<{
     id: string
     label: string
@@ -796,9 +803,9 @@ export const validateCatalog = (value: unknown): MapCatalog => {
   if (!root) {
     throw new CatalogValidationError(["catalog must be an object."], "The map catalog is invalid.")
   }
-  if (root.schemaVersion !== 8) {
+  if (root.schemaVersion !== 9) {
     details.push(
-      "schemaVersion must be 8. Regenerate the catalog with pnpm run cartographer:catalog.",
+      "schemaVersion must be 9. Regenerate the catalog with pnpm run cartographer:catalog.",
     )
   }
   const projectionIssue = wildEncounterProjectionIssue(root.wildEncounterProjection)
@@ -807,6 +814,9 @@ export const validateCatalog = (value: unknown): MapCatalog => {
   }
   if (!Array.isArray(root.maps)) {
     details.push("maps must be an array.")
+  }
+  if (!Array.isArray(root.builds)) {
+    details.push("builds must be an array.")
   }
   if (!Array.isArray(root.regions)) {
     details.push("regions must be an array.")
@@ -822,6 +832,25 @@ export const validateCatalog = (value: unknown): MapCatalog => {
   }
 
   const catalog = root as unknown as MapCatalog
+  const builds = new Set<string>()
+  const validBuilds: Array<{ id: string; mapCount: number; maps: string[] }> = []
+  for (const [index, build] of catalog.builds.entries()) {
+    const record = asRecord(build)
+    if (
+      !record ||
+      !hasString(record.id) ||
+      !hasString(record.label) ||
+      !hasInteger(record.mapCount) ||
+      !Array.isArray(record.maps) ||
+      !record.maps.every(hasString)
+    ) {
+      details.push(`builds[${index}] must include an ID, label, map count, and map names.`)
+      continue
+    }
+    if (builds.has(record.id)) details.push(`duplicate build ${JSON.stringify(record.id)}.`)
+    builds.add(record.id)
+    validBuilds.push({ id: record.id, mapCount: record.mapCount, maps: record.maps })
+  }
   for (const [index, diagnostic] of catalog.topology.conflicts.entries()) {
     const issue = topologyDiagnosticIssue(diagnostic)
     if (issue) details.push(`topology.conflicts[${index}] ${issue}`)
@@ -851,6 +880,19 @@ export const validateCatalog = (value: unknown): MapCatalog => {
     }
     if (!regions.has(map.region)) {
       details.push(`${map.name} refers to undeclared region ${JSON.stringify(map.region)}.`)
+    }
+    if (!Array.isArray(map.builds) || map.builds.length === 0 || !map.builds.every(hasString)) {
+      details.push(`${map.name} must belong to one or more builds.`)
+    } else {
+      const mapBuilds = new Set(map.builds)
+      if (mapBuilds.size !== map.builds.length) {
+        details.push(`${map.name} has duplicate build membership.`)
+      }
+      for (const build of mapBuilds) {
+        if (!builds.has(build)) {
+          details.push(`${map.name} refers to undeclared build ${JSON.stringify(build)}.`)
+        }
+      }
     }
     if (!hasWildEncounters(map.wildEncounters)) {
       details.push(`${map.name} wildEncounters must contain valid source encounter data.`)
@@ -935,6 +977,20 @@ export const validateCatalog = (value: unknown): MapCatalog => {
     }
     mapNames.add(map.name)
     mapIds.add(map.id)
+  }
+  for (const build of validBuilds) {
+    const expectedMaps = catalog.maps
+      .filter((map) => Array.isArray(map.builds) && map.builds.includes(build.id))
+      .map((map) => map.name)
+    if (build.mapCount !== expectedMaps.length) {
+      details.push(`${build.id} has an incorrect map count.`)
+    }
+    if (
+      build.maps.length !== expectedMaps.length ||
+      build.maps.some((map, index) => map !== expectedMaps[index])
+    ) {
+      details.push(`${build.id} has an incorrect map membership list.`)
+    }
   }
   if (details.length > 0) {
     throw new CatalogValidationError(details, "The map catalog is inconsistent.")

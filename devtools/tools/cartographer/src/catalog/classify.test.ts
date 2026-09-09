@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { catalogRegions, regionFor } from "./classify"
+import { buildsForSourceVersion, catalogRegions, regionFor } from "./classify"
 
 describe("Wayfarer map regions", () => {
   it("retains each source map family's native region", () => {
@@ -30,5 +30,17 @@ describe("Wayfarer map regions", () => {
 
   it("publishes the regions represented by Wayfarer maps", () => {
     expect(catalogRegions.map((region) => region.id)).toEqual(["johto", "kanto", "hoenn", "alola"])
+  })
+})
+
+describe("Cartographer map build membership", () => {
+  it("uses the map source version selected by each ROM build", () => {
+    expect(buildsForSourceVersion(undefined)).toEqual(["emerald", "wayfarer"])
+    expect(buildsForSourceVersion("frlg")).toEqual(["firered", "leafgreen"])
+    expect(buildsForSourceVersion("hns")).toEqual(["hns", "wayfarer"])
+  })
+
+  it("rejects unknown source versions instead of inferring a build from a map name", () => {
+    expect(() => buildsForSourceVersion("crystal")).toThrow('Unsupported map source version "crystal"')
   })
 })

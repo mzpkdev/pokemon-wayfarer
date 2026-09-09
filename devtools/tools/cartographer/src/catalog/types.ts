@@ -213,6 +213,7 @@ export type CatalogEncounterDiagnostic =
 
 export type SourceMap = {
   id: string
+  game_version?: string
   layout: string
   music?: string
   region_map_section?: string
@@ -248,6 +249,13 @@ export type MapGroups = {
 
 export type CatalogRegion = {
   id: string
+  label: string
+}
+
+export type CatalogBuildId = "emerald" | "firered" | "leafgreen" | "hns" | "wayfarer"
+
+export type CatalogBuild = {
+  id: CatalogBuildId
   label: string
 }
 
@@ -307,6 +315,7 @@ export type CatalogMap = {
   name: string
   id: string
   region: string
+  builds: CatalogBuildId[]
   category: string
   sourceGroup: string
   sourceRegion: null
@@ -388,7 +397,7 @@ export type CatalogMap = {
 }
 
 export type MapCatalog = {
-  schemaVersion: 8
+  schemaVersion: 9
   format: "pokemon-wayfarer-exterior-map-catalog"
   pixelsPerMetatile: 16
   source: {
@@ -406,6 +415,7 @@ export type MapCatalog = {
     conflicts: TopologyDiagnostic[]
   }
   wildEncounterProjection: CatalogWildEncounterProjection
+  builds: Array<CatalogBuild & { mapCount: number; maps: string[] }>
   regions: Array<CatalogRegion & { mapCount: number; maps: string[] }>
   maps: CatalogMap[]
 }

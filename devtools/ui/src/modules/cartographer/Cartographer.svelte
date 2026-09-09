@@ -7,6 +7,7 @@
   import MapDetails from "./MapDetails.svelte"
   import MapSearch from "./MapSearch.svelte"
   import MapViewport from "./MapViewport.svelte"
+  import BuildPicker from "./BuildPicker.svelte"
   import RegionPicker from "./RegionPicker.svelte"
   import {
     CatalogValidationError,
@@ -40,6 +41,7 @@
   let loadState = $state<LoadState>({ kind: "loading" })
   let requestedRegion = $state<string | null>(null)
   let requestedMap = $state<string | null>(null)
+  let requestedBuild = $state<string | null>(null)
   let initialView = $state<CartographerViewState | null>(null)
   let currentView = $state<CartographerViewState | null>(null)
   let searchQuery = $state("")
@@ -57,6 +59,7 @@
     const state = parseCartographerUrlState(window.location.href)
     requestedRegion = state.region
     requestedMap = state.selectedMap
+    requestedBuild = state.build
     initialView = state.view
     trainerRating = state.trainerRating
     requestedProduct = state.product
@@ -77,27 +80,43 @@
   })
 
   let catalog = $derived(loadState.kind === "ready" ? loadState.catalog : null)
+  let activeBuild = $derived(
+    catalog
+      ? (catalog.builds.find((build) => build.id === requestedBuild) ??
+          catalog.builds.find((build) => build.id === "wayfarer") ??
+          catalog.builds[0] ??
+          null)
+      : null,
+  )
+  let buildMaps = $derived(
+    catalog && activeBuild ? catalog.maps.filter((map) => map.builds.includes(activeBuild.id)) : [],
+  )
   let selectedCandidate = $derived(
-    catalog?.maps.find((map) => map.name === requestedMap || map.id === requestedMap) ?? null,
+    buildMaps.find((map) => map.name === requestedMap || map.id === requestedMap) ?? null,
+  )
+  let regions = $derived(
+    catalog
+      ? catalog.regions
+          .map((region) => {
+            const maps = buildMaps.filter((map) => map.region === region.id)
+            return { ...region, mapCount: maps.length, maps: maps.map((map) => map.name) }
+          })
+          .filter((region) => region.mapCount > 0)
+      : [],
   )
   let activeRegion = $derived(
-    catalog
-      ? (selectedCandidate &&
-          catalog.regions.find((region) => region.id === selectedCandidate.region)) ||
-          catalog.regions.find((region) => region.id === requestedRegion) ||
-          catalog.regions[0] ||
+    activeBuild
+      ? (selectedCandidate && regions.find((region) => region.id === selectedCandidate.region)) ||
+          regions.find((region) => region.id === requestedRegion) ||
+          regions[0] ||
           null
       : null,
   )
-  let maps = $derived(
-    catalog && activeRegion ? catalog.maps.filter((map) => map.region === activeRegion.id) : [],
-  )
+  let maps = $derived(activeRegion ? buildMaps.filter((map) => map.region === activeRegion.id) : [])
   let selectedMap = $derived(
     selectedCandidate?.region === activeRegion?.id ? selectedCandidate : null,
   )
-  let renderedMapNames = $derived(
-    new Set(visibleSurfaceMaps(catalog?.maps ?? []).map((map) => map.name)),
-  )
+  let renderedMapNames = $derived(new Set(visibleSurfaceMaps(buildMaps).map((map) => map.name)))
   let activeEncounters = $derived(
     selectedMap && catalog
       ? resolveMapEncounters(
@@ -109,8 +128,9 @@
   )
 
   const replaceUrl = (): void => {
-    if (!activeRegion) return
+    if (!activeBuild || !activeRegion) return
     const next = cartographerUrlWithState(window.location.href, {
+      build: activeBuild.id,
       region: activeRegion.id,
       selectedMap: selectedMap?.name ?? null,
       view: currentView,
@@ -122,9 +142,12 @@
   }
 
   const selectMap = (name: string, focus = false): void => {
-    const map = catalog?.maps.find((candidate) => candidate.name === name) ?? null
+    const map = buildMaps.find((candidate) => candidate.name === name) ?? null
     if (!map) return
-    if (map.region !== activeRegion?.id) currentView = null
+    if (map.region !== activeRegion?.id) {
+      initialView = null
+      currentView = null
+    }
     requestedRegion = map.region
     requestedMap = map.name
     selectedWarp = null
@@ -138,6 +161,17 @@
     requestedMap = null
     selectedWarp = null
     selectedObject = null
+    initialView = null
+    currentView = null
+    queueMicrotask(replaceUrl)
+  }
+
+  const selectBuild = (build: string): void => {
+    requestedBuild = build
+    requestedMap = null
+    selectedWarp = null
+    selectedObject = null
+    initialView = null
     currentView = null
     queueMicrotask(replaceUrl)
   }
@@ -194,7 +228,7 @@
       </ul>
     {/if}
   </section>
-{:else if !catalog || !activeRegion}
+{:else if !catalog || !activeBuild || !activeRegion}
   <section
     class="mx-auto mt-[12vh] max-w-2xl border border-cartographer-border bg-cartographer-panel p-8"
   >
@@ -206,7 +240,7 @@
       <div>
         <p class="m-0 text-sm font-medium text-cartographer-signal">World maps</p>
         <h1 class="m-0 mt-1 text-[clamp(1.4rem,2.2vw,2.1rem)] font-semibold tracking-[-0.035em]">
-          {activeRegion.label}
+          {activeBuild.label} · {activeRegion.label}
         </h1>
       </div>
       <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -272,16 +306,17 @@
     </header>
     <div class="grid gap-4 xl:grid-cols-[15.5rem_minmax(0,1fr)_20rem]">
       <aside class="grid content-start gap-3">
-        <RegionPicker
-          regions={catalog.regions}
-          activeRegionId={activeRegion.id}
-          onSelectRegion={selectRegion}
+        <BuildPicker
+          builds={catalog.builds}
+          activeBuildId={activeBuild.id}
+          onSelectBuild={selectBuild}
         />
-        <MapSearch maps={catalog.maps} bind:query={searchQuery} onSelectMap={selectMap} />
+        <RegionPicker {regions} activeRegionId={activeRegion.id} onSelectRegion={selectRegion} />
+        <MapSearch maps={buildMaps} bind:query={searchQuery} onSelectMap={selectMap} />
       </aside>
       {#if activeTab === "map"}
         <div id="cartographer-map" class="min-w-0" in:fade={fadeIn}>
-          {#key activeRegion.id}
+          {#key `${activeBuild.id}-${activeRegion.id}`}
             <MapViewport
               {catalog}
               {maps}
@@ -317,7 +352,7 @@
         </div>
         <div class="min-w-0" in:fade={fadeIn}>
           <MapDetails
-            maps={catalog.maps}
+            maps={buildMaps}
             {selectedMap}
             {selectedWarp}
             {selectedObject}
@@ -329,7 +364,7 @@
         </div>
       {:else}
         <div id="cartographer-encounters" class="min-w-0" in:fade={fadeIn}>
-          {#key activeRegion.id}
+          {#key `${activeBuild.id}-${activeRegion.id}`}
             <MapViewport
               {catalog}
               {maps}

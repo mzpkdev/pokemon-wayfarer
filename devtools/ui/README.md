@@ -21,9 +21,12 @@ the parent `devtools/` directory stages that bundle alongside the generated
 catalog in `build/cartographer/map-catalog/`, which is the standalone
 static-host deployment artifact. `ui/dist` remains a bundle only.
 
-Cartographer provides region selection, map and map-section search, URL-persisted
-map selection and camera state, native and overview image switching, map facts,
-and warp navigation. Its generated input is ignored under
+Cartographer defaults to the Wayfarer build. Choose a build above the regions to
+browse its maps; region counts, search, and warp navigation use that selection.
+Build membership comes from each map's `game_version`, so Wayfarer includes both
+HNS and Emerald maps. The URL preserves the build, selected map, and camera state.
+Cartographer also provides native and overview image switching and map facts.
+Its generated input is ignored under
 `build/cartographer/map-catalog/`.
 
 Docs groups files by their folder below `.product/`, takes each page title from its
