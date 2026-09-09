@@ -4,6 +4,17 @@ GAME_CODE    ?= BPEE
 BUILD_NAME   ?= emerald
 MAP_VERSION  ?= emerald
 
+# E2E always builds the Wayfarer product. Resolve it before setup prerequisites
+# run: the outer `make e2e` otherwise defaults to Emerald and can generate
+# shared map includes without Wayfarer's source-constant aliases before the
+# Wayfarer E2E submake begins.
+ifneq (,$(filter e2e,$(MAKECMDGOALS)))
+	GAME_VERSION 	:= POKEMON_WAYFARER
+	TITLE       	:= WAYFARER
+	GAME_CODE   	:= BWFE
+	BUILD_NAME  	:= wayfarer
+	MAP_VERSION 	:= wayfarer
+else
 ifeq (firered, $(or $(BUILD), $(MAKECMDGOALS)))
   	GAME_VERSION 	:= FIRERED
 	TITLE       	:= POKEMON FIRE
@@ -31,6 +42,7 @@ ifeq (wayfarer, $(or $(BUILD), $(MAKECMDGOALS)))
 	GAME_CODE   	:= BWFE
 	BUILD_NAME  	:= wayfarer
 	MAP_VERSION 	:= wayfarer
+endif
 endif
 endif
 endif
