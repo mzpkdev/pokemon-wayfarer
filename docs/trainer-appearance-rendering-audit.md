@@ -1,5 +1,9 @@
 # Trainer appearance rendering audit
 
+The approved v1 includes Gold, Kris, Brendan, and May with saved IDs 1, 2, 5,
+and 6 and menu labels Style 1 through Style 4. Red and Leaf are deferred; IDs
+3 and 4 are not registered.
+
 Wayfarer uses saved appearance for local gameplay displays. Intro and naming
 previews use the setup context explicitly. Gender remains the story identity
 and the fallback identity in legacy remote and recorded formats.
@@ -49,8 +53,8 @@ save initialization clears old records.
 | `decoration.c:SetUpPlacingDecorationPlayerAvatar` / `SetUpPuttingAwayDecorationPlayerAvatar` | Saved normal graphics with explicit `ANIM_STD_FACE_WEST` retain the decorating preview’s static left-facing pose. Normal and decorating descriptors both use 16x32 OAM. The normal table’s west animation repeatedly displays valid frame 2; the old decorating table repeatedly displayed its single left-facing frame 0. No decoration code requests further animations for this dummy-callback preview. Standalone decorating sheets remain unchanged. The putting-away cursor retains its separate `PLACE_DECORATION_PLAYER_TAG` palette and cleanup; the player preview loads the normal graphics descriptor’s own palette tag. |
 | `cable_car.c` both player passenger creations | Saved normal graphics; other passengers keep explicit IDs. |
 | `easy_chat.c` interview illustration | Saved normal graphics for the player facing the reporter. Reporter/fan artwork stays explicit. |
-| `region_map.c:CreateRegionMapPlayerIcon` | Saved ID selects the existing matching Gold, Kris, Red, Leaf, Brendan, or May icon and palette before legacy build/gender handling. Icon dimensions, animation, zoom positioning, and tagged cleanup remain unchanged. Invalid saved identity creates no icon. |
-| `frontier_pass.c:InitFrontierMapSprites` | The selected normal overworld sheet supplies its palette and first facing-down frame. A tagged 128-byte sheet copies the top half of the uncompressed 16x32 first frame into the existing 16x16 marker, with a copied palette released alongside the tiles. All six normal descriptors use this width and height. |
+| `region_map.c:CreateRegionMapPlayerIcon` | Saved ID selects the existing matching Gold, Kris, Brendan, or May icon and palette before legacy build/gender handling. Icon dimensions, animation, zoom positioning, and tagged cleanup remain unchanged. Invalid saved identity creates no icon. |
+| `frontier_pass.c:InitFrontierMapSprites` | The selected normal overworld sheet supplies its palette and first facing-down frame. A tagged 128-byte sheet copies the top half of the uncompressed 16x32 first frame into the existing 16x16 marker, with a copied palette released alongside the tiles. All four normal descriptors use this width and height. |
 | `contest_util.c:GetContestTrainerGraphicsId`, contest map variables, and link palette loading | Local contestant index resolves saved normal graphics through a `u16` lookup and uses the corresponding palette. Other contestants use their existing record fields. `ContestPokemon.trainerGfxId` stays `u8`; creation and outgoing records keep legacy gender graphics. Both Contest Hall scripts skip their subsequent gender overwrite in Wayfarer. |
 | `item_menu.c` / `item_menu_icons.c` | Art depicts the bag, not a trainer. Existing gender-based bag art and menu color theme remain unchanged. Wally's tutorial bag remains explicit. |
 | `start_menu.c` save information and `berry_tag_screen.c` | Gender controls UI colors; no local character depiction is selected here. |
@@ -77,7 +81,7 @@ lookups.
 
 ## Focused tests
 
-`game/test/wayfarer_appearance_rendering.c` checks all six saved local front and
+`game/test/wayfarer_appearance_rendering.c` checks all four saved local front and
 back pictures while pending selection differs, verifies the explicit gender
 mappers stay legacy, and exercises the actual local battle selector with live
 link, ordinary, and recorded flags. It also checks that a remote gender-only

@@ -2491,14 +2491,6 @@ void CreateRegionMapPlayerIcon(u16 tileTag, u16 paletteTag)
         sheet.data = sRegionMapPlayerIcon_KrisGfx;
         palette.data = sRegionMapPlayerIcon_KrisPal;
         break;
-    case APPEARANCE_RED:
-        sheet.data = sRegionMapPlayerIcon_RedGfx;
-        palette.data = sRegionMapPlayerIcon_RedPal;
-        break;
-    case APPEARANCE_LEAF:
-        sheet.data = sRegionMapPlayerIcon_LeafGfx;
-        palette.data = sRegionMapPlayerIcon_LeafPal;
-        break;
     case APPEARANCE_BRENDAN:
         break;
     case APPEARANCE_MAY:

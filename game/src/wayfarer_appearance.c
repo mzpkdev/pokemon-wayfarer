@@ -46,38 +46,6 @@ static const struct WayfarerAppearanceProfile sProfiles[] =
         },
     },
     {
-        .id = APPEARANCE_RED, .gender = MALE,
-        .frontPic = TRAINER_PIC_FRONT_RED, .backPic = TRAINER_PIC_BACK_RED,
-        .paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_RED,
-        .graphicsIds = {
-            [PLAYER_AVATAR_STATE_NORMAL] = OBJ_EVENT_GFX_RED_NORMAL,
-            [PLAYER_AVATAR_STATE_MACH_BIKE] = OBJ_EVENT_GFX_RED_BIKE,
-            [PLAYER_AVATAR_STATE_ACRO_BIKE] = OBJ_EVENT_GFX_RED_ACRO_BIKE_WAYFARER,
-            [PLAYER_AVATAR_STATE_SURFING] = OBJ_EVENT_GFX_RED_SURF,
-            [PLAYER_AVATAR_STATE_UNDERWATER] = OBJ_EVENT_GFX_RED_UNDERWATER_WAYFARER,
-            [PLAYER_AVATAR_STATE_FIELD_MOVE] = OBJ_EVENT_GFX_RED_FIELD_MOVE,
-            [PLAYER_AVATAR_STATE_FISHING] = OBJ_EVENT_GFX_RED_FISH,
-            [PLAYER_AVATAR_STATE_WATERING] = OBJ_EVENT_GFX_RED_WATERING_WAYFARER,
-            [PLAYER_AVATAR_STATE_VSSEEKER] = OBJ_EVENT_GFX_RED_VS_SEEKER,
-        },
-    },
-    {
-        .id = APPEARANCE_LEAF, .gender = FEMALE,
-        .frontPic = TRAINER_PIC_FRONT_LEAF, .backPic = TRAINER_PIC_BACK_LEAF,
-        .paletteTag = OBJ_EVENT_PAL_TAG_PLAYER_GREEN,
-        .graphicsIds = {
-            [PLAYER_AVATAR_STATE_NORMAL] = OBJ_EVENT_GFX_GREEN_NORMAL,
-            [PLAYER_AVATAR_STATE_MACH_BIKE] = OBJ_EVENT_GFX_GREEN_BIKE,
-            [PLAYER_AVATAR_STATE_ACRO_BIKE] = OBJ_EVENT_GFX_GREEN_ACRO_BIKE_WAYFARER,
-            [PLAYER_AVATAR_STATE_SURFING] = OBJ_EVENT_GFX_GREEN_SURF,
-            [PLAYER_AVATAR_STATE_UNDERWATER] = OBJ_EVENT_GFX_GREEN_UNDERWATER_WAYFARER,
-            [PLAYER_AVATAR_STATE_FIELD_MOVE] = OBJ_EVENT_GFX_GREEN_FIELD_MOVE,
-            [PLAYER_AVATAR_STATE_FISHING] = OBJ_EVENT_GFX_GREEN_FISH,
-            [PLAYER_AVATAR_STATE_WATERING] = OBJ_EVENT_GFX_GREEN_WATERING_WAYFARER,
-            [PLAYER_AVATAR_STATE_VSSEEKER] = OBJ_EVENT_GFX_GREEN_VS_SEEKER,
-        },
-    },
-    {
         .id = APPEARANCE_BRENDAN, .gender = MALE,
         .frontPic = TRAINER_PIC_FRONT_BRENDAN, .backPic = TRAINER_PIC_BACK_BRENDAN,
         .paletteTag = OBJ_EVENT_PAL_TAG_BRENDAN,
@@ -110,6 +78,11 @@ static const struct WayfarerAppearanceProfile sProfiles[] =
         },
     },
 };
+
+u8 WayfarerGetAppearanceIdByIndex(u8 index)
+{
+    return index < ARRAY_COUNT(sProfiles) ? sProfiles[index].id : APPEARANCE_NONE;
+}
 
 const struct WayfarerAppearanceProfile *WayfarerGetAppearanceProfile(u8 id)
 {

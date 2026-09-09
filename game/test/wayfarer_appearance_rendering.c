@@ -16,13 +16,14 @@
 #if IS_WAYFARER
 TEST("Wayfarer local trainer pictures read saved identity while legacy mappers stay gender based")
 {
-    u32 id;
+    u32 index;
     WayfarerInitPersistentState();
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         const struct WayfarerAppearanceProfile *profile = WayfarerGetAppearanceProfile(id);
         WayfarerResetPendingAppearance();
-        EXPECT(WayfarerConfirmPendingAppearance(id == APPEARANCE_GOLD ? APPEARANCE_RED : APPEARANCE_GOLD));
+        EXPECT(WayfarerConfirmPendingAppearance(id == APPEARANCE_GOLD ? APPEARANCE_BRENDAN : APPEARANCE_GOLD));
         gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = id;
         gSaveBlock2Ptr->playerGender = profile->gender;
         EXPECT_EQ(GetLocalPlayerFrontTrainerPicId(), profile->frontPic);
@@ -36,14 +37,15 @@ TEST("Wayfarer local trainer pictures read saved identity while legacy mappers s
 
 TEST("Wayfarer live link local back pictures bypass gender-only link records for every style")
 {
-    u32 id;
+    u32 index;
     u32 oldBattleTypeFlags = gBattleTypeFlags;
     struct LinkPlayer oldLinkPlayer = gLinkPlayers[0];
     WayfarerInitPersistentState();
     gLinkPlayers[0].gender = FEMALE;
     gLinkPlayers[0].version = VERSION_FIRE_RED;
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         const struct WayfarerAppearanceProfile *profile = WayfarerGetAppearanceProfile(id);
         gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = id;
         gSaveBlock2Ptr->playerGender = profile->gender;
@@ -60,7 +62,7 @@ TEST("Wayfarer live link local back pictures bypass gender-only link records for
 }
 TEST("Wayfarer contest graphics retain full local IDs and unchanged remote records")
 {
-    u32 id, local, contestant;
+    u32 index, local, contestant;
     u8 oldPlayer = gContestPlayerMonIndex;
     u8 oldGraphics[CONTESTANT_COUNT];
     WayfarerInitPersistentState();
@@ -69,8 +71,9 @@ TEST("Wayfarer contest graphics retain full local IDs and unchanged remote recor
         oldGraphics[contestant] = gContestMons[contestant].trainerGfxId;
         gContestMons[contestant].trainerGfxId = OBJ_EVENT_GFX_LINK_MAY;
     }
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = id;
         gSaveBlock2Ptr->playerGender = WayfarerGetAppearanceProfile(id)->gender;
         for (local = 0; local < CONTESTANT_COUNT; local++)
@@ -89,9 +92,10 @@ TEST("Wayfarer contest graphics retain full local IDs and unchanged remote recor
 }
 TEST("Wayfarer frontier head crops use uncompressed 16 by 32 normal frames")
 {
-    u32 id;
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    u32 index;
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         const struct ObjectEventGraphicsInfo *graphics = GetObjectEventGraphicsInfo(WayfarerGetAppearanceGraphicsId(id, PLAYER_AVATAR_STATE_NORMAL));
         EXPECT_EQ((u32)graphics->compressed, FALSE);
         EXPECT_EQ(graphics->width, 16);

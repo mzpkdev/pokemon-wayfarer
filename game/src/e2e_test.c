@@ -49,7 +49,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 13,
+    .version = 14,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -60,6 +60,7 @@ const struct E2ETestAbi gE2ETestAbi =
 };
 
 STATIC_ASSERT(sizeof(struct E2ETestRequest) == 432, E2ETestRequestSize);
+STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 429, E2ETestRequestAppearanceOffset);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
@@ -430,6 +431,7 @@ static void CopyRequest(void)
         sRequest.leagueClears[i] = gE2ETestRequest.leagueClears[i];
     }
     sRequest.applyLeagueCircuit = gE2ETestRequest.applyLeagueCircuit;
+    sRequest.appearanceId = gE2ETestRequest.appearanceId;
     memcpy(sRequest.reserved, (const void *)gE2ETestRequest.reserved, sizeof(sRequest.reserved));
 }
 
@@ -577,6 +579,13 @@ static enum E2ETestError ValidateArrangeRequest(void)
     const struct MapHeader *mapHeader;
     u32 i;
 
+#if IS_WAYFARER
+    if (sRequest.appearanceId != APPEARANCE_NONE && WayfarerGetAppearanceProfile(sRequest.appearanceId) == NULL)
+        return E2E_TEST_ERROR_APPEARANCE;
+#else
+    if (sRequest.appearanceId != 0)
+        return E2E_TEST_ERROR_APPEARANCE;
+#endif
     if (!ResolveCheckpoint())
         return E2E_TEST_ERROR_CHECKPOINT;
     if (sMapGroup >= MAP_GROUPS_COUNT || sMapNum >= MAP_GROUP_COUNT[sMapGroup])
@@ -664,8 +673,7 @@ static enum E2ETestError ValidateArrangeRequest(void)
         return E2E_TEST_ERROR_FULL_POCKET_MASK;
     if (sRequest.applyLeagueCircuit > TRUE
      || sRequest.reserved[0] != 0
-     || sRequest.reserved[1] != 0
-     || sRequest.reserved[2] != 0)
+     || sRequest.reserved[1] != 0)
         return E2E_TEST_ERROR_CIRCUIT;
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
     {
@@ -706,8 +714,12 @@ static enum E2ETestError ValidateRequest(void)
 static void ApplyCheckpointDefaults(void)
 {
     StringCopy(gSaveBlock2Ptr->playerName, sDefaultPlayerName);
+#if IS_WAYFARER
+    gSaveBlock2Ptr->playerGender = WayfarerGetAppearanceProfile(WayfarerGetPlayerAppearanceId())->gender;
+#else
     gSaveBlock2Ptr->playerGender = sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE
         ? FEMALE : MALE;
+#endif
 
     switch (sRequest.checkpoint)
     {
@@ -1018,7 +1030,12 @@ static void BeginRequest(void)
         ? FEMALE : MALE;
 #if IS_WAYFARER
     WayfarerResetPendingAppearance();
-    WayfarerConfirmPendingAppearance(gSaveBlock2Ptr->playerGender == FEMALE ? APPEARANCE_KRIS : APPEARANCE_GOLD);
+    if (!WayfarerConfirmPendingAppearance(sRequest.appearanceId != APPEARANCE_NONE ? sRequest.appearanceId
+        : (gSaveBlock2Ptr->playerGender == FEMALE ? APPEARANCE_KRIS : APPEARANCE_GOLD)))
+    {
+        FailRequest(E2E_TEST_ERROR_APPEARANCE);
+        return;
+    }
     WayfarerResetPendingOrigin();
     WayfarerConfirmPendingOrigin(sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_BEFORE_RESCUE
         || sRequest.checkpoint == E2E_TEST_CHECKPOINT_HOENN_FEMALE_BEFORE_RESCUE

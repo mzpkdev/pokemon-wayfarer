@@ -672,12 +672,13 @@ static void PrepareOriginFlashFixture(void)
     WayfarerInitPersistentState();
 }
 
-TEST("Wayfarer all six appearances round trip through flash away from home")
+TEST("Wayfarer all four appearances round trip through flash away from home")
 {
-    u32 id;
+    u32 index;
     ASSUME(gPokemonStoragePtr != NULL);
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         u8 loadStatus;
         bool8 written;
         PrepareOriginFlashFixture();

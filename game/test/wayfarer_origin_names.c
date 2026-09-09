@@ -10,15 +10,16 @@
 TEST("Wayfarer rival names follow script source for both origins and appearances")
 {
     u16 origin;
-    u8 appearance;
+    u8 index, appearance;
     u8 gender;
     u8 text[32];
 
     for (origin = ORIGIN_NEW_BARK; origin <= ORIGIN_LITTLEROOT; origin++)
     {
         gSaveBlock3Ptr->wayfarerHoenn.startingOriginId = origin;
-        for (appearance = APPEARANCE_GOLD; appearance <= APPEARANCE_MAY; appearance++)
+        for (index = 0; index < APPEARANCE_COUNT; index++)
         {
+            appearance = WayfarerGetAppearanceIdByIndex(index);
             EXPECT(WayfarerConfirmPendingAppearance(appearance));
             gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = appearance;
             gender = WayfarerGetAppearanceProfile(appearance)->gender;

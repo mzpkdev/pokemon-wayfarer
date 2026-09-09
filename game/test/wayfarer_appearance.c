@@ -15,9 +15,10 @@
 #if IS_WAYFARER
 TEST("Wayfarer appearances register complete state graphics and stable story genders")
 {
-    u32 id, state;
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    u32 index, state;
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         const struct WayfarerAppearanceProfile *profile = WayfarerGetAppearanceProfile(id);
         EXPECT(profile != NULL);
         EXPECT_EQ(profile->id, id);
@@ -30,6 +31,13 @@ TEST("Wayfarer appearances register complete state graphics and stable story gen
     }
     EXPECT(WayfarerGetAppearanceGraphicsId(APPEARANCE_GOLD, PLAYER_AVATAR_STATE_NORMAL) > 255);
     EXPECT(WayfarerGetAppearanceProfile(APPEARANCE_NONE) == NULL);
+    EXPECT_EQ(WayfarerGetAppearanceIdByIndex(0), APPEARANCE_GOLD);
+    EXPECT_EQ(WayfarerGetAppearanceIdByIndex(1), APPEARANCE_KRIS);
+    EXPECT_EQ(WayfarerGetAppearanceIdByIndex(2), APPEARANCE_BRENDAN);
+    EXPECT_EQ(WayfarerGetAppearanceIdByIndex(3), APPEARANCE_MAY);
+    EXPECT_EQ(WayfarerGetAppearanceIdByIndex(APPEARANCE_COUNT), APPEARANCE_NONE);
+    EXPECT(WayfarerGetAppearanceProfile(APPEARANCE_RED) == NULL);
+    EXPECT(WayfarerGetAppearanceProfile(APPEARANCE_LEAF) == NULL);
     EXPECT(WayfarerGetAppearanceProfile(255) == NULL);
     EXPECT_EQ(WayfarerGetAppearanceGraphicsId(255, 0), APPEARANCE_INVALID_GRAPHICS);
     EXPECT_EQ(WayfarerGetAppearanceGraphicsId(APPEARANCE_GOLD, 255), APPEARANCE_INVALID_GRAPHICS);
@@ -41,23 +49,28 @@ TEST("Wayfarer pending appearance is explicit and independent of an old save")
     WayfarerResetPendingAppearance();
     EXPECT_EQ(WayfarerGetPendingAppearanceCandidate(), APPEARANCE_GOLD);
     EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_NONE);
-    EXPECT(WayfarerSetPendingAppearanceCandidate(APPEARANCE_LEAF));
+    EXPECT(WayfarerSetPendingAppearanceCandidate(APPEARANCE_MAY));
     EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_NONE);
-    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_LEAF));
+    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_MAY));
     EXPECT_EQ(gSaveBlock2Ptr->playerGender, FEMALE);
-    EXPECT(WayfarerSetPendingAppearanceCandidate(APPEARANCE_RED));
-    EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_LEAF);
+    EXPECT(WayfarerSetPendingAppearanceCandidate(APPEARANCE_BRENDAN));
+    EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_MAY);
+    EXPECT(!WayfarerSetPendingAppearanceCandidate(APPEARANCE_RED));
+    EXPECT(!WayfarerSetPendingAppearanceCandidate(APPEARANCE_LEAF));
+    EXPECT(!WayfarerConfirmPendingAppearance(APPEARANCE_RED));
+    EXPECT(!WayfarerConfirmPendingAppearance(APPEARANCE_LEAF));
     EXPECT(!WayfarerConfirmPendingAppearance(255));
     EXPECT_EQ(WayfarerGetConfirmedPendingAppearance(), APPEARANCE_NONE);
     WayfarerResetPendingAppearance();
     EXPECT_EQ(WayfarerGetPendingAppearanceCandidate(), APPEARANCE_GOLD);
 }
 
-TEST("Wayfarer all twelve appearance and origin handoffs preserve challenge settings")
+TEST("Wayfarer all eight appearance and origin handoffs preserve challenge settings")
 {
-    u32 id, origin;
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    u32 index, origin;
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         for (origin = ORIGIN_NEW_BARK; origin <= ORIGIN_LITTLEROOT; origin++)
         {
             WayfarerResetPendingAppearance();
@@ -75,25 +88,35 @@ TEST("Wayfarer all twelve appearance and origin handoffs preserve challenge sett
             EXPECT(!WayfarerPersistentStateIsValid());
             EXPECT_EQ(WayfarerGetPlayerAppearanceId(), APPEARANCE_NONE);
             gSaveBlock2Ptr->playerGender ^= 1;
+            gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = APPEARANCE_RED;
+            EXPECT(!WayfarerPersistentStateIsValid());
+            gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = APPEARANCE_LEAF;
+            EXPECT(!WayfarerPersistentStateIsValid());
             gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = 255;
             EXPECT(!WayfarerPersistentStateIsValid());
         }
     }
 }
 
-TEST("Wayfarer caller rejects missing zero and unregistered appearance before save clearing")
+TEST("Wayfarer caller rejects missing zero reserved and unregistered appearance before save clearing")
 {
     u32 attempt;
+    MainCallback runnerCallback = gMain.callback2;
+    u8 runnerState = gMain.state;
     EXPECT(WayfarerConfirmPendingOrigin(ORIGIN_NEW_BARK));
-    for (attempt = 0; attempt < 3; attempt++)
+    for (attempt = 0; attempt < 5; attempt++)
     {
+        MainCallback rejectedCallback;
         WayfarerResetPendingAppearance();
         if (attempt != 0)
-            EXPECT(!WayfarerConfirmPendingAppearance(attempt == 1 ? APPEARANCE_NONE : 255));
+            EXPECT(!WayfarerConfirmPendingAppearance(attempt == 1 ? APPEARANCE_NONE : attempt == 2 ? 255 : attempt));
         gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = APPEARANCE_MAY;
         gSaveBlock1Ptr->money = 12345;
         CB2_NewGame();
-        EXPECT(gMain.callback2 == CB2_InitTitleScreen);
+        rejectedCallback = gMain.callback2;
+        gMain.callback2 = runnerCallback;
+        gMain.state = runnerState;
+        EXPECT(rejectedCallback == CB2_InitTitleScreen);
         EXPECT_EQ(gSaveBlock1Ptr->money, 12345);
         EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId, APPEARANCE_MAY);
         NewGameInitData();
@@ -108,9 +131,10 @@ TEST("Wayfarer all styles retain identity through first Hoenn arrival and region
         {MAP_GROUP(MAP_SLATEPORT_CITY), MAP_NUM(MAP_SLATEPORT_CITY), REGION_HOENN},
         {MAP_GROUP(MAP_NEW_BARK_TOWN_HNS), MAP_NUM(MAP_NEW_BARK_TOWN_HNS), REGION_JOHTO},
     };
-    u32 id, origin, destination;
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    u32 index, origin, destination;
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         for (origin = ORIGIN_NEW_BARK; origin <= ORIGIN_LITTLEROOT; origin++)
         {
             EXPECT(WayfarerConfirmPendingAppearance(id));
@@ -134,9 +158,10 @@ TEST("Wayfarer all styles retain identity through first Hoenn arrival and region
 
 TEST("Wayfarer explicit rival graphics never borrow any saved player appearance")
 {
-    u32 id;
-    for (id = APPEARANCE_GOLD; id <= APPEARANCE_MAY; id++)
+    u32 index;
+    for (index = 0; index < APPEARANCE_COUNT; index++)
     {
+        u8 id = WayfarerGetAppearanceIdByIndex(index);
         EXPECT(WayfarerConfirmPendingAppearance(id));
         gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = id;
         EXPECT_EQ(GetRivalAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, MALE), OBJ_EVENT_GFX_GOLD_NORMAL_HNS);

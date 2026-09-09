@@ -240,8 +240,6 @@ static const struct MenuAction sMenuActions_Gender[] = {
     {COMPOUND_STRING("Style 2"), {NULL}},
     {COMPOUND_STRING("Style 3"), {NULL}},
     {COMPOUND_STRING("Style 4"), {NULL}},
-    {COMPOUND_STRING("Style 5"), {NULL}},
-    {COMPOUND_STRING("Style 6"), {NULL}},
 #else
     {gText_Boy, {NULL}},
     {gText_Girl, {NULL}}
@@ -559,7 +557,7 @@ static void Task_NewGameHnsSpeech_BoyOrGirl(u8 taskId)
 static EWRAM_DATA u8 sAppearanceWalkSprite = 0;
 static EWRAM_DATA bool8 sAppearanceWaitForRelease = FALSE;
 static EWRAM_DATA bool8 sAppearancePreviewReady = FALSE;
-static const u8 sAppearanceIds[] = {APPEARANCE_GOLD, APPEARANCE_KRIS, APPEARANCE_RED, APPEARANCE_LEAF, APPEARANCE_BRENDAN, APPEARANCE_MAY};
+static const u8 sAppearanceIds[] = {APPEARANCE_GOLD, APPEARANCE_KRIS, APPEARANCE_BRENDAN, APPEARANCE_MAY};
 
 static void ResetAppearancePreviewState(void)
 {
@@ -1567,16 +1565,19 @@ static void NewGameHnsSpeech_StartFadePlatformOut(u8 taskId, u8 delay)
 
 static void NewGameHnsSpeech_ShowGenderMenu(void)
 {
+    u8 cursor = 0;
+#if IS_WAYFARER
+    u8 i;
+    for (i = 0; i < ARRAY_COUNT(sAppearanceIds); i++)
+    {
+        if (sAppearanceIds[i] == WayfarerGetPendingAppearanceCandidate())
+            cursor = i;
+    }
+#endif
     DrawMainMenuWindowBorder(&sNewGameHnsSpeechTextWindows[1], (IS_WAYFARER ? 0x140 : 0xF3));
     FillWindowPixelBuffer(1, PIXEL_FILL(1));
     PrintMenuTable(1, ARRAY_COUNT(sMenuActions_Gender), sMenuActions_Gender);
-    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Gender),
-#if IS_WAYFARER
-        WayfarerGetPendingAppearanceCandidate() - APPEARANCE_GOLD
-#else
-        0
-#endif
-    );
+    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Gender), cursor);
     PutWindowTilemap(1);
     CopyWindowToVram(1, COPYWIN_FULL);
 }

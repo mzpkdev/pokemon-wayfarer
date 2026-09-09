@@ -39,12 +39,12 @@ def inventory():
     pics = arrays(DATA / 'object_event_pic_tables.h')
     animations = arrays(DATA / 'object_event_anims.h')
     sources = dict(re.findall(r'\b(\w+)\[\]\s*=\s*INCBIN_U\d+\((.*?)\);', (DATA / 'object_event_graphics.h').read_text()))
-    expected = {'NORMAL': {'sAnimTable_BrendanMayNormal', 'sAnimTable_RedGreenNormal'},
+    expected = {'NORMAL': {'sAnimTable_BrendanMayNormal'},
                 'MACH_BIKE': {'sAnimTable_Standard'}, 'ACRO_BIKE': {'sAnimTable_AcroBike'},
                 'SURFING': {'sAnimTable_Surfing'}, 'UNDERWATER': {'sAnimTable_Standard'},
                 'FIELD_MOVE': {'sAnimTable_FieldMove'}, 'FISHING': {'sAnimTable_Fishing'},
                 'WATERING': {'sAnimTable_Standard'},
-                'VSSEEKER': {'sAnimTable_FieldMove', 'sAnimTable_RedGreenVSSeeker'}}
+                'VSSEEKER': {'sAnimTable_FieldMove'}}
     movement = (ROOT / 'src/event_object_movement.c').read_text()
     palettes = dict((tag, symbol) for symbol, tag in re.findall(r'\{(gObjectEventPal_\w+),\s*(OBJ_EVENT_PAL_TAG_\w+)\}', movement))
     reflection_sets = dict(re.findall(r'\{(OBJ_EVENT_PAL_TAG_\w+),\s*(sReflectionPaletteTags_\w+)\}', movement))
@@ -132,12 +132,12 @@ def inventory():
                     row['animations']['0'] = {'symbol': anim, 'frames': indices}
                     if any(i >= len(frame_list) for i in indices):
                         row['errors'].append(f'{anim}: frame index outside table')
-            required = contracts.get(state, {'0'} if table == 'sAnimTable_RedGreenVSSeeker' else {'ANIM_FIELD_MOVE'})
+            required = contracts.get(state, {'ANIM_FIELD_MOVE'})
             missing = required - row['animations'].keys()
             if missing:
                 row['errors'].append('Missing required animation slots: ' + ', '.join(sorted(missing)))
-    if len(records) != 54:
-        raise ValueError(f'Expected 54 style/state combinations, found {len(records)}')
+    if len(records) != 36:
+        raise ValueError(f'Expected 36 style/state combinations, found {len(records)}')
     return {'format': 1, 'scope': 'Wayfarer; static frame validation is not visual acceptance', 'states': records}
 
 
