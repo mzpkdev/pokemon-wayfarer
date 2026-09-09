@@ -42,3 +42,21 @@ storage deltas. CPU, stack, and gameplay acceptance need separate evidence.
 
 Encounter policy adoption remains gated on the integrated trainer-only baseline
 from PR #85. Discovery alone grants no new battle outcome behavior.
+
+Services are authored in map-local `gameplay.json` sidecars. Script-only bindings
+require exactly one matching effective object; use an authored symbolic local ID
+when that script is shared. Generated mart assembler aliases and shared-clerk rows
+come from these declarations. Stock remains in `src/data/wayfarer_marts.h`.
+
+Standalone HNS already accepts the same six rod contribution flags as Wayfarer,
+although only three giver maps are selected there. Its domain adapter derives the
+other contribution identities from validated Wayfarer declarations and reports
+them as inactive legacy membership. They are not active HNS service bindings. This
+preserves the existing membership without a second writable flag list or fictitious
+map inventory. Emerald and FRLG keep their existing three contributors.
+
+Baseline numerical helpers remain callable in standalone and feature-disabled
+builds. Their curve union therefore includes ordinary, soft-cap, Gym, and League
+baselines; gameplay policy still decides whether a battle uses the result. Exact
+identical point arrays are interned, but curve names stay independent. Wild points
+are consumed by the host generator and do not add a runtime curve.

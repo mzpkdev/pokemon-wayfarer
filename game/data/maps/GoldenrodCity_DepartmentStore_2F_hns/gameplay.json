@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "goldenrod_2f",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "GoldenrodDeptStore2_EventScript_Clerk"
+      },
+      "profile": "MART_PROFILE_GOLDENROD_2F"
+    }
+  ],
+  "encounters": []
+}

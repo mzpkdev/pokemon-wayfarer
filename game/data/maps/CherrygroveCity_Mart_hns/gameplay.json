@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "cherrygrove",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "Cherrygrove_Pokemart_EventScript_Clerk"
+      },
+      "profile": "MART_PROFILE_CHERRYGROVE"
+    }
+  ],
+  "encounters": []
+}

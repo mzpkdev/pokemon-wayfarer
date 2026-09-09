@@ -231,7 +231,7 @@ def main() -> int:
         if profile["script_binding"] in shared_labels:
             continue
         source = (GAME_ROOT / "data/maps" / map_name / "scripts.inc").read_text()
-        if GUARD not in source or f"setvar VAR_0x8004, {profile_id}" not in source:
+        if GUARD not in source or f"setvar VAR_0x8004, {profile['binding_symbol']}" not in source:
             fail(f"direct profile branch is incomplete for {profile_id}")
         if "special WayfarerOpenMartProfile" not in source or "waitstate" not in source:
             fail(f"direct profile opener/resume is incomplete for {profile_id}")

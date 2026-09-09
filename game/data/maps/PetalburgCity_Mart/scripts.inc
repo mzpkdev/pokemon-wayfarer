@@ -7,7 +7,7 @@ PetalburgCity_Mart_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, MART_PROFILE_PETALBURG
+	setvar VAR_0x8004, GAMEPLAY_MART_PETALBURGCITY_MART_PETALBURG
 	special WayfarerOpenMartProfile
 	waitstate
 #else

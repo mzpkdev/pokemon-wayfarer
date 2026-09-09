@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "indigo_plateau",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "BattleFrontier_Mart_EventScript_Clerk"
+      },
+      "profile": "MART_PROFILE_INDIGO_PLATEAU"
+    }
+  ],
+  "encounters": []
+}

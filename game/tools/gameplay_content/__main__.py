@@ -29,7 +29,7 @@ def inputs(root):
     return {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(paths)}
 
-def compile_content(root, product, cpp, cppflags, domains=("inventory", "progression")):
+def compile_content(root, product, cpp, cppflags, domains=("inventory", "progression", "services")):
     defines = numeric_defines(root, cpp, cppflags)
     selected = ('wayfarer' if defines['IS_WAYFARER'] else 'hns' if defines['IS_HNS']
                 else 'leafgreen' if defines['GAMEPLAY_LEAFGREEN'] else 'firered' if defines['IS_FRLG']
@@ -93,7 +93,7 @@ def main():
     parser.add_argument('command', choices=('generate', 'check', 'report'))
     parser.add_argument('--product', required=True, choices=('wayfarer', 'hns', 'emerald', 'firered', 'leafgreen'))
     parser.add_argument('--domains', nargs='+', choices=('inventory', 'progression', 'services'),
-                        default=('inventory', 'progression'))
+                        default=('inventory', 'progression', 'services'))
     parser.add_argument('--cpp', default='cpp')
     parser.add_argument('--cppflags', required=True)
     parser.add_argument('--output-root', default='build/gameplay-content')

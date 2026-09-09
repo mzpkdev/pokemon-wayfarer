@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "rod_contribution",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "rod_contribution",
+      "binding": {
+        "script": "MossdeepCity_House3_EventScript_SuperRodFisherman"
+      },
+      "contribution": {
+        "namespace": "global",
+        "flag": "FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED"
+      }
+    },
+    {
+      "id": "rod_contribution_emerald",
+      "products": [
+        "emerald"
+      ],
+      "kind": "rod_contribution",
+      "binding": {
+        "script": "MossdeepCity_House3_EventScript_SuperRodFisherman"
+      },
+      "contribution": {
+        "namespace": "global",
+        "flag": "FLAG_RECEIVED_SUPER_ROD"
+      }
+    }
+  ],
+  "encounters": []
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "battle_frontier",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "BattleFrontier_Mart_EventScript_Clerk",
+        "localId": "LOCALID_FRONTIER_MART_CLERK"
+      },
+      "profile": "MART_PROFILE_BATTLE_FRONTIER"
+    }
+  ],
+  "encounters": []
+}

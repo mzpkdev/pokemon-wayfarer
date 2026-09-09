@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "rod_contribution",
+      "products": [
+        "wayfarer",
+        "hns"
+      ],
+      "kind": "rod_contribution",
+      "binding": {
+        "script": "Route12_House_EventScript_SuperRod"
+      },
+      "contribution": {
+        "namespace": "global",
+        "flag": "FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED"
+      }
+    }
+  ],
+  "encounters": []
+}

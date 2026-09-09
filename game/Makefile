@@ -401,7 +401,7 @@ GAMEPLAY_CONTENT_INCLUDE := $(GAMEPLAY_CONTENT_ROOT)/$(BUILD_NAME)/current
 # Capture the ROM preprocessor configuration before adding generated search paths.
 GAMEPLAY_CONTENT_CPPFLAGS := $(CPPFLAGS)
 GAMEPLAY_CONTENT_COMMAND = PYTHONDONTWRITEBYTECODE=1 python3 -m tools.gameplay_content
-GAMEPLAY_CONTENT_DOMAINS ?= inventory progression
+GAMEPLAY_CONTENT_DOMAINS ?= inventory progression services
 GAMEPLAY_CONTENT_ARGS = --domains $(GAMEPLAY_CONTENT_DOMAINS) --product $(BUILD_NAME) --cpp $(CPP) --cppflags '$(GAMEPLAY_CONTENT_CPPFLAGS)' --output-root $(GAMEPLAY_CONTENT_ROOT)
 override CPPFLAGS += -iquote $(GAMEPLAY_CONTENT_INCLUDE)
 INCLUDE_SCANINC_ARGS += -I $(GAMEPLAY_CONTENT_INCLUDE)

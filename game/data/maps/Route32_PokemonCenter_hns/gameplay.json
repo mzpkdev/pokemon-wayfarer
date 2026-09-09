@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "rod_contribution",
+      "products": [
+        "wayfarer",
+        "hns"
+      ],
+      "kind": "rod_contribution",
+      "binding": {
+        "script": "Route32_PokemonCenter_EventScript_FishingGuru"
+      },
+      "contribution": {
+        "namespace": "global",
+        "flag": "FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED"
+      }
+    }
+  ],
+  "encounters": []
+}

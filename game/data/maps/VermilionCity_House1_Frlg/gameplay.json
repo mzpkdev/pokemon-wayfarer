@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "rod_contribution",
+      "products": [
+        "firered",
+        "leafgreen"
+      ],
+      "kind": "rod_contribution",
+      "binding": {
+        "script": "VermilionCity_House1_EventScript_FishingGuru"
+      },
+      "contribution": {
+        "namespace": "global",
+        "flag": "FLAG_GOT_OLD_ROD"
+      }
+    }
+  ],
+  "encounters": []
+}
