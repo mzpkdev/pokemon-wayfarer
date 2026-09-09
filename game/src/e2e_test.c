@@ -1348,6 +1348,11 @@ static void UpdateState(void)
             gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_ACTION_MENU;
             gE2ETestState.battleCursor = cursor;
         }
+        else if (E2ETest_GetBattleForfeitPromptState(&cursor))
+        {
+            gE2ETestState.battleUiState = E2E_TEST_BATTLE_UI_FORFEIT_PROMPT;
+            gE2ETestState.battleCursor = cursor;
+        }
         else if (E2ETest_GetBattleBagState(&bagUiState, &pocket, &item))
         {
             gE2ETestState.battleUiState = bagUiState;

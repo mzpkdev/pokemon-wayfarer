@@ -198,6 +198,7 @@ enum E2ETestBattleUiState
     E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY,
     E2E_TEST_BATTLE_UI_OTHER,
     E2E_TEST_BATTLE_UI_TEXT,
+    E2E_TEST_BATTLE_UI_FORFEIT_PROMPT,
 };
 
 struct E2ETestVarPatch
@@ -422,6 +423,7 @@ bool32 E2ETest_IsSummaryScreenOpen(void);
 void E2ETest_SetStorageCurrentBox(u8 boxId);
 void E2ETest_GetStorageUiState(u8 *uiState, u8 *mode, u8 *cursorArea, u8 *cursorPosition, bool8 *movingMon);
 bool32 E2ETest_GetBattleActionMenuState(u8 *cursor);
+bool32 E2ETest_GetBattleForfeitPromptState(u8 *cursor);
 bool32 E2ETest_IsBattleTextReady(void);
 bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item);
 bool32 E2ETest_IsCaughtDexReady(void);

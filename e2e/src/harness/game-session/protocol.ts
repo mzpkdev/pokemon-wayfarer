@@ -126,6 +126,7 @@ export const battleUiStates = [
   "catch-swap-party",
   "other",
   "text",
+  "forfeit-prompt",
 ] as const
 
 export type SessionAbi = {

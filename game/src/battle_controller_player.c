@@ -62,6 +62,7 @@ static void PlayerHandlePaletteFade(enum BattlerId battler);
 static void PlayerHandlePause(enum BattlerId battler);
 static void PlayerHandleChooseAction(enum BattlerId battler);
 static void PlayerHandleYesNoBox(enum BattlerId battler);
+static void PlayerHandleYesNoInput(enum BattlerId battler);
 static void PlayerHandleChooseItem(enum BattlerId battler);
 static void PlayerHandleChoosePokemon(enum BattlerId battler);
 static void PlayerHandleCmd23(enum BattlerId battler);
@@ -424,6 +425,22 @@ bool32 E2ETest_GetBattleActionMenuState(u8 *cursor)
          && gBattlerControllerFuncs[battler] == HandleInputChooseAction)
         {
             *cursor = gActionSelectionCursor[battler];
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+bool32 E2ETest_GetBattleForfeitPromptState(u8 *cursor)
+{
+    u32 battler;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerSide(battler) == B_SIDE_PLAYER
+         && gBattlerControllerFuncs[battler] == PlayerHandleYesNoInput)
+        {
+            *cursor = gMultiUsePlayerCursor;
             return TRUE;
         }
     }
