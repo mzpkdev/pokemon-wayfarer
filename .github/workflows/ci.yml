@@ -9,6 +9,7 @@ on:
       - reopened
       - synchronize
       - ready_for_review
+      - converted_to_draft
   workflow_dispatch:
 
 permissions:
@@ -19,7 +20,13 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
+    outputs:
+      rom-budget-ready: ${{ steps.rom_budget.outputs.ready }}
+      rom-budget-base-used-bytes: ${{ steps.rom_budget.outputs.base-used-bytes }}
+      rom-budget-head-used-bytes: ${{ steps.rom_budget.outputs.head-used-bytes }}
+      rom-budget-capacity-bytes: ${{ steps.rom_budget.outputs.capacity-bytes }}
+      rom-budget-limit-bytes: ${{ steps.rom_budget.outputs.limit-bytes }}
 
     steps:
       - name: Check out trusted classification policy
@@ -61,6 +68,222 @@ jobs:
           UNUSED_ERROR: 1
           DEPRECATED_ERROR: 1
         run: make -j"$(nproc)" BUILD=wayfarer release
+
+      - name: Check out pull request base for ROM budget comparison
+        if: >-
+          always() &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.draft == false &&
+          (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: rom-budget-base
+          persist-credentials: false
+
+      - name: Build pull request base ROM
+        if: >-
+          always() &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.draft == false &&
+          (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        working-directory: rom-budget-base/game
+        env:
+          UNUSED_ERROR: 1
+          DEPRECATED_ERROR: 1
+        run: make -j"$(nproc)" BUILD=wayfarer release
+
+      - name: Record ROM budget comparison
+        id: rom_budget
+        if: >-
+          always() &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.draft == false &&
+          (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        env:
+          BASE_MAP: rom-budget-base/game/pokewayfarer-release.map
+          HEAD_MAP: game/pokewayfarer-release.map
+        run: |
+          python3 - <<'PY'
+          import importlib.util
+          import os
+          from pathlib import Path
+
+          def load_report_module(name, path):
+              specification = importlib.util.spec_from_file_location(name, path)
+              if specification is None or specification.loader is None:
+                  raise SystemExit(f"Could not load {path}")
+              module = importlib.util.module_from_spec(specification)
+              specification.loader.exec_module(module)
+              return module
+
+          def read_map(variable, rom_report):
+              try:
+                  symbols = rom_report.parse_symbols(
+                      Path(os.environ[variable]).read_text(encoding="utf-8")
+                  )
+                  rom_report.validate_layout(symbols)
+                  values = {
+                      "used": symbols["__rom_end"] - rom_report.ROM_START,
+                      "capacity": rom_report.ROM_CAPACITY_END - rom_report.ROM_START,
+                      "limit": rom_report.WAYFARER_RELEASE_LIMIT - rom_report.ROM_START,
+                  }
+              except Exception as error:
+                  raise SystemExit(f"Invalid ROM map {os.environ[variable]!r}: {error}") from error
+              if any(type(value) is not int or value < 0 for value in values.values()):
+                  raise SystemExit(f"Invalid numeric values in ROM map {os.environ[variable]!r}")
+              if not values["used"] <= values["capacity"] or values["limit"] > values["capacity"]:
+                  raise SystemExit(f"Inconsistent ROM limits in map {os.environ[variable]!r}")
+              return values
+
+          base_report = load_report_module(
+              "base_rom_report", Path("rom-budget-base/game/tools/rom_report/rom_report.py")
+          )
+          head_report = load_report_module(
+              "head_rom_report", Path("game/tools/rom_report/rom_report.py")
+          )
+          base = read_map("BASE_MAP", base_report)
+          head = read_map("HEAD_MAP", head_report)
+          if (base["capacity"], base["limit"]) != (head["capacity"], head["limit"]):
+              raise SystemExit("Pull request and base ROM reports use different capacity limits")
+
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a", encoding="utf-8") as output:
+              output.write("ready=true\\n")
+              output.write(f"base-used-bytes={base['used']}\\n")
+              output.write(f"head-used-bytes={head['used']}\\n")
+              output.write(f"capacity-bytes={head['capacity']}\\n")
+              output.write(f"limit-bytes={head['limit']}\\n")
+          PY
+
+  rom-budget-comment:
+    name: ROM Budget Comment
+    needs: build
+    if: >-
+      always() &&
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      needs.build.outputs.rom-budget-ready == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: rom-budget-comment-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Create or update ROM budget comment
+        env:
+          BASE_USED_BYTES: ${{ needs.build.outputs.rom-budget-base-used-bytes }}
+          HEAD_USED_BYTES: ${{ needs.build.outputs.rom-budget-head-used-bytes }}
+          CAPACITY_BYTES: ${{ needs.build.outputs.rom-budget-capacity-bytes }}
+          LIMIT_BYTES: ${{ needs.build.outputs.rom-budget-limit-bytes }}
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          ROM_BUDGET_COMMENT: ${{ runner.temp }}/wayfarer-rom-budget-comment.md
+        run: |
+          python3 - <<'PY' > "$ROM_BUDGET_COMMENT"
+          import os
+
+          def value(name):
+              raw = os.environ[name]
+              if not raw.isdecimal():
+                  raise SystemExit(f"Invalid {name}")
+              return int(raw)
+
+          def amount(bytes):
+              if bytes >= 1024 * 1024:
+                  return f"{bytes / (1024 * 1024):.2f} MiB"
+              return f"{bytes / 1024:.1f} KiB"
+
+          def delta(bytes):
+              return f"{bytes / 1024:+.1f} KiB"
+
+          base_used = value("BASE_USED_BYTES")
+          head_used = value("HEAD_USED_BYTES")
+          capacity = value("CAPACITY_BYTES")
+          limit = value("LIMIT_BYTES")
+          if not (base_used <= capacity and head_used <= capacity and limit <= capacity):
+              raise SystemExit("Inconsistent ROM budget values")
+
+          used_delta = head_used - base_used
+          capacity_free = capacity - head_used
+          headroom = limit - head_used
+          reserve = capacity - limit
+          if headroom < 0:
+              impact = f"This build exceeds the protected reserve by **{amount(-headroom)}**."
+          elif used_delta > 0:
+              impact = f"This PR consumes **{amount(used_delta)}** of ROM headroom."
+          elif used_delta < 0:
+              impact = f"This PR frees **{amount(-used_delta)}** of ROM headroom."
+          else:
+              impact = "This PR does not change ROM headroom."
+
+          print("<!-- wayfarer-rom-budget -->")
+          print("### Wayfarer ROM budget")
+          print()
+          print("| Metric | This PR build | Change from base |")
+          print("| --- | ---: | ---: |")
+          print(f"| Used ROM | {amount(head_used)} | {delta(used_delta)} |")
+          print(f"| Free before 32 MiB capacity | {amount(capacity_free)} | {delta(-used_delta)} |")
+          print(f"| Headroom before protected reserve | {amount(headroom)} | {delta(-used_delta)} |")
+          print()
+          print(f"{impact} The protected reserve is {amount(reserve)}.")
+          PY
+
+          set -o pipefail
+          current_head="$(gh api "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.head.sha')"
+          current_draft="$(gh api "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" --jq '.draft')"
+          if [ "$current_head" != "$HEAD_SHA" ] || [ "$current_draft" != false ]; then
+            echo 'Skipping ROM budget comment for an outdated or draft pull request.'
+            exit 0
+          fi
+
+          comment_id="$(gh api --paginate \
+            "/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- wayfarer-rom-budget -->"))) | .id' \
+            | sed -n '1p')"
+
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH \
+              "/repos/${GITHUB_REPOSITORY}/issues/comments/${comment_id}" \
+              --raw-field body="$(cat "$ROM_BUDGET_COMMENT")"
+          else
+            gh api --method POST \
+              "/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              --raw-field body="$(cat "$ROM_BUDGET_COMMENT")"
+          fi
+
+  remove-rom-budget-comment:
+    name: Remove ROM Budget Comment
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.action == 'converted_to_draft' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: rom-budget-comment-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Remove ROM budget comment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -o pipefail
+          gh api --paginate \
+            "/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --jq '.[] | select(.user.login == "github-actions[bot]" and (.body | contains("<!-- wayfarer-rom-budget -->"))) | .id' \
+            | while IFS= read -r comment_id; do
+                [ -n "$comment_id" ] || continue
+                gh api --method DELETE "/repos/${GITHUB_REPOSITORY}/issues/comments/${comment_id}"
+              done
 
   static-analysis:
     name: Static Analysis
