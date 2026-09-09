@@ -1,6 +1,8 @@
 @ Separate selection menus for before the Rainbow Pass is obtained
 EventScript_ChooseDestFromOneIsland::
-#if IS_FRLG
+#if IS_WAYFARER
+	goto EventScript_SeviiDestinationsPage1
+#elif IS_FRLG
 	goto_if_eq VAR_MAP_SCENE_ONE_ISLAND_HARBOR, 5, EventScript_ChooseOnlyVermilionFromOneIsland
 	call EventScript_CheckFullSeagallopService
 	goto_if_eq VAR_RESULT, TRUE, EventScript_SeviiDestinationsPage1
@@ -27,7 +29,9 @@ EventScript_ChooseDestFromOneIslandVermilionAllowed::
 	end
 
 EventScript_ChooseDestFromTwoIsland::
-#if IS_FRLG
+#if IS_WAYFARER
+	goto EventScript_SeviiDestinationsPage1
+#elif IS_FRLG
 	call EventScript_CheckFullSeagallopService
 	goto_if_eq VAR_RESULT, TRUE, EventScript_SeviiDestinationsPage1
 #else
@@ -73,7 +77,9 @@ EventScript_SailToThreeIsland2::
 	end
 
 EventScript_ChooseDestFromIsland::
-#if IS_FRLG
+#if IS_WAYFARER
+	goto EventScript_SeviiDestinationsPage1
+#elif IS_FRLG
 	call EventScript_CheckFullSeagallopService
 	goto_if_eq VAR_RESULT, TRUE, EventScript_SeviiDestinationsPage1
 #else

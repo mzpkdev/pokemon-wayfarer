@@ -1657,7 +1657,7 @@ const u16 gTilesetPalettes_Lab_Frlg[][16] =
     INCBIN_U16("data/tilesets/secondary/lab_frlg/palettes/15.gbapal"),
 };
 
-#if HAS_FRLG_CONTENT
+#if HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 const u32 gTilesetTiles_MtEmber[] = INCBIN_U32("data/tilesets/secondary/mt_ember_frlg/tiles.4bpp.fastSmol");
 
@@ -3047,7 +3047,7 @@ const u16 ALIGNED(4) gTilesetPalettes_General_Frlg[][16] =
 
 const u32 gTilesetTiles_General_Frlg[] = INCBIN_U32("data/tilesets/primary/general_frlg/tiles.4bpp.smol");
 
-#endif // HAS_FRLG_CONTENT
+#endif // HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 #if HAS_HNS_CONTENT
 

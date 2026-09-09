@@ -2481,6 +2481,13 @@
 // Wayfarer-owned HNS-bank milestones, outside the daily flag range.
 #define FLAG_JOHTO_STARTER_CHOICE_COMMITTED 0x930
 #define FLAG_JOHTO_STARTER_RECEIVED 0x931
+// Sevii exploration state must not use the FRLG aliases that resolve to zero
+// in the HNS catalog. Icefall's nine cracked tiles are intentionally saved so
+// a reload does not silently restore a route the player has already crossed.
+#define FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN 0x932
+#define FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_START 0x933
+#define FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_COUNT 9
+#define FLAG_WAYFARER_SEVII_TANOBY_COMPLETE 0x93C
 #define FLAG_HOENN_STARTER_RECEIVED HOENN_FLAG_ID(WAYFARER_HOENN_STARTER_RECEIVED_SOURCE_FLAG)
 #elif HAS_EMERALD_CONTENT
 #define FLAG_HOENN_STARTER_RECEIVED FLAG_UNUSED_0x4FF

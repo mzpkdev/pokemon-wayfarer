@@ -3,7 +3,7 @@
   "source": "emerald",
   "expectedMapCount": 518,
   "expectedCatalogSha256": "8797f3299e66d08e025021c14c4b063d3e11ce6cc21b74ccb3ae6d833780cf6f",
-  "expectedMapContentSha256": "81f69f78680c5f579c78a5e474455220345218056e654ff3667aa857134d5d39",
+  "expectedMapContentSha256": "d860b46089b906bfe8baed6c813d1e255999547ab29b18a5ea7c9177b5297a3c",
   "expectedTrainerReferencesSha256": "895b369dfdad47019dbbfd08fb9b89da36e7c96d77d963502f1ee3078c4ef97b",
   "expectedTrainerOffset": 638,
   "expectedTrainerPartiesSha256": "4c3df217b1a40b09a5b7cadf9bf201cc5b433234dff7857b14a8ee1e5ff3645c",

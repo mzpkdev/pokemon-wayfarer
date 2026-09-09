@@ -86,6 +86,24 @@ class MapjsonWayfarerTest(unittest.TestCase):
             capture_output=True,
         )
 
+    def run_map(self, root, version, map_file, layouts_file, manifest=None):
+        command = [
+            str(self.mapjson),
+            "map",
+            version,
+            str(map_file.relative_to(root)),
+            str(layouts_file.relative_to(root)),
+            str(map_file.parent.relative_to(root)),
+        ]
+        if manifest is not None:
+            command.extend(
+                [
+                    "--wayfarer-sevii-manifest",
+                    str(manifest.relative_to(root)),
+                ]
+            )
+        return subprocess.run(command, cwd=root, text=True, capture_output=True)
+
     @staticmethod
     def write_sevii_manifest(root, maps, release_link_enabled=False):
         path = root / "src/data/wayfarer_sevii_maps.json"
@@ -229,6 +247,129 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("gFrlg::\n\t.4byte OneIsland_Harbor", (root / "data/maps/groups.inc").read_text())
 
+        record["enabled"] = False
+        manifest = self.write_sevii_manifest(root, [record], release_link_enabled=True)
+        result = self.run_groups(root, "wayfarer", [hns, frlg], manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("gFrlg::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
+
+    def test_wayfarer_sevii_events_strip_story_and_link_room_warps(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        map_dir = root / "data/maps/OneIsland_PokemonCenter_2F_Frlg"
+        map_dir.mkdir()
+        source = {
+            "id": "MAP_SEVII_CENTER_2F",
+            "name": "OneIsland_PokemonCenter_2F_Frlg",
+            "game_version": "frlg",
+            "layout": "LAYOUT_SEVII_CENTER_2F",
+            "music": "MUS_NONE",
+            "region_map_section": "MAPSEC_NONE",
+            "requires_flash": False,
+            "weather": "WEATHER_NONE",
+            "map_type": "MAP_TYPE_INDOOR",
+            "allow_cycling": False,
+            "allow_escaping": False,
+            "allow_running": False,
+            "show_map_name": False,
+            "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+            "object_events": [
+                {"type": "object", "graphics_id": "OBJ_EVENT_GFX_TRAINER", "x": 1, "y": 1,
+                 "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0,
+                 "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NORMAL",
+                 "trainer_sight_or_berry_tree_id": "1", "script": "Frlg_Trainer", "flag": "0"},
+                {"type": "object", "graphics_id": "OBJ_EVENT_GFX_NURSE", "x": 2, "y": 1,
+                 "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0,
+                 "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
+                 "trainer_sight_or_berry_tree_id": "0", "script": "Frlg_Story", "flag": "0"},
+            ],
+            "warp_events": [
+                {"x": 1, "y": 5, "elevation": 0, "dest_warp_id": "0", "dest_map": "MAP_SEVII_1F"},
+                {"x": 5, "y": 1, "elevation": 0, "dest_warp_id": "0", "dest_map": "MAP_UNION_ROOM_FRLG"},
+                {"x": 9, "y": 1, "elevation": 0, "dest_warp_id": "0", "dest_map": "MAP_TRADE_CENTER_FRLG"},
+            ],
+            "coord_events": [{"type": "trigger", "x": 1, "y": 1, "elevation": 0,
+                              "var": "VAR_TEMP_0", "var_value": "0", "script": "Frlg_Cutscene"}],
+            "bg_events": [{"type": "sign", "x": 1, "y": 2, "elevation": 0,
+                           "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY", "script": "Frlg_Sign"}],
+            "connections": [{"direction": "up", "offset": 0, "map": "MAP_SEVII_1F"}],
+        }
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps(source))
+        (root / "include/constants/map_groups.h").write_text(
+            "enum { MAP_SEVII_CENTER_2F = (0 | (0 << 8)), MAP_SEVII_1F = (1 | (0 << 8)), };\n"
+        )
+        layout_file = root / "data/layouts/layouts.json"
+        (root / "data/layouts/center.border.bin").touch()
+        (root / "data/layouts/center.map.bin").touch()
+        layout_file.write_text(json.dumps({"layouts": [{
+            "id": "LAYOUT_SEVII_CENTER_2F", "name": "gMapLayout_SeviiCenter2F",
+            "game_version": "frlg", "layout_version": "frlg", "width": 1, "height": 1,
+            "border_filepath": "data/layouts/center.border.bin", "blockdata_filepath": "data/layouts/center.map.bin",
+            "primary_tileset": "gTileset_General", "secondary_tileset": "gTileset_Petalburg",
+            "border_width": 2, "border_height": 2,
+        }]}))
+        manifest = self.write_sevii_manifest(root, [
+            {"source_map": "OneIsland_PokemonCenter_2F_Frlg", "map_id": "MAP_SEVII_CENTER_2F",
+             "layout": "LAYOUT_SEVII_CENTER_2F", "enabled": True,
+             "retained_events": {"object_events": [], "coord_events": [], "bg_events": []}},
+            {"source_map": "OneIsland_PokemonCenter_1F_Frlg", "map_id": "MAP_SEVII_1F",
+             "layout": "LAYOUT_SEVII_CENTER_1F", "enabled": True},
+        ], release_link_enabled=True)
+
+        result = self.run_map(root, "wayfarer", map_file, layout_file, manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        events = (map_dir / "events.inc").read_text()
+        self.assertNotIn("ObjectEvents", events)
+        self.assertNotIn("CoordEvents", events)
+        self.assertNotIn("BGEvents", events)
+        self.assertIn("MAP_SEVII_1F", events)
+        self.assertNotIn("MAP_UNION_ROOM_FRLG", events)
+        self.assertNotIn("MAP_TRADE_CENTER_FRLG", events)
+        self.assertNotIn("Frlg_Trainer", events)
+        self.assertNotIn("Frlg_Story", events)
+        self.assertNotIn("Frlg_Cutscene", events)
+        self.assertNotIn("Frlg_Sign", events)
+        connections = (map_dir / "connections.inc").read_text()
+        self.assertIn("MAP_SEVII_1F", connections)
+
+    def test_wayfarer_sevii_rejects_retained_trainer_identity(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        map_dir = root / "data/maps/OneIsland_Frlg"
+        map_dir.mkdir()
+        trainer = {"type": "object", "graphics_id": "OBJ_EVENT_GFX_TRAINER", "x": 1, "y": 1,
+                   "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0,
+                   "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NORMAL",
+                   "trainer_sight_or_berry_tree_id": "1", "script": "Frlg_Trainer", "flag": "0"}
+        source = {"id": "MAP_SEVII", "name": "OneIsland_Frlg", "game_version": "frlg",
+                  "layout": "LAYOUT_SEVII", "music": "MUS_NONE", "region_map_section": "MAPSEC_NONE",
+                  "requires_flash": False, "weather": "WEATHER_NONE", "map_type": "MAP_TYPE_TOWN",
+                  "allow_cycling": True, "allow_escaping": False, "allow_running": True,
+                  "show_map_name": True, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+                  "object_events": [trainer], "warp_events": [], "coord_events": [], "bg_events": [],
+                  "connections": []}
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps(source))
+        (root / "data/layouts/sevii.border.bin").touch()
+        (root / "data/layouts/sevii.map.bin").touch()
+        layout_file = root / "data/layouts/layouts.json"
+        layout_file.write_text(json.dumps({"layouts": [{
+            "id": "LAYOUT_SEVII", "name": "gMapLayout_Sevii", "game_version": "frlg", "layout_version": "frlg",
+            "width": 1, "height": 1, "border_filepath": "data/layouts/sevii.border.bin",
+            "blockdata_filepath": "data/layouts/sevii.map.bin", "primary_tileset": "gTileset_General",
+            "secondary_tileset": "gTileset_Petalburg", "border_width": 2, "border_height": 2,
+        }]}))
+        manifest = self.write_sevii_manifest(root, [{
+            "source_map": "OneIsland_Frlg", "map_id": "MAP_SEVII", "layout": "LAYOUT_SEVII", "enabled": True,
+            "retained_events": {"object_events": [{"index": 0, "source": trainer,
+                                                       "wayfarer_script": "WayfarerSevii_Test"}]},
+        }], release_link_enabled=True)
+
+        result = self.run_map(root, "wayfarer", map_file, layout_file, manifest)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("is a Trainer and cannot be retained", result.stderr)
+
     def test_wayfarer_sevii_manifest_rejects_event_island_sources(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
@@ -297,6 +438,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
                     "source_map": "OneIsland_PokemonCenter_1F",
                     "map_id": "MAP_SEVII",
                     "layout": "LAYOUT_SEVII",
+                    "enabled": True,
                 }
             ],
             release_link_enabled=True,
@@ -403,6 +545,29 @@ class MapjsonWayfarerTest(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("\tmap_header_flags ", (map_dir / "header.inc").read_text())
+
+        first_mtimes = {
+            path.name: path.stat().st_mtime_ns
+            for path in map_dir.glob("*.inc")
+        }
+        result = subprocess.run(
+            [
+                str(self.mapjson),
+                "map",
+                "wayfarer",
+                "data/maps/HnsMap/map.json",
+                "data/layouts/layouts.json",
+                "data/maps/HnsMap",
+            ],
+            cwd=root,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            first_mtimes,
+            {path.name: path.stat().st_mtime_ns for path in map_dir.glob("*.inc")},
+        )
 
     def test_catalog_rejects_signed_byte_group_and_map_overflow(self):
         fixture, root = self.make_fixture()

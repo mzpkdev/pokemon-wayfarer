@@ -846,7 +846,7 @@ const struct Tileset gTileset_UnionRoom =
 
 #endif // HAS_EMERALD_CONTENT
 
-#if HAS_FRLG_CONTENT
+#if HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 // FRLG tilesets
 const struct Tileset gTileset_BuildingFrlg =
@@ -1542,7 +1542,7 @@ const struct Tileset gTileset_HallOfFame =
     .callback = NULL,
 };
 
-#endif // HAS_FRLG_CONTENT
+#endif // HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 #if HAS_HNS_CONTENT
 

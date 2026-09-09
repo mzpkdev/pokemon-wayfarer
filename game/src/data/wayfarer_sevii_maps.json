@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "release_link_enabled": false,
+  "release_link_enabled": true,
   "maps": [
     {
       "source_map": "MtEmber_RubyPath_B4F_Frlg",
@@ -223,7 +223,11 @@
         "coord_events": [],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "include": "data/scripts/wayfarer_sevii/environment.inc"
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -265,7 +269,11 @@
         "coord_events": [],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "include": "data/scripts/wayfarer_sevii/environment.inc"
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -291,7 +299,20 @@
         "object_events": [],
         "warp_events": [],
         "coord_events": [],
-        "bg_events": []
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 6,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+              "script": "SixIsland_DottedHole_B1F_EventScript_BrailleUp"
+            },
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleUp"
+          }
+        ]
       },
       "retained_map_scripts": [],
       "encounter_methods": []
@@ -305,7 +326,20 @@
         "object_events": [],
         "warp_events": [],
         "coord_events": [],
-        "bg_events": []
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 6,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+              "script": "SixIsland_DottedHole_B2F_EventScript_BrailleLeft"
+            },
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleLeft"
+          }
+        ]
       },
       "retained_map_scripts": [],
       "encounter_methods": []
@@ -319,7 +353,20 @@
         "object_events": [],
         "warp_events": [],
         "coord_events": [],
-        "bg_events": []
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 6,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+              "script": "SixIsland_DottedHole_B3F_EventScript_BrailleRight"
+            },
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleRight"
+          }
+        ]
       },
       "retained_map_scripts": [],
       "encounter_methods": []
@@ -333,7 +380,20 @@
         "object_events": [],
         "warp_events": [],
         "coord_events": [],
-        "bg_events": []
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 6,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+              "script": "SixIsland_DottedHole_B4F_EventScript_BrailleDown"
+            },
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleDown"
+          }
+        ]
       },
       "retained_map_scripts": [],
       "encounter_methods": []
@@ -862,12 +922,242 @@
       "layout": "LAYOUT_SEVEN_ISLAND_SEVAULT_CANYON_TANOBY_KEY",
       "category": "SevenIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 7,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER3",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 8,
+              "y": 9,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER4",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 6,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER5",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 8,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          },
+          {
+            "index": 5,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER6",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 6,
+              "y": 9,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          },
+          {
+            "index": 6,
+            "source": {
+              "local_id": "LOCALID_TANOBY_KEY_BOULDER7",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+              "x": 6,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 0,
+              "movement_range_y": 0,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "EventScript_StrengthBoulder",
+              "flag": "0"
+            },
+            "wayfarer_script": "EventScript_StrengthBoulder"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 7,
+              "y": 2,
+              "elevation": 3,
+              "var": "VAR_TEMP_1",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch1"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch1"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 8,
+              "elevation": 3,
+              "var": "VAR_TEMP_7",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch7"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch7"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 5,
+              "y": 8,
+              "elevation": 3,
+              "var": "VAR_TEMP_6",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch6"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch6"
+          },
+          {
+            "index": 3,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 6,
+              "elevation": 3,
+              "var": "VAR_TEMP_5",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch5"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch5"
+          },
+          {
+            "index": 4,
+            "source": {
+              "type": "trigger",
+              "x": 5,
+              "y": 6,
+              "elevation": 3,
+              "var": "VAR_TEMP_4",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch4"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch4"
+          },
+          {
+            "index": 5,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 4,
+              "elevation": 3,
+              "var": "VAR_TEMP_3",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch3"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch3"
+          },
+          {
+            "index": 6,
+            "source": {
+              "type": "trigger",
+              "x": 4,
+              "y": 4,
+              "elevation": 3,
+              "var": "VAR_TEMP_2",
+              "var_value": "99",
+              "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch2"
+            },
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch2"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "include": "data/scripts/wayfarer_sevii/environment.inc"
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -1091,7 +1381,11 @@
         "coord_events": [],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "include": "data/scripts/wayfarer_sevii/environment.inc"
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -1161,7 +1455,11 @@
         "coord_events": [],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "include": "data/scripts/wayfarer_sevii/environment.inc"
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -1254,7 +1552,26 @@
       "layout": "LAYOUT_MART_FRLG",
       "category": "SevenIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_CLERK",
+              "x": 2,
+              "y": 3,
+              "elevation": 0,
+              "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "SevenIsland_Mart_EventScript_Clerk",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_SevenIslandMart"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1268,7 +1585,27 @@
       "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
       "category": "SevenIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_SEVEN_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 7,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "SevenIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1296,7 +1633,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "SevenIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "SevenIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_SevenIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1310,10 +1666,139 @@
       "layout": "LAYOUT_ONE_ISLAND_POKEMON_CENTER_1F",
       "category": "OneIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_ONE_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 5,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
-        "bg_events": []
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 12,
+              "y": 2,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "sign",
+              "x": 12,
+              "y": 3,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "sign",
+              "x": 12,
+              "y": 4,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 3,
+            "source": {
+              "type": "sign",
+              "x": 12,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 4,
+            "source": {
+              "type": "sign",
+              "x": 13,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 5,
+            "source": {
+              "type": "sign",
+              "x": 15,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 6,
+            "source": {
+              "type": "sign",
+              "x": 14,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 7,
+            "source": {
+              "type": "sign",
+              "x": 16,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          },
+          {
+            "index": 8,
+            "source": {
+              "type": "sign",
+              "x": 17,
+              "y": 5,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+          }
+        ]
       },
       "retained_map_scripts": [],
       "encounter_methods": []
@@ -1366,7 +1851,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "OneIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "OneIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_OneIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1408,7 +1912,27 @@
       "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
       "category": "TwoIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_TWO_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 7,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TwoIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1436,7 +1960,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "TwoIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TwoIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_TwoIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1464,7 +2007,27 @@
       "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
       "category": "ThreeIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_THREE_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 7,
+              "y": 2,
+              "elevation": 0,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "ThreeIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1492,7 +2055,26 @@
       "layout": "LAYOUT_MART_FRLG",
       "category": "ThreeIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_CLERK",
+              "x": 2,
+              "y": 3,
+              "elevation": 0,
+              "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "ThreeIsland_Mart_EventScript_Clerk",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_ThreeIslandMart"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1562,7 +2144,27 @@
       "layout": "LAYOUT_FOUR_ISLAND_POKEMON_DAY_CARE",
       "category": "FourIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_FOUR_ISLAND_DAYCARE_WOMAN",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN_FRLG",
+              "x": 2,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "FourIsland_PokemonDayCare_EventScript_DaycareWoman",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandDaycareWoman"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1576,7 +2178,27 @@
       "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
       "category": "FourIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_FOUR_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 7,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "FourIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1632,7 +2254,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "FourIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "FourIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1660,7 +2301,26 @@
       "layout": "LAYOUT_MART_FRLG",
       "category": "FourIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_CLERK",
+              "x": 2,
+              "y": 3,
+              "elevation": 0,
+              "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "FourIsland_Mart_EventScript_Clerk",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandMart"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1674,7 +2334,27 @@
       "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
       "category": "FiveIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_FIVE_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 7,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "FiveIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1702,7 +2382,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "FiveIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "FiveIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_FiveIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1744,7 +2443,27 @@
       "layout": "LAYOUT_POKEMON_CENTER_1F_FRLG",
       "category": "SixIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_SIX_ISLAND_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 7,
+              "y": 2,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "SixIsland_PokemonCenter_1F_EventScript_Nurse",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1772,7 +2491,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "SixIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "SixIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_SixIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1800,7 +2538,26 @@
       "layout": "LAYOUT_MART_FRLG",
       "category": "SixIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_CLERK",
+              "x": 2,
+              "y": 3,
+              "elevation": 0,
+              "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "SixIsland_Mart_EventScript_Clerk",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_SixIslandMart"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1814,7 +2571,26 @@
       "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
       "category": "ThreeIsland",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 1,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
+              "x": 8,
+              "y": 6,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "ThreeIsland_Harbor_EventScript_Sailor",
+              "flag": "0"
+            },
+            "wayfarer_script": "WayfarerSevii_EventScript_ThreeIslandHarborSailor"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
@@ -1996,4 +2772,3 @@
     }
   ]
 }
-

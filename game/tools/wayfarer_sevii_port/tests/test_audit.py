@@ -56,6 +56,7 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
         (self.root / "data/layouts/layouts.json").write_text(json.dumps({"layouts": layouts}))
         return {
             "schema_version": 1,
+            "release_link_enabled": False,
             "maps": [
                 {"source_map": "OneIsland_Frlg", "map_id": "MAP_ONE", "layout": "LAYOUT_ONE", "category": "one",
                  "retained_events": {key: [] for key in ("object_events", "warp_events", "coord_events", "bg_events")},
@@ -81,6 +82,9 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
         self.assertEqual(report["selected_map_count"], 2)
         self.assertEqual(report["selected_layout_count"], 2)
         self.assertEqual(report["raw_layout_bytes"], 10)
+        self.assertFalse(report["release_link_enabled"])
+        self.assertEqual(report["enabled_map_count"], 0)
+        self.assertEqual(report["paths"], {"warps": [], "connections": []})
         self.assertEqual([row["source_map"] for row in report["maps"]], ["OneIsland_Frlg", "TwoIsland_Frlg"])
         self.assertEqual(report["event_island_frlg_exclusions"], ["BirthIsland_Harbor_Frlg", "NavelRock_Harbor_Frlg"])
         first = json.dumps(report, sort_keys=True, separators=(",", ":"))
@@ -101,6 +105,46 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
         manifest = self.source_fixture()
         manifest["exclusions"] = manifest["exclusions"][1:]
         with self.assertRaisesRegex(AUDIT.AuditError, "lack exclusion reasons"):
+            self.report(manifest)
+
+    def test_reports_only_the_release_enabled_catalog_and_reciprocal_warps(self):
+        manifest = self.source_fixture()
+        manifest["release_link_enabled"] = True
+        first = self.root / "data/maps/OneIsland_Frlg/map.json"
+        second = self.root / "data/maps/TwoIsland_Frlg/map.json"
+        first_data = json.loads(first.read_text())
+        second_data = json.loads(second.read_text())
+        first_data["warp_events"] = [{"dest_map": "MAP_TWO", "dest_warp_id": "0"}]
+        second_data["warp_events"] = [{"dest_map": "MAP_ONE", "dest_warp_id": "0"}]
+        first.write_text(json.dumps(first_data))
+        second.write_text(json.dumps(second_data))
+        report = self.report(manifest)
+        self.assertEqual(report["enabled_map_count"], 2)
+        self.assertEqual(len(report["paths"]["warps"]), 2)
+        self.assertTrue(all(row["reciprocal"] for row in report["paths"]["warps"]))
+        manifest["maps"][0]["enabled"] = False
+        report = self.report(manifest)
+        self.assertEqual(report["enabled_map_count"], 1)
+        self.assertEqual(report["paths"]["warps"], [])
+
+    def test_rejects_unowned_or_prohibited_retained_scripts(self):
+        manifest = self.source_fixture()
+        map_path = self.root / "data/maps/OneIsland_Frlg/map.json"
+        source = json.loads(map_path.read_text())
+        event = {"type": "object", "trainer_type": "TRAINER_TYPE_NONE", "script": "OneIsland_Source"}
+        source["object_events"] = [event]
+        map_path.write_text(json.dumps(source))
+        record = manifest["maps"][0]
+        record["retained_events"]["object_events"] = [{
+            "index": 0, "source": event, "wayfarer_script": "WayfarerSevii_Test",
+        }]
+        record["retained_map_scripts"] = [{"include": "data/scripts/wayfarer_sevii/test.inc"}]
+        include = self.root / "data/scripts/wayfarer_sevii/test.inc"
+        include.parent.mkdir(parents=True)
+        include.write_text("WayfarerSevii_Test::\n\tend\n")
+        self.assertEqual(self.report(manifest)["retained_scripts"]["retained_event_labels"], ["WayfarerSevii_Test"])
+        include.write_text("WayfarerSevii_Test::\n\tgiveitem ITEM_POTION\n\tend\n")
+        with self.assertRaisesRegex(AUDIT.AuditError, "prohibited command giveitem"):
             self.report(manifest)
 
     def test_allows_only_named_ferry_hook_in_baseline(self):
@@ -126,6 +170,25 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
             AUDIT.validate_event_island_baseline(self.root, baseline)
         script.write_text("Protected::\n\tgoto Bad\nSailor::\n\tend\n")
         with self.assertRaisesRegex(AUDIT.AuditError, "protected block changed"):
+            AUDIT.validate_event_island_baseline(self.root, baseline)
+
+    def test_allows_only_exact_global_wayfarer_script_insertion(self):
+        script = self.root / "data/event_scripts.s"
+        script.parent.mkdir(exist_ok=True)
+        original = b'#if IS_WAYFARER\n\t.include "data/wayfarer_engine_source_constants.inc"\n#endif\n'
+        script.write_bytes(original)
+        baseline = self.root / "baseline.json"
+        baseline.write_text(json.dumps({"schema_version": 1, "files": [{
+            "path": "data/event_scripts.s", "sha256": digest(original),
+        }], "allowed_ferry_hooks": [], "allowed_global_insertions": [{
+            "path": "data/event_scripts.s",
+            "after": '\t.include "data/wayfarer_engine_source_constants.inc"\n',
+            "insertion": '\t.include "data/wayfarer_sevii_event_scripts.inc"\n',
+        }]}))
+        script.write_text('#if IS_WAYFARER\n\t.include "data/wayfarer_engine_source_constants.inc"\n\t.include "data/wayfarer_sevii_event_scripts.inc"\n#endif\n')
+        AUDIT.validate_event_island_baseline(self.root, baseline)
+        script.write_text('#if IS_WAYFARER\n\t.include "data/wayfarer_engine_source_constants.inc"\n\t.include "data/wayfarer_sevii_event_scripts.inc"\n\t.include "data/unapproved.inc"\n#endif\n')
+        with self.assertRaisesRegex(AUDIT.AuditError, "baseline file changed"):
             AUDIT.validate_event_island_baseline(self.root, baseline)
 
 

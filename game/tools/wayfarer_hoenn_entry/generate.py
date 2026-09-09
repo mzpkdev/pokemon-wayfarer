@@ -390,14 +390,32 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     olivine_path = game_root / "data/maps/OlivineCity_PortInside_hns/scripts.inc"
     raw_vermilion = read_text(vermilion_path)
     raw_olivine = read_text(olivine_path)
+    ferry_path = game_root / "src/wayfarer_sevii_ferry.c"
+    ferry_source = read_text(ferry_path)
+    seagallop_path = game_root / "data/scripts/seagallop.inc"
+    seagallop_source = read_text(seagallop_path)
     wayfarer_index = ScriptIndex([(vermilion_path, filter_product(raw_vermilion, wayfarer=True))])
     hns_index = ScriptIndex([(vermilion_path, filter_product(raw_vermilion, wayfarer=False))])
     olivine_index = ScriptIndex([(olivine_path, filter_product(raw_olivine, wayfarer=True))])
 
     wayfarer_root = wayfarer_index.reachable_text("VermilionPort_EventScript_Sailor")
     hns_root = hns_index.reachable_text("VermilionPort_EventScript_Sailor")
-    require(re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*VermilionPort_EventScript_Sailor_AfterKanto", wayfarer_root) is not None,
-            "Wayfarer Vermilion must gate its menu on profile eligibility")
+    wayfarer_top_level = wayfarer_index.block("VermilionPort_EventScript_Sailor")
+    wayfarer_regular_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_OtherDestinations")
+    require(
+        "special DrawWayfarerVermilionPortMenu" in wayfarer_top_level
+        and "specialvar VAR_RESULT, GetWayfarerVermilionPortChoice" in wayfarer_top_level
+        and _case_targets(wayfarer_top_level) == {
+            0: "VermilionPort_EventScript_Sailor_Sevii",
+            1: "VermilionPort_EventScript_Sailor_OtherDestinations",
+            2: "VermilionPort_EventScript_Sailor_Cancel",
+        },
+        "Wayfarer Vermilion must expose fixed Sevii, other-destinations, and cancel choices",
+    )
+    require(
+        re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*VermilionPort_EventScript_Sailor_AfterKanto", wayfarer_regular_branch) is not None,
+        "Wayfarer Vermilion must gate only its regular route on profile eligibility",
+    )
     require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", hns_root) is not None
             and "WayfarerCanUseRegularAqua" not in hns_root,
             "standalone HNS Vermilion must retain its completed-voyage gate")
@@ -483,6 +501,52 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     require("removeitem ITEM_SS_TICKET" not in departure, "the shared S.S. Ticket is consumed")
     require("setvar VAR_SSAQUA_STATE" not in departure, "the Hoenn trip changes completed S.S. Aqua voyage state")
 
+    sevii_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_Sevii")
+    require(
+        "special DrawWayfarerVermilionSeviiDestinationMenu" in sevii_branch
+        and "specialvar VAR_0x8006, GetWayfarerVermilionSeviiDestination" in sevii_branch
+        and all(
+            re.search(rf"case\s+{destination}\s*,\s*VermilionPort_EventScript_Sailor_SetSailToSeviiDestination", sevii_branch) is not None
+            for destination in ("SEAGALLOP_ONE_ISLAND", "SEAGALLOP_BIRTH_ISLAND", "SEAGALLOP_NAVEL_ROCK")
+        ),
+        "Wayfarer Sevii selector does not dispatch stable Seagallop destination IDs",
+    )
+    require("WayfarerCanUseRegularAqua" not in wayfarer_top_level
+            and "WayfarerCanUseRegularAqua" not in sevii_branch,
+            "Wayfarer Sevii service must be offered before the regular Aqua gate")
+    require(
+        re.search(r"u16\s+WayfarerCanSailToBirthIsland\s*\([^)]*\)\s*\{\s*return\s+WayfarerCanUseRegularAqua\s*\(\s*\)\s*&&\s*CheckBagHasItem\s*\(\s*ITEM_AURORA_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
+        "Birth Island eligibility must be the read-only Aqua and Aurora Ticket conjunction",
+    )
+    require("FLAG_ENABLE_SHIP_NAVEL_ROCK" not in ferry_source,
+            "Wayfarer Navel Rock eligibility must not use the unavailable ship flag")
+    require(
+        re.search(r"u16\s+WayfarerCanSailToNavelRock\s*\([^)]*\)\s*\{\s*return\s+FlagGet\s*\(\s*FLAG_SYS_GAME_CLEAR\s*\)\s*&&\s*CheckBagHasItem\s*\(\s*ITEM_MYSTIC_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
+        "Navel Rock eligibility must be the read-only League-clear and Mystic Ticket conjunction",
+    )
+    require(re.search(r"\b(?:FlagSet|FlagClear|AddBagItem|RemoveBagItem)\s*\(", ferry_source) is None,
+            "Wayfarer special-island eligibility helpers must not mutate flags or the Bag")
+
+    wayfarer_seagallop = ScriptIndex([(seagallop_path, filter_product(seagallop_source, wayfarer=True))])
+    for label in ("EventScript_ChooseDestFromOneIsland", "EventScript_ChooseDestFromTwoIsland", "EventScript_ChooseDestFromIsland"):
+        block = wayfarer_seagallop.block(label)
+        require(block.lstrip().startswith("goto EventScript_SeviiDestinationsPage1\n"),
+                f"Wayfarer {label} must offer the complete ungated numbered-island service")
+
+    special_harbors = (
+        ("BirthIsland_Harbor_hns", "BirthIsland_Harbor_hns_EventScript_Sailor"),
+        ("NavelRock_Harbor", "NavelRock_Harbor_EventScript_Sailor"),
+    )
+    for map_name, sailor_label in special_harbors:
+        harbor_path = game_root / "data/maps" / map_name / "scripts.inc"
+        harbor_source = read_text(harbor_path)
+        wayfarer_harbor = ScriptIndex([(harbor_path, filter_product(harbor_source, wayfarer=True))]).block(sailor_label)
+        standalone_harbor = ScriptIndex([(harbor_path, filter_product(harbor_source, wayfarer=False))]).block(sailor_label)
+        require("warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9" in wayfarer_harbor,
+                f"{map_name} Wayfarer sailor must return to the HNS Vermilion safe tile")
+        require("warp MAP_LILYCOVE_CITY_HARBOR, 8, 11" in standalone_harbor,
+                f"{map_name} standalone sailor must retain its Lilycove return")
+
     standalone_olivine_index = ScriptIndex([(olivine_path, filter_product(raw_olivine, wayfarer=False))])
     olivine_root = olivine_index.reachable_text("OlivinePort_EventScript_Sailor")
     standalone_olivine_root = standalone_olivine_index.reachable_text("OlivinePort_EventScript_Sailor")
@@ -527,6 +591,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
             "wayfarerOlivine": wayfarer_olivine,
             "slateportSlot": 0,
             "preservedOptionalSlots": list(range(1, 6)),
+            "wayfarerTopLevel": ["SEVII ISLANDS", "OTHER DESTINATIONS", "CANCEL"],
+            "seviiFirstDestination": "ONE ISLAND",
         },
         "departure": {
             "selectionLabel": slateport_label,
@@ -539,6 +605,16 @@ def audit_menus_and_routes(game_root: Path) -> dict:
             "wayfarerVermilionToOlivine": False,
             "standaloneHnsVermilionToOlivine": True,
             "wayfarerOlivineToVermilion": True,
+        },
+        "specialIslandEligibility": {
+            "birthIsland": "WayfarerCanUseRegularAqua && ITEM_AURORA_TICKET",
+            "navelRock": "FLAG_SYS_GAME_CLEAR && ITEM_MYSTIC_TICKET",
+            "readOnly": True,
+        },
+        "specialIslandReturns": {
+            "arrival": {"birthIsland": [8, 5], "navelRock": [8, 5]},
+            "return": {"map": "MAP_VERMILION_CITY_PORT_INSIDE_HNS", "coordinate": [8, 9]},
+            "standaloneReturn": {"map": "MAP_LILYCOVE_CITY_HARBOR", "coordinate": [8, 11]},
         },
     }
 

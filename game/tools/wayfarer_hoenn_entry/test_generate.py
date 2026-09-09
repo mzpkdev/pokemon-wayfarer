@@ -147,6 +147,34 @@ class RepositoryContractTest(unittest.TestCase):
             "goto_if_eq VAR_RESULT, TRUE, OlivinePort_EventScript_Sailor_CantBoard",
             AUDIT.audit_menus_and_routes, "reject profiles")
 
+    def test_sevii_service_is_available_before_the_regular_aqua_gate(self):
+        self.assert_script_mutation_rejected(
+            "data/maps/VermilionCity_PortInside_hns/scripts.inc",
+            "special DrawWayfarerVermilionPortMenu",
+            "specialvar VAR_RESULT, WayfarerCanUseRegularAqua",
+            AUDIT.audit_menus_and_routes, "fixed Sevii")
+
+    def test_birth_eligibility_requires_the_aqua_gate_and_aurora_ticket(self):
+        self.assert_script_mutation_rejected(
+            "src/wayfarer_sevii_ferry.c",
+            "WayfarerCanUseRegularAqua() && CheckBagHasItem(ITEM_AURORA_TICKET, 1)",
+            "CheckBagHasItem(ITEM_AURORA_TICKET, 1)",
+            AUDIT.audit_menus_and_routes, "Birth Island eligibility")
+
+    def test_navel_eligibility_does_not_use_the_unavailable_ship_flag(self):
+        self.assert_script_mutation_rejected(
+            "src/wayfarer_sevii_ferry.c",
+            "FlagGet(FLAG_SYS_GAME_CLEAR) && CheckBagHasItem(ITEM_MYSTIC_TICKET, 1)",
+            "FlagGet(FLAG_ENABLE_SHIP_NAVEL_ROCK) && CheckBagHasItem(ITEM_MYSTIC_TICKET, 1)",
+            AUDIT.audit_menus_and_routes, "unavailable ship flag")
+
+    def test_numbered_island_harbors_cannot_reintroduce_story_gates(self):
+        self.assert_script_mutation_rejected(
+            "data/scripts/seagallop.inc",
+            "#if IS_WAYFARER\n\tgoto EventScript_SeviiDestinationsPage1",
+            "#if IS_WAYFARER\n\tgoto_if_unset FLAG_SEVII_TRAVEL_INTRO_SEEN, EventScript_CancelSail",
+            AUDIT.audit_menus_and_routes, "complete ungated")
+
     def test_free_ticket_is_profile_owned(self):
         self.assert_script_mutation_rejected(
             "data/maps/SlateportCity_Harbor/scripts.inc",

@@ -5829,7 +5829,11 @@ static void Task_EndScreenShake(u8 taskId)
 
 bool8 CutMoveRuinValleyCheck(void)
 {
+#if IS_WAYFARER
+    if (FlagGet(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN) != TRUE
+#else
     if (FlagGet(FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE) != TRUE
+#endif
      && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY)
      && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY)
      && gSaveBlock1Ptr->pos.x == 24
@@ -5846,7 +5850,11 @@ void CutMoveOpenDottedHoleDoor(void)
     MapGridSetMetatileIdAt(31, 31, METATILE_SeviiIslands67_DottedHoleDoor_Open);
     DrawWholeMapView();
     PlaySE(SE_BANG);
+#if IS_WAYFARER
+    FlagSet(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN);
+#else
     FlagSet(FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE);
+#endif
     UnlockPlayerFieldControls();
 }
 

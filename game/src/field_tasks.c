@@ -978,7 +978,11 @@ static void MarkIcefallCavePuzzleCoordVisited(s16 x, s16 y)
     {
         if (sIcefallCaveIceCoords[i][0] + MAP_OFFSET == x && sIcefallCaveIceCoords[i][1] + MAP_OFFSET == y)
         {
+#if IS_WAYFARER
+            FlagSet(FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_START + i);
+#else
             FlagSet(i + 1);
+#endif
             break;
         }
     }
@@ -988,7 +992,11 @@ void SetIcefallCaveCrackedIceMetatiles(void)
 {
     for (u32 i = 0; i < ARRAY_COUNT(sIcefallCaveIceCoords); i++)
     {
+#if IS_WAYFARER
+        if (FlagGet(FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_START + i) == TRUE)
+#else
         if (FlagGet(i + 1) == TRUE)
+#endif
         {
             int x = sIcefallCaveIceCoords[i][0] + MAP_OFFSET;
             int y = sIcefallCaveIceCoords[i][1] + MAP_OFFSET;
@@ -1073,7 +1081,11 @@ static void IcefallCaveIcePerStepCallback(u8 taskId)
             PlaySE(SE_ICE_BREAK);
             MapGridSetMetatileIdAt(x, y, METATILE_SeafoamIslands_IceHole);
             CurrentMapDrawMetatileAt(x, y);
+#if IS_WAYFARER
+            VarSet(VAR_WAYFARER_SEVII_ICEFALL_FALL, 1);
+#else
             VarSet(VAR_TEMP_1, 1);
+#endif
             tState = 1;
         }
         break;

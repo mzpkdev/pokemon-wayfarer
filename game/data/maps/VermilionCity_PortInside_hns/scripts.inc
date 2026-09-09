@@ -20,6 +20,35 @@ VermilionPort_EventScript_Sailor::
 	lock
 	faceplayer
 #if IS_WAYFARER
+	special DrawWayfarerVermilionPortMenu
+	waitstate
+	specialvar VAR_RESULT, GetWayfarerVermilionPortChoice
+	switch VAR_RESULT
+	case 0, VermilionPort_EventScript_Sailor_Sevii
+	case 1, VermilionPort_EventScript_Sailor_OtherDestinations
+	case 2, VermilionPort_EventScript_Sailor_Cancel
+	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Cancel
+	release
+	end
+
+VermilionPort_EventScript_Sailor_Sevii::
+	setvar VAR_0x8004, SEAGALLOP_VERMILION_CITY
+	special DrawWayfarerVermilionSeviiDestinationMenu
+	waitstate
+	specialvar VAR_0x8006, GetWayfarerVermilionSeviiDestination
+	switch VAR_0x8006
+	case SEAGALLOP_ONE_ISLAND, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination
+	case SEAGALLOP_BIRTH_ISLAND, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination
+	case SEAGALLOP_NAVEL_ROCK, VermilionPort_EventScript_Sailor_SetSailToSeviiDestination
+	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Cancel
+	release
+	end
+
+VermilionPort_EventScript_Sailor_SetSailToSeviiDestination::
+	goto EventScript_SailToDest
+	end
+
+VermilionPort_EventScript_Sailor_OtherDestinations::
 	specialvar VAR_RESULT, WayfarerCanUseRegularAqua
 	goto_if_eq VAR_RESULT, TRUE, VermilionPort_EventScript_Sailor_AfterKanto
 #else
@@ -32,6 +61,13 @@ VermilionPort_EventScript_SailorCantSail::
 	closemessage
 	release
 	end
+
+#if IS_WAYFARER
+VermilionPort_EventScript_Sailor_Cancel::
+	closemessage
+	release
+	end
+#endif
 
 VermilionPort_EventScript_Sailor_AfterKanto::
 	message VermilionPort_Text_WhereSail
