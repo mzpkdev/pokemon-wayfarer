@@ -317,6 +317,16 @@ static bool32 ApplyBagFixtures(void)
                 BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_TM_FOCUS_PUNCH, 1);
         }
     }
+    if (sRequest.fullPocketMask & E2E_TEST_FULL_POCKET_BALLS)
+    {
+        struct BagPocket *pocket = &gBagPockets[POCKET_POKE_BALLS];
+
+        for (i = 0; i < pocket->capacity; i++)
+        {
+            if (BagPocket_GetSlotData(pocket, i).itemId == ITEM_NONE)
+                BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_POKE_BALL, 1);
+        }
+    }
 
     return TRUE;
 }

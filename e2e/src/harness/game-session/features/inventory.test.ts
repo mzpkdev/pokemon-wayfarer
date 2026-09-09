@@ -41,9 +41,9 @@ describe("game-session inventory", () => {
             const contents = new Uint8Array(pocketLength)
             contents.set(uint16Bytes(pocket.item), 0)
             contents.set(uint16Bytes(3 ^ 0x1234), 2)
-            if (pocket.item === 472) {
+            if (pocket.item === 472 || pocket.item === 1) {
               for (const offset of [0, 4]) {
-                contents.set(uint16Bytes(472), offset)
+                contents.set(uint16Bytes(pocket.item), offset)
                 contents.set(uint16Bytes(1 ^ 0x1234), offset + 2)
               }
             }
@@ -79,7 +79,12 @@ describe("game-session inventory", () => {
     expect(writes).toHaveLength(0)
     pocketContents.get(3)!.item = 472
     await inventory.freeFixtureSlot("items")
-    expect(writes).toEqual([{ address: 0x0200_3000, bytes: new Uint8Array([0, 0, 0x34, 0x12]) }])
+    pocketContents.get(1)!.item = 1
+    await inventory.freeFixtureSlot("balls")
+    expect(writes).toEqual([
+      { address: 0x0200_3000, bytes: new Uint8Array([0, 0, 0x34, 0x12]) },
+      { address: 0x0200_8000, bytes: new Uint8Array([0, 0, 0x34, 0x12]) },
+    ])
   })
 
   it("counts Standard Rod slots through the validated HNS Key Items pocket", async () => {

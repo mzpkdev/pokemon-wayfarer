@@ -244,6 +244,7 @@ TEST("Wayfarer Silph defeats and liberation receipts are isolated")
     u32 i, j;
     FlagClear(FLAG_SILPH_LIBERATED_HNS);
     FlagClear(FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS);
+    FlagClear(FLAG_SILPH_MASTER_BALL_RECEIVED_HNS);
     ClearTrainerFlag(TRAINER_NUGGET_BRIDGE_ROCKET_HNS);
     for (i = 1556; i <= 1586; i++)
         ClearTrainerFlag(i);
@@ -255,6 +256,7 @@ TEST("Wayfarer Silph defeats and liberation receipts are isolated")
             EXPECT_EQ(HasTrainerBeenFought(j), i == j);
         EXPECT(!FlagGet(FLAG_SILPH_LIBERATED_HNS));
         EXPECT(!FlagGet(FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS));
+        EXPECT(!FlagGet(FLAG_SILPH_MASTER_BALL_RECEIVED_HNS));
         EXPECT(!HasTrainerBeenFought(TRAINER_NUGGET_BRIDGE_ROCKET_HNS));
         ClearTrainerFlag(i);
     }

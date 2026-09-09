@@ -273,6 +273,7 @@ export const storyFlags = {
   silph10FDoor: 0x4f3,
   silph11FDoor: 0x4f4,
   silphMasterBallPending: 0x4f8,
+  silphMasterBallReceived: 0x4f9,
   silphLiberated: 0x4f5,
   gotSilphLapras: 0x4f6,
   silphThunderWaveTutor: 0x4f7,

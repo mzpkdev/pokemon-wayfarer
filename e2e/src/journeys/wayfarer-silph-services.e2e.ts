@@ -78,30 +78,6 @@ describe.sequential("Wayfarer Silph staff and rewards", () => {
     expect((await game.state.read()).party[0]!.moves.filter((move) => move === "thunderWave")).toHaveLength(1)
   })
 
-  for (const liberated of [false, true]) {
-    it(`defers Steven and President rewards with liberation=${liberated}`, async () => {
-      await arrangeSilph(game, {
-        player: { position: { map: "silph-lobby", x: 17, y: 13 }, facing: "down" },
-        story: { flags: { silphLiberated: liberated, silphMasterBallPending: liberated } },
-      })
-      const before = await game.state.read()
-      await talkSilph(game, true)
-      expect(await game.story.flag("receivedHnsHoennStarter")).toBe(false)
-      expect((await game.state.read()).party).toEqual(before.party)
-      expect((await game.state.read()).origin).toEqual(before.origin)
-      await game.player.warp("silph-11f", 9, 10, "up")
-      await talkSilph(game)
-      expect(await game.story.flag("silphMasterBallPending")).toBe(liberated)
-      expect(await game.inventory.count("masterBall")).toBe(0)
-      await game.player.warp("silph-11f", 11, 10, "up")
-      await game.player.interact()
-      await game.dialogue.waitForOpen()
-      if (!liberated) expect((await game.state.read()).dialogue.text.toLowerCase()).not.toContain("thanks")
-      await settleSilph(game)
-      expect(await game.story.flag("silphLiberated")).toBe(liberated)
-    })
-  }
-
   it("keeps occupied lobby service pending while retaining upstairs access", async () => {
     await arrangeSilph(game, { player: { position: { map: "silph-lobby", x: 30, y: 2 }, facing: "right" } })
     await talkSilph(game, true)

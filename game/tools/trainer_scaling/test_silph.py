@@ -26,9 +26,14 @@ class SilphContracts(unittest.TestCase):
 
     def test_transaction_and_loss_boundaries(self):
         script = (gen.ROOT / 'data/scripts/wayfarer_silph.inc').read_text()
-        self.assertNotRegex(script, r'\b(?:VAR_MAP_SCENE_SILPH_CO_7F|VAR_MAP_SCENE_SILPH_CO_11F|VAR_ELEVATOR_FLOOR|ITEM_CARD_KEY|ITEM_MASTER_BALL)\b')
+        self.assertNotRegex(script, r'\b(?:VAR_MAP_SCENE_SILPH_CO_7F|VAR_MAP_SCENE_SILPH_CO_11F|VAR_ELEVATOR_FLOOR|ITEM_CARD_KEY)\b')
         self.assertEqual(script.count('setflag FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS'), 1)
-        self.assertEqual(script.count('FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS'), 1)
+        self.assertEqual(script.count('clearflag FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS'), 1)
+        self.assertEqual(script.count('setflag FLAG_SILPH_MASTER_BALL_RECEIVED_HNS'), 1)
+        president = script.split('WayfarerSilph_EventScript_PresidentLiberated::')[1].split('SilphCo_11F_EventScript_Secretary::')[0]
+        self.assertLess(president.index('checkitemspace ITEM_MASTER_BALL'), president.index('giveitem_msg SilphCo_11F_Text_ObtainedMasterBallFromPresident'))
+        self.assertLess(president.index('giveitem_msg SilphCo_11F_Text_ObtainedMasterBallFromPresident'), president.index('setflag FLAG_SILPH_MASTER_BALL_RECEIVED_HNS'))
+        self.assertLess(president.index('setflag FLAG_SILPH_MASTER_BALL_RECEIVED_HNS'), president.index('clearflag FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS'))
         self.assertEqual(script.count('trainerbattle_single TRAINER_SILPH_'), 30)
         battle = script.split('SilphCo_11F_EventScript_BattleGiovanni::')[1].split('SilphCo_11F_EventScript_GiovanniApproachLeft::')[0]
         self.assertLess(battle.index('B_OUTCOME_WON'), battle.index('setflag FLAG_SILPH_LIBERATED_HNS'))
@@ -39,7 +44,7 @@ class SilphContracts(unittest.TestCase):
             branch = script.split(trigger + '::')[1].split('\n\n', 1)[0]
             self.assertLess(branch.index('lockall'), branch.index('WayfarerCanStartOrdinaryBattleForScript'))
             self.assertIn('FALSE, WayfarerSilph_EventScript_RocketNoParty', branch)
-        self.assertEqual(len(re.findall(r'checkitemspace ITEM_', script)), 18)
+        self.assertEqual(len(re.findall(r'checkitemspace ITEM_', script)), 19)
         self.assertNotIn('VAR_STARTER_MON', script)
 
 if __name__ == '__main__':

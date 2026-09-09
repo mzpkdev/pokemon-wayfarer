@@ -24,7 +24,7 @@ export type StandardRod = "oldRod" | "goodRod" | "superRod"
 export type InventoryApi = {
   contains: (item: Item | Hm) => Promise<boolean>
   count: (item: Item | Hm) => Promise<number>
-  freeFixtureSlot: (pocket: "items" | "tmHm" | "keyItems") => Promise<void>
+  freeFixtureSlot: (pocket: "items" | "tmHm" | "keyItems" | "balls") => Promise<void>
   rodSlots: () => Promise<Record<StandardRod, number>>
 }
 
@@ -109,7 +109,7 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
     return count
   },
   freeFixtureSlot: async (name) => {
-    const fixture = { items: [3, 472], tmHm: [4, 582], keyItems: [5, 709] }[name]!
+    const fixture = { items: [3, 472], tmHm: [4, 582], keyItems: [5, 709], balls: [1, 1] }[name]!
     const pocket = await readBagPocket(runtime, fixture[0]!)
     const slots = await readPocketSlots(runtime, pocket)
     const saveBlock2 = await runtime.readUint32(runtime.address("gSaveBlock2Ptr"))

@@ -1287,7 +1287,37 @@ SilphCo_11F_EventScript_President::
 	msgbox WayfarerSilph_Text_PresidentOccupied, MSGBOX_NPC
 	end
 WayfarerSilph_EventScript_PresidentLiberated::
-	msgbox WayfarerSilph_Text_PresidentLiberated, MSGBOX_NPC
+	lock
+	faceplayer
+	goto_if_set FLAG_SILPH_MASTER_BALL_RECEIVED_HNS, WayfarerSilph_EventScript_PresidentMasterBallReceived
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, WayfarerSilph_EventScript_PresidentThanksMale
+	call_if_eq VAR_RESULT, FEMALE, WayfarerSilph_EventScript_PresidentThanksFemale
+	checkitemspace ITEM_MASTER_BALL
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSilph_EventScript_PresidentNoRoomForMasterBall
+	giveitem_msg SilphCo_11F_Text_ObtainedMasterBallFromPresident, ITEM_MASTER_BALL, 1, MUS_RG_OBTAIN_KEY_ITEM
+	msgbox SilphCo_11F_Text_ThatsOurSecretPrototype
+	setflag FLAG_SILPH_MASTER_BALL_RECEIVED_HNS
+	clearflag FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS
+	release
+	end
+
+WayfarerSilph_EventScript_PresidentThanksMale::
+	msgbox SilphCo_11F_Text_ThanksForSavingMeDearBoy
+	return
+
+WayfarerSilph_EventScript_PresidentThanksFemale::
+	msgbox SilphCo_11F_Text_ThanksForSavingMeDearGirl
+	return
+
+WayfarerSilph_EventScript_PresidentNoRoomForMasterBall::
+	msgbox SilphCo_11F_Text_YouHaveNoRoomForThis
+	release
+	end
+
+WayfarerSilph_EventScript_PresidentMasterBallReceived::
+	msgbox SilphCo_11F_Text_ThatsOurSecretPrototype
+	release
 	end
 
 SilphCo_11F_EventScript_Secretary::
