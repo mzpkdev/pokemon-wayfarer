@@ -571,7 +571,10 @@ string generate_map_events_text(Json map_data) {
                 if (underfoot.empty()) {
                     underfoot = "FALSE";
                 }
-                bool use_hoenn_namespace = version == "wayfarer" && get_source_version(map_data) == "emerald";
+                // Wayfarer only changes registered FRLG Sevii maps.  Existing
+                // Emerald/HNS/event-island maps retain their legacy event
+                // encoding and flag namespaces byte-for-byte.
+                bool use_hoenn_namespace = false;
                 text << (use_hoenn_namespace ? "\tbg_hidden_item_event_hoenn " : "\tbg_hidden_item_event ")
                      << json_to_string(bg_event, "x") << ", "
                      << json_to_string(bg_event, "y") << ", "

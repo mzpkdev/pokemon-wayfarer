@@ -277,11 +277,11 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 {"type": "object", "graphics_id": "OBJ_EVENT_GFX_TRAINER", "x": 1, "y": 1,
                  "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0,
                  "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NORMAL",
-                 "trainer_sight_or_berry_tree_id": "1", "script": "Frlg_Trainer", "flag": "0"},
+                 "trainer_sight_or_berry_tree_id": "1", "script": "SevenIsland_SevaultCanyon_House_EventScript_ItemLuckyPunch", "flag": "0"},
                 {"type": "object", "graphics_id": "OBJ_EVENT_GFX_NURSE", "x": 2, "y": 1,
                  "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0,
                  "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
-                 "trainer_sight_or_berry_tree_id": "0", "script": "Frlg_Story", "flag": "0"},
+                 "trainer_sight_or_berry_tree_id": "0", "script": "SixIsland_WaterPath_House2_EventScript_Man", "flag": "0"},
             ],
             "warp_events": [
                 {"x": 1, "y": 5, "elevation": 0, "dest_warp_id": "0", "dest_map": "MAP_SEVII_1F"},
@@ -289,9 +289,9 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 {"x": 9, "y": 1, "elevation": 0, "dest_warp_id": "0", "dest_map": "MAP_TRADE_CENTER_FRLG"},
             ],
             "coord_events": [{"type": "trigger", "x": 1, "y": 1, "elevation": 0,
-                              "var": "VAR_TEMP_0", "var_value": "0", "script": "Frlg_Cutscene"}],
+                              "var": "VAR_TEMP_0", "var_value": "0", "script": "SevenIsland_SevaultCanyon_House_EventScript_ChanseyDanceMan"}],
             "bg_events": [{"type": "sign", "x": 1, "y": 2, "elevation": 0,
-                           "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY", "script": "Frlg_Sign"}],
+                           "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY", "script": "SevenIsland_SevaultCanyon_House_EventScript_Chansey"}],
             "connections": [{"direction": "up", "offset": 0, "map": "MAP_SEVII_1F"}],
         }
         map_file = map_dir / "map.json"
@@ -326,12 +326,106 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertIn("MAP_SEVII_1F", events)
         self.assertNotIn("MAP_UNION_ROOM_FRLG", events)
         self.assertNotIn("MAP_TRADE_CENTER_FRLG", events)
-        self.assertNotIn("Frlg_Trainer", events)
-        self.assertNotIn("Frlg_Story", events)
-        self.assertNotIn("Frlg_Cutscene", events)
-        self.assertNotIn("Frlg_Sign", events)
+        self.assertNotIn("SevenIsland_SevaultCanyon_House_EventScript_ItemLuckyPunch", events)
+        self.assertNotIn("SixIsland_WaterPath_House2_EventScript_Man", events)
+        self.assertNotIn("SevenIsland_SevaultCanyon_House_EventScript_ChanseyDanceMan", events)
+        self.assertNotIn("SevenIsland_SevaultCanyon_House_EventScript_Chansey", events)
+        self.assertNotIn("SevenIsland_SevaultCanyon_House_EventScript_ItemLuckyPunch", events)
         connections = (map_dir / "connections.inc").read_text()
         self.assertIn("MAP_SEVII_1F", connections)
+
+    def test_wayfarer_sanitizes_only_registered_sevii_map_events(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+
+        def map_source(name, map_id, game_version, script, flag):
+            return {
+                "id": map_id,
+                "name": name,
+                "game_version": game_version,
+                "layout": f"LAYOUT_{map_id[4:]}",
+                "music": "MUS_NONE",
+                "region_map_section": "MAPSEC_NONE",
+                "requires_flash": False,
+                "weather": "WEATHER_NONE",
+                "map_type": "MAP_TYPE_TOWN",
+                "allow_cycling": True,
+                "allow_escaping": False,
+                "allow_running": True,
+                "show_map_name": True,
+                "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+                "object_events": [{
+                    "type": "object", "graphics_id": "OBJ_EVENT_GFX_NURSE", "x": 1, "y": 1,
+                    "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN", "movement_range_x": 0,
+                    "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
+                    "trainer_sight_or_berry_tree_id": "0", "script": script, "flag": "0",
+                }],
+                "warp_events": [],
+                "coord_events": [],
+                "bg_events": [{
+                    "type": "hidden_item", "x": 2, "y": 2, "elevation": 0,
+                    "item": "ITEM_POTION", "flag": flag,
+                }],
+                "connections": [],
+            }
+
+        layouts = []
+        map_files = {}
+        for name, map_id, source, script, flag in (
+            ("OneIsland_Frlg", "MAP_SEVII", "frlg", "FrlgStoryEvent", "FLAG_SEVII_ITEM"),
+            ("SafariZone_Southeast", "MAP_SAFARI", "emerald", "SafariLegacyEvent", "FLAG_SAFARI_ITEM"),
+            ("NavelRock_Top", "MAP_NAVEL", "emerald", "NavelLegacyEvent", "FLAG_NAVEL_ITEM"),
+        ):
+            map_dir = root / "data/maps" / name
+            map_dir.mkdir()
+            source_data = map_source(name, map_id, source, script, flag)
+            map_file = map_dir / "map.json"
+            map_file.write_text(json.dumps(source_data))
+            map_files[name] = map_file
+            border = root / f"data/layouts/{name}.border.bin"
+            blockdata = root / f"data/layouts/{name}.map.bin"
+            border.touch()
+            blockdata.touch()
+            layouts.append({
+                "id": source_data["layout"], "name": f"gMapLayout_{name}",
+                "game_version": source, "layout_version": source, "width": 1, "height": 1,
+                "border_filepath": str(border.relative_to(root)),
+                "blockdata_filepath": str(blockdata.relative_to(root)),
+                "primary_tileset": "gTileset_General", "secondary_tileset": "gTileset_Petalburg",
+                "border_width": 2, "border_height": 2,
+            })
+        layouts_file = root / "data/layouts/layouts.json"
+        layouts_file.write_text(json.dumps({"layouts": layouts}))
+        (root / "include/constants/map_groups.h").write_text(
+            "enum { MAP_SEVII = (0 | (0 << 8)), MAP_SAFARI = (1 | (0 << 8)), "
+            "MAP_NAVEL = (2 | (0 << 8)), };\n"
+        )
+        manifest = self.write_sevii_manifest(root, [{
+            "source_map": "OneIsland_Frlg", "map_id": "MAP_SEVII", "layout": "LAYOUT_SEVII",
+            "enabled": True, "retained_events": {"object_events": [], "coord_events": [], "bg_events": []},
+        }], release_link_enabled=True)
+
+        result = self.run_map(root, "wayfarer", map_files["OneIsland_Frlg"], layouts_file, manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        sevii_events = map_files["OneIsland_Frlg"].parent.joinpath("events.inc").read_text()
+        self.assertNotIn("FrlgStoryEvent", sevii_events)
+        self.assertNotIn("FLAG_SEVII_ITEM", sevii_events)
+
+        for legacy_name, legacy_script, legacy_flag in (
+            ("SafariZone_Southeast", "SafariLegacyEvent", "FLAG_SAFARI_ITEM"),
+            ("NavelRock_Top", "NavelLegacyEvent", "FLAG_NAVEL_ITEM"),
+        ):
+            result = self.run_map(root, "wayfarer", map_files[legacy_name], layouts_file, manifest)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            wayfarer_events = map_files[legacy_name].parent.joinpath("events.inc").read_text()
+            result = self.run_map(root, "emerald", map_files[legacy_name], layouts_file)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            emerald_events = map_files[legacy_name].parent.joinpath("events.inc").read_text()
+            self.assertEqual(wayfarer_events, emerald_events)
+            self.assertIn(legacy_script, wayfarer_events)
+            self.assertIn(legacy_flag, wayfarer_events)
+            self.assertIn("bg_hidden_item_event ", wayfarer_events)
+            self.assertNotIn("bg_hidden_item_event_hoenn ", wayfarer_events)
 
     def test_wayfarer_sevii_rejects_retained_trainer_identity(self):
         fixture, root = self.make_fixture()
