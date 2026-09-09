@@ -9,6 +9,35 @@ Task: `trainer-only-implementation`, based on main
 `7525da55faf196a52a1d3efe7160d65b3ef893f0` (merged PR #81).
 All changes and builds run in the new task worktree. Game builds run sequentially.
 
+## Compact ordinary caller records
+
+The reviewed 851-caller manifest and its command fingerprints are unchanged.
+Ordinary records now store only caller pointer, stable dialogue key, dialogue
+kind and flags; shared policy/retreat defaults are expanded into caller-owned
+storage. Active encounter state retains its own copy. Regional scene records and
+per-frame registry scope remain unchanged.
+
+Matched normal Wayfarer builds reduced the ordinary table from 30,636 to 6,808
+bytes. ROM end moved from `0x09eea108` to `0x09ee44bc`, a net saving of 23,628
+bytes (23.1 KiB), including the added lookup code. Persistent active-state storage
+adds 36 bytes of EWRAM. These are local normal-build measurements, not a claim
+about the exact CI release delta. Evidence: `/tmp/trainer-compact-size.json` and
+`/tmp/trainer-compact-build.log`.
+
+Generator validation retains all 851 callers and 787 field-loss redirects;
+16 Python tests passed. Seven native story mechanics tests passed, including
+all compact records' expanded fields, independent lookup values, unknown-caller
+rejection and registry duplicate checks. Logs are
+`/tmp/trainer-compact-generator.log`, `/tmp/trainer-compact-python.log` and
+`/tmp/trainer-compact-mechanics.log`. Read-only review found no behavior defect.
+
+The unchanged trainer-story emulator suite passed 14/14 on E2E ROM
+`3e6b47b155ec8e1dd6f5da385485dff30b9b539483894f3512dd36861305e053`
+(`/tmp/trainer-compact-e2e.log`). This includes ordinary refusal variants,
+rematches, completed text, real field losses and selected regional story/exception
+routing. E2E build log: `/tmp/trainer-compact-e2e-build.log`. No new scenario
+matrix or screenshot files were added to the changeset.
+
 ## Settled exceptional defeat policy
 
 The user confirmed the existing challenge, League and unaudited authored-battle

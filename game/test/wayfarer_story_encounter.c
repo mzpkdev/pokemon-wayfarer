@@ -16,13 +16,43 @@
 TEST("Wayfarer story encounter manifests keep caller routing explicit")
 {
     static const u8 sUnauditedCaller[] = {0};
+    struct WayfarerStoryEncounter resolved;
 
     EXPECT(Test_WayfarerStoryRegistryIsValid());
-    EXPECT(WayfarerStoryFindCaller(NULL) == NULL);
-    EXPECT(WayfarerStoryFindCaller(sUnauditedCaller) == NULL);
+    EXPECT(!WayfarerStoryFindCaller(NULL, &resolved));
+    EXPECT(!WayfarerStoryFindCaller(sUnauditedCaller, &resolved));
     WayfarerResetLossContext();
     WayfarerStoryConfigureTrainerBattleCaller(sUnauditedCaller);
     EXPECT(WayfarerGetTrainerLossRedirect() == NULL);
+}
+
+TEST("Wayfarer story compact ordinary callers retain exact routing and independent lookup values")
+{
+    extern const u8 EventScript_WayfarerStoryLossRetreat[];
+    struct WayfarerStoryEncounter first, resolved;
+
+    EXPECT_EQ(sizeof(struct WayfarerOrdinaryEncounter), 8);
+    EXPECT_EQ(gWayfarerStoryOrdinaryEncounterCount, 851);
+    EXPECT(WayfarerStoryFindCaller(gWayfarerStoryOrdinaryEncounters[0].caller, &first));
+    for (u32 i = 0; i < gWayfarerStoryOrdinaryEncounterCount; i++)
+    {
+        const struct WayfarerOrdinaryEncounter *entry = &gWayfarerStoryOrdinaryEncounters[i];
+        EXPECT(WayfarerStoryFindCaller(entry->caller, &resolved));
+        EXPECT(resolved.caller == entry->caller);
+        EXPECT_EQ(resolved.stableKey, entry->stableKey);
+        EXPECT_EQ(resolved.dialogue, entry->dialogue);
+        EXPECT_EQ(resolved.flags, entry->flags);
+        EXPECT_EQ(resolved.policy, WAYFARER_STORY_POLICY_ORDINARY);
+        EXPECT_EQ(resolved.x, WAYFARER_STORY_NO_COORD);
+        EXPECT_EQ(resolved.y, WAYFARER_STORY_NO_COORD);
+        EXPECT_EQ(resolved.sceneId, 0);
+        EXPECT_EQ(resolved.localId, 0);
+        EXPECT(resolved.triggerScript == NULL);
+        EXPECT(resolved.lossRedirect == ((entry->flags & WAYFARER_STORY_FLAG_LOSS_RETURN)
+            ? EventScript_WayfarerStoryLossRetreat : NULL));
+        EXPECT(first.caller == gWayfarerStoryOrdinaryEncounters[0].caller);
+        EXPECT_EQ(first.stableKey, gWayfarerStoryOrdinaryEncounters[0].stableKey);
+    }
 }
 
 TEST("Wayfarer story ordinary refusal dialogue is stable and tutorial-neutral")
