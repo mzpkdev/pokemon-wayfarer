@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "curves": [
+    {
+      "id": "wild_baseline",
+      "points": [
+        {
+          "rating": 0,
+          "value": 5
+        },
+        {
+          "rating": 4,
+          "value": 6
+        },
+        {
+          "rating": 8,
+          "value": 8
+        },
+        {
+          "rating": 16,
+          "value": 13
+        },
+        {
+          "rating": 30,
+          "value": 20
+        },
+        {
+          "rating": 40,
+          "value": 32
+        },
+        {
+          "rating": 55,
+          "value": 50
+        },
+        {
+          "rating": 65,
+          "value": 70
+        },
+        {
+          "rating": 80,
+          "value": 90
+        }
+      ],
+      "interpolation": "nearest_half_up"
+    },
+    {
+      "id": "ordinary_trainer_baseline",
+      "points": [
+        {
+          "rating": 0,
+          "value": 7
+        },
+        {
+          "rating": 4,
+          "value": 8
+        },
+        {
+          "rating": 8,
+          "value": 10
+        },
+        {
+          "rating": 16,
+          "value": 15
+        },
+        {
+          "rating": 30,
+          "value": 22
+        },
+        {
+          "rating": 40,
+          "value": 34
+        },
+        {
+          "rating": 55,
+          "value": 52
+        },
+        {
+          "rating": 65,
+          "value": 72
+        },
+        {
+          "rating": 80,
+          "value": 92
+        }
+      ],
+      "interpolation": "nearest_half_up"
+    },
+    {
+      "id": "soft_cap",
+      "points": [
+        {
+          "rating": 0,
+          "value": 15
+        },
+        {
+          "rating": 4,
+          "value": 16
+        },
+        {
+          "rating": 8,
+          "value": 18
+        },
+        {
+          "rating": 16,
+          "value": 23
+        },
+        {
+          "rating": 30,
+          "value": 30
+        },
+        {
+          "rating": 40,
+          "value": 42
+        },
+        {
+          "rating": 55,
+          "value": 60
+        },
+        {
+          "rating": 65,
+          "value": 80
+        },
+        {
+          "rating": 80,
+          "value": 100
+        }
+      ],
+      "interpolation": "nearest_half_up"
+    },
+    {
+      "id": "gym_baseline",
+      "points": [
+        {
+          "rating": 0,
+          "value": 15
+        },
+        {
+          "rating": 4,
+          "value": 16
+        },
+        {
+          "rating": 8,
+          "value": 18
+        },
+        {
+          "rating": 16,
+          "value": 23
+        },
+        {
+          "rating": 30,
+          "value": 30
+        },
+        {
+          "rating": 40,
+          "value": 42
+        },
+        {
+          "rating": 55,
+          "value": 60
+        },
+        {
+          "rating": 65,
+          "value": 80
+        },
+        {
+          "rating": 80,
+          "value": 100
+        }
+      ],
+      "interpolation": "nearest_half_up"
+    },
+    {
+      "id": "league_baseline",
+      "points": [
+        {
+          "rating": 0,
+          "value": 15
+        },
+        {
+          "rating": 4,
+          "value": 16
+        },
+        {
+          "rating": 8,
+          "value": 18
+        },
+        {
+          "rating": 16,
+          "value": 23
+        },
+        {
+          "rating": 30,
+          "value": 30
+        },
+        {
+          "rating": 40,
+          "value": 42
+        },
+        {
+          "rating": 55,
+          "value": 60
+        },
+        {
+          "rating": 65,
+          "value": 80
+        },
+        {
+          "rating": 80,
+          "value": 100
+        }
+      ],
+      "interpolation": "nearest_half_up"
+    }
+  ]
+}

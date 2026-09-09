@@ -14,6 +14,9 @@ import copy
 import json
 from pathlib import Path
 import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from gameplay_content import progression
+import sys
 
 import generate as trainer_inventory
 
@@ -25,8 +28,7 @@ REPORT = OUTPUT / "gym_leaders.md"
 INVENTORY = OUTPUT / "gym_leaders.json"
 
 PARTY_SIZE = 6
-LEADER_ANCHORS = ((0, 15), (4, 16), (8, 18), (16, 23), (30, 30),
-                  (40, 42), (55, 60), (65, 80), (80, 100))
+LEADER_ANCHORS = progression.load()["gym_baseline"]
 SIZE_THRESHOLDS = ((8, 2), (22, 3), (34, 4), (40, 5), (81, 6))
 AUTHORED = "AUTHORED"
 LEVEL_UP = "LEVEL_UP"
@@ -216,14 +218,7 @@ def party_size(rating):
 
 
 def level(rating, offset):
-    rating = min(max(rating, 0), 80)
-    for (r0, l0), (r1, l1) in zip(LEADER_ANCHORS, LEADER_ANCHORS[1:]):
-        if rating <= r1:
-            distance = r1 - r0
-            numerator = (rating - r0) * (l1 - l0)
-            baseline = l0 + (2 * numerator + distance) // (2 * distance)
-            return min(100, max(1, baseline + offset))
-    return min(100, max(1, 100 + offset))
+    return min(100, max(1, progression.evaluate("gym_baseline", rating) + offset))
 
 
 def source_variant(records, owner):

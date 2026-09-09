@@ -373,6 +373,7 @@ AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
 $(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_sevii_wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py
 
+$(DATA_SRC_SUBDIR)/wild_encounters.h: data/gameplay/progression.json tools/gameplay_content/progression.py
 
 $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc
 	python3  $(MISC_TOOL_DIR)/make_scr_cmd_constants.py
@@ -400,7 +401,7 @@ GAMEPLAY_CONTENT_INCLUDE := $(GAMEPLAY_CONTENT_ROOT)/$(BUILD_NAME)/current
 # Capture the ROM preprocessor configuration before adding generated search paths.
 GAMEPLAY_CONTENT_CPPFLAGS := $(CPPFLAGS)
 GAMEPLAY_CONTENT_COMMAND = PYTHONDONTWRITEBYTECODE=1 python3 -m tools.gameplay_content
-GAMEPLAY_CONTENT_DOMAINS ?= inventory
+GAMEPLAY_CONTENT_DOMAINS ?= inventory progression
 GAMEPLAY_CONTENT_ARGS = --domains $(GAMEPLAY_CONTENT_DOMAINS) --product $(BUILD_NAME) --cpp $(CPP) --cppflags '$(GAMEPLAY_CONTENT_CPPFLAGS)' --output-root $(GAMEPLAY_CONTENT_ROOT)
 override CPPFLAGS += -iquote $(GAMEPLAY_CONTENT_INCLUDE)
 INCLUDE_SCANINC_ARGS += -I $(GAMEPLAY_CONTENT_INCLUDE)
