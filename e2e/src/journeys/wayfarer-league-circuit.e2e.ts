@@ -302,9 +302,15 @@ describe.sequential("Wayfarer League Circuit", () => {
     await game.controls.press("down")
     await game.controls.press("down")
     await game.controls.press("a")
-    await game.wait.until((state) => state.ui.trainerCard === "front", "open Trainer Card")
+    await game.wait.until(
+      (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "front",
+      "open Trainer Card",
+    )
     await game.controls.press("select")
-    await game.wait.until((state) => state.ui.trainerCard === "circuit", "open circuit view")
+    await game.wait.until(
+      (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "circuit",
+      "open circuit view",
+    )
     await expect(game.state.read()).resolves.toMatchObject({
       ui: { mode: "trainer-card", trainerCard: "circuit" },
       circuit: {
@@ -313,7 +319,10 @@ describe.sequential("Wayfarer League Circuit", () => {
       },
     })
     await game.controls.press("b")
-    await game.wait.until((state) => state.ui.trainerCard === "front", "return to Trainer Card")
+    await game.wait.until(
+      (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "front",
+      "return to Trainer Card",
+    )
     await game.controls.press("b")
     await game.wait.until((state) => state.ui.mode === "pause-menu", "close Trainer Card")
     await game.wait.frames(60)

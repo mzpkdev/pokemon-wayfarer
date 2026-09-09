@@ -36,8 +36,17 @@ callbacks at every test boundary. Native-source fixtures restore their temporary
 state and disable interception before asserting, preventing a failed assertion
 from intercepting subsequent battles. Species, level and PID comparisons remain.
 This changes test isolation only, not gameplay RNG or encounter behavior.
-The focused trainer-only suite had passed 13/13; full-suite validation of the
-callback-boundary fix is in progress in `/tmp/pr85-mechanics-final.log`.
+The full mechanics run passed with 4,356 passes and no unexpected failures
+across 5,349 entries; the remaining entries retain their existing known-failure,
+assumption, TODO and expected-failure classifications. Evidence:
+`/tmp/pr85-mechanics-final.log`. GitHub's Expansion Suite also passed on
+`523dad83f1`.
+
+That CI run passed 269/270 emulator tests. Its sole remaining failure observed
+`trainerCard=circuit` while the shared snapshot still reported `ui.mode=overworld`.
+Trainer Card waits now require the screen mode and card side together, retaining
+the existing circuit/badge assertions. The affected itinerary test passed with
+that correction (`/tmp/pr85-card-state.log`).
 
 ## Compact ordinary caller records
 
