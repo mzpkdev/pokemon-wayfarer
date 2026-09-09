@@ -349,6 +349,8 @@ WAYFARER_HOENN_CONTENT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_content
 WAYFARER_HOENN_CONTENT_MANIFEST := $(BUILD_DIR)/wayfarer-hoenn-content-manifest.json
 WAYFARER_HOENN_ENTRY_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_entry
 WAYFARER_HOENN_ENTRY_AUDIT := $(BUILD_DIR)/wayfarer-hoenn-entry-audit.json
+WAYFARER_SEVII_PORT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_sevii_port
+WAYFARER_SEVII_PORT_AUDIT := $(BUILD_DIR)/wayfarer-sevii-port-audit.json
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
@@ -372,7 +374,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += legacy-multiboot-test
@@ -840,6 +842,17 @@ $(WAYFARER_HOENN_ENTRY_AUDIT): $(WAYFARER_HOENN_ENTRY_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py --output $@
 
 wayfarer-hoenn-entry-audit: wayfarer-hoenn-entry-test $(WAYFARER_HOENN_ENTRY_AUDIT)
+
+WAYFARER_SEVII_PORT_DEPS := $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py $(DATA_SRC_SUBDIR)/wayfarer_sevii_maps.json $(WAYFARER_SEVII_PORT_TOOL_DIR)/event_island_baseline.json $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
+
+wayfarer-sevii-port-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_wayfarer_catalog.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_SEVII_PORT_TOOL_DIR)/tests -p 'test_*.py' -q
+
+$(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py --root . --output $@
+
+wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
 
 # Symbol file (`make syms`)
 $(SYM): $(ELF)

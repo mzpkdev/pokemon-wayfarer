@@ -39,6 +39,11 @@ using json11::Json;
 string version;
 // System directory separator
 string sep;
+string wayfarer_sevii_manifest_path;
+bool wayfarer_sevii_release_link_enabled = false;
+set<string> wayfarer_sevii_map_names;
+set<string> wayfarer_sevii_map_ids;
+set<string> wayfarer_sevii_layout_ids;
 
 string read_text_file(string filepath) {
     ifstream in_file(filepath);
@@ -117,7 +122,42 @@ bool source_version_is_selected(const string &source_version) {
 }
 
 bool data_matches_version(const Json &data) {
+    if (version == "wayfarer" && get_source_version(data) == "frlg") {
+        if (!wayfarer_sevii_release_link_enabled)
+            return false;
+        string name = json_to_string(data, "name", true);
+        string id = json_to_string(data, "id", true);
+        return wayfarer_sevii_map_names.find(name) != wayfarer_sevii_map_names.end()
+            || wayfarer_sevii_layout_ids.find(id) != wayfarer_sevii_layout_ids.end();
+    }
     return source_version_is_selected(get_source_version(data));
+}
+
+void load_wayfarer_sevii_manifest() {
+    if (version != "wayfarer" || wayfarer_sevii_manifest_path.empty())
+        return;
+
+    string err;
+    Json manifest = Json::parse(read_text_file(wayfarer_sevii_manifest_path), err);
+    if (manifest == Json())
+        FATAL_ERROR("Failed to read Wayfarer Sevii manifest: %s\n", err.c_str());
+    if (manifest["schema_version"].int_value() != 1)
+        FATAL_ERROR("Wayfarer Sevii manifest has unsupported schema version.\n");
+    if (manifest["release_link_enabled"].type() != Json::Type::BOOL)
+        FATAL_ERROR("Wayfarer Sevii manifest must declare release_link_enabled.\n");
+
+    wayfarer_sevii_release_link_enabled = manifest["release_link_enabled"].bool_value();
+    for (const Json &entry : manifest["maps"].array_items()) {
+        string source_map = json_to_string(entry, "source_map");
+        string map_id = json_to_string(entry, "map_id");
+        string layout = json_to_string(entry, "layout");
+        if (source_map.rfind("BirthIsland_", 0) == 0 || source_map.rfind("NavelRock_", 0) == 0)
+            FATAL_ERROR("Wayfarer Sevii manifest cannot select event-island map %s.\n", source_map.c_str());
+        if (!wayfarer_sevii_map_names.insert(source_map).second
+         || !wayfarer_sevii_map_ids.insert(map_id).second)
+            FATAL_ERROR("Wayfarer Sevii manifest contains duplicate map %s.\n", source_map.c_str());
+        wayfarer_sevii_layout_ids.insert(layout);
+    }
 }
 
 string get_generated_warning(const string &filename, bool isAsm) {
@@ -1056,6 +1096,12 @@ int main(int argc, char *argv[]) {
     version = string(version_arg);
     if (version != "emerald" && version != "ruby" && version != "firered" && version != "hns" && version != "wayfarer")
         FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', 'hns', 'wayfarer', or 'ruby'.\n");
+
+    if (argc >= 5 && string(argv[argc - 2]) == "--wayfarer-sevii-manifest") {
+        wayfarer_sevii_manifest_path = argv[argc - 1];
+        argc -= 2;
+    }
+    load_wayfarer_sevii_manifest();
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

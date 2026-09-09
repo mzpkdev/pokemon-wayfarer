@@ -62,21 +62,44 @@ class MapjsonWayfarerTest(unittest.TestCase):
         (map_dir / "map.json").write_text(json.dumps(data))
         return map_dir / "map.json"
 
-    def run_groups(self, root, version, map_files):
+    def run_groups(self, root, version, map_files, manifest=None):
+        command = [
+            str(self.mapjson),
+            "groups",
+            version,
+            "data/maps/map_groups.json",
+            *(str(path.relative_to(root)) for path in map_files),
+            "data/maps",
+            "include/constants",
+        ]
+        if manifest is not None:
+            command.extend(
+                [
+                    "--wayfarer-sevii-manifest",
+                    str(manifest.relative_to(root)),
+                ]
+            )
         return subprocess.run(
-            [
-                str(self.mapjson),
-                "groups",
-                version,
-                "data/maps/map_groups.json",
-                *(str(path.relative_to(root)) for path in map_files),
-                "data/maps",
-                "include/constants",
-            ],
+            command,
             cwd=root,
             text=True,
             capture_output=True,
         )
+
+    @staticmethod
+    def write_sevii_manifest(root, maps, release_link_enabled=False):
+        path = root / "src/data/wayfarer_sevii_maps.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "release_link_enabled": release_link_enabled,
+                    "maps": maps,
+                    "exclusions": [],
+                }
+            )
+        )
+        return path
 
     def test_wayfarer_selects_hns_and_emerald_without_mutating_heal_data(self):
         fixture, root = self.make_fixture()
@@ -171,6 +194,71 @@ class MapjsonWayfarerTest(unittest.TestCase):
 
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("warp references unavailable map MAP_FRLG", result.stderr)
+
+    def test_wayfarer_sevii_manifest_is_allowlist_based_and_release_gated(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        hns = self.add_map(root, "HnsMap", "MAP_HNS", "hns")
+        frlg = self.add_map(root, "OneIsland_Harbor", "MAP_SEVII", "frlg")
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps(
+                {
+                    "group_order": ["gHns", "gFrlg"],
+                    "gHns": ["HnsMap"],
+                    "gFrlg": ["OneIsland_Harbor"],
+                    "connections_include_order": [],
+                }
+            )
+        )
+        (root / "src/data/heal_locations.json").write_text(
+            json.dumps({"heal_locations": []})
+        )
+        record = {
+            "source_map": "OneIsland_Harbor",
+            "map_id": "MAP_SEVII",
+            "layout": "LAYOUT_SEVII",
+        }
+        manifest = self.write_sevii_manifest(root, [record])
+
+        result = self.run_groups(root, "wayfarer", [hns, frlg], manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("gFrlg::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
+
+        manifest = self.write_sevii_manifest(root, [record], release_link_enabled=True)
+        result = self.run_groups(root, "wayfarer", [hns, frlg], manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("gFrlg::\n\t.4byte OneIsland_Harbor", (root / "data/maps/groups.inc").read_text())
+
+    def test_wayfarer_sevii_manifest_rejects_event_island_sources(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        hns = self.add_map(root, "HnsMap", "MAP_HNS", "hns")
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps(
+                {
+                    "group_order": ["gHns"],
+                    "gHns": ["HnsMap"],
+                    "connections_include_order": [],
+                }
+            )
+        )
+        (root / "src/data/heal_locations.json").write_text(
+            json.dumps({"heal_locations": []})
+        )
+        manifest = self.write_sevii_manifest(
+            root,
+            [
+                {
+                    "source_map": "BirthIsland_Harbor_Frlg",
+                    "map_id": "MAP_BIRTH",
+                    "layout": "LAYOUT_BIRTH",
+                }
+            ],
+        )
+
+        result = self.run_groups(root, "wayfarer", [hns], manifest)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("cannot select event-island map", result.stderr)
 
     def test_wayfarer_layouts_include_both_sources_and_emit_map_flags(self):
         fixture, root = self.make_fixture()
