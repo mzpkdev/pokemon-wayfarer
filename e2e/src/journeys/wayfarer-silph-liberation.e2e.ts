@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "webanvil/test"
-import { GameSession, type PartyMonFixture, type StoryFlag } from "../harness/game-session"
+import { GameSession, type GameMap, type PartyMonFixture, type StoryFlag } from "../harness/game-session"
 import { storyFlags } from "../harness/game-session/catalog"
 import { enterSilphMap, arrangeSilph, moveSilph, settleSilph, talkSilph, triggerSilphGiovanni, waitSilphBattle } from "../playbooks/silph"
 
@@ -29,11 +29,16 @@ const arrangeGiovanni = async (game: GameSession, party: PartyMonFixture[]): Pro
   })
 }
 
-const selectElevator = async (game: GameSession, direction: "up" | "down", steps: number): Promise<void> => {
+const selectElevator = async (
+  game: GameSession,
+  direction: "up" | "down",
+  steps: number,
+  destination: GameMap,
+): Promise<void> => {
   await moveSilph(game, "up", 2, 3)
-  await moveSilph(game, "up", 2, 2)
-  await moveSilph(game, "left", 1, 2)
-  await game.controls.press("left")
+  await moveSilph(game, "left", 1, 3)
+  await moveSilph(game, "left", 0, 3)
+  await game.controls.press("up")
   await game.player.interact()
   await game.dialogue.waitForOpen()
   await game.wait.frames(90)
@@ -43,12 +48,22 @@ const selectElevator = async (game: GameSession, direction: "up" | "down", steps
   }
   await game.controls.press("a")
   await settleSilph(game)
-  await moveSilph(game, "right", 2, 2)
-  await moveSilph(game, "down", 2, 3)
-  await moveSilph(game, "down", 2, 4)
-  await game.controls.press("down")
-  await game.wait.frames(20)
-  await game.controls.press("down")
+  await moveSilph(game, "down", 0, 4)
+  await moveSilph(game, "right", 1, 4)
+  await moveSilph(game, "right", 2, 4)
+  await enterSilphMap(game, "down", destination)
+}
+
+const waitForForfeitPrompt = async (game: GameSession): Promise<void> => {
+  for (let attempt = 0; attempt < 240; attempt++) {
+    const state = await game.state.read()
+    if (state.battle.active && state.battle.ui === "forfeit-prompt" && state.battle.cursor === 1) return
+    if (state.battle.ui === "text") {
+      await game.controls.press("a")
+      await game.wait.frames(12)
+    } else await game.wait.frames(12)
+  }
+  throw new Error(`Giovanni forfeit confirmation not reached: ${JSON.stringify(await game.state.read())}`)
 }
 
 describe.sequential("Wayfarer Silph liberation", () => {
@@ -92,13 +107,11 @@ describe.sequential("Wayfarer Silph liberation", () => {
     await talkSilph(game)
     await game.wait.forMap("silph-elevator")
     expect((await game.state.read()).player).toMatchObject({ x: 2, y: 4 })
-    await selectElevator(game, "up", 10)
-    await game.wait.forMap("silph-11f")
+    await selectElevator(game, "up", 10, "silph-11f")
     expect(await game.story.var("farawayIslandStepCounter")).toBe(173)
     await game.player.warp("silph-11f", 13, 4, "up")
     await enterSilphMap(game, "up", "silph-elevator")
-    await selectElevator(game, "down", 10)
-    await game.wait.forMap("silph-lobby")
+    await selectElevator(game, "down", 10, "silph-lobby")
     expect((await game.state.read()).player).toMatchObject({ x: 22, y: 4 })
     await game.wait.frames(90)
     expect((await game.state.read()).map.name).toBe("silph-lobby")
@@ -166,10 +179,8 @@ describe.sequential("Wayfarer Silph liberation", () => {
     await game.wait.frames(12)
     expect((await game.state.read()).battle.cursor).toBe(3)
     await game.controls.press("a")
-    await game.wait.until(
-      (state) => state.battle.active && state.battle.ui === "forfeit-prompt" && state.battle.cursor === 1,
-      "Giovanni forfeit confirmation",
-    )
+    // The selection script prints its prompt before it creates the Yes/No box.
+    await waitForForfeitPrompt(game)
     // The native yes/no box starts on No; choose Yes to confirm the forfeit.
     await game.controls.press("up")
     await game.wait.until(
