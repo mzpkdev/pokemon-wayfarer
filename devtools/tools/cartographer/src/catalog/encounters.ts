@@ -101,6 +101,16 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
+const requireRecord = (value: unknown, pointer: string): Record<string, unknown> => {
+  if (!isRecord(value)) throw sourceError(pointer, "expected an object")
+  return value
+}
+
+const requireArray = (value: unknown, pointer: string): unknown[] => {
+  if (!Array.isArray(value)) throw sourceError(pointer, "expected an array")
+  return value
+}
+
 const isEncounterType = (value: unknown): value is EncounterType => {
   return typeof value === "string" && encounterTypes.includes(value as EncounterType)
 }
@@ -115,6 +125,18 @@ const requireString = (value: unknown, pointer: string): string => {
 const requireRate = (value: unknown, pointer: string): number => {
   if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
     throw sourceError(pointer, "expected a non-negative finite number")
+  }
+  return value
+}
+
+const requireInteger = (
+  value: unknown,
+  pointer: string,
+  minimum: number,
+  maximum: number,
+): number => {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < minimum || value > maximum) {
+    throw sourceError(pointer, `expected an integer from ${minimum} through ${maximum}`)
   }
   return value
 }
@@ -233,25 +255,54 @@ export const sourceProductForBaseLabel = (baseLabel: string): CatalogEncounterPr
  */
 const withWayfarerSeviiSource = (document: unknown, manifest: unknown): unknown => {
   const copy = JSON.parse(JSON.stringify(document)) as SourceEncounterDocument
-  const root = record(manifest, wayfarerSeviiEncounterPath)
-  const rows = array(root.profiles, `${wayfarerSeviiEncounterPath}/profiles`)
-  const group = copy.wild_encounter_groups.find((candidate) => candidate.label === "gWildMonHeaders")
+  const root = requireRecord(manifest, wayfarerSeviiEncounterPath)
+  const rows = requireArray(root.profiles, `${wayfarerSeviiEncounterPath}/profiles`)
+  const group = copy.wild_encounter_groups.find(
+    (candidate) => candidate.label === "gWildMonHeaders",
+  )
   if (!group) throw sourceError("", "missing gWildMonHeaders")
   const sources = new Map(group.encounters.map((entry) => [entry.base_label, entry]))
   const targets = new Map<string, SourceEncounter>()
   for (const [index, value] of rows.entries()) {
-    const row = record(value, `${wayfarerSeviiEncounterPath}/profiles/${index}`)
-    const map = string(row.map, `${wayfarerSeviiEncounterPath}/profiles/${index}/map`)
+    const row = requireRecord(value, `${wayfarerSeviiEncounterPath}/profiles/${index}`)
+    const map = requireString(row.map, `${wayfarerSeviiEncounterPath}/profiles/${index}/map`)
     const method = isEncounterType(row.method)
       ? row.method
-      : (() => { throw sourceError(`${wayfarerSeviiEncounterPath}/profiles/${index}/method`, "expected a supported encounter method") })()
-    const day = string(row.dayBaseLabel, `${wayfarerSeviiEncounterPath}/profiles/${index}/dayBaseLabel`)
-    const night = string(row.nightBaseLabel, `${wayfarerSeviiEncounterPath}/profiles/${index}/nightBaseLabel`)
-    const fire = sources.get(string(row.fireRedSource, `${wayfarerSeviiEncounterPath}/profiles/${index}/fireRedSource`))
-    const leaf = sources.get(string(row.leafGreenSource, `${wayfarerSeviiEncounterPath}/profiles/${index}/leafGreenSource`))
+      : (() => {
+          throw sourceError(
+            `${wayfarerSeviiEncounterPath}/profiles/${index}/method`,
+            "expected a supported encounter method",
+          )
+        })()
+    const day = requireString(
+      row.dayBaseLabel,
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/dayBaseLabel`,
+    )
+    const night = requireString(
+      row.nightBaseLabel,
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/nightBaseLabel`,
+    )
+    const fire = sources.get(
+      requireString(
+        row.fireRedSource,
+        `${wayfarerSeviiEncounterPath}/profiles/${index}/fireRedSource`,
+      ),
+    )
+    const leaf = sources.get(
+      requireString(
+        row.leafGreenSource,
+        `${wayfarerSeviiEncounterPath}/profiles/${index}/leafGreenSource`,
+      ),
+    )
     if (!fire || !leaf) throw sourceError("", `Sevii manifest source row is missing for ${day}`)
-    const fireMethod = methodFor(fire[method], `${wayfarerSeviiEncounterPath}/profiles/${index}/fireRedSource/${method}`)
-    const leafMethod = methodFor(leaf[method], `${wayfarerSeviiEncounterPath}/profiles/${index}/leafGreenSource/${method}`)
+    const fireMethod = methodFor(
+      fire[method],
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/fireRedSource/${method}`,
+    )
+    const leafMethod = methodFor(
+      leaf[method],
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/leafGreenSource/${method}`,
+    )
     const pairSlots = new Map<string, number[]>()
     for (const [slot, fireSlot] of fireMethod.mons.entries()) {
       const leafSlot = leafMethod.mons[slot]!
@@ -265,15 +316,22 @@ const withWayfarerSeviiSource = (document: unknown, manifest: unknown): unknown 
       const position = positions.get(key) ?? 0
       positions.set(key, position + 1)
       const sourceSlots = pairSlots.get(key)!
-      const useFire = fireSlot.species === leafSlot.species || sourceSlots.length === 1 || position % 2 === 0
+      const useFire =
+        fireSlot.species === leafSlot.species || sourceSlots.length === 1 || position % 2 === 0
       const selected = useFire ? fireSlot : leafSlot
       if (fireSlot.species !== leafSlot.species) return { ...selected }
-      const pickFire = fireSlot.min_level + fireSlot.max_level <= leafSlot.min_level + leafSlot.max_level
+      const pickFire =
+        fireSlot.min_level + fireSlot.max_level <= leafSlot.min_level + leafSlot.max_level
       return { ...(pickFire ? fireSlot : leafSlot) }
     })
-    const encounterRate = integer(row.encounterRate, `${wayfarerSeviiEncounterPath}/profiles/${index}/encounterRate`, 0, 255)
+    const encounterRate = requireInteger(
+      row.encounterRate,
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/encounterRate`,
+      0,
+      255,
+    )
     for (const label of [day, night]) {
-      const target = targets.get(label) ?? { map, base_label: label }
+      const target: SourceEncounter = targets.get(label) ?? { map, base_label: label }
       target[method] = { encounter_rate: encounterRate, mons }
       targets.set(label, target)
     }
