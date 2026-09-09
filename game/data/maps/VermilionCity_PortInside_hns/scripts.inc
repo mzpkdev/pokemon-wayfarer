@@ -45,7 +45,7 @@ VermilionPort_EventScript_Sailor_Sevii::
 	end
 
 VermilionPort_EventScript_Sailor_SetSailToSeviiDestination::
-	goto EventScript_SailToDest
+	goto WayfarerSevii_EventScript_SailToSelectedDestination
 	end
 
 VermilionPort_EventScript_Sailor_OtherDestinations::

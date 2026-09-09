@@ -49,7 +49,18 @@ class WayfarerSeviiServicesTest(unittest.TestCase):
     def test_each_harbor_selects_its_origin_then_uses_full_menu(self):
         for island in ("ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN"):
             self.assertIn(f"setvar VAR_0x8004, SEAGALLOP_{island}_ISLAND", self.text)
-        self.assertEqual(self.text.count("goto EventScript_SeviiDestinationsPage1"), 7)
+        self.assertEqual(self.text.count("goto WayfarerSevii_EventScript_HarborDestinationMenu"), 7)
+
+    def test_ferry_wrapper_cannot_link_frlg_seagallop_story_labels(self):
+        self.assertIn("WayfarerSevii_EventScript_HarborDestinationMenu::", self.text)
+        self.assertIn("WayfarerSevii_EventScript_SailToSelectedDestination::", self.text)
+        for source_label in (
+            "EventScript_SeviiDestinationsPage1",
+            "EventScript_SeviiDestinationsPage2",
+            "EventScript_SailToDest",
+            "EventScript_CheckFullSeagallopService",
+        ):
+            self.assertNotIn(source_label, self.text)
 
 
 if __name__ == "__main__":

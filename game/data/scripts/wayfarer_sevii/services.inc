@@ -215,40 +215,92 @@ WayfarerSevii_EventScript_OneIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_ONE_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
 
 WayfarerSevii_EventScript_TwoIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_TWO_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
 
 WayfarerSevii_EventScript_ThreeIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_THREE_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
 
 WayfarerSevii_EventScript_FourIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_FOUR_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
 
 WayfarerSevii_EventScript_FiveIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_FIVE_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
 
 WayfarerSevii_EventScript_SixIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_SIX_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
 
 WayfarerSevii_EventScript_SevenIslandHarborSailor::
 	lock
 	faceplayer
 	setvar VAR_0x8004, SEAGALLOP_SEVEN_ISLAND
-	goto EventScript_SeviiDestinationsPage1
+	goto WayfarerSevii_EventScript_HarborDestinationMenu
+
+@ This is a Wayfarer-owned wrapper around the existing menu special and ferry
+@ scene. It deliberately does not include or expose the FRLG Seagallop script
+@ graph, which also contains campaign gates and source-only destinations.
+WayfarerSevii_EventScript_HarborDestinationMenu::
+	setvar VAR_0x8005, 0
+	special DrawSeagallopDestinationMenu
+	waitstate
+	specialvar VAR_0x8006, GetSelectedSeagallopDestination
+	goto_if_eq VAR_0x8006, SEAGALLOP_MORE, WayfarerSevii_EventScript_HarborDestinationMenuPage2
+	goto_if_eq VAR_0x8006, MULTI_B_PRESSED, WayfarerSevii_EventScript_HarborDestinationCancel
+	goto WayfarerSevii_EventScript_SailToSelectedDestination
+
+WayfarerSevii_EventScript_HarborDestinationMenuPage2::
+	setvar VAR_0x8005, 1
+	special DrawSeagallopDestinationMenu
+	waitstate
+	specialvar VAR_0x8006, GetSelectedSeagallopDestination
+	goto_if_eq VAR_0x8006, SEAGALLOP_MORE, WayfarerSevii_EventScript_HarborDestinationMenu
+	goto_if_eq VAR_0x8006, MULTI_B_PRESSED, WayfarerSevii_EventScript_HarborDestinationCancel
+	goto WayfarerSevii_EventScript_SailToSelectedDestination
+
+WayfarerSevii_EventScript_SailToSelectedDestination::
+	specialvar VAR_RESULT, GetSeagallopNumber
+	buffernumberstring STR_VAR_1, VAR_RESULT
+	goto_if_eq VAR_0x8004, SEAGALLOP_VERMILION_CITY, WayfarerSevii_EventScript_DepartingVermilion
+	msgbox WayfarerSevii_Text_AllAboard, MSGBOX_DEFAULT
+	goto WayfarerSevii_EventScript_Depart
+
+WayfarerSevii_EventScript_DepartingVermilion::
+	msgbox WayfarerSevii_Text_DepartingVermilion, MSGBOX_DEFAULT
+
+WayfarerSevii_EventScript_Depart::
+	closemessage
+	delay 20
+	fadescreen FADE_TO_BLACK
+	special DoSeagallopFerryScene
+	waitstate
+	end
+
+WayfarerSevii_EventScript_HarborDestinationCancel::
+	closemessage
+	release
+	end
+
+WayfarerSevii_Text_DepartingVermilion:
+	.string "All right!\n"
+	.string "All aboard SEAGALLOP HI-SPEED 7!$"
+
+WayfarerSevii_Text_AllAboard:
+	.string "All right!\n"
+	.string "All aboard SEAGALLOP HI-SPEED {STR_VAR_1}!$"
