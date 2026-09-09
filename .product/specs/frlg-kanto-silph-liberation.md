@@ -2,7 +2,9 @@
 
 PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md)  
 Dependencies: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md), [trainer party scaling](trainer-party-scaling.md), [trainer-only story encounters](trainer-only-story-encounters.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md), [compressed map-layout runtime loading](compressed-map-layout-runtime-loading.md), [Wayfarer Hoenn entry](wayfarer-hoenn-entry.md), [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)  
-Implemented: No
+Implemented: Yes
+
+Implemented on `task/frlg-kanto-story-implementation` in [PR #86](https://github.com/mzpkdev/pokemon-wayfarer/pull/86); not yet merged or released. See the [milestone index](frlg-kanto-story-milestones.md) for the bounded delivery scope.
 
 ## Scope
 
@@ -40,20 +42,15 @@ milestone.
 
 ## Boundaries left for later work
 
-The Master Ball is explicitly deferred. Liberation records a future reward
-handoff but grants no Master Ball, chooses no Trainer Rating threshold, and
-installs no permanent gate. A later reward specification must define the
-threshold, President interaction, item receipt, full-Bag retry, and the
-handoff's consumption. The future reward cannot gate liberation, recovered
-lobby services, or the Giovanni finale.
+The completed [President Master Ball specification](silph-president-master-ball.md)
+owns the immediate post-liberation reward, success-only receipt, full-pocket
+retry, and pending-marker consumption. It has no readiness threshold and does
+not gate liberation, recovered lobby services, or the Giovanni finale.
 
-The current HNS Steven starter interaction is not a settled Wayfarer reward
-policy. During occupation Steven gives only an appropriate occupied-building
-line. After liberation he gives an acknowledgement that his future reward
-remains pending. Neither line opens the existing starter choice, grants a
-Pokemon, changes a receipt, or writes FLAG_GOT_HOENN_STARTER. The existing
-HNS gift path remains standalone-only. A later specification owns any
-cross-origin or Steven reward decision.
+Steven has acknowledgement-only occupation and recovered dialogue in this
+milestone. His approved universal HNS starter reward is a separate future
+delivery in [the unimplemented draft](silph-steven-starter-reward.md), with
+full-party plus full-PC behavior still unresolved.
 
 Current Johto and Hoenn visitors have no personal Blue rivalry. Exclude the
 7F Blue object and all three TRAINER_RIVAL_SILPH source branches. Do not read
@@ -124,7 +121,7 @@ graphics may remain. Blue is excluded, not remapped.
 | --- | --- | --- |
 | Occupied | FLAG_SILPH_LIBERATED_HNS clear | Occupation battles, Card Key puzzle, panels, pickups, staff, and Lapras are available. Lobby uses occupation dialogue but preserves entry access. |
 | Giovanni retry | Clear | A no-party refusal or non-win leaves Giovanni and all occupation state retryable. |
-| Liberated | Set | Occupation combat actors are removed; staff and lobby use recovery dialogue; ordinary lobby service is available; the future Master Ball handoff is present. |
+| Liberated | Set | Occupation combat actors are removed; staff and lobby use recovery dialogue; ordinary lobby service and the separately specified Master Ball reward are available. |
 
 Each Wayfarer occupation combat object on floors 2 through 11 uses
 FLAG_SILPH_LIBERATED_HNS as its hide state. It hides all occupation Rockets and
@@ -274,10 +271,10 @@ meeting or loss.
 
 Only a Giovanni win commits local liberation and sets
 FLAG_SILPH_MASTER_BALL_REWARD_PENDING_HNS. It then updates current map
-visibility and recovered dialogue and releases control. No other interaction
-may set, clear, or inspect that pending marker. Do not give a Master Ball,
-Earth Badge, League reward, Champion result, Celebi flag, or future
-Giovanni-finale result.
+visibility and recovered dialogue and releases control. The separate President
+reward handler clears the pending marker after successful delivery. The
+Giovanni win itself gives no Master Ball, Earth Badge, League reward, Champion
+result, Celebi flag, or future Giovanni-finale result.
 
 ## Staff, Lapras, and the restored lobby
 
@@ -309,15 +306,16 @@ actual item transaction:
 4. A failed add leaves the receipt clear and the Officer retryable. It never
    removes access to 2F.
 
-Steven gives acknowledgement only, as defined in the reward boundary. The
-President has an explicit Wayfarer handler in every local state: an
-occupied-building hostile line while FLAG_SILPH_LIBERATED_HNS is clear, and a
-liberated acknowledgement derived only from that flag after a win. It gives no
-Master Ball, writes or reads no receipt or pending marker, and fabricates no
-Trainer Rating condition. Bypass the original Master Ball body under
-Wayfarer filtering even if an included source entry point retains its name.
-The later reward specification owns every pending-marker read and the
-recoverable delivery transaction.
+Steven uses Wayfarer acknowledgement-only dialogue selected by local Silph
+state. He grants no starter and writes no starter receipt in this delivery.
+The future starter specification owns that reward.
+
+The President uses an occupied-building hostile line while
+FLAG_SILPH_LIBERATED_HNS is clear. After a win, his explicit Wayfarer handler
+offers the immediate reward defined in [Silph President Master Ball](silph-president-master-ball.md).
+That separate specification owns the recoverable delivery transaction,
+success-only receipt, pending-marker consumption, and repeat dialogue. No
+Trainer Rating condition applies.
 
 ## Validation and release budget
 
@@ -353,9 +351,10 @@ Exercise Card Key and each door through map loads; all visible and hidden item
 transactions; Lapras party, PC, and full-party-plus-PC retry; Thunder Wave
 decline/cancel/success retry behavior; and Up-Grade's existing-item
 pre-owned-plus-one transaction with a clear receipt, full-pocket retry,
-successful receipt, and continued 2F access. Confirm Steven never starts or
-records a Wayfarer gift and that the
-Master Ball marker grants nothing and gates no current service or finale.
+successful receipt, and continued 2F access. Confirm Steven's acknowledgement
+does not grant a starter or alter its receipt. Validate the President reward
+under its separate specification, including full-pocket retry and one-time
+receipt; its pending marker gates no lobby service or finale.
 
 Emulator coverage must enter through the HNS entrance, walk to (22,4), (31,3),
 and (30,2), use both access interactions, return from 2F and floor 1 without

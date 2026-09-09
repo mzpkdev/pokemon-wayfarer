@@ -4,6 +4,13 @@ This inventory applies to the merged [story contract](../prds/frlg-kanto-story-o
 
 ## Existing specifications
 
+The [milestone index](../specs/frlg-kanto-story-milestones.md) is the current
+delivery boundary: PR #86 contains eight implemented story milestones and the
+implemented Silph Master Ball reward. The umbrella PRDs remain partial.
+Unimplemented milestones and their product decisions belong to future PRs and
+do not block this scoped delivery. The sequence and measurements below include
+historical findings, not a claim that all future work must ship in PR #86.
+
 | Owner | Dependency retained by the story port |
 | --- | --- |
 | [Runtime foundation](../specs/wayfarer-runtime-foundation.md) | Stable composite map IDs, isolated persistent state, active regions, save bounds and release reserve. |
@@ -34,7 +41,15 @@ The user approved content implementation before separately owned space recovery.
 
 ## Product decisions still required
 
-Steven’s reward, Koga/Janine roles, radio placement, Power Plant exploration layout, and the retained Vermilion Snorlax arrangement remain unresolved. Blue’s visitor Champion party and future starter branches also need specification. Bill/grandfather placement and Master Ball/legendary readiness require bounded decisions before their dependent implementation.
+Future deliveries still need decisions on Steven's full-party plus full-PC
+behavior, Koga/Janine roles, radio placement/transition, Power Plant exploration
+layout, and the retained Vermilion Snorlax arrangement. Steven's universal Hoenn
+starter choice is approved. The discussed ground-floor radio studio is not a
+finalized layout or transition contract. Blue's visitor Champion party and
+future starter branches also need specification. Bill/grandfather placement and
+legendary readiness remain open. Giovanni's Viridian Gym battle uses the FRLG
+leader roster with Wayfarer scaling, as approved by the user. The immediate
+Silph Master Ball is already implemented, with Elm's later reward retained.
 
 Anne travel routes are separately scoped and do not block local boarding. Kanto opening and Blue’s later Gym succession are outside this feature. Settled content can proceed without choosing these deferred features.
 

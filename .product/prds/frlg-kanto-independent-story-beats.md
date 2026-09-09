@@ -1,7 +1,10 @@
 # FRLG Kanto independent story beats
 
-Status: Draft product design for a future Wayfarer story port. Not implemented.
-Exact late-game reward thresholds and bounded scene decisions remain open.
+Status: Partially implemented through the bounded [story milestones](../specs/frlg-kanto-story-milestones.md).
+PR #86 delivers the completed milestones listed there; future milestones and
+their unresolved decisions do not block that scoped PR. The umbrella design
+remains incomplete and is not yet released. Legendary readiness and bounded
+scene decisions remain open; the separate Silph Master Ball reward is implemented.
 
 ## Intent
 
@@ -103,7 +106,7 @@ an earlier loss.
 Viridian's Giovanni confrontation becomes available after both investigations
 are resolved: Celadon's Giovanni has been defeated and its Scope obtained, Fuji
 has been rescued, and Silph's occupation has been ended. Outstanding ordinary
-reward collection must remain recoverable; claiming a TR-gated Master Ball is
+reward collection must remain recoverable; claiming the Silph Master Ball is
 not a finale prerequisite. Neither Snorlax encounter is required.
 
 Remove the existing specific-Kanto-badge access condition for this finale. Do not
@@ -129,15 +132,15 @@ ordinary adventures playable. TR determines eligibility; it is not spent.
 
 | Reward | Required treatment |
 | --- | --- |
-| Silph Master Ball | Require the resolved Silph rescue and sufficient TR. The President remains the reward giver. Below the threshold, he explains that the reward can be claimed later. |
+| Silph Master Ball | The President offers it immediately after Silph liberation, with no TR threshold, a success-only receipt, and full-pocket retry. Follow the [implemented reward specification](../specs/silph-president-master-ball.md). Elm's later Master Ball remains; two are intentional. |
 | Silph Lapras | Keep as an ordinary local gift with its existing giver and one-time delivery behavior. No legendary-tier TR gate is added. |
 | Articuno and Zapdos | Preserve Seafoam and Power Plant exploration and local puzzles. Gate each capture encounter by legendary readiness, without requiring the other bird or a Rocket story. |
 | Mewtwo | Use a higher TR readiness threshold than the birds, replacing the unrelated Celio Ruby/Sapphire campaign dependency. Preserve Cerulean Cave and the existing encounter rather than add a new capture quest. |
 | Cut, Surf, Strength, Flute, fossils, and ordinary gifts | Retain their local acquisition requirements without late-game TR gates. |
 
 Ending Silph's occupation, returning its civilians, receiving ordinary rewards,
-and proceeding toward Giovanni must not wait for Master Ball eligibility. The
-President's deferred reward survives travel, save/reload, and a failed Bag handoff.
+and proceeding toward Giovanni must not wait for Master Ball collection. The
+President's unclaimed reward survives travel, save/reload, and a failed Bag handoff.
 
 The player may discover and explore the birds' sites before capture readiness.
 Keep Articuno's boulder/current puzzle and the applicable field-move requirements.
@@ -149,10 +152,10 @@ boundary in Cerulean Cave. It must enforce the readiness requirement without
 requiring completion of Sevii's unrelated delivery chain. No new League-clear
 condition is introduced by this PRD.
 
-Exact thresholds for the Master Ball, birds, and Mewtwo remain balance decisions
-against the wider journey. Mewtwo's threshold is higher than the birds'; do not
-assume the Master Ball shares either threshold. All alternate activation paths
-must obey the final reward rules.
+Exact thresholds for the birds and Mewtwo remain balance decisions against
+the wider journey. Mewtwo's threshold is higher than the birds'. The Silph
+Master Ball has no readiness threshold. All alternate legendary activation
+paths must obey the final readiness rules.
 
 ### Rival continuity
 
@@ -205,7 +208,7 @@ Each adventure must preserve its own progress and unclaimed rewards through loss
 travel, save/reload, and Bag or party capacity failures. Reordered Giovanni battles
 must not regress Saffron, reset the hideout, erase the Tower rescue, or award the
 Earth Badge prematurely. Viridian completion must not suppress unfinished minor
-Rocket incidents or the President's deferred Master Ball.
+Rocket incidents or the President's unclaimed Master Ball.
 
 These requirements guide the future story port alongside the
 [FRLG traversal design](frlg-open-world-region-traversal.md). That document's
@@ -229,9 +232,9 @@ distinct from unrelated regional progression.
   and with both resolved. Only both enable its finale; badge count and TR do not
   add requirements. Unclaimed Master Ball and unfinished Snorlax encounters do not
   prevent the finale.
-- Finish Silph below Master Ball readiness. The city recovers and other stories
-  proceed. Return at the threshold to receive the reward once, including after a
-  full-Bag failure and save/reload.
+- Finish Silph at different Trainer Ratings. The city recovers and the President
+  offers the Master Ball immediately at each rating. Receive it once, including
+  after a full-pocket failure and save/reload. Preserve Elm's separate reward.
 - Complete both Safari objectives in either order and verify Surf and Strength
   come from their respective givers. Neither objective requires Koga or another arc.
 - Complete Mansion/Secret Key/Blaine without unrelated campaign progress.
@@ -256,10 +259,10 @@ Giovanni's finale without a replacement plot.
 3. Which rival chapters genuinely depend on earlier scenes, and how can the S.S.
    Anne departure and other temporary scenes preserve them without blocking the
    local adventure? Review the League appearance separately from access to Silph.
-4. What TR thresholds govern the Master Ball, birds, and Mewtwo? Where should
+4. What TR thresholds govern the birds and Mewtwo? Where should
    Mewtwo's readiness be enforced within the existing Cerulean Cave access flow?
-5. How should the President explain deferred Master Ball collection, and which
-   existing local presentation explains each legendary readiness requirement?
+5. Which existing local presentation explains each legendary readiness
+   requirement?
 
 ## References
 

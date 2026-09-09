@@ -2,6 +2,10 @@
 
 Dependencies: [Silph Co. liberation](frlg-kanto-silph-liberation.md), [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 
+Implemented: Yes
+
+Implemented on `task/frlg-kanto-story-implementation` in [PR #86](https://github.com/mzpkdev/pokemon-wayfarer/pull/86); not yet merged or released. See the [milestone index](frlg-kanto-story-milestones.md) for the bounded delivery scope.
+
 ## Scope
 
 After a Wayfarer player liberates Silph Co. by defeating its local Giovanni,
