@@ -336,6 +336,62 @@ describe("validateCatalog", () => {
     expect(() => validateCatalog(value)).toThrow("has no species projection for SPECIES_MISSING")
   })
 
+  it("accepts only an explicit Wayfarer night alias for its matching day profile", () => {
+    const encounters = wildEncounters()
+    const sets = encounters.sets as Array<Record<string, unknown>>
+    const set = sets[0]!
+    const methods = set.methods as Array<Record<string, unknown>>
+    const method = methods[0]!
+    const references = method.profiles as Array<Record<string, unknown>>
+    const model = projection()
+    const profiles = model.profiles as Array<Record<string, unknown>>
+    const profile = profiles[0]!
+
+    model.products = [{ id: "POKEMON_WAYFARER", displayName: "Pokémon Wayfarer" }]
+    model.headerCounts = { POKEMON_WAYFARER: 1 }
+    Object.assign(profile, {
+      profileKey: "POKEMON_WAYFARER/sFiveIsland_Wayfarer_Day/land_mons/NONE",
+      product: "POKEMON_WAYFARER",
+      map: "MAP_FIVE_ISLAND",
+      baseLabel: "sFiveIsland_Wayfarer_Day",
+      runtimeTime: "TIME_DAY",
+    })
+    Object.assign(set, {
+      mapId: "MAP_FIVE_ISLAND",
+      mapName: "FiveIsland_Frlg",
+      baseLabel: "sFiveIsland_Wayfarer_Night",
+      product: "POKEMON_WAYFARER",
+      runtimeTime: "night",
+      projectionAlias: { baseLabel: "sFiveIsland_Wayfarer_Day", runtimeTime: "TIME_NIGHT" },
+    })
+    references[0]!.profileKey = profile.profileKey
+
+    const value = catalog({
+      wildEncounterProjection: model,
+      regions: [{ id: "sevii", label: "Sevii", mapCount: 1, maps: ["FiveIsland_Frlg"] }],
+      maps: [
+        {
+          ...mapWithWildEncounters(encounters),
+          name: "FiveIsland_Frlg",
+          id: "MAP_FIVE_ISLAND",
+          region: "sevii",
+        },
+      ],
+    })
+
+    expect(validateCatalog(value)).toBeDefined()
+
+    delete set.projectionAlias
+    expect(() => validateCatalog(value)).toThrow("invalid projection profile")
+
+    set.projectionAlias = {
+      baseLabel: "sFiveIsland_Wayfarer_Day",
+      runtimeTime: "TIME_NIGHT",
+    }
+    profile.map = "MAP_FOUR_ISLAND"
+    expect(() => validateCatalog(value)).toThrow("invalid projection profile")
+  })
+
   it("rejects unsupported topology diagnostic codes", () => {
     expect(() =>
       validateCatalog(

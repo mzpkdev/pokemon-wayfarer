@@ -142,6 +142,10 @@ export type CatalogEncounterSet = {
   baseLabel: string
   product: CatalogEncounterProduct
   runtimeTime: CatalogEncounterTimeOfDay
+  projectionAlias?: {
+    baseLabel: string
+    runtimeTime: CatalogEncounterProjectionProfile["runtimeTime"]
+  }
   header: {
     groupLabel: string
     groupIndex: number

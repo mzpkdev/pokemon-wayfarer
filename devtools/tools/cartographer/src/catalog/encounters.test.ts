@@ -465,7 +465,11 @@ describe("generated Trainer Rating projection joins", () => {
     const nightProfile = night?.methods.find((method) => method.type === "water_mons")?.profiles[0]
 
     expect(day).toMatchObject({ product: "POKEMON_WAYFARER", runtimeTime: "day" })
-    expect(night).toMatchObject({ product: "POKEMON_WAYFARER", runtimeTime: "night" })
+    expect(night).toMatchObject({
+      product: "POKEMON_WAYFARER",
+      runtimeTime: "night",
+      projectionAlias: { baseLabel: "sFiveIsland_Wayfarer_Day", runtimeTime: "TIME_NIGHT" },
+    })
     expect(nightProfile).toEqual(dayProfile)
     expect(nightProfile?.profileKey).toBe(
       "POKEMON_WAYFARER/sFiveIsland_Wayfarer_Day/water_mons/NONE",

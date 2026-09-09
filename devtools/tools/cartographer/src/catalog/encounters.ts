@@ -604,6 +604,7 @@ export const catalogWildEncounters = (
         baseLabel,
         product,
         runtimeTime,
+        projectionAlias: encounter.projectionAlias,
         header: { groupLabel: group.label, groupIndex, headerIndex },
         source: sourcePointer(encounterPointer),
         methods,
