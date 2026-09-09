@@ -425,6 +425,15 @@ vector<string> get_existing_maps() {
     return v;
 }
 
+Json::array effective_connections(const Json &map_data, const vector<string> &existing_maps) {
+    Json::array result;
+    for (const auto &connection : map_data["connections"].array_items()) {
+        if (find(existing_maps.begin(), existing_maps.end(), json_to_string(connection, "map")) != existing_maps.end())
+            result.push_back(connection);
+    }
+    return result;
+}
+
 string generate_map_connections_text(Json map_data) {
     map_data = sanitize_wayfarer_sevii_map_connections(map_data);
     if (map_data["connections"] == Json())
@@ -437,10 +446,7 @@ string generate_map_connections_text(Json map_data) {
     text << get_generated_warning("data/maps/" + mapName + "/map.json", true);
     text << mapName << "_MapConnectionsList:\n";
 
-    for (auto &connection : map_data["connections"].array_items()) {
-        auto it = find(existing_maps.begin(), existing_maps.end(), json_to_string(connection, "map"));
-        if (it == existing_maps.end())
-            continue;
+    for (auto &connection : effective_connections(map_data, existing_maps)) {
         text << "\tconnection "
              << json_to_string(connection, "direction") << ", "
              << json_to_string(connection, "offset") << ", "
@@ -1254,6 +1260,62 @@ void process_layouts(string layouts_filepath, string output_asm, string output_c
     write_text_file(output_c + "layouts.h", layouts_constants_text);
 }
 
+// Export selected event ownership without requiring generated constants or an ELF.
+void export_inventory(const string &groups_path) {
+    string err;
+    Json groups = Json::parse(read_text_file(groups_path), err);
+    if (!err.empty()) FATAL_ERROR("%s: %s\n", groups_path.c_str(), err.c_str());
+    Json::array records;
+    const string directory = strip_trailing_separator(file_parent(groups_path)) + sep;
+    vector<string> catalog_ids;
+    for (auto &group : groups["group_order"].array_items())
+        for (auto &name : groups[group.string_value()].array_items()) {
+            Json map = Json::parse(read_text_file(directory + name.string_value() + sep + "map.json"), err);
+            if (!err.empty()) FATAL_ERROR("%s\n", err.c_str());
+            catalog_ids.push_back(map["id"].string_value());
+        }
+    for (auto &group : groups["group_order"].array_items()) {
+        for (auto &name : groups[group.string_value()].array_items()) {
+            string path = directory + name.string_value() + sep + "map.json";
+            Json raw = Json::parse(read_text_file(path), err);
+            if (!err.empty()) FATAL_ERROR("%s: %s\n", path.c_str(), err.c_str());
+            if (!data_matches_version(raw)) continue;
+            Json effective = raw;
+            string event_path = path;
+            if (!raw["shared_events_map"].string_value().empty()) {
+                event_path = directory + raw["shared_events_map"].string_value() + sep + "map.json";
+                Json owner = Json::parse(read_text_file(event_path), err);
+                if (!err.empty()) FATAL_ERROR("%s: %s\n", event_path.c_str(), err.c_str());
+                auto fields = raw.object_items();
+                for (const string field : {"object_events", "warp_events", "coord_events", "bg_events"})
+                    fields[field] = owner[field];
+                effective = fields;
+            }
+            auto fields = effective.object_items();
+            fields["connections"] = json_to_string(raw, "connections_no_include", true) == "TRUE"
+                ? Json::array{} : effective_connections(raw, catalog_ids);
+            effective = fields;
+            // Match GetHnsMapRegionOrFallback: the native Emerald catalog is Hoenn.
+            // This physical-region projection does not choose a persistence namespace.
+            string physical_region = json_to_string(raw, "region", true);
+            string region_resolution = "authored_map_region";
+            if (get_source_version(raw) == "emerald") {
+                physical_region = "REGION_HOENN";
+                region_resolution = "native_hoenn_catalog";
+            } else if (physical_region.empty()) {
+                region_resolution = "runtime_section_or_saved_context";
+            }
+            records.push_back(Json::object{
+                {"id", raw["id"]}, {"name", raw["name"]},
+                {"sourceNamespace", get_source_version(raw)},
+                {"physicalRegion", physical_region.empty() ? Json() : Json(physical_region)},
+                {"physicalRegionResolution", region_resolution}, {"sourcePath", path},
+                {"eventSourcePath", event_path}, {"raw", raw}, {"effective", effective}});
+        }
+    }
+    cout << Json(Json::object{{"schemaVersion", 1}, {"product", version}, {"maps", records}}).dump() << endl;
+}
+
 int main(int argc, char *argv[]) {
     if (argc < 3)
         FATAL_ERROR("USAGE: mapjson <mode> <game-version> [options]\n");
@@ -1271,7 +1333,12 @@ int main(int argc, char *argv[]) {
 
     char *mode_arg = argv[1];
     string mode(mode_arg);
-    if (mode == "map") {
+    if (mode == "inventory") {
+        if (argc != 4) FATAL_ERROR("USAGE: mapjson inventory <game-version> <groups-file>\n");
+        infer_separator(argv[3]);
+        export_inventory(argv[3]);
+    }
+    else if (mode == "map") {
         if (argc != 6)
             FATAL_ERROR("USAGE: mapjson map <game-version> <map_file> <layouts_file> <output_dir>\n");
 

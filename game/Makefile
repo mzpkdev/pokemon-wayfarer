@@ -373,6 +373,7 @@ AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
 $(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_sevii_wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py
 
+
 $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc
 	python3  $(MISC_TOOL_DIR)/make_scr_cmd_constants.py
 
@@ -392,6 +393,27 @@ RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidy
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += legacy-multiboot-test
+RULES_NO_SCAN += gameplay-content-generate gameplay-content-check gameplay-content-test gameplay-content-report
+
+GAMEPLAY_CONTENT_ROOT := $(BUILD_DIR)/gameplay-content
+GAMEPLAY_CONTENT_INCLUDE := $(GAMEPLAY_CONTENT_ROOT)/$(BUILD_NAME)/current
+# Capture the ROM preprocessor configuration before adding generated search paths.
+GAMEPLAY_CONTENT_CPPFLAGS := $(CPPFLAGS)
+GAMEPLAY_CONTENT_COMMAND = PYTHONDONTWRITEBYTECODE=1 python3 -m tools.gameplay_content
+GAMEPLAY_CONTENT_DOMAINS ?= inventory
+GAMEPLAY_CONTENT_ARGS = --domains $(GAMEPLAY_CONTENT_DOMAINS) --product $(BUILD_NAME) --cpp $(CPP) --cppflags '$(GAMEPLAY_CONTENT_CPPFLAGS)' --output-root $(GAMEPLAY_CONTENT_ROOT)
+override CPPFLAGS += -iquote $(GAMEPLAY_CONTENT_INCLUDE)
+INCLUDE_SCANINC_ARGS += -I $(GAMEPLAY_CONTENT_INCLUDE)
+
+.PHONY: gameplay-content-generate gameplay-content-check gameplay-content-test gameplay-content-report
+gameplay-content-generate: $(MAPJSON) $(TRAINERPROC)
+	$(GAMEPLAY_CONTENT_COMMAND) generate $(GAMEPLAY_CONTENT_ARGS)
+gameplay-content-check: $(MAPJSON) $(TRAINERPROC)
+	$(GAMEPLAY_CONTENT_COMMAND) check $(GAMEPLAY_CONTENT_ARGS)
+gameplay-content-report: $(MAPJSON) $(TRAINERPROC)
+	$(GAMEPLAY_CONTENT_COMMAND) report $(GAMEPLAY_CONTENT_ARGS)
+gameplay-content-test: $(MAPJSON) $(TRAINERPROC)
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/gameplay_content/tests -p 'test_*.py'
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -422,6 +444,10 @@ ifeq ($(SETUP_PREREQS),1)
   $(foreach line, $(shell $(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) TEST=$(TEST) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
   ifneq ($(.SHELLSTATUS),0)
     $(error Errors occurred while generating map-related sources. See error messages above for more details)
+  endif
+  $(foreach line, $(shell $(GAMEPLAY_CONTENT_COMMAND) generate $(GAMEPLAY_CONTENT_ARGS) | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
+  ifneq ($(.SHELLSTATUS),0)
+    $(error Errors occurred while compiling gameplay content. See error messages above for more details)
   endif
 endif
 
@@ -462,6 +488,12 @@ $(OBJ_DIR)/.legacy-multiboot-config: FORCE
 	@echo '$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(capability)=$($(capability)))' | cmp -s $@ - || echo '$(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),$(capability)=$($(capability)))' > $@
 
 $(OBJS) $(TEST_OBJS): $(OBJ_DIR)/.legacy-multiboot-config
+
+# Feature-disabled builds must not reuse objects compiled for another projection.
+$(OBJ_DIR)/.gameplay-content-config: FORCE
+	@echo '$(CPPFLAGS) $(CFLAGS) $(ASFLAGS)' | cmp -s $@ - || echo '$(CPPFLAGS) $(CFLAGS) $(ASFLAGS)' > $@
+
+$(OBJS) $(TEST_OBJS): $(OBJ_DIR)/.gameplay-content-config
 
 # Pretend rules that are actually flags defer to `make all`
 modern: all
