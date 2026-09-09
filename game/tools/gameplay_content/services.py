@@ -116,6 +116,8 @@ def compile_services(root, product, defines, maps, *, cpp='cpp', cppflags=(), va
         _validate_service_scripts(root, product, rows, maps, cpp, cppflags)
     legacy_rods = _hns_legacy_contributors(root, product, rows, maps, cpp, cppflags, validate_scripts)
     rods = _canonical_contributors([row for row in rows if row['kind'] == 'rod_contribution'] + legacy_rods)
+    # Keep the existing numeric flag traversal without a second authored list.
+    rods.sort(key=lambda row: (row.get('contributionValue', 0), row['contribution']['flag']))
     marts = [row for row in rows if row['kind'] == 'mart']
     symbols = [binding_symbol(row) for row in marts]
     if len(symbols) != len(set(symbols)):
@@ -130,7 +132,10 @@ def compile_services(root, product, defines, maps, *, cpp='cpp', cppflags=(), va
     header += ['', '#endif', '']
     shared = []
     shared_contexts = set()
-    for row in marts:
+    families = tuple(dict.fromkeys(SHARED_CLERKS.values()))
+    shared_rows = [row for row in marts if row['binding']['script'] in SHARED_CLERKS]
+    shared_rows.sort(key=lambda row: (families.index(SHARED_CLERKS[row['binding']['script']]), profiles[row['profile']], row['key']))
+    for row in shared_rows:
         family = SHARED_CLERKS.get(row['binding']['script'])
         if family:
             context = (family, row['map'])

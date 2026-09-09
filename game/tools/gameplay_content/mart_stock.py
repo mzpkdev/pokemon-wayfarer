@@ -68,11 +68,12 @@ def load_profile_ids(root, cpp, cppflags):
     header = '#define TRUE 1\n#define FALSE 0\n#include "constants/global.h"\n#include "config/wayfarer_marts.h"\n#include "constants/wayfarer_marts.h"\n'
     selected = preprocess(root, cpp, cppflags, header + text)
     if 'sWayfarerMartProfiles' not in selected:
-        return set()
+        return {}
     profiles = parse_profiles(selected.replace('GAMEPLAY_AUTHORED_', ''))
     markers = ''.join(f'GAMEPLAY_PROFILE_VALUE_{name} {name}\n' for name in profiles)
     values = preprocess(root, cpp, cppflags, header + markers)
     seen = set()
+    resolved = {}
     for line in values.splitlines():
         if not line.startswith('GAMEPLAY_PROFILE_VALUE_'):
             continue
@@ -86,4 +87,5 @@ def load_profile_ids(root, cpp, cppflags):
         if number in seen:
             raise ContentError('CONFLICT', path, name, 'duplicate numeric profile')
         seen.add(number)
-    return set(profiles)
+        resolved[name] = number
+    return resolved
