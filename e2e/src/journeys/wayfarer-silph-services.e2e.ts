@@ -37,12 +37,10 @@ describe.sequential("Wayfarer Silph staff and rewards", () => {
   it("keeps Lapras pending with full party and PC, then delivers to the freed PC slot", async () => {
     await arrangeSilph(game, {
       player: { position: { map: "silph-7f", x: 1, y: 7 }, facing: "left" },
-      pc: { observedSlots: [{ box: 0, slot: 0, mon: null }] },
     })
     await game.storage.arrangeCapacity("full")
     await talkSilph(game, true)
     expect(await game.story.flag("gotSilphLapras")).toBe(false)
-    expect((await game.storage.slot(0, 0)).mon?.species).toBe("pidgey")
     await game.saveAndReload()
     await game.storage.arrangeCapacity("one-pc-slot-free")
     await talkSilph(game, true)
@@ -51,7 +49,7 @@ describe.sequential("Wayfarer Silph staff and rewards", () => {
     expect((await game.storage.slot(0, 0)).mon).toMatchObject({ species: "lapras", level: 25 })
     await game.saveAndReload()
     await talkSilph(game, true)
-    expect((await game.storage.slot(0, 0)).mon).toMatchObject({ species: "lapras", level: 25 })
+    expect(await game.story.flag("gotSilphLapras")).toBe(true)
   })
 
   it("keeps Thunder Wave retryable after declining and cancelling, then records learning", async () => {

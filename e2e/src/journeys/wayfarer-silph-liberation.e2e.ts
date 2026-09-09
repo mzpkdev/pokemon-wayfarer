@@ -74,8 +74,7 @@ describe.sequential("Wayfarer Silph liberation", () => {
     await talkSilph(game)
     await game.wait.forMap("silph-2f")
     expect((await game.state.read()).player).toMatchObject({ x: 30, y: 3 })
-    await game.controls.press("up")
-    await game.wait.forMap("silph-lobby")
+    await enterSilphMap(game, "up", "silph-lobby")
     expect((await game.state.read()).player).toMatchObject({ x: 31, y: 3 })
     await game.wait.frames(90)
     expect((await game.state.read()).map.name).toBe("silph-lobby")
@@ -84,8 +83,7 @@ describe.sequential("Wayfarer Silph liberation", () => {
     await game.controls.press("right")
     await talkSilph(game)
     await game.wait.forMap("silph-2f")
-    await game.controls.press("up")
-    await game.wait.forMap("silph-lobby")
+    await enterSilphMap(game, "up", "silph-lobby")
     await moveSilph(game, "down", 31, 4)
     for (let x = 30; x >= 22; x--) await moveSilph(game, "left", x, 4)
     await game.controls.press("up")
@@ -156,28 +154,32 @@ describe.sequential("Wayfarer Silph liberation", () => {
     await waitSilphBattle(game)
   })
 
-  it("resets Giovanni after a same-map forfeit and permits an immediate retry", async () => {
+  it("rejects a Run attempt while keeping Giovanni pending", async () => {
     await arrangeGiovanni(game, [{ species: "lapras", level: 100 }])
     await triggerSilphGiovanni(game)
     await waitSilphBattle(game)
-    await game.wait.frames(30)
     await game.controls.press("down")
     await game.wait.frames(12)
     await game.controls.press("right")
     await game.wait.frames(12)
     expect((await game.state.read()).battle.cursor).toBe(3)
     await game.controls.press("a")
-    await game.wait.frames(180)
-    await game.controls.press("a")
-    await game.wait.frames(180)
-    await settleSilph(game)
-    expect((await game.state.read()).map.name).toBe("silph-11f")
+    await game.wait.frames(24)
+
+    for (let attempt = 0; attempt < 240; attempt++) {
+      const state = await game.state.read()
+      if (state.battle.ui === "action-menu") break
+      if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive)
+        await game.controls.press("a")
+      else
+        await game.wait.frames(12)
+    }
+
+    expect((await game.state.read()).battle).toMatchObject({ active: true, ui: "action-menu" })
     expect(await game.story.flag("silphLiberated")).toBe(false)
+    expect(await game.story.flag("silphGiovanniDefeated")).toBe(false)
     expect(await game.story.var("silphGiovanniScene")).toBe(0)
     await assertUnrelated(game)
-    await moveSilph(game, "down", 5, 16)
-    await triggerSilphGiovanni(game)
-    await waitSilphBattle(game)
   })
 
   it("liberates Silph from a mixed usable party without inventing skipped victories or rewards", async () => {
