@@ -9,6 +9,7 @@
 #include "constants/battle.h"
 #include "constants/trainers.h"
 #include "constants/opponents.h"
+#include "constants/pokeball.h"
 #include "constants/regions.h"
 #include "constants/difficulty.h"
 
