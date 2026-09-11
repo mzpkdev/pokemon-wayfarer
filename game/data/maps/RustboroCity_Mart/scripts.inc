@@ -7,7 +7,7 @@ RustboroCity_Mart_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, GAMEPLAY_MART_RUSTBOROCITY_MART_RUSTBORO
+	setvar VAR_0x8004, MART_PROFILE_RUSTBORO
 	special WayfarerOpenMartProfile
 	waitstate
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT

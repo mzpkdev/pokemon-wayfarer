@@ -635,11 +635,6 @@
   "allowed_global_insertions": [
     {
       "path": "game/data/event_scripts.s",
-      "after": "#include \"constants/wayfarer_marts.h\"\n",
-      "insertion": "#include \"gameplay_mart_bindings.inc\"\n"
-    },
-    {
-      "path": "game/data/event_scripts.s",
       "after": "\t.include \"data/wayfarer_engine_source_constants.inc\"\n",
       "insertion": "\t.include \"data/wayfarer_sevii_event_scripts.inc\"\n"
     },

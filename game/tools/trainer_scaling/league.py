@@ -3,13 +3,10 @@
 import argparse
 import json
 from pathlib import Path
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from gameplay_content import progression
 import generate
 
 OUT = generate.OUTPUT
-ANCHORS = progression.load()["league_baseline"]
+ANCHORS = ((0,15),(4,16),(8,18),(16,23),(30,30),(40,42),(55,60),(65,80),(80,100))
 # Trainer, ace species, source-order offsets. Never derive offsets from old levels.
 ROSTERS = (
  ('WILL_1_HNS','XATU',(-2,-1,-2,-1,0)),
@@ -30,7 +27,11 @@ ROSTERS = (
 )
 
 def baseline(rating):
-    return progression.evaluate("league_baseline", rating)
+    rating = min(max(rating, 0), 80)
+    for (r0,l0),(r1,l1) in zip(ANCHORS,ANCHORS[1:]):
+        if rating <= r1:
+            width = r1-r0
+            return l0 + (2*(rating-r0)*(l1-l0)+width)//(2*width)
 
 def inventory():
     sources = generate.load_inventory()

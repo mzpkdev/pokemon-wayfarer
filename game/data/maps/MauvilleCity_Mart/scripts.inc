@@ -7,7 +7,7 @@ MauvilleCity_Mart_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, GAMEPLAY_MART_MAUVILLECITY_MART_MAUVILLE
+	setvar VAR_0x8004, MART_PROFILE_MAUVILLE
 	special WayfarerOpenMartProfile
 	waitstate
 #else

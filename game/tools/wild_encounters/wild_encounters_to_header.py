@@ -11,9 +11,6 @@ import json
 import math
 import os
 from pathlib import Path
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from gameplay_content import progression
 import re
 import stat
 import subprocess
@@ -289,14 +286,27 @@ class Config:
 
 def load_scaling(path):
     source = load_json(path)
-    exact_keys(source, {"schemaVersion", "projectionCap", "zoneIdentity", "profileOffsets"}, path)
+    exact_keys(source, {"schemaVersion", "projectionCap", "levelAnchors", "zoneIdentity", "profileOffsets"}, path)
     if source["schemaVersion"] != 1 or isinstance(source["schemaVersion"], bool):
         raise ValidationError(f"{path}/schemaVersion: expected 1")
     cap = integer(source["projectionCap"], f"{path}/projectionCap", 1, 255)
-    anchors = [{"rating": rating, "level": value}
-               for rating, value in progression.load()["wild_baseline"]]
-    if cap != anchors[-1]["rating"]:
-        raise ValidationError(f"{path}/projectionCap: must match the shared progression endpoint")
+    rows = source["levelAnchors"]
+    if not isinstance(rows, list) or len(rows) < 2:
+        raise ValidationError(f"{path}/levelAnchors: expected at least two rows")
+    anchors, last_rating, last_level = [], None, None
+    for index, row in enumerate(rows):
+        location = f"{path}/levelAnchors/{index}"
+        exact_keys(row, {"rating", "level"}, location)
+        rating = integer(row["rating"], f"{location}/rating", 0, cap)
+        level = integer(row["level"], f"{location}/level", 1, MAX_LEVEL)
+        if last_rating is not None and rating <= last_rating:
+            raise ValidationError(f"{location}/rating: anchors must be strictly ordered")
+        if last_level is not None and level <= last_level:
+            raise ValidationError(f"{location}/level: anchors must rise")
+        anchors.append({"rating": rating, "level": level})
+        last_rating, last_level = rating, level
+    if anchors[0]["rating"] != 0 or anchors[-1]["rating"] != cap:
+        raise ValidationError(f"{path}/levelAnchors: anchors must span 0 through the cap")
 
     identity = source["zoneIdentity"]
     exact_keys(identity, {"opening", "convergence"}, f"{path}/zoneIdentity")

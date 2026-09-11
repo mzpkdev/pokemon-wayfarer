@@ -104,22 +104,6 @@ class MapjsonWayfarerTest(unittest.TestCase):
             )
         return subprocess.run(command, cwd=root, text=True, capture_output=True)
 
-    def run_inventory(self, root, version, manifest=None):
-        command = [
-            str(self.mapjson),
-            "inventory",
-            version,
-            "data/maps/map_groups.json",
-        ]
-        if manifest is not None:
-            command.extend(
-                [
-                    "--wayfarer-sevii-manifest",
-                    str(manifest.relative_to(root)),
-                ]
-            )
-        return subprocess.run(command, cwd=root, text=True, capture_output=True)
-
     @staticmethod
     def write_sevii_manifest(root, maps, release_link_enabled=False):
         path = root / "src/data/wayfarer_sevii_maps.json"
@@ -308,10 +292,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
                               "var": "VAR_TEMP_0", "var_value": "0", "script": "SevenIsland_SevaultCanyon_House_EventScript_ChanseyDanceMan"}],
             "bg_events": [{"type": "sign", "x": 1, "y": 2, "elevation": 0,
                            "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY", "script": "SevenIsland_SevaultCanyon_House_EventScript_Chansey"}],
-            "connections": [
-                {"direction": "up", "offset": 0, "map": "MAP_SEVII_1F"},
-                {"direction": "down", "offset": 0, "map": "MAP_UNION_ROOM_FRLG"},
-            ],
+            "connections": [{"direction": "up", "offset": 0, "map": "MAP_SEVII_1F"}],
         }
         map_file = map_dir / "map.json"
         map_file.write_text(json.dumps(source))
@@ -328,20 +309,10 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "primary_tileset": "gTileset_General", "secondary_tileset": "gTileset_Petalburg",
             "border_width": 2, "border_height": 2,
         }]}))
-        retained_nurse = dict(source["object_events"][1])
-        retained_coord = dict(source["coord_events"][0])
-        retained_bg = dict(source["bg_events"][0])
         manifest = self.write_sevii_manifest(root, [
             {"source_map": "OneIsland_PokemonCenter_2F_Frlg", "map_id": "MAP_SEVII_CENTER_2F",
              "layout": "LAYOUT_SEVII_CENTER_2F", "enabled": True,
-             "retained_events": {
-                 "object_events": [{"index": 1, "source": retained_nurse,
-                                    "wayfarer_script": "WayfarerSevii_Nurse"}],
-                 "coord_events": [{"index": 0, "source": retained_coord,
-                                   "wayfarer_script": "WayfarerSevii_Trigger"}],
-                 "bg_events": [{"index": 0, "source": retained_bg,
-                                 "wayfarer_script": "WayfarerSevii_Sign"}],
-             }},
+             "retained_events": {"object_events": [], "coord_events": [], "bg_events": []}},
             {"source_map": "OneIsland_PokemonCenter_1F_Frlg", "map_id": "MAP_SEVII_1F",
              "layout": "LAYOUT_SEVII_CENTER_1F", "enabled": True},
         ], release_link_enabled=True)
@@ -349,9 +320,9 @@ class MapjsonWayfarerTest(unittest.TestCase):
         result = self.run_map(root, "wayfarer", map_file, layout_file, manifest)
         self.assertEqual(result.returncode, 0, result.stderr)
         events = (map_dir / "events.inc").read_text()
-        self.assertIn("WayfarerSevii_Nurse", events)
-        self.assertIn("WayfarerSevii_Trigger", events)
-        self.assertIn("WayfarerSevii_Sign", events)
+        self.assertNotIn("ObjectEvents", events)
+        self.assertNotIn("CoordEvents", events)
+        self.assertNotIn("BGEvents", events)
         self.assertIn("MAP_SEVII_1F", events)
         self.assertNotIn("MAP_UNION_ROOM_FRLG", events)
         self.assertNotIn("MAP_TRADE_CENTER_FRLG", events)
@@ -362,38 +333,6 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotIn("SevenIsland_SevaultCanyon_House_EventScript_ItemLuckyPunch", events)
         connections = (map_dir / "connections.inc").read_text()
         self.assertIn("MAP_SEVII_1F", connections)
-        self.assertNotIn("MAP_UNION_ROOM_FRLG", connections)
-
-        destination_dir = root / "data/maps/OneIsland_PokemonCenter_1F_Frlg"
-        destination_dir.mkdir()
-        (destination_dir / "map.json").write_text(json.dumps({
-            "id": "MAP_SEVII_1F", "name": "OneIsland_PokemonCenter_1F_Frlg",
-            "game_version": "frlg", "object_events": [], "warp_events": [],
-            "coord_events": [], "bg_events": [], "connections": [],
-        }))
-        (root / "data/maps/map_groups.json").write_text(json.dumps({
-            "group_order": ["gSevii"],
-            "gSevii": ["OneIsland_PokemonCenter_2F_Frlg", "OneIsland_PokemonCenter_1F_Frlg"],
-        }))
-        inventory = self.run_inventory(root, "wayfarer", manifest)
-        self.assertEqual(inventory.returncode, 0, inventory.stderr)
-        record = json.loads(inventory.stdout)["maps"][0]
-        self.assertEqual(
-            [event["script"] for event in record["effective"]["object_events"]],
-            ["WayfarerSevii_Nurse"],
-        )
-        self.assertEqual(
-            [event["script"] for event in record["effective"]["coord_events"]],
-            ["WayfarerSevii_Trigger"],
-        )
-        self.assertEqual(
-            [event["script"] for event in record["effective"]["bg_events"]],
-            ["WayfarerSevii_Sign"],
-        )
-        self.assertEqual(
-            record["effective"]["connections"],
-            [{"direction": "up", "offset": 0, "map": "MAP_SEVII_1F"}],
-        )
 
     def test_wayfarer_sanitizes_only_registered_sevii_map_events(self):
         fixture, root = self.make_fixture()

@@ -80,7 +80,6 @@
 #include "constants/sliding_puzzles.h"
 #include "constants/speaker_names.h"
 #include "constants/wayfarer_marts.h"
-#include "gameplay_mart_bindings.inc"
 	.include "asm/macros.inc"
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
