@@ -69,12 +69,13 @@ const parties: { name: string; party: PartyMonFixture[] }[] = [
 ]
 
 describe.sequential("Wayfarer trainer-only controller", () => {
-  for (const fixture of parties) {
+  for (const [index, fixture] of parties.entries()) {
     it(`enters with a real ${fixture.name} party and cancels Bag without a turn`, async () => {
       const game = await GameSession.launch()
       try {
         await game.arrange({
           checkpoint: "new-bark-after-intro",
+          player: { appearanceStyle: (index + 1) as 1 | 2 | 3 | 4 },
           party: fixture.party,
           bag: { items: { masterBall: 1 } },
           determinism: { textSpeed: "instant", rngSeed: 1 },
@@ -86,6 +87,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
           `/tmp/trainer-only-${fixture.name.replaceAll(" ", "-")}-menu.png`,
           await game.screenshot(),
         )
+        expect(initial.appearance.id).toBe([1, 2, 5, 6][index])
         expect(initial.party).toHaveLength(fixture.party.length)
         expect(initial.battle.trainerOnly).toMatchObject({
           active: true,
@@ -98,6 +100,11 @@ describe.sequential("Wayfarer trainer-only controller", () => {
         await game.controls.press("b")
         await menu(game)
         const cancelled = await game.state.read()
+        await fs.promises.writeFile(
+          `/tmp/trainer-only-${fixture.name.replaceAll(" ", "-")}-bag-return.png`,
+          await game.screenshot(),
+        )
+        expect(cancelled.appearance.id).toBe(initial.appearance.id)
         expect(cancelled.battle.trainerOnly).toEqual(initial.battle.trainerOnly)
         expect(cancelled.bag.items.masterBall).toBe(1)
         expect(cancelled.party).toEqual(initial.party)

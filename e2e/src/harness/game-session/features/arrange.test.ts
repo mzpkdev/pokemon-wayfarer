@@ -19,8 +19,16 @@ const captureArrange = () => {
 describe("appearance arrangement fixtures", () => {
   it("maps display styles to stable wire identities and preserves omitted defaults", async () => {
     const fixture = captureArrange()
-    for (const [style, id] of [[1, 1], [2, 2], [3, 5], [4, 6]] as const) {
-      await fixture.arrange({ checkpoint: "new-bark-after-intro", player: { appearanceStyle: style } })
+    for (const [style, id] of [
+      [1, 1],
+      [2, 2],
+      [3, 5],
+      [4, 6],
+    ] as const) {
+      await fixture.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { appearanceStyle: style },
+      })
       expect(fixture.requests.at(-1)![429]).toBe(id)
     }
     await fixture.arrange({ checkpoint: "new-bark-after-intro" })
@@ -30,10 +38,12 @@ describe("appearance arrangement fixtures", () => {
   it("rejects invalid styles before submitting a mailbox request", async () => {
     const fixture = captureArrange()
     for (const style of [0, 5, 6, 1.5, Number.NaN]) {
-      await expect(fixture.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: { appearanceStyle: style },
-      } as ArrangeGame)).rejects.toThrow("Appearance style must")
+      await expect(
+        fixture.arrange({
+          checkpoint: "new-bark-after-intro",
+          player: { appearanceStyle: style },
+        } as ArrangeGame),
+      ).rejects.toThrow("Appearance style must")
     }
     expect(fixture.requests).toHaveLength(0)
   })

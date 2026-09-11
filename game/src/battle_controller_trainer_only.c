@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "text.h"
 #include "trainer_only_encounter.h"
+#include "trainer_pokemon_sprites.h"
 #include "window.h"
 #include "constants/trainers.h"
 #include "constants/songs.h"
@@ -120,7 +121,7 @@ static void RunCommand(enum BattlerId battler)
     {
     case CONTROLLER_DRAWTRAINERPIC:
     {
-        enum TrainerPicID pic = gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+        enum TrainerPicID pic = GetLocalPlayerBackTrainerPicId();
         BtlController_HandleDrawTrainerPic(battler, pic, FALSE, 80, 80 + 4 * (8 - gTrainerBacksprites[pic].coordinates.size), 30);
         break;
     }

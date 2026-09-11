@@ -3,7 +3,13 @@ import * as path from "node:path"
 import { describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
-import { appearanceStyles, reachAppearanceQuestion, selectAppearance, advanceToOriginQuestion, finishOriginIntroduction } from "../playbooks/new-game-intro"
+import {
+  appearanceStyles,
+  reachAppearanceQuestion,
+  selectAppearance,
+  advanceToOriginQuestion,
+  finishOriginIntroduction,
+} from "../playbooks/new-game-intro"
 
 const styles = [1, 2, 3, 4] as const
 
@@ -50,7 +56,6 @@ describe.sequential("Wayfarer appearance picker", () => {
   })
 })
 
-
 describe.sequential("Wayfarer appearance naming lifecycle", () => {
   it("restores the selected style after name rejection and keeps a replacement through callbacks", async () => {
     const game = await GameSession.launch()
@@ -73,7 +78,11 @@ describe.sequential("Wayfarer appearance naming lifecycle", () => {
       await game.wait.frames(240)
       await capture("name-confirmation-may")
       await game.controls.press("b")
-      await game.wait.until((state) => state.appearance.introStage === 1, "appearance after name rejection", 1200)
+      await game.wait.until(
+        (state) => state.appearance.introStage === 1,
+        "appearance after name rejection",
+        1200,
+      )
       expect((await game.state.read()).appearance).toMatchObject({ candidate: 6, confirmed: 6 })
       await capture("name-rejection-may")
       await selectAppearance(game, 3)
@@ -83,6 +92,8 @@ describe.sequential("Wayfarer appearance naming lifecycle", () => {
       await game.controls.press("a")
       await finishOriginIntroduction(game, "johto")
       expect((await game.state.read()).appearance.id).toBe(5)
-    } finally { await game.close() }
+    } finally {
+      await game.close()
+    }
   })
 })

@@ -121,7 +121,9 @@ export const playThroughNewGameIntro = async (
   await game.controls.press("a")
   await finishOriginIntroduction(game, origin)
   const state = await game.state.read()
-  if (state.appearance.id !== appearanceStyles[style].id ||
-    state.origin.gender !== appearanceStyles[style].gender)
+  if (
+    state.appearance.id !== appearanceStyles[style].id ||
+    state.origin.gender !== appearanceStyles[style].gender
+  )
     throw new Error(`Appearance handoff failed: ${JSON.stringify(state)}`)
 }
