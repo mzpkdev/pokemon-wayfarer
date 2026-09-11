@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type GameMap } from "../harness/game-session"
+import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
 
 const finishScript = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 30; attempt++) {
@@ -361,7 +362,8 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       })
 
       await expect(game.inventory.contains("ssTicket")).resolves.toBe(false)
-      await game.player.interact()
+      if (port.map === "vermilion-port-inside") await beginWayfarerRegularAquaDeparture(game)
+      else await game.player.interact()
       await finishScript(game)
 
       await expect(game.state.read()).resolves.toMatchObject({ map: { name: port.map } })

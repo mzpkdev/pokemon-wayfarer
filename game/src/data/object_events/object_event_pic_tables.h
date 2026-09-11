@@ -3036,6 +3036,58 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
 
 #endif // IS_FRLG
 
+#if HAS_SEVII_CONTENT
+static const struct SpriteFrameImage sPicTable_OldWomanFrlg[] = {
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 3),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 4),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 5),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 6),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 7),
+    overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 8),
+};
+
+static const struct SpriteFrameImage sPicTable_SailorFrlg[] = {
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 3),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 4),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 5),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 6),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 7),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 8),
+    overworld_frame(gObjectEventPic_SailorFrlg, 2, 4, 9),
+};
+
+static const struct SpriteFrameImage sPicTable_NurseFrlg[] = {
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_NurseFrlg, 2, 4, 3),
+};
+
+static const struct SpriteFrameImage sPicTable_Clerk[] = {
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 1),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 2),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 3),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 4),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 5),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 6),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 7),
+    overworld_frame(gObjectEventPic_Clerk, 2, 4, 8),
+};
+#endif // HAS_SEVII_CONTENT
+
 #if IS_HNS
 static const struct SpriteFrameImage sPicTable_AttendantF_hns[] = {
     overworld_frame(gObjectEventPic_AttendantF_hns, 2, 4, 0),
@@ -4606,4 +4658,3 @@ static const struct SpriteFrameImage sPicTable_KrisDecorating_hns[] = {
 };
 
 #endif // IS_HNS
-

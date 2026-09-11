@@ -1,5 +1,5 @@
 export { GameSession } from "./game-session"
-export { hms, items, moves, partyMenuActions, species } from "./catalog"
+export { hms, items, moves, partyMenuActions, seviiImportedMaps, species } from "./catalog"
 export type {
   Button,
   Checkpoint,

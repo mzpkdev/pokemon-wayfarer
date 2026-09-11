@@ -79,6 +79,14 @@ class SourceConstantTests(unittest.TestCase):
 
             self.assertEqual(GENERATOR.audit_hoenn_starter_symbols(maps), [])
 
+    def test_write_if_changed_preserves_identical_output_timestamp(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "constants.inc"
+            GENERATOR.write_if_changed(path, "stable\n")
+            first_mtime = path.stat().st_mtime_ns
+            GENERATOR.write_if_changed(path, "stable\n")
+            self.assertEqual(first_mtime, path.stat().st_mtime_ns)
+
 
 if __name__ == "__main__":
     unittest.main()

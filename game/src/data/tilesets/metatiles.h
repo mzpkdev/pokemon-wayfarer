@@ -213,7 +213,7 @@ const u16 gMetatileAttributes_UnionRoom[] = INCBIN_U16("data/tilesets/secondary/
 
 #endif // HAS_EMERALD_CONTENT
 
-#if HAS_FRLG_CONTENT
+#if HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 const u16 gMetatiles_Building_Frlg[] = INCBIN_U16("data/tilesets/primary/building_frlg/metatiles.bin");
 const u16 gMetatileAttributes_Building_Frlg[] = INCBIN_U16("data/tilesets/primary/building_frlg/metatile_attributes.bin");
@@ -408,7 +408,7 @@ const u16 gMetatileAttributes_PokemonLeague[] = INCBIN_U16("data/tilesets/second
 const u16 gMetatiles_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_fame_frlg/metatiles.bin");
 const u16 gMetatileAttributes_HallOfFame[] = INCBIN_U16("data/tilesets/secondary/hall_of_fame_frlg/metatile_attributes.bin");
 
-#endif // HAS_FRLG_CONTENT
+#endif // HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 #if HAS_HNS_CONTENT
 

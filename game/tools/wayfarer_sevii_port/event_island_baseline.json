@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "files": [
+    {
+      "path": "game/data/maps/BirthIsland_Exterior_hns/map.json",
+      "sha256": "4c0660e1099b3ac34ce6c20fa6a7e8f5e8462337df188d74daf758d81a5555bf",
+      "normalized_sha256": "ad36467384ae2f362cc5b046bff0ec064cd20ad6a585c9ba482d1d19c56970fc"
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Exterior_hns/scripts.inc",
+      "sha256": "be0e4aaff66d15d4a87350f899916462d279877bfa2a067b57f8762de0b74681",
+      "protected_blocks": [
+        {
+          "label": "BirthIsland_Exterior_hns_MapScripts",
+          "sha256": "0d391d070c24d24d9729035d1a9a835fa6eb29c11c966379bb4047a8851e2a2a"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_OnReturnToField",
+          "sha256": "9b97d28863791418216a6726e25991f887e53f000a7ac078d38340b601ce0719"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_OnTransition",
+          "sha256": "3bc9d9eee34413a551c9605028194ab0a83015e046e60c950457644249f3caa0"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_HideDeoxysAndPuzzle",
+          "sha256": "f220bf548a17ceff0a200bff2d4f5ce02bdd11215a77743979f90f047c8f3bc5"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_TryShowDeoxysPuzzle",
+          "sha256": "58525b1ca548b36692acf2e4d580623e0497acdf5667c9e92e35eaa9dd1a9858"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_OnResume",
+          "sha256": "3764ac060f568dedb8df41a475683883eb864d9a7a8c8d0637ea48089c44b222"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_TryRemoveDeoxys",
+          "sha256": "eea950e99373cd2c8176ae584b3ffd61fe0cd84804d728662e669f8cf23ba53a"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_Triangle",
+          "sha256": "40675eb2951205e46b247ea0261974c3e60cc4c68c48d60d57e0b0430608bfed"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_Failed",
+          "sha256": "e039d6dd5abadd70a3357edfca61f64fd94df17a407ae569a1e448c7ce8305c4"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_Progressed",
+          "sha256": "4fd5f7dffa09ba73a52d543320a3f61454aebad12bf465397d343da9f4cc6dcc"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_Complete",
+          "sha256": "f0bbc33cb6a32c29caee0de2ed86ced206b7b0395816b2145001c3647df369e7"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_Deoxys",
+          "sha256": "6a2cb724c8cd931b68bea50c37ceec19965e00409c9e9d133c24c47dfcc46cc0"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_DefeatedDeoxys",
+          "sha256": "2c03d7d8edaa7cfaef4bd8cdf15f5c747fe0abb0b0f4810fe04362e7a856028d"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_EventScript_RanFromDeoxys",
+          "sha256": "85855e1553a73951c1f2f7cdcb63d9d7b90473b8d657f61937ccbb4d9a78ad6a"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_Movement_DeoxysApproach",
+          "sha256": "d9e83133cc8093a84c6a707de5671eeb48437543745d06b52cabe07e4a70b5c5"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_MeteorInteract",
+          "sha256": "7dec5e44b4bc467f48be26ba80140b4772d7e496941812be7bef847786027d9f"
+        },
+        {
+          "label": "BirthIsland_Exterior_hns_GotMeteor",
+          "sha256": "7faa879e99e46ff9e2d351b144a16a4cffa819f48f46a0b82e90b18aea6825e4"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Harbor_hns/map.json",
+      "sha256": "77584cda546a1f2511bbdbd6162f2bf91a7621626be7529d5848293e91eef563",
+      "normalized_sha256": "4fa722e8f72597eeede3f636f96ed77cd19994e2259aca877a4294dad4edc2db"
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Harbor_hns/scripts.inc",
+      "sha256": "d2059ba455c84224ccc56b02331e705ff90ec7e56e4b75d3c427cbe3bf17f3cf",
+      "protected_blocks": [
+        {
+          "label": "BirthIsland_Harbor_hns_MapScripts",
+          "sha256": "8ba6fbf48e389d2428adc8ab309bbb8f272250835e00b768a08ab9b58baab31d"
+        },
+        {
+          "label": "BirthIsland_Harbor_hns_EventScript_AsYouLike",
+          "sha256": "a7dd96d0ca4b0420ddfd6a1ab3ffcf7b1da9ff159d9ba2164f5602d833c49582"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Exterior/map.json",
+      "sha256": "c18eab5409f9582ea422e046181f6a71903e0d5489002d81800a4718579a5ff4",
+      "normalized_sha256": "2b01a16b8164eec143381f21002706ef6852671f79f8c63f77d21f11f64015d9"
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Exterior/scripts.inc",
+      "sha256": "e4ed1d8e52a873662016d540dfe05b71cd7cd6f5a389250d2cfa03c62aee4a99",
+      "protected_blocks": [
+        {
+          "label": "BirthIsland_Exterior_MapScripts",
+          "sha256": "3fa2ce41c6cb23df5e4c9791825919a798ee0506797a9da1c9c8da202717fa56"
+        },
+        {
+          "label": "BirthIsland_Exterior_OnReturnToField",
+          "sha256": "792d6b99643de52881e0ca8e67892520180114dce46612639898d787666e54a9"
+        },
+        {
+          "label": "BirthIsland_Exterior_OnTransition",
+          "sha256": "034abec218c3aadce013ed5fe242f02654a2d347204ee27892cd4e177308e693"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_HideDeoxysAndPuzzle",
+          "sha256": "ae1f426dc4bf247f01fd8d9982a481bb9876a3cb9f2ccef120d2456619a46a0b"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_TryShowDeoxysPuzzle",
+          "sha256": "1abc04d8cafdd885941f9dd496fc2818f604eb0984536634e00249753d4852ac"
+        },
+        {
+          "label": "BirthIsland_Exterior_OnResume",
+          "sha256": "e0dba1e75c73cee0cb1470682847e378b4b7441951a31b0afcf97ce5b35977e5"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_TryRemoveDeoxys",
+          "sha256": "21ec1d3ba2808da5c23b67ff0896cab9ac06c084000d3ffdef80bb3af453c9a9"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_Triangle",
+          "sha256": "04c6699c375f546067fb52924abbcf71de074b5f970df65373214b066786d19f"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_Failed",
+          "sha256": "17387ddc5efede41ffe2f3cd5e3f5844fd851d32e77010fe0b4554e2920811a3"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_Progressed",
+          "sha256": "a2cb14db30592186c06489045c6e66823c1605f1127e6ad2aff915a7fc249a51"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_Complete",
+          "sha256": "64d38a61b3bb8a1fa19e94e22ecf546f0ec9810c572148552fc6b94eca6838e1"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_Deoxys",
+          "sha256": "2e80e4245d4f4fd478b791b58403045fa3f82fa7e0064e5551371e39f6ab3ed9"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_DefeatedDeoxys",
+          "sha256": "876b1e9f6d46bfd9be7a58c5787ac608f2ecfd443f63e51e5fa1b9974cbf9f05"
+        },
+        {
+          "label": "BirthIsland_Exterior_EventScript_RanFromDeoxys",
+          "sha256": "b03e0ca3eeff49d9b4ca2424b175444d4dd74f48015524f61444fca05bd5b2d5"
+        },
+        {
+          "label": "BirthIsland_Exterior_Movement_DeoxysApproach",
+          "sha256": "c51d4c0b4278cd247bba6e12b2999e9d12d95f0d383f42ffbaca0b00f84fefac"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Harbor/map.json",
+      "sha256": "d67ef5129a26a24d3c044abf844afad6ba52b37e6df72315ea63ee34874fb393",
+      "normalized_sha256": "9f21755b7a037dff95a7476328b54cd4746d3a2bf09c94209929863ba2c7b947"
+    },
+    {
+      "path": "game/data/maps/BirthIsland_Harbor/scripts.inc",
+      "sha256": "4275d414d3bb4fef25b78f4a9c5ed2cfe86d9108472f3056b2e71685ad69a636",
+      "protected_blocks": [
+        {
+          "label": "BirthIsland_Harbor_MapScripts",
+          "sha256": "68d047a69b1e44457de15298cb28731ed25b1971d06f54b9b54de8cc20cba0ed"
+        },
+        {
+          "label": "BirthIsland_Harbor_EventScript_Sailor",
+          "sha256": "5d3c80c03f8dd31ed5c7cc7a63dddd5f629845756ca8e9a488ad1e40c14dc6fc"
+        },
+        {
+          "label": "BirthIsland_Harbor_EventScript_AsYouLike",
+          "sha256": "090705dadcbc6dd52ce630277530014e1e549ad6ebcc1199cfa4f4fd2c188f7e"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Exterior/map.json",
+      "sha256": "966d9eb0a21e5f55f3b89bc5c2656f29cac4dc9eed6f13d5b19a82ea1cda9f57",
+      "normalized_sha256": "ea9117c3bcf40fd2dfa44e961a9bce92af365b933924d7b194c7e61792b5265c"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Exterior/scripts.inc",
+      "sha256": "f935d0a207a524942e70449ec4b77d2e9b097009b9ae7f92defe8631d67f9727",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Exterior_MapScripts",
+          "sha256": "58e21d7c2ad7e2d42ebf6eb88d3fe914c40cd0e2a9193b8724b54d8eb60b9a43"
+        },
+        {
+          "label": "NavelRock_Exterior_OnTransition",
+          "sha256": "8ac144ca1fb3bf337eb54116f4642018b7d8004a960e585baa336a7244bd382c"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Harbor/map.json",
+      "sha256": "7ad69f83c9e280e2a448f55439aecff02546ff46b0df9de9fe0ba64924e039e6",
+      "normalized_sha256": "7ffdd4f2fd962b80e5598a465f102302f1c49551652a6376870d051e32619024"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Harbor/scripts.inc",
+      "sha256": "be9c095d587b059343a5873a5c25a13363181deb5f53c127d6242e9144cb687f",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Harbor_MapScripts",
+          "sha256": "0f63be294341f10a3bcffbacb9d07a094d17af2ef310bc6a6d96257050134978"
+        },
+        {
+          "label": "NavelRock_Harbor_EventScript_AsYouLike",
+          "sha256": "17097644ab818ab68b2e4f0df0a121693e9e895dc491848e96ed502ca568f51b"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Entrance/map.json",
+      "sha256": "cd55a56293c003eaf6aa971d3b28332484fe201973c7009ea5bb13720c0d2a6c",
+      "normalized_sha256": "fbc87740c1ea52a3f0b8496a2cc88d5687385d8ccd6258171a365bcd8265ddce"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Entrance/scripts.inc",
+      "sha256": "2741032c01d41e8d5a0b19f78d8ef1dfdac6422a7d6e19e0b8c3a6f2f64ae592",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Entrance_MapScripts",
+          "sha256": "2741032c01d41e8d5a0b19f78d8ef1dfdac6422a7d6e19e0b8c3a6f2f64ae592"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_B1F/map.json",
+      "sha256": "0945318514a6031c537149b94aee32fe03563f77a8d45205866d8b14ab8d2072",
+      "normalized_sha256": "edb93696e89bc2a1c3d1c3c6ccc77e9485fcb99d3f3f122722928a2f19a383f4"
+    },
+    {
+      "path": "game/data/maps/NavelRock_B1F/scripts.inc",
+      "sha256": "1c744069889435dd90845ce7a9f17eac9a43279f6f9ee9f583b68fcab9f28d40",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_B1F_MapScripts",
+          "sha256": "1c744069889435dd90845ce7a9f17eac9a43279f6f9ee9f583b68fcab9f28d40"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Fork/map.json",
+      "sha256": "c343a1c95fdfa64a6a277eb366dbf9ce6de07c05f1bb55b0ab00138468186ffe",
+      "normalized_sha256": "339e87d0deac983a335457aeb74508b7827d243acd2cdf5d8a1dfd3bfd52a820"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Fork/scripts.inc",
+      "sha256": "bc1bf8e0f2f46fd78ad06224670d9861fac4dd91515d0784a2d992fa62a9122e",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Fork_MapScripts",
+          "sha256": "bc1bf8e0f2f46fd78ad06224670d9861fac4dd91515d0784a2d992fa62a9122e"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up1/map.json",
+      "sha256": "1a5203ed6b3ef6dc64f49fc1835d23cc66682d0454f79b8f34872522b64cb849",
+      "normalized_sha256": "6b2bb66da8be9db0acaf8988910858d9c4d7c46447d34f6eab70e38fefa9c389"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up1/scripts.inc",
+      "sha256": "862008edd7f768e512c730913ae8e96445e735786903f1db204dc0e5e60fe598",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Up1_MapScripts",
+          "sha256": "862008edd7f768e512c730913ae8e96445e735786903f1db204dc0e5e60fe598"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up2/map.json",
+      "sha256": "6befe21ed9420b06d591d166dbb90cd7b74e5589717a2f20f84b21a601f5ce4a",
+      "normalized_sha256": "11fbeb6a79bfbcb220c2df4ce01d1754f9ba91dbc61a90b69546b08831a08abb"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up2/scripts.inc",
+      "sha256": "1e4981bc84c0b6cbb88f9110854fb3bd7607f2bbe5a8de9063513e13d8a4114b",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Up2_MapScripts",
+          "sha256": "1e4981bc84c0b6cbb88f9110854fb3bd7607f2bbe5a8de9063513e13d8a4114b"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up3/map.json",
+      "sha256": "31e67c4686fd2ccdc273a96b285880473b30b9fca2f9bf5a636081e09ebc92d7",
+      "normalized_sha256": "49714c16168953e83027d088f5eb2c088670088588c8bbe4bd981e75519c31fb"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up3/scripts.inc",
+      "sha256": "81c25a2c3a5684315a9cb3577b174b6e4e9818159a3527d7b65389ff920df7fb",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Up3_MapScripts",
+          "sha256": "81c25a2c3a5684315a9cb3577b174b6e4e9818159a3527d7b65389ff920df7fb"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up4/map.json",
+      "sha256": "bf86e94dd7dde9fa2db7f2756d5b716d99d3243eeecc7c774ace71386f86d4ad",
+      "normalized_sha256": "45167703eae99df2279d791cc47a996939acbc79a3eb19de6de1e7e898be1bc5"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Up4/scripts.inc",
+      "sha256": "ffc02328801386c01d96adbed54fb783280f8598f076c952681e354e71157a2a",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Up4_MapScripts",
+          "sha256": "ffc02328801386c01d96adbed54fb783280f8598f076c952681e354e71157a2a"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Top/map.json",
+      "sha256": "cf7ffcbe393ed1c7cba0a6c5cfa7d571b286836902b194ec0aec78bc04e7367f",
+      "normalized_sha256": "258016a962aff95a743104675bd323824f5eb253227184a91b1d70e16b6fcb27"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Top/scripts.inc",
+      "sha256": "3ba7e7b9270ab77ef0d16a3f0a96a765c0e0171c6404025143c77448f9181395",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Top_MapScripts",
+          "sha256": "8b67d7c46832846fb58ae7ac950184095c774a4462ebcdb49ab4e1e261916bc4"
+        },
+        {
+          "label": "NavelRock_Top_OnTransition",
+          "sha256": "851f603c7af249bd1f259c5710f2e4498db5493cd26146746baea551c4209f46"
+        },
+        {
+          "label": "NavelRock_Top_EventScript_HideHoOh",
+          "sha256": "95f4caee0a6043aaf21b5847702636ecc9405cb0ed28b5ae3ab68b5adbdc6cab"
+        },
+        {
+          "label": "NavelRock_Top_EventScript_TryShowHoOh",
+          "sha256": "7f3758254566540d43f76f8a73734d63b8937e21ff25c3766027d3436dd75444"
+        },
+        {
+          "label": "NavelRock_Top_OnResume",
+          "sha256": "3357be7ba278eeda5de0deaf7a3f376122952feae70a14e3a400536b059583d3"
+        },
+        {
+          "label": "NavelRock_Top_EventScript_TryRemoveHoOh",
+          "sha256": "25f7181ba243acdc7df7c0d0f6df790be7e4db93ee3c25f76f9250439c0cad13"
+        },
+        {
+          "label": "NavelRock_Top_EventScript_HoOh",
+          "sha256": "e75d756e7877999ec19c24454b133656de7d5cdf3f11f5f38c8ef2fdc812d594"
+        },
+        {
+          "label": "NavelRock_Top_EventScript_DefeatedHoOh",
+          "sha256": "c04165061a19cd50b9d0d791b3a13d50b879d7f2239a97361c8ae3b76f816586"
+        },
+        {
+          "label": "NavelRock_Top_EventScript_RanFromHoOh",
+          "sha256": "45498615523311ae25a8b03c12c5cc503685c8d32bc0cbc8fd3b7736c8b1dc55"
+        },
+        {
+          "label": "NavelRock_Top_Movement_CameraPanUp",
+          "sha256": "634fc2e72886dcf25af9ccb7a18ee8d0ed9dacbd92455db3a3fdde57b7a226f6"
+        },
+        {
+          "label": "NavelRock_Top_Movement_CameraPanDown",
+          "sha256": "9917d6ea6d789ab37e2fd2e8449f9bbeea6f088a788eb3ff4dd47410202b4496"
+        },
+        {
+          "label": "NavelRock_Top_Movement_HoOhApproach",
+          "sha256": "656627c4813d5985ddf2fb33ea4de9d8b79229c795a6570861966a55386616b2"
+        },
+        {
+          "label": "NavelRock_Top_Movement_HoOhAppear",
+          "sha256": "53ea17b5cdaedaefd48b969498acfda980967befc0e8ec7cd74be8f6877334c7"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down01/map.json",
+      "sha256": "d4ec2e17045a9eac56106b7c10d9a039e05ce7b9450a7154b8bd4126e6d19015",
+      "normalized_sha256": "86f36052e4a468465a1cd93f61df5fe300a5e51a3f72736427256b90f5e0256e"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down01/scripts.inc",
+      "sha256": "6e039a49934fc4b0bcae460b9005aeea305b3d7064cbddc97fd64d9c8da49cf9",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down01_MapScripts",
+          "sha256": "6e039a49934fc4b0bcae460b9005aeea305b3d7064cbddc97fd64d9c8da49cf9"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down02/map.json",
+      "sha256": "caad3acf6e0136b3ce35f09a8ed00c233b84890c0e2fcebcf2f2baadee7d3e9b",
+      "normalized_sha256": "613e04ce7af18012df811a57f8877929c9155719b5a6a32366175bd6e4df1e2a"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down02/scripts.inc",
+      "sha256": "7ed335a6a4a7c11d0b07c28fe5d5d6de2f8648bb106a712a0b874e0ff768a29f",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down02_MapScripts",
+          "sha256": "7ed335a6a4a7c11d0b07c28fe5d5d6de2f8648bb106a712a0b874e0ff768a29f"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down03/map.json",
+      "sha256": "a142756e3cb4e4e23c463f606e79ae92ae858da8fed44797269f0025d7b6f546",
+      "normalized_sha256": "6b26e713fba085de756247de6974396d8895998267c508d3c8ff7f8c63a0fc67"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down03/scripts.inc",
+      "sha256": "d653d76940f9179e80e4cbc5085b641464109ca7b881eaac657280cf2a44d279",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down03_MapScripts",
+          "sha256": "d653d76940f9179e80e4cbc5085b641464109ca7b881eaac657280cf2a44d279"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down04/map.json",
+      "sha256": "397c1ec7578e1f3d2a5460ab7d7a9e99f2d2b3671c0676a4a4a0e82fd01f3768",
+      "normalized_sha256": "865b2115458bf0314f8e6cbc39a7f1b4c1b8936d41bf862882ce88e3aedf8380"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down04/scripts.inc",
+      "sha256": "bdfbdd807c9bb427b0098bf7992d2e7e3ba0cdda838376a54b84b2d7ddec38fa",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down04_MapScripts",
+          "sha256": "bdfbdd807c9bb427b0098bf7992d2e7e3ba0cdda838376a54b84b2d7ddec38fa"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down05/map.json",
+      "sha256": "bfed7d3a073a61d04e9fdff38cf32a1659f67d81152bca3c230fee1a2de7d1da",
+      "normalized_sha256": "b84db1a2dd83a238082ff50ddb192871a3994cba8077dcdce2e4e1b7c8002730"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down05/scripts.inc",
+      "sha256": "600a690ce38df8210641479a579448297d83037a1d9a97ceb58b233652169724",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down05_MapScripts",
+          "sha256": "600a690ce38df8210641479a579448297d83037a1d9a97ceb58b233652169724"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down06/map.json",
+      "sha256": "7d9ce54d29fb69b339bb6ade1abee3d5a78fb03b2f2b8bb85bc832bf32175d2e",
+      "normalized_sha256": "81ae0e7c6dac27fb8af29bffcf62cfefaafaaf08d8c64797891633196e33268f"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down06/scripts.inc",
+      "sha256": "069757b2bc4c658e06ca1446fe8cd59c6525b56e1e117c180c24ba4933d649b5",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down06_MapScripts",
+          "sha256": "069757b2bc4c658e06ca1446fe8cd59c6525b56e1e117c180c24ba4933d649b5"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down07/map.json",
+      "sha256": "80ed7e754b65f77a3459d331159dd7303d67858c646d15facf897fe17d414317",
+      "normalized_sha256": "58cd9fee295fd96b812d054793cf9bcc64f068e43df0b08739fdf2e16aeb36fe"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down07/scripts.inc",
+      "sha256": "38ebd5d4a5df497ec6386ea87280edf17ea747b11e85ba391e4ebfb5a77c8baa",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down07_MapScripts",
+          "sha256": "38ebd5d4a5df497ec6386ea87280edf17ea747b11e85ba391e4ebfb5a77c8baa"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down08/map.json",
+      "sha256": "a512bef276302dde994c1ef8962043f9c0777490bdabbc7bddb445432a8662b9",
+      "normalized_sha256": "cc4f4f6ccea414fef71d6a9f5ac4455beb3b0780c3d0e0e2f21123fff3e277ba"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down08/scripts.inc",
+      "sha256": "f7d303725e8892e95f33cb57ecfeee17a1503e9026802b54c61900d8c3b34ff4",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down08_MapScripts",
+          "sha256": "f7d303725e8892e95f33cb57ecfeee17a1503e9026802b54c61900d8c3b34ff4"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down09/map.json",
+      "sha256": "2f59bf956a1c6fe567ed46a175cc7798c2ac34ad598fd1ed03925f7ea7190dae",
+      "normalized_sha256": "04f2c3c6b2a61a1ef46d2743141b9c5a6fbd13ca1a084127f31ffd247bc43150"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down09/scripts.inc",
+      "sha256": "399567beb807b61a6cc1f945cad5f769d5f95451c5b58b237f5d4525bf136bce",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down09_MapScripts",
+          "sha256": "399567beb807b61a6cc1f945cad5f769d5f95451c5b58b237f5d4525bf136bce"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down10/map.json",
+      "sha256": "20627b741b468bc1969a40e308b076634f61040c91920911214151b66eb6dda6",
+      "normalized_sha256": "272ad96e402aa433dec50628fc59b82c86f46c9931f190e221c3c5d269060d3b"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down10/scripts.inc",
+      "sha256": "e0b3769d2bdcd4a54971929f1ed441ac73c363b2198f5bf55441a97a0fe463e1",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down10_MapScripts",
+          "sha256": "e0b3769d2bdcd4a54971929f1ed441ac73c363b2198f5bf55441a97a0fe463e1"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down11/map.json",
+      "sha256": "71f92d4f15b62fe8ceb2717b55ab3d422797866b8fe660063c57b4b61ca31ada",
+      "normalized_sha256": "3e727e55a779001463196fdfe5a1151af5131a08703c7731b4f2899aa27be89b"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Down11/scripts.inc",
+      "sha256": "552ab7810ad6298e7b819a4a1f16bb84cebd3a24280c2d0c699717887b84df92",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Down11_MapScripts",
+          "sha256": "552ab7810ad6298e7b819a4a1f16bb84cebd3a24280c2d0c699717887b84df92"
+        }
+      ]
+    },
+    {
+      "path": "game/data/maps/NavelRock_Bottom/map.json",
+      "sha256": "e4ea1c7575de243cc2925749779a949363edf7d0d0f9d71008c94499b9e9e703",
+      "normalized_sha256": "fe1ed51ccbb8cc4935297f28a6a93aa01d86b131300d5d1080619e46d201d918"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Bottom/scripts.inc",
+      "sha256": "90fd41fec6ade2b8fb434341b9670a42d895a33150d9eeccde598c4bab7d48d1",
+      "protected_blocks": [
+        {
+          "label": "NavelRock_Bottom_MapScripts",
+          "sha256": "32c1593aadccc11a29d982dad7c9ed3564e8840f150b94b51ffd8a5d20a78c03"
+        },
+        {
+          "label": "NavelRock_Bottom_OnTransition",
+          "sha256": "e86f6307be193dd52420061fe5b0765feaf134331f9e0f4bcb475faafed440b4"
+        },
+        {
+          "label": "NavelRock_Bottom_EventScript_HideLugia",
+          "sha256": "ec04303a1bcfee3115a3f799631d96ff06ef44e8dc5349db6095fc2e09bbed07"
+        },
+        {
+          "label": "NavelRock_Bottom_EventScript_TryShowLugia",
+          "sha256": "dd425e954e6ce1b234137257fae7ba7ceca5c77b6f5da4c6ce440ab271306acf"
+        },
+        {
+          "label": "NavelRock_Bottom_OnResume",
+          "sha256": "0390e95e0b4e45d1f911042a1628c636607d5e7f45b652f0e4e6deef8463acee"
+        },
+        {
+          "label": "NavelRock_Bottom_EventScript_TryRemoveLugia",
+          "sha256": "c4ef743710d09fd176c55a6a26f8bbca2909192880d1613ead2777acc8a1e794"
+        },
+        {
+          "label": "NavelRock_Bottom_EventScript_Lugia",
+          "sha256": "44a85ba1f49538e9265350af828a4c87f8a0ae410d39da5e5e55bf8067921587"
+        },
+        {
+          "label": "NavelRock_Bottom_EventScript_DefeatedLugia",
+          "sha256": "dca278779683a9c9a339760e6c411b46e207bc3feb1d32b777b8ff9158f254dc"
+        },
+        {
+          "label": "NavelRock_Bottom_EventScript_RanFromLugia",
+          "sha256": "c8273108ec385be95aa6a7286562767c74fe77a451da94cda62dffe14cbdcb7e"
+        }
+      ]
+    },
+    {
+      "path": "game/src/data/wild_encounters.json",
+      "sha256": "06ec4238fdc1bfe380d21ee17c64fbf019c0ff70536dd77f9379615a350e74d5"
+    },
+    {
+      "path": "game/data/event_scripts.s",
+      "sha256": "8a193adf9644ade84bbaaa53e067cb7f288f6326709b5c065e354474159b1f1b"
+    },
+    {
+      "path": "game/src/data/object_events/object_event_graphics_info_pointers.h",
+      "sha256": "28c9564793b728df4adad89cb4ee700b37acc64c1898efddc067549e9f127327"
+    },
+    {
+      "path": "game/src/data/object_events/object_event_graphics_info.h",
+      "sha256": "c1975cdf02a6446d1b08707138c45c2ff022a6f6c9e8bab9577dc8d5ba5024ce"
+    },
+    {
+      "path": "game/src/data/trainers.party",
+      "sha256": "72fbe2095555f5973155bbf11ecd865e027009acdec8e4e0b79ab817f2ef271f"
+    }
+  ],
+  "allowed_global_insertions": [
+    {
+      "path": "game/data/event_scripts.s",
+      "after": "\t.include \"data/wayfarer_engine_source_constants.inc\"\n",
+      "insertion": "\t.include \"data/wayfarer_sevii_event_scripts.inc\"\n"
+    },
+    {
+      "path": "game/src/data/object_events/object_event_graphics_info_pointers.h",
+      "after": "#endif // IS_FRLG\n",
+      "insertion": "\n#if HAS_SEVII_CONTENT\n    [OBJ_EVENT_GFX_OLD_WOMAN_FRLG]           = &gObjectEventGraphicsInfo_OldWomanFrlg,\n    [OBJ_EVENT_GFX_SAILOR_FRLG]              = &gObjectEventGraphicsInfo_SailorFrlg,\n    [OBJ_EVENT_GFX_NURSE_FRLG]               = &gObjectEventGraphicsInfo_NurseFrlg,\n    [OBJ_EVENT_GFX_CLERK]                    = &gObjectEventGraphicsInfo_Clerk,\n#endif // HAS_SEVII_CONTENT\n\n"
+    },
+    {
+      "path": "game/src/data/object_events/object_event_graphics_info.h",
+      "after": "#endif // IS_FRLG\n\n",
+      "insertion": "#if HAS_SEVII_CONTENT\nconst struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OldWomanFrlg = {\n    .tileTag = TAG_NONE,\n    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,\n    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,\n    .size = 256,\n    .width = 16,\n    .height = 32,\n    .paletteSlot = PALSLOT_NPC_2,\n    .shadowSize = SHADOW_SIZE_M,\n    .inanimate = FALSE,\n    .compressed = FALSE,\n    .tracks = TRACKS_FOOT,\n    .oam = &gObjectEventBaseOam_16x32,\n    .subspriteTables = sOamTables_16x32,\n    .anims = sAnimTable_Standard,\n    .images = sPicTable_OldWomanFrlg,\n    .affineAnims = gDummySpriteAffineAnimTable,\n};\n\nconst struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SailorFrlg = {\n    .tileTag = TAG_NONE,\n    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,\n    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,\n    .size = 256,\n    .width = 16,\n    .height = 32,\n    .paletteSlot = PALSLOT_NPC_2,\n    .shadowSize = SHADOW_SIZE_M,\n    .inanimate = FALSE,\n    .compressed = FALSE,\n    .tracks = TRACKS_FOOT,\n    .oam = &gObjectEventBaseOam_16x32,\n    .subspriteTables = sOamTables_16x32,\n    .anims = sAnimTable_Standard,\n    .images = sPicTable_SailorFrlg,\n    .affineAnims = gDummySpriteAffineAnimTable,\n};\n\nconst struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_NurseFrlg = {\n    .tileTag = TAG_NONE,\n    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,\n    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,\n    .size = 256,\n    .width = 16,\n    .height = 32,\n    .paletteSlot = PALSLOT_NPC_2,\n    .shadowSize = SHADOW_SIZE_M,\n    .inanimate = FALSE,\n    .compressed = FALSE,\n    .tracks = TRACKS_FOOT,\n    .oam = &gObjectEventBaseOam_16x32,\n    .subspriteTables = sOamTables_16x32,\n    .anims = sAnimTable_Nurse,\n    .images = sPicTable_NurseFrlg,\n    .affineAnims = gDummySpriteAffineAnimTable,\n};\n\nconst struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Clerk = {\n    .tileTag = TAG_NONE,\n    .paletteTag = OBJ_EVENT_PAL_TAG_NPC_WHITE,\n    .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,\n    .size = 256,\n    .width = 16,\n    .height = 32,\n    .paletteSlot = PALSLOT_NPC_4,\n    .shadowSize = SHADOW_SIZE_M,\n    .inanimate = FALSE,\n    .compressed = FALSE,\n    .tracks = TRACKS_FOOT,\n    .oam = &gObjectEventBaseOam_16x32,\n    .subspriteTables = sOamTables_16x32,\n    .anims = sAnimTable_Standard,\n    .images = sPicTable_Clerk,\n    .affineAnims = gDummySpriteAffineAnimTable,\n};\n#endif // HAS_SEVII_CONTENT\n"
+    }
+  ],
+  "allowed_ferry_hooks": [
+    {
+      "path": "game/data/maps/BirthIsland_Harbor_hns/scripts.inc",
+      "label": "BirthIsland_Harbor_hns_EventScript_Sailor",
+      "sha256": "2f79f22b71a356d96d7fba823148d30de43ebace9a8afacf7c560f5b30799ebf",
+      "source_warp": "warp MAP_LILYCOVE_CITY_HARBOR, 8, 11",
+      "wayfarer_warp": "warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9"
+    },
+    {
+      "path": "game/data/maps/NavelRock_Harbor/scripts.inc",
+      "label": "NavelRock_Harbor_EventScript_Sailor",
+      "sha256": "98f8aa912d1ecbf1385aa2468ae2d00df44da4778ef537b9dc7b51897dab3ee9",
+      "source_warp": "warp MAP_LILYCOVE_CITY_HARBOR, 8, 11",
+      "wayfarer_warp": "warp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9"
+    }
+  ]
+}

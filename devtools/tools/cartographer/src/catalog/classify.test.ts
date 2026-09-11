@@ -41,6 +41,8 @@ describe("Cartographer map build membership", () => {
   })
 
   it("rejects unknown source versions instead of inferring a build from a map name", () => {
-    expect(() => buildsForSourceVersion("crystal")).toThrow('Unsupported map source version "crystal"')
+    expect(() => buildsForSourceVersion("crystal")).toThrow(
+      'Unsupported map source version "crystal"',
+    )
   })
 })

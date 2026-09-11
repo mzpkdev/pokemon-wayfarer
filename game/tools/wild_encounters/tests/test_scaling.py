@@ -110,6 +110,33 @@ class WildEncounterScalingTests(unittest.TestCase):
             self.assertIn("#if IS_WAYFARER\nconst struct WildPokemon " + name + "[]", output)
             self.assertIn("#else\nconst struct WildPokemon " + name + "[]", output)
 
+    def test_sevii_manifest_freezes_topology_and_explicit_night_aliases(self):
+        header_ids = {product: dict(values) for product, values in self.header_ids.items()}
+        profiles, _ = GENERATOR.load_wayfarer_sevii_profiles(
+            GENERATOR.DEFAULT_WAYFARER_SEVII_ENCOUNTERS,
+            self.profiles,
+            header_ids,
+            self.config,
+            self.standard_rod,
+        )
+        self.assertEqual(len(profiles), 99)
+        self.assertEqual(len({profile["map"] for profile in profiles}), 58)
+        self.assertEqual(
+            {method: sum(profile["method"] == method for profile in profiles)
+             for method in GENERATOR.ACTIVE_SLOT_COUNTS},
+            {"land_mons": 49, "water_mons": 20, "rock_smash_mons": 10, "fishing_mons": 20},
+        )
+        self.assertTrue(all(profile["time"] == "TIME_DAY" for profile in profiles))
+        self.assertTrue(all(profile["night_label"].endswith("_Night") for profile in profiles))
+        self.assertFalse(any(profile["map"] in {"MAP_BIRTH_ISLAND", "MAP_NAVEL_ROCK"} for profile in profiles))
+        output = GENERATOR.render_header(
+            self.encounters, self.config, self.scaling, [], self.metadata,
+            self.standard_rod, header_ids, None, profiles,
+        )
+        profile = profiles[0]
+        name = profile["label"] + "_" + profile["method"].title().replace("_", "") + "Info"
+        self.assertGreaterEqual(output.count("&" + name), 2)
+
     def test_standard_rod_source_is_strict_and_exact(self):
         self.assertEqual(self.standard_rod["schemaVersion"], 1)
         self.assertEqual(
@@ -268,7 +295,10 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertNotIn("MAP_NEW_SINJOH_HNS", {profile["map"] for profile in self.profiles})
         self.assertEqual(
             {product: len(headers) for product, headers in self.header_ids.items()},
-            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 168},
+            {
+                "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
+                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 0,
+            },
         )
 
     def test_runtime_generation_uses_content_guards_and_union_header_ids(self):
@@ -321,7 +351,10 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(current, legacy)
         self.assertEqual(
             {product: len([profile for profile in self.profiles if profile["product"] == product]) for product, _ in GENERATOR.PRODUCTS},
-            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 270},
+            {
+                "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
+                "POKEMON_HNS": 270, "POKEMON_WAYFARER": 0,
+            },
         )
 
     def test_species_metadata_is_numeric_and_keeps_reviewed_floors(self):
@@ -1296,7 +1329,7 @@ class WildEncounterScalingTests(unittest.TestCase):
 
     def test_audit_covers_products_slots_and_rod_partitions(self):
         audit = GENERATOR.build_wild_encounter_balance_audit()
-        self.assertEqual(audit["schemaVersion"], 3)
+        self.assertEqual(audit["schemaVersion"], 4)
         self.assertTrue(audit["invariants"]["passed"], audit["invariants"]["failures"])
         kanto = audit["regions"]["KANTO"]
         self.assertEqual(kanto["ownership"]["profileDenominatorByTime"], {"DAY": 129, "NIGHT": 129})
@@ -1405,10 +1438,21 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertTrue(any(change["changeKind"] == "CONSOLIDATE_DUPLICATE" for change in johto["changes"]))
         self.assertTrue(any(change["changeKind"] == "ADD_LOCAL_SPECIES" for change in johto["changes"]))
         products = {row["product"]: row for row in audit["products"]}
-        self.assertEqual(set(products), {"Emerald", "FireRed", "LeafGreen", "HNS"})
+        self.assertEqual(set(products), {"Emerald", "FireRed", "LeafGreen", "HNS", "Wayfarer"})
         for product in products.values():
             self.assertGreater(product["profileCount"], 0)
             self.assertGreater(product["headerCount"], 0)
+        sevii = audit["sevii"]
+        self.assertEqual((sevii["mapCount"], sevii["dayProfileCount"], sevii["nightAliasCount"]), (58, 99, 99))
+        self.assertEqual(len(sevii["mapsWithoutEncounters"]), 77)
+        self.assertTrue(all(
+            row["map"] not in {"MAP_BIRTH_ISLAND", "MAP_NAVEL_ROCK"}
+            and row["resolvedTimes"] == {
+                "TIME_MORNING": row["dayBaseLabel"], "TIME_DAY": row["dayBaseLabel"],
+                "TIME_EVENING": row["dayBaseLabel"], "TIME_NIGHT": row["dayBaseLabel"],
+            }
+            for row in sevii["profiles"]
+        ))
         fishing = [
             row
             for product in products.values()
@@ -1557,7 +1601,10 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(projection["authoredLevel"], {"minimum": 1, "maximum": 100})
         self.assertEqual(
             projection["headerCounts"],
-            {"EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132, "POKEMON_HNS": 168},
+            {
+                "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
+                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 0,
+            },
         )
 
         rows = projection["profiles"]
@@ -1743,7 +1790,12 @@ class WildEncounterScalingTests(unittest.TestCase):
                 GENERATOR.load_json(first)["trainerRating"],
                 {"minimum": 0, "maximum": 80},
             )
-            authored_labels = {profile["label"] for profile in self.profiles}
+            header_ids = {product: dict(values) for product, values in self.header_ids.items()}
+            sevii, _ = GENERATOR.load_wayfarer_sevii_profiles(
+                GENERATOR.DEFAULT_WAYFARER_SEVII_ENCOUNTERS, self.profiles,
+                header_ids, self.config, self.standard_rod,
+            )
+            authored_labels = {profile["label"] for profile in self.profiles + sevii}
             self.assertTrue(
                 all(
                     row["baseLabel"] in authored_labels

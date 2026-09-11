@@ -943,6 +943,14 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_DEOXYS_N]                 = &gObjectEventGraphicsInfo_DeoxysN,
     [OBJ_EVENT_GFX_SS_ANNE]                  = &gObjectEventGraphicsInfo_SSAnne,
 #endif // IS_FRLG
+
+#if HAS_SEVII_CONTENT
+    [OBJ_EVENT_GFX_OLD_WOMAN_FRLG]           = &gObjectEventGraphicsInfo_OldWomanFrlg,
+    [OBJ_EVENT_GFX_SAILOR_FRLG]              = &gObjectEventGraphicsInfo_SailorFrlg,
+    [OBJ_EVENT_GFX_NURSE_FRLG]               = &gObjectEventGraphicsInfo_NurseFrlg,
+    [OBJ_EVENT_GFX_CLERK]                    = &gObjectEventGraphicsInfo_Clerk,
+#endif // HAS_SEVII_CONTENT
+
 #if IS_HNS
     [OBJ_EVENT_GFX_ATTENDANT_F_HNS] = &gObjectEventGraphicsInfo_AttendantF_hns,
     [OBJ_EVENT_GFX_ATTENDANT_M_HNS] = &gObjectEventGraphicsInfo_AttendantM_hns,

@@ -134,7 +134,7 @@ static const u16 sDoorNullPalette48[16] = {};
 static const u8 sDoorAnimTiles_TrainerHillRoofElevator[] = INCBIN_U8("graphics/door_anims/trainer_hill_roof_elevator.4bpp");
 static const u16 sDoorNullPalette49[16] = {};
 
-#if HAS_FRLG_CONTENT
+#if HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 static const u8 sDoorAnimTiles_GeneralFrlg[] = INCBIN_U8("graphics/door_anims/general_frlg.4bpp");
 static const u8 sDoorAnimTiles_SlidingSingle[] = INCBIN_U8("graphics/door_anims/sliding_single.4bpp");
@@ -169,7 +169,7 @@ static const u8 sDoorAnimTiles_Teleporter[] = INCBIN_U8("graphics/door_anims/tel
 static const u8 sDoorAnimTiles_TrainerTowerLobbyElevator[] = INCBIN_U8("graphics/door_anims/trainer_tower_lobby_elevator.4bpp");
 static const u8 sDoorAnimTiles_TrainerTowerRoofElevator[] = INCBIN_U8("graphics/door_anims/trainer_tower_roof_elevator.4bpp");
 
-#endif // HAS_FRLG_CONTENT
+#endif // HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 #if HAS_HNS_CONTENT
 
@@ -357,7 +357,7 @@ static const u8 sDoorAnimPalettes_BattleTentInterior[] = {9, 9, 9, 9, 9, 9, 9, 9
 static const u8 sDoorAnimPalettes_TrainerHillLobbyElevator[] = {7, 7, 7, 7, 7, 7, 7, 7};
 static const u8 sDoorAnimPalettes_TrainerHillRoofElevator[] = {9, 9, 7, 7, 7, 7, 7, 7};
 
-#if HAS_FRLG_CONTENT
+#if HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 static const u8 sDoorAnimPalettes_GeneralFrlg[] = {2, 2, 2, 2, 2, 2, 2, 2};
 static const u8 sDoorAnimPalettes_SlidingSingle[] = {3, 3, 3, 3, 3, 3, 3, 3};
@@ -392,7 +392,7 @@ static const u8 sDoorAnimPalettes_Teleporter[] = {8, 8, 8, 8, 8, 8, 8, 8};
 static const u8 sDoorAnimPalettes_TrainerTowerLobbyElevator[] = {8, 8, 2, 2, 2, 2, 2, 2};
 static const u8 sDoorAnimPalettes_TrainerTowerRoofElevator[] = {11, 11, 2, 2, 2, 2, 2, 2};
 
-#endif // HAS_FRLG_CONTENT
+#endif // HAS_FRLG_CONTENT || HAS_SEVII_CONTENT
 
 #if HAS_HNS_CONTENT
 
@@ -529,6 +529,23 @@ static const struct DoorGraphics sDoorAnimGraphicsTable[] =
     {METATILE_TrainerTower_LobbyElevatorDoor,               &gTileset_TrainerTower, DOOR_SOUND_SLIDING, 2, sDoorAnimTiles_TrainerTowerLobbyElevator, sDoorAnimPalettes_TrainerTowerLobbyElevator},
     {METATILE_TrainerTower_RoofElevatorDoor,                &gTileset_TrainerTower, DOOR_SOUND_SLIDING, 2, sDoorAnimTiles_TrainerTowerRoofElevator, sDoorAnimPalettes_TrainerTowerRoofElevator},
 #endif // HAS_FRLG_CONTENT
+#if HAS_SEVII_CONTENT
+    // Keep this list in lockstep with the reviewed Sevii tileset closure.  The
+    // generic FRLG door table also names Kanto-only tilesets, so it must not
+    // be made available to Wayfarer wholesale.
+    {METATILE_GeneralFrlg_Door,                             &gTileset_General_Frlg, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_GeneralFrlg, sDoorAnimPalettes_GeneralFrlg},
+    {METATILE_GeneralFrlg_SlidingSingleDoor,                &gTileset_General_Frlg, DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_SlidingSingle, sDoorAnimPalettes_SlidingSingle},
+    {METATILE_GeneralFrlg_SlidingDoubleDoor,                &gTileset_General_Frlg, DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_SlidingDouble, sDoorAnimPalettes_SlidingDouble},
+    {METATILE_SeviiIslands123_Door,                         &gTileset_SeviiIslands123, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_Sevii123, sDoorAnimPalettes_Sevii123},
+    {METATILE_SeviiIslands123_GameCornerDoor,               &gTileset_SeviiIslands123, DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_JoyfulGameCorner, sDoorAnimPalettes_JoyfulGameCorner},
+    {METATILE_SeviiIslands123_PokeCenterDoor,               &gTileset_SeviiIslands123, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_OneIslandPokeCenter, sDoorAnimPalettes_OneIslandPokeCenter},
+    {METATILE_SeviiIslands45_Door,                          &gTileset_SeviiIslands45, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_Sevii45, sDoorAnimPalettes_Sevii45},
+    {METATILE_SeviiIslands45_DayCareDoor,                   &gTileset_SeviiIslands45, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_FourIslandDayCare, sDoorAnimPalettes_FourIslandDayCare},
+    {METATILE_SeviiIslands45_RocketWarehouseDoor_Unlocked,  &gTileset_SeviiIslands45, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_RocketWarehouse, sDoorAnimPalettes_RocketWarehouse},
+    {METATILE_SeviiIslands67_Door,                          &gTileset_SeviiIslands67, DOOR_SOUND_NORMAL,  1, sDoorAnimTiles_Sevii67, sDoorAnimPalettes_Sevii67},
+    {METATILE_TrainerTower_LobbyElevatorDoor,               &gTileset_TrainerTower, DOOR_SOUND_SLIDING, 2, sDoorAnimTiles_TrainerTowerLobbyElevator, sDoorAnimPalettes_TrainerTowerLobbyElevator},
+    {METATILE_TrainerTower_RoofElevatorDoor,                &gTileset_TrainerTower, DOOR_SOUND_SLIDING, 2, sDoorAnimTiles_TrainerTowerRoofElevator, sDoorAnimPalettes_TrainerTowerRoofElevator},
+#endif // HAS_SEVII_CONTENT
 #if HAS_HNS_CONTENT
 #if !HAS_EMERALD_CONTENT
     {METATILE_General_Door_PokeCenter,                         &gTileset_General, DOOR_SOUND_SLIDING, 1, sDoorAnimTiles_PokeCenter, sDoorAnimPalettes_PokeCenter},

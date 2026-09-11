@@ -17,6 +17,7 @@ import type {
 import { profileIndex, profileLookupKey, readWildEncounterProjection } from "./projection"
 
 const wildEncounterPath = "src/data/wild_encounters.json"
+const wayfarerSeviiEncounterPath = "src/data/wayfarer_sevii_wild_encounters.json"
 const speciesInfoPath = "src/data/pokemon/species_info.h"
 const speciesInfoDirectory = "src/data/pokemon/species_info"
 const wildEncounterRuntimePath = "src/wild_encounter.c"
@@ -68,6 +69,10 @@ type SourceMethod = {
 type SourceEncounter = {
   map: string
   base_label: string
+  projectionAlias?: {
+    baseLabel: string
+    runtimeTime: CatalogEncounterProjectionProfile["runtimeTime"]
+  }
   [method: string]: unknown
 }
 
@@ -100,6 +105,16 @@ const isRecord = (value: unknown): value is Record<string, unknown> => {
   return typeof value === "object" && value !== null && !Array.isArray(value)
 }
 
+const requireRecord = (value: unknown, pointer: string): Record<string, unknown> => {
+  if (!isRecord(value)) throw sourceError(pointer, "expected an object")
+  return value
+}
+
+const requireArray = (value: unknown, pointer: string): unknown[] => {
+  if (!Array.isArray(value)) throw sourceError(pointer, "expected an array")
+  return value
+}
+
 const isEncounterType = (value: unknown): value is EncounterType => {
   return typeof value === "string" && encounterTypes.includes(value as EncounterType)
 }
@@ -114,6 +129,18 @@ const requireString = (value: unknown, pointer: string): string => {
 const requireRate = (value: unknown, pointer: string): number => {
   if (typeof value !== "number" || !Number.isFinite(value) || value < 0) {
     throw sourceError(pointer, "expected a non-negative finite number")
+  }
+  return value
+}
+
+const requireInteger = (
+  value: unknown,
+  pointer: string,
+  minimum: number,
+  maximum: number,
+): number => {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < minimum || value > maximum) {
+    throw sourceError(pointer, `expected an integer from ${minimum} through ${maximum}`)
   }
   return value
 }
@@ -215,6 +242,7 @@ const sourceTimeForBaseLabel = (
 
 export const sourceProductForBaseLabel = (baseLabel: string): CatalogEncounterProduct => {
   const markedProducts: CatalogEncounterProduct[] = []
+  if (baseLabel.includes("_Wayfarer")) markedProducts.push("POKEMON_WAYFARER")
   if (baseLabel.includes("FireRed")) markedProducts.push("FIRERED")
   if (baseLabel.includes("LeafGreen")) markedProducts.push("LEAFGREEN")
   if (baseLabel.includes("_Hns") || baseLabel.includes("_hns")) {
@@ -224,6 +252,103 @@ export const sourceProductForBaseLabel = (baseLabel: string): CatalogEncounterPr
     throw new Error(`${baseLabel}: source label has ambiguous product markers`)
   }
   return markedProducts[0] ?? "EMERALD"
+}
+
+/** Materialize the reviewed Sevii manifest only for Cartographer's source join.
+ * The JSON manifest names FRLG rows; it intentionally does not duplicate them.
+ */
+const withWayfarerSeviiSource = (document: unknown, manifest: unknown): unknown => {
+  const copy = JSON.parse(JSON.stringify(document)) as SourceEncounterDocument
+  const root = requireRecord(manifest, wayfarerSeviiEncounterPath)
+  const rows = requireArray(root.profiles, `${wayfarerSeviiEncounterPath}/profiles`)
+  const group = copy.wild_encounter_groups.find(
+    (candidate) => candidate.label === "gWildMonHeaders",
+  )
+  if (!group) throw sourceError("", "missing gWildMonHeaders")
+  const sources = new Map(group.encounters.map((entry) => [entry.base_label, entry]))
+  const targets = new Map<string, SourceEncounter>()
+  for (const [index, value] of rows.entries()) {
+    const row = requireRecord(value, `${wayfarerSeviiEncounterPath}/profiles/${index}`)
+    const map = requireString(row.map, `${wayfarerSeviiEncounterPath}/profiles/${index}/map`)
+    const method = isEncounterType(row.method)
+      ? row.method
+      : (() => {
+          throw sourceError(
+            `${wayfarerSeviiEncounterPath}/profiles/${index}/method`,
+            "expected a supported encounter method",
+          )
+        })()
+    const day = requireString(
+      row.dayBaseLabel,
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/dayBaseLabel`,
+    )
+    const night = requireString(
+      row.nightBaseLabel,
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/nightBaseLabel`,
+    )
+    const fire = sources.get(
+      requireString(
+        row.fireRedSource,
+        `${wayfarerSeviiEncounterPath}/profiles/${index}/fireRedSource`,
+      ),
+    )
+    const leaf = sources.get(
+      requireString(
+        row.leafGreenSource,
+        `${wayfarerSeviiEncounterPath}/profiles/${index}/leafGreenSource`,
+      ),
+    )
+    if (!fire || !leaf) throw sourceError("", `Sevii manifest source row is missing for ${day}`)
+    const fireMethod = methodFor(
+      fire[method],
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/fireRedSource/${method}`,
+    )
+    const leafMethod = methodFor(
+      leaf[method],
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/leafGreenSource/${method}`,
+    )
+    const pairSlots = new Map<string, number[]>()
+    for (const [slot, fireSlot] of fireMethod.mons.entries()) {
+      const leafSlot = leafMethod.mons[slot]!
+      const key = `${fireSlot.species}\u0000${leafSlot.species}`
+      pairSlots.set(key, [...(pairSlots.get(key) ?? []), slot])
+    }
+    const positions = new Map<string, number>()
+    const mons = fireMethod.mons.map((fireSlot, slot) => {
+      const leafSlot = leafMethod.mons[slot]!
+      const key = `${fireSlot.species}\u0000${leafSlot.species}`
+      const position = positions.get(key) ?? 0
+      positions.set(key, position + 1)
+      const sourceSlots = pairSlots.get(key)!
+      const useFire =
+        fireSlot.species === leafSlot.species || sourceSlots.length === 1 || position % 2 === 0
+      const selected = useFire ? fireSlot : leafSlot
+      if (fireSlot.species !== leafSlot.species) return { ...selected }
+      const pickFire =
+        fireSlot.min_level + fireSlot.max_level <= leafSlot.min_level + leafSlot.max_level
+      return { ...(pickFire ? fireSlot : leafSlot) }
+    })
+    const encounterRate = requireInteger(
+      row.encounterRate,
+      `${wayfarerSeviiEncounterPath}/profiles/${index}/encounterRate`,
+      0,
+      255,
+    )
+    for (const [label, projectionAlias] of [
+      [day, undefined],
+      [night, { baseLabel: day, runtimeTime: "TIME_NIGHT" }],
+    ] as const) {
+      const target: SourceEncounter = targets.get(label) ?? {
+        map,
+        base_label: label,
+        projectionAlias,
+      }
+      target[method] = { encounter_rate: encounterRate, mons }
+      targets.set(label, target)
+    }
+  }
+  group.encounters.push(...targets.values())
+  return copy
 }
 
 const runtimeTimesFor = (
@@ -276,12 +401,18 @@ const joinedProfiles = (
   method: SourceMethod,
   profiles: ReadonlyMap<string, CatalogEncounterProjectionProfile> | undefined,
   consumedProfiles: Set<string>,
+  projectionAlias?: SourceEncounter["projectionAlias"],
 ): CatalogEncounterProjectionProfile[] => {
   if (!profiles) return []
   const rodsForMethod: CatalogEncounterFishingRod[] =
     metadata.field.type === "fishing_mons" ? profileRods : ["NONE"]
   return rodsForMethod.map((rod) => {
-    const key = profileLookupKey(product, baseLabel, metadata.field.type, rod)
+    const key = profileLookupKey(
+      product,
+      projectionAlias?.baseLabel ?? baseLabel,
+      metadata.field.type,
+      rod,
+    )
     const profile = profiles.get(key)
     if (!profile) throw sourceError("", `projection has no exact profile join for ${key}`)
     const runtimeSlotCount = rod === "NONE" ? metadata.field.encounter_rates.length : 10
@@ -303,11 +434,11 @@ const joinedProfiles = (
         `projection profile ${profile.profileKey} disagrees on ${mismatches.join(", ")}`,
       )
     }
-    if (consumedProfiles.has(profile.profileKey)) {
+    if (!projectionAlias && consumedProfiles.has(profile.profileKey)) {
       throw sourceError("", `projection profile joined more than once: ${profile.profileKey}`)
     }
-    consumedProfiles.add(profile.profileKey)
-    return profile
+    if (!projectionAlias) consumedProfiles.add(profile.profileKey)
+    return projectionAlias ? { ...profile, runtimeTime: projectionAlias.runtimeTime } : profile
   })
 }
 
@@ -357,6 +488,7 @@ export const catalogWildEncounters = (
           method,
           profiles,
           consumedProfiles,
+          encounter.projectionAlias,
         )
         methodProfiles.push(joined)
         return {
@@ -472,6 +604,7 @@ export const catalogWildEncounters = (
         baseLabel,
         product,
         runtimeTime,
+        projectionAlias: encounter.projectionAlias,
         header: { groupLabel: group.label, groupIndex, headerIndex },
         source: sourcePointer(encounterPointer),
         methods,
@@ -533,7 +666,10 @@ export const sourceWildEncounterCatalog = (
   const speciesLabels = sourceSpeciesLabels(root)
   const projection = readWildEncounterProjection(projectionPath, speciesLabels, spriteForSpecies)
   const encountersByMap = catalogWildEncounters(
-    JSON.parse(fs.readFileSync(path.join(root, wildEncounterPath), "utf8")),
+    withWayfarerSeviiSource(
+      JSON.parse(fs.readFileSync(path.join(root, wildEncounterPath), "utf8")),
+      JSON.parse(fs.readFileSync(path.join(root, wayfarerSeviiEncounterPath), "utf8")),
+    ),
     mapNamesById,
     speciesLabels,
     runtimeSelectorMapIds(root),

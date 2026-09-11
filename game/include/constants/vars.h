@@ -57,6 +57,9 @@
 #define VAR_STARTER_MON                                  0x4023 // 0=Treecko, 1=Torchic, 2=Mudkip
 #if IS_WAYFARER
 #define VAR_HOENN_STARTER_CHOICE                         HOENN_VAR_ID(VAR_STARTER_MON)
+// One-shot Icefall fall signal. This HNS-unused slot is reset by the map
+// script after the warp and is intentionally not shared with VAR_TEMP_1.
+#define VAR_WAYFARER_SEVII_ICEFALL_FALL                  0x40FF
 #else
 #define VAR_HOENN_STARTER_CHOICE                         VAR_STARTER_MON
 #endif

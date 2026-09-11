@@ -122,6 +122,15 @@ static void CB_FadeInFlyMap(void);
 static void CB_HandleFlyMapInput(void);
 static void CB_ExitFlyMap(void);
 
+#if IS_WAYFARER
+// These IDs are emitted only for the selected numbered-island catalog. The
+// FRLG Birth Island and Navel Rock IDs remain unavailable in Wayfarer.
+static bool8 IsWayfarerSeviiMapSecId(mapsec_u16_t mapSecId)
+{
+    return mapSecId >= MAPSEC_ONE_ISLAND && mapSecId <= MAPSEC_EMBER_SPA;
+}
+#endif
+
 static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/pokenav/region_map/cursor.gbapal");
 static const u32 sRegionMapCursorSmallGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_small.4bpp.smol");
 static const u32 sRegionMapCursorLargeGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_large.4bpp.smol");
@@ -294,6 +303,8 @@ const struct RegionMapLocation *GetActiveRegionMapEntries(void)
 #if IS_WAYFARER
     if (WayfarerIsCurrentMapHoennSource())
         return sWayfarerHoennRegionMapEntries;
+    if (IsWayfarerSeviiMapSecId(gMapHeader.regionMapSectionId))
+        return gRegionMapEntries;
 #endif
     if (FlagGet(FLAG_VISITED_KANTO))
         entries = sRegionMapEntries_JK;
@@ -838,6 +849,15 @@ static const u8 sMapHealLocations[][3] =
     [MAPSEC_RIXY_CHAMBER] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_VIAPOIS_CHAMBER] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
     [MAPSEC_EMBER_SPA] = {MAP_GROUP(MAP_PALLET_TOWN), MAP_NUM(MAP_PALLET_TOWN), HEAL_LOCATION_NONE},
+#endif
+#if IS_WAYFARER
+    [MAPSEC_ONE_ISLAND] = {MAP_GROUP(MAP_ONE_ISLAND), MAP_NUM(MAP_ONE_ISLAND), HEAL_LOCATION_ONE_ISLAND},
+    [MAPSEC_TWO_ISLAND] = {MAP_GROUP(MAP_TWO_ISLAND), MAP_NUM(MAP_TWO_ISLAND), HEAL_LOCATION_TWO_ISLAND},
+    [MAPSEC_THREE_ISLAND] = {MAP_GROUP(MAP_THREE_ISLAND), MAP_NUM(MAP_THREE_ISLAND), HEAL_LOCATION_THREE_ISLAND},
+    [MAPSEC_FOUR_ISLAND] = {MAP_GROUP(MAP_FOUR_ISLAND), MAP_NUM(MAP_FOUR_ISLAND), HEAL_LOCATION_FOUR_ISLAND},
+    [MAPSEC_FIVE_ISLAND] = {MAP_GROUP(MAP_FIVE_ISLAND), MAP_NUM(MAP_FIVE_ISLAND), HEAL_LOCATION_FIVE_ISLAND},
+    [MAPSEC_SEVEN_ISLAND] = {MAP_GROUP(MAP_SEVEN_ISLAND), MAP_NUM(MAP_SEVEN_ISLAND), HEAL_LOCATION_SEVEN_ISLAND},
+    [MAPSEC_SIX_ISLAND] = {MAP_GROUP(MAP_SIX_ISLAND), MAP_NUM(MAP_SIX_ISLAND), HEAL_LOCATION_SIX_ISLAND},
 #endif
 #if IS_HNS
     [MAPSEC_NEW_BARK_TOWN] = {MAP_GROUP(MAP_NEW_BARK_TOWN_HNS), MAP_NUM(MAP_NEW_BARK_TOWN_HNS), HEAL_LOCATION_NEW_BARK_TOWN_HNS},
@@ -1592,6 +1612,21 @@ enum RegionMapType GetRegionMapType(u32 mapSecId)
 #if IS_WAYFARER
     if (WayfarerIsCurrentMapHoennSource())
         return REGION_MAP_HOENN;
+    if (IsWayfarerSeviiMapSecId(mapSecId))
+    {
+        switch (GetKantoSubregion(mapSecId))
+        {
+        case KANTO_SUBREGION_SEVII123:
+            return REGION_MAP_SEVII123;
+        case KANTO_SUBREGION_SEVII45:
+            return REGION_MAP_SEVII45;
+        case KANTO_SUBREGION_SEVII67:
+            return REGION_MAP_SEVII67;
+        case KANTO_SUBREGION_KANTO:
+        default:
+            break;
+        }
+    }
 #endif
     if (FlagGet(FLAG_VISITED_KANTO))
         return REGION_MAP_JK;
@@ -1636,6 +1671,27 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
 #if IS_WAYFARER
     if (WayfarerIsCurrentMapHoennSource())
         return sWayfarerHoennRegionMapSections[y][x];
+    if (IsWayfarerSeviiMapSecId(gMapHeader.regionMapSectionId))
+    {
+        switch (GetKantoSubregion(gMapHeader.regionMapSectionId))
+        {
+        case KANTO_SUBREGION_SEVII123:
+            return sRegionMapSections_Sevii123[y][x] == 0
+                       ? MAPSEC_NONE
+                       : sRegionMapSections_Sevii123[y][x];
+        case KANTO_SUBREGION_SEVII45:
+            return sRegionMapSections_Sevii45[y][x] == 0
+                       ? MAPSEC_NONE
+                       : sRegionMapSections_Sevii45[y][x];
+        case KANTO_SUBREGION_SEVII67:
+            return sRegionMapSections_Sevii67[y][x] == 0
+                       ? MAPSEC_NONE
+                       : sRegionMapSections_Sevii67[y][x];
+        case KANTO_SUBREGION_KANTO:
+        default:
+            break;
+        }
+    }
 #endif
     if (FlagGet(FLAG_VISITED_KANTO))
         return sRegionMapSections_JK[y][x];
@@ -1946,6 +2002,10 @@ static void RegionMap_InitializeStateBasedOnSSTidalLocation(void)
 static u8 GetMapsecType(mapsec_u16_t mapSecId)
 {
 #if IS_WAYFARER
+    // Numbered-island pages are ferry-only. Their visibility does not create
+    // Fly targets or reuse the standalone FRLG world-map flags.
+    if (IsWayfarerSeviiMapSecId(mapSecId))
+        return MAPSECTYPE_ROUTE;
     if (WayfarerIsCurrentMapHoennSource())
     {
         if (mapSecId == WAYFARER_HOENN_MAPSEC_NONE)
@@ -3023,6 +3083,7 @@ static const struct FlyLocation sFlyLocations[] =
         .mapsec = MAPSEC_SAFFRON_CITY,
         .flag = FLAG_WORLD_MAP_SAFFRON_CITY,
     },
+#if !IS_HNS
     {
         .regionMapType = REGION_MAP_SEVII123,
         .mapsec = MAPSEC_ONE_ISLAND,
@@ -3058,6 +3119,7 @@ static const struct FlyLocation sFlyLocations[] =
         .mapsec = MAPSEC_SIX_ISLAND,
         .flag = FLAG_WORLD_MAP_SIX_ISLAND,
     },
+#endif
     {
         .regionMapType = REGION_MAP_KANTO,
         .mapsec = MAPSEC_ROUTE_4_POKECENTER,

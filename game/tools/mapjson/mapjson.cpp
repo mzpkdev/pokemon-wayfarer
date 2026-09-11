@@ -39,6 +39,15 @@ using json11::Json;
 string version;
 // System directory separator
 string sep;
+string wayfarer_sevii_manifest_path;
+bool wayfarer_sevii_release_link_enabled = false;
+set<string> wayfarer_sevii_map_names;
+set<string> wayfarer_sevii_map_ids;
+set<string> wayfarer_sevii_layout_ids;
+set<string> wayfarer_sevii_enabled_map_names;
+set<string> wayfarer_sevii_enabled_map_ids;
+set<string> wayfarer_sevii_enabled_layout_ids;
+map<string, Json> wayfarer_sevii_records;
 
 string read_text_file(string filepath) {
     ifstream in_file(filepath);
@@ -60,6 +69,19 @@ string read_text_file(string filepath) {
 }
 
 void write_text_file(string filepath, string text) {
+    // `generated` runs before dependency scanning.  Rewriting an identical
+    // include here makes every scaninc dependency older than its generated
+    // map input and forces a full rescan on every build invocation.
+    if (std::filesystem::exists(filepath)) {
+        ifstream in_file(filepath, std::ifstream::binary);
+        std::ostringstream existing;
+        existing << in_file.rdbuf();
+        if (in_file.good() || in_file.eof()) {
+            if (existing.str() == text)
+                return;
+        }
+    }
+
     ofstream out_file(filepath, std::ofstream::binary);
 
     if (!out_file.is_open())
@@ -117,7 +139,178 @@ bool source_version_is_selected(const string &source_version) {
 }
 
 bool data_matches_version(const Json &data) {
+    if (version == "wayfarer" && get_source_version(data) == "frlg") {
+        if (!wayfarer_sevii_release_link_enabled)
+            return false;
+        string name = json_to_string(data, "name", true);
+        string id = json_to_string(data, "id", true);
+        return wayfarer_sevii_enabled_map_names.find(name) != wayfarer_sevii_enabled_map_names.end()
+            || wayfarer_sevii_enabled_layout_ids.find(id) != wayfarer_sevii_enabled_layout_ids.end();
+    }
     return source_version_is_selected(get_source_version(data));
+}
+
+void load_wayfarer_sevii_manifest() {
+    if (version != "wayfarer" || wayfarer_sevii_manifest_path.empty())
+        return;
+
+    string err;
+    Json manifest = Json::parse(read_text_file(wayfarer_sevii_manifest_path), err);
+    if (manifest == Json())
+        FATAL_ERROR("Failed to read Wayfarer Sevii manifest: %s\n", err.c_str());
+    if (manifest["schema_version"].int_value() != 1)
+        FATAL_ERROR("Wayfarer Sevii manifest has unsupported schema version.\n");
+    if (manifest["release_link_enabled"].type() != Json::Type::BOOL)
+        FATAL_ERROR("Wayfarer Sevii manifest must declare release_link_enabled.\n");
+
+    wayfarer_sevii_release_link_enabled = manifest["release_link_enabled"].bool_value();
+    for (const Json &entry : manifest["maps"].array_items()) {
+        string source_map = json_to_string(entry, "source_map");
+        string map_id = json_to_string(entry, "map_id");
+        string layout = json_to_string(entry, "layout");
+        if (source_map.rfind("BirthIsland_", 0) == 0 || source_map.rfind("NavelRock_", 0) == 0)
+            FATAL_ERROR("Wayfarer Sevii manifest cannot select event-island map %s.\n", source_map.c_str());
+        if (!wayfarer_sevii_map_names.insert(source_map).second
+         || !wayfarer_sevii_map_ids.insert(map_id).second)
+            FATAL_ERROR("Wayfarer Sevii manifest contains duplicate map %s.\n", source_map.c_str());
+        wayfarer_sevii_layout_ids.insert(layout);
+        wayfarer_sevii_records.emplace(source_map, entry);
+
+        // An explicit per-map value narrows a release. Otherwise the frozen
+        // manifest follows the reviewed release-wide switch, keeping the
+        // initial all-off artifact inert without duplicating 135 booleans.
+        bool enabled = entry["enabled"].type() == Json::Type::BOOL
+            ? entry["enabled"].bool_value()
+            : wayfarer_sevii_release_link_enabled;
+        if (enabled) {
+            wayfarer_sevii_enabled_map_names.insert(source_map);
+            wayfarer_sevii_enabled_map_ids.insert(map_id);
+            wayfarer_sevii_enabled_layout_ids.insert(layout);
+        }
+    }
+}
+
+bool is_registered_wayfarer_sevii_map(const Json &map_data) {
+    return version == "wayfarer"
+        && get_source_version(map_data) == "frlg"
+        && wayfarer_sevii_records.find(json_to_string(map_data, "name", true))
+            != wayfarer_sevii_records.end();
+}
+
+Json wayfarer_sevii_record(const Json &map_data) {
+    auto it = wayfarer_sevii_records.find(json_to_string(map_data, "name", true));
+    return it == wayfarer_sevii_records.end() ? Json() : it->second;
+}
+
+bool is_wayfarer_sevii_enabled_destination(const string &map_id) {
+    return map_id == "MAP_DYNAMIC" || map_id == "MAP_UNDEFINED"
+        || wayfarer_sevii_enabled_map_ids.find(map_id) != wayfarer_sevii_enabled_map_ids.end();
+}
+
+bool retained_event_matches_index(const Json &entries, unsigned int index, Json *rule) {
+    for (const Json &entry : entries.array_items()) {
+        if (entry.type() == Json::Type::NUMBER && entry.int_value() == (int)index) {
+            if (rule != nullptr)
+                *rule = entry;
+            return true;
+        }
+        if (entry.type() == Json::Type::OBJECT && entry["index"].int_value() == (int)index) {
+            if (rule != nullptr)
+                *rule = entry;
+            return true;
+        }
+    }
+    return false;
+}
+
+Json apply_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
+                                     const string &map_name, const string &event_kind,
+                                     unsigned int index) {
+    // A numeric entry is deliberately rejected for retained scripted events:
+    // it has no source identity and no Wayfarer-owned replacement label.
+    if (rule.type() != Json::Type::OBJECT)
+        FATAL_ERROR("Wayfarer Sevii %s %s[%u] must record a source event identity and Wayfarer script.\n",
+                    map_name.c_str(), event_kind.c_str(), index);
+    if (rule["source"] == Json() || rule["source"].dump() != event.dump())
+        FATAL_ERROR("Wayfarer Sevii %s %s[%u] no longer matches its reviewed source event.\n",
+                    map_name.c_str(), event_kind.c_str(), index);
+
+    Json::object output = event.object_items();
+    string source_script = json_to_string(event, "script", true);
+    string replacement_script = json_to_string(rule, "wayfarer_script", true);
+    if (source_script != "" && source_script != "0" && source_script != "0x0" && source_script != "NULL") {
+        if (replacement_script.empty())
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] must name a Wayfarer-owned replacement script.\n",
+                        map_name.c_str(), event_kind.c_str(), index);
+        output["script"] = replacement_script;
+    }
+    return output;
+}
+
+Json sanitize_wayfarer_sevii_map_events(const Json &map_data) {
+    if (!is_registered_wayfarer_sevii_map(map_data))
+        return map_data;
+
+    const string map_name = json_to_string(map_data, "name");
+    const Json record = wayfarer_sevii_record(map_data);
+    const Json retained = record["retained_events"];
+    Json::object output = map_data.object_items();
+    Json::array objects, warps, coords, bgs;
+
+    // Objects, coordinate triggers, and background events are opt-in only.
+    // This keeps story actors, Trainers, items, and signs out unless a later
+    // milestone records the exact source event and supplies a replacement.
+    for (unsigned int i = 0; i < map_data["object_events"].array_items().size(); i++) {
+        const Json event = map_data["object_events"].array_items()[i];
+        Json rule;
+        if (!retained_event_matches_index(retained["object_events"], i, &rule))
+            continue;
+        string trainer_type = json_to_string(event, "trainer_type", true);
+        if (!trainer_type.empty() && trainer_type != "TRAINER_TYPE_NONE")
+            FATAL_ERROR("Wayfarer Sevii %s object_events[%u] is a Trainer and cannot be retained.\n",
+                        map_name.c_str(), i);
+        objects.push_back(apply_wayfarer_sevii_event_rule(event, rule, map_name, "object_events", i));
+    }
+
+    // Internal map warps are geometry, not story content. Keep only targets
+    // that are enabled in this release; the FRLG Union Room and Trade Center
+    // are intentionally absent, so the Pokemon Center 2F doors disappear.
+    for (const Json &event : map_data["warp_events"].array_items()) {
+        if (is_wayfarer_sevii_enabled_destination(json_to_string(event, "dest_map")))
+            warps.push_back(event);
+    }
+
+    for (unsigned int i = 0; i < map_data["coord_events"].array_items().size(); i++) {
+        const Json event = map_data["coord_events"].array_items()[i];
+        Json rule;
+        if (retained_event_matches_index(retained["coord_events"], i, &rule))
+            coords.push_back(apply_wayfarer_sevii_event_rule(event, rule, map_name, "coord_events", i));
+    }
+    for (unsigned int i = 0; i < map_data["bg_events"].array_items().size(); i++) {
+        const Json event = map_data["bg_events"].array_items()[i];
+        Json rule;
+        if (retained_event_matches_index(retained["bg_events"], i, &rule))
+            bgs.push_back(apply_wayfarer_sevii_event_rule(event, rule, map_name, "bg_events", i));
+    }
+
+    output["object_events"] = objects;
+    output["warp_events"] = warps;
+    output["coord_events"] = coords;
+    output["bg_events"] = bgs;
+    return output;
+}
+
+Json sanitize_wayfarer_sevii_map_connections(const Json &map_data) {
+    if (!is_registered_wayfarer_sevii_map(map_data))
+        return map_data;
+    Json::object output = map_data.object_items();
+    Json::array connections;
+    for (const Json &connection : map_data["connections"].array_items()) {
+        if (is_wayfarer_sevii_enabled_destination(json_to_string(connection, "map")))
+            connections.push_back(connection);
+    }
+    output["connections"] = connections;
+    return output;
 }
 
 string get_generated_warning(const string &filename, bool isAsm) {
@@ -144,6 +337,7 @@ string get_include_guard_end(const string &name) {
 }
 
 string generate_map_header_text(Json map_data, Json layouts_data) {
+    Json effective_map_data = sanitize_wayfarer_sevii_map_connections(map_data);
     string map_layout_id = json_to_string(map_data, "layout");
 
     vector<Json> matched;
@@ -184,8 +378,8 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.4byte " << mapName << "_MapScripts\n";
 
-    if (map_data.object_items().find("connections") != map_data.object_items().end()
-     && map_data["connections"].array_items().size() > 0 && json_to_string(map_data, "connections_no_include", true) != "TRUE")
+    if (effective_map_data.object_items().find("connections") != effective_map_data.object_items().end()
+     && effective_map_data["connections"].array_items().size() > 0 && json_to_string(map_data, "connections_no_include", true) != "TRUE")
         text << "\t.4byte " << mapName << "_MapConnections\n";
     else
         text << "\t.4byte NULL\n";
@@ -232,6 +426,7 @@ vector<string> get_existing_maps() {
 }
 
 string generate_map_connections_text(Json map_data) {
+    map_data = sanitize_wayfarer_sevii_map_connections(map_data);
     if (map_data["connections"] == Json())
         return string("\n");
 
@@ -260,6 +455,7 @@ string generate_map_connections_text(Json map_data) {
 }
 
 string generate_map_events_text(Json map_data) {
+    map_data = sanitize_wayfarer_sevii_map_events(map_data);
     if (map_data.object_items().find("shared_events_map") != map_data.object_items().end())
         return string("\n");
 
@@ -375,7 +571,10 @@ string generate_map_events_text(Json map_data) {
                 if (underfoot.empty()) {
                     underfoot = "FALSE";
                 }
-                bool use_hoenn_namespace = version == "wayfarer" && get_source_version(map_data) == "emerald";
+                // Wayfarer only changes registered FRLG Sevii maps.  Existing
+                // Emerald/HNS/event-island maps retain their legacy event
+                // encoding and flag namespaces byte-for-byte.
+                bool use_hoenn_namespace = false;
                 text << (use_hoenn_namespace ? "\tbg_hidden_item_event_hoenn " : "\tbg_hidden_item_event ")
                      << json_to_string(bg_event, "x") << ", "
                      << json_to_string(bg_event, "y") << ", "
@@ -792,10 +991,15 @@ void validate_wayfarer_heal_locations(const set<string> &included_map_ids) {
         else
             FATAL_ERROR("Heal location %s has unknown content source %s.\n", id.c_str(), source.c_str());
 
-        if (!source_version_is_selected(source_version))
-            continue;
-
         string map_id = json_to_string(heal_location, "map");
+        if (version == "wayfarer" && source_version == "frlg") {
+            if (!wayfarer_sevii_release_link_enabled
+             || wayfarer_sevii_enabled_map_ids.find(map_id) == wayfarer_sevii_enabled_map_ids.end())
+                continue;
+        } else if (!source_version_is_selected(source_version)) {
+            continue;
+        }
+
         if (included_map_ids.find(map_id) == included_map_ids.end())
             FATAL_ERROR("Heal location %s references unavailable map %s.\n", id.c_str(), map_id.c_str());
 
@@ -829,13 +1033,15 @@ void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Js
     const set<string> dynamic_destinations = {"MAP_DYNAMIC", "MAP_UNDEFINED"};
     for (const Json &map_data : included_maps) {
         string map_name = json_to_string(map_data, "name");
-        for (const Json &warp : map_data["warp_events"].array_items()) {
+        Json event_data = sanitize_wayfarer_sevii_map_events(map_data);
+        Json connection_data = sanitize_wayfarer_sevii_map_connections(map_data);
+        for (const Json &warp : event_data["warp_events"].array_items()) {
             string destination = json_to_string(warp, "dest_map");
             if (included_map_ids.find(destination) == included_map_ids.end()
              && dynamic_destinations.find(destination) == dynamic_destinations.end())
                 FATAL_ERROR("Map %s warp references unavailable map %s.\n", map_name.c_str(), destination.c_str());
         }
-        for (const Json &connection : map_data["connections"].array_items()) {
+        for (const Json &connection : connection_data["connections"].array_items()) {
             string destination = json_to_string(connection, "map");
             if (included_map_ids.find(destination) == included_map_ids.end()
              && dynamic_destinations.find(destination) == dynamic_destinations.end())
@@ -1056,6 +1262,12 @@ int main(int argc, char *argv[]) {
     version = string(version_arg);
     if (version != "emerald" && version != "ruby" && version != "firered" && version != "hns" && version != "wayfarer")
         FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', 'hns', 'wayfarer', or 'ruby'.\n");
+
+    if (argc >= 5 && string(argv[argc - 2]) == "--wayfarer-sevii-manifest") {
+        wayfarer_sevii_manifest_path = argv[argc - 1];
+        argc -= 2;
+    }
+    load_wayfarer_sevii_manifest();
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

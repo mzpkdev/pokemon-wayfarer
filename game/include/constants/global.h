@@ -68,6 +68,7 @@ enum Language
     #define IS_HNS 0
     #define IS_WAYFARER 0
     #define HAS_FRLG_CONTENT 1
+    #define HAS_SEVII_CONTENT 0
     #define HAS_HNS_CONTENT 0
     #define HAS_EMERALD_CONTENT 0
 #elif defined(LEAFGREEN)
@@ -76,6 +77,7 @@ enum Language
     #define IS_HNS 0
     #define IS_WAYFARER 0
     #define HAS_FRLG_CONTENT 1
+    #define HAS_SEVII_CONTENT 0
     #define HAS_HNS_CONTENT 0
     #define HAS_EMERALD_CONTENT 0
 #elif defined(POKEMON_WAYFARER)
@@ -84,6 +86,9 @@ enum Language
     #define IS_HNS 1
     #define IS_WAYFARER 1
     #define HAS_FRLG_CONTENT 0
+    // The Wayfarer catalog imports only the reviewed Sevii asset closure.
+    // This deliberately does not make general FireRed content selectable.
+    #define HAS_SEVII_CONTENT 1
     #define HAS_HNS_CONTENT 1
     #define HAS_EMERALD_CONTENT 1
 #elif defined(POKEMON_HNS)
@@ -92,6 +97,7 @@ enum Language
     #define IS_HNS 1
     #define IS_WAYFARER 0
     #define HAS_FRLG_CONTENT 0
+    #define HAS_SEVII_CONTENT 0
     #define HAS_HNS_CONTENT 1
     #define HAS_EMERALD_CONTENT 0
 #else
@@ -100,6 +106,7 @@ enum Language
     #define IS_HNS 0
     #define IS_WAYFARER 0
     #define HAS_FRLG_CONTENT 0
+    #define HAS_SEVII_CONTENT 0
     #define HAS_HNS_CONTENT 0
     #define HAS_EMERALD_CONTENT 1
 #endif

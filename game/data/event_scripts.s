@@ -636,6 +636,7 @@ gStdScripts_End::
 
 #if IS_WAYFARER
 	.include "data/wayfarer_engine_source_constants.inc"
+	.include "data/wayfarer_sevii_event_scripts.inc"
 #endif
 .if IS_FRLG
 

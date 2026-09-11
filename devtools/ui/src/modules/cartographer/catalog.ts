@@ -155,6 +155,10 @@ export type CatalogWildEncounterSet = {
   baseLabel: string
   product: string
   runtimeTime: string
+  projectionAlias?: {
+    baseLabel: string
+    runtimeTime: "TIME_NIGHT"
+  }
   header: {
     groupLabel: string
     groupIndex: number
@@ -451,6 +455,7 @@ const hasWildEncounterMethod = (value: unknown): value is CatalogWildEncounterMe
 
 const hasWildEncounterSet = (value: unknown): value is CatalogWildEncounterSet => {
   const set = asRecord(value)
+  const projectionAlias = asRecord(set?.projectionAlias)
   return (
     !!set &&
     hasString(set.mapId) &&
@@ -458,6 +463,10 @@ const hasWildEncounterSet = (value: unknown): value is CatalogWildEncounterSet =
     hasString(set.baseLabel) &&
     hasString(set.product) &&
     hasString(set.runtimeTime) &&
+    (set.projectionAlias === undefined ||
+      (!!projectionAlias &&
+        hasString(projectionAlias.baseLabel) &&
+        projectionAlias.runtimeTime === "TIME_NIGHT")) &&
     !!asRecord(set.header) &&
     hasString(asRecord(set.header)?.groupLabel) &&
     hasInteger(asRecord(set.header)?.groupIndex) &&
@@ -465,6 +474,29 @@ const hasWildEncounterSet = (value: unknown): value is CatalogWildEncounterSet =
     hasSourcePointer(set.source) &&
     Array.isArray(set.methods) &&
     set.methods.every(hasWildEncounterMethod)
+  )
+}
+
+const isWayfarerNightProjectionAlias = (
+  set: CatalogWildEncounterSet,
+  method: CatalogWildEncounterMethod,
+  reference: CatalogWildEncounterMethod["profiles"][number],
+  profile: CatalogWildEncounterProjection["profiles"][number],
+): boolean => {
+  const alias = set.projectionAlias
+  return (
+    set.product === "POKEMON_WAYFARER" &&
+    set.runtimeTime === "night" &&
+    set.baseLabel.endsWith("_Wayfarer_Night") &&
+    alias?.runtimeTime === "TIME_NIGHT" &&
+    alias.baseLabel === set.baseLabel.replace(/_Night$/, "_Day") &&
+    profile.product === set.product &&
+    profile.map === set.mapId &&
+    profile.baseLabel === alias.baseLabel &&
+    profile.runtimeTime === "TIME_DAY" &&
+    profile.method === method.type &&
+    profile.fishingRod === reference.fishingRod &&
+    profile.levelOffset === reference.levelOffset
   )
 }
 
@@ -938,15 +970,18 @@ export const validateCatalog = (value: unknown): MapCatalog => {
           for (const reference of method.profiles) {
             const profile = projectionProfiles.get(reference.profileKey)
             const expectedRuntimeTime = `TIME_${set.runtimeTime.toUpperCase()}`
+            const exactProfile =
+              !!profile &&
+              profile.product === set.product &&
+              profile.map === set.mapId &&
+              profile.baseLabel === set.baseLabel &&
+              profile.runtimeTime === expectedRuntimeTime &&
+              profile.method === method.type &&
+              profile.fishingRod === reference.fishingRod &&
+              profile.levelOffset === reference.levelOffset
             if (
-              !profile ||
-              profile.product !== set.product ||
-              profile.map !== set.mapId ||
-              profile.baseLabel !== set.baseLabel ||
-              profile.runtimeTime !== expectedRuntimeTime ||
-              profile.method !== method.type ||
-              profile.fishingRod !== reference.fishingRod ||
-              profile.levelOffset !== reference.levelOffset
+              !exactProfile &&
+              (!profile || !isWayfarerNightProjectionAlias(set, method, reference, profile))
             ) {
               details.push(
                 `${set.baseLabel} ${method.type} has invalid projection profile ${reference.profileKey}.`,

@@ -64,7 +64,12 @@ export type CatalogEncounterSprite = {
   source: string
 }
 
-export type CatalogEncounterProduct = "EMERALD" | "FIRERED" | "LEAFGREEN" | "POKEMON_HNS"
+export type CatalogEncounterProduct =
+  | "EMERALD"
+  | "FIRERED"
+  | "LEAFGREEN"
+  | "POKEMON_HNS"
+  | "POKEMON_WAYFARER"
 
 export type CatalogEncounterTimeOfDay = "morning" | "day" | "evening" | "night"
 
@@ -137,6 +142,10 @@ export type CatalogEncounterSet = {
   baseLabel: string
   product: CatalogEncounterProduct
   runtimeTime: CatalogEncounterTimeOfDay
+  projectionAlias?: {
+    baseLabel: string
+    runtimeTime: CatalogEncounterProjectionProfile["runtimeTime"]
+  }
   header: {
     groupLabel: string
     groupIndex: number

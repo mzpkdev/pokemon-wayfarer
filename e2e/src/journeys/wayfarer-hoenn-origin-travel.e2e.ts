@@ -2,9 +2,9 @@ import { describe, expect, it } from "webanvil/test"
 
 import { GameSession, type GameMap } from "../harness/game-session"
 import { advanceOpeningUntil, receiveBirchStarter } from "../playbooks/regional-opening"
+import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
 
-const depart = async (game: GameSession, destination: GameMap): Promise<void> => {
-  await game.player.interact()
+const finishDeparture = async (game: GameSession, destination: GameMap): Promise<void> => {
   for (let attempt = 0; attempt < 100; attempt++) {
     await game.wait.frames(45)
     const state = await game.state.read()
@@ -12,6 +12,11 @@ const depart = async (game: GameSession, destination: GameMap): Promise<void> =>
     await game.controls.press("a")
   }
   throw new Error(`Aqua did not reach ${destination}: ${JSON.stringify(await game.state.read())}`)
+}
+
+const depart = async (game: GameSession, destination: GameMap): Promise<void> => {
+  await game.player.interact()
+  await finishDeparture(game, destination)
 }
 
 describe.sequential("Littleroot-origin regular Aqua circuit", () => {
@@ -41,7 +46,8 @@ describe.sequential("Littleroot-origin regular Aqua circuit", () => {
         if (port === "slateport-city-harbor") {
           await game.controls.press("down")
           await game.wait.frames(24)
-          await depart(game, port)
+          await beginWayfarerRegularAquaDeparture(game)
+          await finishDeparture(game, port)
         }
         const state = await game.state.read()
         expect(state).toMatchObject({

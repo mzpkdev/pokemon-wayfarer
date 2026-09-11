@@ -60,6 +60,13 @@ def parse_args():
     return parser.parse_args()
 
 
+def write_if_changed(path, content):
+    path = Path(path)
+    if path.is_file() and path.read_text() == content:
+        return
+    path.write_text(content)
+
+
 def dump_macros(cpp, include_dir, product_macro):
     source = (
         '#include "constants/global.h"\n'
@@ -323,10 +330,10 @@ def main():
     common_names = collect_common_names(args.event_scripts, args.scripts_dir)
     common_table, common_data = render_common_tables(common_names, emerald_values, engine_values)
 
-    Path(args.hoenn_output).write_text(render_table("Hoenn", hoenn_values))
-    Path(args.engine_output).write_text(render_table("the Wayfarer HNS engine", restore_values))
-    Path(args.common_output).write_text(common_table)
-    Path(args.common_data_output).write_text(common_data)
+    write_if_changed(args.hoenn_output, render_table("Hoenn", hoenn_values))
+    write_if_changed(args.engine_output, render_table("the Wayfarer HNS engine", restore_values))
+    write_if_changed(args.common_output, common_table)
+    write_if_changed(args.common_data_output, common_data)
 
 
 if __name__ == "__main__":

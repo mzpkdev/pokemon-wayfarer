@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession, type Button, type GameMap } from "../harness/game-session"
+import { beginWayfarerRegularAquaDeparture } from "../playbooks/wayfarer-ports"
 
 const emptyRods = { oldRod: 0, goodRod: 0, superRod: 0 }
 
@@ -201,7 +202,11 @@ describe.sequential("Wayfarer Standard Rod givers", () => {
       await game.dialogue.waitForOpen()
       await waitForDialogueText(game, "Obtained the OLD ROD!")
       await expect(contributionFlags(game)).resolves.toEqual(expectedContributionFlags(giver.flag))
-      await expect(game.inventory.rodSlots()).resolves.toEqual({ oldRod: 1, goodRod: 0, superRod: 0 })
+      await expect(game.inventory.rodSlots()).resolves.toEqual({
+        oldRod: 1,
+        goodRod: 0,
+        superRod: 0,
+      })
       await finishScript(game)
 
       await game.player.interact()
@@ -210,7 +215,11 @@ describe.sequential("Wayfarer Standard Rod givers", () => {
         dialogue: { text: expect.not.stringContaining("Obtained the") },
       })
       await expect(contributionFlags(game)).resolves.toEqual(expectedContributionFlags(giver.flag))
-      await expect(game.inventory.rodSlots()).resolves.toEqual({ oldRod: 1, goodRod: 0, superRod: 0 })
+      await expect(game.inventory.rodSlots()).resolves.toEqual({
+        oldRod: 1,
+        goodRod: 0,
+        superRod: 0,
+      })
       await finishScript(game)
     })
   }
@@ -263,7 +272,7 @@ describe.sequential("Wayfarer Standard Rod givers", () => {
       determinism: { textSpeed: "instant" },
     })
 
-    await game.player.interact()
+    await beginWayfarerRegularAquaDeparture(game)
     await game.dialogue.waitForOpen()
     await advanceUntilMap(game, "slateport-city-harbor")
 

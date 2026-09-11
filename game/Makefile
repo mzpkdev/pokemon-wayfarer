@@ -4,6 +4,17 @@ GAME_CODE    ?= BPEE
 BUILD_NAME   ?= emerald
 MAP_VERSION  ?= emerald
 
+# E2E always builds the Wayfarer product. Resolve it before setup prerequisites
+# run: the outer `make e2e` otherwise defaults to Emerald and can generate
+# shared map includes without Wayfarer's source-constant aliases before the
+# Wayfarer E2E submake begins.
+ifneq (,$(filter e2e,$(MAKECMDGOALS)))
+	GAME_VERSION 	:= POKEMON_WAYFARER
+	TITLE       	:= WAYFARER
+	GAME_CODE   	:= BWFE
+	BUILD_NAME  	:= wayfarer
+	MAP_VERSION 	:= wayfarer
+else
 ifeq (firered, $(or $(BUILD), $(MAKECMDGOALS)))
   	GAME_VERSION 	:= FIRERED
 	TITLE       	:= POKEMON FIRE
@@ -31,6 +42,7 @@ ifeq (wayfarer, $(or $(BUILD), $(MAKECMDGOALS)))
 	GAME_CODE   	:= BWFE
 	BUILD_NAME  	:= wayfarer
 	MAP_VERSION 	:= wayfarer
+endif
 endif
 endif
 endif
@@ -337,7 +349,9 @@ endif
 LEARNSET_HELPERS_DIR := $(TOOLS_DIR)/learnset_helpers
 LEARNSET_HELPERS_DATA_DIR := $(LEARNSET_HELPERS_DIR)/porymoves_files
 LEARNSET_HELPERS_BUILD_DIR := $(LEARNSET_HELPERS_DIR)/build
-LEARNSET_HELPERS_BUILD_VERSION := $(LEARNSET_HELPERS_BUILD_DIR)/.game_version
+LEARNSET_HELPERS_BUILD_VERSION := $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.$(GAME_VERSION)
+LEARNSET_HELPERS_BUILD_VERSIONS := $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.POKEMON_EMERALD $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.FIRERED $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.LEAFGREEN $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.POKEMON_HNS $(LEARNSET_HELPERS_BUILD_DIR)/.game_version.POKEMON_WAYFARER
+.NOTINTERMEDIATE: $(LEARNSET_HELPERS_BUILD_VERSION)
 ALL_LEARNABLES_JSON := $(DATA_SRC_SUBDIR)/pokemon/all_learnables.json
 ALL_TUTORS_JSON := $(LEARNSET_HELPERS_BUILD_DIR)/all_tutors.json
 ALL_TEACHING_TYPES_JSON := $(LEARNSET_HELPERS_BUILD_DIR)/all_teaching_types.json
@@ -349,12 +363,14 @@ WAYFARER_HOENN_CONTENT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_content
 WAYFARER_HOENN_CONTENT_MANIFEST := $(BUILD_DIR)/wayfarer-hoenn-content-manifest.json
 WAYFARER_HOENN_ENTRY_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_entry
 WAYFARER_HOENN_ENTRY_AUDIT := $(BUILD_DIR)/wayfarer-hoenn-entry-audit.json
+WAYFARER_SEVII_PORT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_sevii_port
+WAYFARER_SEVII_PORT_AUDIT := $(BUILD_DIR)/wayfarer-sevii-port-audit.json
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
 AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
 
-$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
+$(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_native_hm_encounters.json $(DATA_SRC_SUBDIR)/wayfarer_sevii_wild_encounters.json $(DATA_SRC_SUBDIR)/wild_encounter_regions.json $(DATA_SRC_SUBDIR)/wild_encounter_scaling.json $(DATA_SRC_SUBDIR)/wild_encounter_species.json $(DATA_SRC_SUBDIR)/standard_rod_fishing.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h $(INCLUDE_DIRS)/config/pokemon.h $(INCLUDE_DIRS)/constants/rtc.h $(INCLUDE_DIRS)/constants/species.h $(INCLUDE_DIRS)/constants/pokedex.h $(DATA_SRC_SUBDIR)/pokemon/species_info.h $(wildcard $(DATA_SRC_SUBDIR)/pokemon/species_info/*_families.h)
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py
 
 $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc
@@ -372,7 +388,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit rom-report-test
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += legacy-multiboot-test
@@ -478,7 +494,7 @@ endif
 
 check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test
 ifeq ($(BUILD_NAME),wayfarer)
-check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit
+check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
 check: league-circuit-test
 check: native-hm-windows-test
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
@@ -506,7 +522,7 @@ endif
 # Other rules
 rom: $(ROM)
 ifeq ($(BUILD_NAME),wayfarer)
-$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit trainer-party-scaling-audit
+$(ELF): wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit trainer-party-scaling-audit
 endif
 ifeq ($(RELEASE),1)
 rom: $(ROM_REPORT)
@@ -524,7 +540,7 @@ clean-assets:
 	rm -f $(MID_SUBDIR)/*.s
 	rm -f $(DATA_ASM_SUBDIR)/layouts/layouts.inc $(DATA_ASM_SUBDIR)/layouts/layouts_table.inc
 	rm -f $(DATA_ASM_SUBDIR)/maps/connections.inc $(DATA_ASM_SUBDIR)/maps/events.inc $(DATA_ASM_SUBDIR)/maps/groups.inc $(DATA_ASM_SUBDIR)/maps/headers.inc $(DATA_SRC_SUBDIR)/map_group_count.h
-	rm -f .map_version
+	rm -f .map_version .map_version.*
 	find sound -iname '*.bin' -exec rm {} +
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
@@ -706,8 +722,14 @@ TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(INCLUDE_DIRS)/constants/tms_hms.h $(I
 $(LEARNSET_HELPERS_BUILD_DIR):
 	@mkdir -p $@
 
-$(LEARNSET_HELPERS_BUILD_VERSION): FORCE | $(LEARNSET_HELPERS_BUILD_DIR)
-	@(echo "$(GAME_VERSION)" | cmp -s $@ -) || echo "$(GAME_VERSION)" > $@
+# This stamp is an input to generated headers and scaninc dependency files.
+# A FORCE prerequisite made it perpetually newer even when the version text had
+# not changed, so trainerproc rewrote trainers.h and Make restarted its include
+# scan indefinitely. Product-specific stamps preserve the needed switch signal
+# without refreshing an unchanged build graph.
+$(LEARNSET_HELPERS_BUILD_VERSION): | $(LEARNSET_HELPERS_BUILD_DIR)
+	@rm -f $(filter-out $@,$(LEARNSET_HELPERS_BUILD_VERSIONS))
+	@echo "$(GAME_VERSION)" > $@
 
 $(ALL_LEARNABLES_JSON):  | $(wildcard $(LEARNSET_HELPERS_DATA_DIR)/*.json)
 	python3 $(LEARNSET_HELPERS_DIR)/make_learnables.py $(LEARNSET_HELPERS_DATA_DIR) $@
@@ -831,7 +853,7 @@ wayfarer-hoenn-content-test: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGIN
 wayfarer-hoenn-content-audit: wayfarer-hoenn-content-test $(WAYFARER_HOENN_CONTENT_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_CONTENT_TOOL_DIR)/generate.py --output $(WAYFARER_HOENN_CONTENT_MANIFEST)
 
-WAYFARER_HOENN_ENTRY_DEPS := $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(MAPS_DIR)/SlateportCity_Harbor/map.json $(MAPS_DIR)/LilycoveCity_Harbor/map.json $(LAYOUTS_DIR)/layouts.json $(LAYOUTS_DIR)/Harbor/map.bin $(DATA_SRC_SUBDIR)/heal_locations.json $(MAPS_DIR)/VermilionCity_PortInside_hns/scripts.inc $(MAPS_DIR)/OlivineCity_PortInside_hns/scripts.inc $(MAPS_DIR)/SlateportCity_Harbor/scripts.inc $(MAPS_DIR)/LilycoveCity_Harbor/scripts.inc $(DATA_ASM_SUBDIR)/event_scripts.s $(DATA_ASM_SUBDIR)/scripts/new_game.inc $(DATA_ASM_SUBDIR)/scripts/players_house.inc $(DATA_ASM_SUBDIR)/scripts/wayfarer_hoenn_entry.inc $(C_SUBDIR)/data/script_menu.h $(C_SUBDIR)/wayfarer_persistence.c $(C_SUBDIR)/wayfarer_origin.c $(wildcard $(MAPS_DIR)/*/map.json) $(wildcard $(MAPS_DIR)/*/scripts.inc)
+WAYFARER_HOENN_ENTRY_DEPS := $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(MAPS_DIR)/SlateportCity_Harbor/map.json $(MAPS_DIR)/LilycoveCity_Harbor/map.json $(LAYOUTS_DIR)/layouts.json $(LAYOUTS_DIR)/Harbor/map.bin $(DATA_SRC_SUBDIR)/heal_locations.json $(MAPS_DIR)/VermilionCity_PortInside_hns/scripts.inc $(MAPS_DIR)/OlivineCity_PortInside_hns/scripts.inc $(MAPS_DIR)/SlateportCity_Harbor/scripts.inc $(MAPS_DIR)/LilycoveCity_Harbor/scripts.inc $(DATA_ASM_SUBDIR)/event_scripts.s $(DATA_ASM_SUBDIR)/scripts/new_game.inc $(DATA_ASM_SUBDIR)/scripts/players_house.inc $(DATA_ASM_SUBDIR)/scripts/wayfarer_hoenn_entry.inc $(C_SUBDIR)/data/script_menu.h $(C_SUBDIR)/wayfarer_persistence.c $(C_SUBDIR)/wayfarer_origin.c $(C_SUBDIR)/wayfarer_sevii_ferry.c $(wildcard $(MAPS_DIR)/*/map.json) $(wildcard $(MAPS_DIR)/*/scripts.inc)
 
 wayfarer-hoenn-entry-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_HOENN_ENTRY_TOOL_DIR) -p 'test_*.py' -q
@@ -840,6 +862,18 @@ $(WAYFARER_HOENN_ENTRY_AUDIT): $(WAYFARER_HOENN_ENTRY_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_HOENN_ENTRY_TOOL_DIR)/generate.py --output $@
 
 wayfarer-hoenn-entry-audit: wayfarer-hoenn-entry-test $(WAYFARER_HOENN_ENTRY_AUDIT)
+
+WAYFARER_SEVII_PORT_DEPS := $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py $(DATA_SRC_SUBDIR)/wayfarer_sevii_maps.json $(DATA_SRC_SUBDIR)/wayfarer_sevii_wild_encounters.json $(WAYFARER_SEVII_PORT_TOOL_DIR)/event_island_baseline.json $(WAYFARER_SEVII_SCRIPT_TOOL) $(WAYFARER_SEVII_EVENT_SCRIPTS) $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
+
+wayfarer-sevii-port-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_wayfarer_catalog.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/wayfarer_sevii_scripts -p 'test_*.py' -q
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_SEVII_PORT_TOOL_DIR)/tests -p 'test_*.py' -q
+
+$(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py --root . --output $@
+
+wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
 
 # Symbol file (`make syms`)
 $(SYM): $(ELF)

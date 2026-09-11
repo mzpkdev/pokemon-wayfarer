@@ -681,6 +681,14 @@ const u16 gObjectEventPic_ClefairyOld[] = INCBIN_U16("graphics/object_events/pic
 
 #endif // IS_FRLG
 
+#if HAS_SEVII_CONTENT
+// Wayfarer imports only the ordinary Sevii service and harbor NPC graphics.
+const u16 gObjectEventPic_OldWomanFrlg[] = INCBIN_U16("graphics/object_events/pics/people/old_woman_frlg.4bpp");
+const u16 gObjectEventPic_SailorFrlg[] = INCBIN_U16("graphics/object_events/pics/people/sailor_frlg.4bpp");
+const u16 gObjectEventPic_NurseFrlg[] = INCBIN_U16("graphics/object_events/pics/people/nurse_frlg.4bpp");
+const u16 gObjectEventPic_Clerk[] = INCBIN_U16("graphics/object_events/pics/people/clerk.4bpp");
+#endif // HAS_SEVII_CONTENT
+
 #if IS_HNS
 // HnS sprite data
 const u32 gObjectEventPic_AttendantF_hns[] = INCBIN_U32("graphics/object_events/pics/people/attendant_f_hns.4bpp");
