@@ -17,7 +17,7 @@ def inputs(root):
     patterns = ('data/maps/*/map.json', 'data/maps/*/gameplay.json',
                 'data/maps/*/scripts.inc', 'data/maps/map_groups.json',
                 'data/scripts/**/*.inc', 'data/event_scripts.s',
-                'data/gameplay/*.json', 'src/data/*.party',
+                'data/gameplay/*.json', 'src/data/*.party', 'src/data/wayfarer_sevii_maps.json',
                 'src/data/wayfarer_marts.h', 'src/wayfarer_persistence.c', 'include/regions.h',
                 'include/config/*.h',
                 'include/constants/global.h', 'include/constants/flags*.h',

@@ -35,7 +35,14 @@ def load_maps(root, product, mapjson=None):
     load_json(root / 'data/maps/map_groups.json')
     binary = Path(mapjson or root / 'tools/mapjson/mapjson').resolve()
     selected = 'firered' if product == 'leafgreen' else product
-    process = subprocess.run([str(binary), 'inventory', selected, 'data/maps/map_groups.json'],
+    command = [str(binary), 'inventory', selected, 'data/maps/map_groups.json']
+    # The inventory is a view of the compiler's selected map catalog.  Wayfarer
+    # releases use the reviewed Sevii manifest; synthetic roots without one
+    # deliberately retain the unextended catalog behavior.
+    manifest = root / 'src/data/wayfarer_sevii_maps.json'
+    if product == 'wayfarer' and manifest.is_file():
+        command += ['--wayfarer-sevii-manifest', str(manifest.relative_to(root))]
+    process = subprocess.run(command,
                              cwd=root, text=True, capture_output=True)
     if process.returncode:
         raise ContentError('UNRESOLVED', '<mapjson>', product, process.stderr)

@@ -5,8 +5,9 @@ import tempfile
 import unittest
 
 from tools.gameplay_content.common import ContentError, assign_indexes, check_review, fingerprint, load_json
+from tools.gameplay_content import maps
 from tools.gameplay_content.maps import normalize_inventory, resolve_object
-from tools.gameplay_content.__main__ import publish, compile_content
+from tools.gameplay_content.__main__ import inputs, publish, compile_content
 from unittest.mock import patch
 
 class InventoryTests(unittest.TestCase):
@@ -61,6 +62,52 @@ class InventoryTests(unittest.TestCase):
             path.write_text('{"schemaVersion":1,"schemaVersion":1}')
             with self.assertRaisesRegex(ContentError, 'DUPLICATE'):
                 load_json(path)
+
+    def test_wayfarer_inventory_uses_manifest_when_present(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'data/maps/Fixture').mkdir(parents=True)
+            (root / 'data/maps/Fixture/map.json').write_text('{}')
+            (root / 'data/maps/map_groups.json').write_text('{}')
+            manifest = root / 'src/data/wayfarer_sevii_maps.json'
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{}')
+            completed = type('Completed', (), {
+                'returncode': 0,
+                'stdout': json.dumps({'schemaVersion': 1, 'product': 'wayfarer', 'maps': []}),
+            })()
+            with patch.object(maps.subprocess, 'run', return_value=completed) as run:
+                self.assertEqual(maps.load_maps(root, 'wayfarer'), [])
+            self.assertEqual(
+                run.call_args.args[0][-2:],
+                ['--wayfarer-sevii-manifest', 'src/data/wayfarer_sevii_maps.json'],
+            )
+
+    def test_inventory_keeps_synthetic_and_standalone_catalogs_unextended(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / 'data/maps/Fixture').mkdir(parents=True)
+            (root / 'data/maps/Fixture/map.json').write_text('{}')
+            (root / 'data/maps/map_groups.json').write_text('{}')
+            completed = type('Completed', (), {
+                'returncode': 0,
+                'stdout': json.dumps({'schemaVersion': 1, 'product': 'hns', 'maps': []}),
+            })()
+            with patch.object(maps.subprocess, 'run', return_value=completed) as run:
+                self.assertEqual(maps.load_maps(root, 'hns'), [])
+            self.assertNotIn('--wayfarer-sevii-manifest', run.call_args.args[0])
+
+    def test_manifest_is_a_compiler_input(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            manifest = root / 'src/data/wayfarer_sevii_maps.json'
+            manifest.parent.mkdir(parents=True)
+            manifest.write_text('{"release_link_enabled":true}')
+            first = inputs(root)
+            manifest.write_text('{"release_link_enabled":false}')
+            second = inputs(root)
+            self.assertIn('src/data/wayfarer_sevii_maps.json', first)
+            self.assertNotEqual(first['src/data/wayfarer_sevii_maps.json'], second['src/data/wayfarer_sevii_maps.json'])
 
     def test_indexes_capacity_and_duplicates(self):
         with self.assertRaisesRegex(ContentError, 'CAPACITY'):

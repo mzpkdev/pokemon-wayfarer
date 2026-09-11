@@ -313,6 +313,21 @@ Json sanitize_wayfarer_sevii_map_connections(const Json &map_data) {
     return output;
 }
 
+// Keep the inventory projection on the same event owner and sanitizers as the
+// generated map files.  A shared-events map owns its effective event arrays,
+// while its caller still owns the map header and connection data.
+Json effective_map_events(const Json &map_data, const Json &event_owner) {
+    Json sanitized_owner = sanitize_wayfarer_sevii_map_events(event_owner);
+    Json::object output = map_data.object_items();
+    for (const string field : {"object_events", "warp_events", "coord_events", "bg_events"})
+        output[field] = sanitized_owner[field];
+    return output;
+}
+
+Json effective_map_events(const Json &map_data) {
+    return effective_map_events(map_data, map_data);
+}
+
 string get_generated_warning(const string &filename, bool isAsm) {
     string comment = isAsm ? "@" : "//";
 
@@ -434,6 +449,10 @@ Json::array effective_connections(const Json &map_data, const vector<string> &ex
     return result;
 }
 
+Json::array effective_map_connections(const Json &map_data, const vector<string> &existing_maps) {
+    return effective_connections(sanitize_wayfarer_sevii_map_connections(map_data), existing_maps);
+}
+
 string generate_map_connections_text(Json map_data) {
     map_data = sanitize_wayfarer_sevii_map_connections(map_data);
     if (map_data["connections"] == Json())
@@ -446,7 +465,7 @@ string generate_map_connections_text(Json map_data) {
     text << get_generated_warning("data/maps/" + mapName + "/map.json", true);
     text << mapName << "_MapConnectionsList:\n";
 
-    for (auto &connection : effective_connections(map_data, existing_maps)) {
+    for (auto &connection : effective_map_connections(map_data, existing_maps)) {
         text << "\tconnection "
              << json_to_string(connection, "direction") << ", "
              << json_to_string(connection, "offset") << ", "
@@ -461,7 +480,7 @@ string generate_map_connections_text(Json map_data) {
 }
 
 string generate_map_events_text(Json map_data) {
-    map_data = sanitize_wayfarer_sevii_map_events(map_data);
+    map_data = effective_map_events(map_data);
     if (map_data.object_items().find("shared_events_map") != map_data.object_items().end())
         return string("\n");
 
@@ -1272,7 +1291,8 @@ void export_inventory(const string &groups_path) {
         for (auto &name : groups[group.string_value()].array_items()) {
             Json map = Json::parse(read_text_file(directory + name.string_value() + sep + "map.json"), err);
             if (!err.empty()) FATAL_ERROR("%s\n", err.c_str());
-            catalog_ids.push_back(map["id"].string_value());
+            if (data_matches_version(map))
+                catalog_ids.push_back(map["id"].string_value());
         }
     for (auto &group : groups["group_order"].array_items()) {
         for (auto &name : groups[group.string_value()].array_items()) {
@@ -1280,20 +1300,18 @@ void export_inventory(const string &groups_path) {
             Json raw = Json::parse(read_text_file(path), err);
             if (!err.empty()) FATAL_ERROR("%s: %s\n", path.c_str(), err.c_str());
             if (!data_matches_version(raw)) continue;
-            Json effective = raw;
+            Json event_owner = raw;
             string event_path = path;
             if (!raw["shared_events_map"].string_value().empty()) {
                 event_path = directory + raw["shared_events_map"].string_value() + sep + "map.json";
                 Json owner = Json::parse(read_text_file(event_path), err);
                 if (!err.empty()) FATAL_ERROR("%s: %s\n", event_path.c_str(), err.c_str());
-                auto fields = raw.object_items();
-                for (const string field : {"object_events", "warp_events", "coord_events", "bg_events"})
-                    fields[field] = owner[field];
-                effective = fields;
+                event_owner = owner;
             }
+            Json effective = effective_map_events(raw, event_owner);
             auto fields = effective.object_items();
             fields["connections"] = json_to_string(raw, "connections_no_include", true) == "TRUE"
-                ? Json::array{} : effective_connections(raw, catalog_ids);
+                ? Json::array{} : effective_map_connections(raw, catalog_ids);
             effective = fields;
             // Match GetHnsMapRegionOrFallback: the native Emerald catalog is Hoenn.
             // This physical-region projection does not choose a persistence namespace.

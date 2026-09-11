@@ -42,6 +42,7 @@ class SelectedProductMigrationTests(unittest.TestCase):
                 contributors += report["legacyRodContributors"]
                 self.assertEqual({row["contribution"]["flag"] for row in contributors}, expected)
                 self.assertEqual(report["martCount"], 35 if product == "wayfarer" else 0)
+                self.assertFalse(any(row["sourceNamespace"] == "frlg" for row in report["services"] if row["kind"] == "mart"))
                 if product == "hns":
                     self.assertEqual(len(report["legacyRodContributors"]), 3)
                     self.assertTrue(all(not row["activeBinding"] for row in report["legacyRodContributors"]))
