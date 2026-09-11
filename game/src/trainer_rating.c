@@ -4,7 +4,23 @@
 #include "league_circuit.h"
 #include "pokemon.h"
 #include "trainer_rating.h"
-#include "gameplay_progression.h"
+
+static const struct
+{
+    u8 rating;
+    u8 cap;
+} sTrainerRatingSoftLevelCaps[] =
+{
+    {  0,  15 },
+    {  4,  16 },
+    {  8,  18 },
+    { 16,  23 },
+    { 30,  30 },
+    { 40,  42 },
+    { 55,  60 },
+    { 65,  80 },
+    { 80, 100 },
+};
 
 u8 ClampTrainerRating(u16 rating)
 {
@@ -124,9 +140,25 @@ void InitializeTrainerRatingForSaveMigration(void)
 
 u8 GetTrainerRatingSoftLevelCap(void)
 {
-    u8 cap = 100;
-    EvaluateGameplayCurve(GAMEPLAY_CURVE_SOFT_CAP, GetTrainerRating(), &cap);
-    return cap;
+    u8 rating = GetTrainerRating();
+    u8 i;
+
+    for (i = 1; i < ARRAY_COUNT(sTrainerRatingSoftLevelCaps); i++)
+    {
+        u8 lowerRating = sTrainerRatingSoftLevelCaps[i - 1].rating;
+        u8 upperRating = sTrainerRatingSoftLevelCaps[i].rating;
+        u8 lowerCap = sTrainerRatingSoftLevelCaps[i - 1].cap;
+        u8 upperCap = sTrainerRatingSoftLevelCaps[i].cap;
+
+        if (rating <= upperRating)
+        {
+            u16 numerator = (rating - lowerRating) * (upperCap - lowerCap);
+            u16 denominator = upperRating - lowerRating;
+            return lowerCap + (2 * numerator + denominator) / (2 * denominator);
+        }
+    }
+
+    return sTrainerRatingSoftLevelCaps[ARRAY_COUNT(sTrainerRatingSoftLevelCaps) - 1].cap;
 }
 
 u32 ApplyTrainerRatingExperienceReduction(u16 species, u32 currentExp, u32 awardedExp)

@@ -18,7 +18,6 @@
 #define TEST_ONE_TYPE_CHALLENGE_DISABLED 31
 
 void CB2_TestRunner(void);
-void ReinitCallbacks(void);
 
 EWRAM_DATA struct TestRunnerState gTestRunnerState;
 EWRAM_DATA struct FunctionTestRunnerState *gFunctionTestRunnerState;
@@ -362,11 +361,6 @@ top:
             gTestRunnerState.tearDown = FALSE;
         }
 
-        // Successful tests return directly to this state, unlike failures and
-        // timeouts which already call ReinitCallbacks. Clear callbacks here so
-        // a completed battle cannot advance RNG or retain video work in the
-        // next test.
-        ReinitCallbacks();
         TestRunner_CheckMemory();
 
         if (gTestRunnerState.test->runner == &gAssumptionsRunner)

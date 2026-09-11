@@ -43,10 +43,10 @@ converted Wayfarer mart bindings, and the encounter migration defined in the
 [specification](../specs/gameplay-content-framework.md). These are required
 acceptance phases, not interchangeable demonstrations.
 
-Deliver phases A-C first. Then rebase the open trainer-only PR #85 onto that
-framework and perform encounter adoption in that PR. Compare unrefactored and
-refactored #85 on the same framework base. Merging #85 is not a prerequisite for
-framework delivery; completing A-C does not mark the full framework implemented.
+The encounter phase depends on an integrated, validated trainer-only baseline.
+[PR #85](https://github.com/mzpkdev/pokemon-wayfarer/pull/85) was open when this
+design was researched. Earlier phases can land independently; their completion
+does not mean encounter adoption or the full framework is implemented.
 
 ### State has a defined meaning and lifetime
 
@@ -124,15 +124,9 @@ pending objectives unless the existing feature explicitly requires it.
   data, alignment, and retained legacy paths. The complete first adoption must
   reduce used ROM relative to its equivalent baseline. No KiB saving is promised
   before that measurement.
-- Host-only infrastructure must emit no new runtime payload. Compare the complete
-  delivered refactor against one equivalent baseline; normal Wayfarer must show
-  a net ROM reduction with no static EWRAM/IWRAM increase. Report and explain
-  other configuration deltas, fixing avoidable retained data. Existing ROM capacity
-  and protected-reserve gates remain mandatory in every supported configuration.
-- Use focused release-code inspection and representative timing for performance
-  confidence. Exhaustive frame/interrupt profiling and exact cycle or peak-stack
-  ceilings are not merge requirements. Expand investigation only when evidence
-  identifies an unbounded path, unsafe stack use, or observable regression.
+- Host-only infrastructure must emit no new runtime payload. Runtime phases must
+  not increase used ROM, static EWRAM, or static IWRAM against their phase baseline.
+  Existing ROM capacity and protected-reserve gates remain mandatory.
 - New queries use bounded work and caller-owned or existing scratch storage.
   Adoption must not introduce heap allocation, persistent caches, new save fields,
   or extra per-frame whole-world scans.
@@ -143,13 +137,6 @@ pending objectives unless the existing feature explicitly requires it.
   must allow independent feature switches and product-specific output.
 
 ## Acceptance
-
-Validate each delivered PR once through the existing build/test workflow. Reuse
-results from unchanged code and configuration; rerun affected checks when changes
-or failures justify it. Run permanent framework contracts in the existing test
-job and temporary migration equivalence in a separate job. Remove the latter
-after the remaining v1 content is ported and legacy comparisons can be retired. Reuse the existing test
-harnesses; avoid a separate profiling subsystem or duplicated checks.
 
 The first adoption is complete when all required phases pass the specification's
 behavior, authoring, resource, and build checks. Generated views must replace

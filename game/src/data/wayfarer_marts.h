@@ -166,6 +166,47 @@ static const struct WayfarerMartProfile sWayfarerMartProfiles[MART_PROFILE_COUNT
     [MART_PROFILE_TRAINER_HILL] = MART_PROFILE_FACILITY(sRetainedTrainerHill, MART_CATEGORY_FACILITY),
 };
 
+// The host manifest generator reads this non-emitting table alongside the
+// profile definitions above.  It keeps map and script ownership auditable
+// without putting debug strings in the ROM.  The final string is the authored
+// literal-list source (or an explicit no-retained-stock classification).
+#define WAYFARER_MART_PROFILE_BINDINGS(X) \
+    X(MART_PROFILE_CHERRYGROVE, "CherrygroveCity_Mart_hns", MAP_CHERRYGROVE_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_VIOLET, "VioletCity_Mart_hns", MAP_VIOLET_CITY_MART_HNS, "VioletCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_AZALEA, "AzaleaTown_Mart_hns", MAP_AZALEA_TOWN_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_GOLDENROD_2F, "GoldenrodCity_DepartmentStore_2F_hns", MAP_GOLDENROD_CITY_DEPARTMENT_STORE_2F_HNS, "GoldenrodDeptStore2_EventScript_Clerk", MART_CATEGORY_DEPT, "GoldenrodCity_DepartmentStore_2F_hns/scripts.inc:GoldenrodDeptStore2_EventScript_Clerk") \
+    X(MART_PROFILE_ECRUTEAK, "EcruteakCity_Mart_hns", MAP_ECRUTEAK_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_OLIVINE, "OlivineCity_Mart_hns", MAP_OLIVINE_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_BLACKTHORN, "BlackthornCity_Mart_hns", MAP_BLACKTHORN_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_MAHOGANY, "Mahoganytown_hns", MAP_MAHOGANYTOWN_HNS, "MahoganyTown_EventScript_Merchant", MART_CATEGORY_TOWN, "new exterior Supplies service; no ordinary interior list retained") \
+    X(MART_PROFILE_VIRIDIAN, "ViridianCity_Mart_hns", MAP_VIRIDIAN_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_PEWTER, "PewterCity_Mart_hns", MAP_PEWTER_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_CERULEAN, "CeruleanCity_Mart_hns", MAP_CERULEAN_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_VERMILION, "VermilionCity_Mart_hns", MAP_VERMILION_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_LAVENDER, "LavenderTown_Mart_hns", MAP_LAVENDER_TOWN_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_CELADON_2F, "CeladonCity_DepartmentStore_2F_hns", MAP_CELADON_CITY_DEPARTMENT_STORE_2F_HNS, "VioletCity_Mart_EventScript_Clerk", MART_CATEGORY_DEPT, "legacy shared NULL catalog") \
+    X(MART_PROFILE_SAFFRON, "SaffronCity_Mart_hns", MAP_SAFFRON_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_FUCHSIA, "FuchsiaCity_Mart_hns", MAP_FUCHSIA_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_OLDALE, "OldaleTown_Mart", MAP_OLDALE_TOWN_MART, "OldaleTown_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "OldaleTown_Mart/scripts.inc:OldaleTown_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_PETALBURG, "PetalburgCity_Mart", MAP_PETALBURG_CITY_MART, "PetalburgCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "PetalburgCity_Mart/scripts.inc:PetalburgCity_Mart_EventScript_ClerkItems") \
+    X(MART_PROFILE_RUSTBORO, "RustboroCity_Mart", MAP_RUSTBORO_CITY_MART, "RustboroCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "RustboroCity_Mart/scripts.inc:RustboroCity_Mart_EventScript_ClerkItems") \
+    X(MART_PROFILE_SLATEPORT, "SlateportCity_Mart", MAP_SLATEPORT_CITY_MART, "SlateportCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "SlateportCity_Mart/scripts.inc:SlateportCity_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_MAUVILLE, "MauvilleCity_Mart", MAP_MAUVILLE_CITY_MART, "MauvilleCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "MauvilleCity_Mart/scripts.inc:MauvilleCity_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_VERDANTURF, "VerdanturfTown_Mart", MAP_VERDANTURF_TOWN_MART, "VerdanturfTown_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "VerdanturfTown_Mart/scripts.inc:VerdanturfTown_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_FALLARBOR, "FallarborTown_Mart", MAP_FALLARBOR_TOWN_MART, "FallarborTown_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "FallarborTown_Mart/scripts.inc:FallarborTown_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_LAVARIDGE, "LavaridgeTown_Mart", MAP_LAVARIDGE_TOWN_MART, "LavaridgeTown_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "LavaridgeTown_Mart/scripts.inc:LavaridgeTown_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_FORTREE, "FortreeCity_Mart", MAP_FORTREE_CITY_MART, "FortreeCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "FortreeCity_Mart/scripts.inc:FortreeCity_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_MOSSDEEP, "MossdeepCity_Mart", MAP_MOSSDEEP_CITY_MART, "MossdeepCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "MossdeepCity_Mart/scripts.inc:MossdeepCity_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_SOOTOPOLIS, "SootopolisCity_Mart", MAP_SOOTOPOLIS_CITY_MART, "SootopolisCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "SootopolisCity_Mart/scripts.inc:SootopolisCity_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_LILYCOVE_2F_LEFT, "LilycoveCity_DepartmentStore_2F", MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F, "LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft", MART_CATEGORY_DEPT, "LilycoveCity_DepartmentStore_2F/scripts.inc:LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft") \
+    X(MART_PROFILE_LILYCOVE_2F_RIGHT, "LilycoveCity_DepartmentStore_2F", MAP_LILYCOVE_CITY_DEPARTMENT_STORE_2F, "LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight", MART_CATEGORY_DEPT, "LilycoveCity_DepartmentStore_2F/scripts.inc:LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight") \
+    X(MART_PROFILE_INDIGO_PLATEAU, "IndigoPlateau_PokemonCenter_hns", MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS, "BattleFrontier_Mart_EventScript_Clerk", MART_CATEGORY_LEAGUE, "BattleFrontier_Mart source reused by Indigo") \
+    X(MART_PROFILE_EVER_GRANDE_LEAGUE, "EverGrandeCity_PokemonLeague_1F", MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F, "EverGrandeCity_PokemonLeague_1F_EventScript_Clerk", MART_CATEGORY_LEAGUE, "EverGrandeCity_PokemonLeague_1F/scripts.inc:EverGrandeCity_PokemonLeague_1F_EventScript_Clerk") \
+    X(MART_PROFILE_BATTLE_FRONTIER_HNS, "BattleFrontier_Mart_hns", MAP_BATTLE_FRONTIER_MART_HNS, "BattleFrontier_Mart_EventScript_Clerk_hns", MART_CATEGORY_FACILITY, "BattleFrontier_Mart_hns/scripts.inc:BattleFrontier_Mart_EventScript_Clerk_hns") \
+    X(MART_PROFILE_BATTLE_FRONTIER, "BattleFrontier_Mart", MAP_BATTLE_FRONTIER_MART, "BattleFrontier_Mart_EventScript_Clerk", MART_CATEGORY_FACILITY, "BattleFrontier_Mart/scripts.inc:BattleFrontier_Mart_EventScript_Clerk") \
+    X(MART_PROFILE_TRAINER_HILL_HNS, "TrainerHill_Entrance_hns", MAP_TRAINER_HILL_ENTRANCE_HNS, "TrainerHill_Entrance_hns_EventScript_Clerk2", MART_CATEGORY_FACILITY, "TrainerHill_Entrance_hns/scripts.inc:TrainerHill_Entrance_hns_EventScript_Clerk2") \
+    X(MART_PROFILE_TRAINER_HILL, "TrainerHill_Entrance", MAP_TRAINER_HILL_ENTRANCE, "TrainerHill_Entrance_EventScript_Clerk", MART_CATEGORY_FACILITY, "TrainerHill_Entrance/scripts.inc:TrainerHill_Entrance_EventScript_Clerk")
+
 #undef MART_PROFILE_WITH_RETAINED
 #undef MART_PROFILE_NO_RETAINED
 #undef MART_PROFILE_FACILITY
@@ -173,5 +214,21 @@ static const struct WayfarerMartProfile sWayfarerMartProfiles[MART_PROFILE_COUNT
 
 static const struct WayfarerMartSharedClerkBinding sWayfarerMartSharedClerkBindings[] =
 {
-#include "gameplay_mart_clerks.inc"
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_CHERRYGROVE_CITY_MART_HNS), MAP_NUM(MAP_CHERRYGROVE_CITY_MART_HNS), MART_PROFILE_CHERRYGROVE },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_AZALEA_TOWN_MART_HNS), MAP_NUM(MAP_AZALEA_TOWN_MART_HNS), MART_PROFILE_AZALEA },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_ECRUTEAK_CITY_MART_HNS), MAP_NUM(MAP_ECRUTEAK_CITY_MART_HNS), MART_PROFILE_ECRUTEAK },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_OLIVINE_CITY_MART_HNS), MAP_NUM(MAP_OLIVINE_CITY_MART_HNS), MART_PROFILE_OLIVINE },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_BLACKTHORN_CITY_MART_HNS), MAP_NUM(MAP_BLACKTHORN_CITY_MART_HNS), MART_PROFILE_BLACKTHORN },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_VIRIDIAN_CITY_MART_HNS), MAP_NUM(MAP_VIRIDIAN_CITY_MART_HNS), MART_PROFILE_VIRIDIAN },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_PEWTER_CITY_MART_HNS), MAP_NUM(MAP_PEWTER_CITY_MART_HNS), MART_PROFILE_PEWTER },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_CERULEAN_CITY_MART_HNS), MAP_NUM(MAP_CERULEAN_CITY_MART_HNS), MART_PROFILE_CERULEAN },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_VERMILION_CITY_MART_HNS), MAP_NUM(MAP_VERMILION_CITY_MART_HNS), MART_PROFILE_VERMILION },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_LAVENDER_TOWN_MART_HNS), MAP_NUM(MAP_LAVENDER_TOWN_MART_HNS), MART_PROFILE_LAVENDER },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_SAFFRON_CITY_MART_HNS), MAP_NUM(MAP_SAFFRON_CITY_MART_HNS), MART_PROFILE_SAFFRON },
+    { MART_CLERK_FAMILY_CHERRYGROVE, MAP_GROUP(MAP_FUCHSIA_CITY_MART_HNS), MAP_NUM(MAP_FUCHSIA_CITY_MART_HNS), MART_PROFILE_FUCHSIA },
+    { MART_CLERK_FAMILY_VIOLET, MAP_GROUP(MAP_VIOLET_CITY_MART_HNS), MAP_NUM(MAP_VIOLET_CITY_MART_HNS), MART_PROFILE_VIOLET },
+    { MART_CLERK_FAMILY_VIOLET, MAP_GROUP(MAP_CELADON_CITY_DEPARTMENT_STORE_2F_HNS), MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_2F_HNS), MART_PROFILE_CELADON_2F },
+    { MART_CLERK_FAMILY_FRONTIER, MAP_GROUP(MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS), MAP_NUM(MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS), MART_PROFILE_INDIGO_PLATEAU },
+    { MART_CLERK_FAMILY_FRONTIER, MAP_GROUP(MAP_BATTLE_FRONTIER_MART_HNS), MAP_NUM(MAP_BATTLE_FRONTIER_MART_HNS), MART_PROFILE_BATTLE_FRONTIER_HNS },
+    { MART_CLERK_FAMILY_FRONTIER, MAP_GROUP(MAP_BATTLE_FRONTIER_MART), MAP_NUM(MAP_BATTLE_FRONTIER_MART), MART_PROFILE_BATTLE_FRONTIER },
 };

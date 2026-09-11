@@ -7,7 +7,7 @@ VerdanturfTown_Mart_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, GAMEPLAY_MART_VERDANTURFTOWN_MART_VERDANTURF
+	setvar VAR_0x8004, MART_PROFILE_VERDANTURF
 	special WayfarerOpenMartProfile
 	waitstate
 #else

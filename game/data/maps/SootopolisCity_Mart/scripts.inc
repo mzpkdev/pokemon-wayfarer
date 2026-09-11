@@ -7,7 +7,7 @@ SootopolisCity_Mart_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, GAMEPLAY_MART_SOOTOPOLISCITY_MART_SOOTOPOLIS
+	setvar VAR_0x8004, MART_PROFILE_SOOTOPOLIS
 	special WayfarerOpenMartProfile
 	waitstate
 #else

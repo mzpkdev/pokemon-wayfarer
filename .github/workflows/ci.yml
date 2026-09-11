@@ -300,47 +300,6 @@ jobs:
           ANALYZE: 1
         run: make -j"$(nproc)" BUILD=wayfarer debug
 
-  gameplay-content-migration:
-    # Remove this job and gameplay-content-migration-test when v1 phase D is
-    # accepted and equivalent domain coverage replaces its comparisons.
-    name: Gameplay Content Migration
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Check out trusted classification policy
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          # A PR must not be able to change its own classification policy.
-          ref: ${{ github.event.pull_request.base.sha || github.sha }}
-          persist-credentials: false
-
-      - name: Classify changes
-        # Missing or failed classification falls back to normal validation.
-        if: hashFiles('.github/actions/classify-changes/action.yml') != ''
-        id: changes
-        continue-on-error: true
-        uses: ./.github/actions/classify-changes
-
-      - name: Complete documentation-only validation
-        if: steps.changes.outcome == 'success' && steps.changes.outputs.docs-only == 'true'
-        run: |
-          echo 'Only approved documentation paths changed. No gameplay-content checks are needed for this job.' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Checkout repository
-        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          ref: ${{ github.sha }}
-          persist-credentials: false
-
-      - name: Run temporary gameplay-content migration checks
-        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
-        working-directory: game
-        # This target only builds mapjson and trainerproc with the hosted C/C++ compiler.
-        run: make BUILD=wayfarer gameplay-content-migration-test
-
   expansion-suite:
     name: Expansion Suite
     if: github.event_name == 'pull_request'

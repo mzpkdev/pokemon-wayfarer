@@ -146,7 +146,7 @@ MahoganyTown_EventScript_MerchantMenu::
 	goto MahoganyTown_EventScript_MerchantExit
 
 MahoganyTown_EventScript_MerchantSupplies::
-	setvar VAR_0x8004, GAMEPLAY_MART_MAHOGANYTOWN_HNS_MAHOGANY
+	setvar VAR_0x8004, MART_PROFILE_MAHOGANY
 	special WayfarerOpenMartProfile
 	waitstate
 	goto MahoganyTown_EventScript_MerchantMenu

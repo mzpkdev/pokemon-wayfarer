@@ -263,7 +263,7 @@ TrainerHill_Entrance_hns_EventScript_Clerk2::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, GAMEPLAY_MART_TRAINERHILL_ENTRANCE_HNS_TRAINER_HILL_HNS
+	setvar VAR_0x8004, MART_PROFILE_TRAINER_HILL_HNS
 	special WayfarerOpenMartProfile
 	waitstate
 #else
