@@ -11,9 +11,6 @@ fixtureMaps["host-burned-tower-1f"] = { mapGroup: 24, mapNum: 16 }
 fixtureVars.hostIlexFarfetchd = 0x406b
 fixtureVars.hostEcruteakTheater = 0x4062
 Object.assign(fixtureFlags, {
-  hostSilverAzaleaComplete: 0x932,
-  hostSilverBurnedComplete: 0x933,
-  hostBurnedDiscovered: 0x934,
   hostReceivedCut: 0x1f5,
   hostIlexMasterHidden: 0x062,
   hostIlexApprenticeHidden: 0x05f,
@@ -109,7 +106,7 @@ describe.sequential("Wayfarer deferred Silver independent host completion", () =
           vars: { hostIlexFarfetchd: 2, azaleaTownState: 6, starterMon: 0 } as never,
           flags: {
             johtoStarterChoiceCommitted: true,
-            hostSilverAzaleaComplete: false,
+            silverAzaleaComplete: false,
             hostReceivedCut: false,
             hostIlexMasterHidden: false,
             hostIlexApprenticeHidden: false,
@@ -133,7 +130,7 @@ describe.sequential("Wayfarer deferred Silver independent host completion", () =
       expect(await flag(game, "hostIlexMasterHidden")).toBe(true)
       expect(await flag(game, "hostIlexApprenticeHidden")).toBe(true)
       expect(await flag(game, "hostIlexFarfetchdHidden")).toBe(true)
-      expect(await flag(game, "hostSilverAzaleaComplete")).toBe(false)
+      expect(await flag(game, "silverAzaleaComplete")).toBe(false)
       expect((await game.state.read()).party).toEqual(beforeParty)
     } finally {
       await game.close()
@@ -155,8 +152,8 @@ describe.sequential("Wayfarer deferred Silver independent host completion", () =
           vars: { starterMon: 0, ecruteakCityState: 2, hostEcruteakTheater: 0 } as never,
           flags: {
             johtoStarterChoiceCommitted: true,
-            hostSilverBurnedComplete: false,
-            hostBurnedDiscovered: false,
+            silverBurnedTowerComplete: false,
+            burnedTowerDiscovered: false,
             hostBurnedNpcsHidden: false,
             hostBeastsHidden: false,
             hostBasementEusineHidden: false,
@@ -166,16 +163,16 @@ describe.sequential("Wayfarer deferred Silver independent host completion", () =
         determinism: { textSpeed: "instant", rngSeed: 1 },
       })
       const beforeParty = (await game.state.read()).party
-      expect(await flag(game, "hostBurnedDiscovered")).toBe(false)
+      expect(await flag(game, "burnedTowerDiscovered")).toBe(false)
       expect(await flag(game, "hostBeastsReleased")).toBe(false)
       await game.player.move("up")
       await finishHost(game, async () => await flag(game, "hostBeastsReleased"), "burned-fainted")
       expect((await game.state.read()).map).toMatchObject({ mapGroup: 24, mapNum: 17 })
-      expect(await flag(game, "hostBurnedDiscovered")).toBe(true)
+      expect(await flag(game, "burnedTowerDiscovered")).toBe(true)
       expect(await variable(game, "ecruteakCityState")).toBe(4)
       expect(await flag(game, "hostBeastsHidden")).toBe(true)
       expect(await flag(game, "hostBasementEusineHidden")).toBe(true)
-      expect(await flag(game, "hostSilverBurnedComplete")).toBe(false)
+      expect(await flag(game, "silverBurnedTowerComplete")).toBe(false)
       expect((await game.state.read()).party).toEqual(beforeParty)
 
       // Keep this same save: real Revive targeting restores the fainted member
@@ -196,7 +193,7 @@ describe.sequential("Wayfarer deferred Silver independent host completion", () =
       expect(battle.battle.active).toBe(true)
       expect(battle.battle.ui).toBe("action-menu")
       expect(battle.battle.trainerOnly.active).toBe(false)
-      expect(await flag(game, "hostSilverBurnedComplete")).toBe(false)
+      expect(await flag(game, "silverBurnedTowerComplete")).toBe(false)
       // The battle outcome is deliberately forced. This isolates the native
       // SilverAfterDiscovery continuation, not combat balance or earned victory.
       await game.battle.win()
@@ -204,8 +201,8 @@ describe.sequential("Wayfarer deferred Silver independent host completion", () =
       await game.controls.press("a")
       await finishFieldScript(game, "Tower Silver forced-win continuation")
       expect((await game.state.read()).map).toMatchObject({ mapGroup: 24, mapNum: 16 })
-      expect(await flag(game, "hostSilverBurnedComplete")).toBe(true)
-      expect(await flag(game, "hostBurnedDiscovered")).toBe(true)
+      expect(await flag(game, "silverBurnedTowerComplete")).toBe(true)
+      expect(await flag(game, "burnedTowerDiscovered")).toBe(true)
       expect(await flag(game, "hostBeastsReleased")).toBe(true)
       expect(await variable(game, "ecruteakCityState")).toBe(4)
     } finally {
