@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_appearance.h"
 #include "main.h"
 #include "bike.h"
 #include "challenge_menu.h"
@@ -1628,7 +1629,11 @@ u16 GetRSAvatarGraphicsIdByGender(enum Gender gender)
 
 u16 GetPlayerAvatarGraphicsIdByStateId(u8 state)
 {
+#if IS_WAYFARER
+    return WayfarerGetAppearanceGraphicsId(WayfarerGetPlayerAppearanceId(), state);
+#else
     return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gPlayerAvatar.gender);
+#endif
 }
 
 enum Gender GetPlayerAvatarGenderByGraphicsId(u16 gfxId)
@@ -1709,8 +1714,34 @@ void SetPlayerAvatarStateMask(u8 flags)
     gPlayerAvatar.flags |= flags;
 }
 
-static u8 GetPlayerAvatarStateTransitionByGraphicsId(u16 graphicsId, u8 gender)
+u8 GetPlayerAvatarStateTransitionByGraphicsId(u16 graphicsId, u8 gender)
 {
+#if IS_WAYFARER
+    u8 state = gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ON_FOOT | PLAYER_AVATAR_FLAG_MACH_BIKE
+        | PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
+    u8 savedState = PLAYER_AVATAR_FLAG_ON_FOOT;
+    bool8 foundSavedState = FALSE;
+
+    // Menu returns retain the live movement state before recreating the player
+    // sprite. A game reload clears the avatar first, so recover that state from
+    // the saved player graphics, which are specific to the selected appearance.
+    if (state != 0)
+        return state;
+
+    for (state = PLAYER_AVATAR_STATE_NORMAL; state <= PLAYER_AVATAR_STATE_UNDERWATER; state++)
+    {
+        if (graphicsId == WayfarerGetAppearanceGraphicsId(WayfarerGetPlayerAppearanceId(), state))
+        {
+            // A shared sheet cannot identify a mode after a reload. Preserve
+            // the safe on-foot fallback rather than picking the first match.
+            if (foundSavedState)
+                return PLAYER_AVATAR_FLAG_ON_FOOT;
+            savedState = 1 << state;
+            foundSavedState = TRUE;
+        }
+    }
+    return foundSavedState ? savedState : PLAYER_AVATAR_FLAG_ON_FOOT;
+#else
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(sPlayerAvatarGfxToStateFlag[0]); i++)
@@ -1719,6 +1750,7 @@ static u8 GetPlayerAvatarStateTransitionByGraphicsId(u16 graphicsId, u8 gender)
             return sPlayerAvatarGfxToStateFlag[gender][i].playerFlag;
     }
     return PLAYER_AVATAR_FLAG_ON_FOOT;
+#endif
 }
 
 u16 GetPlayerAvatarGraphicsIdByCurrentState(void)
@@ -1729,7 +1761,11 @@ u16 GetPlayerAvatarGraphicsIdByCurrentState(void)
     for (i = 0; i < ARRAY_COUNT(sPlayerAvatarGfxToStateFlag[0]); i++)
     {
         if (sPlayerAvatarGfxToStateFlag[gPlayerAvatar.gender][i].playerFlag & flags)
+#if IS_WAYFARER
+            return GetPlayerAvatarGraphicsIdByStateId(i);
+#else
             return sPlayerAvatarGfxToStateFlag[gPlayerAvatar.gender][i].graphicsId;
+#endif
     }
     return 0;
 }
@@ -1757,7 +1793,11 @@ void InitPlayerAvatar(s16 x, s16 y, enum Direction direction, enum Gender gender
 
     playerObjEventTemplate.localId = LOCALID_PLAYER;
     playerObjEventTemplate.kind = OBJ_KIND_NORMAL;
+#if IS_WAYFARER
+    playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL);
+#else
     playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
+#endif
     playerObjEventTemplate.x = x - MAP_OFFSET;
     playerObjEventTemplate.y = y - MAP_OFFSET;
     playerObjEventTemplate.elevation = ELEVATION_TRANSITION;

@@ -50,6 +50,7 @@ export type PlayerPosition = {
 export type ArrangeGame = {
   checkpoint: Checkpoint
   player?: {
+    appearanceStyle?: 1 | 2 | 3 | 4
     facing?: Direction
     position?: PlayerPosition
   }
@@ -93,6 +94,11 @@ const entries = <Name extends string, Value>(
 
 export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): ArrangeApi => {
   const arrange = async (options: ArrangeGame): Promise<void> => {
+    const appearanceIds = { 1: 1, 2: 2, 3: 5, 4: 6 } as const
+    const appearanceStyle = options.player?.appearanceStyle
+    if (appearanceStyle !== undefined && !Object.hasOwn(appearanceIds, appearanceStyle))
+      throw new Error("Appearance style must be 1, 2, 3, or 4")
+    const appearanceId = appearanceStyle === undefined ? 0 : appearanceIds[appearanceStyle]
     const vars = entries(options.story?.vars)
     const flags = entries(options.story?.flags)
     const party = options.party ?? []
@@ -168,6 +174,7 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
           vars: vars.map(([name, value]) => ({ id: storyVars[name], value })),
           flags: flags.map(([name, value]) => ({ id: storyFlags[name], value })),
           checkpoint: checkpoints[options.checkpoint],
+          appearanceId,
           facing: directions[options.player?.facing ?? "up"],
           textSpeed: textSpeeds[options.determinism?.textSpeed ?? "instant"],
           party: party.map(toWirePartyMon),

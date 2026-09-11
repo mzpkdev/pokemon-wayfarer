@@ -157,7 +157,7 @@ to prove that the withdrawn Surf user is resolved again. Tests should not treat
 fixture state or a memory snapshot as proof that capture, storage, release, or
 field use worked.
 
-The command mailbox is versioned as ABI v10. Arrangement and wild-battle commands
+The command mailbox is versioned as ABI v14. Arrangement and wild-battle commands
 share request IDs and result handling, reject commands while a harness-owned game
 state machine is active, and validate invalid species, item quantities, boxes,
 and slots in the ROM. Protocol changes must increment the ABI and update both the
@@ -183,8 +183,46 @@ layout offsets published by the ROM ABI. `game.player` supplies real controller
 actions, while `game.wait` and `game.dialogue` synchronize against ROM state
 instead of fixed frame delays.
 
-The mailbox, checkpoints, and telemetry only exist in the HNS E2E ROM. Normal and
-release ROMs do not compile them. Other map versions are outside this capability.
+The `e2e` Makefile target builds Wayfarer (`BUILD=wayfarer`, `E2E_TESTING=1`).
+The mailbox, checkpoints, and telemetry are available in this ROM; normal and
+release ROMs do not compile them. Standalone FRLG and Emerald are outside this
+harness's capability. HNS-named fixtures describe inherited Johto maps and do not
+mean the ROM is a standalone HNS build.
+
+The new-game playbook accepts an explicit origin and appearance:
+`playThroughNewGameIntro(game, "hoenn", 4)` selects Style 4 (May, saved ID 6) and checks its saved
+identity and mapped story gender. The appearance journey exercises all eight
+style/origin combinations and saves and reloads each one. Run it with:
+
+```sh
+XDG_DATA_HOME=/tmp/skyemu-appearance \
+SKYEMU_ROM="$PWD/game/pokemon-wayfarer-e2e.gba" \
+SKYEMU_SYMS="$PWD/game/pokemon-wayfarer-e2e.sym" \
+SKYEMU_CAPTURE_DIR="$PWD/e2e/artifacts/trainer-appearance" \
+pnpm --dir e2e exec wa test src/journeys/wayfarer-trainer-appearance.e2e.ts src/journeys/wayfarer-appearance-picker.e2e.ts
+```
+
+Use a writable `XDG_DATA_HOME` when the normal user data directory is read-only;
+SkyEmu writes its cache there. The reset, visuals, water, and underwater
+appearance journeys provide separate controller-driven acceptance checks. The
+running journey also verifies all four directions and local Ice Path reflections:
+
+```sh
+XDG_DATA_HOME=/tmp/skyemu-appearance-running \
+SKYEMU_ROM="$PWD/game/pokemon-wayfarer-e2e.gba" \
+SKYEMU_SYMS="$PWD/game/pokemon-wayfarer-e2e.sym" \
+SKYEMU_CAPTURE_DIR="$PWD/e2e/artifacts/trainer-appearance" \
+pnpm --dir e2e exec wa test src/journeys/wayfarer-appearance-running.e2e.ts
+```
+
+The picker test writes four native emulator PNG captures when `SKYEMU_CAPTURE_DIR`
+is set. A second test captures May’s naming icon, name confirmation, and restored
+selection after rejecting the name, then selects Brendan and verifies his identity
+after the challenge and origin callbacks. Inspect these images to judge layout, palettes, and character art. Passing
+state assertions or generating captures alone does not establish visual acceptance.
+Action animations, callback round trips, regional travel, and live link rendering
+also require the spec's separate acceptance checks. Build ROM targets serially:
+their generated maps share files.
 
 ## Layout
 
@@ -202,3 +240,8 @@ contains longer player flows. The E2E tier currently covers the opening through
 Elm's first dialogue; future journeys can move to a nightly workflow as they
 become more expensive. Each test must use its own temporary ROM copy so suites
 can run in parallel without sharing a save file.
+
+Wayfarer arrangement fixtures accept `player: { appearanceStyle: 3 }` for Brendan
+or `appearanceStyle: 4` for May. Styles 1 and 2 select Gold and Kris. Omitting
+the option preserves the checkpoint’s default appearance. The wire format uses
+saved IDs 1, 2, 5, and 6; the ROM rejects unregistered IDs before new-game setup.

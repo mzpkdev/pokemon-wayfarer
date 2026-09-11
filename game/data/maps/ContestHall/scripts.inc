@@ -435,6 +435,9 @@ ContestHall_EventScript_SetExitWarpLinkContest::
 	end
 
 LilycoveCity_ContestLobby_EventScript_SetPlayerGfx::
+#if IS_WAYFARER
+	return @ SetContestTrainerGfxIds already resolved the local appearance.
+#endif
 	checkplayergender
 	goto_if_eq VAR_RESULT, MALE, LilycoveCity_ContestLobby_EventScript_SetPlayerGfxBrendan
 	goto_if_eq VAR_RESULT, FEMALE, LilycoveCity_ContestLobby_EventScript_SetPlayerGfxMay

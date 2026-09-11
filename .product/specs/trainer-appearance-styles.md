@@ -2,10 +2,11 @@
 
 PRD: [Trainer appearance styles](../prds/trainer-appearance-styles.md)
 Implemented: No
+Scope: Approved four-style v1 (2026-09-09); Red and Leaf deferred.
 
 ## Scope
 
-Replace Wayfarer's initial boy/girl choice with six appearance styles and carry
+Replace Wayfarer's initial boy/girl choice with four appearance styles and carry
 that choice through every local-player rendering surface. This spec owns the
 intro picker, appearance identity, persistence, graphics lookup, required asset
 completion, and acceptance checks. Starting-origin behavior remains owned by
@@ -25,29 +26,32 @@ before naming. Replace the boy/girl question and menu only in Wayfarer. Preserve
 the surrounding introduction, naming, challenge setup, origin choice, and final
 send-off order.
 
-| Label | Character and source art | Proposed saved ID | Existing gender value |
+| Label | Character and source art | Saved ID | Existing gender value |
 | --- | --- | --- | --- |
 | Style 1 | Gold, HNS | `APPEARANCE_GOLD = 1` | `MALE` |
 | Style 2 | Kris, HNS | `APPEARANCE_KRIS = 2` | `FEMALE` |
-| Style 3 | Red, FRLG | `APPEARANCE_RED = 3` | `MALE` |
-| Style 4 | Leaf, FRLG | `APPEARANCE_LEAF = 4` | `FEMALE` |
-| Style 5 | Brendan, Emerald | `APPEARANCE_BRENDAN = 5` | `MALE` |
-| Style 6 | May, Emerald | `APPEARANCE_MAY = 6` | `FEMALE` |
+| Style 3 | Brendan, Emerald | `APPEARANCE_BRENDAN = 5` | `MALE` |
+| Style 4 | May, Emerald | `APPEARANCE_MAY = 6` | `FEMALE` |
 
-The labels and order are fixed. Display the highlighted character's trainer
-portrait and a small animated walking sprite together. Names and source games
+The labels and order are fixed. Saved IDs are sparse: 1, 2, 5, and 6.
+IDs 3 and 4 remain reserved for deferred Red/Leaf; do not register them or accept
+them in pending or persistent v1 state. Resolve menu rows through an explicit
+choice list rather than arithmetic on appearance IDs.
+
+Display the highlighted character's trainer portrait and a small animated
+walking sprite together. Names and source games
 in the table identify assets for implementers; they are not extra menu labels.
 
-Use one vertical six-row list beside the preview, within the GBA's 240 by 160
+Use one vertical four-row list beside the preview, within the GBA's 240 by 160
 viewport. Reserve the existing bottom dialogue area. A proposed layout uses
-8-pixel-aligned windows: list at x=8, y=8 with a 72 by 96 content area; portrait
+8-pixel-aligned windows: list at x=8, y=8 with a 72 by 64 content area; portrait
 within x=104..167, y=8..71; walking sprite centered near x=192, y=80. Adjust exact
 coordinates to the existing frames and sprite dimensions after rendering, while
-keeping all six rows, cursor, both previews, and dialogue unobscured. Use the
+keeping all four rows, cursor, both previews, and dialogue unobscured. Use the
 existing menu font and styling. Do not shrink the labels or add scrolling.
 
 - A fresh new-game flow highlights Style 1. Up/Down move one row and wrap between
-  Style 1 and Style 6. Left/Right do nothing.
+  Style 1 and Style 4. Left/Right do nothing.
 - A confirms the visible style and advances into the existing naming flow. B
   leaves the picker open, matching the current noncancelable choice.
 - Update portrait, walking sprite, palette, and highlighted label as one visible
@@ -67,7 +71,7 @@ The existing entry points are `Task_NewGameHnsSpeech_WaitToShowGenderMenu`,
 `Task_NewGameHnsSpeech_SlideInNewGenderSprite`, and
 `NewGameHnsSpeech_ShowGenderMenu` in
 [oak_speech_hns.c](../../game/src/oak_speech_hns.c). Their current two-value task
-state cannot serve as the six-style identity. Audit every player-sprite restore
+state cannot serve as the four-style identity. Audit every player-sprite restore
 in this file, including returns from naming and challenge menus. Put the new
 question in [Oak's text](../../game/data/text/oak_speech_hns.inc) without changing
 standalone HNS dialogue.
@@ -85,7 +89,7 @@ confirmation, assign its value from the table. Existing dialogue substitutions,
 name suggestions, rival choices, and story branches continue to use that gender.
 The feature introduces no separate pronoun question. Appearance selection does
 not alter starter options, challenge settings, origin, map version, or regional
-progress. All six styles are available for both Johto and Hoenn origins and
+progress. All four styles are available for both Johto and Hoenn origins and
 remain identical after travel through Johto, Kanto, and Hoenn.
 
 Use a dedicated pending new-game appearance context in RAM, separate from saved
@@ -167,25 +171,22 @@ turn into surfing.
 
 Existing character art is under
 [graphics/object_events/pics/people](../../game/graphics/object_events/pics/people)
-in `gold`, `kris`, `red`, `leaf`, `brendan`, and `may`. Existing front and back
-trainer IDs also cover all six characters. Asset presence alone does not prove
+in `gold`, `kris`, `brendan`, and `may`. Existing front and back
+trainer IDs also cover all four characters. Asset presence alone does not prove
 that every engine animation state is compatible.
 
-Provide a checked manifest for all six styles covering normal walking/running,
+Provide a checked manifest for all four styles covering normal walking/running,
 Mach Bike, Acro Bike and tricks, surfing, underwater, field-move poses, fishing,
 watering, and VS Seeker when available. For each combination, record graphics
 and palette symbols, frame dimensions/counts, animation tables, and whether the
 sheet is reused or authored. Validate every referenced frame index and expected
 animation before accepting a reused sheet.
 
-[Avatar graphics constants](../../game/include/constants/event_objects.h)
-currently alias FRLG Mach/Acro to one bike sheet, underwater to surf, and watering
-to field-move graphics. These aliases are audit targets, not proof of support.
-Author or normalize Red and Leaf assets for missing states, including correct
-Acro tricks, underwater movement, and watering poses wherever their current
-sheets fail the state's animation contract. Keep the selected character in every
-state. Substituting Gold/Kris or Brendan/May for an unsupported Red/Leaf action
-is not acceptable. Reuse compatible same-character art only after verification.
+Red and Leaf are deferred from v1. Do not register their appearance IDs or add
+new FRLG action assets to the Wayfarer v1 build. Their existing standalone assets and
+behavior remain unchanged. Completing and verifying FRLG Acro tricks, underwater
+movement, watering, and other missing action animations is required before a
+future decision to ship those styles, but is outside this release.
 
 ### Required rendering audit
 
@@ -227,14 +228,14 @@ art before acceptance. A picker-only change does not satisfy this spec.
 
 | Area | Required evidence |
 | --- | --- |
-| Picker | Capture all six rows/previews at 240 by 160; exercise wraparound, B, held directions, rapid changes and A during transitions; confirm the displayed style is the saved style. |
+| Picker | Capture all four rows/previews at 240 by 160; exercise wraparound, B, held directions, rapid changes and A during transitions; confirm the displayed style is the saved style. |
 | Callback lifecycle | Name rejection, naming return, challenge return, fast intro, abandoned setup followed by a new flow, and final shrink retain or reset selection as specified. |
-| Initialization | Exercise all 12 style/origin combinations; assert saved ID, mapped gender, expected opening, unchanged challenge settings, and no appearance reset during origin setup. |
-| Persistence | Save/reload each style; Continue omits selection. Invalid IDs and mismatched gender are rejected without out-of-bounds reads; obsolete prerelease saves follow version rejection. |
+| Initialization | Exercise all eight style/origin combinations; assert saved ID, mapped gender, expected opening, unchanged challenge settings, and no appearance reset during origin setup. |
+| Persistence | Save/reload each style; Continue omits selection. Invalid IDs (including reserved 3 and 4) and mismatched gender are rejected without out-of-bounds reads; obsolete prerelease saves follow version rejection. |
 | Field state | For every style, inspect walking/running in all directions, both bikes and Acro tricks, surf entry/exit, dive/surface, fishing, watering, field moves, and VS Seeker where reachable. Check palettes, frame bounds, reflections, transitions, and restoration to the previous state. |
 | Rendering | Verify naming icon, intro portraits, local Trainer Card, battle front/back animations, Hall of Fame and facility records against the chosen character. Explicit NPC/rival/remote records retain their own graphics. |
-| Link boundary | In a live link battle, verify all six styles for the local player while remote opponents/partners use their own legacy data. Playback of legacy recorded battles must not borrow the current save's appearance. |
-| Regions and story | Start each style in both origins, travel through Johto/Kanto/Hoenn and back, save/reload away from home, and verify appearance remains fixed. Verify existing gender-linked naming and rival/story branches for all six mappings. |
+| Link boundary | In a live link battle, verify all four styles for the local player while remote opponents/partners use their own legacy data. Playback of legacy recorded battles must not borrow the current save's appearance. |
+| Regions and story | Start each style in both origins, travel through Johto/Kanto/Hoenn and back, save/reload away from home, and verify appearance remains fixed. Verify existing gender-linked naming and rival/story branches for all four mappings. |
 | Build isolation | Build Wayfarer and supported standalone HNS/FRLG/Emerald targets serially. Native menus and rendering retain their existing behavior without references to Wayfarer-only state. |
 | Resource limits | Record ROM size and asset delta against the accepted baseline; the result must fit the 32 MiB ROM and current save-block budgets. Check intro sprite/window allocation, VRAM/palette use, and cleanup through repeated preview changes and callback returns. |
 

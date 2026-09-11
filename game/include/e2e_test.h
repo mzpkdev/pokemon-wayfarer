@@ -95,6 +95,7 @@ enum E2ETestError
     E2E_TEST_ERROR_FULL_POCKET_MASK,
     E2E_TEST_ERROR_SAVE,
     E2E_TEST_ERROR_CIRCUIT,
+    E2E_TEST_ERROR_APPEARANCE,
 };
 
 enum E2ETestGamePhase
@@ -273,7 +274,8 @@ struct E2ETestRequest
     u8 regionalBadgeCounts[E2E_TEST_LEAGUE_COUNT];
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 applyLeagueCircuit;
-    u8 reserved[3];
+    u8 appearanceId;
+    u8 reserved[2];
 };
 
 struct E2ETestObservedPcSlot
@@ -389,6 +391,10 @@ struct E2ETestState
     u8 playerGender;
     u8 originEquipment;
     u16 littlerootTownState;
+    u8 playerAppearanceId;
+    u8 appearanceCandidate;
+    u8 appearanceConfirmed;
+    u8 appearanceIntroStage;
 };
 
 struct E2ETestAbi

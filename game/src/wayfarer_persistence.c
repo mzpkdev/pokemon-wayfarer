@@ -7,6 +7,7 @@
 #include "script.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
@@ -131,6 +132,8 @@ void WayfarerInitPersistentState(void)
     ConsumeLeagueRunLoadRecovery();
     memset(&gSaveBlock3Ptr->wayfarerHoenn, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn));
     gSaveBlock3Ptr->wayfarerHoenn.magic = WAYFARER_HOENN_STATE_MAGIC;
+    gSaveBlock3Ptr->wayfarerHoenn.playerAppearanceId = APPEARANCE_GOLD;
+    gSaveBlock2Ptr->playerGender = MALE;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 0;
@@ -142,7 +145,8 @@ void WayfarerInitPersistentState(void)
 bool8 WayfarerPersistentStateIsValid(void)
 {
 #if IS_WAYFARER
-    return gSaveBlock3Ptr->wayfarerHoenn.magic == WAYFARER_HOENN_STATE_MAGIC
+    return WayfarerGetPlayerAppearanceId() != APPEARANCE_NONE
+        && gSaveBlock3Ptr->wayfarerHoenn.magic == WAYFARER_HOENN_STATE_MAGIC
         && WayfarerGetOriginProfile(WayfarerGetStartingOriginId()) != NULL
         && GetHealLocation(gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation) != NULL
         && gSaveBlock3Ptr->wayfarerHoenn.initialized <= TRUE

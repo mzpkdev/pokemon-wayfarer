@@ -1,7 +1,7 @@
-const abiVersion = 12
+const abiVersion = 14
 const expectedRequestSize = 432
 const expectedResultSize = 16
-const expectedStateSize = 384
+const expectedStateSize = 388
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -71,6 +71,7 @@ export const commandErrors = [
   "full-pocket-mask",
   "save",
   "circuit",
+  "appearance",
 ] as const
 export const arrangeErrors = commandErrors
 
@@ -178,6 +179,7 @@ export type CommandRequest = {
   regionalBadgeCounts: number[]
   leagueClears: boolean[]
   applyLeagueCircuit?: boolean
+  appearanceId?: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -252,6 +254,10 @@ export type StateSnapshot = {
   leagueRunRegion: number
   leagueRunRating: number
   starterChooseStage: number
+  playerAppearanceId: number
+  appearanceCandidate: number
+  appearanceConfirmed: number
+  appearanceIntroStage: number
   originIntroStage: number
   startingOriginId: number
   johtoStarterChoice: number
@@ -372,6 +378,7 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
     view.setUint8(425 + index, request.leagueClears[index] ? 1 : 0)
   }
   view.setUint8(428, request.applyLeagueCircuit ? 1 : 0)
+  view.setUint8(429, request.appearanceId ?? 0)
   return bytes
 }
 
@@ -747,6 +754,10 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     leagueRunRegion: bytes[353]!,
     leagueRunRating: bytes[354]!,
     starterChooseStage: bytes[373]!,
+    playerAppearanceId: bytes[382]!,
+    appearanceCandidate: bytes[383]!,
+    appearanceConfirmed: bytes[384]!,
+    appearanceIntroStage: bytes[385]!,
     originIntroStage: bytes[355]!,
     startingOriginId: uint16(bytes, 356),
     johtoStarterChoice: uint16(bytes, 358),

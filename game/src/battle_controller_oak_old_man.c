@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_pokemon_sprites.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -677,13 +678,13 @@ void OakOldManBufferExecCompleted(enum BattlerId battler)
 
 static void OakOldManHandleDrawTrainerPic(enum BattlerId battler)
 {
-    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_RED : TRAINER_PIC_BACK_OLD_MAN;
+    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? (IS_WAYFARER ? GetLocalPlayerBackTrainerPicId() : gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_RED) : TRAINER_PIC_BACK_OLD_MAN;
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, FALSE, 80, (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80, 30);
 }
 
 static void OakOldManHandleTrainerSlide(enum BattlerId battler)
 {
-    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_RED : TRAINER_PIC_BACK_OLD_MAN;
+    u32 trainerPicId = (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) ? (IS_WAYFARER ? GetLocalPlayerBackTrainerPicId() : gSaveBlock2Ptr->playerGender + TRAINER_PIC_BACK_RED) : TRAINER_PIC_BACK_OLD_MAN;
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
@@ -856,7 +857,7 @@ static void OakOldManHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
-        const u16 *trainerPal = gTrainerBacksprites[gSaveBlock2Ptr->playerGender].palette.data;
+        const u16 *trainerPal = gTrainerBacksprites[IS_WAYFARER ? GetLocalPlayerBackTrainerPicId() : gSaveBlock2Ptr->playerGender].palette.data;
         BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F8, trainerPal, 31, Intro_TryShinyAnimShowHealthbox);
     }
     else

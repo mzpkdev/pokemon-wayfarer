@@ -60,6 +60,7 @@ struct TrainerCardData
     u8 bgPalLoadState;
     u8 flipDrawState;
     bool8 isLink;
+    bool8 isLocalPlayer;
     u8 timeColonBlinkTimer;
     bool8 timeColonInvisible;
     bool8 onBack;
@@ -2035,6 +2036,7 @@ static bool8 Task_EndCardFlip(struct Task *task)
 void ShowPlayerTrainerCard(void (*callback)(void))
 {
     sData = AllocZeroed(sizeof(*sData));
+    sData->isLocalPlayer = TRUE;
     sData->callback2 = callback;
     if (callback == CB2_ReshowFrontierPass)
         sData->blendColor = RGB_WHITE;
@@ -2057,6 +2059,7 @@ void ShowTrainerCardInLink(u8 cardId, void (*callback)(void))
     sData->callback2 = callback;
     sData->isLink = TRUE;
     sData->trainerCard = gTrainerCards[cardId];
+    sData->isLocalPlayer = (cardId == GetMultiplayerId());
     sData->language = gLinkPlayers[cardId].language;
     SetMainCallback2(CB2_InitTrainerCard);
 }
@@ -2133,6 +2136,15 @@ static u8 VersionToCardType(enum GameVersion version)
 
 static void CreateTrainerCardTrainerPic(void)
 {
+#if IS_WAYFARER
+    if (sData->isLocalPlayer)
+    {
+        CreateTrainerCardTrainerPicSprite(GetLocalPlayerFrontTrainerPicId(), TRUE,
+                    4, 8,
+                    8, WIN_TRAINER_PIC);
+        return;
+    }
+#endif
     if (InUnionRoom() == TRUE && gReceivedRemoteLinkPlayers == 1)
     {
         CreateTrainerCardTrainerPicSprite(FacilityClassToPicIndex(sData->trainerCard.unionRoomClass),

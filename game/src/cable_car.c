@@ -1,4 +1,5 @@
 #include "global.h"
+#include "field_player_avatar.h"
 #include "bg.h"
 #include "decompress.h"
 #include "event_data.h"
@@ -807,7 +808,7 @@ static void CreateCableCarSprites(void)
     case FALSE:
     default:
         // Create player sprite
-        spriteId = CreateObjectGraphicsSprite(playerGraphicsIds[gSaveBlock2Ptr->playerGender], SpriteCB_Player, 200, 73, 102);
+        spriteId = CreateObjectGraphicsSprite(IS_WAYFARER ? GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL) : playerGraphicsIds[gSaveBlock2Ptr->playerGender], SpriteCB_Player, 200, 73, 102);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].oam.priority = 2;
@@ -835,7 +836,7 @@ static void CreateCableCarSprites(void)
     case TRUE:
         CopyToBgTilemapBufferRect_ChangePalette(0, sCableCar->groundTilemap + 0x24, 24, 26, 12, 3, 17);
         // Create player sprite
-        spriteId = CreateObjectGraphicsSprite(playerGraphicsIds[gSaveBlock2Ptr->playerGender], SpriteCB_Player, 128, 39, 102);
+        spriteId = CreateObjectGraphicsSprite(IS_WAYFARER ? GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL) : playerGraphicsIds[gSaveBlock2Ptr->playerGender], SpriteCB_Player, 128, 39, 102);
         if (spriteId != MAX_SPRITES)
         {
             gSprites[spriteId].oam.priority = 2;

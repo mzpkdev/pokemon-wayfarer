@@ -71,6 +71,7 @@
 #include "trainer_hill.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
 #include "title_screen.h"
 #include "trainer_pokemon_sprites.h"
 #include "tv.h"
@@ -2005,7 +2006,8 @@ static bool8 RunFieldCallback(void)
 void CB2_NewGame(void)
 {
 #if IS_WAYFARER
-    if (WayfarerGetOriginProfile(WayfarerGetConfirmedPendingOrigin()) == NULL)
+    if (WayfarerGetOriginProfile(WayfarerGetConfirmedPendingOrigin()) == NULL
+     || WayfarerGetAppearanceProfile(WayfarerGetConfirmedPendingAppearance()) == NULL)
     {
         SetMainCallback2(CB2_InitTitleScreen);
         return;

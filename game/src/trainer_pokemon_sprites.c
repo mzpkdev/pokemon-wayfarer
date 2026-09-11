@@ -1,4 +1,5 @@
 #include "global.h"
+#include "wayfarer_appearance.h"
 #include "sprite.h"
 #include "window.h"
 #include "malloc.h"
@@ -349,6 +350,24 @@ static u16 UNUSED LoadTrainerPicInWindow(u16 species, bool8 isFrontPic, u8 palet
 u16 CreateTrainerCardTrainerPicSprite(u16 species, bool8 isFrontPic, u16 destX, u16 destY, u8 paletteSlot, u8 windowId)
 {
     return CreateTrainerCardSprite(species, FALSE, 0, isFrontPic, destX, destY, paletteSlot, windowId, TRUE);
+}
+
+u16 GetLocalPlayerFrontTrainerPicId(void)
+{
+#if IS_WAYFARER
+    return WayfarerGetAppearanceFrontPic(WayfarerGetPlayerAppearanceId());
+#else
+    return PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender);
+#endif
+}
+
+u16 GetLocalPlayerBackTrainerPicId(void)
+{
+#if IS_WAYFARER
+    return WayfarerGetAppearanceBackPic(WayfarerGetPlayerAppearanceId());
+#else
+    return gSaveBlock2Ptr->playerGender == FEMALE ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
+#endif
 }
 
 u16 PlayerGenderToFrontTrainerPicId_Debug(enum Gender gender, bool8 getClass)

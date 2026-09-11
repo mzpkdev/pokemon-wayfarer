@@ -3189,8 +3189,17 @@ static void RemoveObjectEventIfOutsideView(struct ObjectEvent *objectEvent)
 void SpawnObjectEventsOnReturnToField(s16 x, s16 y)
 {
     u32 i;
+#if IS_WAYFARER
+    u8 movementFlags = gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_ON_FOOT | PLAYER_AVATAR_FLAG_MACH_BIKE
+        | PLAYER_AVATAR_FLAG_ACRO_BIKE | PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
+#endif
 
     ClearPlayerAvatarInfo();
+#if IS_WAYFARER
+    // Menus recreate sprites after clearing transient avatar data. Keep the
+    // movement mode so recreation never has to infer it from shared art.
+    gPlayerAvatar.flags = movementFlags;
+#endif
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (gObjectEvents[i].active)
@@ -3292,7 +3301,11 @@ static void SetPlayerAvatarObjectEventIdAndObjectId(u8 objectEventId, u8 spriteI
 {
     gPlayerAvatar.objectEventId = objectEventId;
     gPlayerAvatar.spriteId = spriteId;
+#if IS_WAYFARER
+    gPlayerAvatar.gender = gSaveBlock2Ptr->playerGender;
+#else
     gPlayerAvatar.gender = GetPlayerAvatarGenderByGraphicsId(gObjectEvents[objectEventId].graphicsId);
+#endif
     SetPlayerAvatarExtraStateTransition(gObjectEvents[objectEventId].graphicsId, PLAYER_AVATAR_FLAG_CONTROLLABLE);
 }
 
@@ -3590,6 +3603,15 @@ u8 LoadPlayerObjectEventPalette(enum Gender gender)
         break;
     }
     return LoadObjectEventPalette(paletteTag);
+}
+
+u8 LoadLocalPlayerObjectEventPalette(void)
+{
+#if IS_WAYFARER
+    return LoadObjectEventPalette(GetObjectEventGraphicsInfo(GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_NORMAL))->paletteTag);
+#else
+    return LoadPlayerObjectEventPalette(gSaveBlock2Ptr->playerGender);
+#endif
 }
 
 static void UNUSED LoadObjectEventPaletteSet(u16 *paletteTags)

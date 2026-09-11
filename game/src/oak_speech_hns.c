@@ -36,6 +36,10 @@
 #include "window.h"
 #if IS_WAYFARER
 #include "wayfarer_origin.h"
+#include "wayfarer_appearance.h"
+#include "field_player_avatar.h"
+#include "event_object_movement.h"
+#include "constants/event_objects.h"
 #include "constants/wayfarer_origin.h"
 #endif
 
@@ -52,11 +56,13 @@ extern const u8 gText_Oak_SoItsPlayer[];
 extern const u8 gText_Oak_YourePlayer[];
 extern const u8 gText_Oak_AreYouReady[];
 #if IS_WAYFARER
+extern const u8 gText_Oak_Appearance[];
 extern const u8 gText_Oak_OriginQuestion[];
 extern const u8 gText_Oak_OriginJohto[];
 extern const u8 gText_Oak_OriginHoenn[];
 extern const u8 gText_Oak_OriginTravel[];
 
+static void ResetAppearancePreviewState(void);
 static void NewGameHnsSpeech_AskOrigin(u8 taskId);
 static void Task_NewGameHnsSpeech_ShowOriginList(u8 taskId);
 static void Task_NewGameHnsSpeech_ChooseOrigin(u8 taskId);
@@ -98,8 +104,10 @@ static void Task_NewGameHnsSpeech_WaitDisclaimerText(u8);
 static void Task_NewGameHnsSpeech_WaitPressDisclaimer(u8);
 static void Task_NewGameHnsSpeech_ChallengeMenu(u8);
 static void Task_NewGameHnsSpeech_WhatsYourName(u8);
+#if !IS_WAYFARER
 static void Task_NewGameHnsSpeech_SlideOutOldGenderSprite(u8);
 static void Task_NewGameHnsSpeech_SlideInNewGenderSprite(u8);
+#endif
 static void Task_NewGameHnsSpeech_WaitForWhatsYourNameToPrint(u8);
 static void Task_NewGameHnsSpeech_WaitPressBeforeNameChoice(u8);
 static void Task_NewGameHnsSpeech_StartNamingScreen(u8);
@@ -128,7 +136,9 @@ static void Task_NewGameHnsSpeech_FadePlatformOut(u8);
 static void SpriteCB_Null(struct Sprite *);
 static void SpriteCB_MovePlayerDownWhileShrinking(struct Sprite *);
 static u8 NewGameHnsSpeech_CreateMonSprite(u8, u8);
+#if !IS_WAYFARER
 static s8 NewGameHnsSpeech_ProcessGenderMenuInput(void);
+#endif
 static void NewGameHnsSpeech_ClearGenderWindowTilemap(u8, u8, u8, u8, u8, u8);
 static void LoadMainMenuWindowFrameTiles(u8, u16);
 static void DrawMainMenuWindowBorder(const struct WindowTemplate *, u16);
@@ -157,10 +167,17 @@ static const struct WindowTemplate sNewGameHnsSpeechTextWindows[] =
     },
     {
         .bg = 0,
+#if IS_WAYFARER
+        .tilemapLeft = 1,
+        .tilemapTop = 1,
+        .width = 9,
+        .height = 12,
+#else
         .tilemapLeft = 3,
         .tilemapTop = 5,
         .width = 6,
         .height = 4,
+#endif
         .paletteNum = 15,
         .baseBlock = 0x6D
     },
@@ -171,7 +188,7 @@ static const struct WindowTemplate sNewGameHnsSpeechTextWindows[] =
         .width = 9,
         .height = 10,
         .paletteNum = 15,
-        .baseBlock = 0x85
+        .baseBlock = IS_WAYFARER ? 0xD9 : 0x85
     },
     DUMMY_WIN_TEMPLATE
 };
@@ -218,8 +235,15 @@ static const union AffineAnimCmd *const sSpriteAffineAnimTable_PlayerShrink[] =
 };
 
 static const struct MenuAction sMenuActions_Gender[] = {
+#if IS_WAYFARER
+    {COMPOUND_STRING("Style 1"), {NULL}},
+    {COMPOUND_STRING("Style 2"), {NULL}},
+    {COMPOUND_STRING("Style 3"), {NULL}},
+    {COMPOUND_STRING("Style 4"), {NULL}},
+#else
     {gText_Boy, {NULL}},
     {gText_Girl, {NULL}}
+#endif
 };
 
 #if IS_WAYFARER
@@ -246,7 +270,7 @@ static const u8 *const sFemalePresetNames[] = {
 #define NUM_PRESET_NAMES min(ARRAY_COUNT(sMalePresetNames), ARRAY_COUNT(sFemalePresetNames))
 
 #define MAIN_MENU_BORDER_TILE   0x1D5
-#define HNS_DLG_BASE_TILE_NUM 0xFC
+#define HNS_DLG_BASE_TILE_NUM (IS_WAYFARER ? 0x149 : 0xFC)
 
 // Task data defines
 #define tTimer            data[0]
@@ -280,6 +304,7 @@ void StartNewGameSceneHns(void)
 
 #if IS_WAYFARER
     WayfarerResetPendingOrigin();
+    WayfarerResetPendingAppearance();
 #endif
 
     SetVBlankCallback(NULL);
@@ -317,6 +342,9 @@ static void Task_NewGameHnsSpeech_Init(u8 taskId)
     LoadPalette(&sHnsSpeechBgGradientPal[8], BG_PLTT_ID(0) + 1, PLTT_SIZEOF(8));
     ScanlineEffect_Stop();
     ResetSpriteData();
+#if IS_WAYFARER
+    ResetAppearancePreviewState();
+#endif
     FreeAllSpritePalettes();
     ResetAllPicSprites();
     AddHnsSpeechObjects(taskId);
@@ -361,7 +389,7 @@ static void Task_NewGameHnsSpeech_WaitForSpriteFadeInWelcome(u8 taskId)
         else
         {
             InitWindows(sNewGameHnsSpeechTextWindows);
-            LoadMainMenuWindowFrameTiles(0, 0xF3);
+            LoadMainMenuWindowFrameTiles(0, (IS_WAYFARER ? 0x140 : 0xF3));
             LoadMessageBoxGfx(0, HNS_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
             DrawDialogFrameWithCustomTile(0, TRUE, HNS_DLG_BASE_TILE_NUM);
             PutWindowTilemap(0);
@@ -516,22 +544,118 @@ static void Task_NewGameHnsSpeech_WaitForPlayerFadeIn(u8 taskId)
 static void Task_NewGameHnsSpeech_BoyOrGirl(u8 taskId)
 {
     NewGameHnsSpeech_ClearWindow(0);
+#if IS_WAYFARER
+    StringExpandPlaceholders(gStringVar4, gText_Oak_Appearance);
+#else
     StringExpandPlaceholders(gStringVar4, gText_Oak_BoyOrGirl);
+#endif
     AddTextPrinterForMessage(TRUE);
     gTasks[taskId].func = Task_NewGameHnsSpeech_WaitToShowGenderMenu;
 }
+
+#if IS_WAYFARER
+static EWRAM_DATA u8 sAppearanceWalkSprite = 0;
+static EWRAM_DATA bool8 sAppearanceWaitForRelease = FALSE;
+static EWRAM_DATA bool8 sAppearancePreviewReady = FALSE;
+static const u8 sAppearanceIds[] = {APPEARANCE_GOLD, APPEARANCE_KRIS, APPEARANCE_BRENDAN, APPEARANCE_MAY};
+
+static void ResetAppearancePreviewState(void)
+{
+    // ResetSpriteData already discarded these resources; never free stale IDs.
+    sAppearanceWalkSprite = MAX_SPRITES;
+    sAppearanceWaitForRelease = FALSE;
+    sAppearancePreviewReady = FALSE;
+}
+
+static void DestroyAppearancePreviewSprite(u8 spriteId)
+{
+    struct Sprite *sprite;
+    u16 tileTag;
+    u16 paletteTag;
+
+    if (spriteId >= MAX_SPRITES)
+        return;
+    sprite = &gSprites[spriteId];
+    tileTag = GetSpriteTileTagByTileStart(sprite->oam.tileNum);
+    paletteTag = GetSpritePaletteTagByPaletteNum(sprite->oam.paletteNum);
+
+    // These sprite factories use temporary templates; free through live OAM tags.
+    if (tileTag != TAG_NONE)
+        FreeSpriteTilesByTag(tileTag);
+    if (paletteTag != TAG_NONE)
+        FreeSpritePaletteByTag(paletteTag);
+    DestroySprite(sprite);
+}
+
+static void DestroyAppearanceWalkPreview(void)
+{
+    if (sAppearanceWalkSprite != MAX_SPRITES)
+        DestroyAppearancePreviewSprite(sAppearanceWalkSprite);
+    sAppearanceWalkSprite = MAX_SPRITES;
+}
+
+static void ShowAppearancePreview(u8 taskId)
+{
+    u8 appearance = WayfarerGetPendingAppearanceCandidate();
+    u8 spriteId;
+
+    sAppearancePreviewReady = FALSE;
+    DestroyAppearanceWalkPreview();
+    DestroyAppearancePreviewSprite(gTasks[taskId].tGoldSpriteId);
+    spriteId = CreateTrainerSprite(WayfarerGetAppearanceFrontPic(appearance), 136, 40, 0, NULL);
+    gTasks[taskId].tGoldSpriteId = spriteId;
+    gTasks[taskId].tKrisSpriteId = spriteId;
+    gTasks[taskId].tPlayerSpriteId = spriteId;
+    sAppearanceWalkSprite = CreateObjectGraphicsSprite(WayfarerGetAppearanceGraphicsId(appearance, PLAYER_AVATAR_STATE_NORMAL), SpriteCallbackDummy, 192, 80, 0);
+    if (sAppearanceWalkSprite != MAX_SPRITES)
+        StartSpriteAnim(&gSprites[sAppearanceWalkSprite], ANIM_STD_GO_SOUTH);
+    sAppearancePreviewReady = spriteId < MAX_SPRITES && sAppearanceWalkSprite < MAX_SPRITES;
+    // Wait for release after the atomic sprite/palette replacement reaches VBlank.
+    sAppearanceWaitForRelease = TRUE;
+}
+#endif
 
 static void Task_NewGameHnsSpeech_WaitToShowGenderMenu(u8 taskId)
 {
     if (!RunTextPrintersAndIsPrinter0Active())
     {
         NewGameHnsSpeech_ShowGenderMenu();
+#if IS_WAYFARER
+        ShowAppearancePreview(taskId);
+#endif
         gTasks[taskId].func = Task_NewGameHnsSpeech_ChooseGender;
     }
 }
 
 static void Task_NewGameHnsSpeech_ChooseGender(u8 taskId)
 {
+#if IS_WAYFARER
+    s8 choice;
+    u8 cursor;
+
+    if (sAppearanceWaitForRelease)
+    {
+        if (!JOY_HELD(A_BUTTON))
+            sAppearanceWaitForRelease = FALSE;
+        return;
+    }
+    choice = Menu_ProcessInput();
+    cursor = Menu_GetCursorPos();
+    if (sAppearanceIds[cursor] != WayfarerGetPendingAppearanceCandidate())
+    {
+        WayfarerSetPendingAppearanceCandidate(sAppearanceIds[cursor]);
+        ShowAppearancePreview(taskId);
+        return;
+    }
+    if (sAppearancePreviewReady && choice >= 0 && WayfarerConfirmPendingAppearance(sAppearanceIds[choice]))
+    {
+        DestroyAppearanceWalkPreview();
+        gSprites[gTasks[taskId].tPlayerSpriteId].x = 180;
+        gSprites[gTasks[taskId].tPlayerSpriteId].y = 60;
+        NewGameHnsSpeech_ClearGenderWindow(1, TRUE);
+        gTasks[taskId].func = Task_NewGameHnsSpeech_WhatsYourName;
+    }
+#else
     enum Gender gender = NewGameHnsSpeech_ProcessGenderMenuInput();
     enum Gender gender2;
 
@@ -560,8 +684,10 @@ static void Task_NewGameHnsSpeech_ChooseGender(u8 taskId)
         NewGameHnsSpeech_StartFadeOutTarget1InTarget2(taskId, 0);
         gTasks[taskId].func = Task_NewGameHnsSpeech_SlideOutOldGenderSprite;
     }
+#endif
 }
 
+#if !IS_WAYFARER
 static void Task_NewGameHnsSpeech_SlideOutOldGenderSprite(u8 taskId)
 {
     u8 spriteId = gTasks[taskId].tPlayerSpriteId;
@@ -604,6 +730,8 @@ static void Task_NewGameHnsSpeech_SlideInNewGenderSprite(u8 taskId)
         }
     }
 }
+
+#endif
 
 static void Task_NewGameHnsSpeech_ChallengeDisclaimer(u8 taskId)
 {
@@ -712,7 +840,11 @@ static void Task_NewGameHnsSpeech_StartNamingScreen(u8 taskId)
         FreeAndDestroyMonPicSprite(gTasks[taskId].tMonSpriteId);
         NewGameHnsSpeech_SetDefaultPlayerName(Random() % NUM_PRESET_NAMES);
         DestroyTask(taskId);
+#if IS_WAYFARER
+        DoNamingScreenForPendingPlayer(gSaveBlock2Ptr->playerName, CB2_NewGameHnsSpeech_ReturnFromNamingScreen);
+#else
         DoNamingScreen(NAMING_SCREEN_PLAYER, gSaveBlock2Ptr->playerName, gSaveBlock2Ptr->playerGender, 0, 0, 0, CB2_NewGameHnsSpeech_ReturnFromNamingScreen);
+#endif
     }
 }
 
@@ -728,7 +860,7 @@ static void Task_NewGameHnsSpeech_CreateNameYesNo(u8 taskId)
 {
     if (!RunTextPrintersAndIsPrinter0Active())
     {
-        CreateYesNoMenuParameterized(2, 1, 0xF3, 0xDF, 2, 15);
+        CreateYesNoMenuParameterized(2, 1, (IS_WAYFARER ? 0x140 : 0xF3), 0xDF, 2, 15);
         gTasks[taskId].func = Task_NewGameHnsSpeech_ProcessNameYesNoMenu;
     }
 }
@@ -794,6 +926,13 @@ static void Task_NewGameHnsSpeech_ReshowProfessorMon(u8 taskId)
 
 #if IS_WAYFARER
 #if defined(E2E_TESTING) && E2E_TESTING
+u8 E2ETest_GetAppearanceIntroStage(void)
+{
+    if (FuncIsActiveTask(Task_NewGameHnsSpeech_ChooseGender))
+        return sAppearanceWaitForRelease || !sAppearancePreviewReady ? 2 : 1;
+    return 0;
+}
+
 u8 E2ETest_GetOriginIntroStage(void)
 {
     if (FuncIsActiveTask(Task_NewGameHnsSpeech_ChooseOrigin))
@@ -836,7 +975,7 @@ static void Task_NewGameHnsSpeech_ShowOriginList(u8 taskId)
     for (i = 0; i < ARRAY_COUNT(sOakOriginIds); i++)
         if (sOakOriginIds[i] == WayfarerGetPendingOriginCandidate())
             cursor = i;
-    DrawMainMenuWindowBorder(&sNewGameHnsSpeechTextWindows[1], 0xF3);
+    DrawMainMenuWindowBorder(&sNewGameHnsSpeechTextWindows[1], (IS_WAYFARER ? 0x140 : 0xF3));
     FillWindowPixelBuffer(1, PIXEL_FILL(1));
     PrintMenuTable(1, ARRAY_COUNT(sMenuActions_Origin), sMenuActions_Origin);
     InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Origin), cursor);
@@ -865,7 +1004,7 @@ static void Task_NewGameHnsSpeech_ShowOriginYesNo(u8 taskId)
     // Release the preceding text/menu input before accepting a new choice.
     if (RunTextPrintersAndIsPrinter0Active() || JOY_HELD(A_BUTTON | B_BUTTON))
         return;
-    CreateYesNoMenuParameterized(2, 1, 0xF3, 0xDF, 2, 15);
+    CreateYesNoMenuParameterized(2, 1, (IS_WAYFARER ? 0x140 : 0xF3), 0xDF, 2, 15);
     gTasks[taskId].func = Task_NewGameHnsSpeech_ConfirmOrigin;
 }
 
@@ -934,7 +1073,7 @@ static void Task_NewGameHnsSpeech_AreYouReady(u8 taskId)
             gTasks[taskId].tTimer--;
             return;
         }
-        if (gSaveBlock2Ptr->playerGender != MALE)
+        if (!IS_WAYFARER && gSaveBlock2Ptr->playerGender != MALE)
             spriteId = gTasks[taskId].tKrisSpriteId;
         else
             spriteId = gTasks[taskId].tGoldSpriteId;
@@ -1042,10 +1181,13 @@ static void CB2_NewGameHnsSpeech_ReturnFromNamingScreen(void)
     gTasks[taskId].tBG1HOFS = -60;
     ScanlineEffect_Stop();
     ResetSpriteData();
+#if IS_WAYFARER
+    ResetAppearancePreviewState();
+#endif
     FreeAllSpritePalettes();
     ResetAllPicSprites();
     AddHnsSpeechObjects(taskId);
-    if (gSaveBlock2Ptr->playerGender != MALE)
+    if (!IS_WAYFARER && gSaveBlock2Ptr->playerGender != MALE)
     {
         gTasks[taskId].tPlayerGender = FEMALE;
         spriteId = gTasks[taskId].tKrisSpriteId;
@@ -1077,7 +1219,7 @@ static void CB2_NewGameHnsSpeech_ReturnFromNamingScreen(void)
     SetVBlankCallback(VBlankCB_HnsMenu);
     SetMainCallback2(CB2_HnsMenu);
     InitWindows(sNewGameHnsSpeechTextWindows);
-    LoadMainMenuWindowFrameTiles(0, 0xF3);
+    LoadMainMenuWindowFrameTiles(0, (IS_WAYFARER ? 0x140 : 0xF3));
     LoadMessageBoxGfx(0, HNS_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
     PutWindowTilemap(0);
     CopyWindowToVram(0, COPYWIN_FULL);
@@ -1118,10 +1260,13 @@ static void CB2_NewGameHnsSpeech_ReturnFromChallengeMenu(void)
     gTasks[taskId].tBG1HOFS = -60;
     ScanlineEffect_Stop();
     ResetSpriteData();
+#if IS_WAYFARER
+    ResetAppearancePreviewState();
+#endif
     FreeAllSpritePalettes();
     ResetAllPicSprites();
     AddHnsSpeechObjects(taskId);
-    if (gSaveBlock2Ptr->playerGender != MALE)
+    if (!IS_WAYFARER && gSaveBlock2Ptr->playerGender != MALE)
     {
         gTasks[taskId].tPlayerGender = FEMALE;
         spriteId = gTasks[taskId].tKrisSpriteId;
@@ -1153,7 +1298,7 @@ static void CB2_NewGameHnsSpeech_ReturnFromChallengeMenu(void)
     SetVBlankCallback(VBlankCB_HnsMenu);
     SetMainCallback2(CB2_HnsMenu);
     InitWindows(sNewGameHnsSpeechTextWindows);
-    LoadMainMenuWindowFrameTiles(0, 0xF3);
+    LoadMainMenuWindowFrameTiles(0, (IS_WAYFARER ? 0x140 : 0xF3));
     LoadMessageBoxGfx(0, HNS_DLG_BASE_TILE_NUM, BG_PLTT_ID(15));
     PutWindowTilemap(0);
     CopyWindowToVram(0, COPYWIN_FULL);
@@ -1204,7 +1349,9 @@ static void AddHnsSpeechObjects(u8 taskId)
     u8 professorSpriteId;
     u8 monSpriteId;
     u8 goldSpriteId;
+#if !IS_WAYFARER
     u8 krisSpriteId;
+#endif
 
     professorSpriteId = AddNewGameOakObject(0x88, 0x3C, 1);
     gSprites[professorSpriteId].callback = SpriteCB_Null;
@@ -1216,16 +1363,24 @@ static void AddHnsSpeechObjects(u8 taskId)
     gSprites[monSpriteId].oam.priority = 0;
     gSprites[monSpriteId].invisible = TRUE;
     gTasks[taskId].tMonSpriteId = monSpriteId;
+#if IS_WAYFARER
+    goldSpriteId = CreateTrainerSprite(WayfarerGetAppearanceFrontPic(WayfarerGetPendingAppearanceCandidate()), 120, 60, 0, NULL);
+#else
     goldSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_GOLD_HNS), 120, 60, 0, NULL);
+#endif
     gSprites[goldSpriteId].callback = SpriteCB_Null;
     gSprites[goldSpriteId].invisible = TRUE;
     gSprites[goldSpriteId].oam.priority = 0;
     gTasks[taskId].tGoldSpriteId = goldSpriteId;
+#if !IS_WAYFARER
     krisSpriteId = CreateTrainerSprite(FacilityClassToPicIndex(FACILITY_CLASS_KRIS_HNS), 120, 60, 0, NULL);
     gSprites[krisSpriteId].callback = SpriteCB_Null;
     gSprites[krisSpriteId].invisible = TRUE;
     gSprites[krisSpriteId].oam.priority = 0;
     gTasks[taskId].tKrisSpriteId = krisSpriteId;
+#else
+    gTasks[taskId].tKrisSpriteId = goldSpriteId;
+#endif
 }
 
 #undef tPlayerSpriteId
@@ -1410,18 +1565,30 @@ static void NewGameHnsSpeech_StartFadePlatformOut(u8 taskId, u8 delay)
 
 static void NewGameHnsSpeech_ShowGenderMenu(void)
 {
-    DrawMainMenuWindowBorder(&sNewGameHnsSpeechTextWindows[1], 0xF3);
+    u8 cursor = 0;
+#if IS_WAYFARER
+    u8 i;
+    for (i = 0; i < ARRAY_COUNT(sAppearanceIds); i++)
+    {
+        if (sAppearanceIds[i] == WayfarerGetPendingAppearanceCandidate())
+            cursor = i;
+    }
+#endif
+    DrawMainMenuWindowBorder(&sNewGameHnsSpeechTextWindows[1], (IS_WAYFARER ? 0x140 : 0xF3));
     FillWindowPixelBuffer(1, PIXEL_FILL(1));
     PrintMenuTable(1, ARRAY_COUNT(sMenuActions_Gender), sMenuActions_Gender);
-    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Gender), 0);
+    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Gender), cursor);
     PutWindowTilemap(1);
     CopyWindowToVram(1, COPYWIN_FULL);
 }
 
+#if !IS_WAYFARER
 static s8 NewGameHnsSpeech_ProcessGenderMenuInput(void)
 {
     return Menu_ProcessInputNoWrap();
 }
+
+#endif
 
 static void NewGameHnsSpeech_ClearGenderWindowTilemap(u8 bg, u8 x, u8 y, u8 width, u8 height, u8 unused)
 {
