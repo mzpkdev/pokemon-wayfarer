@@ -1,0 +1,1275 @@
+{
+  "baselineCommit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+  "frameworkMainCommit": "d99050250df47fe785736a7932d0dc33ef22031a",
+  "implementationCommit": "a655387c45ebd54061778c7443545c1adf23168c",
+  "pr85IncrementAboveFrameworkMain": {
+    "frameworkMain": {
+      "artifacts": {
+        "elfSha256": "14c60db8f74686a6f31dd2a42618723ff5db42ca3e403d7773436b30e00012fc",
+        "mapSha256": "55229c7c47cfac2a1de25de4b7579ce32598ff31360d222960e0dc622f5e4f5b"
+      },
+      "command": "UNUSED_ERROR=1 DEPRECATED_ERROR=1 make -C game -j8 BUILD=wayfarer release",
+      "commit": "d99050250df47fe785736a7932d0dc33ef22031a",
+      "configSha256": "5a19624a5511c708daa405197da86dceda796c39aafd4bf6c2e1e412b8d814c2",
+      "linked": {
+        "baseline": {
+          "available": false
+        },
+        "build": "wayfarer",
+        "categories": {
+          "audio": {
+            "bytes": 11721048,
+            "delta_bytes": null,
+            "end_address": "0x094B9348",
+            "start_address": "0x0898B9F0"
+          },
+          "code": {
+            "bytes": 2695088,
+            "delta_bytes": null,
+            "end_address": "0x08291FB0",
+            "start_address": "0x08000000"
+          },
+          "encounter_data": {
+            "bytes": 81672,
+            "delta_bytes": null,
+            "end_address": "0x09529150",
+            "start_address": "0x09515248"
+          },
+          "graphics": {
+            "bytes": 3112316,
+            "delta_bytes": null,
+            "end_address": "0x0898B9F0",
+            "start_address": "0x08693C74"
+          },
+          "maps_layouts": {
+            "bytes": 2230876,
+            "delta_bytes": null,
+            "end_address": "0x08693C74",
+            "start_address": "0x08473218"
+          },
+          "other": {
+            "bytes": 10476312,
+            "delta_bytes": null,
+            "end_address": "0x09F26C68",
+            "start_address": "0x09529150"
+          },
+          "scripts": {
+            "bytes": 1970792,
+            "delta_bytes": null,
+            "end_address": "0x08473218",
+            "start_address": "0x08291FB0"
+          },
+          "trainer_data": {
+            "bytes": 376576,
+            "delta_bytes": null,
+            "end_address": "0x09515248",
+            "start_address": "0x094B9348"
+          }
+        },
+        "reconciliation": {
+          "category_bytes": 32664680,
+          "matches_used_bytes": true
+        },
+        "release": true,
+        "rom": {
+          "capacity_end_address": "0x0A000000",
+          "end_address": "0x09F26C68",
+          "start_address": "0x08000000",
+          "unused_bytes": 889752,
+          "used_bytes": 32664680,
+          "wayfarer_release_limit_address": "0x09F80000",
+          "wayfarer_release_limit_enforced": true
+        },
+        "schema_version": 1
+      },
+      "staticRam": {
+        "ewram": 248509,
+        "iwram": 25556
+      },
+      "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+    },
+    "staticRamDelta": {
+      "ewram": 132,
+      "iwram": 8
+    },
+    "usedRomDelta": 27456
+  },
+  "products": {
+    "emerald": {
+      "baseline": {
+        "artifacts": {
+          "elfSha256": "6450bf616d6a33ef022cf95337da791f69ff33ad69ea13b3e60744b8602757bb",
+          "mapSha256": "5fe80015ee283b48e10a2f38270c34b2ff62c90aa7ac7d334ed1a8b03e220e1d"
+        },
+        "command": "make -C game -j8 BUILD=emerald release",
+        "commit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "configSha256": "5f6e6a8ba15ac0d393eb08a2473e75a03a3cfb3a5483e9906cef48f57e5085f2",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "emerald",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x091700D8",
+              "start_address": "0x08642780"
+            },
+            "code": {
+              "bytes": 2692536,
+              "delta_bytes": null,
+              "end_address": "0x082915B8",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 25216,
+              "delta_bytes": null,
+              "end_address": "0x091A8628",
+              "start_address": "0x091A23A8"
+            },
+            "graphics": {
+              "bytes": 1761820,
+              "delta_bytes": null,
+              "end_address": "0x08642780",
+              "start_address": "0x08494564"
+            },
+            "maps_layouts": {
+              "bytes": 795872,
+              "delta_bytes": null,
+              "end_address": "0x08494564",
+              "start_address": "0x083D2084"
+            },
+            "other": {
+              "bytes": 10028228,
+              "delta_bytes": null,
+              "end_address": "0x09B38AEC",
+              "start_address": "0x091A8628"
+            },
+            "scripts": {
+              "bytes": 1313484,
+              "delta_bytes": null,
+              "end_address": "0x083D2084",
+              "start_address": "0x082915B8"
+            },
+            "trainer_data": {
+              "bytes": 205520,
+              "delta_bytes": null,
+              "end_address": "0x091A23A8",
+              "start_address": "0x091700D8"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 28543724,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09B38AEC",
+            "start_address": "0x08000000",
+            "unused_bytes": 5010708,
+            "used_bytes": 28543724,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247513,
+          "iwram": 25648
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      },
+      "comparison": {
+        "baseCommit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "categories": {
+          "audio": 0,
+          "code": 0,
+          "encounter_data": 0,
+          "graphics": 0,
+          "maps_layouts": 0,
+          "other": 0,
+          "scripts": 0,
+          "trainer_data": 0
+        },
+        "staticRamDelta": {
+          "ewram": 0,
+          "iwram": 0
+        },
+        "storageGatePassed": true,
+        "usedRomDelta": 0
+      },
+      "configuration": {
+        "DEBUG": 0,
+        "E2E": 0,
+        "O_LEVEL": 2,
+        "RELEASE": 1,
+        "TEST": 0,
+        "USE_LTO_ON_RELEASE": 1,
+        "configHashes": {
+          "include/config/ai.h": "6eaa73d152dcf81727e7e60d3efa24f028cacd4cf6ad8aaa49010e2fd70f9ef5",
+          "include/config/battle.h": "9fd61c31db7664ce09e676ef530dffd7f38d130a6c8507a3ba21cb78975be340",
+          "include/config/caps.h": "9736cf6ac82da0743b40cab86750a0f496430bb82829724cf013a39f151f6d48",
+          "include/config/contest.h": "4738d4b8d84c9ccc81cc7e108b4807420d5c6c1c6febe865e5eedc2168d44094",
+          "include/config/debug.h": "f4094711117ea1e225221e49be9bf2488a4035119e855c18d97f3c98f9f56fca",
+          "include/config/dexnav.h": "159f1dc1a7a9b2778bf9c5c1bb30617e2dfbd324404c2917c44799ea0bb83172",
+          "include/config/fishing.h": "fa88a9a28669e6723206de6d492b322ab10c900a3a3ab7f41045e8db15b72c50",
+          "include/config/follower_npc.h": "7473fad59ffe7db1a530dbfab3924cb97144dc3e7d1735af82918c03ecef6958",
+          "include/config/general.h": "7fb56cf6d851585f2fe41f7996e6682dd8076f685c06ad2037fb40719ce88203",
+          "include/config/item.h": "6c572b334828239b5d4becc71938e4307f3bb1e7c12e5ca4734fac5bbacb42b0",
+          "include/config/league_circuit.h": "951ec422fabcd6f49e4dd69a0acb37ecde9802ba060f8bdd6777d7ab2de1447f",
+          "include/config/name_box.h": "e5fb790a23cd2b5c01e4c5139c44f2cff6dc34dd7f8161cff2bf5f1ca2a61ba6",
+          "include/config/overworld.h": "328f8b22496c0a730381ecf37a0020b30090a29cafd3d5c8e80436cc698ef713",
+          "include/config/pokemon.h": "2a864cc45098656d64ff6f19081f66da042c8dafda43103b1aa34fd500766c82",
+          "include/config/pokerus.h": "6407021b6c99e49c9c6bf02f5ef5dcc0ab9eec3c42e2987d40780528ec1f744d",
+          "include/config/randomizer.h": "85a5fa1271737c55a38199ebae5fe303a9b6c35c4211ef34ad536a31d366cfd0",
+          "include/config/save.h": "e3898a7bf6f9bfe2ae3bbd5ba70f38bd18de0bddead3cf419c8c9b7c47c4ddf7",
+          "include/config/species_enabled.h": "a6fb69e89b0f60a5bb4e7cb93b57e6ea1e16b00283e6e0b6ea7dd982b1740216",
+          "include/config/summary_screen.h": "79dc86bb9322679942c349987e1f03f2cae59419c19165d691e59aa909346a06",
+          "include/config/test.h": "63cbf70c00fee57daf812c5b18809030f6205afe4263d9c7ace7e258abc67fd1",
+          "include/config/text.h": "2c4f70e37f708c2d718a88331d3423e5c510805c0093213264a4788e88f91ee6",
+          "include/config/trainer_party_scaling.h": "64414c649e46c685261fd21c22b665a0878ccde1d1ce9cc851a275b215638735",
+          "include/config/wayfarer_marts.h": "18fac80779490573af9a9a6ea1eaaa3255061f69835bf60ce0e6f6387424c2c0"
+        },
+        "product": "emerald"
+      },
+      "gbaSha256": "aca25b25a0a996b24880ea76d6bbc036672a374cac9180f2aa48b9bbe1585a9d",
+      "identicalBaselineElf": true,
+      "identicalBaselineGba": true,
+      "mapEqualAfterTemporaryLtoNames": true,
+      "refactor": {
+        "artifacts": {
+          "elfSha256": "6450bf616d6a33ef022cf95337da791f69ff33ad69ea13b3e60744b8602757bb",
+          "mapSha256": "be0ca7a6f3a6b71265fbe0877d997126011932e0766a0064217c0e26162dcec9"
+        },
+        "command": "make -C game -j8 BUILD=emerald release",
+        "commit": "a655387c45ebd54061778c7443545c1adf23168c",
+        "configSha256": "5f6e6a8ba15ac0d393eb08a2473e75a03a3cfb3a5483e9906cef48f57e5085f2",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "emerald",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x091700D8",
+              "start_address": "0x08642780"
+            },
+            "code": {
+              "bytes": 2692536,
+              "delta_bytes": null,
+              "end_address": "0x082915B8",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 25216,
+              "delta_bytes": null,
+              "end_address": "0x091A8628",
+              "start_address": "0x091A23A8"
+            },
+            "graphics": {
+              "bytes": 1761820,
+              "delta_bytes": null,
+              "end_address": "0x08642780",
+              "start_address": "0x08494564"
+            },
+            "maps_layouts": {
+              "bytes": 795872,
+              "delta_bytes": null,
+              "end_address": "0x08494564",
+              "start_address": "0x083D2084"
+            },
+            "other": {
+              "bytes": 10028228,
+              "delta_bytes": null,
+              "end_address": "0x09B38AEC",
+              "start_address": "0x091A8628"
+            },
+            "scripts": {
+              "bytes": 1313484,
+              "delta_bytes": null,
+              "end_address": "0x083D2084",
+              "start_address": "0x082915B8"
+            },
+            "trainer_data": {
+              "bytes": 205520,
+              "delta_bytes": null,
+              "end_address": "0x091A23A8",
+              "start_address": "0x091700D8"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 28543724,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09B38AEC",
+            "start_address": "0x08000000",
+            "unused_bytes": 5010708,
+            "used_bytes": 28543724,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247513,
+          "iwram": 25648
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      }
+    },
+    "firered": {
+      "baseline": {
+        "artifacts": {
+          "elfSha256": "230775209fde79a8c723572a54c016e01f5ab5d159205101b5445e78645d43f2",
+          "mapSha256": "b4e878619f39486e23702f571ab4fee3c631f78b86c2036bf7fc933cd7e573af"
+        },
+        "command": "make -C game -j8 BUILD=firered release",
+        "commit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "configSha256": "7bc00d5f8dcd9a43c31ad64d8c38f60aba60a7c29df3bcef45f880b8e903924c",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "firered",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x091624C8",
+              "start_address": "0x08634B70"
+            },
+            "code": {
+              "bytes": 2689744,
+              "delta_bytes": null,
+              "end_address": "0x08290AD0",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 25220,
+              "delta_bytes": null,
+              "end_address": "0x09190060",
+              "start_address": "0x09189DDC"
+            },
+            "graphics": {
+              "bytes": 1530192,
+              "delta_bytes": null,
+              "end_address": "0x08634B70",
+              "start_address": "0x084BF220"
+            },
+            "maps_layouts": {
+              "bytes": 587864,
+              "delta_bytes": null,
+              "end_address": "0x084BF220",
+              "start_address": "0x0842F9C8"
+            },
+            "other": {
+              "bytes": 10223212,
+              "delta_bytes": null,
+              "end_address": "0x09B4FECC",
+              "start_address": "0x09190060"
+            },
+            "scripts": {
+              "bytes": 1699576,
+              "delta_bytes": null,
+              "end_address": "0x0842F9C8",
+              "start_address": "0x08290AD0"
+            },
+            "trainer_data": {
+              "bytes": 162068,
+              "delta_bytes": null,
+              "end_address": "0x09189DDC",
+              "start_address": "0x091624C8"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 28638924,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09B4FECC",
+            "start_address": "0x08000000",
+            "unused_bytes": 4915508,
+            "used_bytes": 28638924,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247625,
+          "iwram": 25864
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      },
+      "comparison": {
+        "baseCommit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "categories": {
+          "audio": 0,
+          "code": 0,
+          "encounter_data": 0,
+          "graphics": 0,
+          "maps_layouts": 0,
+          "other": 0,
+          "scripts": 0,
+          "trainer_data": 0
+        },
+        "staticRamDelta": {
+          "ewram": 0,
+          "iwram": 0
+        },
+        "storageGatePassed": true,
+        "usedRomDelta": 0
+      },
+      "configuration": {
+        "DEBUG": 0,
+        "E2E": 0,
+        "O_LEVEL": 2,
+        "RELEASE": 1,
+        "TEST": 0,
+        "USE_LTO_ON_RELEASE": 1,
+        "configHashes": {
+          "include/config/ai.h": "6eaa73d152dcf81727e7e60d3efa24f028cacd4cf6ad8aaa49010e2fd70f9ef5",
+          "include/config/battle.h": "9fd61c31db7664ce09e676ef530dffd7f38d130a6c8507a3ba21cb78975be340",
+          "include/config/caps.h": "9736cf6ac82da0743b40cab86750a0f496430bb82829724cf013a39f151f6d48",
+          "include/config/contest.h": "4738d4b8d84c9ccc81cc7e108b4807420d5c6c1c6febe865e5eedc2168d44094",
+          "include/config/debug.h": "f4094711117ea1e225221e49be9bf2488a4035119e855c18d97f3c98f9f56fca",
+          "include/config/dexnav.h": "159f1dc1a7a9b2778bf9c5c1bb30617e2dfbd324404c2917c44799ea0bb83172",
+          "include/config/fishing.h": "fa88a9a28669e6723206de6d492b322ab10c900a3a3ab7f41045e8db15b72c50",
+          "include/config/follower_npc.h": "7473fad59ffe7db1a530dbfab3924cb97144dc3e7d1735af82918c03ecef6958",
+          "include/config/general.h": "7fb56cf6d851585f2fe41f7996e6682dd8076f685c06ad2037fb40719ce88203",
+          "include/config/item.h": "6c572b334828239b5d4becc71938e4307f3bb1e7c12e5ca4734fac5bbacb42b0",
+          "include/config/league_circuit.h": "951ec422fabcd6f49e4dd69a0acb37ecde9802ba060f8bdd6777d7ab2de1447f",
+          "include/config/name_box.h": "e5fb790a23cd2b5c01e4c5139c44f2cff6dc34dd7f8161cff2bf5f1ca2a61ba6",
+          "include/config/overworld.h": "328f8b22496c0a730381ecf37a0020b30090a29cafd3d5c8e80436cc698ef713",
+          "include/config/pokemon.h": "2a864cc45098656d64ff6f19081f66da042c8dafda43103b1aa34fd500766c82",
+          "include/config/pokerus.h": "6407021b6c99e49c9c6bf02f5ef5dcc0ab9eec3c42e2987d40780528ec1f744d",
+          "include/config/randomizer.h": "85a5fa1271737c55a38199ebae5fe303a9b6c35c4211ef34ad536a31d366cfd0",
+          "include/config/save.h": "e3898a7bf6f9bfe2ae3bbd5ba70f38bd18de0bddead3cf419c8c9b7c47c4ddf7",
+          "include/config/species_enabled.h": "a6fb69e89b0f60a5bb4e7cb93b57e6ea1e16b00283e6e0b6ea7dd982b1740216",
+          "include/config/summary_screen.h": "79dc86bb9322679942c349987e1f03f2cae59419c19165d691e59aa909346a06",
+          "include/config/test.h": "63cbf70c00fee57daf812c5b18809030f6205afe4263d9c7ace7e258abc67fd1",
+          "include/config/text.h": "2c4f70e37f708c2d718a88331d3423e5c510805c0093213264a4788e88f91ee6",
+          "include/config/trainer_party_scaling.h": "64414c649e46c685261fd21c22b665a0878ccde1d1ce9cc851a275b215638735",
+          "include/config/wayfarer_marts.h": "18fac80779490573af9a9a6ea1eaaa3255061f69835bf60ce0e6f6387424c2c0"
+        },
+        "product": "firered"
+      },
+      "gbaSha256": "268fcf90aac394b4663af86143ce5d3ca3c602bb812a2b556e0e0eda88e0d010",
+      "identicalBaselineElf": true,
+      "identicalBaselineGba": true,
+      "mapEqualAfterTemporaryLtoNames": true,
+      "refactor": {
+        "artifacts": {
+          "elfSha256": "230775209fde79a8c723572a54c016e01f5ab5d159205101b5445e78645d43f2",
+          "mapSha256": "eb66c8978ee2c55005b1c2fe01e098ef45c5cf6f123588bda40e0873163dc0f2"
+        },
+        "command": "make -C game -j8 BUILD=firered release",
+        "commit": "a655387c45ebd54061778c7443545c1adf23168c",
+        "configSha256": "7bc00d5f8dcd9a43c31ad64d8c38f60aba60a7c29df3bcef45f880b8e903924c",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "firered",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x091624C8",
+              "start_address": "0x08634B70"
+            },
+            "code": {
+              "bytes": 2689744,
+              "delta_bytes": null,
+              "end_address": "0x08290AD0",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 25220,
+              "delta_bytes": null,
+              "end_address": "0x09190060",
+              "start_address": "0x09189DDC"
+            },
+            "graphics": {
+              "bytes": 1530192,
+              "delta_bytes": null,
+              "end_address": "0x08634B70",
+              "start_address": "0x084BF220"
+            },
+            "maps_layouts": {
+              "bytes": 587864,
+              "delta_bytes": null,
+              "end_address": "0x084BF220",
+              "start_address": "0x0842F9C8"
+            },
+            "other": {
+              "bytes": 10223212,
+              "delta_bytes": null,
+              "end_address": "0x09B4FECC",
+              "start_address": "0x09190060"
+            },
+            "scripts": {
+              "bytes": 1699576,
+              "delta_bytes": null,
+              "end_address": "0x0842F9C8",
+              "start_address": "0x08290AD0"
+            },
+            "trainer_data": {
+              "bytes": 162068,
+              "delta_bytes": null,
+              "end_address": "0x09189DDC",
+              "start_address": "0x091624C8"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 28638924,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09B4FECC",
+            "start_address": "0x08000000",
+            "unused_bytes": 4915508,
+            "used_bytes": 28638924,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247625,
+          "iwram": 25864
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      }
+    },
+    "hns": {
+      "baseline": {
+        "artifacts": {
+          "elfSha256": "e8d134a936e3799e8deca64eec70dc519a94e4209471639c80f43f620fbca757",
+          "mapSha256": "5020c3fb18d894815e5d0b5c8abdaf8db9081d3d2c7e91ccf3cec8c3acab385f"
+        },
+        "command": "make BUILD=hns RELEASE=1",
+        "commit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "configSha256": "6eebc599557355195294d76dd801ad3fa6093f5d18f91e0a665c59cfa59ff36d",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "hns",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x0933D968",
+              "start_address": "0x08810010"
+            },
+            "code": {
+              "bytes": 2690424,
+              "delta_bytes": null,
+              "end_address": "0x08290D78",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 50728,
+              "delta_bytes": null,
+              "end_address": "0x09375584",
+              "start_address": "0x09368F5C"
+            },
+            "graphics": {
+              "bytes": 2505296,
+              "delta_bytes": null,
+              "end_address": "0x08810010",
+              "start_address": "0x085AC5C0"
+            },
+            "maps_layouts": {
+              "bytes": 1298036,
+              "delta_bytes": null,
+              "end_address": "0x085AC5C0",
+              "start_address": "0x0846F74C"
+            },
+            "other": {
+              "bytes": 10408000,
+              "delta_bytes": null,
+              "end_address": "0x09D625C4",
+              "start_address": "0x09375584"
+            },
+            "scripts": {
+              "bytes": 1960404,
+              "delta_bytes": null,
+              "end_address": "0x0846F74C",
+              "start_address": "0x08290D78"
+            },
+            "trainer_data": {
+              "bytes": 177652,
+              "delta_bytes": null,
+              "end_address": "0x09368F5C",
+              "start_address": "0x0933D968"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 30811588,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09D625C4",
+            "start_address": "0x08000000",
+            "unused_bytes": 2742844,
+            "used_bytes": 30811588,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247577,
+          "iwram": 25616
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      },
+      "comparison": {
+        "baseCommit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "categories": {
+          "audio": 0,
+          "code": 0,
+          "encounter_data": 0,
+          "graphics": 0,
+          "maps_layouts": 0,
+          "other": 0,
+          "scripts": 0,
+          "trainer_data": 0
+        },
+        "staticRamDelta": {
+          "ewram": 0,
+          "iwram": 0
+        },
+        "storageGatePassed": true,
+        "usedRomDelta": 0
+      },
+      "configuration": {
+        "DEBUG": 0,
+        "E2E": 0,
+        "O_LEVEL": 2,
+        "RELEASE": 1,
+        "TEST": 0,
+        "USE_LTO_ON_RELEASE": 1,
+        "configHashes": {
+          "include/config/ai.h": "6eaa73d152dcf81727e7e60d3efa24f028cacd4cf6ad8aaa49010e2fd70f9ef5",
+          "include/config/battle.h": "9fd61c31db7664ce09e676ef530dffd7f38d130a6c8507a3ba21cb78975be340",
+          "include/config/caps.h": "9736cf6ac82da0743b40cab86750a0f496430bb82829724cf013a39f151f6d48",
+          "include/config/contest.h": "4738d4b8d84c9ccc81cc7e108b4807420d5c6c1c6febe865e5eedc2168d44094",
+          "include/config/debug.h": "f4094711117ea1e225221e49be9bf2488a4035119e855c18d97f3c98f9f56fca",
+          "include/config/dexnav.h": "159f1dc1a7a9b2778bf9c5c1bb30617e2dfbd324404c2917c44799ea0bb83172",
+          "include/config/fishing.h": "fa88a9a28669e6723206de6d492b322ab10c900a3a3ab7f41045e8db15b72c50",
+          "include/config/follower_npc.h": "7473fad59ffe7db1a530dbfab3924cb97144dc3e7d1735af82918c03ecef6958",
+          "include/config/general.h": "7fb56cf6d851585f2fe41f7996e6682dd8076f685c06ad2037fb40719ce88203",
+          "include/config/item.h": "6c572b334828239b5d4becc71938e4307f3bb1e7c12e5ca4734fac5bbacb42b0",
+          "include/config/league_circuit.h": "951ec422fabcd6f49e4dd69a0acb37ecde9802ba060f8bdd6777d7ab2de1447f",
+          "include/config/name_box.h": "e5fb790a23cd2b5c01e4c5139c44f2cff6dc34dd7f8161cff2bf5f1ca2a61ba6",
+          "include/config/overworld.h": "328f8b22496c0a730381ecf37a0020b30090a29cafd3d5c8e80436cc698ef713",
+          "include/config/pokemon.h": "2a864cc45098656d64ff6f19081f66da042c8dafda43103b1aa34fd500766c82",
+          "include/config/pokerus.h": "6407021b6c99e49c9c6bf02f5ef5dcc0ab9eec3c42e2987d40780528ec1f744d",
+          "include/config/randomizer.h": "85a5fa1271737c55a38199ebae5fe303a9b6c35c4211ef34ad536a31d366cfd0",
+          "include/config/save.h": "e3898a7bf6f9bfe2ae3bbd5ba70f38bd18de0bddead3cf419c8c9b7c47c4ddf7",
+          "include/config/species_enabled.h": "a6fb69e89b0f60a5bb4e7cb93b57e6ea1e16b00283e6e0b6ea7dd982b1740216",
+          "include/config/summary_screen.h": "79dc86bb9322679942c349987e1f03f2cae59419c19165d691e59aa909346a06",
+          "include/config/test.h": "63cbf70c00fee57daf812c5b18809030f6205afe4263d9c7ace7e258abc67fd1",
+          "include/config/text.h": "2c4f70e37f708c2d718a88331d3423e5c510805c0093213264a4788e88f91ee6",
+          "include/config/trainer_party_scaling.h": "64414c649e46c685261fd21c22b665a0878ccde1d1ce9cc851a275b215638735",
+          "include/config/wayfarer_marts.h": "18fac80779490573af9a9a6ea1eaaa3255061f69835bf60ce0e6f6387424c2c0"
+        },
+        "product": "hns"
+      },
+      "gbaSha256": "26d09c4bb3ff5b8d8ca1f174aaba40932a34c5041571592c14bd5350f4a3de61",
+      "identicalBaselineElf": true,
+      "identicalBaselineGba": true,
+      "mapEqualAfterTemporaryLtoNames": true,
+      "refactor": {
+        "artifacts": {
+          "elfSha256": "e8d134a936e3799e8deca64eec70dc519a94e4209471639c80f43f620fbca757",
+          "mapSha256": "d71bb73bd8e297a8f3278587781f5e0296295c870dc25be0cb930b04e2212395"
+        },
+        "command": "make -C game -j8 BUILD=hns release",
+        "commit": "a655387c45ebd54061778c7443545c1adf23168c",
+        "configSha256": "6eebc599557355195294d76dd801ad3fa6093f5d18f91e0a665c59cfa59ff36d",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "hns",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x0933D968",
+              "start_address": "0x08810010"
+            },
+            "code": {
+              "bytes": 2690424,
+              "delta_bytes": null,
+              "end_address": "0x08290D78",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 50728,
+              "delta_bytes": null,
+              "end_address": "0x09375584",
+              "start_address": "0x09368F5C"
+            },
+            "graphics": {
+              "bytes": 2505296,
+              "delta_bytes": null,
+              "end_address": "0x08810010",
+              "start_address": "0x085AC5C0"
+            },
+            "maps_layouts": {
+              "bytes": 1298036,
+              "delta_bytes": null,
+              "end_address": "0x085AC5C0",
+              "start_address": "0x0846F74C"
+            },
+            "other": {
+              "bytes": 10408000,
+              "delta_bytes": null,
+              "end_address": "0x09D625C4",
+              "start_address": "0x09375584"
+            },
+            "scripts": {
+              "bytes": 1960404,
+              "delta_bytes": null,
+              "end_address": "0x0846F74C",
+              "start_address": "0x08290D78"
+            },
+            "trainer_data": {
+              "bytes": 177652,
+              "delta_bytes": null,
+              "end_address": "0x09368F5C",
+              "start_address": "0x0933D968"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 30811588,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09D625C4",
+            "start_address": "0x08000000",
+            "unused_bytes": 2742844,
+            "used_bytes": 30811588,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247577,
+          "iwram": 25616
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      }
+    },
+    "leafgreen": {
+      "baseline": {
+        "artifacts": {
+          "elfSha256": "90eaf3b3a8a35ff79008158aa8d5ca349ddd3921d23d5f25a3677f22b6153000",
+          "mapSha256": "eb70a9228f5a87a9fc652e2f89c0b11477a02be0a3a45e51e53f0c3342b1a169"
+        },
+        "command": "make -C game -j8 BUILD=leafgreen release",
+        "commit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "configSha256": "d611ba7f5f7b16287a373c910c3c407366f1376577ea9ddc3beef5314cefbd36",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "leafgreen",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x091624E8",
+              "start_address": "0x08634B90"
+            },
+            "code": {
+              "bytes": 2689776,
+              "delta_bytes": null,
+              "end_address": "0x08290AF0",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 25220,
+              "delta_bytes": null,
+              "end_address": "0x09190080",
+              "start_address": "0x09189DFC"
+            },
+            "graphics": {
+              "bytes": 1530192,
+              "delta_bytes": null,
+              "end_address": "0x08634B90",
+              "start_address": "0x084BF240"
+            },
+            "maps_layouts": {
+              "bytes": 587864,
+              "delta_bytes": null,
+              "end_address": "0x084BF240",
+              "start_address": "0x0842F9E8"
+            },
+            "other": {
+              "bytes": 10223584,
+              "delta_bytes": null,
+              "end_address": "0x09B50060",
+              "start_address": "0x09190080"
+            },
+            "scripts": {
+              "bytes": 1699576,
+              "delta_bytes": null,
+              "end_address": "0x0842F9E8",
+              "start_address": "0x08290AF0"
+            },
+            "trainer_data": {
+              "bytes": 162068,
+              "delta_bytes": null,
+              "end_address": "0x09189DFC",
+              "start_address": "0x091624E8"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 28639328,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09B50060",
+            "start_address": "0x08000000",
+            "unused_bytes": 4915104,
+            "used_bytes": 28639328,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247625,
+          "iwram": 25864
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      },
+      "comparison": {
+        "baseCommit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "categories": {
+          "audio": 0,
+          "code": 0,
+          "encounter_data": 0,
+          "graphics": 0,
+          "maps_layouts": 0,
+          "other": 0,
+          "scripts": 0,
+          "trainer_data": 0
+        },
+        "staticRamDelta": {
+          "ewram": 0,
+          "iwram": 0
+        },
+        "storageGatePassed": true,
+        "usedRomDelta": 0
+      },
+      "configuration": {
+        "DEBUG": 0,
+        "E2E": 0,
+        "O_LEVEL": 2,
+        "RELEASE": 1,
+        "TEST": 0,
+        "USE_LTO_ON_RELEASE": 1,
+        "configHashes": {
+          "include/config/ai.h": "6eaa73d152dcf81727e7e60d3efa24f028cacd4cf6ad8aaa49010e2fd70f9ef5",
+          "include/config/battle.h": "9fd61c31db7664ce09e676ef530dffd7f38d130a6c8507a3ba21cb78975be340",
+          "include/config/caps.h": "9736cf6ac82da0743b40cab86750a0f496430bb82829724cf013a39f151f6d48",
+          "include/config/contest.h": "4738d4b8d84c9ccc81cc7e108b4807420d5c6c1c6febe865e5eedc2168d44094",
+          "include/config/debug.h": "f4094711117ea1e225221e49be9bf2488a4035119e855c18d97f3c98f9f56fca",
+          "include/config/dexnav.h": "159f1dc1a7a9b2778bf9c5c1bb30617e2dfbd324404c2917c44799ea0bb83172",
+          "include/config/fishing.h": "fa88a9a28669e6723206de6d492b322ab10c900a3a3ab7f41045e8db15b72c50",
+          "include/config/follower_npc.h": "7473fad59ffe7db1a530dbfab3924cb97144dc3e7d1735af82918c03ecef6958",
+          "include/config/general.h": "7fb56cf6d851585f2fe41f7996e6682dd8076f685c06ad2037fb40719ce88203",
+          "include/config/item.h": "6c572b334828239b5d4becc71938e4307f3bb1e7c12e5ca4734fac5bbacb42b0",
+          "include/config/league_circuit.h": "951ec422fabcd6f49e4dd69a0acb37ecde9802ba060f8bdd6777d7ab2de1447f",
+          "include/config/name_box.h": "e5fb790a23cd2b5c01e4c5139c44f2cff6dc34dd7f8161cff2bf5f1ca2a61ba6",
+          "include/config/overworld.h": "328f8b22496c0a730381ecf37a0020b30090a29cafd3d5c8e80436cc698ef713",
+          "include/config/pokemon.h": "2a864cc45098656d64ff6f19081f66da042c8dafda43103b1aa34fd500766c82",
+          "include/config/pokerus.h": "6407021b6c99e49c9c6bf02f5ef5dcc0ab9eec3c42e2987d40780528ec1f744d",
+          "include/config/randomizer.h": "85a5fa1271737c55a38199ebae5fe303a9b6c35c4211ef34ad536a31d366cfd0",
+          "include/config/save.h": "e3898a7bf6f9bfe2ae3bbd5ba70f38bd18de0bddead3cf419c8c9b7c47c4ddf7",
+          "include/config/species_enabled.h": "a6fb69e89b0f60a5bb4e7cb93b57e6ea1e16b00283e6e0b6ea7dd982b1740216",
+          "include/config/summary_screen.h": "79dc86bb9322679942c349987e1f03f2cae59419c19165d691e59aa909346a06",
+          "include/config/test.h": "63cbf70c00fee57daf812c5b18809030f6205afe4263d9c7ace7e258abc67fd1",
+          "include/config/text.h": "2c4f70e37f708c2d718a88331d3423e5c510805c0093213264a4788e88f91ee6",
+          "include/config/trainer_party_scaling.h": "64414c649e46c685261fd21c22b665a0878ccde1d1ce9cc851a275b215638735",
+          "include/config/wayfarer_marts.h": "18fac80779490573af9a9a6ea1eaaa3255061f69835bf60ce0e6f6387424c2c0"
+        },
+        "product": "leafgreen"
+      },
+      "gbaSha256": "131168caff4c05ea7a6797d04190c4bcbfd6928641ff178b2f2516c3099fcf97",
+      "identicalBaselineElf": true,
+      "identicalBaselineGba": true,
+      "mapEqualAfterTemporaryLtoNames": true,
+      "refactor": {
+        "artifacts": {
+          "elfSha256": "90eaf3b3a8a35ff79008158aa8d5ca349ddd3921d23d5f25a3677f22b6153000",
+          "mapSha256": "7146049ee25f7a8bfcee776bd9f1c28afeb2fe17593a272f8ced9525a09d024b"
+        },
+        "command": "make -C game -j8 BUILD=leafgreen release",
+        "commit": "a655387c45ebd54061778c7443545c1adf23168c",
+        "configSha256": "d611ba7f5f7b16287a373c910c3c407366f1376577ea9ddc3beef5314cefbd36",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "leafgreen",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x091624E8",
+              "start_address": "0x08634B90"
+            },
+            "code": {
+              "bytes": 2689776,
+              "delta_bytes": null,
+              "end_address": "0x08290AF0",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 25220,
+              "delta_bytes": null,
+              "end_address": "0x09190080",
+              "start_address": "0x09189DFC"
+            },
+            "graphics": {
+              "bytes": 1530192,
+              "delta_bytes": null,
+              "end_address": "0x08634B90",
+              "start_address": "0x084BF240"
+            },
+            "maps_layouts": {
+              "bytes": 587864,
+              "delta_bytes": null,
+              "end_address": "0x084BF240",
+              "start_address": "0x0842F9E8"
+            },
+            "other": {
+              "bytes": 10223584,
+              "delta_bytes": null,
+              "end_address": "0x09B50060",
+              "start_address": "0x09190080"
+            },
+            "scripts": {
+              "bytes": 1699576,
+              "delta_bytes": null,
+              "end_address": "0x0842F9E8",
+              "start_address": "0x08290AF0"
+            },
+            "trainer_data": {
+              "bytes": 162068,
+              "delta_bytes": null,
+              "end_address": "0x09189DFC",
+              "start_address": "0x091624E8"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 28639328,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09B50060",
+            "start_address": "0x08000000",
+            "unused_bytes": 4915104,
+            "used_bytes": 28639328,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": false
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 247625,
+          "iwram": 25864
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      }
+    },
+    "wayfarer": {
+      "baseline": {
+        "artifacts": {
+          "elfSha256": "db4214c92009e84a28c83513f3dcff2520d210ca2c3db1a631b63a498880f0f9",
+          "mapSha256": "7ac20c8a99553fdffd0c26ae40415f2fc93a049f8ea29b5e02a63679f574ab54"
+        },
+        "command": "make -C game -j8 BUILD=wayfarer release",
+        "commit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "configSha256": "5a19624a5511c708daa405197da86dceda796c39aafd4bf6c2e1e412b8d814c2",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "wayfarer",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x094BCE88",
+              "start_address": "0x0898F530"
+            },
+            "code": {
+              "bytes": 2707288,
+              "delta_bytes": null,
+              "end_address": "0x08294F58",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 81672,
+              "delta_bytes": null,
+              "end_address": "0x0952CC90",
+              "start_address": "0x09518D88"
+            },
+            "graphics": {
+              "bytes": 3112312,
+              "delta_bytes": null,
+              "end_address": "0x0898F530",
+              "start_address": "0x086977B8"
+            },
+            "maps_layouts": {
+              "bytes": 2230876,
+              "delta_bytes": null,
+              "end_address": "0x086977B8",
+              "start_address": "0x08476D5C"
+            },
+            "other": {
+              "bytes": 10488600,
+              "delta_bytes": null,
+              "end_address": "0x09F2D7A8",
+              "start_address": "0x0952CC90"
+            },
+            "scripts": {
+              "bytes": 1973764,
+              "delta_bytes": null,
+              "end_address": "0x08476D5C",
+              "start_address": "0x08294F58"
+            },
+            "trainer_data": {
+              "bytes": 376576,
+              "delta_bytes": null,
+              "end_address": "0x09518D88",
+              "start_address": "0x094BCE88"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 32692136,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09F2D7A8",
+            "start_address": "0x08000000",
+            "unused_bytes": 862296,
+            "used_bytes": 32692136,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": true
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 248641,
+          "iwram": 25564
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      },
+      "comparison": {
+        "baseCommit": "f4f602d0dd5e00edae4b49f1f4992d217ed02ed2",
+        "categories": {
+          "audio": 0,
+          "code": 0,
+          "encounter_data": 0,
+          "graphics": 0,
+          "maps_layouts": 0,
+          "other": 0,
+          "scripts": 0,
+          "trainer_data": 0
+        },
+        "staticRamDelta": {
+          "ewram": 0,
+          "iwram": 0
+        },
+        "storageGatePassed": true,
+        "usedRomDelta": 0
+      },
+      "configuration": {
+        "DEBUG": 0,
+        "E2E": 0,
+        "O_LEVEL": 2,
+        "RELEASE": 1,
+        "TEST": 0,
+        "USE_LTO_ON_RELEASE": 1,
+        "configHashes": {
+          "include/config/ai.h": "6eaa73d152dcf81727e7e60d3efa24f028cacd4cf6ad8aaa49010e2fd70f9ef5",
+          "include/config/battle.h": "9fd61c31db7664ce09e676ef530dffd7f38d130a6c8507a3ba21cb78975be340",
+          "include/config/caps.h": "9736cf6ac82da0743b40cab86750a0f496430bb82829724cf013a39f151f6d48",
+          "include/config/contest.h": "4738d4b8d84c9ccc81cc7e108b4807420d5c6c1c6febe865e5eedc2168d44094",
+          "include/config/debug.h": "f4094711117ea1e225221e49be9bf2488a4035119e855c18d97f3c98f9f56fca",
+          "include/config/dexnav.h": "159f1dc1a7a9b2778bf9c5c1bb30617e2dfbd324404c2917c44799ea0bb83172",
+          "include/config/fishing.h": "fa88a9a28669e6723206de6d492b322ab10c900a3a3ab7f41045e8db15b72c50",
+          "include/config/follower_npc.h": "7473fad59ffe7db1a530dbfab3924cb97144dc3e7d1735af82918c03ecef6958",
+          "include/config/general.h": "7fb56cf6d851585f2fe41f7996e6682dd8076f685c06ad2037fb40719ce88203",
+          "include/config/item.h": "6c572b334828239b5d4becc71938e4307f3bb1e7c12e5ca4734fac5bbacb42b0",
+          "include/config/league_circuit.h": "951ec422fabcd6f49e4dd69a0acb37ecde9802ba060f8bdd6777d7ab2de1447f",
+          "include/config/name_box.h": "e5fb790a23cd2b5c01e4c5139c44f2cff6dc34dd7f8161cff2bf5f1ca2a61ba6",
+          "include/config/overworld.h": "328f8b22496c0a730381ecf37a0020b30090a29cafd3d5c8e80436cc698ef713",
+          "include/config/pokemon.h": "2a864cc45098656d64ff6f19081f66da042c8dafda43103b1aa34fd500766c82",
+          "include/config/pokerus.h": "6407021b6c99e49c9c6bf02f5ef5dcc0ab9eec3c42e2987d40780528ec1f744d",
+          "include/config/randomizer.h": "85a5fa1271737c55a38199ebae5fe303a9b6c35c4211ef34ad536a31d366cfd0",
+          "include/config/save.h": "e3898a7bf6f9bfe2ae3bbd5ba70f38bd18de0bddead3cf419c8c9b7c47c4ddf7",
+          "include/config/species_enabled.h": "a6fb69e89b0f60a5bb4e7cb93b57e6ea1e16b00283e6e0b6ea7dd982b1740216",
+          "include/config/summary_screen.h": "79dc86bb9322679942c349987e1f03f2cae59419c19165d691e59aa909346a06",
+          "include/config/test.h": "63cbf70c00fee57daf812c5b18809030f6205afe4263d9c7ace7e258abc67fd1",
+          "include/config/text.h": "2c4f70e37f708c2d718a88331d3423e5c510805c0093213264a4788e88f91ee6",
+          "include/config/trainer_party_scaling.h": "64414c649e46c685261fd21c22b665a0878ccde1d1ce9cc851a275b215638735",
+          "include/config/wayfarer_marts.h": "18fac80779490573af9a9a6ea1eaaa3255061f69835bf60ce0e6f6387424c2c0"
+        },
+        "product": "wayfarer"
+      },
+      "gbaSha256": "52d245f1d317e180f505c42df9d7496188c370532920cce1c29edb039c13d498",
+      "identicalBaselineElf": true,
+      "identicalBaselineGba": true,
+      "mapEqualAfterTemporaryLtoNames": true,
+      "refactor": {
+        "artifacts": {
+          "elfSha256": "db4214c92009e84a28c83513f3dcff2520d210ca2c3db1a631b63a498880f0f9",
+          "mapSha256": "75c12fac14fa499ec33ee30f2d1ce64698b07373a999c4546483dfa013d7af15"
+        },
+        "command": "UNUSED_ERROR=1 DEPRECATED_ERROR=1 make -C game -j8 BUILD=wayfarer release",
+        "commit": "a655387c45ebd54061778c7443545c1adf23168c",
+        "configSha256": "5a19624a5511c708daa405197da86dceda796c39aafd4bf6c2e1e412b8d814c2",
+        "linked": {
+          "baseline": {
+            "available": false
+          },
+          "build": "wayfarer",
+          "categories": {
+            "audio": {
+              "bytes": 11721048,
+              "delta_bytes": null,
+              "end_address": "0x094BCE88",
+              "start_address": "0x0898F530"
+            },
+            "code": {
+              "bytes": 2707288,
+              "delta_bytes": null,
+              "end_address": "0x08294F58",
+              "start_address": "0x08000000"
+            },
+            "encounter_data": {
+              "bytes": 81672,
+              "delta_bytes": null,
+              "end_address": "0x0952CC90",
+              "start_address": "0x09518D88"
+            },
+            "graphics": {
+              "bytes": 3112312,
+              "delta_bytes": null,
+              "end_address": "0x0898F530",
+              "start_address": "0x086977B8"
+            },
+            "maps_layouts": {
+              "bytes": 2230876,
+              "delta_bytes": null,
+              "end_address": "0x086977B8",
+              "start_address": "0x08476D5C"
+            },
+            "other": {
+              "bytes": 10488600,
+              "delta_bytes": null,
+              "end_address": "0x09F2D7A8",
+              "start_address": "0x0952CC90"
+            },
+            "scripts": {
+              "bytes": 1973764,
+              "delta_bytes": null,
+              "end_address": "0x08476D5C",
+              "start_address": "0x08294F58"
+            },
+            "trainer_data": {
+              "bytes": 376576,
+              "delta_bytes": null,
+              "end_address": "0x09518D88",
+              "start_address": "0x094BCE88"
+            }
+          },
+          "reconciliation": {
+            "category_bytes": 32692136,
+            "matches_used_bytes": true
+          },
+          "release": true,
+          "rom": {
+            "capacity_end_address": "0x0A000000",
+            "end_address": "0x09F2D7A8",
+            "start_address": "0x08000000",
+            "unused_bytes": 862296,
+            "used_bytes": 32692136,
+            "wayfarer_release_limit_address": "0x09F80000",
+            "wayfarer_release_limit_enforced": true
+          },
+          "schema_version": 1
+        },
+        "staticRam": {
+          "ewram": 248641,
+          "iwram": 25564
+        },
+        "toolchain": "arm-none-eabi-gcc (15:13.2.rel1-2) 13.2.1 20231009"
+      }
+    }
+  },
+  "runtimeGenerationEquivalence": {
+    "finalSourceGeneration": "e4fa363a887399b00fdb5c25b0e3e02dabbb8553dd47e2889723232060bac24b",
+    "outputs": {
+      "gameplay_encounter_scenes.inc": "cc1927dce6ba4c35e2a6fc9a943b16f98b5bcfc1bcb687c3207875809640392e",
+      "gameplay_encounters.inc": "fdb0eb3473b570b5055b77c52a9458210850719376cc5f5f32808180051981a5"
+    },
+    "releaseGeneration": "501aec857099589542412621d5fc561d11d62bf6a2c03dd4e4456c08cdbe8d83"
+  },
+  "schemaVersion": 1,
+  "validation": {
+    "actionlint": "passed",
+    "ciClassifierChecks": 12,
+    "e2e": {
+      "files": 7,
+      "passed": 95,
+      "romSha256": "45ff00198b7b83901ebc611922b0d7284c6534b3ba6b13e37a4efd892e5da036",
+      "seconds": 188.48,
+      "symbolsSha256": "abc29eeccf4b6e3c7be9fa6ccbd73774b7e8722b414b9943cef5033746320620"
+    },
+    "frameworkContracts": 74,
+    "mechanics": {
+      "assumptionsFailed": 9,
+      "expectedFailing": 6,
+      "knownFailing": 349,
+      "passed": 4359,
+      "todo": 629,
+      "total": 5352,
+      "unexpectedFailures": 0
+    },
+    "migrationChecks": 5
+  }
+}

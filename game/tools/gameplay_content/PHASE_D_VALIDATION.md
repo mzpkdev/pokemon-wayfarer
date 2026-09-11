@@ -1,5 +1,8 @@
 # Phase D validation
 
+The measured implementation is `a655387c45ebd54061778c7443545c1adf23168c`.
+The evidence commit changes documentation only.
+
 The unrefactored baseline is `f4f602d0dd5e00edae4b49f1f4992d217ed02ed2`,
 rebased onto framework main `d99050250df47fe785736a7932d0dc33ef22031a`.
 The task preserves that revision and its release artifacts separately from this
