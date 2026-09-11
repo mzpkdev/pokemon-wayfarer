@@ -323,7 +323,14 @@ describe.sequential("Wayfarer League Circuit", () => {
       (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "front",
       "return to Trainer Card",
     )
-    await game.controls.press("b")
+    // A short input pulse can be missed after observing the restored front
+    // page. Retry only while that page still owns input; never send B
+    // during closing or after the pause menu has opened.
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const state = await game.state.read()
+      if (state.ui.mode !== "trainer-card" || state.ui.trainerCard !== "front") break
+      await game.controls.press("b")
+    }
     await game.wait.until((state) => state.ui.mode === "pause-menu", "close Trainer Card")
     await game.wait.frames(60)
     await game.controls.press("b")

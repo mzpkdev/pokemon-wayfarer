@@ -58,6 +58,19 @@ prompts. The existing party, map and post-retirement routing assertions remain;
 no gameplay, timeouts or ROM contents changed. The focused Safari journey,
 E2E lint and type checking passed with this correction.
 
+CI on `c9aef3675f` passed the Safari case and the mechanics suite, with one
+remaining emulator failure while closing the Trainer Card. A local failing
+capture identified `CB2_TrainerCard` (`0x0822d365`), `gMain.state=0`, and
+`ui=trainer-card/front` after the timeout: the short B pulse was missed and
+native field return had not started. The journey now retries B at most eight
+times only while the input-ready front page remains active, then uses the
+unchanged pause-menu wait. It stops sending input once closing begins. The
+native card and field-return code remain unchanged. Evidence:
+`/tmp/pr85-card-capture-5.log`.
+Ten consecutive focused runs passed after the correction on the unchanged
+`3e6b47b1…` ROM (`/tmp/pr85-card-fixed-{1..10}.log`). Temporary callback
+instrumentation and the focused-test selector were removed before committing.
+
 ## Compact ordinary caller records
 
 The reviewed 851-caller manifest and its command fingerprints are unchanged.
