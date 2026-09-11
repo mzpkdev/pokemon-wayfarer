@@ -28,7 +28,7 @@ EverGrandeCity_PokemonLeague_1F_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, MART_PROFILE_EVER_GRANDE_LEAGUE
+	setvar VAR_0x8004, GAMEPLAY_MART_EVERGRANDECITY_POKEMONLEAGUE_1F_EVER_GRANDE_LEAGUE
 	special WayfarerOpenMartProfile
 	waitstate
 #else

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "lilycove_2f_right",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight"
+      },
+      "profile": "MART_PROFILE_LILYCOVE_2F_RIGHT"
+    },
+    {
+      "id": "lilycove_2f_left",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft"
+      },
+      "profile": "MART_PROFILE_LILYCOVE_2F_LEFT"
+    }
+  ],
+  "encounters": []
+}

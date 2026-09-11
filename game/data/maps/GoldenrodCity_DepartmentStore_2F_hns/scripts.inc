@@ -56,7 +56,7 @@ GoldenrodDeptStore2_EventScript_Clerk::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, MART_PROFILE_GOLDENROD_2F
+	setvar VAR_0x8004, GAMEPLAY_MART_GOLDENRODCITY_DEPARTMENTSTORE_2F_HNS_GOLDENROD_2F
 	special WayfarerOpenMartProfile
 	waitstate
 #else

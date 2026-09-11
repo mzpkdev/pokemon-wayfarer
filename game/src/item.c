@@ -631,44 +631,20 @@ u16 CountTotalItemQuantityInBag(enum Item itemId)
     return BagPocket_CountTotalItemQuantity(&gBagPockets[GetItemPocket(itemId)], itemId);
 }
 
+#include "gameplay_services.h"
+
 static bool32 IsActiveStandardRodContributorFlag(u16 flagId)
 {
-#if IS_FRLG
-    return flagId == FLAG_GOT_OLD_ROD
-        || flagId == FLAG_GOT_GOOD_ROD
-        || flagId == FLAG_GOT_SUPER_ROD;
-#elif IS_HNS
-    return flagId == FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED
-        || flagId == FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED
-        || flagId == FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED
-        || flagId == FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED
-        || flagId == FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED
-        || flagId == FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED;
-#else
-    return flagId == FLAG_RECEIVED_OLD_ROD
-        || flagId == FLAG_RECEIVED_GOOD_ROD
-        || flagId == FLAG_RECEIVED_SUPER_ROD;
-#endif
+#define MATCH_CONTRIBUTOR(flag) || flagId == flag
+    return FALSE STANDARD_ROD_CONTRIBUTORS(MATCH_CONTRIBUTOR);
+#undef MATCH_CONTRIBUTOR
 }
 
 static u32 CountStandardRodContributors(void)
 {
-#if IS_FRLG
-    return FlagGet(FLAG_GOT_OLD_ROD)
-         + FlagGet(FLAG_GOT_GOOD_ROD)
-         + FlagGet(FLAG_GOT_SUPER_ROD);
-#elif IS_HNS
-    return FlagGet(FLAG_STANDARD_ROD_ROUTE32_CONTRIBUTED)
-         + FlagGet(FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED)
-         + FlagGet(FLAG_STANDARD_ROD_ROUTE12_CONTRIBUTED)
-         + FlagGet(FLAG_STANDARD_ROD_DEWFORD_CONTRIBUTED)
-         + FlagGet(FLAG_STANDARD_ROD_ROUTE118_CONTRIBUTED)
-         + FlagGet(FLAG_STANDARD_ROD_MOSSDEEP_CONTRIBUTED);
-#else
-    return FlagGet(FLAG_RECEIVED_OLD_ROD)
-         + FlagGet(FLAG_RECEIVED_GOOD_ROD)
-         + FlagGet(FLAG_RECEIVED_SUPER_ROD);
-#endif
+#define COUNT_CONTRIBUTOR(flag) + FlagGet(flag)
+    return 0 STANDARD_ROD_CONTRIBUTORS(COUNT_CONTRIBUTOR);
+#undef COUNT_CONTRIBUTOR
 }
 
 static bool32 FindOnlyStandardRodSlot(enum Item rod, u32 *slot)

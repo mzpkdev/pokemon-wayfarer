@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "mossdeep",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "MossdeepCity_Mart_EventScript_Clerk",
+        "localId": "LOCALID_MOSSDEEP_MART_CLERK"
+      },
+      "profile": "MART_PROFILE_MOSSDEEP"
+    }
+  ],
+  "encounters": []
+}

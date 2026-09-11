@@ -3,11 +3,13 @@
 #include "data.h"
 #include "config/battle.h"
 #include "trainer_rating.h"
+#include "gameplay_progression.h"
 #include "trainer_party_scaling.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/trainers.h"
 #include "constants/opponents.h"
+#include "constants/pokeball.h"
 #include "constants/regions.h"
 #include "constants/difficulty.h"
 
@@ -40,19 +42,9 @@ static EWRAM_DATA u8 sRatingSnapshot = 0;
 
 u8 GetLeagueScalingBaseline(u32 rating)
 {
-    static const u8 anchors[][2] = {{0, 15}, {4, 16}, {8, 18}, {16, 23}, {30, 30}, {40, 42}, {55, 60}, {65, 80}, {80, 100}};
-    u32 i;
-    rating = min(rating, 80);
-    for (i = 1; i < ARRAY_COUNT(anchors); i++)
-    {
-        if (rating <= anchors[i][0])
-        {
-            u32 width = anchors[i][0] - anchors[i - 1][0];
-            u32 rise = (rating - anchors[i - 1][0]) * (anchors[i][1] - anchors[i - 1][1]);
-            return anchors[i - 1][1] + (2 * rise + width) / (2 * width);
-        }
-    }
-    return 100;
+    u8 level = 100;
+    EvaluateGameplayCurve(GAMEPLAY_CURVE_LEAGUE_BASELINE, rating, &level);
+    return level;
 }
 
 u8 GetLeagueScalingLevel(u32 rating, s8 encounterOffset, s8 slotOffset)
@@ -95,25 +87,14 @@ bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, cons
 
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy)
 {
-    static const u8 anchors[][2] = {{0, 7}, {4, 8}, {8, 10}, {16, 15}, {30, 22}, {40, 34}, {55, 52}, {65, 72}, {80, 92}};
-    u32 i;
+    u8 baseline = 92;
     s32 adjustment, level;
-    rating = min(rating, 80);
     authoredLevel = min(max(authoredLevel, 1), 100);
     adjustment = (s32)authoredLevel - 5;
     adjustment = adjustment < 0 ? -((-adjustment + 2) / 5) : (adjustment + 2) / 5;
     adjustment = min(max(adjustment, -1), 8);
-    level = 92;
-    for (i = 1; i < ARRAY_COUNT(anchors); i++)
-    {
-        if (rating <= anchors[i][0])
-        {
-            u32 width = anchors[i][0] - anchors[i - 1][0];
-            u32 rise = (rating - anchors[i - 1][0]) * (anchors[i][1] - anchors[i - 1][1]);
-            level = anchors[i - 1][1] + (2 * rise + width) / (2 * width);
-            break;
-        }
-    }
+    EvaluateGameplayCurve(GAMEPLAY_CURVE_ORDINARY_TRAINER_BASELINE, rating, &baseline);
+    level = baseline;
     return min(max(level + adjustment + (policy == TRAINER_SCALING_GYM_MEMBER ? 2 : 0), 1), 100);
 }
 
@@ -133,21 +114,8 @@ u8 GetGymLeaderScalingPartySize(u32 rating)
 
 u8 GetGymLeaderScalingLevel(u32 rating, s8 levelOffset)
 {
-    static const u8 anchors[][2] = {{0, 15}, {4, 16}, {8, 18}, {16, 23}, {30, 30}, {40, 42}, {55, 60}, {65, 80}, {80, 100}};
-    u32 i;
-    s32 level = 100;
-
-    rating = min(rating, 80);
-    for (i = 1; i < ARRAY_COUNT(anchors); i++)
-    {
-        if (rating <= anchors[i][0])
-        {
-            u32 width = anchors[i][0] - anchors[i - 1][0];
-            u32 rise = (rating - anchors[i - 1][0]) * (anchors[i][1] - anchors[i - 1][1]);
-            level = anchors[i - 1][1] + (2 * rise + width) / (2 * width);
-            break;
-        }
-    }
+    u8 level = 100;
+    EvaluateGameplayCurve(GAMEPLAY_CURVE_GYM_BASELINE, rating, &level);
     return min(max(level + levelOffset, 1), 100);
 }
 

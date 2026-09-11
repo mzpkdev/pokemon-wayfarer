@@ -1,6 +1,9 @@
 """Exhaustive, deterministic audit of projected opposing Trainer slots."""
 from functools import lru_cache
 from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from gameplay_content import progression
 import ast
 import importlib.util
 import json
@@ -11,8 +14,8 @@ ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("wild_metadata", ROOT / "tools/wild_encounters/wild_encounters_to_header.py")
 wild = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(wild)
-ANCHORS = ((0, 7), (4, 8), (8, 10), (16, 15), (30, 22), (40, 34), (55, 52), (65, 72), (80, 92))
-CAPS = ((0, 15), (4, 16), (8, 18), (16, 23), (30, 30), (40, 42), (55, 60), (65, 80), (80, 100))
+ANCHORS = progression.load()["ordinary_trainer_baseline"]
+CAPS = progression.load()["soft_cap"]
 MILESTONES = (0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, 80)
 
 

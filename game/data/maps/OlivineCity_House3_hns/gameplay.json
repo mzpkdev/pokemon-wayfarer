@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "rod_contribution",
+      "products": [
+        "wayfarer",
+        "hns"
+      ],
+      "kind": "rod_contribution",
+      "binding": {
+        "script": "OlivineCityHouse3_EventScriptFishingGuru"
+      },
+      "contribution": {
+        "namespace": "global",
+        "flag": "FLAG_STANDARD_ROD_OLIVINE_CONTRIBUTED"
+      }
+    }
+  ],
+  "encounters": []
+}

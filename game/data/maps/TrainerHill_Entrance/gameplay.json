@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "trainer_hill",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "TrainerHill_Entrance_EventScript_Clerk"
+      },
+      "profile": "MART_PROFILE_TRAINER_HILL"
+    }
+  ],
+  "encounters": []
+}

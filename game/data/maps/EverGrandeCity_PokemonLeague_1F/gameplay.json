@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "services": [
+    {
+      "id": "ever_grande_league",
+      "products": [
+        "wayfarer"
+      ],
+      "kind": "mart",
+      "binding": {
+        "script": "EverGrandeCity_PokemonLeague_1F_EventScript_Clerk"
+      },
+      "profile": "MART_PROFILE_EVER_GRANDE_LEAGUE"
+    }
+  ],
+  "encounters": []
+}

@@ -19,7 +19,7 @@ LilycoveCity_DepartmentStore_2F_EventScript_ClerkLeft::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, MART_PROFILE_LILYCOVE_2F_LEFT
+	setvar VAR_0x8004, GAMEPLAY_MART_LILYCOVECITY_DEPARTMENTSTORE_2F_LILYCOVE_2F_LEFT
 	special WayfarerOpenMartProfile
 	waitstate
 #else
@@ -50,7 +50,7 @@ LilycoveCity_DepartmentStore_2F_EventScript_ClerkRight::
 	message gText_HowMayIServeYou
 	waitmessage
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
-	setvar VAR_0x8004, MART_PROFILE_LILYCOVE_2F_RIGHT
+	setvar VAR_0x8004, GAMEPLAY_MART_LILYCOVECITY_DEPARTMENTSTORE_2F_LILYCOVE_2F_RIGHT
 	special WayfarerOpenMartProfile
 	waitstate
 #else
