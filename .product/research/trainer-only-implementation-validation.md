@@ -48,6 +48,16 @@ Trainer Card waits now require the screen mode and card side together, retaining
 the existing circuit/badge assertions. The affected itinerary test passed with
 that correction (`/tmp/pr85-card-state.log`).
 
+The next CI run on `8abfeab8c9` passed 269/270 emulator tests, including the
+Trainer Card case. Its Safari Run return timed out after the battle ended:
+the field was running Wailord's follower dialogue. The generic dismissal loop
+could send A during the return transition and start that interaction. Safari
+encounter returns now acknowledge only live battle text, then wait without
+input for native field control. Entry and retirement still answer the attendant's
+prompts. The existing party, map and post-retirement routing assertions remain;
+no gameplay, timeouts or ROM contents changed. The focused Safari journey,
+E2E lint and type checking passed with this correction.
+
 ## Compact ordinary caller records
 
 The reviewed 851-caller manifest and its command fingerprints are unchanged.

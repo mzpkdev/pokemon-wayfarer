@@ -203,7 +203,9 @@ const waitForBattleAction = async (game: GameSession, description: string): Prom
     if (state.battle.ui === "text" || state.dialogueOpen) await game.controls.press("a")
     else await game.wait.frames(12)
   }
-  throw new Error(`${description} action menu was not reached: ${JSON.stringify(await game.state.read())}`)
+  throw new Error(
+    `${description} action menu was not reached: ${JSON.stringify(await game.state.read())}`,
+  )
 }
 
 const finishSilverVictoryScript = async (game: GameSession): Promise<void> => {
