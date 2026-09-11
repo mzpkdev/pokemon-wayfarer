@@ -125,13 +125,15 @@ name filter `keeps badge collection independent|preserves admission levels throu
 every room and save/load: earliest Kanto|clears a lost attempt before save/load and
 admits a fresh retry`.
 
-The previous PR head (`6ed0232`) failed the League identity reconstruction
-assertion in CI at `test/league_tiers.c:217`. At `3fd4cd1`, the scoped command
-`make -j2 BUILD=wayfarer TEST=1 check TESTS=test/league_tiers.c` and a direct
-rerun of its matched headless ELF passed all 5 League-tier cases, including that
-identity test. No gameplay or fixture change was made for this investigation.
-This scoped pass does not establish why the earlier full-suite run failed or
-prove that the failure was present on the original baseline.
+The League identity failure was reproduced with four mechanics workers, matching
+CI (`MAKEFLAGS=-j4`). Successful function tests could retain `VBlankCB_Battle`,
+whose per-frame RNG advance interfered with seeded comparisons and a later
+RandomUniform checksum. Diagnostic logging confirmed that callback was active.
+The test runner now calls its existing `ReinitCallbacks()` after every completed
+test's teardown, including normal successful returns. Individual League and
+random-number assertions remain unchanged, and both pass in the four-worker
+execution with the runner fix. Temporary diagnostic logging was removed. This
+changes test isolation only; gameplay callbacks are unchanged.
 
 The disabled trainer-scaling rollback check fails at
 `test/trainer_party_scaling.c:592` with `EXPECT_EQ(1, 63)`. The same failure was
