@@ -33,12 +33,12 @@ host checks use the CLI's `--output-root /tmp/<unique-directory>` so a test cann
 change the `current` pointer used by a running build. `--domains inventory` selects
 the host-only adapter, independently of runtime adoptions.
 
-The map export follows the current compiler, including shared-event ownership and
-connection filtering. Existing raw warps are retained because the current ROM
-compiler retains them. Synthetic overlay tests preserve the distinction between
-raw provenance and effective objects; they do not introduce the proposed Sevii
-overlay implementation. Some HNS physical regions require runtime section or
-saved-context resolution, which the report identifies explicitly.
+The map export follows the current compiler, including shared-event ownership,
+connection filtering, and the selected Wayfarer Sevii manifest. Raw provenance
+remains separate from the effective events and connections produced by the ROM
+compiler. Manifest changes invalidate the generated inventory. Some HNS physical
+regions require runtime section or saved-context resolution, which the report
+identifies explicitly.
 
 For linked resource evidence, use `../gameplay_content_resources/report.py` with
 the matching ELF/map, full source commit, exact build command, and captured
