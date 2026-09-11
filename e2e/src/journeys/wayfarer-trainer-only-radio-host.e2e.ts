@@ -23,7 +23,7 @@ const hideGoldenrodDirector = registerFlag("radio-host-hide-director", 0x069)
 const hideGoldenrodPetrel = registerFlag("radio-host-hide-petrel", 0x06b)
 const hideGoldenrodRockets = registerFlag("radio-host-hide-rockets", 0x06c)
 const hideUndergroundSilver = registerFlag("radio-host-hide-underground-silver", 0x06f)
-const silverGoldenrodComplete = registerFlag("radio-host-silver-complete", 0x935)
+const silverGoldenrodComplete = "silverGoldenrodUndergroundComplete"
 
 const waitForDialogue = async (
   game: GameSession,
