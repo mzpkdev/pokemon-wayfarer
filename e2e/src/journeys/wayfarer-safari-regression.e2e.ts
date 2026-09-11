@@ -76,6 +76,27 @@ const settleSafariTurn = async (game: GameSession, description: string): Promise
   throw new Error(`${description}: ${JSON.stringify(state)}`)
 }
 
+const returnFromSafariEncounter = async (game: GameSession, description: string): Promise<void> => {
+  for (let frame = 0; frame < 7_200; frame += 30) {
+    const state = await game.state.read()
+    if (!state.battle.active) {
+      // Once the battle has handed control back to the field, no button should
+      // be pressed here. The player's follower occupies the tile behind them,
+      // so a late A intended for battle text instead starts its normal field
+      // interaction and prevents the return from becoming ready.
+      if (state.ready && state.map.mapGroup === 30 && state.map.mapNum === 104) return
+      await game.wait.frames(30)
+      continue
+    }
+
+    // Acknowledge only live battle text while the Safari controller still
+    // owns input. Its return script then releases the field on its own.
+    if (state.battle.ui === "text") await game.controls.press("a")
+    else await game.wait.frames(30)
+  }
+  throw new Error(`${description}: ${JSON.stringify(await game.state.read())}`)
+}
+
 const selectSafariAction = async (game: GameSession, action: "go-near" | "run") => {
   // The standard Safari controller keeps its own menu state outside ABI 14.
   // Normalize from any previous cursor position with real directional inputs.
@@ -138,37 +159,21 @@ describe.sequential("Wayfarer Safari regressions", () => {
       // deterministic +4/+3/+2/+1 and saturated repeat sequence.
       await selectSafariAction(game, "go-near")
       await game.wait.frames(15)
-      await fs.promises.writeFile("/tmp/wayfarer-safari-go-near-action.png", await game.screenshot())
+      await fs.promises.writeFile(
+        "/tmp/wayfarer-safari-go-near-action.png",
+        await game.screenshot(),
+      )
       const ongoing = await settleSafariTurn(game, "settle Safari Go Near")
       expect((await game.state.read()).partyVitals).toEqual(partyVitals)
 
       // Use a live continuing battle when possible, otherwise enter a second
       // ordinary Safari encounter through its real grass table for Run.
       if (!ongoing) {
-        await dismissUntil(
-          game,
-          async () => {
-            const state = await game.state.read()
-            return state.ready && !state.battle.active
-          },
-          "Safari Go Near field return",
-        )
+        await returnFromSafariEncounter(game, "Safari Go Near field return")
         await startNaturalSafariBattle(game)
       }
       await selectSafariAction(game, "run")
-      await dismissUntil(
-        game,
-        async () => {
-          const state = await game.state.read()
-          return (
-            state.ready &&
-            !state.battle.active &&
-            state.map.mapGroup === 30 &&
-            state.map.mapNum === 104
-          )
-        },
-        "Safari Run return",
-      )
+      await returnFromSafariEncounter(game, "Safari Run return")
 
       // RETIRE is the first Safari start-menu action. Confirm the actual prompt,
       // then verify a later wild battle uses ordinary routing after Safari ends.
