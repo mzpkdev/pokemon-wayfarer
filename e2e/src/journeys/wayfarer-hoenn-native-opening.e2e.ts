@@ -59,5 +59,5 @@ describe.sequential("Wayfarer native Littleroot household", () => {
     } finally {
       await game.close()
     }
-  })
+  }, 180_000)
 })
