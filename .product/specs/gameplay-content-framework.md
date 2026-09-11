@@ -14,9 +14,9 @@ distinguishes existing behavior from recommendations.
 Research baseline: `a5dd5178f098cc3ae80fbca73a59e04da0f6f835` on `main`.
 Encounter evidence additionally uses open PR #85 at
 `6799eb7d9f625fefe0c0983104d38e3b13e7d4d5`. Do not import its implementation
-implicitly. Phase D requires its landed behavior, or an explicitly equivalent
-integrated replacement, as the before-refactor baseline. Reconcile source changes
-and record exact commits at the start of every phase.
+implicitly. Merge A-C first, then rebase and refactor #85 on that framework.
+Use unrefactored #85 rebased onto the same main as the before-refactor baseline;
+#85 does not need to land before phase D starts. Record the compared commits.
 
 ## Behavior
 
@@ -428,35 +428,42 @@ layout, or graphics ROM are not implied by host inventory consolidation.
 
 ### 8. Resource acceptance
 
-Before each runtime phase, create paired clean release builds with identical
-toolchain, product, feature switches, optimization, and authored content. Record
-base/head commits, config digest, commands, ELF/map hashes, and used ROM from the
-existing ROM reporter. Use linked used bytes, not padded `.gba` file length or
-source-file size. Report code, read-only data, alignment, generated index costs,
-and retained legacy paths without double-counting symbols.
+Use one equivalent baseline/head comparison for each delivered refactor PR, with
+matching toolchain, product, feature configuration, and authored content. Record
+commits, build commands, ELF/map hashes, linked used-ROM bytes, and static RAM
+from the existing reporter. Do not use padded ROM size or JSON line counts as
+cost evidence. Reuse existing equivalent artifacts; rebuild affected products
+only when source/configuration changes or a discrepancy invalidates the evidence.
 
-Host-only phase A must introduce zero runtime bytes. Each runtime phase must have
-`headUsedRom <= baseUsedRom`, no static EWRAM/IWRAM increase, no new save fields or
-heap allocation, and must pass existing capacity/reserve checks. Across completed
-phases B-D the sum of equivalent before/after ROM deltas must be negative. If
-other content changes intervene, use per-phase paired deltas and also produce a
-final same-content comparison with all framework adoptions reverted. Do not
-compare main without trainer-only gameplay to a head that includes it.
+Host-only infrastructure adds no runtime payload. The complete A-C delivery must
+reduce normal Wayfarer used ROM, add no static EWRAM/IWRAM, save fields, or heap
+allocation, and pass the existing capacity/reserve gate. Report the other supported
+configuration deltas. Investigate unexplained growth and fix avoidable duplicated
+or retained data; a small explained alignment/compiler difference is not itself
+a reason to redesign the framework. All configurations must stay within existing
+ROM limits and preserve behavior. An unresolved or unexplained discrepancy remains
+visible in acceptance notes rather than being reported as a pass.
 
-Existing caller-owned buffers and snapshots are reused. For new or changed hot
-queries, compare worst-case cycles and stack high-water under the same emulator
-or hardware setup. Allow at most 256 additional CPU cycles per migrated query,
-at most 4,096 additional cycles across all framework queries in any frame, and
-at most 64 additional bytes of peak stack depth against the equivalent baseline.
-These proposed ceilings permit bounded call/lookup overhead when it saves ROM;
-they are acceptance budgets, not claims about current execution cost. New
-per-frame callbacks or whole-world scans remain prohibited. Record maximum
-observed input sizes and the measurement method. Code inspection must establish
-loop/call-frequency bounds and stack depth beyond sampled timing. Host-only
-processing has no runtime budget. A phase that misses a gate stays
-unaccepted; improve its representation rather than removing content or weakening
-the protected reserve. Numbers in this section are acceptance limits, not
-measured savings claims.
+Inspect changed optimized release routines and their relevant callers for bounded
+loops, plausible stack use, and absence of new per-frame callbacks, whole-world
+scans, recursion, or input-sized stack allocation. Use available disassembly and
+representative timing, covering endpoints and one demanding caller path. Record
+what was inspected/measured and the limits of that evidence. Static RAM equality
+is not evidence of peak stack equality; TEST timing is not a release measurement.
+Neither claim is required when it has not been established.
+
+The former 256-cycle/query, 4,096-cycle/frame, and 64-byte peak-stack ceilings are
+withdrawn under the user's simplification decision. They were proposed guardrails,
+not hardware safety limits. Exhaustive input/frame/interrupt profiling is not a
+merge gate. Investigate further only for a concrete sign of unsafe stack use,
+unbounded work, or material runtime regression. Keep useful compact diagnostics;
+do not ship or maintain a general tracing subsystem solely to close those former
+gates. Previously collected results may remain as optional evidence with their
+provenance and limitations.
+
+For phase D, compare unrefactored and refactored #85 on the exact same framework
+main base. Also report #85's incremental ROM cost against that main. Keep the two
+comparisons distinct so shared framework savings are not counted twice.
 
 ### 9. Validation and delivery
 
@@ -467,9 +474,10 @@ measured savings claims.
 | C | Rod and mart declarations, generated membership/bindings, updated audits | All selected contributors/counters covered; transaction and catalog equivalence; authoring exercises pass |
 | D | Integrated encounter adapter and required migration coverage | Scaling equivalence, exact outcome coverage, caller validation, scene journeys, and final resource gates |
 
-Phases B and C may proceed independently after A. D consumes the inventory and
-requires the integrated trainer-only prerequisite; it does not block earlier
-phases. Do not mark this spec implemented until all four exit gates pass.
+A-C form the first independently reviewable implementation PR. After it lands,
+rebase #85 and perform D there, preserving its unrefactored state as the comparison
+baseline. Review and merge decisions remain separate. Do not mark this spec
+implemented until all four phases are accepted.
 
 Tests must include independent pre-refactor expected results, not only two outputs
 from the new generator. Retain meaningful mechanics and emulator journeys. Add
@@ -484,13 +492,15 @@ available, and that an old-handler declaration fails resolution. A source event
 change must invalidate its reviewed fingerprint. This tests the import contract
 without depending on PR #92 or importing its content into this task.
 
-For progression, compare all Rating values, trainer authored levels 1..100 for
-each existing scaling policy, existing Gym/League offset ranges, and wild effective
-population regressions. Exercise League admission, Rating changes during the run,
-save/load, defeat, and retry. For rods, exercise every distinct three-giver order
-in Wayfarer (120), duplicates, completed progression, transaction failure, shortcut
-preservation, and mixed-region save/load. For marts, compare all profiles across
-0..80 and relevant challenge settings including exact item ordering and terminator.
+For progression, keep the cheap comparison over all 81 Rating values and add
+focused authored-level, clamp, modifier, and disabled-path cases. Reuse existing
+League lifecycle and wild-population tests. For rods, cover each contributor,
+representative orders, duplicates, completion, and transaction failure; reuse
+existing save/load and shortcut journeys. For marts, cover each distinct catalog
+and its unlock boundaries, challenge filtering, item order, and terminator.
+Exhaustive combinations of levels, offsets, contributor permutations, products,
+and feature flags are not required. Retain an existing cheap sweep when it adds
+useful coverage without duplicate setup or substantial maintenance.
 
 For encounters, compare all generated policy assignments against the integrated
 baseline and execute representative actual-win/loss paths, completed aftertext,
@@ -505,12 +515,38 @@ generation and consumer tests to reflect each change without consumer table/code
 edits. The new fixture's expected player behavior must still be asserted explicitly;
 generated inventory coverage is not an independent gameplay oracle.
 
-At runtime-phase release acceptance, build Wayfarer, HNS, Emerald, FireRed, and
-LeafGreen sequentially per worktree, preserving existing feature defaults. Never
+At delivery acceptance, use the existing supported-product build matrix for
+Wayfarer, HNS, Emerald, FireRed, and LeafGreen, preserving feature defaults. Reuse
+valid unchanged build evidence; do not replay every historical phase after a fix. Never
 run different map-version builds concurrently in the same tree. Run affected
 mechanics, generator/content audits, and scoped emulator journeys with explicitly
 matched ROM/symbol artifacts. Link map checks prove excluded product records and
 host evidence are absent from the release.
+
+Keep routine checks proportional to this framework:
+
+- Normal builds validate and generate selected content through incremental,
+  configuration-aware dependencies. Do not repeat generation per object.
+- Run permanent framework contracts in the existing Expansion Suite through
+  `make check`; give temporary migration equivalence its own CI job. Use the
+  existing Python unittest harness and run each group once. Keep `gameplay-content-test` as the local aggregate. Retire the
+  migration job after the remaining v1 content is ported and its comparisons to
+  legacy representations are no longer needed; retain independent arithmetic
+  expectations and framework contract tests. Reuse existing domain tests and
+  cover distinct failure modes with small fixtures.
+- Use `gameplay-content-check` where a freshness check is needed; do not repeat
+  equivalent validation already performed by the same job's generation step.
+- Preserve existing product builds, mechanics/E2E jobs, and ROM capacity/reserve
+  reporting. The migration job does not expand the recurring product matrix or
+  require duplicate gameplay journeys.
+- Keep paired historical ROM comparisons and representative CPU/stack diagnostics
+  as explicitly invoked refactor evidence. They do not run in default builds,
+  `make check`, or CI. Remove provisional general profiling machinery built only
+  to satisfy the withdrawn exhaustive gates.
+
+Verify the actual Make/CI wiring and record the framework's added runtime once.
+A callable target alone does not establish CI coverage. Add future checks for a
+specific uncovered regression risk, not automatically for every new declaration.
 
 Keep each phase revertible by commit without a permanent duplicate runtime path.
 On rollback restore the prior generator/source ownership and regenerate outputs

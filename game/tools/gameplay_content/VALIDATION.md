@@ -1,9 +1,11 @@
 # Framework validation record
 
-This record covers phases A through C at commit
-`6cfae19a450fd3e821ecdf35b494aa1434591a01`, compared with the merged
-PR #91 squash baseline
-`f4d6861481ee8ac1f7d06351f0e7cab9fafb1ab4`. Phase D is not included.
+This record preserves the initial A-C behavioral validation at commit
+`6cfae19a450fd3e821ecdf35b494aa1434591a01`, compared with merged PR #91
+squash baseline `f4d6861481ee8ac1f7d06351f0e7cab9fafb1ab4`. Its early
+resource figures predate the revised curve dispatch. The final paired release
+comparison and representative release inspection are in
+[RELEASE_PROFILING.md](RELEASE_PROFILING.md). Phase D is not included.
 
 Each product was built sequentially from a clean release state with
 `make -j8 BUILD=<product> release`. The captured configuration has `RELEASE=1`,
@@ -95,6 +97,16 @@ make -j8 BUILD=wayfarer check TESTS='Gameplay progression'
 make -j8 BUILD=<product> release
 ```
 
+Routine host wiring now keeps framework contracts in the existing Expansion
+Suite through `make check` and `gameplay-content-contract-test`. The local
+`gameplay-content-test` aggregate adds `gameplay-content-migration-test`; that
+temporary migration-equivalence target has a separate CI job until the remaining
+v1 content is ported and its legacy comparisons can be retired. After the split,
+the permanent group passed 33 tests in 3.796 seconds, the temporary group passed
+2 tests in 2.802 seconds, and the Make leaves plus local aggregate passed all 35
+in 6.61 seconds. `actionlint` passed for the workflow change. The earlier 35-test
+result above is the pre-split historical aggregate.
+
 From `e2e/`, the rod journey used the directly matched paths and writable runtime
 directories:
 
@@ -119,21 +131,14 @@ reproduced in a clean git archive of baseline `f4d6861`, so it is recorded as a
 pre-existing failure. It does not establish disabled-feature acceptance for this
 work.
 
-## Acceptance boundary
+## Scope
 
-These paired builds show no static-RAM increase, and phases A through C introduce
-no save fields or heap allocation. They do not provide released-ROM cycle or stack
-profiling. A test-only timing diagnostic observed maximum additional cycles of 69
-for league baseline, 49 for league level, 54 for ordinary, and 75 for Gym; that
-instrumented result is not release CPU or stack evidence.
+These checks establish A-C behavior at the recorded source state; the current
+release comparison supplies the final storage evidence. The old TEST timing
+diagnostics are historical only and are not release measurements. The withdrawn
+cycle and stack ceilings do not create missing acceptance work.
 
-Matched release disassembly bounds the evaluator's own frame at 16 bytes: it saves
-`r4`, `r5`, `r6`, and `lr`; the division helper has no stack adjustment. The curve
-loop has at most eight intervals and nine points. This does not bound callers,
-interrupt nesting, or released-ROM execution time, so it is not a substitute for
-the missing dynamic acceptance evidence.
-
-Trainer scaling and encounter semantic adapters remain outside this record. Their
-phase D prerequisite is the trainer-only integration in open PR #85, which has not
-been imported here. The remaining runtime evidence and that prerequisite mean the
-overall gameplay content framework specification is not yet claimed as implemented.
+Trainer scaling and encounter semantic adapters remain phase D work. Rebase and
+refactor #85 on the merged A-C base, then compare its unrefactored and refactored
+forms there. Until that phase passes, the overall framework specification is not
+claimed as implemented.

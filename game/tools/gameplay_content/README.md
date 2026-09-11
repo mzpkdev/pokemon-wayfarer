@@ -15,6 +15,13 @@ make BUILD=wayfarer gameplay-content-test
 make BUILD=wayfarer gameplay-content-report
 ```
 
+`gameplay-content-contract-test` is the permanent host-contract leaf and runs
+through the existing Expansion Suite's `make check`. The local
+`gameplay-content-test` aggregate also runs `gameplay-content-migration-test`.
+That migration-equivalence target has its own temporary CI job and is retired
+after the remaining v1 content is ported and equivalent domain coverage replaces
+its legacy comparisons.
+
 Normal builds generate before dependency scanning. Inputs and the effective
 preprocessor configuration select an immutable directory under
 `build/gameplay-content/<product>/<digest>/`. Only a successful generation updates
@@ -38,12 +45,14 @@ the matching ELF/map, full source commit, exact build command, and captured
 configuration file. It checks ROM boundaries against both artifacts, uses the
 existing ROM reporter, and records static RAM sections and artifact hashes.
 `--base` rejects mismatched product/configuration/toolchain metadata and computes
-storage deltas. CPU, stack, and gameplay acceptance need separate evidence.
-See [VALIDATION.md](VALIDATION.md) for the recorded A through C measurements and
-their current acceptance boundary.
+storage deltas. See [RELEASE_PROFILING.md](RELEASE_PROFILING.md) for the paired
+release comparison and limited release inspection, and
+[VALIDATION.md](VALIDATION.md) for the behavioral checks. These are explicit
+refactor evidence, not routine build or CI work.
 
-Encounter policy adoption remains gated on the integrated trainer-only baseline
-from PR #85. Discovery alone grants no new battle outcome behavior.
+Encounter policy adoption follows A-C delivery: rebase and refactor PR #85 on
+the merged framework, comparing equivalent trainer-only content. Discovery alone
+grants no new battle outcome behavior.
 
 Services are authored in map-local `gameplay.json` sidecars. Script-only bindings
 require exactly one matching effective object; use an authored symbolic local ID
