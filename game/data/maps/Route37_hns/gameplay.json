@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route37_EventScript_Greg",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route37_EventScript_Greg",
+        "map": "Route37_hns"
+      },
+      "review": {
+        "source": "data/maps/Route37_hns/scripts.inc",
+        "commandFingerprint": "b067578668e59f587eb84d5ee03643f7e495f45c91808c2b9b90aacc12e02e5f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 61452
+      }
+    },
+    {
+      "id": "Route37_EventScript_TwinAnn",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route37_EventScript_TwinAnn",
+        "map": "Route37_hns"
+      },
+      "review": {
+        "source": "data/maps/Route37_hns/scripts.inc",
+        "commandFingerprint": "61bf50007a6baa2a50da924f562f9bc45927b620bb0b16be0314ab3777be563f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 61084
+      }
+    },
+    {
+      "id": "Route37_EventScript_TwinAnne",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route37_EventScript_TwinAnne",
+        "map": "Route37_hns"
+      },
+      "review": {
+        "source": "data/maps/Route37_hns/scripts.inc",
+        "commandFingerprint": "aef8a2afa9cb4f844f61473bc2a8dc90ab70e4c2dcfecb2240837e17e5ef8166"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 61084
+      }
+    }
+  ]
+}

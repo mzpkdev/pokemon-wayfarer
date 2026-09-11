@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SSTidalLowerDeck_EventScript_Leonard",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalLowerDeck_EventScript_Leonard",
+        "map": "SSTidalLowerDeck"
+      },
+      "review": {
+        "source": "data/maps/SSTidalLowerDeck/scripts.inc",
+        "commandFingerprint": "a6bfa29dc6a70fd84d3ca5b8add3c599c4f695292c9e98fa0ce058c8aac393c1"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 56268
+      }
+    },
+    {
+      "id": "SSTidalLowerDeck_EventScript_Phillip",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalLowerDeck_EventScript_Phillip",
+        "map": "SSTidalLowerDeck"
+      },
+      "review": {
+        "source": "data/maps/SSTidalLowerDeck/scripts.inc",
+        "commandFingerprint": "f1ff2d9f405390278c4130deb073330f3f6da5dd42f283b6b15408df4d743073"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 3340
+      }
+    }
+  ]
+}

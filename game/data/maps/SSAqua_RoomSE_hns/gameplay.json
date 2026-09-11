@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SSAqua_RoomSE_EventScript_Colin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomSE_EventScript_Colin",
+        "map": "SSAqua_RoomSE_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomSE_hns/scripts.inc",
+        "commandFingerprint": "f6de77b12263be2fffc11a3bea71c25a72c416ce976449ac54a91d1e144aa648"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 19630
+      }
+    },
+    {
+      "id": "SSAqua_RoomSE_EventScript_Meg",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomSE_EventScript_Meg",
+        "map": "SSAqua_RoomSE_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomSE_hns/scripts.inc",
+        "commandFingerprint": "a23acf020335674834adae0d0fd99776944b78361e244b8eabe9a02cb2b3b6d0"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 13486
+      }
+    },
+    {
+      "id": "SSAqua_RoomSE_EventScript_Peg",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomSE_EventScript_Peg",
+        "map": "SSAqua_RoomSE_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomSE_hns/scripts.inc",
+        "commandFingerprint": "d205bb9ec167a6497ac0fd7902ac1ed726b77724216b30c1ebb3cbfc1c0700f2"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 13486
+      }
+    }
+  ]
+}

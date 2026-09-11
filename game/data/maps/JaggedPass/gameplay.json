@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "JaggedPass_EventScript_Autumn",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_Autumn",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "130722fd6bf3bbc1439850c68d28fb794bc3174cc7cb7184ca1ad8d1c89101df"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 45553
+      }
+    },
+    {
+      "id": "JaggedPass_EventScript_Diana",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_Diana",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "4bfe7c8787a6ecb7b5c30faa536082f2377568becf31f81a4133ba65ab8681c9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 51176
+      }
+    },
+    {
+      "id": "JaggedPass_EventScript_DianaRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_DianaRematch",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "f6642589eec4ed0eef5f2615be2ce391c320c6ab1d53e5df148b915168d74895"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 51176
+      },
+      "baseEncounter": "JaggedPass_EventScript_Diana"
+    },
+    {
+      "id": "JaggedPass_EventScript_Eric",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_Eric",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "ddc7654422e00efdd62436308a19b9392c5379643786a181a167739f9205b222"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 36048
+      }
+    },
+    {
+      "id": "JaggedPass_EventScript_Ethan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_Ethan",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "75c3023cc51834082397a1dbefcf3dd080b2d62464b33152748c99c8fd40ff2f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 24517
+      }
+    },
+    {
+      "id": "JaggedPass_EventScript_EthanRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_EthanRematch",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "5f2b06d9488547042f31b60db2bab661ba1f03e073f464b1b39d972518beb8df"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 24517
+      },
+      "baseEncounter": "JaggedPass_EventScript_Ethan"
+    },
+    {
+      "id": "JaggedPass_EventScript_Julio",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "JaggedPass_EventScript_Julio",
+        "map": "JaggedPass"
+      },
+      "review": {
+        "source": "data/maps/JaggedPass/scripts.inc",
+        "commandFingerprint": "15519c3473d113c30255839d7d54d96bc0827426e89c71d400d0bbd6b03312f4"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 26703
+      }
+    }
+  ]
+}

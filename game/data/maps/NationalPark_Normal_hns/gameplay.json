@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "NationalPark_Normal_EventScript_Beverly",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "NationalPark_Normal_EventScript_Beverly",
+        "map": "NationalPark_Normal_hns"
+      },
+      "review": {
+        "source": "data/maps/NationalPark_Normal_hns/scripts.inc",
+        "commandFingerprint": "ba89b0ec2ff3e7c49efdcfc737227bbee6ea97c0fb0625ed655abd6b89ae4cc9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 42085
+      }
+    },
+    {
+      "id": "NationalPark_Normal_EventScript_Jack",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "NationalPark_Normal_EventScript_Jack",
+        "map": "NationalPark_Normal_hns"
+      },
+      "review": {
+        "source": "data/maps/NationalPark_Normal_hns/scripts.inc",
+        "commandFingerprint": "a67a91bf60ba12850efa0b242ef3826cc3accb98db813e6b264439087f71280e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52639
+      }
+    },
+    {
+      "id": "NationalPark_Normal_EventScript_Krise",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "NationalPark_Normal_EventScript_Krise",
+        "map": "NationalPark_Normal_hns"
+      },
+      "review": {
+        "source": "data/maps/NationalPark_Normal_hns/scripts.inc",
+        "commandFingerprint": "4871fda5a6867a5b1ae138999b6714493e538a77f95801afbd27a776d872c3e4"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 37098
+      }
+    },
+    {
+      "id": "NationalPark_Normal_EventScript_RematchBeverly",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "NationalPark_Normal_EventScript_RematchBeverly",
+        "map": "NationalPark_Normal_hns"
+      },
+      "review": {
+        "source": "data/maps/NationalPark_Normal_hns/scripts.inc",
+        "commandFingerprint": "88be5d738880bf68e7bdf7856e5dbcc2502dc59440334d44cbe9b9bea3b2890d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 42085
+      },
+      "baseEncounter": "NationalPark_Normal_EventScript_Beverly"
+    },
+    {
+      "id": "NationalPark_Normal_EventScript_RematchJack",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "NationalPark_Normal_EventScript_RematchJack",
+        "map": "NationalPark_Normal_hns"
+      },
+      "review": {
+        "source": "data/maps/NationalPark_Normal_hns/scripts.inc",
+        "commandFingerprint": "f710fb96d58621eb23014902217016447069eec7dc4aab6f21172a080cc13133"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52639
+      },
+      "baseEncounter": "NationalPark_Normal_EventScript_Jack"
+    },
+    {
+      "id": "NationalPark_Normal_EventScript_William",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "NationalPark_Normal_EventScript_William",
+        "map": "NationalPark_Normal_hns"
+      },
+      "review": {
+        "source": "data/maps/NationalPark_Normal_hns/scripts.inc",
+        "commandFingerprint": "6bcaef960af24fac7881b1504e7298d0d4a81b3ab276049a26fd18ca86029e72"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 51234
+      }
+    }
+  ]
+}

@@ -3,8 +3,9 @@
 This compiler reads the selected map catalog through `mapjson inventory` and
 rosters through the production preprocessor and `trainerproc`. Its host inventory
 keeps source namespace, physical region, raw events, effective events, and resolved
-roster ownership separate. It does not authorize encounters or store generated
-indexes in save data.
+roster ownership separate. Encounter declarations authorize only reviewed caller
+contracts; discovery alone grants no outcome behavior. Generated indexes are never
+stored in save data.
 
 Run from `game/`:
 
@@ -50,9 +51,11 @@ release comparison and limited release inspection, and
 [VALIDATION.md](VALIDATION.md) for the behavioral checks. These are explicit
 refactor evidence, not routine build or CI work.
 
-Encounter policy adoption follows A-C delivery: rebase and refactor PR #85 on
-the merged framework, comparing equivalent trainer-only content. Discovery alone
-grants no new battle outcome behavior.
+Encounter policy adoption uses PR #85 rebased on merged framework main
+`d99050250df47fe785736a7932d0dc33ef22031a`. The unrefactored comparison baseline is
+`f4f602d0dd5e00edae4b49f1f4992d217ed02ed2`. Keep the refactor comparison separate
+from PR #85's incremental cost above main. Phase-D validation is recorded in
+[PHASE_D_VALIDATION.md](PHASE_D_VALIDATION.md).
 
 Services are authored in map-local `gameplay.json` sidecars. Script-only bindings
 require exactly one matching effective object; use an authored symbolic local ID
@@ -75,3 +78,26 @@ builds. Their curve union therefore includes ordinary, soft-cap, Gym, and League
 baselines; gameplay policy still decides whether a battle uses the result. Exact
 identical point arrays are interned, but curve names stay independent. Wild points
 are consumed by the host generator and do not add a runtime curve.
+
+Encounters use map-local sidecars or an explicit context-independent contribution
+in `data/gameplay/shared.json`. Each declaration names a reviewed caller label,
+its source and command fingerprint, and separate scaling/outcome policies. The
+adapter runs the production script preprocessor, CPP, and ARM assembler to select
+actual emitted calls. Every discovered call appears in the report; an unreviewed
+call never enters the outcome registry. Post-link validation checks each declared
+label's opcode, mode, trainer argument, and argument offset in the final ELF.
+
+The ordinary template preserves completed aftertext, rematch identity, dialogue
+keys, and the compact eight-byte runtime rows. Rusturf's Aqua objective and the
+Route 110 rival use closed scene adapters with their existing predicates and
+continuations. The rival declaration explicitly retains its activation rectangle,
+which differs from the map object's coordinates. Other regional scenes remain
+reviewed legacy adapters.
+
+Shared `legacyTrainers` rows own fallback scaling classifications. When every
+compiled caller for an actor has an agreed declaration, the fallback is removed.
+A newly discovered undeclared caller then fails completeness validation. Numeric
+or dynamic trainer operands without a supported closed adapter fail generation. This
+keeps scaling policy independent from permission to return after losing a battle.
+The old trainer-scaling CLI is a compatibility consumer of these declarations;
+the frozen encounter snapshot under `migration_tests/` is test evidence only.

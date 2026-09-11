@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route32_EventScript_BirdkeeperPeter",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_BirdkeeperPeter",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "777cadf09b1d63aed31ef1aaa13c1bd9e49a55c05c5f6b273a92ee0e71c81fdb"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52200
+      }
+    },
+    {
+      "id": "Route32_EventScript_CamperRoland",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_CamperRoland",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "27cdc8779b5be9c7c2aa9ded2de1260907482918674a9ce3bd38281affec1f3d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 59745
+      }
+    },
+    {
+      "id": "Route32_EventScript_FisherHenry",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_FisherHenry",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "d18e7234ea52814d969cb6b625eeffbec08e9537a667e77be22f686cfca30865"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 48362
+      }
+    },
+    {
+      "id": "Route32_EventScript_FisherJustin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_FisherJustin",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "418fdff4af2248958012938b172997da6ed378fc425ca37b1bad2020a429e440"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 1967
+      }
+    },
+    {
+      "id": "Route32_EventScript_FisherRalph",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_FisherRalph",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "d50d5dd67a1f74870ebf4de0cde0d2e9c498e0c9cf584604a41eb3caf75c3440"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 4239
+      }
+    },
+    {
+      "id": "Route32_EventScript_PicnickerLiz",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_PicnickerLiz",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "5d75cc2b7fa2697aba4f727a2746b68ac4ac7cf3635d22c71a3fbc7594898b24"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 34192
+      }
+    },
+    {
+      "id": "Route32_EventScript_RematchLiz",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_RematchLiz",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "99dd89802eef284fd34d8b72cad172f51300f518ba2a6eb80842159b3c80281a"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 34192
+      },
+      "baseEncounter": "Route32_EventScript_PicnickerLiz"
+    },
+    {
+      "id": "Route32_EventScript_RematchRalph",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_RematchRalph",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "1ffd55150eae3f00ed10f571d69848cf66f012cd947b8dfdba6d9aceaf677600"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 4239
+      },
+      "baseEncounter": "Route32_EventScript_FisherRalph"
+    },
+    {
+      "id": "Route32_EventScript_YoungsterAlbert",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_YoungsterAlbert",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "af0824f1b3bd8480304af62345035397075b6fe33b6dc3450975539163e10669"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 19074
+      }
+    },
+    {
+      "id": "Route32_EventScript_YoungsterGordon",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route32_EventScript_YoungsterGordon",
+        "map": "Route32_hns"
+      },
+      "review": {
+        "source": "data/maps/Route32_hns/scripts.inc",
+        "commandFingerprint": "74c0b2fe5ceef43aa9182d62455ad3fb790d5b2f17a77bfd0020b22bd30f4a96"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 61399
+      }
+    }
+  ]
+}

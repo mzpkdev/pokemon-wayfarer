@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtPyre_4F_EventScript_Tasha",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_4F_EventScript_Tasha",
+        "map": "MtPyre_4F"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_5F/scripts.inc",
+        "commandFingerprint": "c686197199094cd0648cd6a9273e1b05f6378287c3e86a3c624eb6af291c6989"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21515
+      }
+    }
+  ]
+}

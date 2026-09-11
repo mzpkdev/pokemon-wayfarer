@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "RocketHideout_B2F_EventScript_Grunt14",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B2F_EventScript_Grunt14",
+        "map": "RocketHideout_B2F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B2F_hns/scripts.inc",
+        "commandFingerprint": "3120739863c1caf25d0d57f63198cec07e727c31f8cb98757898fb44b6aa801b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 6405
+      }
+    },
+    {
+      "id": "RocketHideout_B2F_EventScript_Grunt15",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B2F_EventScript_Grunt15",
+        "map": "RocketHideout_B2F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B2F_hns/scripts.inc",
+        "commandFingerprint": "b0c2f13adf88e3245d22a1939dd6d9e1f4d72b4f162da41bc08fb1791a9c31b2"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 52395
+      }
+    },
+    {
+      "id": "RocketHideout_B2F_EventScript_Grunt16",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B2F_EventScript_Grunt16",
+        "map": "RocketHideout_B2F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B2F_hns/scripts.inc",
+        "commandFingerprint": "5cf8a5740b62f9e327805b259dbe330c59be6cc4672876a6622e6ca09a901c9c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 55894
+      }
+    }
+  ]
+}

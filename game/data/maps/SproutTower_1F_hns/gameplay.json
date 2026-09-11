@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SproutTower_1F_EventScript_SageChow",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SproutTower_1F_EventScript_SageChow",
+        "map": "SproutTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/SproutTower_1F_hns/scripts.inc",
+        "commandFingerprint": "86c54ea5544ce02993f15a61ab50e258ee38f5a35b0204a22f6fab4b2bdc97f0"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21651
+      }
+    }
+  ]
+}

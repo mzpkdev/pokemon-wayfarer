@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "GoldenrodRaidoTower2_EventScript_Grunt3",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodRaidoTower2_EventScript_Grunt3",
+        "map": "GoldenrodCity_RadioTower_2F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_2F_hns/scripts.inc",
+        "commandFingerprint": "ddd2fc0343ae0e963334c570b98f3d563390fa6c01f6c2c4b48176bf7a4ea1df"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 54069
+      }
+    },
+    {
+      "id": "GoldenrodRaidoTower2_EventScript_Grunt4",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodRaidoTower2_EventScript_Grunt4",
+        "map": "GoldenrodCity_RadioTower_2F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_2F_hns/scripts.inc",
+        "commandFingerprint": "980d7eeb59e33fa4ca64ad351f9b972f961dff7d19b8a34865a6495abaad6669"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 60489
+      }
+    },
+    {
+      "id": "GoldenrodRaidoTower2_EventScript_Grunt5",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodRaidoTower2_EventScript_Grunt5",
+        "map": "GoldenrodCity_RadioTower_2F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_2F_hns/scripts.inc",
+        "commandFingerprint": "c58b7286f91c0e3cc3796bd90a451baf4dfcb74f2f581112e1d39d76f22cc37d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 26221
+      }
+    },
+    {
+      "id": "GoldenrodRaidoTower2_EventScript_GruntF2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodRaidoTower2_EventScript_GruntF2",
+        "map": "GoldenrodCity_RadioTower_2F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_2F_hns/scripts.inc",
+        "commandFingerprint": "70faf1c3015b68f878304ee2a799ae0a85b2b165e178f574c7549e8c5f3f99f8"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 15058
+      }
+    }
+  ]
+}

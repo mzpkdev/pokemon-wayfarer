@@ -30,5 +30,233 @@
       }
     }
   ],
-  "encounters": []
+  "encounters": [
+    {
+      "id": "Route118_EventScript_Barny",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Barny",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "8678e0c40b03d023ed8b46a800210648b296c4a40bd2ad5ec001e7427e193beb"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 61393
+      }
+    },
+    {
+      "id": "Route118_EventScript_Chester",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Chester",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "8239d1b2b11394aa3dde4a2926b98cad1584f4d70d2aa3e3a7f380d84be1e076"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 14014
+      }
+    },
+    {
+      "id": "Route118_EventScript_Dalton",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Dalton",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "ade8aec6f9a7ebfee10cf0e456f6e8ed334a960ec1c1daf95c43b86e345494eb"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 26021
+      }
+    },
+    {
+      "id": "Route118_EventScript_Deandre",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Deandre",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "8654e8f51d29eeee7fb773bdcf1f64a9ae2d6853ffd8a9c72361cf0e63e5a278"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 48348
+      }
+    },
+    {
+      "id": "Route118_EventScript_Perry",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Perry",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "d4ea36fb47cc1ec1efb4706594065b675794d2a51bb4ea7c524b5a19450beb31"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 25486
+      }
+    },
+    {
+      "id": "Route118_EventScript_RematchDalton",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_RematchDalton",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "ff947bb37b8eadd7c361d3a4637fa8244d57fc335d8e782804cc843e41057a9f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 26021
+      },
+      "baseEncounter": "Route118_EventScript_Dalton"
+    },
+    {
+      "id": "Route118_EventScript_RematchRose",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_RematchRose",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "e86788371f6750fe697848cc5a9728306fa87d50546a613c5e4d668a33f1098f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 57530
+      },
+      "baseEncounter": "Route118_EventScript_Rose"
+    },
+    {
+      "id": "Route118_EventScript_Rose",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Rose",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "a7ecf61d56065b06b5eefb0ef9c57ca501c462a80b1ec852319989919f193040"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 57530
+      }
+    },
+    {
+      "id": "Route118_EventScript_Wade",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route118_EventScript_Wade",
+        "map": "Route118"
+      },
+      "review": {
+        "source": "data/maps/Route118/scripts.inc",
+        "commandFingerprint": "a96d3694a83e6ae128706228f870f5227e449406bf87cb9bb0254b51db3f648c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 32301
+      }
+    }
+  ]
 }

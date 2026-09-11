@@ -13,5 +13,81 @@
       "profile": "MART_PROFILE_INDIGO_PLATEAU"
     }
   ],
-  "encounters": []
+  "encounters": [
+    {
+      "id": "IndigoPlateau_Silver_Battle_Cyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "IndigoPlateau_Silver_Battle_Cyndaquil",
+        "map": "IndigoPlateau_PokemonCenter_hns"
+      },
+      "review": {
+        "source": "data/maps/IndigoPlateau_PokemonCenter_hns/scripts.inc",
+        "commandFingerprint": "f0ecb7956208c25dd29a592b01cd757093cc783d9dc9f56c0ea1b2146178d36e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "IndigoPlateau_Silver_Battle_Totodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "IndigoPlateau_Silver_Battle_Totodile",
+        "map": "IndigoPlateau_PokemonCenter_hns"
+      },
+      "review": {
+        "source": "data/maps/IndigoPlateau_PokemonCenter_hns/scripts.inc",
+        "commandFingerprint": "72ba1d65873e0e952e7b8480db4512870ff0d1bb471fa9c4ba2c9707fea3a1b0"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "IndigoPlateau_Silver_Battle_Chikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "IndigoPlateau_Silver_Battle_Chikorita",
+        "map": "IndigoPlateau_PokemonCenter_hns"
+      },
+      "review": {
+        "source": "data/maps/IndigoPlateau_PokemonCenter_hns/scripts.inc",
+        "commandFingerprint": "caa43694c73ecfaa744a3d47c78559a95f558a7bd063577e7b5e14a416ffd892"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
 }

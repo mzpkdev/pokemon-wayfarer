@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "GoldenrodUnderground_EventScript_Donald",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodUnderground_EventScript_Donald",
+        "map": "GoldenrodCity_UndergroundTunnel_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundTunnel_hns/scripts.inc",
+        "commandFingerprint": "a67afb3bc4d55d5aa469b805d8ace6193a216f847b467bf5e063d83ea806112e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 17050
+      }
+    },
+    {
+      "id": "GoldenrodUnderground_EventScript_Eric",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodUnderground_EventScript_Eric",
+        "map": "GoldenrodCity_UndergroundTunnel_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundTunnel_hns/scripts.inc",
+        "commandFingerprint": "af2ae37cb271ace14d5c459d98673d24fbe95b479d7b2281b144dc76db5fb157"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11385
+      }
+    },
+    {
+      "id": "GoldenrodUnderground_EventScript_Issac",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodUnderground_EventScript_Issac",
+        "map": "GoldenrodCity_UndergroundTunnel_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundTunnel_hns/scripts.inc",
+        "commandFingerprint": "11add307287065ce170eb57e8608fbed027195a26837694a0038f266731523d5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 6227
+      }
+    },
+    {
+      "id": "GoldenrodUnderground_EventScript_Teru",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodUnderground_EventScript_Teru",
+        "map": "GoldenrodCity_UndergroundTunnel_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundTunnel_hns/scripts.inc",
+        "commandFingerprint": "d15a5c7df32a914bddd3bf8d8c6d5adf11f0934f3ef8fbcf12291d3f842b3c18"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 62933
+      }
+    }
+  ]
+}

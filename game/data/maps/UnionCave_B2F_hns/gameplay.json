@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "UnionCave_B2F_EventScript_CooltrainerNick",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B2F_EventScript_CooltrainerNick",
+        "map": "UnionCave_B2F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B2F_hns/scripts.inc",
+        "commandFingerprint": "a53a24313001c0c17c7b0d6a96656247097cef952dbede30f55c7f63cc17b298"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27046
+      }
+    },
+    {
+      "id": "UnionCave_B2F_EventScript_CooltrainerfEmma",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B2F_EventScript_CooltrainerfEmma",
+        "map": "UnionCave_B2F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B2F_hns/scripts.inc",
+        "commandFingerprint": "74ceae1912f67991dceeaee2180735166a1b2cd6cbe01cb5797b896c33313ad3"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 63939
+      }
+    },
+    {
+      "id": "UnionCave_B2F_EventScript_CooltrainerfGwen",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B2F_EventScript_CooltrainerfGwen",
+        "map": "UnionCave_B2F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B2F_hns/scripts.inc",
+        "commandFingerprint": "f4a5be9598194b5a0988b473b97b18b6fa56f52cd7f40565156ef78959540687"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 32011
+      }
+    }
+  ]
+}

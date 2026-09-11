@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Alola_Poni_TrainerBattleSwimmer1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Poni_TrainerBattleSwimmer1",
+        "map": "PoniIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/PoniIsle_hns/scripts.inc",
+        "commandFingerprint": "a07387789e1885952b539f525603cc433c41d865387c589b08b8cc6208ebdc10"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 51981
+      }
+    },
+    {
+      "id": "Alola_Poni_TrainerBattleSwimmer2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Poni_TrainerBattleSwimmer2",
+        "map": "PoniIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/PoniIsle_hns/scripts.inc",
+        "commandFingerprint": "a4d828ee375f69ccd6ca1606653df30e410a72cdf5e556657a4e3b1868d9c2d1"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 36790
+      }
+    }
+  ]
+}

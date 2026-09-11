@@ -19,18 +19,27 @@ def inputs(root):
                 'data/scripts/**/*.inc', 'data/event_scripts.s',
                 'data/gameplay/*.json', 'src/data/*.party', 'src/data/wayfarer_sevii_maps.json',
                 'src/data/wayfarer_marts.h', 'src/wayfarer_persistence.c', 'include/regions.h',
-                'include/config/*.h',
+                'include/config/*.h', 'include/constants/*.h',
                 'include/constants/global.h', 'include/constants/flags*.h',
                 'include/constants/wayfarer_persistence.h',
                 'include/constants/wayfarer_marts.h',
                 'tools/gameplay_content/**/*.py', 'tools/mapjson/*.cpp',
                 'tools/mapjson/*.h', 'tools/trainerproc/*.c',
-                'tools/trainer_scaling/generate.py')
+                'tools/trainer_scaling/*.py', 'tools/wayfarer_story_encounters/*.py',
+                'src/data/wayfarer_story_encounter_*.h', 'src/wayfarer_story_encounter.c',
+                'include/constants/wayfarer_story_encounters.h',
+                'include/constants/battle_setup.h', 'include/constants/opponents*.h',
+                'include/constants/trainers.h', 'include/wayfarer_story_encounter.h',
+                'asm/macros*.inc', 'asm/macros/*.inc', 'asm/macros/event/*.inc',
+                'constants/*.inc', 'data/wayfarer_*source_constants.inc',
+                'tools/wayfarer_source_constants/*.py', 'tools/wayfarer_sevii_scripts/*.py',
+                'tools/preproc/*.cpp', 'tools/preproc/*.h', 'charmap.txt')
     paths = {path for pattern in patterns for path in root.glob(pattern) if path.is_file()}
     return {str(path.relative_to(root)): hashlib.sha256(path.read_bytes()).hexdigest()
             for path in sorted(paths)}
 
-def compile_content(root, product, cpp, cppflags, domains=("inventory", "progression", "services")):
+def compile_content(root, product, cpp, cppflags, domains=("inventory", "progression", "services", "encounters"),
+                    *, assembler='arm-none-eabi-as', asflags=()):
     defines = numeric_defines(root, cpp, cppflags)
     selected = ('wayfarer' if defines['IS_WAYFARER'] else 'hns' if defines['IS_HNS']
                 else 'leafgreen' if defines['GAMEPLAY_LEAFGREEN'] else 'firered' if defines['IS_FRLG']
@@ -40,12 +49,12 @@ def compile_content(root, product, cpp, cppflags, domains=("inventory", "progres
     maps = load_maps(root, product)
     trainers = load_trainers(root, product, cpp, cppflags)
     hashes = inputs(root)
-    config = {'schemaVersion': 1, 'adapterVersion': 1, 'product': product,
-              'defines': defines, 'domains': sorted(domains), 'cpp': cpp, 'cppflags': cppflags, 'inputHashes': hashes}
-    digest = fingerprint(config)
-    report = dict(config, configurationDigest=digest, maps=maps, trainers=trainers,
+    config = {'schemaVersion': 1, 'adapterVersion': 2, 'product': product,
+              'defines': defines, 'domains': sorted(domains), 'cpp': cpp, 'cppflags': cppflags,
+              'assembler': assembler, 'asflags': asflags, 'inputHashes': hashes}
+    report = dict(config, maps=maps, trainers=trainers,
                   selectedCounts={'maps': len(maps), 'trainers': len(trainers)},
-                  unresolvedCoverage=[], legacyCoverage={'encounters': 'Phase D prerequisite not integrated'},
+                  unresolvedCoverage=[], legacyCoverage={},
                   runtimeResourceEvidence={'phaseA': 'host-only; linked measurements required for runtime adoption'})
     outputs = {}
     if 'progression' in domains:
@@ -57,6 +66,18 @@ def compile_content(root, product, cpp, cppflags, domains=("inventory", "progres
         services = compile_services(root, product, defines, maps, cpp=cpp, cppflags=cppflags)
         outputs.update(services['outputs'])
         report['services'] = services['report']
+    if 'encounters' in domains:
+        from .encounters import compile_encounters
+        encounters = compile_encounters(root, product, defines, maps, trainers, cpp=cpp, cppflags=cppflags,
+                                        service_bindings=outputs.get('gameplay_mart_bindings.inc'),
+                                        assembler=assembler, asflags=asflags)
+        outputs.update(encounters['outputs'])
+        report['encounters'] = encounters['report']
+        hashes.update(encounters['report'].get('scriptInputHashes', {}))
+    # Domain adapters can contribute actual compiler-discovered source inputs.
+    # Fingerprint after their closure is complete, before immutable publication.
+    digest = fingerprint(config)
+    report['configurationDigest'] = digest
     outputs['inventory.json'] = json.dumps(report, indent=2, sort_keys=True) + '\n'
     return digest, outputs
 
@@ -93,14 +114,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('command', choices=('generate', 'check', 'report'))
     parser.add_argument('--product', required=True, choices=('wayfarer', 'hns', 'emerald', 'firered', 'leafgreen'))
-    parser.add_argument('--domains', nargs='+', choices=('inventory', 'progression', 'services'),
-                        default=('inventory', 'progression', 'services'))
+    parser.add_argument('--domains', nargs='+', choices=('inventory', 'progression', 'services', 'encounters'),
+                        default=('inventory', 'progression', 'services', 'encounters'))
     parser.add_argument('--cpp', default='cpp')
     parser.add_argument('--cppflags', required=True)
+    parser.add_argument('--assembler', default='arm-none-eabi-as')
+    parser.add_argument('--asflags', default='')
     parser.add_argument('--output-root', default='build/gameplay-content')
     args = parser.parse_args()
     try:
-        digest, outputs = compile_content(ROOT, args.product, args.cpp, args.cppflags, args.domains)
+        digest, outputs = compile_content(ROOT, args.product, args.cpp, args.cppflags, args.domains,
+                                         assembler=args.assembler, asflags=args.asflags)
         directory = publish(args.output_root, args.product, digest, outputs, args.command == 'check')
         print(directory / 'inventory.json' if args.command == 'report' else directory)
     except (ContentError, ValueError) as exc:

@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtPyre_3F_EventScript_Gabrielle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_3F_EventScript_Gabrielle",
+        "map": "MtPyre_3F"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_3F/scripts.inc",
+        "commandFingerprint": "cd5d13bfa75097c17d18ae10cf5369c5e91b8821773498634140128fe07ac9d3"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 6676
+      }
+    },
+    {
+      "id": "MtPyre_3F_EventScript_Kayla",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_3F_EventScript_Kayla",
+        "map": "MtPyre_3F"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_3F/scripts.inc",
+        "commandFingerprint": "38cad2a4f8ee308cb54198bb4ba63d26bc7fcfe365607861ace812af89bab452"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 12891
+      }
+    },
+    {
+      "id": "MtPyre_3F_EventScript_RematchGabrielle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_3F_EventScript_RematchGabrielle",
+        "map": "MtPyre_3F"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_3F/scripts.inc",
+        "commandFingerprint": "92977c12e73880a4c6f24cae2f6d5279f9a779832eda347a339a23a5c1fd568f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 6676
+      },
+      "baseEncounter": "MtPyre_3F_EventScript_Gabrielle"
+    },
+    {
+      "id": "MtPyre_3F_EventScript_William",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_3F_EventScript_William",
+        "map": "MtPyre_3F"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_3F/scripts.inc",
+        "commandFingerprint": "6b53ec7fe52eea846162796c2bde2a1bbff5717213e9386593a5f5d0b46a8e01"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 64205
+      }
+    }
+  ]
+}

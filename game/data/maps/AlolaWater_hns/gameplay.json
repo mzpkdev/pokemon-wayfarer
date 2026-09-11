@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Alola_MelemeleSea_TrainerBattleSwimmer",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_MelemeleSea_TrainerBattleSwimmer",
+        "map": "AlolaWater_hns"
+      },
+      "review": {
+        "source": "data/maps/AlolaWater_hns/scripts.inc",
+        "commandFingerprint": "1aaa54e35d0470c0c0c97fdabe280132a0072f6017c2e8bf817e0966f27e8df9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 62590
+      }
+    }
+  ]
+}

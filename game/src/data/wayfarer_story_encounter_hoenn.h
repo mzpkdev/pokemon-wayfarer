@@ -220,6 +220,8 @@ static bool8 WayfarerHoennKecleonInvestigationPending(void)
         .activationWidth = (_width), .activationHeight = (_height), .x = (_x), .y = (_y), .isNarrativelyEligible = (_eligible), \
     }
 
+#include "gameplay_encounter_scenes.inc"
+
 const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[] =
 {
     // Authored tutorial: refusal precedes lock/starter presentation, and retains
@@ -241,7 +243,7 @@ const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[] =
     HOENN_ENTRY(RustboroCity_EventScript_BattleBrendanMudkip + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
 
     // Route 110's walking rival is native; restore it only at its real template after recovery. Its bike remains script-only and hidden.
-    HOENN_ENTRY(Route110_EventScript_MayBattleTreecko + 1, Route110_EventScript_WayfarerRivalLossRetreat, Route110_EventScript_RivalScene, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_ROUTE110, WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL, 3, 3, 1, 33, 56, WayfarerHoennRoute110RivalPending),
+    GAMEPLAY_ENCOUNTER_ROUTE110_RIVAL_ROW
     HOENN_ENTRY(Route110_EventScript_MayBattleTorchic + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
     HOENN_ENTRY(Route110_EventScript_MayBattleMudkip + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
     HOENN_ENTRY(Route110_EventScript_BrendanBattleTreecko + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
@@ -278,7 +280,7 @@ const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[] =
 
     // Local objectives retain their victory writers.  Only audited single callers opt into a field retry.
     HOENN_ENTRY(NULL, NULL, SlateportCity_OceanicMuseum_2F_EventScript_CaptStern, 0, WAYFARER_STORY_SCENE_OCEANIC_MUSEUM_STERN, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_STERN, 0, MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennMuseumPending),
-    HOENN_ENTRY(RusturfTunnel_EventScript_GruntTrainerBattle + 1, RusturfTunnel_EventScript_WayfarerGruntLossRetreat, NULL, 20, WAYFARER_STORY_SCENE_RUSTURF_AQUA, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_AQUA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTURF_TUNNEL, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRusturfRescuePending),
+    GAMEPLAY_ENCOUNTER_RUSTURF_AQUA_ROW
     HOENN_ENTRY(MtChimney_EventScript_MaxieTrainerBattle + 1, MtChimney_EventScript_WayfarerMaxieLossRetreat, MtChimney_EventScript_Maxie, 21, WAYFARER_STORY_SCENE_MT_CHIMNEY_MAXIE, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_MT_CHIMNEY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennMtChimneyPending),
     HOENN_ENTRY(MagmaHideout_4F_EventScript_MaxieTrainerBattle + 1, MagmaHideout_4F_EventScript_WayfarerMaxieLossRetreat, MagmaHideout_4F_EventScript_Maxie, 22, WAYFARER_STORY_SCENE_MAGMA_HIDEOUT_MAXIE, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_MAGMA_HIDEOUT_4F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennMagmaHideoutPending),
     HOENN_ENTRY(AquaHideout_B2F_EventScript_Matt + 1, EventScript_WayfarerStoryLossRetreat, NULL, 23, WAYFARER_STORY_SCENE_AQUA_HIDEOUT_MATT, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_AQUA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_AQUA_HIDEOUT_B2F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennAquaHideoutPending),
@@ -297,6 +299,8 @@ const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[] =
 
 const u32 gWayfarerStoryHoennEncounterCount = ARRAY_COUNT(gWayfarerStoryHoennEncounters);
 
+#undef GAMEPLAY_ENCOUNTER_RUSTURF_AQUA_ROW
+#undef GAMEPLAY_ENCOUNTER_ROUTE110_RIVAL_ROW
 #undef HOENN_ENTRY
 
 #else

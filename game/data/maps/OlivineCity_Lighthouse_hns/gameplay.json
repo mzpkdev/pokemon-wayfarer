@@ -1,0 +1,257 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "OlivineLighthouse_EventScript_BirdKeeperDenis",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_BirdKeeperDenis",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "db5ef998a9f09e79090f2062bbb3a02589585a12dad1730a3a1391071c067d49"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27049
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_BirdKeeperTheo",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_BirdKeeperTheo",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "11d22a2905edb83312cffc36150ecfa4817d6b5a49a8ea8707da635c7f45d18c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 24158
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_GentlemanAlfred",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_GentlemanAlfred",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "427206c5058ee5d692faaa4361f6b36306b59e3775686f44d08baf04e0c3688d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 18829
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_GentlemanPreston",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_GentlemanPreston",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "01ca6a3cd3062005daa7e26afe609140e21777d150ca77e8671088358535ea65"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 34631
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_Huey",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_Huey",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "968e77d65e2d72d26884f27239020c18673c8060e64f6373b5bc5182633ccddb"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10888
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_LassConnie",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_LassConnie",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "43db14ed15ce2e7546b8eb7b54b7af52331daa2c07b652f6915c585742ec99f8"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 8208
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_RematchHuey",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_RematchHuey",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "8432601ce136044d85e64b00fff874894cae66463e10fbe8c9238bdc7302358c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10888
+      },
+      "baseEncounter": "OlivineLighthouse_EventScript_Huey"
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_SailorErnest",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_SailorErnest",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "4973af4817bde0a6ea92cbe41052db609cef8c84a42e32b964bdab9f5bcafbd5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 60488
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_SailorKent",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_SailorKent",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "6cc4ad087f55b6f63a604246492502191ed6509f78fb970057e7cfa57dd5c63c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 42569
+      }
+    },
+    {
+      "id": "OlivineLighthouse_EventScript_SailorTerrell",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "OlivineLighthouse_EventScript_SailorTerrell",
+        "map": "OlivineCity_Lighthouse_hns"
+      },
+      "review": {
+        "source": "data/maps/OlivineCity_Lighthouse_hns/scripts.inc",
+        "commandFingerprint": "09b96f23986b34767cb5f762335a276eba672bc424603be16cfd441336eb08da"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 45139
+      }
+    }
+  ]
+}

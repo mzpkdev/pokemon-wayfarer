@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SeafloorCavern_Room3_EventScript_Grunt5",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SeafloorCavern_Room3_EventScript_Grunt5",
+        "map": "SeafloorCavern_Room3"
+      },
+      "review": {
+        "source": "data/maps/SeafloorCavern_Room3/scripts.inc",
+        "commandFingerprint": "a5a290f7d4e639dc5364b2ed141c28562965970084022622815e8bf02fba9f1c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 22217
+      }
+    },
+    {
+      "id": "SeafloorCavern_Room3_EventScript_Shelly",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SeafloorCavern_Room3_EventScript_Shelly",
+        "map": "SeafloorCavern_Room3"
+      },
+      "review": {
+        "source": "data/maps/SeafloorCavern_Room3/scripts.inc",
+        "commandFingerprint": "043aab4055c1170423162b3566ef32c862072ef6bce220abd1ad760fc9048835"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 35837
+      }
+    }
+  ]
+}

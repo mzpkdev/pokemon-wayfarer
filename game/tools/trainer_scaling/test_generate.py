@@ -1,5 +1,6 @@
 """Structural gates for reviewed Trainer classification and roster ownership."""
 import copy
+from collections import Counter
 import unittest
 import generate as gen
 
@@ -78,5 +79,17 @@ class InventoryTests(unittest.TestCase):
     def test_proposal_does_not_match_boss_name_substrings(self):
         records = {'TRAINER_ALFRED_HNS': {'DIFFICULTY_NORMAL': roster(source='src/data/trainers_hns.party')}}
         self.assertEqual(gen.propose(records, {})['records'][0]['policy'], 'ORDINARY')
+
+    def test_complete_caller_policies_replace_pruned_fallback_rows(self):
+        raw = gen.load_inventory()
+        manifest = gen.legacy_manifest(gen.resolve_rosters(raw), gen.references())
+        policies = {row['id']: row['policy'] for row in manifest['records']}
+        self.assertEqual(len(policies), 1513)
+        self.assertEqual(Counter(policies.values()),
+                         {'ORDINARY': 1176, 'EXCLUDED': 203,
+                          'GYM_MEMBER': 104, 'GYM_LEADER': 30})
+        # Charlie's one reviewed caller is complete and therefore no longer has
+        # a legacy row; the derived projection keeps its established policy.
+        self.assertEqual(policies['TRAINER_CHARLIE'], 'ORDINARY')
 
 if __name__ == '__main__': unittest.main()

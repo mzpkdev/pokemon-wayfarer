@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "AbandonedShip_Corridors_B1F_EventScript_Duncan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Corridors_B1F_EventScript_Duncan",
+        "map": "AbandonedShip_Corridors_B1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Corridors_B1F/scripts.inc",
+        "commandFingerprint": "2c6c2e99718c4809576283074dc8e44b2abe46b2fd8259e8cd8da3c308d4ecd8"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 32794
+      }
+    }
+  ]
+}

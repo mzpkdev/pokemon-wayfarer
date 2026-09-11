@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "AzaleaTown_Silver_Battle_Cyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AzaleaTown_Silver_Battle_Cyndaquil",
+        "map": "AzaleaTown_hns"
+      },
+      "review": {
+        "source": "data/maps/AzaleaTown_hns/scripts.inc",
+        "commandFingerprint": "9271eaaad12992eacec3d1cbf4d9a78da69501db24674f41329955a07f2e49c4"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "AzaleaTown_Silver_Battle_Totodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AzaleaTown_Silver_Battle_Totodile",
+        "map": "AzaleaTown_hns"
+      },
+      "review": {
+        "source": "data/maps/AzaleaTown_hns/scripts.inc",
+        "commandFingerprint": "96d930b80101bdc060abd59e40185478f094965e2a7e904edff36980a247f40e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "AzaleaTown_Silver_Battle_Chikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AzaleaTown_Silver_Battle_Chikorita",
+        "map": "AzaleaTown_hns"
+      },
+      "review": {
+        "source": "data/maps/AzaleaTown_hns/scripts.inc",
+        "commandFingerprint": "3bf04bd0a0e8aef48ba3b964d746c84c1a78c864ab529cc81699304309f5d1aa"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "VictoryRoad_B1F_EventScript_Halle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B1F_EventScript_Halle",
+        "map": "VictoryRoad_B1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B1F/scripts.inc",
+        "commandFingerprint": "0c0c5156c024102a3abd9ead588d8f24ea1c66e45c86f68c92a43488fed97b9f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 44234
+      }
+    },
+    {
+      "id": "VictoryRoad_B1F_EventScript_Michelle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B1F_EventScript_Michelle",
+        "map": "VictoryRoad_B1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B1F/scripts.inc",
+        "commandFingerprint": "7e8033897123baf7379d77d14b3243a1b684dc5d45789b1268fb0883e9184b72"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 28379
+      }
+    },
+    {
+      "id": "VictoryRoad_B1F_EventScript_Mitchell",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B1F_EventScript_Mitchell",
+        "map": "VictoryRoad_B1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B1F/scripts.inc",
+        "commandFingerprint": "cb2c435e6d620040932f6965fd2b475da97b3f552837dbc8a0ec5882dc161f1c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 37279
+      }
+    },
+    {
+      "id": "VictoryRoad_B1F_EventScript_Samuel",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B1F_EventScript_Samuel",
+        "map": "VictoryRoad_B1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B1F/scripts.inc",
+        "commandFingerprint": "74d244fe5509aa130541b89fcc69b3d28ad2823242f7a3fec015dcfddf9b8a72"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 8479
+      }
+    },
+    {
+      "id": "VictoryRoad_B1F_EventScript_Shannon",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B1F_EventScript_Shannon",
+        "map": "VictoryRoad_B1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B1F/scripts.inc",
+        "commandFingerprint": "2d3e7a588e27234f3271b0dc5359ec5429513f43bd06b5f4b581c37fb3daca89"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 30066
+      }
+    }
+  ]
+}

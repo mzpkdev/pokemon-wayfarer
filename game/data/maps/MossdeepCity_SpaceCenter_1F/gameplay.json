@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt1",
+        "map": "MossdeepCity_SpaceCenter_1F"
+      },
+      "review": {
+        "source": "data/maps/MossdeepCity_SpaceCenter_1F/scripts.inc",
+        "commandFingerprint": "b7c1b9244a0994eb3021a7793114f27bb545afe105709abc113f16b8e4555347"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 6470
+      }
+    },
+    {
+      "id": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt3",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt3",
+        "map": "MossdeepCity_SpaceCenter_1F"
+      },
+      "review": {
+        "source": "data/maps/MossdeepCity_SpaceCenter_1F/scripts.inc",
+        "commandFingerprint": "6b151c688094ecf632b956bceeaa8b4c72f0393a7b63ce5786b52ec52442ffa0"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 12678
+      }
+    },
+    {
+      "id": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt4",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt4",
+        "map": "MossdeepCity_SpaceCenter_1F"
+      },
+      "review": {
+        "source": "data/maps/MossdeepCity_SpaceCenter_1F/scripts.inc",
+        "commandFingerprint": "d4434462121f84c63a728ddbb326089d9f291dae4afcce33c58709ef6a3e4284"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 32530
+      }
+    },
+    {
+      "id": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt2TrainerBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MossdeepCity_SpaceCenter_1F_EventScript_Grunt2TrainerBattle",
+        "map": "MossdeepCity_SpaceCenter_1F"
+      },
+      "review": {
+        "source": "data/maps/MossdeepCity_SpaceCenter_1F/scripts.inc",
+        "commandFingerprint": "cbeb829bc5ef79fbe02c91589174a9f131109639ee51113a082e85e2a8338ea0"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

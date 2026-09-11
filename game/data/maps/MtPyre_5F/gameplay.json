@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtPyre_5F_EventScript_Atsushi",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_5F_EventScript_Atsushi",
+        "map": "MtPyre_5F"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_4F/scripts.inc",
+        "commandFingerprint": "f4e7fdda1db4b65fa5973e9c9ca0d6f3ebe020b0e8c166bf73896c635f080da8"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 48613
+      }
+    }
+  ]
+}

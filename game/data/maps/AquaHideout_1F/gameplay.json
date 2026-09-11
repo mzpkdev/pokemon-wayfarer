@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "AquaHideout_1F_EventScript_Grunt1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AquaHideout_1F_EventScript_Grunt1",
+        "map": "AquaHideout_1F"
+      },
+      "review": {
+        "source": "data/maps/AquaHideout_1F/scripts.inc",
+        "commandFingerprint": "1da2b14a34a7775d767939c852887875691ef7ff32180037c16c503838cee862"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 51578
+      }
+    }
+  ]
+}

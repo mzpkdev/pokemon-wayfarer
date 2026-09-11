@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "AquaHideout_B1F_EventScript_Grunt2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AquaHideout_B1F_EventScript_Grunt2",
+        "map": "AquaHideout_B1F"
+      },
+      "review": {
+        "source": "data/maps/AquaHideout_B1F/scripts.inc",
+        "commandFingerprint": "3eda59ea2a84c941db99623a1bacd96a6f7364800dd676b7e704f165c3e4c596"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 64446
+      }
+    },
+    {
+      "id": "AquaHideout_B1F_EventScript_Grunt3",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AquaHideout_B1F_EventScript_Grunt3",
+        "map": "AquaHideout_B1F"
+      },
+      "review": {
+        "source": "data/maps/AquaHideout_B1F/scripts.inc",
+        "commandFingerprint": "d0619bc1cc4c1c4ae1a6fc87ddaa8bad81137c20901a0702207afd18efcfae96"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 35978
+      }
+    },
+    {
+      "id": "AquaHideout_B1F_EventScript_Grunt5",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AquaHideout_B1F_EventScript_Grunt5",
+        "map": "AquaHideout_B1F"
+      },
+      "review": {
+        "source": "data/maps/AquaHideout_B1F/scripts.inc",
+        "commandFingerprint": "c0d3f1bdca1f6acebb632ef702d5c2f54dc4b03c9142f9bfbb4e2e7646bcef63"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 35830
+      }
+    },
+    {
+      "id": "AquaHideout_B1F_EventScript_Grunt7",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AquaHideout_B1F_EventScript_Grunt7",
+        "map": "AquaHideout_B1F"
+      },
+      "review": {
+        "source": "data/maps/AquaHideout_B1F/scripts.inc",
+        "commandFingerprint": "b609d394c58b22ae4f705246d568986c97b0355b9fa74d5ab14e7172b879d9b9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 4949
+      }
+    }
+  ]
+}

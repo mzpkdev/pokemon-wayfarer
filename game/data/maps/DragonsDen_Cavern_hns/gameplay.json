@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "DragonsDen_Cavern_EventScript_Cara",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "DragonsDen_Cavern_EventScript_Cara",
+        "map": "DragonsDen_Cavern_hns"
+      },
+      "review": {
+        "source": "data/maps/DragonsDen_Cavern_hns/scripts.inc",
+        "commandFingerprint": "1829fd1f8d16d7d13d49cfdf07ae4ed7fb20f39cdf26fd48c66d21a283502463"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10742
+      }
+    },
+    {
+      "id": "DragonsDen_Cavern_EventScript_Darin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "DragonsDen_Cavern_EventScript_Darin",
+        "map": "DragonsDen_Cavern_hns"
+      },
+      "review": {
+        "source": "data/maps/DragonsDen_Cavern_hns/scripts.inc",
+        "commandFingerprint": "e3f5d68bb9c5a4f84984f2926095f3cadab0abe1adebdaaca4a8f4bc5768ae9f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 39296
+      }
+    },
+    {
+      "id": "DragonsDen_Cavern_EventScript_TwinLea",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "DragonsDen_Cavern_EventScript_TwinLea",
+        "map": "DragonsDen_Cavern_hns"
+      },
+      "review": {
+        "source": "data/maps/DragonsDen_Cavern_hns/scripts.inc",
+        "commandFingerprint": "d8602ba97cb2f6b2fc9755081ab64900a2bbf086ee7f6e6e4c1fb47664bc2897"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 36073
+      }
+    },
+    {
+      "id": "DragonsDen_Cavern_EventScript_TwinPia",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "DragonsDen_Cavern_EventScript_TwinPia",
+        "map": "DragonsDen_Cavern_hns"
+      },
+      "review": {
+        "source": "data/maps/DragonsDen_Cavern_hns/scripts.inc",
+        "commandFingerprint": "e0275c3895c3a1d9ef5b9e6e0cf3b101deca5d03cda3a1704639780ef8519d16"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 36073
+      }
+    }
+  ]
+}

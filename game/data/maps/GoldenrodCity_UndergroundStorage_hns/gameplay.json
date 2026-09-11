@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "GoldenrodCity_UndergroundStorage_EventScript_Eto",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundStorage_EventScript_Eto",
+        "map": "GoldenrodCity_UndergroundStorage_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundStorage_hns/scripts.inc",
+        "commandFingerprint": "1fb12fa78c7032056505305d2ec14b4925fbabefe0ee676c0fffd7176e06d051"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 63727
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundStorage_EventScript_Grunt12",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundStorage_EventScript_Grunt12",
+        "map": "GoldenrodCity_UndergroundStorage_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundStorage_hns/scripts.inc",
+        "commandFingerprint": "6516e8c2ac4a515d5a679406f9585a8b6582c5b9e5c71ebd5888cd8902a427f0"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 48945
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundStorage_EventScript_Grunt19",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundStorage_EventScript_Grunt19",
+        "map": "GoldenrodCity_UndergroundStorage_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundStorage_hns/scripts.inc",
+        "commandFingerprint": "f56057cb4f1385de734a0b50bafeb887c1ac876631aac2e8c16ba0dfaf842884"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 47674
+      }
+    }
+  ]
+}

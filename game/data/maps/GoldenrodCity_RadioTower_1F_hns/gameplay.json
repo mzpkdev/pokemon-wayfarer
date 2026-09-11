@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "RadioTower1F_EventScript_GruntBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RadioTower1F_EventScript_GruntBattle",
+        "map": "GoldenrodCity_RadioTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_1F_hns/scripts.inc",
+        "commandFingerprint": "f91715b884658af3a915fccef522d8a3a70e1c40986fe155e533de4226ce9f41"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

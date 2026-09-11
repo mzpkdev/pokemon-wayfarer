@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MagmaHideout_3F_1R_EventScript_Grunt16",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_3F_1R_EventScript_Grunt16",
+        "map": "MagmaHideout_3F_1R"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_3F_1R/scripts.inc",
+        "commandFingerprint": "3ef5a1c5c36bde3841029cd5175dc5e6f0095e86cdfad2ceffbfad26ea5dfc92"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 20113
+      }
+    },
+    {
+      "id": "MagmaHideout_3F_1R_EventScript_Grunt9",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_3F_1R_EventScript_Grunt9",
+        "map": "MagmaHideout_3F_1R"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_3F_1R/scripts.inc",
+        "commandFingerprint": "a8305c1fa7db525708a457f3d7f20dbe7c2c6c90dbf7b57f166babbefb38aeeb"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 24980
+      }
+    }
+  ]
+}

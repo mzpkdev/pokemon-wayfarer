@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SproutTower_3F_EventScript_SageJin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SproutTower_3F_EventScript_SageJin",
+        "map": "SproutTower_3F_hns"
+      },
+      "review": {
+        "source": "data/maps/SproutTower_3F_hns/scripts.inc",
+        "commandFingerprint": "2d57dca8f6c4810b98bcb3cfaa5c5d539d06980767f83368ed117d1f8b512363"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 41185
+      }
+    },
+    {
+      "id": "SproutTower_3F_EventScript_SageNeal",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SproutTower_3F_EventScript_SageNeal",
+        "map": "SproutTower_3F_hns"
+      },
+      "review": {
+        "source": "data/maps/SproutTower_3F_hns/scripts.inc",
+        "commandFingerprint": "20969b009a676f3b640c11194006b4e94df6c3d33eb20ddddf0a14cb417578de"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 54075
+      }
+    },
+    {
+      "id": "SproutTower_3F_EventScript_SageTroy",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SproutTower_3F_EventScript_SageTroy",
+        "map": "SproutTower_3F_hns"
+      },
+      "review": {
+        "source": "data/maps/SproutTower_3F_hns/scripts.inc",
+        "commandFingerprint": "5dd91b8f4e88474680f85e796dff92193e874acfd16af76417f0a0c9781c5981"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21324
+      }
+    },
+    {
+      "id": "SproutTower_3F_EventScript_SageLi_Battle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SproutTower_3F_EventScript_SageLi_Battle",
+        "map": "SproutTower_3F_hns"
+      },
+      "review": {
+        "source": "data/maps/SproutTower_3F_hns/scripts.inc",
+        "commandFingerprint": "39758cf59df6a211f368fdb8317816e123fcdb63e05527278864bc6daa23101f"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

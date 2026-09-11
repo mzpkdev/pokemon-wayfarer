@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SlowpokeWell_B1F_EventScript_Eto",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SlowpokeWell_B1F_EventScript_Eto",
+        "map": "SlowpokeWell_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/SlowpokeWell_B1F_hns/scripts.inc",
+        "commandFingerprint": "a55f7228af62290457af1626d569a2223357090faed0c64bcf0f952caabe1d0b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 52213
+      }
+    },
+    {
+      "id": "SlowpokeWell_B1F_EventScript_Grunt21",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SlowpokeWell_B1F_EventScript_Grunt21",
+        "map": "SlowpokeWell_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/SlowpokeWell_B1F_hns/scripts.inc",
+        "commandFingerprint": "12f729a2d09e8e24569ada861184f6e58ec6a25d5da41d245a228989791164b8"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 59145
+      }
+    },
+    {
+      "id": "SlowpokeWell_B1F_EventScript_Grunt22F",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SlowpokeWell_B1F_EventScript_Grunt22F",
+        "map": "SlowpokeWell_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/SlowpokeWell_B1F_hns/scripts.inc",
+        "commandFingerprint": "c34128e1fea75983147f63471b9381414277406ee98dcabc2af419f7fd3c2e75"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 56854
+      }
+    },
+    {
+      "id": "SlowpokeWell_B1F_EventScript_ProtonBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SlowpokeWell_B1F_EventScript_ProtonBattle",
+        "map": "SlowpokeWell_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/SlowpokeWell_B1F_hns/scripts.inc",
+        "commandFingerprint": "e3a4321badc3cbf25ea94e3bb7161ac0cd8a2fcc62406e8cb0ff281ef31491cb"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

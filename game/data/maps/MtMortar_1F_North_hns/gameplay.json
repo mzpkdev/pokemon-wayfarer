@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtMortar_1F_North_EventScript_Markus",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtMortar_1F_North_EventScript_Markus",
+        "map": "MtMortar_1F_North_hns"
+      },
+      "review": {
+        "source": "data/maps/MtMortar_1F_North_hns/scripts.inc",
+        "commandFingerprint": "b3fc9ec2050900e1ef78c2a7999949440e278560f6a002f37842eeddedd4ed17"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 50993
+      }
+    },
+    {
+      "id": "MtMortar_1F_North_EventScript_Miller",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtMortar_1F_North_EventScript_Miller",
+        "map": "MtMortar_1F_North_hns"
+      },
+      "review": {
+        "source": "data/maps/MtMortar_1F_North_hns/scripts.inc",
+        "commandFingerprint": "8203846ea39c956a33828476a4a24f1fbbe6a79b9165fd18dde1571467281950"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 63656
+      }
+    }
+  ]
+}

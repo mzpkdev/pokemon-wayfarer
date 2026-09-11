@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "LakeOfRage_EventScript_Aaron",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LakeOfRage_EventScript_Aaron",
+        "map": "LakeOfRage_hns"
+      },
+      "review": {
+        "source": "data/maps/LakeOfRage_hns/scripts.inc",
+        "commandFingerprint": "748241f0a2032926c17814ccde33a872c6224bff217d5109cbec820ff58cb9ef"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 64319
+      }
+    },
+    {
+      "id": "LakeOfRage_EventScript_Andre",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LakeOfRage_EventScript_Andre",
+        "map": "LakeOfRage_hns"
+      },
+      "review": {
+        "source": "data/maps/LakeOfRage_hns/scripts.inc",
+        "commandFingerprint": "1b2ca32bf39471d342755e313913c2aae98adc8183a14d7de9f1647c46783d23"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 30212
+      }
+    },
+    {
+      "id": "LakeOfRage_EventScript_Lois",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LakeOfRage_EventScript_Lois",
+        "map": "LakeOfRage_hns"
+      },
+      "review": {
+        "source": "data/maps/LakeOfRage_hns/scripts.inc",
+        "commandFingerprint": "19639af6dff82c582f4493201735a857e9402ea57cf4d9e8834e17365c86da72"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11370
+      }
+    },
+    {
+      "id": "LakeOfRage_EventScript_Raymond",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LakeOfRage_EventScript_Raymond",
+        "map": "LakeOfRage_hns"
+      },
+      "review": {
+        "source": "data/maps/LakeOfRage_hns/scripts.inc",
+        "commandFingerprint": "9073ac2eac4485d1252cd544b4ccebb2188c0da6d66e84b37688900fd8738809"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 56437
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route14_EventScript_Carter",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route14_EventScript_Carter",
+        "map": "Route14_hns"
+      },
+      "review": {
+        "source": "data/maps/Route14_hns/scripts.inc",
+        "commandFingerprint": "9b473c823a4816d1da78930043c5d96826cc7d941ac09d2631b878dddab90615"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 820
+      }
+    },
+    {
+      "id": "Route14_EventScript_RematchCarter",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route14_EventScript_RematchCarter",
+        "map": "Route14_hns"
+      },
+      "review": {
+        "source": "data/maps/Route14_hns/scripts.inc",
+        "commandFingerprint": "5a02924a31c5971432b2da2fbf1906edeb329bc998c1bf64ced97e334bdd8f16"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 820
+      },
+      "baseEncounter": "Route14_EventScript_Carter"
+    },
+    {
+      "id": "Route14_EventScript_RematchTrevor",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route14_EventScript_RematchTrevor",
+        "map": "Route14_hns"
+      },
+      "review": {
+        "source": "data/maps/Route14_hns/scripts.inc",
+        "commandFingerprint": "f8708a4df903e9a19bc5b54f107049dc0b656b1467ed59de6a7f169b2cc33b85"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 35060
+      },
+      "baseEncounter": "Route14_EventScript_Trevor"
+    },
+    {
+      "id": "Route14_EventScript_Roy",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route14_EventScript_Roy",
+        "map": "Route14_hns"
+      },
+      "review": {
+        "source": "data/maps/Route14_hns/scripts.inc",
+        "commandFingerprint": "bac19f59d5fa15fad5becd4e6dced2d03933be5a58d1a87a8cc2f848199daf92"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 36929
+      }
+    },
+    {
+      "id": "Route14_EventScript_Trevor",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route14_EventScript_Trevor",
+        "map": "Route14_hns"
+      },
+      "review": {
+        "source": "data/maps/Route14_hns/scripts.inc",
+        "commandFingerprint": "380854786e9430bee315144c526660a143f1b63ae532c48d80d5dcf8899bc0e2"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 35060
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "RuinsOfAlph_Outside_EventScript_Nathan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RuinsOfAlph_Outside_EventScript_Nathan",
+        "map": "RuinsOfAlph_Outside_hns"
+      },
+      "review": {
+        "source": "data/maps/RuinsOfAlph_Outside_hns/scripts.inc",
+        "commandFingerprint": "79b9baea8af2997586fa82b30e03f5ef8c271dd9bf0b5aac925f9f9b42636787"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10678
+      }
+    },
+    {
+      "id": "RuinsOfAlph_Outside_EventScript_Stan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RuinsOfAlph_Outside_EventScript_Stan",
+        "map": "RuinsOfAlph_Outside_hns"
+      },
+      "review": {
+        "source": "data/maps/RuinsOfAlph_Outside_hns/scripts.inc",
+        "commandFingerprint": "a310a051f63977a00d71bda569d5164fc03463b46335d6951077fdc079ad9771"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10206
+      }
+    }
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "BurnedTower_1F_EventScript_Nard",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "BurnedTower_1F_EventScript_Nard",
+        "map": "BurnedTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/BurnedTower_1F_hns/scripts.inc",
+        "commandFingerprint": "c9fe43e4d01585d5df45dfbd758fee89f6018e510872295e4b027e6e8d0ced25"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52593
+      }
+    },
+    {
+      "id": "BurnedTower_1F_EventScript_Richardo",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "BurnedTower_1F_EventScript_Richardo",
+        "map": "BurnedTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/BurnedTower_1F_hns/scripts.inc",
+        "commandFingerprint": "15ee68d3bd260f97231a21ac1b289442ba4f058f59df4a2a838f51dd6aba9a60"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52925
+      }
+    },
+    {
+      "id": "BurnedTower_1F_Silver_Battle_Cyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "BurnedTower_1F_Silver_Battle_Cyndaquil",
+        "map": "BurnedTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/BurnedTower_1F_hns/scripts.inc",
+        "commandFingerprint": "bbe9bd488532921ad1d30d9cefe670def4b1a370ee00387fbdbd49b3084366f3"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "BurnedTower_1F_Silver_Battle_Totodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "BurnedTower_1F_Silver_Battle_Totodile",
+        "map": "BurnedTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/BurnedTower_1F_hns/scripts.inc",
+        "commandFingerprint": "bc030db5c00dfec18620cc308419af2eb6cb2005982698c5e7c6e7841c839975"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "BurnedTower_1F_Silver_Battle_Chikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "BurnedTower_1F_Silver_Battle_Chikorita",
+        "map": "BurnedTower_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/BurnedTower_1F_hns/scripts.inc",
+        "commandFingerprint": "1e1cd8c4c236df313cc2b8e468cad56d995452c26db07bb33f4986f9cb698c3e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

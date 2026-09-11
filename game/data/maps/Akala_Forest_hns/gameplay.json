@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Alola_AkalaForest_TrainerBattleBugCatcher1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_AkalaForest_TrainerBattleBugCatcher1",
+        "map": "Akala_Forest_hns"
+      },
+      "review": {
+        "source": "data/maps/Akala_Forest_hns/scripts.inc",
+        "commandFingerprint": "610776f3f855e53e4b0b28e2642a49842e7fe14a48912339a47c562b2942da44"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 51436
+      }
+    },
+    {
+      "id": "Alola_AkalaForest_TrainerBattleBugCatcher2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_AkalaForest_TrainerBattleBugCatcher2",
+        "map": "Akala_Forest_hns"
+      },
+      "review": {
+        "source": "data/maps/Akala_Forest_hns/scripts.inc",
+        "commandFingerprint": "de75916dd737d791ff667d414d367b91c31310f835bca6e0b4a9db0a14ae2011"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 17989
+      }
+    }
+  ]
+}

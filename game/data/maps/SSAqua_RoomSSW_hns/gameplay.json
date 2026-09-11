@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SSAqua_RoomSSW_EventScript_Ken",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomSSW_EventScript_Ken",
+        "map": "SSAqua_RoomSSW_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomSSW_hns/scripts.inc",
+        "commandFingerprint": "096f6f4e569f2aa0bd06b713e76456c303318e0e6ebc93df0c2fba010cecf754"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 12172
+      }
+    },
+    {
+      "id": "SSAqua_RoomSSW_EventScript_Lyle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomSSW_EventScript_Lyle",
+        "map": "SSAqua_RoomSSW_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomSSW_hns/scripts.inc",
+        "commandFingerprint": "4ef5b57ff1b883eaabe42b7409984624fcafd1c0bc3c3874e0daaf30ecf72946"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21917
+      }
+    }
+  ]
+}

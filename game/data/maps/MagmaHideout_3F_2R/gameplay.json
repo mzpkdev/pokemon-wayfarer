@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MagmaHideout_3F_2R_EventScript_Grunt10",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_3F_2R_EventScript_Grunt10",
+        "map": "MagmaHideout_3F_2R"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_3F_2R/scripts.inc",
+        "commandFingerprint": "617d47e4d07d6840862841e9d71c9138ad7ec907636999859db6088da3abc530"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 37501
+      }
+    }
+  ]
+}

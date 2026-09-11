@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "UnionCave_B1F_EventScript_HikerLeonard",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B1F_EventScript_HikerLeonard",
+        "map": "UnionCave_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B1F_hns/scripts.inc",
+        "commandFingerprint": "40588962193d0adf71c1b093b55cdc27f3a40dae77a473e4ac9199b329ff2a5b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27705
+      }
+    },
+    {
+      "id": "UnionCave_B1F_EventScript_HikerPhillip",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B1F_EventScript_HikerPhillip",
+        "map": "UnionCave_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B1F_hns/scripts.inc",
+        "commandFingerprint": "812ae5ab67c8fb6386d992a84cd56176a1db2161e4f113aaf160dd6017cecb30"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 47562
+      }
+    },
+    {
+      "id": "UnionCave_B1F_EventScript_PokemaniacAndrew",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B1F_EventScript_PokemaniacAndrew",
+        "map": "UnionCave_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B1F_hns/scripts.inc",
+        "commandFingerprint": "b08fec67e965b30c33f79325a6cf692a939692d2ccff23e8157c7c1e8a82ea8b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11380
+      }
+    },
+    {
+      "id": "UnionCave_B1F_EventScript_PokemaniacCalvin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_B1F_EventScript_PokemaniacCalvin",
+        "map": "UnionCave_B1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_B1F_hns/scripts.inc",
+        "commandFingerprint": "7f3d63a90891d6fffb64ede2a2618c9fe1f6c2c7300e1d2bf8d59d845628a8a5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 32170
+      }
+    }
+  ]
+}

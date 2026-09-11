@@ -1,0 +1,159 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MeteorFalls_1F_2R_EventScript_Jay",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MeteorFalls_1F_2R_EventScript_Jay",
+        "map": "MeteorFalls_1F_2R"
+      },
+      "review": {
+        "source": "data/maps/MeteorFalls_1F_2R/scripts.inc",
+        "commandFingerprint": "d21e6dceaf94f4a3a3c60cc2119b77f4a5341301073299e5b1b919951a0e37ae"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 11970
+      }
+    },
+    {
+      "id": "MeteorFalls_1F_2R_EventScript_John",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MeteorFalls_1F_2R_EventScript_John",
+        "map": "MeteorFalls_1F_2R"
+      },
+      "review": {
+        "source": "data/maps/MeteorFalls_1F_2R/scripts.inc",
+        "commandFingerprint": "d1f2f8b9f5e05b2c6690c215fdf07b79e8327e0072f59d291a0574dd5df6e3f7"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 11970
+      }
+    },
+    {
+      "id": "MeteorFalls_1F_2R_EventScript_Nicolas",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MeteorFalls_1F_2R_EventScript_Nicolas",
+        "map": "MeteorFalls_1F_2R"
+      },
+      "review": {
+        "source": "data/maps/MeteorFalls_1F_2R/scripts.inc",
+        "commandFingerprint": "4bd1f0e1bb839fce6f6514902b5afe207559462ca8bf19dc1333ceb7ab796039"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 50369
+      }
+    },
+    {
+      "id": "MeteorFalls_1F_2R_EventScript_RematchJay",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MeteorFalls_1F_2R_EventScript_RematchJay",
+        "map": "MeteorFalls_1F_2R"
+      },
+      "review": {
+        "source": "data/maps/MeteorFalls_1F_2R/scripts.inc",
+        "commandFingerprint": "a36ece3b6af8c9239a3bf2ef964d2cb7cc336f1eef928d1cc84f275e5e1d363f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 11970
+      },
+      "baseEncounter": "MeteorFalls_1F_2R_EventScript_Jay"
+    },
+    {
+      "id": "MeteorFalls_1F_2R_EventScript_RematchJohn",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MeteorFalls_1F_2R_EventScript_RematchJohn",
+        "map": "MeteorFalls_1F_2R"
+      },
+      "review": {
+        "source": "data/maps/MeteorFalls_1F_2R/scripts.inc",
+        "commandFingerprint": "e4781648139b2a0c770e5fe92744d6799a59ac9de199e49ca4a17c0360d9b621"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 11970
+      },
+      "baseEncounter": "MeteorFalls_1F_2R_EventScript_Jay"
+    },
+    {
+      "id": "MeteorFalls_1F_2R_EventScript_RematchNicolas",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MeteorFalls_1F_2R_EventScript_RematchNicolas",
+        "map": "MeteorFalls_1F_2R"
+      },
+      "review": {
+        "source": "data/maps/MeteorFalls_1F_2R/scripts.inc",
+        "commandFingerprint": "038fe2efdf16af3c4d57fcfb57c8d600f7ef755606b3f01a846c983b71968b9b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 50369
+      },
+      "baseEncounter": "MeteorFalls_1F_2R_EventScript_Nicolas"
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Duncan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Duncan",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "8a0a658c786c3be2d8b9d0c66d7a180a1012603f0cc22ebec2dedb2298c0159a"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 43951
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Eddie",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Eddie",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "ebe6b13c9c608739b1db4555bd5895a9bf08e0f76168a654c41eabab475957c6"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 16523
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt10",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt10",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "59352f95cfd6ec62770feb525e96e2d752305e015afe0270f0f35bfbca0dd2d5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 41344
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt11",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt11",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "d9ee35fdc1dffb863956f524b429bad32772a4afe2c2073e87755e777dda588f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 49600
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt20",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt20",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "e63b93e75b0386dbf0570c97df13f6d54850348800b4a4246394893dee65a650"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 878
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt27",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Grunt27",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "e46873a46be276aeaf0dc7a81902e7cbb617898d3de63bfb744d4969ebb57a0f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 37680
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Cyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Cyndaquil",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "e779051afe3c3684025e347b8de191f1ce36415f4474b90daf9c7d5bfd2a03ba"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Totodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Totodile",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "9ea1a597a30165abe8b196f413a231b5345f01edd010bfb9d1f727e898d53299"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_Chikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_Chikorita",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "4c3defb94daf24056b8a6cf467db22a6b18b993d9aa7e8d8d49c233005802ceb"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnCyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnCyndaquil",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "e779051afe3c3684025e347b8de191f1ce36415f4474b90daf9c7d5bfd2a03ba"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnTotodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnTotodile",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "9ea1a597a30165abe8b196f413a231b5345f01edd010bfb9d1f727e898d53299"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnChikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_UndergroundSwitches_EventScript_SilverReturnChikorita",
+        "map": "GoldenrodCity_UndergroundSwitches_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_UndergroundSwitches_hns/scripts.inc",
+        "commandFingerprint": "4c3defb94daf24056b8a6cf467db22a6b18b993d9aa7e8d8d49c233005802ceb"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

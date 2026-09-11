@@ -1,0 +1,206 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "VictoryRoad_1F_EventScript_Albert",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_Albert",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "c21f3c5a1a7e83c06712f5d7f7815e557e8448cf6271bba80ec76ae57221ec61"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11502
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_Edgar",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_Edgar",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "cebcb6ba07bbaef807917aad4cfdf102b516e073d0bd5dfde0ee8db3731ed984"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 54726
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_Hope",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_Hope",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "dce47cf149655a88dda7ae8a2f41f82726134a11e57f65e6d042bc277795d192"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11686
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_Katelynn",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_Katelynn",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "5cc56e25b0abf38f4574fbc45147d292d2c41746b4caabb99086658fdfbb3044"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 24878
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_Quincy",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_Quincy",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "30c39809378a78f79d62bc785c765b07a92ef1570e68174e5cae9a208d5b6cdd"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 63637
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_WallyEntranceTrainerBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_WallyEntranceTrainerBattle",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "2a9c43be0e7dddb0fca04701da37381f02be76320e04e177863a1e802c85e594"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_ExitWally",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_ExitWally",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "b72a9f69287bf54ea1749898ea949e2920fc9b627f2ddf54276546ab0bde4e9e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "VictoryRoad_1F_EventScript_RematchWally",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_1F_EventScript_RematchWally",
+        "map": "VictoryRoad_1F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_1F/scripts.inc",
+        "commandFingerprint": "ada672620c55688df688c9e76bb06dd7c56377794392b9dfd34e3e307cfcd971"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

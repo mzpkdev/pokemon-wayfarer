@@ -1,0 +1,283 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtChimney_EventScript_Grunt1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Grunt1",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "8dfcbd0b60770a64a60c036a54c1c06d51efc0b4e96b9ffb0078e7cf905a7f3e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 54008
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_Grunt2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Grunt2",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "9eea3ace2d7c48c38284d638c6a59950e9786ed9c4e7d7d5dc9ade57b46751e4"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 28003
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_Melissa",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Melissa",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "3d6dc2b4074e044f0433e7c8cc737ab040e8f1b1ebe85c145b7aab72b1bdef03"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 34048
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_RematchShelby",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_RematchShelby",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "fbacd5f5348bed91905e92c9da020d38b365b32cf55a1e665aae016dc966d068"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 2592
+      },
+      "baseEncounter": "MtChimney_EventScript_Shelby"
+    },
+    {
+      "id": "MtChimney_EventScript_Sawyer",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Sawyer",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "08faaf11a63a5d8bd0f3f0e259ed6cc4b99aa13d4b34a93a7a42e3f1be39e67a"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 28389
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_SawyerRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_SawyerRematch",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "106795a0ba8df3ac607b9f4f0362e5343c5b4e8693f1b9a6aae9f7eeecc964d5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 28389
+      },
+      "baseEncounter": "MtChimney_EventScript_Sawyer"
+    },
+    {
+      "id": "MtChimney_EventScript_Sheila",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Sheila",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "67524e77142ee9ea84558566ea4cdf0adf34e459cdd9b413273332972e5fd00e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 22258
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_Shelby",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Shelby",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "8cceb581bd1d0ab9f86acbda6e20fd09396c6a3390cfc979fc25d3b10fd97e07"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 2592
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_Shirley",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Shirley",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "a2c9b788d78add79e606c552b612b4996f3fee2141628cb14a4d7b78f29e7518"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 64983
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_Tabitha",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_Tabitha",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "04fc01df02f94cf0203b36d74e020e2983cd22e79aab443bf06bda7bd06cce5e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 2750
+      }
+    },
+    {
+      "id": "MtChimney_EventScript_MaxieTrainerBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtChimney_EventScript_MaxieTrainerBattle",
+        "map": "MtChimney"
+      },
+      "review": {
+        "source": "data/maps/MtChimney/scripts.inc",
+        "commandFingerprint": "79551f723adb402f067310dbd975482f32832706584cf2f789737d793061d602"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route1_EventScript_Quinn",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route1_EventScript_Quinn",
+        "map": "Route1_hns"
+      },
+      "review": {
+        "source": "data/maps/Route1_hns/scripts.inc",
+        "commandFingerprint": "6652cc40a6304f2c472ae2a12d0af6cad09d6dabcd477c69c9e3d0f6514a0f76"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 41843
+      }
+    },
+    {
+      "id": "Route1_EventScript_SchoolboyDanny",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route1_EventScript_SchoolboyDanny",
+        "map": "Route1_hns"
+      },
+      "review": {
+        "source": "data/maps/Route1_hns/scripts.inc",
+        "commandFingerprint": "b21e94ba6f8e22da7828618e6d08c096bc1abb72801b0dc308a8f206fa0f6f70"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 26157
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "VictoryRoad_B2F_EventScript_Caroline",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B2F_EventScript_Caroline",
+        "map": "VictoryRoad_B2F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B2F/scripts.inc",
+        "commandFingerprint": "c2b7dc8474ef74771a744bdf5a6def0d9e2656881c32901907c0db043fe5b494"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 28093
+      }
+    },
+    {
+      "id": "VictoryRoad_B2F_EventScript_Dianne",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B2F_EventScript_Dianne",
+        "map": "VictoryRoad_B2F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B2F/scripts.inc",
+        "commandFingerprint": "f00ff87d6d324197c1d6707ca7d4676acc90bc7b11719e66ece04175840e5ef2"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 43136
+      }
+    },
+    {
+      "id": "VictoryRoad_B2F_EventScript_Felix",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B2F_EventScript_Felix",
+        "map": "VictoryRoad_B2F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B2F/scripts.inc",
+        "commandFingerprint": "c511932c1a2d088aec381fb38c935f2c26b71a0d724ec6b230a5e2701898a04b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 34908
+      }
+    },
+    {
+      "id": "VictoryRoad_B2F_EventScript_Julie",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B2F_EventScript_Julie",
+        "map": "VictoryRoad_B2F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B2F/scripts.inc",
+        "commandFingerprint": "6a6abaeef7ddbf177b7a04b2255de862ec7ed0f9f96bed773674cd8b4bfabdc3"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 37160
+      }
+    },
+    {
+      "id": "VictoryRoad_B2F_EventScript_Owen",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B2F_EventScript_Owen",
+        "map": "VictoryRoad_B2F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B2F/scripts.inc",
+        "commandFingerprint": "29464397ef32dddb1957e623a27c8c24241914c6fe419e7a88e18cae9ad0fdda"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 20748
+      }
+    },
+    {
+      "id": "VictoryRoad_B2F_EventScript_Vito",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "VictoryRoad_B2F_EventScript_Vito",
+        "map": "VictoryRoad_B2F"
+      },
+      "review": {
+        "source": "data/maps/VictoryRoad_B2F/scripts.inc",
+        "commandFingerprint": "58612d06a6fb75317faed0c07b515a41a7e57b8375e088de38510f4821df5ac5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 53548
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route47_EventScript_Camper",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route47_EventScript_Camper",
+        "map": "Route47_hns"
+      },
+      "review": {
+        "source": "data/maps/Route47_hns/scripts.inc",
+        "commandFingerprint": "f9c23b7ec8f54048158951fa2b9c18b03e1b573e492cb3e5fa3e976c377f2b52"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 14781
+      }
+    },
+    {
+      "id": "Route47_EventScript_Duff",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route47_EventScript_Duff",
+        "map": "Route47_hns"
+      },
+      "review": {
+        "source": "data/maps/Route47_hns/scripts.inc",
+        "commandFingerprint": "5e5cefa78b6d47f10a5350e51064e9e76aa6c59b89cfba358f709efa4b9316c8"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 34038
+      }
+    },
+    {
+      "id": "Route47_EventScript_Eda",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route47_EventScript_Eda",
+        "map": "Route47_hns"
+      },
+      "review": {
+        "source": "data/maps/Route47_hns/scripts.inc",
+        "commandFingerprint": "41b5049138c7fbf7ff2163f3aa2fade9dd93cd5a694c3ac9491738facdf0d72e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 34038
+      }
+    },
+    {
+      "id": "Route47_EventScript_Hiker",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route47_EventScript_Hiker",
+        "map": "Route47_hns"
+      },
+      "review": {
+        "source": "data/maps/Route47_hns/scripts.inc",
+        "commandFingerprint": "ff9eb7e56fe27eb23f69cca5bccca06b01b3414fb9eff42312afbbb799a23fff"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 57620
+      }
+    },
+    {
+      "id": "Route47_EventScript_Kae",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route47_EventScript_Kae",
+        "map": "Route47_hns"
+      },
+      "review": {
+        "source": "data/maps/Route47_hns/scripts.inc",
+        "commandFingerprint": "0d98761700625cc1ec7b4435b7a0a169b05b294db8e0168e2bc559d040eac744"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 28565
+      }
+    },
+    {
+      "id": "Route47_EventScript_Thom",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route47_EventScript_Thom",
+        "map": "Route47_hns"
+      },
+      "review": {
+        "source": "data/maps/Route47_hns/scripts.inc",
+        "commandFingerprint": "efb13331b07860083fdf4f083a697604a3838392d912920e4de62106991a8820"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 28565
+      }
+    }
+  ]
+}

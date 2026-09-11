@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "GoldenrodCity_RadioTower_5F_EventScript_PetrelBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_RadioTower_5F_EventScript_PetrelBattle",
+        "map": "GoldenrodCity_RadioTower_5F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_5F_hns/scripts.inc",
+        "commandFingerprint": "755e808bd4c204a24aeb50b854b5ec3681888623b8bb0c95bad44d916ccb0f66"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodRaidoTower4_EventScript_ARIANA",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodRaidoTower4_EventScript_ARIANA",
+        "map": "GoldenrodCity_RadioTower_5F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_5F_hns/scripts.inc",
+        "commandFingerprint": "2389d7ed64d828d9b494a8ef11667962afaf62c3241fda2465a4d8b569cfda0c"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "GoldenrodCity_RadioTower_5F_EventScript_ArcherBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "GoldenrodCity_RadioTower_5F_EventScript_ArcherBattle",
+        "map": "GoldenrodCity_RadioTower_5F_hns"
+      },
+      "review": {
+        "source": "data/maps/GoldenrodCity_RadioTower_5F_hns/scripts.inc",
+        "commandFingerprint": "8781cb451a3489253b4047f6841b2709aff635d25492015ee59faa1201653082"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

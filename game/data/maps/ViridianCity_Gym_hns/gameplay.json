@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "ViridianCity_Gym_EventScript_BlueBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "ViridianCity_Gym_EventScript_BlueBattle",
+        "map": "ViridianCity_Gym_hns"
+      },
+      "review": {
+        "source": "data/maps/ViridianCity_Gym_hns/scripts.inc",
+        "commandFingerprint": "35b802b0e71af8b13bcf2d8d0017d1e001c335638f635b62ad1983782cf813dd"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "GYM_LEADER",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

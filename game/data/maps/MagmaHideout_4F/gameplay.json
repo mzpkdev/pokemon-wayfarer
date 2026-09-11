@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MagmaHideout_4F_EventScript_Grunt11",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_4F_EventScript_Grunt11",
+        "map": "MagmaHideout_4F"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_4F/scripts.inc",
+        "commandFingerprint": "b5257bd79843a3e790364089d66b914c2243df54e40238b685001be4dfd0dc78"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 28453
+      }
+    },
+    {
+      "id": "MagmaHideout_4F_EventScript_Grunt12",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_4F_EventScript_Grunt12",
+        "map": "MagmaHideout_4F"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_4F/scripts.inc",
+        "commandFingerprint": "fdacf71b73ac48533ff759d987b256e562d5c229269c48a048266904ed148910"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 6460
+      }
+    },
+    {
+      "id": "MagmaHideout_4F_EventScript_Grunt13",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_4F_EventScript_Grunt13",
+        "map": "MagmaHideout_4F"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_4F/scripts.inc",
+        "commandFingerprint": "554dec7c076f5eed7ac4135eb01ae3e5ea8e2f83590daa272be5cb121bd67872"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 33602
+      }
+    },
+    {
+      "id": "MagmaHideout_4F_EventScript_Tabitha",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_4F_EventScript_Tabitha",
+        "map": "MagmaHideout_4F"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_4F/scripts.inc",
+        "commandFingerprint": "fcd100a7cce4d7797b91e100422bbada63d2752610749e2f4dfab2c82176aa26"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "MAGMA_GUARD",
+        "stableKey": 35584
+      }
+    },
+    {
+      "id": "MagmaHideout_4F_EventScript_MaxieTrainerBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MagmaHideout_4F_EventScript_MaxieTrainerBattle",
+        "map": "MagmaHideout_4F"
+      },
+      "review": {
+        "source": "data/maps/MagmaHideout_4F/scripts.inc",
+        "commandFingerprint": "aae756853dadf8244c21e3bfdddd59490e5cebab29f38a79f159e8d64ed627de"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route24_EventScript_GruntBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route24_EventScript_GruntBattle",
+        "map": "Route24_hns"
+      },
+      "review": {
+        "source": "data/maps/Route24_hns/scripts.inc",
+        "commandFingerprint": "ebbf14365b79da70f5439505316b3dcef3e948a8e9ad9e67cebe65c666fea42b"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

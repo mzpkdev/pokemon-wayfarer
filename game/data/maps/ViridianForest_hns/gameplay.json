@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route2_EventScript_Doug",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route2_EventScript_Doug",
+        "map": "ViridianForest_hns"
+      },
+      "review": {
+        "source": "data/maps/Route2_hns/scripts.inc",
+        "commandFingerprint": "0f82f9361e16d53923f38bb1626ab8b82f7191b9984f28212f7a532e287170c5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 29527
+      }
+    },
+    {
+      "id": "Route2_EventScript_Ed",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route2_EventScript_Ed",
+        "map": "ViridianForest_hns"
+      },
+      "review": {
+        "source": "data/maps/Route2_hns/scripts.inc",
+        "commandFingerprint": "76a3a150fdb8fcb189b5cf7e90ab966080549b555d824e181a50a38f4d652e5a"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 8727
+      }
+    },
+    {
+      "id": "Route2_EventScript_RematchRob",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route2_EventScript_RematchRob",
+        "map": "ViridianForest_hns"
+      },
+      "review": {
+        "source": "data/maps/Route2_hns/scripts.inc",
+        "commandFingerprint": "8c09e7b80db6fcbecc8f4a409d5516ea3e6067864e6df3d4c5f7a07027daa0a2"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27720
+      },
+      "baseEncounter": "Route2_EventScript_Rob"
+    },
+    {
+      "id": "Route2_EventScript_Rob",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route2_EventScript_Rob",
+        "map": "ViridianForest_hns"
+      },
+      "review": {
+        "source": "data/maps/Route2_hns/scripts.inc",
+        "commandFingerprint": "a4347e4a5dbed2341f10f27c88d112fb7949cb01b69d3d93913c4655723dfa85"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27720
+      }
+    }
+  ]
+}

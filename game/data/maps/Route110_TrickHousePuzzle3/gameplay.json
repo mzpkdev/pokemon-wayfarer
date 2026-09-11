@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route110_TrickHousePuzzle3_EventScript_Alan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route110_TrickHousePuzzle3_EventScript_Alan",
+        "map": "Route110_TrickHousePuzzle3"
+      },
+      "review": {
+        "source": "data/maps/Route110_TrickHousePuzzle3/scripts.inc",
+        "commandFingerprint": "dc709e255f575a41323b9f2074c08eb919553d06e76ba2e800bc310afa54f623"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 60722
+      }
+    },
+    {
+      "id": "Route110_TrickHousePuzzle3_EventScript_Justin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route110_TrickHousePuzzle3_EventScript_Justin",
+        "map": "Route110_TrickHousePuzzle3"
+      },
+      "review": {
+        "source": "data/maps/Route110_TrickHousePuzzle3/scripts.inc",
+        "commandFingerprint": "f09ca151ef1644fd34e82a72d14ffac11154a70cfca14126fbb5c55b227c7c61"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 48520
+      }
+    },
+    {
+      "id": "Route110_TrickHousePuzzle3_EventScript_Martha",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route110_TrickHousePuzzle3_EventScript_Martha",
+        "map": "Route110_TrickHousePuzzle3"
+      },
+      "review": {
+        "source": "data/maps/Route110_TrickHousePuzzle3/scripts.inc",
+        "commandFingerprint": "07ac716de125d4b10eccfc38574319182c93a190655bf0c7e4aa15b1dc2a107c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21405
+      }
+    }
+  ]
+}

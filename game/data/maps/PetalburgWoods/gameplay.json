@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "PetalburgWoods_EventScript_James",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "PetalburgWoods_EventScript_James",
+        "map": "PetalburgWoods"
+      },
+      "review": {
+        "source": "data/maps/PetalburgWoods/scripts.inc",
+        "commandFingerprint": "c8e1ce6802aef76b0a14fc62d0dd0726832d514dcd2f9564198a012d2e187568"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52465
+      }
+    },
+    {
+      "id": "PetalburgWoods_EventScript_JamesRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "PetalburgWoods_EventScript_JamesRematch",
+        "map": "PetalburgWoods"
+      },
+      "review": {
+        "source": "data/maps/PetalburgWoods/scripts.inc",
+        "commandFingerprint": "69b386a0b2ad5fd572bd12314ef63c13407b5cb5eeff013d590a3370a9b7c893"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 52465
+      },
+      "baseEncounter": "PetalburgWoods_EventScript_James"
+    },
+    {
+      "id": "PetalburgWoods_EventScript_Lyle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "PetalburgWoods_EventScript_Lyle",
+        "map": "PetalburgWoods"
+      },
+      "review": {
+        "source": "data/maps/PetalburgWoods/scripts.inc",
+        "commandFingerprint": "424f863f77ef24f4e447f59ba64bd2f18c146bf3cc4d4b51f3d096061f2e4fae"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 34815
+      }
+    }
+  ]
+}

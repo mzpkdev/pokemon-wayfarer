@@ -66,8 +66,7 @@ def load_declarations(root):
             raise ContentError('SCHEMA', path, '', sidecar['schemaVersion'])
         if not isinstance(sidecar['services'], list) or not isinstance(sidecar['encounters'], list):
             raise ContentError('SCHEMA', path, '', 'services and encounters must be arrays')
-        if sidecar['encounters']:
-            raise ContentError('UNSUPPORTED_CONTEXT', path, '', 'encounter adapter requires integrated trainer-only baseline')
+        # Encounter declarations are validated and resolved by their domain adapter.
         seen = set()
         for service in sidecar['services']:
             validate_service(service, path)

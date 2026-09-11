@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SSAqua_B1F_EventScript_Jeff",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_B1F_EventScript_Jeff",
+        "map": "SSAqua_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_B1F_hns/scripts.inc",
+        "commandFingerprint": "fe52aa005eb8b9b46f3594187f9f0c53876f045135056c7c5d7cdeabf26b1330"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27241
+      }
+    }
+  ]
+}

@@ -335,10 +335,16 @@ jobs:
           ref: ${{ github.sha }}
           persist-credentials: false
 
+      - name: Set up script inventory toolchain
+        if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
+        uses: ./.github/actions/setup-build-dependencies
+        with:
+          package-set: base
+
       - name: Run temporary gameplay-content migration checks
         if: (steps.changes.outcome != 'success' || steps.changes.outputs.docs-only != 'true')
         working-directory: game
-        # This target only builds mapjson and trainerproc with the hosted C/C++ compiler.
+        # Phase D inventories the actual assembler-selected script commands.
         run: make BUILD=wayfarer gameplay-content-migration-test
 
   expansion-suite:

@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route119_WeatherInstitute_2F_EventScript_Grunt2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route119_WeatherInstitute_2F_EventScript_Grunt2",
+        "map": "Route119_WeatherInstitute_2F"
+      },
+      "review": {
+        "source": "data/maps/Route119_WeatherInstitute_2F/scripts.inc",
+        "commandFingerprint": "e71afd9799f4988bbdcc8cd764c36eaeb0e5284242a0a359f97ac6bb6e09ff71"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 10860
+      }
+    },
+    {
+      "id": "Route119_WeatherInstitute_2F_EventScript_Grunt3",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route119_WeatherInstitute_2F_EventScript_Grunt3",
+        "map": "Route119_WeatherInstitute_2F"
+      },
+      "review": {
+        "source": "data/maps/Route119_WeatherInstitute_2F/scripts.inc",
+        "commandFingerprint": "468929320d7497611b0c3a80055e7744517c4585d43ba1b62e26e943db1be6ef"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 19014
+      }
+    },
+    {
+      "id": "Route119_WeatherInstitute_2F_EventScript_Grunt5",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route119_WeatherInstitute_2F_EventScript_Grunt5",
+        "map": "Route119_WeatherInstitute_2F"
+      },
+      "review": {
+        "source": "data/maps/Route119_WeatherInstitute_2F/scripts.inc",
+        "commandFingerprint": "53b2c4e944b264d4d769f26f19236e7c95760feb66c054a075f5a92718fa1247"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 12607
+      }
+    },
+    {
+      "id": "Route119_WeatherInstitute_2F_EventScript_Shelly",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route119_WeatherInstitute_2F_EventScript_Shelly",
+        "map": "Route119_WeatherInstitute_2F"
+      },
+      "review": {
+        "source": "data/maps/Route119_WeatherInstitute_2F/scripts.inc",
+        "commandFingerprint": "47279d4bf696186c9e563c149c5c73de6b39f66e3c38d17e79f412c1b9bddb3e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

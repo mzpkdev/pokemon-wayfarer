@@ -72,6 +72,7 @@ tools/aif2pcm/aif2pcm
 *.smolTM
 __pycache__
 .map_version
+.map_version.*
 /pokehns-*.png
 src/data/trainers_hns.h
 tools/poryscript

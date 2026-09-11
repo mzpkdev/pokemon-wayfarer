@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtPyre_Summit_EventScript_Grunt1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_Summit_EventScript_Grunt1",
+        "map": "MtPyre_Summit"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_Summit/scripts.inc",
+        "commandFingerprint": "205fb120e8918d6526f21928bff31b7b8baf6db1bf2f6b5d7800b6fc5b70d80c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 22517
+      }
+    },
+    {
+      "id": "MtPyre_Summit_EventScript_Grunt2",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_Summit_EventScript_Grunt2",
+        "map": "MtPyre_Summit"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_Summit/scripts.inc",
+        "commandFingerprint": "11ccc55dbc7544883063cc816224e771072b53b4f0d492d69f1b591bb47010a1"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 10282
+      }
+    },
+    {
+      "id": "MtPyre_Summit_EventScript_Grunt3",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_Summit_EventScript_Grunt3",
+        "map": "MtPyre_Summit"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_Summit/scripts.inc",
+        "commandFingerprint": "a35cd914b865dffb293977be23c17929baa53d30df88b8a3024fbfc465e2120e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 51385
+      }
+    },
+    {
+      "id": "MtPyre_Summit_EventScript_Grunt4",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtPyre_Summit_EventScript_Grunt4",
+        "map": "MtPyre_Summit"
+      },
+      "review": {
+        "source": "data/maps/MtPyre_Summit/scripts.inc",
+        "commandFingerprint": "951f24c2a215609ad0481b3c8d10514de5ff014e29a2de91ffc31796c2395ef9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 19002
+      }
+    }
+  ]
+}

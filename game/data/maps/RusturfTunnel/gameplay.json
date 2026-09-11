@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "RusturfTunnel_EventScript_Mike",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RusturfTunnel_EventScript_Mike",
+        "map": "RusturfTunnel"
+      },
+      "review": {
+        "source": "data/maps/RusturfTunnel/scripts.inc",
+        "commandFingerprint": "d366e9b68ecb8848965092b33f669c0b38f26a4f74b86cd76332c07a097151ba"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 39447
+      }
+    },
+    {
+      "id": "RusturfTunnel_EventScript_GruntTrainerBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RusturfTunnel_EventScript_GruntTrainerBattle",
+        "map": "RusturfTunnel"
+      },
+      "review": {
+        "source": "data/maps/RusturfTunnel/scripts.inc",
+        "commandFingerprint": "3ea3cddd25e28122195954ba0bb6c6ef782780baa9305f92ab9c18f6a72e3687"
+      },
+      "profile": {
+        "family": "objective_guard",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "RusturfTunnel_EventScript_WayfarerGruntLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 20,
+        "scene": {
+          "pendingPredicate": "WayfarerHoennRusturfRescuePending",
+          "retreatScript": "RusturfTunnel_EventScript_WayfarerGruntLossRetreat"
+        }
+      }
+    }
+  ]
+}

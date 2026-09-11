@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MauvilleCity_EventScript_BattleWallyTrainerBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MauvilleCity_EventScript_BattleWallyTrainerBattle",
+        "map": "MauvilleCity"
+      },
+      "review": {
+        "source": "data/maps/MauvilleCity/scripts.inc",
+        "commandFingerprint": "c6c8af43faffeb80200d85ed45db6b042e9dbcd085a230a5fa5331ca424f186b"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

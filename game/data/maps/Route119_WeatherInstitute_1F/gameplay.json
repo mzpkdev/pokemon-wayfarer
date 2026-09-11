@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route119_WeatherInstitute_1F_EventScript_Grunt1",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route119_WeatherInstitute_1F_EventScript_Grunt1",
+        "map": "Route119_WeatherInstitute_1F"
+      },
+      "review": {
+        "source": "data/maps/Route119_WeatherInstitute_1F/scripts.inc",
+        "commandFingerprint": "241d164ed9eb2973273c34c581907fddc0a74d8ee2f7692e3860d369abb24212"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 57245
+      }
+    },
+    {
+      "id": "Route119_WeatherInstitute_1F_EventScript_Grunt4",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route119_WeatherInstitute_1F_EventScript_Grunt4",
+        "map": "Route119_WeatherInstitute_1F"
+      },
+      "review": {
+        "source": "data/maps/Route119_WeatherInstitute_1F/scripts.inc",
+        "commandFingerprint": "c58a860c2839ca4af6977bd3b87c98b3d862510f898e0860a6f63ea8609231cf"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "AQUA_GUARD",
+        "stableKey": 48238
+      }
+    }
+  ]
+}

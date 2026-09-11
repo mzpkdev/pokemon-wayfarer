@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "UnionCave_1F_EventScript_FirebreatherBill",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_1F_EventScript_FirebreatherBill",
+        "map": "UnionCave_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_1F_hns/scripts.inc",
+        "commandFingerprint": "7406c1541076f8c94f720fd50f87e05eba424363806a5110a14de22708d8ce54"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 50589
+      }
+    },
+    {
+      "id": "UnionCave_1F_EventScript_FirebreatherRay",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_1F_EventScript_FirebreatherRay",
+        "map": "UnionCave_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_1F_hns/scripts.inc",
+        "commandFingerprint": "464c08b138d776ae5d2254ad93a500141049483002e1005511925c78e77ef2dd"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 33986
+      }
+    },
+    {
+      "id": "UnionCave_1F_EventScript_HikerDaniel",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_1F_EventScript_HikerDaniel",
+        "map": "UnionCave_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_1F_hns/scripts.inc",
+        "commandFingerprint": "26feb97b6a9c938c84881eb6b2c96f5d2996dbb3ab82c5aff5ce04dca819edc6"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11319
+      }
+    },
+    {
+      "id": "UnionCave_1F_EventScript_HikerRussell",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_1F_EventScript_HikerRussell",
+        "map": "UnionCave_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_1F_hns/scripts.inc",
+        "commandFingerprint": "ce2a0fabbc6bc4d1bd34f4b7ee905c951dbabbba478f20524b28e94e79d63d3f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 16203
+      }
+    },
+    {
+      "id": "UnionCave_1F_EventScript_PokemaniacLarry",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "UnionCave_1F_EventScript_PokemaniacLarry",
+        "map": "UnionCave_1F_hns"
+      },
+      "review": {
+        "source": "data/maps/UnionCave_1F_hns/scripts.inc",
+        "commandFingerprint": "d1cfbf9b369fc3aa7e1670f804a088d373dcef4da8c6484d8fcd94fc05567d1c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 45950
+      }
+    }
+  ]
+}

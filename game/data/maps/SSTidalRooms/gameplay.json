@@ -1,0 +1,181 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SSTidalRooms_EventScript_Colton",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Colton",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "e75d5775fd9af211fb1ecf6436d60d031a0df9b015ac365654b22d17a4de4643"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 16559
+      }
+    },
+    {
+      "id": "SSTidalRooms_EventScript_Garret",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Garret",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "3d8d5fe566dcb3350d7541ec46b9c157f647ee18802801a7a2af4a9d32c6360b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 691
+      }
+    },
+    {
+      "id": "SSTidalRooms_EventScript_Jed",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Jed",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "31ed98e296f45084ef7fe99235288940f04dfb13238ba635543a4b85f64d41df"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 64480
+      }
+    },
+    {
+      "id": "SSTidalRooms_EventScript_Lea",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Lea",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "c844f255d108f37da000c942840e3b931480e2d31913a111783896152b9c648a"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 64480
+      }
+    },
+    {
+      "id": "SSTidalRooms_EventScript_Micah",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Micah",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "e870c30355d4c9ee58e15953d4b83daf9369ad41c098b5412e3aaa3cef8b285f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 54366
+      }
+    },
+    {
+      "id": "SSTidalRooms_EventScript_Naomi",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Naomi",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "27d412d935012cc63b46de9b67d27b6fef4a4b6f5fef07bc158d9e589fd91bd9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 11274
+      }
+    },
+    {
+      "id": "SSTidalRooms_EventScript_Thomas",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSTidalRooms_EventScript_Thomas",
+        "map": "SSTidalRooms"
+      },
+      "review": {
+        "source": "data/maps/SSTidalRooms/scripts.inc",
+        "commandFingerprint": "5894ef0a76444ff2607fb6da8ab9948938c9903b3eea105231b514158cad5fa3"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 26328
+      }
+    }
+  ]
+}

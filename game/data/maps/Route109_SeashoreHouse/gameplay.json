@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route109_SeashoreHouse_EventScript_Dwayne",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route109_SeashoreHouse_EventScript_Dwayne",
+        "map": "Route109_SeashoreHouse"
+      },
+      "review": {
+        "source": "data/maps/Route109_SeashoreHouse/scripts.inc",
+        "commandFingerprint": "5e215853b9c43697b506804552b249219e46ac8716408da22c316be8fe73b201"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 28376
+      }
+    },
+    {
+      "id": "Route109_SeashoreHouse_EventScript_Johanna",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route109_SeashoreHouse_EventScript_Johanna",
+        "map": "Route109_SeashoreHouse"
+      },
+      "review": {
+        "source": "data/maps/Route109_SeashoreHouse/scripts.inc",
+        "commandFingerprint": "05f6be6cf96612551b44e300924c1f229b0fc56ab28124c278292bd913af8309"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 4520
+      }
+    },
+    {
+      "id": "Route109_SeashoreHouse_EventScript_Simon",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route109_SeashoreHouse_EventScript_Simon",
+        "map": "Route109_SeashoreHouse"
+      },
+      "review": {
+        "source": "data/maps/Route109_SeashoreHouse/scripts.inc",
+        "commandFingerprint": "2f20b31cbae77c33a439110d9b47adecd4f56494bcc680e8d98473d44322d48d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 47962
+      }
+    }
+  ]
+}

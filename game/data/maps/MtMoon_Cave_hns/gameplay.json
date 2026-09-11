@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "MtMoon_Cave_EventScript_Silver_Battle_Cyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtMoon_Cave_EventScript_Silver_Battle_Cyndaquil",
+        "map": "MtMoon_Cave_hns"
+      },
+      "review": {
+        "source": "data/maps/MtMoon_Cave_hns/scripts.inc",
+        "commandFingerprint": "686e7272aa5ad763cf40a08f9dbe880bdd43336dd3b8afc5d547b5aac7d0ecf2"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "MtMoon_Cave_EventScript_Silver_Battle_Totodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtMoon_Cave_EventScript_Silver_Battle_Totodile",
+        "map": "MtMoon_Cave_hns"
+      },
+      "review": {
+        "source": "data/maps/MtMoon_Cave_hns/scripts.inc",
+        "commandFingerprint": "88491d8f9bc5362427c8339cb7e8b9e2fd2fdf4455dfc71a27f8c8f96addc9d3"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "MtMoon_Cave_EventScript_Silver_Battle_Chikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "MtMoon_Cave_EventScript_Silver_Battle_Chikorita",
+        "map": "MtMoon_Cave_hns"
+      },
+      "review": {
+        "source": "data/maps/MtMoon_Cave_hns/scripts.inc",
+        "commandFingerprint": "e3f48abb926e059f8d6c3d67812d08ffa71d9312b82731a94fa256c17be24dc9"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

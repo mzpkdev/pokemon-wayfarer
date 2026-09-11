@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "RustboroCity_EventScript_BattleMayTreecko",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RustboroCity_EventScript_BattleMayTreecko",
+        "map": "RustboroCity"
+      },
+      "review": {
+        "source": "data/maps/RustboroCity/scripts.inc",
+        "commandFingerprint": "efb2d10a8e133052c6b61f50e2bca1af2b4266a8cb0b998bdcaf29281a84834d"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RustboroCity_EventScript_BattleMayTorchic",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RustboroCity_EventScript_BattleMayTorchic",
+        "map": "RustboroCity"
+      },
+      "review": {
+        "source": "data/maps/RustboroCity/scripts.inc",
+        "commandFingerprint": "a3e8a620daea04d1cdd4349aca40a4d8e802b4abeb54c3c9cf89f69b093f690e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RustboroCity_EventScript_BattleMayMudkip",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RustboroCity_EventScript_BattleMayMudkip",
+        "map": "RustboroCity"
+      },
+      "review": {
+        "source": "data/maps/RustboroCity/scripts.inc",
+        "commandFingerprint": "40dd5492e48cd6d71cfb1e7e08f0746adbff9b5540b3d334c699985747817c85"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RustboroCity_EventScript_BattleBrendanTreecko",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RustboroCity_EventScript_BattleBrendanTreecko",
+        "map": "RustboroCity"
+      },
+      "review": {
+        "source": "data/maps/RustboroCity/scripts.inc",
+        "commandFingerprint": "5a2e658963cf7a0c1dd938ddbf5914f3a95fdf6f312c4d1487f79d7e816b9aa1"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RustboroCity_EventScript_BattleBrendanTorchic",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RustboroCity_EventScript_BattleBrendanTorchic",
+        "map": "RustboroCity"
+      },
+      "review": {
+        "source": "data/maps/RustboroCity/scripts.inc",
+        "commandFingerprint": "a26f4a1376f29707ec4f6a3c3fade84c41a063d9e3251d8a610935502f70e8ac"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RustboroCity_EventScript_BattleBrendanMudkip",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RustboroCity_EventScript_BattleBrendanMudkip",
+        "map": "RustboroCity"
+      },
+      "review": {
+        "source": "data/maps/RustboroCity/scripts.inc",
+        "commandFingerprint": "1fb49a8a627bbdfd060a51ef7970f6f29c6786898e4099823c1d266ae342b023"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

@@ -31,7 +31,10 @@ class HoennStoryEncounterAudit(unittest.TestCase):
 
     def test_every_registered_caller_is_an_immediate_trainerbattle_argument(self) -> None:
         callers = re.findall(r"HOENN_ENTRY\((\w+) \+ 1,", self.text)
-        self.assertGreater(len(callers), 40)
+        # Two expanded rows now come from the generated scene projection.
+        self.assertGreaterEqual(len(callers), 39)
+        self.assertIn("GAMEPLAY_ENCOUNTER_ROUTE110_RIVAL_ROW", self.text)
+        self.assertIn("GAMEPLAY_ENCOUNTER_RUSTURF_AQUA_ROW", self.text)
         script_files = list(MAPS.glob("*/scripts.inc"))
         for caller in callers:
             matches = [
@@ -72,13 +75,9 @@ class HoennStoryEncounterAudit(unittest.TestCase):
     def test_rival_object_lifecycle_matches_native_staging(self) -> None:
         route110 = [entry for entry in self.entries if "ROUTE110_RIVAL" in entry]
         route119 = [entry for entry in self.entries if "ROUTE119_RIVAL" in entry]
-        self.assertGreaterEqual(len(route110), 7)
+        self.assertGreaterEqual(len(route110), 6)
         self.assertGreaterEqual(len(route119), 7)
-        self.assertTrue(any(
-            "WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL" in entry
-            and "WAYFARER_STORY_FLAG_TRANSIENT_OBJECT" in entry
-            for entry in route110
-        ))
+        self.assertIn("GAMEPLAY_ENCOUNTER_ROUTE110_RIVAL_ROW", self.text)
         self.assertTrue(any(
             "WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL_ON_BIKE" in entry
             and "WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE" in entry
@@ -263,7 +262,9 @@ class HoennStoryEncounterAudit(unittest.TestCase):
             self.assertIn("EventScript_WayfarerStoryNoPartyRefusal", prompt_block)
 
     def test_weather_security_callers_have_one_registry_owner(self) -> None:
-        ordinary = (ROOT / "src/data/wayfarer_story_encounter_ordinary.h").read_text()
+        gameplay = json.loads((MAPS / "Route119_WeatherInstitute_1F" / "gameplay.json").read_text())
+        second_floor = json.loads((MAPS / "Route119_WeatherInstitute_2F" / "gameplay.json").read_text())
+        declarations = {entry["caller"]["label"]: entry for entry in gameplay["encounters"] + second_floor["encounters"]}
         for caller in (
             "Route119_WeatherInstitute_1F_EventScript_Grunt1",
             "Route119_WeatherInstitute_1F_EventScript_Grunt4",
@@ -272,7 +273,7 @@ class HoennStoryEncounterAudit(unittest.TestCase):
             "Route119_WeatherInstitute_2F_EventScript_Grunt5",
         ):
             self.assertNotIn(caller, self.text)
-            self.assertIn(f"ORDINARY_ENTRY({caller},", ordinary)
+            self.assertEqual(declarations[caller]["profile"]["family"], "ordinary")
 
     def test_route104_is_not_claimed_by_current_hoenn_scope(self) -> None:
         for map_name in ("Route104", "JaggedPass", "MeteorFalls_1F_1R", "LavaridgeTown"):

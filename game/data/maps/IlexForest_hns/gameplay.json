@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "IlexForest_EventScript_BugcatcherWayne",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "IlexForest_EventScript_BugcatcherWayne",
+        "map": "IlexForest_hns"
+      },
+      "review": {
+        "source": "data/maps/IlexForest_hns/scripts.inc",
+        "commandFingerprint": "11fb5059b34b7e8c58c7a500b4608e79f74ccbd528c7552d1553b19194a34941"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 22189
+      }
+    }
+  ]
+}

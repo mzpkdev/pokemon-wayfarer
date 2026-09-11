@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "CherryGroveCity_Silver_Battle_Cyndaquil",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "CherryGroveCity_Silver_Battle_Cyndaquil",
+        "map": "CherrygroveCity_hns"
+      },
+      "review": {
+        "source": "data/maps/CherrygroveCity_hns/scripts.inc",
+        "commandFingerprint": "f5d6d42be34d65678542cefdd01fa68b0dd372850bef24564f89cb2f03cd05f9"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "CherryGroveCity_Silver_Battle_Totodile",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "CherryGroveCity_Silver_Battle_Totodile",
+        "map": "CherrygroveCity_hns"
+      },
+      "review": {
+        "source": "data/maps/CherrygroveCity_hns/scripts.inc",
+        "commandFingerprint": "e020473bf3c102124138b5cd34307ee531bfd480a9aa9ff5045c56e7a3d77450"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "CherryGroveCity_Silver_Battle_Chikorita",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "CherryGroveCity_Silver_Battle_Chikorita",
+        "map": "CherrygroveCity_hns"
+      },
+      "review": {
+        "source": "data/maps/CherrygroveCity_hns/scripts.inc",
+        "commandFingerprint": "7a922ddee5a6c030a491b6de86dd856b9251a57401fb5cfa9d1e8b4d39c05251"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

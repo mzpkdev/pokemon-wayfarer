@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "LilycoveCity_EventScript_BattleMayTreecko",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LilycoveCity_EventScript_BattleMayTreecko",
+        "map": "LilycoveCity"
+      },
+      "review": {
+        "source": "data/maps/LilycoveCity/scripts.inc",
+        "commandFingerprint": "43b384910202de56437c67556800eb8422af6b78fe83de28d5ec996cb6881113"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "LilycoveCity_EventScript_BattleMayTorchic",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LilycoveCity_EventScript_BattleMayTorchic",
+        "map": "LilycoveCity"
+      },
+      "review": {
+        "source": "data/maps/LilycoveCity/scripts.inc",
+        "commandFingerprint": "1e9378ea80c74a905197d788223cdce327d908ffb8014a579726f46778e4014c"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "LilycoveCity_EventScript_BattleMayMudkip",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LilycoveCity_EventScript_BattleMayMudkip",
+        "map": "LilycoveCity"
+      },
+      "review": {
+        "source": "data/maps/LilycoveCity/scripts.inc",
+        "commandFingerprint": "d75c932981abf3e2f1544eb068b5130d55310ab53a544de7ff67e5080d9c34c5"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "LilycoveCity_EventScript_BattleBrendanTreecko",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LilycoveCity_EventScript_BattleBrendanTreecko",
+        "map": "LilycoveCity"
+      },
+      "review": {
+        "source": "data/maps/LilycoveCity/scripts.inc",
+        "commandFingerprint": "04bb97b90c78d0cf6e1093fb8c7528c29c6953c65a5056effc426d64990c9a1a"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "LilycoveCity_EventScript_BattleBrendanTorchic",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LilycoveCity_EventScript_BattleBrendanTorchic",
+        "map": "LilycoveCity"
+      },
+      "review": {
+        "source": "data/maps/LilycoveCity/scripts.inc",
+        "commandFingerprint": "07b24c2da967dcfafd64edab5407b34c523ec06570f00b64830fadaab78e5c94"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "LilycoveCity_EventScript_BattleBrendanMudkip",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "LilycoveCity_EventScript_BattleBrendanMudkip",
+        "map": "LilycoveCity"
+      },
+      "review": {
+        "source": "data/maps/LilycoveCity/scripts.inc",
+        "commandFingerprint": "336d6da786aad97c869f292deffac37e70f8df6b76a7e33cced910ad08cccee9"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

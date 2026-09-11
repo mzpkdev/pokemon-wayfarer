@@ -394,32 +394,33 @@ RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidy
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += legacy-multiboot-test
-RULES_NO_SCAN += gameplay-content-generate gameplay-content-check gameplay-content-test gameplay-content-contract-test gameplay-content-migration-test gameplay-content-report
+RULES_NO_SCAN += gameplay-content-generate gameplay-content-check gameplay-content-test gameplay-content-contract-test gameplay-content-migration-test gameplay-content-report gameplay-content-bootstrap
 
 GAMEPLAY_CONTENT_ROOT := $(BUILD_DIR)/gameplay-content
 GAMEPLAY_CONTENT_INCLUDE := $(GAMEPLAY_CONTENT_ROOT)/$(BUILD_NAME)/current
-GAMEPLAY_CONTENT_HOST_TOOLS := $(TOOLS_DIR)/mapjson $(TOOLS_DIR)/trainerproc
+GAMEPLAY_CONTENT_HOST_TOOLS := $(TOOLS_DIR)/mapjson $(TOOLS_DIR)/trainerproc $(TOOLS_DIR)/preproc $(TOOLS_DIR)/jsonproc
 # Capture the ROM preprocessor configuration before adding generated search paths.
 GAMEPLAY_CONTENT_CPPFLAGS := $(CPPFLAGS)
 GAMEPLAY_CONTENT_COMMAND = PYTHONDONTWRITEBYTECODE=1 python3 -m tools.gameplay_content
-GAMEPLAY_CONTENT_DOMAINS ?= inventory progression services
-GAMEPLAY_CONTENT_ARGS = --domains $(GAMEPLAY_CONTENT_DOMAINS) --product $(BUILD_NAME) --cpp $(CPP) --cppflags '$(GAMEPLAY_CONTENT_CPPFLAGS)' --output-root $(GAMEPLAY_CONTENT_ROOT)
+GAMEPLAY_CONTENT_POSTLINK = PYTHONDONTWRITEBYTECODE=1 python3 -m tools.gameplay_content.postlink --elf $@ --report $(GAMEPLAY_CONTENT_INCLUDE)/inventory.json
+GAMEPLAY_CONTENT_DOMAINS ?= inventory progression services encounters
+GAMEPLAY_CONTENT_ARGS = --domains $(GAMEPLAY_CONTENT_DOMAINS) --product $(BUILD_NAME) --cpp $(CPP) --cppflags '$(GAMEPLAY_CONTENT_CPPFLAGS)' --assembler $(AS) --asflags '$(ASFLAGS)' --output-root $(GAMEPLAY_CONTENT_ROOT)
 override CPPFLAGS += -iquote $(GAMEPLAY_CONTENT_INCLUDE)
 INCLUDE_SCANINC_ARGS += -I $(GAMEPLAY_CONTENT_INCLUDE)
 
 .PHONY: gameplay-content-generate gameplay-content-check gameplay-content-test gameplay-content-contract-test gameplay-content-migration-test gameplay-content-report
-gameplay-content-generate: $(GAMEPLAY_CONTENT_HOST_TOOLS)
+gameplay-content-generate: gameplay-content-bootstrap
 	$(GAMEPLAY_CONTENT_COMMAND) generate $(GAMEPLAY_CONTENT_ARGS)
-gameplay-content-check: $(GAMEPLAY_CONTENT_HOST_TOOLS)
+gameplay-content-check: gameplay-content-bootstrap
 	$(GAMEPLAY_CONTENT_COMMAND) check $(GAMEPLAY_CONTENT_ARGS)
-gameplay-content-report: $(GAMEPLAY_CONTENT_HOST_TOOLS)
+gameplay-content-report: gameplay-content-bootstrap
 	$(GAMEPLAY_CONTENT_COMMAND) report $(GAMEPLAY_CONTENT_ARGS)
 gameplay-content-test: gameplay-content-contract-test gameplay-content-migration-test
-gameplay-content-contract-test: $(GAMEPLAY_CONTENT_HOST_TOOLS)
+gameplay-content-contract-test: gameplay-content-bootstrap
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/gameplay_content/tests -p 'test_*.py'
 # Remove this target when v1 phase D is accepted and equivalent domain coverage
 # replaces these pre-migration compatibility checks.
-gameplay-content-migration-test: $(GAMEPLAY_CONTENT_HOST_TOOLS)
+gameplay-content-migration-test: gameplay-content-bootstrap
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/gameplay_content/migration_tests -p 'test_*.py'
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
@@ -613,6 +614,13 @@ endif
 # Other rules
 include graphics_file_rules.mk
 include map_data_rules.mk
+
+# The script inventory assembles a temporary relocatable script object using the
+# same source constants and map IDs as the ROM, before any consuming C object.
+# Explicit host targets need this bootstrap too; they can run in a clean checkout.
+.PHONY: gameplay-content-bootstrap
+gameplay-content-bootstrap: $(GAMEPLAY_CONTENT_HOST_TOOLS)
+	@$(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) NODEP=1 SETUP_PREREQS=0 $(filter include/constants/%,$(AUTO_GEN_TARGETS)) $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_CONSTANTS) $(WAYFARER_SEVII_EVENT_SCRIPTS)
 include spritesheet_rules.mk
 include json_data_rules.mk
 include audio_rules.mk
@@ -802,6 +810,7 @@ $(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
 	@echo "cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs>"
 	+@cd $(OBJ_DIR) && $(ARMCC) $(LDFLAGS) -T ../../$< -o ../../$@ $(OBJS_REL) $(LIB)
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
+	$(GAMEPLAY_CONTENT_POSTLINK)
 else
 # Output .map file, memory usage readout and gc sections to clean-up unused data
 LDFLAGS = -Map ../../$(MAP) --print-memory-usage --gc-sections
@@ -809,6 +818,7 @@ $(ELF): $(LD_SCRIPT) $(OBJS) libagbsyscall
 	@cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$<  -o ../../$@ $(OBJS_REL) $(LIB) | cat
 	@echo "cd $(OBJ_DIR) && $(LD) $(LDFLAGS) -T ../../$< -o ../../$@ <objs> <libs> | cat"
 	$(FIX) $@ -t"$(TITLE)" -c$(GAME_CODE) -m$(MAKER_CODE) -r$(REVISION) --silent
+	$(GAMEPLAY_CONTENT_POSTLINK)
 endif
 
 # Builds the rom from the elf file
@@ -853,15 +863,15 @@ native-hm-windows-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 test/extract_native_hm_coverage_fixtures.py --check
 
 .PHONY: trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
-trainer-party-scaling-generate:
+trainer-party-scaling-generate: gameplay-content-bootstrap
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py
 
-trainer-party-scaling-test:
+trainer-party-scaling-test: gameplay-content-bootstrap
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/trainer_scaling/tests -p 'test_*.py' -q
 
-trainer-party-scaling-audit:
+trainer-party-scaling-audit: gameplay-content-bootstrap
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/generate.py --check
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/trainer_scaling/league.py --check
 

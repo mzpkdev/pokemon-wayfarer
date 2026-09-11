@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Alola_Ulaula_TrainerBattleCooltrainer",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Ulaula_TrainerBattleCooltrainer",
+        "map": "UlaulaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/UlaulaIsle_hns/scripts.inc",
+        "commandFingerprint": "2b36b75cb94d9feed0f69b0dd927bbdb4af501cd5b53f70050b5c976a1a27512"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 31084
+      }
+    },
+    {
+      "id": "Alola_Ulaula_TrainerBattleHiker",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Ulaula_TrainerBattleHiker",
+        "map": "UlaulaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/UlaulaIsle_hns/scripts.inc",
+        "commandFingerprint": "2a15514028c16c62aeb17510c13d861ac5a3495a6953a8ab5d0e51686d4963ac"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 60875
+      }
+    },
+    {
+      "id": "Alola_Ulaula_TrainerBattlePicnicker",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Ulaula_TrainerBattlePicnicker",
+        "map": "UlaulaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/UlaulaIsle_hns/scripts.inc",
+        "commandFingerprint": "7c21ee0f7a7bad1ea94191d85bd7f706aaf480601d05e3e2cb2171d594e10892"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 55524
+      }
+    },
+    {
+      "id": "Alola_Ulaula_TrainerBattleYoungster",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Ulaula_TrainerBattleYoungster",
+        "map": "UlaulaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/UlaulaIsle_hns/scripts.inc",
+        "commandFingerprint": "ecc83eece5fb7132ecb87688d488985f53b5f8ee6701e55672821ede05bbb962"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27145
+      }
+    }
+  ]
+}

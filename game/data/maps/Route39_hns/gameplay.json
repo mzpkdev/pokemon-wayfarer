@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route39_EventScript_Derek",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route39_EventScript_Derek",
+        "map": "Route39_hns"
+      },
+      "review": {
+        "source": "data/maps/Route39_hns/scripts.inc",
+        "commandFingerprint": "f1aa7b9b458b4d3bbfd1d1ced6f3e04d5f22d7361f1db6cd5a0b40660de876d6"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 2473
+      }
+    },
+    {
+      "id": "Route39_EventScript_Eugene",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route39_EventScript_Eugene",
+        "map": "Route39_hns"
+      },
+      "review": {
+        "source": "data/maps/Route39_hns/scripts.inc",
+        "commandFingerprint": "97fb5f62fdd5b471f73a369a06a63e7e7524792fa60c52bca7902c60e171a151"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 56301
+      }
+    },
+    {
+      "id": "Route39_EventScript_Jamie",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route39_EventScript_Jamie",
+        "map": "Route39_hns"
+      },
+      "review": {
+        "source": "data/maps/Route39_hns/scripts.inc",
+        "commandFingerprint": "dec5ca83dec0767a1f2c0946ab5f3932b858122dce481331b80ea1fba2cb745c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 14992
+      }
+    },
+    {
+      "id": "Route39_EventScript_Norman",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route39_EventScript_Norman",
+        "map": "Route39_hns"
+      },
+      "review": {
+        "source": "data/maps/Route39_hns/scripts.inc",
+        "commandFingerprint": "ad4a6e1c6e03a78b8a3c097ea74ef339401b62fee3a8cf06bac834deef48c68a"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 27140
+      }
+    },
+    {
+      "id": "Route39_EventScript_RematchDerek",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route39_EventScript_RematchDerek",
+        "map": "Route39_hns"
+      },
+      "review": {
+        "source": "data/maps/Route39_hns/scripts.inc",
+        "commandFingerprint": "bdff1fe464a5b0adbdc94706a69b44429675deb68b9a2b980813f6e4caaac2e5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 2473
+      },
+      "baseEncounter": "Route39_EventScript_Derek"
+    },
+    {
+      "id": "Route39_EventScript_Ruth",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route39_EventScript_Ruth",
+        "map": "Route39_hns"
+      },
+      "review": {
+        "source": "data/maps/Route39_hns/scripts.inc",
+        "commandFingerprint": "a376a152c304a19bf6648ddcd39402e2c241009b8930f1d382eb0f32641ee235"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 17488
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Alola_Akala_TrainerBattleCamper",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Akala_TrainerBattleCamper",
+        "map": "AkalaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/AkalaIsle_hns/scripts.inc",
+        "commandFingerprint": "d958813784d2585f577d03806db3bc959a215a5a11ecdde7a9f4d6e00e88a8f6"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 18027
+      }
+    },
+    {
+      "id": "Alola_Akala_TrainerBattleHiker",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Akala_TrainerBattleHiker",
+        "map": "AkalaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/AkalaIsle_hns/scripts.inc",
+        "commandFingerprint": "3f7de26b4294297d9944cf7df58553a4ad35165b7315b0a19d336b219315d375"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10029
+      }
+    },
+    {
+      "id": "Alola_Akala_TrainerBattlePicnicker",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Akala_TrainerBattlePicnicker",
+        "map": "AkalaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/AkalaIsle_hns/scripts.inc",
+        "commandFingerprint": "4b7ae13ede218f28d6761314a8038f475eeb1639c69dbbf9c96cc33ab9c731d4"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 24588
+      }
+    },
+    {
+      "id": "Alola_Akala_TrainerBattleSwimmerLand",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Akala_TrainerBattleSwimmerLand",
+        "map": "AkalaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/AkalaIsle_hns/scripts.inc",
+        "commandFingerprint": "1a516e2e0916c445f921765ed81ec28a248d2a61dfef227e3222f586af0b805f"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 32219
+      }
+    },
+    {
+      "id": "Alola_Akala_TrainerBattleSwimmerWater",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Akala_TrainerBattleSwimmerWater",
+        "map": "AkalaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/AkalaIsle_hns/scripts.inc",
+        "commandFingerprint": "6c0f0a86245c4ec02b23d70747d3a6913f6b351669dc8985c27a621c6402d6e3"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 50782
+      }
+    },
+    {
+      "id": "Alola_Akala_TrainerBattleSwimmerWaterM",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Alola_Akala_TrainerBattleSwimmerWaterM",
+        "map": "AkalaIsle_hns"
+      },
+      "review": {
+        "source": "data/maps/AkalaIsle_hns/scripts.inc",
+        "commandFingerprint": "18a88544d06f08519e64cf2214d530d083dbfecfc48d8cf5f446e95f11c7e51c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 10652
+      }
+    }
+  ]
+}

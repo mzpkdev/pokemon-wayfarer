@@ -1,0 +1,258 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route45_EventScript_Erik",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Erik",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "91172a5127884e64ccd0aa9abd7336e95b5bbbf9e9a1fe0c08042134cd6ee81e"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 64005
+      }
+    },
+    {
+      "id": "Route45_EventScript_Kelly",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Kelly",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "8d201a37aa190c7719b04c0e536ba6a20e886ec7d2e12558df22276355615e2d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 62515
+      }
+    },
+    {
+      "id": "Route45_EventScript_Kenji",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Kenji",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "5abd64263e8a0c19446e7dfd7b2aec46de8491b641c7b4ed2dde16852a41f4d1"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 16611
+      }
+    },
+    {
+      "id": "Route45_EventScript_Michael",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Michael",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "2af1884d2a2783ab8dfcc9caec4a1beea65bba71a377195ce1abc43830149e70"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 13697
+      }
+    },
+    {
+      "id": "Route45_EventScript_Parry",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Parry",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "a3db062e3089530dde0c41fb818eb73f61cdba437c0831aa0372167f23f169a4"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21205
+      }
+    },
+    {
+      "id": "Route45_EventScript_Quentin",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Quentin",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "290b114cf636ca7ceb23cf338a67ede799addb161b3d7c65a7ad35d651bd8caf"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 20798
+      }
+    },
+    {
+      "id": "Route45_EventScript_RematchKenji",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_RematchKenji",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "d2552c30aaa82a9d8ef4c121bf271ec8d9a13aa0ff574f65db112e1bdb98b24c"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 16611
+      },
+      "baseEncounter": "Route45_EventScript_Kenji"
+    },
+    {
+      "id": "Route45_EventScript_RematchParry",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_RematchParry",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "614a358aaa835288b363136fad5ea6c1a0438ae57b284c3aa34f02a369372066"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 21205
+      },
+      "baseEncounter": "Route45_EventScript_Parry"
+    },
+    {
+      "id": "Route45_EventScript_Ryan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Ryan",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "2ca57ebb3219b1506436e97c749f179960642d4acc6779cde43572ad3145fe94"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 47733
+      }
+    },
+    {
+      "id": "Route45_EventScript_Timothy",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route45_EventScript_Timothy",
+        "map": "Route45_hns"
+      },
+      "review": {
+        "source": "data/maps/Route45_hns/scripts.inc",
+        "commandFingerprint": "1ffc8c68fb5cc0f3588574ddc2774e8359a303890797e2f0baeb089b73927a5b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 1662
+      }
+    }
+  ]
+}

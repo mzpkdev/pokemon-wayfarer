@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "SSAqua_RoomNW_EventScript_Corey",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomNW_EventScript_Corey",
+        "map": "SSAqua_RoomNW_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomNW_hns/scripts.inc",
+        "commandFingerprint": "967b4931314659617dbdda451f0f5d52e3f4b489094a2d02a4c89293a65016cc"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 62385
+      }
+    },
+    {
+      "id": "SSAqua_RoomNW_EventScript_Edward",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomNW_EventScript_Edward",
+        "map": "SSAqua_RoomNW_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomNW_hns/scripts.inc",
+        "commandFingerprint": "9b23c1027c6285ee6f3811c35b1842ae0d82258e798c02482fe7dee5f1ef2d04"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 59322
+      }
+    },
+    {
+      "id": "SSAqua_RoomNW_EventScript_StanlyBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "SSAqua_RoomNW_EventScript_StanlyBattle",
+        "map": "SSAqua_RoomNW_hns"
+      },
+      "review": {
+        "source": "data/maps/SSAqua_RoomNW_hns/scripts.inc",
+        "commandFingerprint": "8a09658f8ca8e5f85ce6b230bc3dea0440aa493bc6df7a0017e2bc4d9de364c9"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

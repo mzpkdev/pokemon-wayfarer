@@ -313,7 +313,8 @@ def resolve(records, ids):
 
 def validate_policy_inventory(resolved):
     """Keep the ordinary-policy manifest and this authored table inseparable."""
-    manifest = json.loads(trainer_inventory.MANIFEST.read_text())
+    all_records = trainer_inventory.resolve_rosters(trainer_inventory.load_inventory())
+    manifest = trainer_inventory.legacy_manifest(all_records, trainer_inventory.references())
     policies = {row["id"]: row["policy"] for row in manifest["records"]}
     enrolled = {record["trainer"] for record in resolved}
     manifest_enrolled = {trainer for trainer, policy in policies.items()

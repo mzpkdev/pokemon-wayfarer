@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "AbandonedShip_Rooms_1F_EventScript_Demetrius",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms_1F_EventScript_Demetrius",
+        "map": "AbandonedShip_Rooms_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms_1F/scripts.inc",
+        "commandFingerprint": "f8c4595ae36f2e9288a1ddd900044c2d2a68b40ca4c8704aefb05f6ad89bd4d9"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 37097
+      }
+    },
+    {
+      "id": "AbandonedShip_Rooms_1F_EventScript_Thalia",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms_1F_EventScript_Thalia",
+        "map": "AbandonedShip_Rooms_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms_1F/scripts.inc",
+        "commandFingerprint": "621fd2e403bb43f3ce56099e58bea28a90cb61f6979d72890d24d03005d7ca58"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 62905
+      }
+    },
+    {
+      "id": "AbandonedShip_Rooms_1F_EventScript_ThaliaRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms_1F_EventScript_ThaliaRematch",
+        "map": "AbandonedShip_Rooms_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms_1F/scripts.inc",
+        "commandFingerprint": "ffb034346c82ba1298290ed33c58d0c68c10868fe2ecc951978ad5f974d1a7ca"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 62905
+      },
+      "baseEncounter": "AbandonedShip_Rooms_1F_EventScript_Thalia"
+    }
+  ]
+}

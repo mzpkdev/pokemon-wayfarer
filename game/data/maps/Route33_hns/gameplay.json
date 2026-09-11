@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "Route33_EventScript_HikerAnthony",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route33_EventScript_HikerAnthony",
+        "map": "Route33_hns"
+      },
+      "review": {
+        "source": "data/maps/Route33_hns/scripts.inc",
+        "commandFingerprint": "4b31b5ee340b6447a7ef58db33f7c1dc57eb3829f52e4810772481e3c28d09a5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 39333
+      }
+    },
+    {
+      "id": "Route33_EventScript_RematchAnthony",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "Route33_EventScript_RematchAnthony",
+        "map": "Route33_hns"
+      },
+      "review": {
+        "source": "data/maps/Route33_hns/scripts.inc",
+        "commandFingerprint": "32dd723dd55382e3dac6344196430d812034a37aa4217a6cb417780a15d732f4"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 39333
+      },
+      "baseEncounter": "Route33_EventScript_HikerAnthony"
+    }
+  ]
+}

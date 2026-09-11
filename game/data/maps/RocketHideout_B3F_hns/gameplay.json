@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "RocketHideout_B3F_EventScript_Mitch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B3F_EventScript_Mitch",
+        "map": "RocketHideout_B3F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B3F_hns/scripts.inc",
+        "commandFingerprint": "4e0dc3697dd3233489be644c1269169bb9d662ab3014ad2529eaa2dee81f4c9d"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 15845
+      }
+    },
+    {
+      "id": "RocketHideout_B3F_EventScript_Ross",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B3F_EventScript_Ross",
+        "map": "RocketHideout_B3F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B3F_hns/scripts.inc",
+        "commandFingerprint": "b86c1d6a847a10bb7a9683fec124b991e958ac8a6aae065cf210743548539075"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ROCKET_GUARD",
+        "stableKey": 23175
+      }
+    },
+    {
+      "id": "RocketHideout_B3F_EventScript_GruntF5",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B3F_EventScript_GruntF5",
+        "map": "RocketHideout_B3F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B3F_hns/scripts.inc",
+        "commandFingerprint": "d50829e72833ce19dd633f2516be50556bb5d796ffa666fb960a22754431b3f4"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RocketHideout_B3F_EventScript_Eto",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B3F_EventScript_Eto",
+        "map": "RocketHideout_B3F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B3F_hns/scripts.inc",
+        "commandFingerprint": "77e9e0e972f960a7b38225a3284f4603de56575bad0f603fdee7a8b2c226d8b5"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    },
+    {
+      "id": "RocketHideout_B3F_EventScript_GiovanniBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "RocketHideout_B3F_EventScript_GiovanniBattle",
+        "map": "RocketHideout_B3F_hns"
+      },
+      "review": {
+        "source": "data/maps/RocketHideout_B3F_hns/scripts.inc",
+        "commandFingerprint": "4f44453d97b38ddc01b4d7e463e50b4d7cef892dc7224a85b6683da30d51a08e"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

@@ -53,7 +53,8 @@ class UpstreamRematchTests(unittest.TestCase):
         self.assertEqual(values, list(range(639, 661)) + [661, 864])
 
     def test_postobc_rosters_are_complete_and_excluded_from_scaling(self):
-        manifest = {row['id']: row for row in json.loads(gen.MANIFEST.read_text())['records']}
+        manifest = {row['id']: row for row in gen.legacy_manifest(
+            gen.resolve_rosters(self.raw), gen.references())['records']}
         for leader in POSTOBC:
             trainer = postobc_id(leader)
             self.assertEqual(self.raw[trainer]['DIFFICULTY_NORMAL']['partySize'], 6)

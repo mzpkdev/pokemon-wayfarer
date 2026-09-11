@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "AbandonedShip_Rooms2_1F_EventScript_Dan",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms2_1F_EventScript_Dan",
+        "map": "AbandonedShip_Rooms2_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms2_1F/scripts.inc",
+        "commandFingerprint": "346bb94a98e7378ccfc933640004336bb9ae35350b8247bc568f855eae9d7be5"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 43878
+      }
+    },
+    {
+      "id": "AbandonedShip_Rooms2_1F_EventScript_DanRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms2_1F_EventScript_DanRematch",
+        "map": "AbandonedShip_Rooms2_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms2_1F/scripts.inc",
+        "commandFingerprint": "0b080df5bec6ce2cec3fcf17be306e261318c28f4ca4282ceb83f5353ac2cfa7"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 43878
+      },
+      "baseEncounter": "AbandonedShip_Rooms2_1F_EventScript_Dan"
+    },
+    {
+      "id": "AbandonedShip_Rooms2_1F_EventScript_Garrison",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms2_1F_EventScript_Garrison",
+        "map": "AbandonedShip_Rooms2_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms2_1F/scripts.inc",
+        "commandFingerprint": "552b07992c4d6cc5be369857d53cb840de4e70c17277661f612be562f44d08eb"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 24490
+      }
+    },
+    {
+      "id": "AbandonedShip_Rooms2_1F_EventScript_Jani",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms2_1F_EventScript_Jani",
+        "map": "AbandonedShip_Rooms2_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms2_1F/scripts.inc",
+        "commandFingerprint": "fe687ef2907ae6f48ae78e6ca48073bdbddf2d4519fb5a179e76d9d4fa422864"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LOSS_RETURN",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "EventScript_WayfarerStoryLossRetreat",
+        "dialogue": "ORDINARY",
+        "stableKey": 29915
+      }
+    },
+    {
+      "id": "AbandonedShip_Rooms2_1F_EventScript_Kira",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms2_1F_EventScript_Kira",
+        "map": "AbandonedShip_Rooms2_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms2_1F/scripts.inc",
+        "commandFingerprint": "9d3068e8bc349d8a813e244db8af1e558079a2aa92aa595a284b1b1938ad3560"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 43878
+      }
+    },
+    {
+      "id": "AbandonedShip_Rooms2_1F_EventScript_KiraRematch",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "AbandonedShip_Rooms2_1F_EventScript_KiraRematch",
+        "map": "AbandonedShip_Rooms2_1F"
+      },
+      "review": {
+        "source": "data/maps/AbandonedShip_Rooms2_1F/scripts.inc",
+        "commandFingerprint": "a8983a9f574aad458e3d925b009001bdb25e6ee92b264924acb03cdfc3b06c7b"
+      },
+      "profile": {
+        "family": "ordinary",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "trainerbattle",
+        "refusal": "WayfarerStoryTryStartTrainerBattle",
+        "success": "authored",
+        "nonVictory": "authored",
+        "dialogue": "ORDINARY",
+        "stableKey": 43878
+      },
+      "baseEncounter": "AbandonedShip_Rooms2_1F_EventScript_Dan"
+    }
+  ]
+}

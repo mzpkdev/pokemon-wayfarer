@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "EcruteakCity_Theater_EventScript_RocketBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "EcruteakCity_Theater_EventScript_RocketBattle",
+        "map": "EcruteakCity_Theater_hns"
+      },
+      "review": {
+        "source": "data/maps/EcruteakCity_Theater_hns/scripts.inc",
+        "commandFingerprint": "26457c83829bdcd552eef461a7c5bef4dded00ddb0022efd080354d3e3df0c14"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "ORDINARY",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}

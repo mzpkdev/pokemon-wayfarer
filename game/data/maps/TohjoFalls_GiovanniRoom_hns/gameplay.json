@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "services": [],
+  "encounters": [
+    {
+      "id": "TohjoFalls_EventScript_GiovanniBattle",
+      "products": [
+        "wayfarer"
+      ],
+      "caller": {
+        "label": "TohjoFalls_EventScript_GiovanniBattle",
+        "map": "TohjoFalls_GiovanniRoom_hns"
+      },
+      "review": {
+        "source": "data/maps/TohjoFalls_GiovanniRoom_hns/scripts.inc",
+        "commandFingerprint": "929023d165195781bffdc4718f5948d5b86d31b08b0befa1635c32aeaa174a3d"
+      },
+      "profile": {
+        "family": "legacy",
+        "scalingPolicy": "EXCLUDED",
+        "outcomePolicy": "LEGACY",
+        "entry": "legacy_runtime",
+        "refusal": "legacy_runtime",
+        "success": "legacy_runtime",
+        "nonVictory": "legacy_runtime",
+        "dialogue": "ORDINARY",
+        "stableKey": 0
+      }
+    }
+  ]
+}
