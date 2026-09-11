@@ -640,8 +640,18 @@
     },
     {
       "path": "game/data/event_scripts.s",
+      "after": "#include \"constants/wayfarer_origin.h\"\n",
+      "insertion": "#include \"constants/wayfarer_story_encounters.h\"\n"
+    },
+    {
+      "path": "game/data/event_scripts.s",
       "after": "\t.include \"data/wayfarer_engine_source_constants.inc\"\n",
       "insertion": "\t.include \"data/wayfarer_sevii_event_scripts.inc\"\n"
+    },
+    {
+      "path": "game/data/event_scripts.s",
+      "after": "Common_EventScript_ReleaseNoOp::\n\trelease\n\tend\n\n",
+      "insertion": "@ The central fallback is used only by an explicitly registered trainerbattle\n@ caller. Scene scripts with irreversible staging still branch here before that\n@ staging, using WayfarerStoryCanStartScene.\n#if IS_WAYFARER\nEventScript_WayfarerStoryNoPartyRefusal::\n\tspecial WayfarerStoryShowSelectedNoPartyDialogue\n\twaitmessage\n\twaitbuttonpress\n\treleaseall\n\tend\n\n@ Audited ordinary single-trainer callers may use this as their loss redirect.\n@ Authored objective scenes provide a more specific script to reset their actors.\nEventScript_WayfarerStoryLossRetreat::\n\tspecial WayfarerStoryShowRetreatDialogue\n\twaitmessage\n\twaitbuttonpress\n\treleaseall\n\tend\n#endif\n\n"
     },
     {
       "path": "game/src/data/object_events/object_event_graphics_info_pointers.h",
