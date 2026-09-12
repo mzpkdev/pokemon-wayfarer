@@ -17,6 +17,18 @@ API, decode lifecycle, connection algorithm, and failure contract.
 
 ## Behavior
 
+### Bounded feasibility phase
+
+Before full production implementation begins, an isolated prototype may decode the
+largest selected layout and perform one
+connection-heavy transition with the planned descriptor validation, stored checksum,
+LZ preflight, decode, and decoded checksum enabled. It records requested and contiguous
+heap bytes, allocation lifetime, and paired total load time against the pre-feature raw
+loader. It does not enable compression by default for production or change source
+`map.bin` files. Isolated measurement builds may use production release flags. Its result
+decides whether implementation may continue; it does not replace any production integrity,
+failure, functional, ROM, memory, or hardware-timing gate below.
+
 ### Validation builds
 
 The implementation provides four deterministic test configurations from the same
@@ -105,6 +117,9 @@ The following tests compare raw control output with the abstraction-backed path:
 | Trainer Hill | Entrance and exit rows, generated floor blocks, dimensions, scripts reached after generation, and every supported floor ID. |
 | Secret Bases | Immutable entrance and PC searches before and after appearance and decoration overlays, including saved-base reload. |
 | Decorations | Placement and removal for sprite and non-sprite decorations, with restored tiles compared against immutable authored data. |
+| Hoenn entry safety | `wayfarer_persistence.c` preserves its existing `FALSE` result for invalid source/header/events/coordinates and for a successfully read nonwalkable or wrong-elevation tile. After those checks, every non-OK required-layout `MapLayoutLoadError` reaches `CB2_MapLayoutLoadError` and does not initialize Hoenn state. |
+| Origin validation | `wayfarer_origin.c` preserves its existing `FALSE` result for invalid profile/header/events/coordinates and for a successfully read nonwalkable tile. After those checks, every non-OK required-layout `MapLayoutLoadError` reaches `CB2_MapLayoutLoadError` and does not select the origin. |
+| Hoenn-entry mechanics test | The test uses the checked point accessor for all approved-tile collision and elevation assertions, and verifies the terminal error path for an injected required-layout access failure. |
 
 Keeping one of these layouts raw does not waive its API and differential tests. The
 tests prove that hybrid storage policy and runtime access are separate decisions.
@@ -130,6 +145,12 @@ Fault-injection fixtures cover at least:
   connection succeeds; and
 - immutable-view misuse, including nesting, use after release, double release, and a
   pointer retained by a task or global test fixture.
+
+The suite separately exercises the Hoenn-entry and origin validators. Their existing
+pre-access rejection cases (invalid candidate/profile, header, events, coordinates, or
+a successfully read unsafe tile) return `FALSE`. Once a valid required layout is read,
+every non-OK `MapLayoutLoadError` must reach `CB2_MapLayoutLoadError`; none may be
+swallowed as an invalid candidate.
 
 Every case asserts the stable `MapLayoutLoadError`, zero decoder calls when preflight
 fails, an undefined backup buffer, no scripts or saved-view application, no player
@@ -189,10 +210,11 @@ not enter that ABI.
 Static and runtime evidence are both required.
 
 The paired production ELF report records `.ewram`, `.ewram.sbss`, IWRAM, stack reserve,
-`sBackupMapData`, and `gHeap`. The current evidence is 248,484 static EWRAM bytes out of
-256 KiB, with `sBackupMapData` at 20,480 bytes and `gHeap` at `0x1C500` bytes inside that
-total. The candidate may add small scalar loader state, but it must add no static array
-or reserved region sized to a complete layout.
+`sBackupMapData`, and `gHeap`. A historical baseline recorded 248,484 static EWRAM bytes
+out of 256 KiB, with `sBackupMapData` at 20,480 bytes and `gHeap` at `0x1C500` bytes
+inside that total. Candidate values are unknown until these paired reports are produced.
+The candidate may add small scalar loader state, but it must add no static array or
+reserved region sized to a complete layout.
 
 Test instrumentation records allocator topology and high-water use immediately before
 the load context, after its one allocation, after each current or neighbor decode, after
@@ -216,9 +238,10 @@ post-release values. An average or empty-heap measurement does not pass this gat
 ### Timing proof
 
 Functional SkyEmu runs do not approve performance. Before each rollout promotion, run
-paired raw and hybrid production-equivalent builds on an approved accurate GBA emulator
-or physical hardware. Record the ROM revision and checksum, emulator or hardware model,
-measurement code revision, timer source, sample count, and raw samples.
+paired pre-feature legacy-raw and hybrid production-equivalent builds on an approved
+accurate GBA emulator or physical hardware. Record the ROM revision and checksum,
+emulator or hardware model, measurement code revision, timer source, sample count, and
+raw samples.
 
 Use the existing in-ROM benchmark timer or an equally precise cycle counter around:
 
@@ -231,8 +254,15 @@ Use the existing in-ROM benchmark timer or an equally precise cycle counter arou
 
 Measure at least the largest compressed layout, the connection-heaviest real map, a
 representative indoor warp, a Fly arrival, and save reload. Run at least 100 loads per
-case after a fixed setup, report median, 95th percentile, and maximum, and compare paired
-raw-control samples.
+case after a fixed setup, report median, 95th percentile, and maximum. The release
+comparison is candidate total load time minus the paired pre-feature legacy-raw total.
+It includes descriptor validation and both CRC checks when they are common feature cost.
+
+Also record a paired raw-control comparison for diagnosis: raw control uses the new
+descriptor path and its raw-payload validation/checksum work, but has no LZ preflight or
+decode. Report legacy-to-raw-control, raw-control-to-candidate, and legacy-to-candidate
+samples separately. The raw-control comparison cannot cancel shared descriptor or CRC
+cost from the release decision.
 
 At the 95th percentile, added complete-layout time must be no more than one video frame.
 The measured maximum must add no more than two frames. No case may show a visible fade
@@ -247,8 +277,9 @@ hybrid candidate. The `maps_layouts` category diagnoses payload movement; the wh
 difference is the net result. The raw control report is retained for rollback sizing but
 does not define net saving because it shares feature overhead with the candidate.
 
-The reference 991-layout audit measured 1,254,526 bytes of gross payload saving, about
-72 percent. Release approval does not call this net. The candidate must reduce total
+The current 1,089-layout audit measured 1,345,144 bytes of gross payload saving under
+`auto`; 30,492 descriptor bytes leave 1,314,652 bytes before other candidate cost.
+Release approval does not call either figure net. The candidate must reduce total
 linked ROM use by at least 1,048,576 bytes after code, descriptors, checksums, alignment,
 raw exceptions, and all other overhead.
 
@@ -263,6 +294,14 @@ Runtime profiling uses test output rather than save fields or gameplay telemetry
 player save is modified to collect rollout data.
 
 ## Staged migration
+
+### Stage -1: feasibility prototype
+
+Run the bounded feasibility phase above before full production implementation begins.
+Its record must cover the largest selected layout and a connection-heavy case, including
+the planned preflight and checks. A heap, lifetime, or paired-total-timing failure blocks
+implementation until the design changes; a pass advances only to Stage 0 and waives no
+release gate.
 
 ### Stage 0: shadow generation
 
@@ -367,7 +406,7 @@ The later implementation should use these dependency boundaries:
 
 | Order | Workstream | Depends on | Completion output |
 | ---: | --- | --- | --- |
-| 1 | Baseline and contracts | Approved documentation | Reproducible legacy-size and raw-control catalog, ROM, ELF, heap, timing, and direct-access audit; frozen descriptor and error enums. |
+| 1 | Baseline and contracts | Approved documentation and passed feasibility prototype | Reproducible legacy-size and raw-control catalog, ROM, ELF, heap, timing, and direct-access audit; frozen descriptor and error enums. |
 | 2A | Build format and generator | Step 1 | Independent payloads, descriptors, policy manifest, complete-file round trips, generated bounds, and reports. |
 | 2B | Raw runtime abstraction | Step 1 | Opaque `MapLayout` payload, raw full and rectangle copies, scoped views, migrated consumers, source guard, and unchanged raw behavior. |
 | 2C | Test scaffolding | Step 1 | Legacy oracle seam, catalog enumerator, fault fixtures, heap telemetry, timing hooks, and E2E journey skeletons. |

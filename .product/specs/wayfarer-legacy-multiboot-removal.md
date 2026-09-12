@@ -3,6 +3,10 @@
 PRD: [Wayfarer legacy multiboot removal](../prds/wayfarer-legacy-multiboot-removal.md)
 Implemented: Yes
 
+Validation: Paired release savings are proven. Hardware/link and prepared-save
+runtime acceptance remains incomplete; see the
+[validation report](../research/wayfarer-legacy-multiboot-validation.md).
+
 ## Scope
 
 This specification defines how Wayfarer excludes the Pokemon

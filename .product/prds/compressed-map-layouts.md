@@ -67,30 +67,34 @@ permanent full-map EWRAM buffer.
 
 ### Measured opportunity
 
-The reference audit measured the following 991-layout catalog with the project's GBA
-LZ77 compressor:
+The current production selection measured by the
+[2026-09-12 audit of `ec18cfffd21f31b54a60a73d750863bde30be83d`](../research/rom-footprint-spec-audit.md)
+contains 1,089 layouts. It uses the Wayfarer selector in `mapjson.cpp`, including the
+enabled FRLG/Sevii entries from the manifest wired through `map_data_rules.mk`. With
+unprofitable entries kept raw, the project's GBA LZ77 tool produced:
 
 | Measure | Result |
 | --- | ---: |
-| Layout `map.bin` blobs | 991 |
-| Raw bytes | 1,742,526 |
-| Compressed payload bytes | 488,000 |
-| Gross payload saving | 1,254,526 bytes |
-| Gross payload reduction | 71.99%, about 72% |
+| Layout `map.bin` blobs | 1,089 |
+| Raw bytes | 1,875,152 |
+| Stored payload bytes (`auto`) | 530,008 |
+| Gross payload saving | 1,345,144 bytes |
+| Descriptor bytes at 28 bytes each | 30,492 bytes |
+| Saving before loader code, checksums, alignment, and raw-exception cost | 1,314,652 bytes |
+| Margin above the 1 MiB net gate before those costs | 266,076 bytes |
 | Largest current `map.bin` | 14,640 bytes |
 
-The 1,254,526-byte result is gross, not net. It excludes loader code, descriptors,
-checksums, alignment, raw exceptions, and any retained rollback data. The catalog is
+The 1,345,144-byte result is gross, not net. It excludes loader code, checksums,
+alignment, raw exceptions, and any retained rollback data; the stated descriptor cost
+is only a planning estimate. The catalog is
 mutable, so implementation and release builds must regenerate the report from their own
 selected layouts. Neither this baseline nor a later compressor total can substitute for
 the final linked-ROM comparison.
 
-The isolated documentation branch selects 987 of these layouts: 1,741,356 raw bytes and
-487,320 compressed bytes. The four-entry difference is 1,170 raw bytes and 680 compressed
-bytes, which exactly reconciles it with the 991-layout linked audit. Both reproductions
-round-trip byte for byte. Release evidence must identify its exact catalog manifest so a
-reader never has to infer which count a size result covers. The build specification
-records the four paths, per-file totals, and reproduction method.
+The earlier 987- and 991-layout measurements are retained only as historical
+reproductions. They do not constrain current implementation or release approval. Every
+build and release report identifies its exact selected-layout manifest, so a reader does
+not have to infer which catalog a size result covers.
 
 ## Boundaries
 
@@ -102,7 +106,7 @@ records the four paths, per-file totals, and reproduction method.
 - One runtime abstraction for full copies, rectangular copies, and tightly scoped
   immutable access.
 - Normal map loading, connected-map borders, Battle Pyramid, Trainer Hill, Secret Bases,
-  and decorations.
+  decorations, origin validation, and Hoenn-entry safety validation.
 - Build-time round trips, old-loader versus new-loader differential tests, memory and
   latency measurement, failure tests, instrumentation, staged rollout, and rollback.
 
@@ -124,11 +128,11 @@ records the four paths, per-file totals, and reproduction method.
 ## Constraints
 
 `MAX_MAP_DATA_SIZE` is 10,240 `u16` entries. The existing `sBackupMapData` allocation is
-20,480 bytes and remains the sole permanent full loaded-map buffer. A measured Wayfarer
-ELF reports 248,484 bytes of static EWRAM allocation out of 256 KiB. The `gHeap` array is
-`0x1C500` bytes within that allocation, not spare memory outside it. The 14,640-byte
-largest current layout is larger than the remaining static EWRAM headroom, so another
-permanent map-sized allocation is forbidden.
+20,480 bytes and remains the sole permanent full loaded-map buffer. A previously
+captured Wayfarer ELF reported 248,484 bytes of static EWRAM allocation out of 256 KiB,
+with `gHeap` (`0x1C500` bytes) inside that allocation. That historical measurement
+establishes the risk; it is not a current candidate measurement. The 14,640-byte largest
+current layout means another permanent map-sized allocation is forbidden.
 
 A temporary decode allocation must be exact-size or generated-bound-size, measured at
 the real map-load peak, reused rather than multiplied for connections, and freed before
@@ -199,9 +203,10 @@ decode and verify the reconstructed bytes before committing them to the live map
 
 ### Misleading space reports
 
-The gross audit leaves about 205,950 bytes between its payload saving and the 1 MiB net
-gate. Duplicated edge data, large descriptors, retained raw payloads, or code growth can
-consume that margin. Only a paired linked-ROM report can approve rollout.
+The current payload audit leaves 266,076 bytes between its descriptor-adjusted planning
+figure and the 1 MiB net gate. Loader code, checksums, alignment, retained raw payloads,
+or other format cost can consume that margin. Only a paired linked-ROM report can approve
+rollout.
 
 ### Maintenance drift
 
@@ -212,6 +217,16 @@ rationale would hide drift, so each raw exception requires a reason and a test t
 proves it still needs special handling.
 
 ## Staged rollout and rollback
+
+Before full production implementation begins, a bounded feasibility phase must prove the
+two unknowns that source compression cannot answer: a largest-layout decode and a
+connection-heavy transition with the proposed preflight and integrity checks enabled.
+It records contiguous heap availability, allocation lifetime, and paired total load time
+against the pre-feature raw loader. It may use a small isolated prototype and does not
+enable compression by default for production, change source maps, or waive any later
+integrity, functional, ROM, or hardware gate. Isolated measurement builds may use release
+flags to measure realistic ROM and runtime costs. A failed feasibility result stops the
+migration until the design is revised.
 
 | Stage | Runtime selection | Entry gate | Exit gate |
 | --- | --- | --- | --- |

@@ -30,11 +30,11 @@ aliasing. The implementation must refresh the addresses in its evidence report
 from a clean paired baseline; addresses are not ABI constants.
 
 All C payloads in this specification are four-byte aligned. Their selected
-duplicate ranges total 64,240 bytes:
+duplicate ranges total 62,956 bytes:
 
 | Family | Release bytes removed | Linker category |
 |---|---:|---|
-| Arceus overworld forms | 21,828 | `.rom_other` |
+| Arceus overworld forms | 20,544 | `.rom_other` |
 | Johto and Alola water currents | 12,288 | `.rom_other` |
 | Battle environments | 21,440 | `.rom_graphics` |
 | Bike Shop payloads | 8,684 | `.rom_graphics` |
@@ -98,18 +98,25 @@ weak symbol, linker-wide fold, or post-link patch. Public declarations in
 
 `game/src/data/graphics/pokemon.h` owns all 18 external `const u32[]` symbols in
 one translation unit through `game/src/pokemon.c`. Retain
-`gObjectEventPic_ArceusNormal` as the only emitted payload. Declare the other 17
-symbols as strong aliases with complete `const u32[321]` types. Each payload is
-1,284 bytes (`0x504`) of SMOL-compressed 4bpp data. In the audited release ELF,
-all 18 are `GLOBAL HIDDEN` objects in `.rom_other`; preserve that binding,
-visibility, section, and size in the optimized release.
+`gObjectEventPic_ArceusNormal` and `gObjectEventPic_ArceusIce` as independently
+emitted payloads. Declare the other 16 approved type symbols as strong aliases
+with complete `const u32[321]` types. Each payload is 1,284 bytes (`0x504`) of
+SMOL-compressed 4bpp data. In the audited release ELF, all 18 are `GLOBAL
+HIDDEN` objects in `.rom_other`; preserve that binding, visibility, section, and
+size in the optimized release.
 
 The canonical source is `game/graphics/pokemon/arceus/overworld.png`, with
-generated `overworld.4bpp` and `overworld.4bpp.smol`. Each type member keeps its
-own authored `game/graphics/pokemon/arceus/<type>/overworld.png` and generated
-`overworld.4bpp` and `overworld.4bpp.smol` comparison outputs. The build must
-generate those currently unlinked form outputs before validation. Removing a
-row restores that form's independent `INCBIN_COMP` from its own path.
+generated `overworld.4bpp` and `overworld.4bpp.smol`. Each approved type member
+keeps its own authored `game/graphics/pokemon/arceus/<type>/overworld.png` and
+generated `overworld.4bpp` and `overworld.4bpp.smol` comparison outputs. The
+build generates those currently unlinked form outputs before validation.
+
+Ice is not an alias row. Its authored and generated Ice outputs remain tracked
+as different, unlinked artwork, while `gObjectEventPic_ArceusIce` retains its
+existing independent `INCBIN_COMP` of Normal's `overworld.4bpp.smol` in both
+alias and rollback modes. This preserves the pixels consumed by the baseline
+ROM. The following addresses are historical baseline inventory from commit
+`443345f`, not evidence that Ice's authored input equals Normal.
 
 | Role | Symbol | Authored member path | Baseline address | Bytes | Saving |
 |---|---|---|---:|---:|---:|
@@ -127,7 +134,7 @@ row restores that form's independent `INCBIN_COMP` from its own path.
 | Alias | `gObjectEventPic_ArceusGrass` | `graphics/pokemon/arceus/grass/overworld.png` | `0x094FFE24` | 1,284 | 1,284 |
 | Alias | `gObjectEventPic_ArceusElectric` | `graphics/pokemon/arceus/electric/overworld.png` | `0x094FF920` | 1,284 | 1,284 |
 | Alias | `gObjectEventPic_ArceusPsychic` | `graphics/pokemon/arceus/psychic/overworld.png` | `0x094FF41C` | 1,284 | 1,284 |
-| Alias | `gObjectEventPic_ArceusIce` | `graphics/pokemon/arceus/ice/overworld.png` | `0x094FEF18` | 1,284 | 1,284 |
+| Independent control | `gObjectEventPic_ArceusIce` | `graphics/pokemon/arceus/ice/overworld.png` (retained, unlinked); emitted from `graphics/pokemon/arceus/overworld.4bpp.smol` | `0x094FEF18` | 1,284 | 0 |
 | Alias | `gObjectEventPic_ArceusDragon` | `graphics/pokemon/arceus/dragon/overworld.png` | `0x094FEA14` | 1,284 | 1,284 |
 | Alias | `gObjectEventPic_ArceusDark` | `graphics/pokemon/arceus/dark/overworld.png` | `0x094FE510` | 1,284 | 1,284 |
 | Alias | `gObjectEventPic_ArceusFairy` | `graphics/pokemon/arceus/fairy/overworld.png` | `0x094FE00C` | 1,284 | 1,284 |
@@ -137,7 +144,8 @@ The owning `sPicTable_Arceus*` entries in
 reference their original public symbols. Every normal and shiny overworld
 palette in `pokemon.h`, every form record, animation, frame table, icon, and
 species identity remains separate. No Surf Arceus symbol or asset path may
-appear in this manifest.
+appear in this manifest. It contains Normal, 16 approved aliases, and no Ice
+row: 18 symbols total when the independent Ice control is included.
 
 ### Regional water-current allowlist
 
@@ -321,10 +329,13 @@ The later implementation changes only payload definitions, the four manifests,
 and validation/build wiring. It does not edit authored PNG, palette, map, MIDI,
 layout, or script content.
 
-Rollback one group by removing its manifest rows and restoring each member's
-original `INCBIN` definition. Restore Johto current frame definitions from their
-own generated paths. The owning tables and public declarations do not change in
-either direction.
+Rollback one group by removing its manifest rows and restoring the exact
+pre-alias payload definition recorded for that member; never derive its input
+path from a member's authored path. Restore Johto current frame definitions from
+their own generated paths. Ice is never a manifest member: in every build mode,
+retain its independent `INCBIN_COMP` of Normal's generated payload and retain
+the separate Ice artwork unlinked. The owning tables and public declarations do
+not change in either direction.
 
 ## References
 
@@ -338,3 +349,4 @@ either direction.
 - [Tileset payloads](../../game/src/data/tilesets/graphics.h)
 - [Tileset metatiles](../../game/src/data/tilesets/metatiles.h)
 - [Tileset descriptors](../../game/src/data/tilesets/headers.h)
+- [ROM footprint proposal audit (2026-09-12)](../research/rom-footprint-spec-audit.md)

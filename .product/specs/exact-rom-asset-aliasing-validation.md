@@ -65,8 +65,12 @@ first mismatch or structural error when available.
    current raw 4bpp or tilemap input. Validate declared dimensions, tile counts,
    metatile counts, attribute counts, palette row counts, and compression mode.
 6. For raw current frames, compare 1,536 bytes and validate 48 4bpp tiles per
-   ordinal. For Arceus, validate 12,288 decoded bytes per form and 1,284 encoded
-   bytes at the pinned v1 toolchain.
+   ordinal. For each of the 16 approved Arceus aliases, validate 12,288 decoded
+   bytes and 1,284 encoded bytes at the pinned v1 toolchain against Normal. Do
+   not apply an equality gate to Ice: require its different authored and
+   generated outputs to remain tracked and unlinked, and require its emitted
+   definition to remain an independent `INCBIN_COMP` of Normal's generated
+   payload in both alias modes.
 7. For Bike Shop palettes, compare 16 ordered rows of 16 `u16` colors and prove
    that both descriptors use the same palette shape and compressed secondary
    tileset contract. Do not treat concatenated equality alone as semantic proof.
@@ -134,8 +138,9 @@ Unit and integration fixtures must fail for:
 - a C alias with an incomplete array, wrong element type, wrong dimension, wrong
   byte count, pointer object, weak linkage, cross-translation-unit target, or
   independently emitted member;
-- a stale Arceus form output, stale water frame, stale compressed battle asset,
-  stale FastSMOL tile stream, and stale generated MIDI assembly;
+- a stale approved Arceus form output, a stale Ice control definition or missing
+  retained Ice artwork, stale water frame, stale compressed battle asset, stale
+  FastSMOL tile stream, and stale generated MIDI assembly;
 - a changed MIDI option, track boundary, header boundary, voicegroup record,
   relocation, song ID, table position, or caller;
 - a Surf symbol or path, any Secret Base or Cable Club payload, an unreachable
@@ -220,9 +225,11 @@ size JSON, manifests, and recorded build metadata. It must prove:
 5. The linker map has one physical payload range per approved group. Multiple
    symbol labels at that range are expected; a second copy is a failure.
 6. All relevant nonapproved controls remain independent. This includes the
-   General FRLG current frames in configurations where they link, battle
-   palettes, both Bike Shop descriptors, representative HNS object sprites, and
-   all same-namespace graphics not listed by the manifests.
+   independent Normal-backed Ice range, General FRLG current frames in
+   configurations where they link, battle palettes, both Bike Shop descriptors,
+   representative HNS object sprites, and all same-namespace graphics not listed
+   by the manifests. The Ice range has its baseline size and a distinct address
+   from Normal in both links; its decoded output matches the baseline Ice symbol.
 7. No member outside an approved group gains the same address because of a
    heuristic fold, weak resolution, discarded owner, or accidental manifest
    expansion.
@@ -243,21 +250,21 @@ The current exact acceptance target is:
 
 | Family | Required `rom.used_bytes` and `__rom_end` delta | Required category delta |
 |---|---:|---|
-| Arceus | 21,828 | `other`: 21,828 |
+| Arceus | 20,544 | `other`: 20,544 |
 | Currents | 12,288 | `other`: 12,288 |
 | Battle environments | 21,440 | `graphics`: 21,440 |
 | Bike Shop | 8,684 | `graphics`: 8,684 |
 | Audio | 3,304 | `audio`: 3,304 |
-| All families | 67,544 (`0x107D8`) | `other`: 34,116; `graphics`: 30,124; `audio`: 3,304 |
+| All families | 66,260 (`0x102D4`) | `other`: 32,832; `graphics`: 30,124; `audio`: 3,304 |
 
 For each family-only link, `rom.used_bytes`, `rom.end_address`, and linked
 `__rom_end` decrease by exactly the family value. The all-family link decreases
-by exactly 67,544 bytes and equals the sum of the family-only results. Other
+by exactly 66,260 bytes and equals the sum of the family-only results. Other
 categories do not change.
 
 At the clean documentation baseline of 32,878,864 bytes ending at
-`0x09F5B110`, that delta would produce 32,811,320 bytes ending at
-`0x09F4A938`. Those optimized absolute values are projections only. A clean
+`0x09F5B110`, that delta would produce 32,812,604 bytes ending at
+`0x09F4AE3C`. Those optimized absolute values are projections only. A clean
 paired baseline at the implementation revision supplies the acceptance values.
 
 Any smaller or larger delta blocks the family until the linker map explains it.
@@ -273,7 +280,7 @@ behavior and presentation:
 
 | Area | Required cases | Checks |
 |---|---|---|
-| Arceus | Normal plus all 17 type forms; normal and shiny palette paths where supported | Correct form identity, palette, frame order, direction, follower movement, transitions, hide/show, and no Surf asset use. |
+| Arceus | Normal, all 16 approved type aliases, and the independent Ice control; normal and shiny palette paths where supported | Correct form identity, palette, frame order, direction, follower movement, transitions, hide/show, baseline-identical Ice output, and no Surf asset use. |
 | Currents | One active General FRLG control, one Johto current including the waterfall slice, and one Alola current | Eight-frame order, timing, 48-tile upload, destination tile 416, Johto 12-tile waterfall slice from tile 34, collision, forced movement, and regional palette. |
 | Battle environments | Standard and modern Tall Grass (BE07, BE17); Long Grass (BE02, BE13); Pond Water (BE03, BE14); Sand (BE06, BE16); Water and Underwater (BE08, BE10); Rock, Rock Snow, and Mountain Snow (BE05, BE15, BE25); Cave, Snow Cave, Volcano, and modern Cave Water (BE09, BE12, BE18, BE24); Building and Blue Building (BE01, BE11, BE19, BE22, BE23); Stadium, Rayquaza, and modern Sky (BE04, BE20, BE21) | Entry animation, decoded background and tilemap, palette and time-of-day selection, trainer and Pokémon layering, transitions, and return to field. |
 | Bike Shop | Cianwood Shop, Cerulean HNS Bike Shop, and Goldenrod Bike Shop | Tiles, all palette banks, metatiles, collision and attributes, doors, NPCs, map transition, and distinct tileset descriptor identity. |
@@ -339,6 +346,7 @@ they must not start from a guessed total or a normal ELF.
 
 - [Graphics and tileset aliases](exact-rom-asset-aliasing-graphics.md)
 - [Battle-audio aliases](exact-rom-asset-aliasing-audio.md)
+- [ROM footprint proposal audit (2026-09-12)](../research/rom-footprint-spec-audit.md)
 - [Surf pixel aliasing PR #48](https://github.com/mzpkdev/pokemon-wayfarer/pull/48)
 - [Wayfarer ROM report](../../game/tools/rom_report/rom_report.py)
 - [Wayfarer Makefile](../../game/Makefile)

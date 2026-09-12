@@ -40,6 +40,7 @@ project naming conventions, but their ownership and behavior are fixed here.
 | Full copy | Copy the logical `width * height` tile prefix into a caller-provided destination with an explicit stride and bounds. Normal map loading uses this operation. |
 | Rectangle copy | Copy a checked `(x, y, width, height)` tile rectangle into a caller-provided destination and stride. Connections and Trainer Hill use this operation. |
 | Scoped immutable view | Acquire a read-only logical tile view for algorithms that need to scan or revisit source cells, then release it in the same synchronous call scope. |
+| Checked point read | Read one checked logical tile into a caller-provided `u16` without exposing a payload pointer. Origin and entry validation use this operation. |
 
 Every operation takes a `MapLayout`, returns a status, and reports a stable error reason
 in test and diagnostic builds. Rectangle arithmetic uses checked unsigned sizes. Zero
@@ -84,10 +85,11 @@ The current largest source file is 14,640 bytes. That is a measurement case, not
 capacity. A future larger layout updates the generated maximum and must pass peak-memory
 and latency gates before compression is enabled for it.
 
-The production image adds no static full-map buffer. The measured Wayfarer ELF already
-allocates 248,484 of 262,144 EWRAM bytes. `gHeap`, sized at `0x1C500`, is part of that
-total. Heap capacity cannot be added to the remaining static bytes when reasoning about
-EWRAM. The decoder's stack use also counts toward the measured load peak.
+The production image adds no static full-map buffer. A previously captured ELF reported
+248,484 of 262,144 EWRAM bytes allocated statically, with `gHeap` (`0x1C500`) inside
+that total. It is historical context, not a measurement of a candidate build. Heap
+capacity cannot be added to the remaining static bytes when reasoning about EWRAM. The
+decoder's stack use also counts toward the measured load peak.
 
 ### Descriptor validation
 
@@ -169,7 +171,7 @@ neighbor simultaneously, never holds two neighbors, and never decompresses a reg
 Raw neighbors are copied directly through the same rectangle operation.
 
 Generated edge data is deferred because it duplicates authored tiles in ROM, creates a
-second generated representation that can drift, and consumes the narrow difference
+second generated representation that can drift, and consumes the finite difference
 between gross payload saving and the 1 MiB net gate. The current data is small enough to
 make one full neighbor decode bounded by 14,640 bytes, subject to the mandatory live-heap
 proof. If that allocation cannot pass the peak-memory gate, rollout stops and the build
@@ -188,6 +190,9 @@ The migration covers every known direct raw-layout consumer:
 | `trainer_hill.c` | Rectangle copy of the immutable entrance and exit rows before generated floor data. | Relevant layouts may remain raw during the canary stage. |
 | `secret_base.c` | Immutable metatile search. | Relevant layouts remain raw until immutable-view tests pass. |
 | `decoration.c` | Immutable source lookup when removing a decoration. | Relevant layouts remain raw until restoration tests pass. |
+| `wayfarer_persistence.c` Hoenn-entry safety | Checked point read for collision and elevation. | Existing invalid source, header, events, coordinates, or nonwalkable/elevation results return `FALSE`. After a required-layout read begins, every non-OK `MapLayoutLoadError` propagates to `AbortMapLayoutLoad`; it must not initialize Hoenn state. |
+| `wayfarer_origin.c` origin validation | Checked point read for collision. | Existing invalid profile, header, events, coordinates, or nonwalkable result returns `FALSE`. After a required-layout read begins, every non-OK `MapLayoutLoadError` propagates to `AbortMapLayoutLoad`; it must not select or enter that origin. |
+| `test/wayfarer_hoenn_entry.c` | Test-only checked point reads for the approved tiles. | The test asserts successful reads and expected metatiles; it contains no `MapLayout.map` dereference. |
 
 Secret Base searches and decoration restoration cannot substitute the mutable
 `gBackupMapLayout` for authored source data. Decorations and other overlays may already
@@ -198,6 +203,19 @@ Battle Pyramid and Trainer Hill procedural output continues to target
 `sBackupMapData`. The abstraction changes how template tiles are read, not how a floor
 is generated or saved. Each special path must propagate an access failure instead of
 continuing with a partly generated floor.
+
+`MapLayoutReadTile(layout, x, y, &metatile)` (or an equivalent checked point accessor)
+must validate descriptor and coordinates, own any temporary decode context for the call,
+and return `MapLayoutLoadError`. It must not return a raw pointer. Each production
+validator performs its existing structural checks before that call: invalid profile or
+source, null header/events/layout, invalid coordinates, and a successful read of a
+nonwalkable or wrong-elevation tile keep their existing safe `FALSE` outcome. Once a
+valid required layout reaches the accessor, every non-OK `MapLayoutLoadError` is
+propagated to `AbortMapLayoutLoad(error, mapGroup, mapNum, layoutId)` and its terminal
+callback; none is converted to `FALSE`. The Hoenn-entry mechanics test uses the same API
+and asserts both successful reads and the terminal failure path for injected access
+errors. These rules preserve invalid-origin and unsafe-entry handling while preventing a
+raw-pointer bypass or a corrupt payload escape.
 
 Future code that needs layout data chooses a full copy, rectangle copy, search helper, or
 scoped immutable view. A code review must reject a new public raw-pointer accessor, a
@@ -291,8 +309,8 @@ ABI.
 
 The runtime boundary is complete when:
 
-1. every known direct `MapLayout.map` access has been removed and a source guard prevents
-   recurrence;
+1. every known direct `MapLayout.map` access, including origin, persistence, and the
+   Hoenn-entry mechanics test, has been removed and a source guard prevents recurrence;
 2. raw and compressed descriptors pass the same full-copy, rectangle-copy, immutable-
    view, lifetime, and error-contract tests;
 3. full normal loads and every connection direction, offset, clipping case, and ordering

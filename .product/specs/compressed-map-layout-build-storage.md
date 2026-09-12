@@ -234,46 +234,23 @@ human report containing:
 - the count and size of files for which compression was not profitable; and
 - exact round-trip status for every compressed entry.
 
-The reference 991-layout audit measured 1,742,526 raw bytes, 488,000 compressed payload
-bytes, and 1,254,526 bytes of gross payload saving. The report labels these as baseline
-evidence only. It regenerates its own figures from the exact selected catalog instead of
-asserting that the count or total stays constant.
+The current 1,089-layout production selection measured 1,875,152 raw bytes and 530,008
+stored bytes under `auto`, for 1,345,144 bytes of gross payload saving. At 28 bytes per
+layout, descriptors would occupy 30,492 bytes, leaving 1,314,652 bytes before loader,
+integrity, alignment, and raw-exception cost. These are audit evidence, not release
+results. The report regenerates its own figures from the exact selected catalog instead
+of asserting that the count or total stays constant.
 
-### Reference audit reproduction
+### Audit catalog identity
 
-The documentation branch independently selects 987 layouts and produces 1,741,356 raw
-bytes and 487,320 compressed bytes. The supplied 991-layout linked audit used an
-augmented catalog with these four additional HNS records. Each record declares
-`game_version: "hns"` and `layout_version: "frlg"`, so it reuses an existing FRLG
-source layout while the Wayfarer selection rule includes the new record.
-
-| Added layout record | Source path under `game/` | Raw bytes | GBA LZ77 bytes |
-| --- | --- | ---: | ---: |
-| `House1_FRLG_hns_Layout` | `data/layouts/House1_Frlg/map.bin` | 198 | 148 |
-| `CeladonCity_Hotel_FRLG_hns_Layout` | `data/layouts/CeladonCity_Hotel_Frlg/map.bin` | 374 | 200 |
-| `Entrance_1F_FRLG_hns_Layout` | `data/layouts/Entrance_1F_Frlg/map.bin` | 312 | 192 |
-| `Entrance_2F_FRLG_hns_Layout` | `data/layouts/Entrance_2F_Frlg/map.bin` | 286 | 140 |
-| Four-entry total | | 1,170 | 680 |
-
-On the documentation branch, the existing records for these source paths are FRLG-only
-and are correctly absent from the 987-entry Wayfarer selection. The 991 audit first adds
-the four HNS records above, then selects default Emerald and explicit HNS layouts with
-the same version rule as `mapjson`. It runs the repository-built
-`tools/gbagfx/gbagfx` once per source file with a `.lz` output, runs the same tool from
-each `.lz` file to a temporary `.bin`, uses `cmp` over the complete source and decoded
-files, and sums the source and `.lz` byte sizes. All 991 comparisons matched. No source
-file was changed. This method yields:
-
-```text
-987 branch entries + 4 audited entries = 991 entries
-1,741,356 + 1,170 = 1,742,526 raw bytes
-487,320 + 680 = 488,000 compressed bytes
-1,742,526 - 488,000 = 1,254,526 gross saved bytes
-```
-
-The four-entry table is the retained baseline manifest for this proposal. Implementation
-replaces it with the full generated machine-readable manifest. A manifest identity is
-part of every reported total.
+The current audit uses the production `wayfarer` selection in
+[`mapjson.cpp`](../../game/tools/mapjson/mapjson.cpp), including enabled FRLG/Sevii
+layouts from the manifest passed by
+[`map_data_rules.mk`](../../game/map_data_rules.mk). All 1,089 selected layouts
+round-tripped byte for byte with the repository GBA LZ77 tool. The older 987- and
+991-layout figures are historical documentation-branch measurements; they are not a
+baseline manifest or an implementation gate. Generation replaces every audit snapshot
+with its complete machine-readable manifest, whose identity accompanies every total.
 
 ### Net ROM accounting
 
