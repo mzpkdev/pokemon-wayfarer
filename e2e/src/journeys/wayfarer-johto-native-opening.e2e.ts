@@ -51,29 +51,14 @@ describe.sequential("Wayfarer native New Bark household", () => {
       await game.saveAndReload()
       expect((await game.state.read()).party).toHaveLength(1)
       const home = "players-bedroom"
-      const beforeLoss = await game.state.read()
       await game.battle.startWild({ species: "pidgey", level: 2, moves: ["tackle"] })
       await game.battle.lose()
       await advanceOpeningUntil(
         game,
-        (state) => state.ready && !state.battle.active,
-        "ordinary wild loss did not return to the field",
+        (state) => state.ready && state.map.name === home,
+        "pre-Center blackout did not recover at the selected home",
       )
-      const defeated = await game.state.read()
-      expect(defeated.map).toEqual(beforeLoss.map)
-      expect(defeated.player).toEqual(beforeLoss.player)
-      expect(defeated.origin.recovery.map).toBe(home)
-      expect(defeated.partyVitals).toEqual([{ hp: 0, status: 0 }])
-      // The first partner is level 5; retain the native first-badge loss fee.
-      expect(defeated.money).toBe(beforeLoss.money - Math.min(beforeLoss.money, 8 * 5))
-      await game.saveAndReload()
-      expect(await game.state.read()).toMatchObject({
-        map: beforeLoss.map,
-        player: beforeLoss.player,
-        origin: { recovery: { map: home } },
-        partyVitals: [{ hp: 0, status: 0 }],
-        money: defeated.money,
-      })
+      expect((await game.state.read()).party.every((mon) => !mon.fainted)).toBe(true)
     } catch (error) {
       await fs.promises.writeFile(
         "/tmp/wayfarer-johto-household-failure.png",

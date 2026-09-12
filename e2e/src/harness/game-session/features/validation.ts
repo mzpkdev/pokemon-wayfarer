@@ -21,7 +21,6 @@ export type InvalidFixtureCase =
 
 export type ValidationApi = {
   rejectedFixtureError: (invalid: InvalidFixtureCase) => Promise<string>
-  readRearmSceneId: () => Promise<number>
 }
 
 const emptyMon = () => ({
@@ -35,9 +34,6 @@ export const createValidationApi = (
   runtime: SessionRuntime,
   mailbox: MailboxApi,
 ): ValidationApi => ({
-  // Deliberately narrow test-only diagnostic for recovery-scene investigation.
-  // General symbol or memory access remains unavailable to gameplay journeys.
-  readRearmSceneId: () => runtime.readUint16(runtime.address("sRearmSceneId")),
   rejectedFixtureError: async (invalid) => {
     const request = (requestId: number): CommandRequest => {
       const base: CommandRequest = {

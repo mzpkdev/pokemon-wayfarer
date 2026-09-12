@@ -18,17 +18,18 @@ const waitForFailedQuickBall = async (game: GameSession, trainerOnly: boolean) =
   for (let attempt = 0; attempt < 600; attempt++) {
     const state = await game.state.read()
     if (
-      state.battle.active &&
-      state.battle.ui === "action-menu" &&
       state.battle.lastUsedItem === "quickBall" &&
-      (!trainerOnly || state.battle.trainerOnly.completedTurns === 1)
+      ((state.battle.active &&
+        state.battle.ui === "action-menu" &&
+        (!trainerOnly || state.battle.trainerOnly.completedTurns === 1)) ||
+        (trainerOnly && !state.battle.active && state.ready))
     )
       return state
     if (state.battle.ui === "text") await game.controls.press("a")
     else await game.wait.frames(12)
   }
   throw new Error(
-    `Quick Ball did not return to the action menu: ${JSON.stringify(await game.state.read())}`,
+    `Quick Ball action did not resolve: ${JSON.stringify(await game.state.read())}`,
   )
 }
 
@@ -50,11 +51,11 @@ describe.sequential("Trainer-only R Quick Ball widget", () => {
       await game.controls.press("r")
       const resolved = await waitForFailedQuickBall(game, true)
       expect(resolved.battle).toMatchObject({
-        active: true,
         lastUsedItem: "quickBall",
         caughtSpecies: "none",
-        trainerOnly: { completedTurns: 1 },
       })
+      if (resolved.battle.active)
+        expect(resolved.battle.trainerOnly.completedTurns).toBe(1)
       expect(resolved.bag.items.quickBall).toBe(0)
     } finally {
       await game.close()

@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 17
-const expectedRequestSize = 432
+const abiVersion = 18
+const expectedRequestSize = 372
 const expectedResultSize = 16
-const expectedStateSize = 464
+const expectedStateSize = 440
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -89,7 +89,6 @@ export const commandErrors = [
   "save",
   "circuit",
   "appearance",
-  "rematch-trainer",
 ] as const
 export const arrangeErrors = commandErrors
 
@@ -173,7 +172,6 @@ export type ArrangeResult = CommandResult
 export type MonFixtureWire = {
   species: number
   moves: number[]
-  pp?: number[]
   level: number
   egg: boolean
 }
@@ -205,7 +203,6 @@ export type CommandRequest = {
   leagueClears: boolean[]
   applyLeagueCircuit?: boolean
   appearanceId?: number
-  rematchTrainerId?: number
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -304,7 +301,6 @@ export type StateSnapshot = {
   money: number
   partyHp: number[]
   partyStatus: number[]
-  partyPp: number[][]
   trainerOnly: TrainerOnlySnapshot
   littlerootTownState: number
 }
@@ -355,8 +351,6 @@ const encodeMon = (view: DataView, offset: number, mon: MonFixtureWire): void =>
     view.setUint16(offset + 2 + index * 2, mon.moves[index] ?? 0, true)
   view.setUint8(offset + 10, mon.level)
   view.setUint8(offset + 11, mon.egg ? 1 : 0)
-  for (let index = 0; index < maxMoves; index++)
-    view.setUint8(offset + 12 + index, mon.pp?.[index] ?? 0xff)
 }
 
 export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): Uint8Array => {
@@ -384,35 +378,34 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   view.setUint8(85, request.useRngSeed ? 1 : 0)
   view.setUint8(86, request.command)
   for (const [index, mon] of request.party.slice(0, maxParty).entries()) {
-    const offset = 88 + index * 20
+    const offset = 88 + index * 16
     encodeMon(view, offset, mon)
-    view.setUint8(offset + 16, mon.fainted ? 1 : 0)
+    view.setUint8(offset + 12, mon.fainted ? 1 : 0)
   }
   for (const [index, item] of request.bagItems.slice(0, maxBagItems).entries()) {
-    const offset = 208 + index * 4
+    const offset = 184 + index * 4
     view.setUint16(offset, item.item, true)
     view.setUint16(offset + 2, item.quantity, true)
   }
   for (const [index, pcSlot] of request.pcSlots.slice(0, maxPcSlots).entries()) {
-    const offset = 240 + index * 20
+    const offset = 216 + index * 16
     encodeMon(view, offset, pcSlot.mon)
-    view.setUint8(offset + 16, pcSlot.box)
-    view.setUint8(offset + 17, pcSlot.slot)
+    view.setUint8(offset + 12, pcSlot.box)
+    view.setUint8(offset + 13, pcSlot.slot)
   }
-  encodeMon(view, 400, request.wildMon)
-  view.setUint8(416, request.party.length)
-  view.setUint8(417, request.bagItems.length)
-  view.setUint8(418, request.pcSlots.length)
-  view.setUint8(419, request.currentBox)
-  view.setUint8(420, request.hmsOverwrite ? 1 : 0)
-  view.setUint8(421, request.fullPocketMask)
+  encodeMon(view, 344, request.wildMon)
+  view.setUint8(356, request.party.length)
+  view.setUint8(357, request.bagItems.length)
+  view.setUint8(358, request.pcSlots.length)
+  view.setUint8(359, request.currentBox)
+  view.setUint8(360, request.hmsOverwrite ? 1 : 0)
+  view.setUint8(361, request.fullPocketMask)
   for (let index = 0; index < leagueCount; index++) {
-    view.setUint8(422 + index, request.regionalBadgeCounts[index] ?? 0)
-    view.setUint8(425 + index, request.leagueClears[index] ? 1 : 0)
+    view.setUint8(362 + index, request.regionalBadgeCounts[index] ?? 0)
+    view.setUint8(365 + index, request.leagueClears[index] ? 1 : 0)
   }
-  view.setUint8(428, request.applyLeagueCircuit ? 1 : 0)
-  view.setUint8(429, request.appearanceId ?? 0)
-  view.setUint16(430, request.rematchTrainerId ?? 0, true)
+  view.setUint8(368, request.applyLeagueCircuit ? 1 : 0)
+  view.setUint8(369, request.appearanceId ?? 0)
   return bytes
 }
 
@@ -874,12 +867,6 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     money: uint32(bytes, 400),
     partyHp: Array.from({ length: maxParty }, (_, index) => uint16(bytes, 404 + index * 2)),
     partyStatus: Array.from({ length: maxParty }, (_, index) => uint32(bytes, 416 + index * 4)),
-    partyPp: Array.from({ length: maxParty }, (_, partyIndex) =>
-      Array.from(
-        { length: maxMoves },
-        (_, moveIndex) => bytes[440 + partyIndex * maxMoves + moveIndex]!,
-      ),
-    ),
     trainerOnly: {
       active: bytes[386] !== 0,
       initialCatchFactor: bytes[387]!,

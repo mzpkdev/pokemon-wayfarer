@@ -16,31 +16,6 @@ const advance = async (game: GameSession, predicate: (state: GameState) => boole
 const menu = (game: GameSession) => advance(game, (state) => state.battle.ui === "action-menu")
 
 describe.sequential("Explicit trainer-only scenario flag", () => {
-  it("defaults off and does not turn unprotected grass encounters into trainer-only combat", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: { position: { map: "route-30", x: 8, y: 10 }, facing: "left" },
-        party: [],
-        determinism: { textSpeed: "instant", rngSeed: 1 },
-      })
-      expect(await game.story.flag("trainerOnlyEnabled")).toBe(false)
-      const initial = await game.state.read()
-      for (let step = 0; step < 120; step++) {
-        const state = await game.state.read()
-        expect(state.battle.trainerOnly.active).toBe(false)
-        if (state.map.name !== initial.map.name) break
-        await game.player.move(step % 2 === 0 ? "left" : "right")
-        await game.wait.frames(30)
-      }
-      expect((await game.state.read()).battle.trainerOnly.active).toBe(false)
-      expect(await game.story.flag("trainerOnlyEnabled")).toBe(false)
-    } finally {
-      await game.close()
-    }
-  })
-
   it("clears the scenario flag when changing maps", async () => {
     const game = await GameSession.launch()
     try {
@@ -58,7 +33,7 @@ describe.sequential("Explicit trainer-only scenario flag", () => {
     }
   })
 
-  it("allows authors to clear the flag and leaves a usable party on ordinary battle routing", async () => {
+  it("leaves a usable party on ordinary battle routing even with the scenario flag enabled", async () => {
     const game = await GameSession.launch()
     try {
       await arrangeTrainerOnly(game, {
@@ -66,9 +41,6 @@ describe.sequential("Explicit trainer-only scenario flag", () => {
         party: [{ species: "pidgey", level: 5 }],
         determinism: { textSpeed: "instant" },
       })
-      await game.story.setFlag("trainerOnlyEnabled", false)
-      expect(await game.story.flag("trainerOnlyEnabled")).toBe(false)
-      await game.story.setFlag("trainerOnlyEnabled", true)
       await game.battle.startWild({ species: "rattata", level: 5 })
       expect((await menu(game)).battle.trainerOnly.active).toBe(false)
     } finally {

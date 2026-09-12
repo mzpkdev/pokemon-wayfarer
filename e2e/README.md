@@ -98,9 +98,7 @@ await game.dialogue.waitForOpen()
 
 The HNS-only battle and storage fixtures are deliberately narrow. They support
 the HM party-management journeys, not a general battle simulator or a complete
-PC model. Party and PC fixtures share species, level, moves, optional per-move PP,
-and Egg state. Omitted PP uses the move's normal full value; requested PP must fit
-that move's maximum.
+PC model. Party and PC fixtures share species, level, moves, and Egg state.
 Fainted state is party-only because boxed Pokémon do not have meaningful current
 HP. Tests identify Pokémon by unique species; personality and other identity
 fields are not part of this ABI.
@@ -144,12 +142,13 @@ shortcut migration. The mechanics tests cover that transaction instead.
 battle state machine from a settled overworld. It resolves at the first real
 battle-text input boundary. The playbook then uses controller input for the Bag,
 capture messages, catch-swap prompt, and party picker. Capture tests use a Master
-Ball because capture probability is outside this capability's scope. The fixture supports ordinary Wayfarer overworld battles, including the dedicated
-trainer-only controller for empty, fainted and Egg-only parties. Safari Zone,
+Ball because capture probability is outside this capability's scope. The fixture
+supports ordinary Wayfarer overworld battles, including the dedicated trainer-only
+controller when the scenario flag is enabled and the party is exactly empty. Safari Zone,
 Bug Contest and other special battle contexts are outside its contract.
 Trainer-only telemetry exposes committed turns, approach/fear/anger state and
 menu readiness for assertions; gameplay actions still use controller input.
-Money, party HP, status and PP observations support loss and recovery checks.
+Money, party HP, and status observations support loss and recovery checks.
 
 Storage journeys arrange the player in Cherrygrove's Pokémon Center and interact
 with its real PC script. There is no command that opens storage directly. The

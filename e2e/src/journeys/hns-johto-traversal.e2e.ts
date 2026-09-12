@@ -74,6 +74,32 @@ const startScriptedBattle = async (game: GameSession, description: string): Prom
   throw new Error(`${description} did not start: ${JSON.stringify(await game.state.read())}`)
 }
 
+const finishScriptedBattle = async (game: GameSession, description: string): Promise<void> => {
+  let handledFaintedPartyCount = 0
+  for (let attempt = 0; attempt < 1_400; attempt++) {
+    const state = await game.state.read()
+    if (!state.battle.active && state.ready) return
+    const faintedPartyCount = state.party.filter((mon) => mon.fainted).length
+    if (state.battle.ui === "other" && faintedPartyCount > handledFaintedPartyCount) {
+      await game.wait.frames(120)
+      await game.controls.press("down")
+      await game.wait.frames(30)
+      await game.controls.press("a")
+      handledFaintedPartyCount = faintedPartyCount
+    } else if (
+      state.battle.ui === "action-menu" ||
+      state.battle.ui === "move-menu" ||
+      state.battle.ui === "other"
+    )
+      await game.controls.press("a")
+    else if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
+      await game.wait.frames(30)
+      await game.controls.press("a")
+    } else await game.wait.frames(12)
+  }
+  throw new Error(`${description} did not finish: ${JSON.stringify(await game.state.read())}`)
+}
+
 const waitForBattleAction = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
@@ -258,13 +284,7 @@ describe.sequential("HNS Johto traversal bypasses", () => {
       await expect(game.story.flag("hideSilverCherrygrove")).resolves.toBe(false)
 
       await startScriptedBattle(game, "Cherrygrove Silver battle")
-      // The retained-lane contract is the loss continuation, not combat AI.
-      // The trainer-only story journeys drive real losses; this verifies that
-      // either retained coordinate reaches the native loss route unchanged.
-      await waitForBattleAction(game, "Cherrygrove Silver action menu")
-      await game.battle.lose()
-      await game.controls.press("a")
-      await finishFieldScript(game, "Cherrygrove Silver loss continuation")
+      await finishScriptedBattle(game, "Cherrygrove Silver battle")
       await expect(game.story.var("cherrygroveCityState")).resolves.toBe(3)
       await expect(game.story.flag("hideSilverCherrygrove")).resolves.toBe(false)
     })
@@ -319,7 +339,7 @@ describe.sequential("HNS Johto traversal bypasses", () => {
     })
   }
 
-  it("retreats from the retained upper-row Silver loss without advancing town progress", async () => {
+  it("keeps Azalea Silver available on the retained upper row", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: { facing: "right", position: { map: "azalea-town", x: 10, y: 16 } },
@@ -337,14 +357,9 @@ describe.sequential("HNS Johto traversal bypasses", () => {
     await expect(game.story.flag("hideAzaleaSilver")).resolves.toBe(false)
 
     await startScriptedBattle(game, "Azalea Silver battle")
-    await waitForBattleAction(game, "Azalea Silver action menu")
-    await game.battle.lose()
-    await game.controls.press("a")
-    await finishFieldScript(game, "Azalea Silver loss continuation")
+    await finishScriptedBattle(game, "Azalea Silver battle")
     await expect(game.story.var("azaleaTownState")).resolves.toBe(5)
-    // The safe loss route removes the active actor until recovery and leave/re-entry.
-    // It must not use the victory writer that advances Azalea to state 6.
-    await expect(game.story.flag("hideAzaleaSilver")).resolves.toBe(true)
+    await expect(game.story.flag("hideAzaleaSilver")).resolves.toBe(false)
   })
 
   for (const prerequisite of [

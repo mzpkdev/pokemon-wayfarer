@@ -16,7 +16,6 @@
 #define E2E_TEST_KEEP_MAP 0xFFFF
 #define E2E_TEST_KEEP_COORDINATE INT16_MIN
 #define E2E_TEST_KEEP_TEXT_SPEED 0xFF
-#define E2E_TEST_KEEP_PP 0xFF
 
 #define E2E_TEST_FULL_POCKET_ITEMS     (1 << 0)
 #define E2E_TEST_FULL_POCKET_KEY_ITEMS (1 << 1)
@@ -99,7 +98,6 @@ enum E2ETestError
     E2E_TEST_ERROR_SAVE,
     E2E_TEST_ERROR_CIRCUIT,
     E2E_TEST_ERROR_APPEARANCE,
-    E2E_TEST_ERROR_REMATCH_TRAINER,
 };
 
 enum E2ETestGamePhase
@@ -224,7 +222,6 @@ struct E2ETestMonFixture
     u16 moves[MAX_MON_MOVES];
     u8 level;
     u8 isEgg;
-    u8 pp[MAX_MON_MOVES];
 };
 
 struct E2ETestPartyMonFixture
@@ -280,9 +277,6 @@ struct E2ETestRequest
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 applyLeagueCircuit;
     u8 appearanceId;
-    // Little-endian base trainer id. A nonzero valid rematch-table base trainer
-    // is arranged as fought and ready through UpdateRematchIfDefeated().
-    u8 rematchTrainerId[2];
 };
 
 struct E2ETestObservedPcSlot
@@ -406,7 +400,6 @@ struct E2ETestState
     u32 money;
     u16 partyHp[E2E_TEST_MAX_PARTY];
     u32 partyStatus[E2E_TEST_MAX_PARTY];
-    u8 partyPp[E2E_TEST_MAX_PARTY][MAX_MON_MOVES];
 };
 
 struct E2ETestAbi

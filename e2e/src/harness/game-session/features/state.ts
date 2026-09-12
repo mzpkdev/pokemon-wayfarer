@@ -32,7 +32,6 @@ export type GameState = {
   appearance: { id: number; candidate: number; confirmed: number; introStage: number }
   money: number
   partyVitals: { hp: number; status: number }[]
-  partyPp: number[][]
   frame: number
   origin: {
     starterChooseStage: number
@@ -249,7 +248,6 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         hp: snapshot.partyHp[index]!,
         status: snapshot.partyStatus[index]!,
       })),
-      partyPp: snapshot.partyPp.slice(0, snapshot.partyCount),
       frame: snapshot.frame,
       origin: {
         starterChooseStage: snapshot.starterChooseStage,
