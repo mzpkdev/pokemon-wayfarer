@@ -29,10 +29,13 @@ typed `map` pointer. No public API returns a payload pointer with an unbounded l
 
 Raw and compressed layouts have identical behavior after crossing the loader boundary.
 Callers do not branch on codec, inspect LZ headers, or calculate payload addresses.
+Ordinary within-map tile reads continue to use the loaded RAM grid and never decode. An
+infrequent point or special-map source read may decode through the API, and each caller
+context must be measured before it is enabled.
 
 ### Access API
 
-The layout module provides three classes of operation. Exact function names may follow
+The layout module provides four classes of operation. Exact function names may follow
 project naming conventions, but their ownership and behavior are fixed here.
 
 | Operation | Contract |
@@ -85,11 +88,12 @@ The current largest source file is 14,640 bytes. That is a measurement case, not
 capacity. A future larger layout updates the generated maximum and must pass peak-memory
 and latency gates before compression is enabled for it.
 
-The production image adds no static full-map buffer. A previously captured ELF reported
-248,484 of 262,144 EWRAM bytes allocated statically, with `gHeap` (`0x1C500`) inside
-that total. It is historical context, not a measurement of a candidate build. Heap
-capacity cannot be added to the remaining static bytes when reasoning about EWRAM. The
-decoder's stack use also counts toward the measured load peak.
+The production image adds no static full-map buffer. The feasibility release ELF measured
+248,525 of 262,144 EWRAM bytes allocated statically, with the 115,968-byte `gHeap`
+inside that total; the earlier 248,484-byte result is historical. The largest current
+padded grid is 20,250 bytes within `sBackupMapData`'s 20,480 bytes. Heap capacity cannot
+be added to remaining static bytes when reasoning about EWRAM. The decoder's stack use
+also counts toward the measured load peak.
 
 ### Descriptor validation
 
@@ -286,7 +290,10 @@ Test and profiling builds record at least:
 - temporary bytes requested, allocation result, smallest contiguous free block before
   allocation, heap high-water mark during load, and state after release;
 - maximum observed decoder stack use or a proven conservative stack bound;
-- full map-load duration through connection completion; and
+- complete player-facing load/transition duration through destination redraw and resumed
+  input processing, following the validation spec's paired end-to-end boundaries;
+- diagnostic layout timing through all connections, plus complete point and special-map
+  caller operations; and
 - stable failure reason counts.
 
 Instrumentation does not add saved fields. Production may compile out detailed counters
@@ -331,6 +338,7 @@ The runtime boundary is complete when:
 
 - [Compressed map layout build and storage](compressed-map-layout-build-storage.md)
 - [Compressed map layout validation and rollout](compressed-map-layout-validation-rollout.md)
+- [Map compression feasibility and transition budget](../research/map-compression-feasibility.md)
 - [`MapLayout` and `BackupMapLayout`](../../game/include/global.fieldmap.h)
 - [Map offsets and backup-map limits](../../game/include/fieldmap.h)
 - [Field map loading and connection copying](../../game/src/fieldmap.c)

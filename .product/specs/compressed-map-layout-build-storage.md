@@ -236,10 +236,14 @@ human report containing:
 
 The current 1,089-layout production selection measured 1,875,152 raw bytes and 530,008
 stored bytes under `auto`, for 1,345,144 bytes of gross payload saving. At 28 bytes per
-layout, descriptors would occupy 30,492 bytes, leaving 1,314,652 bytes before loader,
-integrity, alignment, and raw-exception cost. These are audit evidence, not release
-results. The report regenerates its own figures from the exact selected catalog instead
-of asserting that the count or total stays constant.
+layout, descriptors occupy 30,492 bytes, including their CRC fields, leaving 1,314,652
+bytes before executable code, other alignment, and raw-exception cost. The
+[feasibility POC](../research/map-compression-feasibility.md) then relinked the storage
+representation and measured 1,315,072 bytes saved, including descriptor bytes and actual
+placement/alignment, leaving 266,496 bytes above 1 MiB. That nonplayable storage-only
+image excludes runtime CRC code, loader and error UI cost, and reviewed raw exceptions;
+it is evidence, not release net savings. The report regenerates figures from its exact
+catalog instead of asserting that a count or total stays constant.
 
 ### Audit catalog identity
 
@@ -312,6 +316,7 @@ The build/storage boundary is complete when:
 
 - [Compressed map layout runtime loading](compressed-map-layout-runtime-loading.md)
 - [Compressed map layout validation and rollout](compressed-map-layout-validation-rollout.md)
+- [Map compression feasibility and transition budget](../research/map-compression-feasibility.md)
 - [Current layout generator](../../game/tools/mapjson/mapjson.cpp)
 - [Current layout generation rules](../../game/map_data_rules.mk)
 - [Current generated layout include point](../../game/data/maps.s)

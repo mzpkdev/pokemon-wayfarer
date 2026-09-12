@@ -17,17 +17,19 @@ API, decode lifecycle, connection algorithm, and failure contract.
 
 ## Behavior
 
-### Bounded feasibility phase
+### Completed feasibility POC
 
-Before full production implementation begins, an isolated prototype may decode the
-largest selected layout and perform one
-connection-heavy transition with the planned descriptor validation, stored checksum,
-LZ preflight, decode, and decoded checksum enabled. It records requested and contiguous
-heap bytes, allocation lifetime, and paired total load time against the pre-feature raw
-loader. It does not enable compression by default for production or change source
-`map.bin` files. Isolated measurement builds may use production release flags. Its result
-decides whether implementation may continue; it does not replace any production integrity,
-failure, functional, ROM, memory, or hardware-timing gate below.
+The [isolated feasibility POC](../research/map-compression-feasibility.md) has completed:
+1,089 exact round trips; a 1,315,072-byte storage-only production relink; and three ARM
+fixtures with 900 deterministic samples, exact 20,480-byte grids, and one-buffer
+lifetime checks. Hybrid added 3.26, 4.09, and 4.11 frames against legacy. The storage
+links used production release LTO and are nonplayable. The separate runtime harness
+uses Thumb `-O2` without LTO, a replacement BIOS, and no IRQ/audio workload; it does
+not cover the connection-heaviest map, east/west boundaries, or real field memory.
+Its reverse Route48 fixture omits the Safari Zone neighbor; its 996-byte stack result is
+below the benchmark caller and excludes gameplay and IRQ peaks. It supports bounded
+playable integration under the provisional timing budget below. It does not satisfy any
+production integrity, failure, functional, ROM, memory, or hardware gate.
 
 ### Validation builds
 
@@ -210,11 +212,12 @@ not enter that ABI.
 Static and runtime evidence are both required.
 
 The paired production ELF report records `.ewram`, `.ewram.sbss`, IWRAM, stack reserve,
-`sBackupMapData`, and `gHeap`. A historical baseline recorded 248,484 static EWRAM bytes
-out of 256 KiB, with `sBackupMapData` at 20,480 bytes and `gHeap` at `0x1C500` bytes
-inside that total. Candidate values are unknown until these paired reports are produced.
-The candidate may add small scalar loader state, but it must add no static array or
-reserved region sized to a complete layout.
+`sBackupMapData`, and `gHeap`. The feasibility release baseline measured 248,525 static
+EWRAM bytes out of 256 KiB, with `sBackupMapData` at 20,480 bytes and `gHeap` at 115,968
+bytes inside that total; the old 248,484-byte figure is historical. The largest selected
+padded grid is 20,250 bytes. Candidate values remain unknown until paired reports are
+produced. The candidate may add small scalar loader state, but it must add no static
+array or reserved region sized to a complete layout.
 
 Test instrumentation records allocator topology and high-water use immediately before
 the load context, after its one allocation, after each current or neighbor decode, after
@@ -226,7 +229,7 @@ release, and before tileset decompression. The matrix includes:
 - the smallest observed contiguous free heap under full warp, camera connection,
   Fly, and save-reload paths;
 - repeated alternating large and small loads to expose fragmentation;
-- each special direct-consumer path; and
+- each special direct-consumer and infrequent point-read caller context; and
 - injected allocation failure at and below the requested size.
 
 For every successful case, the single requested buffer fits the smallest contiguous free
@@ -237,13 +240,31 @@ post-release values. An average or empty-heap measurement does not pass this gat
 
 ### Timing proof
 
-Functional SkyEmu runs do not approve performance. Before each rollout promotion, run
-paired pre-feature legacy-raw and hybrid production-equivalent builds on an approved
-accurate GBA emulator or physical hardware. Record the ROM revision and checksum,
-emulator or hardware model, measurement code revision, timer source, sample count, and
-raw samples.
+The feasibility POC's 3.26–4.11-frame fixtures exceeded the former one-frame p95 and
+two-frame maximum rule. For playable evaluation, the provisional ceiling is now at most
+five **additional** frames (about 84 ms) for a complete player-facing load or transition
+against its paired pre-feature legacy-raw baseline. It includes the current layout, all
+connections, and feature overhead; it is not five frames per decode or neighbor. A pass
+does not approve production rollout.
 
-Use the existing in-ROM benchmark timer or an equally precise cycle counter around:
+Before each rollout promotion, run paired pre-feature legacy-raw and hybrid
+production-equivalent builds on an approved accurate GBA emulator or physical hardware.
+Record the ROM revision and checksum, emulator or hardware model, measurement code
+revision, timer source, sample count, and raw samples.
+
+The acceptance timer covers the complete player-facing operation. For warp, Fly and
+reload, start at the load/transition trigger and stop when the destination field is
+displayed and ordinary input processing has resumed. For a seamless crossing, start at
+the boundary-triggering movement update and stop after destination redraw and input
+processing resume. Include any deferred work or extra display frames caused by the
+feature; moving work outside the layout subroutine must not hide its latency. Measure
+point reads and special-map generation from their caller's trigger through its normal
+return to UI or field processing. Pair the same boundaries and gameplay state in legacy
+and candidate builds. Record audio continuity and correct input resumption during the
+same journeys.
+
+Keep diagnostic sub-timers using the existing in-ROM benchmark timer or an equally
+precise cycle counter around:
 
 - descriptor validation;
 - stored checksum and stream preflight;
@@ -253,21 +274,30 @@ Use the existing in-ROM benchmark timer or an equally precise cycle counter arou
 - complete layout initialization through connection completion.
 
 Measure at least the largest compressed layout, the connection-heaviest real map, a
-representative indoor warp, a Fly arrival, and save reload. Run at least 100 loads per
-case after a fixed setup, report median, 95th percentile, and maximum. The release
+representative indoor warp, a Fly arrival, save reload, all connection directions, and
+each infrequent point or special-map source-read caller context. Run at least 100 loads
+per case after a fixed setup and report median, 95th percentile, and maximum. The
 comparison is candidate total load time minus the paired pre-feature legacy-raw total.
-It includes descriptor validation and both CRC checks when they are common feature cost.
+It includes all feature validation, checksum, decode and allocation work. Raw control
+computes one CRC over its payload and compares it with both descriptor CRC fields;
+hybrid compressed entries check their stored and decoded payloads separately.
 
-Also record a paired raw-control comparison for diagnosis: raw control uses the new
-descriptor path and its raw-payload validation/checksum work, but has no LZ preflight or
-decode. Report legacy-to-raw-control, raw-control-to-candidate, and legacy-to-candidate
-samples separately. The raw-control comparison cannot cancel shared descriptor or CRC
-cost from the release decision.
+Report and judge black-screen warp/Fly/reload paths separately from visible seamless
+crossings. Exercise actual walking, cycling, and repeated crossings, including the
+connection-heaviest map. A brief bounded pause is allowed; uninterrupted audio, correct
+input resumption, and unchanged simulation and gameplay remain required.
 
-At the 95th percentile, added complete-layout time must be no more than one video frame.
-The measured maximum must add no more than two frames. No case may show a visible fade
-stall, input-release delay, or audio interruption. Any miss blocks promotion even if ROM
-and functional gates pass.
+Also record a paired raw-control comparison for diagnosis: raw control includes the new
+descriptor path and its single raw CRC scan with both field comparisons, but has no LZ
+preflight or decode. Report
+legacy-to-raw-control, raw-control-to-candidate, and legacy-to-candidate samples
+separately. The raw-control comparison cannot cancel shared descriptor or CRC cost from
+the release decision.
+
+No complete player-facing case may exceed the provisional five-additional-frame maximum.
+The evidence bundle retains median, p95, and maximum so playability can be judged rather
+than inferred from a single statistic. A miss blocks promotion even if ROM and functional
+gates pass.
 
 ### ROM proof
 
@@ -277,9 +307,10 @@ hybrid candidate. The `maps_layouts` category diagnoses payload movement; the wh
 difference is the net result. The raw control report is retained for rollback sizing but
 does not define net saving because it shares feature overhead with the candidate.
 
-The current 1,089-layout audit measured 1,345,144 bytes of gross payload saving under
-`auto`; 30,492 descriptor bytes leave 1,314,652 bytes before other candidate cost.
-Release approval does not call either figure net. The candidate must reduce total
+The feasibility POC storage relink measured 1,315,072 bytes saved, including 30,492
+descriptor bytes and actual placement/alignment, leaving 266,496 bytes above 1 MiB.
+It excludes runtime code, error UI, and reviewed raw exceptions. Release approval does
+not call it net. The candidate must reduce total
 linked ROM use by at least 1,048,576 bytes after code, descriptors, checksums, alignment,
 raw exceptions, and all other overhead.
 
@@ -295,22 +326,24 @@ player save is modified to collect rollout data.
 
 ## Staged migration
 
-### Stage -1: feasibility prototype
+### Stage -1: feasibility POC complete
 
-Run the bounded feasibility phase above before full production implementation begins.
-Its record must cover the largest selected layout and a connection-heavy case, including
-the planned preflight and checks. A heap, lifetime, or paired-total-timing failure blocks
-implementation until the design changes; a pass advances only to Stage 0 and waives no
-release gate.
+The retained POC supports a bounded playable integration; its storage and fixture timing
+results do not substitute for production evidence.
 
-### Stage 0: shadow generation
+### Stage 0: bounded playable integration
 
-All runtime descriptors select raw. The build generates compressed candidates, verifies
-round trips, and emits manifests and paired size estimates. The raw abstraction replaces
-every public direct payload access before the stage ends.
+Use an evaluation-only build configuration for the real loader and a reviewed small
+compressed map set; other layouts remain raw by build policy. Keep production
+compression off until the later rollout gates permit it. Raw selection is never a
+runtime recovery from failed validation. Retain complete round trips and manifests,
+and measure real black-screen and visible-crossing journeys.
+The raw abstraction replaces every public direct payload access before the stage ends.
 
 Promotion requires deterministic generation, no source-file changes, complete build
-tests, a clean source guard, and raw abstraction differentials for all current consumers.
+tests, a clean source guard, raw abstraction differentials for all current consumers,
+and provisional-budget evidence for warp, Fly, reload, walking, cycling, and repeated
+crossings with uninterrupted audio and correct input resumption.
 
 ### Stage 1: unconnected canary
 
@@ -378,8 +411,9 @@ Release approval requires one evidence bundle showing:
 6. unchanged save structures and successful raw to hybrid to raw save compatibility;
 7. production ELF and live instrumentation proving no permanent full-map buffer and safe
    heap, stack, lifetime, and fragmentation behavior at peak;
-8. accurate-emulator or hardware timing within one frame at the 95th percentile and two
-   frames at maximum, without visible or audio disruption;
+8. accurate-emulator or hardware timing within the provisional five-additional-frame
+   maximum for each complete player-facing case, with separate black-screen and visible-
+   crossing playability evidence, uninterrupted audio, and correct input resumption;
 9. paired production-equivalent legacy-size and hybrid ROM reports showing at least
    1 MiB net saving after all new feature costs and labeling gross payload saving
    separately; and
@@ -393,6 +427,7 @@ net-ROM gate.
 
 - [Compressed map layout build and storage](compressed-map-layout-build-storage.md)
 - [Compressed map layout runtime loading](compressed-map-layout-runtime-loading.md)
+- [Map compression feasibility and transition budget](../research/map-compression-feasibility.md)
 - [Wayfarer runtime foundation](wayfarer-runtime-foundation.md)
 - [Mechanics test runner](../../game/test/test_runner.c)
 - [Mechanics benchmark interface](../../game/include/test/test.h)
@@ -406,7 +441,7 @@ The later implementation should use these dependency boundaries:
 
 | Order | Workstream | Depends on | Completion output |
 | ---: | --- | --- | --- |
-| 1 | Baseline and contracts | Approved documentation and passed feasibility prototype | Reproducible legacy-size and raw-control catalog, ROM, ELF, heap, timing, and direct-access audit; frozen descriptor and error enums. |
+| 1 | Baseline and contracts | Approved documentation and completed feasibility POC | Reproducible legacy-size and raw-control catalog, ROM, ELF, heap, timing, and direct-access audit; frozen descriptor and error enums. |
 | 2A | Build format and generator | Step 1 | Independent payloads, descriptors, policy manifest, complete-file round trips, generated bounds, and reports. |
 | 2B | Raw runtime abstraction | Step 1 | Opaque `MapLayout` payload, raw full and rectangle copies, scoped views, migrated consumers, source guard, and unchanged raw behavior. |
 | 2C | Test scaffolding | Step 1 | Legacy oracle seam, catalog enumerator, fault fixtures, heap telemetry, timing hooks, and E2E journey skeletons. |

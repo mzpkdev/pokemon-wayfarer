@@ -3,8 +3,9 @@
 The five proposals use credible techniques. Two already have measured release
 savings. The other three are plausible. This report records the source-contract,
 inventory, and validation defects found in the audited planning baseline.
-Map compression has the largest potential benefit and needs a runtime feasibility
-prototype before its space can be treated as available.
+Map compression has the largest potential benefit. Its subsequent
+[isolated feasibility POC](map-compression-feasibility.md) now supports bounded
+playable integration; its space is not yet accepted shipping headroom.
 
 This audit covers five PRDs and their nine specifications at
 `ec18cfffd21f31b54a60a73d750863bde30be83d`, the local `origin/main` snapshot on
@@ -13,14 +14,20 @@ task: Ice is an independent Normal-backed control, tileset production rules and
 task-slot accounting are explicit, map planning uses the production catalog and complete consumer
 inventory, timing includes the legacy loader, and multiboot validation status
 is explicit. The findings below describe the original baseline; they are not
-unresolved documentation defects. Game sources remain unchanged. Separate
-feature worktrees and the additional-savings research are outside this audit.
+unresolved documentation defects. The later map POC measured 1,315,072 bytes of
+storage-only linked savings and 3.26–4.11 added frames in three isolated runtime
+fixtures. Product discussion replaces the original one/two-frame timing veto
+with a provisional five-additional-frame complete-transition budget and separate
+playable evaluation of hidden loads and visible crossings. Integrity, live-memory,
+gameplay, final net-ROM and rollback gates remain. The linked report distinguishes
+that decision from measured evidence. Game sources remain unchanged. Separate
+feature implementations and the additional-savings research are outside this audit.
 
 | Proposal | Judgment | What the evidence supports |
 | --- | --- | --- |
 | [Surf pixel sharing](../prds/wayfarer-surf-pokemon-pixel-sheet-deduplication.md) | Proven and worthwhile; already implemented. | Historical paired releases save **430,080 bytes (420 KiB)**. Fresh regeneration still verifies all 61 approved pairs. |
 | [Legacy multiboot removal](../prds/wayfarer-legacy-multiboot-removal.md) | Proven space recovery through an explicit feature cut; already implemented. | Historical paired releases save **209,556 bytes**. This deliberately removes GameCube, Berry-fix transmitter, and e-Reader transfer support. |
-| [Map compression](../prds/compressed-map-layouts.md) | Credible, high-value, conditional on memory and loading proof. | Fresh production-catalog compression saves **1,345,144 gross bytes** with raw fallback. The **at least 1 MiB net** requirement remains unproven by a paired release. |
+| [Map compression](../prds/compressed-map-layouts.md) | Credible, high-value, conditional on memory and loading proof. | Fresh production-catalog compression saves **1,345,144 gross bytes** with per-layout raw selection at build time. The **at least 1 MiB net** requirement remains unproven by a paired release. |
 | [Exact asset aliases](../prds/exact-rom-asset-aliasing.md) | Viable after correcting the Arceus source contract. | The stated **67,544-byte ceiling** includes an Ice-form comparison that fails. Conservatively excluding that alias reduces the ceiling to **66,260 bytes**, before linked-build verification. |
 | [Tileset storage](../prds/tileset-storage-optimization.md) | Viable but small; original production sizes are correct. | Fresh conversion reproduces **19,600 gross bytes** for the two selected assets. The **19,500-byte net minimum** still requires a paired release. |
 
