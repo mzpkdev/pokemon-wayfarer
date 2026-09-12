@@ -42,6 +42,7 @@ void ItemUseOutOfBattle_CannotUse(u8 taskId);
 void ItemUseOutOfBattle_GBPlayer(u8 taskId);
 void ItemUseOutOfBattle_ExpShare(u8 taskId);
 void ItemUseInBattle_BagMenu(u8 taskId);
+void ItemUseInBattle_PokeBall(u8 taskId);
 void ItemUseInBattle_PartyMenu(u8 taskId);
 void ItemUseInBattle_PartyMenuChooseMove(u8 taskId);
 void Task_UseDigEscapeRopeOnField(u8 taskId);
@@ -67,6 +68,8 @@ enum {
     BALL_THROW_UNABLE_ONE_TYPE,
 };
 
+bool32 TrainerOnlyIsFeedableBerry(enum Item item);
+void ItemUseInTrainerOnly_Food(u8 taskId);
 bool32 CanThrowBall(void);
 bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon);
 

@@ -1,7 +1,6 @@
 EcruteakCity_Theater_hns_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, EcruteakCity_Theater_OnTransition
 	.byte 0
-
 EcruteakCity_Theater_OnTransition::
 	call_if_eq VAR_ECRUTEAK_CITY_THEATER, 1, EcruteakCity_Theater_MapScript_SetRocketSceneActive
 	call_if_eq VAR_ECRUTEAK_CITY_THEATER, 8, EcruteakCity_Theater_MapScript_SetKimonoMovement
@@ -1082,4 +1081,3 @@ EcruteakCity_Theater_Text_ZukiAfterAll:
 EcruteakCity_Theater_Text_KimonoGirlsBeforeBattle:
 	.string "Talk to ZUKI in the middle\n"
 	.string "when you are ready.$"
-

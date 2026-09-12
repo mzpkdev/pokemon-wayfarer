@@ -161,7 +161,16 @@ describe.sequential("HNS HM field use", () => {
           unlocked: true,
         },
       })
+      // Return through both menus before the next test replaces the fixture.
+      // Leaving Flash's unavailable-here result in its party-menu callback
+      // holds field controls across the next arrange request.
       await game.controls.press("a")
+      await game.wait.frames(60)
+      for (let attempts = 0; attempts < 3 && !(await game.state.read()).ready; attempts++) {
+        await game.controls.press("b")
+        await game.wait.frames(60)
+      }
+      await game.wait.forReady()
     })
 
     it("reserves Wayfarer HM09 Dive for contextual use on HNS maps", async () => {

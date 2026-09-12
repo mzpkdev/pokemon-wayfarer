@@ -73,11 +73,12 @@ const finishNativeHoennScene = async (
   }
   const state = await game.state.read()
   if (
-    state.ready
-    && !state.controlsLocked
-    && !state.scriptActive
-    && state.origin.littlerootTownState >= townState
-  ) return
+    state.ready &&
+    !state.controlsLocked &&
+    !state.scriptActive &&
+    state.origin.littlerootTownState >= townState
+  )
+    return
   throw new Error(`${description}: ${JSON.stringify(state)}`)
 }
 
@@ -85,7 +86,8 @@ const finishNativeFieldScene = async (game: GameSession, description: string): P
   let sceneObserved = false
   for (let attempt = 0; attempt < 100; attempt++) {
     const state = await game.state.read()
-    sceneObserved ||= !state.ready || state.controlsLocked || state.scriptActive || state.dialogueOpen
+    sceneObserved ||=
+      !state.ready || state.controlsLocked || state.scriptActive || state.dialogueOpen
     if (sceneObserved && state.ready && !state.controlsLocked && !state.scriptActive) return
     await game.controls.press("a")
     await game.wait.frames(45)

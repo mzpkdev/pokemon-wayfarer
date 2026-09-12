@@ -44,6 +44,8 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_WARP,
     E2E_TEST_COMMAND_LOSE_BATTLE,
     E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY,
+    E2E_TEST_COMMAND_OBSERVE_VAR,
+    E2E_TEST_COMMAND_SET_VAR,
 };
 
 enum E2ETestCheckpoint
@@ -198,6 +200,7 @@ enum E2ETestBattleUiState
     E2E_TEST_BATTLE_UI_CATCH_SWAP_PARTY,
     E2E_TEST_BATTLE_UI_OTHER,
     E2E_TEST_BATTLE_UI_TEXT,
+    E2E_TEST_BATTLE_UI_MOVE_MENU,
 };
 
 struct E2ETestVarPatch
@@ -219,7 +222,6 @@ struct E2ETestMonFixture
     u16 moves[MAX_MON_MOVES];
     u8 level;
     u8 isEgg;
-    u32 reserved;
 };
 
 struct E2ETestPartyMonFixture
@@ -275,7 +277,6 @@ struct E2ETestRequest
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 applyLeagueCircuit;
     u8 appearanceId;
-    u8 reserved[2];
 };
 
 struct E2ETestObservedPcSlot
@@ -395,6 +396,10 @@ struct E2ETestState
     u8 appearanceCandidate;
     u8 appearanceConfirmed;
     u8 appearanceIntroStage;
+    u8 trainerOnlyState[12];
+    u32 money;
+    u16 partyHp[E2E_TEST_MAX_PARTY];
+    u32 partyStatus[E2E_TEST_MAX_PARTY];
 };
 
 struct E2ETestAbi
@@ -427,6 +432,8 @@ bool32 E2ETest_IsSummaryScreenOpen(void);
 void E2ETest_SetStorageCurrentBox(u8 boxId);
 void E2ETest_GetStorageUiState(u8 *uiState, u8 *mode, u8 *cursorArea, u8 *cursorPosition, bool8 *movingMon);
 bool32 E2ETest_GetBattleActionMenuState(u8 *cursor);
+bool32 E2ETest_GetBattleMoveMenuState(u8 *cursor);
+bool32 E2ETest_GetTrainerOnlyActionMenuState(u8 *cursor);
 bool32 E2ETest_IsBattleTextReady(void);
 bool32 E2ETest_GetBattleBagState(u8 *state, u8 *pocket, u16 *item);
 bool32 E2ETest_IsCaughtDexReady(void);

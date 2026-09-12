@@ -14,6 +14,7 @@ import {
   type Species,
 } from "../catalog"
 import {
+  type TrainerOnlySnapshot,
   battleUiStates,
   catchSwapStates,
   dialogueMessages,
@@ -29,6 +30,8 @@ import { type SessionRuntime } from "../runtime"
 
 export type GameState = {
   appearance: { id: number; candidate: number; confirmed: number; introStage: number }
+  money: number
+  partyVitals: { hp: number; status: number }[]
   frame: number
   origin: {
     starterChooseStage: number
@@ -128,6 +131,7 @@ export type GameState = {
     }[]
   }
   battle: {
+    trainerOnly: TrainerOnlySnapshot
     active: boolean
     ui: (typeof battleUiStates)[number]
     cursor: number | null
@@ -239,6 +243,11 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         confirmed: snapshot.appearanceConfirmed,
         introStage: snapshot.appearanceIntroStage,
       },
+      money: snapshot.money,
+      partyVitals: Array.from({ length: snapshot.partyCount }, (_, index) => ({
+        hp: snapshot.partyHp[index]!,
+        status: snapshot.partyStatus[index]!,
+      })),
       frame: snapshot.frame,
       origin: {
         starterChooseStage: snapshot.starterChooseStage,
@@ -356,6 +365,7 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         slots: namedPcSlots,
       },
       battle: {
+        trainerOnly: snapshot.trainerOnly,
         active: snapshot.battleActive,
         ui: battleUiStates[snapshot.battleUiState] ?? "other",
         cursor: snapshot.battleCursor === 0xff ? null : snapshot.battleCursor,

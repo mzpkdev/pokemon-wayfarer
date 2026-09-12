@@ -5,8 +5,6 @@
 #include "battle_frontier.h"
 #include "battle_partner.h"
 #include "battle_setup.h"
-#include "wayfarer_battle_gate.h"
-#include "wayfarer_origin.h"
 #include "battle_tower.h"
 #include "battle_transition.h"
 #include "event_data.h"
@@ -72,15 +70,6 @@ static void Task_StartBattleAfterTransition(u8 taskId)
 void DoSpecialTrainerBattle(void)
 {
     s32 i;
-
-#if IS_WAYFARER
-    // Check the player's party before a partner can occupy its remaining slots.
-    if (!WayfarerCanStartOrdinaryBattle())
-    {
-        WayfarerAbortEmptyPartyBattle();
-        return;
-    }
-#endif
 
     gBattleScripting.specialTrainerBattleType = gSpecialVar_0x8004;
     switch (gSpecialVar_0x8004)

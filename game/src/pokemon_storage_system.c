@@ -6964,6 +6964,7 @@ s16 CompactPartySlots(void)
             retVal = i;
         }
     }
+    gPlayerPartyCount = last;
     for (; last < PARTY_SIZE; last++)
         ZeroMonData(&gPlayerParty[last]);
 

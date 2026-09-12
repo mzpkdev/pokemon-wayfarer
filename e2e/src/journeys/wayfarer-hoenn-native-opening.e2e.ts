@@ -40,10 +40,13 @@ describe.sequential("Wayfarer native Littleroot household", () => {
       expect(recovered.origin.recovery.map).toBe(home)
       expect(recovered.party.every((mon) => !mon.fainted)).toBe(true)
     } catch (error) {
-      await fs.promises.writeFile("/tmp/wayfarer-hoenn-household-failure.png", await game.screenshot())
+      await fs.promises.writeFile(
+        "/tmp/wayfarer-hoenn-household-failure.png",
+        await game.screenshot(),
+      )
       throw error
     } finally {
       await game.close()
     }
-  })
+  }, 180_000)
 })

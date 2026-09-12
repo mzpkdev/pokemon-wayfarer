@@ -21,11 +21,18 @@ it("resets an abandoned May setup to unconfirmed Gold in the same emulator", asy
     await game.wait.frames(2)
     expect(await client.input({ A: 0, B: 0, Start: 0, Select: 0 })).toBe("ok")
     await reachAppearanceQuestion(game)
-    expect((await game.state.read()).appearance).toMatchObject({ candidate: 1, confirmed: 0, introStage: 1 })
+    expect((await game.state.read()).appearance).toMatchObject({
+      candidate: 1,
+      confirmed: 0,
+      introStage: 1,
+    })
     const directory = process.env.SKYEMU_CAPTURE_DIR
     if (directory) {
       await fs.mkdir(directory, { recursive: true })
-      await fs.writeFile(path.join(directory, "fresh-after-abandoned-may.png"), await game.screenshot())
+      await fs.writeFile(
+        path.join(directory, "fresh-after-abandoned-may.png"),
+        await game.screenshot(),
+      )
     }
   } finally {
     await game.close()

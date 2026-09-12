@@ -1,4 +1,5 @@
 #include "global.h"
+#include "capture_context.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_arena.h"
@@ -100,8 +101,6 @@ static const u8 sPkblToEscapeFactor[][3] = {
         [B_MSG_MON_IGNORED]    = 0
     }
 };
-static const u8 sGoNearCounterToCatchFactor[] = {4, 3, 2, 1};
-static const u8 sGoNearCounterToEscapeFactor[] = {4, 4, 4, 4};
 
 struct BattleWeatherInfo
 {
@@ -851,24 +850,12 @@ void HandleAction_GoNear(void)
     }
     else
     {
-        // go near
-        gBattleStruct->safariCatchFactor += sGoNearCounterToCatchFactor[gBattleStruct->safariGoNearCounter];
-        if (gBattleStruct->safariCatchFactor > 20)
-            gBattleStruct->safariCatchFactor = 20;
-
-        gBattleStruct->safariEscapeFactor += sGoNearCounterToEscapeFactor[gBattleStruct->safariGoNearCounter];
-        if (gBattleStruct->safariEscapeFactor > 20)
-            gBattleStruct->safariEscapeFactor = 20;
-
-        if (gBattleStruct->safariGoNearCounter < 3)
-        {
-            gBattleStruct->safariGoNearCounter++;
+        if (CaptureAdvanceProximity(&gBattleStruct->safariCatchFactor,
+                                    &gBattleStruct->safariEscapeFactor,
+                                    &gBattleStruct->safariGoNearCounter))
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CREPT_CLOSER;
-        }
         else
-        {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_GET_CLOSER;
-        }
         gBattlescriptCurrInstr = gBattlescriptsForSafariActions[1];
     }
 

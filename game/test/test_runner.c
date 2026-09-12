@@ -277,6 +277,9 @@ top:
         break;
 
     case STATE_ASSIGN_TEST:
+        // A completed battle can leave VBlankCB_Battle installed. Detach it
+        // before another test seeds RNG or frees the previous test state.
+        ReinitCallbacks();
         ClearSaveBlocks();
         while (1)
         {

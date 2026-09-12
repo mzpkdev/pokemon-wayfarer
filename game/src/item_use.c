@@ -49,6 +49,7 @@
 #include "constants/items.h"
 #include "constants/songs.h"
 #include "nuzlocke.h"
+#include "trainer_only_encounter.h"
 
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
@@ -1196,6 +1197,8 @@ void ItemUseInBattle_PokeBall(u8 taskId)
     case BALL_THROW_ABLE:
     default:
         RemoveBagItem(gSpecialVar_ItemId, 1);
+        if (IsTrainerOnlyEncounter())
+            TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_BALL);
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
             Task_FadeAndCloseBagMenu(taskId);
         else
@@ -1238,6 +1241,27 @@ void ItemUseInBattle_PokeBall(u8 taskId)
         DisplayItemMessage(taskId, FONT_NORMAL, sText_CantThrowPokeBall_OneType, CloseItemMessage);
         break;
     }
+}
+
+bool32 TrainerOnlyIsFeedableBerry(enum Item item)
+{
+    // Standard berries are contiguous; the following e-Reader berry is excluded.
+    return item >= FIRST_BERRY_INDEX && item <= ITEM_MARANGA_BERRY;
+}
+
+void ItemUseInTrainerOnly_Food(u8 taskId)
+{
+    if (!TrainerOnlyIsFeedableBerry(gSpecialVar_ItemId)
+     || !IsAllowedToUseBag()
+     || gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
+     || !CheckBagHasItem(gSpecialVar_ItemId, 1))
+    {
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, CloseItemMessage);
+        return;
+    }
+    RemoveBagItem(gSpecialVar_ItemId, 1);
+    TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_FOOD);
+    Task_FadeAndCloseBagMenu(taskId);
 }
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)

@@ -1,6 +1,5 @@
 GoldenrodCity_RadioTower_1F_hns_MapScripts::
 	.byte 0
-
 RadioTower1F_EventScript_Grunt::
 	lock
 	faceplayer
@@ -442,5 +441,3 @@ GoldenrodCity_RadioTower_1F_Text_PrizeWeveBeenHolding:
 
 GoldenrodCity_RadioTower_1F_Text_PleaseVisitAgain2:
 	.string "Please do visit again.$"
-
-

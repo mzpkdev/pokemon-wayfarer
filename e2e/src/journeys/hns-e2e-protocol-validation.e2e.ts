@@ -7,6 +7,16 @@ import {
 } from "../harness/game-session/protocol-test-support"
 import { closePcStorage, openPcStorage } from "../playbooks/pc-storage"
 
+const finishBattle = async (game: GameSession, description: string): Promise<void> => {
+  for (let attempt = 0; attempt < 300; attempt++) {
+    const state = await game.state.read()
+    if (state.ready && !state.battle.active) return
+    if (state.battle.ui === "text" || state.dialogueOpen) await game.controls.press("a")
+    else await game.wait.frames(12)
+  }
+  throw new Error(`${description} did not return to the field`)
+}
+
 describe.sequential("HNS E2E command validation", () => {
   let game: GameSession
   let protocol: ProtocolTestSession["protocol"]
@@ -42,7 +52,7 @@ describe.sequential("HNS E2E command validation", () => {
     await openPcStorage(game, "move")
 
     await expect(game.arrange({ checkpoint: "new-bark-after-intro" })).rejects.toThrow(
-      "Test ROM command failed during validate: busy",
+      "Test ROM command arrange game failed during validate: busy",
     )
     await expect(game.state.read()).resolves.toMatchObject({
       storage: { open: true, ready: true, ui: "ready", mode: "move" },
@@ -59,7 +69,28 @@ describe.sequential("HNS E2E command validation", () => {
     await game.battle.startWild({ species: "rattata", level: 5 })
 
     await expect(game.arrange({ checkpoint: "new-bark-after-intro" })).rejects.toThrow(
-      "Test ROM command failed during validate: busy",
+      "Test ROM command arrange game failed during validate: busy",
     )
+    await game.battle.win()
+    await finishBattle(game, "protocol busy-command battle")
+  })
+
+  it("observes ordinary and Hoenn-banked vars, and changes a banked var only from settled field state", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "route-41", x: 9, y: 21 } },
+      party: [{ species: "rattata" }],
+      story: { vars: { cherrygroveCityState: 3, hoennStarterChoice: 2 } },
+    })
+    await expect(game.story.var("cherrygroveCityState")).resolves.toBe(3)
+    await expect(game.story.var("hoennStarterChoice")).resolves.toBe(2)
+
+    await game.story.setVar("hoennStarterChoice", 1)
+    await expect(game.story.var("hoennStarterChoice")).resolves.toBe(1)
+
+    await game.battle.startWild({ species: "rattata", level: 5 })
+    await expect(game.story.var("hoennStarterChoice")).resolves.toBe(1)
+    await game.battle.win()
+    await finishBattle(game, "protocol variable battle")
   })
 })

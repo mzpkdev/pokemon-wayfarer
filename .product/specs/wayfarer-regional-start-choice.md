@@ -496,11 +496,10 @@ status above. Emulator acceptance is recorded separately from source audits.
   equipment helpers only set availability flags, and Pokédex acknowledgement
   preserves existing records and unlocked modes. There is no generic reward
   transaction engine or universal starter milestone.
-- `WayfarerCanStartOrdinaryBattle` checks the actual usable party. Wild
-  encounter generation and Trainer approaches reject empty parties before
-  starting scenes. Unexpected forced entry abandons its script and returns
-  to validated local recovery without a battle result or a reward. Authored
-  openings must still prevent inappropriate access with their own map logic.
+- Trainer-only has no origin-wide battle-safety policy. Its explicit temporary
+  flag only enables the authored empty-party wild mechanic; trainer, scripted,
+  and other unsupported entries remain native. Authored openings must prevent
+  inappropriate access with their own map logic.
 - `WayfarerReplaceRecoveryDestination` replaces both active and fallback
   recovery before an opening location becomes unavailable. Ordinary recovery
   retains a valid local destination; only an invalid destination uses the
@@ -525,8 +524,6 @@ criteria for that work, rather than additional playable origins in this release:
 - What are the named regional scene interception points and handler results,
   including precedence between custom first-contact scenes, visitor handlers,
   and later normal campaign progression?
-- Where is empty-party battle prevention enforced, and what happens when an
-  unexpected encounter or callback reaches it after reload?
 - What transaction and retry contract covers arbitrary grants, including
   independently successful parts of a multi-reward handoff?
 - How does a profile replace both its active recovery point and fallback

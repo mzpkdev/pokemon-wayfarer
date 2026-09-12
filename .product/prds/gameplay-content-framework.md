@@ -17,12 +17,12 @@ is added, less repeated authoring, and lower linked ROM usage after migration.
 
 Use a shared content compilation layer and small gameplay APIs. Reuse existing
 map, trainer, species, item, and script sources. Add explicit declarations only
-for meaning those sources cannot express, such as an NPC's service or an
-encounter's supported non-victory continuation.
+for meaning those sources cannot express, such as an NPC's service or a future
+encounter profile's explicitly approved continuation.
 
-Each fact has one authoritative owner. A trainer's roster, an encounter's story
-consequences, and a map's region are separate facts. Features may interpret shared
-facts differently, but must not maintain competing copies of them.
+Each fact has one authoritative owner. A trainer's roster, a future encounter
+profile's story consequences, and a map's region are separate facts. Features may
+interpret shared facts differently, but must not maintain competing copies of them.
 
 Resolve routine cases through named profiles and explicit local differences.
 Keep local specialties, ecological choices, iconic teams, dialogue, and story
@@ -35,18 +35,19 @@ class, graphics, map names, or an absence of known exceptions.
 | --- | --- | --- |
 | Progression | One definition for each named Rating curve, consumed by gameplay and audits | Existing levels, rounding, offsets, and timing remain exact |
 | NPC services | One declaration per rod contributor or converted mart interaction; membership and bindings derive from it | All currently supported regional contributors work, rewards remain repeat-safe, and towns retain their stock |
-| Encounters | Shared encounter declarations supply trainer-scaling and supported defeat/deferral policies | Ordinary fights, rivals, and objective guards retain their distinct consequences |
+| Encounters (future) | Separately approved shared encounter and story profiles supply only their declared behavior | Each adopted encounter retains its explicitly validated consequences |
 
 The first adoption includes the shared compiler, progression consumers, all
-existing active Standard Rod contributors in supported builds, all currently
-converted Wayfarer mart bindings, and the encounter migration defined in the
-[specification](../specs/gameplay-content-framework.md). These are required
-acceptance phases, not interchangeable demonstrations.
+existing active Standard Rod contributors in supported builds, and all currently
+converted Wayfarer mart bindings. These are required acceptance phases, not
+interchangeable demonstrations.
 
-The encounter phase depends on an integrated, validated trainer-only baseline.
-[PR #85](https://github.com/mzpkdev/pokemon-wayfarer/pull/85) was open when this
-design was researched. Earlier phases can land independently; their completion
-does not mean encounter adoption or the full framework is implemented.
+Encounter and story profiles are future authored capabilities. Each requires its
+own product decision, explicit data contract, behavior validation, and resource
+measurement; none is a prerequisite for the current adoption. The current
+trainer-only mechanic is separate: it changes eligible wild encounters only when
+an author sets its flag and the player party count is exactly zero. It supplies no
+trainer, NPC, story, refusal, deferral, loss, or recovery policy to this framework.
 
 ### State has a defined meaning and lifetime
 
@@ -69,10 +70,10 @@ Adding a mart using an existing profile requires one binding. A new local stock
 choice belongs to that profile's authored data. Common stock thresholds remain
 shared.
 
-Adding an encounter through a supported template requires its identity, profile,
-and unique dialogue or continuation data. Unsupported legacy scripts remain
-explicitly classified until reviewed; discovering a script does not authorize a
-new outcome for it.
+Adding a future encounter through a supported template will require its identity,
+profile, and unique dialogue or continuation data. Unsupported legacy scripts
+remain explicitly classified until reviewed; discovering a script does not
+authorize a new outcome for it.
 
 ## Boundaries
 
@@ -99,8 +100,8 @@ events are removed or replaced, while keeping the reviewed import choices and
 source provenance. Its fixed-stock shops, healing/PC/daycare services, environmental
 scripts, and ferries keep their existing behavior until an appropriate domain
 adapter is specified. V1 does not convert those shops to TR stock or require the
-Sevii port to wait for this framework. Its trainer-free maps do not expand the
-required trainer encounter migration.
+Sevii port to wait for this framework. Its trainer-free maps do not imply
+encounter-profile adoption.
 
 ## Interactions
 
@@ -112,9 +113,10 @@ Service completion must retain existing transaction behavior. Failed rod upgrade
 must not consume a contribution; repeat visits must not grant another upgrade;
 registered shortcuts and tutorial follow-up must survive.
 
-Encounter completion must retain victory-only consequences. Refusal, loss, draw,
-forfeit, deferral, and interrupted scenes must not award victory flags or retire
-pending objectives unless the existing feature explicitly requires it.
+Any future encounter or story profile must define and validate its own outcome
+policy. The current trainer-only wild mechanic has no trainer or story outcome
+policy; it must not be treated as a source of refusal, deferral, loss, recovery,
+or continuation behavior.
 
 ## Constraints
 
@@ -143,16 +145,17 @@ behavior, authoring, resource, and build checks. Generated views must replace
 superseded manual inventories for the migrated facts. Keeping both writable
 copies does not satisfy this design.
 
-An authoring exercise must add and remove a temporary giver, bind a mart to an
-existing profile, and introduce a supported ordinary encounter without editing
-consumer membership tables or runtime dispatch. These fixtures do not add shipped
-gameplay content. Separate tests must reject invalid or contradictory declarations.
+An authoring exercise must add and remove a temporary giver and bind a mart to an
+existing profile without editing consumer membership tables or runtime dispatch.
+These fixtures do not add shipped gameplay content. A future encounter-profile
+adoption must define its own authoring exercise and reject invalid or contradictory
+declarations.
 
 Representative journeys must preserve mixed-region rod upgrades, mart stock at
-thresholds, League save/load stability, ordinary trainer outcomes, and rival or
-objective retry behavior. Mechanical equivalence establishes preservation;
-playtesting checks that transitions, dialogue, and interaction timing remain
-coherent.
+thresholds, and League save/load stability. A future encounter-profile adoption
+must add representative journeys for every behavior it owns. Mechanical
+equivalence establishes preservation; playtesting checks that transitions,
+dialogue, and interaction timing remain coherent.
 
 ## References
 
@@ -162,4 +165,4 @@ coherent.
 - [Standard Rod fishing](../specs/standard-rod-fishing.md)
 - [Trainer party scaling](../specs/trainer-party-scaling.md)
 - [League scaling](../specs/league-scaling.md)
-- [Trainer-only story encounters](../specs/trainer-only-story-encounters.md)
+- [Trainer-only wild mechanic boundary](../specs/trainer-only-story-encounters.md)

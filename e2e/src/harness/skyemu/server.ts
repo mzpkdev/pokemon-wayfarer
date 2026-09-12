@@ -1,5 +1,7 @@
 import * as childProcess from "node:child_process"
 import * as fs from "node:fs"
+import * as os from "node:os"
+import * as path from "node:path"
 import { skyEmuBinary } from "skyemu-static"
 
 import { SkyEmuClient } from "./client"
@@ -13,10 +15,17 @@ export type RunningSkyEmu = {
 export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
   await fs.promises.access(skyEmuBinary)
   const port = await reserveTcpPort()
+  // SkyEmu persists its cache under the data-home path. Isolate it with the ROM
+  // so E2E runs do not depend on a writable user home or share emulator state.
+  const dataHome = await fs.promises.mkdtemp(path.join(os.tmpdir(), "wayfarer-skyemu-data-"))
   const child = childProcess.spawn(
     "xvfb-run",
     ["--auto-servernum", skyEmuBinary, "http_server", `${port}`, romPath],
-    { detached: true, stdio: ["ignore", "pipe", "pipe"] },
+    {
+      detached: true,
+      env: { ...process.env, XDG_DATA_HOME: dataHome },
+      stdio: ["ignore", "pipe", "pipe"],
+    },
   )
   let launchError: Error | undefined
   child.once("error", (error) => {
@@ -62,8 +71,15 @@ export const startSkyEmu = async (romPath: string): Promise<RunningSkyEmu> => {
     if (released !== "ok") throw new Error(`SkyEmu failed to clear controller input: ${released}`)
   } catch (error) {
     await stopProcess(child)
+    await fs.promises.rm(dataHome, { force: true, recursive: true })
     throw error
   }
 
-  return { client, stop: () => stopProcess(child) }
+  return {
+    client,
+    stop: async () => {
+      await stopProcess(child)
+      await fs.promises.rm(dataHome, { force: true, recursive: true })
+    },
+  }
 }

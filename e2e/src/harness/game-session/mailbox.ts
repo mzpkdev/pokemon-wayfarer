@@ -12,8 +12,9 @@ export class TestRomCommandError extends Error {
   constructor(
     readonly commandError: (typeof commandErrors)[number] | `unknown-${number}`,
     readonly phase: (typeof arrangePhases)[number] | `unknown-${number}`,
+    description: string,
   ) {
-    super(`Test ROM command failed during ${phase}: ${commandError}`)
+    super(`Test ROM command ${description} failed during ${phase}: ${commandError}`)
   }
 }
 
@@ -58,7 +59,7 @@ export const createMailboxApi = (runtime: SessionRuntime, state: StateApi): Mail
           if (result.status === commandStatuses.error) {
             const phase = arrangePhases[result.phase] ?? `unknown-${result.phase}`
             const error = commandErrors[result.error] ?? `unknown-${result.error}`
-            throw new TestRomCommandError(error, phase)
+            throw new TestRomCommandError(error, phase, description)
           }
           return result
         }

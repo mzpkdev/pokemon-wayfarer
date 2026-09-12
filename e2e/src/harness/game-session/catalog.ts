@@ -415,6 +415,7 @@ export const storyVars = {
   goldenrodCityState: 0x4069,
   mahoganyTownState: 0x4072,
   leagueState: 0x4070,
+  hoennEliteFourState: 0x709c,
   numBadges: 0x4076,
   pewterCityState: 0x4079,
   saffronCityState: 0x40bd,
@@ -423,13 +424,16 @@ export const storyVars = {
   train: 0x408e,
   triggerElmRocketCall: 0x40b3,
   blackthornCityState: 0x4056,
+  hoennStarterChoice: 0x7023,
   vermilionCityState: 0x408f,
   violetCityState: 0x4091,
 } as const
 
 export const storyFlags = {
+  trainerOnlyEnabled: 0x0b,
   hoennDiveAuthorized: 0x607b,
   runningShoes: 0x895,
+  noWildRunning: 0x96a,
   hoennWhiteoutToLavaridge: 0x606c,
   sharedPokegear: 0x892,
   sharedMatchCall: 0x1f3,
@@ -495,6 +499,7 @@ export const storyFlags = {
 export const species = {
   none: 0,
   pidgey: 16,
+  shedinja: 292,
   rattata: 19,
   zubat: 41,
   poliwag: 60,
@@ -560,7 +565,10 @@ export const hms = {
 } as const
 
 export const items = {
+  timerBall: 11,
+  quickBall: 12,
   masterBall: 4,
+  oranBerry: 520,
   miracleSeed: 429,
   metalCoat: 441,
   tmThunder: 606,

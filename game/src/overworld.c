@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
 #include "constants/heal_locations.h"
@@ -2229,6 +2230,8 @@ static void FieldCB_FadeTryShowMapPopup(void)
 void CB2_ContinueSavedGame(void)
 {
     u8 trainerHillMapId;
+
+    TrainerOnlyResetEncounter();
 
 #if IS_WAYFARER
     if (!WayfarerPersistentStateIsValid())

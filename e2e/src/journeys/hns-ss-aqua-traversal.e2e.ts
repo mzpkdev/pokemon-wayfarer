@@ -16,8 +16,11 @@ const finishScript = async (game: GameSession): Promise<void> => {
 const startScriptedBattle = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
-    if (state.battle.active) return
-    if (state.dialogueOpen || state.scriptActive) {
+    // `battle.active` becomes true while native initialization is still
+    // carrying the preceding field-script outcome. Wait for the actual action
+    // menu so a forced win belongs solely to Stanly's battle.
+    if (state.battle.ui === "action-menu") return
+    if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
       await game.wait.frames(30)
       await game.controls.press("a")
     } else await game.wait.frames(12)
@@ -127,6 +130,9 @@ describe.sequential("HNS S.S. Aqua voyage rewards", () => {
       await stanlyGame.player.interact()
       await startScriptedBattle(stanlyGame, "Stanly battle")
       await stanlyGame.battle.win()
+      // Finish the native ChooseAction controller after committing the forced
+      // outcome, then let Stanly's ordinary post-battle dialogue complete.
+      await stanlyGame.controls.press("a")
       await finishScript(stanlyGame)
 
       await expect(stanlyGame.story.var("ssAquaState")).resolves.toBe(1)

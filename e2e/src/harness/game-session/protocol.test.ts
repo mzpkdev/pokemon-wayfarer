@@ -5,6 +5,8 @@ import {
   encodeCommandRequest,
   encodeObserveRegionMapRequest,
   encodeObserveRegionMapSectionRequest,
+  encodeObserveVarRequest,
+  encodeSetVarRequest,
   encodeSaveRequest,
   encodeWinBattleRequest,
   keepCoordinate,
@@ -17,16 +19,16 @@ import {
 } from "./protocol"
 
 const abi: SessionAbi = {
-  requestSize: 432,
+  requestSize: 372,
   resultSize: 16,
-  stateSize: 388,
+  stateSize: 440,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 14): Uint8Array => {
+const abiBytes = (version = 18): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -68,16 +70,21 @@ const request = (): CommandRequest => ({
   leagueClears: [true, false, false],
 })
 
-describe("game-session v14 protocol", () => {
+const expectNoFixtureMutations = (bytes: Uint8Array) => {
+  expect(Array.from(bytes.slice(88, 356))).toEqual(Array(268).fill(0))
+  expect(Array.from(bytes.slice(356))).toEqual(Array(16).fill(0))
+}
+
+describe("game-session v18 protocol", () => {
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
-    expect(encodeCommandRequest(abi, request())[429]).toBe(0)
+    expect(encodeCommandRequest(abi, request())[369]).toBe(0)
     for (const id of [1, 2, 5, 6])
-      expect(encodeCommandRequest(abi, { ...request(), appearanceId: id })[429]).toBe(id)
+      expect(encodeCommandRequest(abi, { ...request(), appearanceId: id })[369]).toBe(id)
   })
 
   it("accepts only the exact versioned ABI layout", () => {
     expect(parseAbi(abiBytes())).toEqual(abi)
-    expect(() => parseAbi(abiBytes(13))).toThrow("Unsupported test ROM ABI")
+    expect(() => parseAbi(abiBytes(16))).toThrow("Unsupported test ROM ABI")
   })
 
   it("encodes party-only fainted state, generic items, bounded PC slots, and a wild fixture", () => {
@@ -89,17 +96,18 @@ describe("game-session v14 protocol", () => {
     expect(view.getUint16(88, true)).toBe(131)
     expect(view.getUint16(90, true)).toBe(57)
     expect(bytes[98]).toBe(25)
-    expect(bytes[104]).toBe(1)
-    expect(view.getUint16(208, true)).toBe(4)
-    expect(view.getUint16(210, true)).toBe(1)
-    expect(view.getUint16(240, true)).toBe(16)
-    expect(bytes[256]).toBe(3)
-    expect(bytes[257]).toBe(7)
-    expect(view.getUint16(400, true)).toBe(155)
-    expect(bytes[410]).toBe(5)
-    expect(Array.from(bytes.slice(240, 256))).not.toContain(1)
-    expect(Array.from(bytes.slice(260, 400))).toEqual(Array(140).fill(0))
-    expect(Array.from(bytes.slice(416, 428))).toEqual([1, 1, 1, 3, 1, 7, 4, 3, 1, 1, 0, 0])
+    expect(bytes[100]).toBe(1)
+    expect(view.getUint16(184, true)).toBe(4)
+    expect(view.getUint16(186, true)).toBe(1)
+    expect(view.getUint16(216, true)).toBe(16)
+    expect(bytes[228]).toBe(3)
+    expect(bytes[229]).toBe(7)
+    expect(view.getUint16(344, true)).toBe(155)
+    expect(bytes[354]).toBe(5)
+    expect(Array.from(bytes.slice(216, 228))).not.toContain(1)
+    expect(Array.from(bytes.slice(232, 344))).toEqual(Array(112).fill(0))
+    expect(Array.from(bytes.slice(356, 368))).toEqual([1, 1, 1, 3, 1, 7, 4, 3, 1, 1, 0, 0])
+    expect(bytes[369]).toBe(0)
   })
 
   it("preserves invalid fixture values for ROM-side negative validation", () => {
@@ -112,9 +120,9 @@ describe("game-session v14 protocol", () => {
     const view = new DataView(bytes.buffer)
 
     expect(view.getUint16(88, true)).toBe(0xffff)
-    expect(view.getUint16(210, true)).toBe(0)
-    expect(bytes[256]).toBe(14)
-    expect(bytes[257]).toBe(30)
+    expect(view.getUint16(186, true)).toBe(0)
+    expect(bytes[228]).toBe(14)
+    expect(bytes[229]).toBe(30)
   })
 
   it("encodes the flash-save command without fixture mutations", () => {
@@ -122,7 +130,7 @@ describe("game-session v14 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(17)
     expect(bytes[86]).toBe(commands.save)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(abi.requestSize - 88).fill(0))
+    expectNoFixtureMutations(bytes)
   })
 
   it("encodes the read-only region-map observation command", () => {
@@ -130,7 +138,7 @@ describe("game-session v14 protocol", () => {
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(23)
     expect(bytes[86]).toBe(commands.observeRegionMap)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(abi.requestSize - 88).fill(0))
+    expectNoFixtureMutations(bytes)
   })
 
   it("encodes a region-map grid lookup without changing the ABI layout", () => {
@@ -144,12 +152,33 @@ describe("game-session v14 protocol", () => {
     expect(bytes).toHaveLength(abi.requestSize)
   })
 
+  it("encodes a read-only banked-variable observation without changing the ABI layout", () => {
+    const bytes = encodeObserveVarRequest(abi, 26, 0x7023)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(26)
+    expect(view.getUint16(4, true)).toBe(0x7023)
+    expect(bytes[86]).toBe(commands.observeVar)
+    expectNoFixtureMutations(bytes)
+  })
+
+  it("encodes a bounded banked-variable write without changing the ABI layout", () => {
+    const bytes = encodeSetVarRequest(abi, 27, 0x7023, 0xffff)
+    const view = new DataView(bytes.buffer)
+
+    expect(view.getUint32(0, true)).toBe(27)
+    expect(view.getUint16(4, true)).toBe(0x7023)
+    expect(view.getUint16(6, true)).toBe(0xffff)
+    expect(bytes[86]).toBe(commands.setVar)
+    expectNoFixtureMutations(bytes)
+  })
+
   it("encodes the test-only battle-win command without fixture mutations", () => {
     const bytes = encodeWinBattleRequest(abi, 25)
 
     expect(new DataView(bytes.buffer).getUint32(0, true)).toBe(25)
     expect(bytes[86]).toBe(commands.winBattle)
-    expect(Array.from(bytes.slice(88))).toEqual(Array(abi.requestSize - 88).fill(0))
+    expectNoFixtureMutations(bytes)
   })
 
   it("decodes region-map observation values from the command result", () => {
@@ -247,7 +276,33 @@ describe("game-session v14 protocol", () => {
     bytes[378] = 1
     bytes[379] = 3
     view.setUint16(380, 2, true)
+    bytes.set([5, 6, 2, 1], 382)
+    bytes.set([1, 5, 9, 7, 1, 10, 2, 3, 4, 5, 1, 0], 386)
+    view.setUint32(400, 2992, true)
+    view.setUint16(404, 0, true)
+    view.setUint32(416, 8, true)
     expect(parseStateSnapshot(bytes)).toMatchObject({
+      money: 2992,
+      partyHp: [0, 0, 0, 0, 0, 0],
+      partyStatus: [8, 0, 0, 0, 0, 0],
+      trainerOnly: {
+        active: true,
+        initialCatchFactor: 5,
+        catchFactor: 9,
+        escapeFactor: 7,
+        approach: 1,
+        anger: 10,
+        foodTurns: 2,
+        rocks: 3,
+        completedTurns: 4,
+        runAttempts: 5,
+        warned: true,
+        outcome: 0,
+      },
+      playerAppearanceId: 5,
+      appearanceCandidate: 6,
+      appearanceConfirmed: 2,
+      appearanceIntroStage: 1,
       originIntroStage: 2,
       startingOriginId: 2,
       johtoStarterChoice: 1,

@@ -1,6 +1,8 @@
 #ifndef GUARD_BATTLE_SETUP_H
 #define GUARD_BATTLE_SETUP_H
 
+bool8 BattleSetup_IsUnidentifiedGhostEncounter(void);
+
 #include "battle_transition.h"
 #include "gym_leader_rematch.h"
 

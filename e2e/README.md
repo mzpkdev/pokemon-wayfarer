@@ -15,7 +15,9 @@ pnpm install
 The `skyemu-static` dependency bundles the patched SkyEmu v5 Linux x64 binary.
 
 The test runner starts SkyEmu through Xvfb, so it does not open a visible
-emulator window. On Ubuntu 24.04, install the required runtime packages with:
+emulator window. Each launch uses a temporary `XDG_DATA_HOME` for SkyEmu's cache;
+stopping the emulator removes it. This keeps launches independent of the user's
+settings and works when their home directory is read-only. On Ubuntu 24.04, install the required runtime packages with:
 
 ```sh
 sudo apt install libasound2t64 libxcursor1 libxi6 libopengl0 xvfb
@@ -131,7 +133,7 @@ does not expose duplicate HM aliases.
 
 The Standard Rod giver journey uses `game.inventory.rodSlots()` to inspect the
 occupied Old, Good, and Super Rod slots in the HNS Key Items pocket. This is a
-read-only semantic view backed by the ROM's `gBagPockets` symbol. ABI v7 does
+read-only semantic view backed by the ROM's `gBagPockets` symbol. The ABI does
 not provide fixtures or telemetry for `registeredItem` or
 `registeredItemHold`, so the E2E suite cannot safely seed or assert registered
 shortcut migration. The mechanics tests cover that transaction instead.
@@ -140,9 +142,13 @@ shortcut migration. The mechanics tests cover that transaction instead.
 battle state machine from a settled overworld. It resolves at the first real
 battle-text input boundary. The playbook then uses controller input for the Bag,
 capture messages, catch-swap prompt, and party picker. Capture tests use a Master
-Ball because capture probability is outside this capability's scope. V1 supports
-ordinary HNS overworld battles only; Safari Zone, Bug Contest, and other special
-battle contexts are outside its contract.
+Ball because capture probability is outside this capability's scope. The fixture
+supports ordinary Wayfarer overworld battles, including the dedicated trainer-only
+controller when the scenario flag is enabled and the party is exactly empty. Safari Zone,
+Bug Contest and other special battle contexts are outside its contract.
+Trainer-only telemetry exposes committed turns, approach/fear/anger state and
+menu readiness for assertions; gameplay actions still use controller input.
+Money, party HP, and status observations support loss and recovery checks.
 
 Storage journeys arrange the player in Cherrygrove's Pokémon Center and interact
 with its real PC script. There is no command that opens storage directly. The
@@ -157,7 +163,7 @@ to prove that the withdrawn Surf user is resolved again. Tests should not treat
 fixture state or a memory snapshot as proof that capture, storage, release, or
 field use worked.
 
-The command mailbox is versioned as ABI v14. Arrangement and wild-battle commands
+The command mailbox is versioned as ABI v17. Arrangement and wild-battle commands
 share request IDs and result handling, reject commands while a harness-owned game
 state machine is active, and validate invalid species, item quantities, boxes,
 and slots in the ROM. Protocol changes must increment the ABI and update both the

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #include "battle.h"
 #include "bug_contest.h"
 #include "load_save.h"
@@ -49,7 +50,6 @@
 #include "script.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
-#include "wayfarer_battle_gate.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -324,11 +324,15 @@ static void CreateBattleStartTask(enum BattleTransition transition, u16 song)
 {
     u8 taskId;
 #if IS_WAYFARER
-    if (!(gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL) && !WayfarerCanStartOrdinaryBattle())
-    {
-        WayfarerAbortEmptyPartyBattle();
-        return;
-    }
+    bool8 trainerOnly = IsTrainerOnlyEncounter()
+        && TrainerOnlyCanEnterWildEncounter()
+        && gBattleTypeFlags == 0
+        && gMain.savedCallback == CB2_EndWildBattle
+        && GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) != SPECIES_NONE
+        && GetMonData(&gEnemyParty[0], MON_DATA_HP) != 0;
+
+    if (!trainerOnly)
+        TrainerOnlyResetEncounter();
 #endif
     taskId = CreateTask(Task_BattleStart, 1);
 
@@ -390,6 +394,12 @@ static bool8 CheckSilphScopeInPokemonTower(u16 mapGroup, u16 mapNum)
         return FALSE;
 }
 
+bool8 BattleSetup_IsUnidentifiedGhostEncounter(void)
+{
+    return CheckSilphScopeInPokemonTower(gSaveBlock1Ptr->location.mapGroup,
+                                        gSaveBlock1Ptr->location.mapNum);
+}
+
 void BattleSetup_StartWildBattle(void)
 {
     SetNuzlockeChecks();
@@ -415,6 +425,8 @@ void BattleSetup_StartBattlePikeWildBattle(void)
 
 static void DoStandardWildBattle(bool32 isDouble)
 {
+    if (isDouble || !TrainerOnlyCanEnterWildEncounter())
+        TrainerOnlyResetEncounter();
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
@@ -757,6 +769,19 @@ static void CB2_EndWildBattle(void)
 {
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
     ResetOamRange(0, 128);
+
+    if (IsTrainerOnlyEncounter())
+    {
+        TrainerOnlyResetEncounter();
+        if (gBattleOutcome == B_OUTCOME_LOST)
+            SetMainCallback2(CB2_WhiteOut);
+        else
+        {
+            SetMainCallback2(CB2_ReturnToField);
+            gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
+        }
+        return;
+    }
 
     if (IsNPCFollowerWildBattle())
     {
@@ -1120,8 +1145,13 @@ enum BattleTransition GetWildBattleTransition(void)
 {
     u8 transitionType = GetBattleTransitionTypeByMap();
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-    u8 playerLevel = GetSumOfPlayerPartyLevel(1);
+    u8 playerLevel;
 
+#if IS_WAYFARER
+    if (TrainerOnlyCanEnterWildEncounter())
+        return sBattleTransitionTable_Wild[transitionType][1];
+#endif
+    playerLevel = GetSumOfPlayerPartyLevel(1);
     if (enemyLevel < playerLevel)
     {
         if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
@@ -1242,11 +1272,6 @@ void ChooseStarter(void)
 #if IS_WAYFARER
     if (WayfarerUsesNativeHoennOpening() && FlagGet(FLAG_HOENN_STARTER_RECEIVED))
     {
-        if (!WayfarerCanStartOrdinaryBattle())
-        {
-            WayfarerAbortEmptyPartyBattle();
-            return;
-        }
         SetMainCallback2(CB2_GiveStarter);
         return;
     }
@@ -1310,19 +1335,6 @@ static void CB2_GiveStarter(void)
     BattleTransition_Start(B_TRANSITION_BLUR);
 }
 
-#if IS_WAYFARER
-static void Task_AbortEmptyStarterBattle(u8 taskId)
-{
-    DestroyTask(taskId);
-    WayfarerAbortEmptyPartyBattle();
-}
-
-static void FieldCB_AbortEmptyStarterBattle(void)
-{
-    CreateTask(Task_AbortEmptyStarterBattle, 0);
-}
-#endif
-
 static void CB2_StartFirstBattle(void)
 {
     UpdatePaletteFade();
@@ -1330,16 +1342,6 @@ static void CB2_StartFirstBattle(void)
 
     if (IsBattleTransitionDone() == TRUE)
     {
-#if IS_WAYFARER
-        if (!WayfarerCanStartOrdinaryBattle())
-        {
-            SetVBlankCallback(NULL);
-            SetHBlankCallback(NULL);
-            gFieldCallback = FieldCB_AbortEmptyStarterBattle;
-            SetMainCallback2(CB2_ReturnToField);
-            return;
-        }
-#endif
         gBattleTypeFlags = BATTLE_TYPE_FIRST_BATTLE;
         gMain.savedCallback = CB2_EndFirstBattle;
         FreeAllWindowBuffers();

@@ -80,6 +80,7 @@ enum BattleController
     BATTLE_CONTROLLER_RECORDED_PARTNER,
     BATTLE_CONTROLLER_RECORDED_OPPONENT,
     BATTLE_CONTROLLER_OAK_OLD_MAN,
+    BATTLE_CONTROLLER_TRAINER_ONLY,
     BATTLE_CONTROLLERS_COUNT,
 };
 
@@ -393,6 +394,7 @@ void BtlController_HandleHidePartyStatusSummary(enum BattlerId battler);
 void BtlController_HandleBattleAnimation(enum BattlerId battler);
 
 // player controller
+bool32 HandleLastUsedBallCycleInput(enum BattlerId battler, u8 action);
 void SetControllerToPlayer(enum BattlerId battler);
 void PlayerBufferExecCompleted(enum BattlerId battler);
 void SetBattleEndCallbacks(enum BattlerId battler);

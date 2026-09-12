@@ -225,16 +225,6 @@ void WayfarerGrantRunningShoes(void)
 }
 u16 WayfarerHasSharedPokedex(void) { return FlagGet(FLAG_SYS_POKEDEX_GET); }
 void WayfarerGrantSharedPokedex(void) { FlagSet(FLAG_SYS_POKEDEX_GET); }
-bool8 WayfarerCanStartOrdinaryBattle(void)
-{
-    u32 i;
-    for (i = 0; i < PARTY_SIZE; i++)
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
-         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
-         && GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
-            return TRUE;
-    return FALSE;
-}
 u8 WayfarerGetInitialRecoveryDestination(void)
 {
     const struct WayfarerOriginProfile *profile = WayfarerGetOriginProfile(WayfarerGetStartingOriginId());

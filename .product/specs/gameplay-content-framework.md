@@ -6,17 +6,19 @@ Implemented: No
 ## Scope
 
 Specify the shared host inventory, declaration formats, runtime boundaries, and
-three required adoption phases: progression, NPC services, and encounter policy.
+three required adoption phases: progression, NPC services, and trainer inventory
+with scaling preservation.
 This is a proposed implementation contract; paths and APIs identified as new do
 not exist yet. The [research record](../research/gameplay-content-framework.md)
 distinguishes existing behavior from recommendations.
 
 Research baseline: `a5dd5178f098cc3ae80fbca73a59e04da0f6f835` on `main`.
-Encounter evidence additionally uses open PR #85 at
-`6799eb7d9f625fefe0c0983104d38e3b13e7d4d5`. Do not import its implementation
-implicitly. Phase D requires its landed behavior, or an explicitly equivalent
-integrated replacement, as the before-refactor baseline. Reconcile source changes
-and record exact commits at the start of every phase.
+Historical encounter evidence additionally used PR #85 at
+`6799eb7d9f625fefe0c0983104d38e3b13e7d4d5`. It is research context only: do not
+import its trainer-story behavior or treat it as the Phase D baseline. Phase D
+preserves current native trainer routing and the separately gated wild-only
+trainer-only boundary. Reconcile source changes and record exact commits at the
+start of every phase.
 
 ## Behavior
 
@@ -132,7 +134,7 @@ carry arbitrary feature expressions or another copy of configuration defaults.
 | Ordinary/Gym-member scaling activation | `IS_WAYFARER && B_TRAINER_PARTY_SCALING` |
 | Gym Leader scaling activation | `IS_WAYFARER && B_GYM_LEADER_SCALING` |
 | League scaling activation | `IS_WAYFARER && B_LEAGUE_SCALING` |
-| Trainer-only outcome records | `IS_WAYFARER` at the researched #85 head; reconcile any additional landed gate in phase D |
+| Future authored trainer-outcome records | A separately approved, dedicated feature gate; the current trainer-only mechanic has no trainer outcome records |
 | Progression curve payloads | Union of curves consumed by selected gameplay paths, including existing standalone consumers |
 
 Schema validation applies to every loaded declaration. Binding resolution and
@@ -141,9 +143,9 @@ declarations separately; they neither fail on an inactive converted script path
 nor emit runtime membership. Keep their existing legacy script branch unchanged.
 Validate bindings in a separate enabled configuration to detect stale disabled
 content. Shared host trainer inventory remains complete, while activation and
-emission follow each domain's gate; disabling scaling cannot remove an encounter
-record still required for outcome routing. Do not erase dedicated legacy roster
-data needed by disabled or randomizer paths.
+emission follow each domain's gate; disabling scaling cannot remove a record
+selected by an independently enabled future outcome domain. Do not erase
+dedicated legacy roster data needed by disabled or randomizer paths.
 
 Diagnostics contain a stable category, source path, record key, and offending
 reference. Categories include `SCHEMA`, `DUPLICATE`, `UNRESOLVED`, `INACTIVE`,
@@ -285,8 +287,9 @@ shops and unconverted counters outside this service until explicitly adopted.
 
 ### 6. Encounter adoption
 
-Phase D first reconciles the integrated trainer-only implementation with current
-trainer scaling. Preserve that combined baseline. Inventory every compiled trainer
+Phase D reconciles current trainer scaling with the current wild-only trainer-only
+mechanic. The current baseline has no trainer caller registry, refusal, retreat,
+deferred-rival, or non-victory outcome module. Inventory every compiled trainer
 record and every discovered battle call site, including excluded and unmigrated
 ones. Unknown discovery must be visible in reports but must not gain framework
 authorization.
@@ -297,18 +300,19 @@ and command mode from compiled source. Dynamic trainer selection must enumerate
 its validated possibilities or remain an explicit legacy adapter. Never infer a
 single trainer from the label's spelling.
 
-V1 profile families are `legacy`, `ordinary`, `objective_guard`, and
-`deferred_rival`. Each expanded profile has separate `scalingPolicy` and
-`outcomePolicy` domains. Defaults are excluded scaling and legacy outcome routing;
-an ordinary role alone does not enable either feature. Migration supplies the
-existing policies explicitly and checks equivalence. Standard templates may
-select both supported policies only after proving their command/lifecycle contract.
+V1 inventory records use `legacy` native outcome routing and a separate
+`scalingPolicy`; no trainer-only outcome policy is adopted. A later, separately
+approved author-owned trainer-outcome capability may introduce `ordinary`,
+`objective_guard`, and `deferred_rival` profiles with an independent
+`outcomePolicy` domain. That future capability must supply its policies explicitly
+and prove its command/lifecycle contract; a role name alone cannot enable it.
 
 Preserve existing trainer-level scaling inventory as a generated projection.
 In v1, all callers of a trainer ID must agree with its established scaling policy;
 conflicts fail generation and remain legacy until deliberately resolved. This
-avoids silently changing the current shared-ID semantics. Outcome policy stays
-caller-specific. A trainer ID, class, or Gym location cannot authorize loss return.
+avoids silently changing the current shared-ID semantics. Any future outcome policy
+must stay caller-specific. A trainer ID, class, or Gym location cannot authorize
+loss return.
 
 `legacyTrainers` covers roster IDs not fully described by migrated callers,
 including unplaced, dynamic, facility, and excluded records. Each row requires
@@ -338,23 +342,26 @@ changed relevant command blocks invalidate review. Retain needed runtime adapter
 for unconverted scripts. A reviewed source fingerprint is an audit mechanism,
 not a runtime field or proof of arbitrary script semantics.
 
-An `ordinary` template must identify entry/refusal handling, supported battle mode,
-success continuation, and non-victory continuation. Preserve completed-trainer
-aftertext and rematch identity. An `objective_guard` additionally supplies its
-existing pending/completed state predicate and retreat script. A `deferred_rival`
-also binds the existing scene ID, trigger, object lifecycle, rearm region, and
-eligibility predicate. Use existing named C predicates or script continuations
-through a closed domain adapter, not a generic predicate interpreter. Derive
-object coordinates from map events where equivalent; explicitly retain authored
-activation rectangles that differ from those coordinates.
+If a later author-owned trainer-outcome capability adopts an `ordinary` template,
+it must identify entry handling, supported battle mode, success continuation, and
+non-victory continuation. Preserve completed-trainer aftertext and rematch
+identity. A future `objective_guard` additionally supplies its pending/completed
+state predicate and retreat script. A future `deferred_rival` also binds the scene
+ID, trigger, object lifecycle, rearm region, and eligibility predicate. Use
+existing named C predicates or script continuations through a closed domain
+adapter, not a generic predicate interpreter. Derive object coordinates from map
+events where equivalent; explicitly retain authored activation rectangles that
+differ from those coordinates.
 
-Outcome order remains: existing product/challenge/battle-mode exclusions, exact
-caller contract resolution, party eligibility/refusal, battle setup with captured
-context, then outcome dispatch. Only the existing victory path performs victory
-effects. The non-victory path runs the declared retreat/defer/legacy continuation;
-clear transient context on every finish, cancellation, new encounter, map reload,
-and recovery path as required by the current implementation. Restoration of a
-transient rival must check that its chapter is still pending.
+Current trainer callers retain native routing; this framework must not infer party
+eligibility, refusal, retreat, deferral, or recovery behavior from trainer-only.
+If a later author-owned outcome capability is approved, its order must be existing
+product/challenge/battle-mode exclusions, exact caller contract resolution, battle
+setup with captured context, then outcome dispatch. Only the existing victory path
+may perform victory effects. Its non-victory path must use its declared continuation
+and clear transient context on every finish, cancellation, new encounter, map
+reload, and recovery path. Restoration of a transient rival must check that its
+chapter is still pending.
 
 Map-local lookup must include map context whenever one script has different
 contracts at different sites. Context-independent callers may use one shared
@@ -362,14 +369,13 @@ entry. Never bind runtime identity to a trainer ID alone or to an unverified lab
 address: post-link validation proves the label points at the intended battle
 command and uses the correct argument offset for that command encoding.
 
-Required migration coverage: all ordinary callers authorized by the integrated
-trainer-only baseline; all trainer scaling classifications into shared host
-inventory/generated projections; at least one existing objective guard and one
-existing deferred rival using full declarations. Remaining regional story records
-stay explicit legacy adapters with coverage reports. Migration must not broaden
-the set of battles allowed to return after loss. Existing challenge, partner,
-chained, scripted-wild, unaudited Gym, randomizer, and disabled-feature paths retain
-their current routing.
+Required Phase D coverage is all trainer scaling classifications into shared host
+inventory/generated projections. Current trainer callers remain native legacy
+routing. A future author-owned outcome capability must separately cover every
+adopted caller, including at least one objective guard and one deferred rival when
+those profiles are introduced. It must not broaden the set of battles allowed to
+return after loss. Existing challenge, partner, chained, scripted-wild, unaudited
+Gym, randomizer, and disabled-feature paths retain their current routing.
 
 ### 7. Runtime representation and future extensions
 
@@ -465,11 +471,12 @@ measured savings claims.
 | A | Build adapters, schema validation, inventory, deterministic outputs, baseline reports | Repeated clean generation is byte-identical; wrong-product and stale inputs rejected; zero runtime delta |
 | B | Shared progression source and migrated gameplay/host consumers | Exact outputs at every Rating 0..80, clamped inputs, curve boundaries, existing modifiers, and unchanged snapshot lifecycle |
 | C | Rod and mart declarations, generated membership/bindings, updated audits | All selected contributors/counters covered; transaction and catalog equivalence; authoring exercises pass |
-| D | Integrated encounter adapter and required migration coverage | Scaling equivalence, exact outcome coverage, caller validation, scene journeys, and final resource gates |
+| D | Trainer inventory/adapter and required scaling migration coverage | Scaling equivalence, caller validation, native-routing preservation, and final resource gates |
 
 Phases B and C may proceed independently after A. D consumes the inventory and
-requires the integrated trainer-only prerequisite; it does not block earlier
-phases. Do not mark this spec implemented until all four exit gates pass.
+preserves the current wild-only trainer-only boundary; it requires no trainer-story
+or trainer-outcome prerequisite. It does not block earlier phases. Do not mark this
+spec implemented until all four exit gates pass.
 
 Tests must include independent pre-refactor expected results, not only two outputs
 from the new generator. Retain meaningful mechanics and emulator journeys. Add
@@ -492,18 +499,20 @@ in Wayfarer (120), duplicates, completed progression, transaction failure, short
 preservation, and mixed-region save/load. For marts, compare all profiles across
 0..80 and relevant challenge settings including exact item ordering and terminator.
 
-For encounters, compare all generated policy assignments against the integrated
-baseline and execute representative actual-win/loss paths, completed aftertext,
-rematches, refusal, objective retreat, deferred rival restoration, and challenge
-exclusions. Forced outcomes may cover rare lifecycle boundaries but cannot replace
-real input win/loss journeys. Add mutation tests proving a newly discovered
-unreviewed caller cannot gain outcome authorization.
+For current encounter inventory, compare all generated scaling assignments against
+the native caller baseline and prove that newly discovered callers cannot gain
+outcome authorization. A future author-owned outcome capability must separately
+cover its adopted actual-win/loss paths, completed aftertext, rematches, refusal,
+objective retreat, deferred-rival restoration, and challenge exclusions. Forced
+outcomes may cover rare lifecycle boundaries but cannot replace real input win/loss
+journeys for that future capability.
 
 Authoring fixtures add/remove a temporary rod service, add a mart binding using an
-existing profile, and add an ordinary encounter via a supported template. Require
-generation and consumer tests to reflect each change without consumer table/code
-edits. The new fixture's expected player behavior must still be asserted explicitly;
-generated inventory coverage is not an independent gameplay oracle.
+existing profile, and add/remove a native-routed trainer caller in the host
+inventory. Require generation and consumer tests to reflect each change without
+consumer table/code edits. The new fixture's expected player behavior must still
+be asserted explicitly; generated inventory coverage is not an independent
+gameplay oracle. A future encounter-outcome profile needs its own approved fixture.
 
 At runtime-phase release acceptance, build Wayfarer, HNS, Emerald, FireRed, and
 LeafGreen sequentially per worktree, preserving existing feature defaults. Never
@@ -528,9 +537,11 @@ Integrate dependencies in `game/Makefile` and `game/map_data_rules.mk`.
 
 Primary migrated consumers are `trainer_rating.c`, `trainer_party_scaling.c`,
 the wild generator, trainer scaling host tools, `item.c`, `wayfarer_marts.c`,
-mart binding/audit tooling, and the integrated story encounter module. Extend
-existing tests in their owning domains. No Devtools authoring UI is required;
-machine-readable inventory can support one later.
+and mart binding/audit tooling. Phase D may add trainer inventory and scaling
+adapters, but no trainer-story or trainer-outcome runtime module. The current
+wild-only trainer-only controller remains separately gated. Extend existing tests
+in their owning domains. No Devtools authoring UI is required; machine-readable
+inventory can support one later.
 
 ## References
 
@@ -542,4 +553,4 @@ machine-readable inventory can support one later.
 - [Standard Rod](standard-rod-fishing.md)
 - [Mart behavior](global-tr-pokemarts.md)
 - [Regional starts](wayfarer-regional-start-choice.md)
-- [Trainer-only story behavior](trainer-only-story-encounters.md)
+- [Trainer-only wild mechanic and no-story boundary](trainer-only-story-encounters.md)

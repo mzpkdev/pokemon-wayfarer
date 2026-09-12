@@ -4,8 +4,6 @@
 #endif
 #include "frontier_util.h"
 #include "battle_setup.h"
-#include "wayfarer_battle_gate.h"
-#include "wayfarer_origin.h"
 #include "constants/maps.h"
 #include "battle_util.h"
 #include "berry.h"
@@ -3228,15 +3226,6 @@ bool8 ScrCmd_dotrainerbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE);
 
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-    {
-        StopScript(ctx);
-        WayfarerAbortEmptyPartyBattle();
-        return TRUE;
-    }
-#endif
-
     BattleSetup_StartTrainerBattle();
     return TRUE;
 }
@@ -3347,15 +3336,6 @@ bool8 ScrCmd_setwildbossbattle(struct ScriptContext* ctx)
 bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-    {
-        StopScript(ctx);
-        WayfarerAbortEmptyPartyBattle();
-        return TRUE;
-    }
-#endif
 
     if (sIsScriptedWildDouble == FALSE)
         BattleSetup_StartScriptedWildBattle();

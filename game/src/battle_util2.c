@@ -15,9 +15,13 @@
 
 void AllocateBattleResources(void)
 {
+#if !IS_HNS || IS_WAYFARER
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         InitTrainerTowerBattleStruct();
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+#else
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+#endif
         InitTrainerHillBattleStruct();
 
     gBattleStruct = AllocZeroed(sizeof(*gBattleStruct));
@@ -52,9 +56,13 @@ void AllocateBattleResources(void)
 
 void FreeBattleResources(void)
 {
+#if !IS_HNS || IS_WAYFARER
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_TOWER && gMapHeader.regionMapSectionId == MAPSEC_TRAINER_TOWER_2)
         FreeTrainerTowerBattleStruct();
     else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+#else
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
+#endif
         FreeTrainerHillBattleStruct();
 
     gFieldStatuses = 0;

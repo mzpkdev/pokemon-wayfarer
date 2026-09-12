@@ -34,7 +34,36 @@
 #include "pokenav.h"
 #include "sound.h"
 #include "trainer_rating.h"
-#include "wayfarer_origin.h"
+#include "trainer_only_encounter.h"
+
+#if TESTING
+static bool8 sInterceptWildStartForTesting;
+static u32 sWildStartsForTesting;
+
+void SetWildStartInterceptionForTesting(bool8 enabled)
+{
+    sInterceptWildStartForTesting = enabled;
+    sWildStartsForTesting = 0;
+}
+
+u32 GetWildStartsForTesting(void)
+{
+    return sWildStartsForTesting;
+}
+#endif
+
+static void StartEligibleWildBattle(void)
+{
+    TrainerOnlyPrepareEncounter();
+#if TESTING
+    if (sInterceptWildStartForTesting)
+    {
+        sWildStartsForTesting++;
+        return;
+    }
+#endif
+    BattleSetup_StartWildBattle();
+}
 
 extern const u8 EventScript_SprayWoreOff[];
 
@@ -965,11 +994,6 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     enum TimeOfDay timeOfDay;
     struct Roamer *roamer;
 
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        return FALSE;
-#endif
-
     if (sWildEncountersDisabled == TRUE)
         return FALSE;
 
@@ -1006,7 +1030,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                 return FALSE;
 
             GenerateBattlePyramidWildMon();
-            BattleSetup_StartWildBattle();
+            StartEligibleWildBattle();
             return TRUE;
         }
     }
@@ -1023,7 +1047,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
                 if (!IsWildLevelAllowedByRepel(roamer->level))
@@ -1036,7 +1060,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             {
                 if (DoMassOutbreakEncounterTest() == TRUE && SetUpMassOutbreakEncounter(WILD_CHECK_REPEL | WILD_CHECK_KEEN_EYE) == TRUE)
                 {
-                    BattleSetup_StartWildBattle();
+                    StartEligibleWildBattle();
                     return TRUE;
                 }
 
@@ -1052,7 +1076,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                     }
                     else
                     {
-                        BattleSetup_StartWildBattle();
+                        StartEligibleWildBattle();
                     }
                     return TRUE;
                 }
@@ -1074,7 +1098,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
                 if (!IsWildLevelAllowedByRepel(roamer->level))
@@ -1097,7 +1121,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
                     }
                     else
                     {
-                        BattleSetup_StartWildBattle();
+                        StartEligibleWildBattle();
                     }
                     return TRUE;
                 }
@@ -1114,14 +1138,6 @@ void RockSmashWildEncounter(void)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-    {
-        gSpecialVar_Result = FALSE;
-        return;
-    }
-#endif
 
     if (headerId != HEADER_NONE)
     {
@@ -1145,7 +1161,7 @@ void RockSmashWildEncounter(void)
                 gSpecialVar_Result = TRUE;
             }
             else {
-                BattleSetup_StartWildBattle();
+                StartEligibleWildBattle();
                 gSpecialVar_Result = TRUE;
             }
         }
@@ -1165,11 +1181,6 @@ bool8 SweetScentWildEncounter(void)
     s16 x, y;
     u32 headerId;
     enum TimeOfDay timeOfDay;
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        return FALSE;
-#endif
 
     PlayerGetDestCoords(&x, &y);
     headerId = GetCurrentMapWildMonHeaderId();
@@ -1196,7 +1207,7 @@ bool8 SweetScentWildEncounter(void)
                 return FALSE;
 
             GenerateBattlePyramidWildMon();
-            BattleSetup_StartWildBattle();
+            StartEligibleWildBattle();
             return TRUE;
         }
     }
@@ -1209,7 +1220,7 @@ bool8 SweetScentWildEncounter(void)
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo == NULL)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
@@ -1220,7 +1231,7 @@ bool8 SweetScentWildEncounter(void)
             else if (!TryGenerateWildMonFromProfile(headerId, timeOfDay, WILD_AREA_LAND, WILD_ENCOUNTER_FISHING_ROD_NONE, 0))
                 return FALSE;
 
-            BattleSetup_StartWildBattle();
+            StartEligibleWildBattle();
             return TRUE;
         }
         else if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
@@ -1232,7 +1243,7 @@ bool8 SweetScentWildEncounter(void)
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo == NULL)
                 return FALSE;
 
-            if (TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
@@ -1240,7 +1251,7 @@ bool8 SweetScentWildEncounter(void)
 
             if (!TryGenerateWildMonFromProfile(headerId, timeOfDay, WILD_AREA_WATER, WILD_ENCOUNTER_FISHING_ROD_NONE, 0))
                 return FALSE;
-            BattleSetup_StartWildBattle();
+            StartEligibleWildBattle();
             return TRUE;
         }
     }
@@ -1279,10 +1290,6 @@ void FishingWildEncounter(u8 rod)
     bool8 useFeebasOverride;
 
     gIsFishingEncounter = FALSE;
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        return;
-#endif
     useFeebasOverride = CheckFeebas();
     if (!useFeebasOverride)
     {
@@ -1302,7 +1309,7 @@ void FishingWildEncounter(u8 rod)
     gIsFishingEncounter = TRUE;
     IncrementGameStat(GAME_STAT_FISHING_ENCOUNTERS);
     SetPokemonAnglerSpecies(species);
-    BattleSetup_StartWildBattle();
+    StartEligibleWildBattle();
 }
 
 static u16 GenerateFishingWildMon(u32 headerId, enum TimeOfDay timeOfDay, u8 rod, bool8 useFeebasOverride)
@@ -1931,7 +1938,8 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 
 bool8 TryDoDoubleWildBattle(void)
 {
-    if (GetSafariZoneFlag()
+    if (TrainerOnlyCanEnterWildEncounter()
+      || GetSafariZoneFlag()
       || (B_DOUBLE_WILD_REQUIRE_2_MONS == TRUE && GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS))
         return FALSE;
     if (FollowerNPCIsBattlePartner() && FNPC_FLAG_PARTNER_WILD_BATTLES != 0

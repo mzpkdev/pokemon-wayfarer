@@ -12,7 +12,6 @@
 #include "sprite.h"
 #include "task.h"
 #include "trainer_see.h"
-#include "wayfarer_origin.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
@@ -439,11 +438,6 @@ bool8 CheckForTrainersWantingBattle(void)
     u8 trainerObjects[OBJECT_EVENTS_COUNT] = {0};
     u8 trainerObjectsCount = 0;
 
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        return FALSE;
-#endif
-
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
 
@@ -461,7 +455,7 @@ bool8 CheckForTrainersWantingBattle(void)
     }
 
     // Sorts array by localId
-    for (i = 1; i <= trainerObjectsCount; i++)
+    for (i = 1; i < trainerObjectsCount; i++)
     {
         u8 x = trainerObjects[i];
         u8 j = i;
@@ -473,7 +467,7 @@ bool8 CheckForTrainersWantingBattle(void)
         trainerObjects[j] = x;
     }
 
-    for (i = 0; i <= trainerObjectsCount; i++)
+    for (i = 0; i < trainerObjectsCount; i++)
     {
         u8 numTrainers;
         numTrainers = CheckTrainer(trainerObjects[i]);

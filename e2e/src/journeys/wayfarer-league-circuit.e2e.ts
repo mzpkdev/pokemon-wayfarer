@@ -18,7 +18,7 @@ const circuitState = async (
 const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 360; attempt++) {
     const state = await game.state.read()
-    if (state.ready && !state.dialogueOpen && !state.battle.active) return
+    if (state.ready && !state.scriptActive && !state.dialogueOpen && !state.battle.active) return
     if (state.battle.active) throw new Error(`${description} unexpectedly entered battle`)
     if (state.dialogueOpen || state.scriptActive) {
       await game.wait.frames(20)
@@ -302,9 +302,15 @@ describe.sequential("Wayfarer League Circuit", () => {
     await game.controls.press("down")
     await game.controls.press("down")
     await game.controls.press("a")
-    await game.wait.until((state) => state.ui.trainerCard === "front", "open Trainer Card")
+    await game.wait.until(
+      (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "front",
+      "open Trainer Card",
+    )
     await game.controls.press("select")
-    await game.wait.until((state) => state.ui.trainerCard === "circuit", "open circuit view")
+    await game.wait.until(
+      (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "circuit",
+      "open circuit view",
+    )
     await expect(game.state.read()).resolves.toMatchObject({
       ui: { mode: "trainer-card", trainerCard: "circuit" },
       circuit: {
@@ -313,8 +319,18 @@ describe.sequential("Wayfarer League Circuit", () => {
       },
     })
     await game.controls.press("b")
-    await game.wait.until((state) => state.ui.trainerCard === "front", "return to Trainer Card")
-    await game.controls.press("b")
+    await game.wait.until(
+      (state) => state.ui.mode === "trainer-card" && state.ui.trainerCard === "front",
+      "return to Trainer Card",
+    )
+    // A short input pulse can be missed after observing the restored front
+    // page. Retry only while that page still owns input; never send B
+    // during closing or after the pause menu has opened.
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const state = await game.state.read()
+      if (state.ui.mode !== "trainer-card" || state.ui.trainerCard !== "front") break
+      await game.controls.press("b")
+    }
     await game.wait.until((state) => state.ui.mode === "pause-menu", "close Trainer Card")
     await game.wait.frames(60)
     await game.controls.press("b")
@@ -529,6 +545,12 @@ describe.sequential("Wayfarer League Circuit", () => {
     await finishFieldScript(game, "Hoenn guards grant admission")
     await walkNorthToMap(game, "hoenn-league-hall5")
     await walkNorthToMap(game, "league-sidney")
+    // The room's frame script closes the entrance after the map first becomes ready.
+    await game.wait.until(
+      async () => (await game.story.var("hoennEliteFourState")) === 1,
+      "Sidney entrance door closed",
+    )
+    await finishFieldScript(game, "Sidney entrance scene")
     await game.saveAndReload()
     const rooms = [
       "league-sidney",

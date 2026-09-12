@@ -1,4 +1,5 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
@@ -1062,10 +1063,16 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
 
 static void PrintItemDescription(int itemIndex)
 {
+    static const u8 noBalls[] = _("No Poké Balls left.\nYou can still try to run.");
+    static const u8 feedBerry[] = _("Feed to the wild Pokémon\nto calm it for a while.");
     const u8 *str;
     if (itemIndex != LIST_CANCEL)
     {
-        str = GetItemDescription(GetBagItemId(gBagPosition.pocket, itemIndex));
+        enum Item item = GetBagItemId(gBagPosition.pocket, itemIndex);
+        if (IsTrainerOnlyEncounter() && TrainerOnlyIsFeedableBerry(item))
+            str = feedBerry;
+        else
+            str = GetItemDescription(item);
     }
     else
     {
@@ -1073,6 +1080,9 @@ static void PrintItemDescription(int itemIndex)
         StringCopy(gStringVar1, gBagMenu_ReturnToStrings[gBagPosition.location]);
         StringExpandPlaceholders(gStringVar4, gText_ReturnToVar1);
         str = gStringVar4;
+        if (IsTrainerOnlyEncounter() && gBagPosition.pocket == POCKET_POKE_BALLS
+         && GetBagItemId(POCKET_POKE_BALLS, 0) == ITEM_NONE)
+            str = noBalls;
     }
     FillWindowPixelBuffer(WIN_DESCRIPTION, PIXEL_FILL(0));
     BagMenu_Print(WIN_DESCRIPTION, FONT_NORMAL, str, 3, 1, 0, 0, 0, COLORID_NORMAL);
@@ -1655,7 +1665,9 @@ static void OpenContextMenu(u8 taskId)
     {
     case ITEMMENULOCATION_BATTLE:
     case ITEMMENULOCATION_WALLY:
-        if (GetItemBattleUsage(gSpecialVar_ItemId))
+        if ((IsTrainerOnlyEncounter() && TrainerOnlyIsFeedableBerry(gSpecialVar_ItemId))
+         || (GetItemBattleUsage(gSpecialVar_ItemId)
+          && (!IsTrainerOnlyEncounter() || GetItemPocket(gSpecialVar_ItemId) == POCKET_POKE_BALLS)))
         {
             gBagMenu->contextMenuItemsPtr = sContextMenuItems_BattleUse;
             gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_BattleUse);
@@ -2199,6 +2211,16 @@ static void ItemMenu_UseInBattle(u8 taskId)
         && GetItemPocket(gSpecialVar_ItemId) != POCKET_POKE_BALLS)
     {
         DisplayItemMessage(taskId, FONT_NORMAL, sText_NoItemsInBattle, HandleErrorMessage);
+        return;
+    }
+
+    if (IsTrainerOnlyEncounter())
+    {
+        RemoveContextWindow();
+        if (TrainerOnlyIsFeedableBerry(gSpecialVar_ItemId))
+            ItemUseInTrainerOnly_Food(taskId);
+        else if (GetItemPocket(gSpecialVar_ItemId) == POCKET_POKE_BALLS)
+            ItemUseInBattle_PokeBall(taskId);
         return;
     }
 

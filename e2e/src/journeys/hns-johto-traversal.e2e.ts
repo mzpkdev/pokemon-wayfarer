@@ -15,7 +15,7 @@ type LaneCase = {
 const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 240; attempt++) {
     const state = await game.state.read()
-    if (!state.battle.active && state.ready && !state.dialogueOpen) return
+    if (!state.battle.active && state.ready && !state.dialogueOpen && !state.scriptActive) return
     if (state.dialogueOpen || state.battle.ui === "text" || state.scriptActive) {
       await game.wait.frames(30)
       await game.controls.press("a")
@@ -86,7 +86,11 @@ const finishScriptedBattle = async (game: GameSession, description: string): Pro
       await game.wait.frames(30)
       await game.controls.press("a")
       handledFaintedPartyCount = faintedPartyCount
-    } else if (state.battle.ui === "action-menu" || state.battle.ui === "other")
+    } else if (
+      state.battle.ui === "action-menu" ||
+      state.battle.ui === "move-menu" ||
+      state.battle.ui === "other"
+    )
       await game.controls.press("a")
     else if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
       await game.wait.frames(30)
@@ -508,7 +512,10 @@ describe.sequential("HNS Johto traversal bypasses", () => {
     await openSudowoodoPrompt(game)
     await game.controls.press("a")
     await startScriptedBattle(game, "Sudowoodo encounter")
-    await finishScriptedBattle(game, "Sudowoodo encounter")
+    await waitForBattleAction(game, "Sudowoodo action menu")
+    await game.battle.win()
+    await game.controls.press("a")
+    await finishFieldScript(game, "Sudowoodo victory continuation")
 
     await expect(game.story.flag("hideSudowoodo")).resolves.toBe(true)
     await game.player.move("up")

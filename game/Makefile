@@ -623,6 +623,11 @@ clean-teachables: clean-teachables_intermediates
 
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
+ifeq ($(RELEASE),1)
+# Favor ROM size for the trainer-only controllers while retaining engine -O2.
+$(C_BUILDDIR)/trainer_only_encounter.o $(C_BUILDDIR)/battle_controller_trainer_only.o: Makefile
+$(C_BUILDDIR)/trainer_only_encounter.o $(C_BUILDDIR)/battle_controller_trainer_only.o: override CFLAGS += -Os
+endif
 $(C_BUILDDIR)/agb_flash.o: override CFLAGS += -fno-toplevel-reorder
 # Annoyingly we can't turn this on just for src/data/trainers.h
 $(C_BUILDDIR)/data.o: CFLAGS += -fno-show-column -fno-diagnostics-show-caret

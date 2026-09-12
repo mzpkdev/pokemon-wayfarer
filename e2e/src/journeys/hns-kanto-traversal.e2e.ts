@@ -78,7 +78,7 @@ const startPreparedSurf = async (
 const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 120; attempt++) {
     const state = await game.state.read()
-    if (state.ready && !state.dialogueOpen) return
+    if (!state.battle.active && state.ready && !state.dialogueOpen && !state.scriptActive) return
     await game.wait.frames(state.dialogueOpen ? 30 : 12)
     await game.controls.press("a")
   }
@@ -220,7 +220,8 @@ const finishSilverBattle = async (game: GameSession): Promise<void> => {
       if (state.battle.cursor === 1 || state.battle.cursor === 3) await game.controls.press("left")
       if (state.battle.cursor === 2 || state.battle.cursor === 3) await game.controls.press("up")
       await game.controls.press("a")
-    } else if (state.battle.ui === "bag" || state.battle.ui === "bag-context")
+    } else if (state.battle.ui === "move-menu") await game.controls.press("a")
+    else if (state.battle.ui === "bag" || state.battle.ui === "bag-context")
       await game.controls.press("b")
     else if (state.battle.ui === "other") await game.controls.press("a")
     else if (state.battle.ui === "text" || state.dialogueOpen) await game.controls.press("a")
@@ -229,6 +230,18 @@ const finishSilverBattle = async (game: GameSession): Promise<void> => {
   const state = await game.state.read()
   throw new Error(
     `Mt. Moon Silver battle did not return to the overworld: active=${state.battle.active}, ui=${state.battle.ui}, cursor=${state.battle.cursor}, party=${state.party.map((mon) => `${mon.species}:${mon.fainted}`).join(",")}`,
+  )
+}
+
+const waitForBattleAction = async (game: GameSession, description: string): Promise<void> => {
+  for (let attempt = 0; attempt < 240; attempt++) {
+    const state = await game.state.read()
+    if (state.battle.ui === "action-menu") return
+    if (state.battle.ui === "text" || state.dialogueOpen) await game.controls.press("a")
+    else await game.wait.frames(12)
+  }
+  throw new Error(
+    `${description} action menu was not reached: ${JSON.stringify(await game.state.read())}`,
   )
 }
 
@@ -321,7 +334,9 @@ describe.sequential("HNS Kanto traversal", () => {
         hideIndigoPlateauSilver: true,
       })
       await acceptSilverBattle(game)
+      await waitForBattleAction(game, "Mt. Moon Silver victory")
       await game.battle.win()
+      await game.controls.press("a")
       await finishSilverVictoryScript(game)
 
       await expect(game.story.var("pewterCityState")).resolves.toBe(2)

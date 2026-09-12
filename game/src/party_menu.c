@@ -1,9 +1,11 @@
 #include "global.h"
+#include "trainer_only_encounter.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
 #include "malloc.h"
 #include "battle.h"
+#include "battle_util.h"
 #include "challenge_menu.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -242,9 +244,10 @@ static void CB2_UpdatePartyMenu(void);
 
 bool32 E2ETest_IsPartyMenuOpen(void)
 {
-    return gMain.callback2 == CB2_InitPartyMenu
-        || gMain.callback2 == CB2_ReloadPartyMenu
-        || gMain.callback2 == CB2_UpdatePartyMenu;
+    // The active party menu can run under the reshow-battle callback while
+    // retaining its initialized menu state. Its allocations are the reliable
+    // observable boundary for E2E, unlike a particular callback address.
+    return sPartyMenuInternal != NULL && sPartyMenuBoxes != NULL;
 }
 
 void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count)
@@ -988,13 +991,25 @@ static void PartyPaletteBufferCopy(u8 palNum)
 static void FreePartyPointers(void)
 {
     if (sPartyMenuInternal)
+    {
         Free(sPartyMenuInternal);
+        sPartyMenuInternal = NULL;
+    }
     if (sPartyBgTilemapBuffer)
+    {
         Free(sPartyBgTilemapBuffer);
+        sPartyBgTilemapBuffer = NULL;
+    }
     if (sPartyBgGfxTilemap)
+    {
         Free(sPartyBgGfxTilemap);
+        sPartyBgGfxTilemap = NULL;
+    }
     if (sPartyMenuBoxes)
+    {
         Free(sPartyMenuBoxes);
+        sPartyMenuBoxes = NULL;
+    }
     FreeAllWindowBuffers();
 }
 
@@ -7918,6 +7933,8 @@ u8 GetPartyIdFromBattlePartyId(u8 battlePartyId)
 
 static void UpdatePartyToBattleOrder(void)
 {
+    if (IsTrainerOnlyEncounter())
+        return;
     struct Pokemon *partyBuffer = Alloc(sizeof(gPlayerParty));
     u8 i;
 
@@ -7929,6 +7946,8 @@ static void UpdatePartyToBattleOrder(void)
 
 static void UpdatePartyToFieldOrder(void)
 {
+    if (IsTrainerOnlyEncounter())
+        return;
     struct Pokemon *partyBuffer = Alloc(sizeof(gPlayerParty));
     u8 i;
 
