@@ -1,0 +1,287 @@
+{
+  "cases": {
+    "0": {
+      "name": "Route47 isolated",
+      "legacy": {
+        "n": 100,
+        "median": 145233.0,
+        "p95": 145233,
+        "maximum": 145233,
+        "minimum": 145233
+      },
+      "raw_control": {
+        "n": 100,
+        "median": 760776.0,
+        "p95": 760776,
+        "maximum": 760776,
+        "minimum": 760776
+      },
+      "hybrid": {
+        "n": 100,
+        "median": 1061189.0,
+        "p95": 1061189,
+        "maximum": 1061189,
+        "minimum": 1061189
+      },
+      "hybrid_minus_legacy": {
+        "n": 100,
+        "median": 915956.0,
+        "p95": 915956,
+        "maximum": 915956,
+        "minimum": 915956,
+        "p95_frames": 3.26083675096833
+      },
+      "raw_minus_legacy": {
+        "n": 100,
+        "median": 615543.0,
+        "p95": 615543,
+        "maximum": 615543,
+        "minimum": 615543,
+        "p95_frames": 2.1913555194805197
+      },
+      "hybrid_minus_raw": {
+        "n": 100,
+        "median": 300413.0,
+        "p95": 300413,
+        "maximum": 300413,
+        "minimum": 300413,
+        "p95_frames": 1.0694812314878104
+      }
+    },
+    "1": {
+      "name": "Route47 north to Route48",
+      "legacy": {
+        "n": 100,
+        "median": 151871.0,
+        "p95": 151871,
+        "maximum": 151871,
+        "minimum": 151871
+      },
+      "raw_control": {
+        "n": 100,
+        "median": 915488.0,
+        "p95": 915488,
+        "maximum": 915488,
+        "minimum": 915488
+      },
+      "hybrid": {
+        "n": 100,
+        "median": 1300491.0,
+        "p95": 1300491,
+        "maximum": 1300491,
+        "minimum": 1300491
+      },
+      "hybrid_minus_legacy": {
+        "n": 100,
+        "median": 1148620.0,
+        "p95": 1148620,
+        "maximum": 1148620,
+        "minimum": 1148620,
+        "p95_frames": 4.089129072681704
+      },
+      "raw_minus_legacy": {
+        "n": 100,
+        "median": 763617.0,
+        "p95": 763617,
+        "maximum": 763617,
+        "minimum": 763617,
+        "p95_frames": 2.718504357484621
+      },
+      "hybrid_minus_raw": {
+        "n": 100,
+        "median": 385003.0,
+        "p95": 385003,
+        "maximum": 385003,
+        "minimum": 385003,
+        "p95_frames": 1.3706247151970836
+      }
+    },
+    "2": {
+      "name": "Route48 south to Route47",
+      "legacy": {
+        "n": 100,
+        "median": 71502.0,
+        "p95": 71502,
+        "maximum": 71502,
+        "minimum": 71502
+      },
+      "raw_control": {
+        "n": 100,
+        "median": 834973.0,
+        "p95": 834973,
+        "maximum": 834973,
+        "minimum": 834973
+      },
+      "hybrid": {
+        "n": 100,
+        "median": 1225433.0,
+        "p95": 1225433,
+        "maximum": 1225433,
+        "minimum": 1225433
+      },
+      "hybrid_minus_legacy": {
+        "n": 100,
+        "median": 1153931.0,
+        "p95": 1153931,
+        "maximum": 1153931,
+        "minimum": 1153931,
+        "p95_frames": 4.108036426293006
+      },
+      "raw_minus_legacy": {
+        "n": 100,
+        "median": 763471.0,
+        "p95": 763471,
+        "maximum": 763471,
+        "minimum": 763471,
+        "p95_frames": 2.7179845921622237
+      },
+      "hybrid_minus_raw": {
+        "n": 100,
+        "median": 390460.0,
+        "p95": 390460,
+        "maximum": 390460,
+        "minimum": 390460,
+        "p95_frames": 1.3900518341307815
+      }
+    }
+  },
+  "notes": [
+    "Exact extracted fieldmap loader/copy functions; independent one-buffer descriptor orchestration.",
+    "Minimal ARM ROM, -O2 without LTO; production WAITCNT=0x40b4; mGBA built-in BIOS; no IRQ/audio/gameplay state.",
+    "Complete timings include allocation, validation, checksums, LZ preflight/decode, backup clear/copy, connections and Free. Functional poisoning and comparison are outside timings.",
+    "Raw verifies one CRC scan against both descriptor CRC fields; hybrid scans stored and decoded bytes.",
+    "Stage timings are separate one-shot measurements, not components instrumented inside the 100 complete-load samples.",
+    "Stack paint measures below benchmark caller SP, includes actual 800-byte FastLZ local plus copied ARM routine; excludes parent, IRQ/SVC stack high-water."
+  ],
+  "frame_cycles": 280896,
+  "emulator": "mGBA 0.11-7856-dbffb46c4",
+  "command": "game/tools/mgba/mgba-rom-test -S 3 -R r0 tools/map_compression_poc/artifacts/runtime/map-compression-runtime.gba",
+  "heap": [
+    [
+      0,
+      115952,
+      101296,
+      115952
+    ],
+    [
+      1,
+      115952,
+      101296,
+      115952
+    ],
+    [
+      2,
+      115952,
+      101296,
+      115952
+    ]
+  ],
+  "scratch": [
+    [
+      0,
+      14640,
+      14656,
+      0
+    ],
+    [
+      1,
+      14640,
+      14656,
+      0
+    ],
+    [
+      2,
+      14640,
+      14656,
+      0
+    ]
+  ],
+  "stack": [
+    [
+      0,
+      996,
+      50363552,
+      0
+    ],
+    [
+      1,
+      996,
+      50363552,
+      0
+    ],
+    [
+      2,
+      996,
+      50363552,
+      0
+    ]
+  ],
+  "point": [
+    [
+      0,
+      1137,
+      1,
+      0
+    ],
+    [
+      1,
+      1137,
+      1,
+      0
+    ],
+    [
+      2,
+      1045,
+      1,
+      0
+    ]
+  ],
+  "stages": [
+    [
+      113968,
+      127056,
+      168861,
+      512455
+    ],
+    [
+      146288,
+      162243,
+      210960,
+      635710
+    ],
+    [
+      146288,
+      162243,
+      210960,
+      635710
+    ]
+  ],
+  "fragment": [
+    [
+      14000,
+      115952,
+      14640,
+      1
+    ]
+  ],
+  "sha256": {
+    "tools/map_compression_poc/runtime/fastlz_adapter.c": "71b0c7d529bdaef048d124dd5dae9246065ffca93e2810d5c81b8acc5f13b60e",
+    "tools/map_compression_poc/runtime/harness.c": "220a5cafaa00127d474a132fca32a257ee2d19c8efc85dd00748a306a8306c36",
+    "tools/map_compression_poc/runtime/start.s": "623a8da9969946609fc1b379d63ce1e668b1ec9f7ec64bd794f082c76641ba32",
+    "tools/map_compression_poc/runtime/linker.ld": "0d2c751fdc180b1878b83214c8f50c7b3cc0bce8f57216769e55b37087bf9f7d",
+    "tools/map_compression_poc/runtime/generate_data.py": "de7e88d14447c987a8505b7fa2a9f426b24b9573e8e5f101901693d55d5bfaa6",
+    "tools/map_compression_poc/runtime/Makefile": "595175052b7cf0b8aa4825135667956f973edeb061c76a0f7e3e1f20996276af",
+    "tools/map_compression_poc/runtime/analyze.py": "e4627085040ed5abddc3b5390f69056b68481e3a1fbc1b1452beaf53226db895",
+    "tools/map_compression_poc/runtime/compat.c": "c4ce336a636b683761e3d384cc0666482b330e07396be5ecaae49ace27fb3c36",
+    "tools/map_compression_poc/runtime/extract_legacy.py": "d159b5e227159d27e0386dadd3f1fd015889e13e5ce6bc7c662743e926dc2678",
+    "tools/map_compression_poc/artifacts/runtime/map-compression-runtime.elf": "3b7c02aa4224af4a9d05d1d10f236b1f81bdb959e00aa73f1fd573345df5eafb",
+    "tools/map_compression_poc/artifacts/runtime/map-compression-runtime.gba": "7b4ede0882df290c346fdc3253b8f9c13aef38b83ca51585263dad02017c5391",
+    "tools/map_compression_poc/artifacts/runtime/mgba-run.log": "9c5d8f1e4fee736373d615c92ad3d690bd233a71493b80e5d322ae8e8e6e727a",
+    "tools/map_compression_poc/artifacts/runtime/data/identity.json": "b9ba55d44f858b99acbca3e009be493cc31c55387c802811abe1ed3cec098d00",
+    "tools/map_compression_poc/artifacts/runtime/data/legacy.inc": "4e10aeb87eb72e429d15032d49a647248f4a23ae9664211ba08b0d606a6ff34f",
+    "tools/map_compression_poc/artifacts/runtime/data/legacy-identity.json": "9bad61d85dd28cd2e31f5eda93d61259ea252d55e8bf83aba64e2f0f8ec04793",
+    "game/tools/mgba/mgba-rom-test": "4304688a0b44007cca23c9e887af17c44530fd602ee3d1e57a232da397bec769",
+    "game/src/malloc.c": "455d4f647b80f93bb2f253efdbb9337d3dbb05fab0a233c039605d8bb4562fce",
+    "game/src/decompress_asm.s": "13fed01994cf7c5671e42f95f70ed880c5ca3a013f7513b5d1f2b0d8159292a1"
+  }
+}

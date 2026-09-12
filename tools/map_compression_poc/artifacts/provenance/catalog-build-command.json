@@ -1,0 +1,5 @@
+{
+  "cwd": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer",
+  "shell_command": "cc -Wall -Wextra -Werror -Wno-sign-compare -std=c11 -O2 -DPNG_SKIP_SETJMP_CHECK $(pkg-config --cflags libpng) game/tools/gbagfx/main.c game/tools/gbagfx/convert_png.c game/tools/gbagfx/gfx.c game/tools/gbagfx/jasc_pal.c game/tools/gbagfx/lz.c game/tools/gbagfx/rl.c game/tools/gbagfx/util.c game/tools/gbagfx/font.c game/tools/gbagfx/huff.c -o tools/map_compression_poc/artifacts/catalog/gbagfx $(pkg-config --libs-only-L libpng) -lpng -lz",
+  "binary_sha256": "cd98c8ac15a1d7f93c89e18d724a547f19322e826e262c98778b7d5efed3fc15"
+}

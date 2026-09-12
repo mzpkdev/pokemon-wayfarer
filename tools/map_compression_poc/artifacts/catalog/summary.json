@@ -1,0 +1,82 @@
+{
+  "artifacts": {
+    "compressed_stream_directory": "streams",
+    "per_layout_json": "per-layout.json",
+    "per_layout_tsv": "per-layout.tsv"
+  },
+  "identity": {
+    "layouts_json_sha256": "3b548d055a81dbffb2348d3435077006e8b46aa19df1f2bd5798df218fba5ea3",
+    "sevii_enabled_layout_count": 102,
+    "sevii_manifest_sha256": "d21b1d69d67a15b5af798ad6adb9181b280fb21e32826aae3c3f4d15cea6dee3",
+    "sevii_release_link_enabled": true
+  },
+  "potential_special_raw_exception_exposure": {
+    "battle_pyramid": {
+      "auto_saved_bytes": 5552,
+      "layouts": 38,
+      "raw_bytes": 8560
+    },
+    "player_room": {
+      "auto_saved_bytes": 80,
+      "layouts": 1,
+      "raw_bytes": 160
+    },
+    "secret_base": {
+      "auto_saved_bytes": 3944,
+      "layouts": 24,
+      "raw_bytes": 6268
+    },
+    "trainer_hill": {
+      "auto_saved_bytes": 8268,
+      "layouts": 14,
+      "raw_bytes": 12860
+    }
+  },
+  "selected_layout_count": 1089,
+  "selector": "mapjson.cpp data_matches_version/layout_matches_version; map_data_rules.mk Wayfarer manifest input",
+  "source_revision": "ec18cfffd21f31b54a60a73d750863bde30be83d",
+  "temporary_audit_inventory_validation": {
+    "audit_all_lz_total_bytes": 530348,
+    "compression_inventory_sha256": "a45163d2f84224a6e82698015c4d12311a94205e2ddd6450ee9c1deb1caab9e8",
+    "compression_lz_size_mismatches": 0,
+    "compression_path_set_matches": true,
+    "compression_raw_size_mismatches": 0,
+    "compression_rows": 1089,
+    "current_all_lz_total_bytes": 530348,
+    "historical_source_sample": {
+      "current_sha256": "ab8d965f615db20502ee530cf5088ef0bc05b949f5f39cf36bde63ec8dbfd288",
+      "current_source_path": "data/layouts/NewSinjoh_hns/map.bin",
+      "historical_artifact": "NewSinjoh_hns-868e154.bin",
+      "historical_sha256": "5e0cf86ad6cbe5f3ff128af72da90e782cfd97a84909bbd3ef9a346abda070ac",
+      "matches_current": false
+    },
+    "note": "The temporary TSVs contain no source hashes. They establish matching paths, metadata, raw lengths, and LZ lengths, not byte identity. The compression TSV is all-LZ output; its 36 expansion cases require raw fallback to reach the hybrid stored total.",
+    "selected_inventory_sha256": "354ed1f20442fd830d056bceb17cc0e8fb34621b56cebad43b6779e098b7a686",
+    "selected_metadata_field_mismatches": 0,
+    "selected_path_set_matches": true,
+    "selected_rows": 1089
+  },
+  "tool": {
+    "path": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/tools/map_compression_poc/artifacts/catalog/gbagfx",
+    "sha256": "cd98c8ac15a1d7f93c89e18d724a547f19322e826e262c98778b7d5efed3fc15"
+  },
+  "totals": {
+    "aligned_payload_bytes": 530036,
+    "backup_grid_capacity_bytes": 20480,
+    "backup_grid_capacity_tiles": 10240,
+    "before_code_checksum_exception_net_bytes": 1314624,
+    "compressed_entries": 1053,
+    "compressed_stream_bytes": 529076,
+    "descriptor_bytes_28_each": 30492,
+    "descriptor_interrecord_alignment_bytes": 0,
+    "gross_payload_saved_bytes": 1345144,
+    "largest_decoded_file_bytes": 14640,
+    "largest_decoded_layout_id": "LAYOUT_ROUTE47_HNS",
+    "largest_padded_grid_bytes": 20250,
+    "largest_padded_grid_tiles": 10125,
+    "payload_alignment_bytes": 28,
+    "raw_bytes": 1875152,
+    "raw_fallback_entries": 36,
+    "stored_bytes": 530008
+  }
+}

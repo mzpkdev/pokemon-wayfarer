@@ -1,0 +1,14 @@
+{
+  "source": "game/src/fieldmap.c",
+  "sha256": "4161c8e4e498173ac58a6a06f0b5e173f3269933851a3ed03fc960821f8e0bb5",
+  "functions": {
+    "InitMapLayoutData": "6789ae59a282306766e448852edbd0ef198d7c7096abe7cd6e48a25a8940c6e4",
+    "InitBackupMapLayoutData": "90f2998a8c8ad6324e0ba9954437b1cd9384626a4651e64e8a5170cc71240b0f",
+    "InitBackupMapLayoutConnections": "a1a249d01fa6bf5111f1dd40cb9253d41d82f804653bb366b44898fe93b31891",
+    "FillConnection": "a371431c49b133f2777969bd9061906dad4ad171c5281e39073e4f196825b96a",
+    "FillSouthConnection": "920a49be9302a28dcfaeb5fd891295800cd507f18a89da0c43a3718c2b7f3684",
+    "FillNorthConnection": "13ceb06a6d7dbba503f50fbad124b1993ce5bb12bc287572c1f6d90b2ec000ac",
+    "FillWestConnection": "579f2aa41468f4f3922f9764f15ff2a391efb49a4bdcd81935566ac8997afed2",
+    "FillEastConnection": "a7a918e446e93802b54c411326037c6d62862b7381c7c35cd17ae149974c3710"
+  }
+}

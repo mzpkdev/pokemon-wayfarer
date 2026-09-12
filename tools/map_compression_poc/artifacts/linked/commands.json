@@ -1,0 +1,28 @@
+[
+  {
+    "cwd": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/game",
+    "command": "tools/preproc/preproc /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/tools/map_compression_poc/artifacts/linked/raw-control/maps.s charmap.txt | arm-none-eabi-cpp -iquote include -Wno-trigraphs -DMODERN=1 -DTESTING=0 -DPOKEMON_WAYFARER -std=gnu17 -DENABLE_COLOSSEUM_MULTIBOOT=0 -DENABLE_BERRY_GLITCH_FIX_MULTIBOOT=0 -DENABLE_EREADER_TRANSFER=0 -DPOKEMON_HNS -DRELEASE -I include - | tools/preproc/preproc -ie /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/tools/map_compression_poc/artifacts/linked/raw-control/maps.s charmap.txt | arm-none-eabi-as -mcpu=arm7tdmi -march=armv4t -meabi=5 --defsym MODERN=1 --defsym POKEMON_WAYFARER=1 --defsym POKEMON_HNS=1 -o build/wayfarer-release/data/maps.o"
+  },
+  {
+    "cwd": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/game",
+    "argv": [
+      "make",
+      "-j6",
+      "BUILD=wayfarer",
+      "release"
+    ]
+  },
+  {
+    "cwd": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/game",
+    "command": "tools/preproc/preproc /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/tools/map_compression_poc/artifacts/linked/hybrid/maps.s charmap.txt | arm-none-eabi-cpp -iquote include -Wno-trigraphs -DMODERN=1 -DTESTING=0 -DPOKEMON_WAYFARER -std=gnu17 -DENABLE_COLOSSEUM_MULTIBOOT=0 -DENABLE_BERRY_GLITCH_FIX_MULTIBOOT=0 -DENABLE_EREADER_TRANSFER=0 -DPOKEMON_HNS -DRELEASE -I include - | tools/preproc/preproc -ie /home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/tools/map_compression_poc/artifacts/linked/hybrid/maps.s charmap.txt | arm-none-eabi-as -mcpu=arm7tdmi -march=armv4t -meabi=5 --defsym MODERN=1 --defsym POKEMON_WAYFARER=1 --defsym POKEMON_HNS=1 -o build/wayfarer-release/data/maps.o"
+  },
+  {
+    "cwd": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/map-compression-feasibility/pokemon-wayfarer/game",
+    "argv": [
+      "make",
+      "-j6",
+      "BUILD=wayfarer",
+      "release"
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "legacy": {
+    "verified_layouts": 1089,
+    "verified_table_slots": 1331,
+    "rom_end": "0x9f27af0",
+    "used_bytes": 32668400,
+    "elf_sha256": "70711cd2e57585906366e391063f3266682bf57c0874a090dd6c56b209cce0d7"
+  },
+  "raw-control": {
+    "verified_layouts": 1089,
+    "verified_table_slots": 1331,
+    "rom_end": "0x9f2f210",
+    "used_bytes": 32698896,
+    "elf_sha256": "772434b798a23f55e5b46d12dc77f3aa24b88c3de09368151c2eba32a43c7ec0"
+  },
+  "hybrid": {
+    "verified_layouts": 1089,
+    "verified_table_slots": 1331,
+    "rom_end": "0x9de69f0",
+    "used_bytes": 31353328,
+    "elf_sha256": "74e26d55fc41d2c0950b0eb2193c700dbc5728554bd5eff5eefb220b4cbf6c0d"
+  },
+  "storage_only_saved_bytes": 1315072,
+  "raw_control_overhead_bytes": 30496
+}

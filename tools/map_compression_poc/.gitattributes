@@ -1,0 +1,5 @@
+# Preserve measurement exports byte for byte: empty TSV fields and CSV CRLF.
+artifacts/catalog/per-layout.tsv -text whitespace=-blank-at-eol
+artifacts/runtime/samples.csv -text whitespace=cr-at-eol
+# These are verbatim compiler version outputs.
+artifacts/builds/*-version.txt whitespace=-blank-at-eof

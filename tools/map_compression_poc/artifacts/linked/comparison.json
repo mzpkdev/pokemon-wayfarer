@@ -1,0 +1,257 @@
+{
+  "purpose": "Nonplayable storage-only relinks: no new runtime code, exception policy or shipping overhead",
+  "source_revision": "ec18cfffd21f31b54a60a73d750863bde30be83d",
+  "catalog_sha256": "6a5b9928b341eb5f7cd2390e8133b894f0fa7c0f7b5d7a44767eccef40ea0377",
+  "descriptor_count": 1089,
+  "descriptor_bytes": 30492,
+  "builds": {
+    "legacy": {
+      "rom_report": {
+        "baseline": {
+          "available": true
+        },
+        "build": "wayfarer",
+        "categories": {
+          "audio": {
+            "bytes": 11721048,
+            "delta_bytes": 0,
+            "end_address": "0x094BA0C8",
+            "start_address": "0x0898C770"
+          },
+          "code": {
+            "bytes": 2698528,
+            "delta_bytes": -8240,
+            "end_address": "0x08292D20",
+            "start_address": "0x08000000"
+          },
+          "encounter_data": {
+            "bytes": 81672,
+            "delta_bytes": 9864,
+            "end_address": "0x09529ED0",
+            "start_address": "0x09515FC8"
+          },
+          "graphics": {
+            "bytes": 3112308,
+            "delta_bytes": 215236,
+            "end_address": "0x0898C770",
+            "start_address": "0x086949FC"
+          },
+          "maps_layouts": {
+            "bytes": 2230876,
+            "delta_bytes": 148748,
+            "end_address": "0x086949FC",
+            "start_address": "0x08473FA0"
+          },
+          "other": {
+            "bytes": 10476576,
+            "delta_bytes": -587936,
+            "end_address": "0x09F27AF0",
+            "start_address": "0x09529ED0"
+          },
+          "scripts": {
+            "bytes": 1970816,
+            "delta_bytes": 14400,
+            "end_address": "0x08473FA0",
+            "start_address": "0x08292D20"
+          },
+          "trainer_data": {
+            "bytes": 376576,
+            "delta_bytes": 11192,
+            "end_address": "0x09515FC8",
+            "start_address": "0x094BA0C8"
+          }
+        },
+        "reconciliation": {
+          "category_bytes": 32668400,
+          "matches_used_bytes": true
+        },
+        "release": true,
+        "rom": {
+          "capacity_end_address": "0x0A000000",
+          "end_address": "0x09F27AF0",
+          "start_address": "0x08000000",
+          "unused_bytes": 886032,
+          "used_bytes": 32668400,
+          "wayfarer_release_limit_address": "0x09F80000",
+          "wayfarer_release_limit_enforced": true
+        },
+        "schema_version": 1
+      },
+      "sha256": {
+        "pokewayfarer-release.elf": "70711cd2e57585906366e391063f3266682bf57c0874a090dd6c56b209cce0d7",
+        "pokewayfarer-release.map": "541d990b1bf54f728db5dfbbde6284e156a4d4935b0f3fcf8a50255bdb8ed1f9",
+        "pokewayfarer-release-size.json": "c37de4eb2904a77dbfc25d08bb9d0226af3065d0cf65d7cb0d274c21baa93c1b",
+        "maps.o": "a5ca8c6fb6d3e3b856caa08b4a22dbfc9d917021d7057dc8a7591d7a15661991",
+        "pokewayfarer-release.gba": "08f8fd31796d87c326208fdac6dbb54404d204c29325af3e6dca5ce26dc60416"
+      }
+    },
+    "raw-control": {
+      "rom_report": {
+        "baseline": {
+          "available": true
+        },
+        "build": "wayfarer",
+        "categories": {
+          "audio": {
+            "bytes": 11721048,
+            "delta_bytes": 0,
+            "end_address": "0x094C17E8",
+            "start_address": "0x08993E90"
+          },
+          "code": {
+            "bytes": 2698528,
+            "delta_bytes": -8240,
+            "end_address": "0x08292D20",
+            "start_address": "0x08000000"
+          },
+          "encounter_data": {
+            "bytes": 81672,
+            "delta_bytes": 9864,
+            "end_address": "0x095315F0",
+            "start_address": "0x0951D6E8"
+          },
+          "graphics": {
+            "bytes": 3112312,
+            "delta_bytes": 215240,
+            "end_address": "0x08993E90",
+            "start_address": "0x0869C118"
+          },
+          "maps_layouts": {
+            "bytes": 2261368,
+            "delta_bytes": 179240,
+            "end_address": "0x0869C118",
+            "start_address": "0x08473FA0"
+          },
+          "other": {
+            "bytes": 10476576,
+            "delta_bytes": -587936,
+            "end_address": "0x09F2F210",
+            "start_address": "0x095315F0"
+          },
+          "scripts": {
+            "bytes": 1970816,
+            "delta_bytes": 14400,
+            "end_address": "0x08473FA0",
+            "start_address": "0x08292D20"
+          },
+          "trainer_data": {
+            "bytes": 376576,
+            "delta_bytes": 11192,
+            "end_address": "0x0951D6E8",
+            "start_address": "0x094C17E8"
+          }
+        },
+        "reconciliation": {
+          "category_bytes": 32698896,
+          "matches_used_bytes": true
+        },
+        "release": true,
+        "rom": {
+          "capacity_end_address": "0x0A000000",
+          "end_address": "0x09F2F210",
+          "start_address": "0x08000000",
+          "unused_bytes": 855536,
+          "used_bytes": 32698896,
+          "wayfarer_release_limit_address": "0x09F80000",
+          "wayfarer_release_limit_enforced": true
+        },
+        "schema_version": 1
+      },
+      "sha256": {
+        "relink.log": "2f3c04cba2a974d80cebc6c5502e9a99caff61a022d046ecb7bd20c0f99050dd",
+        "maps.s": "d79f37cb23cad42765065cbd20394d033100db9285591341dd3d25e04fd8e816",
+        "pokewayfarer-release.elf": "772434b798a23f55e5b46d12dc77f3aa24b88c3de09368151c2eba32a43c7ec0",
+        "assemble.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "layouts.inc": "bb75ab164de8762625afbda60f6aab1ab8791946ddc9ed2c1cb09ab84e0f4dc7",
+        "pokewayfarer-release.map": "f390d59e3897021fe1f8b392d17e5081e830e5d97b1875311aa51f69fe8d8b54",
+        "pokewayfarer-release-size.json": "d907f3178a95893a442b54204f28beb3131ecfdee18ee10cd5721f46e1889ae3",
+        "maps.o": "4c9ef9d12024d8b19c26577b2d7d20facaa58a7da86bc42662ca6e57017d21c7",
+        "pokewayfarer-release.gba": "8e92a126b32eaa97ace50656c7518b7ec461542178780b6be7ded20f43f9babb"
+      }
+    },
+    "hybrid": {
+      "rom_report": {
+        "baseline": {
+          "available": true
+        },
+        "build": "wayfarer",
+        "categories": {
+          "audio": {
+            "bytes": 11721048,
+            "delta_bytes": 0,
+            "end_address": "0x09378FC8",
+            "start_address": "0x0884B670"
+          },
+          "code": {
+            "bytes": 2698528,
+            "delta_bytes": -8240,
+            "end_address": "0x08292D20",
+            "start_address": "0x08000000"
+          },
+          "encounter_data": {
+            "bytes": 81672,
+            "delta_bytes": 9864,
+            "end_address": "0x093E8DD0",
+            "start_address": "0x093D4EC8"
+          },
+          "graphics": {
+            "bytes": 3112316,
+            "delta_bytes": 215244,
+            "end_address": "0x0884B670",
+            "start_address": "0x085538F4"
+          },
+          "maps_layouts": {
+            "bytes": 915796,
+            "delta_bytes": -1166332,
+            "end_address": "0x085538F4",
+            "start_address": "0x08473FA0"
+          },
+          "other": {
+            "bytes": 10476576,
+            "delta_bytes": -587936,
+            "end_address": "0x09DE69F0",
+            "start_address": "0x093E8DD0"
+          },
+          "scripts": {
+            "bytes": 1970816,
+            "delta_bytes": 14400,
+            "end_address": "0x08473FA0",
+            "start_address": "0x08292D20"
+          },
+          "trainer_data": {
+            "bytes": 376576,
+            "delta_bytes": 11192,
+            "end_address": "0x093D4EC8",
+            "start_address": "0x09378FC8"
+          }
+        },
+        "reconciliation": {
+          "category_bytes": 31353328,
+          "matches_used_bytes": true
+        },
+        "release": true,
+        "rom": {
+          "capacity_end_address": "0x0A000000",
+          "end_address": "0x09DE69F0",
+          "start_address": "0x08000000",
+          "unused_bytes": 2201104,
+          "used_bytes": 31353328,
+          "wayfarer_release_limit_address": "0x09F80000",
+          "wayfarer_release_limit_enforced": true
+        },
+        "schema_version": 1
+      },
+      "sha256": {
+        "relink.log": "f06b0ae924915d44581dcc55e8905e43e3db3fc5c7d26cb7cb4ff95102925f6b",
+        "maps.s": "443333899023624555e6b7f42da64406af5f97e5f1205c7188400ba005df49d6",
+        "pokewayfarer-release.elf": "74e26d55fc41d2c0950b0eb2193c700dbc5728554bd5eff5eefb220b4cbf6c0d",
+        "assemble.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "layouts.inc": "8b3e1f75042993c91d3f1a66cf5b353eb5237dce558202a8a56f857510a76512",
+        "pokewayfarer-release.map": "2a82248678a2b711a213ade55d01b940a107411c15c609e2e0e37ef20837792f",
+        "pokewayfarer-release-size.json": "c3cd5744249167cda1d9ed44fa98be38c1e9b9a5891647c8a01b6a85566a30b9",
+        "maps.o": "955d91aa23d0baa831a3a2620d83b796fb2dc02dac0ff963f34325a66be60bec",
+        "pokewayfarer-release.gba": "7ba279f631dda60314fda66f2dde0a8f343e36b416a4fe6ba09d876d6164de8a"
+      }
+    }
+  }
+}

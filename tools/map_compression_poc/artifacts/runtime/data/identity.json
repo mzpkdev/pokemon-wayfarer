@@ -1,0 +1,55 @@
+{
+  "chosen_connection": "Route47_hns north to Route48_hns: map.json direction up, offset 19",
+  "gbagfx": "tools/map_compression_poc/artifacts/catalog/gbagfx",
+  "gbagfx_sha256": "cd98c8ac15a1d7f93c89e18d724a547f19322e826e262c98778b7d5efed3fc15",
+  "maps": [
+    {
+      "authored_source": "game/data/layouts/Route47_hns/map.bin",
+      "authored_source_sha256": "29874b3ec4c56678cc5d0f216e1d9ec05eb96e262242fc3362f3ce3d998c6637",
+      "connections": [
+        {
+          "direction": "up",
+          "map": "MAP_ROUTE48_HNS",
+          "offset": 19
+        }
+      ],
+      "height": 61,
+      "layout_id": "LAYOUT_ROUTE47_HNS",
+      "lz_bytes": 2712,
+      "lz_decode_consumed": 2711,
+      "lz_sha256": "7fe2759466180f60236dc75e730a831de51e3ff44fb7418e36aa6f8b4da5793d",
+      "map": "Route47_hns",
+      "raw_bytes": 14640,
+      "raw_sha256": "29874b3ec4c56678cc5d0f216e1d9ec05eb96e262242fc3362f3ce3d998c6637",
+      "symbol": "route47",
+      "width": 120
+    },
+    {
+      "authored_source": "game/data/layouts/Route48_hns/map.bin",
+      "authored_source_sha256": "5d1b91c506b75e109e26aa19da1afac4f502c504f78d2baebc86fb6374198842",
+      "connections": [
+        {
+          "direction": "down",
+          "map": "MAP_ROUTE47_HNS",
+          "offset": -19
+        },
+        {
+          "direction": "up",
+          "map": "MAP_SAFARI_ZONE_GATE_HNS",
+          "offset": 7
+        }
+      ],
+      "height": 32,
+      "layout_id": "LAYOUT_ROUTE48_HNS",
+      "lz_bytes": 768,
+      "lz_decode_consumed": 767,
+      "lz_sha256": "149062113e9829557c5e0d48e84cf2adb4aeb1b3f507e1f6333393c0dae567f9",
+      "map": "Route48_hns",
+      "raw_bytes": 3520,
+      "raw_sha256": "5d1b91c506b75e109e26aa19da1afac4f502c504f78d2baebc86fb6374198842",
+      "symbol": "route48",
+      "width": 55
+    }
+  ],
+  "source_revision": "ec18cfffd21f31b54a60a73d750863bde30be83d"
+}
