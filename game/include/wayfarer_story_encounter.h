@@ -64,12 +64,26 @@ enum WayfarerStoryEncounterFlags
 #define WAYFARER_STORY_NO_COORD (-1)
 #define WAYFARER_STORY_ANY_ELEVATION 0xFF
 
-struct WayfarerOrdinaryEncounter
+struct WayfarerStoryEncounterDescriptor
 {
-    const u8 *caller;
+    // The descriptor deliberately excludes a caller. Regional rival and player
+    // variants share every remaining field, while callers retain source order.
+    const u8 *lossRedirect;
+    const u8 *triggerScript;
     u16 stableKey;
+    u16 sceneId;
+    u8 policy;
     u8 dialogue;
     u8 flags;
+    u8 mapGroup;
+    u8 mapNum;
+    u8 localId;
+    u8 elevation;
+    u8 activationWidth;
+    u8 activationHeight;
+    s16 x;
+    s16 y;
+    bool8 (*isNarrativelyEligible)(void);
 };
 
 struct WayfarerStoryEncounter
@@ -103,15 +117,22 @@ struct WayfarerStoryEncounter
 
 // Registry construction is intentionally split by scope.  The ordinary manifest
 // is owned by the root integration; each region owns only its own data include.
-extern const struct WayfarerOrdinaryEncounter gWayfarerStoryOrdinaryEncounters[];
+extern const u8 *const gWayfarerStoryOrdinaryCallers[];
+extern const u8 gWayfarerStoryOrdinaryMetadata[];
 extern const u32 gWayfarerStoryOrdinaryEncounterCount;
-extern const struct WayfarerStoryEncounter gWayfarerStoryJohtoEncounters[];
+extern const struct WayfarerStoryEncounterDescriptor gWayfarerStoryJohtoDescriptors[];
+extern const u32 gWayfarerStoryJohtoDescriptorCount;
+extern const u8 *const gWayfarerStoryJohtoCallers[];
+extern const u8 gWayfarerStoryJohtoDescriptorIndices[];
 extern const u32 gWayfarerStoryJohtoEncounterCount;
-extern const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[];
+extern const struct WayfarerStoryEncounterDescriptor gWayfarerStoryHoennDescriptors[];
+extern const u32 gWayfarerStoryHoennDescriptorCount;
+extern const u8 *const gWayfarerStoryHoennCallers[];
+extern const u8 gWayfarerStoryHoennDescriptorIndices[];
 extern const u32 gWayfarerStoryHoennEncounterCount;
 
 bool8 WayfarerStoryFindCaller(const u8 *caller, struct WayfarerStoryEncounter *out);
-const struct WayfarerStoryEncounter *WayfarerStoryFindScene(u16 sceneId);
+bool8 WayfarerStoryFindScene(u16 sceneId, struct WayfarerStoryEncounter *out);
 
 // Called by the trainerbattle command and TrainerBattleLoadArgs respectively.
 // They are deliberately separate: entry refusal must happen before script staging,

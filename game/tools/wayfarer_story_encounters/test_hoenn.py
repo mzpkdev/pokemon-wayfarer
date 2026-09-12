@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 HEADER = ROOT / "src/data/wayfarer_story_encounter_hoenn.h"
+ENTRIES = ROOT / "src/data/wayfarer_story_encounter_hoenn_entries.inc"
 MAPS = ROOT / "data/maps"
 
 
@@ -17,10 +18,11 @@ class HoennStoryEncounterAudit(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.text = HEADER.read_text()
+        cls.source_entries = ENTRIES.read_text()
         cls.entries = [
             line.strip()
-            for line in cls.text.splitlines()
-            if line.lstrip().startswith("HOENN_ENTRY(")
+            for line in cls.source_entries.splitlines()
+            if line.lstrip().startswith(("HOENN_ENTRY(", "HOENN_SCENE("))
         ]
 
     def test_registry_is_wayfarer_only_and_nonempty(self) -> None:
@@ -30,7 +32,7 @@ class HoennStoryEncounterAudit(unittest.TestCase):
         self.assertIn("gWayfarerStoryHoennEncounterCount = 0", self.text)
 
     def test_every_registered_caller_is_an_immediate_trainerbattle_argument(self) -> None:
-        callers = re.findall(r"HOENN_ENTRY\((\w+) \+ 1,", self.text)
+        callers = re.findall(r"HOENN_ENTRY\((\w+) \+ 1,", self.source_entries)
         self.assertGreater(len(callers), 40)
         script_files = list(MAPS.glob("*/scripts.inc"))
         for caller in callers:
@@ -263,7 +265,8 @@ class HoennStoryEncounterAudit(unittest.TestCase):
             self.assertIn("EventScript_WayfarerStoryNoPartyRefusal", prompt_block)
 
     def test_weather_security_callers_have_one_registry_owner(self) -> None:
-        ordinary = (ROOT / "src/data/wayfarer_story_encounter_ordinary.h").read_text()
+        ordinary = json.loads((ROOT / "tools/wayfarer_story_encounters/ordinary.json").read_text())
+        ordinary_callers = {row["caller"] for row in ordinary["callers"]}
         for caller in (
             "Route119_WeatherInstitute_1F_EventScript_Grunt1",
             "Route119_WeatherInstitute_1F_EventScript_Grunt4",
@@ -272,7 +275,7 @@ class HoennStoryEncounterAudit(unittest.TestCase):
             "Route119_WeatherInstitute_2F_EventScript_Grunt5",
         ):
             self.assertNotIn(caller, self.text)
-            self.assertIn(f"ORDINARY_ENTRY({caller},", ordinary)
+            self.assertIn(caller, ordinary_callers)
 
     def test_route104_is_not_claimed_by_current_hoenn_scope(self) -> None:
         for map_name in ("Route104", "JaggedPass", "MeteorFalls_1F_1R", "LavaridgeTown"):

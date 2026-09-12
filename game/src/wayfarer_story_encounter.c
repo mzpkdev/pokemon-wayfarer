@@ -14,26 +14,26 @@
 #include "data/wayfarer_story_encounter_johto.h"
 #include "data/wayfarer_story_encounter_hoenn.h"
 
+STATIC_ASSERT(sizeof(struct WayfarerStoryEncounterDescriptor) == 32, WayfarerStoryDescriptorMustStayCompact);
+
 struct WayfarerStoryRegistry
 {
-    const struct WayfarerStoryEncounter *entries;
+    const u8 *const *callers;
+    const u8 *descriptorIndices;
+    const struct WayfarerStoryEncounterDescriptor *descriptors;
+    u32 descriptorCount;
     u32 count;
 };
 
 static const struct WayfarerStoryRegistry sRegistries[] =
 {
-    {gWayfarerStoryJohtoEncounters, gWayfarerStoryJohtoEncounterCount},
-    {gWayfarerStoryHoennEncounters, gWayfarerStoryHoennEncounterCount},
+    {gWayfarerStoryJohtoCallers, gWayfarerStoryJohtoDescriptorIndices, gWayfarerStoryJohtoDescriptors, gWayfarerStoryJohtoDescriptorCount, gWayfarerStoryJohtoEncounterCount},
+    {gWayfarerStoryHoennCallers, gWayfarerStoryHoennDescriptorIndices, gWayfarerStoryHoennDescriptors, gWayfarerStoryHoennDescriptorCount, gWayfarerStoryHoennEncounterCount},
 };
 
 // Ordinary callers have no map-object or frame-script lifecycle. Keeping them
 // out of these scans prevents the ordinary allowlist from becoming an
-// overworld per-frame cost.
-static const struct WayfarerStoryRegistry sFieldRegistries[] =
-{
-    {gWayfarerStoryJohtoEncounters, gWayfarerStoryJohtoEncounterCount},
-    {gWayfarerStoryHoennEncounters, gWayfarerStoryHoennEncounterCount},
-};
+// overworld per-frame cost; sRegistries contains only regional entries.
 
 static EWRAM_DATA struct WayfarerStoryEncounter sActiveEncounterStorage = {0};
 static EWRAM_DATA const struct WayfarerStoryEncounter *sActiveEncounter = NULL;
@@ -71,10 +71,95 @@ static const u8 sText_League[] = _("You need a POKéMON that can\nbattle before 
 static const u8 sText_Investigate[] = _("You need a POKéMON that can\nbattle before you investigate.");
 static const u8 sText_Retreat[] = _("You can't keep battling.\nYou step back.");
 
+enum
+{
+    ORDINARY_METADATA_DIALOGUE_MASK = 0x03,
+    ORDINARY_METADATA_VARIANT_SHIFT = 2,
+    ORDINARY_METADATA_VARIANT_MASK = 0x0C,
+    ORDINARY_METADATA_LOSS_RETURN = 0x10,
+    ORDINARY_METADATA_POST_BATTLE_TEXT = 0x20,
+    ORDINARY_METADATA_RESERVED_MASK = 0xC0,
+};
+
+static bool8 DecodeRegionalEncounter(const struct WayfarerStoryRegistry *registry, u32 index, struct WayfarerStoryEncounter *out)
+{
+    const struct WayfarerStoryEncounterDescriptor *descriptor;
+
+    if (index >= registry->count || registry->descriptorIndices[index] >= registry->descriptorCount)
+        return FALSE;
+    descriptor = &registry->descriptors[registry->descriptorIndices[index]];
+    *out = (struct WayfarerStoryEncounter)
+    {
+        .caller = registry->callers[index],
+        .lossRedirect = descriptor->lossRedirect,
+        .triggerScript = descriptor->triggerScript,
+        .stableKey = descriptor->stableKey,
+        .sceneId = descriptor->sceneId,
+        .policy = descriptor->policy,
+        .dialogue = descriptor->dialogue,
+        .flags = descriptor->flags,
+        .mapGroup = descriptor->mapGroup,
+        .mapNum = descriptor->mapNum,
+        .localId = descriptor->localId,
+        .elevation = descriptor->elevation,
+        .activationWidth = descriptor->activationWidth,
+        .activationHeight = descriptor->activationHeight,
+        .x = descriptor->x,
+        .y = descriptor->y,
+        .isNarrativelyEligible = descriptor->isNarrativelyEligible,
+    };
+    return TRUE;
+}
+
+static const struct WayfarerStoryEncounterDescriptor *GetRegionalDescriptor(const struct WayfarerStoryRegistry *registry, u32 index)
+{
+    if (index >= registry->count || registry->descriptorIndices[index] >= registry->descriptorCount)
+        return NULL;
+    return &registry->descriptors[registry->descriptorIndices[index]];
+}
+
+static bool8 DecodeOrdinaryEncounter(u32 index, struct WayfarerStoryEncounter *out)
+{
+    u8 metadata;
+    u8 dialogue;
+
+    if (index >= gWayfarerStoryOrdinaryEncounterCount)
+        return FALSE;
+    metadata = gWayfarerStoryOrdinaryMetadata[index];
+    dialogue = metadata & ORDINARY_METADATA_DIALOGUE_MASK;
+    if ((metadata & ORDINARY_METADATA_RESERVED_MASK) || dialogue > 3)
+        return FALSE;
+    switch (dialogue)
+    {
+    case 0: dialogue = WAYFARER_STORY_DIALOGUE_ORDINARY; break;
+    case 1: dialogue = WAYFARER_STORY_DIALOGUE_AQUA_GUARD; break;
+    case 2: dialogue = WAYFARER_STORY_DIALOGUE_ROCKET_GUARD; break;
+    case 3: dialogue = WAYFARER_STORY_DIALOGUE_MAGMA_GUARD; break;
+    }
+    *out = (struct WayfarerStoryEncounter)
+    {
+        .caller = gWayfarerStoryOrdinaryCallers[index],
+        .stableKey = (metadata & ORDINARY_METADATA_VARIANT_MASK) >> ORDINARY_METADATA_VARIANT_SHIFT,
+        .dialogue = dialogue,
+        .flags = ((metadata & ORDINARY_METADATA_LOSS_RETURN) ? WAYFARER_STORY_FLAG_LOSS_RETURN : 0)
+            | ((metadata & ORDINARY_METADATA_POST_BATTLE_TEXT) ? WAYFARER_STORY_FLAG_ALLOW_POST_BATTLE_TEXT : 0),
+        .policy = WAYFARER_STORY_POLICY_ORDINARY,
+        .x = WAYFARER_STORY_NO_COORD,
+        .y = WAYFARER_STORY_NO_COORD,
+    };
+    return out->caller != NULL;
+}
+
 static bool8 IsCurrentMap(const struct WayfarerStoryEncounter *entry)
 {
     return entry->mapGroup == gSaveBlock1Ptr->location.mapGroup
         && entry->mapNum == gSaveBlock1Ptr->location.mapNum;
+}
+
+static bool8 IsCurrentDescriptorMap(const struct WayfarerStoryEncounterDescriptor *descriptor)
+{
+    return descriptor->mapGroup == gSaveBlock1Ptr->location.mapGroup
+        && descriptor->mapNum == gSaveBlock1Ptr->location.mapNum;
 }
 
 static bool8 IsNarrativelyEligible(const struct WayfarerStoryEncounter *entry)
@@ -82,16 +167,21 @@ static bool8 IsNarrativelyEligible(const struct WayfarerStoryEncounter *entry)
     return entry->isNarrativelyEligible == NULL || entry->isNarrativelyEligible();
 }
 
-static bool8 IsDeferredHideableObject(const struct WayfarerStoryEncounter *entry)
+static bool8 IsNarrativelyEligibleDescriptor(const struct WayfarerStoryEncounterDescriptor *descriptor)
 {
-    return entry->policy == WAYFARER_STORY_POLICY_DEFERRED_RIVAL
-        && (entry->flags & (WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE));
+    return descriptor->isNarrativelyEligible == NULL || descriptor->isNarrativelyEligible();
 }
 
-static bool8 IsRestorableTransientObject(const struct WayfarerStoryEncounter *entry)
+static bool8 IsDeferredHideableDescriptor(const struct WayfarerStoryEncounterDescriptor *descriptor)
 {
-    return entry->policy == WAYFARER_STORY_POLICY_DEFERRED_RIVAL
-        && (entry->flags & WAYFARER_STORY_FLAG_TRANSIENT_OBJECT);
+    return descriptor->policy == WAYFARER_STORY_POLICY_DEFERRED_RIVAL
+        && (descriptor->flags & (WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE));
+}
+
+static bool8 IsRestorableTransientDescriptor(const struct WayfarerStoryEncounterDescriptor *descriptor)
+{
+    return descriptor->policy == WAYFARER_STORY_POLICY_DEFERRED_RIVAL
+        && (descriptor->flags & WAYFARER_STORY_FLAG_TRANSIENT_OBJECT);
 }
 
 static bool8 AreElevationsCompatibleForObjectRestore(u8 a, u8 b)
@@ -99,16 +189,13 @@ static bool8 AreElevationsCompatibleForObjectRestore(u8 a, u8 b)
     return a == ELEVATION_TRANSITION || b == ELEVATION_TRANSITION || a == b;
 }
 
-static bool8 IsPlayerStandingAtObjectTemplate(const struct WayfarerStoryEncounter *entry)
+static bool8 IsPlayerStandingAtDescriptorObjectTemplate(const struct WayfarerStoryEncounterDescriptor *descriptor)
 {
     s16 destX;
     s16 destY;
     const struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    const struct ObjectEventTemplate *objectTemplate = GetObjectEventTemplateByLocalIdAndMap(entry->localId, entry->mapNum, entry->mapGroup);
+    const struct ObjectEventTemplate *objectTemplate = GetObjectEventTemplateByLocalIdAndMap(descriptor->localId, descriptor->mapNum, descriptor->mapGroup);
 
-    // Keep the same transition-elevation compatibility as object collision. A
-    // transition template must not be restored onto a player on its matching
-    // tile merely because the player has a concrete current elevation.
     if (objectTemplate == NULL
      || !AreElevationsCompatibleForObjectRestore(objectTemplate->elevation, player->currentElevation))
         return FALSE;
@@ -202,20 +289,12 @@ bool8 WayfarerStoryFindCaller(const u8 *caller, struct WayfarerStoryEncounter *o
         return FALSE;
     for (u32 i = 0; i < gWayfarerStoryOrdinaryEncounterCount; i++)
     {
-        const struct WayfarerOrdinaryEncounter *entry = &gWayfarerStoryOrdinaryEncounters[i];
-        if (entry->caller == caller)
+        if (gWayfarerStoryOrdinaryCallers[i] == caller)
         {
-            *out = (struct WayfarerStoryEncounter) {
-                .caller = entry->caller,
-                .stableKey = entry->stableKey,
-                .dialogue = entry->dialogue,
-                .flags = entry->flags,
-                .policy = WAYFARER_STORY_POLICY_ORDINARY,
-                .x = WAYFARER_STORY_NO_COORD,
-                .y = WAYFARER_STORY_NO_COORD,
-            };
+            if (!DecodeOrdinaryEncounter(i, out))
+                return FALSE;
 #if IS_WAYFARER
-            if (entry->flags & WAYFARER_STORY_FLAG_LOSS_RETURN)
+            if (out->flags & WAYFARER_STORY_FLAG_LOSS_RETURN)
                 out->lossRedirect = EventScript_WayfarerStoryLossRetreat;
 #endif
             return TRUE;
@@ -226,34 +305,35 @@ bool8 WayfarerStoryFindCaller(const u8 *caller, struct WayfarerStoryEncounter *o
         u32 i;
         for (i = 0; i < sRegistries[registry].count; i++)
         {
-            const struct WayfarerStoryEncounter *entry = &sRegistries[registry].entries[i];
-            if (entry->caller == caller)
+            if (sRegistries[registry].callers[i] == caller)
             {
-                *out = *entry;
-                return TRUE;
+                return DecodeRegionalEncounter(&sRegistries[registry], i, out);
             }
         }
     }
     return FALSE;
 }
 
-const struct WayfarerStoryEncounter *WayfarerStoryFindScene(u16 sceneId)
+bool8 WayfarerStoryFindScene(u16 sceneId, struct WayfarerStoryEncounter *out)
 {
     u32 registry;
 
-    if (sceneId == 0)
-        return NULL;
+    if (sceneId == 0 || out == NULL)
+        return FALSE;
     for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
     {
         u32 i;
         for (i = 0; i < sRegistries[registry].count; i++)
         {
-            const struct WayfarerStoryEncounter *entry = &sRegistries[registry].entries[i];
-            if (entry->sceneId == sceneId)
-                return entry;
+            const struct WayfarerStoryEncounterDescriptor *descriptor = GetRegionalDescriptor(&sRegistries[registry], i);
+
+            if (descriptor == NULL)
+                return FALSE;
+            if (descriptor->sceneId == sceneId)
+                return DecodeRegionalEncounter(&sRegistries[registry], i, out);
         }
     }
-    return NULL;
+    return FALSE;
 }
 
 bool8 WayfarerStoryCanUseEncounter(const struct WayfarerStoryEncounter *entry)
@@ -322,7 +402,8 @@ void WayfarerStoryConfigureTrainerBattleCaller(const u8 *caller)
 u16 WayfarerStoryCanStartScene(void)
 {
 #if IS_WAYFARER
-    const struct WayfarerStoryEncounter *entry = WayfarerStoryFindScene(gSpecialVar_0x8004);
+    struct WayfarerStoryEncounter resolved;
+    const struct WayfarerStoryEncounter *entry = WayfarerStoryFindScene(gSpecialVar_0x8004, &resolved) ? &resolved : NULL;
 
     // Script authors only call this for an explicit scene id. Treating an unknown
     // id as eligible preserves the caller's current behavior instead of hiding an
@@ -433,23 +514,26 @@ bool8 WayfarerStoryCanSpawnObject(u8 localId, u8 mapNum, u8 mapGroup)
     u32 registry;
     bool8 hasUsableParty = WayfarerCanStartOrdinaryBattle();
 
-    for (registry = 0; registry < ARRAY_COUNT(sFieldRegistries); registry++)
+    for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
     {
         u32 i;
-        for (i = 0; i < sFieldRegistries[registry].count; i++)
+        for (i = 0; i < sRegistries[registry].count; i++)
         {
-            const struct WayfarerStoryEncounter *entry = &sFieldRegistries[registry].entries[i];
-            if (IsDeferredHideableObject(entry)
-             && entry->localId == localId
-             && entry->mapNum == mapNum
-             && entry->mapGroup == mapGroup
-             && IsNarrativelyEligible(entry))
+            const struct WayfarerStoryEncounterDescriptor *descriptor = GetRegionalDescriptor(&sRegistries[registry], i);
+
+            if (descriptor == NULL)
+                continue;
+            if (IsDeferredHideableDescriptor(descriptor)
+             && descriptor->localId == localId
+             && descriptor->mapNum == mapNum
+             && descriptor->mapGroup == mapGroup
+             && IsNarrativelyEligibleDescriptor(descriptor))
             {
                 if (!hasUsableParty)
                     return FALSE;
-                if (IsRestorableTransientObject(entry)
-                 && IsCurrentMap(entry)
-                 && IsPlayerStandingAtObjectTemplate(entry))
+                if (IsRestorableTransientDescriptor(descriptor)
+                 && IsCurrentDescriptorMap(descriptor)
+                 && IsPlayerStandingAtDescriptorObjectTemplate(descriptor))
                     return FALSE;
             }
         }
@@ -466,28 +550,32 @@ void WayfarerStoryReconcileCurrentMap(void)
 
     sUsablePartyStateKnown = TRUE;
     sHadUsableParty = hasUsableParty;
-    for (registry = 0; registry < ARRAY_COUNT(sFieldRegistries); registry++)
+    for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
     {
         u32 i;
-        for (i = 0; i < sFieldRegistries[registry].count; i++)
+        for (i = 0; i < sRegistries[registry].count; i++)
         {
-            const struct WayfarerStoryEncounter *entry = &sFieldRegistries[registry].entries[i];
+            const struct WayfarerStoryEncounterDescriptor *descriptor = GetRegionalDescriptor(&sRegistries[registry], i);
             u8 objectEventId;
 
-            if (!IsDeferredHideableObject(entry) || !IsCurrentMap(entry) || !IsNarrativelyEligible(entry))
+            if (descriptor == NULL)
+                continue;
+            if (!IsDeferredHideableDescriptor(descriptor)
+             || !IsCurrentDescriptorMap(descriptor)
+             || !IsNarrativelyEligibleDescriptor(descriptor))
                 continue;
             if (!hasUsableParty)
             {
-                if (!TryGetObjectEventIdByLocalIdAndMap(entry->localId, entry->mapNum, entry->mapGroup, &objectEventId))
+                if (!TryGetObjectEventIdByLocalIdAndMap(descriptor->localId, descriptor->mapNum, descriptor->mapGroup, &objectEventId))
                     RemoveObjectEvent(&gObjectEvents[objectEventId]);
             }
-            else if (IsRestorableTransientObject(entry)
-             && !IsPlayerStandingAtObjectTemplate(entry)
-             && TryGetObjectEventIdByLocalIdAndMap(entry->localId, entry->mapNum, entry->mapGroup, &objectEventId))
+            else if (IsRestorableTransientDescriptor(descriptor)
+             && !IsPlayerStandingAtDescriptorObjectTemplate(descriptor)
+             && TryGetObjectEventIdByLocalIdAndMap(descriptor->localId, descriptor->mapNum, descriptor->mapGroup, &objectEventId))
             {
                 // This is the raw spawn path, so it neither changes the object's
                 // canonical flag nor recreates it over a saved player position.
-                TrySpawnObjectEvent(entry->localId, entry->mapNum, entry->mapGroup);
+                TrySpawnObjectEvent(descriptor->localId, descriptor->mapNum, descriptor->mapGroup);
             }
         }
     }
@@ -499,14 +587,21 @@ bool8 WayfarerStoryShouldSuppressOnFrameScript(const u8 *script)
 #if IS_WAYFARER
     u32 registry;
 
-    for (registry = 0; registry < ARRAY_COUNT(sFieldRegistries); registry++)
+    for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
     {
         u32 i;
-        for (i = 0; i < sFieldRegistries[registry].count; i++)
+        for (i = 0; i < sRegistries[registry].count; i++)
         {
-            const struct WayfarerStoryEncounter *entry = &sFieldRegistries[registry].entries[i];
-            if (entry->triggerScript != script || !IsCurrentMap(entry))
+            const struct WayfarerStoryEncounterDescriptor *descriptor = GetRegionalDescriptor(&sRegistries[registry], i);
+            struct WayfarerStoryEncounter resolved;
+            const struct WayfarerStoryEncounter *entry;
+
+            if (descriptor == NULL
+             || descriptor->triggerScript != script
+             || !IsCurrentDescriptorMap(descriptor))
                 continue;
+            DecodeRegionalEncounter(&sRegistries[registry], i, &resolved);
+            entry = &resolved;
             // A visible objective/tutorial must run once to select and show its
             // refusal; REARM then prevents its map frame table from reopening it
             // until the player leaves the full authored area. Silent off-screen
@@ -531,7 +626,8 @@ void WayfarerStoryOnPlayerPositionChanged(void)
 
     if (sRearmSceneId != 0 && positionChanged)
     {
-        const struct WayfarerStoryEncounter *entry = WayfarerStoryFindScene(sRearmSceneId);
+        struct WayfarerStoryEncounter resolved;
+        const struct WayfarerStoryEncounter *entry = WayfarerStoryFindScene(sRearmSceneId, &resolved) ? &resolved : NULL;
         if (entry == NULL || !IsCurrentMap(entry) || !IsPlayerInActivationArea(entry))
             sRearmSceneId = 0;
     }
@@ -562,16 +658,17 @@ bool8 Test_WayfarerStoryRegistryIsValid(void)
 
     for (u32 i = 0; i < gWayfarerStoryOrdinaryEncounterCount; i++)
     {
-        const struct WayfarerOrdinaryEncounter *entry = &gWayfarerStoryOrdinaryEncounters[i];
-        if (entry->caller == NULL
-         || (entry->flags & ~(WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_ALLOW_POST_BATTLE_TEXT)))
+        struct WayfarerStoryEncounter entry;
+
+        if (!DecodeOrdinaryEncounter(i, &entry)
+         || (entry.flags & ~(WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_ALLOW_POST_BATTLE_TEXT)))
             return FALSE;
         for (u32 j = i + 1; j < gWayfarerStoryOrdinaryEncounterCount; j++)
-            if (entry->caller == gWayfarerStoryOrdinaryEncounters[j].caller)
+            if (entry.caller == gWayfarerStoryOrdinaryCallers[j])
                 return FALSE;
         for (registry = 0; registry < ARRAY_COUNT(sRegistries); registry++)
             for (u32 j = 0; j < sRegistries[registry].count; j++)
-                if (entry->caller == sRegistries[registry].entries[j].caller)
+                if (entry.caller == sRegistries[registry].callers[j])
                     return FALSE;
     }
 
@@ -580,24 +677,25 @@ bool8 Test_WayfarerStoryRegistryIsValid(void)
         u32 i;
         for (i = 0; i < sRegistries[registry].count; i++)
         {
-            const struct WayfarerStoryEncounter *entry = &sRegistries[registry].entries[i];
+            struct WayfarerStoryEncounter entry;
             u32 otherRegistry;
 
-            if (entry->policy == WAYFARER_STORY_POLICY_NONE
-             || ((entry->flags & WAYFARER_STORY_FLAG_LOSS_RETURN) && entry->lossRedirect == NULL)
-             || (!(entry->flags & WAYFARER_STORY_FLAG_LOSS_RETURN) && entry->lossRedirect != NULL)
-             || ((entry->flags & WAYFARER_STORY_FLAG_TRANSIENT_OBJECT)
-              && (entry->flags & WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE))
-             || ((entry->flags & (WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE))
-              && (entry->localId == 0 || entry->policy != WAYFARER_STORY_POLICY_DEFERRED_RIVAL)))
+            if (!DecodeRegionalEncounter(&sRegistries[registry], i, &entry)
+             || entry.policy == WAYFARER_STORY_POLICY_NONE
+             || ((entry.flags & WAYFARER_STORY_FLAG_LOSS_RETURN) && entry.lossRedirect == NULL)
+             || (!(entry.flags & WAYFARER_STORY_FLAG_LOSS_RETURN) && entry.lossRedirect != NULL)
+             || ((entry.flags & WAYFARER_STORY_FLAG_TRANSIENT_OBJECT)
+              && (entry.flags & WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE))
+             || ((entry.flags & (WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE))
+              && (entry.localId == 0 || entry.policy != WAYFARER_STORY_POLICY_DEFERRED_RIVAL)))
                 return FALSE;
-            if (entry->caller == NULL)
+            if (entry.caller == NULL)
                 continue; // Scripted-wild/coordinate-only entries have no trainer caller.
             for (otherRegistry = registry; otherRegistry < ARRAY_COUNT(sRegistries); otherRegistry++)
             {
                 u32 j = otherRegistry == registry ? i + 1 : 0;
                 for (; j < sRegistries[otherRegistry].count; j++)
-                    if (entry->caller == sRegistries[otherRegistry].entries[j].caller)
+                    if (entry.caller == sRegistries[otherRegistry].callers[j])
                         return FALSE;
             }
         }

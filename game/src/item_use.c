@@ -1245,80 +1245,8 @@ void ItemUseInBattle_PokeBall(u8 taskId)
 
 bool32 TrainerOnlyIsFeedableBerry(enum Item item)
 {
-    static const enum Item feedable[] = {
-        ITEM_CHERI_BERRY,
-        ITEM_CHESTO_BERRY,
-        ITEM_PECHA_BERRY,
-        ITEM_RAWST_BERRY,
-        ITEM_ASPEAR_BERRY,
-        ITEM_LEPPA_BERRY,
-        ITEM_ORAN_BERRY,
-        ITEM_PERSIM_BERRY,
-        ITEM_LUM_BERRY,
-        ITEM_SITRUS_BERRY,
-        ITEM_FIGY_BERRY,
-        ITEM_WIKI_BERRY,
-        ITEM_MAGO_BERRY,
-        ITEM_AGUAV_BERRY,
-        ITEM_IAPAPA_BERRY,
-        ITEM_RAZZ_BERRY,
-        ITEM_BLUK_BERRY,
-        ITEM_NANAB_BERRY,
-        ITEM_WEPEAR_BERRY,
-        ITEM_PINAP_BERRY,
-        ITEM_POMEG_BERRY,
-        ITEM_KELPSY_BERRY,
-        ITEM_QUALOT_BERRY,
-        ITEM_HONDEW_BERRY,
-        ITEM_GREPA_BERRY,
-        ITEM_TAMATO_BERRY,
-        ITEM_CORNN_BERRY,
-        ITEM_MAGOST_BERRY,
-        ITEM_RABUTA_BERRY,
-        ITEM_NOMEL_BERRY,
-        ITEM_SPELON_BERRY,
-        ITEM_PAMTRE_BERRY,
-        ITEM_WATMEL_BERRY,
-        ITEM_DURIN_BERRY,
-        ITEM_BELUE_BERRY,
-        ITEM_CHILAN_BERRY,
-        ITEM_OCCA_BERRY,
-        ITEM_PASSHO_BERRY,
-        ITEM_WACAN_BERRY,
-        ITEM_RINDO_BERRY,
-        ITEM_YACHE_BERRY,
-        ITEM_CHOPLE_BERRY,
-        ITEM_KEBIA_BERRY,
-        ITEM_SHUCA_BERRY,
-        ITEM_COBA_BERRY,
-        ITEM_PAYAPA_BERRY,
-        ITEM_TANGA_BERRY,
-        ITEM_CHARTI_BERRY,
-        ITEM_KASIB_BERRY,
-        ITEM_HABAN_BERRY,
-        ITEM_COLBUR_BERRY,
-        ITEM_BABIRI_BERRY,
-        ITEM_ROSELI_BERRY,
-        ITEM_LIECHI_BERRY,
-        ITEM_GANLON_BERRY,
-        ITEM_SALAC_BERRY,
-        ITEM_PETAYA_BERRY,
-        ITEM_APICOT_BERRY,
-        ITEM_LANSAT_BERRY,
-        ITEM_STARF_BERRY,
-        ITEM_ENIGMA_BERRY,
-        ITEM_MICLE_BERRY,
-        ITEM_CUSTAP_BERRY,
-        ITEM_JABOCA_BERRY,
-        ITEM_ROWAP_BERRY,
-        ITEM_KEE_BERRY,
-        ITEM_MARANGA_BERRY,
-    };
-    u32 i;
-    for (i = 0; i < ARRAY_COUNT(feedable); i++)
-        if (item == feedable[i])
-            return TRUE;
-    return FALSE;
+    // Standard berries are contiguous; the following e-Reader berry is excluded.
+    return item >= FIRST_BERRY_INDEX && item <= ITEM_MARANGA_BERRY;
 }
 
 bool32 TrainerOnlyIsRecoveryItem(enum Item item)

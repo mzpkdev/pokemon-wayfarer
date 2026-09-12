@@ -5,6 +5,12 @@ from this directory, or `make wayfarer-story-encounters-audit` from `game/`.
 Wayfarer ROM and mechanics builds run the audit before linking. Run the generator
 without `--check` to render a reviewed manifest change.
 
+The regional headers are generated from their matching `*_entries.inc` logical
+records and `*_preamble.h` declarations. Run `python3 generate_regional.py` after
+reviewing an entry change; `--check` verifies both the source order and the
+descriptor sharing used by the linked ROM. The generated arrays retain caller
+order, and one-byte descriptor indexes refer only to immutable 32-byte tails.
+
 The initial inventory contains 851 callers on 155 current maps: 688 base singles,
 99 single rematches, 54 base doubles and 10 double rematches. The 787 single
 callers opt into field loss return. Doubles retain their existing defeat routing.

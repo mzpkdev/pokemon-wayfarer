@@ -9,7 +9,7 @@ import unittest
 
 GAME = Path(__file__).resolve().parents[2]
 MAPS = GAME / "data" / "maps"
-MANIFEST = GAME / "src" / "data" / "wayfarer_story_encounter_johto.h"
+MANIFEST = GAME / "src" / "data" / "wayfarer_story_encounter_johto_entries.inc"
 
 
 def read(relative):

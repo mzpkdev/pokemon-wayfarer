@@ -212,99 +212,148 @@ static bool8 WayfarerHoennKecleonInvestigationPending(void)
     return !FlagGet(WAYFARER_HOENN_SOURCE_FLAG_RECEIVED_DEVON_SCOPE);
 }
 
-#define HOENN_ENTRY(_caller, _loss, _trigger, _key, _scene, _policy, _dialogue, _flags, _map, _local, _elevation, _width, _height, _x, _y, _eligible) \
-    { \
-        .caller = (_caller), .lossRedirect = (_loss), .triggerScript = (_trigger), \
-        .stableKey = (_key), .sceneId = (_scene), .policy = (_policy), .dialogue = (_dialogue), .flags = (_flags), \
-        .mapGroup = MAP_GROUP(_map), .mapNum = MAP_NUM(_map), .localId = (_local), .elevation = (_elevation), \
-        .activationWidth = (_width), .activationHeight = (_height), .x = (_x), .y = (_y), .isNarrativelyEligible = (_eligible), \
-    }
-
-const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[] =
+const struct WayfarerStoryEncounterDescriptor gWayfarerStoryHoennDescriptors[] =
 {
-    // Authored tutorial: refusal precedes lock/starter presentation, and retains
-    // Emerald's existing loss route rather than granting a field-return battle.
-    HOENN_ENTRY(Route103_EventScript_StartMayBattleTreecko + 1, NULL, Route103_EventScript_Rival, 0, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, 0, MAP_ROUTE103, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute103Pending),
-    HOENN_ENTRY(Route103_EventScript_StartMayBattleTorchic + 1, NULL, NULL, 0, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, 0, MAP_ROUTE103, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute103Pending),
-    HOENN_ENTRY(Route103_EventScript_StartMayBattleMudkip + 1, NULL, NULL, 0, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, 0, MAP_ROUTE103, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute103Pending),
-    HOENN_ENTRY(Route103_EventScript_StartBrendanBattleTreecko + 1, NULL, NULL, 0, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, 0, MAP_ROUTE103, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute103Pending),
-    HOENN_ENTRY(Route103_EventScript_StartBrendanBattleTorchic + 1, NULL, NULL, 0, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, 0, MAP_ROUTE103, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute103Pending),
-    HOENN_ENTRY(Route103_EventScript_StartBrendanBattleMudkip + 1, NULL, NULL, 0, WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, 0, MAP_ROUTE103, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute103Pending),
-
-    // Rustboro's eligible Match Call conversation stays authored; only either explicit battle prompt refuses without a party.
-    HOENN_ENTRY(NULL, NULL, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL_CONVERSATION, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_RIVAL, 0, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
-    HOENN_ENTRY(RustboroCity_EventScript_BattleMayTreecko + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, RustboroCity_EventScript_RivalTrigger0, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_RUSTBORO_CITY, 0, 3, 8, 1, 12, 53, WayfarerHoennRustboroRivalPending),
-    HOENN_ENTRY(RustboroCity_EventScript_BattleMayTorchic + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
-    HOENN_ENTRY(RustboroCity_EventScript_BattleMayMudkip + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
-    HOENN_ENTRY(RustboroCity_EventScript_BattleBrendanTreecko + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
-    HOENN_ENTRY(RustboroCity_EventScript_BattleBrendanTorchic + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
-    HOENN_ENTRY(RustboroCity_EventScript_BattleBrendanMudkip + 1, RustboroCity_EventScript_WayfarerRivalLossRetreat, NULL, 1, WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTBORO_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRustboroRivalPending),
-
-    // Route 110's walking rival is native; restore it only at its real template after recovery. Its bike remains script-only and hidden.
-    HOENN_ENTRY(Route110_EventScript_MayBattleTreecko + 1, Route110_EventScript_WayfarerRivalLossRetreat, Route110_EventScript_RivalScene, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_ROUTE110, WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL, 3, 3, 1, 33, 56, WayfarerHoennRoute110RivalPending),
-    HOENN_ENTRY(Route110_EventScript_MayBattleTorchic + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
-    HOENN_ENTRY(Route110_EventScript_MayBattleMudkip + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
-    HOENN_ENTRY(Route110_EventScript_BrendanBattleTreecko + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
-    HOENN_ENTRY(Route110_EventScript_BrendanBattleTorchic + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
-    HOENN_ENTRY(Route110_EventScript_BrendanBattleMudkip + 1, Route110_EventScript_WayfarerRivalLossRetreat, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE110, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
-    HOENN_ENTRY(NULL, NULL, NULL, 2, WAYFARER_STORY_SCENE_ROUTE110_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE, MAP_ROUTE110, WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL_ON_BIKE, 3, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute110RivalPending),
-
-    // Route 119 has two authored approach paths; its script provisions the actor and Fly remains a victory-only reward.
-    HOENN_ENTRY(Route119_EventScript_BattleMayTreecko + 1, Route119_EventScript_WayfarerRivalLossRetreat, Route119_EventScript_RivalEncounter, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_ROUTE119, WAYFARER_HOENN_LOCALID_ROUTE119_RIVAL, 0, 2, 1, 25, 31, WayfarerHoennRoute119RivalPending),
-    HOENN_ENTRY(Route119_EventScript_BattleMayTorchic + 1, Route119_EventScript_WayfarerRivalLossRetreat, NULL, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE119, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute119RivalPending),
-    HOENN_ENTRY(Route119_EventScript_BattleMayMudkip + 1, Route119_EventScript_WayfarerRivalLossRetreat, NULL, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE119, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute119RivalPending),
-    HOENN_ENTRY(Route119_EventScript_BattleBrendanTreecko + 1, Route119_EventScript_WayfarerRivalLossRetreat, NULL, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE119, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute119RivalPending),
-    HOENN_ENTRY(Route119_EventScript_BattleBrendanTorchic + 1, Route119_EventScript_WayfarerRivalLossRetreat, NULL, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE119, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute119RivalPending),
-    HOENN_ENTRY(Route119_EventScript_BattleBrendanMudkip + 1, Route119_EventScript_WayfarerRivalLossRetreat, NULL, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE119, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute119RivalPending),
-    HOENN_ENTRY(NULL, NULL, NULL, 3, WAYFARER_STORY_SCENE_ROUTE119_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE, MAP_ROUTE119, WAYFARER_HOENN_LOCALID_ROUTE119_RIVAL_ON_BIKE, 4, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRoute119RivalPending),
-
-    // Optional rivals retain their chapter; no decline, decor, departure, or call state is written on suppression.
-    HOENN_ENTRY(LilycoveCity_EventScript_BattleMayTreecko + 1, LilycoveCity_EventScript_WayfarerRivalLossRetreat, NULL, 4, WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT, MAP_LILYCOVE_CITY, WAYFARER_HOENN_LOCALID_LILYCOVE_RIVAL, 5, 0, 0, 27, 7, WayfarerHoennLilycoveRivalPending),
-    HOENN_ENTRY(LilycoveCity_EventScript_BattleMayTorchic + 1, LilycoveCity_EventScript_WayfarerRivalLossRetreat, NULL, 4, WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_LILYCOVE_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennLilycoveRivalPending),
-    HOENN_ENTRY(LilycoveCity_EventScript_BattleMayMudkip + 1, LilycoveCity_EventScript_WayfarerRivalLossRetreat, NULL, 4, WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_LILYCOVE_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennLilycoveRivalPending),
-    HOENN_ENTRY(LilycoveCity_EventScript_BattleBrendanTreecko + 1, LilycoveCity_EventScript_WayfarerRivalLossRetreat, NULL, 4, WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_LILYCOVE_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennLilycoveRivalPending),
-    HOENN_ENTRY(LilycoveCity_EventScript_BattleBrendanTorchic + 1, LilycoveCity_EventScript_WayfarerRivalLossRetreat, NULL, 4, WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_LILYCOVE_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennLilycoveRivalPending),
-    HOENN_ENTRY(LilycoveCity_EventScript_BattleBrendanMudkip + 1, LilycoveCity_EventScript_WayfarerRivalLossRetreat, NULL, 4, WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_LILYCOVE_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennLilycoveRivalPending),
-
-    HOENN_ENTRY(MauvilleCity_EventScript_BattleWallyTrainerBattle + 1, MauvilleCity_EventScript_WayfarerWallyLossRetreat, NULL, 5, WAYFARER_STORY_SCENE_MAUVILLE_WALLY, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT, MAP_MAUVILLE_CITY, WAYFARER_HOENN_LOCALID_MAUVILLE_WALLY, 3, 0, 0, 8, 6, WayfarerHoennMauvilleWallyPending),
-
-    // Victory Road keeps Emerald's loss route and League/rematch behavior; only no-party chapter/rematch start is deferred.
-    HOENN_ENTRY(VictoryRoad_1F_EventScript_WallyEntranceTrainerBattle + 1, NULL, VictoryRoad_1F_EventScript_WallyBattleTrigger1, 6, WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_VICTORY_ROAD_1F, 0, 4, 2, 1, 2, 23, WayfarerHoennVictoryRoadWallyPending),
-    HOENN_ENTRY(VictoryRoad_1F_EventScript_ExitWally + 1, NULL, NULL, 6, WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, WAYFARER_STORY_FLAG_TRANSIENT_OBJECT, MAP_VICTORY_ROAD_1F, WAYFARER_HOENN_LOCALID_VICTORY_ROAD_EXIT_WALLY, 3, 0, 0, 31, 9, WayfarerHoennVictoryRoadWallyRematchEligible),
-    HOENN_ENTRY(VictoryRoad_1F_EventScript_RematchWally + 1, NULL, NULL, 6, WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY, WAYFARER_STORY_POLICY_DEFERRED_RIVAL, WAYFARER_STORY_DIALOGUE_RIVAL, 0, MAP_VICTORY_ROAD_1F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennVictoryRoadWallyRematchEligible),
-
-    // This scripted party substitution is not an ordinary trainer battle.
-    HOENN_ENTRY(NULL, NULL, PetalburgCity_EventScript_WallyTutorial, 0, WAYFARER_STORY_SCENE_PETALBURG_WALLY_TUTORIAL, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_ORDINARY, WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_PETALBURG_CITY, 0, WAYFARER_STORY_ANY_ELEVATION, 30, 30, 0, 0, NULL),
-
-    // Local objectives retain their victory writers.  Only audited single callers opt into a field retry.
-    HOENN_ENTRY(NULL, NULL, SlateportCity_OceanicMuseum_2F_EventScript_CaptStern, 0, WAYFARER_STORY_SCENE_OCEANIC_MUSEUM_STERN, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_STERN, 0, MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennMuseumPending),
-    HOENN_ENTRY(RusturfTunnel_EventScript_GruntTrainerBattle + 1, RusturfTunnel_EventScript_WayfarerGruntLossRetreat, NULL, 20, WAYFARER_STORY_SCENE_RUSTURF_AQUA, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_AQUA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_RUSTURF_TUNNEL, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennRusturfRescuePending),
-    HOENN_ENTRY(MtChimney_EventScript_MaxieTrainerBattle + 1, MtChimney_EventScript_WayfarerMaxieLossRetreat, MtChimney_EventScript_Maxie, 21, WAYFARER_STORY_SCENE_MT_CHIMNEY_MAXIE, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_MT_CHIMNEY, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennMtChimneyPending),
-    HOENN_ENTRY(MagmaHideout_4F_EventScript_MaxieTrainerBattle + 1, MagmaHideout_4F_EventScript_WayfarerMaxieLossRetreat, MagmaHideout_4F_EventScript_Maxie, 22, WAYFARER_STORY_SCENE_MAGMA_HIDEOUT_MAXIE, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_MAGMA_HIDEOUT_4F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennMagmaHideoutPending),
-    HOENN_ENTRY(AquaHideout_B2F_EventScript_Matt + 1, EventScript_WayfarerStoryLossRetreat, NULL, 23, WAYFARER_STORY_SCENE_AQUA_HIDEOUT_MATT, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_AQUA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_AQUA_HIDEOUT_B2F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennAquaHideoutPending),
-
-    // The ordinary manifest owns the five security grunts. Shelly alone owns this completion writer and field retry.
-    HOENN_ENTRY(Route119_WeatherInstitute_2F_EventScript_Shelly + 1, EventScript_WayfarerStoryLossRetreat, NULL, 24, WAYFARER_STORY_SCENE_WEATHER_INSTITUTE_SHELLY, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_AQUA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN, MAP_ROUTE119_WEATHER_INSTITUTE_2F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennWeatherInstitutePending),
-
-    // The invasion chain and Steven's partner offer are separately gated in the map scripts.
-    HOENN_ENTRY(MossdeepCity_SpaceCenter_1F_EventScript_Grunt2TrainerBattle + 1, NULL, NULL, 25, WAYFARER_STORY_SCENE_SPACE_CENTER_STAIR_GUARD, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, 0, MAP_MOSSDEEP_CITY_SPACE_CENTER_1F, 0, WAYFARER_STORY_ANY_ELEVATION, 0, 0, WAYFARER_STORY_NO_COORD, WAYFARER_STORY_NO_COORD, WayfarerHoennSpaceCenterStairGuardPending),
-    HOENN_ENTRY(NULL, NULL, MossdeepCity_SpaceCenter_2F_EventScript_ThreeMagmaGrunts, 0, WAYFARER_STORY_SCENE_SPACE_CENTER_GRUNTS, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_MOSSDEEP_CITY_SPACE_CENTER_2F, 0, WAYFARER_STORY_ANY_ELEVATION, 16, 10, 0, 0, WayfarerHoennSpaceCenterGruntsPending),
-    HOENN_ENTRY(NULL, NULL, MossdeepCity_SpaceCenter_2F_EventScript_Steven, 0, WAYFARER_STORY_SCENE_SPACE_CENTER_OFFER, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_PARTNER, WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_MOSSDEEP_CITY_SPACE_CENTER_2F, 0, 3, 3, 3, 0, 7, WayfarerHoennSpaceCenterPartnerPending),
-
-    HOENN_ENTRY(SeafloorCavern_Room9_EventScript_ArchieTrainerBattle + 1, SeafloorCavern_Room9_EventScript_WayfarerArchieLossRetreat, SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre, 30, WAYFARER_STORY_SCENE_SEAFLOOR_ARCHIE, WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, WAYFARER_STORY_DIALOGUE_AQUA_GUARD, WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_SEAFLOOR_CAVERN_ROOM9, 0, 3, 1, 1, 17, 42, WayfarerHoennSeafloorPending),
-    HOENN_ENTRY(NULL, NULL, Route120_EventScript_Steven, 0, WAYFARER_STORY_SCENE_ROUTE120_KECLEON, WAYFARER_STORY_POLICY_EXCEPTION, WAYFARER_STORY_DIALOGUE_INVESTIGATE, WAYFARER_STORY_FLAG_REARM_ON_LEAVE, MAP_ROUTE120, 0, 4, 4, 4, 11, 14, WayfarerHoennKecleonInvestigationPending),
+    { .lossRedirect = NULL, .triggerScript = Route103_EventScript_Rival, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, .policy = WAYFARER_STORY_POLICY_EXCEPTION, .dialogue = WAYFARER_STORY_DIALOGUE_ORDINARY, .flags = 0, .mapGroup = MAP_GROUP(MAP_ROUTE103), .mapNum = MAP_NUM(MAP_ROUTE103), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRoute103Pending },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_ROUTE103_TUTORIAL, .policy = WAYFARER_STORY_POLICY_EXCEPTION, .dialogue = WAYFARER_STORY_DIALOGUE_ORDINARY, .flags = 0, .mapGroup = MAP_GROUP(MAP_ROUTE103), .mapNum = MAP_NUM(MAP_ROUTE103), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRoute103Pending },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 1, .sceneId = WAYFARER_STORY_SCENE_RUSTBORO_RIVAL_CONVERSATION, .policy = WAYFARER_STORY_POLICY_EXCEPTION, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = 0, .mapGroup = MAP_GROUP(MAP_RUSTBORO_CITY), .mapNum = MAP_NUM(MAP_RUSTBORO_CITY), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRustboroRivalPending },
+    { .lossRedirect = RustboroCity_EventScript_WayfarerRivalLossRetreat, .triggerScript = RustboroCity_EventScript_RivalTrigger0, .stableKey = 1, .sceneId = WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_RUSTBORO_CITY), .mapNum = MAP_NUM(MAP_RUSTBORO_CITY), .localId = 0, .elevation = 3, .activationWidth = 8, .activationHeight = 1, .x = 12, .y = 53, .isNarrativelyEligible = WayfarerHoennRustboroRivalPending },
+    { .lossRedirect = RustboroCity_EventScript_WayfarerRivalLossRetreat, .triggerScript = NULL, .stableKey = 1, .sceneId = WAYFARER_STORY_SCENE_RUSTBORO_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_RUSTBORO_CITY), .mapNum = MAP_NUM(MAP_RUSTBORO_CITY), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRustboroRivalPending },
+    { .lossRedirect = Route110_EventScript_WayfarerRivalLossRetreat, .triggerScript = Route110_EventScript_RivalScene, .stableKey = 2, .sceneId = WAYFARER_STORY_SCENE_ROUTE110_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_ROUTE110), .mapNum = MAP_NUM(MAP_ROUTE110), .localId = WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL, .elevation = 3, .activationWidth = 3, .activationHeight = 1, .x = 33, .y = 56, .isNarrativelyEligible = WayfarerHoennRoute110RivalPending },
+    { .lossRedirect = Route110_EventScript_WayfarerRivalLossRetreat, .triggerScript = NULL, .stableKey = 2, .sceneId = WAYFARER_STORY_SCENE_ROUTE110_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_ROUTE110), .mapNum = MAP_NUM(MAP_ROUTE110), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRoute110RivalPending },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 2, .sceneId = WAYFARER_STORY_SCENE_ROUTE110_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE, .mapGroup = MAP_GROUP(MAP_ROUTE110), .mapNum = MAP_NUM(MAP_ROUTE110), .localId = WAYFARER_HOENN_LOCALID_ROUTE110_RIVAL_ON_BIKE, .elevation = 3, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRoute110RivalPending },
+    { .lossRedirect = Route119_EventScript_WayfarerRivalLossRetreat, .triggerScript = Route119_EventScript_RivalEncounter, .stableKey = 3, .sceneId = WAYFARER_STORY_SCENE_ROUTE119_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_ROUTE119), .mapNum = MAP_NUM(MAP_ROUTE119), .localId = WAYFARER_HOENN_LOCALID_ROUTE119_RIVAL, .elevation = 0, .activationWidth = 2, .activationHeight = 1, .x = 25, .y = 31, .isNarrativelyEligible = WayfarerHoennRoute119RivalPending },
+    { .lossRedirect = Route119_EventScript_WayfarerRivalLossRetreat, .triggerScript = NULL, .stableKey = 3, .sceneId = WAYFARER_STORY_SCENE_ROUTE119_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_ROUTE119), .mapNum = MAP_NUM(MAP_ROUTE119), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRoute119RivalPending },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 3, .sceneId = WAYFARER_STORY_SCENE_ROUTE119_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_HIDE_WHILE_UNUSABLE, .mapGroup = MAP_GROUP(MAP_ROUTE119), .mapNum = MAP_NUM(MAP_ROUTE119), .localId = WAYFARER_HOENN_LOCALID_ROUTE119_RIVAL_ON_BIKE, .elevation = 4, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRoute119RivalPending },
+    { .lossRedirect = LilycoveCity_EventScript_WayfarerRivalLossRetreat, .triggerScript = NULL, .stableKey = 4, .sceneId = WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT, .mapGroup = MAP_GROUP(MAP_LILYCOVE_CITY), .mapNum = MAP_NUM(MAP_LILYCOVE_CITY), .localId = WAYFARER_HOENN_LOCALID_LILYCOVE_RIVAL, .elevation = 5, .activationWidth = 0, .activationHeight = 0, .x = 27, .y = 7, .isNarrativelyEligible = WayfarerHoennLilycoveRivalPending },
+    { .lossRedirect = LilycoveCity_EventScript_WayfarerRivalLossRetreat, .triggerScript = NULL, .stableKey = 4, .sceneId = WAYFARER_STORY_SCENE_LILYCOVE_RIVAL, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_LILYCOVE_CITY), .mapNum = MAP_NUM(MAP_LILYCOVE_CITY), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennLilycoveRivalPending },
+    { .lossRedirect = MauvilleCity_EventScript_WayfarerWallyLossRetreat, .triggerScript = NULL, .stableKey = 5, .sceneId = WAYFARER_STORY_SCENE_MAUVILLE_WALLY, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_TRANSIENT_OBJECT, .mapGroup = MAP_GROUP(MAP_MAUVILLE_CITY), .mapNum = MAP_NUM(MAP_MAUVILLE_CITY), .localId = WAYFARER_HOENN_LOCALID_MAUVILLE_WALLY, .elevation = 3, .activationWidth = 0, .activationHeight = 0, .x = 8, .y = 6, .isNarrativelyEligible = WayfarerHoennMauvilleWallyPending },
+    { .lossRedirect = NULL, .triggerScript = VictoryRoad_1F_EventScript_WallyBattleTrigger1, .stableKey = 6, .sceneId = WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_VICTORY_ROAD_1F), .mapNum = MAP_NUM(MAP_VICTORY_ROAD_1F), .localId = 0, .elevation = 4, .activationWidth = 2, .activationHeight = 1, .x = 2, .y = 23, .isNarrativelyEligible = WayfarerHoennVictoryRoadWallyPending },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 6, .sceneId = WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = WAYFARER_STORY_FLAG_TRANSIENT_OBJECT, .mapGroup = MAP_GROUP(MAP_VICTORY_ROAD_1F), .mapNum = MAP_NUM(MAP_VICTORY_ROAD_1F), .localId = WAYFARER_HOENN_LOCALID_VICTORY_ROAD_EXIT_WALLY, .elevation = 3, .activationWidth = 0, .activationHeight = 0, .x = 31, .y = 9, .isNarrativelyEligible = WayfarerHoennVictoryRoadWallyRematchEligible },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 6, .sceneId = WAYFARER_STORY_SCENE_VICTORY_ROAD_WALLY, .policy = WAYFARER_STORY_POLICY_DEFERRED_RIVAL, .dialogue = WAYFARER_STORY_DIALOGUE_RIVAL, .flags = 0, .mapGroup = MAP_GROUP(MAP_VICTORY_ROAD_1F), .mapNum = MAP_NUM(MAP_VICTORY_ROAD_1F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennVictoryRoadWallyRematchEligible },
+    { .lossRedirect = NULL, .triggerScript = PetalburgCity_EventScript_WallyTutorial, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_PETALBURG_WALLY_TUTORIAL, .policy = WAYFARER_STORY_POLICY_EXCEPTION, .dialogue = WAYFARER_STORY_DIALOGUE_ORDINARY, .flags = WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_PETALBURG_CITY), .mapNum = MAP_NUM(MAP_PETALBURG_CITY), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 30, .activationHeight = 30, .x = 0, .y = 0, .isNarrativelyEligible = NULL },
+    { .lossRedirect = NULL, .triggerScript = SlateportCity_OceanicMuseum_2F_EventScript_CaptStern, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_OCEANIC_MUSEUM_STERN, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_STERN, .flags = 0, .mapGroup = MAP_GROUP(MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F), .mapNum = MAP_NUM(MAP_SLATEPORT_CITY_OCEANIC_MUSEUM_2F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennMuseumPending },
+    { .lossRedirect = RusturfTunnel_EventScript_WayfarerGruntLossRetreat, .triggerScript = NULL, .stableKey = 20, .sceneId = WAYFARER_STORY_SCENE_RUSTURF_AQUA, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_AQUA_GUARD, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_RUSTURF_TUNNEL), .mapNum = MAP_NUM(MAP_RUSTURF_TUNNEL), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennRusturfRescuePending },
+    { .lossRedirect = MtChimney_EventScript_WayfarerMaxieLossRetreat, .triggerScript = MtChimney_EventScript_Maxie, .stableKey = 21, .sceneId = WAYFARER_STORY_SCENE_MT_CHIMNEY_MAXIE, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_MT_CHIMNEY), .mapNum = MAP_NUM(MAP_MT_CHIMNEY), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennMtChimneyPending },
+    { .lossRedirect = MagmaHideout_4F_EventScript_WayfarerMaxieLossRetreat, .triggerScript = MagmaHideout_4F_EventScript_Maxie, .stableKey = 22, .sceneId = WAYFARER_STORY_SCENE_MAGMA_HIDEOUT_MAXIE, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_MAGMA_HIDEOUT_4F), .mapNum = MAP_NUM(MAP_MAGMA_HIDEOUT_4F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennMagmaHideoutPending },
+    { .lossRedirect = EventScript_WayfarerStoryLossRetreat, .triggerScript = NULL, .stableKey = 23, .sceneId = WAYFARER_STORY_SCENE_AQUA_HIDEOUT_MATT, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_AQUA_GUARD, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_AQUA_HIDEOUT_B2F), .mapNum = MAP_NUM(MAP_AQUA_HIDEOUT_B2F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennAquaHideoutPending },
+    { .lossRedirect = EventScript_WayfarerStoryLossRetreat, .triggerScript = NULL, .stableKey = 24, .sceneId = WAYFARER_STORY_SCENE_WEATHER_INSTITUTE_SHELLY, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_AQUA_GUARD, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN, .mapGroup = MAP_GROUP(MAP_ROUTE119_WEATHER_INSTITUTE_2F), .mapNum = MAP_NUM(MAP_ROUTE119_WEATHER_INSTITUTE_2F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennWeatherInstitutePending },
+    { .lossRedirect = NULL, .triggerScript = NULL, .stableKey = 25, .sceneId = WAYFARER_STORY_SCENE_SPACE_CENTER_STAIR_GUARD, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, .flags = 0, .mapGroup = MAP_GROUP(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F), .mapNum = MAP_NUM(MAP_MOSSDEEP_CITY_SPACE_CENTER_1F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 0, .activationHeight = 0, .x = WAYFARER_STORY_NO_COORD, .y = WAYFARER_STORY_NO_COORD, .isNarrativelyEligible = WayfarerHoennSpaceCenterStairGuardPending },
+    { .lossRedirect = NULL, .triggerScript = MossdeepCity_SpaceCenter_2F_EventScript_ThreeMagmaGrunts, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_SPACE_CENTER_GRUNTS, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_MAGMA_GUARD, .flags = WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_MOSSDEEP_CITY_SPACE_CENTER_2F), .mapNum = MAP_NUM(MAP_MOSSDEEP_CITY_SPACE_CENTER_2F), .localId = 0, .elevation = WAYFARER_STORY_ANY_ELEVATION, .activationWidth = 16, .activationHeight = 10, .x = 0, .y = 0, .isNarrativelyEligible = WayfarerHoennSpaceCenterGruntsPending },
+    { .lossRedirect = NULL, .triggerScript = MossdeepCity_SpaceCenter_2F_EventScript_Steven, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_SPACE_CENTER_OFFER, .policy = WAYFARER_STORY_POLICY_EXCEPTION, .dialogue = WAYFARER_STORY_DIALOGUE_PARTNER, .flags = WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_MOSSDEEP_CITY_SPACE_CENTER_2F), .mapNum = MAP_NUM(MAP_MOSSDEEP_CITY_SPACE_CENTER_2F), .localId = 0, .elevation = 3, .activationWidth = 3, .activationHeight = 3, .x = 0, .y = 7, .isNarrativelyEligible = WayfarerHoennSpaceCenterPartnerPending },
+    { .lossRedirect = SeafloorCavern_Room9_EventScript_WayfarerArchieLossRetreat, .triggerScript = SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre, .stableKey = 30, .sceneId = WAYFARER_STORY_SCENE_SEAFLOOR_ARCHIE, .policy = WAYFARER_STORY_POLICY_OBJECTIVE_GUARD, .dialogue = WAYFARER_STORY_DIALOGUE_AQUA_GUARD, .flags = WAYFARER_STORY_FLAG_LOSS_RETURN | WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_SEAFLOOR_CAVERN_ROOM9), .mapNum = MAP_NUM(MAP_SEAFLOOR_CAVERN_ROOM9), .localId = 0, .elevation = 3, .activationWidth = 1, .activationHeight = 1, .x = 17, .y = 42, .isNarrativelyEligible = WayfarerHoennSeafloorPending },
+    { .lossRedirect = NULL, .triggerScript = Route120_EventScript_Steven, .stableKey = 0, .sceneId = WAYFARER_STORY_SCENE_ROUTE120_KECLEON, .policy = WAYFARER_STORY_POLICY_EXCEPTION, .dialogue = WAYFARER_STORY_DIALOGUE_INVESTIGATE, .flags = WAYFARER_STORY_FLAG_REARM_ON_LEAVE, .mapGroup = MAP_GROUP(MAP_ROUTE120), .mapNum = MAP_NUM(MAP_ROUTE120), .localId = 0, .elevation = 4, .activationWidth = 4, .activationHeight = 4, .x = 11, .y = 14, .isNarrativelyEligible = WayfarerHoennKecleonInvestigationPending },
 };
-
-const u32 gWayfarerStoryHoennEncounterCount = ARRAY_COUNT(gWayfarerStoryHoennEncounters);
-
-#undef HOENN_ENTRY
-
+const u32 gWayfarerStoryHoennDescriptorCount = ARRAY_COUNT(gWayfarerStoryHoennDescriptors);
+const u8 *const gWayfarerStoryHoennCallers[] =
+{
+    Route103_EventScript_StartMayBattleTreecko + 1,
+    Route103_EventScript_StartMayBattleTorchic + 1,
+    Route103_EventScript_StartMayBattleMudkip + 1,
+    Route103_EventScript_StartBrendanBattleTreecko + 1,
+    Route103_EventScript_StartBrendanBattleTorchic + 1,
+    Route103_EventScript_StartBrendanBattleMudkip + 1,
+    NULL,
+    RustboroCity_EventScript_BattleMayTreecko + 1,
+    RustboroCity_EventScript_BattleMayTorchic + 1,
+    RustboroCity_EventScript_BattleMayMudkip + 1,
+    RustboroCity_EventScript_BattleBrendanTreecko + 1,
+    RustboroCity_EventScript_BattleBrendanTorchic + 1,
+    RustboroCity_EventScript_BattleBrendanMudkip + 1,
+    Route110_EventScript_MayBattleTreecko + 1,
+    Route110_EventScript_MayBattleTorchic + 1,
+    Route110_EventScript_MayBattleMudkip + 1,
+    Route110_EventScript_BrendanBattleTreecko + 1,
+    Route110_EventScript_BrendanBattleTorchic + 1,
+    Route110_EventScript_BrendanBattleMudkip + 1,
+    NULL,
+    Route119_EventScript_BattleMayTreecko + 1,
+    Route119_EventScript_BattleMayTorchic + 1,
+    Route119_EventScript_BattleMayMudkip + 1,
+    Route119_EventScript_BattleBrendanTreecko + 1,
+    Route119_EventScript_BattleBrendanTorchic + 1,
+    Route119_EventScript_BattleBrendanMudkip + 1,
+    NULL,
+    LilycoveCity_EventScript_BattleMayTreecko + 1,
+    LilycoveCity_EventScript_BattleMayTorchic + 1,
+    LilycoveCity_EventScript_BattleMayMudkip + 1,
+    LilycoveCity_EventScript_BattleBrendanTreecko + 1,
+    LilycoveCity_EventScript_BattleBrendanTorchic + 1,
+    LilycoveCity_EventScript_BattleBrendanMudkip + 1,
+    MauvilleCity_EventScript_BattleWallyTrainerBattle + 1,
+    VictoryRoad_1F_EventScript_WallyEntranceTrainerBattle + 1,
+    VictoryRoad_1F_EventScript_ExitWally + 1,
+    VictoryRoad_1F_EventScript_RematchWally + 1,
+    NULL,
+    NULL,
+    RusturfTunnel_EventScript_GruntTrainerBattle + 1,
+    MtChimney_EventScript_MaxieTrainerBattle + 1,
+    MagmaHideout_4F_EventScript_MaxieTrainerBattle + 1,
+    AquaHideout_B2F_EventScript_Matt + 1,
+    Route119_WeatherInstitute_2F_EventScript_Shelly + 1,
+    MossdeepCity_SpaceCenter_1F_EventScript_Grunt2TrainerBattle + 1,
+    NULL,
+    NULL,
+    SeafloorCavern_Room9_EventScript_ArchieTrainerBattle + 1,
+    NULL,
+};
+const u8 gWayfarerStoryHoennDescriptorIndices[] =
+{
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    7,
+    8,
+    9,
+    9,
+    9,
+    9,
+    9,
+    10,
+    11,
+    12,
+    12,
+    12,
+    12,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+};
+const u32 gWayfarerStoryHoennEncounterCount = ARRAY_COUNT(gWayfarerStoryHoennCallers);
 #else
-
-const struct WayfarerStoryEncounter gWayfarerStoryHoennEncounters[] =
-{
-    {0},
-};
+const struct WayfarerStoryEncounterDescriptor gWayfarerStoryHoennDescriptors[] = {0};
+const u32 gWayfarerStoryHoennDescriptorCount = 0;
+const u8 *const gWayfarerStoryHoennCallers[] = {NULL};
+const u8 gWayfarerStoryHoennDescriptorIndices[] = {0};
 const u32 gWayfarerStoryHoennEncounterCount = 0;
-
 #endif
