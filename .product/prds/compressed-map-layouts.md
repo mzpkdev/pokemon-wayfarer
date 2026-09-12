@@ -98,6 +98,9 @@ unprofitable entries kept raw, the project's GBA LZ77 tool produced:
 
 The [feasibility POC](../research/map-compression-feasibility.md) regenerated and
 round-tripped all 1,089 layouts, then measured the 1,315,072-byte storage-only relink.
+Its source and compact evidence are preserved in
+[experiment PR #99](https://github.com/mzpkdev/pokemon-wayfarer/pull/99); the research
+summary pins the evidence commit.
 That result includes the 30,492 descriptor bytes (including descriptor CRC fields) and
 actual placement/alignment, but excludes runtime CRC code, the loader, error UI, and
 reviewed raw exceptions. It is not shipping net savings. The catalog is

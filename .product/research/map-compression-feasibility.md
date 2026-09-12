@@ -144,19 +144,34 @@ it; failure of the retired one/two-frame rule alone does not block this next ste
 
 ## Evidence identity
 
-The original report and POC sources remain in the separate local uberepo task
-`tasks/map-compression-feasibility/pokemon-wayfarer`. This documentation change publishes
-the evidence summary, not the prototype source or ROMs. Within that task, detailed
-artifacts are under `tools/map_compression_poc/artifacts/`: `catalog/per-layout.json`,
-`linked/verified.json`, `runtime/summary.json`, `runtime/samples.csv`,
-`runtime/mgba-run.log` and `review/disposition.json`. The `runtime-initial` directory
-is superseded exploratory work and is excluded from these results.
+The experiment is preserved in [PR #99](https://github.com/mzpkdev/pokemon-wayfarer/pull/99)
+at [commit `0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89`](https://github.com/mzpkdev/pokemon-wayfarer/commit/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89).
+It is an evidence archive, not a dependency to merge or production rollout approval.
+Its original latency recommendation used the earlier one/two-frame rule; the product
+decision above records the later provisional five-frame budget.
+
+These links pin the published evidence to that commit:
+
+- [Experiment report](https://github.com/mzpkdev/pokemon-wayfarer/blob/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89/.product/research/map-compression-feasibility.md)
+  and [reproduction instructions](https://github.com/mzpkdev/pokemon-wayfarer/blob/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89/tools/map_compression_poc/README.md).
+- [Per-layout catalog](https://github.com/mzpkdev/pokemon-wayfarer/blob/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89/tools/map_compression_poc/artifacts/catalog/per-layout.tsv)
+  and [linked storage verification](https://github.com/mzpkdev/pokemon-wayfarer/blob/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89/tools/map_compression_poc/artifacts/linked/verified.json).
+- [Runtime summary](https://github.com/mzpkdev/pokemon-wayfarer/blob/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89/tools/map_compression_poc/artifacts/runtime/summary.json)
+  and [all 900 timing samples](https://github.com/mzpkdev/pokemon-wayfarer/blob/0acaf41dd6ce15ed8ae86ff4d9a8fb6a82a7ae89/tools/map_compression_poc/artifacts/runtime/samples.csv).
+
+The source and compact text results are committed. Full ROMs, ELFs, compressed streams,
+logs and the original independent-review disposition remain local in
+`tasks/map-compression-feasibility/pokemon-wayfarer/tools/map_compression_poc/artifacts/`;
+the published report summarizes the review findings. Their hashes identify the original
+artifacts but do not make those artifacts available from GitHub. The `runtime-initial`
+directory is superseded exploratory work and is excluded from these results.
 
 | Artifact | SHA-256 |
 | --- | --- |
-| Original POC report | `40fa74ea814c2296524a687009def367c01127a83764f92166cb507b84c26ff0` |
-| Regenerated catalog | `6a5b9928b341eb5f7cd2390e8133b894f0fa7c0f7b5d7a44767eccef40ea0377` |
+| Published POC report | `cee856111968ff7b315ce86fa2b0bee6f8cec7ed9d9ea6eaacd5531b37a3171e` |
+| Published catalog TSV | `83b2f9f16b773ee2120b9a00d6647ad25a1d0bef551b1d5d80a3a653889d5e29` |
 | Linked verification | `4dc9dfd6a5d026f9e303c33cd910f70223bdace5b026fa300a52371db9bb2c52` |
 | Runtime summary | `19b5bb8f98258f17737dacf29ea86a60c71231d27ce8d2f73697b1ae43c1a0f3` |
-| Runtime sample log and independent rerun | `9c5d8f1e4fee736373d615c92ad3d690bd233a71493b80e5d322ae8e8e6e727a` |
-| Runtime ELF | `3b7c02aa4224af4a9d05d1d10f236b1f81bdb959e00aa73f1fd573345df5eafb` |
+| Published 900-sample CSV | `eb09f9a7494e71f4d808b4ade8b44dcaea6d8972ce08fceb2ae6bde89924517b` |
+| Local runtime sample log and independent rerun | `9c5d8f1e4fee736373d615c92ad3d690bd233a71493b80e5d322ae8e8e6e727a` |
+| Local runtime ELF | `3b7c02aa4224af4a9d05d1d10f236b1f81bdb959e00aa73f1fd573345df5eafb` |
