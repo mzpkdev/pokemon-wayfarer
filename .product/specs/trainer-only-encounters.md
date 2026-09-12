@@ -45,6 +45,7 @@ the authored scope; a map transfer clears it as a backstop, not as scenario logi
 
 ## Validation contract
 
-Focused tests cover the two-condition gate, map-load clearing, and rejection of
-nonempty/fainted/Egg parties. End-to-end coverage exercises explicit-on entry,
-explicit-off native routing, and the retained controller journey.
+Focused tests cover the two-condition gate, map-load clearing, and native routing
+for nonempty, fainted, and Eggs-only parties. End-to-end coverage exercises
+explicitly enabled entry, enabled-with-nonempty native routing, ordinary native
+recovery, and the retained controller journey.

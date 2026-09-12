@@ -1,104 +1,59 @@
 # Trainer-only wild encounters
 
-Status: Supported implementation complete. Scripted-wild, challenge, League and
-unaudited authored-battle exclusions are settled policy. Broader balance
-validation remains; future ports are separate work. See the
-[implementation validation](../research/trainer-only-implementation-validation.md).
+Status: Supported core mechanic. This PRD defines only the explicit, author-owned
+wild-encounter mode; it does not define a global no-party, NPC, story, or recovery
+policy.
 
 ## Intent
 
-Let a Wayfarer player with no usable party Pokémon encounter and catch a wild
-Pokémon directly. The player can approach cautiously, offer food, throw a ball
-immediately, or hurt the Pokémon with rocks. Catching without violence must remain
-a complete strategy.
+In a safe, human-authored Wayfarer scenario, let a player with no party Pokémon
+approach and catch a wild Pokémon directly. The player can use an owned Ball or
+Berry, approach cautiously, throw a Rock, or Run. Catching without violence must
+remain a complete strategy.
 
-This supports both an empty-party opening and later sandbox play after depositing
-the entire party, and continued exploration after the party faints. It does not
-create a new origin or grant starter supplies.
+The mode does not create an origin, grant starter supplies, provide items, or
+change ordinary party, story, trainer, storage, or recovery rules.
 
 ## Design
 
 ### Eligibility and menu
 
-An ordinary wild encounter, including fishing, uses this mode when the party
-has no usable Pokémon under the shared battle-eligibility predicate. This includes
-an empty party, a fully fainted party, and an Eggs-only party. Later encounters
-return to normal battles when the party has a usable Pokémon. The encounter shows
-the trainer and wild Pokémon without sending out an unusable party member.
+The dedicated controller starts only when both conditions are true at wild-battle
+admission:
 
-Wayfarer's PC permits depositing or moving the final usable party Pokémon into a
-box, including leaving fainted Pokémon or Eggs behind. Retain last-Pokémon release
-protection, Mail and challenge restrictions. Cancelling a move safely restores
-the Pokémon.
+1. A human-authored script has set `FLAG_ENABLE_TRAINER_ONLY_ENCOUNTERS`.
+2. `CalculatePlayerPartyCount()` is exactly zero.
 
-Losing an ordinary wild or trainer battle applies the existing loss penalty once
-and returns the player to the field without healing or a recovery warp. It does
-not convert the ongoing battle into this mode.
-The next eligible wild encounter uses this mode if the party remains unusable.
-Ordinary field poison that exhausts the party also leaves the trainer in the field;
-party exhaustion alone must not trigger a delayed blackout on the next step.
-Authored outcomes and challenge consequences need explicit treatment before this
-field-return rule replaces their behavior.
+The flag aliases the map-local temporary `FLAG_TEMP_B`. Normal map loading clears
+temporary flags, but authors must clear this flag before leaving the safe scenario
+or entering unsupported content. No production scenario enables the flag.
 
-Ordinary trainers ignore sight encounters while the player has no usable party.
-Talking to them uses one of a small set of refusal lines, assigned consistently
-to that trainer, with character-specific overrides. This intentional opportunity to walk past trainers grants no victory flags, rewards,
-or gate unlocks. Trainers become available again when the party is usable.
+This is a literal party-count rule. A nonempty party—including a fully fainted,
+Egg-only, mixed, or otherwise unusable party—never enters trainer-only mode and
+keeps native behavior. With the flag clear, an empty party also keeps native
+behavior. The mode has no contextual exclusions or automatic map/NPC allowlist;
+authors own the complete safety of each flagged scenario.
 
-### Rivals, objective guards and open travel
+Trainer battles, scripted or fixed wild battles, tutorials, partner and special
+battles, scene transitions, and other unsupported flows are not converted,
+intercepted, refused, suppressed, rolled back, or given a recovery fallback by
+this mechanic. They remain native. A safe scenario must not reach them while the
+flag is set with an empty party.
 
-Encounter policy follows each scene's purpose. Rival battles can wait; local
-rescues, keys, passwords and boss victories still need to be earned. Public
-travel remains open wherever the regional independence and traversal designs
-require it. Going without usable Pokémon grants no story completion.
+Native storage protection remains in force: depositing or moving the last party
+Pokémon into a box is prohibited. The mechanic does not permit leaving a party
+empty by depositing its final member.
 
-Off-screen battle-only rivals do not spawn or trigger while the player has no
-usable party. Persistent battle-only rivals are temporarily hidden, including
-their collision. Suppression is silent. When the party recovers, pending chapters
-become available at their existing locations under their narrative prerequisites
-and the owning campaign's explicit retirement rules. No-party suppression itself
-never advances or retires a chapter.
-Completing another adventure, ending an occupation or departing on a ship must
-not erase a pending rival chapter. Shared town-state variables need to be split
-where they currently tie rival completion to that adventure.
+## Supported mechanic
 
-A rival who also gives an independently available item or participates in a
-non-battle scene keeps that interaction. If a visible rival's battle interaction
-cannot start, use a short refusal appropriate to the character. Hiding every
-appearance of a rival is not the policy.
-
-Objective guards remain visible and protect their local objective. They refuse a
-challenge when the player has no usable Pokémon and leave room to retreat. A
-Rocket guarding a password or hostage can keep that objective unavailable; a
-Rocket on a public road cannot reinstate a removed regional travel gate. Hostile guards
-reuse suitable existing threats or dismissals, with short character-appropriate
-variants where needed. They do not invite the player back for a fair battle or
-give a key, reveal a password or imply victory. Friendly hosts retain readiness
-refusals. Ordinary refusal does not attack or black out the
-trainer.
-
-This covers the audited Well, Mahogany, Radio Tower, Theater, Hoenn rescue and
-villain encounters, plus local challenge rewards. The companion spec also records
-future FRLG/Sevii rival and objective policies for those ports. Source availability
-does not bring those maps into the current release. Gym and League objectives
-retain their explicit entry and defeat rules. Gym losses keep existing recovery
-until each badge-awarding caller is individually adapted and verified to grant
-no badge, TM, progression or victory credit on defeat.
-
-For supported story battles, loss returns control safely with the objective still
-unresolved. Victory-only script continuations must check the actual result before
-removing guards, handing over rewards or advancing story state. Authored tutorials,
-chained/partner battles, League and challenge outcomes retain their existing loss
-policy. Any future adaptation requires a separate feature decision.
-
-The [story encounter specification](../specs/trainer-only-story-encounters.md)
-owns the per-scene policy, no-party dialogue, safe retreat and recoverability
-requirements. Its regional source mapping comes from the
-[encounter gate audit](../research/trainer-only-story-encounter-gates.md).
+An enabled ordinary wild encounter uses the dedicated trainer-only controller.
+Existing ordinary wild sources that can start a wild battle retain their current
+encounter availability and field permissions. The controller preserves its Ball,
+Berry, Rock, Go Near, and Run actions.
 
 ### Encounter menu
 
-The four actions occupy the familiar battle menu positions:
+The actions occupy the familiar battle menu positions:
 
 | Normal battle position | Trainer-only action |
 | --- | --- |
@@ -122,13 +77,7 @@ The player uses balls and berries actually owned in the Bag.
 
 Performing a valid action consumes a turn. Opening or cancelling the Bag,
 selecting an unusable item, or attempting an unavailable action consumes neither
-a turn nor an item. The Bag must clearly identify usable encounter items and
-must safely target existing party members for applicable non-berry recovery items,
-including HP/status medicine, revives and PP restoration,
-without treating an empty party slot as a target. Restoring a usable party member
-ends this encounter and returns to the field; later encounters use normal battles.
-Trainers watching that return position allow the player to leave their sight area
-before approaching again; the player can still talk to them to start a battle.
+a turn nor an item. The Bag exposes owned usable Balls and Berries only.
 Every standard berry from Cheri through Maranga is feedable, including standard
 Enigma and excluding the e-reader Enigma item. Use an explicit list. Berry selection
 feeds directly without a Feed/Use submenu or party-medicine option in this mode.
@@ -137,8 +86,8 @@ With no balls left, the player can still run. Attempting to select a ball explai
 that none are available without advancing the encounter. Food is optional; the
 player does not need a Pokéblock Case or berries to attempt a catch.
 
-Ball effects that need an active player Pokémon use a neutral fallback for that
-modifier alone. Other applicable effects still work. The game must not invent a
+Ball effects that need an active player Pokémon use a neutral modifier for that
+effect alone. Other applicable effects still work. The game must not invent a
 substitute Pokémon level or treat an empty slot as a battling Pokémon. Level/Love
 Ball comparisons use a neutral bonus. The Gen 8 badge penalty requiring a player
 level comparison is omitted; independent badge rules remain. Quick and Timer
@@ -174,33 +123,25 @@ passive anger increase or subsequent retaliation.
 | Rock knocks out the Pokémon | End the encounter and return to the overworld, with no EXP or rewards. A knocked-out Pokémon cannot retaliate. |
 | Surviving Pokémon retaliates | Show that it attacks the trainer, then enter the shared blackout and recovery flow. |
 
-Retaliation uses the existing centralized logic for all faints, including its
-established respawn destination and recovery rules. It must not calculate a
-separate nearest Pokémon Center or maintain another respawn policy. Text explains
-the trainer's defeat instead of claiming that their party caused this particular defeat.
+Retaliation completes normal battle teardown and uses native blackout and
+recovery. It has no feature-specific injury message, regional recovery override,
+special warp, money rule, or alternate loss policy. Ordinary party defeat and
+field-poison exhaustion also remain native.
 
 ## Boundaries
 
-The trainer-only mode is Wayfarer-specific. Ordinary eligible wild encounters are
-the initial scope. Trainer battles must safely refuse to start without a usable
-party. Scripted and fixed encounters, tutorials, partner or multi-Pokémon battles,
-Safari visits, and the Bug-Catching Contest do not automatically opt into this
-mode. Random land encounters include outbreaks. Rock Smash and Sweet Scent
-encounters qualify when their field actions are already legally available; this
-feature grants no new field permissions. Excluded encounters' existing eligibility
-or a deliberately specified guard must handle an unusable party safely.
+This Wayfarer mechanic applies only to ordinary wild encounters admitted while
+the explicit map-local flag is set and the party count is exactly zero. It grants
+no new encounter availability, progression, field permission, capture
+permission, or party/storage behavior. There are no contextual exclusions or
+automatic map/NPC allowlists: authors own the safety of each flagged scenario.
 
-Scripted-wild exclusion is a settled product rule, not a deferred conversion.
-Route 120 Steven/Kecleon requires a usable party: without one, give the specified
-safe, retryable refusal and grant neither the Scope nor bridge completion.
-Mahogany Electrode and the future Tower Marowak/Lostelle scenes retain their
-existing scripted-wild eligibility and completion rules. Their exclusion does
-not promise that unported scenes are already available.
-
-The feature does not bypass encounter availability, progression gates, normal
-challenge restrictions, or capture restrictions. Walking past inactive ordinary
-trainers is intentional, but does not satisfy any requirement to defeat them.
-Safari-specific challenge exceptions belong to Safari visits.
+Nonempty parties—including fully fainted, Egg-only, mixed, or otherwise unusable
+parties—remain native, as does an empty party when the flag is clear. Trainer,
+scripted, fixed, tutorial, partner, multi-Pokémon, scene, and other unsupported
+flows remain native. This mechanic adds no conversion, interception, refusal,
+suppression, rollback, or recovery fallback for them; authors must clear the
+flag before reaching such content.
 
 Safari retains its action set, admission, ball grants, step limit, total throw
 allowance including owned balls, and exit behavior. The intended shared change is
@@ -209,8 +150,10 @@ keeps its existing turn cost, factor updates and flee checks even at the closest
 distance. Existing Safari Ball odds remain unchanged. This does
 not redesign FRLG bait and rock mechanics or add anger and retaliation to Safari.
 
-No new origin, starter gift, berry distribution, shop, encounter table, trainer HP
-system, or save migration is included in this feature.
+No new origin, starter gift, berry distribution, shop, encounter table, trainer
+HP system, save migration, NPC/story registry, medicine/revive flow, or custom
+loss/recovery policy is included. Depositing the last party Pokémon remains
+prohibited by native storage rules.
 
 ## Balance
 
@@ -263,32 +206,20 @@ ready to attack. The final warning must be understandable without exposing hidde
 numbers. Reaching the closest allowed distance also gets a clear message.
 
 Retaliation visibly connects the Pokémon's attack to the trainer's blackout,
-followed by the normal fade and recovery presentation with appropriate text.
+followed by the native fade and recovery presentation. It adds no feature-specific
+blackout, recovery, or injury text.
 
-## Interactions
+## Native interactions
 
-The ordinary battle guard still protects unsupported encounters. Eligible wild
-encounters select this mode using the same no-usable-party predicate that prevents
-ordinary trainer battles.
+Capture delivery, party capacity, PC capacity, item ownership, field poisoning,
+ordinary battle loss, blackout, recovery, challenge rules, and money handling
+remain native. The mechanic adds no medicine, Revive, PP, custom loss, custom
+poison, custom recovery, special warp, or fallback path. Native storage still
+prohibits depositing the last party Pokémon.
 
-Capture delivery uses existing party and PC capacity rules. With six fainted
-Pokémon, a catch can go to the PC and leave the party unusable. A successful catch
-therefore does not promise immediate recovery. A usable catch added to the party,
-or a successful revive, restores normal eligibility for later encounters.
-
-Players are not guaranteed to reach a Pokémon Center or obtain repeatable balls
-without risk. Retaliation and the established blackout fallback provide recovery
-when needed. A valid centralized respawn destination must exist even before the
-first Pokémon Center visit. Starter supplies, new origins, and economy changes are
-outside this feature; repeatable ball supply is not a release prerequisite here.
-
-Challenge handling remains centralized. If an existing rule assumes a usable
-party member exists, resolve that case through the shared rule rather than
-importing Safari exemptions. Ordinary party defeat and trainer retaliation are
-distinct reasons within that policy: ordinary defeat returns to the field, while
-retaliation invokes blackout and recovery, subject to the settled challenge and
-authored-battle exclusions below. Retaliation deducts no money. Ordinary supported
-battle losses retain their existing money charge exactly once.
+Authors clear the flag before unsafe or unsupported interactions. No production
+map or scenario enables it, and no NPC/story registry, interception, suppression,
+refusal, or story continuation belongs to this mechanic.
 
 ## Constraints
 
@@ -298,8 +229,8 @@ selection and throwing, capture delivery, and proximity calculations. Do not
 copy the Safari subsystem wholesale or build a configurable battle framework.
 Admission, visit counters, ball grants, and entrance warps remain Safari-owned.
 
-Blackout destination and recovery policy remain centralized for every faint
-reason. The technical integration contract belongs in the linked specification.
+Blackout destination and recovery policy remain native and centralized. The
+technical integration contract belongs in the linked specification.
 
 ## Playtesting
 
@@ -308,21 +239,13 @@ Acceptance examples:
 - An empty-party player approaches and catches a Pokémon using an owned ball,
   without throwing rocks. Each unsuccessful committed action builds passive anger.
   If the catch enters the party usable, the next encounter uses normal battles.
-- A player loses an ordinary battle and returns to the field with the party still
-  fainted. The next eligible wild encounter uses the four-action trainer menu.
-- A player deposits their final usable Pokémon, leaving an empty, fainted-only,
-  or Eggs-only party. All three cases use this mode without a starter flag.
-- Ordinary trainers ignore that player on sight and refuse a requested battle.
-  Walking past them does not mark them defeated or unlock a victory-gated route.
-  Reviving or withdrawing a usable Pokémon re-enables those trainers.
-- A no-party player passes a suppressed rival without consuming the chapter,
-  completes the host adventure, recovers a usable Pokémon and can return for that
-  chapter at its original location.
-- A no-party player can travel along an opened public lane but cannot collect a
-  guarded password, rescue reward or boss prize. Talking to the guard gives the
-  specified refusal, releases control and leaves a usable retreat path.
-- Losing a supported story battle preserves the unresolved objective and permits
-  retreat; its victory continuation never runs on loss or refused startup.
+- The same empty party with the flag clear remains native. A nonempty party,
+  including fully fainted, Egg-only, mixed, or otherwise unusable parties, also
+  remains native.
+- Depositing the last party Pokémon is still prohibited by native storage rules.
+- The author clears the temporary flag before leaving the safe scenario or
+  entering trainer, scripted, fixed, tutorial, partner, scene, or other
+  unsupported content; those flows retain native behavior.
 - A player throws rocks, sees HP fall and anger warnings, and attempts escape.
   Failure consumes a turn and can trigger retaliation. Success ends the encounter
   before passive anger or retaliation applies.
@@ -331,15 +254,12 @@ Acceptance examples:
   without restoring HP. Cancelling selection changes no encounter state or items.
 - A player with no balls can attempt escape. Throwing the last ball invokes no
   Safari allowance or exit scripts.
-- With six fainted Pokémon, a successful catch sent to the PC leaves the party
-  unusable. Safely using a revive on a fainted party member ends the encounter and
-  restores normal battle eligibility.
 - Go Near improves owned-ball capture odds in both modes, while an actual Safari
   visit still enforces its own allowance and step limit. A fourth or later Go Near
   still consumes a turn in both modes; trainer-only mode also builds passive anger.
   Factor saturation never turns Go Near into a free action.
-- Retaliation before visiting a Pokémon Center uses the established recovery
-  destination and text explaining the trainer's defeat.
+- Retaliation, ordinary party defeat, and field-poison exhaustion all use their
+  native teardown, blackout, and recovery behavior.
 
 Playtesting must establish whether messages communicate escalating danger without
 meters, whether the dynamic warning arrives in time to inform a choice, and
@@ -347,38 +267,23 @@ whether catching without rocks remains practical. Compare equal-level encounters
 with Pokémon above and below the Trainer Rating softcap, including repeated failed
 escapes, berry use near the anger threshold, and peaceful turns reaching it.
 
-## Settled exceptional defeat rules
+## No contextual exceptions
 
-Active Nuzlocke and Easy Nuzlocke, the hardcore Nuzlocke option, and active League
-runs do not allow trainer-only encounters, ordinary field-loss continuation or
-unprotected storage. Retain the existing activation checks: configured but
-not-yet-active Nuzlocke can still allow trainer-only play; the hardcore option
-blocks it immediately. This feature does not activate challenges on its own.
-
-Existing challenge recovery stays unchanged. Active ordinary Nuzlocke recovery
-withdraws a living boxed Pokémon or supplies its existing level-1 Rattata fallback;
-hardcore keeps its existing save-clear/reset condition. League defeat keeps its
-existing recovery, and whiteout ends the run. Trainer retaliation is not reachable
-through supported trainer-only entry in these excluded active contexts, so no
-new challenge-specific retaliation consequence is pending.
-
-Unaudited story battles, tutorials, partner battles and battle chains retain
-their existing authored defeat routing. Field retreat/retry applies only to the
-explicitly audited allowlist; other scenes receive no new victory continuation,
-reward or challenge exemption. Changing these rules would be a separate feature,
-not unfinished work in this implementation.
+This PRD defines no challenge, trainer, NPC, story, tutorial, partner, scene,
+loss, poisoning, medicine, revive, storage, or recovery exception. Existing
+systems own those behaviors. A human author may enable the mode only where the
+complete scenario is safe; unsupported flows remain native and are not converted
+or intercepted by this feature.
 
 ## Open questions
 
 - Validation and adjustment of the selected initial numeric tuning, including
   warning timing and the three-turn food duration's turn-order behavior.
 - Exact anger and retaliation animations and final encounter messages.
-- Confirm the existing centralized respawn fallback is valid for every supported
-  origin before its first Pokémon Center visit.
+- Playtest supported, human-authored scenarios and confirm authors clear the flag
+  before every unsupported interaction.
 
 ## References
 
 - [Trainer-only wild encounters specification](../specs/trainer-only-encounters.md)
-- [Trainer-only story encounter specification](../specs/trainer-only-story-encounters.md)
-- [Story encounter gate audit](../research/trainer-only-story-encounter-gates.md)
-- [Wayfarer regional start choice](wayfarer-regional-start-choice.md)
+- [Flag-only footprint research](../research/pr96-flag-only-footprint.md)

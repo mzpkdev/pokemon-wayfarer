@@ -524,8 +524,6 @@ criteria for that work, rather than additional playable origins in this release:
 - What are the named regional scene interception points and handler results,
   including precedence between custom first-contact scenes, visitor handlers,
   and later normal campaign progression?
-- Where is empty-party battle prevention enforced, and what happens when an
-  unexpected encounter or callback reaches it after reload?
 - What transaction and retry contract covers arbitrary grants, including
   independently successful parts of a multi-reward handoff?
 - How does a profile replace both its active recovery point and fallback
