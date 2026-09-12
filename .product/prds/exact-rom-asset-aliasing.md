@@ -16,7 +16,8 @@ remain the same.
 
 V1 uses explicit allowlists for five independently audited families:
 
-1. the 18 non-Surf Arceus overworld form pixel symbols;
+1. 16 non-Surf Arceus overworld form pixel aliases, with Normal canonical and
+   Ice retained as independent controls;
 2. the eight live Johto and Alola water-current animation frame pairs;
 3. 25 exact battle-environment graphics and tilemap groups;
 4. four HNS Bike Shop and Johto Bike Shop payload pairs; and
@@ -67,15 +68,15 @@ required same-revision optimized release link.
 
 | Family | Earlier normal-build ceiling | Re-audited source ceiling | Live release ceiling selected for v1 | Decision |
 |---|---:|---:|---:|---|
-| Non-Surf Arceus overworld forms | 21,828 | 21,828 | 21,828 | Include all 17 redundant 1,284-byte payloads. |
+| Non-Surf Arceus overworld forms | 20,544 | 20,544 | 20,544 | Include 16 redundant 1,284-byte payloads. Normal remains canonical; Ice remains independently emitted from the Normal payload it already consumes. |
 | Regional water-current frames | 24,576 | 24,576 | 12,288 | Include Johto to Alola only. The General FRLG copy is absent from the release ELF. |
 | Battle-environment graphics and tilemaps | 17,176 | 21,440 | 21,440 | Include the 25 reconstructed groups. The earlier aggregate omitted 4,264 verified bytes. |
 | Duplicate HNS object-event graphics | 14,336 | Not reconstructable | 0 | Exclude. A broad scan found many equal pairs but no reviewed subset supporting 14,336. |
 | HNS and Johto Bike Shop tileset payloads | 8,684 | 8,684 | 8,684 | Include tiles, metatiles, attributes, and the proven-compatible palette array, but not descriptors. |
 | Kyogre/Groudon and Rayquaza audio | 3,304 | 3,304 | 3,304 | Include one 1,768-byte sequence and one 1,536-byte voicegroup copy. |
-| Total | 89,904 | 79,832 before release GC | 67,544 | Provisional exact linked-delta target. |
+| Total | 88,620 | 78,548 before release GC | 66,260 | Provisional exact linked-delta target. |
 
-The 67,544-byte figure is a live-release opportunity ceiling, not an accepted
+The 66,260-byte figure is a live-release opportunity ceiling, not an accepted
 production saving. An implementation may claim it only after clean baseline and
 optimized release links from the same revision, toolchain, configuration, and
 flags prove the exact delta in `rom.used_bytes`, `rom.end_address`, linked
@@ -83,7 +84,7 @@ flags prove the exact delta in `rom.used_bytes`, `rom.end_address`, linked
 file size is not a measurement.
 
 The expected category deltas are 30,124 bytes in `graphics`, 3,304 bytes in
-`audio`, and 34,116 bytes in `other`. Any different result requires an explained
+`audio`, and 32,832 bytes in `other`. Any different result requires an explained
 link-map reconciliation. If a family cannot prove its full expected release
 delta, remove that family from v1 and recalculate this PRD and its specifications
 instead of offsetting the miss with unrelated work.
@@ -94,7 +95,7 @@ This batch is separate from [PR #48](https://github.com/mzpkdev/pokemon-wayfarer
 which owns every normal/shiny Surf pixel alias and its exact 430,080-byte saving.
 This PRD does not copy PR #48's allowlist, acceptance math, implementation, or
 tests. Portfolio summaries may show both batches, but must list 430,080 bytes for
-Surf and at most 67,544 bytes for this batch so the totals are not counted twice.
+Surf and at most 66,260 bytes for this batch so the totals are not counted twice.
 
 V1 also excludes:
 
@@ -122,10 +123,12 @@ and member symbols, authored and generated paths, complete type and size, owner,
 and expected release saving. Validation consumes those rows directly.
 
 An intentional art or audio change follows a simple rule: remove the affected
-member from the allowlist in the same change, restore independent payload
-emission, and keep both source assets. The build must fail if a source diverges
-while its row remains approved. Equal new assets do not join an allowlist without
-their own source, semantic, ABI, and linked-release review.
+member from the allowlist in the same change, restore its documented pre-alias
+payload emission, and keep both source assets. A rollback must not infer a
+payload path from an authored member path when the existing build consumes a
+different generated input. The build must fail if a source diverges while its
+row remains approved. Equal new assets do not join an allowlist without their
+own source, semantic, ABI, and linked-release review.
 
 Generic byte-comparison or ELF-inspection primitives may be shared with PR #48
 if its implementation lands first. The Surf and Exact ROM manifests, build
@@ -165,8 +168,8 @@ targets, expected totals, error messages, and acceptance reports remain separate
    independent.
 5. Each approved group occupies one linked payload range. The link contains no
    accidental alias outside the allowlists.
-6. Clean paired Wayfarer release links prove exact reductions of 21,828, 12,288,
-   21,440, 8,684, and 3,304 bytes by family, for 67,544 bytes total, in both
+6. Clean paired Wayfarer release links prove exact reductions of 20,544, 12,288,
+   21,440, 8,684, and 3,304 bytes by family, for 66,260 bytes total, in both
    `rom.used_bytes` and linked `__rom_end`. `rom.end_address` moves by the same
    amount and category deltas reconcile exactly.
 7. Divergence, missing-member, duplicate-row, wrong-size, wrong-type, stale-output,
@@ -188,14 +191,17 @@ Measure a clean release after each family so a failed delta can be removed witho
 obscuring the others. Enable all approved aliases only after the aggregate paired
 proof and smoke matrix pass.
 
-Rollback restores independent payload emission for the affected rows and leaves
-the authored assets, tables, IDs, and validation inventory in place. It requires
-no save migration, runtime compatibility path, or content conversion.
+Rollback restores the documented pre-alias payload emission for the affected
+rows and leaves the authored assets, tables, IDs, and validation inventory in
+place. It must preserve the existing Normal-backed independent Ice range in all
+modes; it must not point Ice at its unlinked, different artwork. It requires no
+save migration, runtime compatibility path, or content conversion.
 
 ## References
 
 - [Graphics and tileset specification](../specs/exact-rom-asset-aliasing-graphics.md)
 - [Audio specification](../specs/exact-rom-asset-aliasing-audio.md)
 - [Validation and release-proof specification](../specs/exact-rom-asset-aliasing-validation.md)
+- [ROM footprint proposal audit (2026-09-12)](../research/rom-footprint-spec-audit.md)
 - [Surf pixel aliasing PR #48](https://github.com/mzpkdev/pokemon-wayfarer/pull/48)
 - [Wayfarer runtime foundation](../specs/wayfarer-runtime-foundation.md)

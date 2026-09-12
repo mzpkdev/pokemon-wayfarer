@@ -115,5 +115,10 @@ entry points from being built as active features.
 
 ## References
 
+The implementation's [validation report](../research/wayfarer-legacy-multiboot-validation.md)
+records 209,556 bytes saved in historical paired releases. Its hardware/link
+and prepared-save runtime checks remain incomplete. Implementation status does
+not waive the acceptance criteria above.
+
 - [Wayfarer runtime foundation specification](../specs/wayfarer-runtime-foundation.md)
 - [Wayfarer legacy multiboot removal specification](../specs/wayfarer-legacy-multiboot-removal.md)

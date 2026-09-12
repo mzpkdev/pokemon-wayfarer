@@ -114,9 +114,16 @@ For Emerald layouts, `GetNumTilesInPrimary` returns 512 and the loader copies
 16,384-byte request. A compressed 2,656-byte decode is therefore forbidden.
 
 The reproduced 17,340-byte padded result is specifically the combined GBA
-LZ77 result and is 1,404 bytes larger than the 15,936 raw bytes. A padded
+LZ77 result and is 1,404 bytes larger than the 15,936-byte raw total. A padded
 fastSmol experiment totals 8,856 bytes, but it remains outside this manifest
-and must not affect version 1 code or acceptance.
+because it adds six assets, a source-padding contract, and loader-memory and
+transition implications. It must not affect version 1 code or acceptance.
+
+Production source identity is defined in `game/graphics_file_rules.mk:103-137`.
+The legacy `unused_tiles.4bpp` targets use `tiles.png` with `-num_tiles 82`,
+while the active `tiles.4bpp` targets use 83 tiles. The paired PNGs match, but
+the generated legacy outputs omit the active final tile. This implementation
+requires the active `tiles.4bpp` paths; `unused_tiles` is not a selected input.
 
 ### Unreachable-definition link invariant
 
@@ -133,9 +140,11 @@ Use this exact denylist:
 
 The production Wayfarer release keeps its existing LTO and
 `--gc-sections` behavior. Do not add any denylisted section to a linker
-`KEEP()` rule. The task-base linker already places all eight definitions in
-discarded input sections at address zero, and the final ELF symbol table omits
-them. Their 29,044 input bytes are not a new release saving.
+`KEEP()` rule. A historical task-base linker map placed all eight definitions
+in discarded input sections at address zero, and its final ELF symbol table
+omitted them. That is not evidence of current liveness. The release verifier
+below remains the gate for the current output. The 29,044-byte input inventory
+is not a new release saving.
 
 Add a build guard with these checks:
 
@@ -247,12 +256,19 @@ The explicit heap helper creates one free-after-DMA task after each successful
 compressed allocation. `CreateTask` does not provide safe release recovery
 when all 16 task slots are occupied: its assertion is disabled in release and
 the returned task ID can overwrite task 0 state. Instrument every affected
-explicit-heap route immediately before the copy calls. Require at least as
-many free task slots as compressed tilesets about to be queued, which is two
-for the paired primary and secondary route. Record the active count and prove
-the required headroom in the highest-task affected state. Task exhaustion is a
-release blocker. Safe runtime recovery would require a separately approved
-task or loader contract change; version 1 rolls back to raw mode instead.
+explicit-heap route immediately before each copy call. The change adds exactly
+one selected compressed allocation/free task per affected layout: a Secret Base
+primary or a Cable Club secondary. Count every compressed copy planned by the
+actual route, including unchanged companions, and record active tasks and
+outstanding DMA work. `CopyMapTilesetsToVram` queues the primary before the
+secondary. It needs one total free slot for each Secret Base layout because its
+secondary is raw. It needs two total free slots at entry for each Cable Club
+layout because the existing compressed `gTileset_Building` primary and the new
+compressed Cable Club secondary are both queued before either can complete.
+The secondary-only Cable Club heap route needs one total slot. Prove this
+headroom in the highest-task affected state. Task exhaustion is a release
+blocker. Safe runtime recovery would require a separately approved task or
+loader contract change; version 1 rolls back to raw mode instead.
 
 If the decoded-output allocation fails, the existing helper queues no copy.
 Fault injection must prove that this outer-allocation path does not read, DMA,
@@ -306,9 +322,10 @@ For reference, the task-base raw release reports:
 | `rom.unused_bytes` | 675,568 |
 | Unused bytes above 512 KiB reserve | 151,280 |
 
-The former 48,800-byte gross estimate applies only to a link that also retains
-the 29,044-byte denylisted inventory. The current production release does not.
-The implementation report must keep that distinction explicit.
+The former 48,800-byte gross estimate applies to a link that retains the
+29,044-byte input inventory and uses the mixed-codec active result. It is not a
+current release measurement; the release verifier establishes liveness. The
+implementation report must keep that distinction explicit.
 
 ### Rollout and failure handling
 
@@ -360,10 +377,13 @@ release.
 3. Capture the used primary or secondary BG VRAM tile range after DMA and
    compare every byte between raw and optimized builds.
 4. Instrument allocation size, decoded size, queued copy size, DMA request
-   completion, free count, active task count, free task slots, and peak
-   overlapping heap use. Expect one free per successful allocation and no free
-   before completion. Require two free task slots before a paired explicit-heap
-   copy.
+   completion, free count, active task count, free task slots, outstanding DMA
+   work, and peak overlapping heap use. Expect one free per successful
+   allocation and no free before completion. Record headroom before each copy.
+   Require one total free slot for a Secret Base `CopyMapTilesetsToVram` route,
+   and two at entry for its Cable Club route: the existing compressed Building
+   primary queues before the new compressed Cable Club secondary. Require one
+   slot for the secondary-only Cable Club heap route.
 5. Inject decoded-output allocation failure before each selected decode.
    Assert no overread, overwrite, use-after-free, double free, leaked task, or
    DMA from invalid memory.
@@ -408,8 +428,9 @@ release.
 2. Compare `__rom_end` and `rom.used_bytes`; require matching deltas of at
    least 19,500 bytes.
 3. Confirm the final `.gba` padding does not enter the comparison.
-4. Attribute the delta to the two selected payloads. The denylisted 29,044
-   bytes remain absent in both modes and contribute zero new saving.
+4. Attribute the delta to the two selected payloads. The release verifier must
+   establish the denylisted symbols' status in both modes; legacy inventory
+   figures contribute zero claimed saving.
 5. Run the normal Wayfarer release ROM-limit report and retain at least the
    active reserve required by the runtime foundation specification.
 

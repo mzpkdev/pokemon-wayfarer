@@ -30,7 +30,9 @@ unchanged and usable in Porymap.
 
 ### Player-visible behavior
 
-Players should not be able to tell whether a layout is raw or compressed. In both modes:
+Compression preserves map content and simulation. A brief bounded pause during a map
+load or transition is provisionally acceptable when it buys the required ROM headroom.
+In both modes:
 
 - every map has the same dimensions, metatiles, collision, elevation, border, tilesets,
   events, and scripts;
@@ -40,6 +42,15 @@ Players should not be able to tell whether a layout is raw or compressed. In bot
 - Trainer Hill and Battle Pyramid generate the same playable floors; and
 - save data, map identifiers, map layout identifiers, and persistent state keep their
   meanings.
+
+The current playable-evaluation budget is at most five **additional** video frames
+(about 84 ms) for a complete player-facing load or transition, relative to the same
+pre-feature legacy baseline. It covers the current layout, all connections, and feature
+overhead together; it is not a per-decode or per-neighbor allowance. Warps, Fly, and
+reload may show a bounded pause; visible seamless crossings require separate playability
+judgment during walking, cycling, and repeated crossings. Audio remains uninterrupted,
+input must resume correctly, and gameplay must remain unchanged. This provisional budget
+permits bounded playable integration and measurement, not automatic rollout approval.
 
 No menu, option, save migration prompt, or new player-facing terminology is part of this
 feature. A corrupt or unsupported layout payload must fail before player control reaches
@@ -67,30 +78,40 @@ permanent full-map EWRAM buffer.
 
 ### Measured opportunity
 
-The reference audit measured the following 991-layout catalog with the project's GBA
-LZ77 compressor:
+The current production selection measured by the
+[2026-09-12 audit of `ec18cfffd21f31b54a60a73d750863bde30be83d`](../research/rom-footprint-spec-audit.md)
+contains 1,089 layouts. It uses the Wayfarer selector in `mapjson.cpp`, including the
+enabled FRLG/Sevii entries from the manifest wired through `map_data_rules.mk`. With
+unprofitable entries kept raw, the project's GBA LZ77 tool produced:
 
 | Measure | Result |
 | --- | ---: |
-| Layout `map.bin` blobs | 991 |
-| Raw bytes | 1,742,526 |
-| Compressed payload bytes | 488,000 |
-| Gross payload saving | 1,254,526 bytes |
-| Gross payload reduction | 71.99%, about 72% |
+| Layout `map.bin` blobs | 1,089 |
+| Raw bytes | 1,875,152 |
+| Stored payload bytes (`auto`) | 530,008 |
+| Gross payload saving | 1,345,144 bytes |
+| Descriptor bytes at 28 bytes each | 30,492 bytes |
+| Saving before loader/checksum code, alignment, and raw-exception cost | 1,314,652 bytes |
+| Storage-only relink saving, including descriptors and actual placement/alignment | 1,315,072 bytes |
+| Storage-only margin above the 1 MiB gate | 266,496 bytes |
 | Largest current `map.bin` | 14,640 bytes |
 
-The 1,254,526-byte result is gross, not net. It excludes loader code, descriptors,
-checksums, alignment, raw exceptions, and any retained rollback data. The catalog is
+The [feasibility POC](../research/map-compression-feasibility.md) regenerated and
+round-tripped all 1,089 layouts, then measured the 1,315,072-byte storage-only relink.
+Its source and compact evidence are preserved in
+[experiment PR #99](https://github.com/mzpkdev/pokemon-wayfarer/pull/99); the research
+summary pins the evidence commit.
+That result includes the 30,492 descriptor bytes (including descriptor CRC fields) and
+actual placement/alignment, but excludes runtime CRC code, the loader, error UI, and
+reviewed raw exceptions. It is not shipping net savings. The catalog is
 mutable, so implementation and release builds must regenerate the report from their own
 selected layouts. Neither this baseline nor a later compressor total can substitute for
 the final linked-ROM comparison.
 
-The isolated documentation branch selects 987 of these layouts: 1,741,356 raw bytes and
-487,320 compressed bytes. The four-entry difference is 1,170 raw bytes and 680 compressed
-bytes, which exactly reconciles it with the 991-layout linked audit. Both reproductions
-round-trip byte for byte. Release evidence must identify its exact catalog manifest so a
-reader never has to infer which count a size result covers. The build specification
-records the four paths, per-file totals, and reproduction method.
+The earlier 987- and 991-layout measurements are retained only as historical
+reproductions. They do not constrain current implementation or release approval. Every
+build and release report identifies its exact selected-layout manifest, so a reader does
+not have to infer which catalog a size result covers.
 
 ## Boundaries
 
@@ -102,7 +123,7 @@ records the four paths, per-file totals, and reproduction method.
 - One runtime abstraction for full copies, rectangular copies, and tightly scoped
   immutable access.
 - Normal map loading, connected-map borders, Battle Pyramid, Trainer Hill, Secret Bases,
-  and decorations.
+  decorations, origin validation, and Hoenn-entry safety validation.
 - Build-time round trips, old-loader versus new-loader differential tests, memory and
   latency measurement, failure tests, instrumentation, staged rollout, and rollback.
 
@@ -124,11 +145,12 @@ records the four paths, per-file totals, and reproduction method.
 ## Constraints
 
 `MAX_MAP_DATA_SIZE` is 10,240 `u16` entries. The existing `sBackupMapData` allocation is
-20,480 bytes and remains the sole permanent full loaded-map buffer. A measured Wayfarer
-ELF reports 248,484 bytes of static EWRAM allocation out of 256 KiB. The `gHeap` array is
-`0x1C500` bytes within that allocation, not spare memory outside it. The 14,640-byte
-largest current layout is larger than the remaining static EWRAM headroom, so another
-permanent map-sized allocation is forbidden.
+20,480 bytes and remains the sole permanent full loaded-map buffer. The feasibility
+release ELF measured 248,525 bytes of static EWRAM out of 256 KiB, with 115,968-byte
+`gHeap` inside that allocation; the old 248,484-byte figure is historical. The largest
+current layout is 14,640 bytes, and its 135×75 padded grid occupies 20,250 bytes, only
+230 bytes below the backup-buffer limit. Another permanent map-sized allocation is
+forbidden.
 
 A temporary decode allocation must be exact-size or generated-bound-size, measured at
 the real map-load peak, reused rather than multiplied for connections, and freed before
@@ -152,15 +174,16 @@ The feature succeeds when all of these statements are true:
   `map.bin` during the build;
 - every exerciseable catalog layout produces the same complete loaded backup map under
   the old and new loaders, including connection edges;
-- the required gameplay journeys have no layout, collision, persistence, or transition
-  regressions;
+- the required gameplay journeys have no layout, collision, persistence, or transition-
+  state regressions; bounded timing changes follow the provisional budget below;
 - the production build adds no permanent map-sized EWRAM allocation and the measured
   map-load peak has enough contiguous heap for the bounded temporary allocation;
 - temporary memory is released on success and every failure path, with no heap damage or
   leak;
-- on accurate emulation or hardware, the added map-load work stays within one frame at
-  the 95th percentile and two frames at the measured maximum, with no visible fade or
-  audio disruption; and
+- on accurate emulation or hardware, complete player-facing loads and transitions stay
+  within the provisional five-additional-frame maximum against the paired pre-feature
+  legacy baseline, with separate black-screen and visible-crossing playability evidence,
+  uninterrupted audio, correct input resumption, and unchanged gameplay; and
 - the raw rollback build remains buildable and passes its compatibility suite.
 
 ROM reduction is measured from linked production ROMs, not by summing source files.
@@ -199,9 +222,9 @@ decode and verify the reconstructed bytes before committing them to the live map
 
 ### Misleading space reports
 
-The gross audit leaves about 205,950 bytes between its payload saving and the 1 MiB net
-gate. Duplicated edge data, large descriptors, retained raw payloads, or code growth can
-consume that margin. Only a paired linked-ROM report can approve rollout.
+The storage-only relink leaves 266,496 bytes above the 1 MiB gate before runtime code,
+error UI, retained raw payloads, and other shipping cost. Only a paired playable linked-
+ROM report can approve rollout.
 
 ### Maintenance drift
 
@@ -213,9 +236,22 @@ proves it still needs special handling.
 
 ## Staged rollout and rollback
 
+The completed [feasibility POC](../research/map-compression-feasibility.md) establishes a
+conditional go for bounded playable integration. It exact-round-tripped 1,089 layouts;
+proved one-buffer lifetime and 20,480-byte backup-grid equality in three fixtures; and
+measured 3.26, 4.09, and 4.11 additional frames over legacy across 900 deterministic
+mGBA samples. Its empty-heap 14,640-byte request occupied 14,656 bytes including the
+allocator header, while a fragmented heap failed despite sufficient total free bytes.
+The storage links used production release LTO and remain nonplayable. The separate
+runtime harness used Thumb `-O2` without LTO and a replacement BIOS, without IRQ or
+audio. It does not cover the connection-heaviest map or east/west boundaries, and its
+996-byte stack result below the benchmark caller excludes real gameplay and IRQ peaks.
+The old one/two-frame rule would have rejected those timing fixtures; the provisional
+five-frame budget permits further integration, not production rollout.
+
 | Stage | Runtime selection | Entry gate | Exit gate |
 | --- | --- | --- | --- |
-| 0. Shadow generation | All layouts remain raw. The build emits descriptors, compressed candidates, reports, and round-trip checks. | Generator and format review. | Deterministic output and complete round-trip report. |
+| 0. Bounded playable integration | Evaluation builds select a reviewed small compressed map set; other layouts stay raw by build policy. Production compression remains off. | Completed POC and frozen descriptor/error contracts. | Real warp, Fly, reload, walking, cycling, and repeated connection measurements meet the provisional budget with integrity and safe failure behavior. |
 | 1. Canary | A small reviewed set of ordinary layouts that appear at neither end of any selected map connection uses compressed storage. Special direct-access layouts remain raw. | Raw abstraction is active for every caller; negative tests pass. | Differential, memory, timing, and representative warp tests pass. |
 | 2. Connected maps | Ordinary connected layouts migrate by allowlist. Neighbors decode one at a time. | All connection directions, offsets, and clipping pass differential tests. | Connection-heavy E2E, peak-memory, and accurate-timing gates pass. |
 | 3. Broad hybrid | Eligible catalog layouts default to compressed. Battle Pyramid, Trainer Hill, Secret Base, or decoration exceptions remain raw until their own tests pass. | Full catalog differential suite and required gameplay journeys pass. | At least 1 MiB measured net ROM saving and all acceptance gates pass. |

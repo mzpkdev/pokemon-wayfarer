@@ -61,25 +61,27 @@ The six active Secret Base secondary sheets remain raw:
 - Yellow Cave
 - Red Cave
 
-Each active sheet is 2,656 bytes, for 15,936 bytes total. Emerald layouts copy
-a 16 KiB secondary tileset slot. Compressing the short bytes as-is would make
+Each active sheet is 2,656 bytes, or 83 tiles, for 15,936 bytes total. Emerald
+layouts copy a 16 KiB secondary tileset slot. Compressing the short bytes as-is would make
 the existing decompression helpers allocate only 2,656 decoded bytes before a
 16,384-byte VRAM copy, which risks a heap overread.
 
 Padding each sheet to a 16,384-byte decoded length avoids that overread, but
 GBA LZ77 produces 17,340 stored bytes in total, a 1,404-byte regression from
-the current raw payloads. A separate audit found that padded fastSmol output
-would total 8,856 bytes. That option is still outside version 1 because it
-would add six assets and a new source-padding contract for another 7,080 gross
-bytes. It requires its own proposal and full safety evidence. It must not be
+the current raw payloads. A padded fastSmol experiment totals 8,856 bytes. That
+option remains outside version 1 because it adds six assets, a source-padding
+contract, and loader-memory and transition implications for a 7,080-byte gross
+saving. It requires its own proposal and full safety evidence. It must not be
 silently added to this work.
 
 The similarly named legacy
 `gTilesetTiles_SecretBase*Compressed` definitions are not replacements. Their
-generated inputs contain 82 tiles, or 2,624 bytes, from `unused_tiles`, while
-the active inputs contain 83 tiles, or 2,656 bytes. The source PNG pairs happen
-to match on this task base, but their generated payloads do not: the legacy
-outputs omit the final active tile.
+source identity and tile limits are defined in
+`game/graphics_file_rules.mk:103-137`: both targets use `tiles.png`, but the
+legacy `unused_tiles.4bpp` target uses 82 tiles (2,624 bytes) and the active
+`tiles.4bpp` target uses 83 tiles (2,656 bytes). The source PNG pairs happen to
+match, but the legacy outputs omit the final active tile. Their six generated
+fastSmol payloads total 8,820 bytes.
 
 ### Unreachable definitions
 
@@ -93,14 +95,17 @@ The audited no-reference inventory is:
 | Total | 8 | 29,044 |
 
 These definitions remain available to the build from preserved repository
-sources, but none may occupy a production Wayfarer ELF output section or ROM
-range unless a later content decision deliberately restores one.
+sources, but current release liveness is determined only by the verifier below.
+The Cable Club unknown-tiles output uses the production `-num_tiles 120` rule
+at `game/graphics_file_rules.mk:91-92`, which produces 3,840 bytes. The
+inventory is not a new production ROM saving.
 
-The task-base production release already satisfies this rule. Its linker map
-lists all eight definitions only under discarded input sections at address
-zero, and none appears in the final ELF symbol table. Version 1 therefore adds
-a regression guard; it does not count these bytes as a new production ROM
-saving and does not delete their source files.
+The historical task-base linker map listed all eight definitions only under
+discarded input sections at address zero, and its final ELF symbol table omitted
+them. That evidence is historical. The release verifier remains the gate that
+must establish current absence from output sections and the final ELF. The
+definitions and their source assets remain preserved; version 1 does not count
+them as a new production ROM saving or delete them.
 
 ### Corrected opportunity
 
@@ -108,9 +113,9 @@ The earlier 48,800-byte figure added the best measured active compression
 result, 19,756 bytes, to the 29,044-byte unreachable inventory. It is a valid
 gross inventory figure only for a link that retains those unreachable input
 sections and uses the mixed-codec choice for Cable Club. It is not the version
-1 opportunity on the current production-equivalent release, which already
-discards the unreachable definitions. The selected GBA LZ77 policy has a
-current expected gross opportunity of 19,600 bytes before final-link effects.
+1 opportunity until the release verifier establishes that condition. The
+selected GBA LZ77 policy has a 19,600-byte gross payload reduction before
+final-link effects.
 
 An even earlier 27,936-byte estimate is withdrawn. It counted short Secret
 Base compression without first proving decoded length and active-input
@@ -161,7 +166,7 @@ and link-room flows continue to use their current scripts and link behavior.
   the audited runtime assumptions. Such a redesign requires separate approval.
 - Do not add a generic codec-selection framework.
 - Do not claim the discarded 29,044-byte inventory as a new production ROM
-  saving.
+  saving without a current release verifier result.
 
 ## Constraints
 
@@ -179,9 +184,17 @@ Outer allocation failure must queue no copy and must not produce an
 out-of-bounds read, use-after-free, double free, or DMA from released memory.
 The explicit heap route also needs one task slot per compressed copy so it can
 free the decoded buffer after DMA. The existing task API has no recoverable
-release failure when all slots are occupied. Affected routes must prove at
-least two free task slots before the paired primary and secondary copy, and
-task exhaustion blocks the optimized release.
+release failure when all slots are occupied. The change adds exactly one
+selected compressed allocation/free task per affected layout: the primary for
+each of the 24 Secret Base layouts and the secondary for each of the seven
+Cable Club layouts. Headroom must count every compressed copy queued by the
+actual route, including unchanged companions, and record it before each copy
+alongside active tasks and outstanding DMA work. `CopyMapTilesetsToVram` queues
+one compressed Secret Base primary and a raw secondary, so it needs one total
+slot. It queues the already-compressed `gTileset_Building` primary before the
+new Cable Club secondary, so Cable Club needs two total slots at entry before
+either copy. The secondary-only Cable Club heap route needs one. Task exhaustion
+blocks the optimized release.
 
 Malformed compressed input is different: the release decompressor returns no
 status and its diagnostic is disabled, so version 1 cannot promise safe
