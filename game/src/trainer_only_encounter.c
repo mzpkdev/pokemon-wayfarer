@@ -12,7 +12,6 @@
 #include "trainer_only_encounter.h"
 #include "wayfarer_origin.h"
 #include "window.h"
-#include "wayfarer_loss_policy.h"
 #include "event_data.h"
 #include "pokeball.h"
 #include "constants/battle_anim.h"
@@ -30,8 +29,6 @@ static const u8 sText_ReadyToAttack[] = _("The wild POKéMON is ready to attack!
 static const u8 sText_CreptCloser[] = _("You crept closer to the POKéMON.");
 static const u8 sText_Closest[] = _("You can’t get any closer!");
 static const u8 sText_Eating[] = _("The wild POKéMON calmed down.\nIt is eating the Berry.");
-static const u8 sText_ProtectionRestored[] = _("Your POKéMON can protect you again!");
-static const u8 sText_UsedItem[] = _("You used the item.");
 static const u8 sText_CannotEscape[] = _("Can't escape!");
 static const u8 sText_KnockedOut[] = _("The wild POKéMON was knocked out!");
 static const u8 sText_Angry[] = _("The wild POKéMON is angry!");
@@ -226,17 +223,6 @@ static void TrainerOnlyMain(void)
             MarkBattlerForControllerExec(player);
             sPhase = 14;
             return;
-        case TRAINER_ONLY_RECOVERY:
-#if IS_WAYFARER
-            if (WayfarerCanStartOrdinaryBattle())
-            {
-                ArmTrainerRecoverySightSuppression();
-                Message(sText_ProtectionRestored, 7);
-                return;
-            }
-#endif
-            Message(sText_UsedItem, 5);
-            return;
         case TRAINER_ONLY_RUN:
             if (FlagGet(B_FLAG_NO_RUNNING))
             {
@@ -334,7 +320,6 @@ static void TrainerOnlyMain(void)
         }
         gSprites[gBattlerSpriteIds[player]].x2 = 0;
         gSprites[gBattlerSpriteIds[wild]].x2 = 0;
-        WayfarerMarkTrainerRetaliation();
         EndEncounter(B_OUTCOME_LOST);
         break;
     }

@@ -50,13 +50,13 @@ describe.sequential("Origin home and local Teleport recovery", () => {
   }
 })
 
-describe.sequential("Hoenn field-poison exhaustion", () => {
+describe.sequential("Hoenn field-poison recovery exception", () => {
   for (const source of ["slateport-city", "olivine-city"] as const) {
-    it(`${source}: stays in the field without invoking the Lavaridge recovery transform`, async () => {
+    it(`${source}: applies Lavaridge recovery only while physically in Hoenn`, async () => {
       const game = await GameSession.launch()
       try {
         // The checkpoint supplies a poisoned partner at 1 HP with poison survival
-        // disabled. Walking still runs the real field-poison script.
+        // disabled. Walking still runs the real field-poison and whiteout scripts.
         await game.arrange({
           checkpoint: "hoenn-before-poison-whiteout",
           player: {
@@ -99,31 +99,23 @@ describe.sequential("Hoenn field-poison exhaustion", () => {
           if ((await game.state.read()).party[0]?.fainted) break
         }
         expect((await game.state.read()).party[0]?.fainted).toBe(true)
+        const destination =
+          source === "slateport-city" ? "lavaridge-pokemon-center" : before.origin.recovery.map
         await advanceOpeningUntil(
           game,
-          (state) => state.ready && state.map.name === source,
-          "field-poison exhaustion did not release controls in place",
+          (state) => state.ready && state.map.name === destination,
+          "field-poison whiteout did not reach the source-appropriate recovery point",
         )
-        const exhausted = await game.state.read()
-        expect(exhausted).toMatchObject({
+        expect(await game.state.read()).toMatchObject({
           origin: { id: 2, hoennReceived: false, johtoCommitted: false, maidenVoyageState: 0 },
-          party: [{ species: "pidgey", fainted: true }],
-          partyVitals: [{ hp: 0 }],
+          party: [{ species: "pidgey", fainted: false }],
           circuit: { badges: { total: 0 } },
         })
-        expect(exhausted.money).toBe(before.money)
-        expect(exhausted.origin.recovery.map).toBe(before.origin.recovery.map)
-        expect(await game.story.flag("hoennWhiteoutToLavaridge")).toBe(true)
-        await game.saveAndReload()
-        expect((await game.state.read()).map.name).toBe(source)
-        expect((await game.state.read()).partyVitals).toEqual(exhausted.partyVitals)
-        await game.battle.startWild({ species: "pidgey", level: 5 })
-        await advanceOpeningUntil(
-          game,
-          (state) => state.battle.ui === "action-menu",
-          "unprotected encounter after poison reload",
+        expect((await game.state.read()).origin.recovery.map).toBe(
+          source === "slateport-city" ? "lavaridge-town" : before.origin.recovery.map,
         )
-        expect((await game.state.read()).battle.trainerOnly.active).toBe(true)
+        await game.saveAndReload()
+        expect((await game.state.read()).map.name).toBe(destination)
         expect((await game.state.read()).origin.id).toBe(2)
       } finally {
         await game.close()

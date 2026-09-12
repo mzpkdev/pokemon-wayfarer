@@ -1,7 +1,5 @@
 #include "global.h"
 #include "trainer_only_encounter.h"
-#include "wayfarer_loss_policy.h"
-#include "wayfarer_story_encounter.h"
 #include "battle.h"
 #include "bug_contest.h"
 #include "load_save.h"
@@ -52,7 +50,6 @@
 #include "script.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
-#include "wayfarer_battle_gate.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -336,12 +333,6 @@ static void CreateBattleStartTask(enum BattleTransition transition, u16 song)
 
     if (!trainerOnly)
         TrainerOnlyResetEncounter();
-    if (!(gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
-     && !WayfarerCanStartOrdinaryBattle() && !trainerOnly)
-    {
-        WayfarerAbortEmptyPartyBattle();
-        return;
-    }
 #endif
     taskId = CreateTask(Task_BattleStart, 1);
 
@@ -439,7 +430,6 @@ static void DoStandardWildBattle(bool32 isDouble)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
-    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
     if (IsNPCFollowerWildBattle())
@@ -465,7 +455,6 @@ void DoStandardWildBattle_Debug(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
-    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = 0;
     if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
@@ -491,7 +480,6 @@ void BattleSetup_StartRoamerBattle(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
-    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_ROAMER;
     u16 song = 0;
@@ -540,7 +528,6 @@ static void DoGhostBattle(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
-    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_GHOST;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
@@ -554,7 +541,6 @@ static void DoBattlePikeWildBattle(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     StopPlayerAvatar();
-    WayfarerResetLossContext();
     gMain.savedCallback = CB2_EndWildBattle;
     gBattleTypeFlags = BATTLE_TYPE_PIKE;
     CreateBattleStartTask(GetWildBattleTransition(), 0);
@@ -779,11 +765,6 @@ static void DowngradeBadPoison(void)
     }
 }
 
-bool8 BattleSetup_IsOrdinaryWildCaller(void)
-{
-    return gMain.savedCallback == CB2_EndWildBattle;
-}
-
 static void CB2_EndWildBattle(void)
 {
     CpuFill16(0, (void *)(BG_PLTT), BG_PLTT_SIZE);
@@ -792,8 +773,8 @@ static void CB2_EndWildBattle(void)
     if (IsTrainerOnlyEncounter())
     {
         TrainerOnlyResetEncounter();
-        if (WayfarerRecoveryIsTrainerRetaliation())
-            WayfarerBeginTrainerRetaliationRecovery();
+        if (gBattleOutcome == B_OUTCOME_LOST)
+            SetMainCallback2(CB2_WhiteOut);
         else
         {
             SetMainCallback2(CB2_ReturnToField);
@@ -811,16 +792,14 @@ static void CB2_EndWildBattle(void)
             HealPlayerParty();
     }
 
-    if (IsPlayerDefeated(gBattleOutcome) == TRUE && CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE && !InBattlePike()
-     && !WayfarerShouldContinuePartyDefeat())
+    if (IsPlayerDefeated(gBattleOutcome) == TRUE && CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE && !InBattlePike())
     {
         SetMainCallback2(CB2_WhiteOut);
     }
     else
     {
         SetMainCallback2(CB2_ReturnToField);
-        if (!WayfarerShouldContinuePartyDefeat())
-            DowngradeBadPoison();
+        DowngradeBadPoison();
         gFieldCallback = FieldCB_ReturnToFieldNoScriptCheckMusic;
     }
 }
@@ -1169,7 +1148,7 @@ enum BattleTransition GetWildBattleTransition(void)
     u8 playerLevel;
 
 #if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
+    if (TrainerOnlyCanEnterWildEncounter())
         return sBattleTransitionTable_Wild[transitionType][1];
 #endif
     playerLevel = GetSumOfPlayerPartyLevel(1);
@@ -1293,11 +1272,6 @@ void ChooseStarter(void)
 #if IS_WAYFARER
     if (WayfarerUsesNativeHoennOpening() && FlagGet(FLAG_HOENN_STARTER_RECEIVED))
     {
-        if (!WayfarerCanStartOrdinaryBattle())
-        {
-            WayfarerAbortEmptyPartyBattle();
-            return;
-        }
         SetMainCallback2(CB2_GiveStarter);
         return;
     }
@@ -1361,19 +1335,6 @@ static void CB2_GiveStarter(void)
     BattleTransition_Start(B_TRANSITION_BLUR);
 }
 
-#if IS_WAYFARER
-static void Task_AbortEmptyStarterBattle(u8 taskId)
-{
-    DestroyTask(taskId);
-    WayfarerAbortEmptyPartyBattle();
-}
-
-static void FieldCB_AbortEmptyStarterBattle(void)
-{
-    CreateTask(Task_AbortEmptyStarterBattle, 0);
-}
-#endif
-
 static void CB2_StartFirstBattle(void)
 {
     UpdatePaletteFade();
@@ -1381,16 +1342,6 @@ static void CB2_StartFirstBattle(void)
 
     if (IsBattleTransitionDone() == TRUE)
     {
-#if IS_WAYFARER
-        if (!WayfarerCanStartOrdinaryBattle())
-        {
-            SetVBlankCallback(NULL);
-            SetHBlankCallback(NULL);
-            gFieldCallback = FieldCB_AbortEmptyStarterBattle;
-            SetMainCallback2(CB2_ReturnToField);
-            return;
-        }
-#endif
         gBattleTypeFlags = BATTLE_TYPE_FIRST_BATTLE;
         gMain.savedCallback = CB2_EndFirstBattle;
         FreeAllWindowBuffers();
@@ -1450,7 +1401,6 @@ void ResetTrainerOpponentIds(void)
 
 void InitTrainerBattleParameter(void)
 {
-    WayfarerResetLossContext();
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
 }
@@ -1460,10 +1410,6 @@ void TrainerBattleLoadArgs(const u8 *data)
     InitTrainerBattleParameter();
     memcpy(gTrainerBattleParameter.data, data, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = (u8*)data + sizeof(TrainerBattleParameter);
-    // Loss return is opt-in by the exact trainerbattle caller.  It must be armed
-    // here, before a supported battle can complete, and never inferred from the
-    // trainer id, class, or map.
-    WayfarerStoryConfigureTrainerBattleCaller(data);
 }
 
 void TrainerBattleLoadArgsTrainerA(const u8 *data)
@@ -1873,16 +1819,6 @@ static void HandleBattleVariantEndParty(void)
     FlagClear(B_FLAG_SKY_BATTLE);
 }
 
-static bool8 TryReturnFromSupportedTrainerOutcome(void)
-{
-    if (!WayfarerShouldRetreatFromSupportedTrainerOutcome())
-        return FALSE;
-    ScriptContext_SetupScript(WayfarerGetTrainerLossRedirect());
-    WayfarerResetLossContext();
-    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
-    return TRUE;
-}
-
 static void CB2_EndTrainerBattle(void)
 {
     HandleBattleVariantEndParty();
@@ -1896,9 +1832,6 @@ static void CB2_EndTrainerBattle(void)
          || FlagGet(FNPC_FLAG_HEAL_AFTER_FOLLOWER_BATTLE)))
             HealPlayerParty();
     }
-
-    if (TryReturnFromSupportedTrainerOutcome())
-        return;
 
     if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL)
     {
@@ -1956,9 +1889,6 @@ static void CB2_EndTrainerBattle(void)
 
 static void CB2_EndRematchBattle(void)
 {
-    if (TryReturnFromSupportedTrainerOutcome())
-        return;
-
     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
     {
         DowngradeBadPoison();

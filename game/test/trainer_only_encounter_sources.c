@@ -56,6 +56,7 @@ static void RestoreEncounterSourceTestState(const struct EncounterSourceTestSnap
     // Disable the testing hook before anything can return to the next test.
     SetWildStartInterceptionForTesting(FALSE);
     TrainerOnlyResetEncounter();
+    FlagClear(FLAG_ENABLE_TRAINER_ONLY_ENCOUNTERS);
     gMapHeader = snapshot->mapHeader;
     gBackupMapLayout = snapshot->backupMapLayout;
     gPlayerAvatar = snapshot->playerAvatar;
@@ -70,23 +71,10 @@ static void RestoreEncounterSourceTestState(const struct EncounterSourceTestSnap
     gIsFishingEncounter = snapshot->isFishingEncounter;
 }
 
-static void SetSourceParty(u32 variant)
+static void SetSourceParty(void)
 {
-    u16 hp = 0;
-    u16 heldItem = ITEM_CLEANSE_TAG;
-    bool8 egg = TRUE;
-
     ZeroPlayerPartyMons();
     gPlayerPartyCount = 0;
-    if (variant != 0)
-    {
-        CreateMon(&gPlayerParty[0], SPECIES_ABRA, 100, 0, OTID_STRUCT_PLAYER_ID);
-        SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
-        SetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM, &heldItem);
-        if (variant == 2)
-            SetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, &egg);
-        gPlayerPartyCount = 1;
-    }
 }
 
 static bool32 SelectGrassFromActualLayout(void)
@@ -110,10 +98,11 @@ static bool32 SelectGrassFromActualLayout(void)
     return FALSE;
 }
 
-static void PrepareSource(u32 source, u32 variant)
+static void PrepareSource(u32 source)
 {
-    SetSourceParty(variant);
+    SetSourceParty();
     TrainerOnlyResetEncounter();
+    FlagSet(FLAG_ENABLE_TRAINER_ONLY_ENCOUNTERS);
     ZeroEnemyPartyMons();
     DisableWildEncounters(FALSE);
     gPlayerAvatar.flags = 0;
@@ -151,12 +140,11 @@ static bool32 TrySource(u32 source)
     return FALSE;
 }
 
-TEST("Trainer-only native encounter sources generate and initialize without a usable lead")
+TEST("Trainer-only native encounter sources generate and initialize with an empty party")
 {
-    u32 source = SOURCE_LAND, variant = 0;
+    u32 source = SOURCE_LAND;
     for (u32 i = SOURCE_LAND; i <= SOURCE_SWEET_SCENT; i++)
-        for (u32 j = 0; j < 3; j++)
-            PARAMETRIZE(source = i, variant = j);
+        PARAMETRIZE(source = i);
 
     struct EncounterSourceTestSnapshot snapshot;
     u32 seed;
@@ -165,7 +153,7 @@ TEST("Trainer-only native encounter sources generate and initialize without a us
 
     SnapshotEncounterSourceTestState(&snapshot);
 
-    PrepareSource(source, variant);
+    PrepareSource(source);
     passed &= GetCurrentMapWildMonHeaderId() != HEADER_NONE;
     passed &= SelectGrassFromActualLayout();
     for (seed = 0; seed < 256 && !started; seed++)
@@ -178,7 +166,7 @@ TEST("Trainer-only native encounter sources generate and initialize without a us
     passed &= IsTrainerOnlyEncounter();
     passed &= GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) != SPECIES_NONE;
     passed &= GetMonData(&gEnemyParty[0], MON_DATA_HP) > 0;
-    passed &= gPlayerPartyCount == (variant == 0 ? 0 : 1);
+    passed &= gPlayerPartyCount == 0;
     if (source == SOURCE_OUTBREAK)
     {
         passed &= GetMonData(&gEnemyParty[0], MON_DATA_SPECIES) == SPECIES_DITTO;
@@ -191,55 +179,4 @@ TEST("Trainer-only native encounter sources generate and initialize without a us
     EXPECT(passed);
 }
 
-TEST("Trainer-only native sources ignore fainted and Egg lead stats items and Repel comparisons")
-{
-    u32 source = SOURCE_LAND;
-    for (u32 i = SOURCE_LAND; i <= SOURCE_SWEET_SCENT; i++)
-        PARAMETRIZE(source = i);
-
-    struct EncounterSourceTestSnapshot snapshot;
-    bool32 passed = TRUE;
-
-    SnapshotEncounterSourceTestState(&snapshot);
-    for (u32 seed = 0; seed < 8; seed++)
-    {
-        u32 personality = 0, species = 0, level = 0;
-        bool32 emptyStarted = FALSE;
-        for (u32 variant = 0; variant < 3; variant++)
-        {
-            bool32 started;
-
-            PrepareSource(source, variant);
-            passed &= SelectGrassFromActualLayout();
-            SeedRng(seed);
-            started = TrySource(source);
-            if (variant == 0)
-            {
-                emptyStarted = started;
-                personality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
-                species = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-                level = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-            }
-            else
-            {
-                u32 actualPersonality = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY);
-                u32 actualSpecies = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
-                u32 actualLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
-
-                if (started != emptyStarted
-                 || actualPersonality != personality
-                 || actualSpecies != species
-                 || actualLevel != level)
-                {
-                    Test_MgbaPrintf("trainer-only source mismatch: source %d seed %d variant %d; started %d/%d personality %d/%d species %d/%d level %d/%d",
-                                    source, seed, variant, started, emptyStarted,
-                                    actualPersonality, personality, actualSpecies, species, actualLevel, level);
-                    passed = FALSE;
-                }
-            }
-        }
-    }
-    RestoreEncounterSourceTestState(&snapshot);
-    EXPECT(passed);
-}
 #endif

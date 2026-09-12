@@ -1,7 +1,5 @@
 #include "global.h"
-#include "wayfarer_loss_policy.h"
 #include "trainer_only_encounter.h"
-#include "wayfarer_story_encounter.h"
 #include "league_circuit.h"
 #include "overworld.h"
 #include "constants/heal_locations.h"
@@ -1552,10 +1550,6 @@ void UpdateAmbientCry(s16 *state, u16 *delayCounter)
     case AMB_CRY_RESET:
         divBy = 1;
         monsCount = CalculatePlayerPartyCount();
-#if IS_WAYFARER
-        if (!WayfarerCanStartOrdinaryBattle())
-            monsCount = 0;
-#endif
         for (i = 0; i < monsCount; i++)
         {
             if (!GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_EGG)
@@ -2068,11 +2062,7 @@ void CB2_WhiteOut(void)
         if (IsWhiteoutCutscene())
             gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
         else
-        {
-            WayfarerClearRecoveryCause();
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;
-        }
-        WayfarerResetLossContext();
         state = 0;
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
         DoMapLoadLoop(&state);
@@ -2242,8 +2232,6 @@ void CB2_ContinueSavedGame(void)
     u8 trainerHillMapId;
 
     TrainerOnlyResetEncounter();
-    WayfarerResetLossContext();
-    WayfarerClearRecoveryCause();
 
 #if IS_WAYFARER
     if (!WayfarerPersistentStateIsValid())
@@ -2778,7 +2766,6 @@ static void InitObjectEventsLocal(void)
     SetPlayerAvatarTransitionFlags(player->transitionFlags);
     ResetInitialPlayerAvatarState();
     TrySpawnObjectEvents(0, 0);
-    WayfarerStoryReconcileCurrentMap();
     FollowerNPC_HandleSprite();
     UpdateFollowingPokemon();
     TryRunOnWarpIntoMapScript();
@@ -2787,7 +2774,6 @@ static void InitObjectEventsLocal(void)
 static void InitObjectEventsReturnToField(void)
 {
     SpawnObjectEventsOnReturnToField(0, 0);
-    WayfarerStoryReconcileCurrentMap();
     RotatingGate_InitPuzzleAndGraphics();
     RunOnReturnToFieldMapScript();
 }

@@ -34,19 +34,7 @@
 #include "pokenav.h"
 #include "sound.h"
 #include "trainer_rating.h"
-#include "wayfarer_origin.h"
 #include "trainer_only_encounter.h"
-
-// Preserve the normal lead rules when protected; an unusable party supplies no
-// ability, item, level or Repel comparison to an unprotected trainer.
-static bool8 HasWildEncounterLead(void)
-{
-#if IS_WAYFARER
-    return WayfarerCanStartOrdinaryBattle();
-#else
-    return TRUE;
-#endif
-}
 
 #if TESTING
 static bool8 sInterceptWildStartForTesting;
@@ -66,10 +54,7 @@ u32 GetWildStartsForTesting(void)
 
 static void StartEligibleWildBattle(void)
 {
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        TrainerOnlyPrepareEncounter();
-#endif
+    TrainerOnlyPrepareEncounter();
 #if TESTING
     if (sInterceptWildStartForTesting)
     {
@@ -705,7 +690,7 @@ static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIn
         rand = Random() % range;
 
         // check ability for max level mon
-        if (HasWildEncounterLead() && !GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+        if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         {
             enum Ability ability = GetMonAbility(&gPlayerParty[0]);
             if (ability == ABILITY_HUSTLE || ability == ABILITY_VITAL_SPIRIT || ability == ABILITY_PRESSURE)
@@ -819,13 +804,13 @@ static u8 PickWildMonNature(u32 species)
         }
     }
 
-    return HasWildEncounterLead() ? GetSynchronizedNature(WILDMON_ORIGIN, species) : NATURE_RANDOM;
+    return GetSynchronizedNature(WILDMON_ORIGIN, species);
 }
 
 void CreateWildMon(u16 species, u8 level)
 {
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species, HasWildEncounterLead() ? GetSynchronizedGender(WILDMON_ORIGIN, species) : MON_GENDER_RANDOM, PickWildMonNature(species), RANDOM_UNOWN_LETTER);
+    u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
     CreateMonWithIVs(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID, USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
 }
@@ -952,7 +937,7 @@ static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
     ApplyCleanseTagEncounterRateMod(&encounterRate);
     if (LURE_STEP_COUNT != 0)
         encounterRate *= 2;
-    if (HasWildEncounterLead() && !ignoreAbility && !GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    if (!ignoreAbility && !GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
     {
         enum Ability ability = GetMonAbility(&gPlayerParty[0]);
 
@@ -1009,11 +994,6 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
     enum TimeOfDay timeOfDay;
     struct Roamer *roamer;
 
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle() && !TrainerOnlyCanEnterWildEncounter())
-        return FALSE;
-#endif
-
     if (sWildEncountersDisabled == TRUE)
         return FALSE;
 
@@ -1067,7 +1047,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
 
-            if (HasWildEncounterLead() && TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
                 if (!IsWildLevelAllowedByRepel(roamer->level))
@@ -1118,7 +1098,7 @@ bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior)
             else if (WildEncounterCheck(gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo->encounterRate, FALSE) != TRUE)
                 return FALSE;
 
-            if (HasWildEncounterLead() && TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 roamer = &gSaveBlock1Ptr->roamer[gEncounteredRoamerIndex];
                 if (!IsWildLevelAllowedByRepel(roamer->level))
@@ -1158,14 +1138,6 @@ void RockSmashWildEncounter(void)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle() && !TrainerOnlyCanEnterWildEncounter())
-    {
-        gSpecialVar_Result = FALSE;
-        return;
-    }
-#endif
 
     if (headerId != HEADER_NONE)
     {
@@ -1210,11 +1182,6 @@ bool8 SweetScentWildEncounter(void)
     u32 headerId;
     enum TimeOfDay timeOfDay;
 
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle() && !TrainerOnlyCanEnterWildEncounter())
-        return FALSE;
-#endif
-
     PlayerGetDestCoords(&x, &y);
     headerId = GetCurrentMapWildMonHeaderId();
     if (headerId == HEADER_NONE)
@@ -1253,7 +1220,7 @@ bool8 SweetScentWildEncounter(void)
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo == NULL)
                 return FALSE;
 
-            if (HasWildEncounterLead() && TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
@@ -1276,7 +1243,7 @@ bool8 SweetScentWildEncounter(void)
             if (gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo == NULL)
                 return FALSE;
 
-            if (HasWildEncounterLead() && TryStartRoamerEncounter())
+            if (!TrainerOnlyCanEnterWildEncounter() && TryStartRoamerEncounter())
             {
                 BattleSetup_StartRoamerBattle();
                 return TRUE;
@@ -1323,10 +1290,6 @@ void FishingWildEncounter(u8 rod)
     bool8 useFeebasOverride;
 
     gIsFishingEncounter = FALSE;
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle() && !TrainerOnlyCanEnterWildEncounter())
-        return;
-#endif
     useFeebasOverride = CheckFeebas();
     if (!useFeebasOverride)
     {
@@ -1480,7 +1443,7 @@ static bool8 IsWildLevelAllowedByRepel(u8 wildLevel)
 {
     u8 i;
 
-    if (!HasWildEncounterLead() || !REPEL_STEP_COUNT)
+    if (!REPEL_STEP_COUNT)
         return TRUE;
 
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1499,7 +1462,7 @@ static bool8 IsAbilityAllowingEncounter(u8 level)
 {
     enum Ability ability;
 
-    if (!HasWildEncounterLead() || GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         return TRUE;
 
     ability = GetMonAbility(&gPlayerParty[0]);
@@ -1601,7 +1564,7 @@ static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildM
 static bool8 TryGetAbilityInfluencedWildMonIndex(const struct WildPokemon *wildMon, enum Type type, enum Ability ability, u8 *monIndex)
 #endif
 {
-    if (!HasWildEncounterLead() || GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
     else if (GetMonAbility(&gPlayerParty[0]) != ability)
         return FALSE;
@@ -1680,7 +1643,7 @@ static bool8 TryGetRandomWildEncounterProfileSlotByType(const struct WildEncount
 
 static bool8 TryGetAbilityInfluencedWildEncounterProfileSlot(const struct WildEncounterProfileView *view, u16 trainerRating, bool8 isWildRandomized, enum Type type, enum Ability ability, u8 *slot)
 {
-    if (!HasWildEncounterLead() || GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
     else if (GetMonAbility(&gPlayerParty[0]) != ability)
         return FALSE;
@@ -1969,13 +1932,13 @@ static void ApplyFluteEncounterRateMod(u32 *encRate)
 
 static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
 {
-    if (HasWildEncounterLead() && GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM) == ITEM_CLEANSE_TAG)
+    if (GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM) == ITEM_CLEANSE_TAG)
         *encRate = *encRate * 2 / 3;
 }
 
 bool8 TryDoDoubleWildBattle(void)
 {
-    if (!HasWildEncounterLead()
+    if (TrainerOnlyCanEnterWildEncounter()
       || GetSafariZoneFlag()
       || (B_DOUBLE_WILD_REQUIRE_2_MONS == TRUE && GetMonsStateToDoubles() != PLAYER_HAS_TWO_USABLE_MONS))
         return FALSE;

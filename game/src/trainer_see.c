@@ -12,7 +12,6 @@
 #include "sprite.h"
 #include "task.h"
 #include "trainer_see.h"
-#include "wayfarer_origin.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
@@ -38,13 +37,6 @@ static u8 GetTrainerApproachDistanceNorth(struct ObjectEvent *trainerObj, s16 ra
 static u8 GetTrainerApproachDistanceWest(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y);
 static u8 GetTrainerApproachDistanceEast(struct ObjectEvent *trainerObj, s16 range, s16 x, s16 y);
 
-#if IS_WAYFARER
-static void ResetRecoverySightSuppression(void);
-static void CaptureRecoverySightSuppression(void);
-static void UpdateRecoverySightSuppression(void);
-static bool8 IsRecoverySightSuppressedTrainer(u8 objectEventId);
-#endif
-
 static bool8 TrainerSeeIdle(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 TrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
 static bool8 WaitTrainerExclamationMark(u8 taskId, struct Task *task, struct ObjectEvent *trainerObj);
@@ -69,23 +61,6 @@ COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 
 // EWRAM
 EWRAM_DATA u8 gApproachingTrainerId = 0;
-
-#if IS_WAYFARER
-struct RecoverySightSuppression
-{
-    bool8 pending;
-    u8 mapGroup;
-    u8 mapNum;
-    u8 trainerCount;
-    u8 trainerLocalIds[OBJECT_EVENTS_COUNT];
-    s16 playerX;
-    s16 playerY;
-    s16 playerDestX;
-    s16 playerDestY;
-};
-
-static EWRAM_DATA struct RecoverySightSuppression sRecoverySightSuppression = {0};
-#endif
 
 // const rom data
 static const u16 sGfx_Emoticons[] = INCBIN_U16("graphics/misc/emoticons.4bpp");
@@ -456,152 +431,12 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
     .callback = SpriteCB_TrainerIcons
 };
 
-#if IS_WAYFARER
-static bool8 IsRecoverySightSuppressionOnCurrentMap(void)
-{
-    return sRecoverySightSuppression.mapGroup == gSaveBlock1Ptr->location.mapGroup
-        && sRecoverySightSuppression.mapNum == gSaveBlock1Ptr->location.mapNum;
-}
-
-static void ResetRecoverySightSuppression(void)
-{
-    memset(&sRecoverySightSuppression, 0, sizeof(sRecoverySightSuppression));
-}
-
-void ArmTrainerRecoverySightSuppression(void)
-{
-    ResetRecoverySightSuppression();
-    sRecoverySightSuppression.pending = TRUE;
-    sRecoverySightSuppression.mapGroup = gSaveBlock1Ptr->location.mapGroup;
-    sRecoverySightSuppression.mapNum = gSaveBlock1Ptr->location.mapNum;
-}
-
-static void RecordRecoverySightPlayerPosition(void)
-{
-    const struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-
-    PlayerGetDestCoords(&sRecoverySightSuppression.playerDestX, &sRecoverySightSuppression.playerDestY);
-    sRecoverySightSuppression.playerX = player->currentCoords.x;
-    sRecoverySightSuppression.playerY = player->currentCoords.y;
-}
-
-static bool8 RecoverySightPlayerPositionChanged(void)
-{
-    const struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    s16 destX;
-    s16 destY;
-    bool8 changed;
-
-    PlayerGetDestCoords(&destX, &destY);
-    changed = player->currentCoords.x != sRecoverySightSuppression.playerX
-        || player->currentCoords.y != sRecoverySightSuppression.playerY
-        || destX != sRecoverySightSuppression.playerDestX
-        || destY != sRecoverySightSuppression.playerDestY;
-    if (changed)
-        RecordRecoverySightPlayerPosition();
-    return changed;
-}
-
-static bool8 IsTrainerTypeForRecoverySight(const struct ObjectEvent *objectEvent)
-{
-    return objectEvent->trainerType == TRAINER_TYPE_NORMAL
-        || objectEvent->trainerType == TRAINER_TYPE_SEE_ALL_DIRECTIONS
-        || objectEvent->trainerType == TRAINER_TYPE_BURIED;
-}
-
-// Capture only after the return-to-field scanner runs, when its map objects are
-// live again. The normal approach-distance helper includes the collision path.
-static void CaptureRecoverySightSuppression(void)
-{
-    u8 i;
-
-    if (!sRecoverySightSuppression.pending)
-        return;
-    if (!IsRecoverySightSuppressionOnCurrentMap())
-    {
-        ResetRecoverySightSuppression();
-        return;
-    }
-
-    RecordRecoverySightPlayerPosition();
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        struct ObjectEvent *objectEvent = &gObjectEvents[i];
-
-        if (!objectEvent->active || !IsTrainerTypeForRecoverySight(objectEvent))
-            continue;
-        if (GetTrainerApproachDistance(objectEvent) == 0)
-            continue;
-        sRecoverySightSuppression.trainerLocalIds[sRecoverySightSuppression.trainerCount++] = objectEvent->localId;
-    }
-    sRecoverySightSuppression.pending = FALSE;
-}
-
-static bool8 IsRecoverySightSuppressedTrainer(u8 objectEventId)
-{
-    u8 i;
-
-    if (sRecoverySightSuppression.trainerCount == 0 || !IsRecoverySightSuppressionOnCurrentMap())
-        return FALSE;
-    for (i = 0; i < sRecoverySightSuppression.trainerCount; i++)
-        if (gObjectEvents[objectEventId].localId == sRecoverySightSuppression.trainerLocalIds[i])
-            return TRUE;
-    return FALSE;
-}
-
-// Do not release recovery protection because an idle trainer turns or wanders.
-// It ends only after the player moves out of the captured trainer's real sight.
-static void UpdateRecoverySightSuppression(void)
-{
-    u8 i;
-    u8 kept = 0;
-
-    if (sRecoverySightSuppression.pending || sRecoverySightSuppression.trainerCount == 0)
-        return;
-    if (!IsRecoverySightSuppressionOnCurrentMap())
-    {
-        ResetRecoverySightSuppression();
-        return;
-    }
-    if (!RecoverySightPlayerPositionChanged())
-        return;
-
-    for (i = 0; i < sRecoverySightSuppression.trainerCount; i++)
-    {
-        u8 objectEventId;
-        for (objectEventId = 0; objectEventId < OBJECT_EVENTS_COUNT; objectEventId++)
-        {
-            struct ObjectEvent *objectEvent = &gObjectEvents[objectEventId];
-            if (objectEvent->active
-             && objectEvent->localId == sRecoverySightSuppression.trainerLocalIds[i])
-            {
-                if (GetTrainerApproachDistance(objectEvent) != 0)
-                    sRecoverySightSuppression.trainerLocalIds[kept++] = objectEvent->localId;
-                break;
-            }
-        }
-    }
-    sRecoverySightSuppression.trainerCount = kept;
-    if (kept == 0)
-        ResetRecoverySightSuppression();
-}
-#endif
-
 // code
 bool8 CheckForTrainersWantingBattle(void)
 {
     u8 i;
     u8 trainerObjects[OBJECT_EVENTS_COUNT] = {0};
     u8 trainerObjectsCount = 0;
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        return FALSE;
-    if (sRecoverySightSuppression.pending)
-        CaptureRecoverySightSuppression();
-    else
-        UpdateRecoverySightSuppression();
-#endif
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -614,10 +449,6 @@ bool8 CheckForTrainersWantingBattle(void)
     {
         if (!gObjectEvents[i].active)
             continue;
-#if IS_WAYFARER
-        if (IsRecoverySightSuppressedTrainer(i))
-            continue;
-#endif
         if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_SEE_ALL_DIRECTIONS && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
         trainerObjects[trainerObjectsCount++] = i;

@@ -483,6 +483,7 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  trainerOnlyEnabled: 0x0b,
   hoennDiveAuthorized: 0x607b,
   runningShoes: 0x895,
   noWildRunning: 0x96a,

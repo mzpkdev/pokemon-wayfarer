@@ -5312,8 +5312,7 @@ static void Task_DisplayHPRestoredMessage(u8 taskId)
     StringExpandPlaceholders(gStringVar4, gText_PkmnHPRestoredByVar2);
     DisplayPartyMenuMessage(gStringVar4, FALSE);
     ScheduleBgCopyTilemapToVram(2);
-    if (!IsTrainerOnlyEncounter())
-        HandleBattleLowHpMusicChange();
+    HandleBattleLowHpMusicChange();
     if (gPartyMenu.menuType == PARTY_MENU_TYPE_FIELD && CheckBagHasItem(gSpecialVar_ItemId, 1))
         gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
     else
@@ -5523,7 +5522,7 @@ static void TryUseItemOnMove(u8 taskId)
     struct PartyMenu *ptr = &gPartyMenu;
     struct Pokemon *mon = &gPlayerParty[ptr->slotId];
     // In battle, set appropriate variables to be used in battle script.
-    if (gMain.inBattle && !IsTrainerOnlyEncounter())
+    if (gMain.inBattle)
     {
         if (CannotUseItemsInBattle(gSpecialVar_ItemId, mon))
         {
@@ -5543,20 +5542,14 @@ static void TryUseItemOnMove(u8 taskId)
             gTasks[taskId].func = Task_ClosePartyMenuAfterText;
         }
     }
-    // Trainer-only PP recovery applies to the real party through the same item effect.
+    // Outside of battle, only PP items are used on moves.
     else
     {
         enum Move move = MOVE_NONE;
         s16 *moveSlot = &gPartyMenu.data1;
         enum Item item = gSpecialVar_ItemId;
 
-        if ((IsTrainerOnlyEncounter()
-             && (GetItemBattleUsage(item) != EFFECT_ITEM_RESTORE_PP
-                 || !IsAllowedToUseBag()
-                 || gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
-                 || !CheckBagHasItem(item, 1)
-                 || CannotUseItemsInBattle(item, mon)))
-         || ExecuteTableBasedItemEffect(mon, item, ptr->slotId, *moveSlot))
+        if (ExecuteTableBasedItemEffect(mon, item, ptr->slotId, *moveSlot))
         {
             gPartyMenuUseExitCallback = FALSE;
             PlaySE(SE_SELECT);
@@ -5569,8 +5562,6 @@ static void TryUseItemOnMove(u8 taskId)
             gPartyMenuUseExitCallback = TRUE;
             PlaySE(SE_USE_ITEM);
             RemoveBagItem(item, 1);
-            if (IsTrainerOnlyEncounter())
-                TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_RECOVERY);
             move = GetMonData(mon, MON_DATA_MOVE1 + *moveSlot);
             StringCopy(gStringVar1, GetMoveName(move));
             GetMedicineItemEffectMessage(item, 0);

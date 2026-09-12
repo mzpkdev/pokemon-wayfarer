@@ -1,6 +1,4 @@
 #include "global.h"
-#include "wayfarer_loss_policy.h"
-#include "wayfarer_origin.h"
 #include "battle.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
@@ -34,9 +32,6 @@ static bool32 IsMonValidSpecies(struct Pokemon *pokemon)
 
 static bool32 AllMonsFainted(void)
 {
-#if IS_WAYFARER
-    return !WayfarerCanStartOrdinaryBattle();
-#else
     int i;
     struct Pokemon *pokemon = gPlayerParty;
 
@@ -46,7 +41,6 @@ static bool32 AllMonsFainted(void)
             return FALSE;
     }
     return TRUE;
-#endif
 }
 
 static void FaintFromFieldPoison(u8 partyIdx)
@@ -113,11 +107,6 @@ static void Task_TryFieldPoisonWhiteOut(u8 taskId)
             if (CurrentBattlePyramidLocation() | InBattlePike() || InTrainerHillChallenge())
 #endif
                 gSpecialVar_Result = FLDPSN_FRONTIER_WHITEOUT;
-            else if (WayfarerAllowsOrdinaryPartyExhaustion())
-            {
-                gSpecialVar_Result = FLDPSN_NO_WHITEOUT;
-                UpdateFollowingPokemon();
-            }
             else
                 gSpecialVar_Result = FLDPSN_WHITEOUT;
         }

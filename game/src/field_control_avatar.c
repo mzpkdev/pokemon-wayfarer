@@ -34,7 +34,6 @@
 #include "sound.h"
 #include "start_menu.h"
 #include "trainer_see.h"
-#include "wayfarer_story_encounter.h"
 #include "trainer_hill.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
@@ -197,8 +196,6 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     playerDirection = GetPlayerFacingDirection();
     GetPlayerPosition(&position);
     metatileBehavior = MapGridGetMetatileBehaviorAt(position.x, position.y);
-
-    WayfarerStoryOnPlayerPositionChanged();
 
     if (CheckForTrainersWantingBattle() == TRUE)
         return TRUE;

@@ -1,5 +1,4 @@
 #include "global.h"
-#include "wayfarer_loss_policy.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
@@ -1615,7 +1614,7 @@ static void Task_PCMainMenu(u8 taskId)
                 AddTextPrinterParameterized2(0, FONT_NORMAL, gText_PartyFull, 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
                 task->tState = STATE_ERROR_MSG;
             }
-            else if (task->tInput == OPTION_DEPOSIT && CountPartyMons() == 1 && !WayfarerAllowsUnprotectedStorage())
+            else if (task->tInput == OPTION_DEPOSIT && CountPartyMons() == 1)
             {
                 // Can't deposit
                 FillWindowPixelBuffer(0, PIXEL_FILL(1));
@@ -2382,7 +2381,7 @@ static void Task_PokeStorageMain(u8 taskId)
             }
             break;
         case INPUT_DEPOSIT:
-            if (!IsRemovingLastPartyMon() || WayfarerAllowsUnprotectedStorage())
+            if (!IsRemovingLastPartyMon())
             {
                 if (ItemIsMail(sStorage->displayMonItemId))
                 {
@@ -2400,7 +2399,7 @@ static void Task_PokeStorageMain(u8 taskId)
             }
             break;
         case INPUT_MOVE_MON:
-            if (IsRemovingLastPartyMon() && !WayfarerAllowsUnprotectedStorage())
+            if (IsRemovingLastPartyMon())
             {
                 sStorage->state = MSTATE_ERROR_LAST_PARTY_MON;
             }
@@ -2642,7 +2641,7 @@ static void Task_OnSelectedMon(u8 taskId)
             SetPokeStorageTask(Task_PokeStorageMain);
             break;
         case MENU_MOVE:
-            if (IsRemovingLastPartyMon() && !WayfarerAllowsUnprotectedStorage())
+            if (IsRemovingLastPartyMon())
             {
                 sStorage->state = 3;
             }
@@ -2694,7 +2693,7 @@ static void Task_OnSelectedMon(u8 taskId)
             SetPokeStorageTask(Task_WithdrawMon);
             break;
         case MENU_STORE:
-            if (IsRemovingLastPartyMon() && !WayfarerAllowsUnprotectedStorage())
+            if (IsRemovingLastPartyMon())
             {
                 sStorage->state = 3;
             }

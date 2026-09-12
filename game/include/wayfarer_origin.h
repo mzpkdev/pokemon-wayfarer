@@ -45,7 +45,6 @@ void WayfarerGrantSharedEquipment(void);
 void WayfarerGrantRunningShoes(void);
 u16 WayfarerHasSharedPokedex(void);
 void WayfarerGrantSharedPokedex(void);
-bool8 WayfarerCanStartOrdinaryBattle(void);
 bool8 WayfarerEnsureRecoveryDestination(void);
 bool8 WayfarerReplaceRecoveryDestination(u8 healLocationId);
 u8 WayfarerGetInitialRecoveryDestination(void);

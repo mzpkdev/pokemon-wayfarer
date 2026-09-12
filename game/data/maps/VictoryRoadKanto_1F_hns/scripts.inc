@@ -20,14 +20,6 @@ VictoryRoadKanto_1F_Trigger::
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, TRUE, LeagueCircuit_EventScript_TravelAllowed
 #endif
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_VICTORY_ROAD
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, VictoryRoadKanto_1F_Trigger_Allowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, VictoryRoadKanto_1F_EventScript_NoParty
-	goto VictoryRoadKanto_1F_EventScript_DeferredSilver
-#endif
-VictoryRoadKanto_1F_Trigger_Allowed::
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	delay 5
@@ -174,13 +166,6 @@ VictoryRoad_Text_RivalAfter:
 
 #if IS_WAYFARER
 VictoryRoadKanto_1F_EventScript_DeferredSilver::
-	releaseall
-	end
-
-VictoryRoadKanto_1F_EventScript_NoParty::
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
 	releaseall
 	end
 #endif

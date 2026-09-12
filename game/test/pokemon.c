@@ -4,11 +4,26 @@
 #include "event_data.h"
 #include "new_game.h"
 #include "pokemon.h"
+#include "pokemon_storage_system.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
 #include "constants/characters.h"
 #include "constants/daycare.h"
 #include "constants/move_relearner.h"
+
+TEST("CompactPartySlots updates the cached player party count")
+{
+    ZeroPlayerPartyMons();
+    CreateMon(&gPlayerParty[0], SPECIES_RATTATA, 5, 0, OTID_STRUCT_PLAYER_ID);
+    CreateMon(&gPlayerParty[2], SPECIES_PIDGEY, 5, 0, OTID_STRUCT_PLAYER_ID);
+    gPlayerPartyCount = PARTY_SIZE;
+
+    CompactPartySlots();
+
+    EXPECT_EQ(gPlayerPartyCount, 2);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RATTATA);
+    EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), SPECIES_PIDGEY);
+}
 
 TEST("Nature independent from Hidden Nature")
 {

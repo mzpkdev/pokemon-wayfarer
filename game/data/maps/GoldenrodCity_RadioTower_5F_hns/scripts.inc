@@ -15,16 +15,8 @@ GoldenrodCity_RadioTower_5F_MapScript_HidePetrel::
 @=======[OFFICE]==============================================================================================================================
 
 GoldenrodCity_RadioTower_5F_EventScript_Petrel::
-	goto_if_ge VAR_GOLDENROD_CITY_STATE, 10, GoldenrodCity_RadioTower_5F_EventScript_Director
-#if IS_WAYFARER
-	goto_if_defeated TRAINER_PETREL_2_HNS, GoldenrodCity_RadioTower_5F_EventScript_Petrel2
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RADIO_FAKE_DIRECTOR_PETREL
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, GoldenrodCity_RadioTower_5F_EventScript_PetrelAllowed
-	goto GoldenrodCity_RadioTower_5F_EventScript_PetrelNoParty
-#endif
-GoldenrodCity_RadioTower_5F_EventScript_PetrelAllowed::
 	lock
+	goto_if_ge VAR_GOLDENROD_CITY_STATE, 10, GoldenrodCity_RadioTower_5F_EventScript_Director
 	goto_if_eq VAR_FACING, DIR_SOUTH, GoldenrodCity_RadioTower_5F_EventScript_PetrelNorth
 	faceplayer
 	msgbox GoldenrodCity_RadioTower_5F_Text_FakeDirector1, MSGBOX_DEFAULT
@@ -38,7 +30,6 @@ GoldenrodCity_RadioTower_5F_EventScript_PetrelAllowed::
 	applymovement LOCALID_PETREL_OFFICE, GoldenrodCity_RadioTower_5F_Movement_Spin2
 	waitmovement 0
 	msgbox GoldenrodCity_RadioTower_5F_Text_FakeDirector2, MSGBOX_DEFAULT
-GoldenrodCity_RadioTower_5F_EventScript_PetrelBattle::
 	trainerbattle_no_intro TRAINER_PETREL_2_HNS, GoldenrodCity_RadioTower_5F_Text_FakeDirectorWin
 	msgbox GoldenrodCity_RadioTower_5F_Text_FakeDirectorAfter, MSGBOX_DEFAULT
 	giveitem ITEM_BASEMENT_KEY
@@ -47,36 +38,6 @@ GoldenrodCity_RadioTower_5F_EventScript_PetrelBattle::
 	closemessage
 	release
 	end
-
-GoldenrodCity_RadioTower_5F_EventScript_PetrelNoParty::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
-
-GoldenrodCity_RadioTower_5F_EventScript_PetrelRetreat::
-#if IS_WAYFARER
-
-	setflag FLAG_HIDE_GOLDENROD_RADIOTOWER_PETREL
-	removeobject LOCALID_PETREL_OFFICE
-	clearflag FLAG_HIDE_GOLDENROD_RADIOTOWER_DIRECTOR
-	addobject LOCALID_DIRECTOR_OFFICE
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
 
 GoldenrodCity_RadioTower_5F_EventScript_PetrelNorth::
 	end
@@ -186,18 +147,9 @@ GoldenrodRaidoTower4_EventScript_ARIANA::
 	end
 
 GoldenrodCity_RadioTower_5F_EventScript_Archer::
-#if IS_WAYFARER
-	goto_if_defeated TRAINER_ARCHER_HNS, GoldenrodCity_RadioTower_5F_EventScript_ArcherAlreadyDefeated
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RADIO_ARCHER
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, GoldenrodCity_RadioTower_5F_EventScript_ArcherAllowed
-	goto GoldenrodCity_RadioTower_5F_EventScript_ArcherNoParty
-#endif
-GoldenrodCity_RadioTower_5F_EventScript_ArcherAllowed::
 	lock
 	faceplayer
 	msgbox GoldenrodCity_RadioTower_5F_Text_RocketBossSeen, MSGBOX_DEFAULT
-GoldenrodCity_RadioTower_5F_EventScript_ArcherBattle::
 	trainerbattle_no_intro TRAINER_ARCHER_HNS, GoldenrodCity_RadioTower_5F_Text_RocketBossBeaten
 	msgbox GoldenrodCity_RadioTower_5F_Text_RocketBossAfter, MSGBOX_DEFAULT
 	delay 55
@@ -220,51 +172,6 @@ GoldenrodCity_RadioTower_5F_EventScript_ArcherBattle::
 	goto_if_eq VAR_FACING, DIR_NORTH, GoldenrodCity_RadioTower_5F_EventScript_WingBot
 	release
 	end
-
-GoldenrodCity_RadioTower_5F_EventScript_ArcherAlreadyDefeated::
-	msgbox GoldenrodCity_RadioTower_5F_Text_RocketBossAfter, MSGBOX_AUTOCLOSE
-	closemessage
-	releaseall
-	end
-
-GoldenrodCity_RadioTower_5F_EventScript_ArcherNoParty::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
-
-GoldenrodCity_RadioTower_5F_EventScript_ArcherRetreat::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
-
-GoldenrodCity_RadioTower_5F_EventScript_ArianaRetreat::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
 
 GoldenrodCity_RadioTower_5F_EventScript_WingTop::
 	applymovement LOCALID_DIRECTOR_STUDIO, GoldenrodCity_RadioTower_5F_Movement_WalkToPlayerTop

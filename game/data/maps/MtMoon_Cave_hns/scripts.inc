@@ -17,12 +17,7 @@ MtMoon_Cave_EventScript_Sign::
 MtMoon_Cave_EventScript_Silver::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, MtMoon_Cave_EventScript_DeferredSilver
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_MT_MOON
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, MtMoon_Cave_EventScript_SilverAllowed
-	goto MtMoon_Cave_EventScript_DeferredSilver
 #endif
-MtMoon_Cave_EventScript_SilverAllowed::
 	lock
 	faceplayer
 	msgbox MtMoon_Cave_Text_Rival_Before, MSGBOX_DEFAULT
@@ -65,19 +60,6 @@ MtMoon_Cave_EventScript_SilverAfterBattle::
 	fadedefaultbgm
 	release
 	end
-
-MtMoon_Cave_EventScript_SilverRetreat::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-#else
-	end
-#endif
-
 
 MtMoon_Cave_Text_Rival_Before:
 	.string "..................................\p"

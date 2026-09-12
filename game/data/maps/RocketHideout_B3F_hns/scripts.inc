@@ -4,10 +4,6 @@ RocketHideout_B3F_hns_MapScripts::
 	.byte 0
 
 RocketHideout_B3F_OnLoad::
-	@ The Wayfarer retry coordinate is map-local.  Native HNS continues to
-	@ test state 7 in its script below, so resetting this temp changes no
-	@ authored standalone progression.
-	setvar VAR_TEMP_C, 0
 	call_if_set FLAG_HIDE_ROCKETHIDEOUT3_GATE, RocketHideout_B3F_HideGate
 	call_if_eq VAR_ROCKET_PASSWORD, 2, RocketHideout_B3F_HidePetrel
 	end
@@ -147,15 +143,6 @@ RocketHideout_B3F_Movement_MurkrowStairs2:
 	step_end
 
 RocketHideout_B3F_Trigger_Silver::
-#if IS_WAYFARER
-	@ This scene never needs a usable party: it is local dialogue, not a battle.
-	@ Keep it pending after the hideout advances, and retire only its own chapter.
-	goto_if_set FLAG_WAYFARER_SILVER_MAHOGANY_SCENE_COMPLETE, RocketHideout_B3F_Trigger_SilverDeferred
-	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, RocketHideout_B3F_Trigger_SilverDeferred
-	goto_if_lt VAR_MAHOGANY_TOWN_STATE, 7, RocketHideout_B3F_Trigger_SilverDeferred
-#else
-	goto_if_ne VAR_MAHOGANY_TOWN_STATE, 7, RocketHideout_B3F_Trigger_SilverDeferred
-#endif
 	lock
 	clearflag FLAG_HIDE_ROCKETHIDEOUT3_SILVER
 	addobject LOCALID_ROCKETHIDEOUT3_SILVER
@@ -169,18 +156,9 @@ RocketHideout_B3F_Trigger_Silver::
 	waitmovement 0
 	setflag FLAG_HIDE_ROCKETHIDEOUT3_SILVER
 	removeobject LOCALID_ROCKETHIDEOUT3_SILVER
-#if IS_WAYFARER
-	setflag FLAG_WAYFARER_SILVER_MAHOGANY_SCENE_COMPLETE
-	goto_if_ge VAR_MAHOGANY_TOWN_STATE, 8, RocketHideout_B3F_Trigger_SilverProgressPreserved
-#endif
 	setvar VAR_MAHOGANY_TOWN_STATE, 8
-RocketHideout_B3F_Trigger_SilverProgressPreserved::
 	fadedefaultbgm
 	release
-	end
-
-RocketHideout_B3F_Trigger_SilverDeferred::
-	releaseall
 	end
 
 RocketHideout_B3F_Movement_SilverEnter:
@@ -323,14 +301,6 @@ RocketHideout_B3F_Text_Rival:
 @=======[PETREL]==============================================================================================================================
 
 RocketHideout_B3F_EventScript_Giovanni::
-#if IS_WAYFARER
-	goto_if_defeated TRAINER_PETREL_1_HNS, RocketHideout_B3F_EventScript_GiovanniAlreadyDefeated
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_MAHOGANY_PETREL
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RocketHideout_B3F_EventScript_GiovanniAllowed
-	goto RocketHideout_B3F_EventScript_GiovanniNoParty
-#endif
-RocketHideout_B3F_EventScript_GiovanniAllowed::
 	lock
 	faceplayer
 	msgbox RocketHideout_B3F_Text_PetrelIntro, MSGBOX_DEFAULT
@@ -351,7 +321,6 @@ RocketHideout_B3F_EventScript_GiovanniAllowed::
 	call_if_eq VAR_FACING, DIR_EAST, RocketHideout_B3F_EventScript_FacingEast
 	call_if_eq VAR_FACING, DIR_WEST, RocketHideout_B3F_EventScript_FacingWest
 	msgbox RocketHideout_B3F_Text_PetrelReveal, MSGBOX_DEFAULT
-RocketHideout_B3F_EventScript_GiovanniBattle::
 	trainerbattle_no_intro TRAINER_PETREL_1_HNS, RocketHideout_B3F_Text_PetrelBeaten
 	msgbox RocketHideout_B3F_Text_PetrelAfterBattle, MSGBOX_DEFAULT
 	closemessage
@@ -389,42 +358,6 @@ RocketHideout_B3F_EventScript_GiovanniBattle::
 	setvar VAR_MAHOGANY_TOWN_STATE, 9
 	release
 	end
-
-RocketHideout_B3F_EventScript_GiovanniAlreadyDefeated::
-	msgbox RocketHideout_B3F_Text_PetrelAfterBattle, MSGBOX_AUTOCLOSE
-	closemessage
-	releaseall
-	end
-
-RocketHideout_B3F_EventScript_GiovanniNoParty::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-#else
-	end
-#endif
-
-RocketHideout_B3F_EventScript_PetrelRetreat::
-#if IS_WAYFARER
-
-	@ Retry reset only: restore the password-gate disguise without writing
-	@ passwords, Mahogany state, Murkrow, doors, keys, or rewards.
-	setflag FLAG_HIDE_ROCKETHIDEOUT3_PETREL
-	removeobject LOCALID_ROCKETHIDEOUT3_PETREL
-	clearflag FLAG_HIDE_ROCKETHIDEOUT3_GIOVANNI
-	addobject LOCALID_ROCKETHIDEOUT3_GIOVANNI
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-#else
-	end
-#endif
 
 RocketHideout_B3F_EventScript_FacingEastMurkrow::
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkRight1

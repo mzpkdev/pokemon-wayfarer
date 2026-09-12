@@ -1325,9 +1325,7 @@ static void SpriteCB_PokeballGlowEffect(struct Sprite *sprite)
 static void PokeballGlowEffect_PlaceBalls(struct Sprite *sprite)
 {
     u8 spriteId;
-    // An empty party (or Eggs excluded by the healing configuration) still
-    // completes the shared effect, but must not place a ball and underflow.
-    if (sprite->sNumMons > 0 && (sprite->sTimer == 0 || (--sprite->sTimer) == 0))
+    if (sprite->sTimer == 0 || (--sprite->sTimer) == 0)
     {
         sprite->sTimer = 25;
         spriteId = CreateSpriteAtEnd(&sSpriteTemplate_PokeballGlow, sPokeballCoordOffsets[sprite->sCounter].x + sprite->x2, sPokeballCoordOffsets[sprite->sCounter].y + sprite->y2, 0);
@@ -1425,10 +1423,6 @@ static void PokeballGlowEffect_WaitForSound(struct Sprite *sprite)
 {
     if (sprite->sPlayHealSe == FALSE || IsFanfareTaskInactive())
     {
-        // Zero-ball effects have no ball sprite to release the loaded palette.
-        u8 paletteNum = IndexOfSpritePaletteTag(FLDEFF_PAL_TAG_POKEBALL_GLOW);
-        if (paletteNum < 16)
-            FieldEffectFreePaletteIfUnused(paletteNum);
         sprite->sState++;
     }
 }

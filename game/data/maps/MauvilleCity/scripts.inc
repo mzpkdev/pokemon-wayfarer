@@ -198,7 +198,6 @@ MauvilleCity_EventScript_ScottExitEast::
 
 MauvilleCity_EventScript_BattleWally::
 	msgbox MauvilleCity_Text_WallyHereICome, MSGBOX_DEFAULT
-MauvilleCity_EventScript_BattleWallyTrainerBattle::
 	trainerbattle_no_intro TRAINER_WALLY_MAUVILLE, MauvilleCity_Text_WallyDefeat
 	applymovement LOCALID_MAUVILLE_WALLY, Common_Movement_WalkInPlaceFasterRight
 	waitmovement 0
@@ -210,13 +209,6 @@ MauvilleCity_EventScript_BattleWallyTrainerBattle::
 	waitmovement 0
 	msgbox MauvilleCity_Text_UncleNoNeedToBeDown, MSGBOX_DEFAULT
 	return
-
-#if IS_WAYFARER
-MauvilleCity_EventScript_WayfarerWallyLossRetreat::
-	setobjectxyperm LOCALID_MAUVILLE_WALLY, 8, 6
-	setobjectmovementtype LOCALID_MAUVILLE_WALLY, MOVEMENT_TYPE_FACE_UP
-	goto EventScript_WayfarerStoryLossRetreat
-#endif
 
 MauvilleCity_EventScript_DeclineWallyBattle::
 	setflag FLAG_DECLINED_WALLY_BATTLE_MAUVILLE

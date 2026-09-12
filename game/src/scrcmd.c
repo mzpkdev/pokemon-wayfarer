@@ -4,9 +4,6 @@
 #endif
 #include "frontier_util.h"
 #include "battle_setup.h"
-#include "wayfarer_battle_gate.h"
-#include "wayfarer_origin.h"
-#include "wayfarer_story_encounter.h"
 #include "constants/maps.h"
 #include "battle_util.h"
 #include "berry.h"
@@ -3218,19 +3215,6 @@ bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
 
 bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
 {
-#if IS_WAYFARER
-    // This is the last safe generic entry point. Authored objective scenes also
-    // gate before their own staging; a mapped direct caller still cannot reach
-    // its battle setup with no usable party.
-    if (!WayfarerStoryTryStartTrainerBattle(ctx->scriptPtr))
-    {
-        StopScript(ctx);
-        ScriptContext_SetupScript(WayfarerStoryShouldSilentlyDeferActiveEncounter()
-            ? Common_EventScript_ReleaseNoOp
-            : EventScript_WayfarerStoryNoPartyRefusal);
-        return TRUE;
-    }
-#endif
     Script_RequestEffects(SCREFF_V1 | SCREFF_TRAINERBATTLE);
 
     TrainerBattleLoadArgs(ctx->scriptPtr);
@@ -3241,15 +3225,6 @@ bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
 bool8 ScrCmd_dotrainerbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE);
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-    {
-        StopScript(ctx);
-        WayfarerAbortEmptyPartyBattle();
-        return TRUE;
-    }
-#endif
 
     BattleSetup_StartTrainerBattle();
     return TRUE;
@@ -3361,15 +3336,6 @@ bool8 ScrCmd_setwildbossbattle(struct ScriptContext* ctx)
 bool8 ScrCmd_dowildbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
-
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-    {
-        StopScript(ctx);
-        WayfarerAbortEmptyPartyBattle();
-        return TRUE;
-    }
-#endif
 
     if (sIsScriptedWildDouble == FALSE)
         BattleSetup_StartScriptedWildBattle();

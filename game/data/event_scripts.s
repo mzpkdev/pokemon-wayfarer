@@ -6,7 +6,6 @@
 #include "config/randomizer.h"
 #include "constants/global.h"
 #include "constants/wayfarer_origin.h"
-#include "constants/wayfarer_story_encounters.h"
 #include "constants/apprentice.h"
 #include "constants/apricorn_tree.h"
 #include "constants/battle.h"
@@ -1302,27 +1301,6 @@ Common_EventScript_NoOp::
 Common_EventScript_ReleaseNoOp::
 	release
 	end
-
-@ The central fallback is used only by an explicitly registered trainerbattle
-@ caller. Scene scripts with irreversible staging still branch here before that
-@ staging, using WayfarerStoryCanStartScene.
-#if IS_WAYFARER
-EventScript_WayfarerStoryNoPartyRefusal::
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-@ Audited ordinary single-trainer callers may use this as their loss redirect.
-@ Authored objective scenes provide a more specific script to reset their actors.
-EventScript_WayfarerStoryLossRetreat::
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-#endif
 
 Common_EventScript_BagIsFull::
 	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT

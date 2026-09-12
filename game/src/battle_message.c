@@ -1,5 +1,4 @@
 #include "global.h"
-#include "wayfarer_loss_policy.h"
 #include "trainer_only_encounter.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -60,8 +59,6 @@ struct BattleWindowText
     u8 lineSpacing;
     u8 speed;
 };
-
-static const u8 sText_TrainerOnlyRetreated[] = _("You retreated from the battle.");
 
 #if TESTING
 EWRAM_DATA u16 sBattlerAbilities[MAX_BATTLERS_COUNT] = {0};
@@ -2854,8 +2851,6 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         else
         {
             stringPtr = gBattleStringsTable[stringID];
-            if (stringID == STRINGID_PLAYERWHITEOUT3 && WayfarerShouldContinuePartyDefeat())
-                stringPtr = sText_TrainerOnlyRetreated;
         }
         break;
     }

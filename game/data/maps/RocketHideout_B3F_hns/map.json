@@ -279,8 +279,8 @@
       "x": 8,
       "y": 13,
       "elevation": 0,
-      "var": "VAR_TEMP_C",
-      "var_value": "0",
+      "var": "VAR_MAHOGANY_TOWN_STATE",
+      "var_value": "7",
       "script": "RocketHideout_B3F_Trigger_Silver"
     },
     {

@@ -1,6 +1,4 @@
 #include "global.h"
-#include "wayfarer_loss_policy.h"
-#include "pokemon.h"
 #include "cable_club.h"
 #include "event_data.h"
 #include "fieldmap.h"
@@ -1423,8 +1421,6 @@ static const u8 *GenerateRecoveryMessage(u8 taskId)
     bool32 forfeitTrainer = DidPlayerForfeitNormalTrainerBattle();
     bool32 destinationIsPlayersHouse = (gTasks[taskId].tIsPlayerHouse == TRUE);
 
-    if (WayfarerRecoveryIsTrainerRetaliation())
-        return COMPOUND_STRING("The wild Pokémon injured you.\nYou made it back to safety…");
     if (forfeitTrainer && destinationIsPlayersHouse)
         return sText_PlayerRegroupHome;
     else if (forfeitTrainer && !destinationIsPlayersHouse)
@@ -1475,14 +1471,7 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         if (WaitForWeatherFadeIn() == TRUE)
         {
             DestroyTask(taskId);
-            WayfarerClearRecoveryCause();
-            if (IS_WAYFARER && CalculatePlayerPartyCount() == 0)
-            {
-                Overworld_ChangeMusicToDefault();
-                UnlockPlayerFieldControls();
-                UnfreezeObjectEvents();
-            }
-            else if (gTasks[taskId].tIsPlayerHouse)
+            if (gTasks[taskId].tIsPlayerHouse)
             {
                 if (IS_FRLG)
                     StringCopy(gStringVar1, COMPOUND_STRING("PROF. OAK"));

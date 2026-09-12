@@ -6,6 +6,7 @@ import { type SessionRuntime } from "../runtime"
 
 export type StoryApi = {
   flag: (name: StoryFlag) => Promise<boolean>
+  setFlag: (name: StoryFlag, value: boolean) => Promise<void>
   var: (name: StoryVar) => Promise<number>
   setVar: (name: StoryVar, value: number) => Promise<void>
 }
@@ -26,6 +27,15 @@ export const createStoryApi = (runtime: SessionRuntime, mailbox: MailboxApi): St
       `observe story flag ${name}`,
     )
     return result.x === 1
+  },
+  setFlag: async (name, value) => {
+    const id = storyFlags[name]
+    if (id >= 0x4000) throw new Error("setFlag supports only ordinary save-bank flags")
+    const saveBlock = await runtime.readUint32(runtime.address("gSaveBlock1Ptr"))
+    const address = saveBlock + runtime.abi.flagsOffset + Math.floor(id / 8)
+    const bytes = await runtime.readBytes(address, 1)
+    const mask = 1 << (id % 8)
+    await runtime.writeBytes(address, new Uint8Array([value ? bytes[0]! | mask : bytes[0]! & ~mask]))
   },
   var: async (name) => {
     const id = storyVars[name]

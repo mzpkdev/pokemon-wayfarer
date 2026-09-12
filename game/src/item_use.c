@@ -1249,21 +1249,6 @@ bool32 TrainerOnlyIsFeedableBerry(enum Item item)
     return item >= FIRST_BERRY_INDEX && item <= ITEM_MARANGA_BERRY;
 }
 
-bool32 TrainerOnlyIsRecoveryItem(enum Item item)
-{
-    switch (GetItemBattleUsage(item))
-    {
-    case EFFECT_ITEM_RESTORE_HP:
-    case EFFECT_ITEM_CURE_STATUS:
-    case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
-    case EFFECT_ITEM_REVIVE:
-    case EFFECT_ITEM_RESTORE_PP:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
 void ItemUseInTrainerOnly_Food(u8 taskId)
 {
     if (!TrainerOnlyIsFeedableBerry(gSpecialVar_ItemId)
@@ -1277,34 +1262,6 @@ void ItemUseInTrainerOnly_Food(u8 taskId)
     RemoveBagItem(gSpecialVar_ItemId, 1);
     TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_FOOD);
     Task_FadeAndCloseBagMenu(taskId);
-}
-
-static void ItemUseCB_TrainerOnlyRecovery(u8 taskId, TaskFunc task)
-{
-    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    if (gPartyMenu.slotId >= PARTY_SIZE
-     || GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE
-     || GetMonData(mon, MON_DATA_IS_EGG)
-     || !TrainerOnlyIsRecoveryItem(gSpecialVar_ItemId)
-     || !IsAllowedToUseBag()
-     || gSaveBlock3Ptr->challengeSettings.tx_Challenges_NoItemPlayer
-     || (GetItemBattleUsage(gSpecialVar_ItemId) != EFFECT_ITEM_RESTORE_PP
-         && CannotUseItemsInBattle(gSpecialVar_ItemId, mon)))
-    {
-        gPartyMenuUseExitCallback = FALSE;
-        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
-        ScheduleBgCopyTilemapToVram(2);
-        gTasks[taskId].func = task;
-        return;
-    }
-    if (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_RESTORE_PP)
-    {
-        ItemUseCB_PPRecovery(taskId, task);
-        return;
-    }
-    ItemUseCB_Medicine(taskId, task);
-    if (gPartyMenuUseExitCallback)
-        TrainerOnlyCommitItem(TRAINER_ONLY_ITEM_RECOVERY);
 }
 
 static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
@@ -1323,22 +1280,7 @@ static void ItemUseInBattle_ShowPartyMenu(u8 taskId)
 
 void ItemUseInBattle_PartyMenu(u8 taskId)
 {
-    if (IsTrainerOnlyEncounter())
-    {
-        u32 i;
-        for (i = 0; i < PARTY_SIZE; i++)
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
-             && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
-                break;
-        if (i == PARTY_SIZE)
-        {
-            DisplayItemMessage(taskId, FONT_NORMAL, gText_WontHaveEffect, CloseItemMessage);
-            return;
-        }
-        gItemUseCB = ItemUseCB_TrainerOnlyRecovery;
-    }
-    else
-        gItemUseCB = ItemUseCB_BattleScript;
+    gItemUseCB = ItemUseCB_BattleScript;
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
@@ -1363,8 +1305,6 @@ static bool32 IteamHealsMonVolatile(enum BattlerId battler, enum Item itemId)
 
 static bool32 SelectedMonHasVolatile(enum Item itemId)
 {
-    if (IsTrainerOnlyEncounter())
-        return FALSE;
     if (gPartyMenu.slotId == 0)
         return IteamHealsMonVolatile(0, itemId);
     else if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
@@ -1381,9 +1321,7 @@ bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon)
     u32 i, battlerTarget;
     u16 hp = GetMonData(mon, MON_DATA_HP);
 
-    if (IsTrainerOnlyEncounter())
-        battlerTarget = MAX_POSITION_COUNT;
-    else if (gPartyMenu.slotId == 0)
+    if (gPartyMenu.slotId == 0)
         battlerTarget = B_POSITION_PLAYER_LEFT;
     else if (gPartyMenu.slotId == 1)
         battlerTarget = B_POSITION_PLAYER_RIGHT;

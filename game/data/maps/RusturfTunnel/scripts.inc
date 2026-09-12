@@ -267,14 +267,6 @@ RusturfTunnel_EventScript_TunnelBlockagePos3::
 	end
 
 RusturfTunnel_EventScript_AquaGruntBackUp::
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTURF_AQUA
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RusturfTunnel_EventScript_AquaGruntBackUpWayfarerAllowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
-	goto Common_EventScript_ReleaseNoOp
-RusturfTunnel_EventScript_AquaGruntBackUpWayfarerAllowed::
-#endif
 	lockall
 	setflag FLAG_SAFE_FOLLOWER_MOVEMENT
 	msgbox RusturfTunnel_Text_ComeAndGetSome, MSGBOX_DEFAULT
@@ -305,19 +297,10 @@ RusturfTunnel_EventScript_Peeko::
 	end
 
 RusturfTunnel_EventScript_Grunt::
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_RUSTURF_AQUA
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, RusturfTunnel_EventScript_GruntWayfarerAllowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
-	goto Common_EventScript_ReleaseNoOp
-RusturfTunnel_EventScript_GruntWayfarerAllowed::
-#endif
 	lock
 	faceplayer
 	playbgm MUS_ENCOUNTER_AQUA, FALSE
 	msgbox RusturfTunnel_Text_GruntIntro, MSGBOX_DEFAULT
-RusturfTunnel_EventScript_GruntTrainerBattle::
 	trainerbattle_no_intro TRAINER_GRUNT_RUSTURF_TUNNEL, RusturfTunnel_Text_GruntDefeat
 	msgbox RusturfTunnel_Text_GruntTakePackage, MSGBOX_DEFAULT
 	giveitem ITEM_DEVON_PARTS
@@ -356,15 +339,6 @@ RusturfTunnel_EventScript_GruntTrainerBattle::
 	setflag FLAG_HIDE_ROUTE_116_MR_BRINEY
 	release
 	end
-
-#if IS_WAYFARER
-RusturfTunnel_EventScript_WayfarerGruntLossRetreat::
-	setobjectxyperm LOCALID_RUSTURF_TUNNEL_GRUNT, 14, 5
-	setobjectmovementtype LOCALID_RUSTURF_TUNNEL_GRUNT, MOVEMENT_TYPE_FACE_LEFT
-	savebgm MUS_DUMMY
-	fadedefaultbgm
-	goto EventScript_WayfarerStoryLossRetreat
-#endif
 
 RusturfTunnel_Movement_PushPlayerAsideForGrunt:
 	face_down

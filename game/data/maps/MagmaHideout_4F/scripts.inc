@@ -2,14 +2,6 @@ MagmaHideout_4F_MapScripts::
 	.byte 0
 
 MagmaHideout_4F_EventScript_Maxie::
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_MAGMA_HIDEOUT_MAXIE
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, MagmaHideout_4F_EventScript_MaxieWayfarerAllowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
-	goto Common_EventScript_ReleaseNoOp
-MagmaHideout_4F_EventScript_MaxieWayfarerAllowed::
-#endif
 	lockall
 	playbgm MUS_ENCOUNTER_MAGMA, FALSE
 	msgbox MagmaHideout_4F_Text_MaxieAwakenGroudon, MSGBOX_DEFAULT
@@ -62,7 +54,6 @@ MagmaHideout_4F_EventScript_MaxieWayfarerAllowed::
 	waitmovement 0
 	msgbox MagmaHideout_4F_Text_MaxieOhItWasYou, MSGBOX_DEFAULT
 	closemessage
-MagmaHideout_4F_EventScript_MaxieTrainerBattle::
 	trainerbattle_no_intro TRAINER_MAXIE_MAGMA_HIDEOUT, MagmaHideout_4F_Text_MaxieDefeat
 	msgbox MagmaHideout_4F_Text_MaxieImGoingAfterGroudon, MSGBOX_DEFAULT
 	closemessage
@@ -81,17 +72,6 @@ MagmaHideout_4F_EventScript_MaxieTrainerBattle::
 	fadescreen FADE_FROM_BLACK
 	releaseall
 	end
-
-#if IS_WAYFARER
-MagmaHideout_4F_EventScript_WayfarerMaxieLossRetreat::
-	removeobject LOCALID_MAGMA_HIDEOUT_4F_GROUDON
-	addobject LOCALID_MAGMA_HIDEOUT_4F_GROUDON_SLEEPING
-	setobjectxyperm LOCALID_MAGMA_HIDEOUT_4F_MAXIE, 16, 21
-	setobjectmovementtype LOCALID_MAGMA_HIDEOUT_4F_MAXIE, MOVEMENT_TYPE_FACE_UP
-	savebgm MUS_DUMMY
-	fadedefaultbgm
-	goto EventScript_WayfarerStoryLossRetreat
-#endif
 
 MagmaHideout_4F_Movement_GroudonApproach:
 	delay_16

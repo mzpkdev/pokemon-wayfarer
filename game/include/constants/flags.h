@@ -31,6 +31,7 @@
 #define FLAG_TEMP_9      (TEMP_FLAGS_START + 0x9)  // Unused Flag
 #define FLAG_TEMP_A      (TEMP_FLAGS_START + 0xA)  // Unused Flag
 #define FLAG_TEMP_B      (TEMP_FLAGS_START + 0xB)  // Unused Flag
+#define FLAG_TEMP_TRAINER_ONLY_ENCOUNTER FLAG_TEMP_B // Set only by an authored safe scenario; cleared on map load.
 #define FLAG_TEMP_C      (TEMP_FLAGS_START + 0xC)  // Unused Flag
 #define FLAG_TEMP_D      (TEMP_FLAGS_START + 0xD)  // Unused Flag
 #define FLAG_TEMP_E      (TEMP_FLAGS_START + 0xE)  // When set, follower pokemon won't be spawned
@@ -2535,6 +2536,9 @@
 #define FLAG_NO_WILD_CATCHING                      (ENGINE_FLAGS_START + 11)
 #define FLAG_DISABLE_EXP_GAIN                      (ENGINE_FLAGS_START + 12)
 #define ENGINE_FLAGS_END                        (ENGINE_FLAGS_START + NUM_ENGINE_FLAGS - 1)
+
+// A temporary authoring gate, deliberately outside the persisted engine block.
+#define FLAG_ENABLE_TRAINER_ONLY_ENCOUNTERS FLAG_TEMP_TRAINER_ONLY_ENCOUNTER
 
 #define FLAGS_COUNT (ENGINE_FLAGS_END + 1)
 

@@ -300,13 +300,6 @@ LilycoveCity_EventScript_BattleBrendanMudkip::
 	goto LilycoveCity_EventScript_DefeatedBrendan
 	end
 
-#if IS_WAYFARER
-LilycoveCity_EventScript_WayfarerRivalLossRetreat::
-	savebgm MUS_DUMMY
-	fadedefaultbgm
-	goto EventScript_WayfarerStoryLossRetreat
-#endif
-
 LilycoveCity_EventScript_DefeatedMay::
 	msgbox LilycoveCity_Text_MayGoingBackToLittleroot, MSGBOX_DEFAULT
 	setvar VAR_RESULT, FALSE

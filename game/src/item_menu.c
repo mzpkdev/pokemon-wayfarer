@@ -1667,8 +1667,7 @@ static void OpenContextMenu(u8 taskId)
     case ITEMMENULOCATION_WALLY:
         if ((IsTrainerOnlyEncounter() && TrainerOnlyIsFeedableBerry(gSpecialVar_ItemId))
          || (GetItemBattleUsage(gSpecialVar_ItemId)
-          && (!IsTrainerOnlyEncounter() || TrainerOnlyIsRecoveryItem(gSpecialVar_ItemId)
-              || GetItemPocket(gSpecialVar_ItemId) == POCKET_POKE_BALLS)))
+          && (!IsTrainerOnlyEncounter() || GetItemPocket(gSpecialVar_ItemId) == POCKET_POKE_BALLS)))
         {
             gBagMenu->contextMenuItemsPtr = sContextMenuItems_BattleUse;
             gBagMenu->contextMenuNumItems = ARRAY_COUNT(sContextMenuItems_BattleUse);
@@ -2222,8 +2221,6 @@ static void ItemMenu_UseInBattle(u8 taskId)
             ItemUseInTrainerOnly_Food(taskId);
         else if (GetItemPocket(gSpecialVar_ItemId) == POCKET_POKE_BALLS)
             ItemUseInBattle_PokeBall(taskId);
-        else if (TrainerOnlyIsRecoveryItem(gSpecialVar_ItemId))
-            ItemUseInBattle_PartyMenu(taskId);
         return;
     }
 

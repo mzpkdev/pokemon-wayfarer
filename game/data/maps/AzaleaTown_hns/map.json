@@ -379,8 +379,8 @@
       "x": 11,
       "y": 16,
       "elevation": 0,
-      "var": "VAR_TEMP_C",
-      "var_value": "0",
+      "var": "VAR_AZALEA_TOWN_STATE",
+      "var_value": "5",
       "script": "AzaleaTown_EventScript_SilverTriggerTop"
     }
   ],

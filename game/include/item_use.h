@@ -69,7 +69,6 @@ enum {
 };
 
 bool32 TrainerOnlyIsFeedableBerry(enum Item item);
-bool32 TrainerOnlyIsRecoveryItem(enum Item item);
 void ItemUseInTrainerOnly_Food(u8 taskId);
 bool32 CanThrowBall(void);
 bool32 CannotUseItemsInBattle(enum Item itemId, struct Pokemon *mon);

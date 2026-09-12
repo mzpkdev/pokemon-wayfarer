@@ -3,7 +3,7 @@
   "source": "emerald",
   "expectedMapCount": 518,
   "expectedCatalogSha256": "8797f3299e66d08e025021c14c4b063d3e11ce6cc21b74ccb3ae6d833780cf6f",
-  "expectedMapContentSha256": "70a9aac635a53624a69dfbc6a6f452218c404e11fb3a48744d9967eb6363211b",
+  "expectedMapContentSha256": "211ca2b398de6fd10297700cff58ffaa631caab8b98dd52422923bb437ee3f33",
   "expectedTrainerReferencesSha256": "895b369dfdad47019dbbfd08fb9b89da36e7c96d77d963502f1ee3078c4ef97b",
   "expectedTrainerOffset": 638,
   "expectedTrainerPartiesSha256": "4c3df217b1a40b09a5b7cadf9bf201cc5b433234dff7857b14a8ee1e5ff3645c",
@@ -43,9 +43,7 @@
       "disposition": "excluded-from-first-milestone"
     },
     {
-      "globs": [
-        "InsideOfTruck"
-      ],
+      "globs": ["InsideOfTruck"],
       "system": "native-hoenn-origin",
       "classification": "required",
       "reason": "The Littleroot origin starts in the native moving truck.",

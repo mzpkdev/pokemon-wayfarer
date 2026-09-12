@@ -212,12 +212,7 @@ CherryGroveCity_EventScript_Sign::
 CherryGroveCity_EventScript_TriggerSilver_Top::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_CHERRYGROVE
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, CherryGroveCity_EventScript_TriggerSilver_TopAllowed
-	goto CherrygroveCity_EventScript_DeferredSilver
 #endif
-CherryGroveCity_EventScript_TriggerSilver_TopAllowed::
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, CherryGroveCity_Movement_Trigger_Silver_Top
 	waitmovement 0
@@ -227,12 +222,7 @@ CherryGroveCity_EventScript_TriggerSilver_TopAllowed::
 CherryGroveCity_EventScript_TriggerSilver_Bottom::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_CHERRYGROVE
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, CherryGroveCity_EventScript_TriggerSilver_BottomAllowed
-	goto CherrygroveCity_EventScript_DeferredSilver
 #endif
-CherryGroveCity_EventScript_TriggerSilver_BottomAllowed::
 	lock
 	applymovement OBJ_EVENT_ID_PLAYER, CherryGroveCity_Movement_Trigger_Silver_Bottom
 	waitmovement 0
@@ -242,12 +232,7 @@ CherryGroveCity_EventScript_TriggerSilver_BottomAllowed::
 CherryGroveCity_EventScript_TriggerSilver::
 #if IS_WAYFARER
 	goto_if_unset FLAG_JOHTO_STARTER_CHOICE_COMMITTED, CherrygroveCity_EventScript_DeferredSilver
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_SILVER_CHERRYGROVE
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, CherryGroveCity_EventScript_TriggerSilver_Allowed
-	goto CherrygroveCity_EventScript_DeferredSilver
 #endif
-CherryGroveCity_EventScript_TriggerSilver_Allowed::
 	lock
 	playbgm MUS_HG_ENCOUNTER_RIVAL, FALSE
 	applymovement LOCALID_CHERRYGROVE_SILVER, CherryGroveCity_Movement_Silver_Enter

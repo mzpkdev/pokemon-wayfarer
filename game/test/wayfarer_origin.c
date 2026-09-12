@@ -241,14 +241,4 @@ TEST("Wayfarer profile registration rejects unsafe entries and missing authored 
     EXPECT(Test_WayfarerRegisterOriginProfile(NULL));
 }
 
-TEST("Wayfarer usable-party battle permission survives missing story milestones")
-{
-    ZeroPlayerPartyMons();
-    EXPECT(!WayfarerCanStartOrdinaryBattle());
-    CreateMon(&gPlayerParty[0], SPECIES_PIDGEY, 5, 0, OTID_STRUCT_PLAYER_ID);
-    CalculateMonStats(&gPlayerParty[0]);
-    EXPECT(WayfarerCanStartOrdinaryBattle());
-    SetMonData(&gPlayerParty[0], MON_DATA_HP, &(u16){0});
-    EXPECT(!WayfarerCanStartOrdinaryBattle());
-}
 #endif

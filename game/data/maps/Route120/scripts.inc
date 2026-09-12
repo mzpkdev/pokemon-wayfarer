@@ -151,14 +151,6 @@ Route120_EventScript_BerryNotLove::
 	return
 
 Route120_EventScript_Steven::
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE120_KECLEON
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route120_EventScript_StevenWayfarerAllowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
-	goto Common_EventScript_ReleaseNoOp
-Route120_EventScript_StevenWayfarerAllowed::
-#endif
 	lock
 	faceplayer
 	checkitem ITEM_DEVON_SCOPE

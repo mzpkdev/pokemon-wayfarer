@@ -1,3 +1,4 @@
+import { arrangeTrainerOnly } from "../playbooks/trainer-only-scenario"
 import fs from "node:fs/promises"
 import { describe, expect, it } from "webanvil/test"
 
@@ -35,7 +36,7 @@ describe.sequential("Trainer-only R Quick Ball widget", () => {
   it("uses its only displayed Quick Ball and commits one failed trainer-only throw", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         bag: { items: { quickBall: 1 } },
@@ -63,7 +64,7 @@ describe.sequential("Trainer-only R Quick Ball widget", () => {
   it("leaves a trainer-only turn untouched when R has no owned ball", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         determinism: { textSpeed: "instant", rngSeed: 1 },
@@ -87,7 +88,7 @@ describe.sequential("Trainer-only R Quick Ball widget", () => {
   it("keeps the ordinary party battle R Quick Ball path available", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [{ species: "wailord", level: 100 }],
         bag: { items: { quickBall: 1 } },

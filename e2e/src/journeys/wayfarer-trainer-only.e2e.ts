@@ -1,17 +1,10 @@
+import { arrangeTrainerOnly } from "../playbooks/trainer-only-scenario"
 import * as fs from "node:fs"
 import { describe, expect, it } from "webanvil/test"
-import {
-  openPcStorage,
-  depositPartyMon,
-  closePcStorage,
-  withdrawSlot,
-} from "../playbooks/pc-storage"
-import { catchWithMasterBallAndSwap } from "../playbooks/battle-catch-swap"
 import { GameSession } from "../harness/game-session"
 import { storyFlags } from "../harness/game-session/catalog"
 
 Object.assign(storyFlags, { "party-menu-starter": 0x860, "party-menu-dex": 0x861 })
-import { type PartyMonFixture } from "../harness/game-session/features/fixtures"
 import { type GameState } from "../harness/game-session/features/state"
 
 const B_OUTCOME_RAN = 4
@@ -55,17 +48,8 @@ const useBagItem = async (
   await game.controls.press("a")
 }
 
-const parties: { name: string; party: PartyMonFixture[] }[] = [
+const parties = [
   { name: "empty", party: [] },
-  { name: "fainted", party: [{ species: "rattata", fainted: true }] },
-  { name: "Egg-only", party: [{ species: "rattata", egg: true }] },
-  {
-    name: "mixed unusable",
-    party: [
-      { species: "rattata", fainted: true },
-      { species: "pidgey", egg: true },
-    ],
-  },
 ]
 
 describe.sequential("Wayfarer trainer-only controller", () => {
@@ -73,7 +57,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
     it(`enters with a real ${fixture.name} party and cancels Bag without a turn`, async () => {
       const game = await GameSession.launch()
       try {
-        await game.arrange({
+        await arrangeTrainerOnly(game, {
           checkpoint: "new-bark-after-intro",
           player: { appearanceStyle: (index + 1) as 1 | 2 | 3 | 4 },
           party: fixture.party,
@@ -117,7 +101,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
   it("captures with exactly one owned ball and restores real party protection", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         bag: { items: { masterBall: 1 } },
@@ -170,7 +154,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
   it("commits Go Near once and returns through the real field callback if the wild flees", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         determinism: { textSpeed: "instant", rngSeed: 1 },
@@ -209,7 +193,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
     for (let seed = 1; seed <= 12 && !observedFailure; seed++) {
       const game = await GameSession.launch()
       try {
-        await game.arrange({
+        await arrangeTrainerOnly(game, {
           checkpoint: "new-bark-after-intro",
           party: [],
           determinism: { textSpeed: "instant", rngSeed: seed },
@@ -243,7 +227,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
     for (let seed = 1; seed <= 12 && !escaped; seed++) {
       const game = await GameSession.launch()
       try {
-        await game.arrange({
+        await arrangeTrainerOnly(game, {
           checkpoint: "new-bark-after-intro",
           party: [],
           determinism: { textSpeed: "instant", rngSeed: seed },
@@ -263,6 +247,10 @@ describe.sequential("Wayfarer trainer-only controller", () => {
           expect(state.party).toHaveLength(0)
           expect(state.map).toEqual(before.map)
           expect(state.player).toEqual(before.player)
+          expect(await game.story.flag("trainerOnlyEnabled")).toBe(true)
+          await game.battle.startWild({ species: "pidgey", level: 1 })
+          await menu(game)
+          expect((await game.state.read()).battle.trainerOnly.active).toBe(true)
           escaped = true
         }
       } finally {
@@ -275,7 +263,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
   it("keeps globally disabled Run uncommitted", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         story: { flags: { noWildRunning: true } },
         party: [],
@@ -300,7 +288,7 @@ describe.sequential("Wayfarer trainer-only controller", () => {
       for (let seed = 1; seed <= 12 && !observedFailure; seed++) {
         const game = await GameSession.launch()
         try {
-          await game.arrange({
+          await arrangeTrainerOnly(game, {
             checkpoint: "new-bark-after-intro",
             party: [],
             bag: { items: { [ball]: 1 } },
@@ -343,38 +331,10 @@ describe.sequential("Wayfarer trainer-only controller", () => {
     })
   }
 
-  it("deposits the last real party member, reloads empty, then withdraws protection", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: { facing: "up", position: { map: "cherrygrove-pokemon-center", x: 11, y: 2 } },
-        party: [{ species: "rattata" }],
-        pc: { currentBox: 0, observedSlots: [{ box: 0, slot: 0, mon: null }] },
-        determinism: { textSpeed: "instant" },
-      })
-      await openPcStorage(game, "deposit")
-      await depositPartyMon(game, 0)
-      expect((await game.state.read()).party).toHaveLength(0)
-      expect((await game.storage.slot(0, 0)).mon?.species).toBe("rattata")
-      await closePcStorage(game)
-      await game.saveAndReload()
-      expect((await game.state.read()).party).toHaveLength(0)
-      await openPcStorage(game, "withdraw")
-      await withdrawSlot(game, 0)
-      await closePcStorage(game)
-      expect((await game.state.read()).party).toMatchObject([
-        { species: "rattata", fainted: false },
-      ])
-    } finally {
-      await game.close()
-    }
-  })
-
   it("feeds an owned berry directly and consumes exactly one", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         bag: { items: { oranBerry: 2 } },
@@ -421,42 +381,10 @@ describe.sequential("Wayfarer trainer-only controller", () => {
     }
   })
 
-  it("revives a real fainted member and ends before anger resolution", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        party: [{ species: "rattata", fainted: true }],
-        bag: { items: { revive: 1 } },
-        determinism: { textSpeed: "instant" },
-      })
-      await game.battle.startWild({ species: "pidgey", level: 5 })
-      await useBagItem(game, "revive")
-      await game.wait.until((state) => state.ui.mode === "party-menu", "real Revive target picker")
-      // Party-menu allocations are live before their first rendered frame.
-      // Capture the settled target screen, rather than its palette transition.
-      await game.wait.frames(60)
-      await fs.promises.writeFile("/tmp/trainer-only-revive-picker.png", await game.screenshot())
-      await game.controls.press("a")
-      for (let attempt = 0; attempt < 30; attempt++) {
-        const state = await game.state.read()
-        if (!state.battle.active && state.ready) break
-        await game.controls.press("a")
-        await game.wait.frames(60)
-      }
-      await advance(game, (state) => state.ready && !state.battle.active)
-      const state = await game.state.read()
-      expect(state.party).toMatchObject([{ species: "rattata", fainted: false }])
-      expect(state.bag.items.revive).toBe(0)
-      expect(state.battle.trainerOnly.active).toBe(false)
-    } finally {
-      await game.close()
-    }
-  })
   it("knocks out a real one-HP wild Pokémon with Rock and returns without a capture", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         determinism: { textSpeed: "instant" },
@@ -479,280 +407,4 @@ describe.sequential("Wayfarer trainer-only controller", () => {
     }
   })
 
-  const recoveryScenarios = [
-    {
-      name: "empty party origin fallback",
-      checkpoint: "new-bark-after-intro",
-      source: "route-30",
-      party: [],
-      transform: false,
-    },
-    {
-      name: "fainted party origin fallback",
-      checkpoint: "new-bark-after-intro",
-      source: "route-30",
-      party: [{ species: "rattata", fainted: true }],
-      transform: false,
-    },
-    {
-      name: "Hoenn Lavaridge transform",
-      checkpoint: "hoenn-before-rescue",
-      source: "slateport-city",
-      party: [],
-      transform: true,
-    },
-    {
-      name: "Johto ignores Hoenn transform",
-      checkpoint: "hoenn-before-rescue",
-      source: "olivine-city",
-      party: [],
-      transform: true,
-    },
-  ] as const
-  for (const scenario of recoveryScenarios) {
-    const party: PartyMonFixture[] = [...scenario.party]
-    it(`retaliates after a warning: ${scenario.name}`, async () => {
-      const game = await GameSession.launch()
-      try {
-        let retaliated = false
-        for (let seed = 1; seed <= 12 && !retaliated; seed++) {
-          await game.arrange({
-            checkpoint: scenario.checkpoint,
-            player: {
-              position: {
-                map: scenario.source,
-                x: scenario.source === "route-30" ? 11 : 19,
-                y: scenario.source === "route-30" ? 8 : 21,
-              },
-            },
-            story: { flags: { hoennWhiteoutToLavaridge: scenario.transform } },
-            party,
-            determinism: { textSpeed: "instant", rngSeed: seed },
-          })
-          const beforeRecovery = await game.state.read()
-          const moneyBefore = beforeRecovery.money
-          await game.battle.startWild({ species: "pidgey", level: 100 })
-          for (let rock = 0; rock < 3; rock++) {
-            await menu(game)
-            if (rock === 2) {
-              expect((await game.state.read()).battle.trainerOnly).toMatchObject({
-                anger: 80,
-                warned: true,
-              })
-            }
-            await select(game, 0)
-            if (rock === 1) {
-              // The second Rock crosses the threshold. Capture while the
-              // warning's own timer still owns the message window, before the
-              // next action-menu callback becomes available.
-              await game.wait.frames(180)
-              await fs.promises.writeFile(
-                `/tmp/trainer-only-warning-${scenario.source}-${party.length}.png`,
-                await game.screenshot(),
-              )
-            }
-            await advance(
-              game,
-              (state) =>
-                state.ready ||
-                state.battle.trainerOnly.anger === 100 ||
-                (state.battle.ui === "action-menu" &&
-                  state.battle.trainerOnly.completedTurns === rock + 1),
-            )
-            const state = await game.state.read()
-            if (!state.battle.active) break
-            if (state.battle.trainerOnly.anger === 100) {
-              retaliated = true
-              await game.wait.frames(96)
-              await fs.promises.writeFile(
-                `/tmp/trainer-only-retaliation-${scenario.source}-${party.length}.png`,
-                await game.screenshot(),
-              )
-              for (let confirmation = 0; confirmation < 80; confirmation++) {
-                if ((await game.state.read()).ready) break
-                await game.controls.press("a")
-                await game.wait.frames(30)
-              }
-              await advance(game, (current) => current.ready && !current.battle.active)
-              const recovered = await game.state.read()
-              expect(recovered.money).toBe(moneyBefore)
-              expect(recovered.map.name).toBe(
-                scenario.source === "slateport-city"
-                  ? "lavaridge-pokemon-center"
-                  : scenario.source === "olivine-city"
-                    ? "brendans-house-1f"
-                    : beforeRecovery.origin.recovery.map,
-              )
-              expect(recovered.origin.id).toBe(beforeRecovery.origin.id)
-              expect(recovered.party).toHaveLength(party.length)
-              expect(recovered.party.every((mon) => !mon.fainted)).toBe(true)
-              expect(recovered.battle.trainerOnly.active).toBe(false)
-              break
-            }
-          }
-        }
-        expect(retaliated).toBe(true)
-      } finally {
-        await game.close()
-      }
-    }, 240_000)
-  }
-
-  it("sends a catch to PC with six fainted members and stays unprotected", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        party: Array.from({ length: 6 }, () => ({ species: "rattata" as const, fainted: true })),
-        bag: { items: { masterBall: 1 } },
-        pc: { currentBox: 0, observedSlots: [{ box: 0, slot: 0, mon: null }] },
-        determinism: { textSpeed: "instant" },
-      })
-      await game.battle.startWild({ species: "pidgey", level: 5 })
-      await useBagItem(game, "masterBall")
-      await advance(
-        game,
-        (state) => state.battle.ui === "catch-swap-prompt" || (state.ready && !state.battle.active),
-      )
-      if ((await game.state.read()).battle.ui === "catch-swap-prompt")
-        await game.controls.press("b")
-      await advance(game, (state) => state.ready && !state.battle.active)
-      const caught = await game.state.read()
-      expect(caught.party).toHaveLength(6)
-      expect(caught.party.every((mon) => mon.species === "rattata" && mon.fainted)).toBe(true)
-      expect((await game.storage.slot(0, 0)).mon?.species).toBe("pidgey")
-      expect(caught.bag.items.masterBall).toBe(0)
-      await game.battle.startWild({ species: "pidgey", level: 5 })
-      await menu(game)
-      expect((await game.state.read()).battle.trainerOnly.active).toBe(true)
-    } finally {
-      await game.close()
-    }
-  })
-
-  it("swaps a chosen fainted party member through the real full-party capture picker", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        party: [
-          { species: "rattata", fainted: true },
-          { species: "pidgey", fainted: true },
-          { species: "geodude", fainted: true },
-          { species: "onix", fainted: true },
-          { species: "chikorita", fainted: true },
-          { species: "zubat", fainted: true },
-        ],
-        bag: { items: { masterBall: 1 } },
-        pc: { currentBox: 0, observedSlots: [{ box: 0, slot: 0, mon: null }] },
-        determinism: { textSpeed: "instant" },
-      })
-      await game.battle.startWild({ species: "cyndaquil", level: 5 })
-      await catchWithMasterBallAndSwap(game, { outgoingPartyIndex: 2 })
-
-      const caught = await game.state.read()
-      expect(caught.battle).toMatchObject({
-        caughtSpecies: "cyndaquil",
-        trainerOnly: { active: false },
-        catchSwap: { state: "resolved", selectedParty: 2, box: 0, slot: 0 },
-      })
-      expect(caught.party).toHaveLength(6)
-      expect(caught.party[2]).toMatchObject({ species: "cyndaquil", fainted: false, egg: false })
-      expect((await game.storage.slot(0, 0)).mon?.species).toBe("geodude")
-      expect(caught.bag.items.masterBall).toBe(0)
-
-      await game.battle.startWild({ species: "rattata", level: 5 })
-      await menu(game)
-      expect((await game.state.read()).battle.trainerOnly.active).toBe(false)
-    } finally {
-      await game.close()
-    }
-  })
-
-  it("moves the last party member into a box without leaving a cursor-held Pokémon", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        player: { facing: "up", position: { map: "cherrygrove-pokemon-center", x: 11, y: 2 } },
-        party: [{ species: "rattata" }],
-        pc: { currentBox: 0, observedSlots: [{ box: 0, slot: 0, mon: null }] },
-        determinism: { textSpeed: "instant" },
-      })
-      await openPcStorage(game, "move")
-      for (let row = 0; row < 5; row++) {
-        await game.controls.press("down")
-        await game.wait.frames(12)
-      }
-      await game.wait.until((state) => state.storage.cursor.area === 3, "PC party button")
-      await game.controls.press("a")
-      await game.wait.until(
-        (state) => state.storage.ready && state.storage.cursor.area === 1,
-        "PC party panel",
-      )
-      await game.controls.press("a")
-      await game.wait.until((state) => state.storage.ui === "mon-menu", "last member Move menu")
-      await game.wait.frames(30)
-      await game.controls.press("a")
-      await game.wait.until(
-        (state) => state.storage.ready && state.storage.movingMon,
-        "last member on cursor",
-      )
-      await game.controls.press("b")
-      await game.wait.until(
-        (state) => state.storage.ready && state.storage.cursor.area === 0,
-        "box with held last member",
-      )
-      await game.controls.press("a")
-      await game.wait.until((state) => state.storage.ui === "mon-menu", "place last member menu")
-      await game.wait.frames(30)
-      await game.controls.press("a")
-      await game.wait.until(
-        (state) => state.storage.ready && !state.storage.movingMon,
-        "last member placed",
-      )
-      expect((await game.state.read()).party).toHaveLength(0)
-      expect((await game.storage.slot(0, 0)).mon?.species).toBe("rattata")
-      await closePcStorage(game)
-      await game.saveAndReload()
-      expect((await game.state.read()).party).toHaveLength(0)
-      await game.battle.startWild({ species: "pidgey", level: 5 })
-      await menu(game)
-      expect((await game.state.read()).battle.trainerOnly.active).toBe(true)
-    } finally {
-      await game.close()
-    }
-  })
-  it("loses a real ordinary wild battle once and continues unhealed at the same field location", async () => {
-    const game = await GameSession.launch()
-    try {
-      await game.arrange({
-        checkpoint: "new-bark-after-intro",
-        party: [{ species: "rattata", level: 1, moves: ["tackle"] }],
-        determinism: { textSpeed: "instant", rngSeed: 1 },
-      })
-      const before = await game.state.read()
-      await game.battle.startWild({ species: "pidgey", level: 100, moves: ["tackle"] })
-      await menu(game)
-      expect((await game.state.read()).battle.trainerOnly.active).toBe(false)
-      await select(game, 0)
-      await game.wait.until((state) => state.battle.ui === "move-menu", "ordinary move selection")
-      await game.controls.press("a")
-      await advance(game, (state) => state.ready && !state.battle.active)
-      const lost = await game.state.read()
-      expect(lost.map).toEqual(before.map)
-      expect(lost.player).toEqual(before.player)
-      expect(lost.partyVitals).toEqual([{ hp: 0, status: 0 }])
-      expect(lost.money).toBe(before.money - Math.min(before.money, 8))
-      expect(lost.battle.trainerOnly.active).toBe(false)
-      await game.saveAndReload()
-      expect((await game.state.read()).partyVitals).toEqual(lost.partyVitals)
-      expect((await game.state.read()).money).toBe(lost.money)
-      await game.battle.startWild({ species: "pidgey", level: 5 })
-      await menu(game)
-      expect((await game.state.read()).battle.trainerOnly.active).toBe(true)
-    } finally {
-      await game.close()
-    }
-  })
 })

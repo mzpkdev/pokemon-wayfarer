@@ -73,18 +73,9 @@ Route24_Movement_WomanMove:
 	step_end
 
 Route24_EventScript_Grunt::
-#if IS_WAYFARER
-	goto_if_defeated TRAINER_GRUNT_31_HNS, Route24_EventScript_GruntAlreadyDefeated
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_ROUTE24_ROCKET
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, Route24_EventScript_GruntAllowed
-	goto Route24_EventScript_GruntNoParty
-#endif
-Route24_EventScript_GruntAllowed::
 	lock
 	faceplayer
 	msgbox Route24_Text_RocketSeen, MSGBOX_DEFAULT
-Route24_EventScript_GruntBattle::
 	trainerbattle_no_intro TRAINER_GRUNT_31_HNS, Route24_Text_RocketBeaten
 	msgbox Route24_Text_RocketAfter, MSGBOX_DEFAULT
 	closemessage
@@ -105,37 +96,6 @@ Route24_EventScript_GruntBattle::
 	release
 	end
 
-Route24_EventScript_GruntAlreadyDefeated::
-	msgbox Route24_Text_RocketAfter, MSGBOX_AUTOCLOSE
-	closemessage
-	releaseall
-	end
-
-Route24_EventScript_GruntNoParty::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
-
-Route24_EventScript_GruntRetreat::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowRetreatDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-
-#else
-	end
-#endif
 Route24_Movement_PlayerSlide:
 	delay_16
 	lock_facing_direction

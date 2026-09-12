@@ -1,10 +1,6 @@
 #ifndef GUARD_EVENT_SCRIPTS_H
 #define GUARD_EVENT_SCRIPTS_H
 
-extern const u8 EventScript_WayfarerStoryNoPartyRefusal[];
-extern const u8 EventScript_WayfarerStoryLossRetreat[];
-extern const u8 Common_EventScript_ReleaseNoOp[];
-
 extern const u8 EventScript_Follower[];
 extern const u8 EventScript_FollowerEnd[];
 extern const u8 EventScript_FollowerGeneric[];

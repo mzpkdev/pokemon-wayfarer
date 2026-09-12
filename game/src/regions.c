@@ -12,9 +12,6 @@ enum Region GetCurrentRegion(void)
 #endif
 
 
-// Trainer Tower's map section is emitted only for the FRLG and Wayfarer
-// catalogs. Standalone HNS retains neither the tower nor its map section.
-#if !IS_HNS || IS_WAYFARER
 static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_COUNT][30] = {
     [KANTO_SUBREGION_KANTO] =
     {
@@ -95,4 +92,3 @@ enum KantoSubRegion GetKantoSubregion(u32 mapSecId)
     }
     return KANTO_SUBREGION_KANTO;
 }
-#endif

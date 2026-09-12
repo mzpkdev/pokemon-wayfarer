@@ -11,14 +11,6 @@ AquaHideout_B2F_EventScript_PreventMattNoticing::
 	return
 
 AquaHideout_B2F_EventScript_MattNoticePlayer::
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_AQUA_HIDEOUT_MATT
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, AquaHideout_B2F_EventScript_MattNoticePlayerWayfarerAllowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
-	goto Common_EventScript_ReleaseNoOp
-AquaHideout_B2F_EventScript_MattNoticePlayerWayfarerAllowed::
-#endif
 	lockall
 	setvar VAR_0x8008, LOCALID_AQUA_HIDEOUT_MATT
 	playse SE_PIN

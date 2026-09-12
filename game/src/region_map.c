@@ -155,12 +155,9 @@ static const u8 sRegionMapPlayerIcon_KrisGfx[] = INCBIN_U8("graphics/pokenav/reg
 
 #include "data/region_map/region_map_layout.h"
 #include "data/region_map/region_map_layout_kanto.h"
-#if !IS_HNS || IS_WAYFARER
-// Numbered-island pages are selected only by the Wayfarer catalog in HNS.
 #include "data/region_map/region_map_layout_sevii123.h"
 #include "data/region_map/region_map_layout_sevii45.h"
 #include "data/region_map/region_map_layout_sevii67.h"
-#endif
 #if IS_HNS
 #include "data/region_map/region_map_layout_johto.h"
 #include "data/region_map/region_map_layout_jk.h"

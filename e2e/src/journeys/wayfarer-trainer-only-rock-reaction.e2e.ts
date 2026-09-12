@@ -1,3 +1,4 @@
+import { arrangeTrainerOnly } from "../playbooks/trainer-only-scenario"
 import * as fs from "node:fs"
 import { describe, expect, it } from "webanvil/test"
 import { GameSession } from "../harness/game-session"
@@ -6,7 +7,7 @@ describe.sequential("Trainer-only surviving Rock presentation", () => {
   it("shows native impact and anger motion before committing the completed turn", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         party: [],
         determinism: { textSpeed: "instant", rngSeed: 1 },

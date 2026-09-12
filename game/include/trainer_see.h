@@ -17,9 +17,6 @@ extern bool8 gTrainerApproachedPlayer;
 extern u8 gApproachingTrainerId;
 
 bool8 CheckForTrainersWantingBattle(void);
-#if IS_WAYFARER
-void ArmTrainerRecoverySightSuppression(void);
-#endif
 void SetBuriedTrainerMovement(struct ObjectEvent *objEvent);
 void DoTrainerApproach(void);
 void TryPrepareSecondApproachingTrainer(void);

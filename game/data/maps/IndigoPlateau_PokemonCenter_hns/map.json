@@ -105,8 +105,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "IndigoPlateau_EventScript_Silver",
-      "flag": "FLAG_HIDE_INDIGO_PLATEAU_SILVER",
-      "local_id": "LOCALID_INDIGO_PLATEAU_SILVER"
+      "flag": "FLAG_HIDE_INDIGO_PLATEAU_SILVER"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BLACK_BELT_HNS",

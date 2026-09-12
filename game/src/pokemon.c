@@ -1,5 +1,4 @@
 #include "global.h"
-#include "wayfarer_origin.h"
 #include "malloc.h"
 #include "apprentice.h"
 #include "battle.h"
@@ -7835,10 +7834,6 @@ static s32 GetWildMonTableIdInAlteringCave(u16 species)
 static inline bool32 CanFirstMonBoostHeldItemRarity(void)
 {
     enum Ability ability;
-#if IS_WAYFARER
-    if (!WayfarerCanStartOrdinaryBattle())
-        return FALSE;
-#endif
     if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
 

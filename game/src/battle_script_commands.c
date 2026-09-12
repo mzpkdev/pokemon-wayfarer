@@ -1,7 +1,6 @@
 #include "global.h"
 #include "capture_context.h"
 #include "trainer_only_encounter.h"
-#include "wayfarer_loss_policy.h"
 #ifdef E2E_TESTING
 #include "e2e_test.h"
 #endif
@@ -6308,7 +6307,6 @@ static void Cmd_getmoneyreward(void)
         if (!IsEnoughMoney(&gSaveBlock1Ptr->money, money))
             money = GetMoney(&gSaveBlock1Ptr->money);
         RemoveMoney(&gSaveBlock1Ptr->money, money);
-        WayfarerRecordBattleLossMoney();
     }
 
     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff1, 5, money);

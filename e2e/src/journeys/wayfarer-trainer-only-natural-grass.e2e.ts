@@ -1,3 +1,4 @@
+import { arrangeTrainerOnly } from "../playbooks/trainer-only-scenario"
 import * as fs from "node:fs/promises"
 import { describe, expect, it } from "webanvil/test"
 import { GameSession } from "../harness/game-session"
@@ -6,7 +7,7 @@ describe.sequential("Trainer-only natural encounter entry", () => {
   it("enters the dedicated controller by walking ordinary grass with an empty party", async () => {
     const game = await GameSession.launch()
     try {
-      await game.arrange({
+      await arrangeTrainerOnly(game, {
         checkpoint: "new-bark-after-intro",
         player: { position: { map: "route-30", x: 8, y: 10 }, facing: "left" },
         party: [],

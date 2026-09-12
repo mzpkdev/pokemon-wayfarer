@@ -30,14 +30,6 @@ PetalburgCity_OnFrame:
 	.2byte 0
 
 PetalburgCity_EventScript_WallyTutorial::
-#if IS_WAYFARER
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_PETALBURG_WALLY_TUTORIAL
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, PetalburgCity_EventScript_WallyTutorialWayfarerAllowed
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_REFUSE, EventScript_WayfarerStoryNoPartyRefusal
-	goto Common_EventScript_ReleaseNoOp
-PetalburgCity_EventScript_WallyTutorialWayfarerAllowed::
-#endif
 	lockall
 	special SavePlayerParty
 	special LoadWallyZigzagoon

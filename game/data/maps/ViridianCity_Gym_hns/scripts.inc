@@ -2,14 +2,6 @@ ViridianCity_Gym_hns_MapScripts::
 	.byte 0
 
 ViridianCity_Gym_EventScript_Blue::
-#if IS_WAYFARER
-	goto_if_defeated TRAINER_BLUE_HNS, ViridianCity_Gym_EventScript_Blue_Defeated
-	setvar VAR_0x8004, WAYFARER_STORY_SCENE_VIRIDIAN_BLUE
-	specialvar VAR_RESULT, WayfarerStoryCanStartScene
-	goto_if_eq VAR_RESULT, WAYFARER_STORY_GATE_ALLOW, ViridianCity_Gym_EventScript_BlueAllowed
-	goto ViridianCity_Gym_EventScript_BlueNoParty
-#endif
-ViridianCity_Gym_EventScript_BlueAllowed::
 	lock
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
@@ -20,7 +12,6 @@ ViridianCity_Gym_EventScript_BlueAllowed::
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_Gym_EventScript_Blue_Defeated
 ViridianCity_Gym_EventScript_BlueOfficialChallenge::
 	msgbox ViridianCity_Gym_Text_LeaderBlue_Before, MSGBOX_DEFAULT
-ViridianCity_Gym_EventScript_BlueBattle::
 	trainerbattle_no_intro TRAINER_BLUE_HNS, ViridianCity_Gym_Text_LeaderBlue_Win
 	message ViridianCity_Gym_Text_ReceivedEarthBadge
 	waitmessage
@@ -45,18 +36,6 @@ ViridianCity_Gym_EventScript_BlueBattle::
 	setvar VAR_OAK_MT_SILVER_CALL, 1
 	release
 	end
-
-ViridianCity_Gym_EventScript_BlueNoParty::
-#if IS_WAYFARER
-
-	special WayfarerStoryShowSelectedNoPartyDialogue
-	waitmessage
-	waitbuttonpress
-	releaseall
-	end
-#else
-	end
-#endif
 
 ViridianCity_Gym_EventScript_Blue_Defeated::
 	msgbox ViridianCity_Gym_Text_LeaderBlue_Epilogue, MSGBOX_DEFAULT
