@@ -176,7 +176,7 @@ SaveBlock3 figures above therefore remain the applicable runtime measurements.
 
 ## Trainer integration validation
 
-Story is structurally integrated with Trainer main
+Story merge commit `28f05e6675` structurally integrates Trainer main
 `8347917770864a8d9a72811bea0587e0379cedd5`. The schema-v2 manifest retains all
 135 maps, 261 unique retained events, and 10 map scripts: 87 ordinary-Trainer
 objects plus 131 Story inventory records, with shared actor keys unioned by identity. Regeneration
