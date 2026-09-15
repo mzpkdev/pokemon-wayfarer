@@ -217,7 +217,7 @@ def render_coordination(report: dict) -> str:
     lines = [
         "# Sevii Trainer implementation coordination",
         "",
-        "Status: allocation and runtime interface freeze. The publishing commit is recorded by the next coordination-only commit so the referenced hash is immutable.",
+        "Status: allocation and runtime interface freeze published by commit `7fa44c8b75`.",
         "",
         "## Shared Trainer allocation",
         "",
