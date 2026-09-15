@@ -687,6 +687,43 @@ const u16 gObjectEventPic_OldWomanFrlg[] = INCBIN_U16("graphics/object_events/pi
 const u16 gObjectEventPic_SailorFrlg[] = INCBIN_U16("graphics/object_events/pics/people/sailor_frlg.4bpp");
 const u16 gObjectEventPic_NurseFrlg[] = INCBIN_U16("graphics/object_events/pics/people/nurse_frlg.4bpp");
 const u16 gObjectEventPic_Clerk[] = INCBIN_U16("graphics/object_events/pics/people/clerk.4bpp");
+// Story-selected Sevii object graphics; keep this closure aligned with the manifest.
+const u16 gObjectEventPic_BaldingMan[] = INCBIN_U16("graphics/object_events/pics/people/balding_man.4bpp");
+const u16 gObjectEventPic_BattleGirl[] = INCBIN_U16("graphics/object_events/pics/people/battle_girl.4bpp");
+const u16 gObjectEventPic_BeautyFrlg[] = INCBIN_U16("graphics/object_events/pics/people/beauty_frlg.4bpp");
+const u16 gObjectEventPic_Biker[] = INCBIN_U16("graphics/object_events/pics/people/biker.4bpp");
+const u16 gObjectEventPic_Bill[] = INCBIN_U16("graphics/object_events/pics/people/bill.4bpp");
+const u16 gObjectEventPic_Blackbelt[] = INCBIN_U16("graphics/object_events/pics/people/blackbelt.4bpp");
+const u16 gObjectEventPic_Blue[] = INCBIN_U16("graphics/object_events/pics/people/blue.4bpp");
+const u16 gObjectEventPic_BugCatcherFrlg[] = INCBIN_U16("graphics/object_events/pics/people/bug_catcher_frlg.4bpp");
+const u16 gObjectEventPic_CamperFrlg[] = INCBIN_U16("graphics/object_events/pics/people/camper_frlg.4bpp");
+const u16 gObjectEventPic_Celio[] = INCBIN_U16("graphics/object_events/pics/people/celio.4bpp");
+const u16 gObjectEventPic_Channeler[] = INCBIN_U16("graphics/object_events/pics/people/channeler.4bpp");
+const u16 gObjectEventPic_ChanseyOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/chansey.4bpp");
+const u16 gObjectEventPic_Chef[] = INCBIN_U16("graphics/object_events/pics/people/chef.4bpp");
+const u16 gObjectEventPic_CooltrainerF[] = INCBIN_U16("graphics/object_events/pics/people/cooltrainer_f.4bpp");
+const u16 gObjectEventPic_CooltrainerM[] = INCBIN_U16("graphics/object_events/pics/people/cooltrainer_m.4bpp");
+const u16 gObjectEventPic_DoduoOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/doduo.4bpp");
+const u16 gObjectEventPic_FatManFrlg[] = INCBIN_U16("graphics/object_events/pics/people/fat_man_frlg.4bpp");
+const u16 gObjectEventPic_GBAKid[] = INCBIN_U16("graphics/object_events/pics/people/gba_kid.4bpp");
+const u16 gObjectEventPic_GentlemanFrlg[] = INCBIN_U16("graphics/object_events/pics/people/gentleman_frlg.4bpp");
+const u16 gObjectEventPic_HikerFrlg[] = INCBIN_U16("graphics/object_events/pics/people/hiker_frlg.4bpp");
+const u16 gObjectEventPic_LassFrlg[] = INCBIN_U16("graphics/object_events/pics/people/lass_frlg.4bpp");
+const u16 gObjectEventPic_LittleBoyFrlg[] = INCBIN_U16("graphics/object_events/pics/people/little_boy_frlg.4bpp");
+const u16 gObjectEventPic_LittleGirlFrlg[] = INCBIN_U16("graphics/object_events/pics/people/little_girl_frlg.4bpp");
+const u16 gObjectEventPic_Lorelei[] = INCBIN_U16("graphics/object_events/pics/people/lorelei.4bpp");
+const u16 gObjectEventPic_MoltresOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/moltres.4bpp");
+const u16 gObjectEventPic_OldMan1[] = INCBIN_U16("graphics/object_events/pics/people/old_man_1.4bpp");
+const u16 gObjectEventPic_OldMan2[] = INCBIN_U16("graphics/object_events/pics/people/old_man_2.4bpp");
+const u16 gObjectEventPic_PicnickerFrlg[] = INCBIN_U16("graphics/object_events/pics/people/picnicker_frlg.4bpp");
+const u16 gObjectEventPic_Rocker[] = INCBIN_U16("graphics/object_events/pics/people/rocker.4bpp");
+const u16 gObjectEventPic_RocketF[] = INCBIN_U16("graphics/object_events/pics/people/rocket_f.4bpp");
+const u16 gObjectEventPic_RocketM[] = INCBIN_U16("graphics/object_events/pics/people/rocket_m.4bpp");
+const u16 gObjectEventPic_Sapphire[] = INCBIN_U16("graphics/object_events/pics/misc/sapphire.4bpp");
+const u16 gObjectEventPic_SuperNerd[] = INCBIN_U16("graphics/object_events/pics/people/super_nerd.4bpp");
+const u16 gObjectEventPic_Woman1Frlg[] = INCBIN_U16("graphics/object_events/pics/people/woman_1_frlg.4bpp");
+const u16 gObjectEventPic_Woman2Frlg[] = INCBIN_U16("graphics/object_events/pics/people/woman_2_frlg.4bpp");
+const u16 gObjectEventPic_Woman3Frlg[] = INCBIN_U16("graphics/object_events/pics/people/woman_3_frlg.4bpp");
 #endif // HAS_SEVII_CONTENT
 
 #if IS_HNS

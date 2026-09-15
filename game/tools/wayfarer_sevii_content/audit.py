@@ -41,6 +41,7 @@ REQUIRED_RESERVE_BYTES = 512 * 1024
 LABEL_DEFINITION = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
 SCRIPT_COMMAND = re.compile(r"(?m)^\s*([a-z][a-z0-9_]*)\b")
 WAYFARER_LABEL = re.compile(r"\bWayfarerSevii_[A-Za-z0-9_]+\b")
+OBJECT_GRAPHICS_POINTER = re.compile(r"\[(OBJ_EVENT_GFX_[A-Z0-9_]+)\]\s*=\s*&[A-Za-z0-9_]+")
 STATE_WRITE_COMMANDS = frozenset(("setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar"))
 TRAINER_COMMANDS = frozenset(closure.TRAINER_COMMANDS)
 TRANSACTION_COMMANDS = frozenset(closure.TRANSACTION_COMMANDS)
@@ -99,6 +100,33 @@ def selected_records(manifest: dict[str, Any], domains: Iterable[str] | None = N
         return schema.selected_records(manifest, domains)
     except (schema.SchemaError, ValueError) as error:
         raise AuditError(str(error)) from error
+
+
+def validate_story_object_graphics(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
+    """Require every selected story actor to have a Sevii graphics provider."""
+    pointer_path = root / "src/data/object_events/object_event_graphics_info_pointers.h"
+    try:
+        pointer_text = pointer_path.read_text(encoding="utf-8")
+        start = pointer_text.index("#if HAS_SEVII_CONTENT")
+        end = pointer_text.index("#endif // HAS_SEVII_CONTENT", start)
+    except (FileNotFoundError, ValueError) as error:
+        raise AuditError(f"missing HAS_SEVII_CONTENT object graphics providers in {pointer_path}") from error
+    providers = set(OBJECT_GRAPHICS_POINTER.findall(pointer_text[start:end]))
+    required: set[str] = set()
+    for map_entry in manifest.get("maps", []):
+        for row in map_entry.get("retained_events", {}).get("object_events", []):
+            if row.get("owner") != "story":
+                continue
+            projected = _output_event(row)
+            graphics_id = projected.get("graphics_id")
+            if isinstance(graphics_id, str) and graphics_id.startswith("OBJ_EVENT_GFX_"):
+                required.add(graphics_id)
+    missing = sorted(required - providers)
+    if missing:
+        raise AuditError(
+            "selected story object graphics lack HAS_SEVII_CONTENT providers: " + ", ".join(missing)
+        )
+    return {"required_count": len(required), "provider_count": len(providers)}
 
 
 def _output_event(row: dict[str, Any]) -> dict[str, Any]:
@@ -811,6 +839,7 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
     projection = exploration_projection(root, manifest)
     baseline = load_json(baseline_path)
     hashes = validate_baseline(manifest, baseline, projection, root)
+    story_object_graphics = validate_story_object_graphics(root, manifest)
     return {
         "schema_version": 1,
         "product": "WAYFARER_SEVII_CONTENT",
@@ -832,6 +861,7 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
         "script_closure": closure_report,
         "contracts": contracts_report,
         "contract_closure": validate_contract_closure(root, manifest, closure_report, contracts_report),
+        "story_object_graphics": story_object_graphics,
         "rom": rom_report(candidate_rom_report.resolve() if candidate_rom_report else None, root),
         "invariants": {"passed": True},
     }

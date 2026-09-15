@@ -29,10 +29,25 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
         self.assertTrue(first["schema"]["domains"]["story"]["enabled"])
         self.assertGreater(first["schema"]["domains"]["story"]["inventory_count"], 0)
         self.assertTrue(any(entry["owner"] == "story" for entry in first["contract_closure"]["entries"]))
+        self.assertEqual(first["story_object_graphics"]["required_count"], 44)
         for domain in ("ordinary_trainers", "trainer_tower"):
             self.assertFalse(first["schema"]["domains"][domain]["enabled"])
             self.assertEqual(first["schema"]["domains"][domain]["inventory_count"], 0)
         self.assertFalse(first["rom"]["measured"])
+
+    def test_rejects_selected_story_actor_without_sevii_graphics_provider(self):
+        manifest = self.manifest()
+        source = GAME / "src/data/object_events/object_event_graphics_info_pointers.h"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "src/data/object_events/object_event_graphics_info_pointers.h"
+            target.parent.mkdir(parents=True)
+            line = "    [OBJ_EVENT_GFX_BILL]                     = &gObjectEventGraphicsInfo_Bill,\n"
+            before, separator, after = source.read_text(encoding="utf-8").rpartition(line)
+            self.assertEqual(separator, line)
+            target.write_text(before + after, encoding="utf-8")
+            with self.assertRaisesRegex(AUDIT.AuditError, "OBJ_EVENT_GFX_BILL"):
+                AUDIT.validate_story_object_graphics(root, manifest)
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):
         manifest = self.manifest()
