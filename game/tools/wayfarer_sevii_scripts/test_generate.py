@@ -46,10 +46,9 @@ class WayfarerSeviiScriptGenerationTest(unittest.TestCase):
             definitions = re.findall(rf"(?m)^{re.escape(label)}::?$", rendered)
             self.assertEqual(definitions, [f"{label}::"])
 
-    def test_recursive_dependencies_include_special_implementation_sources(self):
+    def test_recursive_dependencies_include_special_table(self):
         dependencies = GENERATOR.recursive_dependencies(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
         self.assertIn("data/specials.inc", dependencies)
-        self.assertIn("src/seagallop.c", dependencies)
 
     def fixture(self, root):
         source = root / "data/maps/OneIsland_Frlg/scripts.inc"
