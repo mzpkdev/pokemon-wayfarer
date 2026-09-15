@@ -265,7 +265,7 @@ WayfarerSevii_TrainerTower_Lobby_OnLoad::
 	end
 
 WayfarerSevii_TrainerTower_Lobby_OnFrame::
-	end
+	.2byte 0
 
 WayfarerSevii_TrainerTower_Lobby_Nurse::
 	lock
