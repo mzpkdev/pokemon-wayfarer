@@ -23,7 +23,7 @@ LABEL = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 LABEL_DEF = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
 INCLUDE = re.compile(r'^\s*\.include\s+"([^"]+)"\s*(?:@.*)?$')
 MAP_SCRIPT = re.compile(r"^\s*map_script\s+(MAP_SCRIPT_[A-Z0-9_]+)\s*,\s*([A-Za-z_][A-Za-z0-9_]*)\s*(?:@.*)?$", re.MULTILINE)
-EQU = re.compile(r"^\s*\.equ\s+([A-Za-z_][A-Za-z0-9_]*)\s*,\s*(VAR_TEMP_[A-Z0-9_]+)\s*(?:@.*)?$")
+EQU = re.compile(r"^\s*\.equ\s+([A-Za-z_][A-Za-z0-9_]*)\s*,\s*((?:VAR|FLAG)_TEMP_[A-Z0-9_]+)\s*(?:@.*)?$")
 DATA_DIRECTIVE = re.compile(r"^\s*\.(byte|2byte|4byte|word)\s+([A-Za-z_][A-Za-z0-9_]*|0x[0-9A-Fa-f]+|[0-9]+)\s*(?:@.*)?$")
 
 # Commands with symbol operands.  The listed positions are zero based after
@@ -385,7 +385,7 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
         source = path.read_text(encoding="utf-8", errors="ignore")
         label = row["label"]
         kind = row["kind"]
-        if kind not in {"special", "native", "script_symbol"}:
+        if kind not in {"special", "native", "script_symbol", "script_data"}:
             raise ClosureError(f"script module {module} external {label} has unsupported kind {kind}")
         if kind == "special":
             if re.search(rf"(?m)^\s*def_special\s+{re.escape(label)}\b", source) is None:
@@ -407,6 +407,13 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
                 raise ClosureError(f"script module {module} native source lacks {label}")
         elif kind == "script_symbol" and re.search(rf"(?m)^{re.escape(label)}:{'{1,2}'}\s*$", source) is None:
             raise ClosureError(f"script module {module} script source lacks {label}")
+        elif kind == "script_data" and re.search(
+            rf"(?m)^\s*(?:EWRAM_DATA\s+|IWRAM_DATA\s+|IWRAM_INIT\s+)?"
+            rf"(?:const\s+)?(?:u8|u16|u32|s8|s16|s32|bool8|bool32)\s+"
+            rf"{re.escape(label)}(?:\s*\[[^;=]*\])?\s*(?:=|;)",
+            source,
+        ) is None:
+            raise ClosureError(f"script module {module} script data source lacks {label}")
         result[label] = {key: row[key] for key in ("kind", "path", "sha256")}
         if kind == "special":
             result[label].update({"implementation_path": row["implementation_path"], "implementation_sha256": row["implementation_sha256"]})

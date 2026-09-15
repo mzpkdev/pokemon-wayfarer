@@ -258,7 +258,13 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
     if owner != "exploration":
         persistent_field = "var" if event_kind == "coord_events" else "flag"
         effective = overrides.get(persistent_field, source.get(persistent_field, "0"))
-        if effective not in (None, "", "0", 0) and (
+        is_tower_transient_flag = (
+            owner == "trainer_tower"
+            and event_kind == "object_events"
+            and isinstance(effective, str)
+            and effective.startswith("FLAG_TEMP_")
+        )
+        if effective not in (None, "", "0", 0) and not is_tower_transient_flag and (
             not isinstance(effective, str) or WAYFARER_OVERRIDE.fullmatch(effective) is None
         ):
             _fail(f"{context}[{index}].{persistent_field}", "retains raw FRLG persistent state")

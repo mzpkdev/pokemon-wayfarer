@@ -118,6 +118,28 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         with self.assertRaisesRegex(CLOSURE.ClosureError, "unsupported kind made_up_kind"):
             CLOSURE.build_script_closure(self.root, manifest)
 
+    def test_accepts_pinned_script_data_and_rejects_missing_symbol(self):
+        module = self.root / "data/scripts/wayfarer_sevii/environment.inc"
+        module.write_text("WayfarerSevii_OneIsland_OnLoad::\n\tmsgbox gStringVar4\n\tend\n")
+        data = self.root / "src/string_util.c"
+        data.parent.mkdir(parents=True)
+        data.write_text("EWRAM_DATA u8 gStringVar4[0x3E8] = {0};\n")
+        manifest = self.manifest()
+        manifest["script_modules"]["environment"]["exports"] = ["WayfarerSevii_OneIsland_OnLoad"]
+        manifest["script_modules"]["environment"]["allowed_commands"] = ["msgbox", "end"]
+        external = {
+            "label": "gStringVar4", "kind": "script_data", "path": "src/string_util.c",
+            "sha256": hashlib.sha256(data.read_bytes()).hexdigest(),
+        }
+        manifest["script_modules"]["environment"]["allowed_externals"] = [external]
+        report = CLOSURE.build_script_closure(self.root, manifest)
+        self.assertEqual(report["external_dependencies"][0]["kind"], "script_data")
+
+        data.write_text("EWRAM_DATA u8 gOtherBuffer[0x3E8] = {0};\n")
+        external["sha256"] = hashlib.sha256(data.read_bytes()).hexdigest()
+        with self.assertRaisesRegex(CLOSURE.ClosureError, "script data source lacks gStringVar4"):
+            CLOSURE.build_script_closure(self.root, manifest)
+
     def test_rejects_external_source_path_escape(self):
         manifest = self.manifest()
         manifest["script_modules"]["environment"]["allowed_externals"] = [{
@@ -221,6 +243,20 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         manifest["script_modules"]["environment"]["allowed_commands"] = ["checkflag", "end"]
         with self.assertRaisesRegex(CLOSURE.ClosureError, "unsupported assembler directive"):
             CLOSURE.build_script_closure(self.root, manifest)
+
+    def test_accepts_temporary_flag_alias(self):
+        module = self.root / "data/scripts/wayfarer_sevii/environment.inc"
+        module.write_text(
+            ".equ HIDE_TOWER_ACTOR, FLAG_TEMP_2\n"
+            "WayfarerSevii_OneIsland_OnLoad::\n"
+            "\tsetflag HIDE_TOWER_ACTOR\n"
+            "\tend\n"
+        )
+        manifest = self.manifest()
+        manifest["script_modules"]["environment"]["exports"] = ["WayfarerSevii_OneIsland_OnLoad"]
+        manifest["script_modules"]["environment"]["allowed_commands"] = ["setflag", "end"]
+        report = CLOSURE.build_script_closure(self.root, manifest)
+        self.assertEqual(report["state_operations"], [])
 
 
 if __name__ == "__main__":

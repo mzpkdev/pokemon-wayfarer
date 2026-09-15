@@ -151,6 +151,18 @@ class WayfarerSeviiContentSchemaTests(unittest.TestCase):
         with self.assertRaisesRegex(SCHEMA.SchemaError, "raw FRLG persistent state"):
             SCHEMA.validate_manifest(self.root, manifest)
 
+    def test_accepts_tower_transient_source_visibility_without_persistent_override(self):
+        manifest = self.manifest()
+        self.source["object_events"][0]["flag"] = "FLAG_TEMP_2"
+        (self.root / "data/maps/OneIsland_Frlg/map.json").write_text(json.dumps(self.source))
+        row = manifest["maps"][0]["retained_events"]["object_events"][0]
+        row.update({"source": self.source["object_events"][0], "owner": "trainer_tower",
+                    "content_id": "trainer_tower.floor_actor"})
+        manifest["content_domains"]["exploration"]["inventory"] = []
+        manifest["content_domains"]["trainer_tower"]["inventory"] = ["trainer_tower.floor_actor"]
+        validated = SCHEMA.validate_manifest(self.root, manifest)
+        self.assertEqual(validated["maps"][0]["retained_events"]["object_events"][0]["source"]["flag"], "FLAG_TEMP_2")
+
     def test_rejects_absolute_exclusion_script_source(self):
         manifest = self.manifest()
         manifest["exclusions"][0]["source_identities"][0] = {
