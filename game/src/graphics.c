@@ -2246,11 +2246,10 @@ const u16 gMonIconPalettes[][16] =
 };
 
 #if IS_WAYFARER
-const u16 gTitleScreenBgPalettes[]         = INCBIN_U16("graphics/title_screen/hns/pokemon_logo.gbapal",
-                                                        "graphics/title_screen/wayfarer/scene.gbapal");
+const u16 gTitleScreenBgPalettes[]         = INCBIN_U16("graphics/title_screen/wayfarer/background/shared.gbapal");
 const u16 gTitleScreenEmeraldVersionPal[]  = INCBIN_U16("graphics/title_screen/wayfarer/wayfarer_version.gbapal");
 const u32 gTitleScreenCloudsTilemap[]      = INCBIN_U32("graphics/title_screen/clouds.bin.smolTM");
-const u32 gTitleScreenPokemonLogoGfx[]     = INCBIN_U32("graphics/title_screen/hns/pokemon_logo.8bpp.smol");
+const u32 gTitleScreenPokemonLogoGfx[]     = INCBIN_U32("graphics/title_screen/wayfarer/background/logo.8bpp.smol");
 const u32 gTitleScreenEmeraldVersionGfx[]  = INCBIN_U32("graphics/title_screen/wayfarer/wayfarer_version.8bpp.smol");
 const u16 gTitleScreenPressStartPal[]      = INCBIN_U16("graphics/title_screen/hns/press_start.gbapal");
 const u32 gTitleScreenPressStartGfx[]      = INCBIN_U32("graphics/title_screen/hns/press_start.4bpp.smol");

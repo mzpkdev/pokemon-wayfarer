@@ -894,6 +894,13 @@ ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-sevii-content-audit
 endif
 
+# Art conversion is explicit; normal builds consume the checked-in PNG/palette/map
+# exports with gbagfx and do not need Pillow.
+TITLE_ART_PYTHON ?= python3
+.PHONY: wayfarer-title-assets
+wayfarer-title-assets:
+	$(TITLE_ART_PYTHON) tools/convert_wayfarer_title.py
+
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
