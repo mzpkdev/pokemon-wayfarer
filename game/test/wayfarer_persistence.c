@@ -49,6 +49,68 @@ TEST("Wayfarer Hoenn variables use an isolated full-size bank")
     EXPECT_EQ(VarGet(last), 5678);
 }
 
+TEST("Wayfarer Sevii flags and variables use the dedicated SaveBlock3 bank")
+{
+    const u16 lastFlag = WAYFARER_SEVII_FLAG_ID(WAYFARER_SEVII_FLAG_COUNT - 1);
+    const u16 lastVar = WAYFARER_SEVII_VAR_ID(WAYFARER_SEVII_VAR_COUNT - 1);
+
+    WayfarerSeviiInitPersistentState();
+    EXPECT(FlagGet(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN) == FALSE);
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES), 0);
+    FlagSet(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN);
+    FlagSet(lastFlag);
+    EXPECT(VarSet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES, SPECIES_MEOWTH));
+    EXPECT(VarSet(lastVar, 0xBEEF));
+    EXPECT(FlagGet(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN));
+    EXPECT(FlagGet(lastFlag));
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES), SPECIES_MEOWTH);
+    EXPECT_EQ(VarGet(lastVar), 0xBEEF);
+    FlagToggle(lastFlag);
+    FlagClear(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN);
+    EXPECT(!FlagGet(lastFlag));
+    EXPECT(!FlagGet(FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN));
+}
+
+TEST("Wayfarer Sevii initialization and Tower record validation are atomic")
+{
+    struct WayfarerSeviiTrainerTowerRecords *records;
+
+    WayfarerSeviiInitPersistentState();
+    records = WayfarerSevii_GetTrainerTowerRecords();
+    EXPECT(records != NULL);
+    EXPECT(WayfarerSeviiPersistentStateIsValid());
+    EXPECT_EQ(sizeof(gSaveBlock3Ptr->wayfarerSevii), 184);
+
+    records->bestTime[CHALLENGE_TYPE_SINGLE] = 1234;
+    EXPECT(!WayfarerSeviiPersistentStateIsValid());
+    records->completedMask = 1 << CHALLENGE_TYPE_SINGLE;
+    EXPECT(WayfarerSeviiPersistentStateIsValid());
+    records->pendingPrize = ITEM_UP_GRADE;
+    EXPECT(WayfarerSeviiPersistentStateIsValid());
+    records->pendingPrize = ITEM_MASTER_BALL;
+    EXPECT(!WayfarerSeviiPersistentStateIsValid());
+
+    WayfarerSeviiInitPersistentState();
+    EXPECT(WayfarerSeviiPersistentStateIsValid());
+    EXPECT_EQ(records->bestTime[CHALLENGE_TYPE_SINGLE], 0);
+    EXPECT_EQ(records->pendingPrize, ITEM_NONE);
+}
+
+TEST("Wayfarer Sevii Trainer defeat bits cover the fixed allocation")
+{
+    WayfarerSeviiInitPersistentState();
+    WayfarerSeviiTrainerDefeatSet(0);
+    WayfarerSeviiTrainerDefeatSet(WAYFARER_SEVII_TRAINER_COUNT - 1);
+    EXPECT(WayfarerSeviiTrainerDefeatGet(0));
+    EXPECT(WayfarerSeviiTrainerDefeatGet(WAYFARER_SEVII_TRAINER_COUNT - 1));
+    EXPECT(!WayfarerSeviiTrainerDefeatGet(WAYFARER_SEVII_TRAINER_COUNT));
+    WayfarerSeviiTrainerDefeatSet(WAYFARER_SEVII_TRAINER_COUNT);
+    EXPECT(!WayfarerSeviiTrainerDefeatGet(WAYFARER_SEVII_TRAINER_COUNT));
+    WayfarerSeviiTrainerDefeatClear(0);
+    EXPECT(!WayfarerSeviiTrainerDefeatGet(0));
+    WayfarerSeviiTrainerDefeatClear(WAYFARER_SEVII_TRAINER_COUNT);
+}
+
 TEST("Wayfarer common-script source follows the map catalog")
 {
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F);
@@ -573,6 +635,8 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 1 << REGION_JOHTO;
     memset(&gSaveBlock3Ptr->wayfarerHoenn.leagueRun, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn.leagueRun));
+    memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
+    gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
     memcpy(sWayfarerExpectedSaveBlock3, saveBlock3Bytes, sizeof(sWayfarerExpectedSaveBlock3));
 
     // If a storage sector payload is accidentally replaced instead of merely
