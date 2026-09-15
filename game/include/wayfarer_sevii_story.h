@@ -33,23 +33,23 @@ bool8 WayfarerSeviiIsMainlandGiovanniComplete(void);
 bool8 WayfarerSeviiIsMoltresEligible(void);
 bool8 WayfarerSeviiResolveMoltresBattle(void);
 
-// Script specials. Inputs use VAR_0x8004 onward and write VAR_RESULT.
-void WayfarerSevii_HasPartyCapacity(void);
-void WayfarerSevii_PartyHasSpecies(void);
-void WayfarerSevii_PartyHasFriendshipAtLeast(void);
-void WayfarerSevii_TryGiveItemThenSetFlag(void);
-void WayfarerSevii_TryRemoveItemThenSetFlag(void);
-void WayfarerSevii_TryExchangeItemForReward(void);
-void WayfarerSevii_TryExchangeItemForRewardThenSetFlags(void);
-void WayfarerSevii_TryGiveEggThenSetFlag(void);
-void WayfarerSevii_StartSelphyRequest(void);
-void WayfarerSevii_SampleSelphyRequest(void);
-void WayfarerSevii_HasActiveSelphyRequest(void);
-void WayfarerSevii_IsSelectedSpeciesRequested(void);
-void WayfarerSevii_TryClaimSelphyPendingReward(void);
-void WayfarerSevii_HasAnyLeagueClear(void);
-void WayfarerSevii_IsMainlandGiovanniComplete(void);
-void WayfarerSevii_IsMoltresEligible(void);
-void WayfarerSevii_ResolveMoltresBattle(void);
+// Script specials. Inputs use VAR_0x8004 onward; specialvar stores the u16 return.
+u16 WayfarerSevii_HasPartyCapacity(void);
+u16 WayfarerSevii_PartyHasSpecies(void);
+u16 WayfarerSevii_PartyHasFriendshipAtLeast(void);
+u16 WayfarerSevii_TryGiveItemThenSetFlag(void);
+u16 WayfarerSevii_TryRemoveItemThenSetFlag(void);
+u16 WayfarerSevii_TryExchangeItemForReward(void);
+u16 WayfarerSevii_TryExchangeItemForRewardThenSetFlags(void);
+u16 WayfarerSevii_TryGiveEggThenSetFlag(void);
+u16 WayfarerSevii_StartSelphyRequest(void);
+u16 WayfarerSevii_SampleSelphyRequest(void);
+u16 WayfarerSevii_HasActiveSelphyRequest(void);
+u16 WayfarerSevii_IsSelectedSpeciesRequested(void);
+u16 WayfarerSevii_TryClaimSelphyPendingReward(void);
+u16 WayfarerSevii_HasAnyLeagueClear(void);
+u16 WayfarerSevii_IsMainlandGiovanniComplete(void);
+u16 WayfarerSevii_IsMoltresEligible(void);
+u16 WayfarerSevii_ResolveMoltresBattle(void);
 
 #endif // GUARD_WAYFARER_SEVII_STORY_H

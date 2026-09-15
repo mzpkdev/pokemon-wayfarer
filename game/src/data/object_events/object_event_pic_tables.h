@@ -3037,6 +3037,62 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
 #endif // IS_FRLG
 
 #if HAS_SEVII_CONTENT
+static const struct SpriteFrameImage sPicTable_Boy[] = {
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 1),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 2),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 3),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 4),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 5),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 6),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 7),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 8),
+    overworld_frame(gObjectEventPic_Boy, 2, 4, 9),
+};
+
+static const struct SpriteFrameImage sPicTable_Fisher[] = {
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 1),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 2),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 3),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 4),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 5),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 6),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 7),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 8),
+    overworld_frame(gObjectEventPic_Fisher, 2, 4, 9),
+};
+
+static const struct SpriteFrameImage sPicTable_Man[] = {
+    overworld_frame(gObjectEventPic_Man, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 1),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 2),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 3),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 4),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 5),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 6),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 7),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 8),
+    overworld_frame(gObjectEventPic_Man, 2, 4, 9),
+};
+
+static const struct SpriteFrameImage sPicTable_Ruby[] = {
+    overworld_frame(gObjectEventPic_Ruby, 2, 2, 0),
+};
+
+static const struct SpriteFrameImage sPicTable_Scientist[] = {
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 0),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 1),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 2),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 3),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 4),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 5),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 6),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 7),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 8),
+    overworld_frame(gObjectEventPic_Scientist, 2, 4, 9),
+};
+
 static const struct SpriteFrameImage sPicTable_OldWomanFrlg[] = {
     overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 0),
     overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 1),

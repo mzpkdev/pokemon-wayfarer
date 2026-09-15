@@ -688,6 +688,11 @@ const u16 gObjectEventPic_SailorFrlg[] = INCBIN_U16("graphics/object_events/pics
 const u16 gObjectEventPic_NurseFrlg[] = INCBIN_U16("graphics/object_events/pics/people/nurse_frlg.4bpp");
 const u16 gObjectEventPic_Clerk[] = INCBIN_U16("graphics/object_events/pics/people/clerk.4bpp");
 // Story-selected Sevii object graphics; keep this closure aligned with the manifest.
+const u16 gObjectEventPic_Boy[] = INCBIN_U16("graphics/object_events/pics/people/boy.4bpp");
+const u16 gObjectEventPic_Fisher[] = INCBIN_U16("graphics/object_events/pics/people/fisher.4bpp");
+const u16 gObjectEventPic_Man[] = INCBIN_U16("graphics/object_events/pics/people/man.4bpp");
+const u16 gObjectEventPic_Ruby[] = INCBIN_U16("graphics/object_events/pics/misc/ruby.4bpp");
+const u16 gObjectEventPic_Scientist[] = INCBIN_U16("graphics/object_events/pics/people/scientist.4bpp");
 const u16 gObjectEventPic_BaldingMan[] = INCBIN_U16("graphics/object_events/pics/people/balding_man.4bpp");
 const u16 gObjectEventPic_BattleGirl[] = INCBIN_U16("graphics/object_events/pics/people/battle_girl.4bpp");
 const u16 gObjectEventPic_BeautyFrlg[] = INCBIN_U16("graphics/object_events/pics/people/beauty_frlg.4bpp");

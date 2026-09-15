@@ -17,6 +17,19 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
     def manifest(self):
         return json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))
 
+    def copy_graphics_provider_files(self, root):
+        provider_dir = root / "src/data/object_events"
+        provider_dir.mkdir(parents=True, exist_ok=True)
+        for name in (
+            "object_event_graphics_info_pointers.h",
+            "object_event_graphics_info.h",
+            "object_event_pic_tables.h",
+            "object_event_graphics.h",
+        ):
+            (provider_dir / name).write_text(
+                (GAME / "src/data/object_events" / name).read_text(encoding="utf-8"), encoding="utf-8"
+            )
+
     def test_repository_story_report_is_deterministic_and_preserves_the_baseline(self):
         first = AUDIT.build_report(GAME)
         second = AUDIT.build_report(GAME)
@@ -40,13 +53,46 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
         source = GAME / "src/data/object_events/object_event_graphics_info_pointers.h"
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            self.copy_graphics_provider_files(root)
             target = root / "src/data/object_events/object_event_graphics_info_pointers.h"
-            target.parent.mkdir(parents=True)
             line = "    [OBJ_EVENT_GFX_BILL]                     = &gObjectEventGraphicsInfo_Bill,\n"
             before, separator, after = source.read_text(encoding="utf-8").rpartition(line)
             self.assertEqual(separator, line)
             target.write_text(before + after, encoding="utf-8")
             with self.assertRaisesRegex(AUDIT.AuditError, "OBJ_EVENT_GFX_BILL"):
+                AUDIT.validate_story_object_graphics(root, manifest)
+
+    def test_rejects_story_graphics_pointer_without_active_info(self):
+        manifest = self.manifest()
+        source = GAME / "src/data/object_events/object_event_graphics_info.h"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.copy_graphics_provider_files(root)
+            target = root / "src/data/object_events/object_event_graphics_info.h"
+            text = source.read_text(encoding="utf-8")
+            start = text.index("#if HAS_SEVII_CONTENT")
+            definition = "const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Bill ="
+            text = text[:start] + text[start:].replace(
+                definition, "const struct ObjectEventGraphicsInfo disabled_Bill =", 1
+            )
+            target.write_text(text, encoding="utf-8")
+            with self.assertRaisesRegex(AUDIT.AuditError, "inactive HAS_SEVII_CONTENT infos"):
+                AUDIT.validate_story_object_graphics(root, manifest)
+
+    def test_rejects_story_graphics_info_without_active_picture_table(self):
+        manifest = self.manifest()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.copy_graphics_provider_files(root)
+            target = root / "src/data/object_events/object_event_pic_tables.h"
+            text = target.read_text(encoding="utf-8")
+            start = text.index("#if HAS_SEVII_CONTENT")
+            definition = "static const struct SpriteFrameImage sPicTable_Bill[] ="
+            text = text[:start] + text[start:].replace(
+                definition, "static const struct SpriteFrameImage disabled_Bill[] =", 1
+            )
+            target.write_text(text, encoding="utf-8")
+            with self.assertRaisesRegex(AUDIT.AuditError, "lack active HAS_SEVII_CONTENT picture tables"):
                 AUDIT.validate_story_object_graphics(root, manifest)
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):

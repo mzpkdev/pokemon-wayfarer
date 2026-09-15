@@ -346,87 +346,87 @@ bool8 WayfarerSeviiResolveMoltresBattle(void) { return FALSE; }
 
 #endif
 
-void WayfarerSevii_HasPartyCapacity(void)
+u16 WayfarerSevii_HasPartyCapacity(void)
 {
-    gSpecialVar_Result = WayfarerSeviiHasPartyCapacity();
+    return WayfarerSeviiHasPartyCapacity();
 }
 
-void WayfarerSevii_PartyHasSpecies(void)
+u16 WayfarerSevii_PartyHasSpecies(void)
 {
-    gSpecialVar_Result = WayfarerSeviiPartyHasSpecies(gSpecialVar_0x8004);
+    return WayfarerSeviiPartyHasSpecies(gSpecialVar_0x8004);
 }
 
-void WayfarerSevii_PartyHasFriendshipAtLeast(void)
+u16 WayfarerSevii_PartyHasFriendshipAtLeast(void)
 {
-    gSpecialVar_Result = WayfarerSeviiPartyHasFriendshipAtLeast(gSpecialVar_0x8004);
+    return WayfarerSeviiPartyHasFriendshipAtLeast(gSpecialVar_0x8004);
 }
 
-void WayfarerSevii_TryGiveItemThenSetFlag(void)
+u16 WayfarerSevii_TryGiveItemThenSetFlag(void)
 {
-    gSpecialVar_Result = WayfarerSeviiTryGiveItemThenSetFlag(gSpecialVar_0x8004, gSpecialVar_0x8005);
+    return WayfarerSeviiTryGiveItemThenSetFlag(gSpecialVar_0x8004, gSpecialVar_0x8005);
 }
 
-void WayfarerSevii_TryRemoveItemThenSetFlag(void)
+u16 WayfarerSevii_TryRemoveItemThenSetFlag(void)
 {
-    gSpecialVar_Result = WayfarerSeviiTryRemoveItemThenSetFlag(gSpecialVar_0x8004, gSpecialVar_0x8005);
+    return WayfarerSeviiTryRemoveItemThenSetFlag(gSpecialVar_0x8004, gSpecialVar_0x8005);
 }
 
-void WayfarerSevii_TryExchangeItemForReward(void)
+u16 WayfarerSevii_TryExchangeItemForReward(void)
 {
-    gSpecialVar_Result = WayfarerSeviiTryExchangeItemForReward(gSpecialVar_0x8004, gSpecialVar_0x8005, gSpecialVar_0x8006);
+    return WayfarerSeviiTryExchangeItemForReward(gSpecialVar_0x8004, gSpecialVar_0x8005, gSpecialVar_0x8006);
 }
 
-void WayfarerSevii_TryExchangeItemForRewardThenSetFlags(void)
+u16 WayfarerSevii_TryExchangeItemForRewardThenSetFlags(void)
 {
-    gSpecialVar_Result = WayfarerSeviiTryExchangeItemForRewardThenSetFlags(gSpecialVar_0x8004, gSpecialVar_0x8005, gSpecialVar_0x8006, gSpecialVar_0x8007);
+    return WayfarerSeviiTryExchangeItemForRewardThenSetFlags(gSpecialVar_0x8004, gSpecialVar_0x8005, gSpecialVar_0x8006, gSpecialVar_0x8007);
 }
 
-void WayfarerSevii_TryGiveEggThenSetFlag(void)
+u16 WayfarerSevii_TryGiveEggThenSetFlag(void)
 {
-    gSpecialVar_Result = WayfarerSeviiTryGiveEggThenSetFlag(gSpecialVar_0x8004, gSpecialVar_0x8005);
+    return WayfarerSeviiTryGiveEggThenSetFlag(gSpecialVar_0x8004, gSpecialVar_0x8005);
 }
 
-void WayfarerSevii_StartSelphyRequest(void)
+u16 WayfarerSevii_StartSelphyRequest(void)
 {
-    gSpecialVar_Result = WayfarerSeviiStartSelphyRequest(gSpecialVar_0x8004, gSpecialVar_0x8005);
+    return WayfarerSeviiStartSelphyRequest(gSpecialVar_0x8004, gSpecialVar_0x8005);
 }
 
-void WayfarerSevii_SampleSelphyRequest(void)
+u16 WayfarerSevii_SampleSelphyRequest(void)
 {
-    gSpecialVar_Result = WayfarerSeviiSampleSelphyRequest();
+    return WayfarerSeviiSampleSelphyRequest();
 }
 
-void WayfarerSevii_HasActiveSelphyRequest(void)
+u16 WayfarerSevii_HasActiveSelphyRequest(void)
 {
-    gSpecialVar_Result = WayfarerSeviiHasActiveSelphyRequest();
+    return WayfarerSeviiHasActiveSelphyRequest();
 }
 
-void WayfarerSevii_IsSelectedSpeciesRequested(void)
+u16 WayfarerSevii_IsSelectedSpeciesRequested(void)
 {
-    gSpecialVar_Result = WayfarerSeviiIsPartyMonSelphyRequested(gSpecialVar_0x8004);
+    return WayfarerSeviiIsPartyMonSelphyRequested(gSpecialVar_0x8004);
 }
 
-void WayfarerSevii_TryClaimSelphyPendingReward(void)
+u16 WayfarerSevii_TryClaimSelphyPendingReward(void)
 {
-    gSpecialVar_Result = WayfarerSeviiTryClaimSelphyPendingReward();
+    return WayfarerSeviiTryClaimSelphyPendingReward();
 }
 
-void WayfarerSevii_HasAnyLeagueClear(void)
+u16 WayfarerSevii_HasAnyLeagueClear(void)
 {
-    gSpecialVar_Result = WayfarerSeviiHasAnyLeagueClear();
+    return WayfarerSeviiHasAnyLeagueClear();
 }
 
-void WayfarerSevii_IsMainlandGiovanniComplete(void)
+u16 WayfarerSevii_IsMainlandGiovanniComplete(void)
 {
-    gSpecialVar_Result = WayfarerSeviiIsMainlandGiovanniComplete();
+    return WayfarerSeviiIsMainlandGiovanniComplete();
 }
 
-void WayfarerSevii_IsMoltresEligible(void)
+u16 WayfarerSevii_IsMoltresEligible(void)
 {
-    gSpecialVar_Result = WayfarerSeviiIsMoltresEligible();
+    return WayfarerSeviiIsMoltresEligible();
 }
 
-void WayfarerSevii_ResolveMoltresBattle(void)
+u16 WayfarerSevii_ResolveMoltresBattle(void)
 {
-    gSpecialVar_Result = WayfarerSeviiResolveMoltresBattle();
+    return WayfarerSeviiResolveMoltresBattle();
 }

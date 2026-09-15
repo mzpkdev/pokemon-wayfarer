@@ -44,6 +44,7 @@ TRANSACTION_COMMANDS = {"giveitem", "givepokemon", "giveegg", "removeitem"}
 STATE_WRITES = {"setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar", "setorcopyvar"}
 STATE_READS = {"checkflag", "checkvar", "compare", "goto_if_set", "goto_if_unset", "call_if_set", "call_if_unset", "goto_if_eq", "goto_if_ne", "goto_if_lt", "goto_if_le", "goto_if_gt", "goto_if_ge", "call_if_eq", "call_if_ne", "call_if_lt", "call_if_le", "call_if_gt", "call_if_ge"}
 TRANSIENT_VARS = {"VAR_RESULT", "VAR_LAST_TALKED", "VAR_FACING", "VAR_0x8004", "VAR_0x8005", "VAR_0x8006", "VAR_0x8007", "VAR_0x8008", "VAR_0x8009", "VAR_0x800A"}
+TRANSIENT_FLAGS = {"FLAG_SYS_CTRL_OBJ_DELETE"}
 
 # These are the only story specials whose C implementations are reviewed as
 # atomic content transactions.  Their implementation source is pinned by the
@@ -400,7 +401,7 @@ def _validate_state_operand(target: str, *, module: str, relative: str, aliases:
     if target.isdigit() or target.lower().startswith("0x"):
         raise ClosureError(f"script module {module} writes or reads raw numeric state {target} in {relative}")
     if target.startswith("FLAG_"):
-        if target.startswith("FLAG_TEMP_"):
+        if target.startswith("FLAG_TEMP_") or target in TRANSIENT_FLAGS:
             return None
         if not target.startswith("FLAG_WAYFARER_SEVII_"):
             raise ClosureError(f"script module {module} uses non-Sevii flag {target} in {relative}")

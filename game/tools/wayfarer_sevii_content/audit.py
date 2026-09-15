@@ -41,7 +41,20 @@ REQUIRED_RESERVE_BYTES = 512 * 1024
 LABEL_DEFINITION = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
 SCRIPT_COMMAND = re.compile(r"(?m)^\s*([a-z][a-z0-9_]*)\b")
 WAYFARER_LABEL = re.compile(r"\bWayfarerSevii_[A-Za-z0-9_]+\b")
-OBJECT_GRAPHICS_POINTER = re.compile(r"\[(OBJ_EVENT_GFX_[A-Z0-9_]+)\]\s*=\s*&[A-Za-z0-9_]+")
+OBJECT_GRAPHICS_POINTER = re.compile(
+    r"\[(OBJ_EVENT_GFX_[A-Z0-9_]+)\]\s*=\s*&(gObjectEventGraphicsInfo_[A-Za-z0-9_]+)"
+)
+OBJECT_GRAPHICS_INFO = re.compile(
+    r"const\s+struct\s+ObjectEventGraphicsInfo\s+(gObjectEventGraphicsInfo_[A-Za-z0-9_]+)\s*=\s*\{(.*?)\};",
+    re.DOTALL,
+)
+OBJECT_GRAPHICS_IMAGES = re.compile(r"\.images\s*=\s*(sPicTable_[A-Za-z0-9_]+)")
+OBJECT_GRAPHICS_PIC_TABLE = re.compile(
+    r"static\s+const\s+struct\s+SpriteFrameImage\s+(sPicTable_[A-Za-z0-9_]+)\[\]\s*=\s*\{(.*?)\};",
+    re.DOTALL,
+)
+OBJECT_GRAPHICS_ASSET_REFERENCE = re.compile(r"\b(gObjectEventPic_[A-Za-z0-9_]+)\b")
+OBJECT_GRAPHICS_ASSET = re.compile(r"const\s+u(?:16|32)\s+(gObjectEventPic_[A-Za-z0-9_]+)\[\]")
 STATE_WRITE_COMMANDS = frozenset(("setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar"))
 TRAINER_COMMANDS = frozenset(closure.TRAINER_COMMANDS)
 TRANSACTION_COMMANDS = frozenset(closure.TRANSACTION_COMMANDS)
@@ -102,6 +115,27 @@ def selected_records(manifest: dict[str, Any], domains: Iterable[str] | None = N
         raise AuditError(str(error)) from error
 
 
+def unconditional_object_graphics_assets(source: str) -> set[str]:
+    """Return raw sheets declared outside every preprocessor conditional."""
+    assets: set[str] = set()
+    conditional_depth = 0
+    for line in source.splitlines():
+        stripped = line.lstrip()
+        if stripped.startswith(("#if ", "#ifdef ", "#ifndef ")):
+            conditional_depth += 1
+            continue
+        if stripped.startswith("#endif"):
+            conditional_depth -= 1
+            if conditional_depth < 0:
+                raise AuditError("unbalanced object graphics preprocessor conditionals")
+            continue
+        if conditional_depth == 0:
+            assets.update(OBJECT_GRAPHICS_ASSET.findall(line))
+    if conditional_depth != 0:
+        raise AuditError("unbalanced object graphics preprocessor conditionals")
+    return assets
+
+
 def validate_story_object_graphics(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     """Require every selected story actor to have a Sevii graphics provider."""
     pointer_path = root / "src/data/object_events/object_event_graphics_info_pointers.h"
@@ -111,7 +145,33 @@ def validate_story_object_graphics(root: Path, manifest: dict[str, Any]) -> dict
         end = pointer_text.index("#endif // HAS_SEVII_CONTENT", start)
     except (FileNotFoundError, ValueError) as error:
         raise AuditError(f"missing HAS_SEVII_CONTENT object graphics providers in {pointer_path}") from error
-    providers = set(OBJECT_GRAPHICS_POINTER.findall(pointer_text[start:end]))
+    providers = dict(OBJECT_GRAPHICS_POINTER.findall(pointer_text[start:end]))
+    info_path = root / "src/data/object_events/object_event_graphics_info.h"
+    try:
+        info_text = info_path.read_text(encoding="utf-8")
+        info_start = info_text.index("#if HAS_SEVII_CONTENT")
+        info_end = info_text.index("#endif // HAS_SEVII_CONTENT", info_start)
+    except (FileNotFoundError, ValueError) as error:
+        raise AuditError(f"missing HAS_SEVII_CONTENT object graphics infos in {info_path}") from error
+    active_info_bodies = dict(OBJECT_GRAPHICS_INFO.findall(info_text[info_start:info_end]))
+    pic_table_path = root / "src/data/object_events/object_event_pic_tables.h"
+    graphics_path = root / "src/data/object_events/object_event_graphics.h"
+    try:
+        pic_text = pic_table_path.read_text(encoding="utf-8")
+        pic_start = pic_text.index("#if HAS_SEVII_CONTENT")
+        pic_end = pic_text.index("#endif // HAS_SEVII_CONTENT", pic_start)
+        graphics_text = graphics_path.read_text(encoding="utf-8")
+        graphics_start = graphics_text.index("#if HAS_SEVII_CONTENT")
+        graphics_end = graphics_text.index("#endif // HAS_SEVII_CONTENT", graphics_start)
+    except (FileNotFoundError, ValueError) as error:
+        raise AuditError("missing active HAS_SEVII_CONTENT picture-table or asset providers") from error
+    active_pic_tables = dict(OBJECT_GRAPHICS_PIC_TABLE.findall(pic_text[pic_start:pic_end]))
+    # Story tables may intentionally reuse unconditional Emerald sheets
+    # (OldMan2's final frame uses OldWoman), but conditional base declarations
+    # are not assumed active for Wayfarer.
+    base_end = graphics_text.index("#if IS_FRLG")
+    active_assets = unconditional_object_graphics_assets(graphics_text[:base_end])
+    active_assets.update(OBJECT_GRAPHICS_ASSET.findall(graphics_text[graphics_start:graphics_end]))
     required: set[str] = set()
     for map_entry in manifest.get("maps", []):
         for row in map_entry.get("retained_events", {}).get("object_events", []):
@@ -121,12 +181,52 @@ def validate_story_object_graphics(root: Path, manifest: dict[str, Any]) -> dict
             graphics_id = projected.get("graphics_id")
             if isinstance(graphics_id, str) and graphics_id.startswith("OBJ_EVENT_GFX_"):
                 required.add(graphics_id)
-    missing = sorted(required - providers)
+    missing = sorted(required - providers.keys())
     if missing:
         raise AuditError(
             "selected story object graphics lack HAS_SEVII_CONTENT providers: " + ", ".join(missing)
         )
-    return {"required_count": len(required), "provider_count": len(providers)}
+    missing_infos = sorted(
+        f"{graphics_id} -> {providers[graphics_id]}"
+        for graphics_id in required
+        if providers[graphics_id] not in active_info_bodies
+    )
+    if missing_infos:
+        raise AuditError(
+            "selected story object graphics reference inactive HAS_SEVII_CONTENT infos: "
+            + ", ".join(missing_infos)
+        )
+    required_tables: set[str] = set()
+    for graphics_id in required:
+        info = providers[graphics_id]
+        match = OBJECT_GRAPHICS_IMAGES.search(active_info_bodies[info])
+        if match is None:
+            raise AuditError(f"selected story object graphics info lacks picture table: {graphics_id} -> {info}")
+        required_tables.add(match.group(1))
+    missing_tables = sorted(required_tables - active_pic_tables.keys())
+    if missing_tables:
+        raise AuditError(
+            "selected story object graphics lack active HAS_SEVII_CONTENT picture tables: "
+            + ", ".join(missing_tables)
+        )
+    required_assets = {
+        asset
+        for table in required_tables
+        for asset in OBJECT_GRAPHICS_ASSET_REFERENCE.findall(active_pic_tables[table])
+    }
+    missing_assets = sorted(required_assets - active_assets)
+    if missing_assets:
+        raise AuditError(
+            "selected story object graphics lack active HAS_SEVII_CONTENT assets: "
+            + ", ".join(missing_assets)
+        )
+    return {
+        "required_count": len(required),
+        "provider_count": len(providers),
+        "active_info_count": len(active_info_bodies),
+        "required_pic_table_count": len(required_tables),
+        "required_asset_count": len(required_assets),
+    }
 
 
 def _output_event(row: dict[str, Any]) -> dict[str, Any]:
