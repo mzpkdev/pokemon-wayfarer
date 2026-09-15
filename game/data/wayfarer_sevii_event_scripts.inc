@@ -6,11 +6,16 @@
 
 	.include "data/scripts/wayfarer_sevii/common.inc"
 	.include "data/scripts/wayfarer_sevii/environment.inc"
+	.include "data/scripts/wayfarer_sevii/story/celio_network.inc"
+	.include "data/scripts/wayfarer_sevii/story/local_adventures.inc"
+	.include "data/scripts/wayfarer_sevii/story/local_services.inc"
+	.include "data/scripts/wayfarer_sevii/story/passive_inventory.inc"
 
 MtEmber_RubyPath_B4F_Frlg_MapScripts::
 	.byte 0
 
 MtEmber_Exterior_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_MtEmberExterior_OnLoad
 	.byte 0
 
 MtEmber_SummitPath_1F_Frlg_MapScripts::
@@ -211,6 +216,7 @@ ThreeIsland_Frlg_MapScripts::
 	.byte 0
 
 FourIsland_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_FourIsland_RivalOnFrame
 	.byte 0
 
 FiveIsland_Frlg_MapScripts::
@@ -387,6 +393,7 @@ FiveIsland_House2_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_PokemonCenter_1F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_SixIsland_RivalOnFrame
 	.byte 0
 
 SixIsland_PokemonCenter_2F_Frlg_MapScripts::
