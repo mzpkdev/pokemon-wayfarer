@@ -182,6 +182,50 @@ class SeviiContentContractTests(unittest.TestCase):
         report = CONTRACTS.validate_contracts(GAME, manifest)
         self.assertEqual({row["id"] for row in report["states"] if row["lifecycle"] == "transactional"}, {"SEVII_SELPHY_PENDING_REWARD", "SEVII_TOWER_PENDING_PRIZE"})
 
+    def test_repeatable_claim_can_clear_its_related_payload_after_pending_clear(self):
+        manifest = fixture()
+        content = "story.selphy_request"
+        manifest["content_domains"].append({"content_id": content, "owner": "story"})
+        manifest["contracts"]["states"] += [
+            {"id": "SEVII_SELPHY_PENDING_REWARD", "owner": "story", "storage": "var", "slot": 1, "initial": 0,
+             "lifecycle": "transactional", "transaction_id": content, "readers": [content], "writers": [content],
+             "transitions": [{"from": 0, "to": 25, "caller": content}, {"from": 25, "to": 0, "caller": content}]},
+            {"id": "SEVII_SELPHY_REQUEST_ACTIVE", "owner": "story", "storage": "var", "slot": 2, "initial": 0,
+             "lifecycle": "transactional", "transaction_id": content, "readers": [content], "writers": [content],
+             "transitions": [{"from": 0, "to": 1, "caller": content}, {"from": 1, "to": 0, "caller": content}]},
+        ]
+        transaction = {
+            "content_id": content, "owner": "story", "kind": "claim", "prerequisite": ["request_active"],
+            "destination": "bag", "consume": None, "receipt": None,
+            "pending_state": "SEVII_SELPHY_PENDING_REWARD", "clear_payloads": ["SEVII_SELPHY_REQUEST_ACTIVE"],
+            "steps": ["establish_prerequisite", "attempt_destination", "clear_pending", "clear_payload", "update_presentation"],
+        }
+        manifest["contracts"]["transactions"].append(transaction)
+        CONTRACTS.validate_contracts(GAME, manifest)
+        transaction["steps"][2:4] = ["clear_payload", "clear_pending"]
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "transaction ordering"):
+            CONTRACTS.validate_contracts(GAME, manifest)
+
+    def test_repeatable_service_requires_success_before_consuming_its_fee(self):
+        manifest = fixture()
+        content = "story.move_maniac"
+        manifest["content_domains"].append({"content_id": content, "owner": "story"})
+        transaction = {
+            "content_id": content, "owner": "story", "kind": "service", "prerequisite": ["mushroom_fee"],
+            "destination": "service", "consume": "mushrooms", "receipt": None,
+            "steps": ["establish_prerequisite", "successful_service", "consume_source", "update_presentation"],
+        }
+        manifest["contracts"]["transactions"].append(transaction)
+        report = CONTRACTS.validate_contracts(GAME, manifest)
+        self.assertEqual(report["transactions"][-1]["kind"], "service")
+        transaction["steps"][1:3] = ["consume_source", "successful_service"]
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "transaction ordering"):
+            CONTRACTS.validate_contracts(GAME, manifest)
+        transaction["steps"][1:3] = ["successful_service", "consume_source"]
+        transaction["receipt"] = "SEVII_NOT_A_SERVICE_RECEIPT"
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "repeatable service receipt"):
+            CONTRACTS.validate_contracts(GAME, manifest)
+
     def test_rejects_ordinary_transactions_completion_resets_and_unknown_battle_outcome(self):
         manifest = fixture()
         manifest["content_domains"].append({"content_id": "ordinary.trainer", "owner": "ordinary_trainer"})

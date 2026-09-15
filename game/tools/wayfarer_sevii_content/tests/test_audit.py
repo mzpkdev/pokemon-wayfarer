@@ -202,6 +202,54 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 with self.assertRaisesRegex(AUDIT.AuditError, "does not match declared transaction kind"):
                     AUDIT.validate_contract_closure(root, {}, closure, contracts)
 
+    def test_contract_closure_requires_move_maniac_payment_after_successful_service(self):
+        row = {
+            "content_id": "story.test.move_maniac", "owner": "story",
+            "wayfarer_script": "WayfarerSevii_MoveManiac", "state_reads": [], "state_writes": [],
+        }
+        contracts = {
+            "states": [], "trainer_ids": {"allocations": []},
+            "transactions": [{
+                "content_id": row["content_id"], "kind": "service", "receipt": None,
+                "consume": "mushrooms", "destination": "service",
+                "steps": ["establish_prerequisite", "successful_service", "consume_source", "update_presentation"],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/move_maniac.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text(
+                "WayfarerSevii_MoveManiac::\n"
+                "\tgoto WayfarerSevii_MoveManiacTeach\n"
+                "WayfarerSevii_MoveManiacTeach::\n"
+                "\tspecial TeachMoveRelearnerMove\n"
+                "\twaitstate\n"
+                "\tgoto_if_eq VAR_0x8004, 0, WayfarerSevii_MoveManiacEnd\n"
+                "\tgoto WayfarerSevii_MoveManiacPay\n"
+                "WayfarerSevii_MoveManiacPay::\n"
+                "\tremoveitem ITEM_BIG_MUSHROOM\n"
+                "WayfarerSevii_MoveManiacEnd::\n"
+                "\tend\n",
+                encoding="utf-8",
+            )
+            closure = {
+                "includes": ["data/scripts/wayfarer_sevii/story/move_maniac.inc"],
+                "state_operations": [],
+                "content_operations": [{
+                    "label": "WayfarerSevii_MoveManiacPay", "kind": "transaction", "command": "removeitem",
+                }],
+            }
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                report = AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            self.assertEqual(report["entries"][0]["transaction"], "service")
+
+            include.write_text(include.read_text(encoding="utf-8").replace(
+                "\tgoto WayfarerSevii_MoveManiacTeach\n", "\tgoto WayfarerSevii_MoveManiacPay\n"), encoding="utf-8")
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                with self.assertRaisesRegex(AUDIT.AuditError, "payment can precede successful service"):
+                    AUDIT.validate_contract_closure(root, {}, closure, contracts)
+
     def test_real_closure_and_contracts_accept_an_ordinary_single_battle_wrapper(self):
         """Exercise the production closure and Trainer contract, not mocked operations."""
         content_id = "ordinary.test.biker_goon"

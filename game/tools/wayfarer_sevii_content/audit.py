@@ -377,6 +377,63 @@ def _reachable_script_labels(entry: str, bodies: dict[str, str]) -> list[str]:
     return sorted(visited)
 
 
+def _label_graph(labels: list[str], bodies: dict[str, str]) -> dict[str, set[str]]:
+    available = set(labels)
+    return {label: {target for target in WAYFARER_LABEL.findall(bodies[label]) if target in available}
+            for label in labels}
+
+
+def _labels_reachable(starts: set[str], targets: set[str], graph: dict[str, set[str]],
+                      blocked: set[str] = frozenset()) -> bool:
+    pending, seen = list(starts - blocked), set()
+    while pending:
+        label = pending.pop()
+        if label in seen or label in blocked:
+            continue
+        if label in targets:
+            return True
+        seen.add(label)
+        pending.extend(graph.get(label, set()) - seen - blocked)
+    return False
+
+
+def _service_payment_follows_successful_relearner(entry: str, labels: list[str],
+                                                   bodies: dict[str, str]) -> bool:
+    """Prove the Move Maniac's payment paths follow a successful teach action.
+
+    This is deliberately source-faithful rather than a general control-flow
+    theorem: the reviewed repeatable service is the Move Relearner special,
+    whose successful completion is reported in ``VAR_0x8004``.  A payment
+    label must not be reachable before that special, and its success branch
+    must be able to reach every removal label.
+    """
+    graph = _label_graph(labels, bodies)
+    service_labels = {label for label in labels
+                      if re.search(r"(?m)^\s*special\s+TeachMoveRelearnerMove\b", bodies[label])}
+    payment_labels = {label for label in labels
+                      if re.search(r"(?m)^\s*removeitem\b", bodies[label])}
+    if not service_labels or not payment_labels:
+        return False
+    if _labels_reachable({entry}, payment_labels, graph, service_labels):
+        return False
+
+    success_sources: set[str] = set()
+    for label in service_labels:
+        lines = bodies[label].splitlines()
+        special_index = next((index for index, line in enumerate(lines)
+                              if re.fullmatch(r"\s*special\s+TeachMoveRelearnerMove\s*(?:@.*)?", line)), None)
+        if special_index is None:
+            continue
+        guard_index = next((index for index in range(special_index + 1, len(lines))
+                            if re.fullmatch(r"\s*goto_if_eq\s+VAR_0x8004\s*,\s*0\s*,\s*WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", lines[index])), None)
+        if guard_index is None:
+            continue
+        success_sources.update(target for target in WAYFARER_LABEL.findall("\n".join(lines[guard_index + 1:]))
+                               if target in graph)
+    return bool(success_sources) and all(
+        _labels_reachable(success_sources, {payment}, graph) for payment in payment_labels)
+
+
 def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
     """Return the script form used by each owned Trainer battle command.
 
@@ -498,12 +555,18 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             if special_kinds and special_kinds != {transaction["kind"]}:
                 raise AuditError(f"{content_id}: atomic transaction special does not match declared transaction kind")
             receipt = transaction.get("receipt")
-            if receipt is None:
+            if transaction["kind"] == "service":
+                if not _service_payment_follows_successful_relearner(entry, labels, bodies):
+                    raise AuditError(f"{content_id}: repeatable service payment can precede successful service")
+            elif receipt is None:
                 pending = transaction.get("pending_state")
                 if not isinstance(pending, str) or pending not in states:
                     raise AuditError(f"{content_id}: repeatable claim lacks a resolved pending state")
                 if states[pending]["symbol"] not in written:
                     raise AuditError(f"{content_id}: repeatable claim does not clear its pending state")
+                for state_id in transaction.get("clear_payloads", []):
+                    if states[state_id]["symbol"] not in written:
+                        raise AuditError(f"{content_id}: repeatable claim does not clear payload state {state_id}")
             elif states[receipt]["symbol"] not in written:
                 raise AuditError(f"{content_id}: transaction receipt is not written by its owned script")
         if row["owner"] == "ordinary_trainer":

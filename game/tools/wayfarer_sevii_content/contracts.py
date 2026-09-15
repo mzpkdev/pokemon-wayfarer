@@ -36,6 +36,7 @@ TRANSACTION_STEPS = {
     "handoff": ("establish_prerequisite", "attempt_destination", "consume_source", "set_receipt", "update_presentation"),
     "grant": ("establish_prerequisite", "attempt_destination", "set_receipt", "update_presentation"),
     "claim": ("establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"),
+    "service": ("establish_prerequisite", "successful_service", "consume_source", "update_presentation"),
 }
 # Persistent story flags and generic variables begin clear.  This one
 # externally-visible size-record sentinel deliberately begins at the engine's
@@ -295,10 +296,13 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
         if owners.get(content) != owner or owner == "ordinary_trainer" or kind not in TRANSACTION_STEPS: _fail(f"{path} has unresolved content, an ordinary transaction, or an invalid kind")
         if kind == "claim":
             pending = _text(row.get("pending_state"), f"{path}.pending_state", IDENTIFIER)
-            if receipt is not None or row.get("clear_payloads", []) or pending not in states or states[pending]["lifecycle"] != "transactional" or states[pending]["owner"] != owner or states[pending]["transaction_id"] != content or content not in states[pending]["writers"]:
+            if receipt is not None or pending not in states or states[pending]["lifecycle"] != "transactional" or states[pending]["owner"] != owner or states[pending]["transaction_id"] != content or content not in states[pending]["writers"]:
                 _fail(f"{path} has an invalid repeatable pending claim")
             if not any(transition["from"] > 0 and transition["to"] == 0 and transition["caller"] == content for transition in states[pending]["transitions"]):
                 _fail(f"{path} pending claim cannot clear its payload after success")
+        elif kind == "service":
+            if receipt is not None or row.get("pending_state") is not None or row.get("clear_payloads", []):
+                _fail(f"{path} has an invalid repeatable service receipt or payload")
         else:
             if row.get("pending_state") is not None: _fail(f"{path}.pending_state is reserved for a repeatable claim")
             receipt = _text(receipt, f"{path}.receipt", IDENTIFIER)
@@ -310,10 +314,13 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
             state_id = _text(state_id, f"{path}.clear_payloads", IDENTIFIER)
             if state_id not in states or states[state_id]["lifecycle"] != "transactional" or states[state_id]["owner"] != owner or states[state_id]["transaction_id"] != content:
                 _fail(f"{path}.clear_payloads has an unreviewed transactional state")
+            if kind == "claim" and state_id == row.get("pending_state"):
+                _fail(f"{path}.clear_payloads repeats the claim pending state")
         expected_steps = list(TRANSACTION_STEPS[kind])
         if clears: expected_steps.insert(-1, "clear_payload")
-        if row["destination"] not in ("bag", "party", "pc") or row["steps"] != expected_steps: _fail(f"{path} violates destination or transaction ordering")
-        if (kind == "handoff" and (not isinstance(row["consume"], str) or not row["consume"])) or (kind in ("grant", "claim") and row["consume"] is not None): _fail(f"{path} has invalid source consumption")
+        allowed_destinations = ("service",) if kind == "service" else ("bag", "party", "pc")
+        if row["destination"] not in allowed_destinations or row["steps"] != expected_steps: _fail(f"{path} violates destination or transaction ordering")
+        if (kind in ("handoff", "service") and (not isinstance(row["consume"], str) or not row["consume"])) or (kind in ("grant", "claim") and row["consume"] is not None): _fail(f"{path} has invalid source consumption")
         if content in seen: _fail(f"{path} duplicates a content transaction")
         normalized = deepcopy(row); normalized["clear_payloads"] = sorted(clears); normalized["pending_state"] = row.get("pending_state")
         seen.add(content); result.append(normalized)
