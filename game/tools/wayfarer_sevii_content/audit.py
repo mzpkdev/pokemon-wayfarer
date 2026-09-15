@@ -440,6 +440,13 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
     reports = []
     for row in (row for row in selected_records(manifest) if row.get("owner") != "exploration"):
         content_id, entry = row["content_id"], row.get("wayfarer_script")
+        source_event = row.get("source")
+        if (isinstance(source_event, dict) and "script" in source_event
+                and str(source_event["script"]) in SOURCELESS_SCRIPTS):
+            reports.append({"content_id": content_id, "entry": None, "inert_source_slot": True,
+                            "state_reads": [], "state_writes": [], "battle": None,
+                            "transaction": None, "trainer_allocation": None})
+            continue
         if not isinstance(entry, str) or not entry.startswith("WayfarerSevii_"):
             raise AuditError(f"{content_id}: non-exploration content lacks a Wayfarer-owned script entry")
         labels = _reachable_script_labels(entry, bodies)

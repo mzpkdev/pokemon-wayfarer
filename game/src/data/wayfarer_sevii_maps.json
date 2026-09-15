@@ -512,12 +512,216 @@
       "layout": "LAYOUT_TRAINER_TOWER_1F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "0x0",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.object.0",
+            "reason": "Preserves the source's inert first-floor owner slot; transient Tower setup keeps it hidden and it has no source script to replace."
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 0,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.1f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.1f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_1F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "db73f4fc857c44395c6bce62843472e778dd77b2c8b752e3f352bc3d2549aa21"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.1f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_1F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "db73f4fc857c44395c6bce62843472e778dd77b2c8b752e3f352bc3d2549aa21"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.1f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_1F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "db73f4fc857c44395c6bce62843472e778dd77b2c8b752e3f352bc3d2549aa21"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -526,12 +730,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_2F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.2f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.2f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_2F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "7981063d3c11004e9caa814e5b79c6ccbf84f4880862f9e54a7388f5515bba11"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.2f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_2F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "7981063d3c11004e9caa814e5b79c6ccbf84f4880862f9e54a7388f5515bba11"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.2f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_2F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "7981063d3c11004e9caa814e5b79c6ccbf84f4880862f9e54a7388f5515bba11"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -540,12 +949,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_3F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.3f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.3f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_3F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "63a2fef2fe1fc5fe23c9f54282f82f5f37dc3988dd729c16bdd4c2a231912e76"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.3f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_3F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "63a2fef2fe1fc5fe23c9f54282f82f5f37dc3988dd729c16bdd4c2a231912e76"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.3f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_3F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "63a2fef2fe1fc5fe23c9f54282f82f5f37dc3988dd729c16bdd4c2a231912e76"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -554,12 +1168,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_4F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.4f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.4f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_4F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "33c93d6539beb0b3517ded293c5cf003a3d1eff7d6e180bbd9f3cbea33ffa621"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.4f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_4F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "33c93d6539beb0b3517ded293c5cf003a3d1eff7d6e180bbd9f3cbea33ffa621"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.4f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_4F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "33c93d6539beb0b3517ded293c5cf003a3d1eff7d6e180bbd9f3cbea33ffa621"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -568,12 +1387,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_5F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.5f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.5f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_5F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "a184cb03dc35471dbd3f5754f3681a11f1732a044a699752a1963e34fc1c8a40"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.5f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_5F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "a184cb03dc35471dbd3f5754f3681a11f1732a044a699752a1963e34fc1c8a40"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.5f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_5F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "a184cb03dc35471dbd3f5754f3681a11f1732a044a699752a1963e34fc1c8a40"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -582,12 +1606,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_6F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.6f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.6f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_6F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "65cd64ee72af9f0c1347ff5074c5ef66757d84d7bb01a768b0a347804e7d0f03"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.6f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_6F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "65cd64ee72af9f0c1347ff5074c5ef66757d84d7bb01a768b0a347804e7d0f03"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.6f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_6F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "65cd64ee72af9f0c1347ff5074c5ef66757d84d7bb01a768b0a347804e7d0f03"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -596,12 +1825,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_7F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.7f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.7f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_7F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "bf67db687c938d538465f5ef033dda80a104b4408b3dade3a272321bd6d15e98"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.7f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_7F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "bf67db687c938d538465f5ef033dda80a104b4408b3dade3a272321bd6d15e98"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.7f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_7F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "bf67db687c938d538465f5ef033dda80a104b4408b3dade3a272321bd6d15e98"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -610,12 +2044,217 @@
       "layout": "LAYOUT_TRAINER_TOWER_8F",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES1",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_0",
+              "x": 10,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer1",
+              "flag": "FLAG_TEMP_2"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_SINGLES",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_1",
+              "x": 15,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_SinglesTrainer",
+              "flag": "FLAG_TEMP_3"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SinglesTrainer"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_KNOCKOUT",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_2",
+              "x": 10,
+              "y": 16,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_UP",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_KnockoutTrainer",
+              "flag": "FLAG_TEMP_4"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_TRAINER_DOUBLES2",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_VAR_3",
+              "x": 11,
+              "y": 10,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_DoublesTrainer2",
+              "flag": "FLAG_TEMP_5"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 10,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_E",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_SingleBattleTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.coord.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger"
+          },
+          {
+            "index": 1,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 12,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerTop"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.coord.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop"
+          },
+          {
+            "index": 2,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 13,
+              "elevation": 3,
+              "var": "VAR_TEMP_F",
+              "var_value": "0",
+              "script": "TrainerTower_EventScript_DoubleBattleTriggerBottom"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.8f.coord.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom"
+          }
+        ],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.8f.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_8F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "0cd280b150a35a081cd3aa6da7cd9647d530f2c646153d2482307cc322ee849d"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.8f.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_8F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnTransition",
+            "sha256": "fc31c7b24c59fbe6a93cbd43ba8407ae16165df4ec57825097dba93445ab2495",
+            "file_sha256": "0cd280b150a35a081cd3aa6da7cd9647d530f2c646153d2482307cc322ee849d"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.8f.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_8F_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "0cd280b150a35a081cd3aa6da7cd9647d530f2c646153d2482307cc322ee849d"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -624,12 +2263,65 @@
       "layout": "LAYOUT_TRAINER_TOWER_ROOF",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_EventScript_Owner",
+              "flag": "FLAG_TEMP_6"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.roof.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_Owner"
+          }
+        ],
         "warp_events": [],
         "coord_events": [],
         "bg_events": []
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.roof.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_Roof_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "f1520748de09d638226c3e9383b8cfe5da8bac75e8a051493885d2c2d86e75f9"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.roof.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_Roof_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "f1520748de09d638226c3e9383b8cfe5da8bac75e8a051493885d2c2d86e75f9"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -638,12 +2330,235 @@
       "layout": "LAYOUT_TRAINER_TOWER_LOBBY",
       "category": "TrainerTower",
       "retained_events": {
-        "object_events": [],
+        "object_events": [
+          {
+            "index": 0,
+            "source": {
+              "local_id": "LOCALID_TOWER_NURSE",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
+              "x": 4,
+              "y": 9,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_Lobby_EventScript_Nurse",
+              "flag": "0"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.object.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_Nurse"
+          },
+          {
+            "index": 1,
+            "source": {
+              "local_id": "LOCALID_TOWER_MART_CLERK",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_UNION_ROOM_RECEPTIONIST",
+              "x": 14,
+              "y": 9,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_Lobby_EventScript_MartClerk",
+              "flag": "0"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.object.1",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_MartClerk"
+          },
+          {
+            "index": 2,
+            "source": {
+              "local_id": "LOCALID_TOWER_RECEPTIONIST",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_UNION_ROOM_RECEPTIONIST",
+              "x": 11,
+              "y": 7,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_Lobby_EventScript_Receptionist",
+              "flag": "0"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.object.2",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_Receptionist"
+          },
+          {
+            "index": 3,
+            "source": {
+              "local_id": "LOCALID_TOWER_COOLTRAINER_F",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
+              "x": 12,
+              "y": 13,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_Lobby_EventScript_CooltrainerF",
+              "flag": "0"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.object.3",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_CooltrainerF"
+          },
+          {
+            "index": 4,
+            "source": {
+              "local_id": "LOCALID_TOWER_BALDING_MAN",
+              "type": "object",
+              "graphics_id": "OBJ_EVENT_GFX_BALDING_MAN",
+              "x": 2,
+              "y": 12,
+              "elevation": 3,
+              "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+              "movement_range_x": 1,
+              "movement_range_y": 1,
+              "trainer_type": "TRAINER_TYPE_NONE",
+              "trainer_sight_or_berry_tree_id": "0",
+              "script": "TrainerTower_Lobby_EventScript_BaldingMan",
+              "flag": "0"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.object.4",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_BaldingMan"
+          }
+        ],
         "warp_events": [],
-        "coord_events": [],
-        "bg_events": []
+        "coord_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "trigger",
+              "x": 9,
+              "y": 7,
+              "elevation": 3,
+              "var": "VAR_MAP_SCENE_TRAINER_TOWER",
+              "var_value": "0",
+              "script": "TrainerTower_Lobby_EventScript_EntryTrigger"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.coord.0",
+            "reason": "Restores the reviewed Trainer Tower entry interaction with an unsaved Tower-local scene trigger.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_EntryTrigger",
+            "overrides": {
+              "var": "VAR_TEMP_0"
+            }
+          }
+        ],
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 8,
+              "y": 10,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+              "script": "TrainerTower_Lobby_EventScript_ShowRecords"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.lobby.bg.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_ShowRecords"
+          }
+        ]
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.lobby.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_Lobby_Frlg/scripts.inc",
+            "label": "TrainerTower_Lobby_OnResume",
+            "sha256": "1933b2a564594196ddb11eea8dcfcb09a32e450834d244a55a5342436281ab3f",
+            "file_sha256": "6e18d86cff8d0091e283b3c832b4a044620603cdbcd72b1902a107f44b6d60ac"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.lobby.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RETURN_TO_FIELD",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_Lobby_Frlg/scripts.inc",
+            "label": "TrainerTower_Lobby_OnReturnToField",
+            "sha256": "4a405c1c66f3708df904f5cdc027e4c255859e9f91bbcb8cf8b6626ed79b3b60",
+            "file_sha256": "6e18d86cff8d0091e283b3c832b4a044620603cdbcd72b1902a107f44b6d60ac"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_OnReturnToField",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.lobby.map-script.2",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/TrainerTower_Lobby_Frlg/scripts.inc",
+            "label": "TrainerTower_Lobby_OnTransition",
+            "sha256": "446911846f237e50b202fb82588f83575e1f102f2392c100afa90c3bcd841c81",
+            "file_sha256": "6e18d86cff8d0091e283b3c832b4a044620603cdbcd72b1902a107f44b6d60ac"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_OnTransition",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.lobby.map-script.3",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_LOAD",
+          "source_index": 3,
+          "source": {
+            "include": "data/maps/TrainerTower_Lobby_Frlg/scripts.inc",
+            "label": "TrainerTower_Lobby_OnLoad",
+            "sha256": "25c33e0c0bead6f09b1077a28430dd4473773b00cde667c250ee2abac6c7c96b",
+            "file_sha256": "6e18d86cff8d0091e283b3c832b4a044620603cdbcd72b1902a107f44b6d60ac"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_OnLoad",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.lobby.map-script.4",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 4,
+          "source": {
+            "include": "data/maps/TrainerTower_Lobby_Frlg/scripts.inc",
+            "label": "TrainerTower_Lobby_OnFrame",
+            "sha256": "173ef09a3f3223ac7316d49ae4ac364dc6f8dca153647ca7536902f03eadfc1a",
+            "file_sha256": "6e18d86cff8d0091e283b3c832b4a044620603cdbcd72b1902a107f44b6d60ac"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -655,9 +2570,56 @@
         "object_events": [],
         "warp_events": [],
         "coord_events": [],
-        "bg_events": []
+        "bg_events": [
+          {
+            "index": 0,
+            "source": {
+              "type": "sign",
+              "x": 0,
+              "y": 2,
+              "elevation": 0,
+              "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+              "script": "TrainerTower_Elevator_EventScript_FloorSelect"
+            },
+            "owner": "trainer_tower",
+            "content_id": "trainer-tower.elevator.bg.0",
+            "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Elevator_FloorSelect"
+          }
+        ]
       },
-      "retained_map_scripts": [],
+      "retained_map_scripts": [
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.elevator.map-script.0",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/TrainerTower_Elevator_Frlg/scripts.inc",
+            "label": "TrainerTower_OnResume",
+            "sha256": "5198cad358f8b407676d1c2621e8f1253ace7f99ee21aa33ccbb40f571c148f9",
+            "file_sha256": "84b6a25d33b0024d63924b84be4eb7e92a551649722fe5bc676866bea7441a78"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnResume",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        },
+        {
+          "owner": "trainer_tower",
+          "content_id": "trainer-tower.elevator.map-script.1",
+          "module": "trainer_tower",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/TrainerTower_Elevator_Frlg/scripts.inc",
+            "label": "TrainerTower_OnFrame",
+            "sha256": "292d1ea05f55e54699712a4a89149bd1fa579fb1b0d8f6e163ceacb5ad2028b3",
+            "file_sha256": "84b6a25d33b0024d63924b84be4eb7e92a551649722fe5bc676866bea7441a78"
+          },
+          "wayfarer_script": "WayfarerSevii_TrainerTower_Floor_OnFrame",
+          "reason": "Restores the reviewed built-in Trainer Tower lifecycle handler without linking the FRLG map script."
+        }
+      ],
       "encounter_methods": []
     },
     {
@@ -2974,8 +4936,115 @@
     },
     "trainer_tower": {
       "owner": "trainer_tower",
-      "enabled": false,
-      "inventory": []
+      "enabled": true,
+      "inventory": [
+        "trainer-tower.1f.object.0",
+        "trainer-tower.1f.object.1",
+        "trainer-tower.1f.object.2",
+        "trainer-tower.1f.object.3",
+        "trainer-tower.1f.object.4",
+        "trainer-tower.1f.coord.0",
+        "trainer-tower.1f.coord.1",
+        "trainer-tower.1f.coord.2",
+        "trainer-tower.1f.map-script.0",
+        "trainer-tower.1f.map-script.1",
+        "trainer-tower.1f.map-script.2",
+        "trainer-tower.2f.object.0",
+        "trainer-tower.2f.object.1",
+        "trainer-tower.2f.object.2",
+        "trainer-tower.2f.object.3",
+        "trainer-tower.2f.object.4",
+        "trainer-tower.2f.coord.0",
+        "trainer-tower.2f.coord.1",
+        "trainer-tower.2f.coord.2",
+        "trainer-tower.2f.map-script.0",
+        "trainer-tower.2f.map-script.1",
+        "trainer-tower.2f.map-script.2",
+        "trainer-tower.3f.object.0",
+        "trainer-tower.3f.object.1",
+        "trainer-tower.3f.object.2",
+        "trainer-tower.3f.object.3",
+        "trainer-tower.3f.object.4",
+        "trainer-tower.3f.coord.0",
+        "trainer-tower.3f.coord.1",
+        "trainer-tower.3f.coord.2",
+        "trainer-tower.3f.map-script.0",
+        "trainer-tower.3f.map-script.1",
+        "trainer-tower.3f.map-script.2",
+        "trainer-tower.4f.object.0",
+        "trainer-tower.4f.object.1",
+        "trainer-tower.4f.object.2",
+        "trainer-tower.4f.object.3",
+        "trainer-tower.4f.object.4",
+        "trainer-tower.4f.coord.0",
+        "trainer-tower.4f.coord.1",
+        "trainer-tower.4f.coord.2",
+        "trainer-tower.4f.map-script.0",
+        "trainer-tower.4f.map-script.1",
+        "trainer-tower.4f.map-script.2",
+        "trainer-tower.5f.object.0",
+        "trainer-tower.5f.object.1",
+        "trainer-tower.5f.object.2",
+        "trainer-tower.5f.object.3",
+        "trainer-tower.5f.object.4",
+        "trainer-tower.5f.coord.0",
+        "trainer-tower.5f.coord.1",
+        "trainer-tower.5f.coord.2",
+        "trainer-tower.5f.map-script.0",
+        "trainer-tower.5f.map-script.1",
+        "trainer-tower.5f.map-script.2",
+        "trainer-tower.6f.object.0",
+        "trainer-tower.6f.object.1",
+        "trainer-tower.6f.object.2",
+        "trainer-tower.6f.object.3",
+        "trainer-tower.6f.object.4",
+        "trainer-tower.6f.coord.0",
+        "trainer-tower.6f.coord.1",
+        "trainer-tower.6f.coord.2",
+        "trainer-tower.6f.map-script.0",
+        "trainer-tower.6f.map-script.1",
+        "trainer-tower.6f.map-script.2",
+        "trainer-tower.7f.object.0",
+        "trainer-tower.7f.object.1",
+        "trainer-tower.7f.object.2",
+        "trainer-tower.7f.object.3",
+        "trainer-tower.7f.object.4",
+        "trainer-tower.7f.coord.0",
+        "trainer-tower.7f.coord.1",
+        "trainer-tower.7f.coord.2",
+        "trainer-tower.7f.map-script.0",
+        "trainer-tower.7f.map-script.1",
+        "trainer-tower.7f.map-script.2",
+        "trainer-tower.8f.object.0",
+        "trainer-tower.8f.object.1",
+        "trainer-tower.8f.object.2",
+        "trainer-tower.8f.object.3",
+        "trainer-tower.8f.object.4",
+        "trainer-tower.8f.coord.0",
+        "trainer-tower.8f.coord.1",
+        "trainer-tower.8f.coord.2",
+        "trainer-tower.8f.map-script.0",
+        "trainer-tower.8f.map-script.1",
+        "trainer-tower.8f.map-script.2",
+        "trainer-tower.roof.object.0",
+        "trainer-tower.roof.map-script.0",
+        "trainer-tower.roof.map-script.1",
+        "trainer-tower.lobby.object.0",
+        "trainer-tower.lobby.object.1",
+        "trainer-tower.lobby.object.2",
+        "trainer-tower.lobby.object.3",
+        "trainer-tower.lobby.object.4",
+        "trainer-tower.lobby.coord.0",
+        "trainer-tower.lobby.bg.0",
+        "trainer-tower.lobby.map-script.0",
+        "trainer-tower.lobby.map-script.1",
+        "trainer-tower.lobby.map-script.2",
+        "trainer-tower.lobby.map-script.3",
+        "trainer-tower.lobby.map-script.4",
+        "trainer-tower.elevator.bg.0",
+        "trainer-tower.elevator.map-script.0",
+        "trainer-tower.elevator.map-script.1"
+      ]
     }
   },
   "script_modules": {
@@ -3427,6 +5496,174 @@
           "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
           "implementation_path": "src/field_specials.c",
           "implementation_sha256": "c5e0f1c022f0022cec17bde87c508412985c1c4f9cc48ef7c6cadc111a5f6300"
+        }
+      ]
+    },
+    "trainer_tower": {
+      "owner": "trainer_tower",
+      "include": "data/scripts/wayfarer_sevii/trainer_tower/trainer_tower.inc",
+      "exports": [
+        "WayfarerSevii_TrainerTower_Floor_OnResume",
+        "WayfarerSevii_TrainerTower_Floor_OnTransition",
+        "WayfarerSevii_TrainerTower_Floor_SetObjectsSingles",
+        "WayfarerSevii_TrainerTower_Floor_SetObjectsDoubles",
+        "WayfarerSevii_TrainerTower_Floor_SetObjectsDoublesCleared",
+        "WayfarerSevii_TrainerTower_Floor_SetObjectsKnockout",
+        "WayfarerSevii_TrainerTower_Floor_HideOwner",
+        "WayfarerSevii_TrainerTower_Floor_OnFrame",
+        "WayfarerSevii_TrainerTower_Floor_Enter",
+        "WayfarerSevii_TrainerTower_Floor_EnterEnd",
+        "WayfarerSevii_TrainerTower_Floor_DoublesTrainer1",
+        "WayfarerSevii_TrainerTower_Floor_SinglesTrainer",
+        "WayfarerSevii_TrainerTower_Floor_KnockoutTrainer",
+        "WayfarerSevii_TrainerTower_Floor_DoublesTrainer2",
+        "WayfarerSevii_TrainerTower_Floor_PostBattleKnockout2",
+        "WayfarerSevii_TrainerTower_Floor_PostBattleKnockout3",
+        "WayfarerSevii_TrainerTower_Floor_PostBattleSpeech",
+        "WayfarerSevii_TrainerTower_Floor_Owner",
+        "WayfarerSevii_TrainerTower_Floor_SingleBattleTrigger",
+        "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerTop",
+        "WayfarerSevii_TrainerTower_Floor_DoubleBattleTriggerBottom",
+        "WayfarerSevii_TrainerTower_Floor_CheckDoubleEligibility",
+        "WayfarerSevii_TrainerTower_Floor_TriggerBattle",
+        "WayfarerSevii_TrainerTower_Floor_DoSingleBattle",
+        "WayfarerSevii_TrainerTower_Floor_DoDoubleBattle",
+        "WayfarerSevii_TrainerTower_Floor_DoDoubleSecondIntro",
+        "WayfarerSevii_TrainerTower_Floor_DoKnockoutBattle",
+        "WayfarerSevii_TrainerTower_Floor_DoBattle",
+        "WayfarerSevii_TrainerTower_Floor_WonBattle",
+        "WayfarerSevii_TrainerTower_Floor_SetFloorCleared",
+        "WayfarerSevii_TrainerTower_Floor_MoveDoublesOutOfWay",
+        "WayfarerSevii_TrainerTower_Floor_MoveLastKnockoutOutOfWay",
+        "WayfarerSevii_TrainerTower_Floor_NextKnockoutBattle",
+        "WayfarerSevii_TrainerTower_Floor_LostBattle",
+        "WayfarerSevii_TrainerTower_Roof_Owner",
+        "WayfarerSevii_TrainerTower_Roof_Arrived",
+        "WayfarerSevii_TrainerTower_Roof_GivePrize",
+        "WayfarerSevii_TrainerTower_Roof_PrizeReceived",
+        "WayfarerSevii_TrainerTower_Roof_End",
+        "WayfarerSevii_TrainerTower_Lobby_OnResume",
+        "WayfarerSevii_TrainerTower_Lobby_OnReturnToField",
+        "WayfarerSevii_TrainerTower_Lobby_OnTransition",
+        "WayfarerSevii_TrainerTower_Lobby_OnLoad",
+        "WayfarerSevii_TrainerTower_Lobby_OnFrame",
+        "WayfarerSevii_TrainerTower_Lobby_Nurse",
+        "WayfarerSevii_TrainerTower_Lobby_MartClerk",
+        "WayfarerSevii_TrainerTower_Lobby_Receptionist",
+        "WayfarerSevii_TrainerTower_Lobby_ClaimPendingPrize",
+        "WayfarerSevii_TrainerTower_Lobby_ClaimNoRoom",
+        "WayfarerSevii_TrainerTower_Lobby_OfferChallenge",
+        "WayfarerSevii_TrainerTower_Lobby_StartChallenge",
+        "WayfarerSevii_TrainerTower_Lobby_ReceptionistEnd",
+        "WayfarerSevii_TrainerTower_Lobby_EntryTrigger",
+        "WayfarerSevii_TrainerTower_Lobby_ShowRecords",
+        "WayfarerSevii_TrainerTower_Lobby_CooltrainerF",
+        "WayfarerSevii_TrainerTower_Lobby_BaldingMan",
+        "WayfarerSevii_TrainerTower_Elevator_FloorSelect",
+        "WayfarerSevii_TrainerTower_Elevator_ReturnLobby",
+        "WayfarerSevii_TrainerTower_Elevator_End",
+        "WayfarerSevii_TrainerTower_Movement_DoublesTrainer2OutOfWay",
+        "WayfarerSevii_TrainerTower_Movement_LastKnockoutOutOfWay",
+        "WayfarerSevii_TrainerTower_Movement_FaceDown",
+        "WayfarerSevii_TrainerTower_LobbyMartItems",
+        "WayfarerSevii_TrainerTower_Text_Healed",
+        "WayfarerSevii_TrainerTower_Text_NeedTwoMons",
+        "WayfarerSevii_TrainerTower_Text_OwnerGreeting",
+        "WayfarerSevii_TrainerTower_Text_PrizeReceived",
+        "WayfarerSevii_TrainerTower_Text_PrizePending",
+        "WayfarerSevii_TrainerTower_Text_ComeAgain",
+        "WayfarerSevii_TrainerTower_Text_PendingPrize",
+        "WayfarerSevii_TrainerTower_Text_ChallengePrompt",
+        "WayfarerSevii_TrainerTower_Text_Ineligible",
+        "WayfarerSevii_TrainerTower_Text_StartClock",
+        "WayfarerSevii_TrainerTower_Text_StartFailed",
+        "WayfarerSevii_TrainerTower_Text_FlavorOne",
+        "WayfarerSevii_TrainerTower_Text_FlavorTwo",
+        "WayfarerSevii_TrainerTower_Text_AbandonPrompt"
+      ],
+      "allowed_commands": [
+        "addvar",
+        "applymovement",
+        "case",
+        "copyvar",
+        "end",
+        "faceplayer",
+        "face_down",
+        "goto",
+        "goto_if_eq",
+        "goto_if_ne",
+        "lock",
+        "lockall",
+        "map_script_2",
+        "message",
+        "msgbox",
+        "multichoice",
+        "pokemart",
+        "release",
+        "releaseall",
+        "setflag",
+        "setobjectmovementtype",
+        "setobjectxyperm",
+        "setvar",
+        "special",
+        "step_end",
+        "switch",
+        "ttower_checkdoubles",
+        "ttower_checkfinaltime",
+        "ttower_clearedfloor",
+        "ttower_dobattle",
+        "ttower_encountermusic",
+        "ttower_getchallengetype",
+        "ttower_getownerstate",
+        "ttower_getspeech",
+        "ttower_giveprize",
+        "ttower_initfloor",
+        "ttower_isfloorcleared",
+        "ttower_resumetimer",
+        "ttower_setlost",
+        "ttower_startchallenge",
+        "waitmessage",
+        "waitbuttonpress",
+        "waitmovement",
+        "waitstate",
+        "walk_right",
+        "walk_up",
+        "warp"
+      ],
+      "allowed_externals": [
+        {
+          "label": "CallTrainerTowerFunc",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/trainer_tower.c",
+          "implementation_sha256": "4b401e3c83effbd42a3e832d3f7effdce540682eb8bc0d0865a6b4d4120efe6a"
+        },
+        {
+          "label": "HealPlayerParty",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/script_pokemon_util.c",
+          "implementation_sha256": "2746911b4754d57a98509d4181fbbedfdd0c649b6180e827c4cc31df20d0bd51"
+        },
+        {
+          "label": "gStringVar4",
+          "kind": "script_data",
+          "path": "src/string_util.c",
+          "sha256": "be86a4697e5d3bd85f30b13ddec238af519ed4bb6dd541588a628ca3d98625cc"
+        },
+        {
+          "label": "gText_HowMayIServeYou",
+          "kind": "script_symbol",
+          "path": "data/text/mart_clerk.inc",
+          "sha256": "48911a2b860a9ad2cf2e5e320ac9205870fc52d46ab0025f7e45bc48ebc2ee14"
+        },
+        {
+          "label": "gText_PleaseComeAgain",
+          "kind": "script_symbol",
+          "path": "data/text/mart_clerk.inc",
+          "sha256": "48911a2b860a9ad2cf2e5e320ac9205870fc52d46ab0025f7e45bc48ebc2ee14"
         }
       ]
     }

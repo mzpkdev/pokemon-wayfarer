@@ -14,6 +14,7 @@
 #include "string_util.h"
 #include "trainer_tower.h"
 #include "util.h"
+#include "wayfarer_persistence.h"
 #include "constants/event_objects.h"
 #include "constants/items.h"
 #include "constants/layouts.h"
@@ -131,6 +132,7 @@ static u8 GetTrainerTowerChallengeType(void);
 static void HealTrainerTowerParty(void);
 
 const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
+static const u8 sTextNoRecord[] = _("--:--.--");
 
 extern const u8 gText_TimeBoard[];
 
@@ -1150,7 +1152,7 @@ static void ShowResultsBoard(void)
          && records->bestTime[i] <= TRAINER_TOWER_MAX_TIME)
             PRINT_TOWER_TIME(records->bestTime[i]);
         else
-            StringCopy(gStringVar4, _("--:--.--"));
+            StringCopy(gStringVar4, sTextNoRecord);
         if ((records->completedMask & (1 << i))
          && records->bestTime[i] > 0
          && records->bestTime[i] <= TRAINER_TOWER_MAX_TIME)
@@ -1453,7 +1455,7 @@ void PrintTrainerTowerRecords(void)
             StringExpandPlaceholders(gStringVar4, gText_XMinYZSec);
         }
         else
-            StringCopy(gStringVar4, _("--:--.--"));
+            StringCopy(gStringVar4, sTextNoRecord);
         AddTextPrinterParameterized3(0, FONT_NORMAL, 0x18, 0x24 + 0x14 * i, sTextColors, 0, gTrainerTowerChallengeTypeTexts[i]);
         AddTextPrinterParameterized3(0, FONT_NORMAL, 0x60, 0x24 + 0x14 * i, sTextColors, 0, gStringVar4);
     }

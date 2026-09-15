@@ -47,18 +47,7 @@ struct TrainerTowerState
     /* 0x0004 */ struct EReaderTrainerTowerSet data;
 };
 
-// This record is embedded in the story-owned Wayfarer Sevii SaveBlock3 bank.
-// Trainer Tower owns the values and transitions, but never the aggregate.
-struct WayfarerSeviiTrainerTowerRecords
-{
-    u32 bestTime[NUM_TOWER_CHALLENGE_TYPES];
-    u16 pendingPrize;
-    u8 completedMask;
-    u8 reserved;
-};
 STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
-
-struct WayfarerSeviiTrainerTowerRecords *WayfarerSevii_GetTrainerTowerRecords(void);
 
 void PrintTrainerTowerRecords(void);
 void InitTrainerTowerBattleStruct(void);

@@ -2,6 +2,8 @@
 
 Foundation base: `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
 Published persistence/allocation contract: `d3eafb4a05`.
+Integrated story-owned persistence prerequisite: upstream `0357e4a423`,
+cherry-picked here as `d2afb48de3`.
 
 ## Persistent payload contract
 
@@ -53,8 +55,10 @@ added to the saved aggregate.
   rematch identities, or ordinary scaling rows.
 - Tower requests one transactional Sevii state key,
   `trainer_tower.pending_prize`, for manifest ownership/audit. The story state
-  allocator owns its numeric `0xD000`-namespace variable identity; Tower will
-  consume the published allocation and will not choose a slot independently.
+  allocator assigned it variable slot 3 as
+  `VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE`. The saved Tower payload is
+  authoritative; this variable is the transaction contract mirror exposed to
+  scripts and audits.
 - `trainer_tower.pending_prize` transitions `ITEM_NONE -> <exact source prize>`
   only after immediate Bag delivery fails, and `<prize> -> ITEM_NONE` only after
   a later Bag delivery succeeds. A pending prize blocks starting another run.
