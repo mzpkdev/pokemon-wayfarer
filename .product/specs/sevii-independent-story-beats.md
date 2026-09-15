@@ -2,7 +2,7 @@
 
 PRD: [Sevii independent story beats](../prds/sevii-independent-story-beats.md)
 
-Implemented: No
+Implemented: Yes — delivered in [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104) on the [content-overlay foundation](https://github.com/mzpkdev/pokemon-wayfarer/pull/101).
 
 ## Scope and authority
 
@@ -62,9 +62,9 @@ Tanoby state. Preserve source defeat flags only through generated Wayfarer
 aliases with unique storage. Do not infer receipt from an unrelated campaign
 flag or from currently owning an item that can be consumed elsewhere.
 
-Every state transition is enumerated in the map manifest with its script
-caller. The audit rejects a transition not listed below or an objective that can
-skip a required predecessor.
+The manifest publishes state ownership and selected event identities. Native
+helpers and focused runtime tests enforce progression and retry behavior; the
+structural audit does not attempt to interpret every script transition.
 
 ## Lostelle and the Meteorite
 
@@ -235,8 +235,7 @@ Trainer party for this scene.
 ## Moltres
 
 Restore Moltres at the Mt. Ember summit. Use the shared bird threshold
-`WAYFARER_BIRD_CAPTURE_TR = 55`, which also governs future Articuno and Zapdos
-restoration.
+`WAYFARER_BIRD_CAPTURE_TR = 55`, consistent with Articuno and Zapdos.
 
 - Below TR 55, interaction explains that the Pokémon is too dangerous and ends
   without starting a battle or hiding Moltres.
@@ -283,12 +282,18 @@ Retain focused mechanics or emulator coverage for representative high-risk paths
 6. Moltres below/at threshold and unresolved battle retry.
 7. Unchanged ferry and the 135-map exploration sweep.
 
-Use focused checks while iterating. The required stable validation is the content
-audit plus the focused story and exploration emulator journeys against one fresh
-Wayfarer E2E ROM. Run the production release-size check once when runtime content
-changes; do not repeat broad product builds for metadata-only reductions.
+Use focused checks while iterating. The stable validation is the content audit
+plus focused story and exploration emulator journeys against one fresh Wayfarer
+E2E ROM. Run the production release-size check once when runtime content changes;
+do not repeat broad product builds for metadata-only reductions.
 
-## Delivery milestones
+The shipped evidence includes representative Bill, Lostelle, and Moltres
+journeys plus native checks for shared retry and transaction behavior. It does
+not include a live rival-scene journey; that remains a coverage gap, not a claim
+that the scene was exhaustively exercised. The merged validation snapshot is
+recorded once in the [content overlay](sevii-content-overlay.md).
+
+## Delivered milestones
 
 1. Lostelle, bikers, Hypno, Meteorite, reunion, and Moon Stone.
 2. Lorelei and Icefall Cave.
@@ -296,8 +301,8 @@ changes; do not repeat broad product builds for metadata-only reductions.
 4. Celio request, Ruby branch, Sapphire theft, Warehouse, deliveries, and repair.
 5. Rival scene and Moltres.
 
-Each milestone must be independently playable and must leave later objectives
-absent rather than half-linked.
+The milestones were delivered together. Their gameplay contracts remain
+independent; the validation above states the coverage actually exercised.
 
 ## References
 

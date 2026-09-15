@@ -12,9 +12,8 @@ environmental scripts, completeness validation, and the implementation order.
 
 The separate [Sevii wild encounter specification](sevii-wild-encounters.md)
 owns encounter source selection and time-of-day binding. Story, Trainers,
-static encounters, and rewards remain outside the initial numbered-island map
-port. They may be layered later only through the follow-up Sevii content
-specifications.
+static encounters, and rewards remain outside this map-port baseline and are
+layered through the delivered Sevii content specifications.
 
 Birth Island and Navel Rock are preexisting Wayfarer content. This port changes
 only their ferry connection and preserves everything inside those features.
@@ -76,9 +75,9 @@ explicit Wayfarer Sevii manifest input. In `wayfarer` mode only, the adapter:
   catalog; and
 - leaves nonselected FRLG maps as null catalog entries, as they are now.
 
-Do not copy or edit the 102 `map.bin` files. Any later tile, elevation, or
-collision change must be made in Porymap under the repository's FRLG layout
-version guidance. The first port should need no layout changes.
+Do not copy or edit the 102 `map.bin` files. Any tile, elevation, or collision
+change must be made in Porymap under the repository's FRLG layout-version
+guidance. The delivered port made no such layout change.
 
 The source adapter is allowlist based. It must not change the general meaning
 of `game_version: "frlg"` or make all FRLG maps selectable in Wayfarer.
@@ -124,16 +123,16 @@ Apply these output rules:
 | Event class | Wayfarer output |
 | --- | --- |
 | Warps and outdoor connections | Retain, except for an explicit destination repair needed to return to Wayfarer's HNS Vermilion port. |
-| Sight and talk Trainers | Remove every object and every coordinate trigger. |
-| Story actors and cutscenes | Remove objects, triggers, callbacks, scene tables, rewards, and story transitions. |
-| Passive flavor NPCs | Omit from the first port. |
+| Sight and talk Trainers | Omit from the baseline; add only through the ordinary-Trainer layer. |
+| Story actors and cutscenes | Omit from the baseline; add only through the story layer. |
+| Passive flavor NPCs | Omit unless selected by a delivered content layer. |
 | Signs and fixed labels | Retain only when the script has no story read, story write, item delivery, battle, or movement scene. |
-| Pokemon Center and PC service | Retain the ordinary service path with no Bill, Celio, rival, or quest dispatch. |
+| Pokemon Center and PC service | Retain the ordinary service path; content layers may add their owned actors without replacing the service path. |
 | Mart service | Retain the ordinary clerk and stock dispatch. |
 | Four Island Day Care | Retain ordinary deposit and withdrawal only. Remove story dialogue and gifts. |
 | Ferry sailors | Retain the shared all-island menu and a guaranteed HNS Vermilion return. |
 | Environmental mechanics | Retain reviewed map-local mechanics needed for collision, currents, ice, holes, boulders, doors, and directional puzzles. |
-| Items, gifts, trades, and static Pokemon | Remove from the first port. |
+| Items, gifts, trades, and static Pokemon | Omit from the baseline; add only through a selected content layer. |
 
 All retained scripts use common or Wayfarer-owned state. They may not read or
 write FRLG campaign scenes, Champion state, National Pokedex state, Lostelle,

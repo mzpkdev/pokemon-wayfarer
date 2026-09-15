@@ -8,8 +8,10 @@ Add the seven ordinary Sevii Islands to the Wayfarer build as a faithful FRLG
 exploration region. Players can visit the island hubs, follow their outdoor
 routes, enter their caves and buildings, and find the local wild Pokemon.
 
-This first port is geography and encounters only. It does not bring over the
-FRLG Sevii story or its Trainer battles.
+The initial port shipped geography and encounters. The current Wayfarer build
+also layers the delivered ordinary Trainers, independent story, and Trainer
+Tower on that exploration baseline; their gameplay contracts are owned by their
+respective product and technical documents.
 
 ## Design
 
@@ -66,7 +68,7 @@ does not wait for a story flag.
 
 ### Scripted content
 
-On the 135 imported maps, the first port retains only the scripts needed for:
+The exploration baseline retains the scripts needed for:
 
 - ferry entry, departure, and return;
 - Pokemon Center healing and ordinary PC access;
@@ -75,11 +77,12 @@ On the 135 imported maps, the first port retains only the scripts needed for:
   state; and
 - environmental traversal and local puzzle state.
 
-Do not import or retain story actors, rivals, Team Rocket scenes, sight-based
-Trainers, talk-to-battle Trainers, Trainer Tower battles, scripted wild
-battles, static legendary encounters, gifts, trades, item rewards, or quest
-handoffs. Maps and rooms that originally hosted those interactions remain
-physically present and explorable.
+The baseline does not itself own story actors, Trainers, Trainer Tower battles,
+scripted encounters, gifts, trades, rewards, or quest handoffs. Those selected
+interactions are layered through the delivered [story](sevii-independent-story-beats.md),
+[ordinary-Trainer](../specs/sevii-trainer-restoration.md), and
+[Trainer Tower](sevii-trainer-tower.md) contracts; all other source content
+remains excluded.
 
 ### Wild encounters
 
@@ -108,18 +111,16 @@ they do not replace the authored Sevii roster.
 
 - This feature changes only the Wayfarer build. Standalone FireRed, LeafGreen,
   HNS, and Emerald map catalogs and behavior remain unchanged.
-- The [Sevii independent story design](sevii-independent-story-beats.md) is not
-  implemented by this port. A later story task may add compatible actors and
-  scenes on top of the exploration baseline.
+- The [Sevii independent story design](sevii-independent-story-beats.md) is
+  implemented as a compatible layer on this exploration baseline.
 - Birth Island and Navel Rock remain owned by their existing Wayfarer content.
   Preserve all of their current story, Trainers, encounters, static Pokemon,
   puzzles, tickets, items, rewards, and state. Only their ferry connection is
   part of this plan. Their special routes pass through Vermilion as in FRLG;
   they are not added to the ordinary One through Seven Island harbor pages.
 - Moltres, Hypno, the Sapphire theft, Ruby delivery, Lostelle, Lorelei's
-  confrontation, Selphy, and Rocket Warehouse battles are out of scope.
-- Trainer Tower is an empty explorable facility. Its timed challenge, Trainer
-  data, prizes, and record systems are out of scope.
+  confrontation, Selphy, Rocket Warehouse battles, and Trainer Tower are owned
+  by the delivered content layers, not this baseline.
 - New text is limited to ferry destination labels and service prompts. No new
   narrative or flavor NPC dialogue, quest journal, island story, reward
   economy, Pokemon, field move, or encounter-balancing pass is included.
@@ -143,8 +144,8 @@ Rock travel behavior beyond their FRLG-style ferry connection.
 
 Wild encounters remain ordinary regional encounters for Pokedex area data,
 DexNav, Lures, ability attraction, and Trainer Rating. Static and scripted
-Pokemon are absent from the imported numbered-island content. Existing Birth
-Island and Navel Rock Pokemon remain unchanged.
+Pokémon are outside this baseline and owned by the story layer where selected.
+Existing Birth Island and Navel Rock Pokémon remain unchanged.
 
 The complete port must fit the 32 MiB ROM and retain the active release reserve.
 If the full catalog cannot meet that gate, implementation pauses for an
