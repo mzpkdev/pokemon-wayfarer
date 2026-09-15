@@ -427,6 +427,7 @@ export const storyVars = {
   hoennStarterChoice: 0x7023,
   vermilionCityState: 0x408f,
   violetCityState: 0x4091,
+  trainerRating: 0x40f7,
 } as const
 
 export const storyFlags = {
@@ -494,6 +495,14 @@ export const storyFlags = {
   badge7: 0x886,
   badge8: 0x887,
   badge9: 0x888,
+  seviiLostelleStarted: 0xc00b,
+  seviiBikersCleared: 0xc00c,
+  seviiLostelleFound: 0xc00d,
+  seviiLostelleRescued: 0xc00e,
+  seviiIapapaBerryReceived: 0xc00f,
+  seviiMeteoriteReceived: 0xc011,
+  seviiCelioGemsStarted: 0xc01e,
+  seviiMoltresResolved: 0xc02a,
 } as const
 
 export const species = {
@@ -536,6 +545,8 @@ export const species = {
   wooper: 194,
   quagsire: 195,
   kyogre: 382,
+  hypno: 97,
+  moltres: 146,
 } as const
 
 export const moves = {
@@ -587,6 +598,7 @@ export const items = {
   machinePart: 883,
   pass: 885,
   squirtBottle: 892,
+  meteorite: 743,
 } as const
 
 export const partyMenuActions = {
