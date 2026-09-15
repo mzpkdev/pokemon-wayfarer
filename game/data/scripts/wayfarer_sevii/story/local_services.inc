@@ -241,47 +241,92 @@ WayfarerSevii_Story_DunsparceProspectorFull::
 WayfarerSevii_Story_ExplosionTutor::
 	lock
 	faceplayer
-	goto_if_set FLAG_WAYFARER_SEVII_TUTOR_EXPLOSION, EventScript_ExplosionTaught
+	goto_if_set FLAG_WAYFARER_SEVII_TUTOR_EXPLOSION, WayfarerSevii_Story_ExplosionTutorTaught
 	msgbox Text_ExplosionTeach, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_ExplosionDeclined
-	call EventScript_CanOnlyBeLearnedOnce
-	goto_if_eq VAR_RESULT, NO, EventScript_ExplosionDeclined
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_ExplosionTutorDeclined
+	call WayfarerSevii_Story_CanOnlyBeLearnedOnce
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_ExplosionTutorDeclined
 	msgbox Text_ExplosionWhichMon
 	setvar VAR_0x8005, MOVE_EXPLOSION
-	call EventScript_ChooseMoveTutorMon
-	goto_if_eq VAR_RESULT, FALSE, EventScript_ExplosionDeclined
+	call WayfarerSevii_Story_ChooseMoveTutorMon
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_ExplosionTutorDeclined
 	setflag FLAG_WAYFARER_SEVII_TUTOR_EXPLOSION
-	goto EventScript_ExplosionTaught
+	goto WayfarerSevii_Story_ExplosionTutorTaught
 
 WayfarerSevii_Story_BodySlamTutor::
 	lock
 	faceplayer
-	goto_if_set FLAG_WAYFARER_SEVII_TUTOR_BODY_SLAM, EventScript_BodySlamTaught
+	goto_if_set FLAG_WAYFARER_SEVII_TUTOR_BODY_SLAM, WayfarerSevii_Story_BodySlamTutorTaught
 	msgbox Text_BodySlamTeach, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_BodySlamDeclined
-	call EventScript_CanOnlyBeLearnedOnce
-	goto_if_eq VAR_RESULT, NO, EventScript_BodySlamDeclined
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_BodySlamTutorDeclined
+	call WayfarerSevii_Story_CanOnlyBeLearnedOnce
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_BodySlamTutorDeclined
 	msgbox Text_BodySlamWhichMon
 	setvar VAR_0x8005, MOVE_BODY_SLAM
-	call EventScript_ChooseMoveTutorMon
-	goto_if_eq VAR_RESULT, FALSE, EventScript_BodySlamDeclined
+	call WayfarerSevii_Story_ChooseMoveTutorMon
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_BodySlamTutorDeclined
 	setflag FLAG_WAYFARER_SEVII_TUTOR_BODY_SLAM
-	goto EventScript_BodySlamTaught
+	goto WayfarerSevii_Story_BodySlamTutorTaught
 
 WayfarerSevii_Story_SwordsDanceTutor::
 	lock
 	faceplayer
-	goto_if_set FLAG_WAYFARER_SEVII_TUTOR_SWORDS_DANCE, EventScript_SwordsDanceTaught
+	goto_if_set FLAG_WAYFARER_SEVII_TUTOR_SWORDS_DANCE, WayfarerSevii_Story_SwordsDanceTutorTaught
 	msgbox Text_SwordsDanceTeach, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, EventScript_SwordsDanceDeclined
-	call EventScript_CanOnlyBeLearnedOnce
-	goto_if_eq VAR_RESULT, NO, EventScript_SwordsDanceDeclined
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_SwordsDanceTutorDeclined
+	call WayfarerSevii_Story_CanOnlyBeLearnedOnce
+	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_SwordsDanceTutorDeclined
 	msgbox Text_SwordsDanceWhichMon
 	setvar VAR_0x8005, MOVE_SWORDS_DANCE
-	call EventScript_ChooseMoveTutorMon
-	goto_if_eq VAR_RESULT, FALSE, EventScript_SwordsDanceDeclined
+	call WayfarerSevii_Story_ChooseMoveTutorMon
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_SwordsDanceTutorDeclined
 	setflag FLAG_WAYFARER_SEVII_TUTOR_SWORDS_DANCE
-	goto EventScript_SwordsDanceTaught
+	goto WayfarerSevii_Story_SwordsDanceTutorTaught
+
+WayfarerSevii_Story_CanOnlyBeLearnedOnce::
+	msgbox WayfarerSevii_Story_Text_MoveCanOnlyBeLearnedOnce, MSGBOX_YESNO
+	return
+
+WayfarerSevii_Story_ChooseMoveTutorMon::
+	special ChooseMonForMoveTutor
+	waitstate
+	lock
+	faceplayer
+	return
+
+WayfarerSevii_Story_ExplosionTutorTaught::
+	msgbox Text_ExplosionTaught
+	release
+	end
+
+WayfarerSevii_Story_ExplosionTutorDeclined::
+	msgbox Text_ExplosionDeclined
+	release
+	end
+
+WayfarerSevii_Story_BodySlamTutorTaught::
+	msgbox Text_BodySlamTaught
+	release
+	end
+
+WayfarerSevii_Story_BodySlamTutorDeclined::
+	msgbox Text_BodySlamDeclined
+	release
+	end
+
+WayfarerSevii_Story_SwordsDanceTutorTaught::
+	msgbox Text_SwordsDanceTaught
+	release
+	end
+
+WayfarerSevii_Story_SwordsDanceTutorDeclined::
+	msgbox Text_SwordsDanceDeclined
+	release
+	end
+
+WayfarerSevii_Story_Text_MoveCanOnlyBeLearnedOnce::
+	.string "This move can be learned only\n"
+	.string "once. Is that okay?$"
 
 @ CapeBrinkGetMoveToTeachLeadPokemon is a shared eligibility special whose
 @ Wayfarer branch reads the three receipt flags named below. This script owns
@@ -302,12 +347,12 @@ WayfarerSevii_Story_CapeBrinkCheckLead::
 	copyvar VAR_0x8009, VAR_0x8005
 	msgbox Text_AllowMeToTeachMonUltimateMove, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_CapeBrinkDeclined
-	call EventScript_CanOnlyBeLearnedOnce
+	call WayfarerSevii_Story_CanOnlyBeLearnedOnce
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Story_CapeBrinkDeclined
 	msgbox Text_LetMeConferUltimateMove
 	closemessage
 	fadescreen FADE_TO_BLACK
-	call EventScript_ChooseMoveTutorMon
+	call WayfarerSevii_Story_ChooseMoveTutorMon
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_CapeBrinkDeclined
 	copyvar VAR_0x8005, VAR_0x8009
 	call WayfarerSevii_Story_CapeBrinkCommitReceipt

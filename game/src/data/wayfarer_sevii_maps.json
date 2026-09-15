@@ -7874,6 +7874,8 @@
       "include": "data/scripts/wayfarer_sevii/story/local_services.inc",
       "exports": [
         "WayfarerSevii_Story_BodySlamTutor",
+        "WayfarerSevii_Story_BodySlamTutorDeclined",
+        "WayfarerSevii_Story_BodySlamTutorTaught",
         "WayfarerSevii_Story_CapeBrinkAllAlreadyTaught",
         "WayfarerSevii_Story_CapeBrinkAllTaught",
         "WayfarerSevii_Story_CapeBrinkCheckLead",
@@ -7889,12 +7891,16 @@
         "WayfarerSevii_Story_ChanseyDanceAlreadyDone",
         "WayfarerSevii_Story_ChanseyDanceDeclined",
         "WayfarerSevii_Story_ChanseyDanceMan",
+        "WayfarerSevii_Story_CanOnlyBeLearnedOnce",
+        "WayfarerSevii_Story_ChooseMoveTutorMon",
         "WayfarerSevii_Story_DunsparceProspector",
         "WayfarerSevii_Story_DunsparceProspectorComplete",
         "WayfarerSevii_Story_DunsparceProspectorFull",
         "WayfarerSevii_Story_EmberSpaRockSmashFull",
         "WayfarerSevii_Story_EmberSpaRockSmashReceived",
         "WayfarerSevii_Story_ExplosionTutor",
+        "WayfarerSevii_Story_ExplosionTutorDeclined",
+        "WayfarerSevii_Story_ExplosionTutorTaught",
         "WayfarerSevii_Story_FiveIslandHouseOldMan",
         "WayfarerSevii_Story_FiveIslandHouseWoman",
         "WayfarerSevii_Story_FourIslandHouseFatMan",
@@ -7963,6 +7969,8 @@
         "WayfarerSevii_Story_SevenIslandScientist",
         "WayfarerSevii_Story_SevenIslandSign",
         "WayfarerSevii_Story_SwordsDanceTutor",
+        "WayfarerSevii_Story_SwordsDanceTutorDeclined",
+        "WayfarerSevii_Story_SwordsDanceTutorTaught",
         "WayfarerSevii_Story_TectonixCaretaker",
         "WayfarerSevii_Story_TectonixCaretakerComplete",
         "WayfarerSevii_Story_TectonixDeclined",
@@ -7974,6 +7982,7 @@
         "WayfarerSevii_Story_Text_EmberSpaRockSmashFull",
         "WayfarerSevii_Story_Text_LocalRocketAbandoned",
         "WayfarerSevii_Story_Text_LocalRocketInactive",
+        "WayfarerSevii_Story_Text_MoveCanOnlyBeLearnedOnce",
         "WayfarerSevii_Story_Text_TectonixMemorial",
         "WayfarerSevii_Story_Text_TectonixNeedsLemonade",
         "WayfarerSevii_Story_TwoIslandShopItems",
@@ -8056,6 +8065,14 @@
           "implementation_sha256": "d3a8647594f99c45c645c7d838aab7f4ba9ffd7b7bd10b952010537e2fc77c46"
         },
         {
+          "label": "ChooseMonForMoveTutor",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "ce1f292f4dd75fce00500eef0dafbbc00bb33fd45fa0eef4eb61f9509ca7c170",
+          "implementation_path": "src/party_menu.c",
+          "implementation_sha256": "d3a8647594f99c45c645c7d838aab7f4ba9ffd7b7bd10b952010537e2fc77c46"
+        },
+        {
           "label": "ChoosePartyMon",
           "kind": "special",
           "path": "data/specials.inc",
@@ -8086,58 +8103,10 @@
           "implementation_sha256": "f43709bd294dce5b4bfeaddff6477151284453b0b7319beda8333f4e90d69b0c"
         },
         {
-          "label": "EventScript_BodySlamDeclined",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
-          "label": "EventScript_BodySlamTaught",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
-          "label": "EventScript_CanOnlyBeLearnedOnce",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
-          "label": "EventScript_ChooseMoveTutorMon",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
-          "label": "EventScript_ExplosionDeclined",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
-          "label": "EventScript_ExplosionTaught",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
           "label": "EventScript_RestorePrevTextColor",
           "kind": "script_symbol",
           "path": "data/scripts/obtain_item.inc",
           "sha256": "5eda60704c11d8171865b16139f3a9d0f473c5dfb0113bfa4d76f5caab1bb0ad"
-        },
-        {
-          "label": "EventScript_SwordsDanceDeclined",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
-        },
-        {
-          "label": "EventScript_SwordsDanceTaught",
-          "kind": "script_symbol",
-          "path": "data/scripts/move_tutors_frlg.inc",
-          "sha256": "1e13402c8c667ca1943a5412acff8c13eacd89a4ecb3b1b6e5fe8f7f7b146ee3"
         },
         {
           "label": "FiveIsland_House1_Text_HusbandWentOffFishing",
@@ -8580,6 +8549,12 @@
           "sha256": "dfdb20eee19b4f887a2f2e9001e2a8cc8c3fe2a0a7de62615c90c2b6abfdde54"
         },
         {
+          "label": "Text_BodySlamDeclined",
+          "kind": "script_symbol",
+          "path": "data/maps/FourIsland_PokemonCenter_1F_Frlg/scripts.inc",
+          "sha256": "c9f35890c9a3c389b47648eb2f3c0e0e08629e2a83641d66c98cb93d465cc915"
+        },
+        {
           "label": "Text_BodySlamTeach",
           "kind": "script_symbol",
           "path": "data/maps/FourIsland_PokemonCenter_1F_Frlg/scripts.inc",
@@ -8592,7 +8567,25 @@
           "sha256": "c9f35890c9a3c389b47648eb2f3c0e0e08629e2a83641d66c98cb93d465cc915"
         },
         {
+          "label": "Text_BodySlamTaught",
+          "kind": "script_symbol",
+          "path": "data/maps/FourIsland_PokemonCenter_1F_Frlg/scripts.inc",
+          "sha256": "c9f35890c9a3c389b47648eb2f3c0e0e08629e2a83641d66c98cb93d465cc915"
+        },
+        {
+          "label": "Text_ExplosionDeclined",
+          "kind": "script_symbol",
+          "path": "data/maps/MtEmber_Exterior_Frlg/scripts.inc",
+          "sha256": "410ed24d0c6392deaf5345b12ce75bfa71f04b1d4657d4eea2f08977d0491b4e"
+        },
+        {
           "label": "Text_ExplosionTeach",
+          "kind": "script_symbol",
+          "path": "data/maps/MtEmber_Exterior_Frlg/scripts.inc",
+          "sha256": "410ed24d0c6392deaf5345b12ce75bfa71f04b1d4657d4eea2f08977d0491b4e"
+        },
+        {
+          "label": "Text_ExplosionTaught",
           "kind": "script_symbol",
           "path": "data/maps/MtEmber_Exterior_Frlg/scripts.inc",
           "sha256": "410ed24d0c6392deaf5345b12ce75bfa71f04b1d4657d4eea2f08977d0491b4e"
@@ -8634,7 +8627,19 @@
           "sha256": "dfdb20eee19b4f887a2f2e9001e2a8cc8c3fe2a0a7de62615c90c2b6abfdde54"
         },
         {
+          "label": "Text_SwordsDanceDeclined",
+          "kind": "script_symbol",
+          "path": "data/maps/SevenIsland_Frlg/scripts.inc",
+          "sha256": "2392bd59f828c25216fb1c77ba023ce09d03cb036c4fe3412211b68cdbae97ef"
+        },
+        {
           "label": "Text_SwordsDanceTeach",
+          "kind": "script_symbol",
+          "path": "data/maps/SevenIsland_Frlg/scripts.inc",
+          "sha256": "2392bd59f828c25216fb1c77ba023ce09d03cb036c4fe3412211b68cdbae97ef"
+        },
+        {
+          "label": "Text_SwordsDanceTaught",
           "kind": "script_symbol",
           "path": "data/maps/SevenIsland_Frlg/scripts.inc",
           "sha256": "2392bd59f828c25216fb1c77ba023ce09d03cb036c4fe3412211b68cdbae97ef"
