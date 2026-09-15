@@ -281,6 +281,7 @@ WayfarerSevii_Story_EventScript_IapapaNoRoom::
 WayfarerSevii_Story_EventScript_CommitLostelleRescue::
 	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_RESCUED, WayfarerSevii_Story_EventScript_LostelleReadyHome
 	setflag FLAG_WAYFARER_SEVII_LOSTELLE_RESCUED
+	clearflag FLAG_WAYFARER_SEVII_HIDE_RETURNED_LOSTELLE
 	msgbox WayfarerSevii_Story_Text_LostelleReadyHome
 	release
 	end
@@ -402,6 +403,7 @@ WayfarerSevii_Story_EventScript_SelphyLostCave::
 
 WayfarerSevii_Story_EventScript_ReturnSelphy::
 	setflag FLAG_WAYFARER_SEVII_SELPHY_RETURNED
+	clearflag FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY
 	msgbox WayfarerSevii_Story_Text_SelphyReturn
 	releaseall
 	end

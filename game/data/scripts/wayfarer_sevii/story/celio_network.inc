@@ -31,6 +31,9 @@ WayfarerSevii_Celio_OfferInvestigation:
 	msgbox WayfarerSevii_Text_CelioOfferInvestigation, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, WayfarerSevii_Celio_OfferDeclined
 	setflag FLAG_WAYFARER_SEVII_CELIO_GEMS_STARTED
+	clearflag FLAG_WAYFARER_SEVII_HIDE_DOTTED_HOLE_SCIENTIST
+	clearflag FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS
+	clearflag FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS
 	msgbox WayfarerSevii_Text_CelioInvestigationAccepted
 	release
 	end
@@ -104,6 +107,7 @@ WayfarerSevii_EventScript_RubyGuardPasswordScene::
 	goto_if_set FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_RubyLead_PasswordKnown
 	msgbox WayfarerSevii_Text_RubyGuardsRevealPassword
 	setflag FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED
+	call WayfarerSevii_Story_UpdateWarehouseReadiness
 WayfarerSevii_RubyLead_PasswordKnown:
 	releaseall
 	end
@@ -134,6 +138,7 @@ WayfarerSevii_RubyLead_EnsurePassword:
 	goto_if_set FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_RubyLead_EndEnsurePassword
 	msgbox WayfarerSevii_Text_RubyGuardsRevealPassword
 	setflag FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED
+	call WayfarerSevii_Story_UpdateWarehouseReadiness
 WayfarerSevii_RubyLead_EndEnsurePassword:
 	return
 
@@ -169,6 +174,7 @@ WayfarerSevii_EventScript_Ruby::
 	specialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Ruby_NoRoom
 	setflag FLAG_WAYFARER_SEVII_RUBY_RECOVERED
+	setflag FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS
 	msgreceiveditem WayfarerSevii_Text_FoundRuby, ITEM_RUBY, 1, MUS_RG_OBTAIN_KEY_ITEM
 	removeobject VAR_LAST_TALKED
 	release
@@ -213,10 +219,17 @@ WayfarerSevii_Sapphire_CommitTheft:
 	msgbox WayfarerSevii_Text_SapphireScientistStealsGem
 	removeobject VAR_LAST_TALKED
 	setflag FLAG_WAYFARER_SEVII_SAPPHIRE_STOLEN
+	setflag FLAG_WAYFARER_SEVII_HIDE_DOTTED_HOLE_SCIENTIST
 	msgbox WayfarerSevii_Text_SapphireScientistRevealsPassword
 	setflag FLAG_WAYFARER_SEVII_PASSWORD_TWO_LEARNED
-	removeobject LOCALID_DOTTED_HOLE_THIEF
+	call WayfarerSevii_Story_UpdateWarehouseReadiness
+	removeobject 2 @ Dotted Hole Sapphire Room source object index 1.
 	release
+	end
+
+@ The scientist is scene staging, not a second trigger. Only the Sapphire
+@ object may start the theft so VAR_LAST_TALKED removes the correct object.
+WayfarerSevii_EventScript_SapphireScientist::
 	end
 
 WayfarerSevii_Sapphire_NotStarted:
@@ -241,6 +254,18 @@ WayfarerSevii_Warehouse_CheckReady:
 	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_TWO_LEARNED, WayfarerSevii_Warehouse_CheckReadyDone
 	setvar VAR_RESULT, TRUE
 WayfarerSevii_Warehouse_CheckReadyDone:
+	return
+
+@ Passwords can be learned in either order. The final prerequisite transition
+@ presents both the ordered combatants and Gideon; Warehouse clear later hides
+@ only the five combatants so the Sapphire handoff remains retryable.
+WayfarerSevii_Story_UpdateWarehouseReadiness:
+	goto_if_unset FLAG_WAYFARER_SEVII_SAPPHIRE_STOLEN, WayfarerSevii_Story_UpdateWarehouseReadinessDone
+	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_ONE_LEARNED, WayfarerSevii_Story_UpdateWarehouseReadinessDone
+	goto_if_unset FLAG_WAYFARER_SEVII_PASSWORD_TWO_LEARNED, WayfarerSevii_Story_UpdateWarehouseReadinessDone
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS
+	clearflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GIDEON
+WayfarerSevii_Story_UpdateWarehouseReadinessDone:
 	return
 
 WayfarerSevii_Warehouse_NotReady:
@@ -328,6 +353,7 @@ WayfarerSevii_EventScript_WarehouseGideon::
 	faceplayer
 	goto_if_set FLAG_WAYFARER_SEVII_SAPPHIRE_RECOVERED, WayfarerSevii_Warehouse_GideonAfterRecovery
 	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_Warehouse_TryGiveSapphire
+	goto_if_defeated TRAINER_WAYFARER_SEVII_SCIENTIST_GIDEON, WayfarerSevii_Warehouse_TryGiveSapphire
 	call WayfarerSevii_Warehouse_CheckReady
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Warehouse_NotReady
 	goto_if_not_defeated TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN_2, WayfarerSevii_Warehouse_PredecessorPending
@@ -335,9 +361,17 @@ WayfarerSevii_EventScript_WarehouseGideon::
 	goto WayfarerSevii_Warehouse_TryGiveSapphire
 
 WayfarerSevii_Warehouse_GideonVictory:
-	@ The clear commits before reward capacity is checked.  A full Key Items
-	@ pocket therefore retries only this handoff and never the ordered battles.
+	@ Clear commits before capacity is checked, while Gideon's separate staging
+	@ flag keeps only his reward retry available afterward.
 	setflag FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED
+	setflag FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS
+	setflag FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS
+	@ Rocket Warehouse source object indices 0..4 have local IDs 1..5.
+	removeobject 1
+	removeobject 2
+	removeobject 3
+	removeobject 4
+	removeobject 5
 	msgbox WayfarerSevii_Text_WarehouseGideonPostBattle
 	return
 
@@ -375,6 +409,7 @@ WayfarerSevii_SixIsland_RivalOnFrame::
 	.2byte 0
 
 WayfarerSevii_FourIsland_RivalTryScene::
+	setvar VAR_TEMP_8, 1
 	goto_if_set FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoScene
 	specialvar VAR_RESULT, WayfarerSevii_HasAnyLeagueClear
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
@@ -382,12 +417,15 @@ WayfarerSevii_FourIsland_RivalTryScene::
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 	msgbox WayfarerSevii_Text_FourIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
+	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
+	addobject 10 @ Four Island source object index 9.
 	fadedefaultbgm
 	releaseall
 WayfarerSevii_Rival_NoScene:
 	return
 
 WayfarerSevii_SixIsland_RivalTryScene::
+	setvar VAR_TEMP_8, 1
 	goto_if_set FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoScene
 	specialvar VAR_RESULT, WayfarerSevii_HasAnyLeagueClear
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Rival_NoScene
@@ -395,6 +433,8 @@ WayfarerSevii_SixIsland_RivalTryScene::
 	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 	msgbox WayfarerSevii_Text_SixIslandRivalScene
 	setflag FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN
+	clearflag FLAG_WAYFARER_SEVII_HIDE_RIVALS
+	addobject 2 @ Six Island Pokémon Center source object index 1.
 	fadedefaultbgm
 	releaseall
 	return

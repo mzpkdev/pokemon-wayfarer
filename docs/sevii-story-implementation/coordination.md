@@ -36,13 +36,31 @@ The following slots are owned and must not be independently reused:
 | Flags | 30–40 | Celio, Ruby, Sapphire, passwords, Warehouse, and Network Machine repair |
 | Flags | 41–42 | Rival scene and Moltres completion |
 | Flags | 43–51 | Heracross/Nugget/Rock Smash rewards and Explosion, Body Slam, Swords Dance, and Cape Brink tutor receipts |
+| Flags | 52–59 | Derived inverse actor presentation: returned Lostelle; returned Selphy/Butler; Dotted Hole scientist; optional local Rockets; Warehouse combatants; Warehouse Gideon; Ruby guards; rival actors |
 | Variables | 0–2 | Selphy requested species, pending reward, and active request |
 | Variables | 3 | `trainer_tower.pending_prize` transaction mirror |
 | Variables | 4 | Heracross size record, initialized to `0x8000` |
 | Trainer defeat | 0–532 | Trainer-owned fixed allocation capacity; current frozen inventory uses 0–135 |
 | Rematch family | 0–63 | Trainer-owned two-bit stages and pending-ready bits |
 
-The exact flag and variable symbols are authoritative in `include/constants/flags.h` and `include/constants/vars.h`. Unallocated ranges begin at flag slot 52 and variable slot 5.
+The exact flag and variable symbols are authoritative in `include/constants/flags.h` and `include/constants/vars.h`. Unallocated ranges begin at flag slot 60 and variable slot 5.
+
+## Story actor presentation
+
+Slots 52–59 are condition-specific inverse flags because several source maps have no source map-script slot that the provenance-checked overlay can select. `WayfarerSeviiInitPersistentState()` initializes all eight hidden. Objective scripts write only the presentation flags affected by their durable transition; no arrival handler hides a still-undefeated actor.
+
+| Slot | Hide flag | Actor is visible exactly when |
+| ---: | --- | --- |
+| 52 | `FLAG_WAYFARER_SEVII_HIDE_RETURNED_LOSTELLE` | Lostelle rescued |
+| 53 | `FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY` | Selphy returned; shared by Selphy and Butler |
+| 54 | `FLAG_WAYFARER_SEVII_HIDE_DOTTED_HOLE_SCIENTIST` | Celio gems started and Sapphire not stolen |
+| 55 | `FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS` | Celio gems started and Warehouse not cleared; shared by Meadow and Outcast actors |
+| 56 | `FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS` | Sapphire stolen, both passwords learned, and Warehouse not cleared |
+| 57 | `FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GIDEON` | Sapphire stolen and both passwords learned; intentionally remains visible after clear for Sapphire delivery retry and post-dialogue |
+| 58 | `FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS` | Celio gems started and Ruby not recovered |
+| 59 | `FLAG_WAYFARER_SEVII_HIDE_RIVALS` | shared rival scene seen; the eligible on-frame scene clears this flag and explicitly spawns the current actor |
+
+Warehouse readiness is recomputed by `WayfarerSevii_Story_UpdateWarehouseReadiness` after either password/theft transition, so password order does not matter. These flags are saved so handlerless maps load correctly. The Warehouse clear transition removes the five combatants immediately but preserves Gideon; a full Key Items pocket therefore cannot strand the Sapphire reward.
 
 ## Trainer defeat ABI
 
