@@ -92,6 +92,44 @@ const finishBlackout = async (game: GameSession): Promise<void> => {
   )
 }
 
+const chargeVsSeekerOnKindleRoad = async (game: GameSession): Promise<void> => {
+  for (let cycle = 0; cycle < 50; cycle++) {
+    await game.player.move("left")
+    await game.wait.until(
+      (state) => state.ready && state.player.x === 7 && state.player.y === 69,
+      `Vs Seeker charge step ${cycle * 2 + 1}`,
+    )
+    await game.player.move("right")
+    await game.wait.until(
+      (state) => state.ready && state.player.x === 8 && state.player.y === 69,
+      `Vs Seeker charge step ${cycle * 2 + 2}`,
+    )
+  }
+}
+
+const useVsSeekerFromBag = async (game: GameSession, firstUse: boolean): Promise<void> => {
+  await game.controls.press("start")
+  await game.wait.until((state) => state.ui.mode === "pause-menu", "open Vs Seeker pause menu")
+  await game.wait.frames(30)
+
+  // A fresh checkpoint opens the pause menu on POKéMON. Once BAG has been
+  // selected, both the pause-menu cursor and Key Items pocket are retained.
+  if (firstUse) await game.controls.press("down")
+  await game.controls.press("a")
+  await game.wait.frames(120)
+  if (firstUse) {
+    await game.controls.press("right")
+    await game.wait.frames(90)
+  }
+
+  // Select the sole arranged Key Item, then USE from its context menu.
+  await game.controls.press("a")
+  await game.wait.frames(30)
+  await game.controls.press("a")
+  await game.wait.frames(180)
+  await finishFieldScript(game, "Vs Seeker use")
+}
+
 describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
   let game: GameSession
 
@@ -149,6 +187,107 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       battle: { active: true, enemy: { species: "machoke" } },
     })
     await finishTrainerVictory(game, "How could my combination", "Crush Kin victory")
+  })
+
+  it("keeps representative Three, Five, and Six Island defeats across map reloads", async () => {
+    const encounters = [
+      {
+        name: "Violet",
+        position: { map: "sevii-three-island-bond-bridge", x: 67, y: 10 },
+        facing: "right",
+        lead: "bulbasaur",
+        postBattleText: "eventually reach BERRY FOREST",
+      },
+      {
+        name: "Laura",
+        position: { map: "sevii-five-island-lost-cave-room4", x: 6, y: 5 },
+        facing: "up",
+        lead: "natu",
+        postBattleText: "Earlier, a lady went",
+      },
+      {
+        name: "Garret",
+        position: { map: "sevii-six-island-pattern-bush", x: 51, y: 7 },
+        facing: "up",
+        lead: "heracross",
+        postBattleText: "measures HERACROSS",
+      },
+    ] as const
+
+    for (const encounter of encounters) {
+      await game.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: encounter.facing, position: encounter.position },
+        party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+        determinism: { rngSeed: 1, textSpeed: "instant" },
+      })
+
+      await waitForTrainerBattle(game, `${encounter.name} encounter`)
+      await expect(game.state.read()).resolves.toMatchObject({
+        map: { name: encounter.position.map },
+        battle: { active: true, enemy: { species: encounter.lead } },
+      })
+      await finishTrainerVictory(game, encounter.postBattleText, `${encounter.name} victory`)
+
+      await game.player.warp(
+        encounter.position.map,
+        encounter.position.x,
+        encounter.position.y,
+        encounter.facing,
+      )
+      await game.player.interact()
+      await waitForDialogueText(
+        game,
+        encounter.postBattleText,
+        `${encounter.name} post-reload dialogue`,
+      )
+      await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
+      await game.controls.press("a")
+      await finishFieldScript(game, `${encounter.name} post-reload dialogue`)
+    }
+  })
+
+  it("charges the Vs Seeker and advances through every authored Crush Kin party", async () => {
+    const rematchGame = await GameSession.launch()
+    try {
+      await rematchGame.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "up", position: { map: kindleRoad, x: 8, y: 69 } },
+        party: [
+          { species: "lapras", level: 100, moves: ["surf"] },
+          { species: "pidgey", level: 100, moves: ["tackle"] },
+        ],
+        bag: { items: { vsSeeker: 1 } },
+        determinism: { rngSeed: 1, textSpeed: "instant" },
+      })
+
+      await waitForTrainerBattle(rematchGame, "base Crush Kin battle")
+      const base = await rematchGame.state.read()
+      expect(base.battle.enemy).toMatchObject({ species: "machoke" })
+      await finishTrainerVictory(rematchGame, "How could my combination", "base Crush Kin battle")
+
+      await chargeVsSeekerOnKindleRoad(rematchGame)
+      await useVsSeekerFromBag(rematchGame, true)
+      await rematchGame.player.interact()
+      await waitForDialogueText(rematchGame, "We'll prove it", "first Crush Kin rematch intro")
+      await waitForTrainerBattle(rematchGame, "first Crush Kin rematch", false)
+      const firstRematch = await rematchGame.state.read()
+      expect(firstRematch.battle.enemy).toMatchObject({ species: "machoke" })
+      expect(firstRematch.battle.enemy!.level).toBeGreaterThan(base.battle.enemy!.level)
+      await finishTrainerVictory(rematchGame, "How could my combination", "first Crush Kin rematch")
+
+      await chargeVsSeekerOnKindleRoad(rematchGame)
+      await useVsSeekerFromBag(rematchGame, false)
+      await rematchGame.player.interact()
+      await waitForDialogueText(rematchGame, "We'll prove it", "final Crush Kin rematch intro")
+      await waitForTrainerBattle(rematchGame, "final Crush Kin rematch", false)
+      await expect(rematchGame.state.read()).resolves.toMatchObject({
+        battle: { active: true, enemy: { species: "machamp" } },
+      })
+      await finishTrainerVictory(rematchGame, "How could my combination", "final Crush Kin rematch")
+    } finally {
+      await rematchGame.close()
+    }
   })
 
   it("routes exterior Psychic Dario through an ordinary sight battle", async () => {
