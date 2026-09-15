@@ -157,6 +157,49 @@ class SeviiContentContractTests(unittest.TestCase):
         with self.assertRaisesRegex(CONTRACTS.ContractError, "initial value"):
             CONTRACTS.validate_contracts(GAME, manifest)
 
+    def test_presentation_flags_are_story_owned_inverse_visibility_state(self):
+        manifest = fixture()
+        presentation = {
+            "id": "SEVII_SAPPHIRE_SCIENTIST_VISIBLE", "owner": "story", "storage": "flag", "slot": 7,
+            "initial": 1, "lifecycle": "presentation", "readers": ["story.meteorite"],
+            "writers": ["story.meteorite"],
+            "transitions": [
+                {"from": 0, "to": 1, "caller": "story.meteorite"},
+                {"from": 1, "to": 0, "caller": "story.meteorite"},
+            ],
+        }
+        manifest["contracts"]["states"].append(presentation)
+        report = CONTRACTS.validate_contracts(GAME, manifest)
+        state = next(row for row in report["states"] if row["id"] == presentation["id"])
+        self.assertEqual((state["lifecycle"], state["initial"]), ("presentation", 1))
+
+        for storage in ("var", "trainer_defeat"):
+            invalid = copy.deepcopy(manifest)
+            invalid["contracts"]["states"][-1]["storage"] = storage
+            invalid["contracts"]["states"][-1]["initial"] = 0
+            with self.subTest(storage=storage), self.assertRaisesRegex(CONTRACTS.ContractError, "invalid state lifecycle"):
+                CONTRACTS.validate_contracts(GAME, invalid)
+
+        invalid = copy.deepcopy(manifest)
+        invalid["contracts"]["states"][-1]["initial"] = 2
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "initial value"):
+            CONTRACTS.validate_contracts(GAME, invalid)
+        invalid = copy.deepcopy(manifest)
+        invalid["contracts"]["states"][-1]["transitions"][0]["to"] = 2
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "legal presentation transition"):
+            CONTRACTS.validate_contracts(GAME, invalid)
+
+        invalid = copy.deepcopy(manifest)
+        invalid["contracts"]["transactions"][0]["receipt"] = presentation["id"]
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "invalid receipt"):
+            CONTRACTS.validate_contracts(GAME, invalid)
+        invalid = copy.deepcopy(manifest)
+        transaction = invalid["contracts"]["transactions"][0]
+        transaction.update({"kind": "claim", "receipt": None, "pending_state": presentation["id"],
+                            "steps": ["establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"]})
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "invalid repeatable pending claim"):
+            CONTRACTS.validate_contracts(GAME, invalid)
+
     def test_transactional_story_and_tower_payloads_can_clear_after_success(self):
         manifest = fixture()
         manifest["content_domains"] += [

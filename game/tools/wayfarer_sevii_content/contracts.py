@@ -212,7 +212,10 @@ def _state_numeric_id(storage: str, slot: int) -> int:
     return TRAINER_ID_BASE + slot
 
 
-def _valid_state_initial(ident: str, owner: str, storage: str, slot: int, initial: int) -> bool:
+def _valid_state_initial(ident: str, owner: str, storage: str, slot: int, initial: int,
+                         lifecycle: str) -> bool:
+    if lifecycle == "presentation" and owner == "story" and storage == "flag":
+        return initial in (0, 1)
     if initial == 0:
         return True
     return NONZERO_INITIAL_STATES.get((ident, owner, storage, slot)) == initial
@@ -227,8 +230,11 @@ def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
         lifecycle = row.get("lifecycle", "completion")
         transaction_id = row.get("transaction_id")
         capacity = STATE_FLAG_CAPACITY if storage == "flag" else STATE_VAR_CAPACITY if storage == "var" else TRAINER_ID_LIMIT - TRAINER_ID_BASE
-        if not ident.startswith("SEVII_") or owner not in OWNERS or storage not in STORAGES or not 0 <= slot < capacity or not _valid_state_initial(ident, owner, storage, slot, initial) or (storage, slot) in slots or ident in states: _fail(f"{path} has an invalid state identity, owner, initial value, or slot")
-        if lifecycle not in ("completion", "transactional") or (lifecycle == "completion" and transaction_id is not None) or (lifecycle == "transactional" and (owner not in ("story", "trainer_tower") or storage != "var" or not isinstance(transaction_id, str))): _fail(f"{path} has an invalid state lifecycle")
+        if not ident.startswith("SEVII_") or owner not in OWNERS or storage not in STORAGES or not 0 <= slot < capacity or not _valid_state_initial(ident, owner, storage, slot, initial, lifecycle) or (storage, slot) in slots or ident in states: _fail(f"{path} has an invalid state identity, owner, initial value, or slot")
+        if (lifecycle not in ("completion", "transactional", "presentation")
+                or (lifecycle == "completion" and transaction_id is not None)
+                or (lifecycle == "transactional" and (owner not in ("story", "trainer_tower") or storage != "var" or not isinstance(transaction_id, str)))
+                or (lifecycle == "presentation" and (owner != "story" or storage != "flag" or transaction_id is not None))): _fail(f"{path} has an invalid state lifecycle")
         readers, writers = _array(row["readers"], f"{path}.readers"), _array(row["writers"], f"{path}.writers")
         if len(set(readers)) != len(readers) or len(set(writers)) != len(writers): _fail(f"{path} repeats a state reader or writer")
         for content in readers + writers:
@@ -241,7 +247,9 @@ def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
             _keys(transition, {"from", "to", "caller"}, tpath)
             before, after, caller = _number(transition["from"], f"{tpath}.from"), _number(transition["to"], f"{tpath}.to"), _text(transition["caller"], f"{tpath}.caller", CONTENT_ID)
             maximum = 1 if storage in ("flag", "trainer_defeat") else 0xFFFF
-            valid_transition = after > before if lifecycle == "completion" else (after > before or (before > 0 and after == 0))
+            valid_transition = (after > before if lifecycle == "completion"
+                                else (after > before or (before > 0 and after == 0)) if lifecycle == "transactional"
+                                else (before, after) in ((0, 1), (1, 0)))
             if before < 0 or not valid_transition or after > maximum or caller not in writers or (before, after, caller) in transition_keys: _fail(f"{tpath} is not an owned legal {lifecycle} transition")
             transition_keys.add((before, after, caller))
         states[ident] = {"id": ident, "symbol": _state_symbol(storage, ident), "numeric_id": _state_numeric_id(storage, slot), "owner": owner, "storage": storage, "slot": slot, "initial": initial, "lifecycle": lifecycle, "transaction_id": transaction_id,
