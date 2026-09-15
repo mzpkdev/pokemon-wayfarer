@@ -33,8 +33,8 @@
     }
   },
   "required_manifest_rows": [
-    {"source_map": "OneIsland_KindleRoad_EmberSpa_Frlg", "object_indices": [2]},
-    {"source_map": "TwoIsland_Frlg", "object_indices": [1, 2, 4]},
+    {"source_map": "OneIsland_KindleRoad_EmberSpa_Frlg", "object_indices": [2], "overrides": {"flag": "0"}},
+    {"source_map": "TwoIsland_Frlg", "object_indices": [1, 2, 4], "overrides": {"flag": "0"}},
     {"source_map": "OneIsland_TreasureBeach_Frlg", "object_indices": [1]},
     {"source_map": "ThreeIsland_Port_Frlg", "object_indices": [1, 2], "overrides": {"flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"}, "state_reads": ["SEVII_BIKERS_CLEARED"]},
     {"source_map": "SixIsland_RuinValley_Frlg", "object_indices": [0]},
