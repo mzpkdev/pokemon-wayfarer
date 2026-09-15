@@ -366,6 +366,14 @@ WayfarerSevii_Warehouse_GideonAfterRecovery:
 @ Shared, non-battle rival scene.  The manifest calls the location-specific
 @ Try label on arrival and uses the Talk label for the actor afterward.
 
+WayfarerSevii_FourIsland_RivalOnFrame::
+	map_script_2 VAR_TEMP_8, 0, WayfarerSevii_FourIsland_RivalTryScene
+	.2byte 0
+
+WayfarerSevii_SixIsland_RivalOnFrame::
+	map_script_2 VAR_TEMP_8, 0, WayfarerSevii_SixIsland_RivalTryScene
+	.2byte 0
+
 WayfarerSevii_FourIsland_RivalTryScene::
 	goto_if_set FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoScene
 	specialvar VAR_RESULT, WayfarerSevii_HasAnyLeagueClear
