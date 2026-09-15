@@ -342,11 +342,13 @@ WayfarerSevii_Warehouse_Admin2Victory:
 	specialvar VAR_RESULT, WayfarerSevii_IsMainlandGiovanniComplete
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_Warehouse_Admin2GiovanniComplete
 	msgbox WayfarerSevii_Text_WarehouseAdmin2LocalEnding
-	return
+	release
+	end
 
 WayfarerSevii_Warehouse_Admin2GiovanniComplete:
 	msgbox WayfarerSevii_Text_WarehouseAdmin2GiovanniEnding
-	return
+	release
+	end
 
 WayfarerSevii_EventScript_WarehouseGideon::
 	lock
@@ -373,7 +375,7 @@ WayfarerSevii_Warehouse_GideonVictory:
 	removeobject 4
 	removeobject 5
 	msgbox WayfarerSevii_Text_WarehouseGideonPostBattle
-	return
+	goto WayfarerSevii_Warehouse_TryGiveSapphire
 
 WayfarerSevii_Warehouse_TryGiveSapphire:
 	setvar VAR_0x8004, ITEM_SAPPHIRE

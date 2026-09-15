@@ -78,6 +78,21 @@ class WayfarerSeviiStoryActorStagingTests(unittest.TestCase):
         self.assertNotIn("HIDE_WAREHOUSE_GIDEON", victory)
         self.assertEqual(re.findall(r"removeobject ([1-5])", victory), ["1", "2", "3", "4", "5"])
         self.assertNotIn("removeobject 6", victory + reward)
+        self.assertNotIn("return", victory)
+        self.assertIn("goto WayfarerSevii_Warehouse_TryGiveSapphire", victory)
+
+    def test_trainer_post_battle_callbacks_do_not_return(self):
+        story = self.source("data/scripts/wayfarer_sevii/story/celio_network.inc")
+        for label in (
+            "WayfarerSevii_Warehouse_Admin2Victory",
+            "WayfarerSevii_Warehouse_Admin2GiovanniComplete",
+        ):
+            body = re.search(
+                rf"{label}:(.*?)(?:\nWayfarerSevii_|\Z)", story, re.S
+            ).group(1)
+            self.assertNotIn("return", body)
+            self.assertIn("release", body)
+            self.assertIn("end", body)
 
     def test_rival_scene_commits_then_spawns_the_current_actor(self):
         story = self.source("data/scripts/wayfarer_sevii/story/celio_network.inc")
