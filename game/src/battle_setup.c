@@ -46,6 +46,7 @@
 #include "field_screen_effect.h"
 #include "data.h"
 #include "vs_seeker.h"
+#include "wayfarer_sevii_rematches.h"
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -2555,6 +2556,9 @@ bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId)
 {
+    if (WayfarerSeviiRematchHasFamily(trainerId))
+        return WayfarerSeviiRematchGetOpponent(trainerId);
+
     if (FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
         return GetRematchTrainerIdVSSeeker(trainerId);
     else
@@ -2574,6 +2578,9 @@ bool8 ShouldTryRematchBattle(void)
 
 bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 {
+    if (WayfarerSeviiRematchHasFamily(trainerId))
+        return WayfarerSeviiRematchIsReady(trainerId);
+
     if (IsFirstTrainerIdReadyForRematch(gRematchTable, trainerId))
         return TRUE;
 
@@ -2590,7 +2597,15 @@ static void HandleRematchVarsOnBattleEnd(void)
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (I_VS_SEEKER_CHARGING != 0))
         ClearRematchMovementByTrainerId();
 
-    ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
+    if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+    {
+        WayfarerSeviiRematchClearReady(TRAINER_BATTLE_PARAM.opponentA);
+        WayfarerSeviiRematchAdvance(TRAINER_BATTLE_PARAM.opponentA);
+    }
+    else
+    {
+        ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
+    }
     SetBattledTrainersFlags();
 }
 
