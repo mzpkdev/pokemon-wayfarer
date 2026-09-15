@@ -270,8 +270,19 @@ WayfarerSevii_TrainerTower_Lobby_OnFrame::
 WayfarerSevii_TrainerTower_Lobby_Nurse::
 	lock
 	faceplayer
+	setvar VAR_0x8004, TRAINER_TOWER_FUNC_CHECK_ACTIVE
+	special CallTrainerTowerFunc
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_TrainerTower_Lobby_NurseHeal
+	msgbox WayfarerSevii_TrainerTower_Text_AbandonPrompt, MSGBOX_YESNO
+	goto_if_ne VAR_RESULT, YES, WayfarerSevii_TrainerTower_Lobby_NurseEnd
+	setvar VAR_0x8004, TRAINER_TOWER_FUNC_ABANDON_CHALLENGE
+	special CallTrainerTowerFunc
+
+WayfarerSevii_TrainerTower_Lobby_NurseHeal::
 	special HealPlayerParty
 	msgbox WayfarerSevii_TrainerTower_Text_Healed
+
+WayfarerSevii_TrainerTower_Lobby_NurseEnd::
 	release
 	end
 
@@ -366,6 +377,20 @@ WayfarerSevii_TrainerTower_Elevator_ReturnLobby::
 	waitstate
 
 WayfarerSevii_TrainerTower_Elevator_End::
+	releaseall
+	end
+
+WayfarerSevii_TrainerTower_Lobby_ConfirmExit::
+	lockall
+	msgbox WayfarerSevii_TrainerTower_Text_AbandonPrompt, MSGBOX_YESNO
+	goto_if_ne VAR_RESULT, YES, WayfarerSevii_TrainerTower_Lobby_ConfirmExitEnd
+	setvar VAR_0x8004, TRAINER_TOWER_FUNC_ABANDON_CHALLENGE
+	special CallTrainerTowerFunc
+	warp MAP_SEVEN_ISLAND_TRAINER_TOWER, 0
+	waitstate
+	end
+
+WayfarerSevii_TrainerTower_Lobby_ConfirmExitEnd::
 	releaseall
 	end
 

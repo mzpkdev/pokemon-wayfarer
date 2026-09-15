@@ -5554,6 +5554,8 @@
         "WayfarerSevii_TrainerTower_Lobby_OnLoad",
         "WayfarerSevii_TrainerTower_Lobby_OnFrame",
         "WayfarerSevii_TrainerTower_Lobby_Nurse",
+        "WayfarerSevii_TrainerTower_Lobby_NurseHeal",
+        "WayfarerSevii_TrainerTower_Lobby_NurseEnd",
         "WayfarerSevii_TrainerTower_Lobby_MartClerk",
         "WayfarerSevii_TrainerTower_Lobby_Receptionist",
         "WayfarerSevii_TrainerTower_Lobby_ClaimPendingPrize",
@@ -5568,6 +5570,8 @@
         "WayfarerSevii_TrainerTower_Elevator_FloorSelect",
         "WayfarerSevii_TrainerTower_Elevator_ReturnLobby",
         "WayfarerSevii_TrainerTower_Elevator_End",
+        "WayfarerSevii_TrainerTower_Lobby_ConfirmExit",
+        "WayfarerSevii_TrainerTower_Lobby_ConfirmExitEnd",
         "WayfarerSevii_TrainerTower_Movement_DoublesTrainer2OutOfWay",
         "WayfarerSevii_TrainerTower_Movement_LastKnockoutOutOfWay",
         "WayfarerSevii_TrainerTower_Movement_FaceDown",
@@ -5644,7 +5648,7 @@
           "path": "data/specials.inc",
           "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
           "implementation_path": "src/trainer_tower.c",
-          "implementation_sha256": "659ffb628b788aa20ff720b096da78a31a167ef20ac5751690e317dd64556e14"
+          "implementation_sha256": "e7e34f03054c71c1936e11b7344f66ec228b958f7178048ab92cb3a47fffd081"
         },
         {
           "label": "HealPlayerParty",

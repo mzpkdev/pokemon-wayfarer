@@ -35,6 +35,7 @@
 #include "start_menu.h"
 #include "trainer_see.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "vs_seeker.h"
 #include "wild_encounter.h"
 #include "constants/event_bg.h"
@@ -994,6 +995,13 @@ static bool8 TryArrowWarp(struct MapPosition *position, u16 metatileBehavior, en
 
     if (IsArrowWarpMetatileBehavior(metatileBehavior, direction) == TRUE)
     {
+#if IS_WAYFARER
+        if (WayfarerTrainerTowerShouldConfirmExit(gMapHeader.mapLayoutId, warpEventId))
+        {
+            ScriptContext_SetupScript(WayfarerSevii_TrainerTower_Lobby_ConfirmExit);
+            return TRUE;
+        }
+#endif
         StorePlayerStateAndSetupWarp(position, warpEventId);
         DoWarp();
         return TRUE;
@@ -1020,6 +1028,13 @@ static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileB
 
     if (warpEventId != WARP_ID_NONE && IsWarpMetatileBehavior(metatileBehavior) == TRUE)
     {
+#if IS_WAYFARER
+        if (WayfarerTrainerTowerShouldConfirmExit(gMapHeader.mapLayoutId, warpEventId))
+        {
+            ScriptContext_SetupScript(WayfarerSevii_TrainerTower_Lobby_ConfirmExit);
+            return TRUE;
+        }
+#endif
         StoreInitialPlayerAvatarState();
         SetupWarp(&gMapHeader, warpEventId, position);
         if (MetatileBehavior_IsEscalator(metatileBehavior) == TRUE)
@@ -1163,6 +1178,13 @@ static bool8 TryDoorWarp(struct MapPosition *position, u16 metatileBehavior, enu
             warpEventId = GetWarpEventAtMapPosition(&gMapHeader, position);
             if (warpEventId != WARP_ID_NONE && IsWarpMetatileBehavior(metatileBehavior) == TRUE)
             {
+#if IS_WAYFARER
+                if (WayfarerTrainerTowerShouldConfirmExit(gMapHeader.mapLayoutId, warpEventId))
+                {
+                    ScriptContext_SetupScript(WayfarerSevii_TrainerTower_Lobby_ConfirmExit);
+                    return TRUE;
+                }
+#endif
                 StoreInitialPlayerAvatarState();
                 SetupWarp(&gMapHeader, warpEventId, position);
                 DoDoorWarp();

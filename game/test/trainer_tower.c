@@ -6,6 +6,7 @@
 #include "wayfarer_persistence.h"
 #include "test/test.h"
 #include "constants/items.h"
+#include "constants/layouts.h"
 #include "constants/vars.h"
 
 #if IS_WAYFARER
@@ -28,6 +29,29 @@ static void SetUpUsableTowerParty(void)
     CreateMon(&gPlayerParty[0], SPECIES_PIKACHU, 31, 0, OTID_STRUCT_PLAYER_ID);
     CalculateMonStats(&gPlayerParty[0]);
     gPlayerPartyCount = 1;
+}
+
+static void ClearEveryTowerFloor(void)
+{
+    static const u16 sFloorLayouts[MAX_TRAINER_TOWER_FLOORS] =
+    {
+        LAYOUT_TRAINER_TOWER_1F,
+        LAYOUT_TRAINER_TOWER_2F,
+        LAYOUT_TRAINER_TOWER_3F,
+        LAYOUT_TRAINER_TOWER_4F,
+        LAYOUT_TRAINER_TOWER_5F,
+        LAYOUT_TRAINER_TOWER_6F,
+        LAYOUT_TRAINER_TOWER_7F,
+        LAYOUT_TRAINER_TOWER_8F,
+    };
+    u8 floor;
+
+    for (floor = 0; floor < MAX_TRAINER_TOWER_FLOORS; floor++)
+    {
+        gMapHeader.mapLayoutId = sFloorLayouts[floor];
+        CallTowerFunction(TRAINER_TOWER_FUNC_INIT_FLOOR);
+        CallTowerFunction(TRAINER_TOWER_FUNC_CLEARED_FLOOR);
+    }
 }
 
 TEST("Wayfarer Trainer Tower normalizes legal levels and has fixed source prizes")
@@ -118,6 +142,9 @@ TEST("Wayfarer Trainer Tower restores its healed entry snapshot for loss draw an
     CallTowerFunction(TRAINER_TOWER_FUNC_CHECK_ACTIVE);
     EXPECT_EQ(gSpecialVar_Result, TRUE);
     EXPECT(!WayfarerTrainerTowerIsSaveAllowed());
+    EXPECT(WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_LOBBY, 1));
+    EXPECT(!WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_LOBBY, 0));
+    EXPECT(!WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_1F, 1));
     SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
     SetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM, &noItem);
     CallTowerFunction(TRAINER_TOWER_FUNC_SET_LOST);
@@ -143,6 +170,7 @@ TEST("Wayfarer Trainer Tower restores its healed entry snapshot for loss draw an
     EXPECT_EQ(gSpecialVar_Result, FALSE);
     EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > hp);
     EXPECT(WayfarerTrainerTowerIsSaveAllowed());
+    EXPECT(!WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_LOBBY, 1));
 }
 
 TEST("Wayfarer Trainer Tower discards an unsaved run when transient state resets")
@@ -200,6 +228,15 @@ TEST("Wayfarer Trainer Tower successful roof delivery restores the entry snapsho
     StartTowerRun(CHALLENGE_TYPE_SINGLE);
     EXPECT(WayfarerTrainerTowerIsChallengeActive());
     SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
+    CallTowerFunction(TRAINER_TOWER_FUNC_GET_OWNER_STATE);
+    EXPECT_EQ(gSpecialVar_Result, 2);
+    CallTowerFunction(TRAINER_TOWER_FUNC_GIVE_PRIZE);
+    EXPECT_EQ(gSpecialVar_Result, 2);
+    EXPECT(WayfarerTrainerTowerIsChallengeActive());
+    EXPECT(!CheckBagHasItem(ITEM_UP_GRADE, 1));
+    ClearEveryTowerFloor();
+    CallTowerFunction(TRAINER_TOWER_FUNC_GET_OWNER_STATE);
+    EXPECT_EQ(gSpecialVar_Result, 0);
     CallTowerFunction(TRAINER_TOWER_FUNC_GIVE_PRIZE);
     EXPECT_EQ(gSpecialVar_Result, 0);
     EXPECT(!WayfarerTrainerTowerIsChallengeActive());

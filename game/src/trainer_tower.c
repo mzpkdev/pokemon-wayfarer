@@ -68,6 +68,8 @@ static EWRAM_DATA struct TrainerTowerState * sTrainerTowerState = NULL;
 static EWRAM_DATA struct TrainerTowerOpponent * sTrainerTowerOpponent = NULL;
 
 #if IS_WAYFARER
+#define WAYFARER_TRAINER_TOWER_ALL_FLOORS ((1 << MAX_TRAINER_TOWER_FLOORS) - 1)
+
 // This intentionally lives only in EWRAM. A reset or reload discards an
 // in-progress course, while the story-owned record payload remains saved.
 struct WayfarerTrainerTowerRun
@@ -134,6 +136,7 @@ static u8 GetTrainerTowerChallengeType(void);
 static void HealTrainerTowerParty(void);
 #if IS_WAYFARER
 static void SyncTrainerTowerPendingPrize(const struct WayfarerSeviiTrainerTowerRecords *records);
+static bool8 WayfarerTrainerTowerHasCompletedCourse(void);
 #endif
 
 const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
@@ -421,6 +424,15 @@ void WayfarerTrainerTowerResetTransientState(void)
     memset(&sWayfarerTrainerTowerRun, 0, sizeof(sWayfarerTrainerTowerRun));
 }
 
+bool8 WayfarerTrainerTowerShouldConfirmExit(u16 layoutId, s8 warpEventId)
+{
+    // Lobby warp 1 is the exterior door. Other lobby warps lead into the
+    // course or elevator and keep their ordinary facility behavior.
+    return sWayfarerTrainerTowerRun.active
+        && layoutId == LAYOUT_TRAINER_TOWER_LOBBY
+        && warpEventId == 1;
+}
+
 u8 WayfarerTrainerTowerGetUsablePartyCount(void)
 {
     u8 count = 0;
@@ -503,6 +515,12 @@ static void SyncTrainerTowerPendingPrize(const struct WayfarerSeviiTrainerTowerR
 {
     VarSet(VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE,
            records == NULL ? ITEM_NONE : records->pendingPrize);
+}
+
+static bool8 WayfarerTrainerTowerHasCompletedCourse(void)
+{
+    return sWayfarerTrainerTowerRun.active
+        && sWayfarerTrainerTowerRun.clearedFloors == WAYFARER_TRAINER_TOWER_ALL_FLOORS;
 }
 #endif
 
@@ -943,7 +961,7 @@ static void GetOwnerState(void)
     TRAINER_TOWER.spokeToOwner = TRUE;
 #elif IS_WAYFARER
     gSpecialVar_Result = 0;
-    if (!sWayfarerTrainerTowerRun.active)
+    if (!WayfarerTrainerTowerHasCompletedCourse())
     {
         gSpecialVar_Result = 2;
         return;
@@ -983,7 +1001,7 @@ static void GiveChallengePrize(void)
     u16 itemId = WayfarerTrainerTowerGetPrize(sWayfarerTrainerTowerRun.challengeType);
 
     gSpecialVar_Result = 2;
-    if (!sWayfarerTrainerTowerRun.active || records == NULL || itemId == ITEM_NONE)
+    if (!WayfarerTrainerTowerHasCompletedCourse() || records == NULL || itemId == ITEM_NONE)
         return;
     SyncTrainerTowerPendingPrize(records);
     if (AddBagItem(itemId, 1))
@@ -1025,7 +1043,7 @@ static void CheckFinalTime(void)
     struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
 
     gSpecialVar_Result = 2;
-    if (!sWayfarerTrainerTowerRun.active || records == NULL)
+    if (!WayfarerTrainerTowerHasCompletedCourse() || records == NULL)
         return;
     ClearTrainerHillVBlankCounter();
     if (!sWayfarerTrainerTowerRun.timeChecked)

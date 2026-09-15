@@ -61,6 +61,7 @@ bool8 WayfarerTrainerTowerIsChallengeActive(void);
 bool8 WayfarerTrainerTowerIsSaveAllowed(void);
 #if IS_WAYFARER
 void WayfarerTrainerTowerResetTransientState(void);
+bool8 WayfarerTrainerTowerShouldConfirmExit(u16 layoutId, s8 warpEventId);
 STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
 u8 WayfarerTrainerTowerGetUsablePartyCount(void);
 u8 WayfarerTrainerTowerNormalizeLevel(u8 highestUsableLevel);
