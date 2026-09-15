@@ -1,8 +1,6 @@
 # Sevii independent story beats
 
-Status: Draft product design for a future Wayfarer story adaptation. Not
-implemented. Bounded scene decisions and the shared bird-capture TR threshold
-remain open.
+Status: Approved product design. Not implemented.
 
 ## Intent
 
@@ -42,10 +40,11 @@ are needed.
 
 ### Travel and core services
 
-Preserve the [FRLG traversal design](frlg-open-world-region-traversal.md)'s
-independent island travel entitlement. Once that service is unlocked, accepting
-or completing an adventure never removes the established island destinations or
-the return to Kanto.
+Numbered-island service is available whenever the player can use the Vermilion
+dock. One through Seven Island and the Vermilion return remain available from
+the first visit. No story, Trainer, Tower, Ruby/Sapphire, Meteorite, pass,
+Pokédex, badge, League, or Champion state may gate, remove, reorder, or consume
+these routes. First arrival initializes no adventure as accepted or completed.
 
 Do not require the Ruby for travel to Islands Four through Seven. Celio's story
 does not consume, replace, or duplicate an already granted travel pass. Early
@@ -259,19 +258,19 @@ Players should understand each island problem through local introductions.
 Players familiar with FRLG should recognize the same rescue, theft, exploration,
 and reward scenes without learning a replacement plot.
 
-## Open questions
+## Settled implementation decisions
 
-1. Which existing Bill/Celio interaction introduces the Meteorite locally without
-   Blaine's invitation or the forced Cinnabar trip? Keep it separate from Celio's
-   two-gem request and the transport introduction.
-2. Which small request and partial-delivery dialogue changes explain Celio's two
-   parallel investigations while preserving his existing repair conclusion?
-3. What exact Warehouse variants cover Giovanni still being active, and which
-   Lorelei lines need adjustment after the Warehouse has already been cleared?
-4. Which communications effects of Celio's original repair remain applicable to
-   the future port, after removing PC disruption and unrelated postgame writes?
-5. What is the shared bird-capture TR threshold and the minimal local explanation
-   for returning to Moltres later? Birth Island and Navel Rock remain separate.
+- Bill in One Island's Pokémon Center offers the Meteorite delivery; Celio
+  independently offers both gem investigations.
+- Celio has partial-delivery dialogue for either gem arriving first.
+- Warehouse dialogue distinguishes whether the semantic mainland-Giovanni
+  milestone is complete; Lorelei also recognizes an already-cleared Warehouse.
+- Celio's repair conclusion is local presentation only. It changes no network,
+  storage, Pokédex, Champion, League, cave, or travel entitlement.
+- Moltres uses the shared bird-capture threshold `WAYFARER_BIRD_CAPTURE_TR = 55`.
+
+The [technical specification](../specs/sevii-independent-story-beats.md) freezes
+state, transactions, retry behavior, battle ownership, and dialogue predicates.
 
 ## References
 
@@ -279,3 +278,4 @@ and reward scenes without learning a replacement plot.
 - [Johto story design and late-game reward exception](johto-independent-story-beats.md)
 - [FRLG open-world regional traversal](frlg-open-world-region-traversal.md)
 - [FRLG traversal specification](../specs/frlg-open-world-region-traversal.md)
+- [Sevii story technical specification](../specs/sevii-independent-story-beats.md)

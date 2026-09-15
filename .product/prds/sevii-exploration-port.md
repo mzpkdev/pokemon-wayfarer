@@ -1,6 +1,6 @@
 # Sevii exploration port
 
-Status: Draft product design. Not implemented.
+Status: Implemented.
 
 ## Intent
 
