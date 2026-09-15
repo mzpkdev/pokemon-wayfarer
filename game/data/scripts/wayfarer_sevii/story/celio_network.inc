@@ -400,11 +400,16 @@ WayfarerSevii_SixIsland_RivalTryScene::
 	return
 
 WayfarerSevii_EventScript_FourIslandRival::
+	goto_if_unset FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoSceneTalk
 	msgbox WayfarerSevii_Text_FourIslandRivalAfter, MSGBOX_AUTOCLOSE
 	end
 
 WayfarerSevii_EventScript_SixIslandRival::
+	goto_if_unset FLAG_WAYFARER_SEVII_RIVAL_SCENE_SEEN, WayfarerSevii_Rival_NoSceneTalk
 	msgbox WayfarerSevii_Text_SixIslandRivalAfter, MSGBOX_AUTOCLOSE
+	end
+
+WayfarerSevii_Rival_NoSceneTalk:
 	end
 
 @ -----------------------------------------------------------------------------
