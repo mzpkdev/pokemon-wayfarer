@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import re
 import sys
 import tempfile
 import unittest
@@ -28,6 +29,23 @@ class OrdinaryTrainerProjectionTests(unittest.TestCase):
         self.assertEqual(report["maps"]["SevenIsland_TrainerTower_Frlg"], 2)
         self.assertTrue(all(len(pair["members"]) == 2 for pair in report["pairs"]))
         self.assertTrue(all(len(pair["local_ids"]) == 2 and pair["local_ids"][0] > 0 for pair in report["pairs"]))
+
+    def test_every_projected_object_uses_a_runtime_tested_wayfarer_graphics_id(self):
+        manifest = json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))
+        inventory = set(manifest["content_domains"]["ordinary_trainers"]["inventory"])
+        objects = [
+            event
+            for record in manifest["maps"]
+            for event in record["retained_events"]["object_events"]
+            if event.get("content_id") in inventory
+        ]
+        tested_source = (GAME / "test/wayfarer_sevii_object_graphics.c").read_text(encoding="utf-8")
+        tested_ids = set(re.findall(r"^    (OBJ_EVENT_GFX_[A-Z0-9_]+),$", tested_source, re.MULTILINE))
+        projected_ids = {event["source"]["graphics_id"] for event in objects}
+
+        self.assertEqual(len(objects), 87)
+        self.assertEqual(len(projected_ids), 26)
+        self.assertEqual(tested_ids, projected_ids)
 
     def test_generator_preserves_foreign_contract_rows_on_write_and_check(self):
         manifest = json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))

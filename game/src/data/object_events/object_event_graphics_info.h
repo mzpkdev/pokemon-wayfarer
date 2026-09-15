@@ -4467,7 +4467,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_ApricornTree = {
     .images = sPicTable_ApricornTree,
 };
 
-#if IS_FRLG
+#if IS_FRLG || IS_WAYFARER
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_RedNormal = {
     .tileTag = TAG_NONE,
@@ -7224,9 +7224,9 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_SSAnne = {
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
-#endif // IS_FRLG
+#endif // IS_FRLG || IS_WAYFARER
 
-#if HAS_SEVII_CONTENT
+#if HAS_SEVII_CONTENT && !IS_WAYFARER
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_OldWomanFrlg = {
     .tileTag = TAG_NONE,
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_PINK,
@@ -7302,7 +7302,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Clerk = {
     .images = sPicTable_Clerk,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
-#endif // HAS_SEVII_CONTENT
+#endif // HAS_SEVII_CONTENT && !IS_WAYFARER
 #if IS_HNS
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_AttendantF_hns = {TAG_NONE, OBJ_EVENT_PAL_TAG_NPC_1_HNS, OBJ_EVENT_PAL_TAG_NONE, 256, 16, 32, 4, SHADOW_SIZE_M, FALSE, FALSE, TRACKS_FOOT, &gObjectEventBaseOam_16x32, sOamTables_16x32, sAnimTable_Standard, sPicTable_AttendantF_hns, gDummySpriteAffineAnimTable};
 
@@ -7959,4 +7959,3 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_MartLight_Hns = {
 };
 
 #endif // IS_HNS
-
