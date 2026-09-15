@@ -1,7 +1,7 @@
 # Sevii exploration map port
 
 PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
@@ -12,7 +12,10 @@ environmental scripts, completeness validation, and the implementation order.
 
 The separate [Sevii wild encounter specification](sevii-wild-encounters.md)
 owns encounter source selection and time-of-day binding. Story, Trainers,
-static encounters, and rewards remain outside the new numbered-island maps.
+static encounters, and rewards remain outside the initial numbered-island map
+port. They may be layered later only through the follow-up Sevii content
+specifications.
+
 Birth Island and Navel Rock are preexisting Wayfarer content. This port changes
 only their ferry connection and preserves everything inside those features.
 

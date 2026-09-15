@@ -1,7 +1,7 @@
 # Sevii wild encounters
 
 PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
-Implemented: No
+Implemented: Yes
 
 ## Scope
 
