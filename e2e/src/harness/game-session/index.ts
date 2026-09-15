@@ -28,4 +28,3 @@ export type {
 } from "./features/region-map"
 export type { GameState } from "./features/state"
 export type { StandardRod } from "./features/inventory"
-export type { TrainerTowerChallengeType } from "./features/trainer-tower"

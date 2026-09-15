@@ -13,55 +13,56 @@ describe("Wayfarer Trainer Tower run lifecycle", () => {
     await game.close()
   })
 
-  it("heals and restores the entry snapshot while discarding an unsaved active run", async () => {
+  it("starts through the lobby entry and abandons through the exterior door", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
-      party: [
-        { species: "lapras", level: 55 },
-        { species: "pidgey", level: 40 },
-      ],
-    })
-    await game.saveAndReload()
-
-    const savedVitals = (await game.state.read()).partyVitals
-    expect(savedVitals).toHaveLength(2)
-    expect(savedVitals.every(({ hp, status }) => hp > 1 && status === 0)).toBe(true)
-
-    await game.trainerTower.start("mixed")
-    await expect(game.state.read()).resolves.toMatchObject({
-      trainerTower: {
-        active: true,
-        saveAllowed: false,
-        bestTimes: [0, 0, 0, 0],
-        pendingPrize: 0,
-        completedMask: 0,
+      party: [{ species: "lapras", level: 55 }],
+      player: {
+        facing: "up",
+        position: { map: "sevii-trainer-tower-lobby", x: 9, y: 8 },
       },
+      determinism: { textSpeed: "instant" },
     })
 
-    await game.trainerTower.damageParty(1, 8)
-    expect((await game.state.read()).partyVitals).toEqual([
-      { hp: 1, status: 8 },
-      { hp: 1, status: 8 },
-    ])
+    await game.player.move("up")
+    await game.wait.until(
+      (state) => state.dialogueOpen && state.dialogue.text.startsWith("Would you like"),
+      "Trainer Tower challenge prompt",
+    )
+    await game.controls.press("a")
+    await game.wait.frames(30)
+    await game.controls.press("a")
+    await game.wait.frames(30)
+    await game.controls.press("a") // Single Battle
+    await game.wait.until(
+      (state) => state.dialogueOpen && state.dialogue.text.startsWith("On your marks"),
+      "Trainer Tower start clock",
+    )
+    await game.controls.press("a")
+    await game.wait.frames(30)
+    await game.controls.press("a")
+    await game.wait.forReady()
 
-    await game.resetAndReload()
-    await expect(game.state.read()).resolves.toMatchObject({
-      partyVitals: savedVitals,
-      trainerTower: { active: false, saveAllowed: true },
-    })
+    await game.player.warp("sevii-trainer-tower-lobby", 9, 14, "down")
+    await game.player.move("down")
+    await game.wait.frames(16)
+    await game.player.move("down")
+    await game.wait.until(
+      (state) => state.dialogueOpen && state.dialogue.text.startsWith("Leave the challenge"),
+      "active Trainer Tower exit confirmation",
+    )
+    expect((await game.state.read()).map.name).toBe("sevii-trainer-tower-lobby")
 
-    await game.trainerTower.start("mixed")
-    await game.trainerTower.damageParty(1, 8)
-    await game.trainerTower.abandon()
-    await expect(game.state.read()).resolves.toMatchObject({
-      partyVitals: savedVitals,
-      trainerTower: {
-        active: false,
-        saveAllowed: true,
-        bestTimes: [0, 0, 0, 0],
-        pendingPrize: 0,
-        completedMask: 0,
-      },
-    })
+    await game.controls.press("a")
+    await game.wait.frames(30)
+    await game.controls.press("a")
+    await game.wait.forMap("sevii-seven-island-trainer-tower")
+    expect((await game.state.read()).dialogueOpen).toBe(false)
+
+    await game.player.warp("sevii-trainer-tower-lobby", 9, 14, "down")
+    await game.player.move("down")
+    await game.wait.frames(16)
+    await game.player.move("down")
+    await game.wait.forMap("sevii-seven-island-trainer-tower")
   })
 })

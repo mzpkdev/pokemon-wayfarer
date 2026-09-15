@@ -86,11 +86,11 @@ Formats are fixed in menu order: Single `0`, Double `1`, Knockout `2`, Mixed
 Rock. Every format has eight floors. The frozen Mixed source rows are Mixed 1,
 Mixed 2, Mixed 3, Double 8, Mixed 5, Knockout 8, Double 3, and Knockout 2.
 
-The starting built-in set source is
-`game/src/trainer_tower_sets.c`, SHA-256
-`a3d5b451ae73b2ca6dcaf4b260544f979f6a5199ff15ab62510f5513ba515dc0`.
-The local frozen data generator must pin a reviewed normalized checksum rather
-than accept e-Reader, Mystery Gift, record-mixed, or downloaded payloads.
+The built-in set source is `game/src/trainer_tower_sets.c`. The shared Sevii
+content audit verifies local source/include closure and rejects an active
+e-Reader or downloaded loader path. The compiler and focused mechanics tests
+validate the authored C data; there is no separate C-initializer parser or
+frozen per-opponent hash inventory.
 
 ## Integration rule
 
@@ -116,11 +116,18 @@ artifact; do not resolve manifest conflicts by taking a whole-file version.
 These are isolated-branch results. Final three-branch integration must
 regenerate combined outputs and rerun the same acceptance checks.
 
+The CI-cut pass removed the standalone Trainer Tower audit target, its JSON
+artifact, 327-line C-initializer parser, and three redundant parser tests. The
+required shared Sevii content audit now performs the smaller local-source and
+no-external-loader check directly. Its repository test builds the full 135-map
+report once rather than repeating the same shared closure pass for an equality
+assertion; sibling integrations should preserve that single-pass test shape.
+
 The independent critic's three actionable findings are addressed in
 `7f861d4099`: the lobby exterior door confirms abandonment and restores the
 entry snapshot, the lobby nurse cannot heal an active run without the same
 abandonment transaction, and owner/time/prize delivery requires all eight
 floor-clear bits. Independent re-review of that remediation found no remaining
-actionable findings. The current SkyEmu journey covers save exclusion, transient
-reset, and abandonment restoration; the exhaustive four-format completion and
-every-floor loss/draw emulator matrix remains pending combined acceptance.
+actionable findings. Combined acceptance should exercise representative Tower
+gameplay through player input; an exhaustive format/floor permutation matrix is
+not required.

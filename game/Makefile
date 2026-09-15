@@ -365,8 +365,6 @@ WAYFARER_HOENN_ENTRY_TOOL_DIR := $(TOOLS_DIR)/wayfarer_hoenn_entry
 WAYFARER_HOENN_ENTRY_AUDIT := $(BUILD_DIR)/wayfarer-hoenn-entry-audit.json
 WAYFARER_SEVII_PORT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_sevii_port
 WAYFARER_SEVII_PORT_AUDIT := $(BUILD_DIR)/wayfarer-sevii-port-audit.json
-WAYFARER_TRAINER_TOWER_TOOL_DIR := $(TOOLS_DIR)/wayfarer_trainer_tower
-WAYFARER_TRAINER_TOWER_AUDIT := $(BUILD_DIR)/wayfarer-trainer-tower-audit.json
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 
 MISC_TOOL_DIR := $(TOOLS_DIR)/misc
@@ -394,7 +392,6 @@ RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidy
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
 RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
-RULES_NO_SCAN += wayfarer-trainer-tower-test wayfarer-trainer-tower-audit
 RULES_NO_SCAN += legacy-multiboot-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
@@ -884,21 +881,13 @@ $(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)
 
 wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
 
-wayfarer-trainer-tower-test:
-	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_TRAINER_TOWER_TOOL_DIR)/tests -p 'test_*.py' -q
-
-$(WAYFARER_TRAINER_TOWER_AUDIT): $(WAYFARER_TRAINER_TOWER_TOOL_DIR)/audit.py $(C_SUBDIR)/trainer_tower_sets.c $(INCLUDE_DIRS)/constants/trainer_tower.h
-	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_TRAINER_TOWER_TOOL_DIR)/audit.py --root . --output $@
-
-wayfarer-trainer-tower-audit: wayfarer-trainer-tower-test $(WAYFARER_TRAINER_TOWER_AUDIT)
-
 .PHONY: wayfarer-sevii-content-test wayfarer-sevii-content-audit
 wayfarer-sevii-content-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_content/tests -p 'test_*.py' -q
 
 # Always validate the declared source closure; a timestamp-only report can hide
 # drift in a newly added owner module or one of its external dependencies.
-wayfarer-sevii-content-audit: wayfarer-sevii-content-test wayfarer-trainer-tower-audit
+wayfarer-sevii-content-audit: wayfarer-sevii-content-test
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_content/audit.py --root . --output $(BUILD_DIR)/wayfarer-sevii-content-audit.json
 
 ifeq ($(BUILD_NAME),wayfarer)

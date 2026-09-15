@@ -284,19 +284,30 @@ def event_island_report(root: Path) -> dict[str, Any]:
 
 
 def trainer_tower_report(root: Path) -> dict[str, Any]:
-    """Load and run the focused frozen local Trainer Tower audit."""
-    path = root / "tools/wayfarer_trainer_tower/audit.py"
-    if not path.is_file():
-        raise AuditError(f"missing Trainer Tower audit: {relative(path, root)}")
-    spec = importlib.util.spec_from_file_location("wayfarer_trainer_tower_audit", path)
-    if spec is None or spec.loader is None:
-        raise AuditError("cannot load Trainer Tower audit")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    try:
-        return module.build_report(root)
-    except Exception as error:
-        raise AuditError(str(error)) from error
+    """Ensure the built-in course is local and does not select download paths."""
+    paths = (root / "src/trainer_tower.c", root / "src/trainer_tower_sets.c")
+    sources = []
+    for path in paths:
+        try:
+            source = path.read_text(encoding="utf-8")
+        except OSError as error:
+            raise AuditError(f"missing Trainer Tower source: {relative(path, root)}") from error
+        for include in re.findall(r'^#include\s+"([^"]+)"', source, re.M):
+            if not (root / "include" / include).is_file():
+                raise AuditError(f"Trainer Tower source has unresolved local include: {include}")
+        sources.append(source)
+
+    active_runtime = re.sub(r"/\*.*?\*/|//[^\n]*", "", sources[0], flags=re.S)
+    forbidden = ("CEReaderTool_", "ReadTrainerTowerAndValidate", "gReceivedTrainerTower")
+    if any(token in active_runtime for token in forbidden):
+        raise AuditError("Trainer Tower selects an external or e-Reader payload path")
+    local_bindings = ("&gTrainerTowerLocalHeader", "floors_p = gTrainerTowerFloors[challengeType]")
+    if not all(binding in active_runtime for binding in local_bindings):
+        raise AuditError("Trainer Tower runtime does not select the built-in source table")
+    local_symbols = ("gTrainerTowerLocalHeader", "gTrainerTowerFloors")
+    if not all(symbol in sources[1] for symbol in local_symbols):
+        raise AuditError("Trainer Tower built-in source table is incomplete")
+    return {"source_files": [relative(path, root) for path in paths], "external_payload": False}
 
 
 def content_inventory_report(manifest: dict[str, Any]) -> dict[str, Any]:

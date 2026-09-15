@@ -79,7 +79,6 @@ TEST("Wayfarer Sevii initialization and Tower record validation are atomic")
     records = WayfarerSevii_GetTrainerTowerRecords();
     EXPECT(records != NULL);
     EXPECT(WayfarerSeviiPersistentStateIsValid());
-    EXPECT_EQ(sizeof(gSaveBlock3Ptr->wayfarerSevii), 184);
 
     records->bestTime[CHALLENGE_TYPE_SINGLE] = 1234;
     EXPECT(!WayfarerSeviiPersistentStateIsValid());

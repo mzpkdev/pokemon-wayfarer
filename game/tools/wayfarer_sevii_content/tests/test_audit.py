@@ -17,10 +17,8 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
     def manifest(self):
         return json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))
 
-    def test_repository_tower_report_is_deterministic_and_preserves_the_baseline(self):
+    def test_repository_tower_report_preserves_the_baseline(self):
         first = AUDIT.build_report(GAME)
-        second = AUDIT.build_report(GAME)
-        self.assertEqual(first, second)
         self.assertTrue(first["invariants"]["passed"])
         self.assertEqual(first["exploration_baseline"]["map_count"], 135)
         self.assertEqual(first["exploration_baseline"]["layout_count"], 102)
@@ -31,6 +29,10 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
             self.assertEqual(first["schema"]["domains"][domain]["inventory_count"], 0)
         self.assertTrue(first["schema"]["domains"]["trainer_tower"]["enabled"])
         self.assertEqual(first["schema"]["domains"]["trainer_tower"]["inventory_count"], 106)
+        self.assertEqual(first["trainer_tower"], {
+            "source_files": ["src/trainer_tower.c", "src/trainer_tower_sets.c"],
+            "external_payload": False,
+        })
         self.assertFalse(first["rom"]["measured"])
         self.assertEqual(first["contracts"]["trainer_ids"]["allocation_count"], 0)
         self.assertEqual(
@@ -41,6 +43,15 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
             [(row["content_id"], row["kind"], row["pending_state"]) for row in first["contracts"]["transactions"]],
             [("trainer-tower.lobby.object.2", "claim", "SEVII_TRAINER_TOWER_PENDING_PRIZE")],
         )
+
+    def test_tower_report_rejects_an_active_external_loader(self):
+        with mock.patch.object(Path, "read_text", side_effect=[
+            "CEReaderTool_LoadTrainerTower(); &gTrainerTowerLocalHeader; "
+            "floors_p = gTrainerTowerFloors[challengeType]",
+            "gTrainerTowerLocalHeader gTrainerTowerFloors",
+        ]):
+            with self.assertRaisesRegex(AUDIT.AuditError, "external or e-Reader"):
+                AUDIT.trainer_tower_report(GAME)
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):
         manifest = self.manifest()

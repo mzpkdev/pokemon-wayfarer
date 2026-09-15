@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 19
+const abiVersion = 18
 const expectedRequestSize = 372
 const expectedResultSize = 16
-const expectedStateSize = 464
+const expectedStateSize = 440
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -49,9 +49,6 @@ export const commands = {
   giftStorageCapacity: 10,
   observeVar: 11,
   setVar: 12,
-  trainerTowerStart: 13,
-  trainerTowerDamageParty: 14,
-  trainerTowerAbandon: 15,
 } as const
 export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
 
@@ -306,13 +303,6 @@ export type StateSnapshot = {
   partyStatus: number[]
   trainerOnly: TrainerOnlySnapshot
   littlerootTownState: number
-  trainerTower: {
-    bestTimes: number[]
-    pendingPrize: number
-    completedMask: number
-    active: boolean
-    saveAllowed: boolean
-  }
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -683,56 +673,6 @@ export const encodeSetVarRequest = (
     leagueClears: [false, false, false],
   })
 
-const encodeTrainerTowerRequest = (
-  abi: SessionAbi,
-  requestId: number,
-  command: number,
-  value = 0,
-  extra = 0,
-): Uint8Array =>
-  encodeCommandRequest(abi, {
-    requestId,
-    command,
-    mapGroup: value,
-    mapNum: extra,
-    x: keepCoordinate,
-    y: keepCoordinate,
-    rngSeed: 0,
-    useRngSeed: false,
-    vars: [],
-    flags: [],
-    checkpoint: 0,
-    facing: 0,
-    textSpeed: 0,
-    party: [],
-    bagItems: [],
-    pcSlots: [],
-    wildMon: emptyMon(),
-    currentBox: 0,
-    hmsOverwrite: false,
-    fullPocketMask: 0,
-    regionalBadgeCounts: [0, 0, 0],
-    leagueClears: [false, false, false],
-  })
-
-export const encodeTrainerTowerStartRequest = (
-  abi: SessionAbi,
-  requestId: number,
-  challengeType: number,
-): Uint8Array =>
-  encodeTrainerTowerRequest(abi, requestId, commands.trainerTowerStart, challengeType)
-
-export const encodeTrainerTowerDamagePartyRequest = (
-  abi: SessionAbi,
-  requestId: number,
-  hp: number,
-  status: number,
-): Uint8Array =>
-  encodeTrainerTowerRequest(abi, requestId, commands.trainerTowerDamageParty, hp, status)
-
-export const encodeTrainerTowerAbandonRequest = (abi: SessionAbi, requestId: number): Uint8Array =>
-  encodeTrainerTowerRequest(abi, requestId, commands.trainerTowerAbandon)
-
 export const encodeGiftStorageCapacityRequest = (
   abi: SessionAbi,
   requestId: number,
@@ -940,13 +880,6 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
       runAttempts: bytes[395]!,
       warned: bytes[396] !== 0,
       outcome: bytes[397]!,
-    },
-    trainerTower: {
-      bestTimes: Array.from({ length: 4 }, (_, index) => uint32(bytes, 440 + index * 4)),
-      pendingPrize: uint16(bytes, 456),
-      completedMask: bytes[458]!,
-      active: bytes[459] !== 0,
-      saveAllowed: bytes[460] !== 0,
     },
   }
 }

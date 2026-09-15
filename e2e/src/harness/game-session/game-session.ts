@@ -12,7 +12,6 @@ import { createRegionMapApi, type RegionMapApi } from "./features/region-map"
 import { createStateApi, type StateApi } from "./features/state"
 import { createStorageApi, type StorageApi } from "./features/storage"
 import { createStoryApi, type StoryApi } from "./features/story"
-import { createTrainerTowerApi, type TrainerTowerApi } from "./features/trainer-tower"
 import { createWaitApi, type WaitApi } from "./features/wait"
 import { createValidationApi, type ValidationApi } from "./features/validation"
 import { createMailboxApi, type MailboxApi } from "./mailbox"
@@ -36,10 +35,8 @@ export class GameSession {
   readonly state: StateApi
   readonly storage: StorageApi
   readonly story: StoryApi
-  readonly trainerTower: TrainerTowerApi
   readonly wait: WaitApi
   readonly saveAndReload: () => Promise<void>
-  readonly resetAndReload: () => Promise<void>
 
   private constructor(
     runtime: SessionRuntime,
@@ -62,11 +59,12 @@ export class GameSession {
     this.state = state
     this.storage = createStorageApi(state, wait, runtime, mailbox)
     this.story = createStoryApi(runtime, mailbox)
-    this.trainerTower = createTrainerTowerApi(runtime, mailbox)
     this.wait = wait
-    const resetAndReload = async (): Promise<void> => {
+    this.saveAndReload = async () => {
+      await wait.forReady()
+      await mailbox.execute((requestId) => encodeSaveRequest(runtime.abi, requestId), "save game")
       // Reset through the GBA itself so the normal boot/load path reads the
-      // latest flash save. SkyEmu's load_rom endpoint reloads its host .sav,
+      // just-written flash. SkyEmu's load_rom endpoint reloads its host .sav,
       // which is not flushed atomically with emulated flash writes.
       const pressed = await running.client.input({ A: 1, B: 1, Select: 1, Start: 1 })
       if (pressed !== "ok") throw new Error(`SkyEmu failed to press the reset chord: ${pressed}`)
@@ -108,12 +106,6 @@ export class GameSession {
       throw new Error(
         `Saved ROM did not reach a ready overworld after Continue; ${JSON.stringify(await state.read())}`,
       )
-    }
-    this.resetAndReload = resetAndReload
-    this.saveAndReload = async () => {
-      await wait.forReady()
-      await mailbox.execute((requestId) => encodeSaveRequest(runtime.abi, requestId), "save game")
-      await resetAndReload()
     }
     protocolTestInternals.set(this, { runtime, mailbox })
   }

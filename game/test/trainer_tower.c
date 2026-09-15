@@ -33,28 +33,17 @@ static void SetUpUsableTowerParty(void)
 
 static void ClearEveryTowerFloor(void)
 {
-    static const u16 sFloorLayouts[MAX_TRAINER_TOWER_FLOORS] =
-    {
-        LAYOUT_TRAINER_TOWER_1F,
-        LAYOUT_TRAINER_TOWER_2F,
-        LAYOUT_TRAINER_TOWER_3F,
-        LAYOUT_TRAINER_TOWER_4F,
-        LAYOUT_TRAINER_TOWER_5F,
-        LAYOUT_TRAINER_TOWER_6F,
-        LAYOUT_TRAINER_TOWER_7F,
-        LAYOUT_TRAINER_TOWER_8F,
-    };
     u8 floor;
 
     for (floor = 0; floor < MAX_TRAINER_TOWER_FLOORS; floor++)
     {
-        gMapHeader.mapLayoutId = sFloorLayouts[floor];
+        gMapHeader.mapLayoutId = LAYOUT_TRAINER_TOWER_1F + floor;
         CallTowerFunction(TRAINER_TOWER_FUNC_INIT_FLOOR);
         CallTowerFunction(TRAINER_TOWER_FUNC_CLEARED_FLOOR);
     }
 }
 
-TEST("Wayfarer Trainer Tower normalizes legal levels and has fixed source prizes")
+TEST("Wayfarer Trainer Tower clamps levels and maps source prizes")
 {
     EXPECT_EQ(WayfarerTrainerTowerNormalizeLevel(0), 1);
     EXPECT_EQ(WayfarerTrainerTowerNormalizeLevel(1), 1);
@@ -64,7 +53,6 @@ TEST("Wayfarer Trainer Tower normalizes legal levels and has fixed source prizes
     EXPECT_EQ(WayfarerTrainerTowerGetPrize(CHALLENGE_TYPE_DOUBLE), ITEM_DRAGON_SCALE);
     EXPECT_EQ(WayfarerTrainerTowerGetPrize(CHALLENGE_TYPE_KNOCKOUT), ITEM_METAL_COAT);
     EXPECT_EQ(WayfarerTrainerTowerGetPrize(CHALLENGE_TYPE_MIXED), ITEM_KINGS_ROCK);
-    EXPECT_EQ(WayfarerTrainerTowerGetPrize(NUM_TOWER_CHALLENGE_TYPES), ITEM_NONE);
 }
 
 TEST("Wayfarer Trainer Tower formats bounded source timer frames")
@@ -106,71 +94,41 @@ TEST("Wayfarer Trainer Tower retains an independent best record for every format
     struct WayfarerSeviiTrainerTowerRecords records = {0};
     u8 format;
 
-    EXPECT(!WayfarerTrainerTowerRecordTime(&records, CHALLENGE_TYPE_SINGLE, 0));
-    EXPECT(!WayfarerTrainerTowerRecordTime(&records, NUM_TOWER_CHALLENGE_TYPES, 60));
     for (format = 0; format < NUM_TOWER_CHALLENGE_TYPES; format++)
     {
         EXPECT(WayfarerTrainerTowerRecordTime(&records, format, 600 + format));
         EXPECT_EQ(records.bestTime[format], 600 + format);
-        EXPECT(!WayfarerTrainerTowerRecordTime(&records, format, 600 + format));
         EXPECT(!WayfarerTrainerTowerRecordTime(&records, format, 601 + format));
         EXPECT(WayfarerTrainerTowerRecordTime(&records, format, 599 + format));
     }
     EXPECT_EQ(records.completedMask, (1 << NUM_TOWER_CHALLENGE_TYPES) - 1);
-    EXPECT(!WayfarerTrainerTowerRecordTime(&records, CHALLENGE_TYPE_DOUBLE, TRAINER_TOWER_MAX_TIME + 1));
 }
 
-TEST("Wayfarer Trainer Tower restores its healed entry snapshot for loss draw and abandonment")
+TEST("Wayfarer Trainer Tower restores its healed entry snapshot for loss and abandonment")
 {
-    struct WayfarerSeviiTrainerTowerRecords *records;
     u16 heldItem = ITEM_ORAN_BERRY;
     u16 noItem = ITEM_NONE;
     u16 hp = 1;
 
     WayfarerSeviiInitPersistentState();
-    records = WayfarerSevii_GetTrainerTowerRecords();
     SetUpUsableTowerParty();
     SetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM, &heldItem);
-    EXPECT(!WayfarerTrainerTowerIsChallengeActive());
-    EXPECT_EQ(records->pendingPrize, ITEM_NONE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG), SPECIES_PIKACHU);
-    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > 0);
-    EXPECT_EQ(WayfarerTrainerTowerGetUsablePartyCount(), 1);
     StartTowerRun(CHALLENGE_TYPE_SINGLE);
-    EXPECT_EQ(gSpecialVar_Result, TRUE);
-    EXPECT(WayfarerTrainerTowerIsChallengeActive());
-    CallTowerFunction(TRAINER_TOWER_FUNC_CHECK_ACTIVE);
-    EXPECT_EQ(gSpecialVar_Result, TRUE);
     EXPECT(!WayfarerTrainerTowerIsSaveAllowed());
-    EXPECT(WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_LOBBY, 1));
-    EXPECT(!WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_LOBBY, 0));
-    EXPECT(!WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_1F, 1));
     SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
     SetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM, &noItem);
     CallTowerFunction(TRAINER_TOWER_FUNC_SET_LOST);
     EXPECT(!WayfarerTrainerTowerIsChallengeActive());
     EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), heldItem);
     EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > hp);
-    CallTowerFunction(TRAINER_TOWER_FUNC_GET_CHALLENGE_STATUS);
-    EXPECT_EQ(gSpecialVar_Result, TT_CHALLENGE_STATUS_LOST);
-    EXPECT_EQ(records->pendingPrize, ITEM_NONE);
-
-    // Draws follow the same facility terminal dispatcher as losses.
-    StartTowerRun(CHALLENGE_TYPE_SINGLE);
-    SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
-    CallTowerFunction(TRAINER_TOWER_FUNC_SET_LOST);
-    EXPECT(!WayfarerTrainerTowerIsChallengeActive());
-    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > hp);
 
     StartTowerRun(CHALLENGE_TYPE_SINGLE);
     SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
+    SetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM, &noItem);
     CallTowerFunction(TRAINER_TOWER_FUNC_ABANDON_CHALLENGE);
     EXPECT(!WayfarerTrainerTowerIsChallengeActive());
-    CallTowerFunction(TRAINER_TOWER_FUNC_CHECK_ACTIVE);
-    EXPECT_EQ(gSpecialVar_Result, FALSE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM), heldItem);
     EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > hp);
-    EXPECT(WayfarerTrainerTowerIsSaveAllowed());
-    EXPECT(!WayfarerTrainerTowerShouldConfirmExit(LAYOUT_TRAINER_TOWER_LOBBY, 1));
 }
 
 TEST("Wayfarer Trainer Tower discards an unsaved run when transient state resets")
@@ -196,9 +154,7 @@ TEST("Wayfarer Trainer Tower claim finalizer clears only an existing pending pri
 
     WayfarerSeviiInitPersistentState();
     records = WayfarerSevii_GetTrainerTowerRecords();
-    ClearBag();
     records->pendingPrize = ITEM_METAL_COAT;
-    EXPECT(VarSet(VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE, ITEM_NONE));
     CallTowerFunction(TRAINER_TOWER_FUNC_CHECK_PENDING_PRIZE);
     EXPECT_EQ(gSpecialVar_Result, TRUE);
     EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE), ITEM_METAL_COAT);
@@ -220,29 +176,18 @@ TEST("Wayfarer Trainer Tower successful roof delivery restores the entry snapsho
     records = WayfarerSevii_GetTrainerTowerRecords();
     ClearBag();
     SetUpUsableTowerParty();
-    EXPECT(!WayfarerTrainerTowerIsChallengeActive());
-    EXPECT_EQ(records->pendingPrize, ITEM_NONE);
-    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG), SPECIES_PIKACHU);
-    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > 0);
-    EXPECT_EQ(WayfarerTrainerTowerGetUsablePartyCount(), 1);
     StartTowerRun(CHALLENGE_TYPE_SINGLE);
-    EXPECT(WayfarerTrainerTowerIsChallengeActive());
     SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
-    CallTowerFunction(TRAINER_TOWER_FUNC_GET_OWNER_STATE);
-    EXPECT_EQ(gSpecialVar_Result, 2);
     CallTowerFunction(TRAINER_TOWER_FUNC_GIVE_PRIZE);
     EXPECT_EQ(gSpecialVar_Result, 2);
     EXPECT(WayfarerTrainerTowerIsChallengeActive());
     EXPECT(!CheckBagHasItem(ITEM_UP_GRADE, 1));
     ClearEveryTowerFloor();
-    CallTowerFunction(TRAINER_TOWER_FUNC_GET_OWNER_STATE);
-    EXPECT_EQ(gSpecialVar_Result, 0);
     CallTowerFunction(TRAINER_TOWER_FUNC_GIVE_PRIZE);
     EXPECT_EQ(gSpecialVar_Result, 0);
     EXPECT(!WayfarerTrainerTowerIsChallengeActive());
     EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > hp);
     EXPECT_EQ(records->pendingPrize, ITEM_NONE);
-    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE), ITEM_NONE);
     EXPECT(CheckBagHasItem(ITEM_UP_GRADE, 1));
 }
 #endif

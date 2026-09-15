@@ -8,9 +8,6 @@ import {
   encodeObserveVarRequest,
   encodeSetVarRequest,
   encodeSaveRequest,
-  encodeTrainerTowerAbandonRequest,
-  encodeTrainerTowerDamagePartyRequest,
-  encodeTrainerTowerStartRequest,
   encodeWinBattleRequest,
   keepCoordinate,
   keepMap,
@@ -24,14 +21,14 @@ import {
 const abi: SessionAbi = {
   requestSize: 372,
   resultSize: 16,
-  stateSize: 464,
+  stateSize: 440,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 19): Uint8Array => {
+const abiBytes = (version = 18): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -78,7 +75,7 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(356))).toEqual(Array(16).fill(0))
 }
 
-describe("game-session v19 protocol", () => {
+describe("game-session v18 protocol", () => {
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
     expect(encodeCommandRequest(abi, request())[369]).toBe(0)
     for (const id of [1, 2, 5, 6])
@@ -176,22 +173,6 @@ describe("game-session v19 protocol", () => {
     expectNoFixtureMutations(bytes)
   })
 
-  it("encodes Trainer Tower lifecycle commands without growing the request", () => {
-    const start = encodeTrainerTowerStartRequest(abi, 28, 3)
-    const damage = encodeTrainerTowerDamagePartyRequest(abi, 29, 1, 8)
-    const abandon = encodeTrainerTowerAbandonRequest(abi, 30)
-
-    expect(start[86]).toBe(commands.trainerTowerStart)
-    expect(new DataView(start.buffer).getUint16(4, true)).toBe(3)
-    expect(damage[86]).toBe(commands.trainerTowerDamageParty)
-    expect(new DataView(damage.buffer).getUint16(4, true)).toBe(1)
-    expect(new DataView(damage.buffer).getUint16(6, true)).toBe(8)
-    expect(abandon[86]).toBe(commands.trainerTowerAbandon)
-    expect(start).toHaveLength(abi.requestSize)
-    expect(damage).toHaveLength(abi.requestSize)
-    expect(abandon).toHaveLength(abi.requestSize)
-  })
-
   it("encodes the test-only battle-win command without fixture mutations", () => {
     const bytes = encodeWinBattleRequest(abi, 25)
 
@@ -278,24 +259,6 @@ describe("game-session v19 protocol", () => {
       appearanceCandidate: 6,
       appearanceConfirmed: 2,
       appearanceIntroStage: 1,
-    })
-  })
-
-  it("decodes Trainer Tower persistent records and transient admission state", () => {
-    const bytes = new Uint8Array(abi.stateSize)
-    const view = new DataView(bytes.buffer)
-    ;[3_600, 7_200, 10_800, 14_400].forEach((time, index) =>
-      view.setUint32(440 + index * 4, time, true),
-    )
-    view.setUint16(456, 210, true)
-    bytes.set([0b1011, 1, 0], 458)
-
-    expect(parseStateSnapshot(bytes).trainerTower).toEqual({
-      bestTimes: [3_600, 7_200, 10_800, 14_400],
-      pendingPrize: 210,
-      completedMask: 0b1011,
-      active: true,
-      saveAllowed: false,
     })
   })
 

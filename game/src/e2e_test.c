@@ -28,7 +28,6 @@
 #include "sprite.h"
 #include "string_util.h"
 #include "trainer_rating.h"
-#include "trainer_tower.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
@@ -52,7 +51,7 @@ volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 19,
+    .version = 18,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -67,7 +66,7 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 369, E2ETestReque
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 464, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 440, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
@@ -76,8 +75,6 @@ STATIC_ASSERT(offsetof(struct E2ETestState, trainerOnlyState) == 386, E2ETestTra
 STATIC_ASSERT(offsetof(struct E2ETestState, money) == 400, E2ETestMoneyOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, partyHp) == 404, E2ETestPartyHpOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, partyStatus) == 416, E2ETestPartyStatusOffset);
-STATIC_ASSERT(offsetof(struct E2ETestState, trainerTowerBestTimes) == 440, E2ETestTrainerTowerBestTimesOffset);
-STATIC_ASSERT(offsetof(struct E2ETestState, trainerTowerPendingPrize) == 456, E2ETestTrainerTowerPendingPrizeOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -725,14 +722,6 @@ static enum E2ETestError ValidateRequest(void)
     case E2E_TEST_COMMAND_LOSE_BATTLE:
     case E2E_TEST_COMMAND_OBSERVE_FLAG:
         return E2E_TEST_ERROR_NONE;
-#if IS_WAYFARER
-    case E2E_TEST_COMMAND_TRAINER_TOWER_START:
-        return sRequest.mapGroup < 4 ? E2E_TEST_ERROR_NONE : E2E_TEST_ERROR_CIRCUIT;
-    case E2E_TEST_COMMAND_TRAINER_TOWER_DAMAGE_PARTY:
-        return sRequest.mapGroup > 0 ? E2E_TEST_ERROR_NONE : E2E_TEST_ERROR_PARTY;
-    case E2E_TEST_COMMAND_TRAINER_TOWER_ABANDON:
-        return E2E_TEST_ERROR_NONE;
-#endif
     case E2E_TEST_COMMAND_OBSERVE_VAR:
         return IsValidFixtureVar(sRequest.mapGroup) ? E2E_TEST_ERROR_NONE : E2E_TEST_ERROR_VAR;
     case E2E_TEST_COMMAND_SET_VAR:
@@ -1093,58 +1082,6 @@ static void BeginRequest(void)
         return;
     }
 
-#if IS_WAYFARER
-    if (sRequest.command == E2E_TEST_COMMAND_TRAINER_TOWER_START
-     || sRequest.command == E2E_TEST_COMMAND_TRAINER_TOWER_DAMAGE_PARTY
-     || sRequest.command == E2E_TEST_COMMAND_TRAINER_TOWER_ABANDON)
-    {
-        u32 i;
-
-        if (!IsSettledOverworld())
-        {
-            FailRequest(E2E_TEST_ERROR_BUSY);
-            return;
-        }
-
-        if (sRequest.command == E2E_TEST_COMMAND_TRAINER_TOWER_START)
-        {
-            gSpecialVar_0x8004 = TRAINER_TOWER_FUNC_START_CHALLENGE;
-            gSpecialVar_0x8005 = sRequest.mapGroup;
-            CallTrainerTowerFunc();
-        }
-        else if (sRequest.command == E2E_TEST_COMMAND_TRAINER_TOWER_DAMAGE_PARTY)
-        {
-            u16 hp = sRequest.mapGroup;
-            u32 status = sRequest.mapNum;
-
-            if (!WayfarerTrainerTowerIsChallengeActive())
-            {
-                FailRequest(E2E_TEST_ERROR_BUSY);
-                return;
-            }
-            for (i = 0; i < gPlayerPartyCount; i++)
-            {
-                SetMonData(&gPlayerParty[i], MON_DATA_HP, &hp);
-                SetMonData(&gPlayerParty[i], MON_DATA_STATUS, &status);
-            }
-            gSpecialVar_Result = TRUE;
-        }
-        else
-        {
-            gSpecialVar_0x8004 = TRAINER_TOWER_FUNC_ABANDON_CHALLENGE;
-            CallTrainerTowerFunc();
-        }
-
-        sMapGroup = gSaveBlock1Ptr->location.mapGroup;
-        sMapNum = gSaveBlock1Ptr->location.mapNum;
-        sX = gSpecialVar_Result;
-        sY = 0;
-        gE2ETestRequest.status = E2E_TEST_STATUS_SUCCESS;
-        PublishResult(E2E_TEST_STATUS_SUCCESS, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
-        return;
-    }
-#endif
-
     if (gSaveBlock1Ptr == NULL || gSaveBlock2Ptr == NULL)
         SetSaveBlocksPointers(0);
 
@@ -1267,16 +1204,6 @@ static void UpdateState(void)
     u8 storageMode;
     bool8 storageMovingMon;
     u8 trainerCardState;
-#if IS_WAYFARER
-    struct WayfarerSeviiTrainerTowerRecords *trainerTowerRecords;
-#endif
-
-    memset((void *)gE2ETestState.trainerTowerBestTimes, 0, sizeof(gE2ETestState.trainerTowerBestTimes));
-    gE2ETestState.trainerTowerPendingPrize = ITEM_NONE;
-    gE2ETestState.trainerTowerCompletedMask = 0;
-    gE2ETestState.trainerTowerActive = FALSE;
-    gE2ETestState.trainerTowerSaveAllowed = TRUE;
-    memset((void *)gE2ETestState.trainerTowerReserved, 0, sizeof(gE2ETestState.trainerTowerReserved));
 
     gE2ETestState.starterChooseStage = E2ETest_GetStarterChooseStage();
     gE2ETestState.originIntroStage = 0;
@@ -1424,17 +1351,6 @@ static void UpdateState(void)
 #if IS_WAYFARER
     if (gSaveBlock3Ptr != NULL)
     {
-        trainerTowerRecords = WayfarerSevii_GetTrainerTowerRecords();
-        if (trainerTowerRecords != NULL)
-        {
-            memcpy((void *)gE2ETestState.trainerTowerBestTimes,
-                   trainerTowerRecords->bestTime,
-                   sizeof(gE2ETestState.trainerTowerBestTimes));
-            gE2ETestState.trainerTowerPendingPrize = trainerTowerRecords->pendingPrize;
-            gE2ETestState.trainerTowerCompletedMask = trainerTowerRecords->completedMask;
-        }
-        gE2ETestState.trainerTowerActive = WayfarerTrainerTowerIsChallengeActive();
-        gE2ETestState.trainerTowerSaveAllowed = WayfarerTrainerTowerIsSaveAllowed();
         gE2ETestState.startingOriginId = WayfarerGetStartingOriginId();
         gE2ETestState.johtoStarterChoice = VarGet(VAR_STARTER_MON);
         gE2ETestState.hoennStarterChoice = VarGet(VAR_HOENN_STARTER_CHOICE);

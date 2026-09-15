@@ -113,13 +113,6 @@ export type GameState = {
   challenge: {
     hmsOverwrite: boolean
   }
-  trainerTower: {
-    bestTimes: number[]
-    pendingPrize: number
-    completedMask: number
-    active: boolean
-    saveAllowed: boolean
-  }
   partyMenu: {
     open: boolean
     actions: number[]
@@ -363,7 +356,6 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       challenge: {
         hmsOverwrite: snapshot.hmsOverwrite,
       },
-      trainerTower: snapshot.trainerTower,
       partyMenu: {
         open: snapshot.uiMode === 3,
         actions: snapshot.partyMenuActions,

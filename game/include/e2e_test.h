@@ -46,9 +46,6 @@ enum E2ETestCommand
     E2E_TEST_COMMAND_GIFT_STORAGE_CAPACITY,
     E2E_TEST_COMMAND_OBSERVE_VAR,
     E2E_TEST_COMMAND_SET_VAR,
-    E2E_TEST_COMMAND_TRAINER_TOWER_START,
-    E2E_TEST_COMMAND_TRAINER_TOWER_DAMAGE_PARTY,
-    E2E_TEST_COMMAND_TRAINER_TOWER_ABANDON,
 };
 
 enum E2ETestCheckpoint
@@ -403,12 +400,6 @@ struct E2ETestState
     u32 money;
     u16 partyHp[E2E_TEST_MAX_PARTY];
     u32 partyStatus[E2E_TEST_MAX_PARTY];
-    u32 trainerTowerBestTimes[4];
-    u16 trainerTowerPendingPrize;
-    u8 trainerTowerCompletedMask;
-    bool8 trainerTowerActive;
-    bool8 trainerTowerSaveAllowed;
-    u8 trainerTowerReserved[3];
 };
 
 struct E2ETestAbi
