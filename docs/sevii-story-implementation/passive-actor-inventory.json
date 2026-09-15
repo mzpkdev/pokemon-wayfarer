@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "source": "game/src/data/wayfarer_sevii_maps.json",
+    "map_count": 135,
+    "event_kind": "object_events",
+    "predicate": "source.trainer_type == TRAINER_TYPE_NONE",
+    "source_object_count": 392
+  },
+  "classification_counts": {
+    "retained_by_current_manifest": 96,
+    "restored_story_wrapper": 45,
+    "field_obstacle": 99,
+    "static_pickup": 39,
+    "tower_owned": 46,
+    "shared_communications": 28,
+    "ferry_static": 7,
+    "decorative_static": 19,
+    "explicit_exclusion": 13
+  },
+  "required_manifest_module": {
+    "key": "story_passive_inventory",
+    "owner": "story",
+    "include": "data/scripts/wayfarer_sevii/story/passive_inventory.inc",
+    "allowed_commands": ["applymovement", "end", "faceplayer", "goto_if_set", "lock", "msgbox", "release", "waitmovement"],
+    "symbol_pattern": "WayfarerSevii_Story_PassiveInventory_<source_map without _Frlg and underscores>_<object_index>",
+    "extra_exports": ["WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse5_0_Rescued"],
+    "row_defaults": {
+      "owner": "story",
+      "actor_role": "passive",
+      "state_writes": [],
+      "reason": "Retains a dependency-free local flavor actor explicitly in the story passive inventory."
+    }
+  },
+  "required_manifest_rows": [
+    {"source_map": "OneIsland_KindleRoad_EmberSpa_Frlg", "object_indices": [2]},
+    {"source_map": "TwoIsland_Frlg", "object_indices": [1, 2, 4]},
+    {"source_map": "OneIsland_TreasureBeach_Frlg", "object_indices": [1]},
+    {"source_map": "ThreeIsland_Port_Frlg", "object_indices": [1, 2], "overrides": {"flag": "FLAG_WAYFARER_SEVII_BIKERS_CLEARED"}, "state_reads": ["SEVII_BIKERS_CLEARED"]},
+    {"source_map": "SixIsland_RuinValley_Frlg", "object_indices": [0]},
+    {"source_map": "SevenIsland_SevaultCanyon_Frlg", "object_indices": [19]},
+    {"source_map": "SevenIsland_House_Room1_Frlg", "object_indices": [0]},
+    {"source_map": "SevenIsland_Mart_Frlg", "object_indices": [1, 2, 3]},
+    {"source_map": "SevenIsland_PokemonCenter_1F_Frlg", "object_indices": [2, 3]},
+    {"source_map": "OneIsland_PokemonCenter_1F_Frlg", "object_indices": [3, 4, 5]},
+    {"source_map": "OneIsland_House1_Frlg", "object_indices": [0, 1]},
+    {"source_map": "OneIsland_House2_Frlg", "object_indices": [0]},
+    {"source_map": "TwoIsland_PokemonCenter_1F_Frlg", "object_indices": [1, 2]},
+    {"source_map": "ThreeIsland_PokemonCenter_1F_Frlg", "object_indices": [2, 3]},
+    {"source_map": "ThreeIsland_Mart_Frlg", "object_indices": [1, 2]},
+    {"source_map": "ThreeIsland_House2_Frlg", "object_indices": [0, 1]},
+    {"source_map": "ThreeIsland_House3_Frlg", "object_indices": [0]},
+    {"source_map": "ThreeIsland_House4_Frlg", "object_indices": [0, 1]},
+    {"source_map": "ThreeIsland_House5_Frlg", "object_indices": [0], "state_reads": ["SEVII_LOSTELLE_RESCUED"]},
+    {"source_map": "FourIsland_PokemonCenter_1F_Frlg", "object_indices": [1, 2, 3]},
+    {"source_map": "FourIsland_Mart_Frlg", "object_indices": [1, 2]},
+    {"source_map": "FiveIsland_PokemonCenter_1F_Frlg", "object_indices": [1, 2]},
+    {"source_map": "SixIsland_PokemonCenter_1F_Frlg", "object_indices": [2, 3]},
+    {"source_map": "SixIsland_House_Frlg", "object_indices": [0]},
+    {"source_map": "SixIsland_Mart_Frlg", "object_indices": [1, 2]}
+  ],
+  "required_manifest_exclusions": [
+    {"source_map": "OneIsland_Frlg", "object_indices": [0], "reason": "Duplicate source Bill presentation; the Center Bill is the sole story entry actor."},
+    {"source_map": "TwoIsland_JoyfulGameCorner_Frlg", "object_indices": [1], "reason": "Scriptless source staging duplicate; selected Lostelle actors own the scene."},
+    {"source_map": "ThreeIsland_PokemonCenter_1F_Frlg", "object_indices": [1], "reason": "Source text asserts the removed FRLG PC-network campaign repair."},
+    {"source_map": "ThreeIsland_Mart_Frlg", "object_indices": [3], "reason": "Source-only post-biker presentation has no honest pre-objective text variant."},
+    {"source_map": "FourIsland_Frlg", "object_indices": [0], "reason": "The source Day-Care man is subsumed by the existing shared Day-Care service actor."},
+    {"source_map": "FourIsland_LoreleisHouse_Frlg", "object_indices": [0], "reason": "Duplicate Lorelei presentation conflicts with the independently staged Icefall rescue."},
+    {"source_map": "FourIsland_House2_Frlg", "object_indices": [0], "reason": "Sticker Man requires Hall-of-Fame, egg, and link-win Trainer Card systems."},
+    {"source_map": "FiveIsland_PokemonCenter_1F_Frlg", "object_indices": [3, 4], "reason": "Pokemon Journal is a removed Fame Checker campaign payload."},
+    {"source_map": "FiveIsland_ResortGorgeous_Frlg", "object_indices": [7], "reason": "Scriptless duplicate Selphy staging; the house actor owns her return."},
+    {"source_map": "SevenIsland_PokemonCenter_1F_Frlg", "object_indices": [1, 4, 5], "reason": "Connection-events and Pokemon Journal source payloads are campaign/network-owned."}
+  ],
+  "non_story_ownership": {
+    "field_obstacle": {
+      "graphics_ids": ["OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG", "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG", "OBJ_EVENT_GFX_PUSHABLE_BOULDER_FRLG", "OBJ_EVENT_GFX_PUSHABLE_BOULDER"],
+      "scripts": ["EventScript_RockSmash", "EventScript_CutTree", "EventScript_StrengthBoulder"]
+    },
+    "static_pickup": {"graphics_id": "OBJ_EVENT_GFX_ITEM_BALL"},
+    "tower_owned": {"source_map_prefix": "TrainerTower_"},
+    "shared_communications": {"graphics_ids": ["OBJ_EVENT_GFX_CABLE_CLUB_RECEPTIONIST", "OBJ_EVENT_GFX_MG_DELIVERYMAN"]},
+    "ferry_static": {"graphics_id": "OBJ_EVENT_GFX_SEAGALLOP"},
+    "decorative_static": {
+      "source_objects": [
+        {"source_map": "FourIsland_Frlg", "object_indices": [1, 2, 3, 4]},
+        {"source_map": "FourIsland_LoreleisHouse_Frlg", "object_indices": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]},
+        {"source_map": "SevenIsland_House_Room2_Frlg", "object_indices": [0]}
+      ]
+    }
+  },
+  "coverage_assertion": "392 == 96 + 45 + 99 + 39 + 46 + 28 + 7 + 19 + 13"
+}

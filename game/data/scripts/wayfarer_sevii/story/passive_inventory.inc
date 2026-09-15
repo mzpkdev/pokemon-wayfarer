@@ -1,0 +1,201 @@
+@ Wayfarer-owned wrappers for every dependency-free source flavor actor named
+@ by docs/sevii-story-implementation/passive-actor-inventory.json.  These use
+@ source text symbols but never link a source FRLG script graph.
+
+WayfarerSevii_Story_PassiveInventory_OneIslandKindleRoadEmberSpa_2::
+	msgbox OneIsland_KindleRoad_EmberSpa_Text_BrunoVisitsSpaOnOccasion, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_TwoIsland_1::
+	msgbox TwoIsland_Text_ShopkeepersBrotherWorksGameCorner, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_TwoIsland_2::
+	msgbox TwoIsland_Text_BrunoCameToIslandWhileBack, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_TwoIsland_4::
+	msgbox TwoIsland_Text_BuyRareItemsHere, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandTreasureBeach_1::
+	msgbox OneIsland_TreasureBeach_Text_GoodThingsWashUpOnBeach, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandPort_1::
+	msgbox ThreeIsland_Port_Text_WereKantoRiderFederation, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandPort_2::
+	lock
+	msgbox ThreeIsland_Port_Text_ForkOverMoney
+	release
+	end
+
+WayfarerSevii_Story_PassiveInventory_SixIslandRuinValley_0::
+	lock
+	msgbox SixIsland_RuinValley_Text_CantFigureOutHowToGetInside
+	applymovement VAR_LAST_TALKED, Common_Movement_FacePlayer
+	waitmovement 0
+	msgbox SixIsland_RuinValley_Text_IFoundThisPlace
+	applymovement VAR_LAST_TALKED, Common_Movement_FaceOriginalDirection
+	waitmovement 0
+	release
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandSevaultCanyon_19::
+	msgbox SevenIsland_SevaultCanyon_Text_BrunoTrainedWithBrawly, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandHouseRoom1_0::
+	msgbox SevenIsland_House_Room1_Text_OnlyEnjoymentWatchingBattles, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandMart_1::
+	msgbox SevenIsland_Mart_Text_MonHavePersonalitiesOfTheirOwn, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandMart_2::
+	msgbox SevenIsland_Mart_Text_NeedToFishOnSevenIsland, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandMart_3::
+	msgbox SevenIsland_Mart_Text_PreparationsCompleteForRuins, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandPokemonCenter1F_2::
+	msgbox SevenIsland_PokemonCenter_1F_Text_DidYouRideSeagallopHere, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SevenIslandPokemonCenter1F_3::
+	msgbox SevenIsland_PokemonCenter_1F_Text_CheckOutTrainerTower, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_3::
+	msgbox OneIsland_PokemonCenter_1F_Text_CameFromPalletDontKnowIt, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_4::
+	msgbox OneIsland_PokemonCenter_1F_Text_EnormousVolcanoOnIsland, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandPokemonCenter1F_5::
+	msgbox OneIsland_PokemonCenter_1F_Text_WishICouldTradeWithBoyfriend, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandHouse1_0::
+	msgbox OneIsland_House1_Text_GazeUponVolcanoOnSunnyDays, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandHouse1_1::
+	msgbox OneIsland_House1_Text_LastTimeMtEmberErupted, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_OneIslandHouse2_0::
+	msgbox OneIsland_House2_Text_IWantToStayHereForever, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_TwoIslandPokemonCenter1F_1::
+	msgbox TwoIsland_PokemonCenter_1F_Text_HaveYouVisitedGameCorner, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_TwoIslandPokemonCenter1F_2::
+	msgbox TwoIsland_PokemonCenter_1F_Text_OldLadyLivesOutOnCape, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandPokemonCenter1F_2::
+	msgbox ThreeIsland_PokemonCenter_1F_Text_AlwaysBerriesInBerryForest, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandPokemonCenter1F_3::
+	msgbox ThreeIsland_PokemonCenter_1F_Text_ImpossibleToSurfBetweenIslands, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandMart_1::
+	msgbox ThreeIsland_Mart_Text_TrueThatCeldadonDeptStoreBigger, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandMart_2::
+	msgbox ThreeIsland_Mart_Text_PeopleHealWithBerriesFromForest, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse2_0::
+	msgbox ThreeIsland_House2_Text_CantMakeThisSpoonBend, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse2_1::
+	msgbox ThreeIsland_House2_Text_IAdmireSabrina, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse3_0::
+	msgbox ThreeIsland_House3_Text_WantedToLiveSomewhereQuiet, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse4_0::
+	msgbox ThreeIsland_House4_Text_GhostsInBerryForest, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse4_1::
+	msgbox ThreeIsland_House4_Text_PapaKeepsLyingToMe, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse5_0::
+	lock
+	faceplayer
+	goto_if_set FLAG_WAYFARER_SEVII_LOSTELLE_RESCUED, WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse5_0_Rescued
+	msgbox ThreeIsland_House5_Text_ImNotLostelle
+	release
+	end
+
+WayfarerSevii_Story_PassiveInventory_ThreeIslandHouse5_0_Rescued::
+	msgbox ThreeIsland_House5_Text_IllGoPlayWithLostelle
+	release
+	end
+
+WayfarerSevii_Story_PassiveInventory_FourIslandPokemonCenter1F_1::
+	msgbox FourIsland_PokemonCenter_1F_Text_RareIceMonsInCave, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_FourIslandPokemonCenter1F_2::
+	msgbox FourIsland_PokemonCenter_1F_Text_DayCarePeopleFoundEggBefore, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_FourIslandPokemonCenter1F_3::
+	msgbox FourIsland_PokemonCenter_1F_Text_NewPokemonJournalHasntArrived, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_FourIslandMart_1::
+	msgbox FourIsland_Mart_Text_LoreleiGrewUpOnThisIsland, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_FourIslandMart_2::
+	msgbox FourIsland_Mart_Text_IcefallCaveIsFrigid, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_FiveIslandPokemonCenter1F_1::
+	msgbox FiveIsland_PokemonCenter_1F_Text_YoureOnQuestToCatchEveryMon, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_FiveIslandPokemonCenter1F_2::
+	msgbox FiveIsland_PokemonCenter_1F_Text_OnMyWayToPrepareMeal, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SixIslandPokemonCenter1F_2::
+	msgbox SixIsland_PokemonCenter_1F_Text_SomethingHiddenOnThisIsland, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SixIslandPokemonCenter1F_3::
+	msgbox SixIsland_PokemonCenter_1F_Text_SomeMonsEvolveByTradingWithHeldItem, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SixIslandHouse_0::
+	msgbox SixIsland_House_Text_GoodPlaceForNatureAndHistory, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SixIslandMart_1::
+	msgbox SixIsland_Mart_Text_AgathaOldestEverEliteFourMember, MSGBOX_NPC
+	end
+
+WayfarerSevii_Story_PassiveInventory_SixIslandMart_2::
+	msgbox SixIsland_Mart_Text_ShouldBuyMailAndWriteLetter, MSGBOX_NPC
+	end
