@@ -97,6 +97,30 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 report = AUDIT.validate_contract_closure(root, {}, closure, contracts)
             self.assertEqual(report["entries"][0]["state_writes"], ["SEVII_FALLBACK_RECEIPT"])
 
+    def test_contract_closure_counts_object_visibility_override_as_a_state_read(self):
+        row = {
+            "content_id": "story.test.visible_actor", "owner": "story",
+            "wayfarer_script": "WayfarerSevii_VisibleActor",
+            "source": {"type": "object", "flag": "FLAG_HIDE_SOURCE_ACTOR"},
+            "overrides": {"flag": "FLAG_WAYFARER_SEVII_VISIBLE_ACTOR"},
+            "state_reads": ["SEVII_VISIBLE_ACTOR"], "state_writes": [],
+        }
+        contracts = {
+            "states": [{"id": "SEVII_VISIBLE_ACTOR", "symbol": "FLAG_WAYFARER_SEVII_VISIBLE_ACTOR",
+                        "storage": "flag"}],
+            "trainer_ids": {"allocations": []}, "transactions": [],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/visible_actor.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text("WayfarerSevii_VisibleActor::\n\tend\n", encoding="utf-8")
+            closure = {"includes": ["data/scripts/wayfarer_sevii/story/visible_actor.inc"],
+                       "state_operations": [], "content_operations": []}
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                report = AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            self.assertEqual(report["entries"][0]["state_reads"], ["SEVII_VISIBLE_ACTOR"])
+
     def test_contract_closure_binds_a_story_battle_state_and_receipt_to_owned_commands(self):
         row = {
             "content_id": "story.test.battle", "owner": "story", "wayfarer_script": "WayfarerSevii_StoryBattle",

@@ -624,6 +624,14 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
                 if any(_script_command_token(line) in closure.STATE_READS and symbol in line
                        for line in source.splitlines())
             }
+        # Object-event visibility is evaluated by the field engine, outside
+        # the selected script closure. A nonzero manifest override therefore
+        # owns a real state read even when the actor's talk script never checks
+        # its own hide flag.
+        source_event = row.get("source", {})
+        visibility_flag = row.get("overrides", {}).get("flag")
+        if source_event.get("type") == "object" and visibility_flag not in (None, "", "0", 0):
+            read.add(visibility_flag)
         # Defeat-bit transitions are engine-owned battle outcomes, not event
         # script flag operations.  Every other declared state must appear in
         # the owned script operation graph.
