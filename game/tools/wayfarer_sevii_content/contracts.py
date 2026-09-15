@@ -245,7 +245,11 @@ def _allocations(root: Path, value: Any, owners: dict[str, str], states: dict[st
         source, digest, defeat, defeat_base = _text(row["source_trainer"], f"{path}.source_trainer", IDENTIFIER), _text(row["source_hash"], f"{path}.source_hash", SHA256), _text(row["defeat_state"], f"{path}.defeat_state", IDENTIFIER), _text(row["defeat_base"], f"{path}.defeat_base", CONTENT_ID)
         slot, classification, policy = _number(row["slot"], f"{path}.slot"), _text(row["classification"], f"{path}.classification"), _text(row["battle_policy"], f"{path}.battle_policy")
         battle_type, outcome = _text(row["battle_type"], f"{path}.battle_type"), _text(row["outcome_policy"], f"{path}.outcome_policy")
-        if owners.get(content) != owner or not ident.startswith("TRAINER_WAYFARER_SEVII_") or not source.startswith("TRAINER_") or classification not in CLASSIFICATIONS or policy not in POLICIES or battle_type not in BATTLE_TYPES or outcome not in OUTCOME_POLICIES: _fail(f"{path} has unowned content or invalid Trainer fields")
+        # Rematch stages are data-only roster rows: they deliberately do not
+        # own a second map object, defeat bit, or script entry point.  Their
+        # explicit ordinary.roster identity remains scoped to this allocation.
+        data_only_rematch = owner == "ordinary_trainer" and content.startswith("ordinary.roster.")
+        if (owners.get(content) != owner and not data_only_rematch) or not ident.startswith("TRAINER_WAYFARER_SEVII_") or not source.startswith("TRAINER_") or classification not in CLASSIFICATIONS or policy not in POLICIES or battle_type not in BATTLE_TYPES or outcome not in OUTCOME_POLICIES: _fail(f"{path} has unowned content or invalid Trainer fields")
         if owner == "trainer_tower" or classification == "facility" or policy == "facility": _fail(f"{path} facility opponents do not enter the persistent Sevii Trainer allocation")
         if owner == "ordinary_trainer" and (classification != "ordinary" or policy != "ordinary"): _fail(f"{path} violates shared owner/classification/battle-policy rules")
         expected_outcome = {"ordinary": "defeat_and_blackout", "objective_guard": "win_progress_loss_pending"}[policy]
@@ -320,10 +324,11 @@ def _projected_access(manifest: Any, owners: dict[str, str], states: dict[str, d
         if isinstance(node, dict):
             content = node.get("content_id")
             if isinstance(content, str) and content in owners:
-                allocation = allocation_by_content.get(content)
+                allocation_content = node.get("trainer_content_id", content)
+                allocation = allocation_by_content.get(allocation_content)
                 if "battle_type" in node or "outcome_policy" in node:
-                    if allocation is None or node.get("battle_type") != allocation["battle_type"] or node.get("outcome_policy") != allocation["outcome_policy"]:
-                        _fail(f"content {content} battle type or outcome does not match its Trainer allocation")
+                        if allocation is None or node.get("battle_type") != allocation["battle_type"] or node.get("outcome_policy") != allocation["outcome_policy"]:
+                            _fail(f"content {content} battle type or outcome does not match its Trainer allocation")
                 for key, writes in (("state_reads", False), ("state_writes", True)):
                     for state in _array(node.get(key, []), f"content {content}.{key}"):
                         state = _text(state, f"content {content}.{key}", IDENTIFIER)

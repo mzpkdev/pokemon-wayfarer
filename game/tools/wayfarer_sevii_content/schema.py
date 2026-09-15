@@ -39,7 +39,8 @@ EVENT_ROW_KEYS = frozenset((
     "index", "source", "wayfarer_script", "owner", "content_id", "reason", "overrides",
     "state_reads", "state_writes", "visibility", "trainer", "battle", "transaction",
     "reward_receipt", "dependencies", "replaces", "actor_role", "scaling_policy",
-    "battle_type", "outcome_policy", "required_dependencies",
+    "battle_type", "outcome_policy", "required_dependencies", "trainer_content_id",
+    "pair_id", "rematch_family",
 ))
 
 
@@ -263,6 +264,13 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
         ):
             _fail(f"{context}[{index}].{persistent_field}", "retains raw FRLG persistent state")
     _validate_state_names(row, f"{context}[{index}]")
+    if owner == "ordinary_trainer":
+        canonical = row.get("trainer_content_id", content_id)
+        if not isinstance(canonical, str) or CONTENT_ID.fullmatch(canonical) is None:
+            _fail(f"{context}[{index}].trainer_content_id", "must be a stable ordinary Trainer identity")
+        pair_id = row.get("pair_id")
+        if pair_id is not None and (not isinstance(pair_id, str) or CONTENT_ID.fullmatch(pair_id) is None):
+            _fail(f"{context}[{index}].pair_id", "must be a stable pair identity when present")
 
 
 def _validate_script_modules(modules: object) -> dict[str, dict]:

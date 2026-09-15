@@ -17,7 +17,7 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
     def manifest(self):
         return json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))
 
-    def test_repository_foundation_report_is_deterministic_and_content_free(self):
+    def test_repository_report_is_deterministic_with_ordinary_trainers_enabled(self):
         first = AUDIT.build_report(GAME)
         second = AUDIT.build_report(GAME)
         self.assertEqual(first, second)
@@ -26,12 +26,14 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
         self.assertEqual(first["exploration_baseline"]["layout_count"], 102)
         self.assertEqual(first["exploration_baseline"]["raw_layout_bytes"], 134_612)
         self.assertEqual(first["schema"]["domains"]["exploration"]["enabled"], True)
-        for domain in ("ordinary_trainers", "story", "trainer_tower"):
+        self.assertTrue(first["schema"]["domains"]["ordinary_trainers"]["enabled"])
+        self.assertEqual(first["schema"]["domains"]["ordinary_trainers"]["inventory_count"], 87)
+        self.assertEqual(first["contracts"]["trainer_ids"]["allocation_count"], 118)
+        for domain in ("story", "trainer_tower"):
             self.assertFalse(first["schema"]["domains"][domain]["enabled"])
             self.assertEqual(first["schema"]["domains"][domain]["inventory_count"], 0)
         self.assertFalse(first["rom"]["measured"])
-        self.assertEqual(first["contracts"]["trainer_ids"]["allocation_count"], 0)
-        self.assertEqual(first["contracts"]["states"], [])
+        self.assertEqual(len(first["contracts"]["states"]), 81)
         self.assertEqual(first["contracts"]["transactions"], [])
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):
