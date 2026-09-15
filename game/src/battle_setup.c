@@ -47,6 +47,7 @@
 #include "data.h"
 #include "vs_seeker.h"
 #include "wayfarer_sevii_rematches.h"
+#include "wayfarer_sevii_trainer_defeats.h"
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -1640,12 +1641,21 @@ static void UNUSED SetBattledTrainerFlag(void)
 
 bool8 HasTrainerBeenFought(u16 trainerId)
 {
+#if IS_WAYFARER
+    u16 seviiDefeatSlot;
+#endif
+
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
         return FALSE;
 
 #if IS_WAYFARER
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
         return WayfarerHoennTrainerFlagGet(trainerId);
+    // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
+    // before the appended-HNS compatibility remap below.
+    seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
+    if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
+        return WayfarerSeviiTrainerDefeatGet(seviiDefeatSlot);
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1656,6 +1666,10 @@ bool8 HasTrainerBeenFought(u16 trainerId)
 
 void SetTrainerFlag(u16 trainerId)
 {
+#if IS_WAYFARER
+    u16 seviiDefeatSlot;
+#endif
+
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
         return;
 
@@ -1663,6 +1677,14 @@ void SetTrainerFlag(u16 trainerId)
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagSet(trainerId);
+        return;
+    }
+    // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
+    // before the appended-HNS compatibility remap below.
+    seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
+    if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerSeviiTrainerDefeatSet(seviiDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
@@ -1675,6 +1697,10 @@ void SetTrainerFlag(u16 trainerId)
 
 void ClearTrainerFlag(u16 trainerId)
 {
+#if IS_WAYFARER
+    u16 seviiDefeatSlot;
+#endif
+
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
         return;
 
@@ -1682,6 +1708,14 @@ void ClearTrainerFlag(u16 trainerId)
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagClear(trainerId);
+        return;
+    }
+    // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
+    // before the appended-HNS compatibility remap below.
+    seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
+    if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerSeviiTrainerDefeatClear(seviiDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.

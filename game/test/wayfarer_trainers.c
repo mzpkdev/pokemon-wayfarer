@@ -2,6 +2,7 @@
 #include "battle_setup.h"
 #include "test/test.h"
 #include "constants/opponents.h"
+#include "wayfarer_sevii_trainer_defeats.h"
 
 TEST("Trainer defeat helpers reject sentinel and out-of-range IDs")
 {
@@ -28,7 +29,7 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINERS_COUNT, TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_FALKNER_POSTOBC_HNS, 1493);
     EXPECT_EQ(TRAINER_ERIKA_POSTOBC_HNS, 1514);
-    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1515);
+    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1651);
     EXPECT_EQ(MAX_TRAINERS_COUNT, MAX_TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_PARTNER(PARTNER_NONE), 2048);
 }
@@ -76,6 +77,48 @@ TEST("Wayfarer appended HNS rematch defeat flags are isolated from Hoenn")
     EXPECT(HasTrainerBeenFought(TRAINER_MAY_PLACEHOLDER));
     ClearTrainerFlag(TRAINER_ERIKA_POSTOBC_HNS);
     EXPECT(!HasTrainerBeenFought(TRAINER_ERIKA_POSTOBC_HNS));
+}
+
+TEST("Wayfarer Sevii Trainer defeat routing uses frozen allocation slots")
+{
+    EXPECT_EQ(WayfarerSeviiTrainerGetDefeatSlot(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN), 0);
+    EXPECT_EQ(WayfarerSeviiTrainerGetDefeatSlot(TRAINER_WAYFARER_SEVII_LADY_SELPHY), 135);
+    EXPECT_EQ(WayfarerSeviiTrainerGetDefeatSlot(TRAINER_WAYFARER_SEVII_FIRST - 1), WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE);
+    EXPECT_EQ(WayfarerSeviiTrainerGetDefeatSlot(TRAINER_WAYFARER_SEVII_LAST + 1), WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE);
+
+    ClearTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN);
+    ClearTrainerFlag(TRAINER_WAYFARER_SEVII_LADY_SELPHY);
+    ClearTrainerFlag(TRAINER_BEVERLY_5_HNS);
+    ClearTrainerFlag(TRAINER_SAWYER_1);
+    SetTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN);
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN));
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_LADY_SELPHY));
+    EXPECT(!HasTrainerBeenFought(TRAINER_BEVERLY_5_HNS));
+    EXPECT(!HasTrainerBeenFought(TRAINER_SAWYER_1));
+
+    SetTrainerFlag(TRAINER_WAYFARER_SEVII_LADY_SELPHY);
+    SetTrainerFlag(TRAINER_BEVERLY_5_HNS);
+    SetTrainerFlag(TRAINER_SAWYER_1);
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_LADY_SELPHY));
+    EXPECT(HasTrainerBeenFought(TRAINER_BEVERLY_5_HNS));
+    EXPECT(HasTrainerBeenFought(TRAINER_SAWYER_1));
+    ClearTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN);
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_LADY_SELPHY));
+    EXPECT(HasTrainerBeenFought(TRAINER_BEVERLY_5_HNS));
+    EXPECT(HasTrainerBeenFought(TRAINER_SAWYER_1));
+}
+
+TEST("Wayfarer Sevii rematch parties share their base Trainer defeat state")
+{
+    ClearTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    SetTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2);
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2));
+
+    ClearTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON));
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2));
 }
 
 #endif

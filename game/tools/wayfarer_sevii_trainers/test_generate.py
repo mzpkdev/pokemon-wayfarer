@@ -35,6 +35,20 @@ class SelectedRosterTests(unittest.TestCase):
         self.assertEqual(constants.count("#define TRAINER_WAYFARER_SEVII_"), 138)
         self.assertIn("#define TRAINERS_COUNT_WAYFARER      1651", constants)
 
+    def test_defeat_router_aliases_rematches_to_their_base_slot(self):
+        router = generate.render_defeat_router(self.report)
+        rows = self.report["allocation"]["allocations"]
+        slots_by_source = {row["source_trainer"]: row["slot"] for row in rows if row["kind"] in ("base", "planned")}
+        slots = [slots_by_source[row["defeat_base"]] for row in rows]
+
+        self.assertEqual(len(slots), 136)
+        self.assertEqual(slots[0], 0)
+        self.assertEqual(slots[-1], 135)
+        sharon = next(index for index, row in enumerate(rows) if row["source_trainer"] == "TRAINER_CRUSH_GIRL_SHARON")
+        self.assertEqual(slots[sharon + 1], slots[sharon])
+        self.assertIn("WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE", router)
+        self.assertIn("TRAINER_WAYFARER_SEVII_FIRST", router)
+
 
 if __name__ == "__main__":
     unittest.main()

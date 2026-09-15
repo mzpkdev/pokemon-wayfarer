@@ -11,9 +11,10 @@ AUTO_GEN_TARGETS += src/data/debug_trainers.h
 AUTO_GEN_TARGETS += test/league_tiers.h
 AUTO_GEN_TARGETS += include/constants/wayfarer_sevii_trainers.h
 AUTO_GEN_TARGETS += src/data/trainers_wayfarer_sevii.h
+AUTO_GEN_TARGETS += include/wayfarer_sevii_trainer_defeats.h
 
 WAYFARER_SEVII_TRAINER_GENERATOR := tools/wayfarer_sevii_trainers/generate.py
-WAYFARER_SEVII_TRAINER_OUTPUTS := include/constants/wayfarer_sevii_trainers.h src/data/trainers_wayfarer_sevii.h
+WAYFARER_SEVII_TRAINER_OUTPUTS := include/constants/wayfarer_sevii_trainers.h src/data/trainers_wayfarer_sevii.h include/wayfarer_sevii_trainer_defeats.h
 WAYFARER_SEVII_TRAINER_DEPS := $(WAYFARER_SEVII_TRAINER_GENERATOR) ../docs/sevii-trainer-implementation/allocation-inventory.json src/data/trainers_frlg.party data/scripts/trainers_frlg.inc $(shell find data/maps -type f \( -name map.json -o -name scripts.inc \)) tools/trainerproc/main.c tools/trainer_scaling/generate.py
 
 # This is deliberately a selected-roster generator, not another trainerproc
