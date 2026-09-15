@@ -3,7 +3,6 @@
 
 #include "global.h"
 
-#define WAYFARER_SEVII_REMATCH_FAMILY_COUNT 64
 #define WAYFARER_SEVII_REMATCH_STAGES 5
 
 struct WayfarerSeviiRematchFamily
