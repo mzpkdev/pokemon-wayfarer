@@ -320,6 +320,7 @@ WayfarerSevii_TrainerTower_Lobby_OfferChallenge::
 	goto WayfarerSevii_TrainerTower_Lobby_ReceptionistEnd
 
 WayfarerSevii_TrainerTower_Lobby_StartChallenge::
+	special HealPlayerParty
 	msgbox WayfarerSevii_TrainerTower_Text_StartClock
 	ttower_startchallenge
 	goto_if_eq VAR_RESULT, TRUE, WayfarerSevii_TrainerTower_Lobby_ReceptionistEnd

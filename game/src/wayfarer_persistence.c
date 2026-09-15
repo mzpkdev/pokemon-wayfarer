@@ -5,6 +5,7 @@
 #include "overworld.h"
 #include "regions.h"
 #include "script.h"
+#include "trainer_tower.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
@@ -147,6 +148,7 @@ void WayfarerInitPersistentState(void)
 void WayfarerSeviiInitPersistentState(void)
 {
 #if IS_WAYFARER
+    WayfarerTrainerTowerResetTransientState();
     memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
     gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
 #endif

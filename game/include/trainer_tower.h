@@ -60,6 +60,7 @@ u8 GetTrainerTowerOpponentClass(void);
 bool8 WayfarerTrainerTowerIsChallengeActive(void);
 bool8 WayfarerTrainerTowerIsSaveAllowed(void);
 #if IS_WAYFARER
+void WayfarerTrainerTowerResetTransientState(void);
 STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
 u8 WayfarerTrainerTowerGetUsablePartyCount(void);
 u8 WayfarerTrainerTowerNormalizeLevel(u8 highestUsableLevel);

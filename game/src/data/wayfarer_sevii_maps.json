@@ -5644,7 +5644,7 @@
           "path": "data/specials.inc",
           "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
           "implementation_path": "src/trainer_tower.c",
-          "implementation_sha256": "1fd38975081fc5505b265651cbf782b135dfcf787587febd93f79c7f1014a0a6"
+          "implementation_sha256": "659ffb628b788aa20ff720b096da78a31a167ef20ac5751690e317dd64556e14"
         },
         {
           "label": "HealPlayerParty",

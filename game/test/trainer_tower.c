@@ -26,6 +26,7 @@ static void SetUpUsableTowerParty(void)
 {
     ZeroPlayerPartyMons();
     CreateMon(&gPlayerParty[0], SPECIES_PIKACHU, 31, 0, OTID_STRUCT_PLAYER_ID);
+    CalculateMonStats(&gPlayerParty[0]);
     gPlayerPartyCount = 1;
 }
 
@@ -106,6 +107,11 @@ TEST("Wayfarer Trainer Tower restores its healed entry snapshot for loss draw an
     records = WayfarerSevii_GetTrainerTowerRecords();
     SetUpUsableTowerParty();
     SetMonData(&gPlayerParty[0], MON_DATA_HELD_ITEM, &heldItem);
+    EXPECT(!WayfarerTrainerTowerIsChallengeActive());
+    EXPECT_EQ(records->pendingPrize, ITEM_NONE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG), SPECIES_PIKACHU);
+    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > 0);
+    EXPECT_EQ(WayfarerTrainerTowerGetUsablePartyCount(), 1);
     StartTowerRun(CHALLENGE_TYPE_SINGLE);
     EXPECT_EQ(gSpecialVar_Result, TRUE);
     EXPECT(WayfarerTrainerTowerIsChallengeActive());
@@ -139,6 +145,23 @@ TEST("Wayfarer Trainer Tower restores its healed entry snapshot for loss draw an
     EXPECT(WayfarerTrainerTowerIsSaveAllowed());
 }
 
+TEST("Wayfarer Trainer Tower discards an unsaved run when transient state resets")
+{
+    u16 hp = 1;
+
+    WayfarerSeviiInitPersistentState();
+    SetUpUsableTowerParty();
+    StartTowerRun(CHALLENGE_TYPE_SINGLE);
+    EXPECT(WayfarerTrainerTowerIsChallengeActive());
+    SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
+
+    WayfarerTrainerTowerResetTransientState();
+
+    EXPECT(!WayfarerTrainerTowerIsChallengeActive());
+    EXPECT(WayfarerTrainerTowerIsSaveAllowed());
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP), hp);
+}
+
 TEST("Wayfarer Trainer Tower claim finalizer clears only an existing pending prize")
 {
     struct WayfarerSeviiTrainerTowerRecords *records;
@@ -169,6 +192,11 @@ TEST("Wayfarer Trainer Tower successful roof delivery restores the entry snapsho
     records = WayfarerSevii_GetTrainerTowerRecords();
     ClearBag();
     SetUpUsableTowerParty();
+    EXPECT(!WayfarerTrainerTowerIsChallengeActive());
+    EXPECT_EQ(records->pendingPrize, ITEM_NONE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG), SPECIES_PIKACHU);
+    EXPECT(GetMonData(&gPlayerParty[0], MON_DATA_HP) > 0);
+    EXPECT_EQ(WayfarerTrainerTowerGetUsablePartyCount(), 1);
     StartTowerRun(CHALLENGE_TYPE_SINGLE);
     EXPECT(WayfarerTrainerTowerIsChallengeActive());
     SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);

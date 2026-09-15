@@ -415,6 +415,12 @@ bool8 WayfarerTrainerTowerIsSaveAllowed(void)
 }
 
 #if IS_WAYFARER
+void WayfarerTrainerTowerResetTransientState(void)
+{
+    ClearTrainerHillVBlankCounter();
+    memset(&sWayfarerTrainerTowerRun, 0, sizeof(sWayfarerTrainerTowerRun));
+}
+
 u8 WayfarerTrainerTowerGetUsablePartyCount(void)
 {
     u8 count = 0;
