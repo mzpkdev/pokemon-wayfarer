@@ -97,6 +97,8 @@ STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.visitedLocations) *
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.flags) == WAYFARER_SEVII_FLAG_BYTES, WayfarerSeviiFlagBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.vars) / sizeof(u16) == WAYFARER_SEVII_VAR_COUNT, WayfarerSeviiVarBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.trainerFlags) == WAYFARER_SEVII_TRAINER_FLAG_BYTES, WayfarerSeviiTrainerBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.rematchStages) == WAYFARER_SEVII_REMATCH_STAGE_BYTES, WayfarerSeviiRematchStageBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.rematchPending) == WAYFARER_SEVII_REMATCH_PENDING_BYTES, WayfarerSeviiRematchPendingBankSize);
 STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
 #endif
 

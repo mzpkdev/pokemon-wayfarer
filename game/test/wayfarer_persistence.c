@@ -12,6 +12,7 @@
 #include "save.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
 #include "test/test.h"
@@ -79,7 +80,7 @@ TEST("Wayfarer Sevii initialization and Tower record validation are atomic")
     records = WayfarerSevii_GetTrainerTowerRecords();
     EXPECT(records != NULL);
     EXPECT(WayfarerSeviiPersistentStateIsValid());
-    EXPECT_EQ(sizeof(gSaveBlock3Ptr->wayfarerSevii), 184);
+    EXPECT_EQ(sizeof(gSaveBlock3Ptr->wayfarerSevii), 208);
 
     records->bestTime[CHALLENGE_TYPE_SINGLE] = 1234;
     EXPECT(!WayfarerSeviiPersistentStateIsValid());
@@ -109,6 +110,29 @@ TEST("Wayfarer Sevii Trainer defeat bits cover the fixed allocation")
     WayfarerSeviiTrainerDefeatClear(0);
     EXPECT(!WayfarerSeviiTrainerDefeatGet(0));
     WayfarerSeviiTrainerDefeatClear(WAYFARER_SEVII_TRAINER_COUNT);
+}
+
+TEST("Wayfarer Sevii rematch state is packed and bounds safe")
+{
+    WayfarerSeviiInitPersistentState();
+    WayfarerSeviiRematchStageSet(0, 3);
+    WayfarerSeviiRematchStageSet(3, 2);
+    WayfarerSeviiRematchStageSet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT - 1, 1);
+    EXPECT_EQ(WayfarerSeviiRematchStageGet(0), 3);
+    EXPECT_EQ(WayfarerSeviiRematchStageGet(3), 2);
+    EXPECT_EQ(WayfarerSeviiRematchStageGet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT - 1), 1);
+    EXPECT_EQ(WayfarerSeviiRematchStageGet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT), 0);
+    WayfarerSeviiRematchStageSet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT, 3);
+
+    WayfarerSeviiRematchPendingSet(0, TRUE);
+    WayfarerSeviiRematchPendingSet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT - 1, TRUE);
+    EXPECT(WayfarerSeviiRematchPendingGet(0));
+    EXPECT(WayfarerSeviiRematchPendingGet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT - 1));
+    EXPECT(!WayfarerSeviiRematchPendingGet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT));
+    WayfarerSeviiRematchPendingSet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT, TRUE);
+    WayfarerSeviiRematchClearAllPending();
+    EXPECT(!WayfarerSeviiRematchPendingGet(0));
+    EXPECT(!WayfarerSeviiRematchPendingGet(WAYFARER_SEVII_REMATCH_FAMILY_COUNT - 1));
 }
 
 TEST("Wayfarer common-script source follows the map catalog")
@@ -637,6 +661,8 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     memset(&gSaveBlock3Ptr->wayfarerHoenn.leagueRun, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn.leagueRun));
     memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
     gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
+    WayfarerSeviiRematchStageSet(63, 3);
+    WayfarerSeviiRematchPendingSet(63, TRUE);
     memcpy(sWayfarerExpectedSaveBlock3, saveBlock3Bytes, sizeof(sWayfarerExpectedSaveBlock3));
 
     // If a storage sector payload is accidentally replaced instead of merely
