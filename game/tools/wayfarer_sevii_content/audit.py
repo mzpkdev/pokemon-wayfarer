@@ -283,6 +283,22 @@ def event_island_report(root: Path) -> dict[str, Any]:
     return {"sha256": file_digest(baseline), "report": report}
 
 
+def trainer_tower_report(root: Path) -> dict[str, Any]:
+    """Load and run the focused frozen local Trainer Tower audit."""
+    path = root / "tools/wayfarer_trainer_tower/audit.py"
+    if not path.is_file():
+        raise AuditError(f"missing Trainer Tower audit: {relative(path, root)}")
+    spec = importlib.util.spec_from_file_location("wayfarer_trainer_tower_audit", path)
+    if spec is None or spec.loader is None:
+        raise AuditError("cannot load Trainer Tower audit")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    try:
+        return module.build_report(root)
+    except Exception as error:
+        raise AuditError(str(error)) from error
+
+
 def content_inventory_report(manifest: dict[str, Any]) -> dict[str, Any]:
     domains = active_domains(manifest)
     # The schema always preserves enabled exploration when a development
@@ -625,6 +641,7 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
         "exploration_baseline": {**projection, "sha256": hashes["projection_sha256"]},
         "wild_encounters": {"sha256": hashes["wild_encounters_sha256"]},
         "event_island": event_island_report(root),
+        "trainer_tower": trainer_tower_report(root),
         "standalone_projection": standalone_projection_report(root),
         "script_closure": closure_report,
         "contracts": contracts_report,
