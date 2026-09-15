@@ -69,6 +69,34 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
             "type": "object", "script": "WayfarerSevii_Test", "flag": "FLAG_WAYFARER_SEVII_TEST", "x": 4,
         })
 
+    def test_contract_closure_fallback_ignores_blank_and_comment_only_lines(self):
+        row = {
+            "content_id": "story.test.fallback", "owner": "story",
+            "wayfarer_script": "WayfarerSevii_Fallback", "state_reads": [],
+            "state_writes": ["SEVII_FALLBACK_RECEIPT"],
+        }
+        contracts = {
+            "states": [{"id": "SEVII_FALLBACK_RECEIPT", "symbol": "FLAG_WAYFARER_SEVII_FALLBACK_RECEIPT", "storage": "flag"}],
+            "trainer_ids": {"allocations": []}, "transactions": [],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/fallback.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text(
+                "WayfarerSevii_Fallback::\n"
+                "\t@ This line is intentionally comment-only.\n"
+                "\n"
+                "\tsetflag FLAG_WAYFARER_SEVII_FALLBACK_RECEIPT\n"
+                "\tend\n",
+                encoding="utf-8",
+            )
+            closure = {"includes": ["data/scripts/wayfarer_sevii/story/fallback.inc"],
+                       "state_operations": [], "content_operations": []}
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                report = AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            self.assertEqual(report["entries"][0]["state_writes"], ["SEVII_FALLBACK_RECEIPT"])
+
     def test_contract_closure_binds_a_story_battle_state_and_receipt_to_owned_commands(self):
         row = {
             "content_id": "story.test.battle", "owner": "story", "wayfarer_script": "WayfarerSevii_StoryBattle",

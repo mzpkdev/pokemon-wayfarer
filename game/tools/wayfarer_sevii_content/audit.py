@@ -466,6 +466,12 @@ def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
     return result
 
 
+def _script_command_token(line: str) -> str | None:
+    """Return a command token without treating a comment-only line as code."""
+    code = line.split("@", 1)[0].strip()
+    return code.split(maxsplit=1)[0] if code else None
+
+
 def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_report: dict[str, Any],
                               contracts_report: dict[str, Any]) -> dict[str, Any]:
     """Link host contract declarations to selected owned script command surfaces.
@@ -501,13 +507,13 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
         else:
             written = {
                 symbol for symbol in symbols.values()
-                if any(line.split("@", 1)[0].strip().split(maxsplit=1)[0] in STATE_WRITE_COMMANDS and symbol in line
-                       for line in source.splitlines() if line.strip())
+                if any(_script_command_token(line) in STATE_WRITE_COMMANDS and symbol in line
+                       for line in source.splitlines())
             }
             read = {
                 symbol for symbol in symbols.values()
-                if any(line.split("@", 1)[0].strip().split(maxsplit=1)[0] in closure.STATE_READS and symbol in line
-                       for line in source.splitlines() if line.strip())
+                if any(_script_command_token(line) in closure.STATE_READS and symbol in line
+                       for line in source.splitlines())
             }
         # Defeat-bit transitions are engine-owned battle outcomes, not event
         # script flag operations.  Every other declared state must appear in
