@@ -1,8 +1,14 @@
 """Reviewed policy coverage for the generated Sevii selected roster."""
 
+import importlib.util
+from pathlib import Path
 import unittest
 
-import generate as gen
+
+_GENERATOR_PATH = Path(__file__).with_name("generate.py")
+_SPEC = importlib.util.spec_from_file_location("trainer_scaling_generate", _GENERATOR_PATH)
+gen = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(gen)
 
 
 class SeviiPolicyTests(unittest.TestCase):
