@@ -1,0 +1,32 @@
+{
+  "emerald": {
+    "base_sha256": "25fcb88fb0e3593e3c4e48f103d5b1666bfe5345c9c13640b1334fc0459ba022",
+    "byte_identical": true,
+    "candidate_sha256": "25fcb88fb0e3593e3c4e48f103d5b1666bfe5345c9c13640b1334fc0459ba022",
+    "reference": "7aeb01c621"
+  },
+  "firered": {
+    "base_sha256": "eabec6b30ab4a7ef0fa035a0e4b210f3e962f733a1bf1d8fd2fde81ad085b7bb",
+    "byte_identical": true,
+    "candidate_sha256": "eabec6b30ab4a7ef0fa035a0e4b210f3e962f733a1bf1d8fd2fde81ad085b7bb",
+    "reference": "7aeb01c621"
+  },
+  "hns": {
+    "base_sha256": "2cab98cacc0618191c2f1c50af426fb956a950082e80e773cb914a00b2011005",
+    "byte_identical": true,
+    "candidate_sha256": "2cab98cacc0618191c2f1c50af426fb956a950082e80e773cb914a00b2011005",
+    "reference": "7aeb01c621 + standalone HNS alias repair"
+  },
+  "leafgreen": {
+    "base_sha256": "a1faec887222ea72ab774a020bcd88e4211af39e0f80338899938400961b04f8",
+    "byte_identical": true,
+    "candidate_sha256": "a1faec887222ea72ab774a020bcd88e4211af39e0f80338899938400961b04f8",
+    "reference": "7aeb01c621"
+  },
+  "wayfarer": {
+    "base_sha256": "4a5efc952c50e4095bd8c3d9aff3582a37276573ed0e495058db74fcdc97ce6f",
+    "byte_identical": false,
+    "candidate_sha256": "a4eb1181ea8cf886351971570fd1829add66a9f3e7673d78d76f50a376690e59",
+    "reference": "7aeb01c621"
+  }
+}

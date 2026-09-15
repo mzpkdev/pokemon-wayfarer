@@ -106,12 +106,40 @@ class MapjsonWayfarerTest(unittest.TestCase):
 
     @staticmethod
     def write_sevii_manifest(root, maps, release_link_enabled=False):
+        inventory = []
+        for map_record in maps:
+            map_record.setdefault("retained_events", {})
+            for event_kind in ("object_events", "warp_events", "coord_events", "bg_events"):
+                map_record["retained_events"].setdefault(event_kind, [])
+                for row in map_record["retained_events"][event_kind]:
+                    if not isinstance(row, dict):
+                        continue
+                    content_id = row.setdefault(
+                        "content_id",
+                        f"exploration.{map_record['source_map'].lower()}.{event_kind}.{row['index']}",
+                    )
+                    row.setdefault("owner", "exploration")
+                    row.setdefault("reason", "Fixture preserves a reviewed exploration event.")
+                    inventory.append(content_id)
+            map_record.setdefault("retained_map_scripts", [])
+            map_record.setdefault("encounter_methods", [])
         path = root / "src/data/wayfarer_sevii_maps.json"
         path.write_text(
             json.dumps(
                 {
-                    "schema_version": 1,
+                    "schema_version": 2,
                     "release_link_enabled": release_link_enabled,
+                    "baseline": {
+                        "projection_sha256": "0" * 64,
+                        "wild_encounters_sha256": "0" * 64,
+                        "event_island_baseline_sha256": "0" * 64,
+                    },
+                    "content_domains": {
+                        "exploration": {"owner": "exploration", "enabled": True, "inventory": inventory},
+                        "ordinary_trainers": {"owner": "ordinary_trainer", "enabled": False, "inventory": []},
+                        "story": {"owner": "story", "enabled": False, "inventory": []},
+                        "trainer_tower": {"owner": "trainer_tower", "enabled": False, "inventory": []},
+                    },
                     "maps": maps,
                     "exclusions": [],
                 }

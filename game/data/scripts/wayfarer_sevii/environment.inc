@@ -6,12 +6,6 @@
 
 @ Icefall Cave: the field-task callback owns the thin-ice transition; the
 @ map table installs it and handles the resulting fall exactly once.
-FourIsland_IcefallCave_1F_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_IcefallCave1F_OnResume
-	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_IcefallCave1F_OnLoad
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_IcefallCave1F_OnFrame
-	.byte 0
-
 WayfarerSevii_IcefallCave1F_OnResume::
 	setstepcallback STEP_CB_ICEFALL_CAVE
 	end
@@ -70,10 +64,6 @@ WayfarerSevii_DottedHole_BrailleDown::
 @ The retained Cut interaction opens the Ruin Valley doorway. The field-move
 @ implementation owns setting the Wayfarer-local flag; this load hook restores
 @ its collision state after a save, reload, or map transition.
-SixIsland_RuinValley_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_RuinValley_OnLoad
-	.byte 0
-
 WayfarerSevii_RuinValley_OnLoad::
 	call_if_set FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN, WayfarerSevii_RuinValley_OpenDottedHoleDoor
 	end
@@ -85,17 +75,9 @@ WayfarerSevii_RuinValley_OpenDottedHoleDoor::
 @ Rocket Warehouse: the Meadow load hook opens the exterior entrance without
 @ passwords. The interior hook keeps the source floor-arrow geometry usable
 @ for re-entry and exit, with no people or scene state.
-FiveIsland_Meadow_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_Meadow_OnLoad
-	.byte 0
-
 WayfarerSevii_Meadow_OnLoad::
 	setmetatile 12, 21, METATILE_SeviiIslands45_RocketWarehouseDoor_Unlocked, 1
 	end
-
-FiveIsland_RocketWarehouse_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_RocketWarehouse_OnLoad
-	.byte 0
 
 WayfarerSevii_RocketWarehouse_OnLoad::
 	setmetatile 26, 20, METATILE_SilphCo_Arrow_Up, 0
@@ -107,10 +89,6 @@ WayfarerSevii_RocketWarehouse_OnLoad::
 @ their ordinary Strength-puzzle behavior. Temporary variables record the
 @ current visit only; completion is the sole persistent state.
 .equ WAYFARER_SEVII_TANOBY_SWITCH_COUNT, VAR_TEMP_8
-
-SevenIsland_SevaultCanyon_TanobyKey_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TanobyKey_OnTransition
-	.byte 0
 
 WayfarerSevii_TanobyKey_OnTransition::
 	call_if_set FLAG_WAYFARER_SEVII_TANOBY_COMPLETE, WayfarerSevii_TanobyKey_MoveBouldersToSolvedPos

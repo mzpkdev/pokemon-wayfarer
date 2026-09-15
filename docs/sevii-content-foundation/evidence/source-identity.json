@@ -1,0 +1,30 @@
+{
+  "base_commit": "7aeb01c62108f005981297d5d83d0a8826981c10",
+  "source_files": {
+    "game/Makefile": "27f74deddf9292c3840f9798a09b4e0ebd22158e7d95b2d33542f1f020b1a5c1",
+    "game/data/scripts/wayfarer_sevii/environment.inc": "10ce65de8ce2156b67f3ab1035c375ce37e322766894244dfbbf483e558bd9e9",
+    "game/data/wayfarer_sevii_event_scripts.inc": "79bfd70881740b4893415d930bbe88ecdf84488b74dd74af7fb1a3d6217a7c28",
+    "game/map_data_rules.mk": "8a59e14439733be854cfa765f124862903366da3a6118cf110e2ff56b5ad404b",
+    "game/src/data/region_map/region_map_sections.constants.json.txt": "9c69adfc0c05cc8728a635952919e447b40c79129f76e0bf4a7972c235403433",
+    "game/src/data/wayfarer_sevii_maps.json": "c740154f740733433c57a73ac521c01ecc149ec77dc3b27f6d24f2021ffd40de",
+    "game/tools/mapjson/mapjson.cpp": "5307ef5d8cc40030d702637eb002bd50019fbe7a5830a841cf907c528cfa9e05",
+    "game/tools/mapjson/tests/test_wayfarer_catalog.py": "d346ae9ca2913d1f086278bf5d09acc95c1ed60dd4729d08dc641b2683d20eb5",
+    "game/tools/wayfarer_sevii_content/README-contracts.md": "4b065d608414a08807c4baed3dda5e1801aeaf4ed448bdc68927f226715048b0",
+    "game/tools/wayfarer_sevii_content/__init__.py": "5504676b93e82521f0bf025065b64834582c1e3c3755e29a2f24ef09e10ed171",
+    "game/tools/wayfarer_sevii_content/audit.py": "c412d1f3f5d4807d1197289a4d7a518e399b21d803b187ec30bc2baf2944e389",
+    "game/tools/wayfarer_sevii_content/baseline.json": "e82eafaea07e5656d8ec74be394c151f8f24e49e037bc0f210df7fbe97828894",
+    "game/tools/wayfarer_sevii_content/closure.py": "316a858ab0545e4aaea09adcf4c3a2d27ca4ec834fed05fabc67232d76674490",
+    "game/tools/wayfarer_sevii_content/contracts.py": "e09a6057fa8e4b5a5d3571b02ccbb56312940289ab702a81452367cfc33a3f08",
+    "game/tools/wayfarer_sevii_content/schema.py": "d7ec993d5b67cf5ff2ea259c376671aec631e3927758edc39e145867de95a909",
+    "game/tools/wayfarer_sevii_content/tests/test_audit.py": "0ba603e09b3f00f2c0a0f08b54979616c810af86fb380696b0e9ec9d693021dd",
+    "game/tools/wayfarer_sevii_content/tests/test_closure.py": "16b8c56ae35b292b408df5551356de0e6749d5e132a1cd14ed4d40539e79f3c3",
+    "game/tools/wayfarer_sevii_content/tests/test_contracts.py": "bd68c543b70d8717361202f56d1f962045320340ed2a947a8818bf55b8574677",
+    "game/tools/wayfarer_sevii_content/tests/test_region_constants.py": "01052ea80103e4f879893160c2a7599491b659c34b8ea78f2833fcf4538f8e7f",
+    "game/tools/wayfarer_sevii_content/tests/test_schema.py": "78a7ab70f289089f72fcc817aa28aca4cf24979b4164bcd1e6a230d4c270dfd7",
+    "game/tools/wayfarer_sevii_port/audit.py": "4fc9e93d06197786deb30ebf94d0eb606d4c083e7481d3b4a465b07a424c975d",
+    "game/tools/wayfarer_sevii_scripts/generate.py": "bbf8e8b8fdee71dbdaf965cfbb2b14b5c79f081e10c347ebfbf2fe8504278f86",
+    "game/tools/wayfarer_sevii_scripts/test_environment.py": "f22be4de1da1e795e4b38c0e59f6a2743c2fcc7b3fe6540159cda75e3a9e3466",
+    "game/tools/wayfarer_sevii_scripts/test_generate.py": "24f18c8304dd9cd633e8ec0a58210b572f27ea425d146b85c5acdb2b74e0dc35"
+  },
+  "source_digest": "f26c35bf916869702b99bec4b64d844dfc9afcb4d4e06670c9bc8e67464a3a79"
+}

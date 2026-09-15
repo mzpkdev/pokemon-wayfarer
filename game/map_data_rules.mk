@@ -22,6 +22,15 @@ WAYFARER_SEVII_MANIFEST := $(DATA_SRC_SUBDIR)/wayfarer_sevii_maps.json
 WAYFARER_SEVII_MANIFEST_ARG := $(if $(filter wayfarer,$(MAP_VERSION)),--wayfarer-sevii-manifest $(WAYFARER_SEVII_MANIFEST))
 WAYFARER_SEVII_SCRIPT_TOOL := $(TOOLS_DIR)/wayfarer_sevii_scripts/generate.py
 WAYFARER_SEVII_EVENT_SCRIPTS := $(DATA_ASM_SUBDIR)/wayfarer_sevii_event_scripts.inc
+WAYFARER_SEVII_CONTENT_TOOLS := $(wildcard $(TOOLS_DIR)/wayfarer_sevii_content/*.py)
+# Resolve reviewed owner modules recursively, including their source provenance.
+# A failed query must stop Make rather than silently leave stale prerequisites.
+ifeq ($(MAP_VERSION),wayfarer)
+WAYFARER_SEVII_SCRIPT_DEPS := $(shell python3 $(WAYFARER_SEVII_SCRIPT_TOOL) --root . --dependencies || echo SEVII_DEPENDENCY_ERROR)
+ifneq (,$(filter SEVII_DEPENDENCY_ERROR,$(WAYFARER_SEVII_SCRIPT_DEPS)))
+$(error Invalid Wayfarer Sevii script dependency closure)
+endif
+endif
 
 # The map sources themselves are shared between versions, so a version switch
 # must invalidate their generated includes. Use mutually-exclusive stamps rather
@@ -52,11 +61,14 @@ MAP_LAYOUT_OUTPUTS := $(LAYOUTS_OUTDIR)/layouts.inc $(LAYOUTS_OUTDIR)/layouts_ta
 
 $(DATA_ASM_BUILDDIR)/maps.o: $(DATA_ASM_SUBDIR)/maps.s $(LAYOUTS_DIR)/layouts.inc $(LAYOUTS_DIR)/layouts_table.inc $(MAPS_DIR)/headers.inc $(MAPS_DIR)/groups.inc $(MAPS_DIR)/connections.inc $(MAP_CONNECTIONS) $(MAP_HEADERS)
 	$(PREPROC) $< charmap.txt | $(CPP) $(CPPFLAGS) -I include - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
-$(DATA_ASM_BUILDDIR)/event_scripts.o: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_CONSTANTS) $(WAYFARER_SEVII_EVENT_SCRIPTS)
+$(DATA_ASM_BUILDDIR)/event_scripts.o: $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARER_COMMON_SOURCE_CONSTANTS)
 
-$(WAYFARER_SEVII_EVENT_SCRIPTS): $(WAYFARER_SEVII_SCRIPT_TOOL) $(WAYFARER_SEVII_MANIFEST) $(wildcard $(DATA_ASM_SUBDIR)/scripts/wayfarer_sevii/*.inc)
+ifeq ($(MAP_VERSION),wayfarer)
+$(DATA_ASM_BUILDDIR)/event_scripts.o: $(WAYFARER_SEVII_EVENT_SCRIPTS) $(WAYFARER_SEVII_SCRIPT_DEPS)
+$(WAYFARER_SEVII_EVENT_SCRIPTS): $(WAYFARER_SEVII_SCRIPT_TOOL) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SEVII_CONTENT_TOOLS) $(WAYFARER_SEVII_SCRIPT_DEPS) $(MAP_JSONS)
 	python3 $(WAYFARER_SEVII_SCRIPT_TOOL) --root .
 	@touch $@
+endif
 $(DATA_ASM_BUILDDIR)/map_events.o: $(DATA_ASM_SUBDIR)/map_events.s $(MAPS_DIR)/events.inc $(MAP_EVENTS) $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS)
 	$(PREPROC) $< charmap.txt | $(CPP) $(CPPFLAGS) -I include - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
 

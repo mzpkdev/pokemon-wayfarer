@@ -6,11 +6,13 @@ import unittest
 
 GAME_ROOT = Path(__file__).resolve().parents[2]
 ENVIRONMENT = GAME_ROOT / "data/scripts/wayfarer_sevii/environment.inc"
+GENERATED = GAME_ROOT / "data/wayfarer_sevii_event_scripts.inc"
 
 
 class WayfarerSeviiEnvironmentTest(unittest.TestCase):
     def test_environment_wrappers_are_source_free(self):
         text = ENVIRONMENT.read_text()
+        generated = GENERATED.read_text()
         for map_name in (
             "FourIsland_IcefallCave_1F_Frlg",
             "SixIsland_RuinValley_Frlg",
@@ -18,7 +20,8 @@ class WayfarerSeviiEnvironmentTest(unittest.TestCase):
             "FiveIsland_RocketWarehouse_Frlg",
             "SevenIsland_SevaultCanyon_TanobyKey_Frlg",
         ):
-            self.assertIn(f"{map_name}_MapScripts::", text)
+            self.assertNotIn(f"{map_name}_MapScripts::", text)
+            self.assertEqual(generated.count(f"{map_name}_MapScripts::"), 1)
         self.assertIn("FLAG_WAYFARER_SEVII_TANOBY_COMPLETE", text)
         self.assertIn("FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN", text)
         self.assertIn("VAR_WAYFARER_SEVII_ICEFALL_FALL", text)

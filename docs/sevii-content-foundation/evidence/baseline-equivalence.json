@@ -1,0 +1,6 @@
+{
+  "maps": 135,
+  "unchanged_retained_events": 46,
+  "environment_change": "only removed generated map-script table definitions",
+  "base": "7aeb01c62108f005981297d5d83d0a8826981c10"
+}

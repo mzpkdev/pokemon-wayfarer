@@ -391,6 +391,7 @@ MAKEFLAGS += --no-print-directory
 RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates emerald-traversal-static-test frlg-traversal-static-test hns-traversal-static-test surfable-pokemon-pixel-alias-test wild-encounter-scaling-test wild-encounter-balance-audit wayfarer-hoenn-content-test wayfarer-hoenn-content-audit wayfarer-hoenn-entry-test wayfarer-hoenn-entry-audit wayfarer-sevii-port-test wayfarer-sevii-port-audit rom-report-test
 RULES_NO_SCAN += league-circuit-test trainer-party-scaling-generate trainer-party-scaling-test trainer-party-scaling-audit
 RULES_NO_SCAN += summary-screen-test
+RULES_NO_SCAN += wayfarer-sevii-content-test wayfarer-sevii-content-audit
 RULES_NO_SCAN += legacy-multiboot-test
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
@@ -879,6 +880,19 @@ $(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py --root . --output $@
 
 wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
+
+.PHONY: wayfarer-sevii-content-test wayfarer-sevii-content-audit
+wayfarer-sevii-content-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_sevii_content/tests -p 'test_*.py' -q
+
+# Always validate the declared source closure; a timestamp-only report can hide
+# drift in a newly added owner module or one of its external dependencies.
+wayfarer-sevii-content-audit: wayfarer-sevii-content-test
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/wayfarer_sevii_content/audit.py --root . --output $(BUILD_DIR)/wayfarer-sevii-content-audit.json
+
+ifeq ($(BUILD_NAME),wayfarer)
+check: wayfarer-sevii-content-audit
+endif
 
 # Symbol file (`make syms`)
 $(SYM): $(ELF)

@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "release_link_enabled": true,
   "maps": [
     {
@@ -225,7 +225,49 @@
       },
       "retained_map_scripts": [
         {
-          "include": "data/scripts/wayfarer_sevii/environment.inc"
+          "owner": "exploration",
+          "content_id": "exploration.fourisland-icefallcave-1f-frlg.map-script.0",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_RESUME",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/FourIsland_IcefallCave_1F_Frlg/scripts.inc",
+            "label": "FourIsland_IcefallCave_1F_OnResume",
+            "sha256": "7d4b6eba9b67699f58a07b37f8e48a301770bb7df4b90d27c8241fa3b278b835",
+            "file_sha256": "bd0aa3b88c4efdeb05ce85df13e4b680954c3b80e73a76df9f8bcc44f88df460"
+          },
+          "wayfarer_script": "WayfarerSevii_IcefallCave1F_OnResume",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
+        },
+        {
+          "owner": "exploration",
+          "content_id": "exploration.fourisland-icefallcave-1f-frlg.map-script.1",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_LOAD",
+          "source_index": 1,
+          "source": {
+            "include": "data/maps/FourIsland_IcefallCave_1F_Frlg/scripts.inc",
+            "label": "FourIsland_IcefallCave_1F_OnLoad",
+            "sha256": "ab347f24aafc82de401e3006a7a3c999f2e3ef9bea4e04545e89960012a44fe3",
+            "file_sha256": "bd0aa3b88c4efdeb05ce85df13e4b680954c3b80e73a76df9f8bcc44f88df460"
+          },
+          "wayfarer_script": "WayfarerSevii_IcefallCave1F_OnLoad",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
+        },
+        {
+          "owner": "exploration",
+          "content_id": "exploration.fourisland-icefallcave-1f-frlg.map-script.2",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_FRAME_TABLE",
+          "source_index": 2,
+          "source": {
+            "include": "data/maps/FourIsland_IcefallCave_1F_Frlg/scripts.inc",
+            "label": "FourIsland_IcefallCave_1F_OnFrame",
+            "sha256": "9e070020bc34b79f0bddf25440313d1dc324a1eb76ba64936f329387865a20be",
+            "file_sha256": "bd0aa3b88c4efdeb05ce85df13e4b680954c3b80e73a76df9f8bcc44f88df460"
+          },
+          "wayfarer_script": "WayfarerSevii_IcefallCave1F_OnFrame",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
         }
       ],
       "encounter_methods": []
@@ -271,7 +313,19 @@
       },
       "retained_map_scripts": [
         {
-          "include": "data/scripts/wayfarer_sevii/environment.inc"
+          "owner": "exploration",
+          "content_id": "exploration.fiveisland-rocketwarehouse-frlg.map-script.0",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_LOAD",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/FiveIsland_RocketWarehouse_Frlg/scripts.inc",
+            "label": "FiveIsland_RocketWarehouse_OnLoad",
+            "sha256": "d9adb8914bb4ff47760a314d12b381cd098de7c12e45a850b45e5609aec33645",
+            "file_sha256": "8cdf27ec3239aa8d6c8b2e84bf384e8d1b69fcfe5cd7dc17da34fc2ddb3ef681"
+          },
+          "wayfarer_script": "WayfarerSevii_RocketWarehouse_OnLoad",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
         }
       ],
       "encounter_methods": []
@@ -310,7 +364,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
               "script": "SixIsland_DottedHole_B1F_EventScript_BrailleUp"
             },
-            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleUp"
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleUp",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-dottedhole-b1f-frlg.bg.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ]
       },
@@ -337,7 +394,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
               "script": "SixIsland_DottedHole_B2F_EventScript_BrailleLeft"
             },
-            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleLeft"
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleLeft",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-dottedhole-b2f-frlg.bg.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ]
       },
@@ -364,7 +424,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
               "script": "SixIsland_DottedHole_B3F_EventScript_BrailleRight"
             },
-            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleRight"
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleRight",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-dottedhole-b3f-frlg.bg.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ]
       },
@@ -391,7 +454,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
               "script": "SixIsland_DottedHole_B4F_EventScript_BrailleDown"
             },
-            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleDown"
+            "wayfarer_script": "WayfarerSevii_DottedHole_BrailleDown",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-dottedhole-b4f-frlg.bg.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ]
       },
@@ -940,7 +1006,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 1,
@@ -959,7 +1028,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 2,
@@ -978,7 +1050,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.2",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 3,
@@ -997,7 +1072,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.3",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 4,
@@ -1016,7 +1094,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.4",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 5,
@@ -1035,7 +1116,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.5",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 6,
@@ -1054,7 +1138,10 @@
               "script": "EventScript_StrengthBoulder",
               "flag": "0"
             },
-            "wayfarer_script": "EventScript_StrengthBoulder"
+            "wayfarer_script": "EventScript_StrengthBoulder",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.6",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1070,7 +1157,10 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch1"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch1"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch1",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 1,
@@ -1083,7 +1173,10 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch7"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch7"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch7",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 2,
@@ -1096,7 +1189,10 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch6"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch6"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch6",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.2",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 3,
@@ -1109,7 +1205,10 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch5"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch5"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch5",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.3",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 4,
@@ -1122,7 +1221,10 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch4"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch4"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch4",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.4",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 5,
@@ -1135,7 +1237,10 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch3"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch3"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch3",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.5",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 6,
@@ -1148,14 +1253,29 @@
               "var_value": "99",
               "script": "SevenIsland_SevaultCanyon_TanobyKey_EventScript_Switch2"
             },
-            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch2"
+            "wayfarer_script": "WayfarerSevii_TanobyKey_Switch2",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.6",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "bg_events": []
       },
       "retained_map_scripts": [
         {
-          "include": "data/scripts/wayfarer_sevii/environment.inc"
+          "owner": "exploration",
+          "content_id": "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.map-script.0",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_TRANSITION",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/SevenIsland_SevaultCanyon_TanobyKey_Frlg/scripts.inc",
+            "label": "SevenIsland_SevaultCanyon_TanobyKey_OnTransition",
+            "sha256": "3fa4dc1326b907f03fccb5c25f45a258886abf3232bbefc1ecfba435acccbe12",
+            "file_sha256": "98e8e9ee84cc1f8ed6477d7dfd4ea7d56e3f360330e8c858956bdd1135a7a14f"
+          },
+          "wayfarer_script": "WayfarerSevii_TanobyKey_OnTransition",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
         }
       ],
       "encounter_methods": []
@@ -1383,7 +1503,19 @@
       },
       "retained_map_scripts": [
         {
-          "include": "data/scripts/wayfarer_sevii/environment.inc"
+          "owner": "exploration",
+          "content_id": "exploration.fiveisland-meadow-frlg.map-script.0",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_LOAD",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/FiveIsland_Meadow_Frlg/scripts.inc",
+            "label": "FiveIsland_Meadow_OnLoad",
+            "sha256": "d74ad8ca5afd54068cf6caa74a5b2539564500d0d55b7c610f08907ab4495f45",
+            "file_sha256": "ceee083f33b1b63be42195cf75af2944cea9398308ba82ab8e281320482e30ca"
+          },
+          "wayfarer_script": "WayfarerSevii_Meadow_OnLoad",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
         }
       ],
       "encounter_methods": []
@@ -1457,7 +1589,19 @@
       },
       "retained_map_scripts": [
         {
-          "include": "data/scripts/wayfarer_sevii/environment.inc"
+          "owner": "exploration",
+          "content_id": "exploration.sixisland-ruinvalley-frlg.map-script.0",
+          "module": "environment",
+          "handler_type": "MAP_SCRIPT_ON_LOAD",
+          "source_index": 0,
+          "source": {
+            "include": "data/maps/SixIsland_RuinValley_Frlg/scripts.inc",
+            "label": "SixIsland_RuinValley_OnLoad",
+            "sha256": "bf813673ca60ec4b167032a7dfc68862dbe5e83dbacbddd9e2077f9dfd5d26bc",
+            "file_sha256": "5c69f02b5e411579bcc9405c8221eccda5198220e7573c583a83f56bcaf27747"
+          },
+          "wayfarer_script": "WayfarerSevii_RuinValley_OnLoad",
+          "reason": "Preserves accepted Wayfarer environmental geometry without FRLG campaign state."
         }
       ],
       "encounter_methods": []
@@ -1569,7 +1713,10 @@
               "script": "SevenIsland_Mart_EventScript_Clerk",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_SevenIslandMart"
+            "wayfarer_script": "WayfarerSevii_EventScript_SevenIslandMart",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-mart-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1603,7 +1750,10 @@
               "script": "SevenIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1650,7 +1800,10 @@
               "script": "SevenIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_SevenIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_SevenIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.sevenisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1684,7 +1837,10 @@
               "script": "OneIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1700,7 +1856,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 1,
@@ -1712,7 +1871,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 2,
@@ -1724,7 +1886,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.2",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 3,
@@ -1736,7 +1901,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.3",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 4,
@@ -1748,7 +1916,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.4",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 5,
@@ -1760,7 +1931,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.5",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 6,
@@ -1772,7 +1946,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.6",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 7,
@@ -1784,7 +1961,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.7",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           },
           {
             "index": 8,
@@ -1796,7 +1976,10 @@
               "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
               "script": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_PC"
+            "wayfarer_script": "WayfarerSevii_EventScript_PC",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-pokemoncenter-1f-frlg.bg.8",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ]
       },
@@ -1868,7 +2051,10 @@
               "script": "OneIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_OneIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_OneIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.oneisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1930,7 +2116,10 @@
               "script": "TwoIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.twoisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -1977,7 +2166,10 @@
               "script": "TwoIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_TwoIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_TwoIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.twoisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2025,7 +2217,10 @@
               "script": "ThreeIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.threeisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2072,7 +2267,10 @@
               "script": "ThreeIsland_Mart_EventScript_Clerk",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_ThreeIslandMart"
+            "wayfarer_script": "WayfarerSevii_EventScript_ThreeIslandMart",
+            "owner": "exploration",
+            "content_id": "exploration.threeisland-mart-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2162,7 +2360,10 @@
               "script": "FourIsland_PokemonDayCare_EventScript_DaycareWoman",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandDaycareWoman"
+            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandDaycareWoman",
+            "owner": "exploration",
+            "content_id": "exploration.fourisland-pokemondaycare-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2196,7 +2397,10 @@
               "script": "FourIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.fourisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2271,7 +2475,10 @@
               "script": "FourIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.fourisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2318,7 +2525,10 @@
               "script": "FourIsland_Mart_EventScript_Clerk",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandMart"
+            "wayfarer_script": "WayfarerSevii_EventScript_FourIslandMart",
+            "owner": "exploration",
+            "content_id": "exploration.fourisland-mart-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2352,7 +2562,10 @@
               "script": "FiveIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.fiveisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2399,7 +2612,10 @@
               "script": "FiveIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_FiveIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_FiveIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.fiveisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2461,7 +2677,10 @@
               "script": "SixIsland_PokemonCenter_1F_EventScript_Nurse",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_Nurse"
+            "wayfarer_script": "WayfarerSevii_EventScript_Nurse",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-pokemoncenter-1f-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2508,7 +2727,10 @@
               "script": "SixIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_SixIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_SixIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2555,7 +2777,10 @@
               "script": "SixIsland_Mart_EventScript_Clerk",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_SixIslandMart"
+            "wayfarer_script": "WayfarerSevii_EventScript_SixIslandMart",
+            "owner": "exploration",
+            "content_id": "exploration.sixisland-mart-frlg.object.0",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2588,7 +2813,10 @@
               "script": "ThreeIsland_Harbor_EventScript_Sailor",
               "flag": "0"
             },
-            "wayfarer_script": "WayfarerSevii_EventScript_ThreeIslandHarborSailor"
+            "wayfarer_script": "WayfarerSevii_EventScript_ThreeIslandHarborSailor",
+            "owner": "exploration",
+            "content_id": "exploration.threeisland-harbor-frlg.object.1",
+            "reason": "Preserves the accepted Wayfarer exploration service or environmental puzzle."
           }
         ],
         "warp_events": [],
@@ -2669,106 +2897,1039 @@
       "encounter_methods": []
     }
   ],
+  "baseline": {
+    "projection_sha256": "4c4444b40b78ed37b7d6923d1c86c5103ec87175143520ddb645fc3248208a0c",
+    "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
+    "event_island_baseline_sha256": "34077b6fd18c6c35b90d3ce6ac6937d22d1cd81da4e819ceb1cd45f169bae313"
+  },
+  "content_domains": {
+    "exploration": {
+      "owner": "exploration",
+      "enabled": true,
+      "inventory": [
+        "exploration.fourisland-icefallcave-1f-frlg.map-script.0",
+        "exploration.fourisland-icefallcave-1f-frlg.map-script.1",
+        "exploration.fourisland-icefallcave-1f-frlg.map-script.2",
+        "exploration.fiveisland-rocketwarehouse-frlg.map-script.0",
+        "exploration.sixisland-dottedhole-b1f-frlg.bg.0",
+        "exploration.sixisland-dottedhole-b2f-frlg.bg.0",
+        "exploration.sixisland-dottedhole-b3f-frlg.bg.0",
+        "exploration.sixisland-dottedhole-b4f-frlg.bg.0",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.0",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.1",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.2",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.3",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.4",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.5",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.object.6",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.0",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.1",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.2",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.3",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.4",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.5",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.coord.6",
+        "exploration.sevenisland-sevaultcanyon-tanobykey-frlg.map-script.0",
+        "exploration.fiveisland-meadow-frlg.map-script.0",
+        "exploration.sixisland-ruinvalley-frlg.map-script.0",
+        "exploration.sevenisland-mart-frlg.object.0",
+        "exploration.sevenisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.sevenisland-harbor-frlg.object.1",
+        "exploration.oneisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.0",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.1",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.2",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.3",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.4",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.5",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.6",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.7",
+        "exploration.oneisland-pokemoncenter-1f-frlg.bg.8",
+        "exploration.oneisland-harbor-frlg.object.1",
+        "exploration.twoisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.twoisland-harbor-frlg.object.1",
+        "exploration.threeisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.threeisland-mart-frlg.object.0",
+        "exploration.fourisland-pokemondaycare-frlg.object.0",
+        "exploration.fourisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.fourisland-harbor-frlg.object.1",
+        "exploration.fourisland-mart-frlg.object.0",
+        "exploration.fiveisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.fiveisland-harbor-frlg.object.1",
+        "exploration.sixisland-pokemoncenter-1f-frlg.object.0",
+        "exploration.sixisland-harbor-frlg.object.1",
+        "exploration.sixisland-mart-frlg.object.0",
+        "exploration.threeisland-harbor-frlg.object.1"
+      ]
+    },
+    "ordinary_trainers": {
+      "owner": "ordinary_trainer",
+      "enabled": false,
+      "inventory": []
+    },
+    "story": {
+      "owner": "story",
+      "enabled": false,
+      "inventory": []
+    },
+    "trainer_tower": {
+      "owner": "trainer_tower",
+      "enabled": false,
+      "inventory": []
+    }
+  },
+  "script_modules": {
+    "common": {
+      "owner": "exploration",
+      "include": "data/scripts/wayfarer_sevii/common.inc",
+      "exports": [
+        "WayfarerSevii_EventScript_DaycareCheckMoney",
+        "WayfarerSevii_EventScript_DaycareComeAgain",
+        "WayfarerSevii_EventScript_DaycareCostPrompt",
+        "WayfarerSevii_EventScript_DaycareDeposit",
+        "WayfarerSevii_EventScript_DaycareNoRoom",
+        "WayfarerSevii_EventScript_DaycareOneMon",
+        "WayfarerSevii_EventScript_DaycareOnlyOneAliveMon",
+        "WayfarerSevii_EventScript_DaycareOnlyOneMon",
+        "WayfarerSevii_EventScript_DaycareRetrieve",
+        "WayfarerSevii_EventScript_DaycareReturnMon",
+        "WayfarerSevii_EventScript_Depart",
+        "WayfarerSevii_EventScript_DepartingVermilion",
+        "WayfarerSevii_EventScript_Empty",
+        "WayfarerSevii_EventScript_FiveIslandHarborSailor",
+        "WayfarerSevii_EventScript_FourIslandDaycareWoman",
+        "WayfarerSevii_EventScript_FourIslandHarborSailor",
+        "WayfarerSevii_EventScript_FourIslandMart",
+        "WayfarerSevii_EventScript_HarborDestinationCancel",
+        "WayfarerSevii_EventScript_HarborDestinationMenu",
+        "WayfarerSevii_EventScript_HarborDestinationMenuPage2",
+        "WayfarerSevii_EventScript_Nurse",
+        "WayfarerSevii_EventScript_NurseHeal",
+        "WayfarerSevii_EventScript_OneIslandHarborSailor",
+        "WayfarerSevii_EventScript_PC",
+        "WayfarerSevii_EventScript_SailToSelectedDestination",
+        "WayfarerSevii_EventScript_SevenIslandHarborSailor",
+        "WayfarerSevii_EventScript_SevenIslandMart",
+        "WayfarerSevii_EventScript_SixIslandHarborSailor",
+        "WayfarerSevii_EventScript_SixIslandMart",
+        "WayfarerSevii_EventScript_ThreeIslandHarborSailor",
+        "WayfarerSevii_EventScript_ThreeIslandMart",
+        "WayfarerSevii_EventScript_TwoIslandHarborSailor",
+        "WayfarerSevii_FourIslandMartItems",
+        "WayfarerSevii_SevenIslandMartItems",
+        "WayfarerSevii_SixIslandMartItems",
+        "WayfarerSevii_Text_AllAboard",
+        "WayfarerSevii_Text_DepartingVermilion",
+        "WayfarerSevii_ThreeIslandMartItems"
+      ],
+      "allowed_commands": [
+        "applymovement",
+        "buffernumberstring",
+        "callnative",
+        "chooseboxmon",
+        "closemessage",
+        "copyvar",
+        "delay",
+        "dofieldeffect",
+        "end",
+        "faceplayer",
+        "fadescreen",
+        "goto",
+        "goto_if_eq",
+        "hidefollower",
+        "incrementgamestat",
+        "lock",
+        "message",
+        "msgbox",
+        "playmoncry",
+        "playse",
+        "pokemart",
+        "release",
+        "setvar",
+        "special",
+        "specialvar",
+        "waitfieldeffect",
+        "waitmessage",
+        "waitmoncry",
+        "waitmovement",
+        "waitse",
+        "waitstate"
+      ],
+      "allowed_externals": [
+        {
+          "label": "CalculatePlayerPartyCount",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/pokemon.c",
+          "implementation_sha256": "970462e15c800310e9eb7ac1bfc65468f142547469690527c4c65a42787b0974"
+        },
+        {
+          "label": "Common_Movement_FaceDown",
+          "kind": "script_symbol",
+          "path": "data/scripts/movement.inc",
+          "sha256": "9fc0820fde524454c53d80338a615ecc5bc8f02116f0fda83a59b46eca7aa27d"
+        },
+        {
+          "label": "Common_Movement_WalkInPlaceFasterDown",
+          "kind": "script_symbol",
+          "path": "data/scripts/movement.inc",
+          "sha256": "9fc0820fde524454c53d80338a615ecc5bc8f02116f0fda83a59b46eca7aa27d"
+        },
+        {
+          "label": "Common_Movement_WalkInPlaceFasterLeft",
+          "kind": "script_symbol",
+          "path": "data/scripts/movement.inc",
+          "sha256": "9fc0820fde524454c53d80338a615ecc5bc8f02116f0fda83a59b46eca7aa27d"
+        },
+        {
+          "label": "CountPartyAliveNonEggMons_IgnoreVar0x8004Slot",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/pokemon_storage_system.c",
+          "implementation_sha256": "887ca0b2f8d3a6dfadc230d8bd769a997bfe97e52fa7baa9cae710456c66dde0"
+        },
+        {
+          "label": "CountPartyNonEggMons",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/pokemon_storage_system.c",
+          "implementation_sha256": "887ca0b2f8d3a6dfadc230d8bd769a997bfe97e52fa7baa9cae710456c66dde0"
+        },
+        {
+          "label": "DoSeagallopFerryScene",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/seagallop.c",
+          "implementation_sha256": "9781536a27477d76ad0a95bda195117493130a09a6c6e4322846cf157e3095d9"
+        },
+        {
+          "label": "DrawSeagallopDestinationMenu",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/script_menu.c",
+          "implementation_sha256": "75b793326a9baaa35a9731cd3d51508417968fdaf4ccedcc90281210b1cfe90d"
+        },
+        {
+          "label": "EventScript_PC",
+          "kind": "script_symbol",
+          "path": "data/scripts/pc.inc",
+          "sha256": "6de256d14006aef27e5578a8695fbc63cfaa4337049d489790e3fc6bd1058653"
+        },
+        {
+          "label": "GetDaycareCost",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/daycare.c",
+          "implementation_sha256": "475a7bd9d5ed7a3aeb07df649e88b0b17056685afb7ea33318de525a940515eb"
+        },
+        {
+          "label": "GetDaycareState",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/daycare.c",
+          "implementation_sha256": "475a7bd9d5ed7a3aeb07df649e88b0b17056685afb7ea33318de525a940515eb"
+        },
+        {
+          "label": "GetSeagallopNumber",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/seagallop.c",
+          "implementation_sha256": "9781536a27477d76ad0a95bda195117493130a09a6c6e4322846cf157e3095d9"
+        },
+        {
+          "label": "GetSelectedMonNicknameAndSpecies",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/daycare.c",
+          "implementation_sha256": "475a7bd9d5ed7a3aeb07df649e88b0b17056685afb7ea33318de525a940515eb"
+        },
+        {
+          "label": "GetSelectedSeagallopDestination",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/script_menu.c",
+          "implementation_sha256": "75b793326a9baaa35a9731cd3d51508417968fdaf4ccedcc90281210b1cfe90d"
+        },
+        {
+          "label": "HealPlayerParty",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/script_pokemon_util.c",
+          "implementation_sha256": "2746911b4754d57a98509d4181fbbedfdd0c649b6180e827c4cc31df20d0bd51"
+        },
+        {
+          "label": "IsEnoughForCostInVar0x8005",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/money.c",
+          "implementation_sha256": "1f6a799f6ab9aed4191b3f6805997e65e1ba99cb238bfc5aee07e1cd1d2047a3"
+        },
+        {
+          "label": "Movement_PkmnCenterNurse_Bow",
+          "kind": "script_symbol",
+          "path": "data/scripts/pkmn_center_nurse.inc",
+          "sha256": "4fcc3cb4585846e44877e0f77df5d3e95aa771943d970672c6e2302353295648"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_ComeAgain",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_HeresYourMon",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_ItWillCostX",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_NotEnoughMoney",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_TookBackMon",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_WeCanRaiseOneMore",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_WellRaiseYourMon",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_WhatWillYouBattleWith",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_WhichMonShouldWeRaise",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_WouldYouLikeUsToRaiseAMon",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_YouHaveJustOneMon",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "Route117_PokemonDayCare_Text_YourTeamIsFull",
+          "kind": "script_symbol",
+          "path": "data/scripts/day_care.inc",
+          "sha256": "0879143e2a0c9bde229ce7546a0ee7ad5e6a7f15ccd758ccb9a8550ce45d502c"
+        },
+        {
+          "label": "ShowDaycareLevelMenu",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/daycare.c",
+          "implementation_sha256": "475a7bd9d5ed7a3aeb07df649e88b0b17056685afb7ea33318de525a940515eb"
+        },
+        {
+          "label": "StoreSelectedPokemonInDaycare",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/daycare.c",
+          "implementation_sha256": "475a7bd9d5ed7a3aeb07df649e88b0b17056685afb7ea33318de525a940515eb"
+        },
+        {
+          "label": "SubtractMoneyFromVar0x8005",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/money.c",
+          "implementation_sha256": "1f6a799f6ab9aed4191b3f6805997e65e1ba99cb238bfc5aee07e1cd1d2047a3"
+        },
+        {
+          "label": "TakePokemonFromDaycare",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/daycare.c",
+          "implementation_sha256": "475a7bd9d5ed7a3aeb07df649e88b0b17056685afb7ea33318de525a940515eb"
+        },
+        {
+          "label": "UpdateFollowingPokemon",
+          "kind": "native",
+          "path": "src/event_object_movement.c",
+          "sha256": "f1a471c10b2bd583a762371f19fafa1dc4dd345ada9f38c15ec25785c3163507"
+        },
+        {
+          "label": "gText_HowMayIServeYou",
+          "kind": "script_symbol",
+          "path": "data/text/mart_clerk.inc",
+          "sha256": "48911a2b860a9ad2cf2e5e320ac9205870fc52d46ab0025f7e45bc48ebc2ee14"
+        },
+        {
+          "label": "gText_IllTakeYourPkmn",
+          "kind": "script_symbol",
+          "path": "data/text/pkmn_center_nurse.inc",
+          "sha256": "ef26cd445257a89e683b0e0b0fd9711ebd9fb8a1457c1867fc7021aaed6bc859"
+        },
+        {
+          "label": "gText_PleaseComeAgain",
+          "kind": "script_symbol",
+          "path": "data/text/mart_clerk.inc",
+          "sha256": "48911a2b860a9ad2cf2e5e320ac9205870fc52d46ab0025f7e45bc48ebc2ee14"
+        },
+        {
+          "label": "gText_RestoredPkmnToFullHealth",
+          "kind": "script_symbol",
+          "path": "data/text/pkmn_center_nurse.inc",
+          "sha256": "ef26cd445257a89e683b0e0b0fd9711ebd9fb8a1457c1867fc7021aaed6bc859"
+        },
+        {
+          "label": "gText_WeHopeToSeeYouAgain",
+          "kind": "script_symbol",
+          "path": "data/text/pkmn_center_nurse.inc",
+          "sha256": "ef26cd445257a89e683b0e0b0fd9711ebd9fb8a1457c1867fc7021aaed6bc859"
+        },
+        {
+          "label": "gText_WouldYouLikeToRestYourPkmn",
+          "kind": "script_symbol",
+          "path": "data/text/pkmn_center_nurse.inc",
+          "sha256": "ef26cd445257a89e683b0e0b0fd9711ebd9fb8a1457c1867fc7021aaed6bc859"
+        }
+      ]
+    },
+    "environment": {
+      "owner": "exploration",
+      "include": "data/scripts/wayfarer_sevii/environment.inc",
+      "exports": [
+        "WayfarerSevii_DottedHole_BrailleDown",
+        "WayfarerSevii_DottedHole_BrailleLeft",
+        "WayfarerSevii_DottedHole_BrailleRight",
+        "WayfarerSevii_DottedHole_BrailleUp",
+        "WayfarerSevii_IcefallCave1F_FallDownHole",
+        "WayfarerSevii_IcefallCave1F_OnFrame",
+        "WayfarerSevii_IcefallCave1F_OnLoad",
+        "WayfarerSevii_IcefallCave1F_OnResume",
+        "WayfarerSevii_Meadow_OnLoad",
+        "WayfarerSevii_Movement_SetInvisible",
+        "WayfarerSevii_RocketWarehouse_OnLoad",
+        "WayfarerSevii_RuinValley_OnLoad",
+        "WayfarerSevii_RuinValley_OpenDottedHoleDoor",
+        "WayfarerSevii_TanobyKey_AlreadyPressed",
+        "WayfarerSevii_TanobyKey_MoveBouldersToSolvedPos",
+        "WayfarerSevii_TanobyKey_OnTransition",
+        "WayfarerSevii_TanobyKey_PuzzleSolved",
+        "WayfarerSevii_TanobyKey_Switch1",
+        "WayfarerSevii_TanobyKey_Switch2",
+        "WayfarerSevii_TanobyKey_Switch3",
+        "WayfarerSevii_TanobyKey_Switch4",
+        "WayfarerSevii_TanobyKey_Switch5",
+        "WayfarerSevii_TanobyKey_Switch6",
+        "WayfarerSevii_TanobyKey_Switch7",
+        "WayfarerSevii_TanobyKey_SwitchPressed"
+      ],
+      "allowed_commands": [
+        "addvar",
+        "applymovement",
+        "braillemsgbox",
+        "call",
+        "call_if_set",
+        "delay",
+        "end",
+        "goto_if_eq",
+        "lockall",
+        "map_script_2",
+        "playse",
+        "releaseall",
+        "return",
+        "set_invisible",
+        "setflag",
+        "setmetatile",
+        "setobjectxyperm",
+        "setstepcallback",
+        "setvar",
+        "special",
+        "step_end",
+        "waitmovement",
+        "waitse",
+        "waitstate",
+        "warphole"
+      ],
+      "allowed_externals": [
+        {
+          "label": "Braille_Text_Down",
+          "kind": "script_symbol",
+          "path": "data/text/braille.inc",
+          "sha256": "2e191341e8b2031b40c55e7b6585ec709adc17b8e563e410ce09288749e8c042"
+        },
+        {
+          "label": "Braille_Text_Left",
+          "kind": "script_symbol",
+          "path": "data/text/braille.inc",
+          "sha256": "2e191341e8b2031b40c55e7b6585ec709adc17b8e563e410ce09288749e8c042"
+        },
+        {
+          "label": "Braille_Text_Right",
+          "kind": "script_symbol",
+          "path": "data/text/braille.inc",
+          "sha256": "2e191341e8b2031b40c55e7b6585ec709adc17b8e563e410ce09288749e8c042"
+        },
+        {
+          "label": "Braille_Text_Up",
+          "kind": "script_symbol",
+          "path": "data/text/braille.inc",
+          "sha256": "2e191341e8b2031b40c55e7b6585ec709adc17b8e563e410ce09288749e8c042"
+        },
+        {
+          "label": "SetIcefallCaveCrackedIceMetatiles",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/field_tasks.c",
+          "implementation_sha256": "0dde7ca934bf897180f4b78e5e281934d22d5be50c3e99c6011422344ba9eddf"
+        },
+        {
+          "label": "ShakeScreen",
+          "kind": "special",
+          "path": "data/specials.inc",
+          "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
+          "implementation_path": "src/field_specials.c",
+          "implementation_sha256": "c5e0f1c022f0022cec17bde87c508412985c1c4f9cc48ef7c6cadc111a5f6300"
+        }
+      ]
+    }
+  },
   "exclusions": [
     {
-      "source_map": "BirthIsland_Exterior_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.birthisland-exterior-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "BirthIsland_Exterior_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/BirthIsland_Exterior_Frlg/map.json",
+            "sha256": "c5f3d90c691f72ba8158a6f4ce7a6ea08863df3e3e7c28db83e047af308a2f4c"
+          }
+        }
+      ]
     },
     {
-      "source_map": "BirthIsland_Harbor_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.birthisland-harbor-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "BirthIsland_Harbor_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/BirthIsland_Harbor_Frlg/map.json",
+            "sha256": "8e0aed374cca9f320488d86e43f633ee8622ec8186dd6cc03cbe295e937d9324"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_1F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-1f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_1F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_1F_Frlg/map.json",
+            "sha256": "45c0aef2c58a29af93aa1d9914ba0365b3e5f897f55c148d25b46230d6c0d28d"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_B1F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-b1f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_B1F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_B1F_Frlg/map.json",
+            "sha256": "62090c3c9eb4e70e02e38b6c04b595a3f59d3970df2e4b9c72208189db379ed2"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B10F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b10f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B10F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B10F_Frlg/map.json",
+            "sha256": "c84901d1ad0e1867c67b5324c8ef96bc689677d2f8b43f909adf492e4f565ea6"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B11F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b11f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B11F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B11F_Frlg/map.json",
+            "sha256": "82b64c04b01aef224ab91f841886994100734c3e3784bacb632a2f49fec23c46"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B1F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b1f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B1F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B1F_Frlg/map.json",
+            "sha256": "d7dde41eb16ab6c8c941f82d0f454a054adebefbc3bfa83612b9b178e65055c9"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B2F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b2f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B2F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B2F_Frlg/map.json",
+            "sha256": "975e19473562033f7bb9245d31e000e74dcbe3f3b8306779c019b1a43d998d95"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B3F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b3f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B3F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B3F_Frlg/map.json",
+            "sha256": "0b3b01eb751d41e4b2d994c9921003a5c1b07a1c53d246d75737a2ec372cd824"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B4F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b4f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B4F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B4F_Frlg/map.json",
+            "sha256": "b065d0c867067fb5a34a788ede2e29efb261e3c24fa01d050b539cad2b13c8ba"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B5F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b5f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B5F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B5F_Frlg/map.json",
+            "sha256": "ab05e96f2c7f425dec217c9d78ef1f654e66e4b497697ea8e0fe95610ed63f37"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B6F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b6f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B6F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B6F_Frlg/map.json",
+            "sha256": "b3dcfa80f9055ecd7ef83850a47d2012ca66d7afa5243036be5c64e2dc5503ba"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B7F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b7f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B7F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B7F_Frlg/map.json",
+            "sha256": "a04abc3d06797dba31828e772413510b8638e13ea5a6452af19802fa06fec709"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B8F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b8f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B8F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B8F_Frlg/map.json",
+            "sha256": "8eef46141ed20a8f6808e101d6a5fa37dfb9a6ef89ed784e2687aa6b978af5c7"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_BasePath_B9F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-basepath-b9f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_BasePath_B9F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_BasePath_B9F_Frlg/map.json",
+            "sha256": "c550a92bd3a5bf0abb2c5c9e454845baf0763a48f3097bf25c5b4a6408640252"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_Base_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-base-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_Base_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_Base_Frlg/map.json",
+            "sha256": "2ff03f8b4e130f7e8f8a5fbe8474d471ad5809c134733016b50900d2ccc8312e"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_Exterior_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-exterior-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_Exterior_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_Exterior_Frlg/map.json",
+            "sha256": "57218234f46815c2ea1a81b94eb7fb8aec03f16ed0f99ace24613e21799e060d"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_Fork_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-fork-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_Fork_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_Fork_Frlg/map.json",
+            "sha256": "5ba229cf68b4c93b95852266630cc2aad8eab07600da0d3b1f7d1805de1d2f4f"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_Harbor_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-harbor-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_Harbor_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_Harbor_Frlg/map.json",
+            "sha256": "1a022f400ad3e908dbc0d5c0137c85210ec07babec917d29c330d5de8ae09f96"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_SummitPath_2F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-summitpath-2f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_SummitPath_2F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_SummitPath_2F_Frlg/map.json",
+            "sha256": "7e1face63bcc07b84171138d3013f9cc783aa1b790a95f5ad23a89f86100ec82"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_SummitPath_3F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-summitpath-3f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_SummitPath_3F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_SummitPath_3F_Frlg/map.json",
+            "sha256": "e0aea6b34c1c61024c70d5c92f68e20f4b0aee549db2fa456c334c9028daa8ac"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_SummitPath_4F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-summitpath-4f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_SummitPath_4F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_SummitPath_4F_Frlg/map.json",
+            "sha256": "0533b4f68aa3f9ca75e9acd4af00a5f4ccaa5208c97bb51bd9e666e8990bf76d"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_SummitPath_5F_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-summitpath-5f-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_SummitPath_5F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_SummitPath_5F_Frlg/map.json",
+            "sha256": "8d3521a29fbc60a67575a4368ea870477edd0c9ec9d8873bf13344022e194e81"
+          }
+        }
+      ]
     },
     {
-      "source_map": "NavelRock_Summit_Frlg",
-      "reason": "Existing Wayfarer event-island content owns this map."
+      "content_id": "exclusion.event-island.navelrock-summit-frlg",
+      "reason": "Existing Wayfarer event-island content owns this map.",
+      "source_identities": [
+        {
+          "source_map": "NavelRock_Summit_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/NavelRock_Summit_Frlg/map.json",
+            "sha256": "dbfeb12224148269e1c139072ed2bfb2c6dae3927b96004033818288b8dba480"
+          }
+        }
+      ]
     },
     {
-      "source_map": "SevenIsland_UnusedHouse",
-      "reason": "The source map is not registered in map_groups.json."
+      "content_id": "exclusion.event-island.sevenisland-unusedhouse",
+      "reason": "The source map is not registered in map_groups.json.",
+      "source_identities": [
+        {
+          "source_map": "SevenIsland_UnusedHouse",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/SevenIsland_UnusedHouse/map.json",
+            "sha256": "a19d43410d0c3a8826e6ba92f77c1beb5c3bf22b12902840ff946126807cd4e4"
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "exclusion.legacy-seagallop-gate",
+      "reason": "The pre-existing ungated ferry owns island travel.",
+      "source_identities": [
+        {
+          "source_map": "OneIsland_Harbor_Frlg",
+          "event_kind": "script_label",
+          "index": 0,
+          "source": {
+            "path": "data/scripts/seagallop.inc",
+            "label": "EventScript_CheckFullSeagallopService",
+            "file_sha256": "1c6ff0ee3d7bb4fa754cde2e48aa63699ed50478ef22d168b256c95e87479bdd",
+            "body_sha256": "e460a1aac658b26fb7b0d57ae75d28f93ff71724ed98ff6d5bba807b333c2946"
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "exclusion.campaign-network-machine",
+      "reason": "FRLG network repair and temporary PC campaign state remain absent.",
+      "source_identities": [
+        {
+          "source_map": "OneIsland_PokemonCenter_1F_Frlg",
+          "event_kind": "script_label",
+          "index": 0,
+          "source": {
+            "path": "data/maps/OneIsland_PokemonCenter_1F_Frlg/scripts.inc",
+            "label": "OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene",
+            "file_sha256": "df271771c0aa437ead897d4a206a5fc0994396e91cbdd2708b15dacee315419b",
+            "body_sha256": "6e8a2cf250da2e532a817545e190807718f2a42c5e3c54e0d31502c83913604b"
+          }
+        },
+        {
+          "source_map": "OneIsland_PokemonCenter_1F_Frlg",
+          "event_kind": "script_label",
+          "index": 1,
+          "source": {
+            "path": "data/maps/OneIsland_PokemonCenter_1F_Frlg/scripts.inc",
+            "label": "OneIsland_PokemonCenter_1F_OnLoad",
+            "file_sha256": "df271771c0aa437ead897d4a206a5fc0994396e91cbdd2708b15dacee315419b",
+            "body_sha256": "211ba3d216adb07b613e6b55b887cf00e62a7623ee5d7757abdfdec527300fa3"
+          }
+        },
+        {
+          "source_map": "OneIsland_PokemonCenter_1F_Frlg",
+          "event_kind": "script_label",
+          "index": 2,
+          "source": {
+            "path": "data/maps/OneIsland_PokemonCenter_1F_Frlg/scripts.inc",
+            "label": "OneIsland_PokemonCenter_1F_EventScript_NetworkMachine",
+            "file_sha256": "df271771c0aa437ead897d4a206a5fc0994396e91cbdd2708b15dacee315419b",
+            "body_sha256": "8cb7af61d65d46cd475afd18b89c5f14a8d5f9bee7fa510f69c0efa54a568d5f"
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "exclusion.national-dex-champion-side-effects",
+      "reason": "No Champion or National Pok\u00e9dex state is projected into Wayfarer.",
+      "source_identities": [
+        {
+          "source_map": "OneIsland_PokemonCenter_1F_Frlg",
+          "event_kind": "script_label",
+          "index": 0,
+          "source": {
+            "path": "data/maps/OneIsland_PokemonCenter_1F_Frlg/scripts.inc",
+            "label": "OneIsland_PokemonCenter_1F_EventScript_Celio",
+            "file_sha256": "df271771c0aa437ead897d4a206a5fc0994396e91cbdd2708b15dacee315419b",
+            "body_sha256": "e786aa632edf78f1a6becbb3b54bc42547d241898eceab21866278659bb08913"
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "exclusion.frlg-multiplayer",
+      "reason": "Union Room, Trade Center, and multiplayer services remain absent.",
+      "source_identities": [
+        {
+          "source_map": "SevenIsland_PokemonCenter_2F_Frlg",
+          "event_kind": "map",
+          "index": 0,
+          "source": {
+            "path": "data/maps/SevenIsland_PokemonCenter_2F_Frlg/map.json",
+            "sha256": "f0b3efb3439fe9fa1e4e14784d6f2c1f12fdebfaebd2e3bc0acd6a6a48418a37"
+          }
+        }
+      ]
+    },
+    {
+      "content_id": "exclusion.ereader-trainer-tower",
+      "reason": "e-Reader-only Trainer Tower data is never projected.",
+      "source_identities": [
+        {
+          "source_map": "TrainerTower_Lobby_Frlg",
+          "event_kind": "script_label",
+          "index": 0,
+          "source": {
+            "path": "data/maps/TrainerTower_Lobby_Frlg/scripts.inc",
+            "label": "TrainerTower_Lobby_EventScript_ExitChallengeSpeakToReceptionist",
+            "file_sha256": "6e18d86cff8d0091e283b3c832b4a044620603cdbcd72b1902a107f44b6d60ac",
+            "body_sha256": "afeb06493a26b5e6ca532bdd133b7defbdd24afc40e0caf727c51da3fd949193"
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "contracts": {
+    "schema_version": 1,
+    "trainer_ids": {
+      "base": 1515,
+      "limit": 2048,
+      "allocations": []
+    },
+    "state_namespace": {
+      "name": "wayfarer_sevii",
+      "flag_base": 49152,
+      "flag_capacity": 256,
+      "var_base": 53248,
+      "var_capacity": 32,
+      "defeat_bitset": "wayfarer_sevii_trainer_defeat",
+      "storage": "SaveBlock3"
+    },
+    "states": [],
+    "transactions": []
+  }
 }

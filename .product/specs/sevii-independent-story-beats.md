@@ -75,8 +75,10 @@ player has met Bill or owns the Meteorite.
 1. The father starts the search.
 2. Three Island stages the four original ordered battles: Biker Goon, Biker
    Goon 2, Biker Goon 3, then Cue Ball Paxton.
-3. Clearing the bikers opens the investigation path to Bond Bridge and Berry
-   Forest without changing ferry access.
+3. Clearing the bikers advances the local investigation toward Bond Bridge and
+   Berry Forest. Both routes remain physically accessible before the battles,
+   as required by the exploration baseline and the content overlay's primary
+   ownership contract.
 4. Lostelle's scripted Hypno encounter starts only from her interaction.
 5. Defeating or catching the level-30 Hypno records `LOSTELLE_FOUND`; running,
    losing, or an interrupted start leaves the encounter available. Then attempt

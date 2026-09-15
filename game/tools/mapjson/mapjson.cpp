@@ -48,6 +48,8 @@ set<string> wayfarer_sevii_enabled_map_names;
 set<string> wayfarer_sevii_enabled_map_ids;
 set<string> wayfarer_sevii_enabled_layout_ids;
 map<string, Json> wayfarer_sevii_records;
+map<string, bool> wayfarer_sevii_content_domains;
+map<string, string> wayfarer_sevii_content_inventory;
 
 string read_text_file(string filepath) {
     ifstream in_file(filepath);
@@ -158,12 +160,38 @@ void load_wayfarer_sevii_manifest() {
     Json manifest = Json::parse(read_text_file(wayfarer_sevii_manifest_path), err);
     if (manifest == Json())
         FATAL_ERROR("Failed to read Wayfarer Sevii manifest: %s\n", err.c_str());
-    if (manifest["schema_version"].int_value() != 1)
+    if (manifest["schema_version"].int_value() != 2)
         FATAL_ERROR("Wayfarer Sevii manifest has unsupported schema version.\n");
     if (manifest["release_link_enabled"].type() != Json::Type::BOOL)
         FATAL_ERROR("Wayfarer Sevii manifest must declare release_link_enabled.\n");
 
     wayfarer_sevii_release_link_enabled = manifest["release_link_enabled"].bool_value();
+    const Json domains = manifest["content_domains"];
+    const map<string, string> domain_owners = {
+        {"exploration", "exploration"},
+        {"ordinary_trainers", "ordinary_trainer"},
+        {"story", "story"},
+        {"trainer_tower", "trainer_tower"},
+    };
+    if (domains.type() != Json::Type::OBJECT || domains.object_items().size() != domain_owners.size())
+        FATAL_ERROR("Wayfarer Sevii manifest must declare every content domain.\n");
+    for (const auto &domain : domain_owners) {
+        const Json entry = domains[domain.first];
+        if (entry.type() != Json::Type::OBJECT
+         || json_to_string(entry, "owner", true) != domain.second
+         || entry["enabled"].type() != Json::Type::BOOL
+         || entry["inventory"].type() != Json::Type::ARRAY)
+            FATAL_ERROR("Wayfarer Sevii manifest domain %s is invalid.\n", domain.first.c_str());
+        wayfarer_sevii_content_domains.emplace(domain.second, entry["enabled"].bool_value());
+        for (const Json &content_id : entry["inventory"].array_items()) {
+            string value = json_to_string(content_id, "", true);
+            if (value.empty() || !wayfarer_sevii_content_inventory.emplace(value, domain.second).second)
+                FATAL_ERROR("Wayfarer Sevii manifest has an invalid or duplicate content inventory ID.\n");
+        }
+    }
+    if (!wayfarer_sevii_content_domains["exploration"])
+        FATAL_ERROR("Wayfarer Sevii exploration content domain must remain enabled.\n");
+    map<string, unsigned int> content_uses;
     for (const Json &entry : manifest["maps"].array_items()) {
         string source_map = json_to_string(entry, "source_map");
         string map_id = json_to_string(entry, "map_id");
@@ -175,6 +203,24 @@ void load_wayfarer_sevii_manifest() {
             FATAL_ERROR("Wayfarer Sevii manifest contains duplicate map %s.\n", source_map.c_str());
         wayfarer_sevii_layout_ids.insert(layout);
         wayfarer_sevii_records.emplace(source_map, entry);
+        const Json retained = entry["retained_events"];
+        for (const string event_kind : {"object_events", "coord_events", "bg_events"}) {
+            const Json rows = retained[event_kind];
+            if (rows.type() != Json::Type::ARRAY)
+                FATAL_ERROR("Wayfarer Sevii manifest %s %s must be a list.\n", source_map.c_str(), event_kind.c_str());
+            for (const Json &row : rows.array_items()) {
+                string content_id = json_to_string(row, "content_id", true);
+                if (content_id.empty())
+                    FATAL_ERROR("Wayfarer Sevii manifest event has no content_id.\n");
+                content_uses[content_id]++;
+            }
+        }
+        for (const Json &row : entry["retained_map_scripts"].array_items()) {
+            string content_id = json_to_string(row, "content_id", true);
+            if (content_id.empty())
+                FATAL_ERROR("Wayfarer Sevii manifest handler has no content_id.\n");
+            content_uses[content_id]++;
+        }
 
         // An explicit per-map value narrows a release. Otherwise the frozen
         // manifest follows the reviewed release-wide switch, keeping the
@@ -186,6 +232,128 @@ void load_wayfarer_sevii_manifest() {
             wayfarer_sevii_enabled_map_names.insert(source_map);
             wayfarer_sevii_enabled_map_ids.insert(map_id);
             wayfarer_sevii_enabled_layout_ids.insert(layout);
+        }
+    }
+    for (const auto &item : wayfarer_sevii_content_inventory) {
+        if (content_uses[item.first] != 1)
+            FATAL_ERROR("Wayfarer Sevii content inventory ID %s must resolve exactly once.\n", item.first.c_str());
+    }
+}
+
+bool wayfarer_sevii_owner_is_enabled(const Json &rule) {
+    string owner = json_to_string(rule, "owner", true);
+    auto it = wayfarer_sevii_content_domains.find(owner);
+    if (it == wayfarer_sevii_content_domains.end())
+        FATAL_ERROR("Wayfarer Sevii event has an untyped owner.\n");
+    string content_id = json_to_string(rule, "content_id", true);
+    if (content_id.empty() || json_to_string(rule, "reason", true).empty())
+        FATAL_ERROR("Wayfarer Sevii event must declare stable content_id and adaptation reason.\n");
+    auto inventory = wayfarer_sevii_content_inventory.find(content_id);
+    if (inventory == wayfarer_sevii_content_inventory.end() || inventory->second != owner)
+        FATAL_ERROR("Wayfarer Sevii event content_id is not owned by its domain inventory.\n");
+    return it->second;
+}
+
+bool wayfarer_sevii_valid_state_name(const string &state) {
+    return state.rfind("SEVII_", 0) == 0;
+}
+
+void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
+                                        const string &map_name, const string &event_kind,
+                                        unsigned int index) {
+    if (rule.type() != Json::Type::OBJECT)
+        FATAL_ERROR("Wayfarer Sevii %s %s[%u] must record a source event identity.\n",
+                    map_name.c_str(), event_kind.c_str(), index);
+    if (rule["source"] == Json() || rule["source"].dump() != event.dump())
+        FATAL_ERROR("Wayfarer Sevii %s %s[%u] no longer matches its reviewed source event.\n",
+                    map_name.c_str(), event_kind.c_str(), index);
+    wayfarer_sevii_owner_is_enabled(rule);
+    const Json overrides = rule["overrides"];
+    if (overrides != Json() && overrides.type() != Json::Type::OBJECT)
+        FATAL_ERROR("Wayfarer Sevii %s %s[%u] overrides must be an object.\n",
+                    map_name.c_str(), event_kind.c_str(), index);
+    const set<string> allowed = event_kind == "object_events"
+        ? set<string>{"script", "flag"}
+        : event_kind == "coord_events"
+            ? set<string>{"script", "var", "var_value"}
+            : set<string>{"script", "flag"};
+    for (const auto &override : overrides.object_items()) {
+        if (allowed.find(override.first) == allowed.end())
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] has forbidden override %s.\n",
+                        map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
+        if ((override.first == "flag" || override.first == "var")
+         && (json_to_string(override.second, "", true).rfind(
+                override.first == "flag" ? "FLAG_WAYFARER_SEVII_" : "VAR_WAYFARER_SEVII_", 0) != 0))
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] override %s must use the Sevii namespace.\n",
+                        map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
+        if (override.first == "flag" && event_kind == "bg_events"
+         && json_to_string(event, "type", true) != "hidden_item")
+            FATAL_ERROR("Wayfarer Sevii %s bg_events[%u] may override a flag only for a hidden item.\n",
+                        map_name.c_str(), index);
+    }
+    const string replacement_script = json_to_string(rule, "wayfarer_script", true);
+    if (!replacement_script.empty() && replacement_script.rfind("WayfarerSevii_", 0) != 0
+     && !(json_to_string(rule, "owner", true) == "exploration" && replacement_script == "EventScript_StrengthBoulder"))
+        FATAL_ERROR("Wayfarer Sevii %s %s[%u] must use a Wayfarer-owned replacement script.\n",
+                    map_name.c_str(), event_kind.c_str(), index);
+    const string owner = json_to_string(rule, "owner", true);
+    if (owner != "exploration") {
+        const string field = event_kind == "coord_events" ? "var" : "flag";
+        string effective = overrides[field] == Json()
+            ? json_to_string(event, field, true) : json_to_string(overrides, field, true);
+        const string prefix = field == "var" ? "VAR_WAYFARER_SEVII_" : "FLAG_WAYFARER_SEVII_";
+        if (!effective.empty() && effective != "0" && effective != "0x0" && effective.rfind(prefix, 0) != 0)
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] retains raw FRLG persistent state.\n",
+                        map_name.c_str(), event_kind.c_str(), index);
+    }
+    for (const string state_field : {"state_reads", "state_writes"}) {
+        const Json states = rule[state_field];
+        if (states == Json())
+            continue;
+        if (states.type() != Json::Type::ARRAY)
+            FATAL_ERROR("Wayfarer Sevii %s %s[%u] %s must be a list.\n",
+                        map_name.c_str(), event_kind.c_str(), index, state_field.c_str());
+        for (const Json &state : states.array_items()) {
+            if (!wayfarer_sevii_valid_state_name(json_to_string(state, "", true)))
+                FATAL_ERROR("Wayfarer Sevii %s %s[%u] writes or reads raw FRLG state.\n",
+                            map_name.c_str(), event_kind.c_str(), index);
+        }
+    }
+}
+
+void validate_wayfarer_sevii_map_event_rules(const Json &map_data, const Json &record) {
+    const string map_name = json_to_string(map_data, "name");
+    const Json retained = record["retained_events"];
+    set<string> local_ids, coordinates;
+    for (const string event_kind : {"object_events", "coord_events", "bg_events"}) {
+        const Json rules = retained[event_kind];
+        if (rules.type() != Json::Type::ARRAY)
+            FATAL_ERROR("Wayfarer Sevii %s %s must be a list.\n", map_name.c_str(), event_kind.c_str());
+        set<unsigned int> indices;
+        const Json events = map_data[event_kind];
+        for (const Json &rule : rules.array_items()) {
+            int index = rule["index"].int_value();
+            if (rule.type() != Json::Type::OBJECT || index < 0
+             || (unsigned int)index >= events.array_items().size())
+                FATAL_ERROR("Wayfarer Sevii %s %s has an invalid source index.\n",
+                            map_name.c_str(), event_kind.c_str());
+            if (!indices.insert((unsigned int)index).second)
+                FATAL_ERROR("Wayfarer Sevii %s %s has duplicate source ownership.\n",
+                            map_name.c_str(), event_kind.c_str());
+            validate_wayfarer_sevii_event_rule(events.array_items()[index], rule, map_name, event_kind, index);
+            const Json event = events.array_items()[index];
+            if (event_kind == "object_events") {
+                string local_id = json_to_string(event, "local_id", true);
+                if (!local_id.empty() && !local_ids.insert(local_id).second)
+                    FATAL_ERROR("Wayfarer Sevii %s has duplicate local_id ownership %s.\n",
+                                map_name.c_str(), local_id.c_str());
+            } else {
+                string coordinate = event_kind + ":" + json_to_string(event, "x", true) + ":"
+                    + json_to_string(event, "y", true) + ":" + json_to_string(event, "elevation", true);
+                if (!coordinates.insert(coordinate).second)
+                    FATAL_ERROR("Wayfarer Sevii %s has duplicate %s ownership.\n",
+                                map_name.c_str(), event_kind.c_str());
+            }
         }
     }
 }
@@ -209,12 +377,9 @@ bool is_wayfarer_sevii_enabled_destination(const string &map_id) {
 
 bool retained_event_matches_index(const Json &entries, unsigned int index, Json *rule) {
     for (const Json &entry : entries.array_items()) {
-        if (entry.type() == Json::Type::NUMBER && entry.int_value() == (int)index) {
-            if (rule != nullptr)
-                *rule = entry;
-            return true;
-        }
         if (entry.type() == Json::Type::OBJECT && entry["index"].int_value() == (int)index) {
+            if (!wayfarer_sevii_owner_is_enabled(entry))
+                return false;
             if (rule != nullptr)
                 *rule = entry;
             return true;
@@ -226,15 +391,6 @@ bool retained_event_matches_index(const Json &entries, unsigned int index, Json 
 Json apply_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
                                      const string &map_name, const string &event_kind,
                                      unsigned int index) {
-    // A numeric entry is deliberately rejected for retained scripted events:
-    // it has no source identity and no Wayfarer-owned replacement label.
-    if (rule.type() != Json::Type::OBJECT)
-        FATAL_ERROR("Wayfarer Sevii %s %s[%u] must record a source event identity and Wayfarer script.\n",
-                    map_name.c_str(), event_kind.c_str(), index);
-    if (rule["source"] == Json() || rule["source"].dump() != event.dump())
-        FATAL_ERROR("Wayfarer Sevii %s %s[%u] no longer matches its reviewed source event.\n",
-                    map_name.c_str(), event_kind.c_str(), index);
-
     Json::object output = event.object_items();
     string source_script = json_to_string(event, "script", true);
     string replacement_script = json_to_string(rule, "wayfarer_script", true);
@@ -243,6 +399,17 @@ Json apply_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
             FATAL_ERROR("Wayfarer Sevii %s %s[%u] must name a Wayfarer-owned replacement script.\n",
                         map_name.c_str(), event_kind.c_str(), index);
         output["script"] = replacement_script;
+    }
+    const Json overrides = rule["overrides"];
+    for (const auto &override : overrides.object_items()) {
+        if (override.first == "script") {
+            if (!replacement_script.empty() && json_to_string(override.second, "", true) != replacement_script)
+                FATAL_ERROR("Wayfarer Sevii %s %s[%u] override script must match wayfarer_script.\n",
+                            map_name.c_str(), event_kind.c_str(), index);
+            output["script"] = override.second;
+        } else {
+            output[override.first] = override.second;
+        }
     }
     return output;
 }
@@ -254,6 +421,7 @@ Json sanitize_wayfarer_sevii_map_events(const Json &map_data) {
     const string map_name = json_to_string(map_data, "name");
     const Json record = wayfarer_sevii_record(map_data);
     const Json retained = record["retained_events"];
+    validate_wayfarer_sevii_map_event_rules(map_data, record);
     Json::object output = map_data.object_items();
     Json::array objects, warps, coords, bgs;
 
@@ -266,7 +434,8 @@ Json sanitize_wayfarer_sevii_map_events(const Json &map_data) {
         if (!retained_event_matches_index(retained["object_events"], i, &rule))
             continue;
         string trainer_type = json_to_string(event, "trainer_type", true);
-        if (!trainer_type.empty() && trainer_type != "TRAINER_TYPE_NONE")
+        if (!trainer_type.empty() && trainer_type != "TRAINER_TYPE_NONE"
+         && json_to_string(rule, "owner", true) == "exploration")
             FATAL_ERROR("Wayfarer Sevii %s object_events[%u] is a Trainer and cannot be retained.\n",
                         map_name.c_str(), i);
         objects.push_back(apply_wayfarer_sevii_event_rule(event, rule, map_name, "object_events", i));
