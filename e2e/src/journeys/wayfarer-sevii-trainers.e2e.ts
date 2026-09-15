@@ -8,6 +8,8 @@ const tommyPosition = {
   y: 25,
 } as const
 
+const kindleRoad = tommyPosition.map
+
 const arrangeAtTommy = async (
   game: GameSession,
   party: Parameters<GameSession["arrange"]>[0]["party"],
@@ -20,8 +22,12 @@ const arrangeAtTommy = async (
   })
 }
 
-const waitForTommyBattle = async (game: GameSession, description: string): Promise<void> => {
-  await game.player.interact()
+const waitForTrainerBattle = async (
+  game: GameSession,
+  description: string,
+  interact = true,
+): Promise<void> => {
+  if (interact) await game.player.interact()
   for (let attempt = 0; attempt < 300; attempt++) {
     const state = await game.state.read()
     if (state.battle.ui === "action-menu") return
@@ -49,6 +55,30 @@ const waitForDialogueText = async (
   throw new Error(`${description} was not shown: ${JSON.stringify(await game.state.read())}`)
 }
 
+const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
+  for (let attempt = 0; attempt < 300; attempt++) {
+    const state = await game.state.read()
+    if (state.ready && !state.dialogueOpen && !state.scriptActive && !state.battle.active) return
+    if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
+      await game.controls.press("a")
+    } else await game.wait.frames(12)
+  }
+  throw new Error(
+    `${description} did not release the field: ${JSON.stringify(await game.state.read())}`,
+  )
+}
+
+const finishTrainerVictory = async (
+  game: GameSession,
+  postBattleText: string,
+  description: string,
+): Promise<void> => {
+  await game.battle.win()
+  await waitForDialogueText(game, postBattleText, `${description} post-battle dialogue`)
+  await game.controls.press("a")
+  await finishFieldScript(game, description)
+}
+
 const finishBlackout = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 4_000; attempt++) {
     const state = await game.state.read()
@@ -70,18 +100,86 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     return () => game.close()
   })
 
+  it("starts Garrett's Kindle Road battle from his sight line", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: kindleRoad, x: 19, y: 81 } },
+      party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+      determinism: { rngSeed: 1, textSpeed: "instant" },
+    })
+
+    await game.player.move("up")
+    await waitForTrainerBattle(game, "Garrett's Kindle Road sight encounter", false)
+    await expect(game.state.read()).resolves.toMatchObject({
+      player: { x: 19, y: 80 },
+      battle: { active: true, enemy: { species: "shellder" } },
+    })
+    await finishTrainerVictory(game, "Instead of using SURF", "Garrett victory")
+  })
+
+  it("denies the Crush Kin with one usable non-Egg, then starts their pair battle", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: kindleRoad, x: 8, y: 69 } },
+      party: [
+        { species: "lapras", level: 100, moves: ["surf"] },
+        { species: "pidgey", level: 100, moves: ["tackle"], egg: true },
+      ],
+      determinism: { rngSeed: 1, textSpeed: "instant" },
+    })
+
+    await game.player.interact()
+    await waitForDialogueText(game, "Bring two or more", "Crush Kin party-size denial")
+    await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
+    await game.controls.press("a")
+    await finishFieldScript(game, "Crush Kin party-size denial")
+
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: kindleRoad, x: 8, y: 69 } },
+      party: [
+        { species: "lapras", level: 100, moves: ["surf"] },
+        { species: "pidgey", level: 100, moves: ["tackle"] },
+      ],
+      determinism: { rngSeed: 1, textSpeed: "instant" },
+    })
+
+    await waitForTrainerBattle(game, "Crush Kin pair encounter")
+    await expect(game.state.read()).resolves.toMatchObject({
+      battle: { active: true, enemy: { species: "machoke" } },
+    })
+    await finishTrainerVictory(game, "How could my combination", "Crush Kin victory")
+  })
+
+  it("routes exterior Psychic Dario through an ordinary sight battle", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: {
+        facing: "down",
+        position: { map: "sevii-seven-island-trainer-tower", x: 56, y: 24 },
+      },
+      party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+      determinism: { rngSeed: 1, textSpeed: "instant" },
+    })
+
+    await game.player.move("down")
+    await waitForTrainerBattle(game, "Dario sight encounter", false)
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "sevii-seven-island-trainer-tower" },
+      battle: { active: true, enemy: { species: "girafarig" } },
+    })
+    await finishTrainerVictory(game, "In your future", "Dario ordinary victory")
+  })
+
   it("keeps Fisherman Tommy defeated and talkable after saving and reloading", async () => {
     await arrangeAtTommy(game, [{ species: "lapras", level: 100, moves: ["surf"] }])
 
-    await waitForTommyBattle(game, "Fisherman Tommy talk encounter")
+    await waitForTrainerBattle(game, "Fisherman Tommy talk encounter")
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: tommyPosition.map },
       battle: { active: true, enemy: { species: "goldeen" } },
     })
-    await game.battle.win()
-    await waitForDialogueText(game, "Not only did I lose", "Tommy post-battle dialogue")
-    await game.controls.press("a")
-    await game.wait.forReady()
+    await finishTrainerVictory(game, "Not only did I lose", "Tommy victory")
 
     await game.saveAndReload()
     await expect(game.state.read()).resolves.toMatchObject({
@@ -97,7 +195,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
   it("uses a normal blackout and leaves Tommy available after a loss", async () => {
     await arrangeAtTommy(game, [{ species: "rattata", level: 1, moves: ["tackle"] }])
 
-    await waitForTommyBattle(game, "first Fisherman Tommy attempt")
+    await waitForTrainerBattle(game, "first Fisherman Tommy attempt")
     await game.battle.lose()
     await finishBlackout(game)
 
@@ -106,7 +204,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     expect(recovered.party.every((mon) => !mon.fainted)).toBe(true)
 
     await game.player.warp(tommyPosition.map, tommyPosition.x, tommyPosition.y, "right")
-    await waitForTommyBattle(game, "Fisherman Tommy retry after blackout")
+    await waitForTrainerBattle(game, "Fisherman Tommy retry after blackout")
     await expect(game.state.read()).resolves.toMatchObject({
       battle: { active: true, enemy: { species: "goldeen" } },
     })
