@@ -75,9 +75,9 @@ u16 WayfarerSeviiRematchGetOpponent(u16 trainerId)
 
     u8 stage = WayfarerSeviiRematchStageGet(family);
 
-    if (stage >= WAYFARER_SEVII_REMATCH_STAGES)
+    if (stage >= WAYFARER_SEVII_REMATCH_STAGES - 1)
         stage = 0;
-    return gWayfarerSeviiRematchFamilies[family].trainerIds[stage];
+    return gWayfarerSeviiRematchFamilies[family].trainerIds[stage + 1];
 }
 
 void WayfarerSeviiRematchAdvance(u16 trainerId)
@@ -88,7 +88,7 @@ void WayfarerSeviiRematchAdvance(u16 trainerId)
     {
         u8 stage = WayfarerSeviiRematchStageGet(family);
 
-        if (stage < WAYFARER_SEVII_REMATCH_STAGES - 1)
+        if (stage < WAYFARER_SEVII_REMATCH_STAGES - 2)
             WayfarerSeviiRematchStageSet(family, stage + 1);
     }
 }
