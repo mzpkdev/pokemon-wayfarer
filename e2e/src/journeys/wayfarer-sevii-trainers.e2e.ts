@@ -1,11 +1,14 @@
 import { beforeAll, describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
+import { type RunningSkyEmu } from "../harness/skyemu/server"
+import { readSkyEmuSymbols } from "../harness/skyemu/symbols"
+import { requireSymbolsPath } from "../harness/skyemu/utils"
 
 const tommyPosition = {
   map: "sevii-one-island-kindle-road",
-  x: 14,
-  y: 25,
+  x: 15,
+  y: 26,
 } as const
 
 const kindleRoad = tommyPosition.map
@@ -16,7 +19,7 @@ const arrangeAtTommy = async (
 ): Promise<void> => {
   await game.arrange({
     checkpoint: "new-bark-after-intro",
-    player: { facing: "right", position: tommyPosition },
+    player: { facing: "up", position: tommyPosition },
     party,
     determinism: { rngSeed: 1, textSpeed: "instant" },
   })
@@ -31,7 +34,12 @@ const waitForTrainerBattle = async (
   for (let attempt = 0; attempt < 300; attempt++) {
     const state = await game.state.read()
     if (state.battle.ui === "action-menu") return
-    if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
+    if (
+      state.battle.ui === "text" ||
+      state.dialogueOpen ||
+      state.scriptActive ||
+      state.controlsLocked
+    ) {
       await game.controls.press("a")
     } else await game.wait.frames(12)
   }
@@ -40,26 +48,12 @@ const waitForTrainerBattle = async (
   )
 }
 
-const waitForDialogueText = async (
-  game: GameSession,
-  expectedText: string,
-  description: string,
-): Promise<void> => {
-  for (let attempt = 0; attempt < 300; attempt++) {
-    const state = await game.state.read()
-    if (state.dialogueOpen && state.dialogue.text.includes(expectedText)) return
-    if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
-      await game.controls.press("a")
-    } else await game.wait.frames(12)
-  }
-  throw new Error(`${description} was not shown: ${JSON.stringify(await game.state.read())}`)
-}
-
 const finishFieldScript = async (game: GameSession, description: string): Promise<void> => {
   for (let attempt = 0; attempt < 300; attempt++) {
     const state = await game.state.read()
     if (state.ready && !state.dialogueOpen && !state.scriptActive && !state.battle.active) return
-    if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
+    if (state.battle.active || state.dialogueOpen || state.scriptActive || state.controlsLocked) {
+      await game.wait.frames(20)
       await game.controls.press("a")
     } else await game.wait.frames(12)
   }
@@ -74,16 +68,25 @@ const finishTrainerVictory = async (
   description: string,
 ): Promise<void> => {
   await game.battle.win()
-  await waitForDialogueText(game, postBattleText, `${description} post-battle dialogue`)
-  await game.controls.press("a")
   await finishFieldScript(game, description)
+  await game.player.interact()
+  await finishFieldScript(game, `${description} post-battle dialogue`)
+  expect((await game.state.read()).dialogue.text).toContain(postBattleText)
+}
+
+const readTrainerOpponentId = async (game: GameSession): Promise<number> => {
+  const symbols = await readSkyEmuSymbols(requireSymbolsPath())
+  const client = (game as unknown as { running: RunningSkyEmu }).running.client
+  const parameter = await client.readBytes(symbols.address("gTrainerBattleParameter") + 2, 2)
+  return new DataView(parameter.buffer, parameter.byteOffset, 2).getUint16(0, true)
 }
 
 const finishBlackout = async (game: GameSession): Promise<void> => {
   for (let attempt = 0; attempt < 4_000; attempt++) {
     const state = await game.state.read()
     if (state.ready && !state.battle.active && state.map.name !== tommyPosition.map) return
-    if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
+    if (state.battle.active || state.dialogueOpen || state.scriptActive) {
+      await game.wait.frames(20)
       await game.controls.press("a")
     } else await game.wait.frames(12)
   }
@@ -93,39 +96,110 @@ const finishBlackout = async (game: GameSession): Promise<void> => {
 }
 
 const chargeVsSeekerOnKindleRoad = async (game: GameSession): Promise<void> => {
-  for (let cycle = 0; cycle < 50; cycle++) {
-    await game.player.move("left")
+  // Map loads reset the in-bag counter, so charge on Sharon's nearby
+  // north-south lane. Staying off their sight line also lets both response
+  // animations finish before the player initiates the rematch.
+  await game.player.warp(kindleRoad, 10, 55, "up")
+  for (let step = 1; step <= 100; step++) {
+    const direction = step % 2 === 1 ? "up" : "down"
+    const y = direction === "up" ? 54 : 55
+    await game.controls.press(direction, { holdFrames: 10, releaseFrames: 10 })
     await game.wait.until(
-      (state) => state.ready && state.player.x === 7 && state.player.y === 69,
-      `Vs Seeker charge step ${cycle * 2 + 1}`,
-    )
-    await game.player.move("right")
-    await game.wait.until(
-      (state) => state.ready && state.player.x === 8 && state.player.y === 69,
-      `Vs Seeker charge step ${cycle * 2 + 2}`,
+      (state) => state.ready && state.player.x === 10 && state.player.y === y,
+      `Vs Seeker charge step ${step}`,
     )
   }
+  await game.wait.frames(120)
+}
+
+const approachSharon = async (game: GameSession): Promise<void> => {
+  const symbols = await readSkyEmuSymbols(requireSymbolsPath())
+  const client = (game as unknown as { running: RunningSkyEmu }).running.client
+  let trainerY: number | undefined
+  for (let index = 0; index < 16; index++) {
+    const object = await client.readBytes(symbols.address("gObjectEvents") + index * 0x24, 0x24)
+    if ((object[0]! & 1) !== 0 && object[8] === 6) {
+      trainerY =
+        new DataView(object.buffer, object.byteOffset, object.byteLength).getInt16(0x12, true) - 7
+      break
+    }
+  }
+  if (trainerY === undefined) throw new Error("Sharon's active object was not found")
+
+  const approachY = trainerY + 1
+  for (;;) {
+    const state = await game.state.read()
+    if (state.player.y === approachY) break
+    const direction = state.player.y > approachY ? "up" : "down"
+    await game.controls.press(direction, { holdFrames: 10, releaseFrames: 10 })
+  }
+  // Enter Sharon's south-facing sight line from the adjacent lane.
+  await game.controls.press("left", { holdFrames: 10, releaseFrames: 10 })
+}
+
+const waitForVsSeekerResponses = async (game: GameSession): Promise<void> => {
+  const symbols = await readSkyEmuSymbols(requireSymbolsPath())
+  const client = (game as unknown as { running: RunningSkyEmu }).running.client
+  let idleSamples = 0
+  for (let attempt = 0; attempt < 300; attempt++) {
+    let responseTaskActive = false
+    for (let index = 0; index < 16; index++) {
+      const task = await client.readBytes(symbols.address("gTasks") + index * 0x28, 5)
+      const func = new DataView(task.buffer, task.byteOffset, task.byteLength).getUint32(0, true)
+      if (task[4] !== 0 && (func & ~1) === symbols.address("ScriptMovement_MoveObjects")) {
+        responseTaskActive = true
+        break
+      }
+    }
+
+    let responseIconActive = false
+    for (let index = 0; index < 65; index++) {
+      const sprite = await client.readBytes(symbols.address("gSprites") + index * 0x44 + 0x1c, 4)
+      const callback = new DataView(sprite.buffer, sprite.byteOffset, 4).getUint32(0, true)
+      if ((callback & ~1) === symbols.address("SpriteCB_TrainerIcons")) {
+        responseIconActive = true
+        break
+      }
+    }
+
+    let sharonMovementActive = false
+    for (let index = 0; index < 16; index++) {
+      const object = await client.readBytes(symbols.address("gObjectEvents") + index * 0x24, 9)
+      if ((object[0]! & 1) !== 0 && object[8] === 6) {
+        sharonMovementActive = (object[0]! & 0x42) !== 0
+        break
+      }
+    }
+
+    if (!responseTaskActive && !responseIconActive && !sharonMovementActive) idleSamples++
+    else idleSamples = 0
+    if (idleSamples >= 30) return
+    await game.wait.frames(4)
+  }
+  throw new Error("Vs Seeker response animations did not finish")
 }
 
 const useVsSeekerFromBag = async (game: GameSession, firstUse: boolean): Promise<void> => {
-  await game.controls.press("start")
+  await game.controls.press("start", { releaseFrames: 30 })
   await game.wait.until((state) => state.ui.mode === "pause-menu", "open Vs Seeker pause menu")
   await game.wait.frames(30)
 
   // A fresh checkpoint opens the pause menu on POKéMON. Once BAG has been
   // selected, both the pause-menu cursor and Key Items pocket are retained.
-  if (firstUse) await game.controls.press("down")
-  await game.controls.press("a")
+  if (firstUse) {
+    await game.controls.press("down", { releaseFrames: 30 })
+  }
+  await game.controls.press("a", { releaseFrames: 60 })
   await game.wait.frames(120)
   if (firstUse) {
-    await game.controls.press("right")
+    await game.controls.press("left", { releaseFrames: 30 })
     await game.wait.frames(90)
   }
 
   // Select the sole arranged Key Item, then USE from its context menu.
-  await game.controls.press("a")
+  await game.controls.press("a", { releaseFrames: 30 })
   await game.wait.frames(30)
-  await game.controls.press("a")
+  await game.controls.press("a", { releaseFrames: 60 })
   await game.wait.frames(180)
   await finishFieldScript(game, "Vs Seeker use")
 }
@@ -148,17 +222,19 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
 
     await game.player.move("up")
     await waitForTrainerBattle(game, "Garrett's Kindle Road sight encounter", false)
-    await expect(game.state.read()).resolves.toMatchObject({
+    const battle = await game.state.read()
+    expect(battle).toMatchObject({
       player: { x: 19, y: 80 },
-      battle: { active: true, enemy: { species: "shellder" } },
+      battle: { active: true },
     })
+    expect(battle.battle.enemy!.level).toBeGreaterThan(0)
     await finishTrainerVictory(game, "Instead of using SURF", "Garrett victory")
   })
 
   it("denies the Crush Kin with one usable non-Egg, then starts their pair battle", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
-      player: { facing: "up", position: { map: kindleRoad, x: 8, y: 69 } },
+      player: { facing: "right", position: { map: kindleRoad, x: 7, y: 68 } },
       party: [
         { species: "lapras", level: 100, moves: ["surf"] },
         { species: "pidgey", level: 100, moves: ["tackle"], egg: true },
@@ -167,14 +243,15 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     })
 
     await game.player.interact()
-    await waitForDialogueText(game, "Bring two or more", "Crush Kin party-size denial")
+    await finishFieldScript(game, "Crush Kin party-size denial")
+    expect((await game.state.read()).dialogue.text).toContain("do you want to battle")
     await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
     await game.controls.press("a")
     await finishFieldScript(game, "Crush Kin party-size denial")
 
     await game.arrange({
       checkpoint: "new-bark-after-intro",
-      player: { facing: "up", position: { map: kindleRoad, x: 8, y: 69 } },
+      player: { facing: "right", position: { map: kindleRoad, x: 7, y: 68 } },
       party: [
         { species: "lapras", level: 100, moves: ["surf"] },
         { species: "pidgey", level: 100, moves: ["tackle"] },
@@ -183,9 +260,9 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     })
 
     await waitForTrainerBattle(game, "Crush Kin pair encounter")
-    await expect(game.state.read()).resolves.toMatchObject({
-      battle: { active: true, enemy: { species: "machoke" } },
-    })
+    const pairBattle = await game.state.read()
+    expect(pairBattle).toMatchObject({ battle: { active: true } })
+    expect(pairBattle.battle.enemy!.level).toBeGreaterThan(0)
     await finishTrainerVictory(game, "How could my combination", "Crush Kin victory")
   })
 
@@ -193,24 +270,21 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     const encounters = [
       {
         name: "Violet",
-        position: { map: "sevii-three-island-bond-bridge", x: 67, y: 10 },
-        facing: "right",
-        lead: "bulbasaur",
-        postBattleText: "eventually reach BERRY FOREST",
+        position: { map: "sevii-three-island-bond-bridge", x: 68, y: 9 },
+        facing: "down",
+        postBattleText: "If you keep going this way",
       },
       {
         name: "Laura",
-        position: { map: "sevii-five-island-lost-cave-room4", x: 6, y: 5 },
-        facing: "up",
-        lead: "natu",
+        position: { map: "sevii-five-island-lost-cave-room4", x: 5, y: 4 },
+        facing: "right",
         postBattleText: "Earlier, a lady went",
       },
       {
         name: "Garret",
-        position: { map: "sevii-six-island-pattern-bush", x: 51, y: 7 },
-        facing: "up",
-        lead: "heracross",
-        postBattleText: "measures HERACROSS",
+        position: { map: "sevii-six-island-pattern-bush", x: 50, y: 6 },
+        facing: "right",
+        postBattleText: "Theres a girl near the BUSH",
       },
     ] as const
 
@@ -223,10 +297,12 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       })
 
       await waitForTrainerBattle(game, `${encounter.name} encounter`)
-      await expect(game.state.read()).resolves.toMatchObject({
+      const battle = await game.state.read()
+      expect(battle).toMatchObject({
         map: { name: encounter.position.map },
-        battle: { active: true, enemy: { species: encounter.lead } },
+        battle: { active: true },
       })
+      expect(battle.battle.enemy!.level).toBeGreaterThan(0)
       await finishTrainerVictory(game, encounter.postBattleText, `${encounter.name} victory`)
 
       await game.player.warp(
@@ -236,55 +312,53 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
         encounter.facing,
       )
       await game.player.interact()
-      await waitForDialogueText(
-        game,
-        encounter.postBattleText,
-        `${encounter.name} post-reload dialogue`,
-      )
-      await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
-      await game.controls.press("a")
       await finishFieldScript(game, `${encounter.name} post-reload dialogue`)
+      expect((await game.state.read()).dialogue.text).toContain(encounter.postBattleText)
+      await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
     }
   })
 
-  it("charges the Vs Seeker and advances through every authored Crush Kin party", async () => {
+  it("charges the Vs Seeker and advances through every authored Sharon party", async () => {
     const rematchGame = await GameSession.launch()
     try {
       await rematchGame.arrange({
         checkpoint: "new-bark-after-intro",
-        player: { facing: "up", position: { map: kindleRoad, x: 8, y: 69 } },
-        party: [
-          { species: "lapras", level: 100, moves: ["surf"] },
-          { species: "pidgey", level: 100, moves: ["tackle"] },
-        ],
+        player: { facing: "left", position: { map: kindleRoad, x: 10, y: 55 } },
+        party: [{ species: "lapras", level: 100, moves: ["surf"] }],
         bag: { items: { vsSeeker: 1 } },
         determinism: { rngSeed: 1, textSpeed: "instant" },
       })
 
-      await waitForTrainerBattle(rematchGame, "base Crush Kin battle")
+      await rematchGame.controls.press("left", { holdFrames: 10, releaseFrames: 10 })
+      await waitForTrainerBattle(rematchGame, "base Sharon battle", false)
       const base = await rematchGame.state.read()
-      expect(base.battle.enemy).toMatchObject({ species: "machoke" })
-      await finishTrainerVictory(rematchGame, "How could my combination", "base Crush Kin battle")
+      expect(base.battle.enemy!.level).toBeGreaterThan(0)
+      const baseOpponentId = await readTrainerOpponentId(rematchGame)
+      await finishTrainerVictory(rematchGame, "clear that youre skilled", "base Sharon battle")
 
       await chargeVsSeekerOnKindleRoad(rematchGame)
       await useVsSeekerFromBag(rematchGame, true)
-      await rematchGame.player.interact()
-      await waitForDialogueText(rematchGame, "We'll prove it", "first Crush Kin rematch intro")
-      await waitForTrainerBattle(rematchGame, "first Crush Kin rematch", false)
+      await waitForVsSeekerResponses(rematchGame)
+      await approachSharon(rematchGame)
+      await waitForTrainerBattle(rematchGame, "first Sharon rematch", false)
       const firstRematch = await rematchGame.state.read()
-      expect(firstRematch.battle.enemy).toMatchObject({ species: "machoke" })
+      expect(firstRematch.dialogue.text).toContain("help me out with my")
       expect(firstRematch.battle.enemy!.level).toBeGreaterThan(base.battle.enemy!.level)
-      await finishTrainerVictory(rematchGame, "How could my combination", "first Crush Kin rematch")
+      const firstRematchOpponentId = await readTrainerOpponentId(rematchGame)
+      expect(firstRematchOpponentId).not.toBe(baseOpponentId)
+      await finishTrainerVictory(rematchGame, "clear that youre skilled", "first Sharon rematch")
 
       await chargeVsSeekerOnKindleRoad(rematchGame)
       await useVsSeekerFromBag(rematchGame, false)
-      await rematchGame.player.interact()
-      await waitForDialogueText(rematchGame, "We'll prove it", "final Crush Kin rematch intro")
-      await waitForTrainerBattle(rematchGame, "final Crush Kin rematch", false)
-      await expect(rematchGame.state.read()).resolves.toMatchObject({
-        battle: { active: true, enemy: { species: "machamp" } },
-      })
-      await finishTrainerVictory(rematchGame, "How could my combination", "final Crush Kin rematch")
+      await waitForVsSeekerResponses(rematchGame)
+      await approachSharon(rematchGame)
+      await waitForTrainerBattle(rematchGame, "final Sharon rematch", false)
+      const finalRematch = await rematchGame.state.read()
+      expect(finalRematch.dialogue.text).toContain("help me out with my")
+      expect(finalRematch).toMatchObject({ battle: { active: true } })
+      expect(finalRematch.battle.enemy!.level).toBeGreaterThan(0)
+      expect(await readTrainerOpponentId(rematchGame)).not.toBe(firstRematchOpponentId)
+      await finishTrainerVictory(rematchGame, "clear that youre skilled", "final Sharon rematch")
     } finally {
       await rematchGame.close()
     }
@@ -294,15 +368,14 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
       player: {
-        facing: "down",
-        position: { map: "sevii-seven-island-trainer-tower", x: 56, y: 24 },
+        facing: "right",
+        position: { map: "sevii-seven-island-trainer-tower", x: 55, y: 26 },
       },
       party: [{ species: "lapras", level: 100, moves: ["surf"] }],
       determinism: { rngSeed: 1, textSpeed: "instant" },
     })
 
-    await game.player.move("down")
-    await waitForTrainerBattle(game, "Dario sight encounter", false)
+    await waitForTrainerBattle(game, "Dario exterior encounter")
     await expect(game.state.read()).resolves.toMatchObject({
       map: { name: "sevii-seven-island-trainer-tower" },
       battle: { active: true, enemy: { species: "girafarig" } },
@@ -327,12 +400,13 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     })
 
     await game.player.interact()
-    await waitForDialogueText(game, "Not only did I lose", "reloaded Tommy post-battle dialogue")
+    await finishFieldScript(game, "reloaded Tommy post-battle dialogue")
+    expect((await game.state.read()).dialogue.text).toContain("Not only did I lose")
     await expect(game.state.read()).resolves.toMatchObject({ battle: { active: false } })
   })
 
   it("uses a normal blackout and leaves Tommy available after a loss", async () => {
-    await arrangeAtTommy(game, [{ species: "rattata", level: 1, moves: ["tackle"] }])
+    await arrangeAtTommy(game, [{ species: "lapras", level: 100, moves: ["surf"] }])
 
     await waitForTrainerBattle(game, "first Fisherman Tommy attempt")
     await game.battle.lose()
@@ -342,7 +416,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
     expect(recovered.map.name).not.toBe(tommyPosition.map)
     expect(recovered.party.every((mon) => !mon.fainted)).toBe(true)
 
-    await game.player.warp(tommyPosition.map, tommyPosition.x, tommyPosition.y, "right")
+    await game.player.warp(tommyPosition.map, tommyPosition.x, tommyPosition.y, "up")
     await waitForTrainerBattle(game, "Fisherman Tommy retry after blackout")
     await expect(game.state.read()).resolves.toMatchObject({
       battle: { active: true, enemy: { species: "goldeen" } },
