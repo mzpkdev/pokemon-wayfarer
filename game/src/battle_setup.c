@@ -46,6 +46,8 @@
 #include "field_screen_effect.h"
 #include "data.h"
 #include "vs_seeker.h"
+#include "wayfarer_sevii_rematches.h"
+#include "wayfarer_sevii_trainer_defeats.h"
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -1639,12 +1641,21 @@ static void UNUSED SetBattledTrainerFlag(void)
 
 bool8 HasTrainerBeenFought(u16 trainerId)
 {
+#if IS_WAYFARER
+    u16 seviiDefeatSlot;
+#endif
+
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
         return FALSE;
 
 #if IS_WAYFARER
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
         return WayfarerHoennTrainerFlagGet(trainerId);
+    // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
+    // before the appended-HNS compatibility remap below.
+    seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
+    if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
+        return WayfarerSeviiTrainerDefeatGet(seviiDefeatSlot);
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1655,6 +1666,10 @@ bool8 HasTrainerBeenFought(u16 trainerId)
 
 void SetTrainerFlag(u16 trainerId)
 {
+#if IS_WAYFARER
+    u16 seviiDefeatSlot;
+#endif
+
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
         return;
 
@@ -1662,6 +1677,14 @@ void SetTrainerFlag(u16 trainerId)
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagSet(trainerId);
+        return;
+    }
+    // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
+    // before the appended-HNS compatibility remap below.
+    seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
+    if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerSeviiTrainerDefeatSet(seviiDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
@@ -1674,6 +1697,10 @@ void SetTrainerFlag(u16 trainerId)
 
 void ClearTrainerFlag(u16 trainerId)
 {
+#if IS_WAYFARER
+    u16 seviiDefeatSlot;
+#endif
+
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
         return;
 
@@ -1681,6 +1708,14 @@ void ClearTrainerFlag(u16 trainerId)
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagClear(trainerId);
+        return;
+    }
+    // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
+    // before the appended-HNS compatibility remap below.
+    seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
+    if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerSeviiTrainerDefeatClear(seviiDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
@@ -2555,6 +2590,11 @@ bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId)
 {
+#if IS_WAYFARER
+    if (WayfarerSeviiRematchHasFamily(trainerId))
+        return WayfarerSeviiRematchGetOpponent(trainerId);
+#endif
+
     if (FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
         return GetRematchTrainerIdVSSeeker(trainerId);
     else
@@ -2574,6 +2614,11 @@ bool8 ShouldTryRematchBattle(void)
 
 bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 {
+#if IS_WAYFARER
+    if (WayfarerSeviiRematchHasFamily(trainerId))
+        return WayfarerSeviiRematchIsReady(trainerId);
+#endif
+
     if (IsFirstTrainerIdReadyForRematch(gRematchTable, trainerId))
         return TRUE;
 
@@ -2582,6 +2627,11 @@ bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 
 bool8 IsTrainerReadyForRematch(void)
 {
+#if IS_WAYFARER
+    if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+        return WayfarerSeviiRematchIsReady(TRAINER_BATTLE_PARAM.opponentA);
+#endif
+
     return IsTrainerReadyForRematch_(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
 }
 
@@ -2590,7 +2640,17 @@ static void HandleRematchVarsOnBattleEnd(void)
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (I_VS_SEEKER_CHARGING != 0))
         ClearRematchMovementByTrainerId();
 
-    ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
+#if IS_WAYFARER
+    if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+    {
+        WayfarerSeviiRematchClearReady(TRAINER_BATTLE_PARAM.opponentA);
+        WayfarerSeviiRematchAdvance(TRAINER_BATTLE_PARAM.opponentA);
+    }
+    else
+#endif
+    {
+        ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
+    }
     SetBattledTrainersFlags();
 }
 

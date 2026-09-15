@@ -513,7 +513,7 @@ const u16 gFieldEffectObjectPalette_CaveDust[] = INCBIN_U16("graphics/field_effe
 
 const u32 gObjectEventPic_ApricornTree[] = INCBIN_U32("graphics/object_events/pics/misc/apricorn_tree.4bpp");
 
-#if IS_FRLG
+#if IS_FRLG || IS_WAYFARER
 
 const u16 gObjectEventPic_RedNormal[] = INCBIN_U16("graphics/object_events/pics/people/red/red_normal.4bpp");
 const u16 gObjectEventPic_RedBike[] = INCBIN_U16("graphics/object_events/pics/people/red/red_bike.4bpp");
@@ -679,15 +679,15 @@ const u16 gObjectEventPic_JigglypuffOld[] = INCBIN_U16("graphics/object_events/p
 const u16 gObjectEventPic_PidgeyOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/pidgey.4bpp");
 const u16 gObjectEventPic_ClefairyOld[] = INCBIN_U16("graphics/object_events/pics/pokemon_old/clefairy.4bpp");
 
-#endif // IS_FRLG
+#endif // IS_FRLG || IS_WAYFARER
 
-#if HAS_SEVII_CONTENT
+#if HAS_SEVII_CONTENT && !IS_WAYFARER
 // Wayfarer imports only the ordinary Sevii service and harbor NPC graphics.
 const u16 gObjectEventPic_OldWomanFrlg[] = INCBIN_U16("graphics/object_events/pics/people/old_woman_frlg.4bpp");
 const u16 gObjectEventPic_SailorFrlg[] = INCBIN_U16("graphics/object_events/pics/people/sailor_frlg.4bpp");
 const u16 gObjectEventPic_NurseFrlg[] = INCBIN_U16("graphics/object_events/pics/people/nurse_frlg.4bpp");
 const u16 gObjectEventPic_Clerk[] = INCBIN_U16("graphics/object_events/pics/people/clerk.4bpp");
-#endif // HAS_SEVII_CONTENT
+#endif // HAS_SEVII_CONTENT && !IS_WAYFARER
 
 #if IS_HNS
 // HnS sprite data

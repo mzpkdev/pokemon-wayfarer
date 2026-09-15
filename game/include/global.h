@@ -370,6 +370,25 @@ struct WayfarerHoennPersistentState
     // bit. Keeping this outside ChallengeSettings prevents aliasing HNS state.
     u8 nuzlockeEncounterFlags[28];
 };
+
+struct WayfarerSeviiTrainerTowerRecords
+{
+    u32 bestTime[NUM_TOWER_CHALLENGE_TYPES];
+    u16 pendingPrize;
+    u8 completedMask;
+    u8 reserved;
+};
+
+struct WayfarerSeviiPersistentState
+{
+    u8 flags[WAYFARER_SEVII_FLAG_BYTES];
+    u16 vars[WAYFARER_SEVII_VAR_COUNT];
+    u8 trainerFlags[WAYFARER_SEVII_TRAINER_FLAG_BYTES];
+    u8 rematchStages[WAYFARER_SEVII_REMATCH_STAGE_BYTES];
+    u8 rematchPending[WAYFARER_SEVII_REMATCH_PENDING_BYTES];
+    u8 magic;
+    struct WayfarerSeviiTrainerTowerRecords trainerTower;
+};
 #endif
 
 struct SaveBlock3
@@ -392,6 +411,7 @@ struct SaveBlock3
     u16 registeredItemHold;
 #if IS_WAYFARER
     struct WayfarerHoennPersistentState wayfarerHoenn;
+    struct WayfarerSeviiPersistentState wayfarerSevii;
 #endif
 }; /* max size 1624 bytes */
 

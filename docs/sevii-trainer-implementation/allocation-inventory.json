@@ -1,0 +1,3909 @@
+{
+  "allocation": {
+    "allocations": [
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_JOCELYN",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_JOCELYN",
+        "kind": "base",
+        "numeric_id": 1515,
+        "objects": [
+          "MtEmber_Exterior_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 0,
+        "source_hash": "2d1f215b024d2f9c52227e82e1363e53a9e7d19734447c9608ca2bd0e596ec6c",
+        "source_trainer": "TRAINER_CRUSH_GIRL_JOCELYN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_LOGAN",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_LOGAN",
+        "kind": "base",
+        "numeric_id": 1516,
+        "objects": [
+          "MtEmber_Exterior_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 1,
+        "source_hash": "f93c1ad19fd6a6536f437ea6b84db640473fb35c79f331be94ff5df189039dd8",
+        "source_trainer": "TRAINER_PKMN_RANGER_LOGAN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_BETH",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_BETH",
+        "kind": "base",
+        "numeric_id": 1517,
+        "objects": [
+          "MtEmber_Exterior_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 2,
+        "source_hash": "13583dbcee87e55bca119e71630407986aeeb901594c12a7fafcf94176537b0f",
+        "source_trainer": "TRAINER_PKMN_RANGER_BETH"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_BREEDER_BETHANY",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_BREEDER_BETHANY",
+        "kind": "base",
+        "numeric_id": 1518,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 3,
+        "source_hash": "087c2776de974b587ab8928a74d24d846a781e8228d7b1af023a7eec49f27c9a",
+        "source_trainer": "TRAINER_PKMN_BREEDER_BETHANY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_BREEDER_ALLISON",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALLISON",
+        "kind": "base",
+        "numeric_id": 1519,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 4,
+        "source_hash": "0b02c9c90335e8a6e0bbb0b67feb69b9eb2cbda3df4fc940e301b0ccef0c38c7",
+        "source_trainer": "TRAINER_PKMN_BREEDER_ALLISON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BUG_CATCHER_GARRET",
+        "id": "TRAINER_WAYFARER_SEVII_BUG_CATCHER_GARRET",
+        "kind": "base",
+        "numeric_id": 1520,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 5,
+        "source_hash": "f7600462d5804442803803e4831ceba9ef8241fdd5b3ca1ed575cbd642b3168f",
+        "source_trainer": "TRAINER_BUG_CATCHER_GARRET"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BUG_CATCHER_JONAH",
+        "id": "TRAINER_WAYFARER_SEVII_BUG_CATCHER_JONAH",
+        "kind": "base",
+        "numeric_id": 1521,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 6,
+        "source_hash": "87023125c2c8a935f10680e1742d44db7a99604e8741207bb0ed37459c8eae69",
+        "source_trainer": "TRAINER_BUG_CATCHER_JONAH"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BUG_CATCHER_VANCE",
+        "id": "TRAINER_WAYFARER_SEVII_BUG_CATCHER_VANCE",
+        "kind": "base",
+        "numeric_id": 1522,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 7,
+        "source_hash": "50bbb78c135c7ddf4c1a508f46ee2a1df2ef90ae76178f60370dc18835e37278",
+        "source_trainer": "TRAINER_BUG_CATCHER_VANCE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_YOUNGSTER_NASH",
+        "id": "TRAINER_WAYFARER_SEVII_YOUNGSTER_NASH",
+        "kind": "base",
+        "numeric_id": 1523,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 8,
+        "source_hash": "6c0d752031bf4c0029e4c366d556019c2e735ac3f9854cf5fd4f2fc141f67ed6",
+        "source_trainer": "TRAINER_YOUNGSTER_NASH"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_YOUNGSTER_CORDELL",
+        "id": "TRAINER_WAYFARER_SEVII_YOUNGSTER_CORDELL",
+        "kind": "base",
+        "numeric_id": 1524,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:6"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 9,
+        "source_hash": "cea14b0828a8112a5aba1fcf028cea3dff5fb9f52bd537487b7a614f4922b61c",
+        "source_trainer": "TRAINER_YOUNGSTER_CORDELL"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_LASS_DALIA",
+        "id": "TRAINER_WAYFARER_SEVII_LASS_DALIA",
+        "kind": "base",
+        "numeric_id": 1525,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:7"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 10,
+        "source_hash": "f8fd4a26ab43867f9d1329a3d81f69ac0f7d7c7c6e5c8fee7368558349013690",
+        "source_trainer": "TRAINER_LASS_DALIA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_LASS_JOANA",
+        "id": "TRAINER_WAYFARER_SEVII_LASS_JOANA",
+        "kind": "base",
+        "numeric_id": 1526,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:8"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 11,
+        "source_hash": "7f6cce3d9206c4baf833c3ff955135173b33c7fc7507bee4e002524c44769874",
+        "source_trainer": "TRAINER_LASS_JOANA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CAMPER_RILEY",
+        "id": "TRAINER_WAYFARER_SEVII_CAMPER_RILEY",
+        "kind": "base",
+        "numeric_id": 1527,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:9"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 12,
+        "source_hash": "441840711ca988aad74cec0bf769eb13fcca7c9bbcbaf973af2644bec13a5d0a",
+        "source_trainer": "TRAINER_CAMPER_RILEY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PICNICKER_MARCY",
+        "id": "TRAINER_WAYFARER_SEVII_PICNICKER_MARCY",
+        "kind": "base",
+        "numeric_id": 1528,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:10"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 13,
+        "source_hash": "47aa3e3d44cca5bafd95555b338f83e24f5e80af02109fcdeefc96002c36f9c4",
+        "source_trainer": "TRAINER_PICNICKER_MARCY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_LAYTON",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAYTON",
+        "kind": "base",
+        "numeric_id": 1529,
+        "objects": [
+          "SixIsland_PatternBush_Frlg:11"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 14,
+        "source_hash": "ce5f403bbff6c5bc67bd0dd776095eaca3cca98af19c34bd4c2182aa20aa9c9b",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LAYTON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_LAWSON",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LAWSON",
+        "kind": "base",
+        "numeric_id": 1530,
+        "objects": [
+          "FiveIsland_LostCave_Room1_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 15,
+        "source_hash": "60866f3ed9dcd363f6a89a4d494daecd60f5d0d8cd6f9e063e7b749416ab85dc",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LAWSON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_LAURA",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_LAURA",
+        "kind": "base",
+        "numeric_id": 1531,
+        "objects": [
+          "FiveIsland_LostCave_Room4_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 16,
+        "source_hash": "226b38922ff092561a3bfb758c82aa677f2a259bf5fed2d0917b4e9a3651c694",
+        "source_trainer": "TRAINER_PSYCHIC_LAURA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_MARIA",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_MARIA",
+        "kind": "base",
+        "numeric_id": 1532,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 17,
+        "source_hash": "3ad960140efc48935a50a4bacacddec650d20bf2fdc29720a9a5f701bf47a0d7",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_MARIA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_ABIGAIL",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_ABIGAIL",
+        "kind": "base",
+        "numeric_id": 1533,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 18,
+        "source_hash": "d1cb368b921badab2df4ede744c7f52288c4b69538964e5ecc2a5bc5c145ae39",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_ABIGAIL"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_FINN",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN",
+        "kind": "base",
+        "numeric_id": 1534,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 19,
+        "source_hash": "1c6e78decb6d6677355c31d7e8e8e2e407ff9acd264efb35506377ce495d1143",
+        "source_trainer": "TRAINER_SWIMMER_MALE_FINN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_FINN",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN_2",
+        "kind": "rematch",
+        "numeric_id": 1535,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 20,
+        "source_hash": "4cebc647e218622888e3fa16900018d5eb3e81e6efcf3ec41f5ec15ed3c11d26",
+        "source_trainer": "TRAINER_SWIMMER_MALE_FINN_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_GARRETT",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_GARRETT",
+        "kind": "base",
+        "numeric_id": 1536,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 21,
+        "source_hash": "ad2def248e7c0491c5f3200419c5e52f499c86061994a43173a9381e2853eecc",
+        "source_trainer": "TRAINER_SWIMMER_MALE_GARRETT"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_FISHERMAN_TOMMY",
+        "id": "TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY",
+        "kind": "base",
+        "numeric_id": 1537,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 22,
+        "source_hash": "cd886d455c32e41fb4727410772d430e213a940b869b26f1f18d74293d26821a",
+        "source_trainer": "TRAINER_FISHERMAN_TOMMY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_SHARON",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON",
+        "kind": "base",
+        "numeric_id": 1538,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 23,
+        "source_hash": "f7bd79c5aac184f198ccfde45d9f8e7b024ea50fda3913357feeee240477c915",
+        "source_trainer": "TRAINER_CRUSH_GIRL_SHARON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_SHARON",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2",
+        "kind": "rematch",
+        "numeric_id": 1539,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 24,
+        "source_hash": "e5e4a0cfc4dc50c9437773a89d0cc8efc396bbe1fc6a795a817b6fa43fa8973f",
+        "source_trainer": "TRAINER_CRUSH_GIRL_SHARON_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_SHARON",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_3",
+        "kind": "rematch",
+        "numeric_id": 1540,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 25,
+        "source_hash": "9f485a0854593735c499cfa2b5afc501e3bfef763247fa97cea673bfbc11a5c9",
+        "source_trainer": "TRAINER_CRUSH_GIRL_SHARON_3"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_TANYA",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA",
+        "kind": "base",
+        "numeric_id": 1541,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:6"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 26,
+        "source_hash": "3107037b8721c7a31ca771a3aef02320772d5df5e455d81d1fbf7a4f9166659f",
+        "source_trainer": "TRAINER_CRUSH_GIRL_TANYA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_TANYA",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA_2",
+        "kind": "rematch",
+        "numeric_id": 1542,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 27,
+        "source_hash": "8dea12c5a4b3baf1157fdbdf76be0883d8bef9af51444a0323e063c380a37e53",
+        "source_trainer": "TRAINER_CRUSH_GIRL_TANYA_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_TANYA",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_TANYA_3",
+        "kind": "rematch",
+        "numeric_id": 1543,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 28,
+        "source_hash": "23162b8c00a2a98bef4275a51c403e9eeebbbd09ce2fac6a72126f4e1f20b26f",
+        "source_trainer": "TRAINER_CRUSH_GIRL_TANYA_3"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BLACK_BELT_SHEA",
+        "id": "TRAINER_WAYFARER_SEVII_BLACK_BELT_SHEA",
+        "kind": "base",
+        "numeric_id": 1544,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:7"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 29,
+        "source_hash": "89f2b49979ebe9182f7a96b0b6deaa7b4901b949debfa330caeb052bf3b05a44",
+        "source_trainer": "TRAINER_BLACK_BELT_SHEA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BLACK_BELT_SHEA",
+        "id": "TRAINER_WAYFARER_SEVII_BLACK_BELT_SHEA_2",
+        "kind": "rematch",
+        "numeric_id": 1545,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 30,
+        "source_hash": "7ac8ab19f8699fc822960d07d8e45a050076570c3c3116aaf45c2247e42ef42f",
+        "source_trainer": "TRAINER_BLACK_BELT_SHEA_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BLACK_BELT_SHEA",
+        "id": "TRAINER_WAYFARER_SEVII_BLACK_BELT_SHEA_3",
+        "kind": "rematch",
+        "numeric_id": 1546,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 31,
+        "source_hash": "ac36df38d678721d51f49099b783f86f4e94090148ae431971db5a5d09d825ea",
+        "source_trainer": "TRAINER_BLACK_BELT_SHEA_3"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BLACK_BELT_HUGH",
+        "id": "TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH",
+        "kind": "base",
+        "numeric_id": 1547,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:8"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 32,
+        "source_hash": "1265400bebf3cdc909db7f92e23a9204d35a72374c6034ba28ac07692c81418c",
+        "source_trainer": "TRAINER_BLACK_BELT_HUGH"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BLACK_BELT_HUGH",
+        "id": "TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH_2",
+        "kind": "rematch",
+        "numeric_id": 1548,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 33,
+        "source_hash": "5c4d960f03094d40447326c0df8292b241bf4d41c324a710382b9bd9a4de4d6f",
+        "source_trainer": "TRAINER_BLACK_BELT_HUGH_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BLACK_BELT_HUGH",
+        "id": "TRAINER_WAYFARER_SEVII_BLACK_BELT_HUGH_3",
+        "kind": "rematch",
+        "numeric_id": 1549,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 34,
+        "source_hash": "fc7a7ebdea3fbb40276d7d431ee296beb3254db214dd917e328ffc92e21afeae",
+        "source_trainer": "TRAINER_BLACK_BELT_HUGH_3"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CAMPER_BRYCE",
+        "id": "TRAINER_WAYFARER_SEVII_CAMPER_BRYCE",
+        "kind": "base",
+        "numeric_id": 1550,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:9"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 35,
+        "source_hash": "0f445a60c9fe3e2e8fe1fcab955cc85715293170165d4cf630f8c5fd3190179b",
+        "source_trainer": "TRAINER_CAMPER_BRYCE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PICNICKER_CLAIRE",
+        "id": "TRAINER_WAYFARER_SEVII_PICNICKER_CLAIRE",
+        "kind": "base",
+        "numeric_id": 1551,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:10"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 36,
+        "source_hash": "33ebabeb1dbc728886a298e0491e1f290408ad1b7b6802219ae1217be788cc57",
+        "source_trainer": "TRAINER_PICNICKER_CLAIRE"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_CRUSH_KIN_MIK_KIA",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA",
+        "kind": "base",
+        "numeric_id": 1552,
+        "objects": [
+          "OneIsland_KindleRoad_Frlg:11",
+          "OneIsland_KindleRoad_Frlg:12"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 37,
+        "source_hash": "651d170234e9d1e6bdd1a0ca61a0530464ea5c406743b77048f4666bc9da9ac9",
+        "source_trainer": "TRAINER_CRUSH_KIN_MIK_KIA"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_CRUSH_KIN_MIK_KIA",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA_2",
+        "kind": "rematch",
+        "numeric_id": 1553,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 38,
+        "source_hash": "3f0d2fd280c013c6f5457127fa4f154b348f9ba7747f7fe65e0b1b51f3d7ea44",
+        "source_trainer": "TRAINER_CRUSH_KIN_MIK_KIA_2"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_CRUSH_KIN_MIK_KIA",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA_3",
+        "kind": "rematch",
+        "numeric_id": 1554,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 39,
+        "source_hash": "0ed444c2ce3f333a14c1f82fcc260f857c8a60b4f2142141638757d1ded697c2",
+        "source_trainer": "TRAINER_CRUSH_KIN_MIK_KIA_3"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_AMARA",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_AMARA",
+        "kind": "base",
+        "numeric_id": 1555,
+        "objects": [
+          "OneIsland_TreasureBeach_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 40,
+        "source_hash": "33a9ccf1299f8ec030f1985d41dc2df6106c9122d52e2a433e7931acc8ffdf35",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_AMARA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_AROMA_LADY_NIKKI",
+        "id": "TRAINER_WAYFARER_SEVII_AROMA_LADY_NIKKI",
+        "kind": "base",
+        "numeric_id": 1556,
+        "objects": [
+          "ThreeIsland_BondBridge_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 41,
+        "source_hash": "ce087e35676f81acf660f65dec595185201cfac223a44c47eb5bd19395ae5864",
+        "source_trainer": "TRAINER_AROMA_LADY_NIKKI"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_AROMA_LADY_VIOLET",
+        "id": "TRAINER_WAYFARER_SEVII_AROMA_LADY_VIOLET",
+        "kind": "base",
+        "numeric_id": 1557,
+        "objects": [
+          "ThreeIsland_BondBridge_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 42,
+        "source_hash": "2ac5d50fa8796beed132815fb5b51bf7af196baa7d875c07cfb4b67ec7109eff",
+        "source_trainer": "TRAINER_AROMA_LADY_VIOLET"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TUBER_AMIRA",
+        "id": "TRAINER_WAYFARER_SEVII_TUBER_AMIRA",
+        "kind": "base",
+        "numeric_id": 1558,
+        "objects": [
+          "ThreeIsland_BondBridge_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 43,
+        "source_hash": "a98f51bdd9d5769511b800c098ed394e254a1a0e57501b1556b5bf7af98ee050",
+        "source_trainer": "TRAINER_TUBER_AMIRA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TUBER_AMIRA",
+        "id": "TRAINER_WAYFARER_SEVII_TUBER_AMIRA_2",
+        "kind": "rematch",
+        "numeric_id": 1559,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 44,
+        "source_hash": "a2839a9d319b242a36d3b37022ae8ff723fc4577a64553c077e7947d6eecf638",
+        "source_trainer": "TRAINER_TUBER_AMIRA_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TUBER_ALEXIS",
+        "id": "TRAINER_WAYFARER_SEVII_TUBER_ALEXIS",
+        "kind": "base",
+        "numeric_id": 1560,
+        "objects": [
+          "ThreeIsland_BondBridge_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 45,
+        "source_hash": "0d3490bdce8802f0f31359742e17fa5e1b28e30b0e0c5d25d360637849f49751",
+        "source_trainer": "TRAINER_TUBER_ALEXIS"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_TISHA",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_TISHA",
+        "kind": "base",
+        "numeric_id": 1561,
+        "objects": [
+          "ThreeIsland_BondBridge_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 46,
+        "source_hash": "7325abb46d3b6f04370b49972937873f4a152244a24e8c632b0e16b948cc1548",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_TISHA"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_TWINS_JOY_MEG",
+        "id": "TRAINER_WAYFARER_SEVII_TWINS_JOY_MEG",
+        "kind": "base",
+        "numeric_id": 1562,
+        "objects": [
+          "ThreeIsland_BondBridge_Frlg:5",
+          "ThreeIsland_BondBridge_Frlg:6"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 47,
+        "source_hash": "90d7ec556ecc3056f1e3be0250ecfac0fac90340e2ac080fbe514d27cb7d6174",
+        "source_trainer": "TRAINER_TWINS_JOY_MEG"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_TWINS_JOY_MEG",
+        "id": "TRAINER_WAYFARER_SEVII_TWINS_JOY_MEG_2",
+        "kind": "rematch",
+        "numeric_id": 1563,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 48,
+        "source_hash": "44ebb7fa2a3b3538172aa2ed4a1009f389aa35ad0686aa823a3bef18ca57b47a",
+        "source_trainer": "TRAINER_TWINS_JOY_MEG_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PAINTER_DAISY",
+        "id": "TRAINER_WAYFARER_SEVII_PAINTER_DAISY",
+        "kind": "base",
+        "numeric_id": 1564,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 49,
+        "source_hash": "5e2aa1d26b153b69a3be890e20828e49d40c2151d0fc771b2ad1a0ce68a35e5a",
+        "source_trainer": "TRAINER_PAINTER_DAISY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PAINTER_CELINA",
+        "id": "TRAINER_WAYFARER_SEVII_PAINTER_CELINA",
+        "kind": "base",
+        "numeric_id": 1565,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 50,
+        "source_hash": "173e6edd40c5911286560e6ffbff292ba0b2971fc30980c4dda3fbcc6386433b",
+        "source_trainer": "TRAINER_PAINTER_CELINA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PAINTER_RAYNA",
+        "id": "TRAINER_WAYFARER_SEVII_PAINTER_RAYNA",
+        "kind": "base",
+        "numeric_id": 1566,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 51,
+        "source_hash": "a323d2579c7b55b855725d38e764d698c852375e08aefa68363ed9ed0a12c38c",
+        "source_trainer": "TRAINER_PAINTER_RAYNA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PAINTER_RAYNA",
+        "id": "TRAINER_WAYFARER_SEVII_PAINTER_RAYNA_2",
+        "kind": "rematch",
+        "numeric_id": 1567,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 52,
+        "source_hash": "6f781ca20c892d57fd18286b73d07d5cde3825052bfd5cc1142454cfbd5f796c",
+        "source_trainer": "TRAINER_PAINTER_RAYNA_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_LADY_JACKI",
+        "id": "TRAINER_WAYFARER_SEVII_LADY_JACKI",
+        "kind": "base",
+        "numeric_id": 1568,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 53,
+        "source_hash": "b2835bf977bbbfd75cfe627c7f68d57b9970f41d339a600267bb8367189d5446",
+        "source_trainer": "TRAINER_LADY_JACKI"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_LADY_GILLIAN",
+        "id": "TRAINER_WAYFARER_SEVII_LADY_GILLIAN",
+        "kind": "base",
+        "numeric_id": 1569,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 54,
+        "source_hash": "e952638baa2b1f49c50a05ea26f310c896326f6ffa70cec63774d7560f5d1cb5",
+        "source_trainer": "TRAINER_LADY_GILLIAN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_YOUNGSTER_DESTIN",
+        "id": "TRAINER_WAYFARER_SEVII_YOUNGSTER_DESTIN",
+        "kind": "base",
+        "numeric_id": 1570,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 55,
+        "source_hash": "23b046d9151056f2c0765c20fc079660ab35efd24b3d0979fb10f9bf73839c69",
+        "source_trainer": "TRAINER_YOUNGSTER_DESTIN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_YOUNGSTER_DESTIN",
+        "id": "TRAINER_WAYFARER_SEVII_YOUNGSTER_DESTIN_2",
+        "kind": "rematch",
+        "numeric_id": 1571,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 56,
+        "source_hash": "136a0e236cf13b44d1ccbd52c0c3b7a34c2a8a8ae581eb387a37dcc0e900abdb",
+        "source_trainer": "TRAINER_YOUNGSTER_DESTIN_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_TOBY",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_TOBY",
+        "kind": "base",
+        "numeric_id": 1572,
+        "objects": [
+          "FiveIsland_ResortGorgeous_Frlg:6"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 57,
+        "source_hash": "6ec0456b26cb73048c8c2a9a9887fa8847838126fddbe46b0463ae780a28768d",
+        "source_trainer": "TRAINER_SWIMMER_MALE_TOBY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_BREEDER_ALIZE",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALIZE",
+        "kind": "base",
+        "numeric_id": 1573,
+        "objects": [
+          "FiveIsland_WaterLabyrinth_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 58,
+        "source_hash": "46c780ef865f51c5f5357a1b9911d182bb128ff0b9e71ae587effc04677ab2cc",
+        "source_trainer": "TRAINER_PKMN_BREEDER_ALIZE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_BREEDER_ALIZE",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_BREEDER_ALIZE_2",
+        "kind": "rematch",
+        "numeric_id": 1574,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 59,
+        "source_hash": "bd91b014a77588146eb16e3c682b8e9a36e6cee44fe9990d17b7fa01d7b4ad1c",
+        "source_trainer": "TRAINER_PKMN_BREEDER_ALIZE_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIRD_KEEPER_MILO",
+        "id": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_MILO",
+        "kind": "base",
+        "numeric_id": 1575,
+        "objects": [
+          "FiveIsland_MemorialPillar_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 60,
+        "source_hash": "bf1f2abedeee1cdad5482d4d2e4c83e98721a79e0ee44a97ccbddd1d7b060110",
+        "source_trainer": "TRAINER_BIRD_KEEPER_MILO"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIRD_KEEPER_MILO",
+        "id": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_MILO_2",
+        "kind": "rematch",
+        "numeric_id": 1576,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 61,
+        "source_hash": "68aa2fb5c911b9fec6a487f3422c7d01eec1e73464ba6afb9bb1378ca4704638",
+        "source_trainer": "TRAINER_BIRD_KEEPER_MILO_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIRD_KEEPER_CHAZ",
+        "id": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_CHAZ",
+        "kind": "base",
+        "numeric_id": 1577,
+        "objects": [
+          "FiveIsland_MemorialPillar_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 62,
+        "source_hash": "3afe4a94e21c1e9f1ac0ff6a115beebabe0bb74746974a7076b8be885b2c685d",
+        "source_trainer": "TRAINER_BIRD_KEEPER_CHAZ"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIRD_KEEPER_CHAZ",
+        "id": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_CHAZ_2",
+        "kind": "rematch",
+        "numeric_id": 1578,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 63,
+        "source_hash": "d644dcd691663ca98ef49e29827328b084629bf3ebf92f87cf56378c98a69037",
+        "source_trainer": "TRAINER_BIRD_KEEPER_CHAZ_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIRD_KEEPER_HAROLD",
+        "id": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_HAROLD",
+        "kind": "base",
+        "numeric_id": 1579,
+        "objects": [
+          "FiveIsland_MemorialPillar_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 64,
+        "source_hash": "fc85d5335554d4b4587bad7fc3ddab426b9a73c2e31d7615ca285dbcf559551c",
+        "source_trainer": "TRAINER_BIRD_KEEPER_HAROLD"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIRD_KEEPER_HAROLD",
+        "id": "TRAINER_WAYFARER_SEVII_BIRD_KEEPER_HAROLD_2",
+        "kind": "rematch",
+        "numeric_id": 1580,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 65,
+        "source_hash": "7f6147674dfcb405760a5d4370a58e4ce1d546a6bdd0fd4fd0ff25c560fe32c9",
+        "source_trainer": "TRAINER_BIRD_KEEPER_HAROLD_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_FISHERMAN_TYLOR",
+        "id": "TRAINER_WAYFARER_SEVII_FISHERMAN_TYLOR",
+        "kind": "base",
+        "numeric_id": 1581,
+        "objects": [
+          "SixIsland_OutcastIsland_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 66,
+        "source_hash": "f422648174135539dbd7ce489c3e86e304df0c7ebf0f65b931ce01d669e29f9e",
+        "source_trainer": "TRAINER_FISHERMAN_TYLOR"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_MYMO",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_MYMO",
+        "kind": "base",
+        "numeric_id": 1582,
+        "objects": [
+          "SixIsland_OutcastIsland_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 67,
+        "source_hash": "7faffcb46b4b261e8c94c264f370843d30a449962f0a1f773f0a32b1a07088bd",
+        "source_trainer": "TRAINER_SWIMMER_MALE_MYMO"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_NICOLE",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE",
+        "kind": "base",
+        "numeric_id": 1583,
+        "objects": [
+          "SixIsland_OutcastIsland_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 68,
+        "source_hash": "9daf4673f3d5d7671860c48d94ac1c2d4581dcbfdb142770f66f51fbbbb94f23",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_NICOLE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_NICOLE",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_NICOLE_2",
+        "kind": "rematch",
+        "numeric_id": 1584,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 69,
+        "source_hash": "8c48912e968bd42dbd9938a10d68c04bf54256c6bfc0e9641a4cef84bccba4f4",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_NICOLE_2"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_SIS_AND_BRO_AVA_GEB",
+        "id": "TRAINER_WAYFARER_SEVII_SIS_AND_BRO_AVA_GEB",
+        "kind": "base",
+        "numeric_id": 1585,
+        "objects": [
+          "SixIsland_OutcastIsland_Frlg:4",
+          "SixIsland_OutcastIsland_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 70,
+        "source_hash": "65c824ee3edf3e4c51a04d6fb0db051b0c113fb81e3fc0e9f766464813d6d1b7",
+        "source_trainer": "TRAINER_SIS_AND_BRO_AVA_GEB"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_JACLYN",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN",
+        "kind": "base",
+        "numeric_id": 1586,
+        "objects": [
+          "SixIsland_GreenPath_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 71,
+        "source_hash": "bc2bb9c2f45567674402a0d8933909a26e8b3bd2e4435a906ac516399254a9a2",
+        "source_trainer": "TRAINER_PSYCHIC_JACLYN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_JACLYN",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_JACLYN_2",
+        "kind": "rematch",
+        "numeric_id": 1587,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 72,
+        "source_hash": "ad0e95cbe778904571c660b587db4b084f4911c90a847067f7e903f7db613ecc",
+        "source_trainer": "TRAINER_PSYCHIC_JACLYN_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_AROMA_LADY_ROSE",
+        "id": "TRAINER_WAYFARER_SEVII_AROMA_LADY_ROSE",
+        "kind": "base",
+        "numeric_id": 1588,
+        "objects": [
+          "SixIsland_WaterPath_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 73,
+        "source_hash": "6577fc69afae1e9ce0a7d596efcf39fb8cc59db0ddf8767788b2d76845b29ef7",
+        "source_trainer": "TRAINER_AROMA_LADY_ROSE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_JUGGLER_EDWARD",
+        "id": "TRAINER_WAYFARER_SEVII_JUGGLER_EDWARD",
+        "kind": "base",
+        "numeric_id": 1589,
+        "objects": [
+          "SixIsland_WaterPath_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 74,
+        "source_hash": "de9c8308681a881ec64efe629fd5fa406ae1ac1888d203d64ebd089d755e3eb6",
+        "source_trainer": "TRAINER_JUGGLER_EDWARD"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_SAMIR",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_SAMIR",
+        "kind": "base",
+        "numeric_id": 1590,
+        "objects": [
+          "SixIsland_WaterPath_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 75,
+        "source_hash": "e2a121b0790d9a402bcba84272a8a939d232de94ec6d26742dbfe9097ae3c4d5",
+        "source_trainer": "TRAINER_SWIMMER_MALE_SAMIR"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_MALE_SAMIR",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_MALE_SAMIR_2",
+        "kind": "rematch",
+        "numeric_id": 1591,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 76,
+        "source_hash": "ae66b505c4a895148a234cc6a0fd318fd64eb29a82fadf1ebbe23da8d932d5ec",
+        "source_trainer": "TRAINER_SWIMMER_MALE_SAMIR_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_DENISE",
+        "id": "TRAINER_WAYFARER_SEVII_SWIMMER_FEMALE_DENISE",
+        "kind": "base",
+        "numeric_id": 1592,
+        "objects": [
+          "SixIsland_WaterPath_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 77,
+        "source_hash": "9d66e2c29f06b6cba57fc4af26c89f9315b61a85546a367dba5570c60834d7ec",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_DENISE"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_TWINS_MIU_MIA",
+        "id": "TRAINER_WAYFARER_SEVII_TWINS_MIU_MIA",
+        "kind": "base",
+        "numeric_id": 1593,
+        "objects": [
+          "SixIsland_WaterPath_Frlg:4",
+          "SixIsland_WaterPath_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 78,
+        "source_hash": "882abce6828b77c585ac447d5e83e8c935628f3810a7ba2a383f4c14519a5fdc",
+        "source_trainer": "TRAINER_TWINS_MIU_MIA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_HIKER_EARL",
+        "id": "TRAINER_WAYFARER_SEVII_HIKER_EARL",
+        "kind": "base",
+        "numeric_id": 1594,
+        "objects": [
+          "SixIsland_WaterPath_Frlg:6"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 79,
+        "source_hash": "10287f4744582d9e95d6e680c2eb5fe2b69b97d433a56be08f214007411866dd",
+        "source_trainer": "TRAINER_HIKER_EARL"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_HIKER_EARL",
+        "id": "TRAINER_WAYFARER_SEVII_HIKER_EARL_2",
+        "kind": "rematch",
+        "numeric_id": 1595,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 80,
+        "source_hash": "cff2c978bdcf3e74d6e36df98d4b0b2f60a164f20f6884019ea9bf55593ed144",
+        "source_trainer": "TRAINER_HIKER_EARL_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_STANLY",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_STANLY",
+        "kind": "base",
+        "numeric_id": 1596,
+        "objects": [
+          "SixIsland_RuinValley_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 81,
+        "source_hash": "4b33632b09f6d63280557bdb1aa22cdd75f1647a48c069ae27f1688e6ee3dbeb",
+        "source_trainer": "TRAINER_RUIN_MANIAC_STANLY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_FOSTER",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_FOSTER",
+        "kind": "base",
+        "numeric_id": 1597,
+        "objects": [
+          "SixIsland_RuinValley_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 82,
+        "source_hash": "cdc36dbba5ffee25095b31ca31f7695819053c5f94e455d17b59151f26a99cfe",
+        "source_trainer": "TRAINER_RUIN_MANIAC_FOSTER"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_LARRY",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LARRY",
+        "kind": "base",
+        "numeric_id": 1598,
+        "objects": [
+          "SixIsland_RuinValley_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 83,
+        "source_hash": "0fa7a763225f6e8a14d9391856f75a55ec5d3631c5aa380f044c81ff003d62d7",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LARRY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_LARRY",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_LARRY_2",
+        "kind": "rematch",
+        "numeric_id": 1599,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 84,
+        "source_hash": "8f1207ddb1b35affc2a896c390a332c7c4cba44b5c22934851c2e21eabe2547f",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LARRY_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_HIKER_DARYL",
+        "id": "TRAINER_WAYFARER_SEVII_HIKER_DARYL",
+        "kind": "base",
+        "numeric_id": 1600,
+        "objects": [
+          "SixIsland_RuinValley_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 85,
+        "source_hash": "86827abe2dce11a92a7851cad595ab1c4559741aa26a26af599dabe31e0726fc",
+        "source_trainer": "TRAINER_HIKER_DARYL"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_POKEMANIAC_HECTOR",
+        "id": "TRAINER_WAYFARER_SEVII_POKEMANIAC_HECTOR",
+        "kind": "base",
+        "numeric_id": 1601,
+        "objects": [
+          "SixIsland_RuinValley_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 86,
+        "source_hash": "e78197728f25e77bd94de4d8f28707e0db1822ada4d51113fa7bc5ec78c246ae",
+        "source_trainer": "TRAINER_POKEMANIAC_HECTOR"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_POKEMANIAC_HECTOR",
+        "id": "TRAINER_WAYFARER_SEVII_POKEMANIAC_HECTOR_2",
+        "kind": "rematch",
+        "numeric_id": 1602,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 87,
+        "source_hash": "d45d9721d3d15958c66a6e598a9e8a0f0e2b9f5a8f1cae12dc9c991025c5eeec",
+        "source_trainer": "TRAINER_POKEMANIAC_HECTOR_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_DARIO",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_DARIO",
+        "kind": "base",
+        "numeric_id": 1603,
+        "objects": [
+          "SevenIsland_TrainerTower_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 88,
+        "source_hash": "903962de0857d259a52b608127dcd4a03147b04cfad958a1f21b3428ddb800e7",
+        "source_trainer": "TRAINER_PSYCHIC_DARIO"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_DARIO",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_DARIO_2",
+        "kind": "rematch",
+        "numeric_id": 1604,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 89,
+        "source_hash": "f47902ffe60ad5cd3cd92168d545e9311f7da05406f82962d0ea6ca88eb7a02a",
+        "source_trainer": "TRAINER_PSYCHIC_DARIO_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_RODETTE",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_RODETTE",
+        "kind": "base",
+        "numeric_id": 1605,
+        "objects": [
+          "SevenIsland_TrainerTower_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 90,
+        "source_hash": "ab5d00dc4926b6704c1dd843bde5851fa7b3b7f4c2f950671f54d80adb16b59d",
+        "source_trainer": "TRAINER_PSYCHIC_RODETTE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PSYCHIC_RODETTE",
+        "id": "TRAINER_WAYFARER_SEVII_PSYCHIC_RODETTE_2",
+        "kind": "rematch",
+        "numeric_id": 1606,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 91,
+        "source_hash": "a82491aa987ab228d6f908d742aab28d278ef58ec7e720464a933505baab69e2",
+        "source_trainer": "TRAINER_PSYCHIC_RODETTE_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_AROMA_LADY_MIAH",
+        "id": "TRAINER_WAYFARER_SEVII_AROMA_LADY_MIAH",
+        "kind": "base",
+        "numeric_id": 1607,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Entrance_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 92,
+        "source_hash": "d589b6418daa121d2fc9b877945456d9d4ef19ce9863cee9e790369b4aad9bce",
+        "source_trainer": "TRAINER_AROMA_LADY_MIAH"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_YOUNG_COUPLE_EVE_JON",
+        "id": "TRAINER_WAYFARER_SEVII_YOUNG_COUPLE_EVE_JON",
+        "kind": "base",
+        "numeric_id": 1608,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Entrance_Frlg:1",
+          "SevenIsland_SevaultCanyon_Entrance_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 93,
+        "source_hash": "02036f59fbee82d745784c3ddc6218d0305b92fd4ef3aa76f8842c7786b574ad",
+        "source_trainer": "TRAINER_YOUNG_COUPLE_EVE_JON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_NICOLAS",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS",
+        "kind": "base",
+        "numeric_id": 1609,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Entrance_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 94,
+        "source_hash": "63cafa87e4c8a4de0b8907cec985307a741e0295552933ff175a3e5649a08285",
+        "source_trainer": "TRAINER_PKMN_RANGER_NICOLAS"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_NICOLAS",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_NICOLAS_2",
+        "kind": "rematch",
+        "numeric_id": 1610,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 95,
+        "source_hash": "3b365926fe878726575f879a44eec0e0cac1dbf8458a5d073419c1acbce04448",
+        "source_trainer": "TRAINER_PKMN_RANGER_NICOLAS_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_MADELINE",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_MADELINE",
+        "kind": "base",
+        "numeric_id": 1611,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Entrance_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 96,
+        "source_hash": "33125ce439a857b334ed2d8ff938a11e4009231b3e205a6342ce97ec7bf487a4",
+        "source_trainer": "TRAINER_PKMN_RANGER_MADELINE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_MADELINE",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_MADELINE_2",
+        "kind": "rematch",
+        "numeric_id": 1612,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 97,
+        "source_hash": "16df7c4a06a4b66f77ba2e706abde69510caaf0985c582ea7f5dfe7419f15f63",
+        "source_trainer": "TRAINER_PKMN_RANGER_MADELINE_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_JUGGLER_MASON",
+        "id": "TRAINER_WAYFARER_SEVII_JUGGLER_MASON",
+        "kind": "base",
+        "numeric_id": 1613,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Entrance_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 98,
+        "source_hash": "93419d4eda184b7210a6e470021436d2cf48268c1ea3341676decde1ef21d01e",
+        "source_trainer": "TRAINER_JUGGLER_MASON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_JUGGLER_MASON",
+        "id": "TRAINER_WAYFARER_SEVII_JUGGLER_MASON_2",
+        "kind": "rematch",
+        "numeric_id": 1614,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 99,
+        "source_hash": "67b312c62f9df78a06dd67ba0efd38abc22d6a7db3a393250b1f284125f90c17",
+        "source_trainer": "TRAINER_JUGGLER_MASON_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_CYNDY",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_CYNDY",
+        "kind": "base",
+        "numeric_id": 1615,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 100,
+        "source_hash": "c880886fad0cf7938b0e7f4cbdd7ee30469c47383b3124df30337ebaea416c45",
+        "source_trainer": "TRAINER_CRUSH_GIRL_CYNDY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CRUSH_GIRL_CYNDY",
+        "id": "TRAINER_WAYFARER_SEVII_CRUSH_GIRL_CYNDY_2",
+        "kind": "rematch",
+        "numeric_id": 1616,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 101,
+        "source_hash": "8292841267e28627b189e418a5488a87c637c4ac7ed54208b087d05a1456b073",
+        "source_trainer": "TRAINER_CRUSH_GIRL_CYNDY_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TAMER_EVAN",
+        "id": "TRAINER_WAYFARER_SEVII_TAMER_EVAN",
+        "kind": "base",
+        "numeric_id": 1617,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 102,
+        "source_hash": "cf5bd88f84fa5528e09a6997f67f485b5d3d3f2da81466f5ce676b06ceaa0efe",
+        "source_trainer": "TRAINER_TAMER_EVAN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TAMER_EVAN",
+        "id": "TRAINER_WAYFARER_SEVII_TAMER_EVAN_2",
+        "kind": "rematch",
+        "numeric_id": 1618,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 103,
+        "source_hash": "15c7c741b86738bd4766e46a24897858f2c6e96ed4dc44304cc0a02a1482d2d4",
+        "source_trainer": "TRAINER_TAMER_EVAN_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_JACKSON",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_JACKSON",
+        "kind": "base",
+        "numeric_id": 1619,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 104,
+        "source_hash": "86acc3bd85ff47c8bb1f0d32e069d4c71b3e5b8d8db256be4d1a088b110bb7b4",
+        "source_trainer": "TRAINER_PKMN_RANGER_JACKSON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_JACKSON",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_JACKSON_2",
+        "kind": "rematch",
+        "numeric_id": 1620,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 105,
+        "source_hash": "76691400efa8ffebb43c1a97cbfe0d9191e82ef7773cc790327d99d137e0da38",
+        "source_trainer": "TRAINER_PKMN_RANGER_JACKSON_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_KATELYN",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_KATELYN",
+        "kind": "base",
+        "numeric_id": 1621,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 106,
+        "source_hash": "d35c555826a44d079896cb1937bd486ad580b81f3569513f1cdbb43b43b380c3",
+        "source_trainer": "TRAINER_PKMN_RANGER_KATELYN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PKMN_RANGER_KATELYN",
+        "id": "TRAINER_WAYFARER_SEVII_PKMN_RANGER_KATELYN_2",
+        "kind": "rematch",
+        "numeric_id": 1622,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 107,
+        "source_hash": "774bb86c3b7dcadedafd52b2707023ab8800112c67b00b8a0722de7c0add93b8",
+        "source_trainer": "TRAINER_PKMN_RANGER_KATELYN_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_COOLTRAINER_LEROY",
+        "id": "TRAINER_WAYFARER_SEVII_COOLTRAINER_LEROY",
+        "kind": "base",
+        "numeric_id": 1623,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:4"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 108,
+        "source_hash": "072505855abe3ce3f0844e4a93719b6314b52961468b0af438980a2cff007fbe",
+        "source_trainer": "TRAINER_COOLTRAINER_LEROY"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_COOLTRAINER_LEROY",
+        "id": "TRAINER_WAYFARER_SEVII_COOLTRAINER_LEROY_2",
+        "kind": "rematch",
+        "numeric_id": 1624,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 109,
+        "source_hash": "c3330dfd41632bde5a42e3b668fbf1fbb566c73d8ac4f68b191779b93d951f0c",
+        "source_trainer": "TRAINER_COOLTRAINER_LEROY_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_COOLTRAINER_MICHELLE",
+        "id": "TRAINER_WAYFARER_SEVII_COOLTRAINER_MICHELLE",
+        "kind": "base",
+        "numeric_id": 1625,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:5"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 110,
+        "source_hash": "07644264fbc4a224ceb9e090c0f3c1143e2031aef3aa762b4b86937a0a707106",
+        "source_trainer": "TRAINER_COOLTRAINER_MICHELLE"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_COOLTRAINER_MICHELLE",
+        "id": "TRAINER_WAYFARER_SEVII_COOLTRAINER_MICHELLE_2",
+        "kind": "rematch",
+        "numeric_id": 1626,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 111,
+        "source_hash": "55b90ede1a1ce5f520214a91c8f04ccb6f62acef6d989c15e1abeeb71f91225d",
+        "source_trainer": "TRAINER_COOLTRAINER_MICHELLE_2"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_COOL_COUPLE_LEX_NYA",
+        "id": "TRAINER_WAYFARER_SEVII_COOL_COUPLE_LEX_NYA",
+        "kind": "base",
+        "numeric_id": 1627,
+        "objects": [
+          "SevenIsland_SevaultCanyon_Frlg:6",
+          "SevenIsland_SevaultCanyon_Frlg:7"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 112,
+        "source_hash": "4475f1a74d2fe4f7b64c89c817e64e164c2538fe9328e5d2f982476ddfef4180",
+        "source_trainer": "TRAINER_COOL_COUPLE_LEX_NYA"
+      },
+      {
+        "battle_type": "double",
+        "defeat_base": "TRAINER_COOL_COUPLE_LEX_NYA",
+        "id": "TRAINER_WAYFARER_SEVII_COOL_COUPLE_LEX_NYA_2",
+        "kind": "rematch",
+        "numeric_id": 1628,
+        "objects": [],
+        "owner": "ordinary_trainer",
+        "slot": 113,
+        "source_hash": "bc41c9f6f80dd821167950f9df64ba00939cbc697ed29373784dcd4e694e56ea",
+        "source_trainer": "TRAINER_COOL_COUPLE_LEX_NYA_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_BRANDON",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BRANDON",
+        "kind": "base",
+        "numeric_id": 1629,
+        "objects": [
+          "SevenIsland_TanobyRuins_Frlg:0"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 114,
+        "source_hash": "70eb7a2994cde23e7ee93f880bc94456783d066816e4464d46b4a200716c555c",
+        "source_trainer": "TRAINER_RUIN_MANIAC_BRANDON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_RUIN_MANIAC_BENJAMIN",
+        "id": "TRAINER_WAYFARER_SEVII_RUIN_MANIAC_BENJAMIN",
+        "kind": "base",
+        "numeric_id": 1630,
+        "objects": [
+          "SevenIsland_TanobyRuins_Frlg:1"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 115,
+        "source_hash": "2fc78b333d7e2957137024927f21f0f8a16efd1fab937954959bb56353f8133d",
+        "source_trainer": "TRAINER_RUIN_MANIAC_BENJAMIN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_PAINTER_EDNA",
+        "id": "TRAINER_WAYFARER_SEVII_PAINTER_EDNA",
+        "kind": "base",
+        "numeric_id": 1631,
+        "objects": [
+          "SevenIsland_TanobyRuins_Frlg:2"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 116,
+        "source_hash": "e4a360cb55427140f92f4c730e8abf148c3b23e36948e594e2230c6b513cc4b0",
+        "source_trainer": "TRAINER_PAINTER_EDNA"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_GENTLEMAN_CLIFFORD",
+        "id": "TRAINER_WAYFARER_SEVII_GENTLEMAN_CLIFFORD",
+        "kind": "base",
+        "numeric_id": 1632,
+        "objects": [
+          "SevenIsland_TanobyRuins_Frlg:3"
+        ],
+        "owner": "ordinary_trainer",
+        "slot": 117,
+        "source_hash": "04805b08772ed1cb91945b786e649651447b429ab458ddea8c3b0f6f23dabdce",
+        "source_trainer": "TRAINER_GENTLEMAN_CLIFFORD"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIKER_GOON",
+        "id": "TRAINER_WAYFARER_SEVII_BIKER_GOON",
+        "kind": "planned",
+        "numeric_id": 1633,
+        "objects": [],
+        "owner": "story",
+        "slot": 118,
+        "source_hash": "88c5bf0ed07ebe47bcf7675e0624c1e32ccf68110c1ca7682cf57ddf1c1a385b",
+        "source_trainer": "TRAINER_BIKER_GOON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIKER_GOON_2",
+        "id": "TRAINER_WAYFARER_SEVII_BIKER_GOON_2",
+        "kind": "planned",
+        "numeric_id": 1634,
+        "objects": [],
+        "owner": "story",
+        "slot": 119,
+        "source_hash": "089e189ea5decb430a0188d2fbb4f6875f31679ee1a30741623df85ceb5fcab0",
+        "source_trainer": "TRAINER_BIKER_GOON_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_BIKER_GOON_3",
+        "id": "TRAINER_WAYFARER_SEVII_BIKER_GOON_3",
+        "kind": "planned",
+        "numeric_id": 1635,
+        "objects": [],
+        "owner": "story",
+        "slot": 120,
+        "source_hash": "12e351e10e3d0be353e5988be1d799b9ed8441cbb19acc6d1f1e0839864338d0",
+        "source_trainer": "TRAINER_BIKER_GOON_3"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_CUE_BALL_PAXTON",
+        "id": "TRAINER_WAYFARER_SEVII_CUE_BALL_PAXTON",
+        "kind": "planned",
+        "numeric_id": 1636,
+        "objects": [],
+        "owner": "story",
+        "slot": 121,
+        "source_hash": "480870799ad773a769336125009bc4b7c2a7c4b8927ab2c63adc9ef5ac95145a",
+        "source_trainer": "TRAINER_CUE_BALL_PAXTON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_43",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_43",
+        "kind": "planned",
+        "numeric_id": 1637,
+        "objects": [],
+        "owner": "story",
+        "slot": 122,
+        "source_hash": "59e0e492763d48e6f1c3bc44ba7567ccac6af97853a2f647c69c2afea189b04d",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_43"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_44",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_44",
+        "kind": "planned",
+        "numeric_id": 1638,
+        "objects": [],
+        "owner": "story",
+        "slot": 123,
+        "source_hash": "fea2695f668c280e368a09ddbc6649e0d9304bc58a279ac832fff193153a6cce",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_44"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_45",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_45",
+        "kind": "planned",
+        "numeric_id": 1639,
+        "objects": [],
+        "owner": "story",
+        "slot": 124,
+        "source_hash": "5e878857a5cafc4274c4f1e7480de2ca3d69b52ddaf30246a8290698fcf65ac4",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_45"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_46",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_46",
+        "kind": "planned",
+        "numeric_id": 1640,
+        "objects": [],
+        "owner": "story",
+        "slot": 125,
+        "source_hash": "deef60b0c2c41da9237e27c7e0c975e0c75695ff959700f99457f03514299a7d",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_46"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_49",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_49",
+        "kind": "planned",
+        "numeric_id": 1641,
+        "objects": [],
+        "owner": "story",
+        "slot": 126,
+        "source_hash": "d7ffd5a4f82bb49155b063c5e8dbe5a49de596396684f63e037f9950ed95a2bd",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_49"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_50",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_50",
+        "kind": "planned",
+        "numeric_id": 1642,
+        "objects": [],
+        "owner": "story",
+        "slot": 127,
+        "source_hash": "b35cfabbb2f2a70fb1ce52cf1ad6e74ca37ce821071f1e41f8b773719e67be53",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_50"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_51",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_51",
+        "kind": "planned",
+        "numeric_id": 1643,
+        "objects": [],
+        "owner": "story",
+        "slot": 128,
+        "source_hash": "960ffb1b313c9eaae55aee919290028bb46715563c57d4123a3aa6b0f49a4f66",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_51"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_42",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_42",
+        "kind": "planned",
+        "numeric_id": 1644,
+        "objects": [],
+        "owner": "story",
+        "slot": 129,
+        "source_hash": "4f7fb89e6c5c8e132e7075795f55c8e97addd9ce3221857424b46af883682d2d",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_42"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_47",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_47",
+        "kind": "planned",
+        "numeric_id": 1645,
+        "objects": [],
+        "owner": "story",
+        "slot": 130,
+        "source_hash": "dfe041cee6e421e6d5a73100bed37a882adf1ff744795de70645f2517f78cb9b",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_47"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_GRUNT_48",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_GRUNT_48",
+        "kind": "planned",
+        "numeric_id": 1646,
+        "objects": [],
+        "owner": "story",
+        "slot": 131,
+        "source_hash": "dc31195f33bbf5001f826394a925e1477878061761f706a18b0fa4597e42b071",
+        "source_trainer": "TRAINER_TEAM_ROCKET_GRUNT_48"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_ADMIN",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN",
+        "kind": "planned",
+        "numeric_id": 1647,
+        "objects": [],
+        "owner": "story",
+        "slot": 132,
+        "source_hash": "92ed6e0e67041d7a63f5a8e17ff9a7209164d2a61745882f0ae046e289b2aa93",
+        "source_trainer": "TRAINER_TEAM_ROCKET_ADMIN"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_TEAM_ROCKET_ADMIN_2",
+        "id": "TRAINER_WAYFARER_SEVII_TEAM_ROCKET_ADMIN_2",
+        "kind": "planned",
+        "numeric_id": 1648,
+        "objects": [],
+        "owner": "story",
+        "slot": 133,
+        "source_hash": "8bb0dad73d695ce112698e42e919bbda4603f27f76b12588333bcb016c2b4a41",
+        "source_trainer": "TRAINER_TEAM_ROCKET_ADMIN_2"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_SCIENTIST_GIDEON",
+        "id": "TRAINER_WAYFARER_SEVII_SCIENTIST_GIDEON",
+        "kind": "planned",
+        "numeric_id": 1649,
+        "objects": [],
+        "owner": "story",
+        "slot": 134,
+        "source_hash": "cc8402e6ceffbaaf2d706fb7cd9d0b451123c451267a36a21f477331fa84efda",
+        "source_trainer": "TRAINER_SCIENTIST_GIDEON"
+      },
+      {
+        "battle_type": "single",
+        "defeat_base": "TRAINER_LADY_SELPHY",
+        "id": "TRAINER_WAYFARER_SEVII_LADY_SELPHY",
+        "kind": "planned",
+        "numeric_id": 1650,
+        "objects": [],
+        "owner": "story",
+        "slot": 135,
+        "source_hash": "6a85e80cf5d1c1c3607b3c366fc82f399c9efc9f81eae6c60beebd108b8ac0f8",
+        "source_trainer": "TRAINER_LADY_SELPHY"
+      }
+    ],
+    "base": 1515,
+    "count": 136,
+    "limit": 2048,
+    "next_id": 1651
+  },
+  "ordinary": {
+    "base_identities": 81,
+    "objects": 87,
+    "objects_inventory": [
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+          "movement_range_x": 5,
+          "movement_range_y": 3,
+          "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT",
+          "script": "MtEmber_Exterior_EventScript_Jocelyn",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 22,
+          "y": 35
+        },
+        "source_index": 3,
+        "source_map": "MtEmber_Exterior_Frlg",
+        "source_script": "MtEmber_Exterior_EventScript_Jocelyn",
+        "source_trainer": "TRAINER_CRUSH_GIRL_JOCELYN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "MtEmber_Exterior_EventScript_Logan",
+          "trainer_sight_or_berry_tree_id": "5",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 15,
+          "y": 28
+        },
+        "source_index": 4,
+        "source_map": "MtEmber_Exterior_Frlg",
+        "source_script": "MtEmber_Exterior_EventScript_Logan",
+        "source_trainer": "TRAINER_PKMN_RANGER_LOGAN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_LEFT",
+          "script": "MtEmber_Exterior_EventScript_Beth",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 14,
+          "y": 42
+        },
+        "source_index": 5,
+        "source_map": "MtEmber_Exterior_Frlg",
+        "source_script": "MtEmber_Exterior_EventScript_Beth",
+        "source_trainer": "TRAINER_PKMN_RANGER_BETH",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT",
+          "script": "SixIsland_PatternBush_EventScript_Bethany",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 48,
+          "y": 15
+        },
+        "source_index": 0,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Bethany",
+        "source_trainer": "TRAINER_PKMN_BREEDER_BETHANY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT",
+          "script": "SixIsland_PatternBush_EventScript_Allison",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 10,
+          "y": 5
+        },
+        "source_index": 1,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Allison",
+        "source_trainer": "TRAINER_PKMN_BREEDER_ALLISON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "SixIsland_PatternBush_EventScript_Garret",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 51,
+          "y": 6
+        },
+        "source_index": 2,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Garret",
+        "source_trainer": "TRAINER_BUG_CATCHER_GARRET",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 2,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SixIsland_PatternBush_EventScript_Jonah",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 12,
+          "y": 13
+        },
+        "source_index": 3,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Jonah",
+        "source_trainer": "TRAINER_BUG_CATCHER_JONAH",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_FRLG",
+          "movement_range_x": 2,
+          "movement_range_y": 5,
+          "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_LEFT_UP_RIGHT_DOWN",
+          "script": "SixIsland_PatternBush_EventScript_Vance",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 37,
+          "y": 23
+        },
+        "source_index": 4,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Vance",
+        "source_trainer": "TRAINER_BUG_CATCHER_VANCE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "SixIsland_PatternBush_EventScript_Nash",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 32,
+          "y": 5
+        },
+        "source_index": 5,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Nash",
+        "source_trainer": "TRAINER_YOUNGSTER_NASH",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 7,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+          "script": "SixIsland_PatternBush_EventScript_Cordell",
+          "trainer_sight_or_berry_tree_id": "4",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 52,
+          "y": 20
+        },
+        "source_index": 6,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Cordell",
+        "source_trainer": "TRAINER_YOUNGSTER_CORDELL",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 8,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_LEFT",
+          "script": "SixIsland_PatternBush_EventScript_Dalia",
+          "trainer_sight_or_berry_tree_id": "5",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 8,
+          "y": 21
+        },
+        "source_index": 7,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Dalia",
+        "source_trainer": "TRAINER_LASS_DALIA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 9,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SixIsland_PatternBush_EventScript_Joana",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 39,
+          "y": 6
+        },
+        "source_index": 8,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Joana",
+        "source_trainer": "TRAINER_LASS_JOANA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 10,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 2,
+          "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+          "script": "SixIsland_PatternBush_EventScript_Riley",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 3,
+          "y": 9
+        },
+        "source_index": 9,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Riley",
+        "source_trainer": "TRAINER_CAMPER_RILEY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 11,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
+          "movement_range_x": 5,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT",
+          "script": "SixIsland_PatternBush_EventScript_Marcy",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 19,
+          "y": 24
+        },
+        "source_index": 10,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Marcy",
+        "source_trainer": "TRAINER_PICNICKER_MARCY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 12,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SixIsland_PatternBush_EventScript_Layton",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 30,
+          "y": 19
+        },
+        "source_index": 11,
+        "source_map": "SixIsland_PatternBush_Frlg",
+        "source_script": "SixIsland_PatternBush_EventScript_Layton",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LAYTON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "FiveIsland_LostCave_Room1_EventScript_Lawson",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 5,
+          "y": 4
+        },
+        "source_index": 0,
+        "source_map": "FiveIsland_LostCave_Room1_Frlg",
+        "source_script": "FiveIsland_LostCave_Room1_EventScript_Lawson",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LAWSON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": false,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "FiveIsland_LostCave_Room4_EventScript_Laura",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 6,
+          "y": 4
+        },
+        "source_index": 0,
+        "source_map": "FiveIsland_LostCave_Room4_Frlg",
+        "source_script": "FiveIsland_LostCave_Room4_EventScript_Laura",
+        "source_trainer": "TRAINER_PSYCHIC_LAURA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT",
+          "script": "OneIsland_KindleRoad_EventScript_Maria",
+          "trainer_sight_or_berry_tree_id": "4",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 32
+        },
+        "source_index": 0,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Maria",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_MARIA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_LAND",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "OneIsland_KindleRoad_EventScript_Abigail",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 17,
+          "y": 132
+        },
+        "source_index": 1,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Abigail",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_ABIGAIL",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
+          "movement_range_x": 6,
+          "movement_range_y": 3,
+          "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_RIGHT_DOWN_LEFT_UP",
+          "script": "OneIsland_KindleRoad_EventScript_Finn",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 7,
+          "y": 39
+        },
+        "source_index": 2,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Finn",
+        "source_trainer": "TRAINER_SWIMMER_MALE_FINN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_LAND",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "OneIsland_KindleRoad_EventScript_Garrett",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 19,
+          "y": 79
+        },
+        "source_index": 3,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Garrett",
+        "source_trainer": "TRAINER_SWIMMER_MALE_GARRETT",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_FISHER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+          "script": "OneIsland_KindleRoad_EventScript_Tommy",
+          "trainer_sight_or_berry_tree_id": "0",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 15,
+          "y": 25
+        },
+        "source_index": 4,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Tommy",
+        "source_trainer": "TRAINER_FISHERMAN_TOMMY",
+        "talk_battle": true
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+          "movement_range_x": 1,
+          "movement_range_y": 7,
+          "movement_type": "MOVEMENT_TYPE_WALK_DOWN_AND_UP",
+          "script": "OneIsland_KindleRoad_EventScript_Sharon",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 9,
+          "y": 53
+        },
+        "source_index": 5,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Sharon",
+        "source_trainer": "TRAINER_CRUSH_GIRL_SHARON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 7,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 4,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+          "movement_range_x": 1,
+          "movement_range_y": 4,
+          "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT",
+          "script": "OneIsland_KindleRoad_EventScript_Tanya",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 18,
+          "y": 105
+        },
+        "source_index": 6,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Tanya",
+        "source_trainer": "TRAINER_CRUSH_GIRL_TANYA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 8,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BLACKBELT",
+          "movement_range_x": 2,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WALK_LEFT_AND_RIGHT",
+          "script": "OneIsland_KindleRoad_EventScript_Shea",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 16,
+          "y": 64
+        },
+        "source_index": 7,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Shea",
+        "source_trainer": "TRAINER_BLACK_BELT_SHEA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 9,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BLACKBELT",
+          "movement_range_x": 2,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WALK_RIGHT_AND_LEFT",
+          "script": "OneIsland_KindleRoad_EventScript_Hugh",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 64
+        },
+        "source_index": 8,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Hugh",
+        "source_trainer": "TRAINER_BLACK_BELT_HUGH",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 10,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT",
+          "script": "OneIsland_KindleRoad_EventScript_Bryce",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 89
+        },
+        "source_index": 9,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Bryce",
+        "source_trainer": "TRAINER_CAMPER_BRYCE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 11,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+          "script": "OneIsland_KindleRoad_EventScript_Claire",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 9,
+          "y": 108
+        },
+        "source_index": 10,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Claire",
+        "source_trainer": "TRAINER_PICNICKER_CLAIRE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 12,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BLACKBELT",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "OneIsland_KindleRoad_EventScript_Mik",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 8,
+          "y": 68
+        },
+        "source_index": 11,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Mik",
+        "source_trainer": "TRAINER_CRUSH_KIN_MIK_KIA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 13,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "OneIsland_KindleRoad_EventScript_Kia",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 9,
+          "y": 68
+        },
+        "source_index": 12,
+        "source_map": "OneIsland_KindleRoad_Frlg",
+        "source_script": "OneIsland_KindleRoad_EventScript_Kia",
+        "source_trainer": "TRAINER_CRUSH_KIN_MIK_KIA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
+          "movement_range_x": 2,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "OneIsland_TreasureBeach_EventScript_Amara",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 8,
+          "y": 11
+        },
+        "source_index": 0,
+        "source_map": "OneIsland_TreasureBeach_Frlg",
+        "source_script": "OneIsland_TreasureBeach_EventScript_Amara",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_AMARA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "ThreeIsland_BondBridge_EventScript_Nikki",
+          "trainer_sight_or_berry_tree_id": "5",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 27,
+          "y": 10
+        },
+        "source_index": 0,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Nikki",
+        "source_trainer": "TRAINER_AROMA_LADY_NIKKI",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+          "script": "ThreeIsland_BondBridge_EventScript_Violet",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 68,
+          "y": 10
+        },
+        "source_index": 1,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Violet",
+        "source_trainer": "TRAINER_AROMA_LADY_VIOLET",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_TUBER_F_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+          "script": "ThreeIsland_BondBridge_EventScript_Amira",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 33,
+          "y": 13
+        },
+        "source_index": 2,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Amira",
+        "source_trainer": "TRAINER_TUBER_AMIRA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_TUBER_F_FRLG",
+          "movement_range_x": 2,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WALK_LEFT_AND_RIGHT",
+          "script": "ThreeIsland_BondBridge_EventScript_Alexis",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 50,
+          "y": 11
+        },
+        "source_index": 3,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Alexis",
+        "source_trainer": "TRAINER_TUBER_ALEXIS",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+          "script": "ThreeIsland_BondBridge_EventScript_Tisha",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 36,
+          "y": 4
+        },
+        "source_index": 4,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Tisha",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_TISHA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "ThreeIsland_BondBridge_EventScript_Joy",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 77,
+          "y": 5
+        },
+        "source_index": 5,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Joy",
+        "source_trainer": "TRAINER_TWINS_JOY_MEG",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 7,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "ThreeIsland_BondBridge_EventScript_Meg",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 78,
+          "y": 5
+        },
+        "source_index": 6,
+        "source_map": "ThreeIsland_BondBridge_Frlg",
+        "source_script": "ThreeIsland_BondBridge_EventScript_Meg",
+        "source_trainer": "TRAINER_TWINS_JOY_MEG",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Daisy",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 44,
+          "y": 10
+        },
+        "source_index": 0,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Daisy",
+        "source_trainer": "TRAINER_PAINTER_DAISY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Celina",
+          "trainer_sight_or_berry_tree_id": "4",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 33,
+          "y": 12
+        },
+        "source_index": 1,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Celina",
+        "source_trainer": "TRAINER_PAINTER_CELINA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Rayna",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 12,
+          "y": 10
+        },
+        "source_index": 2,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Rayna",
+        "source_trainer": "TRAINER_PAINTER_RAYNA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 2,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Jacki",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 23,
+          "y": 9
+        },
+        "source_index": 3,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Jacki",
+        "source_trainer": "TRAINER_LADY_JACKI",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Gillian",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 33,
+          "y": 8
+        },
+        "source_index": 4,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Gillian",
+        "source_trainer": "TRAINER_LADY_GILLIAN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
+          "movement_range_x": 10,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_RIGHT_UP_LEFT",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Destin",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 33,
+          "y": 3
+        },
+        "source_index": 5,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Destin",
+        "source_trainer": "TRAINER_YOUNGSTER_DESTIN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 7,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+          "script": "FiveIsland_ResortGorgeous_EventScript_Toby",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 56,
+          "y": 7
+        },
+        "source_index": 6,
+        "source_map": "FiveIsland_ResortGorgeous_Frlg",
+        "source_script": "FiveIsland_ResortGorgeous_EventScript_Toby",
+        "source_trainer": "TRAINER_SWIMMER_MALE_TOBY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "FiveIsland_WaterLabyrinth_EventScript_Alize",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 9,
+          "y": 7
+        },
+        "source_index": 1,
+        "source_map": "FiveIsland_WaterLabyrinth_Frlg",
+        "source_script": "FiveIsland_WaterLabyrinth_EventScript_Alize",
+        "source_trainer": "TRAINER_PKMN_BREEDER_ALIZE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_ROCKER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP_LEFT_AND_RIGHT",
+          "script": "FiveIsland_MemorialPillar_EventScript_Milo",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 12,
+          "y": 6
+        },
+        "source_index": 1,
+        "source_map": "FiveIsland_MemorialPillar_Frlg",
+        "source_script": "FiveIsland_MemorialPillar_EventScript_Milo",
+        "source_trainer": "TRAINER_BIRD_KEEPER_MILO",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_ROCKER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT",
+          "script": "FiveIsland_MemorialPillar_EventScript_Chaz",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 14,
+          "y": 17
+        },
+        "source_index": 2,
+        "source_map": "FiveIsland_MemorialPillar_Frlg",
+        "source_script": "FiveIsland_MemorialPillar_EventScript_Chaz",
+        "source_trainer": "TRAINER_BIRD_KEEPER_CHAZ",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_ROCKER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "FiveIsland_MemorialPillar_EventScript_Harold",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 17,
+          "y": 31
+        },
+        "source_index": 3,
+        "source_map": "FiveIsland_MemorialPillar_Frlg",
+        "source_script": "FiveIsland_MemorialPillar_EventScript_Harold",
+        "source_trainer": "TRAINER_BIRD_KEEPER_HAROLD",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_FISHER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SixIsland_OutcastIsland_EventScript_Tylor",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 12,
+          "y": 15
+        },
+        "source_index": 1,
+        "source_map": "SixIsland_OutcastIsland_Frlg",
+        "source_script": "SixIsland_OutcastIsland_EventScript_Tylor",
+        "source_trainer": "TRAINER_FISHERMAN_TYLOR",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+          "script": "SixIsland_OutcastIsland_EventScript_Mymo",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 13,
+          "y": 34
+        },
+        "source_index": 2,
+        "source_map": "SixIsland_OutcastIsland_Frlg",
+        "source_script": "SixIsland_OutcastIsland_EventScript_Mymo",
+        "source_trainer": "TRAINER_SWIMMER_MALE_MYMO",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
+          "movement_range_x": 2,
+          "movement_range_y": 4,
+          "movement_type": "MOVEMENT_TYPE_WALK_SEQUENCE_DOWN_LEFT_UP_RIGHT",
+          "script": "SixIsland_OutcastIsland_EventScript_Nicole",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 14,
+          "y": 61
+        },
+        "source_index": 3,
+        "source_map": "SixIsland_OutcastIsland_Frlg",
+        "source_script": "SixIsland_OutcastIsland_EventScript_Nicole",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_NICOLE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SixIsland_OutcastIsland_EventScript_Ava",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 10,
+          "y": 44
+        },
+        "source_index": 4,
+        "source_map": "SixIsland_OutcastIsland_Frlg",
+        "source_script": "SixIsland_OutcastIsland_EventScript_Ava",
+        "source_trainer": "TRAINER_SIS_AND_BRO_AVA_GEB",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_TUBER_M_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SixIsland_OutcastIsland_EventScript_Geb",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 44
+        },
+        "source_index": 5,
+        "source_map": "SixIsland_OutcastIsland_Frlg",
+        "source_script": "SixIsland_OutcastIsland_EventScript_Geb",
+        "source_trainer": "TRAINER_SIS_AND_BRO_AVA_GEB",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT",
+          "script": "SixIsland_GreenPath_EventScript_Jaclyn",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 8
+        },
+        "source_index": 0,
+        "source_map": "SixIsland_GreenPath_Frlg",
+        "source_script": "SixIsland_GreenPath_EventScript_Jaclyn",
+        "source_trainer": "TRAINER_PSYCHIC_JACLYN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT",
+          "script": "SixIsland_WaterPath_EventScript_Rose",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 12,
+          "y": 13
+        },
+        "source_index": 0,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Rose",
+        "source_trainer": "TRAINER_AROMA_LADY_ROSE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_ROCKER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SixIsland_WaterPath_EventScript_Edward",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 52
+        },
+        "source_index": 1,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Edward",
+        "source_trainer": "TRAINER_JUGGLER_EDWARD",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+          "script": "SixIsland_WaterPath_EventScript_Samir",
+          "trainer_sight_or_berry_tree_id": "4",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 13,
+          "y": 35
+        },
+        "source_index": 2,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Samir",
+        "source_trainer": "TRAINER_SWIMMER_MALE_SAMIR",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 1,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SixIsland_WaterPath_EventScript_Denise",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 15,
+          "y": 45
+        },
+        "source_index": 3,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Denise",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_DENISE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "SixIsland_WaterPath_EventScript_Miu",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 6,
+          "y": 21
+        },
+        "source_index": 4,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Miu",
+        "source_trainer": "TRAINER_TWINS_MIU_MIA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "SixIsland_WaterPath_EventScript_Mia",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 7,
+          "y": 21
+        },
+        "source_index": 5,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Mia",
+        "source_trainer": "TRAINER_TWINS_MIU_MIA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 7,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP_AND_LEFT",
+          "script": "SixIsland_WaterPath_EventScript_Earl",
+          "trainer_sight_or_berry_tree_id": "4",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 76
+        },
+        "source_index": 6,
+        "source_map": "SixIsland_WaterPath_Frlg",
+        "source_script": "SixIsland_WaterPath_EventScript_Earl",
+        "source_trainer": "TRAINER_HIKER_EARL",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 5,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_LEFT",
+          "script": "SixIsland_RuinValley_EventScript_Stanly",
+          "trainer_sight_or_berry_tree_id": "4",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 32,
+          "y": 11
+        },
+        "source_index": 1,
+        "source_map": "SixIsland_RuinValley_Frlg",
+        "source_script": "SixIsland_RuinValley_EventScript_Stanly",
+        "source_trainer": "TRAINER_RUIN_MANIAC_STANLY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 5,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT_AND_RIGHT",
+          "script": "SixIsland_RuinValley_EventScript_Foster",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 33,
+          "y": 16
+        },
+        "source_index": 2,
+        "source_map": "SixIsland_RuinValley_Frlg",
+        "source_script": "SixIsland_RuinValley_EventScript_Foster",
+        "source_trainer": "TRAINER_RUIN_MANIAC_FOSTER",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 5,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+          "script": "SixIsland_RuinValley_EventScript_Larry",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 31,
+          "y": 24
+        },
+        "source_index": 3,
+        "source_map": "SixIsland_RuinValley_Frlg",
+        "source_script": "SixIsland_RuinValley_EventScript_Larry",
+        "source_trainer": "TRAINER_RUIN_MANIAC_LARRY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 5,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "SixIsland_RuinValley_EventScript_Daryl",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 14,
+          "y": 10
+        },
+        "source_index": 4,
+        "source_map": "SixIsland_RuinValley_Frlg",
+        "source_script": "SixIsland_RuinValley_EventScript_Daryl",
+        "source_trainer": "TRAINER_HIKER_DARYL",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 5,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
+          "movement_range_x": 2,
+          "movement_range_y": 3,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SixIsland_RuinValley_EventScript_Hector",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 21,
+          "y": 29
+        },
+        "source_index": 5,
+        "source_map": "SixIsland_RuinValley_Frlg",
+        "source_script": "SixIsland_RuinValley_EventScript_Hector",
+        "source_trainer": "TRAINER_POKEMANIAC_HECTOR",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BOY",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SevenIsland_TrainerTower_EventScript_Dario",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 56,
+          "y": 26
+        },
+        "source_index": 0,
+        "source_map": "SevenIsland_TrainerTower_Frlg",
+        "source_script": "SevenIsland_TrainerTower_EventScript_Dario",
+        "source_trainer": "TRAINER_PSYCHIC_DARIO",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+          "script": "SevenIsland_TrainerTower_EventScript_Rodette",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 56,
+          "y": 29
+        },
+        "source_index": 1,
+        "source_map": "SevenIsland_TrainerTower_Frlg",
+        "source_script": "SevenIsland_TrainerTower_EventScript_Rodette",
+        "source_trainer": "TRAINER_PSYCHIC_RODETTE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+          "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Miah",
+          "trainer_sight_or_berry_tree_id": "5",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 12,
+          "y": 6
+        },
+        "source_index": 0,
+        "source_map": "SevenIsland_SevaultCanyon_Entrance_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Miah",
+        "source_trainer": "TRAINER_AROMA_LADY_MIAH",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BEAUTY_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Eve",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 3,
+          "y": 34
+        },
+        "source_index": 1,
+        "source_map": "SevenIsland_SevaultCanyon_Entrance_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Eve",
+        "source_trainer": "TRAINER_YOUNG_COUPLE_EVE_JON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_MAN",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
+          "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Jon",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 4,
+          "y": 34
+        },
+        "source_index": 2,
+        "source_map": "SevenIsland_SevaultCanyon_Entrance_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Jon",
+        "source_trainer": "TRAINER_YOUNG_COUPLE_EVE_JON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Nicolas",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 26
+        },
+        "source_index": 3,
+        "source_map": "SevenIsland_SevaultCanyon_Entrance_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Nicolas",
+        "source_trainer": "TRAINER_PKMN_RANGER_NICOLAS",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_LEFT",
+          "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Madeline",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 10,
+          "y": 26
+        },
+        "source_index": 4,
+        "source_map": "SevenIsland_SevaultCanyon_Entrance_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Madeline",
+        "source_trainer": "TRAINER_PKMN_RANGER_MADELINE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 5,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_ROCKER",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_ROTATE_COUNTERCLOCKWISE",
+          "script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Mason",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 17
+        },
+        "source_index": 5,
+        "source_map": "SevenIsland_SevaultCanyon_Entrance_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_Entrance_EventScript_Mason",
+        "source_trainer": "TRAINER_JUGGLER_MASON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Cyndy",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 13,
+          "y": 43
+        },
+        "source_index": 0,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Cyndy",
+        "source_trainer": "TRAINER_CRUSH_GIRL_CYNDY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_MAN",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Evan",
+          "trainer_sight_or_berry_tree_id": "2",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 13,
+          "y": 36
+        },
+        "source_index": 1,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Evan",
+        "source_trainer": "TRAINER_TAMER_EVAN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_UP_LEFT_AND_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Jackson",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 3,
+          "y": 35
+        },
+        "source_index": 2,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Jackson",
+        "source_trainer": "TRAINER_PKMN_RANGER_JACKSON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Katelyn",
+          "trainer_sight_or_berry_tree_id": "3",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 3,
+          "y": 36
+        },
+        "source_index": 3,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Katelyn",
+        "source_trainer": "TRAINER_PKMN_RANGER_KATELYN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 5,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Leroy",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 7,
+          "y": 56
+        },
+        "source_index": 4,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Leroy",
+        "source_trainer": "TRAINER_COOLTRAINER_LEROY",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 6,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Michelle",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 11,
+          "y": 63
+        },
+        "source_index": 5,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Michelle",
+        "source_trainer": "TRAINER_COOLTRAINER_MICHELLE",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 7,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Lex",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 14,
+          "y": 13
+        },
+        "source_index": 6,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Lex",
+        "source_trainer": "TRAINER_COOL_COUPLE_LEX_NYA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "double",
+        "local_id": 8,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+          "script": "SevenIsland_SevaultCanyon_EventScript_Nya",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "type": "object",
+          "x": 14,
+          "y": 14
+        },
+        "source_index": 7,
+        "source_map": "SevenIsland_SevaultCanyon_Frlg",
+        "source_script": "SevenIsland_SevaultCanyon_EventScript_Nya",
+        "source_trainer": "TRAINER_COOL_COUPLE_LEX_NYA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 1,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SevenIsland_TanobyRuins_EventScript_Brandon",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "x": 35,
+          "y": 7
+        },
+        "source_index": 0,
+        "source_map": "SevenIsland_TanobyRuins_Frlg",
+        "source_script": "SevenIsland_TanobyRuins_EventScript_Brandon",
+        "source_trainer": "TRAINER_RUIN_MANIAC_BRANDON",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 2,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+          "script": "SevenIsland_TanobyRuins_EventScript_Benjamin",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "x": 121,
+          "y": 11
+        },
+        "source_index": 1,
+        "source_map": "SevenIsland_TanobyRuins_Frlg",
+        "source_script": "SevenIsland_TanobyRuins_EventScript_Benjamin",
+        "source_trainer": "TRAINER_RUIN_MANIAC_BENJAMIN",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 3,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+          "script": "SevenIsland_TanobyRuins_EventScript_Edna",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "x": 85,
+          "y": 8
+        },
+        "source_index": 2,
+        "source_map": "SevenIsland_TanobyRuins_Frlg",
+        "source_script": "SevenIsland_TanobyRuins_EventScript_Edna",
+        "source_trainer": "TRAINER_PAINTER_EDNA",
+        "talk_battle": false
+      },
+      {
+        "battle_type": "single",
+        "local_id": 4,
+        "rematch_capable": true,
+        "source_event": {
+          "elevation": 3,
+          "flag": "0",
+          "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_FRLG",
+          "movement_range_x": 1,
+          "movement_range_y": 1,
+          "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+          "script": "SevenIsland_TanobyRuins_EventScript_Clifford",
+          "trainer_sight_or_berry_tree_id": "1",
+          "trainer_type": "TRAINER_TYPE_NORMAL",
+          "x": 85,
+          "y": 5
+        },
+        "source_index": 3,
+        "source_map": "SevenIsland_TanobyRuins_Frlg",
+        "source_script": "SevenIsland_TanobyRuins_EventScript_Clifford",
+        "source_trainer": "TRAINER_GENTLEMAN_CLIFFORD",
+        "talk_battle": false
+      }
+    ],
+    "pair_identities": 6,
+    "rematch_objects": 70,
+    "selected_party_records": 118,
+    "sight_objects": 86,
+    "single_objects": 75,
+    "single_stage_objects": 17,
+    "talk_objects": 1
+  },
+  "planned_story_party_records": 18,
+  "schema_version": 1
+}

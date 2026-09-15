@@ -1367,7 +1367,7 @@ static const struct SpriteFrameImage sPicTable_ApricornTree[] = {
     overworld_frame(gObjectEventPic_ApricornTree, 2, 2, 0),
 };
 
-#if IS_FRLG
+#if IS_FRLG || IS_WAYFARER
 
 static const struct SpriteFrameImage sPicTable_RedNormal[] = {
     overworld_frame(gObjectEventPic_RedNormal, 2, 4, 0),
@@ -3034,9 +3034,9 @@ static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
     overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 2),
 };
 
-#endif // IS_FRLG
+#endif // IS_FRLG || IS_WAYFARER
 
-#if HAS_SEVII_CONTENT
+#if HAS_SEVII_CONTENT && !IS_WAYFARER
 static const struct SpriteFrameImage sPicTable_OldWomanFrlg[] = {
     overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 0),
     overworld_frame(gObjectEventPic_OldWomanFrlg, 2, 4, 1),
@@ -3086,7 +3086,7 @@ static const struct SpriteFrameImage sPicTable_Clerk[] = {
     overworld_frame(gObjectEventPic_Clerk, 2, 4, 7),
     overworld_frame(gObjectEventPic_Clerk, 2, 4, 8),
 };
-#endif // HAS_SEVII_CONTENT
+#endif // HAS_SEVII_CONTENT && !IS_WAYFARER
 
 #if IS_HNS
 static const struct SpriteFrameImage sPicTable_AttendantF_hns[] = {

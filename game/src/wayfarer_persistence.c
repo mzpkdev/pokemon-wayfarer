@@ -6,11 +6,13 @@
 #include "regions.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
+#include "constants/items.h"
 #if IS_WAYFARER
 #include "data/map_group_count.h"
 #include "data/wayfarer_map_sources.h"
@@ -139,6 +141,145 @@ void WayfarerInitPersistentState(void)
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 0;
     VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
     FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));
+    WayfarerSeviiInitPersistentState();
+#endif
+}
+
+void WayfarerSeviiInitPersistentState(void)
+{
+#if IS_WAYFARER
+    memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
+    gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
+#endif
+}
+
+#if IS_WAYFARER
+static bool8 IsWayfarerSeviiTowerPrize(u16 item)
+{
+    return item == ITEM_NONE
+        || item == ITEM_UP_GRADE
+        || item == ITEM_DRAGON_SCALE
+        || item == ITEM_METAL_COAT
+        || item == ITEM_KINGS_ROCK;
+}
+#endif
+
+bool8 WayfarerSeviiPersistentStateIsValid(void)
+{
+#if IS_WAYFARER
+    const struct WayfarerSeviiTrainerTowerRecords *records = &gSaveBlock3Ptr->wayfarerSevii.trainerTower;
+    u32 i;
+
+    if (gSaveBlock3Ptr->wayfarerSevii.magic != WAYFARER_SEVII_STATE_MAGIC
+     || records->reserved != 0
+     || records->completedMask & ~((1 << NUM_TOWER_CHALLENGE_TYPES) - 1)
+     || !IsWayfarerSeviiTowerPrize(records->pendingPrize))
+        return FALSE;
+
+    for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
+    {
+        bool8 completed = (records->completedMask >> i) & 1;
+        if ((completed && (records->bestTime[i] == 0 || records->bestTime[i] > TRAINER_TOWER_MAX_TIME))
+         || (!completed && records->bestTime[i] != 0))
+            return FALSE;
+    }
+    return TRUE;
+#else
+    return TRUE;
+#endif
+}
+
+struct WayfarerSeviiTrainerTowerRecords *WayfarerSevii_GetTrainerTowerRecords(void)
+{
+#if IS_WAYFARER
+    return &gSaveBlock3Ptr->wayfarerSevii.trainerTower;
+#else
+    return NULL;
+#endif
+}
+
+bool32 WayfarerSeviiTrainerDefeatGet(u16 slot)
+{
+#if IS_WAYFARER
+    if (slot >= WAYFARER_SEVII_TRAINER_COUNT)
+        return FALSE;
+    return (gSaveBlock3Ptr->wayfarerSevii.trainerFlags[slot / 8] >> (slot & 7)) & 1;
+#else
+    return FALSE;
+#endif
+}
+
+void WayfarerSeviiTrainerDefeatSet(u16 slot)
+{
+#if IS_WAYFARER
+    if (slot >= WAYFARER_SEVII_TRAINER_COUNT)
+        return;
+    gSaveBlock3Ptr->wayfarerSevii.trainerFlags[slot / 8] |= 1 << (slot & 7);
+#endif
+}
+
+void WayfarerSeviiTrainerDefeatClear(u16 slot)
+{
+#if IS_WAYFARER
+    if (slot >= WAYFARER_SEVII_TRAINER_COUNT)
+        return;
+    gSaveBlock3Ptr->wayfarerSevii.trainerFlags[slot / 8] &= ~(1 << (slot & 7));
+#endif
+}
+
+u8 WayfarerSeviiRematchStageGet(u8 family)
+{
+#if IS_WAYFARER
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return 0;
+    return (gSaveBlock3Ptr->wayfarerSevii.rematchStages[family / 4] >> ((family & 3) * 2)) & 3;
+#else
+    return 0;
+#endif
+}
+
+void WayfarerSeviiRematchStageSet(u8 family, u8 stage)
+{
+#if IS_WAYFARER
+    u8 shift;
+    u8 mask;
+
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return;
+    shift = (family & 3) * 2;
+    mask = 3 << shift;
+    gSaveBlock3Ptr->wayfarerSevii.rematchStages[family / 4]
+        = (gSaveBlock3Ptr->wayfarerSevii.rematchStages[family / 4] & ~mask) | ((stage & 3) << shift);
+#endif
+}
+
+bool8 WayfarerSeviiRematchPendingGet(u8 family)
+{
+#if IS_WAYFARER
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return FALSE;
+    return (gSaveBlock3Ptr->wayfarerSevii.rematchPending[family / 8] >> (family & 7)) & 1;
+#else
+    return FALSE;
+#endif
+}
+
+void WayfarerSeviiRematchPendingSet(u8 family, bool8 pending)
+{
+#if IS_WAYFARER
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return;
+    if (pending)
+        gSaveBlock3Ptr->wayfarerSevii.rematchPending[family / 8] |= 1 << (family & 7);
+    else
+        gSaveBlock3Ptr->wayfarerSevii.rematchPending[family / 8] &= ~(1 << (family & 7));
+#endif
+}
+
+void WayfarerSeviiRematchClearAllPending(void)
+{
+#if IS_WAYFARER
+    memset(gSaveBlock3Ptr->wayfarerSevii.rematchPending, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii.rematchPending));
 #endif
 }
 
@@ -147,6 +288,7 @@ bool8 WayfarerPersistentStateIsValid(void)
 #if IS_WAYFARER
     return WayfarerGetPlayerAppearanceId() != APPEARANCE_NONE
         && gSaveBlock3Ptr->wayfarerHoenn.magic == WAYFARER_HOENN_STATE_MAGIC
+        && WayfarerSeviiPersistentStateIsValid()
         && WayfarerGetOriginProfile(WayfarerGetStartingOriginId()) != NULL
         && GetHealLocation(gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation) != NULL
         && gSaveBlock3Ptr->wayfarerHoenn.initialized <= TRUE

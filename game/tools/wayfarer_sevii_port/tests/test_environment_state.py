@@ -10,10 +10,10 @@ class WayfarerSeviiEnvironmentStateTests(unittest.TestCase):
         flags = (GAME / "include/constants/flags.h").read_text()
         vars_ = (GAME / "include/constants/vars.h").read_text()
 
-        self.assertIn("#define FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN 0x932", flags)
-        self.assertIn("#define FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_START 0x933", flags)
+        self.assertIn("#define FLAG_WAYFARER_SEVII_DOTTED_HOLE_OPEN WAYFARER_SEVII_FLAG_ID(0)", flags)
+        self.assertIn("#define FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_START WAYFARER_SEVII_FLAG_ID(1)", flags)
         self.assertIn("#define FLAG_WAYFARER_SEVII_ICEFALL_CRACKED_ICE_COUNT 9", flags)
-        self.assertIn("#define FLAG_WAYFARER_SEVII_TANOBY_COMPLETE 0x93C", flags)
+        self.assertIn("#define FLAG_WAYFARER_SEVII_TANOBY_COMPLETE WAYFARER_SEVII_FLAG_ID(10)", flags)
         self.assertIn("#define VAR_WAYFARER_SEVII_ICEFALL_FALL                  0x40FF", vars_)
 
     def test_dotted_hole_keeps_standalone_flag_path(self):
