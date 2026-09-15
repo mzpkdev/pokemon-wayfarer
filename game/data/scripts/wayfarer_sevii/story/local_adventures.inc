@@ -17,6 +17,7 @@ WayfarerSevii_Story_EventScript_BillMeteorite::
 	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_METEORITE_RECEIVED
 	specialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_BillMeteoriteNoRoom
+	setflag FLAG_WAYFARER_SEVII_METEORITE_RECEIVED
 	msgbox WayfarerSevii_Story_Text_BillMeteoriteReceived
 	release
 	end
@@ -83,6 +84,8 @@ WayfarerSevii_Story_EventScript_LostellesFatherAfterRescue::
 	setvar VAR_0x8007, FLAG_WAYFARER_SEVII_MOON_STONE_RECEIVED
 	specialvar VAR_RESULT, WayfarerSevii_TryExchangeItemForRewardThenSetFlags
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_MoonStoneNoRoom
+	setflag FLAG_WAYFARER_SEVII_METEORITE_DELIVERED
+	setflag FLAG_WAYFARER_SEVII_MOON_STONE_RECEIVED
 	msgbox WayfarerSevii_Story_Text_MeteoriteDelivered
 	goto WayfarerSevii_Story_EventScript_LostellesFatherComplete
 
@@ -102,6 +105,7 @@ WayfarerSevii_Story_EventScript_TryMoonStone::
 	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_MOON_STONE_RECEIVED
 	specialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_MoonStoneNoRoom
+	setflag FLAG_WAYFARER_SEVII_MOON_STONE_RECEIVED
 	msgbox WayfarerSevii_Story_Text_MoonStoneReceived
 	release
 	end
@@ -225,6 +229,7 @@ WayfarerSevii_Story_EventScript_ThreeIslandDefender::
 	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_THREE_ISLAND_FULL_RESTORE_RECEIVED
 	specialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_FullRestoreNoRoom
+	setflag FLAG_WAYFARER_SEVII_THREE_ISLAND_FULL_RESTORE_RECEIVED
 	msgbox WayfarerSevii_Story_Text_FullRestoreReceived
 	release
 	end
@@ -269,6 +274,7 @@ WayfarerSevii_Story_EventScript_LostelleAfterHypno::
 	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_IAPAPA_BERRY_RECEIVED
 	specialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_IapapaNoRoom
+	setflag FLAG_WAYFARER_SEVII_IAPAPA_BERRY_RECEIVED
 	msgbox WayfarerSevii_Story_Text_IapapaReceived
 	goto WayfarerSevii_Story_EventScript_CommitLostelleRescue
 
@@ -304,6 +310,7 @@ WayfarerSevii_Story_EventScript_LostelleReturned::
 	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_IAPAPA_BERRY_RECEIVED
 	specialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag
 	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_EventScript_ReturnedIapapaNoRoom
+	setflag FLAG_WAYFARER_SEVII_IAPAPA_BERRY_RECEIVED
 	msgbox WayfarerSevii_Story_Text_IapapaReceived
 	release
 	end
