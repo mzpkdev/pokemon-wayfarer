@@ -2395,7 +2395,13 @@
             "owner": "trainer_tower",
             "content_id": "trainer-tower.lobby.object.2",
             "reason": "Restores the reviewed built-in Trainer Tower facility event through a Wayfarer-owned wrapper.",
-            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_Receptionist"
+            "wayfarer_script": "WayfarerSevii_TrainerTower_Lobby_Receptionist",
+            "state_reads": [
+              "SEVII_TRAINER_TOWER_PENDING_PRIZE"
+            ],
+            "state_writes": [
+              "SEVII_TRAINER_TOWER_PENDING_PRIZE"
+            ]
           },
           {
             "index": 3,
@@ -5589,6 +5595,7 @@
         "end",
         "faceplayer",
         "face_down",
+        "giveitem",
         "goto",
         "goto_if_eq",
         "goto_if_ne",
@@ -5637,7 +5644,7 @@
           "path": "data/specials.inc",
           "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
           "implementation_path": "src/trainer_tower.c",
-          "implementation_sha256": "4b401e3c83effbd42a3e832d3f7effdce540682eb8bc0d0865a6b4d4120efe6a"
+          "implementation_sha256": "1fd38975081fc5505b265651cbf782b135dfcf787587febd93f79c7f1014a0a6"
         },
         {
           "label": "HealPlayerParty",
@@ -6166,7 +6173,53 @@
       "defeat_bitset": "wayfarer_sevii_trainer_defeat",
       "storage": "SaveBlock3"
     },
-    "states": [],
-    "transactions": []
+    "states": [
+      {
+        "id": "SEVII_TRAINER_TOWER_PENDING_PRIZE",
+        "owner": "trainer_tower",
+        "storage": "var",
+        "slot": 3,
+        "initial": 0,
+        "lifecycle": "transactional",
+        "transaction_id": "trainer-tower.lobby.object.2",
+        "readers": [
+          "trainer-tower.lobby.object.2"
+        ],
+        "writers": [
+          "trainer-tower.lobby.object.2"
+        ],
+        "transitions": [
+          {"from": 0, "to": 227, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 0, "to": 228, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 0, "to": 441, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 0, "to": 465, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 227, "to": 0, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 228, "to": 0, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 441, "to": 0, "caller": "trainer-tower.lobby.object.2"},
+          {"from": 465, "to": 0, "caller": "trainer-tower.lobby.object.2"}
+        ]
+      }
+    ],
+    "transactions": [
+      {
+        "content_id": "trainer-tower.lobby.object.2",
+        "owner": "trainer_tower",
+        "kind": "claim",
+        "prerequisite": [
+          "challenge_complete",
+          "pending_prize"
+        ],
+        "destination": "bag",
+        "consume": null,
+        "receipt": null,
+        "pending_state": "SEVII_TRAINER_TOWER_PENDING_PRIZE",
+        "steps": [
+          "establish_prerequisite",
+          "attempt_destination",
+          "clear_pending",
+          "update_presentation"
+        ]
+      }
+    ]
   }
 }

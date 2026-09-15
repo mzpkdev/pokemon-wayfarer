@@ -258,6 +258,32 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         report = CLOSURE.build_script_closure(self.root, manifest)
         self.assertEqual(report["state_operations"], [])
 
+    def test_giveitem_reads_a_named_sevii_transaction_payload(self):
+        module = self.root / "data/scripts/wayfarer_sevii/environment.inc"
+        module.write_text(
+            "WayfarerSevii_OneIsland_OnLoad::\n"
+            "\tgiveitem VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE\n"
+            "\tend\n"
+        )
+        manifest = self.manifest()
+        manifest["script_modules"]["environment"]["exports"] = ["WayfarerSevii_OneIsland_OnLoad"]
+        manifest["script_modules"]["environment"]["allowed_commands"] = ["giveitem", "end"]
+
+        report = CLOSURE.build_script_closure(self.root, manifest)
+
+        self.assertEqual(report["state_operations"], [{
+            "module": "environment",
+            "label": "WayfarerSevii_OneIsland_OnLoad",
+            "access": "read",
+            "state": "VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE",
+        }])
+        self.assertEqual(report["content_operations"], [{
+            "module": "environment",
+            "label": "WayfarerSevii_OneIsland_OnLoad",
+            "kind": "transaction",
+            "command": "giveitem",
+        }])
+
 
 if __name__ == "__main__":
     unittest.main()

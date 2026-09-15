@@ -335,6 +335,8 @@ def _operands(line: str) -> list[str]:
 
 def _state_operands(command: str, line: str) -> list[tuple[str, str]]:
     operands = _operands(line)
+    if command == "giveitem" and operands:
+        return [("read", operands[0])]
     if command in STATE_WRITES | STATE_READS:
         result = [("write" if command in STATE_WRITES else "read", operands[0])] if operands else []
         if command in {"copyvar", "setorcopyvar"} and len(operands) > 1:

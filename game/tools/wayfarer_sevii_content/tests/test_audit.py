@@ -33,8 +33,14 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
         self.assertEqual(first["schema"]["domains"]["trainer_tower"]["inventory_count"], 106)
         self.assertFalse(first["rom"]["measured"])
         self.assertEqual(first["contracts"]["trainer_ids"]["allocation_count"], 0)
-        self.assertEqual(first["contracts"]["states"], [])
-        self.assertEqual(first["contracts"]["transactions"], [])
+        self.assertEqual(
+            [(row["id"], row["slot"], row["lifecycle"]) for row in first["contracts"]["states"]],
+            [("SEVII_TRAINER_TOWER_PENDING_PRIZE", 3, "transactional")],
+        )
+        self.assertEqual(
+            [(row["content_id"], row["kind"], row["pending_state"]) for row in first["contracts"]["transactions"]],
+            [("trainer-tower.lobby.object.2", "claim", "SEVII_TRAINER_TOWER_PENDING_PRIZE")],
+        )
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):
         manifest = self.manifest()

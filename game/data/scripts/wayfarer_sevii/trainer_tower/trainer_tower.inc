@@ -296,10 +296,11 @@ WayfarerSevii_TrainerTower_Lobby_Receptionist::
 WayfarerSevii_TrainerTower_Lobby_ClaimPendingPrize::
 	msgbox WayfarerSevii_TrainerTower_Text_PendingPrize, MSGBOX_YESNO
 	goto_if_ne VAR_RESULT, YES, WayfarerSevii_TrainerTower_Lobby_ReceptionistEnd
+	giveitem VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_TrainerTower_Lobby_ClaimNoRoom
+	setvar VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE, ITEM_NONE
 	setvar VAR_0x8004, TRAINER_TOWER_FUNC_CLAIM_PENDING_PRIZE
 	special CallTrainerTowerFunc
-	goto_if_ne VAR_RESULT, TRUE, WayfarerSevii_TrainerTower_Lobby_ClaimNoRoom
-	msgbox WayfarerSevii_TrainerTower_Text_PrizeReceived
 	goto WayfarerSevii_TrainerTower_Lobby_ReceptionistEnd
 
 WayfarerSevii_TrainerTower_Lobby_ClaimNoRoom::
@@ -329,7 +330,7 @@ WayfarerSevii_TrainerTower_Lobby_ReceptionistEnd::
 	end
 
 WayfarerSevii_TrainerTower_Lobby_EntryTrigger::
-	goto WayfarerSevii_TrainerTower_Lobby_Receptionist
+	goto WayfarerSevii_TrainerTower_Lobby_OfferChallenge
 
 WayfarerSevii_TrainerTower_Lobby_ShowRecords::
 	lockall
@@ -351,6 +352,9 @@ WayfarerSevii_TrainerTower_Lobby_BaldingMan::
 
 WayfarerSevii_TrainerTower_Elevator_FloorSelect::
 	lockall
+	setvar VAR_0x8004, TRAINER_TOWER_FUNC_CHECK_ACTIVE
+	special CallTrainerTowerFunc
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_TrainerTower_Elevator_ReturnLobby
 	msgbox WayfarerSevii_TrainerTower_Text_AbandonPrompt, MSGBOX_YESNO
 	goto_if_ne VAR_RESULT, YES, WayfarerSevii_TrainerTower_Elevator_End
 	setvar VAR_0x8004, TRAINER_TOWER_FUNC_ABANDON_CHALLENGE
