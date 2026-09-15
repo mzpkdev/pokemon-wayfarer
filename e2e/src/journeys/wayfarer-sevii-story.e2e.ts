@@ -11,18 +11,24 @@ const advanceUntil = async (
   predicate: (state: Awaited<ReturnType<GameSession["state"]["read"]>>) => boolean,
   description: string,
   maxAttempts = 240,
+  advanceActionMenu = false,
 ): Promise<void> => {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const state = await game.state.read()
     if (predicate(state)) return
     await game.wait.frames(state.dialogueOpen || state.scriptActive ? 24 : 12)
-    if ((await game.state.read()).battle.ui !== "action-menu") await game.controls.press("a")
+    if (advanceActionMenu || (await game.state.read()).battle.ui !== "action-menu")
+      await game.controls.press("a")
   }
   throw new Error(`${description} not reached: ${JSON.stringify(await game.state.read())}`)
 }
 
-const finishScript = (game: GameSession, description: string): Promise<void> =>
-  advanceUntil(game, (state) => state.ready && !state.dialogueOpen, description)
+const finishScript = (
+  game: GameSession,
+  description: string,
+  advanceActionMenu = false,
+): Promise<void> =>
+  advanceUntil(game, (state) => state.ready && !state.dialogueOpen, description, 240, advanceActionMenu)
 
 const warpTo = async (game: GameSession, location: Location): Promise<void> => {
   await game.player.warp(location.map, location.x, location.y, location.facing)
@@ -50,7 +56,7 @@ const winObjectiveBattle = async (
 ): Promise<void> => {
   await startObjectiveBattle(game, location, description)
   await game.battle.win()
-  await finishScript(game, `${description} victory script`)
+  await finishScript(game, `${description} victory script`, true)
 }
 
 describe.sequential("Wayfarer Sevii independent story journeys", () => {
@@ -76,6 +82,7 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       bag: { fullPockets: ["keyItems"] },
       determinism: { textSpeed: "instant" },
     })
+    await expect(game.story.flag("seviiMeteoriteReceived")).resolves.toBe(false)
     await game.player.interact()
     await game.dialogue.waitForOpen()
     await game.controls.press("a")
@@ -151,6 +158,8 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       game,
       (state) => state.ready && !state.battle.active,
       "first biker blackout recovery",
+      240,
+      true,
     )
     await expect(game.story.flag("seviiBikersCleared")).resolves.toBe(false)
     await game.saveAndReload()
@@ -175,6 +184,8 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       game,
       (state) => state.ready && !state.battle.active,
       "Hypno blackout recovery",
+      240,
+      true,
     )
     await expect(game.story.flag("seviiLostelleFound")).resolves.toBe(false)
     await expect(game.story.flag("seviiLostelleRescued")).resolves.toBe(false)
@@ -204,7 +215,7 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
     await game.player.interact()
     await advanceUntil(
       game,
-      (state) => state.dialogue.text.includes("Trainer Rating 55"),
+      (state) => state.dialogue.text.includes("radiates overwhelming"),
       "Moltres TR 54 refusal",
     )
     expect((await game.state.read()).battle.active).toBe(false)
@@ -219,13 +230,15 @@ describe.sequential("Wayfarer Sevii independent story journeys", () => {
       game,
       (state) => state.ready && !state.battle.active,
       "Moltres blackout recovery",
+      240,
+      true,
     )
     await expect(game.story.flag("seviiMoltresResolved")).resolves.toBe(false)
     await game.saveAndReload()
 
     await startObjectiveBattle(game, moltres, "retried Moltres")
     await game.battle.win()
-    await finishScript(game, "Moltres knockout resolution")
+    await finishScript(game, "Moltres knockout resolution", true)
     await expect(game.story.flag("seviiMoltresResolved")).resolves.toBe(true)
     await game.saveAndReload()
     await expect(game.story.flag("seviiMoltresResolved")).resolves.toBe(true)

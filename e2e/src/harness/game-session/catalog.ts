@@ -502,6 +502,7 @@ export const storyFlags = {
   seviiIapapaBerryReceived: 0xc00f,
   seviiMeteoriteReceived: 0xc011,
   seviiCelioGemsStarted: 0xc01e,
+  seviiRivalSceneSeen: 0xc029,
   seviiMoltresResolved: 0xc02a,
 } as const
 
