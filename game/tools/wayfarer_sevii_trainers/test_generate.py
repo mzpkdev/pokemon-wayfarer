@@ -33,7 +33,10 @@ class SelectedRosterTests(unittest.TestCase):
     def test_runtime_constants_match_roster_extent(self):
         constants = generate.render_runtime_constants(self.report)
         self.assertEqual(constants.count("#define TRAINER_WAYFARER_SEVII_"), 138)
-        self.assertIn("#define TRAINERS_COUNT_WAYFARER      1651", constants)
+        self.assertIn(
+            "#if IS_WAYFARER\n#define TRAINERS_COUNT_WAYFARER      1651\n#endif",
+            constants,
+        )
 
     def test_defeat_router_aliases_rematches_to_their_base_slot(self):
         router = generate.render_defeat_router(self.report)
