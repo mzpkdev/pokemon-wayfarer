@@ -54,6 +54,12 @@
 #define TRAINER_TOWER_FUNC_SHOULD_WARP_TO_COUNTER   18
 #define TRAINER_TOWER_FUNC_ENCOUNTER_MUSIC          19
 #define TRAINER_TOWER_FUNC_GET_BEAT_CHALLENGE       20
+// Wayfarer's local facility lifecycle. These deliberately have no e-Reader
+// or external-set counterparts.
+#define TRAINER_TOWER_FUNC_CHECK_ELIGIBILITY        21
+#define TRAINER_TOWER_FUNC_ABANDON_CHALLENGE         22
+#define TRAINER_TOWER_FUNC_CHECK_PENDING_PRIZE       23
+#define TRAINER_TOWER_FUNC_CLAIM_PENDING_PRIZE       24
 
 #define TRAINER_TOWER_TEXT_INTRO        2
 #define TRAINER_TOWER_TEXT_PLAYER_LOST  3

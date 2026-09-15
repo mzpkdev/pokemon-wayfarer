@@ -47,6 +47,19 @@ struct TrainerTowerState
     /* 0x0004 */ struct EReaderTrainerTowerSet data;
 };
 
+// This record is embedded in the story-owned Wayfarer Sevii SaveBlock3 bank.
+// Trainer Tower owns the values and transitions, but never the aggregate.
+struct WayfarerSeviiTrainerTowerRecords
+{
+    u32 bestTime[NUM_TOWER_CHALLENGE_TYPES];
+    u16 pendingPrize;
+    u8 completedMask;
+    u8 reserved;
+};
+STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
+
+struct WayfarerSeviiTrainerTowerRecords *WayfarerSevii_GetTrainerTowerRecords(void);
+
 void PrintTrainerTowerRecords(void);
 void InitTrainerTowerBattleStruct(void);
 void FreeTrainerTowerBattleStruct(void);
@@ -56,5 +69,12 @@ void GetTrainerTowerOpponentWinText(u8 *dest, u8 opponentIdx);
 void GetTrainerTowerOpponentLoseText(u8 *dest, u8 opponentIdx);
 void GetTrainerTowerOpponentName(u8 *text);
 u8 GetTrainerTowerOpponentClass(void);
+bool8 WayfarerTrainerTowerIsChallengeActive(void);
+bool8 WayfarerTrainerTowerIsSaveAllowed(void);
+u8 WayfarerTrainerTowerGetUsablePartyCount(void);
+u8 WayfarerTrainerTowerNormalizeLevel(u8 highestUsableLevel);
+u8 WayfarerTrainerTowerGetFloorChallengeType(u8 challengeType, u8 floor);
+u16 WayfarerTrainerTowerGetPrize(u8 challengeType);
+bool8 WayfarerTrainerTowerRecordTime(struct WayfarerSeviiTrainerTowerRecords *records, u8 challengeType, u32 time);
 
 #endif //GUARD_TRAINER_TOWER_H

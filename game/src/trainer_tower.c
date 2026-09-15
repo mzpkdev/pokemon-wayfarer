@@ -21,6 +21,10 @@
 #include "constants/trainers.h"
 #include "constants/trainer_tower.h"
 
+#if IS_WAYFARER && FREE_TRAINER_TOWER
+#error "Wayfarer Trainer Tower content requires FREE_TRAINER_TOWER == FALSE"
+#endif
+
 #define CURR_FLOOR sTrainerTowerState->data.floors[sTrainerTowerState->floorIdx]
 #define TRAINER_TOWER gSaveBlock1Ptr->trainerTower[gSaveBlock1Ptr->towerChallengeId]
 
@@ -61,6 +65,30 @@ struct TrainerEncounterMusicPairs
 static EWRAM_DATA struct TrainerTowerState * sTrainerTowerState = NULL;
 static EWRAM_DATA struct TrainerTowerOpponent * sTrainerTowerOpponent = NULL;
 
+#if IS_WAYFARER
+// This intentionally lives only in EWRAM. A reset or reload discards an
+// in-progress course, while the story-owned record payload remains saved.
+struct WayfarerTrainerTowerRun
+{
+    struct Pokemon partySnapshot[PARTY_SIZE];
+    u32 timer;
+    u8 partyCount;
+    u8 challengeType;
+    u8 localSetId;
+    u8 normalizedLevel;
+    u8 floorIdx;
+    u8 knockoutOpponent;
+    u8 clearedFloors;
+    bool8 active;
+    bool8 snapshotValid;
+    bool8 ownerSpoken;
+    bool8 timeChecked;
+    bool8 lossPending;
+};
+
+static EWRAM_DATA struct WayfarerTrainerTowerRun sWayfarerTrainerTowerRun = {0};
+#endif
+
 static void SetUpTrainerTowerDataStruct(void);
 static void FreeTrainerTowerDataStruct(void);
 static void InitTrainerTowerFloor(void);
@@ -94,6 +122,13 @@ static void ValidateOrResetCurTrainerTowerRecord(void);
 static u32 GetTrainerTowerRecordTime(u32 *);
 static void SetTrainerTowerRecordTime(u32 *, u32);
 #endif //FREE_TRAINER_TOWER
+static void TrainerTowerCheckEligibility(void);
+static void TrainerTowerAbandonChallenge(void);
+static void TrainerTowerCheckPendingPrize(void);
+static void TrainerTowerClaimPendingPrize(void);
+static void TrainerTowerRestoreAndCloseRun(void);
+static u8 GetTrainerTowerChallengeType(void);
+static void HealTrainerTowerParty(void);
 
 const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
 
@@ -264,7 +299,11 @@ static void (*const sTrainerTowerFunctions[])(void) = {
     [TRAINER_TOWER_FUNC_GET_NUM_FLOORS]         = TrainerTowerGetNumFloors,
     [TRAINER_TOWER_FUNC_SHOULD_WARP_TO_COUNTER] = ShouldWarpToCounter,
     [TRAINER_TOWER_FUNC_ENCOUNTER_MUSIC]        = PlayTrainerTowerEncounterMusic,
-    [TRAINER_TOWER_FUNC_GET_BEAT_CHALLENGE]     = HasSpokenToOwner
+    [TRAINER_TOWER_FUNC_GET_BEAT_CHALLENGE]     = HasSpokenToOwner,
+    [TRAINER_TOWER_FUNC_CHECK_ELIGIBILITY]      = TrainerTowerCheckEligibility,
+    [TRAINER_TOWER_FUNC_ABANDON_CHALLENGE]      = TrainerTowerAbandonChallenge,
+    [TRAINER_TOWER_FUNC_CHECK_PENDING_PRIZE]    = TrainerTowerCheckPendingPrize,
+    [TRAINER_TOWER_FUNC_CLAIM_PENDING_PRIZE]    = TrainerTowerClaimPendingPrize,
 };
 
 // - 1 excludes Mixed challenge, which just uses one of the 3 other types
@@ -353,8 +392,113 @@ static const u8 sKnockoutChallengeMonIdxs[MAX_TRAINER_TOWER_FLOORS][3] = {
 extern const struct EReaderTrainerTowerSetSubstruct gTrainerTowerLocalHeader;
 extern const struct TrainerTowerFloor *const gTrainerTowerFloors[][MAX_TRAINER_TOWER_FLOORS];
 
+bool8 WayfarerTrainerTowerIsChallengeActive(void)
+{
+#if IS_WAYFARER
+    return sWayfarerTrainerTowerRun.active;
+#else
+    return FALSE;
+#endif
+}
+
+bool8 WayfarerTrainerTowerIsSaveAllowed(void)
+{
+    return !WayfarerTrainerTowerIsChallengeActive();
+}
+
+u8 WayfarerTrainerTowerGetUsablePartyCount(void)
+{
+    u8 count = 0;
+    u8 i;
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u32 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+        if (species != SPECIES_NONE && species != SPECIES_EGG
+         && GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
+            count++;
+    }
+    return count;
+}
+
+u8 WayfarerTrainerTowerNormalizeLevel(u8 highestUsableLevel)
+{
+    if (highestUsableLevel == 0)
+        return 1;
+    if (highestUsableLevel > MAX_LEVEL)
+        return MAX_LEVEL;
+    return highestUsableLevel;
+}
+
+u8 WayfarerTrainerTowerGetFloorChallengeType(u8 challengeType, u8 floor)
+{
+    if (challengeType >= NUM_TOWER_CHALLENGE_TYPES || floor >= MAX_TRAINER_TOWER_FLOORS)
+        return NUM_TOWER_CHALLENGE_TYPES;
+    return gTrainerTowerFloors[challengeType][floor]->challengeType;
+}
+
+u16 WayfarerTrainerTowerGetPrize(u8 challengeType)
+{
+    static const u16 sWayfarerPrizeByChallenge[NUM_TOWER_CHALLENGE_TYPES] =
+    {
+        [CHALLENGE_TYPE_SINGLE] = ITEM_UP_GRADE,
+        [CHALLENGE_TYPE_DOUBLE] = ITEM_DRAGON_SCALE,
+        [CHALLENGE_TYPE_KNOCKOUT] = ITEM_METAL_COAT,
+        [CHALLENGE_TYPE_MIXED] = ITEM_KINGS_ROCK,
+    };
+
+    if (challengeType >= NUM_TOWER_CHALLENGE_TYPES)
+        return ITEM_NONE;
+    return sWayfarerPrizeByChallenge[challengeType];
+}
+
+bool8 WayfarerTrainerTowerRecordTime(struct WayfarerSeviiTrainerTowerRecords *records, u8 challengeType, u32 time)
+{
+    u8 bit;
+
+    if (records == NULL || challengeType >= NUM_TOWER_CHALLENGE_TYPES
+     || time == 0 || time > TRAINER_TOWER_MAX_TIME)
+        return FALSE;
+
+    bit = 1 << challengeType;
+    if (!(records->completedMask & bit) || records->bestTime[challengeType] == 0
+     || time < records->bestTime[challengeType])
+    {
+        records->bestTime[challengeType] = time;
+        records->completedMask |= bit;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void HealTrainerTowerParty(void)
+{
+    u8 i;
+
+    for (i = 0; i < gPlayerPartyCount; i++)
+        HealPokemon(&gPlayerParty[i]);
+}
+
+static u8 GetTrainerTowerChallengeType(void)
+{
+#if IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active)
+        return sWayfarerTrainerTowerRun.challengeType;
+#endif
+#if FREE_TRAINER_TOWER == FALSE && IS_FRLG
+    if (gSaveBlock1Ptr->towerChallengeId < NUM_TOWER_CHALLENGE_TYPES)
+        return gSaveBlock1Ptr->towerChallengeId;
+#endif
+    return CHALLENGE_TYPE_SINGLE;
+}
+
 void CallTrainerTowerFunc(void)
 {
+    if (gSpecialVar_0x8004 >= ARRAY_COUNT(sTrainerTowerFunctions))
+    {
+        gSpecialVar_Result = FALSE;
+        return;
+    }
     SetUpTrainerTowerDataStruct();
     sTrainerTowerFunctions[gSpecialVar_0x8004]();
     FreeTrainerTowerDataStruct();
@@ -402,6 +546,9 @@ void InitTrainerTowerBattleStruct(void)
     sTrainerTowerOpponent->textColor = CURR_FLOOR.trainers[trainerId].textColor;
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
     SetTrainerHillVBlankCounter(&TRAINER_TOWER.timer);
+#elif IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active)
+        SetTrainerHillVBlankCounter(&sWayfarerTrainerTowerRun.timer);
 #endif //FREE_TRAINER_TOWER
     FreeTrainerTowerDataStruct();
 }
@@ -433,11 +580,7 @@ void GetTrainerTowerOpponentLoseText(u8 *dest, u8 opponentIdx)
 
 static void SetUpTrainerTowerDataStruct(void)
 {
-#if FREE_TRAINER_TOWER == FALSE && IS_FRLG
-    u32 challengeType = gSaveBlock1Ptr->towerChallengeId;
-#else
-    u32 challengeType = CHALLENGE_TYPE_SINGLE;
-#endif // FREE_TRAINER_TOWER
+    u32 challengeType = GetTrainerTowerChallengeType();
     s32 i;
     const struct TrainerTowerFloor *const * floors_p;
 
@@ -474,6 +617,10 @@ static void InitTrainerTowerFloor(void)
     }
     else
     {
+#if IS_WAYFARER
+        if (sWayfarerTrainerTowerRun.active)
+            sWayfarerTrainerTowerRun.floorIdx = sTrainerTowerState->floorIdx;
+#endif
         gSpecialVar_Result = CURR_FLOOR.challengeType;
         SetCurrentMapLayout(sFloorLayouts[sTrainerTowerState->floorIdx][gSpecialVar_Result]);
         SetTrainerTowerNPCGraphics();
@@ -678,6 +825,9 @@ static void TrainerTowerAddFloorCleared(void)
 {
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
     TRAINER_TOWER.floorsCleared++;
+#elif IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active && sWayfarerTrainerTowerRun.floorIdx < MAX_TRAINER_TOWER_FLOORS)
+        sWayfarerTrainerTowerRun.clearedFloors |= 1 << sWayfarerTrainerTowerRun.floorIdx;
 #endif //FREE_TRAINER_TOWER
 }
 
@@ -694,6 +844,10 @@ static void GetFloorAlreadyCleared(void)
 #else
     gSpecialVar_Result = TRUE;
 #endif //FREE_TRAINER_TOWER
+#if IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active && sWayfarerTrainerTowerRun.floorIdx < MAX_TRAINER_TOWER_FLOORS)
+        gSpecialVar_Result = (sWayfarerTrainerTowerRun.clearedFloors & (1 << sWayfarerTrainerTowerRun.floorIdx)) != 0;
+#endif
 }
 
 static void StartTrainerTowerChallenge(void)
@@ -709,6 +863,34 @@ static void StartTrainerTowerChallenge(void)
     TRAINER_TOWER.timer = 0;
     TRAINER_TOWER.spokeToOwner = FALSE;
     TRAINER_TOWER.checkedFinalTime = FALSE;
+#elif IS_WAYFARER
+    u8 challengeType = gSpecialVar_0x8005;
+    u8 neededMons = (challengeType == CHALLENGE_TYPE_DOUBLE || challengeType == CHALLENGE_TYPE_MIXED) ? 2 : 1;
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+
+    gSpecialVar_Result = FALSE;
+    if (challengeType >= NUM_TOWER_CHALLENGE_TYPES || sWayfarerTrainerTowerRun.active
+     || records == NULL || records->pendingPrize != ITEM_NONE
+     || WayfarerTrainerTowerGetUsablePartyCount() < neededMons)
+        return;
+
+    HealTrainerTowerParty();
+    memcpy(sWayfarerTrainerTowerRun.partySnapshot, gPlayerParty, sizeof(gPlayerParty));
+    sWayfarerTrainerTowerRun.partyCount = gPlayerPartyCount;
+    sWayfarerTrainerTowerRun.challengeType = challengeType;
+    sWayfarerTrainerTowerRun.localSetId = gTrainerTowerLocalHeader.id;
+    sWayfarerTrainerTowerRun.normalizedLevel = GetPartyMaxLevel();
+    sWayfarerTrainerTowerRun.floorIdx = 0;
+    sWayfarerTrainerTowerRun.knockoutOpponent = 0;
+    sWayfarerTrainerTowerRun.clearedFloors = 0;
+    sWayfarerTrainerTowerRun.timer = 0;
+    sWayfarerTrainerTowerRun.active = TRUE;
+    sWayfarerTrainerTowerRun.snapshotValid = TRUE;
+    sWayfarerTrainerTowerRun.ownerSpoken = FALSE;
+    sWayfarerTrainerTowerRun.timeChecked = FALSE;
+    sWayfarerTrainerTowerRun.lossPending = FALSE;
+    SetTrainerHillVBlankCounter(&sWayfarerTrainerTowerRun.timer);
+    gSpecialVar_Result = TRUE;
 #endif //FREE_TRAINER_TOWER
 }
 
@@ -724,6 +906,19 @@ static void GetOwnerState(void)
         gSpecialVar_Result++;
 
     TRAINER_TOWER.spokeToOwner = TRUE;
+#elif IS_WAYFARER
+    gSpecialVar_Result = 0;
+    if (!sWayfarerTrainerTowerRun.active)
+    {
+        gSpecialVar_Result = 2;
+        return;
+    }
+    ClearTrainerHillVBlankCounter();
+    if (sWayfarerTrainerTowerRun.ownerSpoken)
+        gSpecialVar_Result++;
+    if (sWayfarerTrainerTowerRun.timeChecked)
+        gSpecialVar_Result++;
+    sWayfarerTrainerTowerRun.ownerSpoken = TRUE;
 #else
     gSpecialVar_Result = 2;
 #endif //FREE_TRAINER_TOWER
@@ -748,6 +943,24 @@ static void GiveChallengePrize(void)
     {
         gSpecialVar_Result = 1;
     }
+#elif IS_WAYFARER
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+    u16 itemId = WayfarerTrainerTowerGetPrize(sWayfarerTrainerTowerRun.challengeType);
+
+    gSpecialVar_Result = 2;
+    if (!sWayfarerTrainerTowerRun.active || records == NULL || itemId == ITEM_NONE)
+        return;
+    if (AddBagItem(itemId, 1))
+    {
+        CopyItemName(itemId, gStringVar2);
+        gSpecialVar_Result = 0;
+    }
+    else
+    {
+        records->pendingPrize = itemId;
+        gSpecialVar_Result = 1;
+    }
+    TrainerTowerRestoreAndCloseRun();
 #else
     gSpecialVar_Result = 0;
 #endif //FREE_TRAINER_TOWER
@@ -771,6 +984,21 @@ static void CheckFinalTime(void)
     }
 
     TRAINER_TOWER.checkedFinalTime = TRUE;
+#elif IS_WAYFARER
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+
+    gSpecialVar_Result = 2;
+    if (!sWayfarerTrainerTowerRun.active || records == NULL)
+        return;
+    ClearTrainerHillVBlankCounter();
+    if (!sWayfarerTrainerTowerRun.timeChecked)
+    {
+        if (sWayfarerTrainerTowerRun.timer > TRAINER_TOWER_MAX_TIME)
+            sWayfarerTrainerTowerRun.timer = TRAINER_TOWER_MAX_TIME;
+        gSpecialVar_Result = WayfarerTrainerTowerRecordTime(records, sWayfarerTrainerTowerRun.challengeType,
+                                                             sWayfarerTrainerTowerRun.timer) ? 0 : 1;
+        sWayfarerTrainerTowerRun.timeChecked = TRUE;
+    }
 #else
     gSpecialVar_Result = 0;
 #endif //FREE_TRAINER_TOWER
@@ -787,12 +1015,27 @@ static void TrainerTowerResumeTimer(void)
             SetTrainerHillVBlankCounter(&TRAINER_TOWER.timer);
     }
 #endif //FREE_TRAINER_TOWER
+#if IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active && !sWayfarerTrainerTowerRun.ownerSpoken)
+    {
+        if (sWayfarerTrainerTowerRun.timer >= TRAINER_TOWER_MAX_TIME)
+            sWayfarerTrainerTowerRun.timer = TRAINER_TOWER_MAX_TIME;
+        else
+            SetTrainerHillVBlankCounter(&sWayfarerTrainerTowerRun.timer);
+    }
+#endif
 }
 
 static void TrainerTowerSetPlayerLost(void)
 {
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
     TRAINER_TOWER.hasLost = TRUE;
+#elif IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active)
+    {
+        TrainerTowerRestoreAndCloseRun();
+        sWayfarerTrainerTowerRun.lossPending = TRUE;
+    }
 #endif //FREE_TRAINER_TOWER
 }
 
@@ -816,6 +1059,13 @@ static void GetTrainerTowerChallengeStatus(void)
 #else
     gSpecialVar_Result = TT_CHALLENGE_STATUS_NORMAL;
 #endif //FREE_TRAINER_TOWER
+#if IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.lossPending)
+    {
+        sWayfarerTrainerTowerRun.lossPending = FALSE;
+        gSpecialVar_Result = TT_CHALLENGE_STATUS_LOST;
+    }
+#endif
 }
 
 #define PRINT_TOWER_TIME(src) ({                                                           \
@@ -844,6 +1094,13 @@ static void GetCurrentTime(void)
     }
 
     PRINT_TOWER_TIME(TRAINER_TOWER.timer);
+#elif IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.timer >= TRAINER_TOWER_MAX_TIME)
+    {
+        ClearTrainerHillVBlankCounter();
+        sWayfarerTrainerTowerRun.timer = TRAINER_TOWER_MAX_TIME;
+    }
+    PRINT_TOWER_TIME(sWayfarerTrainerTowerRun.timer);
 #else
     ConvertIntToDecimalStringN(gStringVar1, 0, STR_CONV_MODE_RIGHT_ALIGN, 2);
     ConvertIntToDecimalStringN(gStringVar2, 0, STR_CONV_MODE_RIGHT_ALIGN, 2);
@@ -868,10 +1125,39 @@ static void ShowResultsBoard(void)
         PRINT_TOWER_TIME(GetTrainerTowerRecordTime(&TRAINER_TOWER.bestTime));
 
         StringExpandPlaceholders(gStringVar4, gText_XMinYZSec);
-        AddTextPrinterParameterized(windowId, FONT_NORMAL, gTrainerTowerChallengeTypeTexts[i - 1], 24, 36 + 20 * i, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, gTrainerTowerChallengeTypeTexts[i], 24, 36 + 20 * i, TEXT_SKIP_DRAW, NULL);
         AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 96, 46 + 20 * i, TEXT_SKIP_DRAW, NULL);
     }
 
+    PutWindowTilemap(windowId);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+    VarSet(VAR_TEMP_1, windowId);
+#elif IS_WAYFARER
+    u8 windowId;
+    u8 i;
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+
+    if (records == NULL)
+        return;
+    windowId = AddWindow(sTimeBoardWindowTemplate);
+    LoadMessageBoxAndBorderGfx();
+    DrawStdWindowFrame(windowId, FALSE);
+    AddTextPrinterParameterized(windowId, FONT_NORMAL, gText_TimeBoard, 74, 0, TEXT_SKIP_DRAW, NULL);
+    for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
+    {
+        if ((records->completedMask & (1 << i))
+         && records->bestTime[i] > 0
+         && records->bestTime[i] <= TRAINER_TOWER_MAX_TIME)
+            PRINT_TOWER_TIME(records->bestTime[i]);
+        else
+            StringCopy(gStringVar4, _("--:--.--"));
+        if ((records->completedMask & (1 << i))
+         && records->bestTime[i] > 0
+         && records->bestTime[i] <= TRAINER_TOWER_MAX_TIME)
+            StringExpandPlaceholders(gStringVar4, gText_XMinYZSec);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, gTrainerTowerChallengeTypeTexts[i], 24, 36 + 20 * i, TEXT_SKIP_DRAW, NULL);
+        AddTextPrinterParameterized(windowId, FONT_NORMAL, gStringVar4, 96, 46 + 20 * i, TEXT_SKIP_DRAW, NULL);
+    }
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
     VarSet(VAR_TEMP_1, windowId);
@@ -880,16 +1166,99 @@ static void ShowResultsBoard(void)
 
 static void CloseResultsBoard(void)
 {
-#if FREE_TRAINER_TOWER == FALSE && IS_FRLG
+#if (FREE_TRAINER_TOWER == FALSE && IS_FRLG) || IS_WAYFARER
     u8 windowId = VarGet(VAR_TEMP_1);
     ClearStdWindowAndFrameToTransparent(windowId, TRUE);
     RemoveWindow(windowId);
 #endif //FREE_TRAINER_TOWER
 }
 
+static void TrainerTowerCheckEligibility(void)
+{
+#if IS_WAYFARER
+    u8 challengeType = gSpecialVar_0x8005;
+    u8 neededMons = (challengeType == CHALLENGE_TYPE_DOUBLE || challengeType == CHALLENGE_TYPE_MIXED) ? 2 : 1;
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+
+    gSpecialVar_Result = challengeType < NUM_TOWER_CHALLENGE_TYPES
+                      && !sWayfarerTrainerTowerRun.active
+                      && records != NULL
+                      && records->pendingPrize == ITEM_NONE
+                      && WayfarerTrainerTowerGetUsablePartyCount() >= neededMons;
+#else
+    gSpecialVar_Result = TRUE;
+#endif
+}
+
+static void TrainerTowerRestoreAndCloseRun(void)
+{
+#if IS_WAYFARER
+    ClearTrainerHillVBlankCounter();
+    if (sWayfarerTrainerTowerRun.snapshotValid)
+    {
+        memcpy(gPlayerParty, sWayfarerTrainerTowerRun.partySnapshot, sizeof(gPlayerParty));
+        gPlayerPartyCount = sWayfarerTrainerTowerRun.partyCount;
+    }
+    sWayfarerTrainerTowerRun.active = FALSE;
+    sWayfarerTrainerTowerRun.snapshotValid = FALSE;
+    sWayfarerTrainerTowerRun.ownerSpoken = FALSE;
+    sWayfarerTrainerTowerRun.timeChecked = FALSE;
+    sWayfarerTrainerTowerRun.timer = 0;
+    sWayfarerTrainerTowerRun.clearedFloors = 0;
+    sWayfarerTrainerTowerRun.floorIdx = 0;
+    sWayfarerTrainerTowerRun.knockoutOpponent = 0;
+    sWayfarerTrainerTowerRun.localSetId = 0;
+    sWayfarerTrainerTowerRun.normalizedLevel = 0;
+#endif
+}
+
+static void TrainerTowerAbandonChallenge(void)
+{
+#if IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active)
+        TrainerTowerRestoreAndCloseRun();
+    gSpecialVar_Result = TRUE;
+#else
+    gSpecialVar_Result = FALSE;
+#endif
+}
+
+static void TrainerTowerCheckPendingPrize(void)
+{
+#if IS_WAYFARER
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+    gSpecialVar_Result = records != NULL && records->pendingPrize != ITEM_NONE;
+#else
+    gSpecialVar_Result = FALSE;
+#endif
+}
+
+static void TrainerTowerClaimPendingPrize(void)
+{
+#if IS_WAYFARER
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+
+    gSpecialVar_Result = FALSE;
+    if (records == NULL || records->pendingPrize == ITEM_NONE)
+        return;
+    if (AddBagItem(records->pendingPrize, 1))
+    {
+        CopyItemName(records->pendingPrize, gStringVar2);
+        records->pendingPrize = ITEM_NONE;
+        gSpecialVar_Result = TRUE;
+    }
+#else
+    gSpecialVar_Result = FALSE;
+#endif
+}
+
 static void TrainerTowerGetDoublesEligiblity(void)
 {
+#if IS_WAYFARER
+    gSpecialVar_Result = WayfarerTrainerTowerGetUsablePartyCount() >= 2;
+#else
     gSpecialVar_Result = GetMonsStateToDoubles();
+#endif
 }
 
 
@@ -943,6 +1312,8 @@ static void HasSpokenToOwner(void)
 {
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
     gSpecialVar_Result = TRAINER_TOWER.spokeToOwner;
+#elif IS_WAYFARER
+    gSpecialVar_Result = sWayfarerTrainerTowerRun.ownerSpoken;
 #endif //FREE_TRAINER_TOWER
 }
 
@@ -952,11 +1323,18 @@ static void BuildEnemyParty(void)
     s32 level = GetPartyMaxLevel();
 #if FREE_TRAINER_TOWER == FALSE && IS_FRLG
     u8 floorIdx = TRAINER_TOWER.floorsCleared;
+#elif IS_WAYFARER
+    u8 floorIdx = sWayfarerTrainerTowerRun.floorIdx;
 #else
     u8 floorIdx = gMapHeader.mapLayoutId - LAYOUT_TRAINER_TOWER_1F;
 #endif //FREE_TRAINER_TOWER
     s32 i;
     u8 monIdx;
+
+#if IS_WAYFARER
+    if (sWayfarerTrainerTowerRun.active)
+        level = sWayfarerTrainerTowerRun.normalizedLevel;
+#endif
 
     ZeroEnemyPartyMons();
 
@@ -967,23 +1345,38 @@ static void BuildEnemyParty(void)
         for (i = 0; i < 2; i++)
         {
             monIdx = sSingleBattleChallengeMonIdxs[floorIdx][i];
-            CURR_FLOOR.trainers[trainerIdx].mons[monIdx].level = level;
-            CreateBattleTowerMon(&gEnemyParty[i], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
+            {
+                struct BattleTowerPokemon mon = CURR_FLOOR.trainers[trainerIdx].mons[monIdx];
+                mon.level = level;
+                CreateBattleTowerMon(&gEnemyParty[i], &mon);
+            }
         }
         break;
     case CHALLENGE_TYPE_DOUBLE:
         monIdx = sDoubleBattleChallengeMonIdxs[floorIdx][0];
-        CURR_FLOOR.trainers[0].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[0], &CURR_FLOOR.trainers[0].mons[monIdx]);
+        {
+            struct BattleTowerPokemon mon = CURR_FLOOR.trainers[0].mons[monIdx];
+            mon.level = level;
+            CreateBattleTowerMon(&gEnemyParty[0], &mon);
+        }
 
         monIdx = sDoubleBattleChallengeMonIdxs[floorIdx][1];
-        CURR_FLOOR.trainers[1].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[1], &CURR_FLOOR.trainers[1].mons[monIdx]);
+        {
+            struct BattleTowerPokemon mon = CURR_FLOOR.trainers[1].mons[monIdx];
+            mon.level = level;
+            CreateBattleTowerMon(&gEnemyParty[1], &mon);
+        }
         break;
     case CHALLENGE_TYPE_KNOCKOUT:
         monIdx = sKnockoutChallengeMonIdxs[floorIdx][trainerIdx];
-        CURR_FLOOR.trainers[trainerIdx].mons[monIdx].level = level;
-        CreateBattleTowerMon(&gEnemyParty[0], &CURR_FLOOR.trainers[trainerIdx].mons[monIdx]);
+        {
+            struct BattleTowerPokemon mon = CURR_FLOOR.trainers[trainerIdx].mons[monIdx];
+            mon.level = level;
+            CreateBattleTowerMon(&gEnemyParty[0], &mon);
+        }
+#if IS_WAYFARER
+        sWayfarerTrainerTowerRun.knockoutOpponent = trainerIdx;
+#endif
         break;
     }
 }
@@ -995,7 +1388,9 @@ static s32 GetPartyMaxLevel(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) != 0 && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG)
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_NONE
+         && GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) != SPECIES_EGG
+         && GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) != 0)
         {
             s32 currLevel = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL, NULL);
             if (currLevel > topLevel)
@@ -1003,7 +1398,7 @@ static s32 GetPartyMaxLevel(void)
         }
     }
 
-    return topLevel;
+    return WayfarerTrainerTowerNormalizeLevel(topLevel);
 }
 
 static void ValidateOrResetCurTrainerTowerRecord(void)
@@ -1040,6 +1435,30 @@ void PrintTrainerTowerRecords(void)
     PutWindowTilemap(windowId);
     CopyWindowToVram(windowId, COPYWIN_FULL);
     FreeTrainerTowerDataStruct();
+#elif IS_WAYFARER
+    u8 i;
+    struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+
+    if (records == NULL)
+        return;
+    FillWindowPixelRect(0, PIXEL_FILL(0), 0, 0, 216, 144);
+    AddTextPrinterParameterized3(0, FONT_NORMAL, 0x4a, 0, sTextColors, 0, gText_TimeBoard);
+    for (i = 0; i < NUM_TOWER_CHALLENGE_TYPES; i++)
+    {
+        if ((records->completedMask & (1 << i))
+         && records->bestTime[i] > 0
+         && records->bestTime[i] <= TRAINER_TOWER_MAX_TIME)
+        {
+            PRINT_TOWER_TIME(records->bestTime[i]);
+            StringExpandPlaceholders(gStringVar4, gText_XMinYZSec);
+        }
+        else
+            StringCopy(gStringVar4, _("--:--.--"));
+        AddTextPrinterParameterized3(0, FONT_NORMAL, 0x18, 0x24 + 0x14 * i, sTextColors, 0, gTrainerTowerChallengeTypeTexts[i]);
+        AddTextPrinterParameterized3(0, FONT_NORMAL, 0x60, 0x24 + 0x14 * i, sTextColors, 0, gStringVar4);
+    }
+    PutWindowTilemap(0);
+    CopyWindowToVram(0, COPYWIN_FULL);
 #endif //FREE_TRAINER_TOWER
 }
 
