@@ -64,6 +64,10 @@ static void SpriteCB_Sparkle(struct Sprite *sprite);
 static void SpriteCB_LogoLetter(struct Sprite *sprite);
 static void SpriteCB_GameFreakLogo(struct Sprite *sprite);
 static void SpriteCB_FlygonSilhouette(struct Sprite *sprite);
+#if IS_WAYFARER
+static void WayfarerEnterScene1TitleHold(void);
+static struct Sprite *WayfarerGetFlygonSilhouette(void);
+#endif
 
 // Scene 2 main tasks
 static void Task_Scene2_Load(u8);
@@ -184,6 +188,9 @@ static EWRAM_DATA enum Gender sIntroCharacterGender = 0;
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
 COMMON_DATA u32 gIntroFrameCounter = 0;
+#if IS_WAYFARER
+static EWRAM_DATA bool8 sWayfarerIntroTitleHoldRequested = FALSE;
+#endif
 #if ENABLE_COLOSSEUM_MULTIBOOT
 COMMON_DATA struct GcmbStruct gMultibootProgramStruct = {0};
 #endif
@@ -1030,6 +1037,13 @@ void MainCB2_Intro(void)
     AnimateSprites();
     BuildOamBuffer();
     UpdatePaletteFade();
+#if IS_WAYFARER
+    if (gMain.newKeys != 0 && !gPaletteFade.active)
+    {
+        WayfarerEnterScene1TitleHold();
+        return;
+    }
+#endif
     if (gMain.newKeys != 0 && !gPaletteFade.active)
         SetMainCallback2(MainCB2_EndIntro);
     else if (gIntroFrameCounter != -1)
@@ -1060,7 +1074,7 @@ static u8 SetUpCopyrightScreen(void)
 {
 #if IS_FRLG
     return SetUpCopyrightScreenFrlg();
-#elif IS_HNS
+#elif IS_HNS && !IS_WAYFARER
     return SetUpCopyrightScreenHns();
 #endif
 
@@ -1121,7 +1135,7 @@ static u8 SetUpCopyrightScreen(void)
     case COPYRIGHT_START_INTRO:
         if (UpdatePaletteFade())
             break;
-#if EXPANSION_INTRO == TRUE
+#if EXPANSION_INTRO == TRUE && !IS_WAYFARER
         SetMainCallback2(CB2_ExpansionIntro);
         CreateTask(Task_HandleExpansionIntro, 0);
 #else
@@ -1217,6 +1231,13 @@ void Task_Scene1_Load(u8 taskId)
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(11) + 4], PLTT_SIZEOF(16 - 4));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(10) + 5], PLTT_SIZEOF(16 - 5));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID( 9) + 6], PLTT_SIZEOF(16 - 6));
+#if IS_WAYFARER
+    if (sWayfarerIntroTitleHoldRequested)
+    {
+        WayfarerEnterScene1TitleHold();
+        return;
+    }
+#endif
     CreateGameFreakLogoSprites(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 0);
     gTasks[taskId].sBigDropSpriteId = CreateWaterDrop(236, -14, 0x200, 1, 0x78, FALSE);
     gTasks[taskId].func = Task_Scene1_FadeIn;
@@ -1321,6 +1342,13 @@ static void SpriteCB_Sparkle(struct Sprite *sprite)
 
 static void Task_Scene1_PanUp(u8 taskId)
 {
+#if IS_WAYFARER
+    if (gIntroFrameCounter >= TIMER_END_PAN_UP)
+    {
+        WayfarerEnterScene1TitleHold();
+        return;
+    }
+#endif
     if (gIntroFrameCounter < TIMER_END_PAN_UP)
     {
         s32 offset;
@@ -1369,6 +1397,85 @@ static void Task_Scene1_End(u8 taskId)
     if (gIntroFrameCounter > TIMER_START_SCENE_2)
         gTasks[taskId].func = Task_Scene2_Load;
 }
+
+#if IS_WAYFARER
+// Scene 1 has completed 72 Flygon callbacks when its final pan frame is
+// presented.  Skips build that one frozen state directly; they do not advance
+// the water-drop, Game Freak, or background cinematic frame-by-frame.
+#define WAYFARER_FLYGON_HOLD_CALLBACKS 72
+#define WAYFARER_BG2_HOLD_VOFS (-49)
+#define WAYFARER_BG1_HOLD_VOFS (-147)
+#define WAYFARER_BG0_HOLD_VOFS (-217)
+
+void RequestWayfarerIntroTitleHold(void)
+{
+    sWayfarerIntroTitleHoldRequested = TRUE;
+}
+
+static struct Sprite *WayfarerGetFlygonSilhouette(void)
+{
+    u8 i;
+    for (i = 0; i < MAX_SPRITES; i++)
+        if (gSprites[i].inUse && gSprites[i].template == &sSpriteTemplate_FlygonSilhouette)
+            return &gSprites[i];
+    return NULL;
+}
+
+static void WayfarerDestroyScene1TransientSprites(void)
+{
+    u8 i;
+    for (i = 0; i < MAX_SPRITES; i++)
+    {
+        const struct SpriteTemplate *template = gSprites[i].template;
+        if (gSprites[i].inUse
+         && (template == &sSpriteTemplate_WaterDrop
+          || template == &sSpriteTemplate_Sparkle
+          || template == &sSpriteTemplate_GameFreakLetter
+          || template == &sSpriteTemplate_GameFreakLogo))
+            DestroySprite(&gSprites[i]);
+    }
+}
+
+static void WayfarerEnterScene1TitleHold(void)
+{
+    struct Sprite *flygon = WayfarerGetFlygonSilhouette();
+    u16 callbacksCompleted = 0;
+
+    sWayfarerIntroTitleHoldRequested = FALSE;
+    SetGpuReg(REG_OFFSET_BG3VOFS, 0);
+    SetGpuReg(REG_OFFSET_BG2VOFS, WAYFARER_BG2_HOLD_VOFS);
+    SetGpuReg(REG_OFFSET_BG1VOFS, WAYFARER_BG1_HOLD_VOFS);
+    SetGpuReg(REG_OFFSET_BG0VOFS, WAYFARER_BG0_HOLD_VOFS);
+
+    if (flygon != NULL && gIntroFrameCounter >= TIMER_FLYGON_SILHOUETTE_APPEAR)
+        callbacksCompleted = min(WAYFARER_FLYGON_HOLD_CALLBACKS,
+                                 gIntroFrameCounter - TIMER_FLYGON_SILHOUETTE_APPEAR + 1);
+    else
+    {
+        u8 spriteId = CreateSprite(&sSpriteTemplate_FlygonSilhouette, 120, DISPLAY_HEIGHT, 10);
+        flygon = &gSprites[spriteId];
+    }
+    while (callbacksCompleted++ < WAYFARER_FLYGON_HOLD_CALLBACKS)
+        SpriteCB_FlygonSilhouette(flygon);
+    flygon->callback = SpriteCallbackDummy;
+    flygon->oam.paletteNum = 13;
+
+    WayfarerDestroyScene1TransientSprites();
+    FreeSpriteTilesByTag(GFXTAG_DROPS_LOGO);
+    FreeSpriteTilesByTag(TAG_SPARKLE);
+    FreeSpritePaletteByTag(PALTAG_DROPS);
+    FreeSpritePaletteByTag(PALTAG_LOGO);
+    FreeSpritePaletteByTag(TAG_SPARKLE);
+    ResetTasks();
+    gIntroFrameCounter = -1;
+    InitWayfarerTitleScreenFromIntro(sIntroFlygonSilhouette_Pal, TAG_FLYGON_SILHOUETTE);
+}
+
+#undef WAYFARER_FLYGON_HOLD_CALLBACKS
+#undef WAYFARER_BG2_HOLD_VOFS
+#undef WAYFARER_BG1_HOLD_VOFS
+#undef WAYFARER_BG0_HOLD_VOFS
+#endif // IS_WAYFARER
 
 static void Task_Scene2_Load(u8 taskId)
 {

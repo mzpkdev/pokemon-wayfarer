@@ -23,6 +23,335 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
+#if IS_WAYFARER
+
+// Scene 1 uses this shared blend ramp while the Game Freak mark disappears.
+const u16 gTitleScreenAlphaBlend[64] =
+{
+    BLDALPHA_BLEND(16, 0), BLDALPHA_BLEND(16, 1), BLDALPHA_BLEND(16, 2), BLDALPHA_BLEND(16, 3),
+    BLDALPHA_BLEND(16, 4), BLDALPHA_BLEND(16, 5), BLDALPHA_BLEND(16, 6), BLDALPHA_BLEND(16, 7),
+    BLDALPHA_BLEND(16, 8), BLDALPHA_BLEND(16, 9), BLDALPHA_BLEND(16, 10), BLDALPHA_BLEND(16, 11),
+    BLDALPHA_BLEND(16, 12), BLDALPHA_BLEND(16, 13), BLDALPHA_BLEND(16, 14), BLDALPHA_BLEND(16, 15),
+    BLDALPHA_BLEND(15, 16), BLDALPHA_BLEND(14, 16), BLDALPHA_BLEND(13, 16), BLDALPHA_BLEND(12, 16),
+    BLDALPHA_BLEND(11, 16), BLDALPHA_BLEND(10, 16), BLDALPHA_BLEND(9, 16), BLDALPHA_BLEND(8, 16),
+    BLDALPHA_BLEND(7, 16), BLDALPHA_BLEND(6, 16), BLDALPHA_BLEND(5, 16), BLDALPHA_BLEND(4, 16),
+    BLDALPHA_BLEND(3, 16), BLDALPHA_BLEND(2, 16), BLDALPHA_BLEND(1, 16), BLDALPHA_BLEND(0, 16),
+    [32 ... 63] = BLDALPHA_BLEND(0, 16),
+};
+
+// Scene 1 owns every mode-0 background.  This title path deliberately never
+// calls the normal initializer, which clears VRAM and replaces that landscape.
+enum
+{
+    TAG_WAYFARER_POKEMON_LOGO = 1000,
+    TAG_WAYFARER_VERSION,
+    TAG_WAYFARER_PRESS_START,
+};
+
+#define WAYFARER_LOGO_Y 42
+#define WAYFARER_VERSION_Y 58
+#define WAYFARER_PRESS_START_Y 108
+#define WAYFARER_COPYRIGHT_Y 148
+#define CLEAR_SAVE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_UP)
+#define RESET_RTC_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
+
+static void MainCB2_WayfarerTitleScreen(void);
+static void VBlankCB_WayfarerTitleScreen(void);
+static void Task_WayfarerTitleReveal(u8 taskId);
+static void Task_WayfarerTitleInput(u8 taskId);
+static void CB2_GoToMainMenu(void);
+static void CB2_GoToClearSaveDataScreen(void);
+static void CB2_GoToResetRtcScreen(void);
+static void SpriteCB_PressStart(struct Sprite *sprite);
+
+static const u16 sWayfarerOverlayPalette[] = INCBIN_U16("graphics/title_screen/wayfarer/overlays/overlay_palette.gbapal");
+static const u32 sWayfarerPokemonLogoGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/overlays/pokemon_logo_obj.8bpp.smol");
+static const u16 sWayfarerVersionPal[] = INCBIN_U16("graphics/title_screen/wayfarer/wayfarer_version.gbapal");
+static const u32 sWayfarerVersionGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/wayfarer_version.4bpp.smol");
+
+static const struct OamData sOamData_WayfarerPokemonLogo =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_8BPP,
+    .shape = SPRITE_SHAPE(64x64),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(64x64),
+    .tileNum = 0,
+    .priority = 1,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct OamData sOamData_WayfarerVersion =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(64x32),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(64x32),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+static const struct OamData sOamData_WayfarerPressStart =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x8),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x8),
+    .tileNum = 0,
+    .priority = 0,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
+#define LOGO_ANIM(offset) { ANIMCMD_FRAME(offset, 1), ANIMCMD_END }
+static const union AnimCmd sAnim_WayfarerPokemonLogo0[] = LOGO_ANIM(0);
+static const union AnimCmd sAnim_WayfarerPokemonLogo1[] = LOGO_ANIM(128);
+static const union AnimCmd sAnim_WayfarerPokemonLogo2[] = LOGO_ANIM(256);
+static const union AnimCmd sAnim_WayfarerPokemonLogo3[] = LOGO_ANIM(384);
+#undef LOGO_ANIM
+static const union AnimCmd *const sAnims_WayfarerPokemonLogo0[] = {sAnim_WayfarerPokemonLogo0};
+static const union AnimCmd *const sAnims_WayfarerPokemonLogo1[] = {sAnim_WayfarerPokemonLogo1};
+static const union AnimCmd *const sAnims_WayfarerPokemonLogo2[] = {sAnim_WayfarerPokemonLogo2};
+static const union AnimCmd *const sAnims_WayfarerPokemonLogo3[] = {sAnim_WayfarerPokemonLogo3};
+
+static const struct SpriteTemplate sSpriteTemplate_WayfarerPokemonLogo[] =
+{
+    {TAG_WAYFARER_POKEMON_LOGO, TAG_WAYFARER_POKEMON_LOGO, &sOamData_WayfarerPokemonLogo, sAnims_WayfarerPokemonLogo0, NULL, NULL, SpriteCallbackDummy},
+    {TAG_WAYFARER_POKEMON_LOGO, TAG_WAYFARER_POKEMON_LOGO, &sOamData_WayfarerPokemonLogo, sAnims_WayfarerPokemonLogo1, NULL, NULL, SpriteCallbackDummy},
+    {TAG_WAYFARER_POKEMON_LOGO, TAG_WAYFARER_POKEMON_LOGO, &sOamData_WayfarerPokemonLogo, sAnims_WayfarerPokemonLogo2, NULL, NULL, SpriteCallbackDummy},
+    {TAG_WAYFARER_POKEMON_LOGO, TAG_WAYFARER_POKEMON_LOGO, &sOamData_WayfarerPokemonLogo, sAnims_WayfarerPokemonLogo3, NULL, NULL, SpriteCallbackDummy},
+};
+
+static const union AnimCmd sAnim_WayfarerVersionLeft[] = {ANIMCMD_FRAME(0, 1), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerVersionRight[] = {ANIMCMD_FRAME(32, 1), ANIMCMD_END};
+static const union AnimCmd *const sAnims_WayfarerVersionLeft[] = {sAnim_WayfarerVersionLeft};
+static const union AnimCmd *const sAnims_WayfarerVersionRight[] = {sAnim_WayfarerVersionRight};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerVersionLeft =
+{
+    TAG_WAYFARER_VERSION, TAG_WAYFARER_VERSION, &sOamData_WayfarerVersion, sAnims_WayfarerVersionLeft, NULL, NULL, SpriteCallbackDummy,
+};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerVersionRight =
+{
+    TAG_WAYFARER_VERSION, TAG_WAYFARER_VERSION, &sOamData_WayfarerVersion, sAnims_WayfarerVersionRight, NULL, NULL, SpriteCallbackDummy,
+};
+
+static const union AnimCmd sAnim_WayfarerPressStart[] = {ANIMCMD_FRAME(1, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerPressStart1[] = {ANIMCMD_FRAME(5, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerPressStart2[] = {ANIMCMD_FRAME(9, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerPressStart3[] = {ANIMCMD_FRAME(13, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerPressStart4[] = {ANIMCMD_FRAME(17, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerCopyright[] = {ANIMCMD_FRAME(21, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerCopyright1[] = {ANIMCMD_FRAME(25, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerCopyright2[] = {ANIMCMD_FRAME(29, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerCopyright3[] = {ANIMCMD_FRAME(33, 4), ANIMCMD_END};
+static const union AnimCmd sAnim_WayfarerCopyright4[] = {ANIMCMD_FRAME(37, 4), ANIMCMD_END};
+static const union AnimCmd *const sAnims_WayfarerPressStart[] = {
+    sAnim_WayfarerPressStart, sAnim_WayfarerPressStart1, sAnim_WayfarerPressStart2,
+    sAnim_WayfarerPressStart3, sAnim_WayfarerPressStart4, sAnim_WayfarerCopyright,
+    sAnim_WayfarerCopyright1, sAnim_WayfarerCopyright2, sAnim_WayfarerCopyright3, sAnim_WayfarerCopyright4,
+};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerPressStart =
+{
+    TAG_WAYFARER_PRESS_START, TAG_WAYFARER_PRESS_START, &sOamData_WayfarerPressStart, sAnims_WayfarerPressStart, NULL, NULL, SpriteCB_PressStart,
+};
+
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerPokemonLogo =
+{
+    sWayfarerPokemonLogoGfx, 0x4000, TAG_WAYFARER_POKEMON_LOGO,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerVersion =
+{
+    sWayfarerVersionGfx, 0x800, TAG_WAYFARER_VERSION,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerPressStart =
+{
+    gTitleScreenPressStartGfx, 0x520, TAG_WAYFARER_PRESS_START,
+};
+
+static void CreateWayfarerPressStart(s16 y)
+{
+    u8 i;
+    for (i = 0; i < 5; i++)
+    {
+        u8 spriteId = CreateSprite(&sSpriteTemplate_WayfarerPressStart, 64 + i * 32, y, 0);
+        StartSpriteAnim(&gSprites[spriteId], i);
+    }
+}
+
+static void CreateWayfarerTitleSprites(void)
+{
+    static const s16 sLogoX[] = {24, 88, 152, 216};
+    u8 i;
+
+    for (i = 0; i < ARRAY_COUNT(sLogoX); i++)
+        CreateSprite(&sSpriteTemplate_WayfarerPokemonLogo[i], sLogoX[i], WAYFARER_LOGO_Y, 0);
+    CreateSprite(&sSpriteTemplate_WayfarerVersionLeft, 98, WAYFARER_VERSION_Y, 1);
+    CreateSprite(&sSpriteTemplate_WayfarerVersionRight, 162, WAYFARER_VERSION_Y, 1);
+    CreateWayfarerPressStart(WAYFARER_PRESS_START_Y);
+}
+
+static void SpriteCB_PressStart(struct Sprite *sprite)
+{
+    if (++sprite->data[0] & 16)
+        sprite->invisible = FALSE;
+    else
+        sprite->invisible = TRUE;
+}
+
+// Called by Scene 1 after it has fixed its backgrounds, Flygon, and matrix.
+void InitWayfarerTitleScreenFromIntro(const u16 *retainedSpritePalette, u16 retainedSpritePaletteTag)
+{
+    struct SpritePalette retainedPalette = {retainedSpritePalette, retainedSpritePaletteTag};
+    u8 taskId;
+
+    ScanlineEffect_Stop();
+    SetGpuReg(REG_OFFSET_BLDCNT, 0);
+    SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+    SetGpuReg(REG_OFFSET_BLDY, 0);
+    LoadPalette(sWayfarerOverlayPalette, OBJ_PLTT_ID(0), 16 * PLTT_SIZE_4BPP);
+    FreeAllSpritePalettes();
+    AllocSpritePalette(TAG_WAYFARER_POKEMON_LOGO); // 8bpp logo and banner share OBJ palette 0.
+    LoadSpritePaletteInSlot(&(struct SpritePalette){sWayfarerVersionPal, TAG_WAYFARER_VERSION}, 11);
+    LoadSpritePaletteInSlot(&(struct SpritePalette){gTitleScreenPressStartPal, TAG_WAYFARER_PRESS_START}, 12);
+    LoadSpritePaletteInSlot(&retainedPalette, 13);
+    LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerPokemonLogo);
+    LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerVersion);
+    LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerPressStart);
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG_ALL_ON | DISPCNT_OBJ_ON);
+    SetVBlankCallback(VBlankCB_WayfarerTitleScreen);
+    taskId = CreateTask(Task_WayfarerTitleReveal, 0);
+    // Let Scene 1's final music phrase land on the frozen mountain before the
+    // title artwork and title theme take over.
+    gTasks[taskId].data[0] = 117;
+    SetMainCallback2(MainCB2_WayfarerTitleScreen);
+}
+
+static void VBlankCB_WayfarerTitleScreen(void)
+{
+    LoadOam();
+    ProcessSpriteCopyRequests();
+    TransferPlttBuffer();
+}
+
+static void MainCB2_WayfarerTitleScreen(void)
+{
+    RunTasks();
+    AnimateSprites();
+    BuildOamBuffer();
+    UpdatePaletteFade();
+}
+
+static void Task_WayfarerTitleReveal(u8 taskId)
+{
+    if (gTasks[taskId].data[0] != 0)
+    {
+        gTasks[taskId].data[0]--;
+        return;
+    }
+    FadeOutBGM(4);
+    m4aSongNumStart(MUS_HG_TITLE, FlagGet(FLAG_SYS_GBS_ENABLED));
+    CreateWayfarerTitleSprites();
+    taskId = CreateTask(Task_WayfarerTitleInput, 0);
+    gTasks[taskId].data[1] = TRUE; // Consume the cinematic skip press.
+    DestroyTask(FindTaskIdByFunc(Task_WayfarerTitleReveal));
+}
+
+static void Task_WayfarerTitleInput(u8 taskId)
+{
+    if (gTasks[taskId].data[1])
+    {
+        gTasks[taskId].data[1] = FALSE;
+        return;
+    }
+    if (JOY_NEW(A_BUTTON) || JOY_NEW(START_BUTTON))
+    {
+        FadeOutBGM(4);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITEALPHA);
+        SetMainCallback2(CB2_GoToMainMenu);
+    }
+    else if (JOY_HELD(CLEAR_SAVE_BUTTON_COMBO) == CLEAR_SAVE_BUTTON_COMBO)
+    {
+        SetMainCallback2(CB2_GoToClearSaveDataScreen);
+    }
+    else if (JOY_HELD(RESET_RTC_BUTTON_COMBO) == RESET_RTC_BUTTON_COMBO && CanResetRTC())
+    {
+        FadeOutBGM(4);
+        BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        SetMainCallback2(CB2_GoToResetRtcScreen);
+    }
+    else if ((gMPlayInfo_BGM.status & 0xFFFF) == 0)
+    {
+        // A music end must keep this held composition; never return to intro.
+        m4aSongNumStart(MUS_HG_TITLE, FlagGet(FLAG_SYS_GBS_ENABLED));
+    }
+}
+
+static void CB2_GoToMainMenu(void)
+{
+    if (!UpdatePaletteFade())
+        SetMainCallback2(CB2_InitMainMenu);
+}
+
+static void CB2_GoToClearSaveDataScreen(void)
+{
+    if (!UpdatePaletteFade())
+        SetMainCallback2(CB2_InitClearSaveDataScreen);
+}
+
+static void CB2_GoToResetRtcScreen(void)
+{
+    if (!UpdatePaletteFade())
+        SetMainCallback2(CB2_InitResetRtcScreen);
+}
+
+// Auxiliary screens still use this public entry point.  Reload Scene 1, then
+// immediately establish the same held title contract without replaying it.
+void CB2_InitTitleScreen(void)
+{
+    switch (gMain.state)
+    {
+    case 0:
+        SetVBlankCallback(NULL);
+        SetGpuReg(REG_OFFSET_BLDCNT, 0);
+        SetGpuReg(REG_OFFSET_BLDALPHA, 0);
+        SetGpuReg(REG_OFFSET_BLDY, 0);
+        SetGpuReg(REG_OFFSET_DISPCNT, 0);
+        CpuFill32(0, (void *)VRAM, VRAM_SIZE);
+        CpuFill32(0, (void *)OAM, OAM_SIZE);
+        CpuFill16(0, (void *)PLTT, PLTT_SIZE);
+        ResetPaletteFade();
+        ResetTasks();
+        ResetSpriteData();
+        FreeAllSpritePalettes();
+        gMain.state++;
+        break;
+    default:
+        RequestWayfarerIntroTitleHold();
+        CreateTask(Task_Scene1_Load, 0);
+        SetMainCallback2(MainCB2_Intro);
+        break;
+    }
+}
+
+#else
+
 enum {
     TAG_VERSION = 1000,
     TAG_PRESS_START_COPYRIGHT,
@@ -923,3 +1252,5 @@ static void UpdateLegendaryMarkingColor(u8 frameNum)
         LoadPalette(&color, BG_PLTT_ID(14) + 15, sizeof(color));
    }
 }
+
+#endif // IS_WAYFARER

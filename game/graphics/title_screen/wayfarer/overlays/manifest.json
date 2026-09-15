@@ -1,0 +1,38 @@
+{
+  "format": 1,
+  "logo": {
+    "source": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/wayfarer-title-screen/pokemon-wayfarer/game/graphics/title_screen/wayfarer/background/logo.png",
+    "obj_sheet_size": [
+      64,
+      256
+    ],
+    "bytes": 16384,
+    "frames": 4
+  },
+  "banner": {
+    "source": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/wayfarer-title-screen/pokemon-wayfarer/game/graphics/title_screen/wayfarer/wayfarer_version.png",
+    "obj_sheet_size": [
+      64,
+      64
+    ],
+    "bytes": 4096
+  },
+  "palette": {
+    "source": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/wayfarer-title-screen/pokemon-wayfarer/game/graphics/title_screen/wayfarer/background/shared.pal",
+    "entries": 256,
+    "banner_white": 184,
+    "banner_black": 185,
+    "reserved_4bpp_banks": [
+      12,
+      13
+    ]
+  },
+  "obj_budget": {
+    "logo": 16384,
+    "banner": 4096,
+    "press_start": 1312,
+    "flygon": 1024,
+    "total": 22816,
+    "capacity": 32768
+  }
+}

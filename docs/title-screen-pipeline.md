@@ -1,4 +1,13 @@
-# Wayfarer title-background pipeline
+# Wayfarer title pipeline
+
+Wayfarer plays Emerald's Game Freak and Scene 1 opening, then freezes the
+completed mountain pan before Scene 1's white fade into the bike scene.  The
+held screen keeps Scene 1's mode-0 backgrounds and Flygon silhouette.  Its
+Pokémon, WAYFARER, Press Start, and copyright artwork are OBJ overlays; the
+normal title initializer must not be used because it clears Scene 1 VRAM.
+
+The expansion splash is intentionally bypassed for Wayfarer.  Standalone HNS
+continues to use its own intro and title pipeline.
 
 `game/tools/convert_wayfarer_title.py` converts a reviewed Pixel Art Fixer image
 into the 8bpp text-background assets used by the Wayfarer title screen. It keeps
@@ -87,6 +96,25 @@ The generator writes `wayfarer_version.png` and `wayfarer_version.pal` in
 halves into a 64x64 sheet, reserves index 0 for transparency, and uses only the
 first 16 sprite-palette entries. Regeneration does not change the background.
 
+## Held-title overlays
+
+The held title uses the existing full-colour Pokémon logo as four 64x64 8bpp
+OBJ frames. `game/tools/pack_wayfarer_title_overlays.py` repacks its tile order
+into `game/graphics/title_screen/wayfarer/overlays/pokemon_logo_obj.png` and
+maps the WAYFARER banner into unused shared OBJ-palette entries. It reserves
+4bpp OBJ palette banks 12 and 13 for Press Start and the frozen Flygon.
+
+Regenerate after changing the logo, shared palette, or banner:
+
+```bash
+python3 game/tools/pack_wayfarer_title_overlays.py
+```
+
+The generated manifest records the fixed allocation: 0x4000 logo + 0x1000
+banner + 0x520 prompt + 0x400 Flygon = 0x5920 of the 0x8000 OBJ-tile capacity.
+At the held composition the 17 OAM entries peak at eight sprites on a scanline,
+well below the GBA's 32-sprite scanline limit.
+
 ## Build and inspect the real screen
 
 Build the ROM after regeneration; this also compresses the exported assets:
@@ -107,9 +135,11 @@ node game/tools/capture_wayfarer_title.mjs \
 ```
 
 The capture uses an isolated ROM copy and records its SHA256. It waits for the
-actual title tasks, captures the natural intro and settled title across the
-prompt blink, checks that Start leaves the title, and checks skipping the intro.
-Review `title.png`, `title-blink.png`, `title-skipped.png`, and `after-start.png`.
+actual Scene 1 cinematic and held title, captures Game Freak, mountain hold,
+overlay reveal, prompt blink, menu entry, and early/mid/late skips. Review the
+natural and skipped held frames together: their background registers and frozen
+Flygon state must match, no white fade or bike frame may appear, and Start must
+be a fresh press after a skip.
 `capture.json` records the ROM identity and display registers. Compare the
 uncovered background with `preview.png`; only hardware RGB555 display expansion
 should affect its colors. The logo and prompts use their existing overlays.

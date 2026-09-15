@@ -24,6 +24,10 @@ const symbols = new Map(execFileSync('arm-none-eabi-nm', [resolve(values.elf)], 
     return match ? [[match[2], parseInt(match[1], 16)]] : [];
   }));
 function symbol(name) {
+  if (!symbols.has(name)) {
+    const ltoName = [...symbols.keys()].find(candidate => candidate === name || candidate.startsWith(`${name}.lto_priv.`));
+    if (ltoName) return symbols.get(ltoName);
+  }
   if (!symbols.has(name)) throw new Error(`ELF lacks ${name}`);
   return symbols.get(name);
 }
@@ -59,6 +63,7 @@ async function read(address, size) {
 }
 const step = frames => command(`step?frames=${frames}`);
 async function hasTask(name) {
+  if (![...symbols.keys()].some(candidate => candidate === name || candidate.startsWith(`${name}.lto_priv.`))) return false;
   const expected = symbol(name) & ~1;
   const tasks = Buffer.alloc(640);
   for (let offset = 0; offset < 640; offset += 160)
@@ -87,7 +92,9 @@ async function capture(name) {
   if (bytes.readUInt32BE(16) !== 240 || bytes.readUInt32BE(20) !== 160) throw new Error('Not a native GBA frame');
   await writeFile(join(output, `${name}.png`), bytes);
   captures.push({ name, sha256: createHash('sha256').update(bytes).digest('hex'),
-    displayRegisters: (await read(0x04000000, 16)).toString('hex') });
+    displayRegisters: (await read(0x04000000, 16)).toString('hex'),
+    introFrameCounter: symbols.has('gIntroFrameCounter')
+      ? (await read(symbol('gIntroFrameCounter'), 4)).readInt32LE() : null });
 }
 async function reload() {
   await command(`load_rom?${new URLSearchParams({ path: rom, pause: '1' })}`);
@@ -101,33 +108,49 @@ try {
     await new Promise(done => setTimeout(done, 250));
   }
   await reload();
-  await waitTask('Task_TitleScreenPhase1');
-  await capture('intro-logo');
-  await waitTask('Task_TitleScreenPhase2');
-  await capture('intro-banner');
-  await waitTask('Task_TitleScreenPhase3');
+  await waitTask('Task_Scene1_WaterDrops');
+  await step(150);
+  await capture('game-freak');
+  await waitTask('Task_Scene1_PanUp');
+  await step(320);
+  await capture('mountain-pan');
+  await waitTask('Task_WayfarerTitleReveal');
+  await capture('mountain-hold');
+  await waitTask('Task_WayfarerTitleInput', 300);
   await step(4);
-  await capture('title');
+  await capture('title-overlays');
   await step(16);
   await capture('title-blink');
-  await step(120);
+  await step(600);
   await capture('title-held');
   await press('Start');
   await step(180);
-  if (await hasTask('Task_TitleScreenPhase3')) throw new Error('Start did not leave title');
+  if (await hasTask('Task_WayfarerTitleInput')) throw new Error('Start did not leave title');
   await capture('after-start');
-  await reload();
-  await waitTask('Task_TitleScreenPhase1');
-  // The task is allocated before the initial palette fade finishes and input runs.
-  await step(90);
-  await press('Start');
-  await waitTask('Task_TitleScreenPhase3', 300);
-  await step(20);
-  await capture('title-skipped');
+
+  for (const [label, delay] of [['early', 90], ['mid', 480], ['late', 800]]) {
+    await reload();
+    await waitTask('Task_Scene1_WaterDrops');
+    if (delay) await step(delay);
+    await press('Start');
+    await waitTask('Task_WayfarerTitleInput', 300);
+    await step(4);
+    await capture(`title-skipped-${label}`);
+  }
+  // Remain longer than the title loop's audible opening. It may restart music,
+  // but it must remain in the held title task and never reload the cinematic.
+  await step(7200);
+  if (!(await hasTask('Task_WayfarerTitleInput'))) throw new Error('Idle title left the held composition');
+  if (await hasTask('Task_Scene2_Load')) throw new Error('Bike scene was reached');
+  await capture('title-long-idle');
   await writeFile(join(output, 'capture.json'), JSON.stringify({
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
-    verified: ['natural intro', 'settled title and blink', 'Start exits title', 'skipped intro reaches title'],
+    verified: [
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays and blink',
+      'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
+      'bike scene task was not reached',
+    ],
   }, null, 2) + '\n');
   console.log(`Captured and verified title screen in ${output}`);
 } finally {
