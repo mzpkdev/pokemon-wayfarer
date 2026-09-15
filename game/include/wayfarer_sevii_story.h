@@ -22,6 +22,7 @@ bool8 WayfarerSeviiTryExchangeItemForRewardThenSetFlags(u16 sourceItem, u16 rewa
 bool8 WayfarerSeviiTryGiveEggThenSetFlag(u16 species, u16 receiptFlag);
 
 bool8 WayfarerSeviiStartSelphyRequest(u16 species, u16 rewardItem);
+bool8 WayfarerSeviiSampleSelphyRequest(void);
 bool8 WayfarerSeviiHasActiveSelphyRequest(void);
 bool8 WayfarerSeviiIsSelphyRequestedSpecies(u16 species);
 bool8 WayfarerSeviiIsPartyMonSelphyRequested(u8 partyIndex);
@@ -42,6 +43,7 @@ void WayfarerSevii_TryExchangeItemForReward(void);
 void WayfarerSevii_TryExchangeItemForRewardThenSetFlags(void);
 void WayfarerSevii_TryGiveEggThenSetFlag(void);
 void WayfarerSevii_StartSelphyRequest(void);
+void WayfarerSevii_SampleSelphyRequest(void);
 void WayfarerSevii_HasActiveSelphyRequest(void);
 void WayfarerSevii_IsSelectedSpeciesRequested(void);
 void WayfarerSevii_TryClaimSelphyPendingReward(void);

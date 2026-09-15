@@ -2,19 +2,49 @@
 #include "battle.h"
 #include "event_data.h"
 #include "item.h"
+#include "new_game.h"
+#include "pokedex.h"
 #include "pokemon.h"
+#include "pokemon_size_record.h"
+#include "random.h"
 #include "trainer_rating.h"
+#include "wayfarer_appearance.h"
+#include "wayfarer_origin.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_sevii_story.h"
 #include "test/test.h"
 #include "constants/battle.h"
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "constants/moves.h"
+#include "constants/pokedex.h"
 #include "constants/regions.h"
 #include "constants/species.h"
 #include "constants/vars.h"
+#include "constants/wayfarer_appearance.h"
+#include "constants/wayfarer_origin.h"
 
 #if IS_WAYFARER
+
+extern bool8 CapeBrinkGetMoveToTeachLeadPokemon(void);
+extern bool8 HasLearnedAllMovesFromCapeBrinkTutor(void);
+
+static bool8 IsSelphySourceReward(u16 item)
+{
+    switch (item)
+    {
+    case ITEM_LUXURY_BALL:
+    case ITEM_BIG_PEARL:
+    case ITEM_PEARL:
+    case ITEM_STARDUST:
+    case ITEM_STAR_PIECE:
+    case ITEM_NUGGET:
+    case ITEM_RARE_CANDY:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
 
 TEST("Wayfarer Sevii item receipts commit only after their Bag transaction")
 {
@@ -70,6 +100,36 @@ TEST("Wayfarer Sevii party helpers and Selphy keep a pending request until rewar
     EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD), ITEM_NONE);
 }
 
+TEST("Wayfarer Sevii Selphy sampler freezes the source candidate and reward draw")
+{
+    u16 species;
+    u16 reward;
+
+    ResetPokedex();
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(SPECIES_MEOWTH), FLAG_SET_SEEN);
+    WayfarerSeviiInitPersistentState();
+    SeedRng(0x4C2A);
+    EXPECT(WayfarerSeviiSampleSelphyRequest());
+    species = VarGet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES);
+    reward = VarGet(VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD);
+    EXPECT_EQ(species, SPECIES_MEOWTH);
+    EXPECT(IsSelphySourceReward(reward));
+    EXPECT(!WayfarerSeviiSampleSelphyRequest());
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES), species);
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD), reward);
+
+    WayfarerSeviiInitPersistentState();
+    SeedRng(0x4C2A);
+    EXPECT(WayfarerSeviiSampleSelphyRequest());
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES), species);
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD), reward);
+
+    ResetPokedex();
+    WayfarerSeviiInitPersistentState();
+    EXPECT(!WayfarerSeviiSampleSelphyRequest());
+    EXPECT(!WayfarerSeviiHasActiveSelphyRequest());
+}
+
 TEST("Wayfarer Sevii Egg receipt remains a party-only capacity transaction")
 {
     WayfarerSeviiInitPersistentState();
@@ -112,6 +172,60 @@ TEST("Wayfarer Sevii rival eligibility accepts any completed League")
     SetGameClearStateForRegion(REGION_HOENN, TRUE);
     EXPECT(WayfarerSeviiHasAnyLeagueClear());
     SetGameClearStateForRegion(REGION_HOENN, FALSE);
+}
+
+TEST("Wayfarer Sevii Heracross record uses saved slot four and new-game default")
+{
+    WayfarerSeviiInitPersistentState();
+    VarSet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD, 1);
+    InitHeracrossSizeRecord();
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD), 0x8000);
+    EXPECT_EQ(VarGet(WAYFARER_SEVII_VAR_ID(4)), 0x8000);
+
+    EXPECT(WayfarerConfirmPendingOrigin(ORIGIN_NEW_BARK));
+    EXPECT(WayfarerConfirmPendingAppearance(APPEARANCE_GOLD));
+    VarSet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD, 1);
+    NewGameInitData();
+    EXPECT_EQ(VarGet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD), 0x8000);
+}
+
+static void SetCapeBrinkLead(u16 species)
+{
+    u8 friendship = 255;
+
+    ZeroPlayerPartyMons();
+    CreateMon(&gPlayerParty[0], species, 50, 0, OTID_STRUCT_PLAYER_ID);
+    SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &friendship);
+    gPlayerPartyCount = 1;
+}
+
+TEST("Wayfarer Cape Brink tutor tracks each reward in Sevii flags 47 through 49")
+{
+    WayfarerSeviiInitPersistentState();
+    FlagClear(FLAG_WAYFARER_SEVII_TUTOR_FRENZY_PLANT);
+    FlagClear(FLAG_WAYFARER_SEVII_TUTOR_BLAST_BURN);
+    FlagClear(FLAG_WAYFARER_SEVII_TUTOR_HYDRO_CANNON);
+
+    SetCapeBrinkLead(SPECIES_VENUSAUR);
+    EXPECT(CapeBrinkGetMoveToTeachLeadPokemon());
+    EXPECT_EQ(gSpecialVar_0x8005, MOVE_FRENZY_PLANT);
+    EXPECT(!HasLearnedAllMovesFromCapeBrinkTutor());
+    EXPECT(FlagGet(FLAG_WAYFARER_SEVII_TUTOR_FRENZY_PLANT));
+    EXPECT(!FlagGet(FLAG_WAYFARER_SEVII_TUTOR_BLAST_BURN));
+    EXPECT(!FlagGet(FLAG_WAYFARER_SEVII_TUTOR_HYDRO_CANNON));
+    EXPECT(!CapeBrinkGetMoveToTeachLeadPokemon());
+
+    SetCapeBrinkLead(SPECIES_CHARIZARD);
+    EXPECT(CapeBrinkGetMoveToTeachLeadPokemon());
+    EXPECT_EQ(gSpecialVar_0x8005, MOVE_BLAST_BURN);
+    EXPECT(!HasLearnedAllMovesFromCapeBrinkTutor());
+    EXPECT(FlagGet(FLAG_WAYFARER_SEVII_TUTOR_BLAST_BURN));
+
+    SetCapeBrinkLead(SPECIES_BLASTOISE);
+    EXPECT(CapeBrinkGetMoveToTeachLeadPokemon());
+    EXPECT_EQ(gSpecialVar_0x8005, MOVE_HYDRO_CANNON);
+    EXPECT(HasLearnedAllMovesFromCapeBrinkTutor());
+    EXPECT(FlagGet(FLAG_WAYFARER_SEVII_TUTOR_HYDRO_CANNON));
 }
 
 #endif // IS_WAYFARER

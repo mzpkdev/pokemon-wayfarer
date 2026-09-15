@@ -4,13 +4,16 @@
 #include "daycare.h"
 #include "event_data.h"
 #include "item.h"
+#include "pokedex.h"
 #include "pokemon.h"
+#include "random.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_sevii_story.h"
 #include "constants/battle.h"
 #include "constants/flags.h"
 #include "constants/items.h"
+#include "constants/pokedex.h"
 #include "constants/regions.h"
 #include "constants/vars.h"
 
@@ -25,6 +28,66 @@ static bool8 IsSeviiReceiptFlag(u16 flag)
 static bool8 IsStoryItem(u16 item)
 {
     return item != ITEM_NONE && item < ITEMS_COUNT;
+}
+
+static bool8 IsSelphyRequestSpecies(u16 species)
+{
+    return species != SPECIES_NONE
+        && IsSpeciesEnabled(species)
+        && GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_GET_SEEN);
+}
+
+static bool8 HasSelphyRequestSpecies(void)
+{
+    u16 species;
+
+    for (species = SPECIES_BULBASAUR; species < NUM_SPECIES; species++)
+    {
+        if (IsSelphyRequestSpecies(species))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static u16 SampleSelphyRequestSpecies(void)
+{
+    u16 i;
+    u16 species = SPECIES_NONE;
+
+    // Preserve the source's 100 random probes and descending wraparound.
+    // HasSelphyRequestSpecies guarantees that its fallback terminates.
+    for (i = 0; i < 100; i++)
+    {
+        species = (Random() % (NUM_SPECIES - 1)) + 1;
+        if (IsSelphyRequestSpecies(species))
+            return species;
+    }
+
+    while (!IsSelphyRequestSpecies(species))
+    {
+        if (species == SPECIES_BULBASAUR)
+            species = NUM_SPECIES - 1;
+        else
+            species--;
+    }
+    return species;
+}
+
+static const u16 sSelphyDeluxeRewards[] =
+{
+    ITEM_BIG_PEARL,
+    ITEM_PEARL,
+    ITEM_STARDUST,
+    ITEM_STAR_PIECE,
+    ITEM_NUGGET,
+    ITEM_RARE_CANDY,
+};
+
+static u16 SampleSelphyReward(void)
+{
+    if ((Random() % 100) >= 30)
+        return ITEM_LUXURY_BALL;
+    return sSelphyDeluxeRewards[Random() % ARRAY_COUNT(sSelphyDeluxeRewards)];
 }
 
 bool8 WayfarerSeviiPartyHasSpecies(u16 species)
@@ -176,6 +239,17 @@ bool8 WayfarerSeviiStartSelphyRequest(u16 species, u16 rewardItem)
     return TRUE;
 }
 
+bool8 WayfarerSeviiSampleSelphyRequest(void)
+{
+    u16 species;
+
+    if (WayfarerSeviiHasActiveSelphyRequest() || !HasSelphyRequestSpecies())
+        return FALSE;
+
+    species = SampleSelphyRequestSpecies();
+    return WayfarerSeviiStartSelphyRequest(species, SampleSelphyReward());
+}
+
 bool8 WayfarerSeviiHasActiveSelphyRequest(void)
 {
     u16 species = VarGet(VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES);
@@ -260,6 +334,7 @@ bool8 WayfarerSeviiTryExchangeItemForReward(u16 sourceItem, u16 rewardItem, u16 
 bool8 WayfarerSeviiTryExchangeItemForRewardThenSetFlags(u16 sourceItem, u16 rewardItem, u16 deliveryFlag, u16 rewardReceiptFlag) { (void)sourceItem; (void)rewardItem; (void)deliveryFlag; (void)rewardReceiptFlag; return FALSE; }
 bool8 WayfarerSeviiTryGiveEggThenSetFlag(u16 species, u16 receiptFlag) { (void)species; (void)receiptFlag; return FALSE; }
 bool8 WayfarerSeviiStartSelphyRequest(u16 species, u16 rewardItem) { (void)species; (void)rewardItem; return FALSE; }
+bool8 WayfarerSeviiSampleSelphyRequest(void) { return FALSE; }
 bool8 WayfarerSeviiHasActiveSelphyRequest(void) { return FALSE; }
 bool8 WayfarerSeviiIsSelphyRequestedSpecies(u16 species) { (void)species; return FALSE; }
 bool8 WayfarerSeviiIsPartyMonSelphyRequested(u8 partyIndex) { (void)partyIndex; return FALSE; }
@@ -314,6 +389,11 @@ void WayfarerSevii_TryGiveEggThenSetFlag(void)
 void WayfarerSevii_StartSelphyRequest(void)
 {
     gSpecialVar_Result = WayfarerSeviiStartSelphyRequest(gSpecialVar_0x8004, gSpecialVar_0x8005);
+}
+
+void WayfarerSevii_SampleSelphyRequest(void)
+{
+    gSpecialVar_Result = WayfarerSeviiSampleSelphyRequest();
 }
 
 void WayfarerSevii_HasActiveSelphyRequest(void)

@@ -775,6 +775,7 @@ gSpecials::
     def_special WayfarerSevii_TryExchangeItemForRewardThenSetFlags
     def_special WayfarerSevii_TryGiveEggThenSetFlag
     def_special WayfarerSevii_StartSelphyRequest
+    def_special WayfarerSevii_SampleSelphyRequest
     def_special WayfarerSevii_HasActiveSelphyRequest
     def_special WayfarerSevii_IsSelectedSpeciesRequested
     def_special WayfarerSevii_TryClaimSelphyPendingReward
