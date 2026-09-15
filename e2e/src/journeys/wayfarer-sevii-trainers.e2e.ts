@@ -41,7 +41,7 @@ const waitForDialogueText = async (
 ): Promise<void> => {
   for (let attempt = 0; attempt < 300; attempt++) {
     const state = await game.state.read()
-    if (state.dialogue.text.includes(expectedText)) return
+    if (state.dialogueOpen && state.dialogue.text.includes(expectedText)) return
     if (state.battle.ui === "text" || state.dialogueOpen || state.scriptActive) {
       await game.controls.press("a")
     } else await game.wait.frames(12)
