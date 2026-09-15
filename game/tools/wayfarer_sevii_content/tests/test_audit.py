@@ -230,6 +230,67 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 with self.assertRaisesRegex(AUDIT.AuditError, "does not match declared transaction kind"):
                     AUDIT.validate_contract_closure(root, {}, closure, contracts)
 
+    def test_contract_closure_accepts_only_a_delivery_gated_handoff_retry_grant(self):
+        row = {
+            "content_id": "story.test.handoff_retry", "owner": "story",
+            "wayfarer_script": "WayfarerSevii_Father",
+            "state_reads": ["SEVII_DELIVERED", "SEVII_REWARD_RECEIVED"],
+            "state_writes": ["SEVII_DELIVERED", "SEVII_REWARD_RECEIVED"],
+        }
+        contracts = {
+            "states": [
+                {"id": "SEVII_DELIVERED", "symbol": "FLAG_WAYFARER_SEVII_DELIVERED", "storage": "flag"},
+                {"id": "SEVII_REWARD_RECEIVED", "symbol": "FLAG_WAYFARER_SEVII_REWARD_RECEIVED", "storage": "flag"},
+            ],
+            "trainer_ids": {"allocations": []},
+            "transactions": [{"content_id": row["content_id"], "kind": "handoff",
+                              "receipt": "SEVII_REWARD_RECEIVED"}],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/handoff.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text(
+                "WayfarerSevii_Father::\n"
+                "\tgoto_if_set FLAG_WAYFARER_SEVII_DELIVERED, WayfarerSevii_FatherRetry\n"
+                "\tsetvar VAR_0x8004, ITEM_METEORITE\n"
+                "\tsetvar VAR_0x8005, ITEM_MOON_STONE\n"
+                "\tsetvar VAR_0x8006, FLAG_WAYFARER_SEVII_DELIVERED\n"
+                "\tsetvar VAR_0x8007, FLAG_WAYFARER_SEVII_REWARD_RECEIVED\n"
+                "\tspecialvar VAR_RESULT, WayfarerSevii_TryExchangeItemForRewardThenSetFlags\n"
+                "\tend\n"
+                "WayfarerSevii_FatherRetry::\n"
+                "\tgoto_if_set FLAG_WAYFARER_SEVII_REWARD_RECEIVED, WayfarerSevii_FatherComplete\n"
+                "\tsetvar VAR_0x8004, ITEM_MOON_STONE\n"
+                "\tsetvar VAR_0x8005, FLAG_WAYFARER_SEVII_REWARD_RECEIVED\n"
+                "\tspecialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag\n"
+                "\tend\n"
+                "WayfarerSevii_FatherComplete::\n\tend\n",
+                encoding="utf-8",
+            )
+            closure = {
+                "includes": ["data/scripts/wayfarer_sevii/story/handoff.inc"],
+                "state_operations": [
+                    {"label": "WayfarerSevii_Father", "access": access, "state": state}
+                    for state in ("FLAG_WAYFARER_SEVII_DELIVERED", "FLAG_WAYFARER_SEVII_REWARD_RECEIVED")
+                    for access in ("read", "write")
+                ],
+                "content_operations": [
+                    {"label": "WayfarerSevii_Father", "kind": "transaction",
+                     "command": "WayfarerSevii_TryExchangeItemForRewardThenSetFlags"},
+                    {"label": "WayfarerSevii_FatherRetry", "kind": "transaction",
+                     "command": "WayfarerSevii_TryGiveItemThenSetFlag"},
+                ],
+            }
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            include.write_text(include.read_text(encoding="utf-8").replace(
+                "\tgoto_if_set FLAG_WAYFARER_SEVII_DELIVERED, WayfarerSevii_FatherRetry\n",
+                "\tgoto WayfarerSevii_FatherRetry\n"), encoding="utf-8")
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                with self.assertRaisesRegex(AUDIT.AuditError, "does not match declared transaction kind"):
+                    AUDIT.validate_contract_closure(root, {}, closure, contracts)
+
     def test_contract_closure_requires_move_maniac_payment_after_successful_service(self):
         row = {
             "content_id": "story.test.move_maniac", "owner": "story",

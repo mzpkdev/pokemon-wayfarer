@@ -491,6 +491,58 @@ def _staged_grant_is_ordered(entry: str, labels: list[str], bodies: dict[str, st
     return all(_labels_reachable(post_commit_sources, {reward}, graph) for reward in reward_labels)
 
 
+def _handoff_retry_grant_is_guarded(labels: list[str], bodies: dict[str, str], receipt: str) -> bool:
+    """Prove the Lostelle father retry grant follows its atomic handoff.
+
+    The atomic exchange records both the consumed Meteorite delivery and its
+    Moon Stone receipt.  A later item-only retry is valid only when the
+    delivery flag routes into it and the final receipt still routes away from
+    it.  This is intentionally a topology proof for that reviewed recovery
+    path, not a general mixed-transaction exemption.
+    """
+    handoff_labels: set[str] = set()
+    grant_labels: set[str] = set()
+    delivery_symbols: set[str] = set()
+    for label in labels:
+        lines = bodies[label].splitlines()
+        exchange = next((index for index, line in enumerate(lines)
+                         if re.fullmatch(r"\s*specialvar\s+VAR_RESULT\s*,\s*"
+                                         r"WayfarerSevii_TryExchangeItemForRewardThenSetFlags\s*(?:@.*)?", line)), None)
+        if exchange is not None:
+            handoff_labels.add(label)
+            delivery = next((match.group(1) for line in lines[:exchange]
+                             if (match := re.fullmatch(r"\s*setvar\s+VAR_0x8006\s*,\s*"
+                                                       r"(FLAG_WAYFARER_SEVII_[A-Z0-9_]+)\s*(?:@.*)?", line))), None)
+            if delivery is None:
+                return False
+            delivery_symbols.add(delivery)
+        if any(re.fullmatch(r"\s*specialvar\s+VAR_RESULT\s*,\s*"
+                            r"WayfarerSevii_TryGiveItemThenSetFlag\s*(?:@.*)?", line)
+               for line in lines):
+            grant_labels.add(label)
+    if not handoff_labels or not grant_labels or len(delivery_symbols) != 1:
+        return False
+    delivery = next(iter(delivery_symbols))
+    for grant in grant_labels:
+        lines = bodies[grant].splitlines()
+        special = next(index for index, line in enumerate(lines)
+                       if re.fullmatch(r"\s*specialvar\s+VAR_RESULT\s*,\s*"
+                                       r"WayfarerSevii_TryGiveItemThenSetFlag\s*(?:@.*)?", line))
+        if not any(re.fullmatch(rf"\s*goto_if_set\s+{re.escape(receipt)}\s*,\s*"
+                                r"WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", line)
+                   for line in lines[:special]):
+            return False
+        incoming = [line for body in bodies.values() for line in body.splitlines()
+                    if not LABEL_DEFINITION.fullmatch(line.strip())
+                    and _script_command_token(line) is not None
+                    and grant in WAYFARER_LABEL.findall(line)]
+        if not incoming or any(not re.fullmatch(
+                rf"\s*goto_if_set\s+{re.escape(delivery)}\s*,\s*{re.escape(grant)}\s*(?:@.*)?", line)
+                for line in incoming):
+            return False
+    return True
+
+
 def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
     """Return the script form used by each owned Trainer battle command.
 
@@ -616,7 +668,13 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             special_kinds = {kind for command in transaction_commands
                              if (kind := closure.transaction_kind(command)) is not None}
             if special_kinds and special_kinds != {transaction["kind"]}:
-                raise AuditError(f"{content_id}: atomic transaction special does not match declared transaction kind")
+                allowed_retry = (transaction["kind"] == "handoff"
+                                 and special_kinds == {"handoff", "grant"}
+                                 and isinstance(transaction.get("receipt"), str)
+                                 and _handoff_retry_grant_is_guarded(
+                                     labels, bodies, states[transaction["receipt"]]["symbol"]))
+                if not allowed_retry:
+                    raise AuditError(f"{content_id}: atomic transaction special does not match declared transaction kind")
             receipt = transaction.get("receipt")
             if transaction["kind"] == "service":
                 if not _service_payment_follows_successful_relearner(entry, labels, bodies):
