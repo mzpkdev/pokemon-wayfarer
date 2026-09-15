@@ -110,6 +110,51 @@ class WayfarerSeviiStoryActorStagingTests(unittest.TestCase):
             self.assertLess(commit, presentation)
             self.assertLess(presentation, spawn)
 
+    def test_biker_completion_removes_the_instantiated_gang(self):
+        story = self.source("data/scripts/wayfarer_sevii/story/local_adventures.inc")
+        body = re.search(
+            r"WayfarerSevii_Story_EventScript_CommitBikersCleared::(.*?)"
+            r"WayfarerSevii_Story_EventScript_BikersNotStarted::",
+            story,
+            re.S,
+        ).group(1)
+        commit = body.index("setflag FLAG_WAYFARER_SEVII_BIKERS_CLEARED")
+        removals = (
+            "LOCALID_PAXTON",
+            "LOCALID_THREE_ISLAND_BIKER1",
+            "LOCALID_THREE_ISLAND_BIKER2",
+            "LOCALID_THREE_ISLAND_BIKER3",
+            "LOCALID_THREE_ISLAND_BIKER4",
+            "LOCALID_THREE_ISLAND_BIKER5",
+            "LOCALID_THREE_ISLAND_BIKER6",
+        )
+        for actor in removals:
+            self.assertGreater(body.index(f"removeobject {actor}"), commit)
+
+    def test_story_resolution_removes_current_map_actors(self):
+        story = self.source("data/scripts/wayfarer_sevii/story/local_adventures.inc")
+        cases = (
+            (
+                "WayfarerSevii_Story_EventScript_CommitLostelleRescue::",
+                "WayfarerSevii_Story_EventScript_LostelleReadyHome::",
+                ("LOCALID_BERRY_FOREST_LOSTELLE",),
+            ),
+            (
+                "WayfarerSevii_Story_EventScript_CommitLoreleiComplete::",
+                "WayfarerSevii_Story_EventScript_LoreleiWarehouseDone::",
+                ("LOCALID_ICEFALL_ROCKET1", "LOCALID_ICEFALL_ROCKET2", "LOCALID_ICEFALL_ROCKET3"),
+            ),
+            (
+                "WayfarerSevii_Story_EventScript_ReturnSelphy::",
+                "WayfarerSevii_Story_EventScript_SelphyAlreadyReturned::",
+                ("LOCALID_LOST_CAVE_SELPHY",),
+            ),
+        )
+        for start, end, actors in cases:
+            body = story.split(start, 1)[1].split(end, 1)[0]
+            for actor in actors:
+                self.assertIn(f"removeobject {actor}", body)
+
     def test_literal_local_ids_are_pinned_to_source_object_indices(self):
         cases = (
             ("FiveIsland_RocketWarehouse_Frlg", 0, "FiveIsland_RocketWarehouse_EventScript_Grunt2"),

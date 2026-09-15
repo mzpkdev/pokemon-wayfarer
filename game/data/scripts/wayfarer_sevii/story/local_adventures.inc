@@ -183,6 +183,16 @@ WayfarerSevii_Story_EventScript_CueBallPaxton::
 WayfarerSevii_Story_EventScript_CommitBikersCleared::
 	setflag FLAG_WAYFARER_SEVII_BIKERS_CLEARED
 	msgbox WayfarerSevii_Story_Text_BikersLeave
+	closemessage
+	fadescreenswapbuffers FADE_TO_BLACK
+	removeobject LOCALID_PAXTON
+	removeobject LOCALID_THREE_ISLAND_BIKER1
+	removeobject LOCALID_THREE_ISLAND_BIKER2
+	removeobject LOCALID_THREE_ISLAND_BIKER3
+	removeobject LOCALID_THREE_ISLAND_BIKER4
+	removeobject LOCALID_THREE_ISLAND_BIKER5
+	removeobject LOCALID_THREE_ISLAND_BIKER6
+	fadescreenswapbuffers FADE_FROM_BLACK
 	releaseall
 	end
 
@@ -283,6 +293,7 @@ WayfarerSevii_Story_EventScript_CommitLostelleRescue::
 	setflag FLAG_WAYFARER_SEVII_LOSTELLE_RESCUED
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RETURNED_LOSTELLE
 	msgbox WayfarerSevii_Story_Text_LostelleReadyHome
+	removeobject LOCALID_BERRY_FOREST_LOSTELLE
 	release
 	end
 
@@ -350,6 +361,9 @@ WayfarerSevii_Story_EventScript_IcefallRocket::
 
 WayfarerSevii_Story_EventScript_CommitLoreleiComplete::
 	setflag FLAG_WAYFARER_SEVII_LORELEI_COMPLETE
+	removeobject LOCALID_ICEFALL_ROCKET1
+	removeobject LOCALID_ICEFALL_ROCKET2
+	removeobject LOCALID_ICEFALL_ROCKET3
 	goto_if_set FLAG_WAYFARER_SEVII_WAREHOUSE_CLEARED, WayfarerSevii_Story_EventScript_LoreleiWarehouseDone
 	msgbox WayfarerSevii_Story_Text_LoreleiWarehouseLead
 	releaseall
@@ -405,6 +419,7 @@ WayfarerSevii_Story_EventScript_ReturnSelphy::
 	setflag FLAG_WAYFARER_SEVII_SELPHY_RETURNED
 	clearflag FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY
 	msgbox WayfarerSevii_Story_Text_SelphyReturn
+	removeobject LOCALID_LOST_CAVE_SELPHY
 	releaseall
 	end
 
