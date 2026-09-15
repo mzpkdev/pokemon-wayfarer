@@ -2,7 +2,8 @@
 
 Validated on branch `task/sevii-trainer-implementation` from exact foundation base
 `fbc3bc33f7a37b89be850013938595155bb6ecc0`. The final validation candidate includes
-`f99e57607f`.
+`f99e57607f` plus the final isolation and reduction commits listed in the branch
+history.
 
 ## Delivered behavior
 
@@ -45,43 +46,68 @@ serially within this worktree.
 - `/tmp/sevii-build-tools/bin/make -C game BUILD=wayfarer -j2 check`: exit 0;
   4,368 passed, 349 known, 629 TODO, 6 expected failing, 9 assumptions failed,
   5,361 total. The assumptions are the suite's declared non-failures.
-- Both Trainer generators passed `--check` after the final release build.
-- Content-contract unit suite: 49/49 passed.
+- Trainer roster, content, and scaling generators passed `--check` after the final
+  release build.
+- Content-contract unit suite: 45/45 passed.
 - Sevii-port preservation suite: 14/14 passed.
-- Selected-roster and scaling suites: 6/6 passed.
-- E2E formatting, type checking, linting, and diff checks passed.
-- Headless SkyEmu ordinary-Trainer suite: 7/7 journeys passed in 54.67 seconds.
+- The changed Trainer journey passed focused formatting and lint checks; the full
+  E2E project passed type checking. The aggregate E2E style command remains red on
+  four unrelated committed files (`story.ts` and three trainer-only journeys), none
+  changed by this branch's final pass.
+- Headless SkyEmu ordinary-Trainer suite: 7/7 journeys passed in 60.77 seconds.
   It covers Garrett sight/victory, Crush Kin party denial and paired battle,
   representative Three/Five/Six Island defeat/reload, two real 100-step Vs.
   Seeker charges with `_2` then `_3` parties, exterior Dario, Tommy victory/reload,
-  and Tommy blackout/retry. A focused real Sharon rematch chain also passed in
-  28.23 seconds.
+  and Tommy blackout/retry. The rematch journey asserts exact runtime IDs 1539
+  (`_2`) and 1540 (`_3`).
+
+## Validation reduction
+
+- Removed ten redundant tests: four generator render snapshots, two Vs. Seeker
+  source-shape/CPP assertions, two duplicate ordinary inventory/graphics parsers,
+  and two scaling-policy literal tests already enforced by generator validation.
+- Removed the orphaned roster-test Make target and stopped building the complete
+  audit report twice in one test method.
+- Removed the generated 136-row Markdown allocation mirror. The checked-in JSON
+  inventory remains the sole authoritative per-key record.
+
+The deleted test files and cases accounted for at least 5.4 seconds of measured
+host-test time per aggregate run, excluding the two removed scaling tests; avoiding
+the second audit report construction removes another full content-report pass.
+Gameplay journeys and positive generator/contract validation remain.
 
 ## Release measurements
 
 The exact foundation-base evidence records 32,673,336 used bytes. The final
-Wayfarer release uses 32,831,544 bytes (`__rom_end = 0x09F4F838`), a net increase of
-158,208 bytes. It leaves 722,888 bytes unused, or 198,600 bytes above the required
+Wayfarer release uses 32,831,448 bytes (`__rom_end = 0x09F4F7D8`), a net increase of
+158,112 bytes. It leaves 722,984 bytes unused, or 198,696 bytes above the required
 512 KiB reserve.
 
 | Category | Delta from exact foundation base |
 | --- | ---: |
-| Code | +7,000 bytes |
+| Code | +6,896 bytes |
 | Scripts | +27,808 bytes |
 | Maps/layouts | +2,088 bytes |
 | Trainer data | +32,700 bytes |
 | Other | +88,612 bytes |
-| Audio, graphics, encounters | 0 bytes |
+| Graphics | +8 bytes |
+| Audio, encounters | 0 bytes |
 
 Supported release products also build successfully:
 
 | Product | Used ROM | EWRAM | IWRAM |
 | --- | ---: | ---: | ---: |
-| firered | 28,622,040 | 247,625 | 25,864 |
-| leafgreen | 28,622,444 | 247,625 | 25,864 |
-| emerald | 28,527,016 | 247,513 | 25,648 |
-| hns | 30,809,256 | 247,593 | 25,612 |
-| wayfarer | 32,831,544 | 248,781 | 25,564 |
+| firered | 28,622,008 | 247,625 | 25,864 |
+| leafgreen | 28,622,412 | 247,625 | 25,864 |
+| emerald | 28,527,000 | 247,513 | 25,648 |
+| hns | 30,809,224 | 247,593 | 25,612 |
+| wayfarer | 32,831,448 | 248,781 | 25,564 |
+
+The standalone products' ROM category boundaries exactly match the foundation
+references after gating the rematch runtime to Wayfarer; this removes the leaked
+32-byte rematch stub contribution from FireRed, LeafGreen, and HNS (and 16 bytes
+from Emerald). Full-file SHA-256 differs because GCC LTO reordered same-address
+interworking thunks, so byte identity is not claimed.
 
 ## Integration status
 

@@ -219,7 +219,6 @@ def build_report() -> dict:
 
 
 def render_coordination(report: dict) -> str:
-    rows = report["allocation"]["allocations"]
     lines = [
         "# Sevii Trainer implementation coordination",
         "",
@@ -229,16 +228,8 @@ def render_coordination(report: dict) -> str:
         "",
         "The collision-audited allocation starts at 1515 and is dense through 1650 inclusive. `TRAINERS_COUNT_WAYFARER` becomes 1651 when the shared roster lands. Slots 0–117 are every distinct ordinary base/rematch party source; slots 118–135 reserve every planned story opponent. Trainer Tower opponents are facility-local and never enter this range. Source FRLG numeric IDs are provenance only and must never reach runtime.",
         "",
-        "The checked-in machine-readable inventory is `allocation-inventory.json`. Its normalized party hashes are authoritative for source-drift checks.",
-        "",
-        "| Slot | Runtime ID | Generated symbol | Source key | Owner | Kind | Defeat base |",
-        "| ---: | ---: | --- | --- | --- | --- | --- |",
+        "The checked-in machine-readable `allocation-inventory.json` is the single authoritative per-key inventory. It records every slot, runtime ID, generated symbol, source key, owner, kind, defeat base, object reference, and normalized party hash; this coordination note deliberately does not duplicate its 136 rows.",
     ]
-    for row in rows:
-        lines.append(
-            f"| {row['slot']} | {row['numeric_id']} | `{row['id']}` | `{row['source_trainer']}` | "
-            f"{row['owner']} | {row['kind']} | `{row['defeat_base']}` |"
-        )
     lines.extend(
         [
             "",
