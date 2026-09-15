@@ -48,7 +48,7 @@ enum
     TAG_WAYFARER_PRESS_START,
 };
 
-#define WAYFARER_LOGO_Y 42
+#define WAYFARER_LOGO_Y 24
 #define WAYFARER_VERSION_Y 58
 #define WAYFARER_PRESS_START_Y 108
 #define WAYFARER_COPYRIGHT_Y 148
@@ -197,7 +197,9 @@ static void CreateWayfarerPressStart(s16 y)
 
 static void CreateWayfarerTitleSprites(void)
 {
-    static const s16 sLogoX[] = {24, 88, 152, 216};
+    // The 256px logo is centered on the 240px display; only transparent edge
+    // pixels fall outside the viewport.
+    static const s16 sLogoX[] = {-8, 56, 120, 184};
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(sLogoX); i++)
