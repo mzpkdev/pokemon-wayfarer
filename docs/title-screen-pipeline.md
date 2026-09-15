@@ -72,6 +72,21 @@ Run the converter tests after changing the pipeline:
 /tmp/wayfarer-title-venv/bin/python game/tools/test_convert_wayfarer_title.py
 ```
 
+## Version banner
+
+The `WAYFARER` banner uses white pixel lettering with a heavy black outline,
+modeled on the original GBA version banners. Its glyphs live in
+`game/tools/generate_wayfarer_banner.py`; regenerate it separately from the scene:
+
+```bash
+make -C game TITLE_ART_PYTHON=/tmp/wayfarer-title-venv/bin/python wayfarer-title-banner
+```
+
+The generator writes `wayfarer_version.png` and `wayfarer_version.pal` in
+`game/graphics/title_screen/wayfarer/`. It packs the left and right 64x32 sprite
+halves into a 64x64 sheet, reserves index 0 for transparency, and uses only the
+first 16 sprite-palette entries. Regeneration does not change the background.
+
 ## Build and inspect the real screen
 
 Build the ROM after regeneration; this also compresses the exported assets:

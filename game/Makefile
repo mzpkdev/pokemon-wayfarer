@@ -897,9 +897,12 @@ endif
 # Art conversion is explicit; normal builds consume the checked-in PNG/palette/map
 # exports with gbagfx and do not need Pillow.
 TITLE_ART_PYTHON ?= python3
-.PHONY: wayfarer-title-assets
+.PHONY: wayfarer-title-assets wayfarer-title-banner
 wayfarer-title-assets:
 	$(TITLE_ART_PYTHON) tools/convert_wayfarer_title.py
+
+wayfarer-title-banner:
+	$(TITLE_ART_PYTHON) tools/generate_wayfarer_banner.py
 
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
