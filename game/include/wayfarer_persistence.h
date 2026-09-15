@@ -7,6 +7,12 @@
 void WayfarerInitPersistentState(void);
 bool8 WayfarerPersistentStateIsValid(void);
 void WayfarerValidatePersistentState(void);
+void WayfarerSeviiInitPersistentState(void);
+bool8 WayfarerSeviiPersistentStateIsValid(void);
+struct WayfarerSeviiTrainerTowerRecords *WayfarerSevii_GetTrainerTowerRecords(void);
+bool32 WayfarerSeviiTrainerDefeatGet(u16 slot);
+void WayfarerSeviiTrainerDefeatSet(u16 slot);
+void WayfarerSeviiTrainerDefeatClear(u16 slot);
 
 bool8 WayfarerHoennStateIsInitialized(void);
 void WayfarerSetHoennStateInitialized(bool8 initialized);
