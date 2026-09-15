@@ -161,7 +161,7 @@ The functions must ignore slots at or above 533 safely. Trainer runtime maps eve
 
 ## Runtime surfaces owned here
 
-The Trainer branch will publish generated constants/roster data for all 136 keys, `TRAINERS_COUNT_WAYFARER = 1651`, one scaling classification per populated ID, the generated defeat-base lookup, and a separate Sevii Vs. Seeker registry. The registry carries transient readiness locally and does not append 64 families to the existing fixed SaveBlock1 rematch-index array.
+The Trainer branch will publish generated constants/roster data for all 136 keys, `TRAINERS_COUNT_WAYFARER = 1651`, one scaling classification per populated ID, the generated defeat-base lookup, and a separate Sevii Vs. Seeker registry. The registry consumes Story's compact persistent rematch-stage and pending-ready accessors and does not append 64 families to the existing fixed SaveBlock1 rematch-index array. Trainer owns Sevii flag slot 52 (`FLAG_WAYFARER_SEVII_VS_SEEKER_CHARGING`) for the Wayfarer-only Vs. Seeker charge lifecycle; Story's published allocation reserves slots 11-51.
 
 Ordinary content uses normal victory/blackout routing. Story callers use their own objective continuations but consume the same generated roster IDs and defeat accessors. Tower remains excluded from ordinary scaling, persistent Trainer defeat, and this allocation.
 
