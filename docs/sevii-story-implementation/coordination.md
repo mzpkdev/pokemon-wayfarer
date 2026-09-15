@@ -4,7 +4,7 @@ Status: base saved-state ABI published by commit `0357e4a423`; Trainer rematch e
 
 ## Saved bank and version
 
-Story owns `SaveBlock3.wayfarerSevii`, its initializer, validation, and the event flag/variable routing. The aggregate is 208 bytes and raises the Wayfarer `SAVE_VERSION` from 8 to 9. With the foundation's 904-byte `SaveBlock3`, the result is 1128 bytes, below the 1624-byte hard bound.
+Story owns `SaveBlock3.wayfarerSevii`, its initializer, validation, and the event flag/variable routing. The aggregate is 208 bytes and raises the Wayfarer `SAVE_VERSION` from 8 to 9. With the foundation's 904-byte `SaveBlock3`, the result is 1112 bytes, below the 1624-byte hard bound.
 
 ```c
 struct WayfarerSeviiPersistentState {
