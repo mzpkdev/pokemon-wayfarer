@@ -24,11 +24,9 @@ records live in the map manifest's `contracts` object.
 
 The active Wayfarer IDs end at 1514. The fixed 1515–2047 range gives later
 streams 533 explicit slots without a hole in the eventual dense Trainer table.
-Slots never derive from the moving active Trainer count. `selected_trainer_render`
-compiles the current selected FRLG source with Wayfarer product defines, uses the
-existing trainer-scaling parser, and returns only selected rows. Each row carries
-the exact compiled record and normalized source block so later generators retain
-name, class, sprite, music, AI, prize, items, IVs, moves, and party order.
+Slots never derive from the moving active Trainer count. The Trainer-owned
+generator compiles and validates selected FRLG parties; the content contract
+retains only the source identity and hash needed to bind an allocation to it.
 
 The `0xC000` flag and `0xD000` variable reservations describe future dedicated
 SaveBlock3 storage; they do not change the current save layout. State writers

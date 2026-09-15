@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -35,6 +36,11 @@ DEFAULT_OUTPUT = GAME_ROOT / "data/wayfarer_sevii_event_scripts.inc"
 
 class GenerationError(ValueError):
     pass
+
+
+SOURCE_LABEL = re.compile(
+    r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$"
+)
 
 
 def read_json(path: Path) -> dict:
@@ -85,14 +91,58 @@ def selected_module_names(manifest: dict) -> set[str]:
                 source = event.get("source", {})
                 source_script = source.get("script") if isinstance(source, dict) else None
                 entrypoint = event.get("wayfarer_script")
-                if source_script in (None, "", "0", "0x0", "NULL"):
-                    continue
                 if not isinstance(entrypoint, str):
+                    if source_script in (None, "", "0", "0x0", "NULL"):
+                        continue
                     raise GenerationError(f"{record['source_map']} {event_kind} has no Wayfarer entrypoint")
                 module = module_for_export(manifest, entrypoint, owner)
                 if module is not None:
                     selected.add(module)
     return selected
+
+
+def _source_label_block(root: Path, relative: str, label: str) -> str:
+    source = (root / relative).read_text(encoding="utf-8").replace("\r\n", "\n")
+    matches = list(SOURCE_LABEL.finditer(source))
+    for index, match in enumerate(matches):
+        if match.group(1) != label:
+            continue
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(source)
+        return source[match.start():end].rstrip() + "\n"
+    raise GenerationError(f"pinned source label is missing: {label} in {relative}")
+
+
+def source_data_blocks(root: Path, modules: dict, selected_modules: set[str]) -> list[str]:
+    """Copy only pinned text data from source-map scripts.
+
+    Wayfarer never links the FRLG source map scripts themselves. Selected
+    story handlers may reuse reviewed dialogue, so those individual label
+    blocks must be materialized in the generated projection. Event scripts and
+    every non-string data directive remain forbidden here.
+    """
+    blocks: dict[str, tuple[str, str]] = {}
+    for module_name in sorted(selected_modules):
+        for row in modules[module_name].get("allowed_externals", []):
+            relative = row.get("path", "")
+            label = row.get("label", "")
+            if row.get("kind") != "script_symbol" or not relative.startswith("data/maps/"):
+                continue
+            block = _source_label_block(root, relative, label)
+            directives = []
+            for line in block.splitlines()[1:]:
+                code = line.split("@", 1)[0].strip()
+                if not code:
+                    continue
+                if not code.startswith(".string "):
+                    raise GenerationError(f"source-map external is not pure text data: {label}")
+                directives.append(code)
+            if not directives:
+                raise GenerationError(f"source-map external has no text data: {label}")
+            previous = blocks.get(label)
+            if previous is not None and previous != (relative, block):
+                raise GenerationError(f"source data label is pinned to multiple definitions: {label}")
+            blocks[label] = (relative, block)
+    return [blocks[label][1] for label in sorted(blocks)]
 
 
 def render(root: Path, manifest_path: Path) -> str:
@@ -118,6 +168,15 @@ def render(root: Path, manifest_path: Path) -> str:
     ]
     lines.extend(f'\t.include "{include}"' for include in includes)
     lines.append("")
+    data_blocks = source_data_blocks(root, modules, selected_modules)
+    if data_blocks:
+        lines.extend((
+            "@ Pinned FRLG source text data used by selected handlers.",
+            "@ No source event-script block is linked.",
+            "",
+        ))
+        for block in data_blocks:
+            lines.extend((block.rstrip(), ""))
     for record in manifest["maps"]:
         source_map = record["source_map"]
         lines.append(f"{source_map}_MapScripts::")

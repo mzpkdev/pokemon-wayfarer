@@ -2,6 +2,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -33,11 +34,21 @@ class WayfarerSeviiScriptGenerationTest(unittest.TestCase):
         self.assertNotIn("_Frlg_MapScripts::", environment)
         self.assertNotIn('data/maps/', rendered)
         self.assertNotIn('_Frlg/scripts.inc', rendered)
+        modules = manifest["script_modules"]
+        selected = GENERATOR.selected_module_names(manifest)
+        source_labels = {
+            row["label"]
+            for module_name in selected
+            for row in modules[module_name].get("allowed_externals", [])
+            if row.get("kind") == "script_symbol" and row.get("path", "").startswith("data/maps/")
+        }
+        for label in source_labels:
+            definitions = re.findall(rf"(?m)^{re.escape(label)}::?$", rendered)
+            self.assertEqual(definitions, [f"{label}::"])
 
-    def test_recursive_dependencies_include_special_implementation_sources(self):
+    def test_recursive_dependencies_include_special_table(self):
         dependencies = GENERATOR.recursive_dependencies(GAME_ROOT, GAME_ROOT / "src/data/wayfarer_sevii_maps.json")
         self.assertIn("data/specials.inc", dependencies)
-        self.assertIn("src/seagallop.c", dependencies)
 
     def fixture(self, root):
         source = root / "data/maps/OneIsland_Frlg/scripts.inc"
@@ -96,12 +107,37 @@ class WayfarerSeviiScriptGenerationTest(unittest.TestCase):
                 "exports": ["WayfarerSevii_Story_Meteorite"], "allowed_commands": ["end"], "allowed_externals": [],
             }
             fixture["maps"][0]["retained_events"] = {"object_events": [{
-                "owner": "story", "source": {"script": "OneIsland_Frlg_EventScript_Meteorite"},
+                "owner": "story", "source": {"script": "0x0"},
                 "wayfarer_script": "WayfarerSevii_Story_Meteorite",
             }], "coord_events": [], "bg_events": []}
             self.assertNotIn("story", GENERATOR.selected_module_names(fixture))
             fixture["content_domains"]["story"]["enabled"] = True
             self.assertIn("story", GENERATOR.selected_module_names(fixture))
+
+    def test_materializes_only_pinned_source_map_pure_text_data(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "data/maps/OneIsland_Frlg/scripts.inc"
+            source.parent.mkdir(parents=True)
+            source.write_text(
+                "OneIsland_EventScript_Story::\n\tmsgbox OneIsland_Text_Hello\n\tend\n\n"
+                "OneIsland_Text_Hello::\n\t.string \"Hello!$\"\n\n"
+                "OneIsland_Text_Bad::\n\tmsgbox OneIsland_Text_Hello\n\tend\n",
+                encoding="utf-8",
+            )
+            modules = {"story": {"allowed_externals": [
+                {"kind": "script_symbol", "path": "data/maps/OneIsland_Frlg/scripts.inc",
+                 "label": "OneIsland_Text_Hello"},
+            ]}}
+            blocks = "\n".join(GENERATOR.source_data_blocks(root, modules, {"story"}))
+            self.assertIn("OneIsland_Text_Hello::", blocks)
+            self.assertNotIn("OneIsland_EventScript_Story::", blocks)
+            modules["story"]["allowed_externals"].append({
+                "kind": "script_symbol", "path": "data/maps/OneIsland_Frlg/scripts.inc",
+                "label": "OneIsland_Text_Bad",
+            })
+            with self.assertRaisesRegex(GENERATOR.GenerationError, "not pure text data"):
+                GENERATOR.source_data_blocks(root, modules, {"story"})
 
     def test_enabled_event_requires_entrypoint_from_its_owner_module(self):
         with tempfile.TemporaryDirectory() as directory:

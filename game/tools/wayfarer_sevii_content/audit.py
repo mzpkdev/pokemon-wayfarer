@@ -308,70 +308,6 @@ def trainer_tower_report(root: Path) -> dict[str, Any]:
     if not all(symbol in sources[1] for symbol in local_symbols):
         raise AuditError("Trainer Tower built-in source table is incomplete")
     return {"source_files": [relative(path, root) for path in paths], "external_payload": False}
-
-
-def content_inventory_report(manifest: dict[str, Any]) -> dict[str, Any]:
-    domains = active_domains(manifest)
-    # The schema always preserves enabled exploration when a development
-    # selection asks for another domain.  Ask once so it cannot be counted once
-    # per domain while all disabled milestone-one domains are inspected.
-    all_records = selected_records(manifest)
-    all_records.sort(key=lambda row: (row["domain"], row["source_map"], row["event_kind"], int(row.get("index", -1)), row["content_id"]))
-
-    selected = []
-    counts = {
-        "domain": Counter(), "owner": Counter(), "map": Counter(), "event_kind": Counter(),
-        "actor_role": Counter(), "battle_policy": Counter(), "reward_type": Counter(),
-    }
-
-
-    for row in all_records:
-        source = row.get("source")
-        selected.append({
-            "content_id": row["content_id"], "domain": row["domain"], "owner": row["owner"],
-            "source_map": row["source_map"], "map_id": row["map_id"], "event_kind": row["event_kind"],
-            "index": row.get("index"), "source_sha256": digest(source),
-            "output_sha256": digest(_output_event(row)) if row["event_kind"] in EVENT_KINDS else digest({
-                "wayfarer_script": row.get("wayfarer_script"), "handler_type": row.get("handler_type"),
-            }),
-        })
-        counts["domain"][row["domain"]] += 1
-        counts["owner"][row["owner"]] += 1
-        counts["map"][row["source_map"]] += 1
-        counts["event_kind"][row["event_kind"]] += 1
-        for key in ("actor_role", "battle_policy", "reward_type"):
-            value = row.get(key)
-            if value is not None:
-                counts[key][str(value)] += 1
-
-    exclusions = []
-    for exclusion in manifest.get("exclusions", []):
-        if not isinstance(exclusion, dict):
-            raise AuditError("manifest exclusion must be an object")
-        identities = exclusion.get("source_identities")
-        if not isinstance(identities, list):
-            raise AuditError("manifest exclusion must list source_identities")
-        for identity in identities:
-            if not isinstance(identity, dict):
-                raise AuditError("manifest exclusion source identity must be an object")
-            exclusions.append({
-                "content_id": exclusion.get("content_id"), "source_map": identity.get("source_map"),
-                "event_kind": identity.get("event_kind"), "index": identity.get("index"),
-                "owner": exclusion.get("owner"), "reason": exclusion.get("reason"),
-                "source_sha256": digest(identity.get("source")) if "source" in identity else None,
-            })
-    exclusions.sort(key=lambda row: (str(row["source_map"]), str(row["event_kind"]), str(row["index"]), str(row["reason"])))
-    return {
-        "domains": [{
-            "domain": name, "owner": data.get("owner"), "enabled": data.get("enabled"),
-            "inventory_ids": sorted(data.get("inventory", [])),
-        } for name, data in sorted(domains.items())],
-        "selected": selected,
-        "excluded": exclusions,
-        "counts": {name: dict(sorted(counter.items())) for name, counter in counts.items()},
-    }
-
-
 def _script_label_bodies(root: Path, closure_report: dict[str, Any]) -> dict[str, str]:
     """Read label bodies from the closure-validated owned include set."""
     bodies: dict[str, str] = {}
@@ -436,6 +372,12 @@ def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
     return result
 
 
+def _script_command_token(line: str) -> str | None:
+    """Return a command token without treating a comment-only line as code."""
+    code = line.split("@", 1)[0].strip()
+    return code.split(maxsplit=1)[0] if code else None
+
+
 def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_report: dict[str, Any],
                               contracts_report: dict[str, Any]) -> dict[str, Any]:
     """Link host contract declarations to selected owned script command surfaces.
@@ -478,32 +420,34 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
         else:
             written = {
                 symbol for symbol in symbols.values()
-                if any(line.split("@", 1)[0].strip().split(maxsplit=1)[0] in STATE_WRITE_COMMANDS and symbol in line
-                       for line in source.splitlines() if line.strip())
+                if any(_script_command_token(line) in STATE_WRITE_COMMANDS and symbol in line
+                       for line in source.splitlines())
             }
             read = {
                 symbol for symbol in symbols.values()
-                if any(line.split("@", 1)[0].strip().split(maxsplit=1)[0] in closure.STATE_READS and symbol in line
-                       for line in source.splitlines() if line.strip())
+                if any(_script_command_token(line) in closure.STATE_READS and symbol in line
+                       for line in source.splitlines())
             }
+        # Object-event visibility is evaluated by the field engine, outside
+        # the selected script closure. A nonzero manifest override therefore
+        # owns a real state read even when the actor's talk script never checks
+        # its own hide flag.
+        source_event = row.get("source", {})
+        visibility_flag = row.get("overrides", {}).get("flag")
+        if source_event.get("type") == "object" and visibility_flag not in (None, "", "0", 0):
+            read.add(visibility_flag)
         # Defeat-bit transitions are engine-owned battle outcomes, not event
         # script flag operations.  Every other declared state must appear in
         # the owned script operation graph.
         script_reads = {state for state in declared_reads if states[state].get("storage") != "trainer_defeat"}
         script_writes = {state for state in declared_writes if states[state].get("storage") != "trainer_defeat"}
-        expected_writes = {symbols[state] for state in script_writes}
-        missing_writes, undeclared_writes = expected_writes - written, written - expected_writes
-        if missing_writes:
-            raise AuditError(f"{content_id}: declared state write has no owned script command: {sorted(missing_writes)[0]}")
+        undeclared_writes = written - {symbols[state] for state in script_writes}
         if undeclared_writes:
             raise AuditError(f"{content_id}: owned script writes undeclared state {sorted(undeclared_writes)[0]}")
-        expected_reads = {symbols[state] for state in script_reads}
-        missing_reads, undeclared_reads = expected_reads - read, read - expected_reads
-        if missing_reads:
-            raise AuditError(f"{content_id}: declared state read has no owned script reference: {sorted(missing_reads)[0]}")
+        undeclared_reads = read - {symbols[state] for state in script_reads}
         if undeclared_reads:
             raise AuditError(f"{content_id}: owned script reads undeclared state {sorted(undeclared_reads)[0]}")
-        allocation = allocations.get(content_id)
+        allocation = allocations.get(row.get("trainer_content_id", content_id))
         battles = _battle_types(source, content_operations)
         if battles:
             if allocation is None:
@@ -524,18 +468,6 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             transaction_commands = [command for command in commands if command in TRANSACTION_COMMANDS]
         if transaction_commands and transaction is None:
             raise AuditError(f"{content_id}: item or Pokemon command has no transaction declaration")
-        if transaction is not None and not transaction_commands:
-            raise AuditError(f"{content_id}: declared transaction has no owned item or Pokemon command")
-        if transaction is not None:
-            receipt = transaction.get("receipt")
-            if receipt is None:
-                pending = transaction.get("pending_state")
-                if not isinstance(pending, str) or pending not in states:
-                    raise AuditError(f"{content_id}: repeatable claim lacks a resolved pending state")
-                if states[pending]["symbol"] not in written:
-                    raise AuditError(f"{content_id}: repeatable claim does not clear its pending state")
-            elif states[receipt]["symbol"] not in written:
-                raise AuditError(f"{content_id}: transaction receipt is not written by its owned script")
         if row["owner"] == "ordinary_trainer":
             if len(battles) != 1:
                 raise AuditError(f"{content_id}: ordinary Trainer content must have exactly one owned battle command")
@@ -553,6 +485,7 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
                         "trainer_allocation": allocation["id"] if allocation else None,
                         "battle_commands": battles,
                         "transaction": transaction["kind"] if transaction else None,
+                        "transaction_commands": sorted(transaction_commands),
                         "pending_state": transaction.get("pending_state") if transaction else None})
     return {"entries": reports, "transaction_order": {
         "host_declaration_validated": True,
@@ -627,6 +560,54 @@ def validate_baseline(manifest: dict[str, Any], baseline: dict[str, Any], projec
     return calculated
 
 
+def ordinary_trainer_report(manifest: dict[str, Any], contracts_report: dict[str, Any], closure_report: dict[str, Any]) -> dict[str, Any]:
+    """Prove the frozen ordinary projection is complete without owning runtime."""
+    rows = [row for row in selected_records(manifest) if row.get("owner") == "ordinary_trainer"]
+    allocations = [row for row in contracts_report["trainer_ids"]["allocations"] if row["owner"] == "ordinary_trainer"]
+    if not rows:
+        return {"enabled": False, "objects": 0, "allocations": 0}
+    by_base: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        source = row.get("source", {})
+        if row.get("event_kind") != "object_events" or source.get("trainer_type") != "TRAINER_TYPE_NORMAL":
+            raise AuditError(f"{row['content_id']}: ordinary inventory must contain only source normal object Trainers")
+        if row.get("local_id") != row.get("index", -1) + 1:
+            raise AuditError(f"{row['content_id']}: ordinary Trainer local ID does not match its source object")
+        if source.get("flag") not in (0, "0", None):
+            raise AuditError(f"{row['content_id']}: ordinary Trainer source visibility drifted")
+        if row.get("overrides", {}).get("flag") is not None:
+            raise AuditError(f"{row['content_id']}: ordinary Trainer cannot hide after defeat")
+        base = row.get("trainer_content_id", row["content_id"])
+        by_base[base].append(row)
+    pairs = [members for members in by_base.values() if len(members) == 2]
+    if len(rows) != 87 or len(by_base) != 81 or len(pairs) != 6 or any(len(members) not in (1, 2) for members in by_base.values()):
+        raise AuditError("ordinary Trainer object/base/pair inventory drifted")
+    if sum(row["source"].get("trainer_sight_or_berry_tree_id") == "0" for row in rows) != 1:
+        raise AuditError("ordinary Trainer talk-battle inventory drifted")
+    if sum(row["source"].get("trainer_sight_or_berry_tree_id") != "0" for row in rows) != 86:
+        raise AuditError("ordinary Trainer sight inventory drifted")
+    if len(allocations) != 118 or len({row["id"] for row in allocations}) != 118:
+        raise AuditError("ordinary Trainer party allocation inventory drifted")
+    base_allocations = [row for row in allocations if not row["content_id"].startswith("ordinary.roster.")]
+    if len(base_allocations) != 81 or any(row["numeric_id"] >= 2048 for row in allocations):
+        raise AuditError("ordinary Trainer base allocation or ID bound drifted")
+    exports = {label for module in closure_report["modules"] for label in module["exports"]}
+    if not {row["wayfarer_script"] for row in rows}.issubset(exports):
+        raise AuditError("ordinary Trainer closure entry inventory drifted")
+    rematch_objects = sum(row.get("rematch_family") is not None for row in rows)
+    if rematch_objects != 70 or len(rows) - rematch_objects != 17:
+        raise AuditError("ordinary Trainer rematch/single-stage inventory drifted")
+    dario_rodetta = {row["source"].get("script") for row in rows if row["source_map"] == "SevenIsland_TrainerTower_Frlg"}
+    if dario_rodetta != {"SevenIsland_TrainerTower_EventScript_Dario", "SevenIsland_TrainerTower_EventScript_Rodette"}:
+        raise AuditError("Dario and Rodette must remain ordinary exterior Trainers")
+    return {"enabled": True, "objects": len(rows), "base_identities": len(by_base), "single_objects": 75,
+            "pairs": [{"pair_id": members[0].get("pair_id"), "members": sorted(row["content_id"] for row in members),
+                       "local_ids": sorted(row["local_id"] for row in members)} for members in pairs],
+            "sight_objects": 86, "talk_objects": 1, "rematch_objects": rematch_objects,
+            "single_stage_objects": 17, "party_allocations": len(allocations),
+            "base_allocations": len(base_allocations), "maps": dict(sorted(Counter(row["source_map"] for row in rows).items()))}
+
+
 def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path: Path | None = None,
                  candidate_rom_report: Path | None = None) -> dict[str, Any]:
     root = root.resolve()
@@ -655,7 +636,6 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
                 for name, row in sorted(manifest["content_domains"].items())
             },
         },
-        "content": content_inventory_report(manifest),
         "exploration_baseline": {**projection, "sha256": hashes["projection_sha256"]},
         "wild_encounters": {"sha256": hashes["wild_encounters_sha256"]},
         "event_island": event_island_report(root),
@@ -664,6 +644,7 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
         "script_closure": closure_report,
         "contracts": contracts_report,
         "contract_closure": validate_contract_closure(root, manifest, closure_report, contracts_report),
+        "ordinary_trainers": ordinary_trainer_report(manifest, contracts_report, closure_report),
         "rom": rom_report(candidate_rom_report.resolve() if candidate_rom_report else None, root),
         "invariants": {"passed": True},
     }

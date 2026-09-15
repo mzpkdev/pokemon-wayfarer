@@ -357,7 +357,8 @@ def release_enabled_records(manifest: dict[str, Any], records: list[dict[str, An
     return enabled
 
 
-def retained_event_rows(record: dict[str, Any], source: dict[str, Any]) -> tuple[dict[str, dict[str, int]], list[dict[str, Any]]]:
+def retained_event_rows(record: dict[str, Any], source: dict[str, Any],
+                        allow_content_overlays: bool = False) -> tuple[dict[str, dict[str, int]], list[dict[str, Any]]]:
     """Validate reviewed source identities and count the sanitized event overlay."""
     retained = record["retained_events"]
     counts: dict[str, dict[str, int]] = {}
@@ -381,7 +382,35 @@ def retained_event_rows(record: dict[str, Any], source: dict[str, Any]) -> tuple
             if rule["source"] != events[index]:
                 raise AuditError(f"{record['source_map']}: retained {kind}[{index}] source identity drifted")
             if kind == "object_events" and events[index].get("trainer_type", "TRAINER_TYPE_NONE") != "TRAINER_TYPE_NONE":
-                raise AuditError(f"{record['source_map']}: retained object event {index} is a Trainer")
+                state_writes = rule.get("state_writes")
+                owned_ordinary = (
+                    rule.get("owner") == "ordinary_trainer"
+                    and isinstance(rule.get("content_id"), str)
+                    and isinstance(rule.get("trainer_content_id"), str)
+                    and isinstance(rule.get("trainer"), str)
+                    and rule["trainer"].startswith("TRAINER_WAYFARER_SEVII_")
+                    and rule.get("scaling_policy") == "ordinary"
+                    and rule.get("outcome_policy") == "defeat_and_blackout"
+                    and isinstance(state_writes, list)
+                    and len(state_writes) == 1
+                    and isinstance(state_writes[0], str)
+                    and state_writes[0].startswith("SEVII_ORDINARY_")
+                    and state_writes[0].endswith("_DEFEATED")
+                )
+                owned_story = (
+                    allow_content_overlays
+                    and rule.get("owner") == "story"
+                    and isinstance(rule.get("content_id"), str)
+                    and rule["content_id"].startswith("story.")
+                    and isinstance(rule.get("trainer"), str)
+                    and rule["trainer"].startswith("TRAINER_WAYFARER_SEVII_")
+                    and rule.get("battle") == "objective_guard"
+                    and rule.get("scaling_policy") in ("ordinary", "story")
+                    and rule.get("outcome_policy") == "win_progress_loss_pending"
+                    and isinstance(state_writes, list)
+                )
+                if not (owned_ordinary or owned_story):
+                    raise AuditError(f"{record['source_map']}: retained object event {index} is an unowned Trainer")
             source_script = str(events[index].get("script", ""))
             replacement = rule.get("wayfarer_script")
             if source_script not in ("", "0", "0x0", "NULL"):
@@ -391,7 +420,12 @@ def retained_event_rows(record: dict[str, Any], source: dict[str, Any]) -> tuple
                 script_rows.append({"map": record["source_map"], "event_kind": kind, "index": index,
                                     "label": replacement})
             elif replacement not in (None, ""):
-                raise AuditError(f"{record['source_map']}: retained {kind}[{index}] replaces a scriptless event")
+                content_owner = rule.get("owner") in {"story", "ordinary_trainers", "trainer_tower"}
+                if not (allow_content_overlays and content_owner
+                        and isinstance(replacement, str) and replacement.startswith("WayfarerSevii_")):
+                    raise AuditError(f"{record['source_map']}: retained {kind}[{index}] replaces a scriptless event")
+                script_rows.append({"map": record["source_map"], "event_kind": kind, "index": index,
+                                    "label": replacement})
         counts[kind] = {"source": len(events), "retained": len(seen), "removed": len(events) - len(seen)}
     return counts, script_rows
 
@@ -465,7 +499,10 @@ def script_closure(root: Path, records: list[dict[str, Any]], manifest: dict[str
             raise AuditError(str(error)) from error
         event_labels = set()
         for record in records:
-            _, retained_labels = retained_event_rows(record, load_json(root / "data/maps" / record["source_map"] / "map.json"))
+            _, retained_labels = retained_event_rows(
+                record, load_json(root / "data/maps" / record["source_map"] / "map.json"),
+                allow_content_overlays=True,
+            )
             event_labels.update(row["label"] for row in retained_labels)
         missing = sorted(event_labels - set(modern["labels"]) - set(COMMON_SHARED_HELPERS))
         if missing:
@@ -648,7 +685,9 @@ def build_report(root: Path, manifest_path: Path, *, expected_map_count: int = E
         if layout.get("game_version") not in (None, "frlg") or layout.get("layout_version") != "frlg":
             raise AuditError(f"{name}: {layout_id} is not an FRLG layout-version layout")
         selected_layouts[layout_id] = layout
-        event_counts, script_rows = retained_event_rows(record, source)
+        event_counts, script_rows = retained_event_rows(
+            record, source, allow_content_overlays=manifest.get("schema_version") == 2
+        )
         enabled = name in enabled_names
         for kind in ("object_events", "coord_events", "bg_events"):
             event_counts[kind]["emitted"] = event_counts[kind]["retained"] if enabled else 0

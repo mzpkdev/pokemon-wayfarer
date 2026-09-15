@@ -179,6 +179,20 @@ class WayfarerSeviiContentSchemaTests(unittest.TestCase):
         row["overrides"] = {"var": "VAR_TEMP_1"}
         SCHEMA.validate_manifest(self.root, manifest)
 
+    def test_allows_only_literal_zero_object_visibility_override(self):
+        manifest = self.manifest()
+        self.source["object_events"][0]["flag"] = "FLAG_HIDE_FRLG_ACTOR"
+        (self.root / "data/maps/OneIsland_Frlg/map.json").write_text(json.dumps(self.source))
+        row = manifest["maps"][0]["retained_events"]["object_events"][0]
+        row.update({"source": self.source["object_events"][0], "owner": "story", "content_id": "story.actor",
+                    "overrides": {"flag": "0"}})
+        manifest["content_domains"]["exploration"]["inventory"] = []
+        manifest["content_domains"]["story"]["inventory"] = ["story.actor"]
+        SCHEMA.validate_manifest(self.root, manifest)
+        row["overrides"] = {"flag": "1"}
+        with self.assertRaisesRegex(SCHEMA.SchemaError, "Wayfarer Sevii namespace"):
+            SCHEMA.validate_manifest(self.root, manifest)
+
     def test_rejects_absolute_exclusion_script_source(self):
         manifest = self.manifest()
         manifest["exclusions"][0]["source_identities"][0] = {

@@ -17,31 +17,31 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
     def manifest(self):
         return json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))
 
-    def test_repository_tower_report_preserves_the_baseline(self):
-        first = AUDIT.build_report(GAME)
-        self.assertTrue(first["invariants"]["passed"])
-        self.assertEqual(first["exploration_baseline"]["map_count"], 135)
-        self.assertEqual(first["exploration_baseline"]["layout_count"], 102)
-        self.assertEqual(first["exploration_baseline"]["raw_layout_bytes"], 134_612)
-        self.assertEqual(first["schema"]["domains"]["exploration"]["enabled"], True)
-        for domain in ("ordinary_trainers", "story"):
-            self.assertFalse(first["schema"]["domains"][domain]["enabled"])
-            self.assertEqual(first["schema"]["domains"][domain]["inventory_count"], 0)
-        self.assertTrue(first["schema"]["domains"]["trainer_tower"]["enabled"])
-        self.assertEqual(first["schema"]["domains"]["trainer_tower"]["inventory_count"], 106)
-        self.assertEqual(first["trainer_tower"], {
+    def test_repository_report_accepts_story_and_ordinary_trainers(self):
+        report = AUDIT.build_report(GAME)
+        self.assertTrue(report["invariants"]["passed"])
+        self.assertEqual(report["exploration_baseline"]["map_count"], 135)
+        self.assertEqual(report["exploration_baseline"]["layout_count"], 102)
+        self.assertEqual(report["exploration_baseline"]["raw_layout_bytes"], 134_612)
+        self.assertEqual(report["schema"]["domains"]["exploration"]["enabled"], True)
+        self.assertTrue(report["schema"]["domains"]["ordinary_trainers"]["enabled"])
+        self.assertEqual(report["schema"]["domains"]["ordinary_trainers"]["inventory_count"], 87)
+        self.assertTrue(report["schema"]["domains"]["story"]["enabled"])
+        self.assertGreater(report["schema"]["domains"]["story"]["inventory_count"], 0)
+        self.assertEqual(report["contracts"]["trainer_ids"]["allocation_count"], 136)
+        self.assertTrue(any(entry["owner"] == "story" for entry in report["contract_closure"]["entries"]))
+        self.assertTrue(report["schema"]["domains"]["trainer_tower"]["enabled"])
+        self.assertEqual(report["schema"]["domains"]["trainer_tower"]["inventory_count"], 106)
+        self.assertEqual(report["trainer_tower"], {
             "source_files": ["src/trainer_tower.c", "src/trainer_tower_sets.c"],
             "external_payload": False,
         })
-        self.assertFalse(first["rom"]["measured"])
-        self.assertEqual(first["contracts"]["trainer_ids"]["allocation_count"], 0)
-        self.assertEqual(
-            [(row["id"], row["slot"], row["lifecycle"]) for row in first["contracts"]["states"]],
-            [("SEVII_TRAINER_TOWER_PENDING_PRIZE", 3, "transactional")],
-        )
-        self.assertEqual(
-            [(row["content_id"], row["kind"], row["pending_state"]) for row in first["contracts"]["transactions"]],
-            [("trainer-tower.lobby.object.2", "claim", "SEVII_TRAINER_TOWER_PENDING_PRIZE")],
+        self.assertFalse(report["rom"]["measured"])
+        self.assertGreater(len(report["contracts"]["states"]), 81)
+        self.assertGreater(len(report["contracts"]["transactions"]), 0)
+        self.assertIn(
+            ("SEVII_TRAINER_TOWER_PENDING_PRIZE", 3, "transactional"),
+            [(row["id"], row["slot"], row["lifecycle"]) for row in report["contracts"]["states"]],
         )
 
     def test_tower_report_rejects_an_active_external_loader(self):

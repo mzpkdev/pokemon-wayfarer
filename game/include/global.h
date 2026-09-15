@@ -384,6 +384,8 @@ struct WayfarerSeviiPersistentState
     u8 flags[WAYFARER_SEVII_FLAG_BYTES];
     u16 vars[WAYFARER_SEVII_VAR_COUNT];
     u8 trainerFlags[WAYFARER_SEVII_TRAINER_FLAG_BYTES];
+    u8 rematchStages[WAYFARER_SEVII_REMATCH_STAGE_BYTES];
+    u8 rematchPending[WAYFARER_SEVII_REMATCH_PENDING_BYTES];
     u8 magic;
     struct WayfarerSeviiTrainerTowerRecords trainerTower;
 };

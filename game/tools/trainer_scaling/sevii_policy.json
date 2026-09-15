@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "ordinary_policy": "ORDINARY",
+  "story": {
+    "TRAINER_BIKER_GOON": {"policy": "EXCLUDED", "reason": "Story-owned Five Island Meadow opponent."},
+    "TRAINER_BIKER_GOON_2": {"policy": "EXCLUDED", "reason": "Story-owned Five Island Meadow opponent."},
+    "TRAINER_BIKER_GOON_3": {"policy": "EXCLUDED", "reason": "Story-owned Five Island Meadow opponent."},
+    "TRAINER_CUE_BALL_PAXTON": {"policy": "EXCLUDED", "reason": "Story-owned Five Island Meadow opponent."},
+    "TRAINER_TEAM_ROCKET_GRUNT_43": {"policy": "ORDINARY"},
+    "TRAINER_TEAM_ROCKET_GRUNT_44": {"policy": "ORDINARY"},
+    "TRAINER_TEAM_ROCKET_GRUNT_45": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse guard."},
+    "TRAINER_TEAM_ROCKET_GRUNT_46": {"policy": "ORDINARY"},
+    "TRAINER_TEAM_ROCKET_GRUNT_49": {"policy": "ORDINARY"},
+    "TRAINER_TEAM_ROCKET_GRUNT_50": {"policy": "ORDINARY"},
+    "TRAINER_TEAM_ROCKET_GRUNT_51": {"policy": "ORDINARY"},
+    "TRAINER_TEAM_ROCKET_GRUNT_42": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse guard."},
+    "TRAINER_TEAM_ROCKET_GRUNT_47": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse guard."},
+    "TRAINER_TEAM_ROCKET_GRUNT_48": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse guard."},
+    "TRAINER_TEAM_ROCKET_ADMIN": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse administrator."},
+    "TRAINER_TEAM_ROCKET_ADMIN_2": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse administrator."},
+    "TRAINER_SCIENTIST_GIDEON": {"policy": "EXCLUDED", "reason": "Story-owned Rocket Warehouse boss."},
+    "TRAINER_LADY_SELPHY": {"policy": "EXCLUDED", "reason": "Story-owned Lost Cave encounter."}
+  }
+}

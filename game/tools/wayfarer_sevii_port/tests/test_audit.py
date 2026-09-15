@@ -147,6 +147,54 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(AUDIT.AuditError, "prohibited command giveitem"):
             self.report(manifest)
 
+    def test_scriptless_event_replacement_requires_a_typed_content_overlay(self):
+        event = {"type": "object", "trainer_type": "TRAINER_TYPE_NONE", "script": "0x0"}
+        record = {
+            "source_map": "OneIsland_Frlg",
+            "retained_events": {key: [] for key in AUDIT.EVENT_KINDS},
+        }
+        rule = {
+            "index": 0, "source": event,
+            "wayfarer_script": "WayfarerSevii_StoryActor",
+            "owner": "story",
+        }
+        record["retained_events"]["object_events"] = [rule]
+        source = {key: [] for key in AUDIT.EVENT_KINDS}
+        source["object_events"] = [event]
+        with self.assertRaisesRegex(AUDIT.AuditError, "replaces a scriptless event"):
+            AUDIT.retained_event_rows(record, source)
+        _, scripts = AUDIT.retained_event_rows(record, source, allow_content_overlays=True)
+        self.assertEqual(scripts[0]["label"], "WayfarerSevii_StoryActor")
+        rule["owner"] = "exploration"
+        with self.assertRaisesRegex(AUDIT.AuditError, "replaces a scriptless event"):
+            AUDIT.retained_event_rows(record, source, allow_content_overlays=True)
+
+    def test_retained_trainers_require_complete_ordinary_ownership(self):
+        event = {"type": "object", "trainer_type": "TRAINER_TYPE_NORMAL", "script": "SourceTrainer"}
+        record = {
+            "source_map": "OneIsland_Frlg",
+            "retained_events": {key: [] for key in ("object_events", "warp_events", "coord_events", "bg_events")},
+        }
+        rule = {
+            "index": 0,
+            "source": event,
+            "wayfarer_script": "WayfarerSevii_Trainer_Test",
+            "owner": "ordinary_trainer",
+            "content_id": "ordinary.test.object.0",
+            "trainer_content_id": "ordinary.test.object.0",
+            "trainer": "TRAINER_WAYFARER_SEVII_TEST",
+            "scaling_policy": "ordinary",
+            "outcome_policy": "defeat_and_blackout",
+            "state_writes": ["SEVII_ORDINARY_TEST_DEFEATED"],
+        }
+        record["retained_events"]["object_events"] = [rule]
+        counts, _ = AUDIT.retained_event_rows(record, {"object_events": [event]})
+        self.assertEqual(counts["object_events"]["retained"], 1)
+
+        del rule["owner"]
+        with self.assertRaisesRegex(AUDIT.AuditError, "unowned Trainer"):
+            AUDIT.retained_event_rows(record, {"object_events": [event]})
+
     def test_allows_only_named_ferry_hook_in_baseline(self):
         script = self.root / "data/maps/BirthIsland_Harbor_hns/scripts.inc"
         script.parent.mkdir()

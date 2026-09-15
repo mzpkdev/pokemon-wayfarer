@@ -131,3 +131,26 @@ floor-clear bits. Independent re-review of that remediation found no remaining
 actionable findings. Combined acceptance should exercise representative Tower
 gameplay through player input; an exhaustive format/floor permutation matrix is
 not required.
+
+## Final combined integration
+
+Tower was merged with post-Trainer/post-Story main
+`fdce387e9a67e436890c53590405a56e82bad711` without rebasing. The shared
+manifest was structurally combined and regenerated: it retains all 135 maps and
+contains 53 exploration, 87 ordinary-Trainer, 131 story, and 106 Trainer Tower
+records. The combined persistence aggregate remains 208 bytes with one 20-byte
+Tower payload; SaveBlock3 is 1,112 bytes. The merged transient reset hooks run
+before new-game Sevii initialization and after ordinary non-Hall-of-Fame load.
+
+Focused combined validation passed 8/8 Tower mechanics tests, 13/13 shared
+Sevii persistence/story/Trainer routing tests, 2/2 Sevii rematch tests, all 50
+shared content tests, and all focused script/Trainer/scaling generator checks.
+The integrated SkyEmu run passed 17/17 tests across the Tower, ordinary Trainer,
+Story, and exploration journeys. The production Wayfarer ROM uses 32,916,176
+bytes and leaves 638,256 bytes unused, or 113,968 bytes above the required
+512 KiB reserve.
+
+An independent merge-hazard review found no actionable persistence, allocation,
+graphics, E2E-guard, or Tower-battle-routing regression. The review confirmed
+52 unique Sevii graphics providers and that facility opponents continue to
+bypass ordinary Trainer IDs, defeat routing, and scaling.

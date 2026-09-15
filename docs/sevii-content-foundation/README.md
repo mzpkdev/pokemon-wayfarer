@@ -32,9 +32,8 @@ All paths below are relative to `game/`.
   binary includes or label expressions. Exclusions pin source script files and
   label bodies where a whole-map boundary would be too broad.
 - `tools/wayfarer_sevii_content/contracts.py`: `validate_contracts(root, manifest)`
-  checks the shared allocation and state declarations. `selected_trainer_render`
-  compiles the current selected party source in a temporary directory and returns
-  selected records with source and compiler provenance. See the
+  checks the shared allocation and state declarations. Selected party compilation
+  belongs to the Trainer-owned generator, avoiding a duplicate compiler pass. See the
   [contract reference](../../game/tools/wayfarer_sevii_content/README-contracts.md).
 - `tools/wayfarer_sevii_scripts/generate.py`: emits the single linkage include.
   `--check` rejects a stale artifact; `--dependencies` lists reviewed recursive

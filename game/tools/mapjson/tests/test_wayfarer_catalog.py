@@ -340,7 +340,12 @@ class MapjsonWayfarerTest(unittest.TestCase):
         manifest = self.write_sevii_manifest(root, [
             {"source_map": "OneIsland_PokemonCenter_2F_Frlg", "map_id": "MAP_SEVII_CENTER_2F",
              "layout": "LAYOUT_SEVII_CENTER_2F", "enabled": True,
-             "retained_events": {"object_events": [], "coord_events": [], "bg_events": []}},
+             "retained_events": {"object_events": [{
+                 "index": 1,
+                 "source": source["object_events"][1],
+                 "wayfarer_script": "WayfarerSevii_Nurse",
+                 "overrides": {"script": "WayfarerSevii_Nurse", "flag": "0"},
+             }], "coord_events": [], "bg_events": []}},
             {"source_map": "OneIsland_PokemonCenter_1F_Frlg", "map_id": "MAP_SEVII_1F",
              "layout": "LAYOUT_SEVII_CENTER_1F", "enabled": True},
         ], release_link_enabled=True)
@@ -348,7 +353,9 @@ class MapjsonWayfarerTest(unittest.TestCase):
         result = self.run_map(root, "wayfarer", map_file, layout_file, manifest)
         self.assertEqual(result.returncode, 0, result.stderr)
         events = (map_dir / "events.inc").read_text()
-        self.assertNotIn("ObjectEvents", events)
+        self.assertIn("ObjectEvents", events)
+        self.assertIn("WayfarerSevii_Nurse", events)
+        self.assertRegex(events, r"object_event [^\n]*, 0\n")
         self.assertNotIn("CoordEvents", events)
         self.assertNotIn("BGEvents", events)
         self.assertIn("MAP_SEVII_1F", events)

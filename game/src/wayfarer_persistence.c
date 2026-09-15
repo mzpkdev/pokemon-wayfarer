@@ -7,6 +7,7 @@
 #include "script.h"
 #include "trainer_tower.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
 #include "constants/heal_locations.h"
@@ -151,6 +152,15 @@ void WayfarerSeviiInitPersistentState(void)
     WayfarerTrainerTowerResetTransientState();
     memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
     gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
+    VarSet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD, WAYFARER_SEVII_HERACROSS_DEFAULT_SIZE_RECORD);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_RETURNED_LOSTELLE);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_DOTTED_HOLE_SCIENTIST);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_COMBATANTS);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GIDEON);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS);
+    FlagSet(FLAG_WAYFARER_SEVII_HIDE_RIVALS);
 #endif
 }
 
@@ -225,6 +235,62 @@ void WayfarerSeviiTrainerDefeatClear(u16 slot)
     if (slot >= WAYFARER_SEVII_TRAINER_COUNT)
         return;
     gSaveBlock3Ptr->wayfarerSevii.trainerFlags[slot / 8] &= ~(1 << (slot & 7));
+#endif
+}
+
+u8 WayfarerSeviiRematchStageGet(u8 family)
+{
+#if IS_WAYFARER
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return 0;
+    return (gSaveBlock3Ptr->wayfarerSevii.rematchStages[family / 4] >> ((family & 3) * 2)) & 3;
+#else
+    return 0;
+#endif
+}
+
+void WayfarerSeviiRematchStageSet(u8 family, u8 stage)
+{
+#if IS_WAYFARER
+    u8 shift;
+    u8 mask;
+
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return;
+    shift = (family & 3) * 2;
+    mask = 3 << shift;
+    gSaveBlock3Ptr->wayfarerSevii.rematchStages[family / 4]
+        = (gSaveBlock3Ptr->wayfarerSevii.rematchStages[family / 4] & ~mask) | ((stage & 3) << shift);
+#endif
+}
+
+bool8 WayfarerSeviiRematchPendingGet(u8 family)
+{
+#if IS_WAYFARER
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return FALSE;
+    return (gSaveBlock3Ptr->wayfarerSevii.rematchPending[family / 8] >> (family & 7)) & 1;
+#else
+    return FALSE;
+#endif
+}
+
+void WayfarerSeviiRematchPendingSet(u8 family, bool8 pending)
+{
+#if IS_WAYFARER
+    if (family >= WAYFARER_SEVII_REMATCH_FAMILY_COUNT)
+        return;
+    if (pending)
+        gSaveBlock3Ptr->wayfarerSevii.rematchPending[family / 8] |= 1 << (family & 7);
+    else
+        gSaveBlock3Ptr->wayfarerSevii.rematchPending[family / 8] &= ~(1 << (family & 7));
+#endif
+}
+
+void WayfarerSeviiRematchClearAllPending(void)
+{
+#if IS_WAYFARER
+    memset(gSaveBlock3Ptr->wayfarerSevii.rematchPending, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii.rematchPending));
 #endif
 }
 
