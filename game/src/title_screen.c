@@ -68,7 +68,11 @@ static void SpriteCB_PokemonLogoShine(struct Sprite *sprite);
 // const rom data
 static const u16 sUnusedUnknownPal[] = INCBIN_U16("graphics/title_screen/unused.gbapal");
 
-#if IS_HNS
+#if IS_WAYFARER
+static const u32 sTitleScreenRayquazaGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/scene.4bpp.smol");
+static const u32 sTitleScreenRayquazaTilemap[] = INCBIN_U32("graphics/title_screen/wayfarer/scene.bin.smolTM");
+static const u32 sTitleScreenLogoShineGfx[] = INCBIN_U32("graphics/title_screen/hns/logo_shine.4bpp.smol");
+#elif IS_HNS
 static const u32 sTitleScreenRayquazaGfx[] = INCBIN_U32("graphics/title_screen/hns/rayquaza.4bpp.smol");
 static const u32 sTitleScreenRayquazaTilemap[] = INCBIN_U32("graphics/title_screen/hns/rayquaza.bin.smolTM");
 static const u32 sTitleScreenLogoShineGfx[] = INCBIN_U32("graphics/title_screen/hns/logo_shine.4bpp.smol");
