@@ -604,6 +604,8 @@ def ordinary_trainer_report(manifest: dict[str, Any], contracts_report: dict[str
         source = row.get("source", {})
         if row.get("event_kind") != "object_events" or source.get("trainer_type") != "TRAINER_TYPE_NORMAL":
             raise AuditError(f"{row['content_id']}: ordinary inventory must contain only source normal object Trainers")
+        if row.get("local_id") != row.get("index", -1) + 1:
+            raise AuditError(f"{row['content_id']}: ordinary Trainer local ID does not match its source object")
         if source.get("flag") not in (0, "0", None):
             raise AuditError(f"{row['content_id']}: ordinary Trainer source visibility drifted")
         if row.get("overrides", {}).get("flag") is not None:
@@ -632,7 +634,8 @@ def ordinary_trainer_report(manifest: dict[str, Any], contracts_report: dict[str
     if dario_rodetta != {"SevenIsland_TrainerTower_EventScript_Dario", "SevenIsland_TrainerTower_EventScript_Rodette"}:
         raise AuditError("Dario and Rodette must remain ordinary exterior Trainers")
     return {"enabled": True, "objects": len(rows), "base_identities": len(by_base), "single_objects": 75,
-            "pairs": [{"pair_id": members[0].get("pair_id"), "members": sorted(row["content_id"] for row in members)} for members in pairs],
+            "pairs": [{"pair_id": members[0].get("pair_id"), "members": sorted(row["content_id"] for row in members),
+                       "local_ids": sorted(row["local_id"] for row in members)} for members in pairs],
             "sight_objects": 86, "talk_objects": 1, "rematch_objects": rematch_objects,
             "single_stage_objects": 17, "party_allocations": len(allocations),
             "base_allocations": len(base_allocations), "maps": dict(sorted(Counter(row["source_map"] for row in rows).items()))}

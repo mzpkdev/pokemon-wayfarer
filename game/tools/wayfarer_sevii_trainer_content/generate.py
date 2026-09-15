@@ -111,7 +111,7 @@ def manifest_update(manifest: dict) -> dict:
         family = families[canonical]
         cid = event["content_id"]
         event_by_map.setdefault(event["source_map"], []).append({
-            "index": event["index"], "source": event["source"],
+            "index": event["index"], "local_id": event["index"] + 1, "source": event["source"],
             "wayfarer_script": wayfarer_label(event["source_script"]), "owner": "ordinary_trainer",
             "content_id": cid, "trainer_content_id": canonical, "pair_id": family["pair_id"],
             "rematch_family": base["source_trainer"] if "ShouldTryRematchBattle" in event["wrapper"] else None,

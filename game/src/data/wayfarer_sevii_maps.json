@@ -25,6 +25,7 @@
         "object_events": [
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
@@ -61,6 +62,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
@@ -97,6 +99,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
@@ -596,6 +599,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -632,6 +636,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -668,6 +673,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_FRLG",
@@ -704,6 +710,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_FRLG",
@@ -740,6 +747,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER_FRLG",
@@ -776,6 +784,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
@@ -812,6 +821,7 @@
           },
           {
             "index": 6,
+            "local_id": 7,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
@@ -848,6 +858,7 @@
           },
           {
             "index": 7,
+            "local_id": 8,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
@@ -884,6 +895,7 @@
           },
           {
             "index": 8,
+            "local_id": 9,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
@@ -920,6 +932,7 @@
           },
           {
             "index": 9,
+            "local_id": 10,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
@@ -956,6 +969,7 @@
           },
           {
             "index": 10,
+            "local_id": 11,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
@@ -992,6 +1006,7 @@
           },
           {
             "index": 11,
+            "local_id": 12,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -1225,6 +1240,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -1304,6 +1320,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
@@ -2017,6 +2034,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
@@ -2053,6 +2071,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_LAND",
@@ -2089,6 +2108,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
@@ -2125,6 +2145,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_LAND",
@@ -2161,6 +2182,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_FISHER",
@@ -2197,6 +2219,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
@@ -2233,6 +2256,7 @@
           },
           {
             "index": 6,
+            "local_id": 7,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
@@ -2269,6 +2293,7 @@
           },
           {
             "index": 7,
+            "local_id": 8,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BLACKBELT",
@@ -2305,6 +2330,7 @@
           },
           {
             "index": 8,
+            "local_id": 9,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BLACKBELT",
@@ -2341,6 +2367,7 @@
           },
           {
             "index": 9,
+            "local_id": 10,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
@@ -2377,6 +2404,7 @@
           },
           {
             "index": 10,
+            "local_id": 11,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
@@ -2413,6 +2441,7 @@
           },
           {
             "index": 11,
+            "local_id": 12,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BLACKBELT",
@@ -2449,6 +2478,7 @@
           },
           {
             "index": 12,
+            "local_id": 13,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
@@ -2500,6 +2530,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
@@ -2565,6 +2596,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -2601,6 +2633,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -2637,6 +2670,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_TUBER_F_FRLG",
@@ -2673,6 +2707,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_TUBER_F_FRLG",
@@ -2709,6 +2744,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
@@ -2745,6 +2781,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
@@ -2781,6 +2818,7 @@
           },
           {
             "index": 6,
+            "local_id": 7,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
@@ -2846,6 +2884,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
@@ -2882,6 +2921,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
@@ -2918,6 +2958,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
@@ -2954,6 +2995,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -2990,6 +3032,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -3026,6 +3069,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
@@ -3062,6 +3106,7 @@
           },
           {
             "index": 6,
+            "local_id": 7,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
@@ -3113,6 +3158,7 @@
         "object_events": [
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -3194,6 +3240,7 @@
         "object_events": [
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKER",
@@ -3230,6 +3277,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKER",
@@ -3266,6 +3314,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKER",
@@ -3317,6 +3366,7 @@
         "object_events": [
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_FISHER",
@@ -3353,6 +3403,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
@@ -3389,6 +3440,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
@@ -3425,6 +3477,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
@@ -3461,6 +3514,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_TUBER_M_WATER",
@@ -3512,6 +3566,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
@@ -3563,6 +3618,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -3599,6 +3655,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKER",
@@ -3635,6 +3692,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_M_WATER",
@@ -3671,6 +3729,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SWIMMER_F_WATER",
@@ -3707,6 +3766,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
@@ -3743,6 +3803,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
@@ -3779,6 +3840,7 @@
           },
           {
             "index": 6,
+            "local_id": 7,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -3830,6 +3892,7 @@
         "object_events": [
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -3866,6 +3929,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -3902,6 +3966,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -3938,6 +4003,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
@@ -3974,6 +4040,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_SUPER_NERD",
@@ -4041,6 +4108,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BOY",
@@ -4077,6 +4145,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
@@ -4128,6 +4197,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_WOMAN_2_FRLG",
@@ -4164,6 +4234,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BEAUTY_FRLG",
@@ -4200,6 +4271,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_MAN",
@@ -4236,6 +4308,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
@@ -4272,6 +4345,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
@@ -4308,6 +4382,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_ROCKER",
@@ -4359,6 +4434,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_BATTLE_GIRL",
@@ -4395,6 +4471,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_MAN",
@@ -4431,6 +4508,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_CAMPER_FRLG",
@@ -4467,6 +4545,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_PICNICKER_FRLG",
@@ -4503,6 +4582,7 @@
           },
           {
             "index": 4,
+            "local_id": 5,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
@@ -4539,6 +4619,7 @@
           },
           {
             "index": 5,
+            "local_id": 6,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
@@ -4575,6 +4656,7 @@
           },
           {
             "index": 6,
+            "local_id": 7,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_M",
@@ -4611,6 +4693,7 @@
           },
           {
             "index": 7,
+            "local_id": 8,
             "source": {
               "type": "object",
               "graphics_id": "OBJ_EVENT_GFX_COOLTRAINER_F",
@@ -4662,6 +4745,7 @@
         "object_events": [
           {
             "index": 0,
+            "local_id": 1,
             "source": {
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
               "x": 35,
@@ -4697,6 +4781,7 @@
           },
           {
             "index": 1,
+            "local_id": 2,
             "source": {
               "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
               "x": 121,
@@ -4732,6 +4817,7 @@
           },
           {
             "index": 2,
+            "local_id": 3,
             "source": {
               "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
               "x": 85,
@@ -4767,6 +4853,7 @@
           },
           {
             "index": 3,
+            "local_id": 4,
             "source": {
               "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_FRLG",
               "x": 85,

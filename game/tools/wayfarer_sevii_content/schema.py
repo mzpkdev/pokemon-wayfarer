@@ -36,7 +36,7 @@ STATE_CONTRACT = re.compile(r"^SEVII_[A-Z0-9_]+$")
 WAYFARER_OVERRIDE = re.compile(r"^(?:FLAG|VAR)_WAYFARER_SEVII_[A-Z0-9_]+$")
 APPROVED_EXPLORATION_HELPERS = {"EventScript_StrengthBoulder"}
 EVENT_ROW_KEYS = frozenset((
-    "index", "source", "wayfarer_script", "owner", "content_id", "reason", "overrides",
+    "index", "local_id", "source", "wayfarer_script", "owner", "content_id", "reason", "overrides",
     "state_reads", "state_writes", "visibility", "trainer", "battle", "transaction",
     "reward_receipt", "dependencies", "replaces", "actor_role", "scaling_policy",
     "battle_type", "outcome_policy", "required_dependencies", "trainer_content_id",
@@ -265,6 +265,9 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
             _fail(f"{context}[{index}].{persistent_field}", "retains raw FRLG persistent state")
     _validate_state_names(row, f"{context}[{index}]")
     if owner == "ordinary_trainer":
+        local_id = row.get("local_id")
+        if event_kind != "object_events" or not isinstance(local_id, int) or isinstance(local_id, bool) or local_id != index + 1:
+            _fail(f"{context}[{index}].local_id", "must preserve the source object local ID (index + 1)")
         canonical = row.get("trainer_content_id", content_id)
         if not isinstance(canonical, str) or CONTENT_ID.fullmatch(canonical) is None:
             _fail(f"{context}[{index}].trainer_content_id", "must be a stable ordinary Trainer identity")

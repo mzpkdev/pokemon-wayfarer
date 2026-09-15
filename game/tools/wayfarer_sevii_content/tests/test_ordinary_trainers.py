@@ -19,6 +19,7 @@ class OrdinaryTrainerProjectionTests(unittest.TestCase):
         self.assertEqual((report["party_allocations"], report["base_allocations"]), (118, 81))
         self.assertEqual(report["maps"]["SevenIsland_TrainerTower_Frlg"], 2)
         self.assertTrue(all(len(pair["members"]) == 2 for pair in report["pairs"]))
+        self.assertTrue(all(len(pair["local_ids"]) == 2 and pair["local_ids"][0] > 0 for pair in report["pairs"]))
 
 
 if __name__ == "__main__":
