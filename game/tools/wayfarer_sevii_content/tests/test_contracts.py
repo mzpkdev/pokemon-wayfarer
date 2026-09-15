@@ -226,6 +226,35 @@ class SeviiContentContractTests(unittest.TestCase):
         with self.assertRaisesRegex(CONTRACTS.ContractError, "repeatable service receipt"):
             CONTRACTS.validate_contracts(GAME, manifest)
 
+    def test_staged_grant_commits_a_distinct_source_receipt_before_reward(self):
+        manifest = fixture()
+        content = "story.tectonix_memorial"
+        manifest["content_domains"].append({"content_id": content, "owner": "story"})
+        manifest["contracts"]["states"] += [
+            {"id": "SEVII_TECTONIX_OFFERING_COMPLETE", "owner": "story", "storage": "flag", "slot": 5,
+             "initial": 0, "readers": [content], "writers": [content],
+             "transitions": [{"from": 0, "to": 1, "caller": content}]},
+            {"id": "SEVII_TECTONIX_REWARD_RECEIVED", "owner": "story", "storage": "flag", "slot": 6,
+             "initial": 0, "readers": [content], "writers": [content],
+             "transitions": [{"from": 0, "to": 1, "caller": content}]},
+        ]
+        transaction = {
+            "content_id": content, "owner": "story", "kind": "staged_grant", "prerequisite": ["lemonade accepted"],
+            "destination": "bag", "consume": "ITEM_LEMONADE", "source_receipt": "SEVII_TECTONIX_OFFERING_COMPLETE",
+            "receipt": "SEVII_TECTONIX_REWARD_RECEIVED",
+            "steps": ["establish_prerequisite", "consume_source", "set_source_receipt", "attempt_destination", "set_receipt", "update_presentation"],
+        }
+        manifest["contracts"]["transactions"].append(transaction)
+        report = CONTRACTS.validate_contracts(GAME, manifest)
+        self.assertEqual(report["transactions"][-1]["source_receipt"], "SEVII_TECTONIX_OFFERING_COMPLETE")
+        transaction["steps"][1:4] = ["attempt_destination", "consume_source", "set_source_receipt"]
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "transaction ordering"):
+            CONTRACTS.validate_contracts(GAME, manifest)
+        transaction["steps"][1:4] = ["consume_source", "set_source_receipt", "attempt_destination"]
+        transaction["source_receipt"] = transaction["receipt"]
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "source receipt"):
+            CONTRACTS.validate_contracts(GAME, manifest)
+
     def test_rejects_ordinary_transactions_completion_resets_and_unknown_battle_outcome(self):
         manifest = fixture()
         manifest["content_domains"].append({"content_id": "ordinary.trainer", "owner": "ordinary_trainer"})

@@ -37,6 +37,7 @@ TRANSACTION_STEPS = {
     "grant": ("establish_prerequisite", "attempt_destination", "set_receipt", "update_presentation"),
     "claim": ("establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"),
     "service": ("establish_prerequisite", "successful_service", "consume_source", "update_presentation"),
+    "staged_grant": ("establish_prerequisite", "consume_source", "set_source_receipt", "attempt_destination", "set_receipt", "update_presentation"),
 }
 # Persistent story flags and generic variables begin clear.  This one
 # externally-visible size-record sentinel deliberately begins at the engine's
@@ -290,7 +291,7 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
     fields = {"content_id", "owner", "kind", "prerequisite", "destination", "consume", "receipt", "steps"}
     for index, raw in enumerate(_array(value, "contracts.transactions")):
         path, row = f"contracts.transactions[{index}]", _object(raw, f"contracts.transactions[{index}]")
-        _keys(row, fields, path, {"clear_payloads", "pending_state"})
+        _keys(row, fields, path, {"clear_payloads", "pending_state", "source_receipt"})
         content, owner, kind = _text(row["content_id"], f"{path}.content_id", CONTENT_ID), _text(row["owner"], f"{path}.owner"), _text(row["kind"], f"{path}.kind")
         receipt = row["receipt"]
         if owners.get(content) != owner or owner == "ordinary_trainer" or kind not in TRANSACTION_STEPS: _fail(f"{path} has unresolved content, an ordinary transaction, or an invalid kind")
@@ -307,6 +308,15 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
             if row.get("pending_state") is not None: _fail(f"{path}.pending_state is reserved for a repeatable claim")
             receipt = _text(receipt, f"{path}.receipt", IDENTIFIER)
             if receipt not in states or states[receipt]["storage"] == "trainer_defeat" or states[receipt]["lifecycle"] != "completion" or states[receipt]["owner"] != owner or content not in states[receipt]["writers"]: _fail(f"{path} has an invalid receipt")
+        source_receipt = row.get("source_receipt")
+        if kind == "staged_grant":
+            if row.get("pending_state") is not None or row.get("clear_payloads", []):
+                _fail(f"{path} has an invalid staged grant payload")
+            source_receipt = _text(source_receipt, f"{path}.source_receipt", IDENTIFIER)
+            if source_receipt == receipt or source_receipt not in states or states[source_receipt]["storage"] == "trainer_defeat" or states[source_receipt]["lifecycle"] != "completion" or states[source_receipt]["owner"] != owner or content not in states[source_receipt]["writers"]:
+                _fail(f"{path} has an invalid source receipt")
+        elif source_receipt is not None:
+            _fail(f"{path}.source_receipt is reserved for a staged grant")
         if not isinstance(row["prerequisite"], list) or not row["prerequisite"] or not all(isinstance(item, str) and item for item in row["prerequisite"]): _fail(f"{path}.prerequisite must be a reviewed non-empty list")
         clears = _array(row.get("clear_payloads", []), f"{path}.clear_payloads")
         if len(set(clears)) != len(clears): _fail(f"{path}.clear_payloads repeats a state")
@@ -320,9 +330,9 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
         if clears: expected_steps.insert(-1, "clear_payload")
         allowed_destinations = ("service",) if kind == "service" else ("bag", "party", "pc")
         if row["destination"] not in allowed_destinations or row["steps"] != expected_steps: _fail(f"{path} violates destination or transaction ordering")
-        if (kind in ("handoff", "service") and (not isinstance(row["consume"], str) or not row["consume"])) or (kind in ("grant", "claim") and row["consume"] is not None): _fail(f"{path} has invalid source consumption")
+        if (kind in ("handoff", "service", "staged_grant") and (not isinstance(row["consume"], str) or not row["consume"])) or (kind in ("grant", "claim") and row["consume"] is not None): _fail(f"{path} has invalid source consumption")
         if content in seen: _fail(f"{path} duplicates a content transaction")
-        normalized = deepcopy(row); normalized["clear_payloads"] = sorted(clears); normalized["pending_state"] = row.get("pending_state")
+        normalized = deepcopy(row); normalized["clear_payloads"] = sorted(clears); normalized["pending_state"] = row.get("pending_state"); normalized["source_receipt"] = source_receipt
         seen.add(content); result.append(normalized)
     transaction_ids = {row["content_id"] for row in result}
     cleared_payloads = {state_id for row in result for state_id in row["clear_payloads"]}

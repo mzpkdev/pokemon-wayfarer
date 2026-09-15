@@ -434,28 +434,61 @@ def _service_payment_follows_successful_relearner(entry: str, labels: list[str],
         _labels_reachable(success_sources, {payment}, graph) for payment in payment_labels)
 
 
-def _egg_grant_has_capacity_then_receipt(labels: list[str], bodies: dict[str, str],
-                                         receipt_symbol: str) -> bool:
-    """Validate the reviewed non-PC Egg grant's local success ordering."""
+def _staged_grant_is_ordered(entry: str, labels: list[str], bodies: dict[str, str],
+                             source_receipt: str, receipt: str) -> bool:
+    """Prove the Memorial Pillar's consumed offering commits before its reward.
+
+    A staged grant is deliberately narrow: the source receipt is written in
+    the same successful removal body before that body can transfer to an item
+    grant, and every reward path is unreachable from the entry when those
+    source-commit bodies are removed from the graph.
+    """
+    graph = _label_graph(labels, bodies)
+    reward_labels: set[str] = set()
     for label in labels:
         lines = bodies[label].splitlines()
-        egg_index = next((index for index, line in enumerate(lines)
-                          if re.fullmatch(r"\s*giveegg\s+SPECIES_[A-Z0-9_]+\s*(?:@.*)?", line)), None)
-        if egg_index is None:
+        reward = next((index for index, line in enumerate(lines)
+                       if re.fullmatch(r"\s*giveitem\b.*", line)), None)
+        if reward is not None:
+            failure_guard = any(re.fullmatch(r"\s*goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", line)
+                                for line in lines[reward + 1:])
+            receipt_after = any(re.fullmatch(rf"\s*setflag\s+{re.escape(receipt)}\s*(?:@.*)?", line)
+                                for line in lines[reward + 1:])
+            if not (failure_guard and receipt_after):
+                return False
+            reward_labels.add(label)
+    source_labels: set[str] = set()
+    post_commit_sources: set[str] = set()
+    for label in labels:
+        lines = bodies[label].splitlines()
+        removal = next((index for index, line in enumerate(lines)
+                        if re.fullmatch(r"\s*removeitem\b.*", line)), None)
+        if removal is None:
             continue
-        capacity_index = next((index for index, line in enumerate(lines[:egg_index])
-                               if re.fullmatch(r"\s*getpartysize\s*(?:@.*)?", line)), None)
-        if capacity_index is None:
-            continue
-        capacity_guard = any(re.fullmatch(
-            r"\s*goto_if_eq\s+VAR_RESULT\s*,\s*PARTY_SIZE\s*,\s*WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", line)
-            for line in lines[capacity_index + 1:egg_index])
-        receipt_after_egg = any(re.fullmatch(
-            rf"\s*setflag\s+{re.escape(receipt_symbol)}\s*(?:@.*)?", line)
-            for line in lines[egg_index + 1:])
-        if capacity_guard and receipt_after_egg:
-            return True
-    return False
+        source_commit = next((index for index in range(removal + 1, len(lines))
+                              if re.fullmatch(rf"\s*setflag\s+{re.escape(source_receipt)}\s*(?:@.*)?", lines[index])), None)
+        if source_commit is None:
+            return False
+        pre_commit_targets: set[str] = set()
+        for line in lines[:source_commit]:
+            retry = re.fullmatch(
+                rf"\s*goto_if_set\s+{re.escape(source_receipt)}\s*,\s*(WayfarerSevii_[A-Za-z0-9_]+)\s*(?:@.*)?", line)
+            if retry is not None:
+                # This conditional is the legitimate retry path after an
+                # already committed source phase; it cannot bypass a fresh
+                # source removal.
+                continue
+            pre_commit_targets.update(target for target in WAYFARER_LABEL.findall(line) if target in graph)
+        if _labels_reachable(pre_commit_targets, reward_labels, graph, source_labels | {label}):
+            return False
+        source_labels.add(label)
+        post_commit_sources.update(target for target in WAYFARER_LABEL.findall("\n".join(lines[source_commit + 1:]))
+                                   if target in graph)
+    if not source_labels or not reward_labels or not post_commit_sources:
+        return False
+    if entry not in source_labels and _labels_reachable({entry}, reward_labels, graph, source_labels):
+        return False
+    return all(_labels_reachable(post_commit_sources, {reward}, graph) for reward in reward_labels)
 
 
 def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
@@ -588,6 +621,10 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             if transaction["kind"] == "service":
                 if not _service_payment_follows_successful_relearner(entry, labels, bodies):
                     raise AuditError(f"{content_id}: repeatable service payment can precede successful service")
+            elif transaction["kind"] == "staged_grant":
+                source_receipt = transaction.get("source_receipt")
+                if not isinstance(source_receipt, str) or not _staged_grant_is_ordered(entry, labels, bodies, states[source_receipt]["symbol"], states[receipt]["symbol"]):
+                    raise AuditError(f"{content_id}: staged grant must consume and commit its source before rewarding")
             elif receipt is None:
                 pending = transaction.get("pending_state")
                 if not isinstance(pending, str) or pending not in states:
@@ -600,8 +637,7 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             elif states[receipt]["symbol"] not in written:
                 raise AuditError(f"{content_id}: transaction receipt is not written by its owned script")
             if "giveegg" in transaction_commands:
-                if transaction["kind"] != "grant" or not isinstance(receipt, str) or not _egg_grant_has_capacity_then_receipt(labels, bodies, states[receipt]["symbol"]):
-                    raise AuditError(f"{content_id}: Egg grant must check capacity, give the Egg, then write its receipt")
+                raise AuditError(f"{content_id}: party-only Egg grants must use the atomic WayfarerSevii_TryGiveEggThenSetFlag special")
         if row["owner"] == "ordinary_trainer":
             if len(battles) != 1:
                 raise AuditError(f"{content_id}: ordinary Trainer content must have exactly one owned battle command")

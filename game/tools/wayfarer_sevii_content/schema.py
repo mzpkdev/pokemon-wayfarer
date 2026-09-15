@@ -248,7 +248,8 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
     for field in ("flag", "var"):
         if field in overrides:
             value = _require_string(overrides[field], f"{context}[{index}].overrides.{field}")
-            if WAYFARER_OVERRIDE.fullmatch(value) is None:
+            always_visible_object = field == "flag" and event_kind == "object_events" and value == "0"
+            if not always_visible_object and WAYFARER_OVERRIDE.fullmatch(value) is None:
                 _fail(f"{context}[{index}].overrides.{field}", "must use the Wayfarer Sevii namespace")
     if "flag" in overrides and event_kind == "bg_events" and source.get("type") != "hidden_item":
         _fail(f"{context}[{index}].overrides.flag", "is only valid for a hidden item")

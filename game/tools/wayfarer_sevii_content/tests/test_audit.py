@@ -278,7 +278,7 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 with self.assertRaisesRegex(AUDIT.AuditError, "payment can precede successful service"):
                     AUDIT.validate_contract_closure(root, {}, closure, contracts)
 
-    def test_contract_closure_requires_egg_receipt_after_capacity_checked_gift(self):
+    def test_contract_closure_requires_atomic_party_only_egg_grant(self):
         row = {
             "content_id": "story.test.egg", "owner": "story", "wayfarer_script": "WayfarerSevii_Egg",
             "state_reads": [], "state_writes": ["SEVII_EGG_RECEIVED"],
@@ -308,12 +308,75 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 "content_operations": [{"label": "WayfarerSevii_Egg", "kind": "transaction", "command": "giveegg"}],
             }
             with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                with self.assertRaisesRegex(AUDIT.AuditError, "must use the atomic"):
+                    AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            include.write_text(
+                "WayfarerSevii_Egg::\n"
+                "\tsetvar VAR_0x8004, SPECIES_TOGEPI\n"
+                "\tsetvar VAR_0x8005, FLAG_WAYFARER_SEVII_EGG_RECEIVED\n"
+                "\tspecialvar VAR_RESULT, WayfarerSevii_TryGiveEggThenSetFlag\n"
+                "\tend\n",
+                encoding="utf-8",
+            )
+            closure["content_operations"] = [{
+                "label": "WayfarerSevii_Egg", "kind": "transaction",
+                "command": "WayfarerSevii_TryGiveEggThenSetFlag",
+            }]
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                AUDIT.validate_contract_closure(root, {}, closure, contracts)
+
+    def test_contract_closure_requires_staged_grant_source_commit_before_reward(self):
+        row = {
+            "content_id": "story.test.tectonix", "owner": "story", "wayfarer_script": "WayfarerSevii_Tectonix",
+            "state_reads": [], "state_writes": ["SEVII_OFFERING_COMPLETE", "SEVII_REWARD_RECEIVED"],
+        }
+        contracts = {
+            "states": [
+                {"id": "SEVII_OFFERING_COMPLETE", "symbol": "FLAG_WAYFARER_SEVII_OFFERING_COMPLETE", "storage": "flag"},
+                {"id": "SEVII_REWARD_RECEIVED", "symbol": "FLAG_WAYFARER_SEVII_REWARD_RECEIVED", "storage": "flag"},
+            ],
+            "trainer_ids": {"allocations": []},
+            "transactions": [{
+                "content_id": row["content_id"], "kind": "staged_grant", "receipt": "SEVII_REWARD_RECEIVED",
+                "source_receipt": "SEVII_OFFERING_COMPLETE", "consume": "ITEM_LEMONADE", "destination": "bag",
+                "steps": ["establish_prerequisite", "consume_source", "set_source_receipt", "attempt_destination", "set_receipt", "update_presentation"],
+            }],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/tectonix.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text(
+                "WayfarerSevii_Tectonix::\n"
+                "\tgoto_if_set FLAG_WAYFARER_SEVII_OFFERING_COMPLETE, WayfarerSevii_TectonixReward\n"
+                "\tremoveitem ITEM_LEMONADE\n"
+                "\tsetflag FLAG_WAYFARER_SEVII_OFFERING_COMPLETE\n"
+                "\tgoto WayfarerSevii_TectonixReward\n"
+                "WayfarerSevii_TectonixReward::\n"
+                "\tgiveitem ITEM_TM42\n"
+                "\tgoto_if_eq VAR_RESULT, FALSE, WayfarerSevii_TectonixFull\n"
+                "\tsetflag FLAG_WAYFARER_SEVII_REWARD_RECEIVED\n"
+                "WayfarerSevii_TectonixFull::\n\tend\n",
+                encoding="utf-8",
+            )
+            closure = {
+                "includes": ["data/scripts/wayfarer_sevii/story/tectonix.inc"],
+                "state_operations": [
+                    {"label": "WayfarerSevii_Tectonix", "access": "write", "state": "FLAG_WAYFARER_SEVII_OFFERING_COMPLETE"},
+                    {"label": "WayfarerSevii_TectonixReward", "access": "write", "state": "FLAG_WAYFARER_SEVII_REWARD_RECEIVED"},
+                ],
+                "content_operations": [
+                    {"label": "WayfarerSevii_Tectonix", "kind": "transaction", "command": "removeitem"},
+                    {"label": "WayfarerSevii_TectonixReward", "kind": "transaction", "command": "giveitem"},
+                ],
+            }
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
                 AUDIT.validate_contract_closure(root, {}, closure, contracts)
             include.write_text(include.read_text(encoding="utf-8").replace(
-                "\tgiveegg SPECIES_TOGEPI\n\tsetflag FLAG_WAYFARER_SEVII_EGG_RECEIVED\n",
-                "\tsetflag FLAG_WAYFARER_SEVII_EGG_RECEIVED\n\tgiveegg SPECIES_TOGEPI\n"), encoding="utf-8")
+                "\tsetflag FLAG_WAYFARER_SEVII_OFFERING_COMPLETE\n\tgoto WayfarerSevii_TectonixReward\n",
+                "\tgoto WayfarerSevii_TectonixReward\n\tsetflag FLAG_WAYFARER_SEVII_OFFERING_COMPLETE\n"), encoding="utf-8")
             with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
-                with self.assertRaisesRegex(AUDIT.AuditError, "give the Egg, then write its receipt"):
+                with self.assertRaisesRegex(AUDIT.AuditError, "must consume and commit its source before rewarding"):
                     AUDIT.validate_contract_closure(root, {}, closure, contracts)
 
     def test_real_closure_and_contracts_accept_an_ordinary_single_battle_wrapper(self):
