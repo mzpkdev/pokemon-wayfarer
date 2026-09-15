@@ -159,9 +159,9 @@ Concrete removals:
 - removed the content audit's reserialized selected/excluded inventory payload; and
 - removed its duplicate Trainer compiler/scaling pass, leaving selected-party compilation to the Trainer-owned generator.
 
-The content suite is now 44 tests instead of 73 and runs in 1.1 seconds on this
-host instead of 13.8 seconds immediately before the duplicate Trainer compiler
-pass was removed. Stable post-reduction validation passed:
+The content suite is now 44 tests instead of 73. On this host, removing the
+duplicate Trainer compiler pass reduced the already-trimmed 45-test intermediate
+suite from 13.8 seconds to 1.1 seconds. Stable post-reduction validation passed:
 
 - `make -C game wayfarer-sevii-content-audit` (44 tests plus report generation);
 - `make -C game wayfarer-sevii-port-audit` (11 catalog, 15 script, and 15 port tests);
