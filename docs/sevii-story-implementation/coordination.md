@@ -35,13 +35,14 @@ The following slots are owned and must not be independently reused:
 | Flags | 26–29 | Tectonix and Egg Move Tutor one-time rewards |
 | Flags | 30–40 | Celio, Ruby, Sapphire, passwords, Warehouse, and Network Machine repair |
 | Flags | 41–42 | Rival scene and Moltres completion |
-| Flags | 43–50 | Heracross/Nugget rewards and Explosion, Body Slam, Swords Dance, and Cape Brink tutor receipts |
+| Flags | 43–51 | Heracross/Nugget/Rock Smash rewards and Explosion, Body Slam, Swords Dance, and Cape Brink tutor receipts |
 | Variables | 0–2 | Selphy requested species, pending reward, and active request |
 | Variables | 3 | `trainer_tower.pending_prize` transaction mirror |
+| Variables | 4 | Heracross size record, initialized to `0x8000` |
 | Trainer defeat | 0–532 | Trainer-owned fixed allocation capacity; current frozen inventory uses 0–135 |
 | Rematch family | 0–63 | Trainer-owned two-bit stages and pending-ready bits |
 
-The exact flag and variable symbols are authoritative in `include/constants/flags.h` and `include/constants/vars.h`. Unallocated ranges begin at flag slot 51 and variable slot 4.
+The exact flag and variable symbols are authoritative in `include/constants/flags.h` and `include/constants/vars.h`. Unallocated ranges begin at flag slot 52 and variable slot 5.
 
 ## Trainer defeat ABI
 

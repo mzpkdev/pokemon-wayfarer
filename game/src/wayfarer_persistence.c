@@ -150,6 +150,7 @@ void WayfarerSeviiInitPersistentState(void)
 #if IS_WAYFARER
     memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
     gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
+    VarSet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD, WAYFARER_SEVII_HERACROSS_DEFAULT_SIZE_RECORD);
 #endif
 }
 

@@ -8,7 +8,11 @@
 #include "string_util.h"
 #include "text.h"
 
+#if IS_WAYFARER
+#define DEFAULT_MAX_SIZE WAYFARER_SEVII_HERACROSS_DEFAULT_SIZE_RECORD
+#else
 #define DEFAULT_MAX_SIZE 0x8000 // was 0x8100 in Ruby/Sapphire
+#endif
 #define DEFAULT_MAX_SIZE_MAGIKARP 0
 static u8* ReturnHeightStringNoWhitespace(u32 size);
 
@@ -215,19 +219,31 @@ void CompareLotadSize(void)
 
 void InitHeracrossSizeRecord(void)
 {
+#if IS_WAYFARER
+    VarSet(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD, DEFAULT_MAX_SIZE);
+#else
     VarSet(VAR_HERACROSS_SIZE_RECORD, DEFAULT_MAX_SIZE);
+#endif
 }
 
 void GetHeracrossSizeRecordInfo(void)
 {
+#if IS_WAYFARER
+    u16 *sizeRecord = GetVarPointer(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD);
+#else
     u16 *sizeRecord = GetVarPointer(VAR_HERACROSS_SIZE_RECORD);
+#endif
 
     GetMonSizeRecordInfo(SPECIES_HERACROSS, sizeRecord);
 }
 
 void CompareHeracrossSize(void)
 {
+#if IS_WAYFARER
+    u16 *sizeRecord = GetVarPointer(VAR_WAYFARER_SEVII_HERACROSS_SIZE_RECORD);
+#else
     u16 *sizeRecord = GetVarPointer(VAR_HERACROSS_SIZE_RECORD);
+#endif
 
     gSpecialVar_Result = CompareMonSize(SPECIES_HERACROSS, sizeRecord);
 }
