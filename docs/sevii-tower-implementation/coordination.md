@@ -120,6 +120,7 @@ The independent critic's three actionable findings are addressed in
 `7f861d4099`: the lobby exterior door confirms abandonment and restores the
 entry snapshot, the lobby nurse cannot heal an active run without the same
 abandonment transaction, and owner/time/prize delivery requires all eight
-floor-clear bits. The current SkyEmu journey covers save exclusion, transient
+floor-clear bits. Independent re-review of that remediation found no remaining
+actionable findings. The current SkyEmu journey covers save exclusion, transient
 reset, and abandonment restoration; the exhaustive four-format completion and
 every-floor loss/draw emulator matrix remains pending combined acceptance.
