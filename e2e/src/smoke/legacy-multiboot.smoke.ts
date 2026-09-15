@@ -62,10 +62,10 @@ describe.sequential("Wayfarer startup without legacy multiboot", () => {
   })
 
   it("passes copyright and leaves B+Select inactive on the title screen", async () => {
-    await waitForTask("Task_TitleScreenPhase3", 12_000)
+    await waitForTask("Task_WayfarerTitleInput", 12_000)
     const callback = await running.client.readUint32LE(symbols.address("gMain") + 4)
     await press({ B: 1, Select: 1 }, 60)
-    expect(await taskAddress("Task_TitleScreenPhase3")).toBeDefined()
+    expect(await taskAddress("Task_WayfarerTitleInput")).toBeDefined()
     expect(await running.client.readUint32LE(symbols.address("gMain") + 4)).toBe(callback)
     expect((await running.client.readUint32LE(symbols.address("gMain") + 0x18)) & ~1).toBe(
       symbols.address("SerialCB") & ~1,
@@ -74,7 +74,7 @@ describe.sequential("Wayfarer startup without legacy multiboot", () => {
 
   it("keeps the disabled reset-RTC chord inactive on a fresh save", async () => {
     await press({ B: 1, Select: 1, Left: 1 }, 30)
-    expect(await taskAddress("Task_TitleScreenPhase3")).toBeDefined()
+    expect(await taskAddress("Task_WayfarerTitleInput")).toBeDefined()
   })
 
   it("opens Options from the main menu and returns", async () => {
@@ -101,13 +101,13 @@ describe.sequential("Wayfarer startup without legacy multiboot", () => {
     await press({ B: 1 })
     await waitForTask("Task_HandleMainMenuInput")
     await press({ B: 1 })
-    await waitForTask("Task_TitleScreenPhase3")
+    await waitForTask("Task_WayfarerTitleInput")
   })
 
   it("retains the clear-save chord and allows cancelling its prompt", async () => {
     await press({ B: 1, Select: 1, Up: 1 })
     await waitForTask("Task_ClearSaveDataScreenYesNoChoice")
     await press({ B: 1 })
-    await waitForTask("Task_TitleScreenPhase3", 12_000)
+    await waitForTask("Task_WayfarerTitleInput", 12_000)
   })
 })
