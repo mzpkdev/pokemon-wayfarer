@@ -36,22 +36,22 @@ The following slots are owned and must not be independently reused:
 | Flags | 30–40 | Celio, Ruby, Sapphire, passwords, Warehouse, and Network Machine repair |
 | Flags | 41–42 | Rival scene and Moltres completion |
 | Flags | 43–51 | Heracross/Nugget/Rock Smash rewards and Explosion, Body Slam, Swords Dance, and Cape Brink tutor receipts |
-| Flags | 52–59 | Derived inverse actor presentation: returned Lostelle; returned Selphy/Butler; Dotted Hole scientist; optional local Rockets; Warehouse combatants; Warehouse Gideon; Ruby guards; rival actors |
+| Flags | 52 | Trainer-owned Wayfarer Vs. Seeker charging lifecycle |
+| Flags | 53–60 | Derived inverse actor presentation: returned Selphy/Butler; Dotted Hole scientist; optional local Rockets; Warehouse combatants; Warehouse Gideon; Ruby guards; rival actors; returned Lostelle |
 | Variables | 0–2 | Selphy requested species, pending reward, and active request |
 | Variables | 3 | `trainer_tower.pending_prize` transaction mirror |
 | Variables | 4 | Heracross size record, initialized to `0x8000` |
 | Trainer defeat | 0–532 | Trainer-owned fixed allocation capacity; current frozen inventory uses 0–135 |
 | Rematch family | 0–63 | Trainer-owned two-bit stages and pending-ready bits |
 
-The exact flag and variable symbols are authoritative in `include/constants/flags.h` and `include/constants/vars.h`. Unallocated ranges begin at flag slot 60 and variable slot 5.
+The exact flag and variable symbols are authoritative in `include/constants/flags.h` and `include/constants/vars.h`. Unallocated ranges begin at flag slot 61 and variable slot 5.
 
 ## Story actor presentation
 
-Slots 52–59 are condition-specific inverse flags because several source maps have no source map-script slot that the provenance-checked overlay can select. `WayfarerSeviiInitPersistentState()` initializes all eight hidden. Objective scripts write only the presentation flags affected by their durable transition; no arrival handler hides a still-undefeated actor.
+Slots 53–60 are condition-specific inverse flags because several source maps have no source map-script slot that the provenance-checked overlay can select. `WayfarerSeviiInitPersistentState()` initializes all eight hidden. Objective scripts write only the presentation flags affected by their durable transition; no arrival handler hides a still-undefeated actor. During Trainer integration, returned Lostelle moved from slot 52 to slot 60 so Trainer can own slot 52 for Vs. Seeker charging.
 
 | Slot | Hide flag | Actor is visible exactly when |
 | ---: | --- | --- |
-| 52 | `FLAG_WAYFARER_SEVII_HIDE_RETURNED_LOSTELLE` | Lostelle rescued |
 | 53 | `FLAG_WAYFARER_SEVII_HIDE_RETURNED_SELPHY` | Selphy returned; shared by Selphy and Butler |
 | 54 | `FLAG_WAYFARER_SEVII_HIDE_DOTTED_HOLE_SCIENTIST` | Celio gems started and Sapphire not stolen |
 | 55 | `FLAG_WAYFARER_SEVII_HIDE_LOCAL_ROCKETS` | Celio gems started and Warehouse not cleared; shared by Meadow and Outcast actors |
@@ -59,6 +59,7 @@ Slots 52–59 are condition-specific inverse flags because several source maps h
 | 57 | `FLAG_WAYFARER_SEVII_HIDE_WAREHOUSE_GIDEON` | Sapphire stolen and both passwords learned; intentionally remains visible after clear for Sapphire delivery retry and post-dialogue |
 | 58 | `FLAG_WAYFARER_SEVII_HIDE_RUBY_GUARDS` | Celio gems started and Ruby not recovered |
 | 59 | `FLAG_WAYFARER_SEVII_HIDE_RIVALS` | shared rival scene seen; the eligible on-frame scene clears this flag and explicitly spawns the current actor |
+| 60 | `FLAG_WAYFARER_SEVII_HIDE_RETURNED_LOSTELLE` | Lostelle rescued |
 
 Warehouse readiness is recomputed by `WayfarerSevii_Story_UpdateWarehouseReadiness` after either password/theft transition, so password order does not matter. These flags are saved so handlerless maps load correctly. The Warehouse clear transition removes the five combatants immediately but preserves Gideon; a full Key Items pocket therefore cannot strand the Sapphire reward.
 
@@ -172,3 +173,39 @@ suite from 13.8 seconds to 1.1 seconds. Stable post-reduction validation passed:
 No production rebuild was repeated because this commit changes only host
 metadata/tests/docs and a script comment. The last measured production ROM and
 SaveBlock3 figures above therefore remain the applicable runtime measurements.
+
+## Trainer integration validation
+
+Story is structurally integrated with Trainer main
+`8347917770864a8d9a72811bea0587e0379cedd5`. The schema-v2 manifest retains all
+135 maps, 261 unique retained events, and 10 map scripts: 87 ordinary-Trainer
+objects plus 131 Story inventory records, with shared actor keys unioned by identity. Regeneration
+retains Trainer's guarded rematch runtime and `EXCLUDED` policy for Story
+objectives. The `HAS_SEVII_CONTENT` graphics pointer closure contains 52 unique
+designated initializers; the 20 merge-duplicated ordinary entries were removed.
+
+The confirmed flag collision is resolved with Trainer charging at slot 52 and
+returned Lostelle presentation at slot 60. New-game initialization still sets
+Story variable 4 to `0x8000`, initializes all eight Story hide flags, and
+preserves the rematch and Tower-record payloads. Tower transient reset hooks are
+deliberately left for the Tower integration stage.
+
+Combined validation before push:
+
+- all five shared generators pass `--check`; Trainer scaling reports 1,649
+  populated IDs (`EXCLUDED` 215, `GYM_LEADER` 30, `GYM_MEMBER` 104,
+  `ORDINARY` 1,300);
+- Sevii content and port audits pass (45 content, 11 catalog, 15 script, and 15
+  port tests), and the generated content audit passes against the release ROM;
+- the focused Wayfarer mechanics run passes 103/103 tests;
+- the exact concurrent Trainer 7 + Story 3 + exploration 6 emulator selection
+  passes 16/16. A two-line Story driver guard now advances only overworld or
+  explicit battle text while waiting for an action menu, eliminating redundant
+  transition inputs without disabling global file parallelism; and
+- the production release uses 32,909,152 bytes (delta +235,816 from foundation
+  `fbc3bc33f7a37b89be850013938595155bb6ecc0`), ends at `0x09F62760`, and leaves
+  645,280 bytes free: 120,992 bytes beyond the required 512 KiB reserve.
+  SaveBlock3 remains 1,112 bytes, 512 bytes below the 1,624-byte bound.
+
+These checks establish the combined Trainer + Story branch only. Final Tower
+integration still requires structural regeneration and renewed acceptance.

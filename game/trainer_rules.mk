@@ -22,10 +22,6 @@ WAYFARER_SEVII_TRAINER_DEPS := $(WAYFARER_SEVII_TRAINER_GENERATOR) ../docs/sevii
 $(WAYFARER_SEVII_TRAINER_OUTPUTS) &: $(WAYFARER_SEVII_TRAINER_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SEVII_TRAINER_GENERATOR)
 
-.PHONY: wayfarer-sevii-trainer-roster-test
-wayfarer-sevii-trainer-roster-test:
-	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest tools/wayfarer_sevii_trainers/test_generate.py -q
-
 src/data/trainers.h test/league_tiers.h: $(LEARNSET_HELPERS_BUILD_VERSION)
 
 test/league_tiers.h: tools/wayfarer_league_tiers/generate_fixture.py tools/wayfarer_league_tiers/inventory.json src/data/trainers.party src/data/trainers_hns.party $(TRAINERPROC)

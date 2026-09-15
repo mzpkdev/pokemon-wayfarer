@@ -382,14 +382,35 @@ def retained_event_rows(record: dict[str, Any], source: dict[str, Any],
             if rule["source"] != events[index]:
                 raise AuditError(f"{record['source_map']}: retained {kind}[{index}] source identity drifted")
             if kind == "object_events" and events[index].get("trainer_type", "TRAINER_TYPE_NONE") != "TRAINER_TYPE_NONE":
-                typed_trainer = (
-                    allow_content_overlays
-                    and rule.get("owner") in {"story", "ordinary_trainers", "trainer_tower"}
+                state_writes = rule.get("state_writes")
+                owned_ordinary = (
+                    rule.get("owner") == "ordinary_trainer"
+                    and isinstance(rule.get("content_id"), str)
+                    and isinstance(rule.get("trainer_content_id"), str)
                     and isinstance(rule.get("trainer"), str)
                     and rule["trainer"].startswith("TRAINER_WAYFARER_SEVII_")
+                    and rule.get("scaling_policy") == "ordinary"
+                    and rule.get("outcome_policy") == "defeat_and_blackout"
+                    and isinstance(state_writes, list)
+                    and len(state_writes) == 1
+                    and isinstance(state_writes[0], str)
+                    and state_writes[0].startswith("SEVII_ORDINARY_")
+                    and state_writes[0].endswith("_DEFEATED")
                 )
-                if not typed_trainer:
-                    raise AuditError(f"{record['source_map']}: retained object event {index} is a Trainer")
+                owned_story = (
+                    allow_content_overlays
+                    and rule.get("owner") == "story"
+                    and isinstance(rule.get("content_id"), str)
+                    and rule["content_id"].startswith("story.")
+                    and isinstance(rule.get("trainer"), str)
+                    and rule["trainer"].startswith("TRAINER_WAYFARER_SEVII_")
+                    and rule.get("battle") == "objective_guard"
+                    and rule.get("scaling_policy") in ("ordinary", "story")
+                    and rule.get("outcome_policy") == "win_progress_loss_pending"
+                    and isinstance(state_writes, list)
+                )
+                if not (owned_ordinary or owned_story):
+                    raise AuditError(f"{record['source_map']}: retained object event {index} is an unowned Trainer")
             source_script = str(events[index].get("script", ""))
             replacement = rule.get("wayfarer_script")
             if source_script not in ("", "0", "0x0", "NULL"):

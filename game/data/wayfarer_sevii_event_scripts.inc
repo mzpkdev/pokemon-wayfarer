@@ -10,6 +10,7 @@
 	.include "data/scripts/wayfarer_sevii/story/local_adventures.inc"
 	.include "data/scripts/wayfarer_sevii/story/local_services.inc"
 	.include "data/scripts/wayfarer_sevii/story/passive_inventory.inc"
+	.include "data/scripts/wayfarer_sevii/trainers/ordinary.inc"
 
 @ Pinned FRLG source text data used by selected handlers.
 @ No source event-script block is linked.

@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle_setup.h"
 #include "test/test.h"
 #include "constants/opponents.h"
 #include "wayfarer_sevii_rematches.h"
@@ -49,6 +50,19 @@ TEST("Sevii Vs. Seeker registry is local, complete, and uses generated IDs")
     // Both source objects use this one generated base identity, so readiness
     // and stage selection remain atomic for the double battle.
     EXPECT(WayfarerSeviiRematchHasFamily(TRAINER_WAYFARER_SEVII_CRUSH_KIN_MIK_KIA));
+}
+
+TEST("Sevii rematch battle accepts a ready compact family after opponent selection")
+{
+    WayfarerSeviiRematchClearReady(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2;
+    EXPECT(!IsTrainerReadyForRematch());
+
+    WayfarerSeviiRematchSetReady(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT(IsTrainerReadyForRematch());
+
+    WayfarerSeviiRematchClearReady(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT(!IsTrainerReadyForRematch());
 }
 
 #endif // IS_WAYFARER

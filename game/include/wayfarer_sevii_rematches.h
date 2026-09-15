@@ -3,6 +3,8 @@
 
 #include "global.h"
 
+#if IS_WAYFARER
+
 #define WAYFARER_SEVII_REMATCH_STAGES 5
 
 struct WayfarerSeviiRematchFamily
@@ -20,5 +22,7 @@ void WayfarerSeviiRematchClearAllReady(void);
 u16 WayfarerSeviiRematchGetOpponent(u16 trainerId);
 void WayfarerSeviiRematchAdvance(u16 trainerId);
 s32 WayfarerSeviiRematchFamilyIndex(u16 trainerId);
+
+#endif // IS_WAYFARER
 
 #endif // GUARD_WAYFARER_SEVII_REMATCHES_H

@@ -93,17 +93,4 @@ void WayfarerSeviiRematchAdvance(u16 trainerId)
     }
 }
 
-#else
-
-const struct WayfarerSeviiRematchFamily gWayfarerSeviiRematchFamilies[WAYFARER_SEVII_REMATCH_FAMILY_COUNT] = {0};
-
-s32 WayfarerSeviiRematchFamilyIndex(u16 trainerId) { return -1; }
-bool8 WayfarerSeviiRematchHasFamily(u16 trainerId) { return FALSE; }
-bool8 WayfarerSeviiRematchIsReady(u16 trainerId) { return FALSE; }
-void WayfarerSeviiRematchSetReady(u16 trainerId) {}
-void WayfarerSeviiRematchClearReady(u16 trainerId) {}
-void WayfarerSeviiRematchClearAllReady(void) {}
-u16 WayfarerSeviiRematchGetOpponent(u16 trainerId) { return trainerId; }
-void WayfarerSeviiRematchAdvance(u16 trainerId) {}
-
 #endif // IS_WAYFARER

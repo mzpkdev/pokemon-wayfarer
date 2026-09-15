@@ -219,7 +219,6 @@ def build_report() -> dict:
 
 
 def render_coordination(report: dict) -> str:
-    rows = report["allocation"]["allocations"]
     lines = [
         "# Sevii Trainer implementation coordination",
         "",
@@ -229,16 +228,8 @@ def render_coordination(report: dict) -> str:
         "",
         "The collision-audited allocation starts at 1515 and is dense through 1650 inclusive. `TRAINERS_COUNT_WAYFARER` becomes 1651 when the shared roster lands. Slots 0–117 are every distinct ordinary base/rematch party source; slots 118–135 reserve every planned story opponent. Trainer Tower opponents are facility-local and never enter this range. Source FRLG numeric IDs are provenance only and must never reach runtime.",
         "",
-        "The checked-in machine-readable inventory is `allocation-inventory.json`. Its normalized party hashes are authoritative for source-drift checks.",
-        "",
-        "| Slot | Runtime ID | Generated symbol | Source key | Owner | Kind | Defeat base |",
-        "| ---: | ---: | --- | --- | --- | --- | --- |",
+        "The checked-in machine-readable `allocation-inventory.json` is the single authoritative per-key inventory. It records every slot, runtime ID, generated symbol, source key, owner, kind, defeat base, object reference, and normalized party hash; this coordination note deliberately does not duplicate its 136 rows.",
     ]
-    for row in rows:
-        lines.append(
-            f"| {row['slot']} | {row['numeric_id']} | `{row['id']}` | `{row['source_trainer']}` | "
-            f"{row['owner']} | {row['kind']} | `{row['defeat_base']}` |"
-        )
     lines.extend(
         [
             "",
@@ -256,7 +247,7 @@ def render_coordination(report: dict) -> str:
             "",
             "## Runtime surfaces owned here",
             "",
-            "The Trainer branch will publish generated constants/roster data for all 136 keys, `TRAINERS_COUNT_WAYFARER = 1651`, one scaling classification per populated ID, the generated defeat-base lookup, and a separate Sevii Vs. Seeker registry. The registry carries transient readiness locally and does not append 64 families to the existing fixed SaveBlock1 rematch-index array.",
+            "The Trainer branch will publish generated constants/roster data for all 136 keys, `TRAINERS_COUNT_WAYFARER = 1651`, one scaling classification per populated ID, the generated defeat-base lookup, and a separate Sevii Vs. Seeker registry. The registry consumes Story's compact persistent rematch-stage and pending-ready accessors and does not append 64 families to the existing fixed SaveBlock1 rematch-index array. Trainer owns Sevii flag slot 52 (`FLAG_WAYFARER_SEVII_VS_SEEKER_CHARGING`) for the Wayfarer-only Vs. Seeker charge lifecycle; Story owns slots 11-51 and presentation flags 53-60 (including returned Lostelle at 60); unallocated slots begin at 61.",
             "",
             "Ordinary content uses normal victory/blackout routing. Story callers use their own objective continuations but consume the same generated roster IDs and defeat accessors. Tower remains excluded from ordinary scaling, persistent Trainer defeat, and this allocation.",
             "",
@@ -345,7 +336,9 @@ def render_runtime_constants(report: dict) -> str:
         "",
         f"#define TRAINER_WAYFARER_SEVII_FIRST {ALLOCATION_BASE}",
         f"#define TRAINER_WAYFARER_SEVII_LAST  {allocations[-1]['numeric_id']}",
+        "#if IS_WAYFARER",
         f"#define TRAINERS_COUNT_WAYFARER      {report['allocation']['next_id']}",
+        "#endif",
         "",
         "#endif  // GUARD_CONSTANTS_WAYFARER_SEVII_TRAINERS_H",
         "",

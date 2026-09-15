@@ -17,7 +17,7 @@ import importlib.util
 import json
 import re
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -415,7 +415,7 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
         undeclared_reads = read - {symbols[state] for state in script_reads}
         if undeclared_reads:
             raise AuditError(f"{content_id}: owned script reads undeclared state {sorted(undeclared_reads)[0]}")
-        allocation = allocations.get(content_id)
+        allocation = allocations.get(row.get("trainer_content_id", content_id))
         battles = _battle_types(source, content_operations)
         if battles:
             if allocation is None:
@@ -528,6 +528,54 @@ def validate_baseline(manifest: dict[str, Any], baseline: dict[str, Any], projec
     return calculated
 
 
+def ordinary_trainer_report(manifest: dict[str, Any], contracts_report: dict[str, Any], closure_report: dict[str, Any]) -> dict[str, Any]:
+    """Prove the frozen ordinary projection is complete without owning runtime."""
+    rows = [row for row in selected_records(manifest) if row.get("owner") == "ordinary_trainer"]
+    allocations = [row for row in contracts_report["trainer_ids"]["allocations"] if row["owner"] == "ordinary_trainer"]
+    if not rows:
+        return {"enabled": False, "objects": 0, "allocations": 0}
+    by_base: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        source = row.get("source", {})
+        if row.get("event_kind") != "object_events" or source.get("trainer_type") != "TRAINER_TYPE_NORMAL":
+            raise AuditError(f"{row['content_id']}: ordinary inventory must contain only source normal object Trainers")
+        if row.get("local_id") != row.get("index", -1) + 1:
+            raise AuditError(f"{row['content_id']}: ordinary Trainer local ID does not match its source object")
+        if source.get("flag") not in (0, "0", None):
+            raise AuditError(f"{row['content_id']}: ordinary Trainer source visibility drifted")
+        if row.get("overrides", {}).get("flag") is not None:
+            raise AuditError(f"{row['content_id']}: ordinary Trainer cannot hide after defeat")
+        base = row.get("trainer_content_id", row["content_id"])
+        by_base[base].append(row)
+    pairs = [members for members in by_base.values() if len(members) == 2]
+    if len(rows) != 87 or len(by_base) != 81 or len(pairs) != 6 or any(len(members) not in (1, 2) for members in by_base.values()):
+        raise AuditError("ordinary Trainer object/base/pair inventory drifted")
+    if sum(row["source"].get("trainer_sight_or_berry_tree_id") == "0" for row in rows) != 1:
+        raise AuditError("ordinary Trainer talk-battle inventory drifted")
+    if sum(row["source"].get("trainer_sight_or_berry_tree_id") != "0" for row in rows) != 86:
+        raise AuditError("ordinary Trainer sight inventory drifted")
+    if len(allocations) != 118 or len({row["id"] for row in allocations}) != 118:
+        raise AuditError("ordinary Trainer party allocation inventory drifted")
+    base_allocations = [row for row in allocations if not row["content_id"].startswith("ordinary.roster.")]
+    if len(base_allocations) != 81 or any(row["numeric_id"] >= 2048 for row in allocations):
+        raise AuditError("ordinary Trainer base allocation or ID bound drifted")
+    exports = {label for module in closure_report["modules"] for label in module["exports"]}
+    if not {row["wayfarer_script"] for row in rows}.issubset(exports):
+        raise AuditError("ordinary Trainer closure entry inventory drifted")
+    rematch_objects = sum(row.get("rematch_family") is not None for row in rows)
+    if rematch_objects != 70 or len(rows) - rematch_objects != 17:
+        raise AuditError("ordinary Trainer rematch/single-stage inventory drifted")
+    dario_rodetta = {row["source"].get("script") for row in rows if row["source_map"] == "SevenIsland_TrainerTower_Frlg"}
+    if dario_rodetta != {"SevenIsland_TrainerTower_EventScript_Dario", "SevenIsland_TrainerTower_EventScript_Rodette"}:
+        raise AuditError("Dario and Rodette must remain ordinary exterior Trainers")
+    return {"enabled": True, "objects": len(rows), "base_identities": len(by_base), "single_objects": 75,
+            "pairs": [{"pair_id": members[0].get("pair_id"), "members": sorted(row["content_id"] for row in members),
+                       "local_ids": sorted(row["local_id"] for row in members)} for members in pairs],
+            "sight_objects": 86, "talk_objects": 1, "rematch_objects": rematch_objects,
+            "single_stage_objects": 17, "party_allocations": len(allocations),
+            "base_allocations": len(base_allocations), "maps": dict(sorted(Counter(row["source_map"] for row in rows).items()))}
+
+
 def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path: Path | None = None,
                  candidate_rom_report: Path | None = None) -> dict[str, Any]:
     root = root.resolve()
@@ -563,6 +611,7 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
         "script_closure": closure_report,
         "contracts": contracts_report,
         "contract_closure": validate_contract_closure(root, manifest, closure_report, contracts_report),
+        "ordinary_trainers": ordinary_trainer_report(manifest, contracts_report, closure_report),
         "rom": rom_report(candidate_rom_report.resolve() if candidate_rom_report else None, root),
         "invariants": {"passed": True},
     }

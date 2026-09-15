@@ -17,7 +17,8 @@ const advanceUntil = async (
     const state = await game.state.read()
     if (predicate(state)) return
     await game.wait.frames(state.dialogueOpen || state.scriptActive ? 24 : 12)
-    if (advanceActionMenu || (await game.state.read()).battle.ui !== "action-menu")
+    const nextState = await game.state.read()
+    if (advanceActionMenu || !nextState.battle.active || nextState.battle.ui === "text")
       await game.controls.press("a")
   }
   throw new Error(`${description} not reached: ${JSON.stringify(await game.state.read())}`)
