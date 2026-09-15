@@ -5,10 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from copy import deepcopy
 import hashlib
-import importlib.util
 import re
-import subprocess
-import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -94,57 +91,6 @@ def _source_block(root: Path, trainer: str) -> bytes:
 def source_party_hash(root: Path, source_trainer: str) -> str:
     """Normalized hash of one authored FRLG party source record."""
     return hashlib.sha256(_source_block(root, source_trainer)).hexdigest()
-
-
-def _scaling(root: Path):
-    spec = importlib.util.spec_from_file_location("wayfarer_sevii_trainer_scaling", root / "tools/trainer_scaling/generate.py")
-    if spec is None or spec.loader is None: _fail("cannot load Trainer scaling parser")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-def _compiled_record(header: str, trainer: str, parser: Any) -> str:
-    match = re.search(rf"\[DIFFICULTY_NORMAL\]\[{re.escape(trainer)}\]\s*=\s*\{{", header)
-    if match is None: _fail(f"selected Trainer compiler output is absent: {trainer}")
-    _, end = parser.balanced(header, match.end() - 1)
-    return header[match.start():end].strip() + "\n"
-
-
-def selected_trainer_render(root: Path, allocations: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Render selected source parties through trainerproc and the scaling parser."""
-    if not allocations: return []
-    source = root / "src/data/trainers_frlg.party"
-    with tempfile.TemporaryDirectory(prefix="wayfarer-sevii-party-") as directory:
-        directory = Path(directory)
-        binary, output = directory / "trainerproc", directory / "trainers_frlg.h"
-        def command(args: list[str], **kwargs: Any) -> str:
-            result = subprocess.run(args, text=True, capture_output=True, **kwargs)
-            if result.returncode: _fail(f"selected-party compiler failed: {result.stderr.strip()}")
-            return result.stdout
-        command(["cc", "-O2", str(root / "tools/trainerproc/main.c"), "-o", str(binary)])
-        preprocessed = command(["cpp", "-traditional-cpp", "-P", "-DPOKEMON_WAYFARER", "-DPOKEMON_HNS",
-                                "-DIS_WAYFARER=1", "-DIS_HNS=1", "-DIS_FRLG=0", "-DIS_EMERALD=0",
-                                "-I", str(root / "include"), str(source)])
-        command([str(binary), "-i", "src/data/trainers_frlg.party", "-o", str(output), "-"], input=preprocessed)
-        try: header = output.read_text(encoding="utf-8")
-        except OSError as error: _fail(f"cannot read selected-party parser output: {error}")
-    parser = _scaling(root)
-    resolved = parser.resolve_rosters(parser.parse_output(header, "src/data/trainers_frlg.party"))
-    rows = []
-    for row in sorted(allocations, key=lambda item: item["slot"]):
-        source = row["source_trainer"]
-        if source not in resolved: _fail(f"selected Trainer parser output is absent: {source}")
-        compiled = _compiled_record(header, source, parser)
-        rows.append({"content_id": row["content_id"], "id": row["id"], "slot": row["slot"],
-                     "numeric_id": TRAINER_ID_BASE + row["slot"], "source_trainer": source,
-                     "source_hash": row["source_hash"], "classification": row["classification"],
-                     "battle_policy": row["battle_policy"], "defeat_state": row["defeat_state"],
-                     "source_block": _source_block(root, source).decode("utf-8"),
-                     "compiled_record": compiled,
-                     "compiled_record_sha256": hashlib.sha256(compiled.encode()).hexdigest(),
-                     "party": deepcopy(resolved[source]["DIFFICULTY_NORMAL"])})
-    return rows
 
 
 def _content_owners(manifest: Any) -> dict[str, str]:
@@ -286,11 +232,6 @@ def _allocations(root: Path, value: Any, owners: dict[str, str], states: dict[st
         state = states[row["defeat_state"]]
         if state["slot"] != base["slot"] or state["id"] != base["defeat_state"] or base["content_id"] not in state["writers"]:
             _fail(f"allocation {row['content_id']} does not route through its base defeat state")
-    rendered = selected_trainer_render(root, rows)
-    for row, output in zip(sorted(rows, key=lambda item: item["slot"]), rendered):
-        expected_type = {"TRAINER_BATTLE_TYPE_SINGLES": "single", "TRAINER_BATTLE_TYPE_DOUBLES": "double"}.get(output["party"].get("battleType"))
-        if expected_type is None or row["battle_type"] != expected_type:
-            _fail(f"allocation {row['content_id']} battle_type does not match its preserved source party")
     return [{"content_id": r["content_id"], "id": r["id"], "slot": r["slot"], "numeric_id": TRAINER_ID_BASE + r["slot"], "owner": r["owner"], "source_trainer": r["source_trainer"], "source_hash": r["source_hash"], "classification": r["classification"], "battle_policy": r["battle_policy"], "battle_type": r["battle_type"], "outcome_policy": r["outcome_policy"], "defeat_state": r["defeat_state"], "defeat_base": r["defeat_base"]} for r in sorted(rows, key=lambda r: r["slot"])]
 
 

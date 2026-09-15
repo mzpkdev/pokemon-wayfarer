@@ -37,8 +37,8 @@ WAYFARER_OVERRIDE = re.compile(r"^(?:FLAG|VAR)_WAYFARER_SEVII_[A-Z0-9_]+$")
 APPROVED_EXPLORATION_HELPERS = {"EventScript_StrengthBoulder"}
 EVENT_ROW_KEYS = frozenset((
     "index", "source", "wayfarer_script", "owner", "content_id", "reason", "overrides",
-    "state_reads", "state_writes", "visibility", "trainer", "battle", "transaction",
-    "reward_receipt", "dependencies", "replaces", "actor_role", "scaling_policy",
+    "state_reads", "state_writes", "trainer", "battle",
+    "dependencies", "replaces", "actor_role", "scaling_policy",
     "battle_type", "outcome_policy", "required_dependencies",
 ))
 

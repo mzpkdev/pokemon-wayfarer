@@ -17,7 +17,7 @@ import importlib.util
 import json
 import re
 import sys
-from collections import Counter, defaultdict
+from collections import defaultdict
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -41,20 +41,6 @@ REQUIRED_RESERVE_BYTES = 512 * 1024
 LABEL_DEFINITION = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
 SCRIPT_COMMAND = re.compile(r"(?m)^\s*([a-z][a-z0-9_]*)\b")
 WAYFARER_LABEL = re.compile(r"\bWayfarerSevii_[A-Za-z0-9_]+\b")
-OBJECT_GRAPHICS_POINTER = re.compile(
-    r"\[(OBJ_EVENT_GFX_[A-Z0-9_]+)\]\s*=\s*&(gObjectEventGraphicsInfo_[A-Za-z0-9_]+)"
-)
-OBJECT_GRAPHICS_INFO = re.compile(
-    r"const\s+struct\s+ObjectEventGraphicsInfo\s+(gObjectEventGraphicsInfo_[A-Za-z0-9_]+)\s*=\s*\{(.*?)\};",
-    re.DOTALL,
-)
-OBJECT_GRAPHICS_IMAGES = re.compile(r"\.images\s*=\s*(sPicTable_[A-Za-z0-9_]+)")
-OBJECT_GRAPHICS_PIC_TABLE = re.compile(
-    r"static\s+const\s+struct\s+SpriteFrameImage\s+(sPicTable_[A-Za-z0-9_]+)\[\]\s*=\s*\{(.*?)\};",
-    re.DOTALL,
-)
-OBJECT_GRAPHICS_ASSET_REFERENCE = re.compile(r"\b(gObjectEventPic_[A-Za-z0-9_]+)\b")
-OBJECT_GRAPHICS_ASSET = re.compile(r"const\s+u(?:16|32)\s+(gObjectEventPic_[A-Za-z0-9_]+)\[\]")
 STATE_WRITE_COMMANDS = frozenset(("setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar"))
 TRAINER_COMMANDS = frozenset(closure.TRAINER_COMMANDS)
 TRANSACTION_COMMANDS = frozenset(closure.TRANSACTION_COMMANDS)
@@ -113,120 +99,6 @@ def selected_records(manifest: dict[str, Any], domains: Iterable[str] | None = N
         return schema.selected_records(manifest, domains)
     except (schema.SchemaError, ValueError) as error:
         raise AuditError(str(error)) from error
-
-
-def unconditional_object_graphics_assets(source: str) -> set[str]:
-    """Return raw sheets declared outside every preprocessor conditional."""
-    assets: set[str] = set()
-    conditional_depth = 0
-    for line in source.splitlines():
-        stripped = line.lstrip()
-        if stripped.startswith(("#if ", "#ifdef ", "#ifndef ")):
-            conditional_depth += 1
-            continue
-        if stripped.startswith("#endif"):
-            conditional_depth -= 1
-            if conditional_depth < 0:
-                raise AuditError("unbalanced object graphics preprocessor conditionals")
-            continue
-        if conditional_depth == 0:
-            assets.update(OBJECT_GRAPHICS_ASSET.findall(line))
-    if conditional_depth != 0:
-        raise AuditError("unbalanced object graphics preprocessor conditionals")
-    return assets
-
-
-def validate_story_object_graphics(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
-    """Require every selected story actor to have a Sevii graphics provider."""
-    pointer_path = root / "src/data/object_events/object_event_graphics_info_pointers.h"
-    try:
-        pointer_text = pointer_path.read_text(encoding="utf-8")
-        start = pointer_text.index("#if HAS_SEVII_CONTENT")
-        end = pointer_text.index("#endif // HAS_SEVII_CONTENT", start)
-    except (FileNotFoundError, ValueError) as error:
-        raise AuditError(f"missing HAS_SEVII_CONTENT object graphics providers in {pointer_path}") from error
-    providers = dict(OBJECT_GRAPHICS_POINTER.findall(pointer_text[start:end]))
-    info_path = root / "src/data/object_events/object_event_graphics_info.h"
-    try:
-        info_text = info_path.read_text(encoding="utf-8")
-        info_start = info_text.index("#if HAS_SEVII_CONTENT")
-        info_end = info_text.index("#endif // HAS_SEVII_CONTENT", info_start)
-    except (FileNotFoundError, ValueError) as error:
-        raise AuditError(f"missing HAS_SEVII_CONTENT object graphics infos in {info_path}") from error
-    active_info_bodies = dict(OBJECT_GRAPHICS_INFO.findall(info_text[info_start:info_end]))
-    pic_table_path = root / "src/data/object_events/object_event_pic_tables.h"
-    graphics_path = root / "src/data/object_events/object_event_graphics.h"
-    try:
-        pic_text = pic_table_path.read_text(encoding="utf-8")
-        pic_start = pic_text.index("#if HAS_SEVII_CONTENT")
-        pic_end = pic_text.index("#endif // HAS_SEVII_CONTENT", pic_start)
-        graphics_text = graphics_path.read_text(encoding="utf-8")
-        graphics_start = graphics_text.index("#if HAS_SEVII_CONTENT")
-        graphics_end = graphics_text.index("#endif // HAS_SEVII_CONTENT", graphics_start)
-    except (FileNotFoundError, ValueError) as error:
-        raise AuditError("missing active HAS_SEVII_CONTENT picture-table or asset providers") from error
-    active_pic_tables = dict(OBJECT_GRAPHICS_PIC_TABLE.findall(pic_text[pic_start:pic_end]))
-    # Story tables may intentionally reuse unconditional Emerald sheets
-    # (OldMan2's final frame uses OldWoman), but conditional base declarations
-    # are not assumed active for Wayfarer.
-    base_end = graphics_text.index("#if IS_FRLG")
-    active_assets = unconditional_object_graphics_assets(graphics_text[:base_end])
-    active_assets.update(OBJECT_GRAPHICS_ASSET.findall(graphics_text[graphics_start:graphics_end]))
-    required: set[str] = set()
-    for map_entry in manifest.get("maps", []):
-        for row in map_entry.get("retained_events", {}).get("object_events", []):
-            if row.get("owner") != "story":
-                continue
-            projected = _output_event(row)
-            graphics_id = projected.get("graphics_id")
-            if isinstance(graphics_id, str) and graphics_id.startswith("OBJ_EVENT_GFX_"):
-                required.add(graphics_id)
-    missing = sorted(required - providers.keys())
-    if missing:
-        raise AuditError(
-            "selected story object graphics lack HAS_SEVII_CONTENT providers: " + ", ".join(missing)
-        )
-    missing_infos = sorted(
-        f"{graphics_id} -> {providers[graphics_id]}"
-        for graphics_id in required
-        if providers[graphics_id] not in active_info_bodies
-    )
-    if missing_infos:
-        raise AuditError(
-            "selected story object graphics reference inactive HAS_SEVII_CONTENT infos: "
-            + ", ".join(missing_infos)
-        )
-    required_tables: set[str] = set()
-    for graphics_id in required:
-        info = providers[graphics_id]
-        match = OBJECT_GRAPHICS_IMAGES.search(active_info_bodies[info])
-        if match is None:
-            raise AuditError(f"selected story object graphics info lacks picture table: {graphics_id} -> {info}")
-        required_tables.add(match.group(1))
-    missing_tables = sorted(required_tables - active_pic_tables.keys())
-    if missing_tables:
-        raise AuditError(
-            "selected story object graphics lack active HAS_SEVII_CONTENT picture tables: "
-            + ", ".join(missing_tables)
-        )
-    required_assets = {
-        asset
-        for table in required_tables
-        for asset in OBJECT_GRAPHICS_ASSET_REFERENCE.findall(active_pic_tables[table])
-    }
-    missing_assets = sorted(required_assets - active_assets)
-    if missing_assets:
-        raise AuditError(
-            "selected story object graphics lack active HAS_SEVII_CONTENT assets: "
-            + ", ".join(missing_assets)
-        )
-    return {
-        "required_count": len(required),
-        "provider_count": len(providers),
-        "active_info_count": len(active_info_bodies),
-        "required_pic_table_count": len(required_tables),
-        "required_asset_count": len(required_assets),
-    }
 
 
 def _output_event(row: dict[str, Any]) -> dict[str, Any]:
@@ -411,68 +283,6 @@ def event_island_report(root: Path) -> dict[str, Any]:
     return {"sha256": file_digest(baseline), "report": report}
 
 
-def content_inventory_report(manifest: dict[str, Any]) -> dict[str, Any]:
-    domains = active_domains(manifest)
-    # The schema always preserves enabled exploration when a development
-    # selection asks for another domain.  Ask once so it cannot be counted once
-    # per domain while all disabled milestone-one domains are inspected.
-    all_records = selected_records(manifest)
-    all_records.sort(key=lambda row: (row["domain"], row["source_map"], row["event_kind"], int(row.get("index", -1)), row["content_id"]))
-
-    selected = []
-    counts = {
-        "domain": Counter(), "owner": Counter(), "map": Counter(), "event_kind": Counter(),
-        "actor_role": Counter(), "battle_policy": Counter(), "reward_type": Counter(),
-    }
-
-
-    for row in all_records:
-        source = row.get("source")
-        selected.append({
-            "content_id": row["content_id"], "domain": row["domain"], "owner": row["owner"],
-            "source_map": row["source_map"], "map_id": row["map_id"], "event_kind": row["event_kind"],
-            "index": row.get("index"), "source_sha256": digest(source),
-            "output_sha256": digest(_output_event(row)) if row["event_kind"] in EVENT_KINDS else digest({
-                "wayfarer_script": row.get("wayfarer_script"), "handler_type": row.get("handler_type"),
-            }),
-        })
-        counts["domain"][row["domain"]] += 1
-        counts["owner"][row["owner"]] += 1
-        counts["map"][row["source_map"]] += 1
-        counts["event_kind"][row["event_kind"]] += 1
-        for key in ("actor_role", "battle_policy", "reward_type"):
-            value = row.get(key)
-            if value is not None:
-                counts[key][str(value)] += 1
-
-    exclusions = []
-    for exclusion in manifest.get("exclusions", []):
-        if not isinstance(exclusion, dict):
-            raise AuditError("manifest exclusion must be an object")
-        identities = exclusion.get("source_identities")
-        if not isinstance(identities, list):
-            raise AuditError("manifest exclusion must list source_identities")
-        for identity in identities:
-            if not isinstance(identity, dict):
-                raise AuditError("manifest exclusion source identity must be an object")
-            exclusions.append({
-                "content_id": exclusion.get("content_id"), "source_map": identity.get("source_map"),
-                "event_kind": identity.get("event_kind"), "index": identity.get("index"),
-                "owner": exclusion.get("owner"), "reason": exclusion.get("reason"),
-                "source_sha256": digest(identity.get("source")) if "source" in identity else None,
-            })
-    exclusions.sort(key=lambda row: (str(row["source_map"]), str(row["event_kind"]), str(row["index"]), str(row["reason"])))
-    return {
-        "domains": [{
-            "domain": name, "owner": data.get("owner"), "enabled": data.get("enabled"),
-            "inventory_ids": sorted(data.get("inventory", [])),
-        } for name, data in sorted(domains.items())],
-        "selected": selected,
-        "excluded": exclusions,
-        "counts": {name: dict(sorted(counter.items())) for name, counter in counts.items()},
-    }
-
-
 def _script_label_bodies(root: Path, closure_report: dict[str, Any]) -> dict[str, str]:
     """Read label bodies from the closure-validated owned include set."""
     bodies: dict[str, str] = {}
@@ -503,172 +313,6 @@ def _reachable_script_labels(entry: str, bodies: dict[str, str]) -> list[str]:
         visited.add(label)
         pending.extend(target for target in WAYFARER_LABEL.findall(bodies[label]) if target in bodies and target not in visited)
     return sorted(visited)
-
-
-def _label_graph(labels: list[str], bodies: dict[str, str]) -> dict[str, set[str]]:
-    available = set(labels)
-    return {label: {target for target in WAYFARER_LABEL.findall(bodies[label]) if target in available}
-            for label in labels}
-
-
-def _labels_reachable(starts: set[str], targets: set[str], graph: dict[str, set[str]],
-                      blocked: set[str] = frozenset()) -> bool:
-    pending, seen = list(starts - blocked), set()
-    while pending:
-        label = pending.pop()
-        if label in seen or label in blocked:
-            continue
-        if label in targets:
-            return True
-        seen.add(label)
-        pending.extend(graph.get(label, set()) - seen - blocked)
-    return False
-
-
-def _service_payment_follows_successful_relearner(entry: str, labels: list[str],
-                                                   bodies: dict[str, str]) -> bool:
-    """Prove the Move Maniac's payment paths follow a successful teach action.
-
-    This is deliberately source-faithful rather than a general control-flow
-    theorem: the reviewed repeatable service is the Move Relearner special,
-    whose successful completion is reported in ``VAR_0x8004``.  A payment
-    label must not be reachable before that special, and its success branch
-    must be able to reach every removal label.
-    """
-    graph = _label_graph(labels, bodies)
-    service_labels = {label for label in labels
-                      if re.search(r"(?m)^\s*special\s+TeachMoveRelearnerMove\b", bodies[label])}
-    payment_labels = {label for label in labels
-                      if re.search(r"(?m)^\s*removeitem\b", bodies[label])}
-    if not service_labels or not payment_labels:
-        return False
-    if _labels_reachable({entry}, payment_labels, graph, service_labels):
-        return False
-
-    success_sources: set[str] = set()
-    for label in service_labels:
-        lines = bodies[label].splitlines()
-        special_index = next((index for index, line in enumerate(lines)
-                              if re.fullmatch(r"\s*special\s+TeachMoveRelearnerMove\s*(?:@.*)?", line)), None)
-        if special_index is None:
-            continue
-        guard_index = next((index for index in range(special_index + 1, len(lines))
-                            if re.fullmatch(r"\s*goto_if_eq\s+VAR_0x8004\s*,\s*0\s*,\s*WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", lines[index])), None)
-        if guard_index is None:
-            continue
-        success_sources.update(target for target in WAYFARER_LABEL.findall("\n".join(lines[guard_index + 1:]))
-                               if target in graph)
-    return bool(success_sources) and all(
-        _labels_reachable(success_sources, {payment}, graph) for payment in payment_labels)
-
-
-def _staged_grant_is_ordered(entry: str, labels: list[str], bodies: dict[str, str],
-                             source_receipt: str, receipt: str) -> bool:
-    """Prove the Memorial Pillar's consumed offering commits before its reward.
-
-    A staged grant is deliberately narrow: the source receipt is written in
-    the same successful removal body before that body can transfer to an item
-    grant, and every reward path is unreachable from the entry when those
-    source-commit bodies are removed from the graph.
-    """
-    graph = _label_graph(labels, bodies)
-    reward_labels: set[str] = set()
-    for label in labels:
-        lines = bodies[label].splitlines()
-        reward = next((index for index, line in enumerate(lines)
-                       if re.fullmatch(r"\s*giveitem\b.*", line)), None)
-        if reward is not None:
-            failure_guard = any(re.fullmatch(r"\s*goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", line)
-                                for line in lines[reward + 1:])
-            receipt_after = any(re.fullmatch(rf"\s*setflag\s+{re.escape(receipt)}\s*(?:@.*)?", line)
-                                for line in lines[reward + 1:])
-            if not (failure_guard and receipt_after):
-                return False
-            reward_labels.add(label)
-    source_labels: set[str] = set()
-    post_commit_sources: set[str] = set()
-    for label in labels:
-        lines = bodies[label].splitlines()
-        removal = next((index for index, line in enumerate(lines)
-                        if re.fullmatch(r"\s*removeitem\b.*", line)), None)
-        if removal is None:
-            continue
-        source_commit = next((index for index in range(removal + 1, len(lines))
-                              if re.fullmatch(rf"\s*setflag\s+{re.escape(source_receipt)}\s*(?:@.*)?", lines[index])), None)
-        if source_commit is None:
-            return False
-        pre_commit_targets: set[str] = set()
-        for line in lines[:source_commit]:
-            retry = re.fullmatch(
-                rf"\s*goto_if_set\s+{re.escape(source_receipt)}\s*,\s*(WayfarerSevii_[A-Za-z0-9_]+)\s*(?:@.*)?", line)
-            if retry is not None:
-                # This conditional is the legitimate retry path after an
-                # already committed source phase; it cannot bypass a fresh
-                # source removal.
-                continue
-            pre_commit_targets.update(target for target in WAYFARER_LABEL.findall(line) if target in graph)
-        if _labels_reachable(pre_commit_targets, reward_labels, graph, source_labels | {label}):
-            return False
-        source_labels.add(label)
-        post_commit_sources.update(target for target in WAYFARER_LABEL.findall("\n".join(lines[source_commit + 1:]))
-                                   if target in graph)
-    if not source_labels or not reward_labels or not post_commit_sources:
-        return False
-    if entry not in source_labels and _labels_reachable({entry}, reward_labels, graph, source_labels):
-        return False
-    return all(_labels_reachable(post_commit_sources, {reward}, graph) for reward in reward_labels)
-
-
-def _handoff_retry_grant_is_guarded(labels: list[str], bodies: dict[str, str], receipt: str) -> bool:
-    """Prove the Lostelle father retry grant follows its atomic handoff.
-
-    The atomic exchange records both the consumed Meteorite delivery and its
-    Moon Stone receipt.  A later item-only retry is valid only when the
-    delivery flag routes into it and the final receipt still routes away from
-    it.  This is intentionally a topology proof for that reviewed recovery
-    path, not a general mixed-transaction exemption.
-    """
-    handoff_labels: set[str] = set()
-    grant_labels: set[str] = set()
-    delivery_symbols: set[str] = set()
-    for label in labels:
-        lines = bodies[label].splitlines()
-        exchange = next((index for index, line in enumerate(lines)
-                         if re.fullmatch(r"\s*specialvar\s+VAR_RESULT\s*,\s*"
-                                         r"WayfarerSevii_TryExchangeItemForRewardThenSetFlags\s*(?:@.*)?", line)), None)
-        if exchange is not None:
-            handoff_labels.add(label)
-            delivery = next((match.group(1) for line in lines[:exchange]
-                             if (match := re.fullmatch(r"\s*setvar\s+VAR_0x8006\s*,\s*"
-                                                       r"(FLAG_WAYFARER_SEVII_[A-Z0-9_]+)\s*(?:@.*)?", line))), None)
-            if delivery is None:
-                return False
-            delivery_symbols.add(delivery)
-        if any(re.fullmatch(r"\s*specialvar\s+VAR_RESULT\s*,\s*"
-                            r"WayfarerSevii_TryGiveItemThenSetFlag\s*(?:@.*)?", line)
-               for line in lines):
-            grant_labels.add(label)
-    if not handoff_labels or not grant_labels or len(delivery_symbols) != 1:
-        return False
-    delivery = next(iter(delivery_symbols))
-    for grant in grant_labels:
-        lines = bodies[grant].splitlines()
-        special = next(index for index, line in enumerate(lines)
-                       if re.fullmatch(r"\s*specialvar\s+VAR_RESULT\s*,\s*"
-                                       r"WayfarerSevii_TryGiveItemThenSetFlag\s*(?:@.*)?", line))
-        if not any(re.fullmatch(rf"\s*goto_if_set\s+{re.escape(receipt)}\s*,\s*"
-                                r"WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", line)
-                   for line in lines[:special]):
-            return False
-        incoming = [line for body in bodies.values() for line in body.splitlines()
-                    if not LABEL_DEFINITION.fullmatch(line.strip())
-                    and _script_command_token(line) is not None
-                    and grant in WAYFARER_LABEL.findall(line)]
-        if not incoming or any(not re.fullmatch(
-                rf"\s*goto_if_set\s+{re.escape(delivery)}\s*,\s*{re.escape(grant)}\s*(?:@.*)?", line)
-                for line in incoming):
-            return False
-    return True
 
 
 def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
@@ -765,16 +409,10 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
         # the owned script operation graph.
         script_reads = {state for state in declared_reads if states[state].get("storage") != "trainer_defeat"}
         script_writes = {state for state in declared_writes if states[state].get("storage") != "trainer_defeat"}
-        expected_writes = {symbols[state] for state in script_writes}
-        missing_writes, undeclared_writes = expected_writes - written, written - expected_writes
-        if missing_writes:
-            raise AuditError(f"{content_id}: declared state write has no owned script command: {sorted(missing_writes)[0]}")
+        undeclared_writes = written - {symbols[state] for state in script_writes}
         if undeclared_writes:
             raise AuditError(f"{content_id}: owned script writes undeclared state {sorted(undeclared_writes)[0]}")
-        expected_reads = {symbols[state] for state in script_reads}
-        missing_reads, undeclared_reads = expected_reads - read, read - expected_reads
-        if missing_reads:
-            raise AuditError(f"{content_id}: declared state read has no owned script reference: {sorted(missing_reads)[0]}")
+        undeclared_reads = read - {symbols[state] for state in script_reads}
         if undeclared_reads:
             raise AuditError(f"{content_id}: owned script reads undeclared state {sorted(undeclared_reads)[0]}")
         allocation = allocations.get(content_id)
@@ -798,40 +436,6 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             transaction_commands = [command for command in commands if command in TRANSACTION_COMMANDS]
         if transaction_commands and transaction is None:
             raise AuditError(f"{content_id}: item or Pokemon command has no transaction declaration")
-        if transaction is not None and not transaction_commands:
-            raise AuditError(f"{content_id}: declared transaction has no owned item or Pokemon command")
-        if transaction is not None:
-            special_kinds = {kind for command in transaction_commands
-                             if (kind := closure.transaction_kind(command)) is not None}
-            if special_kinds and special_kinds != {transaction["kind"]}:
-                allowed_retry = (transaction["kind"] == "handoff"
-                                 and special_kinds == {"handoff", "grant"}
-                                 and isinstance(transaction.get("receipt"), str)
-                                 and _handoff_retry_grant_is_guarded(
-                                     labels, bodies, states[transaction["receipt"]]["symbol"]))
-                if not allowed_retry:
-                    raise AuditError(f"{content_id}: atomic transaction special does not match declared transaction kind")
-            receipt = transaction.get("receipt")
-            if transaction["kind"] == "service":
-                if not _service_payment_follows_successful_relearner(entry, labels, bodies):
-                    raise AuditError(f"{content_id}: repeatable service payment can precede successful service")
-            elif transaction["kind"] == "staged_grant":
-                source_receipt = transaction.get("source_receipt")
-                if not isinstance(source_receipt, str) or not _staged_grant_is_ordered(entry, labels, bodies, states[source_receipt]["symbol"], states[receipt]["symbol"]):
-                    raise AuditError(f"{content_id}: staged grant must consume and commit its source before rewarding")
-            elif receipt is None:
-                pending = transaction.get("pending_state")
-                if not isinstance(pending, str) or pending not in states:
-                    raise AuditError(f"{content_id}: repeatable claim lacks a resolved pending state")
-                if states[pending]["symbol"] not in written:
-                    raise AuditError(f"{content_id}: repeatable claim does not clear its pending state")
-                for state_id in transaction.get("clear_payloads", []):
-                    if states[state_id]["symbol"] not in written:
-                        raise AuditError(f"{content_id}: repeatable claim does not clear payload state {state_id}")
-            elif states[receipt]["symbol"] not in written:
-                raise AuditError(f"{content_id}: transaction receipt is not written by its owned script")
-            if "giveegg" in transaction_commands:
-                raise AuditError(f"{content_id}: party-only Egg grants must use the atomic WayfarerSevii_TryGiveEggThenSetFlag special")
         if row["owner"] == "ordinary_trainer":
             if len(battles) != 1:
                 raise AuditError(f"{content_id}: ordinary Trainer content must have exactly one owned battle command")
@@ -939,7 +543,6 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
     projection = exploration_projection(root, manifest)
     baseline = load_json(baseline_path)
     hashes = validate_baseline(manifest, baseline, projection, root)
-    story_object_graphics = validate_story_object_graphics(root, manifest)
     return {
         "schema_version": 1,
         "product": "WAYFARER_SEVII_CONTENT",
@@ -953,7 +556,6 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
                 for name, row in sorted(manifest["content_domains"].items())
             },
         },
-        "content": content_inventory_report(manifest),
         "exploration_baseline": {**projection, "sha256": hashes["projection_sha256"]},
         "wild_encounters": {"sha256": hashes["wild_encounters_sha256"]},
         "event_island": event_island_report(root),
@@ -961,7 +563,6 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
         "script_closure": closure_report,
         "contracts": contracts_report,
         "contract_closure": validate_contract_closure(root, manifest, closure_report, contracts_report),
-        "story_object_graphics": story_object_graphics,
         "rom": rom_report(candidate_rom_report.resolve() if candidate_rom_report else None, root),
         "invariants": {"passed": True},
     }

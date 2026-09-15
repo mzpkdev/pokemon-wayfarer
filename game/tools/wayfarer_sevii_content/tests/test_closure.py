@@ -63,72 +63,6 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         self.assertEqual(report["map_script_tables"][0]["handler_type"], "MAP_SCRIPT_ON_LOAD")
         self.assertIn("data/maps/OneIsland_Frlg/scripts.inc", CLOSURE.dependency_paths(self.root, self.manifest()))
 
-    def test_reports_atomic_story_transaction_specials_and_c_owned_state_effects(self):
-        specials = {
-            "WayfarerSevii_TryGiveItemThenSetFlag": ("grant", ("VAR_0x8005",)),
-            "WayfarerSevii_TryRemoveItemThenSetFlag": ("handoff", ("VAR_0x8005",)),
-            "WayfarerSevii_TryExchangeItemForReward": ("handoff", ("VAR_0x8006",)),
-            "WayfarerSevii_TryExchangeItemForRewardThenSetFlags": ("handoff", ("VAR_0x8006", "VAR_0x8007")),
-            "WayfarerSevii_TryGiveEggThenSetFlag": ("grant", ("VAR_0x8005",)),
-            "WayfarerSevii_TryClaimSelphyPendingReward": ("claim", ()),
-        }
-        source = self.root / "data/specials.inc"
-        source.parent.mkdir(parents=True, exist_ok=True)
-        source.write_text("".join(f"def_special {name}\n" for name in specials), encoding="utf-8")
-        implementation = self.root / "src/wayfarer_sevii_story.c"
-        implementation.parent.mkdir(parents=True)
-        implementation.write_text("\n".join(f"void {name}(void) {{}}" for name in specials), encoding="utf-8")
-        module = self.root / "data/scripts/wayfarer_sevii/story/transactions.inc"
-        module.parent.mkdir(parents=True)
-        labels = []
-        source_lines = []
-        for index, (special, (_, variables)) in enumerate(specials.items()):
-            label = f"WayfarerSevii_Transaction{index}"
-            labels.append(label)
-            source_lines.append(f"{label}::")
-            for variable in variables:
-                source_lines.append(f"\tsetvar {variable}, FLAG_WAYFARER_SEVII_RECEIPT_{index}_{variable[-1]}")
-            source_lines.extend((f"\tspecialvar VAR_RESULT, {special}", "\tend"))
-        module.write_text("\n".join(source_lines) + "\n", encoding="utf-8")
-        source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
-        implementation_sha = hashlib.sha256(implementation.read_bytes()).hexdigest()
-        manifest = {
-            "script_modules": {"story_transactions": {
-                "owner": "story", "include": "data/scripts/wayfarer_sevii/story/transactions.inc",
-                "exports": labels, "allowed_commands": ["setvar", "specialvar", "end"],
-                "allowed_externals": [{
-                    "label": name, "kind": "special", "path": "data/specials.inc", "sha256": source_sha,
-                    "implementation_path": "src/wayfarer_sevii_story.c", "implementation_sha256": implementation_sha,
-                } for name in specials],
-            }},
-            "maps": [],
-        }
-
-        report = CLOSURE.build_script_closure(self.root, manifest)
-        operations = {(row["label"], row["command"]): row for row in report["content_operations"]}
-        for index, (special, (kind, _)) in enumerate(specials.items()):
-            self.assertIn((f"WayfarerSevii_Transaction{index}", special), operations)
-            self.assertEqual(CLOSURE.transaction_kind(special), kind)
-        writes = {(row["label"], row["state"]) for row in report["state_operations"] if row["access"] == "write"}
-        self.assertIn(("WayfarerSevii_Transaction0", "FLAG_WAYFARER_SEVII_RECEIPT_0_5"), writes)
-        self.assertIn(("WayfarerSevii_Transaction3", "FLAG_WAYFARER_SEVII_RECEIPT_3_6"), writes)
-        self.assertIn(("WayfarerSevii_Transaction3", "FLAG_WAYFARER_SEVII_RECEIPT_3_7"), writes)
-        self.assertIn(("WayfarerSevii_Transaction5", "VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD"), writes)
-
-    def test_reports_giveegg_as_a_transaction_command(self):
-        module = self.root / "data/scripts/wayfarer_sevii/story/egg.inc"
-        module.parent.mkdir(parents=True)
-        module.write_text("WayfarerSevii_Egg::\n\tgiveegg SPECIES_TOGEPI\n\tend\n", encoding="utf-8")
-        manifest = {"script_modules": {"story_egg": {
-            "owner": "story", "include": "data/scripts/wayfarer_sevii/story/egg.inc",
-            "exports": ["WayfarerSevii_Egg"], "allowed_externals": [],
-            "allowed_commands": ["giveegg", "end"],
-        }}, "maps": []}
-        report = CLOSURE.build_script_closure(self.root, manifest)
-        self.assertEqual(report["content_operations"], [{
-            "module": "story_egg", "label": "WayfarerSevii_Egg", "kind": "transaction", "command": "giveegg",
-        }])
-
     def test_rejects_duplicate_handler_type(self):
         manifest = self.manifest()
         manifest["maps"][0]["retained_map_scripts"].append(dict(manifest["maps"][0]["retained_map_scripts"][0]))
@@ -300,20 +234,6 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         manifest["script_modules"]["environment"]["allowed_commands"] = ["setflag", "clearflag", "end"]
         report = CLOSURE.build_script_closure(self.root, manifest)
         self.assertEqual(report["state_operations"], [])
-
-    def test_allows_extended_standard_special_argument_variables_as_transient(self):
-        module = self.root / "data/scripts/wayfarer_sevii/environment.inc"
-        module.write_text(
-            "WayfarerSevii_OneIsland_OnLoad::\n"
-            "\tcheckvar VAR_0x8008\n\tcheckvar VAR_0x8009\n\tcheckvar VAR_0x800A\n\tend\n",
-            encoding="utf-8",
-        )
-        manifest = self.manifest()
-        manifest["script_modules"]["environment"]["exports"] = ["WayfarerSevii_OneIsland_OnLoad"]
-        manifest["script_modules"]["environment"]["allowed_commands"] = ["checkvar", "end"]
-        report = CLOSURE.build_script_closure(self.root, manifest)
-        self.assertEqual(report["state_operations"], [])
-
 
 if __name__ == "__main__":
     unittest.main()

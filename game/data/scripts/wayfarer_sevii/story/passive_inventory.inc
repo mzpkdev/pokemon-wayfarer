@@ -1,6 +1,5 @@
-@ Wayfarer-owned wrappers for every dependency-free source flavor actor named
-@ by docs/sevii-story-implementation/passive-actor-inventory.json.  These use
-@ source text symbols but never link a source FRLG script graph.
+@ Wayfarer-owned wrappers for source flavor actors selected in the schema-v2
+@ manifest. These use source text symbols but never link a source FRLG script graph.
 
 WayfarerSevii_Story_PassiveInventory_OneIslandKindleRoadEmberSpa_2::
 	msgbox OneIsland_KindleRoad_EmberSpa_Text_BrunoVisitsSpaOnOccasion, MSGBOX_NPC

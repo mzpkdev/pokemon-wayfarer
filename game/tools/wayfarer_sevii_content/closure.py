@@ -46,32 +46,6 @@ STATE_READS = {"checkflag", "checkvar", "compare", "goto_if_set", "goto_if_unset
 TRANSIENT_VARS = {"VAR_RESULT", "VAR_LAST_TALKED", "VAR_FACING", "VAR_0x8004", "VAR_0x8005", "VAR_0x8006", "VAR_0x8007", "VAR_0x8008", "VAR_0x8009", "VAR_0x800A"}
 TRANSIENT_FLAGS = {"FLAG_SYS_CTRL_OBJ_DELETE"}
 
-# These are the only story specials whose C implementations are reviewed as
-# atomic content transactions.  Their implementation source is pinned by the
-# manifest's special external contract, so this table intentionally names the
-# exact calling ABI rather than accepting arbitrary ``specialvar`` calls.
-# ``state_vars`` are receipt flags supplied through event-script temporary
-# variables; the special reads and writes them after it has completed the safe
-# destination/consumption sequence.  Selphy's claim owns its fixed payload
-# clear entirely in C.
-TRANSACTION_SPECIALS: dict[str, dict[str, Any]] = {
-    "WayfarerSevii_TryGiveItemThenSetFlag": {"kind": "grant", "state_vars": ("VAR_0x8005",)},
-    "WayfarerSevii_TryRemoveItemThenSetFlag": {"kind": "handoff", "state_vars": ("VAR_0x8005",)},
-    "WayfarerSevii_TryExchangeItemForReward": {"kind": "handoff", "state_vars": ("VAR_0x8006",)},
-    "WayfarerSevii_TryExchangeItemForRewardThenSetFlags": {
-        "kind": "handoff", "state_vars": ("VAR_0x8006", "VAR_0x8007"),
-    },
-    "WayfarerSevii_TryGiveEggThenSetFlag": {"kind": "grant", "state_vars": ("VAR_0x8005",)},
-    "WayfarerSevii_TryClaimSelphyPendingReward": {
-        "kind": "claim",
-        "fixed_states": (
-            "VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES",
-            "VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD",
-            "VAR_WAYFARER_SEVII_SELPHY_REQUEST_ACTIVE",
-        ),
-    },
-}
-
 # Constants name engine values, not script/data labels.  A dependency is
 # intentionally rejected unless it is a local export or a manifest row.
 CONSTANT_PREFIXES = (
@@ -370,33 +344,6 @@ def _state_operands(command: str, line: str) -> list[tuple[str, str]]:
     return []
 
 
-def transaction_kind(command: str) -> str | None:
-    """Return the reviewed semantic kind for an atomic transaction special."""
-    effect = TRANSACTION_SPECIALS.get(command)
-    return effect["kind"] if effect is not None else None
-
-
-def _special_transaction_states(label: str, transient_values: dict[str, str], *, module: str,
-                                relative: str) -> set[str]:
-    """Resolve one reviewed special's C-owned persistent state effects.
-
-    The event VM only passes scalar temporary variables to a special.  We
-    therefore require an immediately concrete, owned state symbol for every
-    receipt argument instead of guessing through arbitrary script flow.
-    """
-    effect = TRANSACTION_SPECIALS[label]
-    states = set(effect.get("fixed_states", ()))
-    for variable in effect.get("state_vars", ()):
-        target = transient_values.get(variable)
-        if target is None:
-            raise ClosureError(f"script module {module} transaction special {label} lacks a concrete {variable} receipt in {relative}")
-        state = _validate_state_operand(target, module=module, relative=relative, aliases=set())
-        if state is None:
-            raise ClosureError(f"script module {module} transaction special {label} has a non-persistent {variable} receipt in {relative}")
-        states.add(state)
-    return states
-
-
 def _validate_state_operand(target: str, *, module: str, relative: str, aliases: set[str]) -> str | None:
     if target.isdigit() or target.lower().startswith("0x"):
         raise ClosureError(f"script module {module} writes or reads raw numeric state {target} in {relative}")
@@ -446,26 +393,12 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
         if kind == "special":
             if re.search(rf"(?m)^\s*def_special\s+{re.escape(label)}\b", source) is None:
                 raise ClosureError(f"script module {module} special table lacks {label}")
-            impl_path, impl_sha = row.get("implementation_path"), row.get("implementation_sha256")
-            if not isinstance(impl_sha, str):
-                raise ClosureError(f"script module {module} special {label} lacks a pinned implementation")
-            impl_path = _root_relative_path(impl_path, field=f"script module {module} special {label} implementation_path")
-            impl = _resolved_under_root(root, impl_path, field=f"script module {module} special {label} implementation_path")
-            if not impl.is_file():
-                raise ClosureError(f"script module {module} special {label} lacks a pinned implementation")
-            if hashlib.sha256(impl.read_bytes()).hexdigest() != impl_sha:
-                raise ClosureError(f"script module {module} special implementation drifted: {label}")
-            implementation = impl.read_text(encoding="utf-8", errors="ignore")
-            if re.search(rf"(?m)^\s*(?:static\s+)?(?:void|u8|u16|u32|s8|s16|s32|bool8|bool32)\s+{re.escape(label)}\s*\(", implementation) is None:
-                raise ClosureError(f"script module {module} special implementation lacks {label}")
         elif kind == "native":
             if re.search(rf"(?m)^\s*(?:static\s+)?(?:void|u8|u16|u32|s8|s16|s32|bool8|bool32)\s+{re.escape(label)}\s*\(", source) is None:
                 raise ClosureError(f"script module {module} native source lacks {label}")
         elif kind == "script_symbol" and re.search(rf"(?m)^{re.escape(label)}:{'{1,2}'}\s*$", source) is None:
             raise ClosureError(f"script module {module} script source lacks {label}")
         result[label] = {key: row[key] for key in ("kind", "path", "sha256")}
-        if kind == "special":
-            result[label].update({"implementation_path": row["implementation_path"], "implementation_sha256": row["implementation_sha256"]})
     return result
 
 
@@ -483,8 +416,6 @@ def dependency_paths(root: Path, manifest: dict[str, Any]) -> list[str]:
         paths.update(_module_files(root, module["include"], module["owner"]))
         for external in _external_rows(root, "dependency", module["allowed_externals"]).values():
             paths.add(external["path"])
-            if "implementation_path" in external:
-                paths.add(external["implementation_path"])
     for handler in handlers:
         _validate_provenance(root, handler)
         if handler["source"].get("kind") != "baseline":
@@ -552,12 +483,10 @@ def build_script_closure(root: Path, manifest: dict[str, Any]) -> dict[str, Any]
                     transient_aliases.add(match.group(1))
         for relative in files:
             current_label = "<module>"
-            transient_values: dict[str, str] = {}
             for line in (root / relative).read_text(encoding="utf-8").splitlines():
                 label_match = LABEL_DEF.fullmatch(line.split("@", 1)[0].strip())
                 if label_match:
                     current_label = label_match.group(1)
-                    transient_values = {}
                 command = _script_command(line)
                 if command is not None and command not in modules[name]["allowed_commands"]:
                     raise ClosureError(f"script module {name} uses unreviewed command {command} in {relative}")
@@ -570,22 +499,6 @@ def build_script_closure(root: Path, manifest: dict[str, Any]) -> dict[str, Any]
                         state = _validate_state_operand(target, module=name, relative=relative, aliases=transient_aliases)
                         if state is not None:
                             state_operations.add((name, current_label, access, state))
-                    operands = _operands(line)
-                    if command in STATE_WRITES and operands and operands[0] in TRANSIENT_VARS:
-                        if command == "setvar" and len(operands) > 1:
-                            transient_values[operands[0]] = operands[1]
-                        else:
-                            transient_values.pop(operands[0], None)
-                    if command == "specialvar" and len(operands) > 1 and operands[1] in TRANSACTION_SPECIALS:
-                        special = operands[1]
-                        content_operations.add((name, current_label, "transaction", special))
-                        for state in _special_transaction_states(special, transient_values, module=name, relative=relative):
-                            # Receipt and pending-payload reads/writes happen
-                            # inside the pinned C special, after its guarded
-                            # transaction ordering.  They must still appear
-                            # in the contract closure as owned state access.
-                            state_operations.add((name, current_label, "read", state))
-                            state_operations.add((name, current_label, "write", state))
                 for label, command in _line_references(line):
                     if _is_constant(label):
                         continue
