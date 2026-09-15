@@ -36,9 +36,9 @@ Wayfarer configuration must fail if the feature is specified as enabled while
 the switch removes required data.
 
 Do not select e-Reader read/write code, external Trainer Tower blocks, Mystery
-Gift download paths, or record mixing. Build a frozen Wayfarer local header from
-the repository's built-in source sets and validate its checksum during host
-generation.
+Gift download paths, or record mixing. Use the repository's built-in source
+sets directly; the shared content audit verifies that those local sources are
+present and no external loader path is active.
 
 ## Content overlay
 
@@ -162,8 +162,7 @@ PP, and status.
 Facility loss does not deduct money, trigger an ordinary blackout warp, set an
 ordinary Trainer flag, advance story, or authorize trainer-only wild mode.
 Challenge-specific fainting and Nuzlocke hooks must use the repository's existing
-facility exclusion. Audit every challenge option that can intercept fainting,
-held items, Bag access, experience, or party restoration.
+facility exclusion. Focused mechanics tests cover these facility boundaries.
 
 ## Timer and records
 
@@ -198,42 +197,28 @@ Only one pending prize may exist, so a player cannot start another run until it
 is claimed. A later successful run may award its source prize again. Never save
 a party snapshot, active run, format, or final time merely to preserve a prize.
 
-## Generated audit
+## Content audit
 
-The Trainer Tower section of `wayfarer-sevii-content-audit` reports:
-
-- hashes for the local header, every built-in floor, opponent, speech tuple,
-  party, layout, and prize;
-- all four formats, eight floor initializers, actor arrangements, triggers, and
-  owner transitions;
-- dependency closure and every changed compilation guard;
-- opponent construction at every legal party maximum level;
-- facility exclusions for EXP, money, ordinary scaling, Trainer flags,
-  story outcomes, and challenge fainting hooks;
-- persistent field sizes and transient allocation bounds; and
-- all timer, record, loss, abandonment, snapshot, and prize transitions.
-
-Fail on external-data dependence, source drift, an invalid opponent field,
-missing format/floor coverage, non-facility battle type, ordinary scaling,
-experience or money reward, incomplete restoration, or an unreceivable prize.
+`wayfarer-sevii-content-audit` retains the shared manifest, script closure, and
+transaction checks. Its compact Trainer Tower check requires the local runtime
+and built-in set sources, resolves their project-local includes, and rejects an
+active external or e-Reader loader path. Compilation and focused mechanics tests
+cover C initializer validity and runtime behavior; the audit does not duplicate
+the compiler with a custom C parser or freeze per-opponent hashes.
 
 ## Validation
 
-Add unit and mechanics tests for all dispatcher functions, format/floor layout
-selection, opponent indices, level normalization, speech, records, timer bounds,
-party snapshots, battle outcomes, and every prize pocket.
+Keep focused unit and mechanics coverage for format/floor selection, level
+normalization, records and timer bounds, party restoration, battle outcomes,
+and pending-prize delivery. Prefer representative boundary cases over a full
+cross-product of formats, floors, levels, and item pockets.
 
-Add emulator journeys for:
-
-- all four complete eight-floor formats;
-- every loss floor and every Knockout opponent position;
-- Double/Mixed eligibility with zero, one, and two usable Pokémon;
-- elevator cancel and confirmed abandonment from multiple floors;
-- first, faster, equal, and slower records, followed by save/reload;
-- full prize pocket, retry, reset after stopped timing, and successful claim;
-- party/held-item restoration with Bag item consumption; and
-- unchanged Sevii travel, story, ordinary Trainers, wild encounters, Birth
-  Island, Navel Rock, and standalone products.
+Keep one stable emulator journey that drives challenge start and confirmed
+abandonment through ordinary lobby input. Focused mechanics tests cover party
+restoration, completion gating, records, and pending-prize delivery. Shared
+Sevii journeys cover travel and unrelated content; do not duplicate their
+catalog coverage or add test-only runtime commands when player input can
+exercise the behavior.
 
 Run serial builds because map versions share generated files. The final
 production-equivalent Wayfarer release must pass the active ROM reserve.

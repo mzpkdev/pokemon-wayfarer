@@ -283,6 +283,31 @@ def event_island_report(root: Path) -> dict[str, Any]:
     return {"sha256": file_digest(baseline), "report": report}
 
 
+def trainer_tower_report(root: Path) -> dict[str, Any]:
+    """Ensure the built-in course is local and does not select download paths."""
+    paths = (root / "src/trainer_tower.c", root / "src/trainer_tower_sets.c")
+    sources = []
+    for path in paths:
+        try:
+            source = path.read_text(encoding="utf-8")
+        except OSError as error:
+            raise AuditError(f"missing Trainer Tower source: {relative(path, root)}") from error
+        for include in re.findall(r'^#include\s+"([^"]+)"', source, re.M):
+            if not (root / "include" / include).is_file():
+                raise AuditError(f"Trainer Tower source has unresolved local include: {include}")
+        sources.append(source)
+
+    active_runtime = re.sub(r"/\*.*?\*/|//[^\n]*", "", sources[0], flags=re.S)
+    forbidden = ("CEReaderTool_", "ReadTrainerTowerAndValidate", "gReceivedTrainerTower")
+    if any(token in active_runtime for token in forbidden):
+        raise AuditError("Trainer Tower selects an external or e-Reader payload path")
+    local_bindings = ("&gTrainerTowerLocalHeader", "floors_p = gTrainerTowerFloors[challengeType]")
+    if not all(binding in active_runtime for binding in local_bindings):
+        raise AuditError("Trainer Tower runtime does not select the built-in source table")
+    local_symbols = ("gTrainerTowerLocalHeader", "gTrainerTowerFloors")
+    if not all(symbol in sources[1] for symbol in local_symbols):
+        raise AuditError("Trainer Tower built-in source table is incomplete")
+    return {"source_files": [relative(path, root) for path in paths], "external_payload": False}
 def _script_label_bodies(root: Path, closure_report: dict[str, Any]) -> dict[str, str]:
     """Read label bodies from the closure-validated owned include set."""
     bodies: dict[str, str] = {}
@@ -368,6 +393,13 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
     reports = []
     for row in (row for row in selected_records(manifest) if row.get("owner") != "exploration"):
         content_id, entry = row["content_id"], row.get("wayfarer_script")
+        source_event = row.get("source")
+        if (isinstance(source_event, dict) and "script" in source_event
+                and str(source_event["script"]) in SOURCELESS_SCRIPTS):
+            reports.append({"content_id": content_id, "entry": None, "inert_source_slot": True,
+                            "state_reads": [], "state_writes": [], "battle": None,
+                            "transaction": None, "trainer_allocation": None})
+            continue
         if not isinstance(entry, str) or not entry.startswith("WayfarerSevii_"):
             raise AuditError(f"{content_id}: non-exploration content lacks a Wayfarer-owned script entry")
         labels = _reachable_script_labels(entry, bodies)
@@ -607,6 +639,7 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
         "exploration_baseline": {**projection, "sha256": hashes["projection_sha256"]},
         "wild_encounters": {"sha256": hashes["wild_encounters_sha256"]},
         "event_island": event_island_report(root),
+        "trainer_tower": trainer_tower_report(root),
         "standalone_projection": standalone_projection_report(root),
         "script_closure": closure_report,
         "contracts": contracts_report,

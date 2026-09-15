@@ -10,6 +10,7 @@
 #include "hall_of_fame.h"
 #include "pokemon_storage_system.h"
 #include "trainer_hill.h"
+#include "trainer_tower.h"
 #include "link.h"
 #include "constants/game_stat.h"
 #include "constants/rematches.h"
@@ -969,6 +970,9 @@ u8 LoadGameSave(u8 saveType)
     }
 
 #if IS_WAYFARER
+    if (saveType != SAVE_HALL_OF_FAME)
+        WayfarerTrainerTowerResetTransientState();
+
     // Prerelease layouts have no compatibility baseline. Reject before any
     // migration or regional repair can mutate the loaded story state.
     if (saveType != SAVE_HALL_OF_FAME && (status == SAVE_STATUS_OK || status == SAVE_STATUS_ERROR))

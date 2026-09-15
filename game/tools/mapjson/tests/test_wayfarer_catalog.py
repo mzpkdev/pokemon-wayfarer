@@ -499,6 +499,74 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("is a Trainer and cannot be retained", result.stderr)
 
+    def test_wayfarer_sevii_accepts_tower_transient_event_state_only(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        map_dir = root / "data/maps/TrainerTower_1F_Frlg"
+        map_dir.mkdir()
+        tower_actor = {
+            "type": "object", "graphics_id": "OBJ_EVENT_GFX_TRAINER_TOWER_DUDE",
+            "x": 1, "y": 1, "elevation": 0, "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+            "movement_range_x": 0, "movement_range_y": 0, "trainer_type": "TRAINER_TYPE_NONE",
+            "trainer_sight_or_berry_tree_id": "0", "script": "TowerActor", "flag": "FLAG_TEMP_6",
+        }
+        source = {
+            "id": "MAP_TOWER", "name": "TrainerTower_1F_Frlg", "game_version": "frlg",
+            "layout": "LAYOUT_TOWER", "music": "MUS_NONE", "region_map_section": "MAPSEC_NONE",
+            "requires_flash": False, "weather": "WEATHER_NONE", "map_type": "MAP_TYPE_INDOOR",
+            "allow_cycling": False, "allow_escaping": False, "allow_running": True,
+            "show_map_name": False, "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+            "object_events": [tower_actor], "warp_events": [], "coord_events": [], "bg_events": [],
+            "connections": [],
+        }
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps(source))
+        (root / "data/layouts/tower.border.bin").touch()
+        (root / "data/layouts/tower.map.bin").touch()
+        layout_file = root / "data/layouts/layouts.json"
+        layout_file.write_text(json.dumps({"layouts": [{
+            "id": "LAYOUT_TOWER", "name": "gMapLayout_Tower", "game_version": "frlg",
+            "layout_version": "frlg", "width": 1, "height": 1,
+            "border_filepath": "data/layouts/tower.border.bin",
+            "blockdata_filepath": "data/layouts/tower.map.bin",
+            "primary_tileset": "gTileset_General", "secondary_tileset": "gTileset_Petalburg",
+            "border_width": 2, "border_height": 2,
+        }]}))
+        (root / "include/constants/map_groups.h").write_text(
+            "enum { MAP_TOWER = (0 | (0 << 8)), };\n"
+        )
+        content_id = "trainer-tower.test.actor"
+        row = {
+            "index": 0, "source": tower_actor, "owner": "trainer_tower", "content_id": content_id,
+            "reason": "Fixture preserves a transient Tower actor.",
+            "wayfarer_script": "WayfarerSevii_TowerActor",
+        }
+        manifest = self.write_sevii_manifest(root, [{
+            "source_map": "TrainerTower_1F_Frlg", "map_id": "MAP_TOWER", "layout": "LAYOUT_TOWER",
+            "enabled": True, "retained_events": {"object_events": [row]},
+        }], release_link_enabled=True)
+        manifest_data = json.loads(manifest.read_text())
+        manifest_data["content_domains"]["exploration"]["inventory"] = []
+        manifest_data["content_domains"]["trainer_tower"] = {
+            "owner": "trainer_tower", "enabled": True, "inventory": [content_id],
+        }
+        manifest.write_text(json.dumps(manifest_data))
+
+        result = self.run_map(root, "wayfarer", map_file, layout_file, manifest)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+        manifest_data["content_domains"]["trainer_tower"] = {
+            "owner": "trainer_tower", "enabled": False, "inventory": [],
+        }
+        manifest_data["content_domains"]["story"] = {
+            "owner": "story", "enabled": True, "inventory": [content_id],
+        }
+        manifest_data["maps"][0]["retained_events"]["object_events"][0]["owner"] = "story"
+        manifest.write_text(json.dumps(manifest_data))
+        result = self.run_map(root, "wayfarer", map_file, layout_file, manifest)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("retains raw FRLG persistent state", result.stderr)
+
     def test_wayfarer_sevii_manifest_rejects_event_island_sources(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)

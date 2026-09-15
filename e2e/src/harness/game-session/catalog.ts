@@ -303,7 +303,7 @@ export const seviiImportedMaps = [
   { map: "sevii-trainer-tower-7-f", x: 15, y: 6 },
   { map: "sevii-trainer-tower-8-f", x: 15, y: 6 },
   { map: "sevii-trainer-tower-roof", x: 13, y: 5 },
-  { map: "sevii-trainer-tower-lobby", x: 9, y: 2 },
+  { map: "sevii-trainer-tower-lobby", x: 8, y: 13 },
   { map: "sevii-trainer-tower-elevator", x: 2, y: 5 },
   { map: "sevii-five-island-lost-cave-entrance", x: 5, y: 8 },
   { map: "sevii-five-island-lost-cave-room1", x: 8, y: 2 },

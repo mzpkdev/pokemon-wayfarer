@@ -336,6 +336,8 @@ def _operands(line: str) -> list[str]:
 
 def _state_operands(command: str, line: str) -> list[tuple[str, str]]:
     operands = _operands(line)
+    if command == "giveitem" and operands and operands[0].startswith("VAR_"):
+        return [("read", operands[0])]
     if command in STATE_WRITES | STATE_READS:
         result = [("write" if command in STATE_WRITES else "read", operands[0])] if operands else []
         if command in {"copyvar", "setorcopyvar"} and len(operands) > 1:
@@ -388,7 +390,7 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
         source = path.read_text(encoding="utf-8", errors="ignore")
         label = row["label"]
         kind = row["kind"]
-        if kind not in {"special", "native", "script_symbol"}:
+        if kind not in {"special", "native", "script_symbol", "script_data"}:
             raise ClosureError(f"script module {module} external {label} has unsupported kind {kind}")
         if kind == "special":
             if re.search(rf"(?m)^\s*def_special\s+{re.escape(label)}\b", source) is None:
@@ -398,6 +400,13 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
                 raise ClosureError(f"script module {module} native source lacks {label}")
         elif kind == "script_symbol" and re.search(rf"(?m)^{re.escape(label)}:{'{1,2}'}\s*$", source) is None:
             raise ClosureError(f"script module {module} script source lacks {label}")
+        elif kind == "script_data" and re.search(
+            rf"(?m)^\s*(?:EWRAM_DATA\s+|IWRAM_DATA\s+|IWRAM_INIT\s+)?"
+            rf"(?:const\s+)?(?:u8|u16|u32|s8|s16|s32|bool8|bool32)\s+"
+            rf"{re.escape(label)}(?:\s*\[[^;=]*\])?\s*(?:=|;)",
+            source,
+        ) is None:
+            raise ClosureError(f"script module {module} script data source lacks {label}")
         result[label] = {key: row[key] for key in ("kind", "path", "sha256")}
     return result
 

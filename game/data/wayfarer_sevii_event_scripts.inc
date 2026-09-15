@@ -10,6 +10,7 @@
 	.include "data/scripts/wayfarer_sevii/story/local_adventures.inc"
 	.include "data/scripts/wayfarer_sevii/story/local_services.inc"
 	.include "data/scripts/wayfarer_sevii/story/passive_inventory.inc"
+	.include "data/scripts/wayfarer_sevii/trainer_tower/trainer_tower.inc"
 	.include "data/scripts/wayfarer_sevii/trainers/ordinary.inc"
 
 @ Pinned FRLG source text data used by selected handlers.
@@ -1002,36 +1003,69 @@ SixIsland_AlteringCave_Frlg_MapScripts::
 	.byte 0
 
 TrainerTower_1F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_2F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_3F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_4F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_5F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_6F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_7F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_8F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Floor_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_Roof_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 TrainerTower_Lobby_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Lobby_OnResume
+	map_script MAP_SCRIPT_ON_RETURN_TO_FIELD, WayfarerSevii_TrainerTower_Lobby_OnReturnToField
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TrainerTower_Lobby_OnTransition
+	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_TrainerTower_Lobby_OnLoad
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Lobby_OnFrame
 	.byte 0
 
 TrainerTower_Elevator_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_TrainerTower_Floor_OnResume
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_TrainerTower_Floor_OnFrame
 	.byte 0
 
 FiveIsland_LostCave_Entrance_Frlg_MapScripts::

@@ -88,8 +88,12 @@ def selected_module_names(manifest: dict) -> set[str]:
                 domain = schema.OWNER_DOMAINS.get(owner)
                 if domain is None or not manifest["content_domains"][domain]["enabled"]:
                     continue
+                source = event.get("source", {})
+                source_script = source.get("script") if isinstance(source, dict) else None
                 entrypoint = event.get("wayfarer_script")
                 if not isinstance(entrypoint, str):
+                    if source_script in (None, "", "0", "0x0", "NULL"):
+                        continue
                     raise GenerationError(f"{record['source_map']} {event_kind} has no Wayfarer entrypoint")
                 module = module_for_export(manifest, entrypoint, owner)
                 if module is not None:

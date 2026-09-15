@@ -30,11 +30,28 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
         self.assertGreater(report["schema"]["domains"]["story"]["inventory_count"], 0)
         self.assertEqual(report["contracts"]["trainer_ids"]["allocation_count"], 136)
         self.assertTrue(any(entry["owner"] == "story" for entry in report["contract_closure"]["entries"]))
-        self.assertFalse(report["schema"]["domains"]["trainer_tower"]["enabled"])
-        self.assertEqual(report["schema"]["domains"]["trainer_tower"]["inventory_count"], 0)
+        self.assertTrue(report["schema"]["domains"]["trainer_tower"]["enabled"])
+        self.assertEqual(report["schema"]["domains"]["trainer_tower"]["inventory_count"], 106)
+        self.assertEqual(report["trainer_tower"], {
+            "source_files": ["src/trainer_tower.c", "src/trainer_tower_sets.c"],
+            "external_payload": False,
+        })
         self.assertFalse(report["rom"]["measured"])
         self.assertGreater(len(report["contracts"]["states"]), 81)
         self.assertGreater(len(report["contracts"]["transactions"]), 0)
+        self.assertIn(
+            ("SEVII_TRAINER_TOWER_PENDING_PRIZE", 3, "transactional"),
+            [(row["id"], row["slot"], row["lifecycle"]) for row in report["contracts"]["states"]],
+        )
+
+    def test_tower_report_rejects_an_active_external_loader(self):
+        with mock.patch.object(Path, "read_text", side_effect=[
+            "CEReaderTool_LoadTrainerTower(); &gTrainerTowerLocalHeader; "
+            "floors_p = gTrainerTowerFloors[challengeType]",
+            "gTrainerTowerLocalHeader gTrainerTowerFloors",
+        ]):
+            with self.assertRaisesRegex(AUDIT.AuditError, "external or e-Reader"):
+                AUDIT.trainer_tower_report(GAME)
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):
         manifest = self.manifest()

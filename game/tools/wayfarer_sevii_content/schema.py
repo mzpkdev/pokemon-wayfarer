@@ -249,8 +249,14 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
     for field in ("flag", "var"):
         if field in overrides:
             value = _require_string(overrides[field], f"{context}[{index}].overrides.{field}")
+            is_tower_transient_override = (
+                owner == "trainer_tower"
+                and ((field == "flag" and value.startswith("FLAG_TEMP_"))
+                     or (field == "var" and value.startswith("VAR_TEMP_")))
+            )
             always_visible_object = field == "flag" and event_kind == "object_events" and value == "0"
-            if not always_visible_object and WAYFARER_OVERRIDE.fullmatch(value) is None:
+            if (not always_visible_object and not is_tower_transient_override
+                    and WAYFARER_OVERRIDE.fullmatch(value) is None):
                 _fail(f"{context}[{index}].overrides.{field}", "must use the Wayfarer Sevii namespace")
     if "flag" in overrides and event_kind == "bg_events" and source.get("type") != "hidden_item":
         _fail(f"{context}[{index}].overrides.flag", "is only valid for a hidden item")
@@ -260,7 +266,19 @@ def _validate_event_row(root: Path, map_record: dict, event_kind: str, row: obje
     if owner != "exploration":
         persistent_field = "var" if event_kind == "coord_events" else "flag"
         effective = overrides.get(persistent_field, source.get(persistent_field, "0"))
-        if effective not in (None, "", "0", 0) and (
+        is_tower_transient_flag = (
+            owner == "trainer_tower"
+            and event_kind == "object_events"
+            and isinstance(effective, str)
+            and effective.startswith("FLAG_TEMP_")
+        )
+        is_tower_transient_var = (
+            owner == "trainer_tower"
+            and event_kind == "coord_events"
+            and isinstance(effective, str)
+            and effective.startswith("VAR_TEMP_")
+        )
+        if effective not in (None, "", "0", 0) and not is_tower_transient_flag and not is_tower_transient_var and (
             not isinstance(effective, str) or WAYFARER_OVERRIDE.fullmatch(effective) is None
         ):
             _fail(f"{context}[{index}].{persistent_field}", "retains raw FRLG persistent state")

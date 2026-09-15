@@ -151,6 +151,34 @@ class WayfarerSeviiContentSchemaTests(unittest.TestCase):
         with self.assertRaisesRegex(SCHEMA.SchemaError, "raw FRLG persistent state"):
             SCHEMA.validate_manifest(self.root, manifest)
 
+    def test_accepts_tower_transient_source_visibility_without_persistent_override(self):
+        manifest = self.manifest()
+        self.source["object_events"][0]["flag"] = "FLAG_TEMP_2"
+        (self.root / "data/maps/OneIsland_Frlg/map.json").write_text(json.dumps(self.source))
+        row = manifest["maps"][0]["retained_events"]["object_events"][0]
+        row.update({"source": self.source["object_events"][0], "owner": "trainer_tower",
+                    "content_id": "trainer_tower.floor_actor"})
+        manifest["content_domains"]["exploration"]["inventory"] = []
+        manifest["content_domains"]["trainer_tower"]["inventory"] = ["trainer_tower.floor_actor"]
+        validated = SCHEMA.validate_manifest(self.root, manifest)
+        self.assertEqual(validated["maps"][0]["retained_events"]["object_events"][0]["source"]["flag"], "FLAG_TEMP_2")
+
+    def test_accepts_tower_transient_coord_source_and_override(self):
+        manifest = self.manifest()
+        row = {
+            "index": 0, "source": self.source["coord_events"][0],
+            "wayfarer_script": "WayfarerSevii_TowerTrigger", "owner": "trainer_tower",
+            "content_id": "trainer_tower.floor_trigger", "reason": "Run-local floor trigger.",
+        }
+        manifest["maps"][0]["retained_events"]["object_events"] = []
+        manifest["maps"][0]["retained_events"]["coord_events"] = [row]
+        manifest["content_domains"]["exploration"]["inventory"] = []
+        manifest["content_domains"]["trainer_tower"]["inventory"] = [row["content_id"]]
+        manifest["exclusions"] = []
+        SCHEMA.validate_manifest(self.root, manifest)
+        row["overrides"] = {"var": "VAR_TEMP_1"}
+        SCHEMA.validate_manifest(self.root, manifest)
+
     def test_allows_only_literal_zero_object_visibility_override(self):
         manifest = self.manifest()
         self.source["object_events"][0]["flag"] = "FLAG_HIDE_FRLG_ACTOR"
