@@ -1,6 +1,6 @@
 # Sevii story implementation coordination
 
-Status: story implementation complete through reduction commit `874d590047`; base saved-state ABI published by commit `0357e4a423`; Trainer rematch extension published separately by commit `7664a169ad`; foundation base `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
+Status: story implementation complete through reduction follow-up `50b510a95a`; base saved-state ABI published by commit `0357e4a423`; Trainer rematch extension published separately by commit `7664a169ad`; foundation base `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
 
 ## Saved bank and version
 
@@ -145,6 +145,9 @@ These results cover the isolated story branch only. The parent integration remai
 Commit `874d590047` removes 1,669 lines while adding 95 lines of simplified
 requirements/documentation. Gameplay, saved-state layouts, allocations, map
 selection, script providers, and generated runtime output are unchanged.
+Focused critic follow-up `50b510a95a` removes the stale assertion that treated
+`src/seagallop.c` as a script-generation input; `data/specials.inc` remains the
+precise generator dependency and the complete Sevii port audit passes.
 
 Concrete removals:
 
@@ -161,6 +164,7 @@ host instead of 13.8 seconds immediately before the duplicate Trainer compiler
 pass was removed. Stable post-reduction validation passed:
 
 - `make -C game wayfarer-sevii-content-audit` (44 tests plus report generation);
+- `make -C game wayfarer-sevii-port-audit` (11 catalog, 15 script, and 15 port tests);
 - checked-in Sevii script generation with `generate.py --check`; and
 - 3 focused story plus 6 exploration emulator journeys against the existing
   fresh E2E ROM.
