@@ -21,6 +21,7 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "constants/trainer_tower.h"
+#include "constants/vars.h"
 
 #if IS_WAYFARER && FREE_TRAINER_TOWER
 #error "Wayfarer Trainer Tower content requires FREE_TRAINER_TOWER == FALSE"
@@ -127,9 +128,13 @@ static void TrainerTowerCheckEligibility(void);
 static void TrainerTowerAbandonChallenge(void);
 static void TrainerTowerCheckPendingPrize(void);
 static void TrainerTowerClaimPendingPrize(void);
+static void TrainerTowerCheckActive(void);
 static void TrainerTowerRestoreAndCloseRun(void);
 static u8 GetTrainerTowerChallengeType(void);
 static void HealTrainerTowerParty(void);
+#if IS_WAYFARER
+static void SyncTrainerTowerPendingPrize(const struct WayfarerSeviiTrainerTowerRecords *records);
+#endif
 
 const u8 gText_XMinYZSec[] = _("{STR_VAR_1}MIN. {STR_VAR_2}.{STR_VAR_3}SEC.");
 static const u8 sTextNoRecord[] = _("--:--.--");
@@ -306,6 +311,7 @@ static void (*const sTrainerTowerFunctions[])(void) = {
     [TRAINER_TOWER_FUNC_ABANDON_CHALLENGE]      = TrainerTowerAbandonChallenge,
     [TRAINER_TOWER_FUNC_CHECK_PENDING_PRIZE]    = TrainerTowerCheckPendingPrize,
     [TRAINER_TOWER_FUNC_CLAIM_PENDING_PRIZE]    = TrainerTowerClaimPendingPrize,
+    [TRAINER_TOWER_FUNC_CHECK_ACTIVE]           = TrainerTowerCheckActive,
 };
 
 // - 1 excludes Mixed challenge, which just uses one of the 3 other types
@@ -408,6 +414,7 @@ bool8 WayfarerTrainerTowerIsSaveAllowed(void)
     return !WayfarerTrainerTowerIsChallengeActive();
 }
 
+#if IS_WAYFARER
 u8 WayfarerTrainerTowerGetUsablePartyCount(void)
 {
     u8 count = 0;
@@ -472,6 +479,26 @@ bool8 WayfarerTrainerTowerRecordTime(struct WayfarerSeviiTrainerTowerRecords *re
     }
     return FALSE;
 }
+#endif
+
+void WayfarerTrainerTowerFormatTime(u32 time, u16 *minutes, u8 *seconds, u8 *centiseconds)
+{
+    if (time > TRAINER_TOWER_MAX_TIME)
+        time = TRAINER_TOWER_MAX_TIME;
+    *minutes = time / (60 * 60);
+    time %= 60 * 60;
+    *seconds = time / 60;
+    *centiseconds = (time % 60) * 168 / 100;
+}
+
+// The authoritative persistent payload exists only in Wayfarer SaveBlock3.
+#if IS_WAYFARER
+static void SyncTrainerTowerPendingPrize(const struct WayfarerSeviiTrainerTowerRecords *records)
+{
+    VarSet(VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE,
+           records == NULL ? ITEM_NONE : records->pendingPrize);
+}
+#endif
 
 static void HealTrainerTowerParty(void)
 {
@@ -952,6 +979,7 @@ static void GiveChallengePrize(void)
     gSpecialVar_Result = 2;
     if (!sWayfarerTrainerTowerRun.active || records == NULL || itemId == ITEM_NONE)
         return;
+    SyncTrainerTowerPendingPrize(records);
     if (AddBagItem(itemId, 1))
     {
         CopyItemName(itemId, gStringVar2);
@@ -960,6 +988,7 @@ static void GiveChallengePrize(void)
     else
     {
         records->pendingPrize = itemId;
+        SyncTrainerTowerPendingPrize(records);
         gSpecialVar_Result = 1;
     }
     TrainerTowerRestoreAndCloseRun();
@@ -1071,15 +1100,10 @@ static void GetTrainerTowerChallengeStatus(void)
 }
 
 #define PRINT_TOWER_TIME(src) ({                                                           \
-    s32 minutes, seconds, centiseconds, frames;                                            \
+    u16 minutes;                                                                           \
+    u8 seconds, centiseconds;                                                              \
                                                                                            \
-    frames = (src);                                                                        \
-                                                                                           \
-    minutes = frames / (60 * 60);                                                          \
-    frames %= (60 * 60);                                                                   \
-    seconds = frames / 60;                                                                 \
-    frames %= 60;                                                                          \
-    centiseconds = frames * 168 / 100;                                                     \
+    WayfarerTrainerTowerFormatTime((src), &minutes, &seconds, &centiseconds);             \
                                                                                            \
     ConvertIntToDecimalStringN(gStringVar1, minutes, STR_CONV_MODE_RIGHT_ALIGN, 2);        \
     ConvertIntToDecimalStringN(gStringVar2, seconds, STR_CONV_MODE_RIGHT_ALIGN, 2);        \
@@ -1229,6 +1253,7 @@ static void TrainerTowerCheckPendingPrize(void)
 {
 #if IS_WAYFARER
     struct WayfarerSeviiTrainerTowerRecords *records = WayfarerSevii_GetTrainerTowerRecords();
+    SyncTrainerTowerPendingPrize(records);
     gSpecialVar_Result = records != NULL && records->pendingPrize != ITEM_NONE;
 #else
     gSpecialVar_Result = FALSE;
@@ -1243,15 +1268,19 @@ static void TrainerTowerClaimPendingPrize(void)
     gSpecialVar_Result = FALSE;
     if (records == NULL || records->pendingPrize == ITEM_NONE)
         return;
-    if (AddBagItem(records->pendingPrize, 1))
-    {
-        CopyItemName(records->pendingPrize, gStringVar2);
-        records->pendingPrize = ITEM_NONE;
-        gSpecialVar_Result = TRUE;
-    }
+    // The lobby wrapper performs giveitem first. This finalizer is deliberately
+    // non-transactional: it can never make a second Bag insertion.
+    records->pendingPrize = ITEM_NONE;
+    SyncTrainerTowerPendingPrize(records);
+    gSpecialVar_Result = TRUE;
 #else
     gSpecialVar_Result = FALSE;
 #endif
+}
+
+static void TrainerTowerCheckActive(void)
+{
+    gSpecialVar_Result = WayfarerTrainerTowerIsChallengeActive();
 }
 
 static void TrainerTowerGetDoublesEligiblity(void)
@@ -1400,7 +1429,11 @@ static s32 GetPartyMaxLevel(void)
         }
     }
 
+#if IS_WAYFARER
     return WayfarerTrainerTowerNormalizeLevel(topLevel);
+#else
+    return topLevel;
+#endif
 }
 
 static void ValidateOrResetCurTrainerTowerRecord(void)

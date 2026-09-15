@@ -47,9 +47,8 @@ struct TrainerTowerState
     /* 0x0004 */ struct EReaderTrainerTowerSet data;
 };
 
-STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
-
 void PrintTrainerTowerRecords(void);
+void CallTrainerTowerFunc(void);
 void InitTrainerTowerBattleStruct(void);
 void FreeTrainerTowerBattleStruct(void);
 u8 GetTrainerTowerTrainerFrontSpriteId(void);
@@ -60,10 +59,14 @@ void GetTrainerTowerOpponentName(u8 *text);
 u8 GetTrainerTowerOpponentClass(void);
 bool8 WayfarerTrainerTowerIsChallengeActive(void);
 bool8 WayfarerTrainerTowerIsSaveAllowed(void);
+#if IS_WAYFARER
+STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
 u8 WayfarerTrainerTowerGetUsablePartyCount(void);
 u8 WayfarerTrainerTowerNormalizeLevel(u8 highestUsableLevel);
 u8 WayfarerTrainerTowerGetFloorChallengeType(u8 challengeType, u8 floor);
 u16 WayfarerTrainerTowerGetPrize(u8 challengeType);
 bool8 WayfarerTrainerTowerRecordTime(struct WayfarerSeviiTrainerTowerRecords *records, u8 challengeType, u32 time);
+#endif
+void WayfarerTrainerTowerFormatTime(u32 time, u16 *minutes, u8 *seconds, u8 *centiseconds);
 
 #endif //GUARD_TRAINER_TOWER_H
