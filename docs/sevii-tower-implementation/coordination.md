@@ -4,6 +4,10 @@ Foundation base: `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
 Published persistence/allocation contract: `d3eafb4a05`.
 Integrated story-owned persistence prerequisite: upstream `0357e4a423`,
 cherry-picked here as `d2afb48de3`.
+Published facility runtime and overlay: `50f1dfcda4` and `11adca27d2`.
+Published pending-prize transaction contract: `215d8d4836`.
+Published E2E lifecycle ABI/journey: `37f987fa6f`.
+Published transient lifecycle reset integration: `c51bb2afea`.
 
 ## Persistent payload contract
 
@@ -49,6 +53,14 @@ validity. The active run, final time, selected format/set/floor/opponent, cleare
 floors, timer state, and healed party snapshot are transient and must never be
 added to the saved aggregate.
 
+`WayfarerTrainerTowerResetTransientState()` clears the active run and source
+timer without restoring the transient snapshot. It is required after every
+ordinary save load and during whole-bank new-game initialization: the loaded or
+new party is authoritative, while an interrupted Tower run is discarded. Hall
+of Fame auxiliary loads do not reset the run. Tower start scripts heal before
+the final start-clock message, and the runtime defensively heals again before
+capturing the entry snapshot.
+
 ## State and allocation inventory
 
 - Tower facility opponents allocate **no Trainer IDs**, ordinary defeat bits,
@@ -85,3 +97,20 @@ The Tower branch changes only the manifest's `trainer_tower` domain plus Tower
 states/transactions after the story owner publishes their allocation. Combined
 integration must merge domain records structurally and regenerate the shared
 artifact; do not resolve manifest conflicts by taking a whole-file version.
+
+## Isolated branch validation
+
+- Wayfarer focused mechanics: 8/8 Tower tests passed; all 48 Sevii content
+  audit tests also passed in the same host check.
+- Full Wayfarer check: 5,360 total tests with no unexpected failures (4,367
+  passed; repository-known failures/assumptions/TODO/expected-failing retained).
+- SkyEmu Tower lifecycle journey: 1/1 passed; E2E protocol suite 17/17 passed.
+- Release products built serially for Wayfarer, Emerald, FireRed, LeafGreen,
+  and HNS.
+- Wayfarer release ROM uses 32,682,188 bytes and leaves 872,244 bytes total;
+  the enforced 512 KiB reserve has 347,956 bytes of additional headroom.
+- SaveBlock3 is 1,088 bytes, within the 1,624-byte bound; the Tower-owned
+  persistent payload is 20 bytes.
+
+These are isolated-branch results. Final three-branch integration must
+regenerate combined outputs and rerun the same acceptance checks.
