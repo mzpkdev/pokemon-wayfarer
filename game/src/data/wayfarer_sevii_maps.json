@@ -7273,7 +7273,7 @@
           "path": "data/specials.inc",
           "sha256": "24506c146171828977931b23b57fceb7d2a2b874f332c0d54ddb5653d408a909",
           "implementation_path": "src/battle_setup.c",
-          "implementation_sha256": "02d5bc11752e4c2c5fbbc969134b384b6e1a0bec9b8f5d52533f604cae9e3857"
+          "implementation_sha256": "dea5be735ba9b8a1ea4c6327469686c4a8a4ccb7e9e2441061f6bb900cf3cabb"
         }
       ]
     }

@@ -2623,6 +2623,9 @@ bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 
 bool8 IsTrainerReadyForRematch(void)
 {
+    if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+        return WayfarerSeviiRematchIsReady(TRAINER_BATTLE_PARAM.opponentA);
+
     return IsTrainerReadyForRematch_(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
 }
 
