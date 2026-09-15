@@ -1,6 +1,6 @@
 # Sevii story implementation coordination
 
-Status: base saved-state ABI published by commit `0357e4a423`; Trainer rematch extension published separately by commit `7664a169ad`; foundation base `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
+Status: story implementation complete through reduction commit `874d590047`; base saved-state ABI published by commit `0357e4a423`; Trainer rematch extension published separately by commit `7664a169ad`; foundation base `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
 
 ## Saved bank and version
 
@@ -121,3 +121,50 @@ The payload is 20 bytes with 4-byte alignment. Zero is the initial state. Comple
 ## Integration
 
 Consumers may integrate commit `0357e4a423` as the base prerequisite and `7664a169ad` as the coherent Trainer rematch extension; published history is not rewritten. The final integration must structurally merge each domain's records into the single schema-v2 manifest, regenerate combined projections, and repeat full validation; isolated branch results do not establish combined readiness.
+
+## Story delivery and isolated validation
+
+The complete story-domain implementation is committed through `ffac958849`. The final closure commits are:
+
+- `9f40bfb4f4`: schema-v2 story projection (131 records, including 125 objects, 3 background events, and 3 scripts; 71 declared states, 18 Trainer slots, and 17 atomic transactions).
+- `e167904683` and `ab8b43fb0a`: story actor graphics and full pointer/info/picture/raw-asset closure, plus `specialvar` ABI and legendary retry corrections.
+- `ffac958849`: emulator fixtures and journeys for full-pocket Meteorite retry, ordered biker/Hypno loss retries, and Moltres TR gating plus loss/save/reload retry. The exploration sweep also explicitly suppresses the optional rival arrival scene so the ungated 135-map traversal remains deterministic.
+
+Isolated branch validation at `ffac958849`:
+
+- Wayfarer production release: 32,859,932 bytes used, ROM end `0x09F5671C`, 694,500 bytes unused. This is 186,596 bytes above starting main and leaves 170,212 bytes beyond the required 512 KiB reserve.
+- SaveBlock3: 1,112 bytes, leaving 512 bytes below the 1,624-byte bound. The Sevii aggregate is 208 bytes, including the exact 24-byte rematch extension.
+- Sevii content audit: 73 tests passed; Sevii port/catalog/script audit: 11 + 15 + 15 tests passed.
+- Emulator: all 3 independent story journeys and all 6 Sevii exploration journeys passed against a freshly built E2E ROM.
+- FireRed, LeafGreen, Emerald, HNS, and Wayfarer standalone release builds passed serially earlier in this branch; the final graphics closure was additionally compiled under Wayfarer, HNS, and FireRed provider guards.
+
+These results cover the isolated story branch only. The parent integration remains responsible for merging sibling manifest domains structurally, regenerating the combined outputs, and renewing all validation and ROM measurements.
+
+## Reduction follow-up
+
+Commit `874d590047` removes 1,669 lines while adding 95 lines of simplified
+requirements/documentation. Gameplay, saved-state layouts, allocations, map
+selection, script providers, and generated runtime output are unchanged.
+
+Concrete removals:
+
+- deleted the Python graphics-provider parser and its three snapshot tests;
+- deleted bespoke reward, retry, Move Maniac, Egg, Memorial, and handoff control-flow recognizers;
+- deleted the nine-test actor-staging source recognizer;
+- removed 43 duplicate C implementation path/hash pin pairs while retaining external table hashes and symbol checks;
+- removed duplicate per-event transaction/receipt fields and the parallel passive-actor JSON inventory; the schema-v2 manifest remains authoritative;
+- removed the content audit's reserialized selected/excluded inventory payload; and
+- removed its duplicate Trainer compiler/scaling pass, leaving selected-party compilation to the Trainer-owned generator.
+
+The content suite is now 44 tests instead of 73 and runs in 1.1 seconds on this
+host instead of 13.8 seconds immediately before the duplicate Trainer compiler
+pass was removed. Stable post-reduction validation passed:
+
+- `make -C game wayfarer-sevii-content-audit` (44 tests plus report generation);
+- checked-in Sevii script generation with `generate.py --check`; and
+- 3 focused story plus 6 exploration emulator journeys against the existing
+  fresh E2E ROM.
+
+No production rebuild was repeated because this commit changes only host
+metadata/tests/docs and a script comment. The last measured production ROM and
+SaveBlock3 figures above therefore remain the applicable runtime measurements.
