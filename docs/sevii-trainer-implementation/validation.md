@@ -41,7 +41,9 @@ history.
 ## Automated verification
 
 All commands used GNU Make 4.4.1 and `arm-none-eabi` GCC 13.2.1. Product builds ran
-serially within this worktree.
+serially within this worktree. The final artifacts were built from the complete
+working-tree diff immediately before commits `93ad85a7e3` and `57e736d3bb`; those
+commits recorded the unchanged files, and the repository was clean afterward.
 
 - `/tmp/sevii-build-tools/bin/make -C game BUILD=wayfarer -j2 check`: exit 0;
   4,368 passed, 349 known, 629 TODO, 6 expected failing, 9 assumptions failed,
