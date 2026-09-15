@@ -268,6 +268,7 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
         FATAL_ERROR("Wayfarer Sevii %s %s[%u] no longer matches its reviewed source event.\n",
                     map_name.c_str(), event_kind.c_str(), index);
     wayfarer_sevii_owner_is_enabled(rule);
+    const string owner = json_to_string(rule, "owner", true);
     const Json overrides = rule["overrides"];
     if (overrides != Json() && overrides.type() != Json::Type::OBJECT)
         FATAL_ERROR("Wayfarer Sevii %s %s[%u] overrides must be an object.\n",
@@ -281,8 +282,12 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
         if (allowed.find(override.first) == allowed.end())
             FATAL_ERROR("Wayfarer Sevii %s %s[%u] has forbidden override %s.\n",
                         map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
-        if ((override.first == "flag" || override.first == "var")
-         && (json_to_string(override.second, "", true).rfind(
+        const string override_value = json_to_string(override.second, "", true);
+        const bool tower_transient = owner == "trainer_tower"
+            && ((override.first == "flag" && override_value.rfind("FLAG_TEMP_", 0) == 0)
+             || (override.first == "var" && override_value.rfind("VAR_TEMP_", 0) == 0));
+        if ((override.first == "flag" || override.first == "var") && !tower_transient
+         && (override_value.rfind(
                 override.first == "flag" ? "FLAG_WAYFARER_SEVII_" : "VAR_WAYFARER_SEVII_", 0) != 0))
             FATAL_ERROR("Wayfarer Sevii %s %s[%u] override %s must use the Sevii namespace.\n",
                         map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
@@ -296,13 +301,16 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
      && !(json_to_string(rule, "owner", true) == "exploration" && replacement_script == "EventScript_StrengthBoulder"))
         FATAL_ERROR("Wayfarer Sevii %s %s[%u] must use a Wayfarer-owned replacement script.\n",
                     map_name.c_str(), event_kind.c_str(), index);
-    const string owner = json_to_string(rule, "owner", true);
     if (owner != "exploration") {
         const string field = event_kind == "coord_events" ? "var" : "flag";
         string effective = overrides[field] == Json()
             ? json_to_string(event, field, true) : json_to_string(overrides, field, true);
         const string prefix = field == "var" ? "VAR_WAYFARER_SEVII_" : "FLAG_WAYFARER_SEVII_";
-        if (!effective.empty() && effective != "0" && effective != "0x0" && effective.rfind(prefix, 0) != 0)
+        const bool tower_transient = owner == "trainer_tower"
+            && ((field == "flag" && effective.rfind("FLAG_TEMP_", 0) == 0)
+             || (field == "var" && effective.rfind("VAR_TEMP_", 0) == 0));
+        if (!effective.empty() && effective != "0" && effective != "0x0"
+         && effective.rfind(prefix, 0) != 0 && !tower_transient)
             FATAL_ERROR("Wayfarer Sevii %s %s[%u] retains raw FRLG persistent state.\n",
                         map_name.c_str(), event_kind.c_str(), index);
     }
