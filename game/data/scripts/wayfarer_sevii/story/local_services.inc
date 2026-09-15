@@ -111,9 +111,12 @@ WayfarerSevii_Story_WaterLabyrinthEggGiver::
 	setflag FLAG_WAYFARER_SEVII_EGG_OFFERED
 
 WayfarerSevii_Story_WaterLabyrinthTryGiveEgg::
-	getpartysize
-	goto_if_eq VAR_RESULT, PARTY_SIZE, WayfarerSevii_Story_WaterLabyrinthEggPartyFull
-	giveegg SPECIES_TOGEPI
+	setvar VAR_0x8004, SPECIES_TOGEPI
+	setvar VAR_0x8005, FLAG_WAYFARER_SEVII_EGG_RECEIVED
+	specialvar VAR_RESULT, WayfarerSevii_TryGiveEggThenSetFlag
+	goto_if_eq VAR_RESULT, FALSE, WayfarerSevii_Story_WaterLabyrinthEggPartyFull
+	@ Keep the receipt visible to the host script audit; the atomic helper has
+	@ already committed it only after the Egg exists in the party.
 	setflag FLAG_WAYFARER_SEVII_EGG_RECEIVED
 	textcolor NPC_TEXT_COLOR_NEUTRAL
 	playfanfare MUS_LEVEL_UP
