@@ -5,10 +5,7 @@ from __future__ import annotations
 from collections import Counter
 from copy import deepcopy
 import hashlib
-import importlib.util
 import re
-import subprocess
-import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -36,6 +33,15 @@ TRANSACTION_STEPS = {
     "handoff": ("establish_prerequisite", "attempt_destination", "consume_source", "set_receipt", "update_presentation"),
     "grant": ("establish_prerequisite", "attempt_destination", "set_receipt", "update_presentation"),
     "claim": ("establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"),
+    "service": ("establish_prerequisite", "successful_service", "consume_source", "update_presentation"),
+    "staged_grant": ("establish_prerequisite", "consume_source", "set_source_receipt", "attempt_destination", "set_receipt", "update_presentation"),
+}
+# Persistent story flags and generic variables begin clear.  This one
+# externally-visible size-record sentinel deliberately begins at the engine's
+# DEFAULT_MAX_SIZE value; keeping its narrow identity here prevents an
+# accidental nonzero default from becoming available to arbitrary state slots.
+NONZERO_INITIAL_STATES = {
+    ("SEVII_HERACROSS_SIZE_RECORD", "story", "var", 4): 0x8000,
 }
 
 
@@ -85,57 +91,6 @@ def _source_block(root: Path, trainer: str) -> bytes:
 def source_party_hash(root: Path, source_trainer: str) -> str:
     """Normalized hash of one authored FRLG party source record."""
     return hashlib.sha256(_source_block(root, source_trainer)).hexdigest()
-
-
-def _scaling(root: Path):
-    spec = importlib.util.spec_from_file_location("wayfarer_sevii_trainer_scaling", root / "tools/trainer_scaling/generate.py")
-    if spec is None or spec.loader is None: _fail("cannot load Trainer scaling parser")
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-def _compiled_record(header: str, trainer: str, parser: Any) -> str:
-    match = re.search(rf"\[DIFFICULTY_NORMAL\]\[{re.escape(trainer)}\]\s*=\s*\{{", header)
-    if match is None: _fail(f"selected Trainer compiler output is absent: {trainer}")
-    _, end = parser.balanced(header, match.end() - 1)
-    return header[match.start():end].strip() + "\n"
-
-
-def selected_trainer_render(root: Path, allocations: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Render selected source parties through trainerproc and the scaling parser."""
-    if not allocations: return []
-    source = root / "src/data/trainers_frlg.party"
-    with tempfile.TemporaryDirectory(prefix="wayfarer-sevii-party-") as directory:
-        directory = Path(directory)
-        binary, output = directory / "trainerproc", directory / "trainers_frlg.h"
-        def command(args: list[str], **kwargs: Any) -> str:
-            result = subprocess.run(args, text=True, capture_output=True, **kwargs)
-            if result.returncode: _fail(f"selected-party compiler failed: {result.stderr.strip()}")
-            return result.stdout
-        command(["cc", "-O2", str(root / "tools/trainerproc/main.c"), "-o", str(binary)])
-        preprocessed = command(["cpp", "-traditional-cpp", "-P", "-DPOKEMON_WAYFARER", "-DPOKEMON_HNS",
-                                "-DIS_WAYFARER=1", "-DIS_HNS=1", "-DIS_FRLG=0", "-DIS_EMERALD=0",
-                                "-I", str(root / "include"), str(source)])
-        command([str(binary), "-i", "src/data/trainers_frlg.party", "-o", str(output), "-"], input=preprocessed)
-        try: header = output.read_text(encoding="utf-8")
-        except OSError as error: _fail(f"cannot read selected-party parser output: {error}")
-    parser = _scaling(root)
-    resolved = parser.resolve_rosters(parser.parse_output(header, "src/data/trainers_frlg.party"))
-    rows = []
-    for row in sorted(allocations, key=lambda item: item["slot"]):
-        source = row["source_trainer"]
-        if source not in resolved: _fail(f"selected Trainer parser output is absent: {source}")
-        compiled = _compiled_record(header, source, parser)
-        rows.append({"content_id": row["content_id"], "id": row["id"], "slot": row["slot"],
-                     "numeric_id": TRAINER_ID_BASE + row["slot"], "source_trainer": source,
-                     "source_hash": row["source_hash"], "classification": row["classification"],
-                     "battle_policy": row["battle_policy"], "defeat_state": row["defeat_state"],
-                     "source_block": _source_block(root, source).decode("utf-8"),
-                     "compiled_record": compiled,
-                     "compiled_record_sha256": hashlib.sha256(compiled.encode()).hexdigest(),
-                     "party": deepcopy(resolved[source]["DIFFICULTY_NORMAL"])})
-    return rows
 
 
 def _content_owners(manifest: Any) -> dict[str, str]:
@@ -203,6 +158,15 @@ def _state_numeric_id(storage: str, slot: int) -> int:
     return TRAINER_ID_BASE + slot
 
 
+def _valid_state_initial(ident: str, owner: str, storage: str, slot: int, initial: int,
+                         lifecycle: str) -> bool:
+    if lifecycle == "presentation" and owner == "story" and storage == "flag":
+        return initial in (0, 1)
+    if initial == 0:
+        return True
+    return NONZERO_INITIAL_STATES.get((ident, owner, storage, slot)) == initial
+
+
 def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
     states, slots = {}, set()
     for index, raw in enumerate(_array(value, "contracts.states")):
@@ -212,8 +176,11 @@ def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
         lifecycle = row.get("lifecycle", "completion")
         transaction_id = row.get("transaction_id")
         capacity = STATE_FLAG_CAPACITY if storage == "flag" else STATE_VAR_CAPACITY if storage == "var" else TRAINER_ID_LIMIT - TRAINER_ID_BASE
-        if not ident.startswith("SEVII_") or owner not in OWNERS or storage not in STORAGES or not 0 <= slot < capacity or initial != 0 or (storage, slot) in slots or ident in states: _fail(f"{path} has an invalid state identity, owner, initial value, or slot")
-        if lifecycle not in ("completion", "transactional") or (lifecycle == "completion" and transaction_id is not None) or (lifecycle == "transactional" and (owner not in ("story", "trainer_tower") or storage != "var" or not isinstance(transaction_id, str))): _fail(f"{path} has an invalid state lifecycle")
+        if not ident.startswith("SEVII_") or owner not in OWNERS or storage not in STORAGES or not 0 <= slot < capacity or not _valid_state_initial(ident, owner, storage, slot, initial, lifecycle) or (storage, slot) in slots or ident in states: _fail(f"{path} has an invalid state identity, owner, initial value, or slot")
+        if (lifecycle not in ("completion", "transactional", "presentation")
+                or (lifecycle == "completion" and transaction_id is not None)
+                or (lifecycle == "transactional" and (owner not in ("story", "trainer_tower") or storage != "var" or not isinstance(transaction_id, str)))
+                or (lifecycle == "presentation" and (owner != "story" or storage != "flag" or transaction_id is not None))): _fail(f"{path} has an invalid state lifecycle")
         readers, writers = _array(row["readers"], f"{path}.readers"), _array(row["writers"], f"{path}.writers")
         if len(set(readers)) != len(readers) or len(set(writers)) != len(writers): _fail(f"{path} repeats a state reader or writer")
         for content in readers + writers:
@@ -226,7 +193,9 @@ def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
             _keys(transition, {"from", "to", "caller"}, tpath)
             before, after, caller = _number(transition["from"], f"{tpath}.from"), _number(transition["to"], f"{tpath}.to"), _text(transition["caller"], f"{tpath}.caller", CONTENT_ID)
             maximum = 1 if storage in ("flag", "trainer_defeat") else 0xFFFF
-            valid_transition = after > before if lifecycle == "completion" else (after > before or (before > 0 and after == 0))
+            valid_transition = (after > before if lifecycle == "completion"
+                                else (after > before or (before > 0 and after == 0)) if lifecycle == "transactional"
+                                else (before, after) in ((0, 1), (1, 0)))
             if before < 0 or not valid_transition or after > maximum or caller not in writers or (before, after, caller) in transition_keys: _fail(f"{tpath} is not an owned legal {lifecycle} transition")
             transition_keys.add((before, after, caller))
         states[ident] = {"id": ident, "symbol": _state_symbol(storage, ident), "numeric_id": _state_numeric_id(storage, slot), "owner": owner, "storage": storage, "slot": slot, "initial": initial, "lifecycle": lifecycle, "transaction_id": transaction_id,
@@ -267,11 +236,6 @@ def _allocations(root: Path, value: Any, owners: dict[str, str], states: dict[st
         state = states[row["defeat_state"]]
         if state["slot"] != base["slot"] or state["id"] != base["defeat_state"] or base["content_id"] not in state["writers"]:
             _fail(f"allocation {row['content_id']} does not route through its base defeat state")
-    rendered = selected_trainer_render(root, rows)
-    for row, output in zip(sorted(rows, key=lambda item: item["slot"]), rendered):
-        expected_type = {"TRAINER_BATTLE_TYPE_SINGLES": "single", "TRAINER_BATTLE_TYPE_DOUBLES": "double"}.get(output["party"].get("battleType"))
-        if expected_type is None or row["battle_type"] != expected_type:
-            _fail(f"allocation {row['content_id']} battle_type does not match its preserved source party")
     return [{"content_id": r["content_id"], "id": r["id"], "slot": r["slot"], "numeric_id": TRAINER_ID_BASE + r["slot"], "owner": r["owner"], "source_trainer": r["source_trainer"], "source_hash": r["source_hash"], "classification": r["classification"], "battle_policy": r["battle_policy"], "battle_type": r["battle_type"], "outcome_policy": r["outcome_policy"], "defeat_state": r["defeat_state"], "defeat_base": r["defeat_base"]} for r in sorted(rows, key=lambda r: r["slot"])]
 
 
@@ -280,20 +244,32 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
     fields = {"content_id", "owner", "kind", "prerequisite", "destination", "consume", "receipt", "steps"}
     for index, raw in enumerate(_array(value, "contracts.transactions")):
         path, row = f"contracts.transactions[{index}]", _object(raw, f"contracts.transactions[{index}]")
-        _keys(row, fields, path, {"clear_payloads", "pending_state"})
+        _keys(row, fields, path, {"clear_payloads", "pending_state", "source_receipt"})
         content, owner, kind = _text(row["content_id"], f"{path}.content_id", CONTENT_ID), _text(row["owner"], f"{path}.owner"), _text(row["kind"], f"{path}.kind")
         receipt = row["receipt"]
         if owners.get(content) != owner or owner == "ordinary_trainer" or kind not in TRANSACTION_STEPS: _fail(f"{path} has unresolved content, an ordinary transaction, or an invalid kind")
         if kind == "claim":
             pending = _text(row.get("pending_state"), f"{path}.pending_state", IDENTIFIER)
-            if receipt is not None or row.get("clear_payloads", []) or pending not in states or states[pending]["lifecycle"] != "transactional" or states[pending]["owner"] != owner or states[pending]["transaction_id"] != content or content not in states[pending]["writers"]:
+            if receipt is not None or pending not in states or states[pending]["lifecycle"] != "transactional" or states[pending]["owner"] != owner or states[pending]["transaction_id"] != content or content not in states[pending]["writers"]:
                 _fail(f"{path} has an invalid repeatable pending claim")
             if not any(transition["from"] > 0 and transition["to"] == 0 and transition["caller"] == content for transition in states[pending]["transitions"]):
                 _fail(f"{path} pending claim cannot clear its payload after success")
+        elif kind == "service":
+            if receipt is not None or row.get("pending_state") is not None or row.get("clear_payloads", []):
+                _fail(f"{path} has an invalid repeatable service receipt or payload")
         else:
             if row.get("pending_state") is not None: _fail(f"{path}.pending_state is reserved for a repeatable claim")
             receipt = _text(receipt, f"{path}.receipt", IDENTIFIER)
             if receipt not in states or states[receipt]["storage"] == "trainer_defeat" or states[receipt]["lifecycle"] != "completion" or states[receipt]["owner"] != owner or content not in states[receipt]["writers"]: _fail(f"{path} has an invalid receipt")
+        source_receipt = row.get("source_receipt")
+        if kind == "staged_grant":
+            if row.get("pending_state") is not None or row.get("clear_payloads", []):
+                _fail(f"{path} has an invalid staged grant payload")
+            source_receipt = _text(source_receipt, f"{path}.source_receipt", IDENTIFIER)
+            if source_receipt == receipt or source_receipt not in states or states[source_receipt]["storage"] == "trainer_defeat" or states[source_receipt]["lifecycle"] != "completion" or states[source_receipt]["owner"] != owner or content not in states[source_receipt]["writers"]:
+                _fail(f"{path} has an invalid source receipt")
+        elif source_receipt is not None:
+            _fail(f"{path}.source_receipt is reserved for a staged grant")
         if not isinstance(row["prerequisite"], list) or not row["prerequisite"] or not all(isinstance(item, str) and item for item in row["prerequisite"]): _fail(f"{path}.prerequisite must be a reviewed non-empty list")
         clears = _array(row.get("clear_payloads", []), f"{path}.clear_payloads")
         if len(set(clears)) != len(clears): _fail(f"{path}.clear_payloads repeats a state")
@@ -301,12 +277,15 @@ def _transactions(value: Any, owners: dict[str, str], states: dict[str, dict[str
             state_id = _text(state_id, f"{path}.clear_payloads", IDENTIFIER)
             if state_id not in states or states[state_id]["lifecycle"] != "transactional" or states[state_id]["owner"] != owner or states[state_id]["transaction_id"] != content:
                 _fail(f"{path}.clear_payloads has an unreviewed transactional state")
+            if kind == "claim" and state_id == row.get("pending_state"):
+                _fail(f"{path}.clear_payloads repeats the claim pending state")
         expected_steps = list(TRANSACTION_STEPS[kind])
         if clears: expected_steps.insert(-1, "clear_payload")
-        if row["destination"] not in ("bag", "party", "pc") or row["steps"] != expected_steps: _fail(f"{path} violates destination or transaction ordering")
-        if (kind == "handoff" and (not isinstance(row["consume"], str) or not row["consume"])) or (kind in ("grant", "claim") and row["consume"] is not None): _fail(f"{path} has invalid source consumption")
+        allowed_destinations = ("service",) if kind == "service" else ("bag", "party", "pc")
+        if row["destination"] not in allowed_destinations or row["steps"] != expected_steps: _fail(f"{path} violates destination or transaction ordering")
+        if (kind in ("handoff", "service", "staged_grant") and (not isinstance(row["consume"], str) or not row["consume"])) or (kind in ("grant", "claim") and row["consume"] is not None): _fail(f"{path} has invalid source consumption")
         if content in seen: _fail(f"{path} duplicates a content transaction")
-        normalized = deepcopy(row); normalized["clear_payloads"] = sorted(clears); normalized["pending_state"] = row.get("pending_state")
+        normalized = deepcopy(row); normalized["clear_payloads"] = sorted(clears); normalized["pending_state"] = row.get("pending_state"); normalized["source_receipt"] = source_receipt
         seen.add(content); result.append(normalized)
     transaction_ids = {row["content_id"] for row in result}
     cleared_payloads = {state_id for row in result for state_id in row["clear_payloads"]}

@@ -247,7 +247,7 @@ def render_coordination(report: dict) -> str:
             "",
             "## Runtime surfaces owned here",
             "",
-            "The Trainer branch will publish generated constants/roster data for all 136 keys, `TRAINERS_COUNT_WAYFARER = 1651`, one scaling classification per populated ID, the generated defeat-base lookup, and a separate Sevii Vs. Seeker registry. The registry consumes Story's compact persistent rematch-stage and pending-ready accessors and does not append 64 families to the existing fixed SaveBlock1 rematch-index array. Trainer owns Sevii flag slot 52 (`FLAG_WAYFARER_SEVII_VS_SEEKER_CHARGING`) for the Wayfarer-only Vs. Seeker charge lifecycle; Story's published allocation reserves slots 11-51.",
+            "The Trainer branch will publish generated constants/roster data for all 136 keys, `TRAINERS_COUNT_WAYFARER = 1651`, one scaling classification per populated ID, the generated defeat-base lookup, and a separate Sevii Vs. Seeker registry. The registry consumes Story's compact persistent rematch-stage and pending-ready accessors and does not append 64 families to the existing fixed SaveBlock1 rematch-index array. Trainer owns Sevii flag slot 52 (`FLAG_WAYFARER_SEVII_VS_SEEKER_CHARGING`) for the Wayfarer-only Vs. Seeker charge lifecycle; Story owns slots 11-51 and presentation flags 53-60 (including returned Lostelle at 60); unallocated slots begin at 61.",
             "",
             "Ordinary content uses normal victory/blackout routing. Story callers use their own objective continuations but consume the same generated roster IDs and defeat accessors. Tower remains excluded from ordinary scaling, persistent Trainer defeat, and this allocation.",
             "",

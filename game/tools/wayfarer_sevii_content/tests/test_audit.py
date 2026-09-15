@@ -17,7 +17,7 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
     def manifest(self):
         return json.loads((GAME / "src/data/wayfarer_sevii_maps.json").read_text(encoding="utf-8"))
 
-    def test_repository_report_accepts_ordinary_trainers(self):
+    def test_repository_report_accepts_story_and_ordinary_trainers(self):
         report = AUDIT.build_report(GAME)
         self.assertTrue(report["invariants"]["passed"])
         self.assertEqual(report["exploration_baseline"]["map_count"], 135)
@@ -26,13 +26,15 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
         self.assertEqual(report["schema"]["domains"]["exploration"]["enabled"], True)
         self.assertTrue(report["schema"]["domains"]["ordinary_trainers"]["enabled"])
         self.assertEqual(report["schema"]["domains"]["ordinary_trainers"]["inventory_count"], 87)
-        self.assertEqual(report["contracts"]["trainer_ids"]["allocation_count"], 118)
-        for domain in ("story", "trainer_tower"):
-            self.assertFalse(report["schema"]["domains"][domain]["enabled"])
-            self.assertEqual(report["schema"]["domains"][domain]["inventory_count"], 0)
+        self.assertTrue(report["schema"]["domains"]["story"]["enabled"])
+        self.assertGreater(report["schema"]["domains"]["story"]["inventory_count"], 0)
+        self.assertEqual(report["contracts"]["trainer_ids"]["allocation_count"], 136)
+        self.assertTrue(any(entry["owner"] == "story" for entry in report["contract_closure"]["entries"]))
+        self.assertFalse(report["schema"]["domains"]["trainer_tower"]["enabled"])
+        self.assertEqual(report["schema"]["domains"]["trainer_tower"]["inventory_count"], 0)
         self.assertFalse(report["rom"]["measured"])
-        self.assertEqual(len(report["contracts"]["states"]), 81)
-        self.assertEqual(report["contracts"]["transactions"], [])
+        self.assertGreater(len(report["contracts"]["states"]), 81)
+        self.assertGreater(len(report["contracts"]["transactions"]), 0)
 
     def test_rejects_manifest_attempt_to_redefine_the_accepted_projection(self):
         manifest = self.manifest()

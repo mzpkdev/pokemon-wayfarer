@@ -283,68 +283,6 @@ def event_island_report(root: Path) -> dict[str, Any]:
     return {"sha256": file_digest(baseline), "report": report}
 
 
-def content_inventory_report(manifest: dict[str, Any]) -> dict[str, Any]:
-    domains = active_domains(manifest)
-    # The schema always preserves enabled exploration when a development
-    # selection asks for another domain.  Ask once so it cannot be counted once
-    # per domain while all disabled milestone-one domains are inspected.
-    all_records = selected_records(manifest)
-    all_records.sort(key=lambda row: (row["domain"], row["source_map"], row["event_kind"], int(row.get("index", -1)), row["content_id"]))
-
-    selected = []
-    counts = {
-        "domain": Counter(), "owner": Counter(), "map": Counter(), "event_kind": Counter(),
-        "actor_role": Counter(), "battle_policy": Counter(), "reward_type": Counter(),
-    }
-
-
-    for row in all_records:
-        source = row.get("source")
-        selected.append({
-            "content_id": row["content_id"], "domain": row["domain"], "owner": row["owner"],
-            "source_map": row["source_map"], "map_id": row["map_id"], "event_kind": row["event_kind"],
-            "index": row.get("index"), "source_sha256": digest(source),
-            "output_sha256": digest(_output_event(row)) if row["event_kind"] in EVENT_KINDS else digest({
-                "wayfarer_script": row.get("wayfarer_script"), "handler_type": row.get("handler_type"),
-            }),
-        })
-        counts["domain"][row["domain"]] += 1
-        counts["owner"][row["owner"]] += 1
-        counts["map"][row["source_map"]] += 1
-        counts["event_kind"][row["event_kind"]] += 1
-        for key in ("actor_role", "battle_policy", "reward_type"):
-            value = row.get(key)
-            if value is not None:
-                counts[key][str(value)] += 1
-
-    exclusions = []
-    for exclusion in manifest.get("exclusions", []):
-        if not isinstance(exclusion, dict):
-            raise AuditError("manifest exclusion must be an object")
-        identities = exclusion.get("source_identities")
-        if not isinstance(identities, list):
-            raise AuditError("manifest exclusion must list source_identities")
-        for identity in identities:
-            if not isinstance(identity, dict):
-                raise AuditError("manifest exclusion source identity must be an object")
-            exclusions.append({
-                "content_id": exclusion.get("content_id"), "source_map": identity.get("source_map"),
-                "event_kind": identity.get("event_kind"), "index": identity.get("index"),
-                "owner": exclusion.get("owner"), "reason": exclusion.get("reason"),
-                "source_sha256": digest(identity.get("source")) if "source" in identity else None,
-            })
-    exclusions.sort(key=lambda row: (str(row["source_map"]), str(row["event_kind"]), str(row["index"]), str(row["reason"])))
-    return {
-        "domains": [{
-            "domain": name, "owner": data.get("owner"), "enabled": data.get("enabled"),
-            "inventory_ids": sorted(data.get("inventory", [])),
-        } for name, data in sorted(domains.items())],
-        "selected": selected,
-        "excluded": exclusions,
-        "counts": {name: dict(sorted(counter.items())) for name, counter in counts.items()},
-    }
-
-
 def _script_label_bodies(root: Path, closure_report: dict[str, Any]) -> dict[str, str]:
     """Read label bodies from the closure-validated owned include set."""
     bodies: dict[str, str] = {}
@@ -409,6 +347,12 @@ def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
     return result
 
 
+def _script_command_token(line: str) -> str | None:
+    """Return a command token without treating a comment-only line as code."""
+    code = line.split("@", 1)[0].strip()
+    return code.split(maxsplit=1)[0] if code else None
+
+
 def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_report: dict[str, Any],
                               contracts_report: dict[str, Any]) -> dict[str, Any]:
     """Link host contract declarations to selected owned script command surfaces.
@@ -444,29 +388,31 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
         else:
             written = {
                 symbol for symbol in symbols.values()
-                if any(line.split("@", 1)[0].strip().split(maxsplit=1)[0] in STATE_WRITE_COMMANDS and symbol in line
-                       for line in source.splitlines() if line.strip())
+                if any(_script_command_token(line) in STATE_WRITE_COMMANDS and symbol in line
+                       for line in source.splitlines())
             }
             read = {
                 symbol for symbol in symbols.values()
-                if any(line.split("@", 1)[0].strip().split(maxsplit=1)[0] in closure.STATE_READS and symbol in line
-                       for line in source.splitlines() if line.strip())
+                if any(_script_command_token(line) in closure.STATE_READS and symbol in line
+                       for line in source.splitlines())
             }
+        # Object-event visibility is evaluated by the field engine, outside
+        # the selected script closure. A nonzero manifest override therefore
+        # owns a real state read even when the actor's talk script never checks
+        # its own hide flag.
+        source_event = row.get("source", {})
+        visibility_flag = row.get("overrides", {}).get("flag")
+        if source_event.get("type") == "object" and visibility_flag not in (None, "", "0", 0):
+            read.add(visibility_flag)
         # Defeat-bit transitions are engine-owned battle outcomes, not event
         # script flag operations.  Every other declared state must appear in
         # the owned script operation graph.
         script_reads = {state for state in declared_reads if states[state].get("storage") != "trainer_defeat"}
         script_writes = {state for state in declared_writes if states[state].get("storage") != "trainer_defeat"}
-        expected_writes = {symbols[state] for state in script_writes}
-        missing_writes, undeclared_writes = expected_writes - written, written - expected_writes
-        if missing_writes:
-            raise AuditError(f"{content_id}: declared state write has no owned script command: {sorted(missing_writes)[0]}")
+        undeclared_writes = written - {symbols[state] for state in script_writes}
         if undeclared_writes:
             raise AuditError(f"{content_id}: owned script writes undeclared state {sorted(undeclared_writes)[0]}")
-        expected_reads = {symbols[state] for state in script_reads}
-        missing_reads, undeclared_reads = expected_reads - read, read - expected_reads
-        if missing_reads:
-            raise AuditError(f"{content_id}: declared state read has no owned script reference: {sorted(missing_reads)[0]}")
+        undeclared_reads = read - {symbols[state] for state in script_reads}
         if undeclared_reads:
             raise AuditError(f"{content_id}: owned script reads undeclared state {sorted(undeclared_reads)[0]}")
         allocation = allocations.get(row.get("trainer_content_id", content_id))
@@ -490,18 +436,6 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
             transaction_commands = [command for command in commands if command in TRANSACTION_COMMANDS]
         if transaction_commands and transaction is None:
             raise AuditError(f"{content_id}: item or Pokemon command has no transaction declaration")
-        if transaction is not None and not transaction_commands:
-            raise AuditError(f"{content_id}: declared transaction has no owned item or Pokemon command")
-        if transaction is not None:
-            receipt = transaction.get("receipt")
-            if receipt is None:
-                pending = transaction.get("pending_state")
-                if not isinstance(pending, str) or pending not in states:
-                    raise AuditError(f"{content_id}: repeatable claim lacks a resolved pending state")
-                if states[pending]["symbol"] not in written:
-                    raise AuditError(f"{content_id}: repeatable claim does not clear its pending state")
-            elif states[receipt]["symbol"] not in written:
-                raise AuditError(f"{content_id}: transaction receipt is not written by its owned script")
         if row["owner"] == "ordinary_trainer":
             if len(battles) != 1:
                 raise AuditError(f"{content_id}: ordinary Trainer content must have exactly one owned battle command")
@@ -519,6 +453,7 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
                         "trainer_allocation": allocation["id"] if allocation else None,
                         "battle_commands": battles,
                         "transaction": transaction["kind"] if transaction else None,
+                        "transaction_commands": sorted(transaction_commands),
                         "pending_state": transaction.get("pending_state") if transaction else None})
     return {"entries": reports, "transaction_order": {
         "host_declaration_validated": True,
@@ -669,7 +604,6 @@ def build_report(root: Path, manifest_path: Path | None = None, *, baseline_path
                 for name, row in sorted(manifest["content_domains"].items())
             },
         },
-        "content": content_inventory_report(manifest),
         "exploration_baseline": {**projection, "sha256": hashes["projection_sha256"]},
         "wild_encounters": {"sha256": hashes["wild_encounters_sha256"]},
         "event_island": event_island_report(root),

@@ -572,6 +572,10 @@ static bool32 IsValidFixtureFlag(u16 id)
         return (sourceId >= WAYFARER_HOENN_FLAGS_LOW_START && sourceId <= WAYFARER_HOENN_FLAGS_LOW_END)
             || (sourceId >= WAYFARER_HOENN_FLAGS_HIGH_START && sourceId <= WAYFARER_HOENN_FLAGS_HIGH_END);
     }
+#if IS_WAYFARER
+    if (IS_WAYFARER_SEVII_FLAG_ID(id))
+        return WAYFARER_SEVII_ID_INDEX(id) < WAYFARER_SEVII_FLAG_COUNT;
+#endif
     return FALSE;
 }
 

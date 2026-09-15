@@ -6,7 +6,7 @@ GAME = Path(__file__).resolve().parents[3]
 
 
 class WayfarerSeviiEnvironmentStateTests(unittest.TestCase):
-    def test_sevii_state_uses_reserved_wayfarer_ids(self):
+    def test_sevii_state_uses_dedicated_wayfarer_bank_slots(self):
         flags = (GAME / "include/constants/flags.h").read_text()
         vars_ = (GAME / "include/constants/vars.h").read_text()
 

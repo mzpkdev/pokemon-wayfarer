@@ -9,6 +9,10 @@ void InitLotadSizeRecord(void);
 void GetLotadSizeRecordInfo(void);
 void CompareLotadSize(void);
 
+void InitHeracrossSizeRecord(void);
+void GetHeracrossSizeRecordInfo(void);
+void CompareHeracrossSize(void);
+
 void GiveGiftRibbonToParty(u8 index, u8 ribbonId);
 
 #endif // GUARD_POKEMON_SIZE_RECORD_H

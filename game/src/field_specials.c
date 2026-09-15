@@ -4780,13 +4780,25 @@ bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
     switch (moveId)
     {
     case MOVE_FRENZY_PLANT:
+#if IS_WAYFARER
+        tutorFlag = FLAG_WAYFARER_SEVII_TUTOR_FRENZY_PLANT;
+#else
         tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
+#endif
         break;
     case MOVE_BLAST_BURN:
+#if IS_WAYFARER
+        tutorFlag = FLAG_WAYFARER_SEVII_TUTOR_BLAST_BURN;
+#else
         tutorFlag = FLAG_TUTOR_BLAST_BURN;
+#endif
         break;
     case MOVE_HYDRO_CANNON:
+#if IS_WAYFARER
+        tutorFlag = FLAG_WAYFARER_SEVII_TUTOR_HYDRO_CANNON;
+#else
         tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
+#endif
         break;
     default:
         return FALSE;
@@ -4812,19 +4824,37 @@ bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
     switch (gSpecialVar_0x8005)
     {
     case MOVE_FRENZY_PLANT:
+#if IS_WAYFARER
+        FlagSet(FLAG_WAYFARER_SEVII_TUTOR_FRENZY_PLANT);
+#else
         FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+#endif
         break;
     case MOVE_BLAST_BURN:
+#if IS_WAYFARER
+        FlagSet(FLAG_WAYFARER_SEVII_TUTOR_BLAST_BURN);
+#else
         FlagSet(FLAG_TUTOR_BLAST_BURN);
+#endif
         break;
     case MOVE_HYDRO_CANNON:
+#if IS_WAYFARER
+        FlagSet(FLAG_WAYFARER_SEVII_TUTOR_HYDRO_CANNON);
+#else
         FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+#endif
         break;
     }
 
+#if IS_WAYFARER
+    return (FlagGet(FLAG_WAYFARER_SEVII_TUTOR_FRENZY_PLANT) == TRUE)
+        && (FlagGet(FLAG_WAYFARER_SEVII_TUTOR_BLAST_BURN) == TRUE)
+        && (FlagGet(FLAG_WAYFARER_SEVII_TUTOR_HYDRO_CANNON) == TRUE);
+#else
     return (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
         && (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
         && (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE);
+#endif
 }
 
 void SetSeenMon(void)

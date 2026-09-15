@@ -222,6 +222,18 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         with self.assertRaisesRegex(CLOSURE.ClosureError, "unsupported assembler directive"):
             CLOSURE.build_script_closure(self.root, manifest)
 
+    def test_allows_only_temp_flag_equ_aliases_as_transient_state(self):
+        module = self.root / "data/scripts/wayfarer_sevii/environment.inc"
+        module.write_text(
+            ".equ HAS_PAYMENT, FLAG_TEMP_1\n"
+            "WayfarerSevii_OneIsland_OnLoad::\n\tsetflag HAS_PAYMENT\n\tclearflag FLAG_TEMP_2\n\tend\n",
+            encoding="utf-8",
+        )
+        manifest = self.manifest()
+        manifest["script_modules"]["environment"]["exports"] = ["WayfarerSevii_OneIsland_OnLoad"]
+        manifest["script_modules"]["environment"]["allowed_commands"] = ["setflag", "clearflag", "end"]
+        report = CLOSURE.build_script_closure(self.root, manifest)
+        self.assertEqual(report["state_operations"], [])
 
 if __name__ == "__main__":
     unittest.main()

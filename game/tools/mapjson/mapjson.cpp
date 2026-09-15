@@ -281,11 +281,16 @@ void validate_wayfarer_sevii_event_rule(const Json &event, const Json &rule,
         if (allowed.find(override.first) == allowed.end())
             FATAL_ERROR("Wayfarer Sevii %s %s[%u] has forbidden override %s.\n",
                         map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
-        if ((override.first == "flag" || override.first == "var")
-         && (json_to_string(override.second, "", true).rfind(
-                override.first == "flag" ? "FLAG_WAYFARER_SEVII_" : "VAR_WAYFARER_SEVII_", 0) != 0))
-            FATAL_ERROR("Wayfarer Sevii %s %s[%u] override %s must use the Sevii namespace.\n",
-                        map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
+        if (override.first == "flag" || override.first == "var") {
+            const string value = json_to_string(override.second, "", true);
+            const bool always_visible_object = override.first == "flag"
+                && event_kind == "object_events" && value == "0";
+            const string prefix = override.first == "flag"
+                ? "FLAG_WAYFARER_SEVII_" : "VAR_WAYFARER_SEVII_";
+            if (!always_visible_object && value.rfind(prefix, 0) != 0)
+                FATAL_ERROR("Wayfarer Sevii %s %s[%u] override %s must use the Sevii namespace.\n",
+                            map_name.c_str(), event_kind.c_str(), index, override.first.c_str());
+        }
         if (override.first == "flag" && event_kind == "bg_events"
          && json_to_string(event, "type", true) != "hidden_item")
             FATAL_ERROR("Wayfarer Sevii %s bg_events[%u] may override a flag only for a hidden item.\n",

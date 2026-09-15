@@ -215,9 +215,9 @@ their source prerequisites unless those prerequisites are one of the removed
 campaign gates named by this specification. One-time moves, trades, gifts, and
 rewards use independent receipts.
 
-The story inventory classifies every stripped non-Trainer source actor on the 135
-maps as restored or explicitly excluded. Do not silently omit an actor because a
-dependency was inconvenient to link.
+The schema-v2 manifest selects restored non-Trainer actors and records explicit
+source exclusions. Do not maintain a second actor inventory or snapshot that
+duplicates those records.
 
 ## Rival scene
 
@@ -262,46 +262,31 @@ performs ordinary Wayfarer blackout/recovery and returns the objective to a
 stable pending state. Post-battle dialogue or rewards never run on loss. No story
 scene enables the temporary empty-party trainer-only encounter flag.
 
-## Generated audit
+## Validation ownership
 
-The story section of `wayfarer-sevii-content-audit` reports:
-
-- every source and restored actor, script, movement, text, state transition,
-  battle, static encounter, item, Pokémon, tutor, trade, and reward;
-- objective graphs with all legal orders and no skipped predecessor;
-- every capacity check, transaction order, and one-time receipt;
-- all story-battle classifications and win/loss continuation targets;
-- all dialogue variants and their predicates;
-- the exact Moltres threshold and encounter outcomes; and
-- explicit exclusions for removed campaign/network behavior.
-
-Fail on an unowned source actor, story write outside the namespace, reward
-without a receipt, item consumption before success, impossible continuation,
-travel-state write, or source-party mutation.
+Keep the host audit structural: schema selection, source identity, script closure,
+state ownership, Trainer allocation, protected exploration, and ROM reserve. Do
+not duplicate reward ordering, retry behavior, tutor flow, actor visibility, C
+linkage, or objective control flow with bespoke Python recognizers or report
+snapshots. Compiler/linker checks and focused mechanics or emulator journeys are
+the authority for those runtime behaviors.
 
 ## Validation
 
-Add mechanics and emulator coverage for:
+Retain focused mechanics or emulator coverage for representative high-risk paths:
 
-1. Lostelle before and after accepting the Meteorite, with every reunion and
-   reward-capacity order.
-2. Ruby-first and Sapphire-first investigation, both gem-delivery orders, all
-   four Warehouse password states, and Warehouse completion before/after
-   mainland Giovanni.
-3. Loss, blackout, ferry departure, save/reload, and re-entry at every objective
-   battle and transaction boundary.
-4. Lorelei before/during/after Warehouse completion.
-5. Selphy loss and return, request success, wrong species, and full reward pocket.
-6. Memorial and Egg capacity failures without duplicate consumption or receipt.
-7. Rival visits to Four and Six Island in both orders before and after League
-   eligibility.
-8. Moltres at TR 54 and 55, then catch, knockout, run, loss, save, and reload.
-9. Unchanged ferry, PC, wild encounters, environmental puzzles, ordinary
-   Trainers, Trainer Tower, Birth Island, Navel Rock, and standalone builds.
+1. Lostelle's ordered battles and Meteorite reward-capacity retry.
+2. Ruby/Sapphire branch order and Warehouse readiness at the native helper level.
+3. Objective loss/retry and save/reload at representative shared boundaries.
+4. Selphy, Memorial, and Egg capacity behavior in the native transaction helpers.
+5. Rival League eligibility and shared receipt at the native helper level.
+6. Moltres below/at threshold and unresolved battle retry.
+7. Unchanged ferry and the 135-map exploration sweep.
 
-Run map-manifest tests, `wayfarer-sevii-content-audit`, existing Sevii
-audits, `make -C game check`, serial product builds, and a production-equivalent
-Wayfarer release. Record the ROM delta after each bounded objective group.
+Use focused checks while iterating. The required stable validation is the content
+audit plus the focused story and exploration emulator journeys against one fresh
+Wayfarer E2E ROM. Run the production release-size check once when runtime content
+changes; do not repeat broad product builds for metadata-only reductions.
 
 ## Delivery milestones
 

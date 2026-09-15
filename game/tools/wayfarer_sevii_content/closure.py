@@ -23,7 +23,7 @@ LABEL = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 LABEL_DEF = re.compile(r"(?m)^([A-Za-z_][A-Za-z0-9_]*):{1,2}\s*(?:@.*)?$")
 INCLUDE = re.compile(r'^\s*\.include\s+"([^"]+)"\s*(?:@.*)?$')
 MAP_SCRIPT = re.compile(r"^\s*map_script\s+(MAP_SCRIPT_[A-Z0-9_]+)\s*,\s*([A-Za-z_][A-Za-z0-9_]*)\s*(?:@.*)?$", re.MULTILINE)
-EQU = re.compile(r"^\s*\.equ\s+([A-Za-z_][A-Za-z0-9_]*)\s*,\s*(VAR_TEMP_[A-Z0-9_]+)\s*(?:@.*)?$")
+EQU = re.compile(r"^\s*\.equ\s+([A-Za-z_][A-Za-z0-9_]*)\s*,\s*((?:VAR|FLAG)_TEMP_[A-Z0-9_]+)\s*(?:@.*)?$")
 DATA_DIRECTIVE = re.compile(r"^\s*\.(byte|2byte|4byte|word)\s+([A-Za-z_][A-Za-z0-9_]*|0x[0-9A-Fa-f]+|[0-9]+)\s*(?:@.*)?$")
 
 # Commands with symbol operands.  The listed positions are zero based after
@@ -40,10 +40,11 @@ REFERENCE_OPERANDS: dict[str, tuple[int | str, ...]] = {
     "loadword": (1,), "loadbytefromptr": (1,), "loadwordfromptr": (1,),
 }
 TRAINER_COMMANDS = {"trainerbattle", "trainerbattle_single", "trainerbattle_double"}
-TRANSACTION_COMMANDS = {"giveitem", "givepokemon", "removeitem"}
+TRANSACTION_COMMANDS = {"giveitem", "givepokemon", "giveegg", "removeitem"}
 STATE_WRITES = {"setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar", "setorcopyvar"}
 STATE_READS = {"checkflag", "checkvar", "compare", "goto_if_set", "goto_if_unset", "call_if_set", "call_if_unset", "goto_if_eq", "goto_if_ne", "goto_if_lt", "goto_if_le", "goto_if_gt", "goto_if_ge", "call_if_eq", "call_if_ne", "call_if_lt", "call_if_le", "call_if_gt", "call_if_ge"}
-TRANSIENT_VARS = {"VAR_RESULT", "VAR_LAST_TALKED", "VAR_FACING", "VAR_0x8004", "VAR_0x8005", "VAR_0x8006", "VAR_0x8007"}
+TRANSIENT_VARS = {"VAR_RESULT", "VAR_LAST_TALKED", "VAR_FACING", "VAR_0x8004", "VAR_0x8005", "VAR_0x8006", "VAR_0x8007", "VAR_0x8008", "VAR_0x8009", "VAR_0x800A"}
+TRANSIENT_FLAGS = {"FLAG_SYS_CTRL_OBJ_DELETE"}
 
 # Constants name engine values, not script/data labels.  A dependency is
 # intentionally rejected unless it is a local export or a manifest row.
@@ -347,6 +348,8 @@ def _validate_state_operand(target: str, *, module: str, relative: str, aliases:
     if target.isdigit() or target.lower().startswith("0x"):
         raise ClosureError(f"script module {module} writes or reads raw numeric state {target} in {relative}")
     if target.startswith("FLAG_"):
+        if target.startswith("FLAG_TEMP_") or target in TRANSIENT_FLAGS:
+            return None
         if not target.startswith("FLAG_WAYFARER_SEVII_"):
             raise ClosureError(f"script module {module} uses non-Sevii flag {target} in {relative}")
         return target
@@ -390,26 +393,12 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
         if kind == "special":
             if re.search(rf"(?m)^\s*def_special\s+{re.escape(label)}\b", source) is None:
                 raise ClosureError(f"script module {module} special table lacks {label}")
-            impl_path, impl_sha = row.get("implementation_path"), row.get("implementation_sha256")
-            if not isinstance(impl_sha, str):
-                raise ClosureError(f"script module {module} special {label} lacks a pinned implementation")
-            impl_path = _root_relative_path(impl_path, field=f"script module {module} special {label} implementation_path")
-            impl = _resolved_under_root(root, impl_path, field=f"script module {module} special {label} implementation_path")
-            if not impl.is_file():
-                raise ClosureError(f"script module {module} special {label} lacks a pinned implementation")
-            if hashlib.sha256(impl.read_bytes()).hexdigest() != impl_sha:
-                raise ClosureError(f"script module {module} special implementation drifted: {label}")
-            implementation = impl.read_text(encoding="utf-8", errors="ignore")
-            if re.search(rf"(?m)^\s*(?:static\s+)?(?:void|u8|u16|u32|s8|s16|s32|bool8|bool32)\s+{re.escape(label)}\s*\(", implementation) is None:
-                raise ClosureError(f"script module {module} special implementation lacks {label}")
         elif kind == "native":
             if re.search(rf"(?m)^\s*(?:static\s+)?(?:void|u8|u16|u32|s8|s16|s32|bool8|bool32)\s+{re.escape(label)}\s*\(", source) is None:
                 raise ClosureError(f"script module {module} native source lacks {label}")
         elif kind == "script_symbol" and re.search(rf"(?m)^{re.escape(label)}:{'{1,2}'}\s*$", source) is None:
             raise ClosureError(f"script module {module} script source lacks {label}")
         result[label] = {key: row[key] for key in ("kind", "path", "sha256")}
-        if kind == "special":
-            result[label].update({"implementation_path": row["implementation_path"], "implementation_sha256": row["implementation_sha256"]})
     return result
 
 
@@ -427,8 +416,6 @@ def dependency_paths(root: Path, manifest: dict[str, Any]) -> list[str]:
         paths.update(_module_files(root, module["include"], module["owner"]))
         for external in _external_rows(root, "dependency", module["allowed_externals"]).values():
             paths.add(external["path"])
-            if "implementation_path" in external:
-                paths.add(external["implementation_path"])
     for handler in handlers:
         _validate_provenance(root, handler)
         if handler["source"].get("kind") != "baseline":

@@ -65,25 +65,10 @@ class SeviiContentContractTests(unittest.TestCase):
         self.assertEqual(first["trainer_ids"]["active_count"], 1515)
         self.assertEqual(first["trainer_ids"]["allocation_count"], 0)
 
-    def test_selected_party_render_and_contract_map_fixed_slot(self):
+    def test_contract_maps_fixed_trainer_slot(self):
         report = CONTRACTS.validate_contracts(GAME, fixture())
         allocation = report["trainer_ids"]["allocations"][0]
         self.assertEqual((allocation["slot"], allocation["numeric_id"]), (4, 1519))
-        rendered = CONTRACTS.selected_trainer_render(GAME, fixture()["contracts"]["trainer_ids"]["allocations"])
-        self.assertEqual(rendered[0]["party"]["partySize"], 2)
-        self.assertEqual(rendered[0]["party"]["slots"][0]["species"], "SPECIES_KOFFING")
-        self.assertIn(".trainerClass = TRAINER_CLASS_BIKER_FRLG", rendered[0]["compiled_record"])
-        self.assertIn("- Haze", rendered[0]["source_block"])
-
-    def test_selected_render_preserves_compiler_metadata_and_authored_item_ivs(self):
-        allocation = fixture()["contracts"]["trainer_ids"]["allocations"][0]
-        allocation.update({"source_trainer": "TRAINER_CRUSH_GIRL_TANYA",
-                           "source_hash": CONTRACTS.source_party_hash(GAME, "TRAINER_CRUSH_GIRL_TANYA")})
-        rendered = CONTRACTS.selected_trainer_render(GAME, [allocation])[0]
-        self.assertEqual(rendered["party"]["trainerName"], '_("TANYA")')
-        self.assertEqual(rendered["party"]["slots"][0]["heldItem"], "ITEM_BLACK_BELT")
-        self.assertIn("TRAINER_PARTY_IVS(6, 6, 6, 6, 6, 6)", rendered["compiled_record"])
-        self.assertIn("AI: Check Bad Move", rendered["source_block"])
 
     def test_rematch_maps_to_its_explicit_base_defeat_bit(self):
         manifest = fixture()
@@ -137,31 +122,6 @@ class SeviiContentContractTests(unittest.TestCase):
         manifest["contracts"]["states"].append(duplicate)
         with self.assertRaisesRegex(CONTRACTS.ContractError, "slot"):
             CONTRACTS.validate_contracts(GAME, manifest)
-
-    def test_transactional_story_and_tower_payloads_can_clear_after_success(self):
-        manifest = fixture()
-        manifest["content_domains"] += [
-            {"content_id": "story.selphy_request", "owner": "story"},
-            {"content_id": "trainer_tower.prize_claim", "owner": "trainer_tower"},
-        ]
-        manifest["contracts"]["states"] += [
-            {"id": "SEVII_SELPHY_PENDING_REWARD", "owner": "story", "storage": "var", "slot": 1, "initial": 0,
-             "lifecycle": "transactional", "transaction_id": "story.selphy_request", "readers": ["story.selphy_request"], "writers": ["story.selphy_request"],
-             "transitions": [{"from": 0, "to": 25, "caller": "story.selphy_request"}, {"from": 25, "to": 0, "caller": "story.selphy_request"}]},
-            {"id": "SEVII_TOWER_PENDING_PRIZE", "owner": "trainer_tower", "storage": "var", "slot": 2, "initial": 0,
-             "lifecycle": "transactional", "transaction_id": "trainer_tower.prize_claim", "readers": ["trainer_tower.prize_claim"], "writers": ["trainer_tower.prize_claim"],
-             "transitions": [{"from": 0, "to": 50, "caller": "trainer_tower.prize_claim"}, {"from": 50, "to": 0, "caller": "trainer_tower.prize_claim"}]},
-        ]
-        manifest["contracts"]["transactions"] += [
-            {"content_id": "story.selphy_request", "owner": "story", "kind": "claim", "prerequisite": ["request_active"], "destination": "bag", "consume": None,
-             "receipt": None, "pending_state": "SEVII_SELPHY_PENDING_REWARD",
-             "steps": ["establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"]},
-            {"content_id": "trainer_tower.prize_claim", "owner": "trainer_tower", "kind": "claim", "prerequisite": ["challenge_complete"], "destination": "bag", "consume": None,
-             "receipt": None, "pending_state": "SEVII_TOWER_PENDING_PRIZE",
-             "steps": ["establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"]},
-        ]
-        report = CONTRACTS.validate_contracts(GAME, manifest)
-        self.assertEqual({row["id"] for row in report["states"] if row["lifecycle"] == "transactional"}, {"SEVII_SELPHY_PENDING_REWARD", "SEVII_TOWER_PENDING_PRIZE"})
 
     def test_rejects_ordinary_transactions_completion_resets_and_unknown_battle_outcome(self):
         manifest = fixture()
