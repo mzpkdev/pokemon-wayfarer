@@ -1,6 +1,7 @@
 # Sevii Trainer Tower coordination
 
 Foundation base: `fbc3bc33f7a37b89be850013938595155bb6ecc0`.
+Published persistence/allocation contract: `d3eafb4a05`.
 
 ## Persistent payload contract
 
@@ -80,4 +81,3 @@ The Tower branch changes only the manifest's `trainer_tower` domain plus Tower
 states/transactions after the story owner publishes their allocation. Combined
 integration must merge domain records structurally and regenerate the shared
 artifact; do not resolve manifest conflicts by taking a whole-file version.
-
