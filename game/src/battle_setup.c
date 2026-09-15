@@ -2590,8 +2590,10 @@ bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
 #if FREE_MATCH_CALL == FALSE
 static u16 GetRematchTrainerId(u16 trainerId)
 {
+#if IS_WAYFARER
     if (WayfarerSeviiRematchHasFamily(trainerId))
         return WayfarerSeviiRematchGetOpponent(trainerId);
+#endif
 
     if (FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
         return GetRematchTrainerIdVSSeeker(trainerId);
@@ -2612,8 +2614,10 @@ bool8 ShouldTryRematchBattle(void)
 
 bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 {
+#if IS_WAYFARER
     if (WayfarerSeviiRematchHasFamily(trainerId))
         return WayfarerSeviiRematchIsReady(trainerId);
+#endif
 
     if (IsFirstTrainerIdReadyForRematch(gRematchTable, trainerId))
         return TRUE;
@@ -2623,8 +2627,10 @@ bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 
 bool8 IsTrainerReadyForRematch(void)
 {
+#if IS_WAYFARER
     if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
         return WayfarerSeviiRematchIsReady(TRAINER_BATTLE_PARAM.opponentA);
+#endif
 
     return IsTrainerReadyForRematch_(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
 }
@@ -2634,12 +2640,14 @@ static void HandleRematchVarsOnBattleEnd(void)
     if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && (I_VS_SEEKER_CHARGING != 0))
         ClearRematchMovementByTrainerId();
 
+#if IS_WAYFARER
     if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
     {
         WayfarerSeviiRematchClearReady(TRAINER_BATTLE_PARAM.opponentA);
         WayfarerSeviiRematchAdvance(TRAINER_BATTLE_PARAM.opponentA);
     }
     else
+#endif
     {
         ClearTrainerWantRematchState(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
     }

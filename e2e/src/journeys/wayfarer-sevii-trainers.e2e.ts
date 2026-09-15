@@ -345,6 +345,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       expect(firstRematch.dialogue.text).toContain("help me out with my")
       expect(firstRematch.battle.enemy!.level).toBeGreaterThan(base.battle.enemy!.level)
       const firstRematchOpponentId = await readTrainerOpponentId(rematchGame)
+      expect(firstRematchOpponentId).toBe(1539)
       expect(firstRematchOpponentId).not.toBe(baseOpponentId)
       await finishTrainerVictory(rematchGame, "clear that youre skilled", "first Sharon rematch")
 
@@ -357,7 +358,7 @@ describe.sequential("Wayfarer Sevii ordinary Trainers", () => {
       expect(finalRematch.dialogue.text).toContain("help me out with my")
       expect(finalRematch).toMatchObject({ battle: { active: true } })
       expect(finalRematch.battle.enemy!.level).toBeGreaterThan(0)
-      expect(await readTrainerOpponentId(rematchGame)).not.toBe(firstRematchOpponentId)
+      expect(await readTrainerOpponentId(rematchGame)).toBe(1540)
       await finishTrainerVictory(rematchGame, "clear that youre skilled", "final Sharon rematch")
     } finally {
       await rematchGame.close()

@@ -1038,6 +1038,7 @@ u8 FldEff_ExclamationMarkIcon(void)
 {
     u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
 
+#if IS_WAYFARER
     if (spriteId == MAX_SPRITES)
     {
         // FieldEffectStart registers the effect before invoking this function.
@@ -1045,7 +1046,8 @@ u8 FldEff_ExclamationMarkIcon(void)
         // sprite slot, or the next Trainer approach will wait for it forever.
         FieldEffectActiveListRemove(FLDEFF_EXCLAMATION_MARK_ICON);
     }
-    else
+#endif
+    if (spriteId != MAX_SPRITES)
     {
         SetIconSpriteData(&gSprites[spriteId], FLDEFF_EXCLAMATION_MARK_ICON, 0);
         UpdateSpritePaletteByTemplate(&sSpriteTemplate_ExclamationQuestionMark, &gSprites[spriteId]);
