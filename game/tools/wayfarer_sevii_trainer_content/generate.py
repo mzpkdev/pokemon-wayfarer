@@ -155,8 +155,16 @@ def manifest_update(manifest: dict) -> dict:
                             "classification": "ordinary", "battle_policy": "ordinary", "battle_type": source["battle_type"],
                             "outcome_policy": "defeat_and_blackout", "defeat_state": state_id(base["source_trainer"]),
                             "defeat_base": canonical})
-    manifest["contracts"]["trainer_ids"]["allocations"] = allocations
-    manifest["contracts"]["states"] = sorted(states, key=lambda row: row["slot"])
+    # This generator owns ordinary rows only.  Story and facility streams add
+    # their own declarations to the same contract envelope, so regenerating
+    # ordinary projection must never discard those independent records.
+    existing_allocations = [row for row in manifest["contracts"]["trainer_ids"]["allocations"]
+                            if row.get("owner") != "ordinary_trainer"]
+    manifest["contracts"]["trainer_ids"]["allocations"] = sorted(
+        existing_allocations + allocations, key=lambda row: (row.get("slot", -1), row.get("id", "")))
+    existing_states = [row for row in manifest["contracts"]["states"] if row.get("owner") != "ordinary_trainer"]
+    manifest["contracts"]["states"] = sorted(
+        existing_states + states, key=lambda row: (row.get("storage", ""), row.get("slot", -1), row.get("id", "")))
     return manifest
 
 
