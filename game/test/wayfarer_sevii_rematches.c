@@ -2,6 +2,7 @@
 #include "test/test.h"
 #include "constants/opponents.h"
 #include "wayfarer_sevii_rematches.h"
+#include "wayfarer_sevii_state.h"
 
 #if IS_WAYFARER
 
@@ -31,17 +32,19 @@ TEST("Sevii Vs. Seeker registry is local, complete, and uses generated IDs")
     WayfarerSeviiRematchClearReady(TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY);
     EXPECT(!WayfarerSeviiRematchIsReady(TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY));
 
-    EXPECT_EQ(WayfarerSeviiRematchGetOpponent(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN),
-              TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN_2);
-    WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN);
-    EXPECT_EQ(WayfarerSeviiRematchGetOpponent(TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN),
-              TRAINER_WAYFARER_SEVII_SWIMMER_MALE_FINN_2);
-
+    WayfarerSeviiRematchStageSet(WayfarerSeviiRematchFamilyIndex(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON), 0);
     EXPECT_EQ(WayfarerSeviiRematchGetOpponent(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON),
               TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2);
     WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
     EXPECT_EQ(WayfarerSeviiRematchGetOpponent(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON),
               TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_3);
+    WayfarerSeviiRematchAdvance(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
+    EXPECT_EQ(WayfarerSeviiRematchGetOpponent(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON),
+              TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_3);
+
+    WayfarerSeviiRematchStageSet(WayfarerSeviiRematchFamilyIndex(TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY), 0);
+    EXPECT_EQ(WayfarerSeviiRematchGetOpponent(TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY),
+              TRAINER_WAYFARER_SEVII_FISHERMAN_TOMMY);
 
     // Both source objects use this one generated base identity, so readiness
     // and stage selection remain atomic for the double battle.
