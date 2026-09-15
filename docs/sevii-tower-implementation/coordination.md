@@ -8,6 +8,7 @@ Published facility runtime and overlay: `50f1dfcda4` and `11adca27d2`.
 Published pending-prize transaction contract: `215d8d4836`.
 Published E2E lifecycle ABI/journey: `37f987fa6f`.
 Published transient lifecycle reset integration: `c51bb2afea`.
+Published lobby-exit and eight-floor completion enforcement: `7f861d4099`.
 
 ## Persistent payload contract
 
@@ -102,15 +103,23 @@ artifact; do not resolve manifest conflicts by taking a whole-file version.
 
 - Wayfarer focused mechanics: 8/8 Tower tests passed; all 48 Sevii content
   audit tests also passed in the same host check.
-- Full Wayfarer check: 5,360 total tests with no unexpected failures (4,367
+- Full Wayfarer check: 5,361 total tests with no unexpected failures (4,368
   passed; repository-known failures/assumptions/TODO/expected-failing retained).
 - SkyEmu Tower lifecycle journey: 1/1 passed; E2E protocol suite 17/17 passed.
 - Release products built serially for Wayfarer, Emerald, FireRed, LeafGreen,
   and HNS.
-- Wayfarer release ROM uses 32,682,188 bytes and leaves 872,244 bytes total;
-  the enforced 512 KiB reserve has 347,956 bytes of additional headroom.
+- Wayfarer release ROM uses 32,682,380 bytes and leaves 872,052 bytes total;
+  the enforced 512 KiB reserve has 347,764 bytes of additional headroom.
 - SaveBlock3 is 1,088 bytes, within the 1,624-byte bound; the Tower-owned
   persistent payload is 20 bytes.
 
 These are isolated-branch results. Final three-branch integration must
 regenerate combined outputs and rerun the same acceptance checks.
+
+The independent critic's three actionable findings are addressed in
+`7f861d4099`: the lobby exterior door confirms abandonment and restores the
+entry snapshot, the lobby nurse cannot heal an active run without the same
+abandonment transaction, and owner/time/prize delivery requires all eight
+floor-clear bits. The current SkyEmu journey covers save exclusion, transient
+reset, and abandonment restoration; the exhaustive four-format completion and
+every-floor loss/draw emulator matrix remains pending combined acceptance.
