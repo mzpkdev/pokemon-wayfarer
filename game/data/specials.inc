@@ -766,4 +766,20 @@ gSpecials::
     def_special GetWayfarerVermilionSeviiDestination
     def_special WayfarerCanSailToBirthIsland
     def_special WayfarerCanSailToNavelRock
+    def_special WayfarerSevii_HasPartyCapacity
+    def_special WayfarerSevii_PartyHasSpecies
+    def_special WayfarerSevii_PartyHasFriendshipAtLeast
+    def_special WayfarerSevii_TryGiveItemThenSetFlag
+    def_special WayfarerSevii_TryRemoveItemThenSetFlag
+    def_special WayfarerSevii_TryExchangeItemForReward
+    def_special WayfarerSevii_TryExchangeItemForRewardThenSetFlags
+    def_special WayfarerSevii_TryGiveEggThenSetFlag
+    def_special WayfarerSevii_StartSelphyRequest
+    def_special WayfarerSevii_HasActiveSelphyRequest
+    def_special WayfarerSevii_IsSelectedSpeciesRequested
+    def_special WayfarerSevii_TryClaimSelphyPendingReward
+    def_special WayfarerSevii_HasAnyLeagueClear
+    def_special WayfarerSevii_IsMainlandGiovanniComplete
+    def_special WayfarerSevii_IsMoltresEligible
+    def_special WayfarerSevii_ResolveMoltresBattle
 #endif
