@@ -17,6 +17,7 @@
 #include "field_player_avatar.h"
 #include "fieldmap.h"
 #include "vs_seeker.h"
+#include "wayfarer_sevii_rematches.h"
 #include "menu.h"
 #include "string_util.h"
 #include "tv.h"
@@ -482,7 +483,17 @@ static u8 GetVsSeekerResponseInArea(void)
             continue;
         }
 
-        gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[vsSeekerIdx].localId)] = rematchTrainerIdx;
+        if (WayfarerSeviiRematchHasFamily(trainerIdx))
+        {
+            // Sevii's 64 families deliberately do not consume the fixed
+            // SaveBlock1 rematch-index array. Story owns the compact pending
+            // state, which survives a save until this charged use resolves.
+            WayfarerSeviiRematchSetReady(trainerIdx);
+        }
+        else
+        {
+            gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[vsSeekerIdx].localId)] = rematchTrainerIdx;
+        }
         ShiftStillObjectEventCoords(&gObjectEvents[sVsSeeker->trainerInfo[vsSeekerIdx].objectEventId]);
         StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerRematch);
         sVsSeeker->trainerIdxArray[sVsSeeker->numRematchableTrainers] = vsSeekerIdx;
@@ -521,16 +532,19 @@ void ClearRematchMovementByTrainerId(void)
     struct ObjectEvent *objectEvent;
 
     int vsSeekerDataIdx = TrainerIdToRematchTableId(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
+    s32 wayfarerFamily = WayfarerSeviiRematchFamilyIndex(TRAINER_BATTLE_PARAM.opponentA);
 
     if (!I_VS_SEEKER_CHARGING) return;
 
-    if (vsSeekerDataIdx == -1)
+    if (vsSeekerDataIdx == -1 && wayfarerFamily == -1)
         return;
 
     for (i = 0; i < gMapHeader.events->objectEventCount; i++)
     {
         if (!ShouldChangeMovementForTrainerType(objectEventTemplates[i].trainerType)
-        || vsSeekerDataIdx != TrainerIdToRematchTableId(gRematchTable, GetTrainerFlagFromScript(objectEventTemplates[i].script)))
+        || (wayfarerFamily != -1
+            ? wayfarerFamily != WayfarerSeviiRematchFamilyIndex(GetTrainerFlagFromScript(objectEventTemplates[i].script))
+            : vsSeekerDataIdx != TrainerIdToRematchTableId(gRematchTable, GetTrainerFlagFromScript(objectEventTemplates[i].script))))
             continue;
 
         TryGetObjectEventIdByLocalIdAndMap(objectEventTemplates[i].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objEventId);
@@ -571,6 +585,8 @@ u16 GetRematchTrainerIdVSSeeker(u16 trainerId)
 
     if (!I_VS_SEEKER_CHARGING)
         return 0;
+    if (WayfarerSeviiRematchHasFamily(trainerId))
+        return WayfarerSeviiRematchGetOpponent(trainerId);
     if (tableId == -1)
         return 0;
     if (tableId >= REMATCH_ELITE_FOUR_ENTRIES)
@@ -755,6 +771,8 @@ static void ClearAllTrainerRematchStates(void)
 #if FREE_MATCH_CALL == FALSE
     u32 i;
 
+    WayfarerSeviiRematchClearAllReady();
+
     if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
         return;
 
@@ -831,7 +849,8 @@ static void StartAllRespondantIdleMovements(void)
                 SetTrainerMovementType(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
             TryOverrideTemplateCoordsForObjectEvent(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
         }
-        gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[j].localId)] = GetRematchTrainerIdVSSeeker(sVsSeeker->trainerInfo[j].trainerIdx);
+        if (!WayfarerSeviiRematchHasFamily(sVsSeeker->trainerInfo[j].trainerIdx))
+            gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[j].localId)] = GetRematchTrainerIdVSSeeker(sVsSeeker->trainerInfo[j].trainerIdx);
     }
 #endif //FREE_MATCH_CALL
 }
