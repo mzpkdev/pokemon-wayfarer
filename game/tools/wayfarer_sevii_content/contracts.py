@@ -177,14 +177,15 @@ def _namespace(root: Path, value: Any) -> dict[str, Any]:
                 "var_base": STATE_VAR_BASE, "var_capacity": STATE_VAR_CAPACITY,
                 "defeat_bitset": STATE_DEFEAT_BITSET, "storage": "SaveBlock3"}
     if row != expected: _fail("contracts.state_namespace must use the fixed audited Sevii SaveBlock3 reservation")
-    pattern = re.compile(r"^\s*#define\s+(?:FLAG|VAR)_[A-Za-z0-9_]+\s+(0x[0-9A-Fa-f]+)\b", re.M)
+    pattern = re.compile(r"^\s*#define\s+((?:FLAG|VAR)_[A-Za-z0-9_]+)\s+(0x[0-9A-Fa-f]+)\b", re.M)
     paths = list((root / "include/constants").glob("*.h")) + list((root / "data").glob("wayfarer_*source_constants.inc"))
     for path in paths:
         try: values = pattern.findall(path.read_text(encoding="utf-8"))
         except OSError as error: _fail(f"cannot audit Sevii state reservation {path}: {error}")
-        for value in values:
+        for symbol, value in values:
             numeric = int(value, 16)
-            if STATE_FLAG_BASE <= numeric < STATE_FLAG_BASE + STATE_FLAG_CAPACITY or STATE_VAR_BASE <= numeric < STATE_VAR_BASE + STATE_VAR_CAPACITY:
+            owned = symbol.startswith("FLAG_WAYFARER_SEVII_") or symbol.startswith("VAR_WAYFARER_SEVII_")
+            if not owned and (STATE_FLAG_BASE <= numeric < STATE_FLAG_BASE + STATE_FLAG_CAPACITY or STATE_VAR_BASE <= numeric < STATE_VAR_BASE + STATE_VAR_CAPACITY):
                 _fail(f"Sevii state namespace collides with existing constant {path}: {value}")
     return expected
 

@@ -94,6 +94,10 @@ STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.persistentFlags) ==
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.trainerFlags) == 107, WayfarerHoennTrainerBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.badges) * 8 == WAYFARER_HOENN_BADGE_COUNT, WayfarerHoennBadgeBankSize);
 STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerHoenn.visitedLocations) * 8 == WAYFARER_HOENN_VISITED_COUNT, WayfarerHoennVisitedBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.flags) == WAYFARER_SEVII_FLAG_BYTES, WayfarerSeviiFlagBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.vars) / sizeof(u16) == WAYFARER_SEVII_VAR_COUNT, WayfarerSeviiVarBankSize);
+STATIC_ASSERT(sizeof(((struct SaveBlock3 *)0)->wayfarerSevii.trainerFlags) == WAYFARER_SEVII_TRAINER_FLAG_BYTES, WayfarerSeviiTrainerBankSize);
+STATIC_ASSERT(sizeof(struct WayfarerSeviiTrainerTowerRecords) == 20, WayfarerSeviiTrainerTowerRecordsSize);
 #endif
 
 // ChallengeSettings is a packed bitfield block living in SaveBlock3 ahead of

@@ -60,6 +60,10 @@
 // One-shot Icefall fall signal. This HNS-unused slot is reset by the map
 // script after the warp and is intentionally not shared with VAR_TEMP_1.
 #define VAR_WAYFARER_SEVII_ICEFALL_FALL                  0x40FF
+#define VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES      WAYFARER_SEVII_VAR_ID(0)
+#define VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD         WAYFARER_SEVII_VAR_ID(1)
+#define VAR_WAYFARER_SEVII_SELPHY_REQUEST_ACTIVE         WAYFARER_SEVII_VAR_ID(2)
+#define VAR_WAYFARER_SEVII_TRAINER_TOWER_PENDING_PRIZE   WAYFARER_SEVII_VAR_ID(3)
 #else
 #define VAR_HOENN_STARTER_CHOICE                         VAR_STARTER_MON
 #endif
