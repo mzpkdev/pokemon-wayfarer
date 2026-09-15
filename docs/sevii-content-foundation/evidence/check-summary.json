@@ -1,0 +1,24 @@
+{
+  "content_tests": 43,
+  "mapjson_tests": 11,
+  "generator_environment_tests": 14,
+  "port_tests": 13,
+  "wild_tests": 61,
+  "trainer_scaling_tests": 28,
+  "league_tests": 5,
+  "e2e_tests": 6,
+  "audit_sha256": "542f3b568b702dd73b263b858ed280233b0aa26aa117e7f9b4685e092c456431",
+  "saveblock3_bytes": 904,
+  "rom_end": "0x09F28E38",
+  "rom_delta_bytes": 0,
+  "mechanics": {
+    "passed": 4357,
+    "expected_failing": 6,
+    "known_failing": 349,
+    "todo": 629,
+    "assumptions_failed": 9,
+    "total": 5350
+  },
+  "raw_evidence": "/tmp/sevii-foundation-evidence",
+  "review": "No outstanding accepted findings in scoped independent review."
+}

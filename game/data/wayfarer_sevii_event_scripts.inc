@@ -1,7 +1,7 @@
 @
 @ DO NOT MODIFY THIS FILE! It is auto-generated from src/data/wayfarer_sevii_maps.json
 @
-@ Source-free Wayfarer map-script tables for the registered FRLG Sevii maps.
+@ Central Wayfarer-owned map-script tables; source FRLG scripts are never linked.
 @
 
 	.include "data/scripts/wayfarer_sevii/common.inc"
@@ -52,10 +52,20 @@ ThreeIsland_BerryForest_Frlg_MapScripts::
 FourIsland_IcefallCave_Entrance_Frlg_MapScripts::
 	.byte 0
 
+FourIsland_IcefallCave_1F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_RESUME, WayfarerSevii_IcefallCave1F_OnResume
+	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_IcefallCave1F_OnLoad
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_IcefallCave1F_OnFrame
+	.byte 0
+
 FourIsland_IcefallCave_B1F_Frlg_MapScripts::
 	.byte 0
 
 FourIsland_IcefallCave_Back_Frlg_MapScripts::
+	.byte 0
+
+FiveIsland_RocketWarehouse_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_RocketWarehouse_OnLoad
 	.byte 0
 
 SixIsland_DottedHole_1F_Frlg_MapScripts::
@@ -184,6 +194,10 @@ SevenIsland_TanobyRuins_ViapoisChamber_Frlg_MapScripts::
 ThreeIsland_DunsparceTunnel_Frlg_MapScripts::
 	.byte 0
 
+SevenIsland_SevaultCanyon_TanobyKey_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_TanobyKey_OnTransition
+	.byte 0
+
 OneIsland_KindleRoad_EmberSpa_Frlg_MapScripts::
 	.byte 0
 
@@ -229,6 +243,10 @@ FiveIsland_ResortGorgeous_Frlg_MapScripts::
 FiveIsland_WaterLabyrinth_Frlg_MapScripts::
 	.byte 0
 
+FiveIsland_Meadow_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_Meadow_OnLoad
+	.byte 0
+
 FiveIsland_MemorialPillar_Frlg_MapScripts::
 	.byte 0
 
@@ -239,6 +257,10 @@ SixIsland_GreenPath_Frlg_MapScripts::
 	.byte 0
 
 SixIsland_WaterPath_Frlg_MapScripts::
+	.byte 0
+
+SixIsland_RuinValley_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, WayfarerSevii_RuinValley_OnLoad
 	.byte 0
 
 SevenIsland_TrainerTower_Frlg_MapScripts::

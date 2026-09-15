@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the source-free Wayfarer script table for registered Sevii maps.
+"""Generate the Wayfarer-owned Sevii map-script linkage artifact.
 
-The FRLG map-script files remain behind ``.if IS_FRLG``.  This generator owns
-the identically named map-script table symbols used by the selected headers,
-without copying any FRLG script body into the composite Wayfarer build.
+The manifest is the only projection boundary. Authored owner modules export
+handlers, but never define source-map tables: this generator emits every table
+once and validates the complete selected script closure before writing it.
 """
 
 from __future__ import annotations
@@ -11,15 +11,26 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import tempfile
 from pathlib import Path
 
 
 TOOL_DIR = Path(__file__).resolve().parent
 GAME_ROOT = TOOL_DIR.parents[1]
+sys.path.insert(0, str(TOOL_DIR.parent))
+
+from wayfarer_sevii_content.closure import (  # noqa: E402
+    ClosureError,
+    build_script_closure,
+    dependency_paths,
+    module_for_export,
+)
+from wayfarer_sevii_content import contracts, schema  # noqa: E402
+
+
 DEFAULT_MANIFEST = GAME_ROOT / "src/data/wayfarer_sevii_maps.json"
 DEFAULT_OUTPUT = GAME_ROOT / "data/wayfarer_sevii_event_scripts.inc"
-SCRIPT_ROOT = "data/scripts/wayfarer_sevii/"
 
 
 class GenerationError(ValueError):
@@ -28,77 +39,110 @@ class GenerationError(ValueError):
 
 def read_json(path: Path) -> dict:
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
+        value = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
         raise GenerationError(f"cannot read {path}: {error}") from error
+    if not isinstance(value, dict):
+        raise GenerationError(f"manifest root must be an object: {path}")
+    return value
 
 
-def map_script_includes(record: dict, root: Path) -> list[str]:
-    """Return reviewed Wayfarer-owned script files requested by one map.
+def validated(root: Path, manifest_path: Path) -> tuple[dict, dict]:
+    manifest = read_json(manifest_path)
+    try:
+        manifest = schema.validate_manifest(root, manifest)
+        contracts.validate_contracts(root, manifest)
+        closure = build_script_closure(root, manifest)
+    except (ClosureError, schema.SchemaError, contracts.ContractError) as error:
+        raise GenerationError(str(error)) from error
+    return manifest, closure
 
-    A non-empty ``retained_map_scripts`` list means that its map script table
-    is defined in one or more explicitly named source-free files.  Empty maps
-    use the generated zero-entry table below.
-    """
-    entries = record.get("retained_map_scripts", [])
-    if not isinstance(entries, list):
-        raise GenerationError(f"{record['source_map']} retained_map_scripts must be a list")
-    includes = []
-    for entry in entries:
-        if not isinstance(entry, dict) or not isinstance(entry.get("include"), str):
-            raise GenerationError(
-                f"{record['source_map']} retained_map_scripts entries must name an include"
-            )
-        include = entry["include"]
-        if not include.startswith(SCRIPT_ROOT) or ".." in Path(include).parts:
-            raise GenerationError(
-                f"{record['source_map']} script include must stay under {SCRIPT_ROOT}"
-            )
-        if not (root / include).is_file():
-            raise GenerationError(f"{record['source_map']} script include is missing: {include}")
-        includes.append(include)
-    return includes
+
+def handler_rows(manifest: dict) -> dict[str, list[dict]]:
+    rows: dict[str, list[dict]] = {}
+    for record in manifest["maps"]:
+        source_map = record["source_map"]
+        handlers = [
+            handler for handler in record.get("retained_map_scripts", [])
+            if manifest["content_domains"][schema.OWNER_DOMAINS[handler["owner"]]]["enabled"]
+        ]
+        rows[source_map] = sorted(handlers, key=lambda handler: handler["source_index"])
+    return rows
+
+
+def selected_module_names(manifest: dict) -> set[str]:
+    """Return modules required by all enabled map handlers and event scripts."""
+    selected = {"common"}
+    for record in manifest["maps"]:
+        for handler in handler_rows(manifest)[record["source_map"]]:
+            selected.add(handler["module"])
+        for event_kind in ("object_events", "coord_events", "bg_events"):
+            for event in record.get("retained_events", {}).get(event_kind, []):
+                owner = event.get("owner")
+                domain = schema.OWNER_DOMAINS.get(owner)
+                if domain is None or not manifest["content_domains"][domain]["enabled"]:
+                    continue
+                source = event.get("source", {})
+                source_script = source.get("script") if isinstance(source, dict) else None
+                entrypoint = event.get("wayfarer_script")
+                if source_script in (None, "", "0", "0x0", "NULL"):
+                    continue
+                if not isinstance(entrypoint, str):
+                    raise GenerationError(f"{record['source_map']} {event_kind} has no Wayfarer entrypoint")
+                module = module_for_export(manifest, entrypoint, owner)
+                if module is not None:
+                    selected.add(module)
+    return selected
 
 
 def render(root: Path, manifest_path: Path) -> str:
-    manifest = read_json(manifest_path)
-    if manifest.get("schema_version") != 1:
-        raise GenerationError("Wayfarer Sevii manifest has unsupported schema_version")
-    maps = manifest.get("maps")
-    if not isinstance(maps, list):
-        raise GenerationError("Wayfarer Sevii manifest maps must be a list")
-
-    records = []
-    includes = set()
-    names = set()
-    for record in maps:
-        if not isinstance(record, dict) or not isinstance(record.get("source_map"), str):
-            raise GenerationError("Wayfarer Sevii manifest map has no source_map")
-        name = record["source_map"]
-        if name in names:
-            raise GenerationError(f"Wayfarer Sevii manifest duplicates {name}")
-        names.add(name)
-        record_includes = map_script_includes(record, root)
-        includes.update(record_includes)
-        records.append((name, bool(record_includes)))
+    manifest, _ = validated(root, manifest_path)
+    modules = manifest["script_modules"]
+    rows_by_map = handler_rows(manifest)
+    try:
+        selected_modules = selected_module_names(manifest)
+    except ClosureError as error:
+        raise GenerationError(str(error)) from error
+    missing = selected_modules - set(modules)
+    if missing:
+        raise GenerationError(f"manifest has no script module {sorted(missing)[0]}")
+    includes = sorted({modules[name]["include"] for name in selected_modules})
 
     lines = [
         "@",
         "@ DO NOT MODIFY THIS FILE! It is auto-generated from src/data/wayfarer_sevii_maps.json",
         "@",
-        "@ Source-free Wayfarer map-script tables for the registered FRLG Sevii maps.",
+        "@ Central Wayfarer-owned map-script tables; source FRLG scripts are never linked.",
         "@",
         "",
-        '\t.include "data/scripts/wayfarer_sevii/common.inc"',
     ]
-    lines.extend(f'\t.include "{include}"' for include in sorted(includes))
-    if includes:
-        lines.append("")
-    for name, owns_table in records:
-        if owns_table:
-            continue
-        lines.extend((f"{name}_MapScripts::", "\t.byte 0", ""))
+    lines.extend(f'\t.include "{include}"' for include in includes)
+    lines.append("")
+    for record in manifest["maps"]:
+        source_map = record["source_map"]
+        lines.append(f"{source_map}_MapScripts::")
+        for row in rows_by_map[source_map]:
+            lines.append(f"\tmap_script {row['handler_type']}, {row['wayfarer_script']}")
+        lines.extend(("\t.byte 0", ""))
     return "\n".join(lines).rstrip() + "\n"
+
+
+def _relative(path: Path, root: Path) -> str:
+    try:
+        return path.relative_to(root).as_posix()
+    except ValueError as error:
+        raise GenerationError(f"tool is outside game root: {path}") from error
+
+
+def recursive_dependencies(root: Path, manifest_path: Path) -> list[str]:
+    manifest, _ = validated(root, manifest_path)
+    try:
+        paths = dependency_paths(root, manifest)
+    except ClosureError as error:
+        raise GenerationError(str(error)) from error
+    paths.extend((_relative(TOOL_DIR / "generate.py", root),
+                  _relative(TOOL_DIR.parent / "wayfarer_sevii_content" / "closure.py", root)))
+    return sorted(set(paths))
 
 
 def atomic_write(path: Path, content: str) -> None:
@@ -115,24 +159,39 @@ def atomic_write(path: Path, content: str) -> None:
         raise
 
 
+def write_depfile(path: Path, output: Path, dependencies: list[str], root: Path) -> None:
+    target = _relative(output, root)
+    escaped = " ".join(dependency.replace(" ", "\\ ") for dependency in dependencies)
+    atomic_write(path, f"{target}: {escaped}\n")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=GAME_ROOT)
     parser.add_argument("--manifest", type=Path)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--dependencies", action="store_true", help="print validated recursive prerequisites")
+    parser.add_argument("--depfile", type=Path, help="write Make dependency rule for the generated artifact")
     args = parser.parse_args()
+    if args.dependencies and (args.check or args.depfile):
+        parser.error("--dependencies cannot be combined with --check or --depfile")
     root = args.root.resolve()
-    manifest = (args.manifest or DEFAULT_MANIFEST).resolve()
-    output = (args.output or DEFAULT_OUTPUT).resolve()
+    manifest = (args.manifest or root / "src/data/wayfarer_sevii_maps.json").resolve()
+    output = (args.output or root / "data/wayfarer_sevii_event_scripts.inc").resolve()
     try:
+        if args.dependencies:
+            print("\n".join(recursive_dependencies(root, manifest)))
+            return 0
         content = render(root, manifest)
+        if args.depfile:
+            write_depfile(args.depfile.resolve(), output, recursive_dependencies(root, manifest), root)
+        if args.check:
+            if not output.is_file() or output.read_text(encoding="utf-8") != content:
+                parser.error(f"stale generated Sevii script artifact: {output}")
+            return 0
     except GenerationError as error:
         parser.error(str(error))
-    if args.check:
-        if not output.is_file() or output.read_text(encoding="utf-8") != content:
-            parser.error(f"stale generated Sevii script artifact: {output}")
-        return 0
     atomic_write(output, content)
     return 0
 

@@ -145,8 +145,13 @@ release. Publish each cell's owner, initial value, legal transitions, and
 consumers, use nonzero constants through normal flag/variable APIs, and keep
 `SaveBlock3` within its 1,624-byte bound with compile-time assertions.
 
-Use one-way state transitions. A later objective may read an earlier completion
-state, but it must not reset it. Map entry never awards an item, teaches a
+Use one-way transitions for objective progress and one-time receipts. A later
+objective may read an earlier completion state, but it must not reset it.
+Explicitly declared reusable transaction payloads, such as Selphy's pending
+request/reward and Trainer Tower's pending prize, may follow their owner's
+bounded transition graph, including clearing after a successful claim. These
+payloads do not reset objective completion or one-time receipts.
+Map entry never awards an item, teaches a
 password, defeats a Trainer, hides an undefeated actor, or completes an unseen
 scene.
 

@@ -98,8 +98,8 @@ def normalized_bytes(path: Path) -> bytes:
 
 
 def manifest_records(manifest: dict[str, Any]) -> list[dict[str, Any]]:
-    if manifest.get("schema_version") != 1:
-        raise AuditError("manifest schema_version must be 1")
+    if manifest.get("schema_version") not in (1, 2):
+        raise AuditError("manifest schema_version must be 1 or 2")
     maps = manifest.get("maps")
     if not isinstance(maps, list):
         raise AuditError("manifest maps must be a list")
@@ -172,6 +172,28 @@ def validate_exclusions(manifest: dict[str, Any], selected: set[str], event_sour
     exclusions = manifest.get("exclusions")
     if not isinstance(exclusions, list):
         raise AuditError("manifest exclusions must be a list")
+    if manifest.get("schema_version") == 2:
+        by_name: dict[str, str] = {}
+        for exclusion in exclusions:
+            if not isinstance(exclusion, dict) or not isinstance(exclusion.get("reason"), str) or not isinstance(exclusion.get("source_identities"), list):
+                raise AuditError("schema-v2 exclusions require reason and source_identities")
+            for identity in exclusion["source_identities"]:
+                if not isinstance(identity, dict) or identity.get("event_kind") != "map" or not isinstance(identity.get("source_map"), str):
+                    continue
+                name = identity["source_map"]
+                # Schema-v2 exclusions can describe omitted source-script
+                # surfaces on an otherwise selected geography map.  The port
+                # catalog only needs full-map exclusions here.
+                if name in selected:
+                    continue
+                if name in by_name:
+                    continue
+                by_name[name] = exclusion["reason"]
+        required = set(EXCLUDED_SOURCE_MAPS) | set(event_sources)
+        missing = sorted(required - set(by_name))
+        if missing:
+            raise AuditError(f"manifest omissions lack exclusion reasons: {missing[0]}")
+        return [{"source_map": name, "reason": by_name[name]} for name in sorted(by_name)]
     by_name: dict[str, str] = {}
     for index, record in enumerate(exclusions):
         if not isinstance(record, dict) or not isinstance(record.get("source_map"), str) or not isinstance(record.get("reason"), str):
@@ -427,8 +449,31 @@ def event_output_and_paths(records: list[dict[str, Any]], sources: dict[str, dic
     return paths, per_map
 
 
-def script_closure(root: Path, records: list[dict[str, Any]]) -> dict[str, Any]:
+def script_closure(root: Path, records: list[dict[str, Any]], manifest: dict[str, Any] | None = None) -> dict[str, Any]:
     """Report every explicitly retained Wayfarer-owned script and reject story ownership."""
+    if manifest is not None and manifest.get("schema_version") == 2:
+        import importlib.util
+        closure_path = root / "tools/wayfarer_sevii_content/closure.py"
+        spec = importlib.util.spec_from_file_location("wayfarer_sevii_content_closure", closure_path)
+        if spec is None or spec.loader is None:
+            raise AuditError("cannot load Wayfarer Sevii content closure")
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        try:
+            modern = module.build_script_closure(root, manifest)
+        except module.ClosureError as error:
+            raise AuditError(str(error)) from error
+        event_labels = set()
+        for record in records:
+            _, retained_labels = retained_event_rows(record, load_json(root / "data/maps" / record["source_map"] / "map.json"))
+            event_labels.update(row["label"] for row in retained_labels)
+        missing = sorted(event_labels - set(modern["labels"]) - set(COMMON_SHARED_HELPERS))
+        if missing:
+            raise AuditError(f"retained event script is not owned by a retained Wayfarer include: {missing[0]}")
+        return {"includes": modern["includes"], "labels": modern["labels"],
+                "commands": sorted({command for row in manifest["script_modules"].values() for command in row["allowed_commands"]}),
+                "retained_event_labels": sorted(event_labels), "shared_helpers": [],
+                "map_script_tables": [row["source_map"] for row in modern["map_script_tables"]]}
     includes: set[str] = set()
     labels: set[str] = set()
     map_script_tables = {f"{record['source_map']}_MapScripts" for record in records if record["retained_map_scripts"]}
@@ -645,7 +690,7 @@ def build_report(root: Path, manifest_path: Path, *, expected_map_count: int = E
     if raw_bytes != expected_raw_bytes:
         raise AuditError(f"expected {expected_raw_bytes} raw layout bytes, found {raw_bytes}")
     paths, _ = event_output_and_paths(records, sources, enabled_names)
-    script_report = script_closure(root, records)
+    script_report = script_closure(root, records, manifest)
     if sorted({row["label"] for row in retained_script_rows}) != script_report["retained_event_labels"]:
         raise AuditError("retained event script report does not close over its Wayfarer-owned labels")
     recovery = recovery_and_ferry_report(root, {record["map_id"] for record in records if record["source_map"] in enabled_names},
