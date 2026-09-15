@@ -37,6 +37,13 @@ TRANSACTION_STEPS = {
     "grant": ("establish_prerequisite", "attempt_destination", "set_receipt", "update_presentation"),
     "claim": ("establish_prerequisite", "attempt_destination", "clear_pending", "update_presentation"),
 }
+# Persistent story flags and generic variables begin clear.  This one
+# externally-visible size-record sentinel deliberately begins at the engine's
+# DEFAULT_MAX_SIZE value; keeping its narrow identity here prevents an
+# accidental nonzero default from becoming available to arbitrary state slots.
+NONZERO_INITIAL_STATES = {
+    ("SEVII_HERACROSS_SIZE_RECORD", "story", "var", 4): 0x8000,
+}
 
 
 def _fail(message: str) -> None:
@@ -203,6 +210,12 @@ def _state_numeric_id(storage: str, slot: int) -> int:
     return TRAINER_ID_BASE + slot
 
 
+def _valid_state_initial(ident: str, owner: str, storage: str, slot: int, initial: int) -> bool:
+    if initial == 0:
+        return True
+    return NONZERO_INITIAL_STATES.get((ident, owner, storage, slot)) == initial
+
+
 def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
     states, slots = {}, set()
     for index, raw in enumerate(_array(value, "contracts.states")):
@@ -212,7 +225,7 @@ def _states(value: Any, owners: dict[str, str]) -> dict[str, dict[str, Any]]:
         lifecycle = row.get("lifecycle", "completion")
         transaction_id = row.get("transaction_id")
         capacity = STATE_FLAG_CAPACITY if storage == "flag" else STATE_VAR_CAPACITY if storage == "var" else TRAINER_ID_LIMIT - TRAINER_ID_BASE
-        if not ident.startswith("SEVII_") or owner not in OWNERS or storage not in STORAGES or not 0 <= slot < capacity or initial != 0 or (storage, slot) in slots or ident in states: _fail(f"{path} has an invalid state identity, owner, initial value, or slot")
+        if not ident.startswith("SEVII_") or owner not in OWNERS or storage not in STORAGES or not 0 <= slot < capacity or not _valid_state_initial(ident, owner, storage, slot, initial) or (storage, slot) in slots or ident in states: _fail(f"{path} has an invalid state identity, owner, initial value, or slot")
         if lifecycle not in ("completion", "transactional") or (lifecycle == "completion" and transaction_id is not None) or (lifecycle == "transactional" and (owner not in ("story", "trainer_tower") or storage != "var" or not isinstance(transaction_id, str))): _fail(f"{path} has an invalid state lifecycle")
         readers, writers = _array(row["readers"], f"{path}.readers"), _array(row["writers"], f"{path}.writers")
         if len(set(readers)) != len(readers) or len(set(writers)) != len(writers): _fail(f"{path} repeats a state reader or writer")

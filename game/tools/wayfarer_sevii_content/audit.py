@@ -493,6 +493,10 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
         if transaction is not None and not transaction_commands:
             raise AuditError(f"{content_id}: declared transaction has no owned item or Pokemon command")
         if transaction is not None:
+            special_kinds = {kind for command in transaction_commands
+                             if (kind := closure.transaction_kind(command)) is not None}
+            if special_kinds and special_kinds != {transaction["kind"]}:
+                raise AuditError(f"{content_id}: atomic transaction special does not match declared transaction kind")
             receipt = transaction.get("receipt")
             if receipt is None:
                 pending = transaction.get("pending_state")
@@ -519,6 +523,7 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
                         "trainer_allocation": allocation["id"] if allocation else None,
                         "battle_commands": battles,
                         "transaction": transaction["kind"] if transaction else None,
+                        "transaction_commands": sorted(transaction_commands),
                         "pending_state": transaction.get("pending_state") if transaction else None})
     return {"entries": reports, "transaction_order": {
         "host_declaration_validated": True,

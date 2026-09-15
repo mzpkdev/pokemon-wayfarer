@@ -158,6 +158,50 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 report = AUDIT.validate_contract_closure(root, {}, closure, contracts)
             self.assertEqual(report["entries"][0]["pending_state"], "SEVII_CLAIM_PENDING")
 
+    def test_contract_closure_accepts_atomic_special_receipt_without_script_item_or_flag_markers(self):
+        row = {
+            "content_id": "story.test.atomic_grant", "owner": "story",
+            "wayfarer_script": "WayfarerSevii_AtomicGrant",
+            "state_reads": ["SEVII_ATOMIC_RECEIPT"],
+            "state_writes": ["SEVII_ATOMIC_RECEIPT"],
+        }
+        contracts = {
+            "states": [{"id": "SEVII_ATOMIC_RECEIPT", "symbol": "FLAG_WAYFARER_SEVII_ATOMIC_RECEIPT", "storage": "flag"}],
+            "trainer_ids": {"allocations": []},
+            "transactions": [{"content_id": row["content_id"], "kind": "grant", "receipt": "SEVII_ATOMIC_RECEIPT"}],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/atomic.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text(
+                "WayfarerSevii_AtomicGrant::\n"
+                "\tsetvar VAR_0x8004, ITEM_POTION\n"
+                "\tsetvar VAR_0x8005, FLAG_WAYFARER_SEVII_ATOMIC_RECEIPT\n"
+                "\tspecialvar VAR_RESULT, WayfarerSevii_TryGiveItemThenSetFlag\n"
+                "\tend\n",
+                encoding="utf-8",
+            )
+            closure = {
+                "includes": ["data/scripts/wayfarer_sevii/story/atomic.inc"],
+                "state_operations": [
+                    {"label": "WayfarerSevii_AtomicGrant", "access": access,
+                     "state": "FLAG_WAYFARER_SEVII_ATOMIC_RECEIPT"}
+                    for access in ("read", "write")
+                ],
+                "content_operations": [{
+                    "label": "WayfarerSevii_AtomicGrant", "kind": "transaction",
+                    "command": "WayfarerSevii_TryGiveItemThenSetFlag",
+                }],
+            }
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                report = AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            self.assertEqual(report["entries"][0]["transaction_commands"], ["WayfarerSevii_TryGiveItemThenSetFlag"])
+            contracts["transactions"][0]["kind"] = "handoff"
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                with self.assertRaisesRegex(AUDIT.AuditError, "does not match declared transaction kind"):
+                    AUDIT.validate_contract_closure(root, {}, closure, contracts)
+
     def test_real_closure_and_contracts_accept_an_ordinary_single_battle_wrapper(self):
         """Exercise the production closure and Trainer contract, not mocked operations."""
         content_id = "ordinary.test.biker_goon"

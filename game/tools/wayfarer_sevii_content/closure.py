@@ -45,6 +45,32 @@ STATE_WRITES = {"setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar",
 STATE_READS = {"checkflag", "checkvar", "compare", "goto_if_set", "goto_if_unset", "call_if_set", "call_if_unset", "goto_if_eq", "goto_if_ne", "goto_if_lt", "goto_if_le", "goto_if_gt", "goto_if_ge", "call_if_eq", "call_if_ne", "call_if_lt", "call_if_le", "call_if_gt", "call_if_ge"}
 TRANSIENT_VARS = {"VAR_RESULT", "VAR_LAST_TALKED", "VAR_FACING", "VAR_0x8004", "VAR_0x8005", "VAR_0x8006", "VAR_0x8007"}
 
+# These are the only story specials whose C implementations are reviewed as
+# atomic content transactions.  Their implementation source is pinned by the
+# manifest's special external contract, so this table intentionally names the
+# exact calling ABI rather than accepting arbitrary ``specialvar`` calls.
+# ``state_vars`` are receipt flags supplied through event-script temporary
+# variables; the special reads and writes them after it has completed the safe
+# destination/consumption sequence.  Selphy's claim owns its fixed payload
+# clear entirely in C.
+TRANSACTION_SPECIALS: dict[str, dict[str, Any]] = {
+    "WayfarerSevii_TryGiveItemThenSetFlag": {"kind": "grant", "state_vars": ("VAR_0x8005",)},
+    "WayfarerSevii_TryRemoveItemThenSetFlag": {"kind": "handoff", "state_vars": ("VAR_0x8005",)},
+    "WayfarerSevii_TryExchangeItemForReward": {"kind": "handoff", "state_vars": ("VAR_0x8006",)},
+    "WayfarerSevii_TryExchangeItemForRewardThenSetFlags": {
+        "kind": "handoff", "state_vars": ("VAR_0x8006", "VAR_0x8007"),
+    },
+    "WayfarerSevii_TryGiveEggThenSetFlag": {"kind": "grant", "state_vars": ("VAR_0x8005",)},
+    "WayfarerSevii_TryClaimSelphyPendingReward": {
+        "kind": "claim",
+        "fixed_states": (
+            "VAR_WAYFARER_SEVII_SELPHY_REQUESTED_SPECIES",
+            "VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD",
+            "VAR_WAYFARER_SEVII_SELPHY_REQUEST_ACTIVE",
+        ),
+    },
+}
+
 # Constants name engine values, not script/data labels.  A dependency is
 # intentionally rejected unless it is a local export or a manifest row.
 CONSTANT_PREFIXES = (
@@ -343,6 +369,33 @@ def _state_operands(command: str, line: str) -> list[tuple[str, str]]:
     return []
 
 
+def transaction_kind(command: str) -> str | None:
+    """Return the reviewed semantic kind for an atomic transaction special."""
+    effect = TRANSACTION_SPECIALS.get(command)
+    return effect["kind"] if effect is not None else None
+
+
+def _special_transaction_states(label: str, transient_values: dict[str, str], *, module: str,
+                                relative: str) -> set[str]:
+    """Resolve one reviewed special's C-owned persistent state effects.
+
+    The event VM only passes scalar temporary variables to a special.  We
+    therefore require an immediately concrete, owned state symbol for every
+    receipt argument instead of guessing through arbitrary script flow.
+    """
+    effect = TRANSACTION_SPECIALS[label]
+    states = set(effect.get("fixed_states", ()))
+    for variable in effect.get("state_vars", ()):
+        target = transient_values.get(variable)
+        if target is None:
+            raise ClosureError(f"script module {module} transaction special {label} lacks a concrete {variable} receipt in {relative}")
+        state = _validate_state_operand(target, module=module, relative=relative, aliases=set())
+        if state is None:
+            raise ClosureError(f"script module {module} transaction special {label} has a non-persistent {variable} receipt in {relative}")
+        states.add(state)
+    return states
+
+
 def _validate_state_operand(target: str, *, module: str, relative: str, aliases: set[str]) -> str | None:
     if target.isdigit() or target.lower().startswith("0x"):
         raise ClosureError(f"script module {module} writes or reads raw numeric state {target} in {relative}")
@@ -496,10 +549,12 @@ def build_script_closure(root: Path, manifest: dict[str, Any]) -> dict[str, Any]
                     transient_aliases.add(match.group(1))
         for relative in files:
             current_label = "<module>"
+            transient_values: dict[str, str] = {}
             for line in (root / relative).read_text(encoding="utf-8").splitlines():
                 label_match = LABEL_DEF.fullmatch(line.split("@", 1)[0].strip())
                 if label_match:
                     current_label = label_match.group(1)
+                    transient_values = {}
                 command = _script_command(line)
                 if command is not None and command not in modules[name]["allowed_commands"]:
                     raise ClosureError(f"script module {name} uses unreviewed command {command} in {relative}")
@@ -512,6 +567,22 @@ def build_script_closure(root: Path, manifest: dict[str, Any]) -> dict[str, Any]
                         state = _validate_state_operand(target, module=name, relative=relative, aliases=transient_aliases)
                         if state is not None:
                             state_operations.add((name, current_label, access, state))
+                    operands = _operands(line)
+                    if command in STATE_WRITES and operands and operands[0] in TRANSIENT_VARS:
+                        if command == "setvar" and len(operands) > 1:
+                            transient_values[operands[0]] = operands[1]
+                        else:
+                            transient_values.pop(operands[0], None)
+                    if command == "specialvar" and len(operands) > 1 and operands[1] in TRANSACTION_SPECIALS:
+                        special = operands[1]
+                        content_operations.add((name, current_label, "transaction", special))
+                        for state in _special_transaction_states(special, transient_values, module=name, relative=relative):
+                            # Receipt and pending-payload reads/writes happen
+                            # inside the pinned C special, after its guarded
+                            # transaction ordering.  They must still appear
+                            # in the contract closure as owned state access.
+                            state_operations.add((name, current_label, "read", state))
+                            state_operations.add((name, current_label, "write", state))
                 for label, command in _line_references(line):
                     if _is_constant(label):
                         continue

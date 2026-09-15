@@ -138,6 +138,25 @@ class SeviiContentContractTests(unittest.TestCase):
         with self.assertRaisesRegex(CONTRACTS.ContractError, "slot"):
             CONTRACTS.validate_contracts(GAME, manifest)
 
+    def test_allows_only_the_truthful_heracross_size_record_nonzero_initial(self):
+        manifest = fixture()
+        content = "story.heracross_size_record"
+        manifest["content_domains"].append({"content_id": content, "owner": "story",
+                                            "state_reads": ["SEVII_HERACROSS_SIZE_RECORD"],
+                                            "state_writes": ["SEVII_HERACROSS_SIZE_RECORD"]})
+        manifest["contracts"]["states"].append({
+            "id": "SEVII_HERACROSS_SIZE_RECORD", "owner": "story", "storage": "var", "slot": 4,
+            "initial": 0x8000, "readers": [content], "writers": [content],
+            "transitions": [{"from": 0x8000, "to": 0x8001, "caller": content}],
+        })
+        report = CONTRACTS.validate_contracts(GAME, manifest)
+        state = next(row for row in report["states"] if row["id"] == "SEVII_HERACROSS_SIZE_RECORD")
+        self.assertEqual(state["initial"], 0x8000)
+
+        manifest["contracts"]["states"][-1]["id"] = "SEVII_OTHER_SIZE_RECORD"
+        with self.assertRaisesRegex(CONTRACTS.ContractError, "initial value"):
+            CONTRACTS.validate_contracts(GAME, manifest)
+
     def test_transactional_story_and_tower_payloads_can_clear_after_success(self):
         manifest = fixture()
         manifest["content_domains"] += [
