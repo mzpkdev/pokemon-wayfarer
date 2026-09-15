@@ -434,6 +434,30 @@ def _service_payment_follows_successful_relearner(entry: str, labels: list[str],
         _labels_reachable(success_sources, {payment}, graph) for payment in payment_labels)
 
 
+def _egg_grant_has_capacity_then_receipt(labels: list[str], bodies: dict[str, str],
+                                         receipt_symbol: str) -> bool:
+    """Validate the reviewed non-PC Egg grant's local success ordering."""
+    for label in labels:
+        lines = bodies[label].splitlines()
+        egg_index = next((index for index, line in enumerate(lines)
+                          if re.fullmatch(r"\s*giveegg\s+SPECIES_[A-Z0-9_]+\s*(?:@.*)?", line)), None)
+        if egg_index is None:
+            continue
+        capacity_index = next((index for index, line in enumerate(lines[:egg_index])
+                               if re.fullmatch(r"\s*getpartysize\s*(?:@.*)?", line)), None)
+        if capacity_index is None:
+            continue
+        capacity_guard = any(re.fullmatch(
+            r"\s*goto_if_eq\s+VAR_RESULT\s*,\s*PARTY_SIZE\s*,\s*WayfarerSevii_[A-Za-z0-9_]+\s*(?:@.*)?", line)
+            for line in lines[capacity_index + 1:egg_index])
+        receipt_after_egg = any(re.fullmatch(
+            rf"\s*setflag\s+{re.escape(receipt_symbol)}\s*(?:@.*)?", line)
+            for line in lines[egg_index + 1:])
+        if capacity_guard and receipt_after_egg:
+            return True
+    return False
+
+
 def _battle_types(source: str, operations: list[dict[str, Any]]) -> list[str]:
     """Return the script form used by each owned Trainer battle command.
 
@@ -575,6 +599,9 @@ def validate_contract_closure(root: Path, manifest: dict[str, Any], closure_repo
                         raise AuditError(f"{content_id}: repeatable claim does not clear payload state {state_id}")
             elif states[receipt]["symbol"] not in written:
                 raise AuditError(f"{content_id}: transaction receipt is not written by its owned script")
+            if "giveegg" in transaction_commands:
+                if transaction["kind"] != "grant" or not isinstance(receipt, str) or not _egg_grant_has_capacity_then_receipt(labels, bodies, states[receipt]["symbol"]):
+                    raise AuditError(f"{content_id}: Egg grant must check capacity, give the Egg, then write its receipt")
         if row["owner"] == "ordinary_trainer":
             if len(battles) != 1:
                 raise AuditError(f"{content_id}: ordinary Trainer content must have exactly one owned battle command")

@@ -115,6 +115,20 @@ class WayfarerSeviiClosureTests(unittest.TestCase):
         self.assertIn(("WayfarerSevii_Transaction3", "FLAG_WAYFARER_SEVII_RECEIPT_3_7"), writes)
         self.assertIn(("WayfarerSevii_Transaction5", "VAR_WAYFARER_SEVII_SELPHY_PENDING_REWARD"), writes)
 
+    def test_reports_giveegg_as_a_transaction_command(self):
+        module = self.root / "data/scripts/wayfarer_sevii/story/egg.inc"
+        module.parent.mkdir(parents=True)
+        module.write_text("WayfarerSevii_Egg::\n\tgiveegg SPECIES_TOGEPI\n\tend\n", encoding="utf-8")
+        manifest = {"script_modules": {"story_egg": {
+            "owner": "story", "include": "data/scripts/wayfarer_sevii/story/egg.inc",
+            "exports": ["WayfarerSevii_Egg"], "allowed_externals": [],
+            "allowed_commands": ["giveegg", "end"],
+        }}, "maps": []}
+        report = CLOSURE.build_script_closure(self.root, manifest)
+        self.assertEqual(report["content_operations"], [{
+            "module": "story_egg", "label": "WayfarerSevii_Egg", "kind": "transaction", "command": "giveegg",
+        }])
+
     def test_rejects_duplicate_handler_type(self):
         manifest = self.manifest()
         manifest["maps"][0]["retained_map_scripts"].append(dict(manifest["maps"][0]["retained_map_scripts"][0]))

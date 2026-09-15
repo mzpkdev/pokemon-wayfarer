@@ -40,7 +40,7 @@ REFERENCE_OPERANDS: dict[str, tuple[int | str, ...]] = {
     "loadword": (1,), "loadbytefromptr": (1,), "loadwordfromptr": (1,),
 }
 TRAINER_COMMANDS = {"trainerbattle", "trainerbattle_single", "trainerbattle_double"}
-TRANSACTION_COMMANDS = {"giveitem", "givepokemon", "removeitem"}
+TRANSACTION_COMMANDS = {"giveitem", "givepokemon", "giveegg", "removeitem"}
 STATE_WRITES = {"setflag", "clearflag", "setvar", "addvar", "subvar", "copyvar", "setorcopyvar"}
 STATE_READS = {"checkflag", "checkvar", "compare", "goto_if_set", "goto_if_unset", "call_if_set", "call_if_unset", "goto_if_eq", "goto_if_ne", "goto_if_lt", "goto_if_le", "goto_if_gt", "goto_if_ge", "call_if_eq", "call_if_ne", "call_if_lt", "call_if_le", "call_if_gt", "call_if_ge"}
 TRANSIENT_VARS = {"VAR_RESULT", "VAR_LAST_TALKED", "VAR_FACING", "VAR_0x8004", "VAR_0x8005", "VAR_0x8006", "VAR_0x8007", "VAR_0x8008", "VAR_0x8009", "VAR_0x800A"}

@@ -278,6 +278,44 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 with self.assertRaisesRegex(AUDIT.AuditError, "payment can precede successful service"):
                     AUDIT.validate_contract_closure(root, {}, closure, contracts)
 
+    def test_contract_closure_requires_egg_receipt_after_capacity_checked_gift(self):
+        row = {
+            "content_id": "story.test.egg", "owner": "story", "wayfarer_script": "WayfarerSevii_Egg",
+            "state_reads": [], "state_writes": ["SEVII_EGG_RECEIVED"],
+        }
+        contracts = {
+            "states": [{"id": "SEVII_EGG_RECEIVED", "symbol": "FLAG_WAYFARER_SEVII_EGG_RECEIVED", "storage": "flag"}],
+            "trainer_ids": {"allocations": []},
+            "transactions": [{"content_id": row["content_id"], "kind": "grant", "receipt": "SEVII_EGG_RECEIVED"}],
+        }
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            include = root / "data/scripts/wayfarer_sevii/story/egg.inc"
+            include.parent.mkdir(parents=True)
+            include.write_text(
+                "WayfarerSevii_Egg::\n"
+                "\tgetpartysize\n"
+                "\tgoto_if_eq VAR_RESULT, PARTY_SIZE, WayfarerSevii_EggFull\n"
+                "\tgiveegg SPECIES_TOGEPI\n"
+                "\tsetflag FLAG_WAYFARER_SEVII_EGG_RECEIVED\n"
+                "WayfarerSevii_EggFull::\n\tend\n",
+                encoding="utf-8",
+            )
+            closure = {
+                "includes": ["data/scripts/wayfarer_sevii/story/egg.inc"],
+                "state_operations": [{"label": "WayfarerSevii_Egg", "access": "write",
+                                      "state": "FLAG_WAYFARER_SEVII_EGG_RECEIVED"}],
+                "content_operations": [{"label": "WayfarerSevii_Egg", "kind": "transaction", "command": "giveegg"}],
+            }
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                AUDIT.validate_contract_closure(root, {}, closure, contracts)
+            include.write_text(include.read_text(encoding="utf-8").replace(
+                "\tgiveegg SPECIES_TOGEPI\n\tsetflag FLAG_WAYFARER_SEVII_EGG_RECEIVED\n",
+                "\tsetflag FLAG_WAYFARER_SEVII_EGG_RECEIVED\n\tgiveegg SPECIES_TOGEPI\n"), encoding="utf-8")
+            with mock.patch.object(AUDIT, "selected_records", return_value=[row]):
+                with self.assertRaisesRegex(AUDIT.AuditError, "give the Egg, then write its receipt"):
+                    AUDIT.validate_contract_closure(root, {}, closure, contracts)
+
     def test_real_closure_and_contracts_accept_an_ordinary_single_battle_wrapper(self):
         """Exercise the production closure and Trainer contract, not mocked operations."""
         content_id = "ordinary.test.biker_goon"
