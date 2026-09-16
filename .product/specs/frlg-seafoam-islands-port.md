@@ -55,10 +55,11 @@ the removed HNS B1F encounter cannot become a second capture. Its battle is
 level 50 before any separately approved scaling rule. Apply the Kanto
 legendary-readiness rule to starting the battle, not to entering or exploring
 Seafoam. An ineligible interaction explains that Articuno cannot yet be
-challenged and leaves it present. A run, teleport, or loss keeps the encounter
-retryable under the game's legendary policy; a catch or defeat resolves it
-once. Test the existing encounter script's exact outcome handling before
-adopting it unchanged.
+challenged and leaves it present. Preserve FRLG's battle outcomes: a run or
+teleport removes Articuno for the current map visit without setting its fought
+flag, so it returns on reentry; a catch, defeat, or player loss sets the fought
+flag and resolves the encounter. Map the source flags to the single Wayfarer
+Articuno state without changing these outcomes.
 
 Preserve FRLG floor items and hidden items, including Ice Heal, Water Stone,
 Revive, Big Pearl, Ultra Ball, Nugget, and the B4F Water Stone. Each uses
@@ -84,7 +85,8 @@ capture destination under its owning story rules.
    after each current is stopped. An unfinished path resets on Route 20;
    completed paths stay solved.
 3. Verify item persistence, encounter species and methods per floor, and
-   Articuno's ineligible, retry, catch, and defeat paths.
+   Articuno's ineligible, run/teleport and reentry, catch, defeat, and player
+   loss paths.
 4. Confirm no Wayfarer path enters Seafoam Gym or Secret Cave and no Seafoam
    interaction starts a Groudon battle or awards Blaine's badge.
 

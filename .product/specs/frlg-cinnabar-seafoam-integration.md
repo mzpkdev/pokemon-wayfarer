@@ -81,6 +81,14 @@ retires the unused exterior introduction. Neither path duplicates a battle,
 badge, item, or Trainer Rating reward. The exterior interaction cannot block
 the Gym doorway or ordinary city travel.
 
+Initialize the Gym leader visible on a new Wayfarer save; do not wait for the
+removed Cinnabar script to clear `FLAG_HIDE_VIRIDIAN_BLUE`. Give the exterior
+introduction its own one-time state and hide flag, separate from the Gym
+leader's visibility and defeat state. Speaking to exterior Blue records that
+state and hides only his exterior object. Entering the Gym first records the
+same introduction state, hides the unused exterior object, and selects the
+Gym's first-meeting line. Neither path hides an undefeated Gym leader.
+
 This port keeps Blue as Wayfarer's initial Viridian Gym Leader and sole Earth
 Badge giver. His invitation is local to Viridian and has no fifteen-badge,
 Cinnabar, or Blaine prerequisite. A future Kanto story may separately assign
@@ -124,11 +132,14 @@ five-floor cave, puzzle, services, or rewards by default.
    Dojo Blaine reward, no Seafoam Groudon, and Hoenn Terra Cave's Groudon
    encounter unaffected.
 4. Save and reload during Mansion switches, Gym quiz progress, Lab revival,
-   Seafoam current progress, Articuno retry, deferred item delivery, and
-   Blue's introduction. Verify Fly, whiteout, Center healing, and the Mart.
+   Seafoam current progress, Articuno's run/teleport reentry behavior,
+   deferred item delivery, and Blue's introduction. Verify Fly, whiteout,
+   Center healing, and the Mart.
 5. Meet Blue at Viridian before any Cinnabar visit, after a visit, and after
-   Blaine. Confirm the Gym gives a truthful first meeting if the exterior
-   interaction was skipped, and neither path changes Bill or Sevii state.
+   Blaine. Confirm the leader is visible from a new save, the Gym gives a
+   truthful first meeting if the exterior interaction was skipped, and both
+   orders retire only the exterior introduction without changing Bill or
+   Sevii state.
 6. Build the release ROM and record the true linked delta and reserve margin.
 
 ## References
