@@ -45,3 +45,6 @@ const u16 gIntroBubbles_Pal[] = INCBIN_U16("graphics/intro/scene_3/bubbles.gbapa
 
 const u32 gIntroFlygonSilhouette_Gfx[] = INCBIN_U32("graphics/intro/scene_1/flygon.4bpp.smol");
 const u32 gIntroSparkle_Gfx[] = INCBIN_U32("graphics/intro/scene_1/sparkle.4bpp.smol");
+#if IS_WAYFARER
+const u32 gWayfarerIntroPokeball_Gfx[] = INCBIN_U32("graphics/intro/scene_1/wayfarer_pokeball.4bpp.smol");
+#endif

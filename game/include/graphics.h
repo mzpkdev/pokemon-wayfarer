@@ -1980,6 +1980,9 @@ extern const u32 gBerryCheckCircle_Gfx[];
 //intro graphics
 extern const u32 gIntroSparkle_Gfx[];
 extern const u32 gIntroFlygonSilhouette_Gfx[];
+#if IS_WAYFARER
+extern const u32 gWayfarerIntroPokeball_Gfx[];
+#endif
 extern const u32 gIntroLightning_Gfx[];
 extern const u16 gIntroLightning_Pal[];
 extern const u32 gIntroCopyright_Gfx[];
