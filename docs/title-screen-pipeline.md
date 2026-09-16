@@ -83,8 +83,8 @@ Run the converter tests after changing the pipeline:
 
 ## Version banner
 
-The `Wayfarer` banner uses the reviewed wordmark at
-`.github/assets/wayfarer-simple.png` directly. The approved full-resolution
+The `Wayfarer` banner uses the thick-stroke wordmark at
+`.github/assets/wayfarer-simple-thick.png` directly. The full-resolution
 source is downsampled with Lanczos into the existing 128x32 sprite region and
 quantized to eight grayscale shades (plus transparency) by
 `game/tools/generate_wayfarer_banner.py`. It packs the two 64x32 halves.
@@ -98,7 +98,8 @@ The generator writes `wayfarer_version.png` and `wayfarer_version.pal` in
 `game/graphics/title_screen/wayfarer/`. It packs the left and right 64x32 sprite
 halves into a 64x64 sheet, reserves index 0 for transparency, and uses only the
 first 16 sprite-palette entries. Regeneration does not change the background.
-The earlier Pixel Art Fixer reconstruction remains at
+The original simple source remains at `.github/assets/wayfarer-simple.png`, and
+the earlier Pixel Art Fixer reconstruction remains at
 `game/graphics/title_screen/wayfarer/wayfarer_wordmark_pixel_fixed.png` for
 comparison; it is not an input to the current banner generator.
 

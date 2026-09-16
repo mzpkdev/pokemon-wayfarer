@@ -16,7 +16,7 @@ GRAY_LEVELS = tuple(round(index * 255 / 7) for index in range(8))
 
 GAME_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = GAME_ROOT / "graphics/title_screen/wayfarer"
-DEFAULT_INPUT = GAME_ROOT.parent / ".github/assets/wayfarer-simple.png"
+DEFAULT_INPUT = GAME_ROOT.parent / ".github/assets/wayfarer-simple-thick.png"
 
 
 def palette() -> list[int]:
