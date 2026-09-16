@@ -355,14 +355,14 @@ static const struct
     const struct CompressedSpriteSheet *sheet;
     const u16 *palette;
     const struct SpriteTemplate *spriteTemplate;
-    s16 x;
+    s16 offscreenOffset;
     s16 y;
 } sWayfarerPassingPokemon[WAYFARER_PASS_COUNT] =
 {
-    {&sSpriteSheet_WayfarerVolbeat, gIntroVolbeat_Pal, &sSpriteTemplate_WayfarerVolbeat, -16, WAYFARER_VOLBEAT_Y},
-    {&sSpriteSheet_WayfarerTorchic, gIntroTorchic_Pal, &sSpriteTemplate_WayfarerTorchic, DISPLAY_WIDTH + 16, WAYFARER_TORCHIC_Y},
-    {&sSpriteSheet_WayfarerBrendan, gIntroPlayer_Pal, &sSpriteTemplate_WayfarerBicyclist, -32, WAYFARER_BICYCLIST_Y},
-    {&sSpriteSheet_WayfarerManectric, gIntroManectric_Pal, &sSpriteTemplate_WayfarerManectric, DISPLAY_WIDTH + 32, WAYFARER_MANECTRIC_Y},
+    {&sSpriteSheet_WayfarerVolbeat, gIntroVolbeat_Pal, &sSpriteTemplate_WayfarerVolbeat, 16, WAYFARER_VOLBEAT_Y},
+    {&sSpriteSheet_WayfarerTorchic, gIntroTorchic_Pal, &sSpriteTemplate_WayfarerTorchic, 16, WAYFARER_TORCHIC_Y},
+    {&sSpriteSheet_WayfarerBrendan, gIntroPlayer_Pal, &sSpriteTemplate_WayfarerBicyclist, 32, WAYFARER_BICYCLIST_Y},
+    {&sSpriteSheet_WayfarerManectric, gIntroManectric_Pal, &sSpriteTemplate_WayfarerManectric, 32, WAYFARER_MANECTRIC_Y},
 };
 
 static void CreateWayfarerPressStart(s16 y)
@@ -405,6 +405,8 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     {
         const u8 pass = task->data[1];
         const struct CompressedSpriteSheet *sheet = sWayfarerPassingPokemon[pass].sheet;
+        const s16 startX = task->data[7] > 0 ? -sWayfarerPassingPokemon[pass].offscreenOffset
+                                               : DISPLAY_WIDTH + sWayfarerPassingPokemon[pass].offscreenOffset;
         u8 spriteId;
 
         if (task->data[0] != 0)
@@ -436,7 +438,7 @@ static void Task_WayfarerPokemonPass(u8 taskId)
         }
         LoadSpritePaletteInSlot(&(struct SpritePalette){sWayfarerPassingPokemon[pass].palette, TAG_WAYFARER_PASSING_POKEMON}, 14);
         spriteId = CreateSprite(sWayfarerPassingPokemon[pass].spriteTemplate,
-                                sWayfarerPassingPokemon[pass].x, sWayfarerPassingPokemon[pass].y, 2);
+                                startX, sWayfarerPassingPokemon[pass].y, 2);
         if (spriteId == MAX_SPRITES)
         {
             FreeSpriteTilesByTag(TAG_WAYFARER_PASSING_POKEMON);
@@ -450,7 +452,7 @@ static void Task_WayfarerPokemonPass(u8 taskId)
         if (pass == WAYFARER_PASS_BICYCLIST)
         {
             u8 bicycleId = CreateSprite(&sSpriteTemplate_WayfarerBicycle,
-                                        sWayfarerPassingPokemon[pass].x,
+                                        startX,
                                         sWayfarerPassingPokemon[pass].y + 8, 3);
             if (bicycleId == MAX_SPRITES)
             {
@@ -461,10 +463,10 @@ static void Task_WayfarerPokemonPass(u8 taskId)
                 return;
             }
             task->data[3] = bicycleId;
-            gSprites[bicycleId].hFlip = TRUE;
+            gSprites[bicycleId].hFlip = task->data[7] > 0;
             gSprites[bicycleId].invisible = TRUE;
         }
-        gSprites[spriteId].hFlip = pass == WAYFARER_PASS_VOLBEAT || pass == WAYFARER_PASS_BICYCLIST;
+        gSprites[spriteId].hFlip = task->data[7] > 0;
         gSprites[spriteId].invisible = TRUE;
         return;
     }
@@ -473,17 +475,17 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     sprite->invisible = FALSE;
     if (task->data[1] == WAYFARER_PASS_VOLBEAT)
     {
-        sprite->x += 2;
+        sprite->x += 2 * task->data[7];
         sprite->y2 = Sin((u8)(task->data[4] += 8), 6);
     }
     else if (task->data[1] == WAYFARER_PASS_MANECTRIC)
     {
-        sprite->x -= 12;
+        sprite->x += 12 * task->data[7];
     }
     else if (task->data[1] == WAYFARER_PASS_BICYCLIST)
     {
         struct Sprite *bicycle = &gSprites[task->data[3]];
-        sprite->x += 6;
+        sprite->x += 6 * task->data[7];
         bicycle->x = sprite->x;
         bicycle->y = sprite->y + 8;
         bicycle->invisible = FALSE;
@@ -493,10 +495,11 @@ static void Task_WayfarerPokemonPass(u8 taskId)
         switch (task->data[5])
         {
         case WAYFARER_TORCHIC_RUN:
-            sprite->x -= 2;
-            if (sprite->x <= 120)
+            sprite->x += 2 * task->data[7];
+            if ((task->data[7] > 0 && sprite->x >= DISPLAY_WIDTH / 2)
+             || (task->data[7] < 0 && sprite->x <= DISPLAY_WIDTH / 2))
             {
-                sprite->x = 120;
+                sprite->x = DISPLAY_WIDTH / 2;
                 StartSpriteAnim(sprite, WAYFARER_TORCHIC_ANIM_TRIP);
                 task->data[5] = WAYFARER_TORCHIC_TRIP;
             }
@@ -523,14 +526,12 @@ static void Task_WayfarerPokemonPass(u8 taskId)
             }
             break;
         case WAYFARER_TORCHIC_RUN_AGAIN:
-            sprite->x -= 2;
+            sprite->x += 2 * task->data[7];
             break;
         }
     }
-    if ((task->data[1] == WAYFARER_PASS_VOLBEAT && sprite->x > DISPLAY_WIDTH + 16)
-     || (task->data[1] == WAYFARER_PASS_TORCHIC && sprite->x < -16)
-     || (task->data[1] == WAYFARER_PASS_BICYCLIST && sprite->x > DISPLAY_WIDTH + 32)
-     || (task->data[1] == WAYFARER_PASS_MANECTRIC && sprite->x < -32))
+    if ((task->data[7] > 0 && sprite->x > DISPLAY_WIDTH + sWayfarerPassingPokemon[task->data[1]].offscreenOffset)
+     || (task->data[7] < 0 && sprite->x < -sWayfarerPassingPokemon[task->data[1]].offscreenOffset))
     {
         if (task->data[1] == WAYFARER_PASS_BICYCLIST)
         {
@@ -543,6 +544,7 @@ static void Task_WayfarerPokemonPass(u8 taskId)
         task->data[0] = WAYFARER_PASS_WAIT_MIN + Random() % WAYFARER_PASS_WAIT_SPAN;
         // Choose among the other three so a repeat never looks like a stuck cycle.
         task->data[1] = (task->data[1] + 1 + Random() % (WAYFARER_PASS_COUNT - 1)) % WAYFARER_PASS_COUNT;
+        task->data[7] = Random() & 1 ? 1 : -1;
         task->data[4] = 0;
         task->data[5] = WAYFARER_TORCHIC_RUN;
         task->data[6] = 0;
@@ -606,6 +608,7 @@ static void Task_WayfarerTitleReveal(u8 taskId)
         u8 passTaskId = CreateTask(Task_WayfarerPokemonPass, 0);
         gTasks[passTaskId].data[0] = 120;
         gTasks[passTaskId].data[1] = Random() % WAYFARER_PASS_COUNT;
+        gTasks[passTaskId].data[7] = Random() & 1 ? 1 : -1;
         gTasks[passTaskId].data[2] = MAX_SPRITES;
         gTasks[passTaskId].data[3] = MAX_SPRITES;
     }

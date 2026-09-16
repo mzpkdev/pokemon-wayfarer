@@ -86,10 +86,10 @@ async function taskSlot(name) {
   throw new Error(`Task not active: ${name}`);
 }
 async function passingState(slot) {
-  const data = await read(symbol('gTasks') + slot * 40 + 8, 14);
+  const data = await read(symbol('gTasks') + slot * 40 + 8, 16);
   return { wait: data.readInt16LE(0), species: data.readInt16LE(2),
     spriteId: data.readInt16LE(4), bicycleId: data.readInt16LE(6),
-    torchicState: data.readInt16LE(10) };
+    torchicState: data.readInt16LE(10), direction: data.readInt16LE(14) };
 }
 async function spriteX(spriteId) {
   return (await read(symbol('gSprites') + spriteId * 68 + 0x20, 2)).readInt16LE();
@@ -144,20 +144,25 @@ try {
   await step(16);
   await capture('title-blink');
   const passSlot = await taskSlot('Task_WayfarerPokemonPass');
-  const seen = new Set();
+  const seenPairs = new Set();
   const passOrder = [];
+  const passDirections = [];
   const waits = [];
   const transitionChoices = new Set();
   const waitChoices = new Set();
   let previousSpecies = null;
   let wasLoaded = false;
-  let torchicFall = false;
-  let torchicGetUp = false;
-  for (let elapsed = 0; elapsed < 60000 &&
-       (seen.size < 4 || !torchicFall || !torchicGetUp || passOrder.length < 10 ||
+  const torchicFallDirections = new Set();
+  const torchicGetUpDirections = new Set();
+  let previousX = null;
+  for (let elapsed = 0; elapsed < 100000 &&
+       (seenPairs.size < 8 || torchicFallDirections.size < 2 || torchicGetUpDirections.size < 2 || passOrder.length < 10 ||
         transitionChoices.size < 2 || waitChoices.size < 2); elapsed += 10) {
     const state = await passingState(passSlot);
     const loaded = state.spriteId < 64;
+    const x = loaded ? await spriteX(state.spriteId) : null;
+    if (state.direction !== -1 && state.direction !== 1)
+      throw new Error(`Invalid passing direction: ${state.direction}`);
     if (loaded && !wasLoaded) {
       if (previousSpecies !== null) {
         const transition = (state.species - previousSpecies + 4) % 4;
@@ -166,7 +171,13 @@ try {
       }
       previousSpecies = state.species;
       passOrder.push(state.species);
+      passDirections.push(state.direction);
     }
+    if (loaded && wasLoaded && (x - previousX) * state.direction < 0)
+      throw new Error(`Pass ${state.species} moved against its direction: ${previousX} → ${x}`);
+    if (loaded && state.species === 2 &&
+        (state.bicycleId >= 64 || await spriteX(state.bicycleId) !== x))
+      throw new Error('Bicycle and rider did not stay aligned');
     if (!loaded && wasLoaded) {
       // Polling can happen up to nine frames after the wait was assigned.
       if (state.wait < 890 || state.wait > 1500)
@@ -175,34 +186,35 @@ try {
       waits.push(state.wait);
       waitChoices.add(state.wait);
     }
-    if (loaded && !seen.has(state.species)) {
-      const x = await spriteX(state.spriteId);
+    const pair = `${state.species}:${state.direction}`;
+    if (loaded && !seenPairs.has(pair)) {
       if (x >= 40 && x <= 180) {
         const names = ['volbeat', 'torchic', 'bicyclist', 'manectric'];
-        await capture(`title-${names[state.species]}`);
-        seen.add(state.species);
+        await capture(`title-${names[state.species]}-${state.direction > 0 ? 'right' : 'left'}`);
+        seenPairs.add(pair);
         if (state.species === 0) {
           await step(8);
-          await capture('title-volbeat-zig-8');
+          await capture(`title-volbeat-${state.direction > 0 ? 'right' : 'left'}-zig-8`);
           await step(8);
-          await capture('title-volbeat-zig-16');
+          await capture(`title-volbeat-${state.direction > 0 ? 'right' : 'left'}-zig-16`);
         }
       }
     }
-    if (loaded && state.species === 1 && state.torchicState === 2 && !torchicFall) {
-      await capture('title-torchic-fall');
-      torchicFall = true;
+    if (loaded && state.species === 1 && state.torchicState === 2 && !torchicFallDirections.has(state.direction)) {
+      await capture(`title-torchic-${state.direction > 0 ? 'right' : 'left'}-fall`);
+      torchicFallDirections.add(state.direction);
     }
-    if (loaded && state.species === 1 && state.torchicState === 3 && !torchicGetUp) {
-      await capture('title-torchic-get-up');
-      torchicGetUp = true;
+    if (loaded && state.species === 1 && state.torchicState === 3 && !torchicGetUpDirections.has(state.direction)) {
+      await capture(`title-torchic-${state.direction > 0 ? 'right' : 'left'}-get-up`);
+      torchicGetUpDirections.add(state.direction);
     }
     wasLoaded = loaded;
+    previousX = x;
     await step(10);
   }
-  if (seen.size !== 4 || !torchicFall || !torchicGetUp || passOrder.length < 10 ||
+  if (seenPairs.size !== 8 || torchicFallDirections.size !== 2 || torchicGetUpDirections.size !== 2 || passOrder.length < 10 ||
       transitionChoices.size < 2 || waitChoices.size < 2)
-    throw new Error(`Incomplete random pass coverage: order=${passOrder}, waits=${waits}, trip=${torchicFall}/${torchicGetUp}`);
+    throw new Error(`Incomplete random pass coverage: pairs=${[...seenPairs]}, order=${passOrder}, waits=${waits}, trip=${[...torchicFallDirections]}/${[...torchicGetUpDirections]}`);
   await capture('title-held');
   await press('Start');
   await step(180);
@@ -227,9 +239,9 @@ try {
   await writeFile(join(output, 'capture.json'), JSON.stringify({
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
-    passOrder, observedWaitFrames: waits,
+    passOrder, passDirections, observedWaitFrames: waits,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, all four passers, Torchic trip/recovery, random non-repeating order and 15–25-second gaps, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],

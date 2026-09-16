@@ -125,8 +125,10 @@ The bicyclist uses a 0x2000 rider sheet plus 0x800 for the bicycle's first
 two frames, bringing the peak to 0x7920 of the 0x8000 OBJ-tile capacity and
 14 sprite slots. Together those two sheets fill the contiguous 0x2800-byte
 tail exactly. The passer reuses palette bank 14. Each appearance is chosen
-randomly from Volbeat flying left-to-right, Torchic running in from the right
-and tripping, the mirrored rider cycling in from the left, and fast Manectric.
+randomly from Volbeat, Torchic, the bicyclist, and Manectric, then independently
+chooses a left-to-right or right-to-left path. Their sprites face the travel
+direction; the rider and bicycle mirror together. Torchic trips at the center
+from either side.
 The first pass starts after two seconds; subsequent passes wait a random
 15–25 seconds and cannot immediately repeat the previous character. The rider
 matches Scene 1's randomly selected Brendan or May. Torchic's
