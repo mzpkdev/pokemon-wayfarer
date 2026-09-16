@@ -16,15 +16,8 @@ Route7_EventScript_Door::
 	end
 
 Route7_Text_UndergroundPathSign:
-	.string "What's this flyer?\p"
-	.string "… Uncouth trainers have been\n"
-	.string "holding battles in the\l"
-	.string "UNDERGROUND PATH.\p"
-	.string "Because of rising complaints by\n"
-	.string "local residents, the UNDERGROUND\l"
-	.string "PATH has been sealed indefinitely.\p"
-	.string "CELADON POLICE$"
+	.string "UNDERGROUND PATH\p"
+	.string "CELADON CITY - LAVENDER TOWN$"
 
 Route7_Text_LockedDoor:
 	.string "It's locked…$"
-
