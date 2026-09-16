@@ -11,9 +11,8 @@ A Wayfarer-only Poké Ball is present in the dark pool from Scene 1's
 first frame, including the fade-in. Its OBJ position follows the foreground
 grass BG2 scroll plus an average quarter pixel per frame during the pan, then
 moves offscreen. The sprite and its palette are released before the held title.
-The approved source is the 48×48 Pixel Art Fixer output at
-`.github/assets/wayfarer-intro-pokeball-v2-dirt-48-fixed.png`. The generated
-master with dirt and rocks and its 48×48 downscale are saved alongside it.
+The approved 48×48 Pixel Art Fixer source is stored at
+`game/graphics/intro/scene_1/wayfarer_pokeball_source.png`.
 The converter centers those pixels in a 64×64 indexed OBJ canvas with eight
 transparent pixels of padding on each side. Regenerate it with:
 

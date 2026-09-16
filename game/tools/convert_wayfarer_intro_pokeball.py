@@ -18,7 +18,7 @@ TARGET_SIZE = 64
 SOURCE_SIZE = 48
 TRANSPARENCY_THRESHOLD = 48
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_SOURCE = ROOT.parent / ".github/assets/wayfarer-intro-pokeball-v2-dirt-48-fixed.png"
+DEFAULT_SOURCE = ROOT / "graphics/intro/scene_1/wayfarer_pokeball_source.png"
 DEFAULT_OUTPUT = ROOT / "graphics/intro/scene_1/wayfarer_pokeball.png"
 
 
