@@ -46,12 +46,14 @@ enum
     TAG_WAYFARER_POKEMON_LOGO = 1000,
     TAG_WAYFARER_VERSION,
     TAG_WAYFARER_PRESS_START,
+    TAG_WAYFARER_VOLBEAT,
 };
 
 #define WAYFARER_LOGO_Y 32
 #define WAYFARER_VERSION_Y 66
 #define WAYFARER_PRESS_START_Y 108
 #define WAYFARER_COPYRIGHT_Y 148
+#define WAYFARER_VOLBEAT_Y 96
 #define CLEAR_SAVE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_UP)
 #define RESET_RTC_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
 
@@ -63,6 +65,7 @@ static void CB2_GoToMainMenu(void);
 static void CB2_GoToClearSaveDataScreen(void);
 static void CB2_GoToResetRtcScreen(void);
 static void SpriteCB_PressStart(struct Sprite *sprite);
+static void SpriteCB_WayfarerVolbeat(struct Sprite *sprite);
 
 static const u16 sWayfarerOverlayPalette[] = INCBIN_U16("graphics/title_screen/wayfarer/overlays/overlay_palette.gbapal");
 static const u32 sWayfarerPokemonLogoGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/overlays/pokemon_logo_obj.8bpp.smol");
@@ -120,6 +123,23 @@ static const struct OamData sOamData_WayfarerPressStart =
     .affineParam = 0,
 };
 
+static const struct OamData sOamData_WayfarerVolbeat =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x32),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x32),
+    .tileNum = 0,
+    .priority = 3, // Behind the moving grass (BG2), but in front of the mountain (BG3).
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
 #define LOGO_ANIM(offset) { ANIMCMD_FRAME(offset, 1), ANIMCMD_END }
 static const union AnimCmd sAnim_WayfarerPokemonLogo0[] = LOGO_ANIM(0);
 static const union AnimCmd sAnim_WayfarerPokemonLogo1[] = LOGO_ANIM(128);
@@ -172,6 +192,16 @@ static const struct SpriteTemplate sSpriteTemplate_WayfarerPressStart =
     TAG_WAYFARER_PRESS_START, TAG_WAYFARER_PRESS_START, &sOamData_WayfarerPressStart, sAnims_WayfarerPressStart, NULL, NULL, SpriteCB_PressStart,
 };
 
+static const union AnimCmd sAnim_WayfarerVolbeat[] =
+{
+    ANIMCMD_FRAME(0, 2), ANIMCMD_FRAME(16, 2), ANIMCMD_JUMP(0),
+};
+static const union AnimCmd *const sAnims_WayfarerVolbeat[] = {sAnim_WayfarerVolbeat};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerVolbeat =
+{
+    TAG_WAYFARER_VOLBEAT, TAG_WAYFARER_VOLBEAT, &sOamData_WayfarerVolbeat, sAnims_WayfarerVolbeat, NULL, NULL, SpriteCB_WayfarerVolbeat,
+};
+
 static const struct CompressedSpriteSheet sSpriteSheet_WayfarerPokemonLogo =
 {
     sWayfarerPokemonLogoGfx, 0x4000, TAG_WAYFARER_POKEMON_LOGO,
@@ -183,6 +213,10 @@ static const struct CompressedSpriteSheet sSpriteSheet_WayfarerVersion =
 static const struct CompressedSpriteSheet sSpriteSheet_WayfarerPressStart =
 {
     gTitleScreenPressStartGfx, 0x520, TAG_WAYFARER_PRESS_START,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerVolbeat =
+{
+    gIntroVolbeat_Gfx, 0x400, TAG_WAYFARER_VOLBEAT,
 };
 
 static void CreateWayfarerPressStart(s16 y)
@@ -216,6 +250,27 @@ static void SpriteCB_PressStart(struct Sprite *sprite)
         sprite->invisible = TRUE;
 }
 
+static void SpriteCB_WayfarerVolbeat(struct Sprite *sprite)
+{
+    if (sprite->data[0] != 0)
+    {
+        sprite->data[0]--;
+        sprite->invisible = TRUE;
+        return;
+    }
+
+    sprite->invisible = FALSE;
+    sprite->x -= 2;
+    sprite->y2 = Sin((u8)(sprite->data[1] += 4), 3);
+    if (sprite->x < -16)
+    {
+        sprite->x = DISPLAY_WIDTH + 16;
+        sprite->y2 = 0;
+        sprite->data[0] = 600;
+        sprite->invisible = TRUE;
+    }
+}
+
 // Called by Scene 1 after it has fixed its backgrounds, Flygon, and matrix.
 void InitWayfarerTitleScreenFromIntro(const u16 *retainedSpritePalette, u16 retainedSpritePaletteTag)
 {
@@ -232,9 +287,11 @@ void InitWayfarerTitleScreenFromIntro(const u16 *retainedSpritePalette, u16 reta
     LoadSpritePaletteInSlot(&(struct SpritePalette){sWayfarerVersionPal, TAG_WAYFARER_VERSION}, 11);
     LoadSpritePaletteInSlot(&(struct SpritePalette){gTitleScreenPressStartPal, TAG_WAYFARER_PRESS_START}, 12);
     LoadSpritePaletteInSlot(&retainedPalette, 13);
+    LoadSpritePaletteInSlot(&(struct SpritePalette){gIntroVolbeat_Pal, TAG_WAYFARER_VOLBEAT}, 14);
     LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerPokemonLogo);
     LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerVersion);
     LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerPressStart);
+    LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerVolbeat);
     SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG_ALL_ON | DISPCNT_OBJ_ON);
     SetVBlankCallback(VBlankCB_WayfarerTitleScreen);
     taskId = CreateTask(Task_WayfarerTitleReveal, 0);
@@ -269,6 +326,10 @@ static void Task_WayfarerTitleReveal(u8 taskId)
     FadeOutBGM(4);
     m4aSongNumStart(MUS_HG_TITLE, FlagGet(FLAG_SYS_GBS_ENABLED));
     CreateWayfarerTitleSprites();
+    {
+        u8 spriteId = CreateSprite(&sSpriteTemplate_WayfarerVolbeat, DISPLAY_WIDTH + 16, WAYFARER_VOLBEAT_Y, 2);
+        gSprites[spriteId].data[0] = 120;
+    }
     taskId = CreateTask(Task_WayfarerTitleInput, 0);
     gTasks[taskId].data[1] = TRUE; // Consume the cinematic skip press.
     DestroyTask(FindTaskIdByFunc(Task_WayfarerTitleReveal));

@@ -119,8 +119,11 @@ python3 game/tools/pack_wayfarer_title_overlays.py
 
 The generated manifest records the fixed allocation: 0x4000 logo + 0x1000
 banner + 0x520 prompt + 0x400 Flygon = 0x5920 of the 0x8000 OBJ-tile capacity.
-At the held composition the 17 OAM entries peak at eight sprites on a scanline,
-well below the GBA's 32-sprite scanline limit.
+The title also reuses Scene 2's two-frame Volbeat sheet (0x400 bytes) and
+palette bank 14, bringing the held composition to 0x5D20 OBJ bytes and 18 OAM
+entries. Its OBJ priority 3 places it behind the moving grass (BG2) but ahead
+of the mountain (BG3). It flies across once after the title reveal, then waits
+before repeating; the grass can hide its lower half.
 
 ## Build and inspect the real screen
 

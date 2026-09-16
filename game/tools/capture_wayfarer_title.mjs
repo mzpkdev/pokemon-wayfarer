@@ -121,8 +121,12 @@ try {
   await capture('title-overlays');
   await step(16);
   await capture('title-blink');
-  await step(600);
+  await step(180);
+  await capture('title-volbeat');
+  await step(420);
   await capture('title-held');
+  await step(317);
+  await capture('title-volbeat-repeat');
   await press('Start');
   await step(180);
   if (await hasTask('Task_WayfarerTitleInput')) throw new Error('Start did not leave title');
@@ -147,7 +151,7 @@ try {
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, repeating Volbeat pass, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],
