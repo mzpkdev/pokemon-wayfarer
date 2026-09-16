@@ -35,9 +35,12 @@ Preserve the FRLG boulder positions and floor-to-floor movement on 1F, B1F,
 B2F, B3F, and B4F. On B3F and B4F, the two required boulders stop the local
 current and select the corresponding `*_CurrentStopped_Layout`. Current and
 stopped-current layouts remain separate selectable layouts. Each floor
-restores the correct boulder, collision, and current state on entrance,
-save/reload, and return from another map. One boulder alone does not stop a
-two-boulder current; completed current state does not regress on reentry.
+restores the correct boulder, collision, and current state on entrance and
+save/reload. The retained HNS Route 20 must run the FRLG reset when the player
+returns to that route: reset only unfinished B3F/B4F boulder paths to their
+starting positions, while preserving completed stopped-current state. One
+boulder alone does not stop a two-boulder current; completed current state
+does not regress on reentry.
 
 Use Wayfarer-owned persistent identities for boulder and stopped-current
 state. Stock FRLG constants that resolve to zero or overlap HNS/Emerald state
@@ -77,7 +80,9 @@ capture destination under its owning story rules.
    their original maps.
 2. Traverse both Route 20 entrances, every floor, each boulder path, both
    current states, Articuno's shore, and both exits in an emulator. Repeat
-   after save/reload and after leaving through each coast.
+   after save/reload and after leaving through each coast, both before and
+   after each current is stopped. An unfinished path resets on Route 20;
+   completed paths stay solved.
 3. Verify item persistence, encounter species and methods per floor, and
    Articuno's ineligible, retry, catch, and defeat paths.
 4. Confirm no Wayfarer path enters Seafoam Gym or Secret Cave and no Seafoam

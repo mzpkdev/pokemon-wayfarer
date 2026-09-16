@@ -39,6 +39,15 @@ both directions in an emulator, including repeated crossings and save/reload.
 No story, badge, HM item, Blaine, or Articuno flag may close the only
 Pallet-to-Cinnabar native-Surf path or strand a player inside Seafoam.
 
+Compose FRLG Route 20's Seafoam reset behavior into the retained HNS Route 20
+transition without losing its time-of-day encounter setup. On reentering Route
+20, reset the unsolved B3F boulder chain to its 1F starts and the unsolved B4F
+chain to its B3F starts, using the new Wayfarer flag identities; do not reset a
+chain whose current is already stopped. Reconcile the old Route 20 Seafoam Gym
+sign and its Blaine text near the eastern cave entrance. It must no longer
+advertise or point toward a Gym that this port removes. Inspect the ordinary
+Seafoam sign's placement during the Porymap seam pass.
+
 ### Saved state and rewards
 
 Inventory every selected FRLG script and object flag and var before enabling
@@ -108,6 +117,9 @@ five-floor cave, puzzle, services, or rewards by default.
 2. Traverse Pallet ↔ Route 21 ↔ Cinnabar and Cinnabar ↔ Route 20 ↔ both
    Seafoam entrances ↔ Route 19, by normal field movement and native Surf.
    Check shoreline, camera, music, collision, and return landing points.
+   Leaving either Seafoam door resets each unfinished boulder path but leaves
+   stopped currents solved; Route 20 still sets time-based encounters and its
+   signs do not advertise a Seafoam Gym.
 3. Verify one Blaine badge/TM path, one Articuno encounter, no Seafoam or
    Dojo Blaine reward, no Seafoam Groudon, and Hoenn Terra Cave's Groudon
    encounter unaffected.

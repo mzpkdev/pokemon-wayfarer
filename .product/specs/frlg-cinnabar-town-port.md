@@ -70,7 +70,9 @@ from other regions must neither be duplicated nor treated as already revived.
 Center 1F heals, sets the FRLG Cinnabar heal location, and is the town's
 whiteout/Fly destination. Center 2F remains a reachable service floor with
 working supported facilities and clear unavailable responses for facilities
-the product does not support. The Mart retains the FRLG clerk and stock.
+the product does not support. The Mart retains its FRLG room, counter, and
+clerk interaction; its inventory follows the Wayfarer
+[global Mart profile](global-tr-pokemarts.md) for Cinnabar.
 None of these services requires defeating Blaine, completing the Mansion, or
 starting Bill's story.
 
