@@ -197,15 +197,14 @@ static void CreateWayfarerPressStart(s16 y)
 
 static void CreateWayfarerTitleSprites(void)
 {
-    // The 256px logo is centered on the 240px display; only transparent edge
-    // pixels fall outside the viewport.
-    static const s16 sLogoX[] = {-8, 56, 120, 184};
+    // Center the visible lettering, not its 256px atlas with empty right space.
+    static const s16 sLogoX[] = {64, 128, 192, 256};
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(sLogoX); i++)
         CreateSprite(&sSpriteTemplate_WayfarerPokemonLogo[i], sLogoX[i], WAYFARER_LOGO_Y, 0);
-    CreateSprite(&sSpriteTemplate_WayfarerVersionLeft, 98, WAYFARER_VERSION_Y, 1);
-    CreateSprite(&sSpriteTemplate_WayfarerVersionRight, 162, WAYFARER_VERSION_Y, 1);
+    CreateSprite(&sSpriteTemplate_WayfarerVersionLeft, 88, WAYFARER_VERSION_Y, 1);
+    CreateSprite(&sSpriteTemplate_WayfarerVersionRight, 152, WAYFARER_VERSION_Y, 1);
     CreateWayfarerPressStart(WAYFARER_PRESS_START_Y);
 }
 

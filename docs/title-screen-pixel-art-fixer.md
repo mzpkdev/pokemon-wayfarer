@@ -39,6 +39,13 @@ Image.fromarray(fixed).save(target)
 Review `OUTPUT.png` at native size before using it. Pixel Art Fixer reconstructs
 the detected native pixel grid; it does not compose a GBA title screen.
 
+For the approved version-name wordmark, use
+`.github/assets/wayfarer-simple.png` as `INPUT.png` and
+`game/graphics/title_screen/wayfarer/wayfarer_wordmark_pixel_fixed.png` as
+`OUTPUT.png`. The reviewed reconstruction detected a 117x41 grid. Then run
+`game/tools/generate_wayfarer_banner.py` to fit it into the 128x32 title sprite
+and reduce it to transparent, white, and black palette entries.
+
 ## GBA integration
 
 Use the [Wayfarer title-background pipeline](title-screen-pipeline.md) after

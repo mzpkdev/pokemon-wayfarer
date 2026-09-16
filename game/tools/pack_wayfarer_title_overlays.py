@@ -120,7 +120,8 @@ def read_jasc_palette(path: Path) -> list[tuple[int, int, int]]:
 
 
 def write_jasc_palette(path: Path, palette: list[tuple[int, int, int]]) -> None:
-    path.write_text("\n".join(["JASC-PAL", "0100", str(len(palette)), *(f"{r} {g} {b}" for r, g, b in palette)]) + "\n", encoding="ascii")
+    rows = ["JASC-PAL", "0100", str(len(palette)), *(f"{r} {g} {b}" for r, g, b in palette)]
+    path.write_bytes(("\r\n".join(rows) + "\r\n").encode("ascii"))
 
 
 def rgb555(rgb: tuple[int, int, int]) -> int:
