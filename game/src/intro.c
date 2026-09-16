@@ -1437,7 +1437,7 @@ static void Task_Scene1_PanUp(u8 taskId)
         gTasks[taskId].tBg2PosLo = offset;
         SetGpuReg(REG_OFFSET_BG2VOFS, gTasks[taskId].tBg2PosHi);
 #if IS_WAYFARER
-        WayfarerScrollIntroPokeball(previousBg2Vofs - gTasks[taskId].tBg2PosHi + (gIntroFrameCounter & 1));
+        WayfarerScrollIntroPokeball(previousBg2Vofs - gTasks[taskId].tBg2PosHi + ((gIntroFrameCounter & 3) == 0));
 #endif
 
         // Slide bg 1 downward
@@ -1519,7 +1519,7 @@ static void WayfarerDestroyScene1TransientSprites(void)
 
 static void CreateWayfarerIntroPokeball(void)
 {
-    u8 spriteId = CreateSprite(&sSpriteTemplate_WayfarerIntroPokeball, 120, 99, 0);
+    u8 spriteId = CreateSprite(&sSpriteTemplate_WayfarerIntroPokeball, 120, 111, 0);
 
     if (spriteId != MAX_SPRITES)
         gSprites[spriteId].y2 = 0;

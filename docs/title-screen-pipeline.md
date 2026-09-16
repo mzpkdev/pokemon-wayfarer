@@ -2,17 +2,20 @@
 
 Wayfarer plays Emerald's Scene 1 grass and droplet opening without Game Freak
 branding, then freezes the completed mountain pan before Scene 1's white fade
-into the bike scene. The
-held screen keeps Scene 1's mode-0 backgrounds and Flygon silhouette.  Its
+into the bike scene. The held screen keeps Scene 1's mode-0 backgrounds and
+Flygon silhouette. Its
 Pokémon, WAYFARER, Press Start, and copyright artwork are OBJ overlays; the
 normal title initializer must not be used because it clears Scene 1 VRAM.
 
 A Wayfarer-only Poké Ball is present in the dark pool from Scene 1's
 first frame, including the fade-in. Its OBJ position follows the foreground
-grass BG2 scroll plus an average half pixel per frame during the pan, then moves offscreen. The sprite and its
-palette are released before the held title. The approved source is
-`.github/assets/wayfarer-intro-pokeball-lospec-concept.png`;
-regenerate its 64×64 indexed sprite (56 visible pixels wide) with:
+grass BG2 scroll plus an average quarter pixel per frame during the pan, then
+moves offscreen. The sprite and its palette are released before the held title.
+The approved source is the 48×48 Pixel Art Fixer output at
+`.github/assets/wayfarer-intro-pokeball-v2-dirt-48-fixed.png`. The generated
+master with dirt and rocks and its 48×48 downscale are saved alongside it.
+The converter centers those pixels in a 64×64 indexed OBJ canvas with eight
+transparent pixels of padding on each side. Regenerate it with:
 
 ```bash
 python3 -m venv .venv-title
@@ -20,9 +23,9 @@ python3 -m venv .venv-title
 .venv-title/bin/python game/tools/convert_wayfarer_intro_pokeball.py
 ```
 
-The ball is centered at x=120 with its resting shadow near y=125. Wayfarer
-keeps Scene 1's falling droplets but removes their landing ripples; standalone
-HNS retains the original ripple animation.
+The sprite is centered at (120, 111), with a dirt and rock patch beneath the
+ball. Wayfarer keeps Scene 1's falling droplets but removes their landing
+ripples; standalone HNS retains the original ripple animation.
 
 The expansion splash is intentionally bypassed for Wayfarer.  Standalone HNS
 continues to use its own intro and title pipeline.
