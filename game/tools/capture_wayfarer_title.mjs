@@ -76,10 +76,23 @@ async function taskData(name) {
 async function hasTask(name) {
   return (await taskData(name)) !== null;
 }
-async function verifyPass(species, loaded) {
-  const data = await taskData('Task_WayfarerPokemonPass');
-  if (!data || data[1] !== species || (data[2] < 64) !== loaded)
-    throw new Error(`Expected pass ${species} ${loaded ? 'loaded' : 'unloaded'}; got ${JSON.stringify(data)}`);
+async function taskSlot(name) {
+  const expected = symbol(name) & ~1;
+  const tasks = Buffer.alloc(640);
+  for (let offset = 0; offset < 640; offset += 160)
+    (await read(symbol('gTasks') + offset, 160)).copy(tasks, offset);
+  for (let offset = 0; offset < 640; offset += 40)
+    if (tasks[offset + 4] && (tasks.readUInt32LE(offset) & ~1) === expected) return offset / 40;
+  throw new Error(`Task not active: ${name}`);
+}
+async function passingState(slot) {
+  const data = await read(symbol('gTasks') + slot * 40 + 8, 14);
+  return { wait: data.readInt16LE(0), species: data.readInt16LE(2),
+    spriteId: data.readInt16LE(4), bicycleId: data.readInt16LE(6),
+    torchicState: data.readInt16LE(10) };
+}
+async function spriteX(spriteId) {
+  return (await read(symbol('gSprites') + spriteId * 68 + 0x20, 2)).readInt16LE();
 }
 async function waitTask(name, limit = 12000) {
   for (let frames = 0; frames < limit; frames += 10) {
@@ -130,43 +143,67 @@ try {
   await capture('title-overlays');
   await step(16);
   await capture('title-blink');
-  await step(150);
-  await capture('title-volbeat-left');
-  await step(8);
-  await capture('title-volbeat-zig-8');
-  await step(8);
-  await capture('title-volbeat-zig-16');
-  await step(44);
-  await capture('title-volbeat-right');
-  await step(390);
+  const passSlot = await taskSlot('Task_WayfarerPokemonPass');
+  const seen = new Set();
+  const passOrder = [];
+  const waits = [];
+  const transitionChoices = new Set();
+  const waitChoices = new Set();
+  let previousSpecies = null;
+  let wasLoaded = false;
+  let torchicFall = false;
+  let torchicGetUp = false;
+  for (let elapsed = 0; elapsed < 60000 &&
+       (seen.size < 4 || !torchicFall || !torchicGetUp || passOrder.length < 10 ||
+        transitionChoices.size < 2 || waitChoices.size < 2); elapsed += 10) {
+    const state = await passingState(passSlot);
+    const loaded = state.spriteId < 64;
+    if (loaded && !wasLoaded) {
+      if (previousSpecies !== null) {
+        const transition = (state.species - previousSpecies + 4) % 4;
+        if (transition === 0) throw new Error('Passing character repeated immediately');
+        transitionChoices.add(transition);
+      }
+      previousSpecies = state.species;
+      passOrder.push(state.species);
+    }
+    if (!loaded && wasLoaded) {
+      // Polling can happen up to nine frames after the wait was assigned.
+      if (state.wait < 890 || state.wait > 1500)
+        throw new Error(`Passing interval outside 15–25 seconds: ${state.wait}`);
+      if (state.bicycleId < 64) throw new Error('Bicycle sprite leaked after rider exit');
+      waits.push(state.wait);
+      waitChoices.add(state.wait);
+    }
+    if (loaded && !seen.has(state.species)) {
+      const x = await spriteX(state.spriteId);
+      if (x >= 40 && x <= 180) {
+        const names = ['volbeat', 'torchic', 'bicyclist', 'manectric'];
+        await capture(`title-${names[state.species]}`);
+        seen.add(state.species);
+        if (state.species === 0) {
+          await step(8);
+          await capture('title-volbeat-zig-8');
+          await step(8);
+          await capture('title-volbeat-zig-16');
+        }
+      }
+    }
+    if (loaded && state.species === 1 && state.torchicState === 2 && !torchicFall) {
+      await capture('title-torchic-fall');
+      torchicFall = true;
+    }
+    if (loaded && state.species === 1 && state.torchicState === 3 && !torchicGetUp) {
+      await capture('title-torchic-get-up');
+      torchicGetUp = true;
+    }
+    wasLoaded = loaded;
+    await step(10);
+  }
+  if (seen.size !== 4 || !torchicFall || !torchicGetUp || passOrder.length < 10 ||
+      transitionChoices.size < 2 || waitChoices.size < 2)
+    throw new Error(`Incomplete random pass coverage: order=${passOrder}, waits=${waits}, trip=${torchicFall}/${torchicGetUp}`);
   await capture('title-held');
-  await step(280);
-  await capture('title-torchic-run');
-  await verifyPass(1, true);
-  await step(38);
-  await capture('title-torchic-fall');
-  await step(33);
-  await capture('title-torchic-get-up');
-  await step(17);
-  await capture('title-torchic-recovered');
-  await step(675);
-  await capture('title-bicyclist-entering');
-  await verifyPass(2, true);
-  await step(3);
-  await capture('title-bicyclist-center');
-  await verifyPass(2, true);
-  await step(648);
-  await capture('title-manectric-entering');
-  await verifyPass(3, true);
-  await step(3);
-  await capture('title-manectric-center');
-  await verifyPass(3, true);
-  await step(33);
-  await capture('title-manectric-exiting');
-  await verifyPass(0, false);
-  await step(700);
-  await capture('title-volbeat-repeat');
-  await verifyPass(0, true);
   await press('Start');
   await step(180);
   if (await hasTask('Task_WayfarerTitleInput')) throw new Error('Start did not leave title');
@@ -190,8 +227,9 @@ try {
   await writeFile(join(output, 'capture.json'), JSON.stringify({
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
+    passOrder, observedWaitFrames: waits,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, rightward zigzagging Volbeat, Torchic trip/recovery, left-to-right bicyclist, fast Manectric pass, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, all four passers, Torchic trip/recovery, random non-repeating order and 15–25-second gaps, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],

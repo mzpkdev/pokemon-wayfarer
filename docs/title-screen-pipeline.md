@@ -124,10 +124,12 @@ sprite sheets and palette are loaded, then freed after it exits.
 The bicyclist uses a 0x2000 rider sheet plus 0x800 for the bicycle's first
 two frames, bringing the peak to 0x7920 of the 0x8000 OBJ-tile capacity and
 14 sprite slots. Together those two sheets fill the contiguous 0x2800-byte
-tail exactly. The passer reuses palette bank 14. The sequence is
-Volbeat flying left-to-right, Torchic running in from the right, tripping and
-getting up, the mirrored rider cycling in from the left, then a fast Manectric
-run. The rider matches Scene 1's randomly selected Brendan or May. Torchic's
+tail exactly. The passer reuses palette bank 14. Each appearance is chosen
+randomly from Volbeat flying left-to-right, Torchic running in from the right
+and tripping, the mirrored rider cycling in from the left, and fast Manectric.
+The first pass starts after two seconds; subsequent passes wait a random
+15–25 seconds and cannot immediately repeat the previous character. The rider
+matches Scene 1's randomly selected Brendan or May. Torchic's
 trip uses Emerald's original frames; its visible get-up reverses those frames
 (Emerald itself slides the fallen sprite offscreen). All four use OBJ priority
 3, behind the moving grass (BG2) but ahead of the mountain (BG3).

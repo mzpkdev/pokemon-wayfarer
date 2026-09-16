@@ -13,6 +13,7 @@
 #include "main_menu.h"
 #include "palette.h"
 #include "reset_rtc_screen.h"
+#include "random.h"
 #include "berry_fix_program.h"
 #include "sound.h"
 #include "sprite.h"
@@ -59,6 +60,8 @@ enum
 #define WAYFARER_TORCHIC_Y 88
 #define WAYFARER_BICYCLIST_Y 80
 #define WAYFARER_MANECTRIC_Y 88
+#define WAYFARER_PASS_WAIT_MIN 900
+#define WAYFARER_PASS_WAIT_SPAN 601
 #define CLEAR_SAVE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_UP)
 #define RESET_RTC_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
 
@@ -537,8 +540,9 @@ static void Task_WayfarerPokemonPass(u8 taskId)
         }
         DestroySpriteAndFreeResources(sprite);
         task->data[2] = MAX_SPRITES;
-        task->data[0] = 600;
-        task->data[1] = (task->data[1] + 1) % WAYFARER_PASS_COUNT;
+        task->data[0] = WAYFARER_PASS_WAIT_MIN + Random() % WAYFARER_PASS_WAIT_SPAN;
+        // Choose among the other three so a repeat never looks like a stuck cycle.
+        task->data[1] = (task->data[1] + 1 + Random() % (WAYFARER_PASS_COUNT - 1)) % WAYFARER_PASS_COUNT;
         task->data[4] = 0;
         task->data[5] = WAYFARER_TORCHIC_RUN;
         task->data[6] = 0;
@@ -601,6 +605,7 @@ static void Task_WayfarerTitleReveal(u8 taskId)
     {
         u8 passTaskId = CreateTask(Task_WayfarerPokemonPass, 0);
         gTasks[passTaskId].data[0] = 120;
+        gTasks[passTaskId].data[1] = Random() % WAYFARER_PASS_COUNT;
         gTasks[passTaskId].data[2] = MAX_SPRITES;
         gTasks[passTaskId].data[3] = MAX_SPRITES;
     }
