@@ -1,6 +1,6 @@
 # Sevii independent story beats
 
-Status: Approved product design. Not implemented.
+Status: Implemented on `main` in [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), using the [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101) overlay foundation.
 
 ## Intent
 
@@ -177,15 +177,13 @@ Champion status, change League progression, or bypass Mewtwo's separate readines
 policy through the original Cerulean Cave unlock. Removing those unrelated
 side effects must not suppress the local repair conclusion.
 
-The future port specification must identify which original communications effects
-remain meaningful in Wayfarer. This PRD does not redesign trading or promise a
-new network feature. Normal existing services remain available while the quest
-is unfinished.
+The delivered adaptation leaves normal existing services available while the
+quest is unfinished. It does not redesign trading or introduce a network feature.
 
 ## Boundaries
 
-- Cover FRLG Sevii's ordinary island adventures for a future Wayfarer adaptation.
-  No gameplay implementation or standalone FRLG behavior change is claimed here.
+- The Wayfarer adaptation is delivered; standalone FRLG behavior remains
+  unchanged.
 - Birth Island and Navel Rock need separate optional-legendary designs. Their
   credentials, puzzles, and rewards are not silently included in this contract.
 - HNS integration, regional geography merging, and shared NPC or pass identities
@@ -200,8 +198,8 @@ is unfinished.
 - The rival's later island scenes retain necessary personal-story order. Early
   visits cannot force premature dialogue or consume a later scene; they must
   not gate local island adventures. Exact chapter handling belongs in the spec.
-- Script state, exact revised dialogue, reward failure handling, and map events
-  belong in a subsequent implementation specification.
+- Script state, revised dialogue, reward failure handling, and map events are
+  defined by the delivered [technical specification](../specs/sevii-independent-story-beats.md).
 
 ## Interactions
 
@@ -222,7 +220,14 @@ than wait for the old Cinnabar detour. Preserve that specification's independent
 travel and return guarantees. Replace its retained PC shutdown with the rules
 above, and do not restore the original Ruby-to-travel coupling.
 
-## Playtesting
+## Playtesting checklist and coverage
+
+This is the full product checklist, not a record that every permutation below
+ran before shipment. The delivered evidence covers representative Bill,
+Lostelle, and Moltres journeys plus focused native retry/transaction tests.
+The live rival scene remains unexercised in an emulator journey; see the
+[technical specification](../specs/sevii-independent-story-beats.md) for the
+coverage boundary.
 
 - Discover and complete Lostelle without Bill's introduction or the Meteorite.
   Then accept and deliver the Meteorite without replaying the rescue or bikers.
@@ -269,8 +274,8 @@ and reward scenes without learning a replacement plot.
   storage, Pokédex, Champion, League, cave, or travel entitlement.
 - Moltres uses the shared bird-capture threshold `WAYFARER_BIRD_CAPTURE_TR = 55`.
 
-The [technical specification](../specs/sevii-independent-story-beats.md) freezes
-state, transactions, retry behavior, battle ownership, and dialogue predicates.
+The [technical specification](../specs/sevii-independent-story-beats.md) records
+the delivered state, transaction, battle-ownership, and dialogue behavior.
 
 ## References
 

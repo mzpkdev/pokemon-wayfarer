@@ -4,7 +4,7 @@ PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md),
 [Sevii independent story beats](../prds/sevii-independent-story-beats.md), and
 [Sevii Trainer Tower](../prds/sevii-trainer-tower.md)
 
-Implemented: No
+Implemented: Yes — foundation in [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101), with the ordinary Trainers, story, and Trainer Tower delivered in [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105), [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and [PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102).
 
 ## Scope and authority
 
@@ -127,9 +127,10 @@ subdirectories are used, derive Make dependencies from the manifest or emit a
 depfile rather than relying on the existing nonrecursive glob.
 
 Copied text and movement data may retain source wording and ordering. Script
-control flow must be adapted explicitly to the Wayfarer contracts. Generation
-emits a symbol-closure report and fails on an undefined label, an unreviewed
-source include, or a call into a prohibited FRLG campaign entry point.
+control flow is adapted to the Wayfarer contracts. Generation fails on an
+undefined label, an unreviewed source include, or a call into a prohibited FRLG
+campaign entry point; runtime behavior is covered by focused mechanics and
+emulator tests rather than a second script interpreter.
 
 ## State and transaction rules
 
@@ -139,11 +140,10 @@ script used it. The manifest publishes each domain's state table and rejects a
 write outside that table.
 
 Use a compact dedicated Wayfarer Sevii state bank, including a dedicated
-ordinary-Trainer defeat bitset. Move the existing prerelease exploration flags
-into this bank when story state lands; no save migration is required before
-release. Publish each cell's owner, initial value, legal transitions, and
-consumers, use nonzero constants through normal flag/variable APIs, and keep
-`SaveBlock3` within its 1,624-byte bound with compile-time assertions.
+ordinary-Trainer defeat bitset. The delivered state is initialized as a whole;
+prerelease save migration is not required. Publish each cell's owner and use
+normal flag/variable APIs rather than raw FRLG state. Keep `SaveBlock3` within
+its 1,624-byte bound with compile-time assertions.
 
 Use one-way transitions for objective progress and one-time receipts. A later
 objective may read an earlier completion state, but it must not reset it.
@@ -215,62 +215,48 @@ parties, items, and specials reachable from the manifest. A dependency being
 present in a standalone FRLG build does not make it available to Wayfarer.
 
 Standalone HNS, FireRed, LeafGreen, and Emerald generation ignores the content
-manifest and remains byte-equivalent. A domain can be disabled for development,
-but the production Wayfarer build enables all delivered domains together.
+manifest. Their supported behavior and ROM-category boundaries remain unchanged;
+whole-ROM byte identity is not claimed because LTO can reorder same-address
+interworking thunks. A domain can be disabled for development, but the production
+Wayfarer build enables all delivered domains together.
 
-## Generated audit
+## Structural audit and delivered validation
 
-Add a deterministic `wayfarer-sevii-content-audit` target. Its report includes:
+`wayfarer-sevii-content-audit` is a deterministic structural gate. It checks the
+manifest schema, selected source identity, ownership conflicts, script and asset
+closure, state allocation, battle routing, protected exploration content, and
+the active ROM reserve. It does not reimplement story control flow, reward
+delivery, or C-data parsing; focused mechanics and emulator tests cover those
+runtime paths.
 
-- counts by domain, map, event kind, actor role, battle policy, and reward type;
-- every selected and explicitly excluded source identity;
-- source hashes and generated output identities;
-- state reads, writes, ownership, and cross-objective dependencies;
-- every Trainer ID, caller, party owner, scaling classification, battle type,
-  defeat flag, and outcome route;
-- every item/Pokémon transaction and one-time receipt;
-- script and asset dependency closure;
-- unchanged hashes for the exploration baseline, wild profiles, Birth Island,
-  Navel Rock, and standalone products; and
-- ROM usage and remaining production reserve.
-
-Fail on source drift, duplicate ownership, an unknown state write, an unowned
-battle, a missing receipt, an unavailable dependency, an accidental FRLG script
-include, a changed baseline hash, or an unexplained output record.
-
-## Delivery order
-
-1. Land schema-v2, generator, and audit support with no enabled new content and
-   no material linked-ROM increase.
-2. Restore ordinary Trainers and validate scaling, defeat persistence, and map
-   traversal.
-3. Add independent story objectives in bounded groups, rebuilding and measuring
-   after each group.
-4. Add Trainer Tower as a separate facility milestone.
-5. Enable all domains together and run full integration and release validation.
-
-The accepted baseline uses 32,865,136 bytes, leaving 165,008 bytes above the
-required 512 KiB reserve. Retain exact-base and candidate ROM reports plus
-category deltas for every milestone, and keep `__rom_end <= 0x09F80000`. Do not
-weaken that reserve or delete accepted gameplay content. If a milestone does not
-fit, stop and land a separately reviewed content-preserving storage optimization.
+The delivered integration was merged as `f5d74b7ef5`, with the validated tree
+matching Tower integration commit `11bd87be8b`. Its one combined evidence
+snapshot is: 8 Tower, 13 shared Sevii, and 2 rematch mechanics tests; 50 content
+checks; and 17/17 emulator tests across four journey files. The production ROM
+is 32,916,176 bytes, with 638,256 bytes unused—113,968 bytes above the required
+512 KiB reserve—and
+`SaveBlock3` is 1,112 of 1,624 bytes. See the [integration coordination
+record](../../docs/sevii-tower-implementation/coordination.md) for results and
+scope. Keep `__rom_end <= 0x09F80000`; no future documentation-only edit needs
+to repeat this historical integration build.
 
 ## Validation
 
-Required checks include:
+The stable validation set includes:
 
-- manifest schema, source-drift, collision, script-closure, state-ownership, and
-  transaction-order tests;
+- manifest schema, source-drift, collision, script-closure, and state-ownership
+  tests;
 - the existing Sevii map and wild-encounter audits unchanged;
 - ordinary-Trainer, story-objective, static-encounter, and Trainer Tower tests
   named by their owning specifications;
 - serial Wayfarer and supported standalone builds;
 - a production-equivalent Wayfarer release with the active ROM reserve; and
-- emulator journeys covering first discovery, every battle outcome, reward
-  capacity failure, save/reload, blackout, ferry departure, and objective orders.
+- representative emulator journeys for discovery, failure and retry, save/load,
+  ferry travel, and objective order.
 
-The final exploration journey must still load all 135 maps and prove that every
-unselected FRLG actor and script remains absent.
+The 135-map exploration sweep remains the authority for catalog coverage.
+Representative runtime journeys are not a claim that every story branch, every
+battle outcome, or every facility format/floor combination has been exercised.
 
 ## References
 

@@ -1,8 +1,12 @@
 # Sevii content foundation
 
-This is milestone 1 of the [content overlay specification](../../.product/specs/sevii-content-overlay.md).
-The 135-map exploration catalog remains enabled. Ordinary Trainers, story scenes,
-rewards, statics, and Trainer Tower challenges have no production entries yet.
+This was milestone 1 of the [content overlay specification](../../.product/specs/sevii-content-overlay.md).
+The 135-map exploration catalog remains enabled. Its foundation shipped in
+[PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101); ordinary
+Trainers, story content, and Trainer Tower then shipped in
+[PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105),
+[PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and
+[PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102).
 
 ## Ownership
 

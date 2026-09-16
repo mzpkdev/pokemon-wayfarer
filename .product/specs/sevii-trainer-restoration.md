@@ -3,7 +3,7 @@
 PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md) and
 [Sevii independent story beats](../prds/sevii-independent-story-beats.md)
 
-Implemented: No
+Implemented: Yes — delivered in [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105) on the [content-overlay foundation](https://github.com/mzpkdev/pokemon-wayfarer/pull/101).
 
 ## Scope and authority
 
@@ -30,12 +30,14 @@ Trainer IDs:
 - two ordinary exterior psychics, Dario and Rodette, at Seven Island Trainer
   Tower. They remain in this domain; no exterior battle uses facility rules.
 
-The map manifest must enumerate every object individually with its exact source
-map, source index, local ID, coordinates, movement, sight radius, script,
-Trainer identity, dialogue labels, pair identity, and rematch family. It must
-also freeze normalized hashes of every selected base and rematch party. A
-checked-in generated report groups the inventory by island and map; the numeric
-totals above are release assertions, not a substitute for that exhaustive list.
+The map manifest enumerates every object individually with its exact source map,
+source index, local ID, coordinates, movement, sight radius, script, Trainer
+identity, dialogue labels, pair identity, and rematch family. It freezes
+normalized hashes of selected base and rematch parties. The numeric totals above
+are release assertions. The manifest owns object placement; the generated
+[allocation inventory](../../docs/sevii-trainer-implementation/allocation-inventory.json)
+remains the authoritative per-key party record, without a second Markdown
+mirror.
 
 The 17 non-rematch objects are the three Mt. Ember exterior Trainers, two Lost
 Cave room Trainers, and twelve Pattern Bush Trainers. All other selected objects
@@ -126,36 +128,24 @@ For paired Trainers, the rematch registry advances and battles the pair as one
 unit. Base victory and every rematch use the same persistent object presentation;
 rematch victory does not create a second map defeat flag.
 
-## Generated audit
+## Structural audit
 
-The ordinary-Trainer section of `wayfarer-sevii-content-audit` reports and
-asserts:
-
-- 87 selected objects, 81 unique base IDs, 75 single objects, six complete
-  pairs, 86 sight objects, one talk object, 70 rematch-capable objects, and 17
-  single-stage objects;
-- exact source-event and script hashes, generated event identity, pair
-  membership, sight radius, dialogue, base party, and complete rematch chain;
-- unique generated IDs below 2048, dense selected data, and no raw FRLG runtime
-  IDs or full FRLG Trainer table;
-- one `ORDINARY` classification for every populated ordinary party ID and one
-  valid defeat-bit mapping for every base Trainer identity;
-- no selected story or facility opponent, story-state access, item transaction,
-  movement scene, or unowned helper; and
-- all assets and symbols reachable from the selected closure and no others.
-
-Fail on a changed source event or party, an incomplete pair, a missing rematch
-row, an unknown classification, duplicate ID, defeat-bit alias, changed
-placement, source campaign dependency, or inventory-count drift.
+The ordinary-Trainer portion of `wayfarer-sevii-content-audit` checks selected
+source identity, the frozen counts and pairs, generated IDs and defeat mappings,
+ordinary-scaling classification, and the owned script/asset closure. It rejects
+source drift, incomplete pairs, missing rematch rows, ID or defeat aliases, and
+story/facility leakage. Runtime battle and rematch behavior stays with the
+mechanics and emulator coverage, not a duplicate inventory report.
 
 ## Validation
 
-Add schema and generator tests for every failure above. Mechanics tests cover
+Mechanics tests cover
 first victory, loss, draw, blackout, post-battle talk, save/reload, Vs. Seeker
 eligibility, every rematch stage, and paired eligibility. Exercise every party
 through the ordinary scaler at low, equal, and high Trainer Rating.
 
-Emulator journeys cover at least:
+The following remains the manual playtesting checklist; the automated journeys
+exercise representative routes rather than every entry below:
 
 - Kindle Road sight and Fisherman Tommy talk encounters;
 - the Crush Kin pair and a pair with only one usable Pokémon;
@@ -165,10 +155,14 @@ Emulator journeys cover at least:
 - a base fight and full rematch chain; and
 - loss, ferry departure, map reload, save/reload, and return after defeat.
 
-Run the overlay and scaling audits, `make -C game check`, serial supported-product
-builds, and a production-equivalent Wayfarer release. Standalone FRLG keeps its
-original roster and scripts; HNS and Emerald builds contain no generated Sevii
-Trainer IDs, parties, defeat bits, or rematch registry.
+Run the overlay and scaling audits, focused mechanics, serial supported-product
+builds, and a production-equivalent Wayfarer release. Standalone FRLG retains
+its original roster and scripts; HNS and Emerald contain no generated Sevii
+Trainer IDs, parties, defeat bits, or rematch registry. Recorded builds kept the
+ROM-category boundaries unchanged; applicable standalone behavior is validated
+separately. LTO reordered same-address interworking thunks, so whole-ROM byte
+identity is not claimed. The merged validation snapshot is recorded once in the
+[content overlay](sevii-content-overlay.md).
 
 ## References
 

@@ -1,6 +1,6 @@
 # Sevii Trainer Tower
 
-Status: Approved product design. Not implemented.
+Status: Implemented on `main` in [PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102), using the [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101) overlay foundation.
 
 ## Intent
 
@@ -129,7 +129,13 @@ The facility uses its own opponent construction and battle type. It must not
 enable the temporary empty-party trainer-only wild mechanic or use story battle
 continuation handlers.
 
-## Playtesting
+## Playtesting checklist and coverage
+
+This is the full product checklist, not a record that each case has run. The
+delivered emulator journey exercises player-input start and confirmed
+abandonment; focused mechanics tests cover completion gating, records, party
+restoration, and pending prizes. A live eight-floor completion in every format
+has not been exercised end to end.
 
 - Enter before any Sevii story, inspect services and records, and start each of
   the four formats.

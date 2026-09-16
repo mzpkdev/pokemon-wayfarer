@@ -2,7 +2,7 @@
 
 PRD: [Sevii Trainer Tower](../prds/sevii-trainer-tower.md)
 
-Implemented: No
+Implemented: Yes — delivered in [PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102) on the [content-overlay foundation](https://github.com/mzpkdev/pokemon-wayfarer/pull/101).
 
 ## Scope and authority
 
@@ -197,10 +197,10 @@ Only one pending prize may exist, so a player cannot start another run until it
 is claimed. A later successful run may award its source prize again. Never save
 a party snapshot, active run, format, or final time merely to preserve a prize.
 
-## Content audit
+## Structural audit
 
 `wayfarer-sevii-content-audit` retains the shared manifest, script closure, and
-transaction checks. Its compact Trainer Tower check requires the local runtime
+state-ownership checks. Its compact Trainer Tower check requires the local runtime
 and built-in set sources, resolves their project-local includes, and rejects an
 active external or e-Reader loader path. Compilation and focused mechanics tests
 cover C initializer validity and runtime behavior; the audit does not duplicate
@@ -221,7 +221,14 @@ catalog coverage or add test-only runtime commands when player input can
 exercise the behavior.
 
 Run serial builds because map versions share generated files. The final
-production-equivalent Wayfarer release must pass the active ROM reserve.
+production-equivalent Wayfarer release must pass the active ROM reserve. The
+merged validation snapshot is recorded once in the
+[content overlay](sevii-content-overlay.md).
+
+The shipped emulator journey covers player-input challenge start and confirmed
+abandonment. Focused mechanics tests cover records, eight-floor completion
+gating, restoration, and pending prizes. It does not constitute a live run
+through all eight floors in every format.
 
 ## References
 
