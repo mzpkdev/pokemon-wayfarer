@@ -94,10 +94,10 @@ async function passingState(slot) {
 async function spriteX(spriteId) {
   return (await read(symbol('gSprites') + spriteId * 68 + 0x20, 2)).readInt16LE();
 }
-async function waitTask(name, limit = 12000) {
-  for (let frames = 0; frames < limit; frames += 10) {
+async function waitTask(name, limit = 12000, interval = 10) {
+  for (let frames = 0; frames < limit; frames += interval) {
     if (await hasTask(name)) return;
-    await step(10);
+    await step(interval);
   }
   throw new Error(`Did not reach ${name} within ${limit} frames`);
 }
@@ -138,7 +138,14 @@ try {
   await capture('mountain-pan');
   await waitTask('Task_WayfarerTitleReveal');
   await capture('mountain-hold');
-  await waitTask('Task_WayfarerTitleInput', 300);
+  await waitTask('Task_WayfarerTitleFinishReveal', 300, 1);
+  await capture('title-logo-rise-start');
+  await step(6);
+  await capture('title-logo-rise-mid');
+  await step(6);
+  await capture('title-wayfarer-rise');
+  if (await hasTask('Task_WayfarerTitleInput')) throw new Error('Title input appeared before wordmarks settled');
+  await waitTask('Task_WayfarerTitleInput', 300, 1);
   await step(4);
   await capture('title-overlays');
   await step(16);
@@ -241,7 +248,7 @@ try {
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     passOrder, passDirections, observedWaitFrames: waits,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'staggered wordmark rise before Press Start, held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],

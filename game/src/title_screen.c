@@ -53,7 +53,12 @@ enum
 };
 
 #define WAYFARER_LOGO_Y 32
-#define WAYFARER_VERSION_Y 66
+#define WAYFARER_VERSION_Y 70
+#define WAYFARER_LOGO_RISE 6
+#define WAYFARER_LOGO_RISE_FRAMES 12
+#define WAYFARER_VERSION_RISE 4
+#define WAYFARER_VERSION_RISE_FRAMES 10
+#define WAYFARER_VERSION_DELAY 6
 #define WAYFARER_PRESS_START_Y 108
 #define WAYFARER_COPYRIGHT_Y 148
 #define WAYFARER_VOLBEAT_Y 96
@@ -68,12 +73,14 @@ enum
 static void MainCB2_WayfarerTitleScreen(void);
 static void VBlankCB_WayfarerTitleScreen(void);
 static void Task_WayfarerTitleReveal(u8 taskId);
+static void Task_WayfarerTitleFinishReveal(u8 taskId);
 static void Task_WayfarerTitleInput(u8 taskId);
 static void Task_WayfarerPokemonPass(u8 taskId);
 static void CB2_GoToMainMenu(void);
 static void CB2_GoToClearSaveDataScreen(void);
 static void CB2_GoToResetRtcScreen(void);
 static void SpriteCB_PressStart(struct Sprite *sprite);
+static void SpriteCB_WayfarerTitleRise(struct Sprite *sprite);
 
 static const u16 sWayfarerOverlayPalette[] = INCBIN_U16("graphics/title_screen/wayfarer/overlays/overlay_palette.gbapal");
 static const u32 sWayfarerPokemonLogoGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/overlays/pokemon_logo_obj.8bpp.smol");
@@ -375,6 +382,23 @@ static void CreateWayfarerPressStart(s16 y)
     }
 }
 
+static void SetWayfarerTitleRise(u8 spriteId, s16 offset, s16 delay, s16 frames)
+{
+    struct Sprite *sprite;
+
+    if (spriteId == MAX_SPRITES)
+        return;
+    sprite = &gSprites[spriteId];
+
+    sprite->y2 = offset;
+    sprite->invisible = delay != 0;
+    sprite->data[0] = delay;
+    sprite->data[1] = frames;
+    sprite->data[2] = offset;
+    sprite->data[3] = frames;
+    sprite->callback = SpriteCB_WayfarerTitleRise;
+}
+
 static void CreateWayfarerTitleSprites(void)
 {
     // Center the visible lettering, not its 256px atlas with empty right space.
@@ -382,10 +406,29 @@ static void CreateWayfarerTitleSprites(void)
     u8 i;
 
     for (i = 0; i < ARRAY_COUNT(sLogoX); i++)
-        CreateSprite(&sSpriteTemplate_WayfarerPokemonLogo[i], sLogoX[i], WAYFARER_LOGO_Y, 0);
-    CreateSprite(&sSpriteTemplate_WayfarerVersionLeft, 88, WAYFARER_VERSION_Y, 1);
-    CreateSprite(&sSpriteTemplate_WayfarerVersionRight, 152, WAYFARER_VERSION_Y, 1);
-    CreateWayfarerPressStart(WAYFARER_PRESS_START_Y);
+        SetWayfarerTitleRise(CreateSprite(&sSpriteTemplate_WayfarerPokemonLogo[i], sLogoX[i], WAYFARER_LOGO_Y, 0),
+                             WAYFARER_LOGO_RISE, 0, WAYFARER_LOGO_RISE_FRAMES);
+    SetWayfarerTitleRise(CreateSprite(&sSpriteTemplate_WayfarerVersionLeft, 88, WAYFARER_VERSION_Y, 1),
+                         WAYFARER_VERSION_RISE, WAYFARER_VERSION_DELAY, WAYFARER_VERSION_RISE_FRAMES);
+    SetWayfarerTitleRise(CreateSprite(&sSpriteTemplate_WayfarerVersionRight, 152, WAYFARER_VERSION_Y, 1),
+                         WAYFARER_VERSION_RISE, WAYFARER_VERSION_DELAY, WAYFARER_VERSION_RISE_FRAMES);
+}
+
+static void SpriteCB_WayfarerTitleRise(struct Sprite *sprite)
+{
+    if (sprite->data[0] != 0)
+    {
+        sprite->data[0]--;
+        return;
+    }
+    sprite->invisible = FALSE;
+    if (sprite->data[1] != 0)
+    {
+        sprite->data[1]--;
+        sprite->y2 = sprite->data[2] * sprite->data[1] / sprite->data[3];
+    }
+    else
+        sprite->callback = SpriteCallbackDummy;
 }
 
 static void SpriteCB_PressStart(struct Sprite *sprite)
@@ -612,9 +655,23 @@ static void Task_WayfarerTitleReveal(u8 taskId)
         gTasks[passTaskId].data[2] = MAX_SPRITES;
         gTasks[passTaskId].data[3] = MAX_SPRITES;
     }
-    taskId = CreateTask(Task_WayfarerTitleInput, 0);
-    gTasks[taskId].data[1] = TRUE; // Consume the cinematic skip press.
-    DestroyTask(FindTaskIdByFunc(Task_WayfarerTitleReveal));
+    gTasks[taskId].data[0] = WAYFARER_VERSION_DELAY + WAYFARER_VERSION_RISE_FRAMES + 1;
+    gTasks[taskId].func = Task_WayfarerTitleFinishReveal;
+}
+
+static void Task_WayfarerTitleFinishReveal(u8 taskId)
+{
+    u8 inputTaskId;
+
+    if (gTasks[taskId].data[0] != 0)
+    {
+        gTasks[taskId].data[0]--;
+        return;
+    }
+    CreateWayfarerPressStart(WAYFARER_PRESS_START_Y);
+    inputTaskId = CreateTask(Task_WayfarerTitleInput, 0);
+    gTasks[inputTaskId].data[1] = TRUE; // Consume the cinematic skip press.
+    DestroyTask(taskId);
 }
 
 static void Task_WayfarerTitleInput(u8 taskId)

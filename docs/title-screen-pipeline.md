@@ -136,6 +136,11 @@ trip uses Emerald's original frames; its visible get-up reverses those frames
 (Emerald itself slides the fallen sprite offscreen). All four use OBJ priority
 3, behind the moving grass (BG2) but ahead of the mountain (BG3).
 
+After the mountain hold, Pokémon rises six pixels into place over 12 frames.
+WAYFARER follows six frames later with a four-pixel rise over 10 frames, then
+Press Start appears. The banner's resting sprite Y is 70; the Pokémon logo
+remains at Y=32.
+
 ## Build and inspect the real screen
 
 Build the ROM after regeneration; this also compresses the exported assets:
