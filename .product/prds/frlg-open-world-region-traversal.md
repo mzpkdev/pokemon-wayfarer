@@ -1,5 +1,10 @@
 # FireRed and LeafGreen open-world regional traversal
 
+The [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
+supersedes this PRD's future Cinnabar map, Seafoam, and Bill-at-Cinnabar
+assumptions. This PRD retains the historical implementation record below; the
+port keeps Cinnabar, Seafoam, the Meteorite story, and Sevii travel independent.
+
 ## Player outcome
 
 After the opening releases the player with a starter, every Kanto town and city is reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the route to Cinnabar. The player may take a long route, but determination is enough.
@@ -25,7 +30,7 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Route 12 is the core Fuchsia approach; its Snorlax remains asleep beside an open lane. Route 16 and Cycling Road remain an optional Bicycle shortcut. Native Surf connects Pallet to Cinnabar through Route 21. Existing Horsea and Krabby fishing encounters provide both species on both sides in FireRed and LeafGreen. Route 20 and Seafoam remain optional. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Route 12 is the core Fuchsia approach; its Snorlax remains asleep beside an open lane. Route 16 and Cycling Road remain an optional Bicycle shortcut. Native Surf connects Pallet to the selected FRLG Cinnabar through HNS Route 21. The encounter policy owns the selected coastal fishing sources. HNS Route 20 and the selected FRLG Seafoam remain optional. |
 | Sevii Islands | The settlement hubs on One, Two, Three, Four, Five, Six, and Seven Island | The Seagallop service is the core network. The unlock trip introduces One Island; immediately afterward, every Sevii port offers all seven islands and Vermilion. |
 
 Indigo Plateau and event-only islands are not settlements in this pass. A route, cave, or optional landmark does not enter scope merely because it has a healing point.
@@ -49,8 +54,8 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 - Job: inspect three marked soft spots in the construction lot. Machop follows the player to each marker and tamps it down. This uses no battle, item, field move, badge, or earlier story flag.
 - Turn-in: report to the builder, who certifies the pier for Seagallop service. The ferry sailor gives the player the Rainbow Pass and adds Sevii Islands to the shared dock's service choices. This does not change the S.S. Anne scene.
 - Shared dock: while the S.S. Anne is present, the sailor offers S.S. Anne and Sevii Islands. The S.S. Anne choice keeps its existing Ticket, boarding, captain, rival, Cut, and departure behavior. Sevii Islands never advances or departs the S.S. Anne. After the player causes the ship's normal departure, the sailor offers only Sevii Islands.
-- First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives a new travel-only introduction and expands the Town Map. Bill remains hidden until his normal Cinnabar trip. This introduction does not give the Meteorite or Tri-Pass, disable PC storage, move Bill, or advance the existing One Island quest state.
-- Existing Meteorite story: Bill's normal Cinnabar invitation remains the entry to the original Meteorite delivery after early Sevii travel. That later trip may reuse the player's Rainbow Pass, but it still starts the original local quest and preserves its rewards and state transitions without giving a duplicate pass.
+- First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives a new travel-only introduction and expands the Town Map. This introduction does not give the Meteorite or Tri-Pass, disable PC storage, move Bill, or advance the existing One Island quest state.
+- Existing Meteorite story: its independently owned entry remains available after early Sevii travel. Its owner defines any later invitation, location, rewards, and state transitions. It may reuse the player's Rainbow Pass without giving a duplicate pass, but it does not depend on visiting Cinnabar or defeating Blaine.
 - Permanent service: as soon as Celio's introduction ends, the One Island sailor offers One through Seven Island and Vermilion. Every other Sevii port uses that same eight-destination menu from its first visit. The Rainbow Pass is the only credential.
 - State isolation: visiting an island marks that destination visited and initializes only the baseline NPC and transport state needed to enter and leave it. It does not complete Lostelle, the biker invasion, Hypno, the Meteorite, the Ruby, the Champion, or the National Pokédex progression. The shared rival scene on Four or Six Island remains deferred until its original Sevii prerequisite is met and plays exactly once at whichever location resolves first.
 - Return guarantee: the player can always select Vermilion or another island. Starting any local island story never removes the ferry menu.
@@ -78,7 +83,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Complete the Seagallop shakedown and receive the Rainbow Pass without leaving Vermilion or satisfying another story flag.
 - Open Sevii service while the S.S. Anne is still present, use both dock choices, and confirm neither choice changes the other's independent story state.
 - Confirm the first Sevii trip goes to One Island, Celio's travel introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
-- After early Sevii travel, take Bill's normal Cinnabar trip and confirm the Meteorite story starts without replacing or duplicating the Rainbow Pass.
+- After early Sevii travel, start the independently owned Meteorite story and confirm it does not replace or duplicate the Rainbow Pass or require visiting Cinnabar or defeating Blaine.
 - Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.
 - Enter Two Island's Game Corner and Three Island's port before starting the original detour. Confirm Lostelle, the bikers, PC storage, and detour-completion state remain unchanged.
 - Reach Four and Six Island before the postgame Sevii story in both visit orders and confirm the shared rival scene remains pending. Satisfy the original prerequisite later and confirm it plays exactly once at whichever location resolves first.

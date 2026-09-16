@@ -9,9 +9,11 @@ reward change is pending implementation; the current circuit uses the old reward
 ## Scope
 
 Implement shared Trainer Rating essentials and permanent local stock for the
-Wayfarer counters enumerated below. Kanto means the active HNS Kanto maps;
-Johto uses HNS maps and Hoenn uses imported Emerald maps. This specification
-defines the catalog, bindings, script changes, runtime contract and acceptance.
+Wayfarer counters enumerated below. Current Kanto coverage uses active HNS
+maps; the approved FRLG Cinnabar port adds the future Cinnabar counter defined
+below. Johto uses HNS maps and Hoenn uses imported Emerald maps. This
+specification defines the catalog, bindings, script changes, runtime contract
+and acceptance.
 It does not authorize changes to Pokémon species, teams, movesets or learnsets.
 
 Source baseline: `f7a2b95b7bde184141cf5b91215dc4e7ab9068a6`. The core production
@@ -135,8 +137,27 @@ convert. These are explicit coverage boundaries, not missing profiles.
 
 The ordinary Kanto employees stand at (2,3). Preserve Mt. Moon's Moon Stones,
 drinks and souvenirs, and all Celadon specialist floors. Pallet and active
-HNS Cinnabar have no mart to convert. Do not add FRLG or Sevii marts to claim
-Kanto coverage. Existing alternatives to these signature items remain available.
+HNS Cinnabar have no mart to convert. Do not add other FRLG or Sevii marts to
+claim Kanto coverage. Existing alternatives to these signature items remain
+available.
+
+### Future FRLG Cinnabar Mart
+
+When the approved [FRLG Cinnabar port](frlg-cinnabar-town-port.md) selects
+`CinnabarIsland_Mart_Frlg` for Wayfarer, convert
+`CinnabarIsland_Mart_EventScript_Clerk` at (2,3) into the direct
+`MART_PROFILE_CINNABAR` full-service profile. Apply the same global TR
+essentials, ordering, challenge PP supplement, price rules, and
+`IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED` script guard as every other
+converted full-service town counter. Its permanent signatures are
+`ITEM_X_ATTACK` and `ITEM_DIRE_HIT`.
+
+The FRLG source list contains only common essentials, so the Cinnabar profile
+has no retained stock after the common-ID removal rule. Add its profile,
+binding, source-list record, and all-tier outputs to the catalog manifest when
+the map is selected. This future integration does not register the FRLG map or
+alter the current HNS Cinnabar runtime; standalone HNS and FRLG keep their
+authored interactions.
 
 ### Hoenn town profiles
 
@@ -393,8 +414,9 @@ callers must be classified and retain legacy behavior, not be reprofiled.
 
 For each profile and every integer TR 0 through 80, test exact expected item
 membership, no duplicates, correct order/terminator, capacity and monotonic
-common stock. Assert that each of the 29 town-counter signature sets has two
-to four IDs and that those sets are pairwise distinct; the six facility
+common stock. Assert that each of the 29 current town-counter signature sets
+has two to four IDs and that those sets are pairwise distinct; when the FRLG
+Cinnabar port is selected, assert the same for all 30. The six facility
 profiles are explicit exceptions with no new signatures. The selected catalog's
 largest list is Mauville in challenge mode at TR 55 or above: 31 unique IDs,
 including eight distinct signature/retained goods. Treat future capacity

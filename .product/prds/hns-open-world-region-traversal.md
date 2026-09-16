@@ -6,6 +6,12 @@ assumptions in this document. It is not implemented yet. Regional routes,
 field-use authorization, scaling and unrelated mechanics remain unchanged;
 standalone builds retain their existing contract.
 
+The [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
+supersedes this PRD's future Cinnabar and Seafoam map and encounter selection.
+This PRD continues to require the Route 21 native-Surf settlement connection;
+the port owns its FRLG Cinnabar endpoint, the FRLG Seafoam replacement, and
+the Route 20/21 seam work.
+
 ## Player outcome
 
 After the opening releases the player with a starter, the nine Johto settlements in this pass are reachable without completing the main story, earning badges, or owning an HM. Native Surf users may provide the route to Cianwood. Route 44, Ice Path, and Blackthorn City retain their existing late-game progression.
@@ -32,7 +38,7 @@ Kanto opens through the S.S. Aqua maiden voyage, which awards the S.S. Ticket. O
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
 | Johto | New Bark Town, Cherrygrove City, Violet City, Azalea Town, Goldenrod City, Ecruteak City, Olivine City, Cianwood City, and Mahogany Town | The existing land network serves the eight settlements other than Cianwood once the listed road actors and turnbacks stop blocking it. Native Surf crosses Routes 40 and 41 to Cianwood. Existing mainland encounters provide Wooper and Chinchou; Cianwood fishing provides native Chinchou by day. Route 44, Ice Path, Blackthorn City, Safari Zone Gate, Lake of Rage, the League corridor, and Mt. Silver are outside this pass. |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | The S.S. Aqua releases the player in Vermilion. Route 6 and Saffron connect Celadon, Lavender, and Cerulean. The nonblocking Mt. Moon route continues to Pewter, Viridian, and Pallet. Celadon's loan-bicycle access to Cycling Road reaches Fuchsia. Native Surf reaches Cinnabar through Route 21, with existing Chinchou fishing encounters around Vermilion and Cinnabar providing directional coverage. Route 20 remains optional. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | The S.S. Aqua releases the player in Vermilion. Route 6 and Saffron connect Celadon, Lavender, and Cerulean. The nonblocking Mt. Moon route continues to Pewter, Viridian, and Pallet. Celadon's loan-bicycle access to Cycling Road reaches Fuchsia. Native Surf reaches the selected FRLG Cinnabar through HNS Route 21, with Chinchou fishing at Vermilion and the selected town providing directional coverage. HNS Route 20 remains optional and connects to the selected FRLG Seafoam entrances. |
 
 A healing point or Fly marker does not make a route or landmark a settlement. This roster, rather than every named map, is the acceptance boundary.
 

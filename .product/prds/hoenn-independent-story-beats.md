@@ -131,6 +131,9 @@ Rayquaza's later capture opportunity requires the resolved crisis and sufficient
 Trainer Rating. The later Groudon and Kyogre capture opportunities also require
 their relevant resolved story and sufficient TR. Preserve their existing encounter
 identities and presentation; no new capture quest or NPC is introduced.
+Hoenn's Terra Cave remains Groudon's capture site; the
+[Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) removes the separate
+HNS Seafoam Secret Cave encounter from Wayfarer.
 
 Every route that activates these capture encounters must enforce the chosen
 readiness rule, including revisits and alternate activation paths. Encounter level

@@ -10,6 +10,13 @@ their existing contract.
 PRD: [HNS open-world regional traversal](../prds/hns-open-world-region-traversal.md)
 Implemented: Yes
 
+The [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
+supersedes this implemented feature's future Cinnabar and Seafoam selection.
+The existing HNS coast behavior remains historical evidence. Future Wayfarer
+work keeps the Route 21 native-Surf access contract while selecting FRLG
+Cinnabar and all five FRLG Seafoam floors, with HNS Route 20 and Route 21
+adapted at their seams.
+
 ## Scope
 
 This specification defines the ordinary settlement network that opens after
@@ -94,7 +101,8 @@ script to `EventScript_ResetAllMapFlagsHnS`:
 - `FLAG_HIDE_ROUTE25_EUSINE`
 - `FLAG_HIDE_ROUTE25_SUICUNE`
 - `FLAG_HIDE_CELADON_EUSINE`
-- `FLAG_HIDE_SEAFOAM_GYMGUY`
+- `FLAG_HIDE_SEAFOAM_GYMGUY` (historical HNS Seafoam state; the Cinnabar and
+  Seafoam port retires its selected map and actor)
 - `FLAG_HIDE_VIRIDIAN_BLUE`
 - `FLAG_HIDE_ROUTE14_EUSINE`
 - `FLAG_HIDE_ROUTE14_SUICUNE`
@@ -342,8 +350,9 @@ but the player must prepare a Pokemon that already knows Surf.
   Wooper, Olivine fishing supplies Chinchou, and Cianwood daytime fishing
   supplies a return-side Chinchou. HNS Krabby does not receive native Surf and
   is not part of the recovery contract.
-- Route 21 connects Pallet to Cinnabar. Existing Chinchou fishing encounters on
-  the Kanto network provide the approved directional coverage.
+- Route 21 connects Pallet to Cinnabar. The Cinnabar and Seafoam port keeps
+  Route 21 and requires the selected FRLG Cinnabar fishing table to provide
+  the approved native-Surf directional coverage with the Kanto network.
 
 This specification does not change encounters, Standard Rod probabilities,
 rod distribution, capture supplies, party storage, terrain, or learnsets.
@@ -420,9 +429,9 @@ The acceptance suite must cover:
   Copycat's quest, Route 5 and Route 6 Underground Path access, and both Magnet
   Train stations. Both S.S. Aqua desks must remain independent of the flag.
 - Vermilion through Route 6 to Saffron and onward through Routes 5, 7, and 8
-  with Machine Part unset; Pallet through Route 21 to Cinnabar and back with a
-  prepared native Surf user; and Olivine through Routes 40 and 41 to Cianwood
-  and back with a prepared native Surf user.
+  with Machine Part unset; Pallet through HNS Route 21 to the selected FRLG
+  Cinnabar and back with a prepared native Surf user; and Olivine through
+  Routes 40 and 41 to Cianwood and back with a prepared native Surf user.
 - Regression checks that Route 44, Ice Path, Blackthorn, Route 13 Alola access,
   Snowswept Cavern, New Sinjoh, the League corridor, and Mt. Silver retain
   their current progression gates.

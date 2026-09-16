@@ -45,6 +45,11 @@ initial-badge validation to cover Giovanni's finale and once-only reward when
 implementing the port; do not remove protections for other Leaders. Current
 runtime still uses Blue's invitation until that port is implemented.
 
+The independent [Cinnabar and Seafoam port](../prds/frlg-cinnabar-seafoam-port.md)
+moves Blue's invitation to the Viridian Gym entrance and retains his existing
+initial Earth Badge ownership. Giovanni's future override remains a separate
+story-port decision and is not a dependency of the coastal port.
+
 ## Scope
 
 The draft [regional start choice](wayfarer-regional-start-choice.md) defines
@@ -135,8 +140,10 @@ audit. Include late arrivals, revisits, and an already-completed takeover, and
 ensure earlier event writes such as Whitney's cannot overwrite later takeover
 state.
 
-Before the story port, Blue's Cinnabar interaction is sufficient to invite him
-back to his Gym without fifteen other HNS badges or any League clear. The
+In the current runtime, Blue's Cinnabar interaction is sufficient to invite
+him back to his Gym without fifteen other HNS badges or any League clear. The
+[coastal port](../prds/frlg-cinnabar-seafoam-port.md) moves that interaction to
+Viridian while retaining Blue as the initial badge giver. The
 [future Viridian ownership rule](#approved-future-viridian-badge-ownership)
 replaces this invitation contract with Giovanni's finale for that port.
 Wattson's New Mauville relocation requires both Norman's defeat and the Dynamo
@@ -365,7 +372,9 @@ Deterministic tests must cover:
     that count, revisit recovery, once-only triggering, and no regression after
     completion. Verify that unrelated badges do not replace regional story
     prerequisites. Cover Blue's Cinnabar invitation before fifteen HNS badges
-    on the current implementation; for the story port, replace that case with
+    on the current implementation and his Viridian introduction without a
+    Cinnabar or Blaine prerequisite in the coastal port; for the story port,
+    replace that case with
     Giovanni's finale and once-only Earth Badge under the future ownership
     rule above. Cover Norman before Wattson and all retained Leader protections.
 12. Eighth-badge routes ending in Kanto, Johto, and Hoenn can all reach the

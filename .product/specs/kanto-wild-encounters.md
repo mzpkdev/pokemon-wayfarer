@@ -13,7 +13,7 @@ Implemented: Yes
 
 ## Scope
 
-This specification defines the HNS mainland Kanto ordinary wild encounter
+This specification defines the selected Wayfarer mainland Kanto ordinary wild encounter
 portfolio, its FireRed and LeafGreen source provenance, authored day and night
 behavior, and the deterministic checks that keep it suitable as a starting
 region. It covers land, Surf, the shared Rock Smash and Headbutt interaction
@@ -46,7 +46,7 @@ exact fields are defined by its own specification.
 
 Every Kanto `profiles` record has these fields:
 
-- `map`, the exact HNS map constant.
+- `map`, the exact selected Wayfarer map constant.
 - `method`, one of `land_mons`, `water_mons`, `rock_smash_mons`, or
   `fishing_mons`.
 - `dayBaseLabel` and `nightBaseLabel`, the resolved target identities.
@@ -98,7 +98,18 @@ show these records, but `changes` are not compiled into the ROM.
 
 ### Mainland ownership
 
-The Kanto manifest contains these 53 map IDs and no others:
+The 53-map HNS-only manifest below is the implemented baseline. The [FRLG
+Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
+supersedes it for future Wayfarer encounter work: replace
+`MAP_CINNABAR_ISLAND_HNS` and `MAP_SEAFOAM_ISLANDS_{1F,B1F}_HNS` with
+the existing FRLG IDs `MAP_CINNABAR_ISLAND` and
+`MAP_SEAFOAM_ISLANDS_{1F,B1F,B2F,B3F,B4F}`.
+No HNS Cinnabar or Seafoam encounter map remains selected. Preserve HNS Route
+20 and Route 21 and their ordinary encounter ownership. The regenerated
+manifest must report its selected map IDs and profile denominator; the old
+53-map and 129-profile counts are historical values, not future targets.
+
+The historical baseline contains these 53 map IDs and no others:
 
 | Group | Map IDs |
 | --- | --- |
@@ -114,15 +125,18 @@ The route range in the first row includes Routes 1 through 25. This makes
 Their encounter rates are 21, 2, and 20 respectively, copied from the FireRed
 and LeafGreen Route 23 sources. Route 23 has no interaction profile.
 
-The resolved mainland topology is 129 profiles at day and 129 at night: 41
+The historical baseline's resolved mainland topology is 129 profiles at day and 129 at night: 41
 land, 31 Surf, 25 interaction, and 32 fishing profiles per time. A profile is a
 map and method pair. `DAY_ALIAS` still contributes a night profile because the
 manifest binds it explicitly. Automatic runtime fallback does not.
 
-The original 52 maps retain their current nonzero encounter rates. Adding or
-removing a method, changing one of those rates, or turning a zero-rate source
-row into an active profile is outside this specification. Route 23 is the only
-topology and encounter-rate addition.
+For the historical baseline, the original 52 maps retain their current nonzero
+encounter rates. Adding or removing a method, changing one of those rates, or
+turning a zero-rate source row into an active profile is outside this
+specification. Route 23 is the only historical topology and encounter-rate
+addition. The Cinnabar and Seafoam port is the explicit exception: it selects
+the FRLG coast set and its authored methods under the port and this encounter
+policy.
 
 Routes 26 through 28, Tohjo Falls, Mt. Silver, the Johto Rocket Hideout, Sinjoh,
 Alola, event islands, and every Sevii map are rejected from the Kanto manifest.
@@ -165,6 +179,8 @@ maps use named `EQUIVALENT` sources:
 | Kanto Victory Road 1F | `sVictoryRoad1F_FireRed` and `sVictoryRoad1F_LeafGreen` |
 | Kanto Victory Road B1F | `sVictoryRoad2F_FireRed` and `sVictoryRoad2F_LeafGreen` |
 | Kanto Victory Road B2F | `sVictoryRoad3F_FireRed` and `sVictoryRoad3F_LeafGreen` |
+| Selected FRLG Cinnabar | `sCinnabarIsland_FireRed` and `sCinnabarIsland_LeafGreen` |
+| Selected FRLG Seafoam 1F, B1F, B2F, B3F, and B4F | The matching FireRed and LeafGreen Seafoam floor for each selected map |
 
 When one of those sources lacks an active target method, use these `ANALOG`
 sources. This table is exhaustive, so the implementation does not choose an
@@ -177,7 +193,6 @@ analog by proximity at generation time.
 | Route 9 Surf and fishing | `sRoute10_FireRed` and `sRoute10_LeafGreen`, same method |
 | Routes 14 and 15 Surf and fishing | `sFuchsiaCity_FireRed` and `sFuchsiaCity_LeafGreen`, same method |
 | Kanto Victory Road 1F and B1F Surf or fishing without a floor source | `sCeruleanCave1F_FireRed` and `sCeruleanCave1F_LeafGreen`, same method |
-| Cinnabar land | `sRoute21North_FireRed` and `sRoute21North_LeafGreen` land |
 | Every active mainland interaction profile without a direct FRLG interaction source | `sRockTunnelB1F_FireRed` and `sRockTunnelB1F_LeafGreen` Rock Smash |
 
 An active method not covered by a direct, equivalent, or analog rule is a
@@ -353,16 +368,16 @@ All Kanto fishing profiles retain ten active entries and use the Standard Rod
 weights. Species placement may change, but rod bite rates, eligibility,
 renormalization, Lure mirroring, and the Feebas exception do not.
 
-The following six HNS records remain in
-`game/src/data/standard_rod_fishing.json`: Vermilion City, Vermilion port
-outside, and Cinnabar Island by day and night. For each record, Chinchou is
+The six Wayfarer records for Vermilion City, Vermilion port outside, and the
+selected FRLG Cinnabar Island, by day and night, remain in
+`game/src/data/standard_rod_fishing.json`. For each record, Chinchou is
 exactly 11 percent of successful Old Rod encounters with Lure off at every
 Wayfarer Rating from 0 through 80. The 25 percent bite rate makes it exactly
 2.75 percent per unmodified cast. Kanto changes must not alter the Johto-owned
 Olivine and Cianwood accessibility records in the same file.
 
 Every qualifying Kanto Chinchou catch knows Surf. Wayfarer Rating 0 produces a
-level-5 catch from the authored level-5 sources, so the Wayfarer HNS Chinchou
+level-5 catch from the authored level-5 sources, so the Wayfarer Chinchou
 schedule begins at level 5 in both learnset modes as required by the
 interregional circuit. Preserve the utility moves through level 100 and update
 the native-HM tests in the same implementation.
@@ -386,8 +401,9 @@ Extend `game/tools/wild_encounters/wild_encounters_to_header.py` to consume the
 regional manifest. Bump the balance audit to schema version 3. In addition to
 the existing per-slot Trainer Rating data, it contains:
 
-- The complete resolved Kanto ownership manifest and 129-profile denominator
-  for each time.
+- The complete resolved Kanto ownership manifest and its generated profile
+  denominator for each time. The report distinguishes the historical HNS-only
+  baseline from the selected FRLG Cinnabar and Seafoam port manifest.
 - Authored and effective species probabilities as exact fractions, with the
   authored slot and resolved species both present for every outcome.
 - Day and night generation portfolios for every Rating and rod quality.
@@ -414,8 +430,8 @@ the discrete-slot tie breaks; source-range selection; explicit day aliases;
 night retention and distance boundaries; generation classification; forbidden
 authored and effective species; and deterministic report ordering.
 
-Update existing HNS profile-count fixtures for Route 23 and the explicit night
-bindings. Run `make wild-encounter-scaling-test` and
+Update the profile-count fixtures for Route 23, the selected FRLG Cinnabar and
+five Seafoam floors, and the explicit night bindings. Run `make wild-encounter-scaling-test` and
 `make wild-encounter-balance-audit`. The generated audit must pass every Rating
 from 0 through 80 in Wayfarer and all three rod qualities.
 
@@ -426,12 +442,13 @@ every Kanto Chinchou record. Run the native-HM test if the Chinchou schedule
 changes. Run the devtools catalog tests and checks after the audit or
 Cartographer schema changes.
 
-Compile the affected encounter, radio, Pokédex, and DexNav objects for HNS,
-then build one HNS release ROM. Playtest a new Kanto start through the first
-badge at day and night, all three rod qualities, both Chinchou coasts, one
-unchanged cave night, one materially changed route night, Safari Zone, Power
-Plant approach on Route 10, and Route 23. Confirm special acquisitions and
-Sevii encounters did not change.
+Compile the affected encounter, radio, Pokédex, and DexNav objects for
+Wayfarer, then build one Wayfarer release ROM. Playtest a new Kanto start
+through the first badge at day and night, all three rod qualities, both
+Chinchou coasts, the selected Cinnabar and every Seafoam floor, one unchanged
+cave night, one materially changed route night, Safari Zone, Power Plant
+approach on Route 10, and Route 23. Confirm special acquisitions and Sevii
+encounters did not change.
 
 ## References
 

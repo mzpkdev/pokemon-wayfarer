@@ -3,6 +3,13 @@
 PRD: [FireRed and LeafGreen open-world regional traversal](../prds/frlg-open-world-region-traversal.md)
 Implemented: Yes
 
+The [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
+supersedes this feature's future Cinnabar and Seafoam selection and its
+Bill-at-Cinnabar coupling. The existing implementation below remains a
+historical compatibility record. Future work keeps the Route 21 native-Surf
+contract, uses the selected FRLG Cinnabar endpoint, and leaves the Meteorite
+story and Sevii travel independently owned.
+
 ## Scope
 
 This specification defines the ordinary Kanto settlement network that opens
@@ -139,7 +146,12 @@ Island and does not show another destination. Once that flag is set, it routes
 through the existing Rainbow Pass dispatch, including the Mystic Ticket and
 Aurora Ticket branches when those branches are independently available.
 
-### Travel-only One Island introduction
+### Historical travel-only One Island introduction
+
+The details in this section describe the shipped feature before the Cinnabar
+port. They do not require a future Cinnabar meeting with Bill. The port owns
+removal of that coupling; the owning Meteorite and Sevii story specifications
+must define any future invitation and preserve this feature's completed state.
 
 The early trip uses dedicated travel states without changing
 `VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F`. It must not reuse scene value 5,
@@ -207,7 +219,12 @@ The ferry menu remains available during Lostelle, the biker invasion,
 Meteorite delivery, Ruby and Sapphire recovery, and every later island state.
 No local quest may replace it with a no-return menu.
 
-### Compatibility with the original Sevii story
+### Historical compatibility with the original Sevii story
+
+This is compatibility evidence for the implemented traversal feature. It does
+not require the selected FRLG Cinnabar to host Bill, start the Meteorite story,
+or control Sevii access after the Cinnabar port. Those stories retain their own
+entry rules.
 
 Bill's normal Cinnabar invitation remains available after early travel. Before
 the boat departs, preflight Key Items space for every missing item that the
@@ -281,10 +298,12 @@ credential.
 
 ### Native Surf crossing
 
-Route 21 keeps its existing water and encounter tables. The HM field-use and
-native learnset specifications allow a prepared Horsea or Krabby to Surf
-without HM03 or the Soul Badge. No part of this specification changes rods,
-fishing odds, capture supplies, party storage, terrain, or learnsets.
+The historical implementation keeps Route 21's water and encounter tables and
+allows a prepared Horsea or Krabby to Surf without HM03 or the Soul Badge. The
+Cinnabar and Seafoam port retains HNS Route 21 but selects FRLG Cinnabar and
+its encounter table; the Kanto encounter policy owns its native-Surf source.
+No part of this specification changes rods, fishing odds, capture supplies,
+party storage, terrain, or learnsets.
 
 Acceptance covers a player who prepares a native Surf user before each Pallet
 to Cinnabar crossing. It does not guarantee recovery when the player lacks an
@@ -318,7 +337,7 @@ known only for the Route 21 crossing:
 5. While the S.S. Anne is present, select Cancel, fail and pass its Ticket
    check, board it, and use Sevii travel. Confirm neither branch changes the
    other's state. Repeat after the ship's normal departure.
-6. Interrupt the first Sevii introduction with a full Key Items pocket, return
+6. Historical implementation check: interrupt the first Sevii introduction with a full Key Items pocket, return
    to Vermilion, make room, and finish it. Confirm no Meteorite, Tri-Pass,
    storage-disable flag, visible Bill, or One Island quest state changed. Then
    take the normal Cinnabar trip and confirm its successful preflight restores
@@ -335,7 +354,7 @@ known only for the Route 21 crossing:
    restore from Four first on one save and Six first on another, and confirm
    the rival scene plays exactly once in each case. Both scene variables must
    end at 1.
-10. After early travel, take Bill's Cinnabar trip, finish the Meteorite detour,
+10. Historical implementation check: after early travel, take Bill's Cinnabar trip, finish the Meteorite detour,
    deliver the Ruby, and complete the later Sevii story. Confirm no duplicate
    Tri-Pass, Rainbow Pass, Town Map, or map-page reward appears.
 11. Prepare the named native Surf users on both sides of Route 21 and cross in

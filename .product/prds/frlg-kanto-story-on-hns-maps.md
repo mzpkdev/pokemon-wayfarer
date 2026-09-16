@@ -1,8 +1,9 @@
 # FRLG Kanto story on HNS maps
 
 Status: Draft product design. Not implemented. FRLG is Kanto's narrative
-baseline and HNS is its general geographic base. The full FRLG Cinnabar port is
-selected; the S.S. Anne remains permanently available, with travel design
+baseline and HNS is its general geographic base. The full FRLG Cinnabar and
+Seafoam port is owned by [its dedicated PRD](frlg-cinnabar-seafoam-port.md).
+The S.S. Anne remains permanently available, with travel design
 owned by a separate specification. Selected HNS story adaptations are
 recorded below; remaining choices stay open.
 
@@ -21,9 +22,8 @@ history. Preserve as much HNS Kanto story content as possible through coherent
 adaptations; do not remove a quest merely because it originated in HNS.
 
 This release does not implement transitions between historical world states
-or rebuild the entire overworld to match FRLG. A later Blue takeover of Viridian Gym is a potential future feature, not an
-event assumed to have already happened. Cinnabar remains intact; an eruption
-is neither planned by this PRD nor required for story coherence.
+or rebuild the entire overworld to match FRLG. Cinnabar remains intact; an
+eruption is outside the dedicated coastal port.
 ROM space recovery will happen before implementation and does not drive cuts
 to this product design.
 
@@ -36,42 +36,28 @@ and links to Johto. Preserve existing traversal and landmarks wherever the
 story can use them. Adapt NPC positions, movement, encounters, and entrances to
 those spaces rather than requiring FRLG's exterior coordinates.
 
-Import the Celadon Rocket Hideout, Pokémon Tower, Silph's missing floors, and
-Pokémon Mansion as the principal new story interiors. Use the existing FRLG
+Import the Celadon Rocket Hideout, Pokémon Tower, and Silph's missing floors
+as the principal story interiors owned here. Use the existing FRLG
 layouts and their recognizable puzzles as the starting point. A small entrance
-or transition adjustment is acceptable. Cinnabar is the selected exception for a
-full city-map replacement. Other wholesale
-city or route replacements remain outside this design.
+or transition adjustment is acceptable. Cinnabar and Seafoam are selected
+exceptions owned by the [coastal port](frlg-cinnabar-seafoam-port.md). Other
+wholesale city or route replacements remain outside this design.
 
 Do not replace these adventures with a single room containing their final
 battle and reward. The player should investigate the hideout, navigate Silph,
-climb the Tower, and explore the Mansion. Exact layout reuse, shared tilesets,
+climb the Tower, and explore the separately specified Mansion. Exact layout reuse, shared tilesets,
 floor connections, and entrance positions belong in the implementation specs.
 
-### Cinnabar: full FRLG port, intact throughout the adventure
+### Cinnabar and Seafoam ownership
 
-Port the complete FRLG Cinnabar exterior and its Mansion, Gym, laboratory,
-Pokémon Center, and Mart into Wayfarer. Keep Blaine in Cinnabar Gym and preserve
-Mansion exploration, the Secret Key requirement, and fossil revival at the
-laboratory. The island remains intact throughout the scoped adventure.
-
-Retain HNS Routes 20 and 21. Adapt their reciprocal connections and verify
-shore alignment, traversable water, and tileset compatibility at seamless
-borders. The full island port is selected; exact connection offsets and any
-necessary local seam adjustments belong in the implementation specification.
-Also adapt interior exits, Fly and healing destinations, map identity,
-encounters, and services to Wayfarer. Do not import Bill's Sevii departure as
-part of this mainland map port.
-
-Replace HNS dialogue that describes Cinnabar's destruction as completed history.
-Blaine's Seafoam relocation is not part of this campaign. Preserve Seafoam's
-compatible exploration and encounters without a second active Blaine Gym.
-
-An erupted island may never be implemented. Do not resize the HNS island,
-link a second playable island, reserve transition state, or build routing,
-evacuation, or reward handling for a hypothetical eruption. Existing HNS source
-assets may remain in the repository for standalone HNS; their presence creates
-no Wayfarer feature commitment. Any future eruption would need its own design.
+The [FRLG Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) owns both
+complete locations, their local puzzles, services, encounters, rewards, Blue's
+Viridian introduction, and the coastal connection work. Its Mansion Secret
+Key leads to Blaine's Cinnabar Gym. Its Seafoam cave contains the FRLG current
+puzzle and Articuno. Bill's Sevii story remains independent, and Groudon is
+catchable through Hoenn's Terra Cave rather than the removed HNS Seafoam
+Secret Cave. This broader story PRD adds no second island, cave, Gym, or
+eruption state.
 
 ### Adventure coverage
 
@@ -86,13 +72,12 @@ no Wayfarer feature commitment. Any future eruption would need its own design.
 | Snorlax | Preserve the two FRLG encounters associated with Routes 12 and 16 and the Flute requirement, adapting event placement to HNS geography. Neither encounter may close the only ordinary travel route. Resolve the existing HNS Vermilion Snorlax separately rather than accidentally duplicating the same encounter. |
 | Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the deferred Master Ball reward. |
 | Safari Zone and Warden | Use HNS Fuchsia's existing Safari areas for the Surf destination and Gold Teeth search. Keep returning the Teeth for Strength as a separate local objective. Do not import the entire FRLG Safari merely to reproduce coordinates. |
-| Mansion and Blaine | Add the Mansion exploration and Secret Key reward. Preserve its causal connection to Blaine's challenge; Blaine belongs in the intact Cinnabar Gym for the FRLG baseline. Use the selected full FRLG island and interiors. |
+| Mansion and Blaine | The dedicated coastal port owns the intact town, Mansion, Secret Key, Gym, Lab, Center, Mart, and Blaine's local rewards. No broader Rocket or League prerequisite is added. |
 | Giovanni's finale | Preserve the final confrontation after the two major investigations. Giovanni owns the initial Viridian challenge and Earth Badge. Blue is the rival only for Kanto-origin players and the Kanto Champion for all origins; a later Gym takeover is future work. |
-| Legendary sites | Reuse HNS Seafoam, Power Plant, and Cerulean Cave where their spaces support the encounter and exploration requirements. Any missing puzzle space needs a named, bounded addition rather than an automatic full FRLG dungeon import. |
+| Legendary sites | The dedicated coastal port owns full FRLG Seafoam and Articuno. Reuse HNS Power Plant and Cerulean Cave where their spaces support the other encounters; any missing puzzle space needs a named, bounded addition. Groudon belongs to Hoenn. |
 
-The fossil reward has a usable revival service at the restored Cinnabar
-laboratory. Preserve its local reward handling and access independently of
-unrelated regional campaign completion.
+The coastal port owns fossil revival at Cinnabar's laboratory, independently
+of unrelated regional campaign completion.
 
 ### Preserve local causes and allow different adventure orders
 
@@ -105,7 +90,8 @@ In particular:
 - Both major investigations lead to Giovanni's finale. Smaller Rocket
   incidents and the Snorlax encounters are not finale prerequisites.
 - Bill provides a route to the S.S. Ticket and Anne boarding; an existing
-  Ticket also permits boarding. The Mansion's Key leads to Blaine's challenge.
+  Ticket also permits boarding. The coastal port owns the Mansion's local Key
+  and Blaine connection without triggering Bill's Sevii trip.
 - Unrelated badges, League clears, or regional campaigns do not activate these
   adventures. Retain ordinary field preparation and necessary local puzzles.
 
@@ -127,8 +113,9 @@ FRLG adventure presents that same event as unresolved.
 
 Preservation is the default. Each overlapping HNS scene must be explicitly retained, adapted, or deferred
 in a follow-up content specification. This includes the Machine Part theft,
-Misty's absence, the radio upgrade, Vermilion Snorlax, Blue's invitation and Gym
-role, Blaine at Seafoam, and dialogue about Cinnabar's condition. Unrelated HNS
+Misty's absence, the radio upgrade, Vermilion Snorlax, and Blue's broader story
+role. The coastal port resolves Blaine's location, Blue's introduction, and
+Cinnabar and Seafoam's condition. Unrelated HNS
 flavor, services, and side content remain available unless a named conflict
 requires a change. Dropping content requires a named conflict and a product
 decision after considering dialogue, event placement, and dependency changes.
@@ -231,7 +218,7 @@ rival battle as a required visitor battle.
   contract but does not implement starter selection or the Kanto opening.
   Visiting players do not need an Oak's Parcel opening to access Kanto stories.
 - No wholesale replacement of HNS city or route layouts beyond the selected
-  Cinnabar exception, new parallel Kanto,
+  Cinnabar and Seafoam exceptions, new parallel Kanto,
   or general import of every FRLG house, gate, cave, tileset, or soundtrack.
 - No new quest-selection interface or quest journal is required.
 - No change to the global TR formula, scaling rules, League order, or total
@@ -252,6 +239,8 @@ For this adaptation, Giovanni replaces the existing League circuit's Blue
 invitation route to the initial Earth Badge. Blue's HNS Gym scenes are
 candidates for a future succession transition, not concurrent Gym ownership. No new TR,
 badge-count, or League-clear condition is introduced for that badge.
+The separately deliverable coastal port keeps Blue as the Earth Badge giver
+until this broader story adaptation is actually implemented.
 
 Keep ordinary local rewards attached to their adventures even when the player
 already owns the corresponding HM or can use the field move through another
@@ -446,9 +435,9 @@ provide a valid return to the HNS world.
 - Do repeat Anne visits preserve one-time rewards and Blue's actual progression?
 - Can the player leave and return to Kanto throughout every adventure without
   affecting the Aqua circuit or unrelated regional progress?
-- Does the intact Cinnabar connect correctly to both HNS sea routes, with
-  reliable interior exits, Fly/healing arrivals, and no post-eruption dialogue?
-- Are the Tower/radio, Cinnabar/Blaine, and Giovanni/Blue choices coherent to a
+- Do the separately specified Cinnabar and Seafoam ports pass their coastal,
+  service, Gym, and cave acceptance checks?
+- Are the Tower/radio and Giovanni/Blue choices coherent to a
   player who knows either original game?
 - Does a later Blue encounter retire all earlier chapters across save/reload,
   while a loss leaves the current encounter retryable and grants no skipped rewards?

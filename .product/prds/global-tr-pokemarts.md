@@ -108,7 +108,10 @@ specification. Existing restrictions on using items still apply.
 
 Apply this feature only to the combined Wayfarer build, including HNS Kanto,
 Johto and imported Hoenn. Standalone HNS, Emerald, FireRed and LeafGreen retain
-their behavior. FRLG Kanto/Sevii map files are not Wayfarer's Kanto coverage.
+their behavior. FRLG Kanto/Sevii map files are outside Wayfarer's ordinary
+Mart coverage except for the selected
+[FRLG Cinnabar port](frlg-cinnabar-seafoam-port.md), whose Mart uses the global
+profile defined in the [Mart specification](../specs/global-tr-pokemarts.md).
 Alola, Sinjoh and other outlying specialist services are outside the ordinary
 three-region catalog unless explicitly listed in the specification.
 
