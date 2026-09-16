@@ -84,11 +84,11 @@ Run the converter tests after changing the pipeline:
 ## Version banner
 
 The `Wayfarer` banner uses the reviewed wordmark at
-`.github/assets/wayfarer-simple.png`. Pixel Art Fixer reconstructed its native
-grid into `game/graphics/title_screen/wayfarer/wayfarer_wordmark_pixel_fixed.png`.
-`game/tools/generate_wayfarer_banner.py` fits that source into the existing
-128x32 sprite region, makes the fill pure white and the outline pure black,
-and packs the two 64x32 halves. Regenerate it separately from the scene:
+`.github/assets/wayfarer-simple.png` directly. The approved full-resolution
+source is downsampled with Lanczos into the existing 128x32 sprite region and
+quantized to eight grayscale shades (plus transparency) by
+`game/tools/generate_wayfarer_banner.py`. It packs the two 64x32 halves.
+Regenerate it separately from the scene:
 
 ```bash
 make -C game TITLE_ART_PYTHON=/tmp/wayfarer-title-venv/bin/python wayfarer-title-banner
@@ -98,9 +98,9 @@ The generator writes `wayfarer_version.png` and `wayfarer_version.pal` in
 `game/graphics/title_screen/wayfarer/`. It packs the left and right 64x32 sprite
 halves into a 64x64 sheet, reserves index 0 for transparency, and uses only the
 first 16 sprite-palette entries. Regeneration does not change the background.
-To change the wordmark, rerun Pixel Art Fixer using the command in
-`docs/title-screen-pixel-art-fixer.md`, review its output, then rerun the banner
-generator. The original full-resolution PNG remains separate from the GBA sprite.
+The earlier Pixel Art Fixer reconstruction remains at
+`game/graphics/title_screen/wayfarer/wayfarer_wordmark_pixel_fixed.png` for
+comparison; it is not an input to the current banner generator.
 
 ## Held-title overlays
 

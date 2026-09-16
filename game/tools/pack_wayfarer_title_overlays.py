@@ -180,17 +180,20 @@ def main() -> None:
     banner_w, banner_h, banner_pixels, banner_palette = read_indexed_png(args.banner)
     if (banner_w, banner_h) != (64, 64):
         raise ValueError("WAYFARER banner must be the established 64x64 packed sheet")
-    if len(banner_palette) < 3:
+    if len(banner_palette) < 9:
         raise ValueError("WAYFARER banner palette is incomplete")
 
-    # The converter reserves 184..255.  Place the banner's literal white and
-    # black there so its 8bpp pixels cannot alter any logo colours.
-    WHITE_INDEX, BLACK_INDEX = 184, 185
-    shared[WHITE_INDEX] = (255, 255, 255)
-    shared[BLACK_INDEX] = (0, 0, 0)
-    banner_obj = bytes(0 if pixel == 0 else WHITE_INDEX if pixel == 1 else BLACK_INDEX if pixel == 2 else 0
-                       for pixel in banner_pixels)
-    if set(banner_obj) - {0, WHITE_INDEX, BLACK_INDEX}:
+    # The converter reserves 184..255. Keep the banner's eight grayscale
+    # shades there without changing any of the logo's colours.
+    BANNER_FIRST_INDEX = 184
+    if set(banner_pixels) - set(range(9)):
+        raise ValueError("WAYFARER banner uses an unexpected palette index")
+    for index, colour in enumerate(banner_palette[1:9]):
+        if len(set(colour)) != 1:
+            raise ValueError("WAYFARER banner palette must be grayscale")
+        shared[BANNER_FIRST_INDEX + index] = colour
+    banner_obj = bytes(0 if pixel == 0 else BANNER_FIRST_INDEX + pixel - 1 for pixel in banner_pixels)
+    if set(banner_obj) - ({0} | set(range(BANNER_FIRST_INDEX, BANNER_FIRST_INDEX + 8))):
         raise AssertionError("banner palette remap escaped its reserved entries")
 
     packed_logo = pack_logo_obj(logo_pixels, logo_w, logo_h)
@@ -203,7 +206,7 @@ def main() -> None:
         "format": 1,
         "logo": {"source": str(args.logo), "obj_sheet_size": [64, 256], "bytes": len(packed_logo), "frames": 4},
         "banner": {"source": str(args.banner), "obj_sheet_size": [64, 64], "bytes": len(banner_obj)},
-        "palette": {"source": str(args.shared_palette), "entries": 256, "banner_white": WHITE_INDEX, "banner_black": BLACK_INDEX,
+        "palette": {"source": str(args.shared_palette), "entries": 256, "banner_first": BANNER_FIRST_INDEX, "banner_shades": 8,
                     "reserved_4bpp_banks": [12, 13]},
         "obj_budget": {"logo": 0x4000, "banner": 0x1000, "press_start": 0x520, "flygon": 0x400, "total": 0x5920, "capacity": 0x8000},
     }, indent=2) + "\n", encoding="utf-8")

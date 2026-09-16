@@ -1,53 +1,46 @@
 #!/usr/bin/env python3
-"""Fit the reviewed Wayfarer wordmark into the GBA title sprite banner."""
+"""Fit the approved Wayfarer wordmark into the GBA title sprite banner."""
 
 from __future__ import annotations
 
 import argparse
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image
 
 
 NATIVE_SIZE = (128, 32)
 SHEET_SIZE = (64, 64)
 CONTENT_SIZE = (112, 28)
+GRAY_LEVELS = tuple(round(index * 255 / 7) for index in range(8))
 
 GAME_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = GAME_ROOT / "graphics/title_screen/wayfarer"
-DEFAULT_INPUT = DEFAULT_OUTPUT / "wayfarer_wordmark_pixel_fixed.png"
+DEFAULT_INPUT = GAME_ROOT.parent / ".github/assets/wayfarer-simple.png"
 
 
 def palette() -> list[int]:
-    """Index 0 is transparent; indexes 1 and 2 are exact white and black."""
-    colours = [(0, 0, 0), (255, 255, 255), (0, 0, 0)] + [(0, 0, 0)] * 13
+    """Index 0 is transparent; indexes 1..8 are black through white."""
+    colours = [(0, 0, 0)] + [(gray, gray, gray) for gray in GRAY_LEVELS] + [(0, 0, 0)] * 7
     return [channel for colour in colours for channel in colour]
 
 
 def native_banner(source: Path) -> Image.Image:
-    """Scale the pixel-fixed source and reduce it to the sprite's three indices."""
+    """Downsample the original directly to the sprite's eight grayscale levels."""
     original = Image.open(source).convert("RGBA")
     if original.getchannel("A").getbbox() is None:
         raise ValueError("wordmark source has no visible pixels")
 
-    # Keep the fixed glyph interiors. Rebuild the outline after the fit so a
-    # non-integer height reduction cannot break its one-pixel black edge.
-    source_white = Image.new("L", original.size)
-    source_white.putdata([
-        255 if alpha >= 128 and red + green + blue >= 3 * 192 else 0
-        for red, green, blue, alpha in original.get_flattened_data()
-    ])
-    fitted_white = source_white.resize(CONTENT_SIZE, Image.Resampling.NEAREST)
-    fitted_black = fitted_white.filter(ImageFilter.MaxFilter(3))
+    fitted = original.resize(CONTENT_SIZE, Image.Resampling.LANCZOS)
     pixels = bytearray(NATIVE_SIZE[0] * NATIVE_SIZE[1])
     offset_x = (NATIVE_SIZE[0] - CONTENT_SIZE[0]) // 2
     offset_y = (NATIVE_SIZE[1] - CONTENT_SIZE[1]) // 2
     for y in range(CONTENT_SIZE[1]):
         for x in range(CONTENT_SIZE[0]):
-            if fitted_black.getpixel((x, y)):
-                pixels[(y + offset_y) * NATIVE_SIZE[0] + x + offset_x] = (
-                    1 if fitted_white.getpixel((x, y)) else 2
-                )
+            red, green, blue, alpha = fitted.getpixel((x, y))
+            if alpha >= 128:
+                gray_index = round((red + green + blue) / (3 * 255) * 7)
+                pixels[(y + offset_y) * NATIVE_SIZE[0] + x + offset_x] = gray_index + 1
 
     image = Image.frombytes("P", NATIVE_SIZE, bytes(pixels))
     image.putpalette(palette())
@@ -93,14 +86,15 @@ def review_composite(native: Image.Image) -> Image.Image:
 
 
 def write_jasc_palette(path: Path) -> None:
-    rows = ["JASC-PAL", "0100", "16", "0 0 0", "255 255 255", "0 0 0"]
-    rows.extend(["0 0 0"] * 13)
+    rows = ["JASC-PAL", "0100", "16", "0 0 0"]
+    rows.extend(f"{gray} {gray} {gray}" for gray in GRAY_LEVELS)
+    rows.extend(["0 0 0"] * 7)
     path.write_bytes(("\r\n".join(rows) + "\r\n").encode("ascii"))
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT, help="reviewed Pixel Art Fixer PNG")
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT, help="approved full-resolution wordmark PNG")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="directory for wayfarer_version.png and .pal")
     parser.add_argument("--review-output", type=Path, help="directory for unpacked native and 4x review PNGs")
     args = parser.parse_args()
@@ -111,8 +105,9 @@ def main() -> None:
     sheet = pack_sprite(native)
     if unpack_sprite(sheet).tobytes() != native.tobytes():
         raise AssertionError("banner sprite packing failed to round-trip")
-    if set(native.tobytes()) != {0, 1, 2}:
-        raise AssertionError("banner must contain transparency, white fill, and black outline only")
+    used = set(native.tobytes())
+    if not {0, 1, 8} <= used or used - set(range(9)):
+        raise AssertionError("banner must contain transparency and black-to-white grayscale only")
 
     sheet.save(output / "wayfarer_version.png", optimize=False)
     write_jasc_palette(output / "wayfarer_version.pal")
@@ -121,7 +116,7 @@ def main() -> None:
         review.mkdir(parents=True, exist_ok=True)
         native.save(review / "wayfarer-banner-native.png", optimize=False)
         review_composite(native).resize((NATIVE_SIZE[0] * 4, NATIVE_SIZE[1] * 4), Image.Resampling.NEAREST).save(review / "wayfarer-banner-4x.png", optimize=False)
-    print("Generated Pixel Art Fixer-derived Wayfarer banner with white fill and black outline.")
+    print("Generated direct-downsample Wayfarer banner with eight grayscale levels.")
 
 
 if __name__ == "__main__":

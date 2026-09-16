@@ -20,8 +20,8 @@
   "palette": {
     "source": "/home/mzpk/Workspace/pokemon-wayfarer-v2/tasks/wayfarer-title-screen/pokemon-wayfarer/game/graphics/title_screen/wayfarer/background/shared.pal",
     "entries": 256,
-    "banner_white": 184,
-    "banner_black": 185,
+    "banner_first": 184,
+    "banner_shades": 8,
     "reserved_4bpp_banks": [
       12,
       13
