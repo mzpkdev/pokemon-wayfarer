@@ -1355,7 +1355,12 @@ static void Task_Scene1_PanUp(u8 taskId)
 
         // Slide bg 2 downward
         offset = (gTasks[taskId].tBg2PosHi << 16) + (u16)gTasks[taskId].tBg2PosLo;
+        // Lower the Wayfarer foreground at the end of the mountain pan.
+#if IS_WAYFARER
+        offset -= 0x7000;
+#else
         offset -= 0x6000;
+#endif
         gTasks[taskId].tBg2PosHi = offset >> 16;
         gTasks[taskId].tBg2PosLo = offset;
         SetGpuReg(REG_OFFSET_BG2VOFS, gTasks[taskId].tBg2PosHi);
@@ -1403,7 +1408,7 @@ static void Task_Scene1_End(u8 taskId)
 // presented.  Skips build that one frozen state directly; they do not advance
 // the water-drop, Game Freak, or background cinematic frame-by-frame.
 #define WAYFARER_FLYGON_HOLD_CALLBACKS 72
-#define WAYFARER_BG2_HOLD_VOFS (-49)
+#define WAYFARER_BG2_HOLD_VOFS (-70)
 #define WAYFARER_BG1_HOLD_VOFS (-147)
 #define WAYFARER_BG0_HOLD_VOFS (-217)
 
