@@ -9,9 +9,9 @@ normal title initializer must not be used because it clears Scene 1 VRAM.
 The expansion splash is intentionally bypassed for Wayfarer.  Standalone HNS
 continues to use its own intro and title pipeline.
 
-`game/tools/convert_wayfarer_title.py` converts a reviewed Pixel Art Fixer image
-into the 8bpp text-background assets used by the Wayfarer title screen. It keeps
-the full-colour input as `source.png`; generated files live beside it in
+`game/tools/convert_wayfarer_title.py` converts the approved full-colour
+`source.png` into the 8bpp text-background assets used by the title screen.
+Generated files live beside it in
 `game/graphics/title_screen/wayfarer/background/`.
 
 ## Dependencies
@@ -24,19 +24,17 @@ python3 -m venv /tmp/wayfarer-title-venv
 /tmp/wayfarer-title-venv/bin/pip install -r game/tools/requirements-wayfarer-title.txt
 ```
 
-An existing Pixel Art Fixer environment with the same Pillow version can also
-run the converter. Commands below run from the repository root.
+Commands below run from the repository root.
 
 ## Regenerate
 
-Put the opaque, Pixel Art Fixer-reviewed source image at:
+Keep the approved opaque source image at:
 
 ```text
 game/graphics/title_screen/wayfarer/background/source.png
 ```
 
-Then generate all title-background sources and inspect `preview.png` at its
-native 240x160 size:
+Then regenerate the title-background sources:
 
 ```bash
 make -C game TITLE_ART_PYTHON=/tmp/wayfarer-title-venv/bin/python wayfarer-title-assets
@@ -53,8 +51,7 @@ The direct form is useful for a temporary source or output directory:
 
 The checked-in generated inputs are `scene.png`, `scene.bin`, `logo.png`, and
 `shared.pal`. Normal Make rules create the ignored `.8bpp` and `.gbapal` files
-from them. `preview.png` is reconstructed from exported scene tiles, map, and
-the shared palette; it is the review image for the game background.
+from them.
 
 ## Asset contract
 
@@ -71,9 +68,7 @@ the shared palette; it is the review image for the game background.
   bank or flip bits. The 240x160 composition occupies the upper-left 30x20
   tiles; unused map cells point at tile 0.
 - Scene tile data may use at most `0xB000` bytes for charbase 1 before the logo
-  map at `0xF000`; the logo asset may use at most `0x4000` bytes. The manifest
-  records the actual counts, source and artifact checksums, dimensions, and
-  converter version.
+  map at `0xF000`; the logo asset may use at most `0x4000` bytes.
 
 Run the converter tests after changing the pipeline:
 
@@ -98,26 +93,25 @@ The generator writes `wayfarer_version.png` and `wayfarer_version.pal` in
 `game/graphics/title_screen/wayfarer/`. It packs the left and right 64x32 sprite
 halves into a 64x64 sheet, reserves index 0 for transparency, and uses only the
 first 16 sprite-palette entries. Regeneration does not change the background.
-The original simple source remains at `.github/assets/wayfarer-simple.png`, and
-the earlier Pixel Art Fixer reconstruction remains at
-`game/graphics/title_screen/wayfarer/wayfarer_wordmark_pixel_fixed.png` for
-comparison; it is not an input to the current banner generator.
+The original simple source remains at `.github/assets/wayfarer-simple.png` for
+provenance; it is not an input to the current banner generator.
 
 ## Held-title overlays
 
 The held title uses the existing full-colour Pokémon logo as four 64x64 8bpp
 OBJ frames. `game/tools/pack_wayfarer_title_overlays.py` repacks its tile order
 into `game/graphics/title_screen/wayfarer/overlays/pokemon_logo_obj.png` and
-maps the WAYFARER banner into unused shared OBJ-palette entries. It reserves
-4bpp OBJ palette banks 12 and 13 for Press Start and the frozen Flygon.
+copies the shared palette to `overlays/overlay_palette.pal`. The WAYFARER
+banner uses its own 4bpp palette in bank 11; banks 12 and 13 are reserved for
+Press Start and the frozen Flygon.
 
-Regenerate after changing the logo, shared palette, or banner:
+Regenerate after changing the logo or shared palette:
 
 ```bash
 python3 game/tools/pack_wayfarer_title_overlays.py
 ```
 
-The generated manifest conservatively budgets 0x4000 logo + 0x1000 banner +
+The conservative asset budget is 0x4000 logo + 0x1000 banner +
 0x520 prompt + 0x400 Flygon = 0x5920 OBJ bytes. The runtime uses a 0x800
 banner sheet, so its fixed allocation is 0x5120. Only the current passer's
 sprite sheets and palette are loaded, then freed after it exits.
@@ -166,6 +160,5 @@ overlay reveal, prompt blink, menu entry, and early/mid/late skips. Review the
 natural and skipped held frames together: their background registers and frozen
 Flygon state must match, no white fade or bike frame may appear, and Start must
 be a fresh press after a skip.
-`capture.json` records the ROM identity and display registers. Compare the
-uncovered background with `preview.png`; only hardware RGB555 display expansion
-should affect its colors. The logo and prompts use their existing overlays.
+`capture.json` records the ROM identity and display registers. The logo and
+prompts use their existing overlays.

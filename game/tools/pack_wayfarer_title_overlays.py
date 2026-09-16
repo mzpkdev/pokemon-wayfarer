@@ -2,9 +2,9 @@
 """Pack Wayfarer's title artwork for the held Emerald Scene 1 composition.
 
 The Pokémon logo is an 8bpp 256x64 image, but the GBA can only display it as
-four 64x64 OBJ sprites.  This tool changes the tile order (not the pixels) so
-each quarter is a contiguous OBJ frame.  It also remaps the existing 4bpp
-WAYFARER banner to unused entries in the logo's 256-colour OBJ palette.
+four 64x64 OBJ sprites. This tool changes the tile order (not the pixels) so
+each quarter is a contiguous OBJ frame and copies the shared palette. The
+WAYFARER banner uses its own 4bpp sprite palette.
 
 This intentionally has no Pillow dependency: title asset regeneration must be
 possible in the normal game toolchain as well as the art-review environment.
@@ -14,7 +14,6 @@ from __future__ import annotations
 
 import argparse
 import binascii
-import json
 import struct
 import zlib
 from pathlib import Path
@@ -164,7 +163,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--logo", type=Path, default=BACKGROUND / "logo.png")
     parser.add_argument("--shared-palette", type=Path, default=BACKGROUND / "shared.pal")
-    parser.add_argument("--banner", type=Path, default=GAME / "graphics/title_screen/wayfarer/wayfarer_version.png")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args()
     output = args.output.resolve()
@@ -177,39 +175,11 @@ def main() -> None:
     if [rgb555(c) for c in logo_palette] != [rgb555(c) for c in shared]:
         raise ValueError("logo palette does not match the shared title palette")
 
-    banner_w, banner_h, banner_pixels, banner_palette = read_indexed_png(args.banner)
-    if (banner_w, banner_h) != (64, 64):
-        raise ValueError("WAYFARER banner must be the established 64x64 packed sheet")
-    if len(banner_palette) < 9:
-        raise ValueError("WAYFARER banner palette is incomplete")
-
-    # The converter reserves 184..255. Keep the banner's eight grayscale
-    # shades there without changing any of the logo's colours.
-    BANNER_FIRST_INDEX = 184
-    if set(banner_pixels) - set(range(9)):
-        raise ValueError("WAYFARER banner uses an unexpected palette index")
-    for index, colour in enumerate(banner_palette[1:9]):
-        if len(set(colour)) != 1:
-            raise ValueError("WAYFARER banner palette must be grayscale")
-        shared[BANNER_FIRST_INDEX + index] = colour
-    banner_obj = bytes(0 if pixel == 0 else BANNER_FIRST_INDEX + pixel - 1 for pixel in banner_pixels)
-    if set(banner_obj) - ({0} | set(range(BANNER_FIRST_INDEX, BANNER_FIRST_INDEX + 8))):
-        raise AssertionError("banner palette remap escaped its reserved entries")
-
     packed_logo = pack_logo_obj(logo_pixels, logo_w, logo_h)
     # gbagfx scans PNGs tile by tile, so turn the target tile stream back into
     # a normal raster before it serializes the four 64x64 OBJ frames.
     write_indexed_png(output / "pokemon_logo_obj.png", 64, 256, tile_bytes_to_image(packed_logo, 64, 256), shared)
-    write_indexed_png(output / "wayfarer_version_obj.png", 64, 64, banner_obj, shared)
     write_jasc_palette(output / "overlay_palette.pal", shared)
-    (output / "manifest.json").write_text(json.dumps({
-        "format": 1,
-        "logo": {"source": str(args.logo), "obj_sheet_size": [64, 256], "bytes": len(packed_logo), "frames": 4},
-        "banner": {"source": str(args.banner), "obj_sheet_size": [64, 64], "bytes": len(banner_obj)},
-        "palette": {"source": str(args.shared_palette), "entries": 256, "banner_first": BANNER_FIRST_INDEX, "banner_shades": 8,
-                    "reserved_4bpp_banks": [12, 13]},
-        "obj_budget": {"logo": 0x4000, "banner": 0x1000, "press_start": 0x520, "flygon": 0x400, "total": 0x5920, "capacity": 0x8000},
-    }, indent=2) + "\n", encoding="utf-8")
     print(f"Packed Wayfarer title overlays in {output}")
 
 

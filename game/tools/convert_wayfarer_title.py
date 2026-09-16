@@ -8,8 +8,6 @@ tile, map, and palette sources that the ROM's normal graphics rules consume.
 from __future__ import annotations
 
 import argparse
-import hashlib
-import json
 import struct
 from collections import Counter
 from pathlib import Path
@@ -179,32 +177,7 @@ def tiles_atlas(tiles: Iterable[bytes], palette: list[tuple[int, int, int]]) -> 
 def write_jasc_palette(path: Path, palette: list[tuple[int, int, int]]) -> None:
     rows = ["JASC-PAL", "0100", str(PALETTE_ENTRIES)]
     rows.extend("{} {} {}".format(*rgb888_from_555(colour)) for colour in palette)
-    path.write_text("\n".join(rows) + "\n", encoding="ascii")
-
-
-def preview_from_exports(scene_tiles_data: bytes, tilemap: bytes, palette: list[tuple[int, int, int]]) -> Image.Image:
-    if len(tilemap) != MAP_WIDTH_TILES * MAP_HEIGHT_TILES * 2:
-        raise ValueError("scene tile map must be 32x32 u16 entries")
-    if len(scene_tiles_data) % 64:
-        raise ValueError("scene tile data is not an 8bpp tile sequence")
-    image = Image.new("RGB", (SCREEN_WIDTH, SCREEN_HEIGHT))
-    output = bytearray(SCREEN_WIDTH * SCREEN_HEIGHT * 3)
-    for tile_y in range(SCREEN_HEIGHT // TILE_SIZE):
-        for tile_x in range(SCREEN_WIDTH // TILE_SIZE):
-            map_offset = (tile_y * MAP_WIDTH_TILES + tile_x) * 2
-            tile_index = struct.unpack_from("<H", tilemap, map_offset)[0]
-            if tile_index & 0xFC00:
-                raise ValueError("scene text map contains palette-bank or flip bits")
-            tile_offset = tile_index * 64
-            if tile_offset + 64 > len(scene_tiles_data):
-                raise ValueError("scene map references a tile beyond scene data")
-            for row in range(TILE_SIZE):
-                for column in range(TILE_SIZE):
-                    colour = palette[scene_tiles_data[tile_offset + row * TILE_SIZE + column]]
-                    pixel_offset = ((tile_y * TILE_SIZE + row) * SCREEN_WIDTH + tile_x * TILE_SIZE + column) * 3
-                    output[pixel_offset:pixel_offset + 3] = bytes(rgb888_from_555(colour))
-    image.frombytes(bytes(output))
-    return image
+    path.write_bytes(("\r\n".join(rows) + "\r\n").encode("ascii"))
 
 
 def decode_scene_indices(scene_tiles_data: bytes, tilemap: bytes) -> bytes:
@@ -225,18 +198,6 @@ def decode_scene_indices(scene_tiles_data: bytes, tilemap: bytes) -> bytes:
     return bytes(decoded)
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
-def manifest_path(path: Path) -> str:
-    """Keep checked-in manifests portable when callers use default repository paths."""
-    try:
-        return str(path.resolve().relative_to(ROOT))
-    except ValueError:
-        return path.name
-
-
 def build_assets(input_path: Path, output: Path, logo_path: Path) -> dict[str, object]:
     output.mkdir(parents=True, exist_ok=True)
     source = read_opaque_rgb(input_path)
@@ -254,46 +215,20 @@ def build_assets(input_path: Path, output: Path, logo_path: Path) -> dict[str, o
         raise ValueError(f"logo tile data is {len(logo_raw):#x}, above {LOGO_TILE_BYTE_CAP:#x}")
     if decode_scene_indices(scene_raw, tilemap) != scene_pixels:
         raise AssertionError("scene tiles and text map failed an indexed-pixel round trip")
-    preview = preview_from_exports(scene_raw, tilemap, shared_palette)
-
     scene_png = tiles_atlas(scene_tiles_data, shared_palette)
     logo_png.putpalette([channel for colour in shared_palette for channel in rgb888_from_555(colour)])
-    files = {
-        "scene.png": scene_png,
-        "logo.png": logo_png,
-        "preview.png": preview,
-    }
-    for name, image in files.items():
-        image.save(output / name, optimize=False)
+    scene_png.save(output / "scene.png", optimize=False)
+    logo_png.save(output / "logo.png", optimize=False)
     (output / "scene.8bpp").write_bytes(scene_raw)
     (output / "scene.bin").write_bytes(tilemap)
     (output / "logo.8bpp").write_bytes(logo_raw)
     (output / "shared.gbapal").write_bytes(gba_palette_bytes(shared_palette))
     write_jasc_palette(output / "shared.pal", shared_palette)
 
-    artifact_names = ["scene.png", "scene.8bpp", "scene.bin", "logo.png", "logo.8bpp", "shared.pal", "shared.gbapal", "preview.png"]
-    manifest: dict[str, object] = {
-        "format": 1,
-        "invocation": {
-            "input": manifest_path(input_path),
-            "logo_source": manifest_path(logo_path),
-            "output": manifest_path(output),
-            "command": "python game/tools/convert_wayfarer_title.py --input INPUT.png --output OUTPUT --logo-source LOGO.png",
-            "pillow": Image.__version__,
-            "resize": "nearest-neighbour source to 240x160; no crop",
-            "dither": "none",
-        },
-        "sources": {
-            "input": {"path": manifest_path(input_path), "sha256": sha256(input_path)},
-            "logo": {"path": manifest_path(logo_path), "sha256": sha256(logo_path)},
-        },
-        "dimensions": {"source": list(source.size), "scene": [SCREEN_WIDTH, SCREEN_HEIGHT], "scene_map_tiles": [MAP_WIDTH_TILES, MAP_HEIGHT_TILES], "logo": [256, 64]},
+    return {
         "palette": {"entries": PALETTE_ENTRIES, "transparent_index": 0, "logo_rgb555_colours": logo_colour_count, "scene_rgb555_colours": len(scene_palette), "used_entries": len(logo_palette) + len(scene_palette)},
         "tiles": {"scene_count": len(scene_tiles_data), "scene_bytes": len(scene_raw), "scene_byte_cap": SCENE_TILE_BYTE_CAP, "scene_capacity_tiles": SCENE_TILE_BYTE_CAP // 64, "logo_count": len(logo_raw) // 64, "logo_bytes": len(logo_raw), "logo_byte_cap": LOGO_TILE_BYTE_CAP},
-        "artifacts": {name: {"bytes": (output / name).stat().st_size, "sha256": sha256(output / name)} for name in artifact_names},
     }
-    (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return manifest
 
 
 def main() -> None:
@@ -302,9 +237,9 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT, help="generated background directory")
     parser.add_argument("--logo-source", type=Path, default=DEFAULT_LOGO, help="existing HNS affine Pokemon logo PNG")
     args = parser.parse_args()
-    manifest = build_assets(args.input.resolve(), args.output.resolve(), args.logo_source.resolve())
-    tiles = manifest["tiles"]
-    palette = manifest["palette"]
+    result = build_assets(args.input.resolve(), args.output.resolve(), args.logo_source.resolve())
+    tiles = result["tiles"]
+    palette = result["palette"]
     print(f"Generated {tiles['scene_count']} scene tiles ({tiles['scene_bytes']:#x}) with {palette['used_entries']} shared palette entries.")
 
 

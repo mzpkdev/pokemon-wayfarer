@@ -41,7 +41,7 @@ def write_source(path: Path, transparent: bool = False) -> None:
 
 
 class ConvertWayfarerTitleTests(unittest.TestCase):
-    def test_rgb555_conversion_has_a_concrete_preview_colour(self) -> None:
+    def test_rgb555_conversion_has_a_concrete_display_colour(self) -> None:
         self.assertEqual(converter.rgb555((57, 113, 185)), (7, 14, 23))
         self.assertEqual(converter.rgb888_from_555((7, 14, 23)), (56, 112, 184))
 
@@ -68,7 +68,7 @@ class ConvertWayfarerTitleTests(unittest.TestCase):
         self.assertEqual(tilemap[:6], b"\x01\x00\x02\x00\x00\x00")
         self.assertEqual(tilemap[(20 * 32) * 2:], bytes((32 * 12) * 2))
 
-    def test_generation_is_deterministic_and_round_trips_native_preview(self) -> None:
+    def test_generation_is_deterministic_and_round_trips_native_scene(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             source, logo, output = root / "source.png", root / "logo.png", root / "out"
@@ -78,14 +78,15 @@ class ConvertWayfarerTitleTests(unittest.TestCase):
             before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in output.iterdir()}
             second = converter.build_assets(source, output, logo)
             after = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in output.iterdir()}
-            with Image.open(output / "preview.png") as preview_file:
-                preview_size = preview_file.size
-                self.assertEqual(preview_file.getpixel((0, 0)), (56, 112, 184))
-            source_sha = hashlib.sha256(source.read_bytes()).hexdigest()
+            decoded = converter.decode_scene_indices(
+                (output / "scene.8bpp").read_bytes(), (output / "scene.bin").read_bytes())
+            with Image.open(output / "scene.png") as scene_file:
+                palette = scene_file.getpalette()
+            colour_offset = decoded[0] * 3
+            self.assertEqual(tuple(palette[colour_offset:colour_offset + 3]), (56, 112, 184))
         self.assertEqual(first["tiles"], second["tiles"])
-        self.assertEqual(first["sources"]["input"]["sha256"], source_sha)
         self.assertEqual(before, after)
-        self.assertEqual(preview_size, (240, 160))
+        self.assertEqual(len(decoded), 240 * 160)
         self.assertGreater(first["tiles"]["scene_count"], 1)
         self.assertLessEqual(first["tiles"]["scene_bytes"], converter.SCENE_TILE_BYTE_CAP)
 
