@@ -132,7 +132,11 @@ try {
   await capture('title-blink');
   await step(150);
   await capture('title-volbeat-left');
-  await step(60);
+  await step(8);
+  await capture('title-volbeat-zig-8');
+  await step(8);
+  await capture('title-volbeat-zig-16');
+  await step(44);
   await capture('title-volbeat-right');
   await step(390);
   await capture('title-held');
@@ -146,11 +150,17 @@ try {
   await step(17);
   await capture('title-torchic-recovered');
   await step(675);
-  await capture('title-manectric-entering');
+  await capture('title-bicyclist-entering');
   await verifyPass(2, true);
   await step(3);
-  await capture('title-manectric-center');
+  await capture('title-bicyclist-center');
   await verifyPass(2, true);
+  await step(648);
+  await capture('title-manectric-entering');
+  await verifyPass(3, true);
+  await step(3);
+  await capture('title-manectric-center');
+  await verifyPass(3, true);
   await step(33);
   await capture('title-manectric-exiting');
   await verifyPass(0, false);
@@ -181,7 +191,7 @@ try {
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, rightward Volbeat, Torchic trip/recovery, fast Manectric pass, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, rightward zigzagging Volbeat, Torchic trip/recovery, left-to-right bicyclist, fast Manectric pass, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],

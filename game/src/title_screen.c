@@ -7,6 +7,7 @@
 #include "decompress.h"
 #include "event_data.h"
 #include "intro.h"
+#include "intro_credits_graphics.h"
 #include "m4a.h"
 #include "main.h"
 #include "main_menu.h"
@@ -47,6 +48,7 @@ enum
     TAG_WAYFARER_VERSION,
     TAG_WAYFARER_PRESS_START,
     TAG_WAYFARER_PASSING_POKEMON,
+    TAG_WAYFARER_BICYCLE,
 };
 
 #define WAYFARER_LOGO_Y 32
@@ -55,6 +57,7 @@ enum
 #define WAYFARER_COPYRIGHT_Y 148
 #define WAYFARER_VOLBEAT_Y 96
 #define WAYFARER_TORCHIC_Y 88
+#define WAYFARER_BICYCLIST_Y 80
 #define WAYFARER_MANECTRIC_Y 88
 #define CLEAR_SAVE_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_UP)
 #define RESET_RTC_BUTTON_COMBO (B_BUTTON | SELECT_BUTTON | DPAD_LEFT)
@@ -159,6 +162,23 @@ static const struct OamData sOamData_WayfarerPassingManectric =
     .affineParam = 0,
 };
 
+static const struct OamData sOamData_WayfarerPassingBicycle =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(64x32),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(64x32),
+    .tileNum = 0,
+    .priority = 3,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
 #define LOGO_ANIM(offset) { ANIMCMD_FRAME(offset, 1), ANIMCMD_END }
 static const union AnimCmd sAnim_WayfarerPokemonLogo0[] = LOGO_ANIM(0);
 static const union AnimCmd sAnim_WayfarerPokemonLogo1[] = LOGO_ANIM(128);
@@ -218,10 +238,22 @@ static const union AnimCmd sAnim_WayfarerVolbeat[] =
 static const union AnimCmd *const sAnims_WayfarerVolbeat[] = {sAnim_WayfarerVolbeat};
 static const union AnimCmd sAnim_WayfarerManectric[] =
 {
+    ANIMCMD_FRAME(0, 2), ANIMCMD_FRAME(64, 2),
+    ANIMCMD_FRAME(128, 2), ANIMCMD_FRAME(192, 2), ANIMCMD_JUMP(0),
+};
+static const union AnimCmd *const sAnims_WayfarerManectric[] = {sAnim_WayfarerManectric};
+static const union AnimCmd sAnim_WayfarerBicyclist[] =
+{
     ANIMCMD_FRAME(0, 4), ANIMCMD_FRAME(64, 4),
     ANIMCMD_FRAME(128, 4), ANIMCMD_FRAME(192, 4), ANIMCMD_JUMP(0),
 };
-static const union AnimCmd *const sAnims_WayfarerManectric[] = {sAnim_WayfarerManectric};
+static const union AnimCmd *const sAnims_WayfarerBicyclist[] = {sAnim_WayfarerBicyclist};
+static const union AnimCmd sAnim_WayfarerBicycle[] =
+{
+    ANIMCMD_FRAME(0, 4), ANIMCMD_FRAME(32, 4),
+    ANIMCMD_FRAME(0, 4), ANIMCMD_FRAME(32, 4), ANIMCMD_JUMP(0),
+};
+static const union AnimCmd *const sAnims_WayfarerBicycle[] = {sAnim_WayfarerBicycle};
 static const union AnimCmd sAnim_WayfarerTorchic[] =
 {
     ANIMCMD_FRAME(0, 3), ANIMCMD_FRAME(16, 3), ANIMCMD_FRAME(32, 3),
@@ -258,6 +290,7 @@ enum
 {
     WAYFARER_PASS_VOLBEAT,
     WAYFARER_PASS_TORCHIC,
+    WAYFARER_PASS_BICYCLIST,
     WAYFARER_PASS_MANECTRIC,
     WAYFARER_PASS_COUNT,
 };
@@ -272,6 +305,14 @@ static const struct SpriteTemplate sSpriteTemplate_WayfarerTorchic =
 static const struct SpriteTemplate sSpriteTemplate_WayfarerManectric =
 {
     TAG_WAYFARER_PASSING_POKEMON, TAG_WAYFARER_PASSING_POKEMON, &sOamData_WayfarerPassingManectric, sAnims_WayfarerManectric, NULL, NULL, SpriteCallbackDummy,
+};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerBicyclist =
+{
+    TAG_WAYFARER_PASSING_POKEMON, TAG_WAYFARER_PASSING_POKEMON, &sOamData_WayfarerPassingManectric, sAnims_WayfarerBicyclist, NULL, NULL, SpriteCallbackDummy,
+};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerBicycle =
+{
+    TAG_WAYFARER_BICYCLE, TAG_WAYFARER_PASSING_POKEMON, &sOamData_WayfarerPassingBicycle, sAnims_WayfarerBicycle, NULL, NULL, SpriteCallbackDummy,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_WayfarerPokemonLogo =
@@ -298,6 +339,14 @@ static const struct CompressedSpriteSheet sSpriteSheet_WayfarerManectric =
 {
     gIntroManectric_Gfx, 0x2000, TAG_WAYFARER_PASSING_POKEMON,
 };
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerBrendan =
+{
+    gIntroBrendan_Gfx, 0x2000, TAG_WAYFARER_PASSING_POKEMON,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerMay =
+{
+    gIntroMay_Gfx, 0x2000, TAG_WAYFARER_PASSING_POKEMON,
+};
 static const struct
 {
     const struct CompressedSpriteSheet *sheet;
@@ -309,6 +358,7 @@ static const struct
 {
     {&sSpriteSheet_WayfarerVolbeat, gIntroVolbeat_Pal, &sSpriteTemplate_WayfarerVolbeat, -16, WAYFARER_VOLBEAT_Y},
     {&sSpriteSheet_WayfarerTorchic, gIntroTorchic_Pal, &sSpriteTemplate_WayfarerTorchic, DISPLAY_WIDTH + 16, WAYFARER_TORCHIC_Y},
+    {&sSpriteSheet_WayfarerBrendan, gIntroPlayer_Pal, &sSpriteTemplate_WayfarerBicyclist, -32, WAYFARER_BICYCLIST_Y},
     {&sSpriteSheet_WayfarerManectric, gIntroManectric_Pal, &sSpriteTemplate_WayfarerManectric, DISPLAY_WIDTH + 32, WAYFARER_MANECTRIC_Y},
 };
 
@@ -351,6 +401,7 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     if (task->data[2] == MAX_SPRITES)
     {
         const u8 pass = task->data[1];
+        const struct CompressedSpriteSheet *sheet = sWayfarerPassingPokemon[pass].sheet;
         u8 spriteId;
 
         if (task->data[0] != 0)
@@ -358,10 +409,27 @@ static void Task_WayfarerPokemonPass(u8 taskId)
             task->data[0]--;
             return;
         }
-        if (LoadCompressedSpriteSheet(sWayfarerPassingPokemon[pass].sheet) == TAG_NONE)
+        if (pass == WAYFARER_PASS_BICYCLIST && GetWayfarerIntroCharacterGender() != MALE)
+            sheet = &sSpriteSheet_WayfarerMay;
+        if (LoadCompressedSpriteSheet(sheet) == TAG_NONE)
         {
             task->data[0] = 60;
             return;
+        }
+        if (pass == WAYFARER_PASS_BICYCLIST)
+        {
+            // The rider fills most of the 320-tile contiguous tail. Two bike
+            // frames fit the remaining 64 tiles; the third would not.
+            struct CompressedSpriteSheet bicycleSheet =
+            {
+                gSpriteSheet_IntroBicycle[0].data, 0x800, TAG_WAYFARER_BICYCLE,
+            };
+            if (LoadCompressedSpriteSheet(&bicycleSheet) == TAG_NONE)
+            {
+                FreeSpriteTilesByTag(TAG_WAYFARER_PASSING_POKEMON);
+                task->data[0] = 60;
+                return;
+            }
         }
         LoadSpritePaletteInSlot(&(struct SpritePalette){sWayfarerPassingPokemon[pass].palette, TAG_WAYFARER_PASSING_POKEMON}, 14);
         spriteId = CreateSprite(sWayfarerPassingPokemon[pass].spriteTemplate,
@@ -369,12 +437,31 @@ static void Task_WayfarerPokemonPass(u8 taskId)
         if (spriteId == MAX_SPRITES)
         {
             FreeSpriteTilesByTag(TAG_WAYFARER_PASSING_POKEMON);
+            if (pass == WAYFARER_PASS_BICYCLIST)
+                FreeSpriteTilesByTag(TAG_WAYFARER_BICYCLE);
             FreeSpritePaletteByTag(TAG_WAYFARER_PASSING_POKEMON);
             task->data[0] = 60;
             return;
         }
         task->data[2] = spriteId;
-        gSprites[spriteId].hFlip = pass == WAYFARER_PASS_VOLBEAT;
+        if (pass == WAYFARER_PASS_BICYCLIST)
+        {
+            u8 bicycleId = CreateSprite(&sSpriteTemplate_WayfarerBicycle,
+                                        sWayfarerPassingPokemon[pass].x,
+                                        sWayfarerPassingPokemon[pass].y + 8, 3);
+            if (bicycleId == MAX_SPRITES)
+            {
+                DestroySpriteAndFreeResources(&gSprites[spriteId]);
+                FreeSpriteTilesByTag(TAG_WAYFARER_BICYCLE);
+                task->data[2] = MAX_SPRITES;
+                task->data[0] = 60;
+                return;
+            }
+            task->data[3] = bicycleId;
+            gSprites[bicycleId].hFlip = TRUE;
+            gSprites[bicycleId].invisible = TRUE;
+        }
+        gSprites[spriteId].hFlip = pass == WAYFARER_PASS_VOLBEAT || pass == WAYFARER_PASS_BICYCLIST;
         gSprites[spriteId].invisible = TRUE;
         return;
     }
@@ -384,11 +471,19 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     if (task->data[1] == WAYFARER_PASS_VOLBEAT)
     {
         sprite->x += 2;
-        sprite->y2 = Sin((u8)(task->data[4] += 4), 3);
+        sprite->y2 = Sin((u8)(task->data[4] += 8), 6);
     }
     else if (task->data[1] == WAYFARER_PASS_MANECTRIC)
     {
         sprite->x -= 12;
+    }
+    else if (task->data[1] == WAYFARER_PASS_BICYCLIST)
+    {
+        struct Sprite *bicycle = &gSprites[task->data[3]];
+        sprite->x += 6;
+        bicycle->x = sprite->x;
+        bicycle->y = sprite->y + 8;
+        bicycle->invisible = FALSE;
     }
     else // Torchic runs, trips, gets up, then resumes running.
     {
@@ -431,8 +526,15 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     }
     if ((task->data[1] == WAYFARER_PASS_VOLBEAT && sprite->x > DISPLAY_WIDTH + 16)
      || (task->data[1] == WAYFARER_PASS_TORCHIC && sprite->x < -16)
+     || (task->data[1] == WAYFARER_PASS_BICYCLIST && sprite->x > DISPLAY_WIDTH + 32)
      || (task->data[1] == WAYFARER_PASS_MANECTRIC && sprite->x < -32))
     {
+        if (task->data[1] == WAYFARER_PASS_BICYCLIST)
+        {
+            DestroySprite(&gSprites[task->data[3]]);
+            FreeSpriteTilesByTag(TAG_WAYFARER_BICYCLE);
+            task->data[3] = MAX_SPRITES;
+        }
         DestroySpriteAndFreeResources(sprite);
         task->data[2] = MAX_SPRITES;
         task->data[0] = 600;
@@ -500,6 +602,7 @@ static void Task_WayfarerTitleReveal(u8 taskId)
         u8 passTaskId = CreateTask(Task_WayfarerPokemonPass, 0);
         gTasks[passTaskId].data[0] = 120;
         gTasks[passTaskId].data[2] = MAX_SPRITES;
+        gTasks[passTaskId].data[3] = MAX_SPRITES;
     }
     taskId = CreateTask(Task_WayfarerTitleInput, 0);
     gTasks[taskId].data[1] = TRUE; // Consume the cinematic skip press.

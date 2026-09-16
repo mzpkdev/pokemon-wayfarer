@@ -119,14 +119,17 @@ python3 game/tools/pack_wayfarer_title_overlays.py
 
 The generated manifest conservatively budgets 0x4000 logo + 0x1000 banner +
 0x520 prompt + 0x400 Flygon = 0x5920 OBJ bytes. The runtime uses a 0x800
-banner sheet, so its fixed allocation is 0x5120. Only the current passing
-Pokémon's sprite sheet and palette are loaded, then freed after it exits.
-Manectric is the largest sheet at 0x2000, bringing the peak to 0x7120 of
-the 0x8000 OBJ-tile capacity and 13 sprite slots. The passer reuses palette
-bank 14. The sequence is Volbeat flying left-to-right, Torchic running in
-from the right, tripping and getting up, then a fast Manectric run. Torchic's
+banner sheet, so its fixed allocation is 0x5120. Only the current passer's
+sprite sheets and palette are loaded, then freed after it exits.
+The bicyclist uses a 0x2000 rider sheet plus 0x800 for the bicycle's first
+two frames, bringing the peak to 0x7920 of the 0x8000 OBJ-tile capacity and
+14 sprite slots. Together those two sheets fill the contiguous 0x2800-byte
+tail exactly. The passer reuses palette bank 14. The sequence is
+Volbeat flying left-to-right, Torchic running in from the right, tripping and
+getting up, the mirrored rider cycling in from the left, then a fast Manectric
+run. The rider matches Scene 1's randomly selected Brendan or May. Torchic's
 trip uses Emerald's original frames; its visible get-up reverses those frames
-(Emerald itself slides the fallen sprite offscreen). All three use OBJ priority
+(Emerald itself slides the fallen sprite offscreen). All four use OBJ priority
 3, behind the moving grass (BG2) but ahead of the mountain (BG3).
 
 ## Build and inspect the real screen

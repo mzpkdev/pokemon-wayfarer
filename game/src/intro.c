@@ -185,6 +185,13 @@ enum {
 #define TIMER_START_LEGENDARIES          43
 
 static EWRAM_DATA enum Gender sIntroCharacterGender = 0;
+
+#if IS_WAYFARER
+u8 GetWayfarerIntroCharacterGender(void)
+{
+    return sIntroCharacterGender;
+}
+#endif
 static EWRAM_DATA u16 sFlygonYOffset = 0;
 
 COMMON_DATA u32 gIntroFrameCounter = 0;
