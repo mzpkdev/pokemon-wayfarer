@@ -45,7 +45,7 @@ Returning after the real prerequisite is satisfied makes it available normally.
 | Snorlax | Use the Poké Flute for the existing Route 12 and Route 16 encounters. | Retain the Flute prerequisite. Either encounter may be completed first; neither gates ordinary regional travel. |
 | Silph Co. | Infiltrate the occupied company, solve its local access puzzles, defeat Giovanni, and rescue the staff. | Remove Mr. Fuji's rescue as an entrance prerequisite. Keep this adventure independently available in Saffron. |
 | Safari Zone | Reach the Secret House for Surf; find the Gold Teeth and return them to the Warden for Strength. | Keep as parallel local objectives. Neither requires the other or a distant adventure. Koga's challenge remains separate. |
-| Pokémon Mansion and Blaine | Explore the mansion, find the Secret Key, and unlock Blaine's Gym. | Retain this local connection without unrelated campaign prerequisites. |
+| Pokémon Mansion and Blaine | Explore the mansion, find the Secret Key, and unlock Blaine's Gym. | The [FRLG Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) owns this complete local adventure and its independence from unrelated campaigns. |
 | Giovanni in Viridian | Discover Giovanni as Gym Leader, confront him, and receive the Earth Badge through the existing battle/reward sequence. | Make this the shared finale of the Celadon/Lavender and Silph adventures, replacing specific-badge access requirements. No TR gate applies to the badge. |
 
 The opening and Oak's Parcel keep their own local sequence where included by the
@@ -131,7 +131,7 @@ ordinary adventures playable. TR determines eligibility; it is not spent.
 | --- | --- |
 | Silph Master Ball | Require the resolved Silph rescue and sufficient TR. The President remains the reward giver. Below the threshold, he explains that the reward can be claimed later. |
 | Silph Lapras | Keep as an ordinary local gift with its existing giver and one-time delivery behavior. No legendary-tier TR gate is added. |
-| Articuno and Zapdos | Preserve Seafoam and Power Plant exploration and local puzzles. Gate each capture encounter by legendary readiness, without requiring the other bird or a Rocket story. |
+| Articuno and Zapdos | Preserve their local exploration and puzzles. Gate each capture encounter by legendary readiness, without requiring the other bird or a Rocket story. The coastal port owns FRLG Seafoam and Articuno's placement. |
 | Mewtwo | Use a higher TR readiness threshold than the birds, replacing the unrelated Celio Ruby/Sapphire campaign dependency. Preserve Cerulean Cave and the existing encounter rather than add a new capture quest. |
 | Cut, Surf, Strength, Flute, fossils, and ordinary gifts | Retain their local acquisition requirements without late-game TR gates. |
 
@@ -140,7 +140,8 @@ and proceeding toward Giovanni must not wait for Master Ball eligibility. The
 President's deferred reward survives travel, save/reload, and a failed Bag handoff.
 
 The player may discover and explore the birds' sites before capture readiness.
-Keep Articuno's boulder/current puzzle and the applicable field-move requirements.
+Keep Articuno's boulder/current puzzle in the full FRLG Seafoam port and the
+applicable field-move requirements.
 A high encounter level alone is not a gate. Unmet readiness must not consume or
 permanently hide an encounter.
 
@@ -156,7 +157,9 @@ must obey the final reward rules.
 
 ### Rival continuity
 
-Keep FRLG's rival scenes at their existing locations. Preserve genuinely necessary
+Keep FRLG's rival scenes at their existing locations except for Blue's
+one-time Cinnabar introduction, which the coastal port moves to the Viridian
+Gym entrance. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors
 are complete. Do not relocate chapters or select a different chapter dynamically
 based on where the player arrives.
@@ -178,8 +181,10 @@ the whole original campaign order.
 - This is a future Wayfarer FRLG Kanto story contract, not a claim that the story
   port exists or that standalone FireRed/LeafGreen behavior changes now.
 - HNS Kanto coexistence, replacement, shared locations, NPC identities, badge
-  ownership, and transport integration are explicitly deferred. Do not resolve
-  those questions by interpreting this document as an approved merge design.
+  ownership, and transport integration remain outside this document. The
+  [coastal port](frlg-cinnabar-seafoam-port.md) owns its named Cinnabar,
+  Seafoam, Blaine, Blue-introduction, and Groudon-removal decisions; other
+  merge choices require their own designs.
 - Sevii's story, Lostelle, Celio's deliveries, and its transport design are outside
   scope. Removing Celio's dependency from Mewtwo does not complete or delete those
   quests. Moltres is at Mt. Ember in FRLG and belongs to that separate Sevii scope.
@@ -234,7 +239,8 @@ distinct from unrelated regional progression.
   full-Bag failure and save/reload.
 - Complete both Safari objectives in either order and verify Surf and Strength
   come from their respective givers. Neither objective requires Koga or another arc.
-- Complete Mansion/Secret Key/Blaine without unrelated campaign progress.
+- Complete the separately specified Mansion/Secret Key/Blaine adventure
+  without unrelated campaign progress.
 - Resolve the Snorlax encounters in either order after obtaining the Flute. Travel
   without resolving either must not require a capture or story victory.
 - Test Articuno and Zapdos discovery below readiness and capture eligibility at

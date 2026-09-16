@@ -158,7 +158,10 @@ not satisfy this design.
 
 ### Encounter methods
 
-The HNS map and its usable terrain decide which ordinary methods exist on a map.
+The selected Wayfarer map and its usable terrain decide which ordinary methods
+exist on a map. For Cinnabar and Seafoam, the selected maps are the FRLG town
+and five-floor cave defined by the [FRLG Cinnabar and Seafoam Islands
+port](frlg-cinnabar-seafoam-port.md), not their replaced HNS maps.
 The FRLG source decides the Generation I anchors and rarity roles where a
 comparable method exists. Restrained Generation II additions follow the regional
 targets and habitat rules above. A source table does not authorize Surf, Rock
@@ -210,18 +213,24 @@ ranges alone:
   `MAP_ROUTE24_HNS` and `MAP_ROUTE25_HNS`.
 - Cities and surface subareas: Pallet Town, Viridian City, Pewter City,
   Cerulean City, Lavender Town, Vermilion City, Vermilion port outside,
-  Celadon City, Fuchsia City, Cinnabar Island, and Saffron City.
+  Celadon City, Fuchsia City, the selected FRLG Cinnabar Island, and Saffron
+  City.
 - Safari subareas: beach, brush, cave, and mountain.
 - Forests and caves: Viridian Forest, Mt. Moon Cave, Diglett's Cave tunnel,
-  both Rock Tunnel floors, both Seafoam Islands floors, and all three Cerulean
-  Cave floors.
+  both Rock Tunnel floors, all five selected FRLG Seafoam Islands floors, and
+  all three Cerulean Cave floors.
 - Kanto League caves: all three `MAP_VICTORY_ROAD_KANTO_*_HNS` maps.
 
-Those groups contain 52 currently active map IDs. Route 22 is Kanto-owned
-transition ecology. `MAP_ROUTE23_HNS` is a reserved 53rd owner even though it
-currently has no HNS encounter profile and carries `MAPSEC_INDIGO_PLATEAU`.
-Its target profile stem is `gRoute23_hns`; land, Surf, and fishing are the
-expected methods if its population is authored.
+The historical HNS-only manifest had 52 active map IDs plus Route 23 as a
+reserved 53rd owner. The port replaces `MAP_CINNABAR_ISLAND_HNS` and
+`MAP_SEAFOAM_ISLANDS_{1F,B1F}_HNS` with the FRLG Cinnabar map and all five
+FRLG Seafoam floors. Regenerate the active-map and profile counts from that
+selected set; do not retain an HNS coast profile merely to preserve the old
+denominator. Route 22 remains Kanto-owned transition ecology.
+`MAP_ROUTE23_HNS` remains a reserved owner even though it currently has no HNS
+encounter profile and carries `MAPSEC_INDIGO_PLATEAU`. Its target profile stem
+is `gRoute23_hns`; land, Surf, and fishing are the expected methods if its
+population is authored.
 
 Sevii, Routes 26 through 28, Tohjo Falls, Mt. Silver, and the Johto Rocket
 Hideout are excluded. Kanto interiors without an active encounter method do
@@ -232,8 +241,9 @@ implementation specification.
 ## Boundaries
 
 This PRD covers ordinary random land, Surf, Rock Smash, and fishing encounters
-on mainland Kanto maps in HNS. It also sets the ecological direction for Sevii
-content when those profiles are available in the same product.
+on selected mainland Kanto maps in Wayfarer. It also sets the ecological
+direction for Sevii content when those profiles are available in the same
+product.
 
 It does not redesign fixed encounters, gifts, trades, fossils, Game Corner
 prizes, starters, roamers, scripted encounters, hidden DexNav encounters,
@@ -345,16 +355,16 @@ species. Caves, forests, power facilities, coastlines, ponds, and urban edges
 retain distinct populations. Rare species should have one or a few memorable
 sources rather than a low-probability slot on many unrelated maps.
 
-Vermilion and Cinnabar fishing must retain Chinchou as the native Surf source
-for the open-world mainland-to-Cinnabar crossing. At both named sources and at
-every supported Trainer Rating, Chinchou must remain exactly as accessible as
-the current Standard Rod contract: 11 percent of successful Old Rod encounters
-and 2.75 percent of unmodified casts. Its authored level range follows its
-mapped FireRed or LeafGreen rarity role. If the resulting effective level can
-fall below the native-HM schedule's current level 20 floor, the implementation
-must extend Chinchou's Surf schedule to the lowest attainable level and update
-the native-HM source record and specification in the same change. Every
-qualifying catch must know Surf.
+Vermilion and the selected FRLG Cinnabar fishing tables must retain Chinchou as
+the native Surf source for the open-world mainland-to-Cinnabar crossing. At
+both named sources and at every supported Trainer Rating, Chinchou must remain
+exactly as accessible as the current Standard Rod contract: 11 percent of
+successful Old Rod encounters and 2.75 percent of unmodified casts. Its
+authored level range follows its mapped FireRed or LeafGreen rarity role. If
+the resulting effective level can fall below the native-HM schedule's current
+level 20 floor, the implementation must extend Chinchou's Surf schedule to the
+lowest attainable level and update the native-HM source record and
+specification in the same change. Every qualifying catch must know Surf.
 
 ## Interactions
 

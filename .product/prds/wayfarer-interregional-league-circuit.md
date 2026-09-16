@@ -21,6 +21,13 @@ cases remain the current-runtime baseline until the story port lands. Circuit
 qualification, order, scaling, badge/reward accounting, and other Leaders'
 protections remain binding before and after that change.
 
+The independent [Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md)
+relocates Blue's one-time invitation to the Viridian Gym entrance while keeping
+him the Earth Badge giver. It does not require the future Giovanni story port;
+if that separate port later ships, its badge-ownership rule supersedes Blue's
+Gym role. References below to Blue's Cinnabar interaction describe the
+current runtime only.
+
 ## Intent
 
 Give Wayfarer's open world a clear long-term arc without requiring the player
@@ -73,9 +80,10 @@ be prerequisites for an initial badge.
 
 Regional prerequisites mean that not every Gym is immediately available in any
 order. Clair may still require Chuck, Jasmine, and Pryce's badges, and Norman
-may still require four Hoenn badges and Wally's tutorial. Blue's Cinnabar
-interaction alone invites him back to his Gym; the requirement to earn the
-other fifteen Kanto/Johto badges is removed.
+may still require four Hoenn badges and Wally's tutorial. In the current
+runtime, Blue's Cinnabar interaction invites him back to his Gym; the coastal
+port moves this introduction to Viridian without restoring a requirement to
+earn the other fifteen Kanto/Johto badges.
 
 Story events must recognize satisfied regional prerequisites on a revisit,
 without replaying completed events or undoing later progress. In particular,
@@ -193,7 +201,8 @@ shared systems to preserve behavior in other product builds.
 
 Playtesting must prove a Johto-start journey to all twenty-four badges with zero
 League clears, including mixed regional orders and recoverable story events.
-Cover deferred Whitney and Clair badge rewards, Blue's invitation, and Wattson
+Cover deferred Whitney and Clair badge rewards, Blue's invitation at its
+selected location, and Wattson
 remaining available when Norman is defeated first. Verify that a mixed badge
 order which misses the old exact-seven Rocket trigger still reaches the story
 and Clair without replaying completed events.
