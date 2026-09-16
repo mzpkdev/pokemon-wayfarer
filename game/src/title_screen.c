@@ -204,7 +204,33 @@ static const union AnimCmd sAnim_WayfarerTorchic[] =
     ANIMCMD_FRAME(0, 3), ANIMCMD_FRAME(16, 3), ANIMCMD_FRAME(32, 3),
     ANIMCMD_FRAME(16, 3), ANIMCMD_JUMP(0),
 };
-static const union AnimCmd *const sAnims_WayfarerTorchic[] = {sAnim_WayfarerTorchic};
+static const union AnimCmd sAnim_WayfarerTorchicTrip[] =
+{
+    ANIMCMD_FRAME(48, 4), ANIMCMD_FRAME(64, 6), ANIMCMD_FRAME(80, 0), ANIMCMD_END,
+};
+static const union AnimCmd sAnim_WayfarerTorchicGetUp[] =
+{
+    ANIMCMD_FRAME(80, 4), ANIMCMD_FRAME(64, 6), ANIMCMD_FRAME(48, 4),
+    ANIMCMD_FRAME(32, 3), ANIMCMD_END,
+};
+enum
+{
+    WAYFARER_TORCHIC_ANIM_RUN,
+    WAYFARER_TORCHIC_ANIM_TRIP,
+    WAYFARER_TORCHIC_ANIM_GET_UP,
+};
+static const union AnimCmd *const sAnims_WayfarerTorchic[] =
+{
+    sAnim_WayfarerTorchic, sAnim_WayfarerTorchicTrip, sAnim_WayfarerTorchicGetUp,
+};
+enum
+{
+    WAYFARER_TORCHIC_RUN,
+    WAYFARER_TORCHIC_TRIP,
+    WAYFARER_TORCHIC_FALLEN,
+    WAYFARER_TORCHIC_GET_UP,
+    WAYFARER_TORCHIC_RUN_AGAIN,
+};
 static const struct SpriteTemplate sSpriteTemplate_WayfarerVolbeat =
 {
     TAG_WAYFARER_VOLBEAT, TAG_WAYFARER_VOLBEAT, &sOamData_WayfarerPassingPokemon, sAnims_WayfarerVolbeat, NULL, NULL, SpriteCallbackDummy,
@@ -278,11 +304,57 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     }
 
     sprite->invisible = FALSE;
-    sprite->x -= 2;
     if (task->data[1] == 0) // Volbeat flies; Torchic stays on the ground.
+    {
+        sprite->x -= 2;
         sprite->y2 = Sin((u8)(task->data[4] += 4), 3);
+    }
+    else
+    {
+        switch (task->data[5])
+        {
+        case WAYFARER_TORCHIC_RUN:
+            sprite->x -= 2;
+            if (sprite->x <= 120)
+            {
+                sprite->x = 120;
+                StartSpriteAnim(sprite, WAYFARER_TORCHIC_ANIM_TRIP);
+                task->data[5] = WAYFARER_TORCHIC_TRIP;
+            }
+            break;
+        case WAYFARER_TORCHIC_TRIP:
+            if (sprite->animEnded)
+            {
+                task->data[6] = 24;
+                task->data[5] = WAYFARER_TORCHIC_FALLEN;
+            }
+            break;
+        case WAYFARER_TORCHIC_FALLEN:
+            if (--task->data[6] == 0)
+            {
+                StartSpriteAnim(sprite, WAYFARER_TORCHIC_ANIM_GET_UP);
+                task->data[5] = WAYFARER_TORCHIC_GET_UP;
+            }
+            break;
+        case WAYFARER_TORCHIC_GET_UP:
+            if (sprite->animEnded)
+            {
+                StartSpriteAnim(sprite, WAYFARER_TORCHIC_ANIM_RUN);
+                task->data[5] = WAYFARER_TORCHIC_RUN_AGAIN;
+            }
+            break;
+        case WAYFARER_TORCHIC_RUN_AGAIN:
+            sprite->x -= 2;
+            break;
+        }
+    }
     if (sprite->x < -16)
     {
+        if (task->data[1] != 0)
+        {
+            StartSpriteAnim(sprite, WAYFARER_TORCHIC_ANIM_RUN);
+            task->data[5] = WAYFARER_TORCHIC_RUN;
+        }
         sprite->x = DISPLAY_WIDTH + 16;
         sprite->y2 = 0;
         sprite->invisible = TRUE;
