@@ -119,15 +119,15 @@ python3 game/tools/pack_wayfarer_title_overlays.py
 
 The generated manifest conservatively budgets 0x4000 logo + 0x1000 banner +
 0x520 prompt + 0x400 Flygon = 0x5920 OBJ bytes. The runtime uses a 0x800
-banner sheet and also loads Scene 2's Volbeat (0x400) and Torchic (0xC00),
-for 0x6120 of the 0x8000 OBJ-tile capacity and 14 sprite slots. Palette
-banks 14 and 15 hold their original colors. Only one Pokémon passes at a time:
-Volbeat flies left-to-right; Torchic runs in from the right, trips, gets up,
-and runs off. Their passes alternate. Torchic's trip uses Emerald's original
-frames, while the visible get-up
-reverses those frames (Emerald itself slides the fallen sprite offscreen). Their
-OBJ priority 3 puts them behind the moving grass (BG2) but ahead of the mountain
-(BG3), so the grass can hide their lower halves.
+banner sheet, so its fixed allocation is 0x5120. Only the current passing
+Pokémon's sprite sheet and palette are loaded, then freed after it exits.
+Manectric is the largest sheet at 0x2000, bringing the peak to 0x7120 of
+the 0x8000 OBJ-tile capacity and 13 sprite slots. The passer reuses palette
+bank 14. The sequence is Volbeat flying left-to-right, Torchic running in
+from the right, tripping and getting up, then a fast Manectric run. Torchic's
+trip uses Emerald's original frames; its visible get-up reverses those frames
+(Emerald itself slides the fallen sprite offscreen). All three use OBJ priority
+3, behind the moving grass (BG2) but ahead of the mountain (BG3).
 
 ## Build and inspect the real screen
 

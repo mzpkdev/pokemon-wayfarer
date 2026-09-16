@@ -62,15 +62,24 @@ async function read(address, size) {
   return Buffer.from(hex, 'hex');
 }
 const step = frames => command(`step?frames=${frames}`);
-async function hasTask(name) {
-  if (![...symbols.keys()].some(candidate => candidate === name || candidate.startsWith(`${name}.lto_priv.`))) return false;
+async function taskData(name) {
+  if (![...symbols.keys()].some(candidate => candidate === name || candidate.startsWith(`${name}.lto_priv.`))) return null;
   const expected = symbol(name) & ~1;
   const tasks = Buffer.alloc(640);
   for (let offset = 0; offset < 640; offset += 160)
     (await read(symbol('gTasks') + offset, 160)).copy(tasks, offset);
   for (let offset = 0; offset < 640; offset += 40)
-    if (tasks[offset + 4] && (tasks.readUInt32LE(offset) & ~1) === expected) return true;
-  return false;
+    if (tasks[offset + 4] && (tasks.readUInt32LE(offset) & ~1) === expected)
+      return Array.from({ length: 16 }, (_, index) => tasks.readInt16LE(offset + 8 + index * 2));
+  return null;
+}
+async function hasTask(name) {
+  return (await taskData(name)) !== null;
+}
+async function verifyPass(species, loaded) {
+  const data = await taskData('Task_WayfarerPokemonPass');
+  if (!data || data[1] !== species || (data[2] < 64) !== loaded)
+    throw new Error(`Expected pass ${species} ${loaded ? 'loaded' : 'unloaded'}; got ${JSON.stringify(data)}`);
 }
 async function waitTask(name, limit = 12000) {
   for (let frames = 0; frames < limit; frames += 10) {
@@ -129,14 +138,25 @@ try {
   await capture('title-held');
   await step(280);
   await capture('title-torchic-run');
+  await verifyPass(1, true);
   await step(38);
   await capture('title-torchic-fall');
   await step(33);
   await capture('title-torchic-get-up');
   await step(17);
   await capture('title-torchic-recovered');
-  await step(736);
+  await step(675);
+  await capture('title-manectric-entering');
+  await verifyPass(2, true);
+  await step(3);
+  await capture('title-manectric-center');
+  await verifyPass(2, true);
+  await step(33);
+  await capture('title-manectric-exiting');
+  await verifyPass(0, false);
+  await step(700);
   await capture('title-volbeat-repeat');
+  await verifyPass(0, true);
   await press('Start');
   await step(180);
   if (await hasTask('Task_WayfarerTitleInput')) throw new Error('Start did not leave title');
@@ -161,7 +181,7 @@ try {
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, rightward Volbeat, Torchic trip/recovery, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, rightward Volbeat, Torchic trip/recovery, fast Manectric pass, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],
