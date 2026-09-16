@@ -59,6 +59,9 @@ enum
 #define WAYFARER_VERSION_RISE 4
 #define WAYFARER_VERSION_RISE_FRAMES 10
 #define WAYFARER_VERSION_DELAY 6
+#define WAYFARER_SHINE_SPEED 4
+#define WAYFARER_SHINE_WIDTH 12
+#define WAYFARER_SHINE_SKEW 12
 #define WAYFARER_PRESS_START_Y 108
 #define WAYFARER_COPYRIGHT_Y 148
 #define WAYFARER_VOLBEAT_Y 96
@@ -81,11 +84,13 @@ static void CB2_GoToClearSaveDataScreen(void);
 static void CB2_GoToResetRtcScreen(void);
 static void SpriteCB_PressStart(struct Sprite *sprite);
 static void SpriteCB_WayfarerTitleRise(struct Sprite *sprite);
+static void Task_WayfarerLogoShine(u8 taskId);
 
 static const u16 sWayfarerOverlayPalette[] = INCBIN_U16("graphics/title_screen/wayfarer/overlays/overlay_palette.gbapal");
 static const u32 sWayfarerPokemonLogoGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/overlays/pokemon_logo_obj.8bpp.smol");
 static const u16 sWayfarerVersionPal[] = INCBIN_U16("graphics/title_screen/wayfarer/wayfarer_version.gbapal");
 static const u32 sWayfarerVersionGfx[] = INCBIN_U32("graphics/title_screen/wayfarer/wayfarer_version.4bpp.smol");
+static u8 sWayfarerLogoShineTaskId;
 
 static const struct OamData sOamData_WayfarerPokemonLogo =
 {
@@ -439,6 +444,59 @@ static void SpriteCB_PressStart(struct Sprite *sprite)
         sprite->invisible = TRUE;
 }
 
+static void StopWayfarerLogoShine(void)
+{
+    if (sWayfarerLogoShineTaskId == TASK_NONE)
+        return;
+
+    DestroyTask(sWayfarerLogoShineTaskId);
+    sWayfarerLogoShineTaskId = TASK_NONE;
+    ClearGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+    SetGpuReg(REG_OFFSET_WIN0H, 0);
+    SetGpuReg(REG_OFFSET_WIN0V, 0);
+    SetGpuReg(REG_OFFSET_WIN1H, 0);
+    SetGpuReg(REG_OFFSET_WIN1V, 0);
+    SetGpuReg(REG_OFFSET_WININ, 0);
+    SetGpuReg(REG_OFFSET_WINOUT, 0);
+    SetGpuReg(REG_OFFSET_BLDCNT, 0);
+    SetGpuReg(REG_OFFSET_BLDY, 0);
+}
+
+static void Task_WayfarerLogoShine(u8 taskId)
+{
+    s16 x = gTasks[taskId].data[0];
+    s16 topX = x + WAYFARER_SHINE_SKEW;
+
+    if (x >= DISPLAY_WIDTH)
+    {
+        StopWayfarerLogoShine();
+        return;
+    }
+    if (topX > DISPLAY_WIDTH)
+        topX = DISPLAY_WIDTH;
+    SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(topX, topX + WAYFARER_SHINE_WIDTH > DISPLAY_WIDTH ? DISPLAY_WIDTH : topX + WAYFARER_SHINE_WIDTH));
+    SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE(x, x + WAYFARER_SHINE_WIDTH > DISPLAY_WIDTH ? DISPLAY_WIDTH : x + WAYFARER_SHINE_WIDTH));
+    gTasks[taskId].data[0] += WAYFARER_SHINE_SPEED;
+}
+
+static void StartWayfarerLogoShine(void)
+{
+    sWayfarerLogoShineTaskId = CreateTask(Task_WayfarerLogoShine, 0);
+    if (sWayfarerLogoShineTaskId == TASK_NONE)
+        return;
+
+    gTasks[sWayfarerLogoShineTaskId].data[0] = 0;
+    SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(WAYFARER_SHINE_SKEW, WAYFARER_SHINE_SKEW + WAYFARER_SHINE_WIDTH));
+    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(0, 30));
+    SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE(0, WAYFARER_SHINE_WIDTH));
+    SetGpuReg(REG_OFFSET_WIN1V, WIN_RANGE(30, 56));
+    SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_ALL | WININ_WIN1_ALL);
+    SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG_ALL | WINOUT_WIN01_OBJ);
+    SetGpuReg(REG_OFFSET_BLDCNT, BLDCNT_TGT1_OBJ | BLDCNT_EFFECT_LIGHTEN);
+    SetGpuReg(REG_OFFSET_BLDY, 8);
+    SetGpuRegBits(REG_OFFSET_DISPCNT, DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+}
+
 static void Task_WayfarerPokemonPass(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
@@ -601,6 +659,7 @@ void InitWayfarerTitleScreenFromIntro(const u16 *retainedSpritePalette, u16 reta
     u8 taskId;
 
     ScanlineEffect_Stop();
+    sWayfarerLogoShineTaskId = TASK_NONE;
     SetGpuReg(REG_OFFSET_BLDCNT, 0);
     SetGpuReg(REG_OFFSET_BLDALPHA, 0);
     SetGpuReg(REG_OFFSET_BLDY, 0);
@@ -669,6 +728,7 @@ static void Task_WayfarerTitleFinishReveal(u8 taskId)
         return;
     }
     CreateWayfarerPressStart(WAYFARER_PRESS_START_Y);
+    StartWayfarerLogoShine();
     inputTaskId = CreateTask(Task_WayfarerTitleInput, 0);
     gTasks[inputTaskId].data[1] = TRUE; // Consume the cinematic skip press.
     DestroyTask(taskId);
@@ -683,16 +743,19 @@ static void Task_WayfarerTitleInput(u8 taskId)
     }
     if (JOY_NEW(A_BUTTON) || JOY_NEW(START_BUTTON))
     {
+        StopWayfarerLogoShine();
         FadeOutBGM(4);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_WHITEALPHA);
         SetMainCallback2(CB2_GoToMainMenu);
     }
     else if (JOY_HELD(CLEAR_SAVE_BUTTON_COMBO) == CLEAR_SAVE_BUTTON_COMBO)
     {
+        StopWayfarerLogoShine();
         SetMainCallback2(CB2_GoToClearSaveDataScreen);
     }
     else if (JOY_HELD(RESET_RTC_BUTTON_COMBO) == RESET_RTC_BUTTON_COMBO && CanResetRTC())
     {
+        StopWayfarerLogoShine();
         FadeOutBGM(4);
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
         SetMainCallback2(CB2_GoToResetRtcScreen);

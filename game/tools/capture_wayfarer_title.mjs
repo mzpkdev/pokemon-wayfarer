@@ -148,6 +148,24 @@ try {
   await waitTask('Task_WayfarerTitleInput', 300, 1);
   await step(4);
   await capture('title-overlays');
+  if (((await read(0x04000000, 2)).readUInt16LE() & 0x6000) !== 0x6000)
+    throw new Error('Logo shine did not enable both windows');
+  await step(18);
+  await capture('title-shine-left');
+  await step(12);
+  await capture('title-shine-center');
+  await step(12);
+  await capture('title-shine-right');
+  await step(32);
+  await capture('title-shine-finished');
+  const shineRegisters = {
+    dispcnt: (await read(0x04000000, 2)).readUInt16LE(),
+    bldcnt: (await read(0x04000050, 2)).readUInt16LE(),
+  };
+  // SkyEmu exposes BLDY as write-only (reads return 0xffff), so check the
+  // window and blend controller and inspect the post-sweep frame instead.
+  if (shineRegisters.dispcnt & 0x6000 || shineRegisters.bldcnt !== 0)
+    throw new Error(`Logo shine did not restore display and blend state: ${JSON.stringify(shineRegisters)}`);
   await step(16);
   await capture('title-blink');
   const passSlot = await taskSlot('Task_WayfarerPokemonPass');
@@ -236,6 +254,12 @@ try {
     await waitTask('Task_WayfarerTitleInput', 300);
     await step(4);
     await capture(`title-skipped-${label}`);
+    if (label === 'early') {
+      await press('Start');
+      if ((await read(0x04000000, 2)).readUInt16LE() & 0x6000 ||
+          (await read(0x04000050, 2)).readUInt16LE() !== 0)
+        throw new Error('Leaving during logo shine kept window or blend state enabled');
+    }
   }
   // Remain longer than the title loop's audible opening. It may restart music,
   // but it must remain in the held title task and never reload the cinematic.
@@ -248,7 +272,7 @@ try {
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     passOrder, passDirections, observedWaitFrames: waits,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'staggered wordmark rise before Press Start, held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'staggered wordmark rise followed by one-off logo shine, held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],
