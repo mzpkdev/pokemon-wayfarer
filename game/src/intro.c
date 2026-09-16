@@ -49,9 +49,11 @@ static void Task_Scene1_End(u8);
 
 // Scene 1 supplemental functions
 static void IntroResetGpuRegs(void);
+#if !IS_WAYFARER
 static u8 CreateGameFreakLogoSprites(s16, s16, s16);
 static void Task_BlendLogoIn(u8);
 static void Task_BlendLogoOut(u8);
+#endif
 static void Task_CreateSparkles(u8);
 static u8 CreateWaterDrop(s16, s16, u16, u16, u16, u8);
 static void SpriteCB_WaterDrop(struct Sprite *sprite);
@@ -2947,6 +2949,7 @@ static void IntroResetGpuRegs(void)
     SetGpuReg(REG_OFFSET_BLDY, 0);
 }
 
+#if !IS_WAYFARER
 static void Task_BlendLogoIn(u8 taskId)
 {
     switch (gTasks[taskId].tState)
@@ -3039,6 +3042,7 @@ static void Task_BlendLogoOut(u8 taskId)
         break;
     }
 }
+#endif
 
 void PanFadeAndZoomScreen(u16 screenX, u16 screenY, u16 zoom, u16 alpha)
 {
@@ -3557,6 +3561,7 @@ static void SpriteCB_GameFreakLogo(struct Sprite *sprite)
     }
 }
 
+#if !IS_WAYFARER
 static u8 CreateGameFreakLogoSprites(s16 x, s16 y, s16 unused)
 {
     u16 i;
@@ -3584,6 +3589,7 @@ static u8 CreateGameFreakLogoSprites(s16 x, s16 y, s16 unused)
 
     return spriteId;
 }
+#endif
 
 #undef sTimer
 #undef sLetterId
