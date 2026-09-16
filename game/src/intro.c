@@ -65,6 +65,8 @@ static void SpriteCB_LogoLetter(struct Sprite *sprite);
 static void SpriteCB_GameFreakLogo(struct Sprite *sprite);
 static void SpriteCB_FlygonSilhouette(struct Sprite *sprite);
 #if IS_WAYFARER
+static void CreateWayfarerIntroPokeball(void);
+static void WayfarerScrollIntroPokeball(s16);
 static void WayfarerEnterScene1TitleHold(void);
 static struct Sprite *WayfarerGetFlygonSilhouette(void);
 #endif
@@ -139,6 +141,9 @@ enum {
 
 #define TAG_FLYGON_SILHOUETTE 2002
 #define TAG_RAYQUAZA_ORB      2003
+#if IS_WAYFARER
+#define TAG_WAYFARER_INTRO_POKEBALL 2004
+#endif
 
 #if ENABLE_COLOSSEUM_MULTIBOOT
 #define COLOSSEUM_GAME_CODE 0x65366347 // "Gc6e" in ASCII
@@ -221,6 +226,9 @@ static const u16 sIntroRayquzaOrb_Pal[]       = INCBIN_U16("graphics/intro/scene
 static const u16 sIntroMisc_Pal[]             = INCBIN_U16("graphics/intro/scene_3/misc.gbapal"); // Unused
 static const u32 sIntroMisc_Gfx[]             = INCBIN_U32("graphics/intro/scene_3/misc.4bpp.smol"); // Rayquza orb, and misc unused gfx
 static const u16 sIntroFlygonSilhouette_Pal[] = INCBIN_U16("graphics/intro/scene_1/flygon.gbapal");
+#if IS_WAYFARER
+static const u16 sWayfarerIntroPokeball_Pal[] = INCBIN_U16("graphics/intro/scene_1/wayfarer_pokeball.gbapal");
+#endif
 static const u32 sIntroLati_Gfx[]             = INCBIN_U32("graphics/intro/scene_1/lati.4bpp.smol"); // Unused
 static const u8 sUnusedData[] = {
     0x02, 0x03, 0x04, 0x05, 0x01, 0x01, 0x01, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x02, 0x0D,
@@ -985,6 +993,49 @@ static const struct SpritePalette sSpritePalettes_Intro1[] =
     {sIntroFlygonSilhouette_Pal, TAG_FLYGON_SILHOUETTE},
     {},
 };
+#if IS_WAYFARER
+static const struct OamData sOamData_WayfarerIntroPokeball =
+{
+    .y = DISPLAY_HEIGHT,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(64x64),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(64x64),
+    .tileNum = 0,
+    .priority = 1,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+static const union AnimCmd sAnim_WayfarerIntroPokeball[] =
+{
+    ANIMCMD_FRAME(0, 1),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnims_WayfarerIntroPokeball[] =
+{
+    sAnim_WayfarerIntroPokeball,
+};
+static const struct SpriteTemplate sSpriteTemplate_WayfarerIntroPokeball =
+{
+    .tileTag = TAG_WAYFARER_INTRO_POKEBALL,
+    .paletteTag = TAG_WAYFARER_INTRO_POKEBALL,
+    .oam = &sOamData_WayfarerIntroPokeball,
+    .anims = sAnims_WayfarerIntroPokeball,
+    .callback = SpriteCallbackDummy,
+};
+static const struct CompressedSpriteSheet sSpriteSheet_WayfarerIntroPokeball =
+{
+    gWayfarerIntroPokeball_Gfx, 0x800, TAG_WAYFARER_INTRO_POKEBALL,
+};
+static const struct SpritePalette sSpritePalette_WayfarerIntroPokeball =
+{
+    sWayfarerIntroPokeball_Pal, TAG_WAYFARER_INTRO_POKEBALL,
+};
+#endif
 static const struct OamData sOamData_RayquazaOrb =
 {
     .y = DISPLAY_HEIGHT,
@@ -1231,6 +1282,10 @@ void Task_Scene1_Load(u8 taskId)
     LoadSpritePalettes(sSpritePalettes_Intro1);
     LoadCompressedSpriteSheet(sSpriteSheet_Sparkle);
     LoadSpritePalettes(sSpritePalette_Sparkle);
+#if IS_WAYFARER
+    LoadCompressedSpriteSheet(&sSpriteSheet_WayfarerIntroPokeball);
+    LoadSpritePalette(&sSpritePalette_WayfarerIntroPokeball);
+#endif
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(15) + 0], PLTT_SIZEOF(16 - 0));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(14) + 1], PLTT_SIZEOF(16 - 1) + 1); // Copying an extra half color?
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(13) + 2], PLTT_SIZEOF(16 - 2));
@@ -1239,13 +1294,16 @@ void Task_Scene1_Load(u8 taskId)
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID(10) + 5], PLTT_SIZEOF(16 - 5));
     CpuCopy16(&gPlttBufferUnfaded[OBJ_PLTT_ID(0)], &gPlttBufferUnfaded[OBJ_PLTT_ID( 9) + 6], PLTT_SIZEOF(16 - 6));
 #if IS_WAYFARER
+    CreateWayfarerIntroPokeball();
     if (sWayfarerIntroTitleHoldRequested)
     {
         WayfarerEnterScene1TitleHold();
         return;
     }
 #endif
+#if !IS_WAYFARER
     CreateGameFreakLogoSprites(DISPLAY_WIDTH / 2, DISPLAY_HEIGHT / 2, 0);
+#endif
     gTasks[taskId].sBigDropSpriteId = CreateWaterDrop(236, -14, 0x200, 1, 0x78, FALSE);
     gTasks[taskId].func = Task_Scene1_FadeIn;
 }
@@ -1274,14 +1332,18 @@ static void Task_Scene1_WaterDrops(u8 taskId)
     if (gIntroFrameCounter == TIMER_BIG_DROP_START)
         gSprites[gTasks[taskId].sBigDropSpriteId].sState = 1;
 
+#if !IS_WAYFARER
     if (gIntroFrameCounter == TIMER_LOGO_APPEAR)
         CreateTask(Task_BlendLogoIn, 0);
+#endif
 
     if (gIntroFrameCounter == TIMER_BIG_DROP_FALLS)
         gSprites[gTasks[taskId].sBigDropSpriteId].sState = 2;
 
+#if !IS_WAYFARER
     if (gIntroFrameCounter == TIMER_LOGO_BLEND_OUT)
         CreateTask(Task_BlendLogoOut, 0);
+#endif
 
     if (gIntroFrameCounter == TIMER_SMALL_DROP_1)
         CreateWaterDrop(48, 0, 0x400, 5, 0x70, TRUE);
@@ -1359,6 +1421,9 @@ static void Task_Scene1_PanUp(u8 taskId)
     if (gIntroFrameCounter < TIMER_END_PAN_UP)
     {
         s32 offset;
+#if IS_WAYFARER
+        s16 previousBg2Vofs = gTasks[taskId].tBg2PosHi;
+#endif
 
         // Slide bg 2 downward
         offset = (gTasks[taskId].tBg2PosHi << 16) + (u16)gTasks[taskId].tBg2PosLo;
@@ -1371,6 +1436,9 @@ static void Task_Scene1_PanUp(u8 taskId)
         gTasks[taskId].tBg2PosHi = offset >> 16;
         gTasks[taskId].tBg2PosLo = offset;
         SetGpuReg(REG_OFFSET_BG2VOFS, gTasks[taskId].tBg2PosHi);
+#if IS_WAYFARER
+        WayfarerScrollIntroPokeball(previousBg2Vofs - gTasks[taskId].tBg2PosHi + (gIntroFrameCounter & 1));
+#endif
 
         // Slide bg 1 downward
         offset = (gTasks[taskId].tBg1PosHi << 16) + (u16)gTasks[taskId].tBg1PosLo;
@@ -1443,8 +1511,36 @@ static void WayfarerDestroyScene1TransientSprites(void)
          && (template == &sSpriteTemplate_WaterDrop
           || template == &sSpriteTemplate_Sparkle
           || template == &sSpriteTemplate_GameFreakLetter
-          || template == &sSpriteTemplate_GameFreakLogo))
+          || template == &sSpriteTemplate_GameFreakLogo
+          || template == &sSpriteTemplate_WayfarerIntroPokeball))
             DestroySprite(&gSprites[i]);
+    }
+}
+
+static void CreateWayfarerIntroPokeball(void)
+{
+    u8 spriteId = CreateSprite(&sSpriteTemplate_WayfarerIntroPokeball, 120, 99, 0);
+
+    if (spriteId != MAX_SPRITES)
+        gSprites[spriteId].y2 = 0;
+}
+
+static void WayfarerScrollIntroPokeball(s16 distance)
+{
+    u8 i;
+
+    if (distance == 0)
+        return;
+
+    for (i = 0; i < MAX_SPRITES; i++)
+    {
+        if (gSprites[i].inUse && gSprites[i].template == &sSpriteTemplate_WayfarerIntroPokeball)
+        {
+            if (gSprites[i].y + gSprites[i].y2 + distance >= DISPLAY_HEIGHT + 32)
+                DestroySprite(&gSprites[i]);
+            else
+                gSprites[i].y2 += distance;
+        }
     }
 }
 
@@ -1475,9 +1571,11 @@ static void WayfarerEnterScene1TitleHold(void)
     WayfarerDestroyScene1TransientSprites();
     FreeSpriteTilesByTag(GFXTAG_DROPS_LOGO);
     FreeSpriteTilesByTag(TAG_SPARKLE);
+    FreeSpriteTilesByTag(TAG_WAYFARER_INTRO_POKEBALL);
     FreeSpritePaletteByTag(PALTAG_DROPS);
     FreeSpritePaletteByTag(PALTAG_LOGO);
     FreeSpritePaletteByTag(TAG_SPARKLE);
+    FreeSpritePaletteByTag(TAG_WAYFARER_INTRO_POKEBALL);
     ResetTasks();
     gIntroFrameCounter = -1;
     InitWayfarerTitleScreenFromIntro(sIntroFlygonSilhouette_Pal, TAG_FLYGON_SILHOUETTE);
@@ -3016,6 +3114,25 @@ static void SpriteCB_WaterDropHalf(struct Sprite *sprite)
     }
 }
 
+#if IS_WAYFARER
+static void WayfarerDestroyWaterDropAtLanding(struct Sprite *sprite)
+{
+    u8 i;
+    u8 dropSpriteId = sprite - gSprites;
+
+    for (i = 0; i < MAX_SPRITES; i++)
+    {
+        if (gSprites[i].inUse
+         && gSprites[i].template == &sSpriteTemplate_WaterDrop
+         && gSprites[i].data[7] == dropSpriteId
+         && (gSprites[i].callback == SpriteCB_WaterDropHalf
+          || gSprites[i].callback == SpriteCB_WaterDrop_Ripple))
+            DestroySprite(&gSprites[i]);
+    }
+    DestroySprite(sprite);
+}
+#endif
+
 static void SpriteCB_WaterDrop(struct Sprite *sprite)
 {
     // Wait for sState to be modified by Task_Scene1_WaterDrops
@@ -3117,6 +3234,9 @@ static void SpriteCB_WaterDrop_Fall(struct Sprite *sprite)
     }
     else
     {
+#if IS_WAYFARER
+        WayfarerDestroyWaterDropAtLanding(sprite);
+#else
         sprite->data[7] = 1;
         sprite->invisible = TRUE;
         sprite->x += sprite->x2;
@@ -3128,6 +3248,7 @@ static void SpriteCB_WaterDrop_Fall(struct Sprite *sprite)
         sprite->oam.shape = SPRITE_SHAPE(64x32);
         sprite->oam.size = SPRITE_SIZE(64x32);
         CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
+#endif
     }
 }
 
@@ -3141,6 +3262,9 @@ static void SpriteCB_WaterDropShort(struct Sprite *sprite)
     }
     else
     {
+#if IS_WAYFARER
+        WayfarerDestroyWaterDropAtLanding(sprite);
+#else
         sprite->data[7] = 1;
         sprite->invisible = TRUE;
         sprite->x += sprite->x2;
@@ -3152,6 +3276,7 @@ static void SpriteCB_WaterDropShort(struct Sprite *sprite)
         sprite->oam.shape = SPRITE_SHAPE(64x32);
         sprite->oam.size = SPRITE_SIZE(64x32);
         CalcCenterToCornerVec(sprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_ERASE);
+#endif
     }
 }
 

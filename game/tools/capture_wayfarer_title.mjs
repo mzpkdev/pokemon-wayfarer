@@ -131,10 +131,26 @@ try {
   }
   await reload();
   await waitTask('Task_Scene1_WaterDrops');
-  await step(150);
-  await capture('game-freak');
+  await capture('scene1-first-frame');
+  await step(24);
+  await capture('scene1-early');
+  await step(126);
+  await capture('scene1-grass');
+  await step(120);
+  await capture('scene1-big-drop-landing');
+  await step(60);
+  await capture('scene1-after-big-drop');
+  await step(80);
+  await capture('scene1-small-drops');
   await waitTask('Task_Scene1_PanUp');
-  await step(320);
+  await capture('grass-pan-start');
+  await step(24);
+  await capture('grass-pan-24');
+  await step(24);
+  await capture('grass-pan-48');
+  await step(80);
+  await capture('grass-pan-128');
+  await step(192);
   await capture('mountain-pan');
   await waitTask('Task_WayfarerTitleReveal');
   await capture('mountain-hold');
@@ -272,7 +288,7 @@ try {
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     passOrder, passDirections, observedWaitFrames: waits,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'staggered wordmark rise followed by one-off logo shine, held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
+      'Scene 1 grass and droplet sequence', 'Scene 1 mountain pan and hold', 'staggered wordmark rise followed by one-off logo shine, held overlays, all four passers in both directions, Torchic trip/recovery from both sides, random non-repeating order and 15–25-second gaps, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],

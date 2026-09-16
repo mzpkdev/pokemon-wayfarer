@@ -1,10 +1,28 @@
 # Wayfarer title pipeline
 
-Wayfarer plays Emerald's Game Freak and Scene 1 opening, then freezes the
-completed mountain pan before Scene 1's white fade into the bike scene.  The
+Wayfarer plays Emerald's Scene 1 grass and droplet opening without Game Freak
+branding, then freezes the completed mountain pan before Scene 1's white fade
+into the bike scene. The
 held screen keeps Scene 1's mode-0 backgrounds and Flygon silhouette.  Its
 Pokémon, WAYFARER, Press Start, and copyright artwork are OBJ overlays; the
 normal title initializer must not be used because it clears Scene 1 VRAM.
+
+A Wayfarer-only Poké Ball is present in the dark pool from Scene 1's
+first frame, including the fade-in. Its OBJ position follows the foreground
+grass BG2 scroll plus an average half pixel per frame during the pan, then moves offscreen. The sprite and its
+palette are released before the held title. The approved source is
+`.github/assets/wayfarer-intro-pokeball-lospec-concept.png`;
+regenerate its 64×64 indexed sprite (56 visible pixels wide) with:
+
+```bash
+python3 -m venv .venv-title
+.venv-title/bin/pip install -r game/tools/requirements-wayfarer-title.txt
+.venv-title/bin/python game/tools/convert_wayfarer_intro_pokeball.py
+```
+
+The ball is centered at x=120 with its resting shadow near y=125. Wayfarer
+keeps Scene 1's falling droplets but removes their landing ripples; standalone
+HNS retains the original ripple animation.
 
 The expansion splash is intentionally bypassed for Wayfarer.  Standalone HNS
 continues to use its own intro and title pipeline.
@@ -155,8 +173,8 @@ node game/tools/capture_wayfarer_title.mjs \
 ```
 
 The capture uses an isolated ROM copy and records its SHA256. It waits for the
-actual Scene 1 cinematic and held title, captures Game Freak, mountain hold,
-overlay reveal, prompt blink, menu entry, and early/mid/late skips. Review the
+actual Scene 1 cinematic and held title, captures the opening grass, mountain
+hold, overlay reveal, prompt blink, menu entry, and early/mid/late skips. Review the
 natural and skipped held frames together: their background registers and frozen
 Flygon state must match, no white fade or bike frame may appear, and Start must
 be a fresh press after a skip.
