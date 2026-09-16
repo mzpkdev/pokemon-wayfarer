@@ -117,13 +117,14 @@ Regenerate after changing the logo, shared palette, or banner:
 python3 game/tools/pack_wayfarer_title_overlays.py
 ```
 
-The generated manifest records the fixed allocation: 0x4000 logo + 0x1000
-banner + 0x520 prompt + 0x400 Flygon = 0x5920 of the 0x8000 OBJ-tile capacity.
-The title also reuses Scene 2's two-frame Volbeat sheet (0x400 bytes) and
-palette bank 14, bringing the held composition to 0x5D20 OBJ bytes and 18 OAM
-entries. Its OBJ priority 3 places it behind the moving grass (BG2) but ahead
-of the mountain (BG3). It flies across once after the title reveal, then waits
-before repeating; the grass can hide its lower half.
+The generated manifest conservatively budgets 0x4000 logo + 0x1000 banner +
+0x520 prompt + 0x400 Flygon = 0x5920 OBJ bytes. The runtime uses a 0x800
+banner sheet and also loads Scene 2's Volbeat (0x400) and Torchic (0xC00),
+for 0x6120 of the 0x8000 OBJ-tile capacity and 14 sprite slots. Palette
+banks 14 and 15 hold their original colors. Only one Pokémon passes at a time:
+Volbeat flies first, Torchic runs next, and the sequence repeats. Their OBJ
+priority 3 puts them behind the moving grass (BG2) but ahead of the mountain
+(BG3), so the grass can hide their lower halves.
 
 ## Build and inspect the real screen
 

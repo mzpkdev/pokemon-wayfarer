@@ -126,6 +126,8 @@ try {
   await step(420);
   await capture('title-held');
   await step(317);
+  await capture('title-torchic');
+  await step(737);
   await capture('title-volbeat-repeat');
   await press('Start');
   await step(180);
@@ -151,7 +153,7 @@ try {
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, repeating Volbeat pass, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, alternating Volbeat/Torchic passes, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],
