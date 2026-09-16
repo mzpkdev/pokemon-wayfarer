@@ -121,9 +121,11 @@ try {
   await capture('title-overlays');
   await step(16);
   await capture('title-blink');
-  await step(180);
-  await capture('title-volbeat');
-  await step(420);
+  await step(150);
+  await capture('title-volbeat-left');
+  await step(60);
+  await capture('title-volbeat-right');
+  await step(390);
   await capture('title-held');
   await step(280);
   await capture('title-torchic-run');
@@ -159,7 +161,7 @@ try {
     rom: resolve(values.rom), elf: resolve(values.elf),
     romSha256: createHash('sha256').update(await readFile(rom)).digest('hex'), captures,
     verified: [
-      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, Torchic trip/recovery, alternating passes, and blink',
+      'Game Freak sequence', 'Scene 1 mountain pan and hold', 'held overlays, rightward Volbeat, Torchic trip/recovery, and blink',
       'Start exits title', 'early/mid/late skips reach held title', 'long idle stays held',
       'bike scene task was not reached',
     ],

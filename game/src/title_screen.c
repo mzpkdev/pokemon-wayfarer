@@ -306,7 +306,7 @@ static void Task_WayfarerPokemonPass(u8 taskId)
     sprite->invisible = FALSE;
     if (task->data[1] == 0) // Volbeat flies; Torchic stays on the ground.
     {
-        sprite->x -= 2;
+        sprite->x += 2;
         sprite->y2 = Sin((u8)(task->data[4] += 4), 3);
     }
     else
@@ -348,14 +348,15 @@ static void Task_WayfarerPokemonPass(u8 taskId)
             break;
         }
     }
-    if (sprite->x < -16)
+    if ((task->data[1] == 0 && sprite->x > DISPLAY_WIDTH + 16)
+     || (task->data[1] != 0 && sprite->x < -16))
     {
         if (task->data[1] != 0)
         {
             StartSpriteAnim(sprite, WAYFARER_TORCHIC_ANIM_RUN);
             task->data[5] = WAYFARER_TORCHIC_RUN;
         }
-        sprite->x = DISPLAY_WIDTH + 16;
+        sprite->x = task->data[1] == 0 ? -16 : DISPLAY_WIDTH + 16;
         sprite->y2 = 0;
         sprite->invisible = TRUE;
         task->data[0] = 600;
@@ -424,8 +425,9 @@ static void Task_WayfarerTitleReveal(u8 taskId)
     {
         u8 passTaskId = CreateTask(Task_WayfarerPokemonPass, 0);
         gTasks[passTaskId].data[0] = 120;
-        gTasks[passTaskId].data[2] = CreateSprite(&sSpriteTemplate_WayfarerVolbeat, DISPLAY_WIDTH + 16, WAYFARER_VOLBEAT_Y, 2);
+        gTasks[passTaskId].data[2] = CreateSprite(&sSpriteTemplate_WayfarerVolbeat, -16, WAYFARER_VOLBEAT_Y, 2);
         gTasks[passTaskId].data[3] = CreateSprite(&sSpriteTemplate_WayfarerTorchic, DISPLAY_WIDTH + 16, WAYFARER_TORCHIC_Y, 2);
+        gSprites[gTasks[passTaskId].data[2]].hFlip = TRUE;
         gSprites[gTasks[passTaskId].data[2]].invisible = TRUE;
         gSprites[gTasks[passTaskId].data[3]].invisible = TRUE;
     }

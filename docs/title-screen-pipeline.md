@@ -122,8 +122,9 @@ The generated manifest conservatively budgets 0x4000 logo + 0x1000 banner +
 banner sheet and also loads Scene 2's Volbeat (0x400) and Torchic (0xC00),
 for 0x6120 of the 0x8000 OBJ-tile capacity and 14 sprite slots. Palette
 banks 14 and 15 hold their original colors. Only one Pokémon passes at a time:
-Volbeat flies first; Torchic runs in, trips, gets up, then runs off; the sequence
-repeats. Torchic's trip uses Emerald's original frames, while the visible get-up
+Volbeat flies left-to-right; Torchic runs in from the right, trips, gets up,
+and runs off. Their passes alternate. Torchic's trip uses Emerald's original
+frames, while the visible get-up
 reverses those frames (Emerald itself slides the fallen sprite offscreen). Their
 OBJ priority 3 puts them behind the moving grass (BG2) but ahead of the mountain
 (BG3), so the grass can hide their lower halves.
