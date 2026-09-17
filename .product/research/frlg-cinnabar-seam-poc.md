@@ -43,12 +43,19 @@ The visual mismatch is observable. The screenshot taken immediately after the
 Route 21 camera crossing renders the town's coast and buildings differently
 from a full warp into the same town position. This confirms that coordinate
 and collision continuity alone cannot certify a seamless visual transition.
+The route's primary palette also remains loaded. In addition, the transition
+restarts only the secondary animation callback: HNS's primary callback keeps
+writing 18 sand/water-edge tiles at VRAM tile 416, where FRLG's callback
+expects to write 48 water/current/land-edge tiles. The incorrect water shapes
+and black patches are consistent with that slot conflict; individual black
+pixels have not been traced to a particular animation frame. A Route 20 →
+Cinnabar return crossing was also verified while surfing.
 The screenshots and playable ROM/save pairs live in the task's `artifacts/`
 directory, outside the source worktree. The focused reproduction is
 `e2e/src/journeys/cinnabar-seam-poc.e2e.ts`; set `SKYEMU_ROM`, `SKYEMU_SYMS`,
 and `CINNABAR_POC_ARTIFACTS` to run it.
 
-Remaining acceptance for the full port includes Surf traversal in both
-directions on both links, shoreline inspection in Porymap, music transitions,
-and the final tileset solution. This probe exercises Route 21 → Cinnabar and
-Cinnabar → Route 20; the other two directions have not been exercised.
+Remaining acceptance for the full port includes Surf traversal from Cinnabar
+back to Route 21, shoreline inspection in Porymap, music transitions, and a
+tileset solution verified on both routes. Route 20 was traversed in both
+directions; Route 21 was traversed into Cinnabar.

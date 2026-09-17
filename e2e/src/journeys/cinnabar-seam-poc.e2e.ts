@@ -153,6 +153,15 @@ pocIt("crosses the Route 20 Cinnabar seam while surfing", async () => {
     await fs.writeFile(path.join(output, "route20-crossed.json"), JSON.stringify(crossed, null, 2))
     await fs.writeFile(path.join(output, "route20-crossed.png"), await game.screenshot())
     expect(crossed).toMatchObject({ map: { name: "route-20" }, player: { surfing: true } })
+    await moveOneTile(game, "left")
+    const returned = await game.state.read()
+    await fs.writeFile(path.join(output, "route20-returned-cinnabar.json"), JSON.stringify(returned, null, 2))
+    await fs.writeFile(path.join(output, "route20-returned-cinnabar.png"), await game.screenshot())
+    expect(returned).toMatchObject({ map: { name: "cinnabar-seam-poc" }, player: { surfing: true } })
+    await game.player.warp("cinnabar-seam-poc", returned.player.x, returned.player.y, "left")
+    await game.wait.forReady()
+    await game.wait.frames(90)
+    await fs.writeFile(path.join(output, "route20-returned-full-load.png"), await game.screenshot())
   } finally {
     await game.close()
   }
