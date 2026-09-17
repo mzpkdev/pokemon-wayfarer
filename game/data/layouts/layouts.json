@@ -14217,6 +14217,20 @@
       "layout_version": "hns"
     },
     {
+      "id": "LAYOUT_CINNABAR_SEAM_POC",
+      "name": "CinnabarIsland_SeamPoc_Layout",
+      "width": 24,
+      "height": 20,
+      "primary_tileset": "gTileset_General_Frlg",
+      "secondary_tileset": "gTileset_CinnabarIsland",
+      "border_filepath": "data/layouts/CinnabarIsland_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/CinnabarIsland_Frlg/map.bin",
+      "border_height": 2,
+      "border_width": 2,
+      "game_version": "hns",
+      "layout_version": "frlg"
+    },
+    {
       "id": "LAYOUT_FUCHSIA_CITY_GYM_HNS",
       "name": "FuchsiaCity_Gym_hns_Layout",
       "width": 15,
