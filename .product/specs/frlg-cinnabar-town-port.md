@@ -3,6 +3,11 @@
 PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
 Implemented: No
 
+The [unlocked interior preview](frlg-cinnabar-unlocked-interiors.md) is a
+separate interim milestone. It makes the twelve rooms traversable and supplies
+Center healing and Mart shopping, but does not implement the local content and
+rewards specified here.
+
 ## Scope
 
 Select the intact FRLG Cinnabar exterior and its twelve local interior maps for
