@@ -148,9 +148,11 @@ bool data_matches_version(const Json &data) {
             "MAP_CINNABAR_ISLAND_HNS", "MAP_CINNABAR_ISLAND_POKEMON_CENTER_HNS",
             "MAP_SEAFOAM_ISLANDS_1F_HNS", "MAP_SEAFOAM_ISLANDS_B1F_HNS",
             "MAP_SEAFOAM_ISLANDS_GYM_HNS", "MAP_SEAFOAM_ISLANDS_SECRET_CAVE_HNS",
+            "MAP_ROUTE21_HNS",
             "LAYOUT_CINNABAR_ISLAND_HNS", "LAYOUT_CINNABAR_ISLAND_POKEMON_CENTER_HNS",
             "LAYOUT_SEAFOAM_ISLANDS_1F_HNS", "LAYOUT_SEAFOAM_ISLANDS_B1F_HNS",
             "LAYOUT_SEAFOAM_ISLANDS_GYM_HNS", "LAYOUT_SEAFOAM_ISLANDS_SECRET_CAVE_HNS",
+            "LAYOUT_ROUTE21_HNS",
         };
         if (replaced_hns_ids.find(json_to_string(data, "id", true)) != replaced_hns_ids.end())
             return false;

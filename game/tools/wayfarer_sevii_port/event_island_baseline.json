@@ -617,7 +617,7 @@
     },
     {
       "path": "game/data/event_scripts.s",
-      "sha256": "598caa7ca7ff907f4662f8b30a8feb60124d8b8a32c069fd702d1abd97ce897b"
+      "sha256": "90a9c19cea6a6552003f80d09464f6cad19d97614e63f31c5c4fc0de042ad4cb"
     },
     {
       "path": "game/src/data/object_events/object_event_graphics_info_pointers.h",

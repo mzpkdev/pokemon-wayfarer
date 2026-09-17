@@ -14,6 +14,7 @@ RETIRED_HNS_MAP_NAMES = (
     "SeafoamIslands_B1F_hns",
     "SeafoamIslands_Gym_hns",
     "SeafoamIslands_SecretCave_hns",
+    "Route21_hns",
 )
 
 
@@ -123,10 +124,10 @@ class MapjsonWayfarerTest(unittest.TestCase):
             capture_output=True,
         )
 
-    def test_wayfarer_unlinks_replaced_hns_maps_and_layouts_only(self):
+    def test_wayfarer_unlinks_replaced_and_orphaned_hns_maps_and_layouts(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
-        names = [*RETIRED_HNS_MAP_NAMES, "Route20_hns", "Route21_hns"]
+        names = [*RETIRED_HNS_MAP_NAMES, "Route20_hns"]
         source_maps = {
             name: json.loads((GAME_ROOT / "data/maps" / name / "map.json").read_text())
             for name in names
@@ -166,7 +167,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             self.assertNotIn(f"\t.4byte {name}\n", groups)
             self.assertNotIn(f"/{name}/header.inc", headers)
             self.assertNotIn(f"/{name}/events.inc", events)
-        for name in ("Route20_hns", "Route21_hns"):
+        for name in ("Route20_hns",):
             self.assertIn(f"\t.4byte {name}\n", groups)
 
         result = self.run_layouts(root, "wayfarer")
@@ -178,7 +179,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         for name in RETIRED_HNS_MAP_NAMES:
             self.assertNotIn(f"{name}_Layout::", layout_headers)
             self.assertNotIn(f"\t.4byte {name}_Layout\n", layout_table)
-        for name in ("Route20_hns", "Route21_hns"):
+        for name in ("Route20_hns",):
             self.assertIn(f"{name}_Layout::", layout_headers)
 
         result = self.run_groups(root, "hns", map_files)

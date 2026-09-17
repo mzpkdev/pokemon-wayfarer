@@ -1,7 +1,8 @@
 # FRLG Cinnabar and Seafoam Islands port
 
 Status: Approved product direction. The unlocked Cinnabar interior preview and
-retirement of the six superseded HNS maps from Wayfarer are in
+retirement of the six superseded HNS maps and the unreachable HNS Route 21
+payload from Wayfarer are in
 [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full town
 and Seafoam port is not implemented.
 

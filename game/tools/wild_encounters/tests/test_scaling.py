@@ -324,7 +324,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         item = {"product": "POKEMON_HNS", "header_id": 7}
         expression = GENERATOR.runtime_header_id(item, self.header_ids)
         retired = GENERATOR.retired_hns_header_ids(self.header_ids)
-        self.assertEqual(len(retired), 3)
+        self.assertEqual(len(retired), 4)
         self.assertIn("IS_WAYFARER", expression)
         evaluate = lambda value, wayfarer: eval(value.replace("HAS_EMERALD_CONTENT", "1")
                                               .replace("HAS_HNS_CONTENT", "1")

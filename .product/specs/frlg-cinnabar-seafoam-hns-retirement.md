@@ -8,13 +8,15 @@ Change the marker to `Yes` once it lands on `main`.
 
 ## Scope
 
-Retire six superseded HNS maps from the Wayfarer ROM: Cinnabar Island,
+Retire seven superseded or unreachable HNS maps from the Wayfarer ROM: Cinnabar Island,
 Cinnabar Pokémon Center, Seafoam Islands 1F and B1F, Seafoam Gym, and Seafoam
-Secret Cave. Remove their map, layout, script, and wild encounter payloads from
-Wayfarer while retaining them for standalone HNS. HNS Route 20 and Route 21
-remain available for their authored trainers, fishing, and final coastal
-integration. The empty CoastPoc routes are temporary preview maps, not a
-replacement for those routes.
+Secret Cave, plus Route 21. Remove their map, layout, script, and wild encounter
+payloads from Wayfarer while retaining them for standalone HNS. HNS Route 21
+has no playable incoming connection in this preview: Pallet and Cinnabar use
+the CoastPoc route instead. Its three Trainers, hidden items, and encounters
+remain in source for the final coastal integration, which must place that
+content on a playable route. HNS Route 20 remains reachable through Route 19
+and Seafoam's two exits, preserving its authored Trainers and fishing.
 
 ## Behavior
 
@@ -44,8 +46,8 @@ Blaine script also removes its Fighting Dojo relocation trigger. No retired
 Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
 
 The Wayfarer release link map contains no layout, event, script, or wild
-encounter payload for the six retired HNS maps. The generated standalone HNS
-catalog retains the six source maps and layouts; this retirement does not edit
+encounter payload for the seven retired HNS maps. The generated standalone HNS
+catalog retains the seven source maps and layouts; this retirement does not edit
 their scripts or encounter profiles. Map IDs may remain defined for shared
 source code, but Wayfarer must not route the player or Fly to their retired
 content.
@@ -60,7 +62,7 @@ content.
 3. Meet Blue on the Viridian exterior and, in a separate run, enter his Gym
    first. Check that each path leaves one accessible Gym leader and truthful
    local dialogue, without enabling old Blaine or Groudon paths.
-4. Confirm the six old payloads are absent from the Wayfarer release link map,
+4. Confirm the seven old payloads are absent from the Wayfarer release link map,
    remain in the generated HNS catalog, and the Wayfarer release reserve still
    passes.
 

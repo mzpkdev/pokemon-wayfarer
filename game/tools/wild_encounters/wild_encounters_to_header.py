@@ -65,11 +65,13 @@ PRODUCT_GUARDS = {
 }
 RETIRED_WAYFARER_HNS_WILD_MAPS = {
     "MAP_CINNABAR_ISLAND_HNS",
+    "MAP_ROUTE21_HNS",
     "MAP_SEAFOAM_ISLANDS_1F_HNS",
     "MAP_SEAFOAM_ISLANDS_B1F_HNS",
 }
 RETIRED_WAYFARER_HNS_WILD_HEADERS = {
     "gCinnabarIsland_hns",
+    "gRoute21_hns",
     "gSeafoamIslands_1F_hns",
     "gSeafoamIslands_B1F_hns",
 }

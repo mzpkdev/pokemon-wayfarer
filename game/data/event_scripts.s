@@ -2028,7 +2028,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/Route18_hns/scripts.inc"
 	.include "data/maps/Route19_hns/scripts.inc"
 	.include "data/maps/Route20_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/Route21_hns/scripts.inc"
+#endif
 	.include "data/maps/Route22_hns/scripts.inc"
 	.include "data/maps/Route23_hns/scripts.inc"
 	.include "data/maps/IndigoPlateau_hns/scripts.inc"
