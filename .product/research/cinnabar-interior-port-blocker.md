@@ -27,11 +27,11 @@ southern neighbor has elevation 3 and correctly blocks movement. Mansion
 directional stairs likewise require east or west entry according to their
 tile behavior.
 
-## Verification and remaining release gate
+## Verification
 
 `cinnabar-interior-port.e2e.ts` checks exterior entrances and returns, wide
 side exits, Lab rooms, Center stairs and healing, Mart purchase, and Mansion
 floor and basement passages through SkyEmu. The playable E2E ROM links at
-33,418,432 bytes, leaving 136,000 physical bytes free. The separate 512 KiB
-production reserve is therefore 388,288 bytes short at this E2E size; a
-release build and size recovery are still required before merging this port.
+33,418,432 bytes. `make -C game -j4 release BUILD=wayfarer` also passes: its
+production ROM uses 32,996,316 bytes, leaves 558,116 physical bytes free, and
+clears the unchanged 512 KiB reserve by 33,828 bytes.
