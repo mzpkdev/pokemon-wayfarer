@@ -385,7 +385,19 @@
     "FuchsiaCity_Route15_Gate_hns"
   ],
   "gMapGroup_IndoorCinnabar_Hns": [
-    "CinnabarIsland_PokemonCenter_hns"
+    "CinnabarIsland_PokemonCenter_hns",
+    "CinnabarIsland_PokemonCenter_1F_Port",
+    "CinnabarIsland_PokemonCenter_2F_Port",
+    "CinnabarIsland_Mart_Port",
+    "CinnabarIsland_PokemonLab_Entrance_Port",
+    "CinnabarIsland_PokemonLab_Lounge_Port",
+    "CinnabarIsland_PokemonLab_ResearchRoom_Port",
+    "CinnabarIsland_PokemonLab_ExperimentRoom_Port",
+    "CinnabarIsland_Gym_Port",
+    "PokemonMansion_1F_Port",
+    "PokemonMansion_2F_Port",
+    "PokemonMansion_3F_Port",
+    "PokemonMansion_B1F_Port"
   ],
   "gMapGroup_IndoorIndigo_Hns": [
     "IndigoPlateau_PokemonCenter_hns",
