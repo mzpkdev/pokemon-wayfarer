@@ -42,6 +42,18 @@ export const maps = {
   "vermilion-city": { mapGroup: 0, mapNum: 35 },
   "cinnabar-island": { mapGroup: 0, mapNum: 40 },
   "cinnabar-seam-poc": { mapGroup: 0, mapNum: 71 },
+  "cinnabar-center-1f-port": { mapGroup: 20, mapNum: 1 },
+  "cinnabar-center-2f-port": { mapGroup: 20, mapNum: 2 },
+  "cinnabar-mart-port": { mapGroup: 20, mapNum: 3 },
+  "cinnabar-lab-entrance-port": { mapGroup: 20, mapNum: 4 },
+  "cinnabar-lab-lounge-port": { mapGroup: 20, mapNum: 5 },
+  "cinnabar-lab-research-port": { mapGroup: 20, mapNum: 6 },
+  "cinnabar-lab-experiment-port": { mapGroup: 20, mapNum: 7 },
+  "cinnabar-gym-port": { mapGroup: 20, mapNum: 8 },
+  "pokemon-mansion-1f-port": { mapGroup: 20, mapNum: 9 },
+  "pokemon-mansion-2f-port": { mapGroup: 20, mapNum: 10 },
+  "pokemon-mansion-3f-port": { mapGroup: 20, mapNum: 11 },
+  "pokemon-mansion-b1f-port": { mapGroup: 20, mapNum: 12 },
   "route-20-coast-poc": { mapGroup: 0, mapNum: 72 },
   "route-21-north-coast-poc": { mapGroup: 0, mapNum: 73 },
   "route-21-south-coast-poc": { mapGroup: 0, mapNum: 74 },
@@ -590,6 +602,7 @@ export const hms = {
 } as const
 
 export const items = {
+  ultraBall: 3,
   timerBall: 11,
   quickBall: 12,
   masterBall: 4,

@@ -80,8 +80,7 @@ const readPocketSlots = async (runtime: SessionRuntime, pocket: BagPocket): Prom
 export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
   contains: async (name) => {
     const item = items[name]
-    // HNS traversal credentials and rewards live in Items, TM/HM, or Key Items.
-    for (const pocketId of [3, 4, 5]) {
+    for (const pocketId of [0, 1, 2, 3, 4, 5]) {
       const pocket = await readBagPocket(runtime, pocketId)
       const slots = await readPocketSlots(runtime, pocket)
       for (let slot = 0; slot < pocket.capacity; slot++) {

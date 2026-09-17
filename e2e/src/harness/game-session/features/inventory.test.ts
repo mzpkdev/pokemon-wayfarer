@@ -9,8 +9,11 @@ const keyItemsAddress = 0x0200_2000
 const uint16Bytes = (value: number): number[] => [value & 0xff, value >> 8]
 
 describe("game-session inventory", () => {
-  it("finds traversal items across the HNS Items, TM/HM, and Key Items pockets", async () => {
+  it("finds items across all HNS Bag pockets", async () => {
     const pocketContents = new Map([
+      [0, { address: 0x0200_6000, capacity: 4, item: 17 }],
+      [1, { address: 0x0200_7000, capacity: 4, item: 3 }],
+      [2, { address: 0x0200_8000, capacity: 4, item: 520 }],
       [3, { address: 0x0200_3000, capacity: 4, item: 441 }],
       [4, { address: 0x0200_4000, capacity: 4, item: 606 }],
       [5, { address: 0x0200_5000, capacity: 60, item: 727 }],
@@ -48,6 +51,7 @@ describe("game-session inventory", () => {
     } satisfies SessionRuntime
     const inventory = createInventoryApi(runtime)
 
+    await expect(inventory.contains("ultraBall")).resolves.toBe(true)
     await expect(inventory.contains("metalCoat")).resolves.toBe(true)
     await expect(inventory.contains("tmThunder")).resolves.toBe(true)
     await expect(inventory.contains("ssTicket")).resolves.toBe(true)
