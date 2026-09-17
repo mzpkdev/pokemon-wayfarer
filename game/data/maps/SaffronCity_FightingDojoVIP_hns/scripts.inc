@@ -1,14 +1,5 @@
 SaffronCity_FightingDojoVIP_hns_MapScripts::
-#if IS_WAYFARER
-	map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_FightingDojoVIP_hns_HideRetiredBlaine
-#endif
 	.byte 0
-
-#if IS_WAYFARER
-SaffronCity_FightingDojoVIP_hns_HideRetiredBlaine:
-	setflag FLAG_HIDE_DOJO_BLAINE
-	end
-#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Nurse::
 	lock
