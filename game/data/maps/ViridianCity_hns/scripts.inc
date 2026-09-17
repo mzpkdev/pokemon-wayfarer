@@ -5,12 +5,6 @@ ViridianCity_hns_MapScripts::
 
 ViridianCity_EventScript_CityEnter::
 	setflag FLAG_VISITED_VIRIDIAN_CITY
-#if IS_WAYFARER
-	// Saves made before the HNS Cinnabar retirement may still hide Blue.
-	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_EventScript_CityEnterDone
-	clearflag FLAG_HIDE_VIRIDIAN_BLUE
-ViridianCity_EventScript_CityEnterDone::
-#endif
 	end
 
 ViridianCity_OnFrame::

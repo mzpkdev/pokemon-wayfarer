@@ -39,8 +39,7 @@ Wayfarer's Viridian Blue introduction and Gym access no longer depend on the
 retired HNS Cinnabar script clearing `FLAG_HIDE_VIRIDIAN_BLUE`. Exterior Blue
 is available for a one-time introduction beside the Gym; entering the Gym
 first provides a truthful first meeting and retires the unused exterior
-introduction. Existing saves that still hide an undefeated Blue recover on
-entering Viridian. Neither path hides an undefeated Gym leader. Viridian and Pallet
+introduction. Neither path hides an undefeated Gym leader. Viridian and Pallet
 dialogue does not claim a Cinnabar meeting or eruption. Retiring Cinnabar's
 Blaine script also removes its Fighting Dojo relocation trigger. No retired
 Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
