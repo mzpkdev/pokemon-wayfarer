@@ -1091,6 +1091,20 @@ static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileB
         return TRUE;
     }
 
+#if IS_WAYFARER
+    // The preview Seafoam entrances have exit events on non-warp metatiles.
+    // Honor only those two declared exits; the cave's other tiles keep their
+    // normal behavior requirements.
+    if (gMapHeader.mapLayoutId == LAYOUT_SEAFOAM_ISLANDS_1F_COAST_POC
+     && (warpEventId == 3 || warpEventId == 4))
+    {
+        StoreInitialPlayerAvatarState();
+        SetupWarp(&gMapHeader, warpEventId, position);
+        DoWarp();
+        return TRUE;
+    }
+#endif
+
     return FALSE;
 }
 

@@ -1041,12 +1041,19 @@ SaffronCity_FightingDojoVIP_Text_Blaine_RematchDefeat:
 	.string "defenses.$"
 
 SaffronCity_FightingDojoVIP_Text_Blue_Rematch:
+#if IS_WAYFARER
+	.string "BLUE: Back for another match?\p"
+	.string "I remember our VIRIDIAN battle.\p"
+	.string "I won't go easy on you this time.\p"
+	.string "Want a rematch?$"
+#else
 	.string "BLUE: Well, well. CHAMPION!\p"
 	.string "Looks like you've come a long way.\p"
 	.string "I used to have that title too,\n"
 	.string "you know. But I won't go easy.\p"
 	.string "Let's see if you can keep it up.\p"
 	.string "Want to have a rematch with me?$"
+#endif
 
 SaffronCity_FightingDojoVIP_Text_Blue_RematchDefeat:
 	.string "BLUE: What?\p"

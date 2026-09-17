@@ -141,6 +141,20 @@ bool source_version_is_selected(const string &source_version) {
 }
 
 bool data_matches_version(const Json &data) {
+    // The coast preview replaces this complete HNS map cluster in Wayfarer.
+    // Retain the source maps and stable map/layout IDs for standalone HNS.
+    if (version == "wayfarer" && get_source_version(data) == "hns") {
+        static const set<string> replaced_hns_ids = {
+            "MAP_CINNABAR_ISLAND_HNS", "MAP_CINNABAR_ISLAND_POKEMON_CENTER_HNS",
+            "MAP_SEAFOAM_ISLANDS_1F_HNS", "MAP_SEAFOAM_ISLANDS_B1F_HNS",
+            "MAP_SEAFOAM_ISLANDS_GYM_HNS", "MAP_SEAFOAM_ISLANDS_SECRET_CAVE_HNS",
+            "LAYOUT_CINNABAR_ISLAND_HNS", "LAYOUT_CINNABAR_ISLAND_POKEMON_CENTER_HNS",
+            "LAYOUT_SEAFOAM_ISLANDS_1F_HNS", "LAYOUT_SEAFOAM_ISLANDS_B1F_HNS",
+            "LAYOUT_SEAFOAM_ISLANDS_GYM_HNS", "LAYOUT_SEAFOAM_ISLANDS_SECRET_CAVE_HNS",
+        };
+        if (replaced_hns_ids.find(json_to_string(data, "id", true)) != replaced_hns_ids.end())
+            return false;
+    }
     if (version == "wayfarer" && get_source_version(data) == "frlg") {
         if (!wayfarer_sevii_release_link_enabled)
             return false;
@@ -635,6 +649,45 @@ string generate_map_connections_text(Json map_data) {
     return text.str();
 }
 
+Json resolve_wayfarer_coast_warp(const Json &map_data, const Json &warp, size_t index) {
+    if (version != "wayfarer")
+        return warp;
+
+    string map_name = json_to_string(map_data, "name");
+    if (map_name == "Route20_hns" && index < 2) {
+        const string expected_x = index == 0 ? "60" : "72";
+        const string expected_y = index == 0 ? "8" : "14";
+        const string expected_warp = index == 0 ? "0" : "3";
+        if (json_to_string(warp, "x") != expected_x
+         || json_to_string(warp, "y") != expected_y
+         || json_to_string(warp, "dest_map") != "MAP_SEAFOAM_ISLANDS_1F_HNS"
+         || json_to_string(warp, "dest_warp_id") != expected_warp)
+            FATAL_ERROR("Route20_hns Seafoam entrance %zu no longer matches its HNS source warp.\n", index);
+
+        Json::object resolved = warp.object_items();
+        resolved["dest_map"] = "MAP_SEAFOAM_ISLANDS_1F_COAST_POC";
+        resolved["dest_warp_id"] = index == 0 ? "3" : "4";
+        return resolved;
+    }
+    if (map_name == "SeafoamIslands_1F_CoastPoc" && (index == 3 || index == 4)) {
+        const string expected_x = index == 3 ? "6" : "32";
+        const string expected_warp = index == 3 ? "0" : "1";
+        if (json_to_string(warp, "x") != expected_x
+         || json_to_string(warp, "y") != "21"
+         || json_to_string(warp, "dest_map") != "MAP_ROUTE20_COAST_POC"
+         || json_to_string(warp, "dest_warp_id") != expected_warp)
+            FATAL_ERROR("SeafoamIslands_1F_CoastPoc exit %zu no longer matches its source warp.\n", index);
+
+        Json::object resolved = warp.object_items();
+        resolved["dest_map"] = "MAP_ROUTE20_HNS";
+        // FRLG's elevation 15 wildcard is a literal height in HNS. These
+        // exit tiles are at elevation 3 in the copied 1F layout.
+        resolved["elevation"] = 3;
+        return resolved;
+    }
+    return warp;
+}
+
 string generate_map_events_text(Json map_data) {
     map_data = sanitize_wayfarer_sevii_map_events(map_data);
     if (map_data.object_items().find("shared_events_map") != map_data.object_items().end())
@@ -688,7 +741,9 @@ string generate_map_events_text(Json map_data) {
     if (map_data["warp_events"].array_items().size() > 0) {
         warps_label = mapName + "_MapWarps";
         text << warps_label << ":\n";
-        for (auto &warp_event : map_data["warp_events"].array_items()) {
+        size_t warp_index = 0;
+        for (auto &source_warp : map_data["warp_events"].array_items()) {
+            Json warp_event = resolve_wayfarer_coast_warp(map_data, source_warp, warp_index++);
             text << "\twarp_def "
                  << json_to_string(warp_event, "x") << ", "
                  << json_to_string(warp_event, "y") << ", "
@@ -1216,7 +1271,9 @@ void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Js
         string map_name = json_to_string(map_data, "name");
         Json event_data = sanitize_wayfarer_sevii_map_events(map_data);
         Json connection_data = sanitize_wayfarer_sevii_map_connections(map_data);
-        for (const Json &warp : event_data["warp_events"].array_items()) {
+        size_t warp_index = 0;
+        for (const Json &source_warp : event_data["warp_events"].array_items()) {
+            Json warp = resolve_wayfarer_coast_warp(map_data, source_warp, warp_index++);
             string destination = json_to_string(warp, "dest_map");
             if (included_map_ids.find(destination) == included_map_ids.end()
              && dynamic_destinations.find(destination) == dynamic_destinations.end())

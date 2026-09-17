@@ -16,10 +16,16 @@ const moveOneTile = async (game: GameSession, direction: Direction): Promise<voi
     await game.player.move(direction)
     await game.wait.frames(12)
     const after = await game.state.read()
-    if (after.player.x !== before.player.x || after.player.y !== before.player.y || after.map.name !== before.map.name)
+    if (
+      after.player.x !== before.player.x ||
+      after.player.y !== before.player.y ||
+      after.map.name !== before.map.name
+    )
       return
   }
-  throw new Error(`Could not move ${direction} from ${before.map.name} ${before.player.x}:${before.player.y}`)
+  throw new Error(
+    `Could not move ${direction} from ${before.map.name} ${before.player.x}:${before.player.y}`,
+  )
 }
 
 const expectMap = async (game: GameSession, map: GameMap): Promise<void> => {
@@ -43,7 +49,10 @@ const startSurf = async (game: GameSession): Promise<void> => {
   )
   await game.wait.frames(12)
   await game.controls.press("a")
-  await game.wait.until((state) => state.dialogue.message === "player-used-surf", "Surf confirmation")
+  await game.wait.until(
+    (state) => state.dialogue.message === "player-used-surf",
+    "Surf confirmation",
+  )
   await game.dialogue.waitForClosed()
   await game.wait.frames(60)
   await game.controls.press("a")
@@ -54,7 +63,10 @@ const startSurf = async (game: GameSession): Promise<void> => {
 const screenshot = async (game: GameSession, name: string): Promise<void> => {
   if (!output) throw new Error("FRLG_COAST_POC_ARTIFACTS must name the artifact directory")
   await fs.writeFile(path.join(output, `${name}.png`), await game.screenshot())
-  await fs.writeFile(path.join(output, `${name}.json`), JSON.stringify(await game.state.read(), null, 2))
+  await fs.writeFile(
+    path.join(output, `${name}.json`),
+    JSON.stringify(await game.state.read(), null, 2),
+  )
 }
 
 const cross = async (
@@ -169,8 +181,27 @@ pocIt("crosses the complete FRLG coast and packages a surf save", async () => {
     await game.saveAndReload()
     await expectMap(game, "route-20-coast-poc")
     await screenshot(game, "route20-west-door-reloaded")
+    await cross(
+      game,
+      { map: "route-20-coast-poc", x: 60, y: 9, facing: "up" },
+      "up",
+      "seafoam-islands-1f-coast-poc",
+      "route20-west-door-to-seafoam",
+    )
+    await cross(
+      game,
+      { map: "seafoam-islands-1f-coast-poc", x: 6, y: 20, facing: "down" },
+      "down",
+      "route-20",
+      "seafoam-west-exit-to-retained-route20",
+    )
+    await game.player.warp("route-20-coast-poc", 60, 9, "up")
+    await game.wait.forReady()
     const romPath = (game as unknown as { rom: { path: string } }).rom.path
-    await fs.copyFile(path.join(path.dirname(romPath), "wayfarer.sav"), path.join(output, "frlg-coast-overworld-poc.sav"))
+    await fs.copyFile(
+      path.join(path.dirname(romPath), "wayfarer.sav"),
+      path.join(output, "frlg-coast-overworld-poc.sav"),
+    )
     await fs.copyFile(process.env.SKYEMU_ROM!, path.join(output, "frlg-coast-overworld-poc.gba"))
     await fs.copyFile(process.env.SKYEMU_SYMS!, path.join(output, "frlg-coast-overworld-poc.sym"))
   } finally {
@@ -189,7 +220,10 @@ pocIt("packages a Cinnabar continuation save", async () => {
     await expectMap(game, "cinnabar-seam-poc")
     expect((await game.state.read()).player.surfing).toBe(true)
     const romPath = (game as unknown as { rom: { path: string } }).rom.path
-    await fs.copyFile(path.join(path.dirname(romPath), "wayfarer.sav"), path.join(output, "cinnabar-test.sav"))
+    await fs.copyFile(
+      path.join(path.dirname(romPath), "wayfarer.sav"),
+      path.join(output, "cinnabar-test.sav"),
+    )
     await fs.copyFile(process.env.SKYEMU_ROM!, path.join(output, "cinnabar-test.gba"))
   } finally {
     await game.close()

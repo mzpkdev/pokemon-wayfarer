@@ -258,6 +258,30 @@ describe.sequential("Wayfarer League Circuit", () => {
     await game.close()
   })
 
+  it("introduces Blue in Viridian when the Gym is visited before the exterior", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "viridian-gym", x: 5, y: 3 } },
+      story: {
+        flags: {
+          viridianBlueIntroduced: false,
+          hideViridianBlueIntro: false,
+          hideViridianBlue: false,
+        },
+      },
+      determinism: { textSpeed: "instant" },
+    })
+
+    await game.player.interact()
+    await game.wait.until(
+      (state) => state.dialogueOpen && state.dialogue.text.includes("First time here"),
+      "Blue's first meeting in Viridian Gym",
+    )
+    await expect(game.story.flag("viridianBlueIntroduced")).resolves.toBe(true)
+    await expect(game.story.flag("hideViridianBlueIntro")).resolves.toBe(true)
+    await expect(game.story.flag("hideViridianBlue")).resolves.toBe(false)
+  })
+
   it("keeps badge collection independent and enforces the ordered 8/16/24 itinerary", async () => {
     await expect(circuitState(game, { johto: 3, hoenn: 4 })).resolves.toMatchObject({
       circuit: {
@@ -410,13 +434,21 @@ describe.sequential("Wayfarer League Circuit", () => {
 
     await game.arrange({
       checkpoint: "new-bark-after-intro",
-      player: { facing: "up", position: { map: "cinnabar-island", x: 40, y: 22 } },
-      story: { vars: { numBadges: 4 }, flags: { hideCinnabarBlue: false, hideViridianBlue: true } },
+      player: { facing: "up", position: { map: "viridian-city", x: 42, y: 16 } },
+      story: {
+        vars: { numBadges: 4 },
+        flags: {
+          viridianBlueIntroduced: false,
+          hideViridianBlueIntro: false,
+          hideViridianBlue: false,
+        },
+      },
       circuit: { badges: { hoenn: 4 } },
     })
     await game.player.interact()
     await finishFieldScript(game, "Blue invitation")
-    await expect(game.story.flag("hideCinnabarBlue")).resolves.toBe(true)
+    await expect(game.story.flag("viridianBlueIntroduced")).resolves.toBe(true)
+    await expect(game.story.flag("hideViridianBlueIntro")).resolves.toBe(true)
     await expect(game.story.flag("hideViridianBlue")).resolves.toBe(false)
 
     await game.arrange({

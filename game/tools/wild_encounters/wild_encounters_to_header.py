@@ -63,6 +63,16 @@ PRODUCT_GUARDS = {
     "POKEMON_HNS": "HAS_HNS_CONTENT",
     "POKEMON_WAYFARER": "IS_WAYFARER",
 }
+RETIRED_WAYFARER_HNS_WILD_MAPS = {
+    "MAP_CINNABAR_ISLAND_HNS",
+    "MAP_SEAFOAM_ISLANDS_1F_HNS",
+    "MAP_SEAFOAM_ISLANDS_B1F_HNS",
+}
+RETIRED_WAYFARER_HNS_WILD_HEADERS = {
+    "gCinnabarIsland_hns",
+    "gSeafoamIslands_1F_hns",
+    "gSeafoamIslands_B1F_hns",
+}
 FISHING_QUALITIES = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD")
 FISHING_SLOT_COUNT = 10
 FISHING_BASE_BITE_PERCENT = {"OLD_ROD": 25, "GOOD_ROD": 50, "SUPER_ROD": 75}
@@ -419,7 +429,9 @@ def product_for(label):
     return "EMERALD"
 
 
-def product_guard(product):
+def product_guard(product, map_name=None):
+    if product == "POKEMON_HNS" and map_name in RETIRED_WAYFARER_HNS_WILD_MAPS:
+        return "HAS_HNS_CONTENT && !IS_WAYFARER"
     return PRODUCT_GUARDS[product]
 
 
@@ -2755,7 +2767,7 @@ def apply_wayfarer_encounter_replacements(encounters, replacements=None):
             raise ValidationError(f"{location}: no matching map")
         for entry in matches:
             label = entry["base_label"]
-            if product_for(label) not in {"EMERALD", "POKEMON_HNS"}:
+            if product_for(label) not in {"EMERALD", "POKEMON_HNS", "POKEMON_WAYFARER"}:
                 raise ValidationError(f"{location}/{label}: unsupported Wayfarer product")
             if method not in entry or slot >= len(entry[method]["mons"]):
                 raise ValidationError(f"{location}/{label}: missing method or slot")
@@ -2837,7 +2849,7 @@ class Assembler:
             for label, data in headers["data"].items():
                 if product_for(label) != product:
                     continue
-                self.line(); self.line(f"#if {product_guard(product)}"); self.line("{", 1)
+                self.line(); self.line(f"#if {product_guard(product, data.get('map'))}"); self.line("{", 1)
                 self.line(f".mapGroup = {data['mapGroup']},", 2); self.line(f".mapNum = {data['mapNum']},", 2); self.line(".encounterTypes =", 2); self.line("{", 2)
                 for time in self.config.times:
                     if not self.config.time_encounters and time != self.config.time_fallback:
@@ -2860,11 +2872,11 @@ class Assembler:
                     map_group, map_num = f"MAP_GROUP({encounter['map']})", f"MAP_NUM({encounter['map']})"
                 counter += 1
                 time, header = time_and_header(encounter["base_label"], self.config)
-                data = headers["data"].setdefault(header, {"mapGroup": map_group, "mapNum": map_num})
+                data = headers["data"].setdefault(header, {"mapGroup": map_group, "mapNum": map_num, "map": encounter.get("map")})
                 if data["mapGroup"] != map_group or data["mapNum"] != map_num:
                     raise ValidationError(f"{encounter['base_label']}: shared header spans maps")
                 time_data = data.setdefault(time, {})
-                self.line(f"#if {product_guard(product_for(header))}")
+                self.line(f"#if {product_guard(product_for(header), encounter.get('map'))}")
                 for method in self.config.mon_types:
                     if method not in encounter:
                         continue
@@ -2922,14 +2934,21 @@ class Assembler:
             self.write_headers(headers)
 
 
+def retired_hns_header_ids(header_ids):
+    hns_ids = header_ids["POKEMON_HNS"]
+    return sorted(hns_ids[name] for name in RETIRED_WAYFARER_HNS_WILD_HEADERS if name in hns_ids)
+
+
 def runtime_header_id(item, header_ids):
     if item["product"] == "POKEMON_HNS":
         emerald_count = len(header_ids["EMERALD"])
-        return f"({item['header_id']} + HAS_EMERALD_CONTENT * {emerald_count})"
+        retired_before = sum(old_id < item["header_id"] for old_id in retired_hns_header_ids(header_ids))
+        return f"({item['header_id']} - IS_WAYFARER * {retired_before} + HAS_EMERALD_CONTENT * {emerald_count})"
     if item["product"] == "POKEMON_WAYFARER":
         emerald_count = len(header_ids["EMERALD"])
         hns_count = len(header_ids["POKEMON_HNS"])
-        return f"({item['header_id']} + HAS_EMERALD_CONTENT * {emerald_count} + HAS_HNS_CONTENT * {hns_count})"
+        retired_count = len(retired_hns_header_ids(header_ids))
+        return f"({item['header_id']} + HAS_EMERALD_CONTENT * {emerald_count} + HAS_HNS_CONTENT * ({hns_count} - IS_WAYFARER * {retired_count}))"
     return str(item["header_id"])
 
 
@@ -2953,7 +2972,9 @@ def render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids)
     if offsets:
         for item in offsets:
             header_id = runtime_header_id(item, header_ids)
-            output.write(f"#if {product_guard(item['product'])}\n    {{ {header_id}, {item['area']}, {item['time']}, {item['rod']}, {item['level_offset']} }},\n#endif\n")
+            retired_hns = item["product"] == "POKEMON_HNS" and item["header_id"] in retired_hns_header_ids(header_ids)
+            guard = "HAS_HNS_CONTENT && !IS_WAYFARER" if retired_hns else product_guard(item["product"])
+            output.write(f"#if {guard}\n    {{ {header_id}, {item['area']}, {item['time']}, {item['rod']}, {item['level_offset']} }},\n#endif\n")
     else:
         output.write("    { 0 }, // Typed sentinel; count remains zero.\n")
     output.write("};\n")

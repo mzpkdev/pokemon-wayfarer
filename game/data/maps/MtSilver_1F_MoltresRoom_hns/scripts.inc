@@ -12,7 +12,7 @@ MtSilver_1F_MoltresRoom_EventScript_Moltres::
 	lock
 	faceplayer
 	playmoncry SPECIES_MOLTRES, CRY_MODE_ENCOUNTER
-	msgbox SeafoamIslands_B1F_Text_ArticunoBattle
+	msgbox Text_Gyaoo
 	delay 40
 	waitmoncry
 	seteventmon SPECIES_MOLTRES, 50

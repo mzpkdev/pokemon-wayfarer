@@ -613,11 +613,11 @@
     },
     {
       "path": "game/src/data/wild_encounters.json",
-      "sha256": "06ec4238fdc1bfe380d21ee17c64fbf019c0ff70536dd77f9379615a350e74d5"
+      "sha256": "2e28ce592e4b00c5265a7f7d4fad9db4966381621f5f149995c7cb49e720f48c"
     },
     {
       "path": "game/data/event_scripts.s",
-      "sha256": "8a193adf9644ade84bbaaa53e067cb7f288f6326709b5c065e354474159b1f1b"
+      "sha256": "598caa7ca7ff907f4662f8b30a8feb60124d8b8a32c069fd702d1abd97ce897b"
     },
     {
       "path": "game/src/data/object_events/object_event_graphics_info_pointers.h",

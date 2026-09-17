@@ -1,8 +1,9 @@
 # FRLG Cinnabar and Seafoam Islands port
 
-Status: Approved product direction. The unlocked Cinnabar interior preview is in
-[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full
-town and Seafoam port is not implemented.
+Status: Approved product direction. The unlocked Cinnabar interior preview and
+retirement of the six superseded HNS maps from Wayfarer are in
+[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full town
+and Seafoam port is not implemented.
 
 ## Intent
 
@@ -115,6 +116,7 @@ difficulty.
 
 - [Cinnabar implementation specification](../specs/frlg-cinnabar-town-port.md)
 - [Unlocked Cinnabar interior preview](../specs/frlg-cinnabar-unlocked-interiors.md)
+- [HNS Cinnabar and Seafoam map retirement](../specs/frlg-cinnabar-seafoam-hns-retirement.md)
 - [Seafoam implementation specification](../specs/frlg-seafoam-islands-port.md)
 - [Coastal and state integration specification](../specs/frlg-cinnabar-seafoam-integration.md)
 - [FRLG Kanto independent story beats](frlg-kanto-independent-story-beats.md)

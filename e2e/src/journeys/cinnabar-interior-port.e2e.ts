@@ -1,7 +1,8 @@
 import { expect, it } from "webanvil/test"
 
-import { GameSession } from "../harness/game-session"
+import { GameSession, partyMenuActions } from "../harness/game-session"
 import { maps, type Direction } from "../harness/game-session/catalog"
+import { openFieldPartyMenuActions, selectFieldPartyAction } from "../playbooks/field-party-menu"
 
 const travel = async (
   map: keyof typeof maps,
@@ -54,6 +55,72 @@ it("returns from each Cinnabar building to the exterior", async () => {
     { map: "cinnabar-mart-port", x: 4, y: 6 },
   ] as const) {
     await travel(exit.map, exit.x, exit.y, "down", "cinnabar-seam-poc")
+  }
+})
+
+it("connects both retained Route 20 entrances to the Seafoam cave", async () => {
+  await travel("route-20", 60, 9, "up", "seafoam-islands-1f-coast-poc")
+  await travel("route-20", 72, 15, "up", "seafoam-islands-1f-coast-poc")
+  await travel("seafoam-islands-1f-coast-poc", 6, 20, "down", "route-20")
+  await travel("seafoam-islands-1f-coast-poc", 32, 20, "down", "route-20")
+})
+
+it("flies to the visited Cinnabar exterior", async () => {
+  const game = await GameSession.launch()
+  try {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      story: { flags: { visitedKanto: true, visitedCinnabarIsland: true } },
+      party: [{ species: "pidgey", moves: ["fly"] }],
+    })
+    await openFieldPartyMenuActions(game)
+    await selectFieldPartyAction(game, partyMenuActions.fly)
+    let flyMapOpen = false
+    for (let elapsed = 0; elapsed < 600; elapsed += 4) {
+      await game.wait.frames(4)
+      try {
+        if ((await game.regionMap.active()).layout === "combined") {
+          flyMapOpen = true
+          break
+        }
+      } catch {
+        // The Fly map is allocated before its layout is initialized.
+      }
+    }
+    expect(flyMapOpen).toBe(true)
+    await game.wait.frames(60)
+    for (const x of [15, 16, 17, 18, 19, 20]) {
+      await game.controls.press("right")
+      await game.wait.until(
+        async () => (await game.regionMap.active()).cursor.x === x,
+        `Fly cursor at x=${x}`,
+        90,
+      )
+    }
+    for (const y of [14, 15]) {
+      await game.controls.press("down")
+      await game.wait.until(
+        async () => (await game.regionMap.active()).cursor.y === y,
+        `Fly cursor at y=${y}`,
+        90,
+      )
+    }
+    await expect(game.regionMap.active()).resolves.toMatchObject({
+      mapSectionType: 2,
+      cursor: { x: 20, y: 15 },
+    })
+    await game.controls.press("a")
+    await game.wait.until(
+      (state) => state.ready && state.map.name === "cinnabar-seam-poc",
+      "Fly to Cinnabar",
+      3_600,
+    )
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "cinnabar-seam-poc" },
+      player: { x: 14, y: 12 },
+    })
+  } finally {
+    await game.close()
   }
 })
 
