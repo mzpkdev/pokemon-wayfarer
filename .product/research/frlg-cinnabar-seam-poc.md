@@ -35,9 +35,26 @@ visible BG entries decoded with the previous map's metatile definitions.
 The PoC now reloads the primary graphics and palette, reapplies weather color,
 and restarts both animations when the primary tileset changes. Both ordinary
 and credits camera updates redraw the whole map view after a map transition.
-The focused SkyEmu checks pass,
-and the Route 21 crossing screenshot now matches a full load visually apart
-from animation phase. The Route 20 return no longer shows garbled town art.
+The focused SkyEmu checks pass, and the Route 21 view **after** crossing now
+matches a full load visually apart from animation phase. The Route 20 return
+no longer shows garbled town art. This repairs the entering frame only.
+
+The departing frame still previews the neighboring map through the current
+map's tileset. `FillConnection` copies raw neighbor metatile IDs into the
+current map backup, and the renderer resolves them using the current layout.
+In Route 21, that means FRLG Cinnabar building IDs are decoded with HNS
+Pallet Town secondary art. The manually played mGBA ROM and the saved
+`route21-approach.png` both show the garbled building one step before the
+crossing. Route 20 has the same underlying issue on its Cinnabar preview.
+
+A temporary Route 21 layout trial using Cinnabar's secondary tileset made
+the pre-crossing building look correct (`trial-route21-cinnabar-secondary-approach.png`).
+It was reverted: Route 21 also previews Pallet Town at its north edge, whose
+secondary metatiles require Pallet Town art. A corresponding Route 20 trial
+still showed mismatched shoreline art and was also reverted. Neither trial
+changed `map.bin`. A complete visual seam needs compatible metatile graphics
+and definitions on both sides, or a context-sensitive rendering scheme that
+preserves the other route connections.
 
 SkyEmu traverses both links while Surfing. From Route 21 `(2,99)`, moving down
 loads the PoC town at `(2,0)`; from the town `(23,10)`, moving right loads
@@ -54,8 +71,8 @@ directory, outside the source worktree. The focused reproduction is
 `e2e/src/journeys/cinnabar-seam-poc.e2e.ts`; set `SKYEMU_ROM`, `SKYEMU_SYMS`,
 and `CINNABAR_POC_ARTIFACTS` to run it.
 
-Remaining acceptance for the full port includes shoreline inspection in
-Porymap, music transitions, and manual mGBA playthrough of the fixed ROM/save
-pairs. This PoC tests only an empty exterior, so it does not validate town
+Remaining acceptance for the full port includes a fix for the departing-frame
+preview on both routes, shoreline inspection in Porymap, and music transitions.
+This PoC tests only an empty exterior, so it does not validate town
 events, entrances, services, or the full port's assets. Full-view redraw on
 map crossings should be checked for frame cost on hardware before general use.
