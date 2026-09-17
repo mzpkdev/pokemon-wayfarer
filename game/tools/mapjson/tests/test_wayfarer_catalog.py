@@ -7,6 +7,15 @@ import unittest
 
 
 GAME_ROOT = Path(__file__).resolve().parents[3]
+RETIRED_HNS_MAP_NAMES = (
+    "CinnabarIsland_hns",
+    "CinnabarIsland_PokemonCenter_hns",
+    "SeafoamIslands_1F_hns",
+    "SeafoamIslands_B1F_hns",
+    "SeafoamIslands_Gym_hns",
+    "SeafoamIslands_SecretCave_hns",
+    "Route21_hns",
+)
 
 
 class MapjsonWayfarerTest(unittest.TestCase):
@@ -103,6 +112,183 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 ]
             )
         return subprocess.run(command, cwd=root, text=True, capture_output=True)
+
+    def run_layouts(self, root, version):
+        return subprocess.run(
+            [
+                str(self.mapjson), "layouts", version,
+                "data/layouts/layouts.json", "data/layouts", "include/constants",
+            ],
+            cwd=root,
+            text=True,
+            capture_output=True,
+        )
+
+    def test_wayfarer_unlinks_replaced_and_orphaned_hns_maps_and_layouts(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        names = [*RETIRED_HNS_MAP_NAMES, "Route20_hns"]
+        source_maps = {
+            name: json.loads((GAME_ROOT / "data/maps" / name / "map.json").read_text())
+            for name in names
+        }
+        map_files = [
+            self.add_map(root, name, source_maps[name]["id"], "hns")
+            for name in names
+        ]
+        (root / "data/maps/map_groups.json").write_text(json.dumps({
+            "group_order": ["gHns"], "gHns": names, "connections_include_order": [],
+        }))
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+
+        layouts = []
+        for name in names:
+            layout_dir = root / "data/layouts" / name
+            layout_dir.mkdir()
+            (layout_dir / "border.bin").write_bytes(b"\0\0")
+            (layout_dir / "map.bin").write_bytes(b"\0\0")
+            layouts.append({
+                "id": source_maps[name]["layout"], "name": f"{name}_Layout",
+                "game_version": "hns", "width": 1, "height": 1,
+                "border_filepath": f"data/layouts/{name}/border.bin",
+                "blockdata_filepath": f"data/layouts/{name}/map.bin",
+                "primary_tileset": "gTileset_Primary", "secondary_tileset": "gTileset_Secondary",
+            })
+        (root / "data/layouts/layouts.json").write_text(json.dumps({
+            "layouts_table_label": "gMapLayouts", "layouts": layouts,
+        }))
+
+        result = self.run_groups(root, "wayfarer", map_files)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        groups = (root / "data/maps/groups.inc").read_text()
+        headers = (root / "data/maps/headers.inc").read_text()
+        events = (root / "data/maps/events.inc").read_text()
+        for name in RETIRED_HNS_MAP_NAMES:
+            self.assertNotIn(f"\t.4byte {name}\n", groups)
+            self.assertNotIn(f"/{name}/header.inc", headers)
+            self.assertNotIn(f"/{name}/events.inc", events)
+        for name in ("Route20_hns",):
+            self.assertIn(f"\t.4byte {name}\n", groups)
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        wayfarer_map_constants = (root / "include/constants/map_groups.h").read_text()
+        wayfarer_layout_constants = (root / "include/constants/layouts.h").read_text()
+        layout_headers = (root / "data/layouts/layouts.inc").read_text()
+        layout_table = (root / "data/layouts/layouts_table.inc").read_text()
+        for name in RETIRED_HNS_MAP_NAMES:
+            self.assertNotIn(f"{name}_Layout::", layout_headers)
+            self.assertNotIn(f"\t.4byte {name}_Layout\n", layout_table)
+        for name in ("Route20_hns",):
+            self.assertIn(f"{name}_Layout::", layout_headers)
+
+        result = self.run_groups(root, "hns", map_files)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_layouts(root, "hns")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        hns_groups = (root / "data/maps/groups.inc").read_text()
+        hns_layouts = (root / "data/layouts/layouts.inc").read_text()
+        self.assertEqual((root / "include/constants/map_groups.h").read_text(), wayfarer_map_constants)
+        self.assertEqual((root / "include/constants/layouts.h").read_text(), wayfarer_layout_constants)
+        for name in RETIRED_HNS_MAP_NAMES:
+            self.assertIn(f"\t.4byte {name}\n", hns_groups)
+            self.assertIn(f"{name}_Layout::", hns_layouts)
+
+    def test_route20_seafoam_warps_follow_selected_build(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        route_name = "Route20_hns"
+        route_source = json.loads((GAME_ROOT / "data/maps" / route_name / "map.json").read_text())
+        route_map = self.add_map(root, route_name, route_source["id"], "hns")
+        route_map.write_text(json.dumps(route_source))
+        self.assertEqual(
+            [(warp["dest_map"], warp["dest_warp_id"]) for warp in route_source["warp_events"]],
+            [("MAP_SEAFOAM_ISLANDS_1F_HNS", "0"), ("MAP_SEAFOAM_ISLANDS_1F_HNS", "3")],
+        )
+        old_seafoam = self.add_map(
+            root, "SeafoamIslands_1F_hns", "MAP_SEAFOAM_ISLANDS_1F_HNS", "hns"
+        )
+        coast_seafoam = self.add_map(
+            root, "SeafoamIslands_1F_CoastPoc", "MAP_SEAFOAM_ISLANDS_1F_COAST_POC", "hns"
+        )
+        route19 = self.add_map(root, "Route19_hns", "MAP_ROUTE19_HNS", "hns")
+        cinnabar_seam = self.add_map(root, "CinnabarIsland_SeamPoc", "MAP_CINNABAR_SEAM_POC", "hns")
+        (root / "data/maps/map_groups.json").write_text(json.dumps({
+            "group_order": ["gHns"],
+            "gHns": [route_name, "Route19_hns", "CinnabarIsland_SeamPoc", "SeafoamIslands_1F_hns", "SeafoamIslands_1F_CoastPoc"],
+            "connections_include_order": [],
+        }))
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        source_layouts = json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())
+        route_layout = next(
+            layout for layout in source_layouts["layouts"]
+            if layout.get("id") == route_source["layout"]
+        )
+        for key in ("border_filepath", "blockdata_filepath"):
+            path = root / route_layout[key]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"\0\0")
+        layouts_file = root / "data/layouts/layouts.json"
+        layouts_file.write_text(json.dumps({"layouts": [route_layout]}))
+
+        map_files = [route_map, route19, cinnabar_seam, old_seafoam, coast_seafoam]
+        result = self.run_groups(root, "wayfarer", map_files)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_map(root, "wayfarer", route_map, layouts_file)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        wayfarer_events = (route_map.parent / "events.inc").read_text()
+        self.assertIn("\twarp_def 60, 8, 0, 3, MAP_SEAFOAM_ISLANDS_1F_COAST_POC", wayfarer_events)
+        self.assertIn("\twarp_def 72, 14, 0, 4, MAP_SEAFOAM_ISLANDS_1F_COAST_POC", wayfarer_events)
+
+        result = self.run_groups(root, "hns", map_files)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_map(root, "hns", route_map, layouts_file)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        hns_events = (route_map.parent / "events.inc").read_text()
+        self.assertIn("\twarp_def 60, 8, 0, 0, MAP_SEAFOAM_ISLANDS_1F_HNS", hns_events)
+        self.assertIn("\twarp_def 72, 14, 0, 3, MAP_SEAFOAM_ISLANDS_1F_HNS", hns_events)
+
+    def test_seafoam_exits_return_to_selected_route20_only_in_wayfarer(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        name = "SeafoamIslands_1F_CoastPoc"
+        source = json.loads((GAME_ROOT / "data/maps" / name / "map.json").read_text())
+        seafoam = self.add_map(root, name, source["id"], "hns")
+        seafoam.write_text(json.dumps(source))
+        route20_hns = self.add_map(root, "Route20_hns", "MAP_ROUTE20_HNS", "hns")
+        route20_poc = self.add_map(root, "Route20_CoastPoc", "MAP_ROUTE20_COAST_POC", "hns")
+        b1f = self.add_map(root, "SeafoamIslands_B1F_CoastPoc", "MAP_SEAFOAM_ISLANDS_B1F_COAST_POC", "hns")
+        (root / "data/maps/map_groups.json").write_text(json.dumps({
+            "group_order": ["gHns"],
+            "gHns": [name, "Route20_hns", "Route20_CoastPoc", "SeafoamIslands_B1F_CoastPoc"],
+            "connections_include_order": [],
+        }))
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        source_layouts = json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())
+        layout = next(row for row in source_layouts["layouts"] if row.get("id") == source["layout"])
+        for key in ("border_filepath", "blockdata_filepath"):
+            path = root / layout[key]
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"\0\0")
+        layouts_file = root / "data/layouts/layouts.json"
+        layouts_file.write_text(json.dumps({"layouts": [layout]}))
+        files = [seafoam, route20_hns, route20_poc, b1f]
+
+        result = self.run_groups(root, "wayfarer", files)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_map(root, "wayfarer", seafoam, layouts_file)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        events = (seafoam.parent / "events.inc").read_text()
+        self.assertIn("\twarp_def 6, 21, 3, 0, MAP_ROUTE20_HNS", events)
+        self.assertIn("\twarp_def 32, 21, 3, 1, MAP_ROUTE20_HNS", events)
+
+        result = self.run_groups(root, "hns", files)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_map(root, "hns", seafoam, layouts_file)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        events = (seafoam.parent / "events.inc").read_text()
+        self.assertIn("\twarp_def 6, 21, 15, 0, MAP_ROUTE20_COAST_POC", events)
+        self.assertIn("\twarp_def 32, 21, 15, 1, MAP_ROUTE20_COAST_POC", events)
 
     @staticmethod
     def write_sevii_manifest(root, maps, release_link_enabled=False):
@@ -852,7 +1038,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
             for map_num, map_name in enumerate(groups[group_name]):
                 self.assertLessEqual(map_num, 127)
                 map_data = data[map_name]
-                if map_data.get("game_version", "emerald") in {"hns", "emerald"}:
+                if (map_data.get("game_version", "emerald") in {"hns", "emerald"}
+                        and map_name not in RETIRED_HNS_MAP_NAMES):
                     included.append(map_data)
 
         included_ids = {map_data["id"] for map_data in included}
@@ -860,9 +1047,14 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertTrue(any(item.get("game_version") == "hns" for item in included))
         self.assertTrue(any(item.get("game_version", "emerald") == "emerald" for item in included))
         for map_data in included:
-            for warp in map_data.get("warp_events", []):
+            for warp_index, warp in enumerate(map_data.get("warp_events", [])):
+                destination = (
+                    "MAP_SEAFOAM_ISLANDS_1F_COAST_POC"
+                    if map_data["name"] == "Route20_hns" and warp_index < 2
+                    else warp["dest_map"]
+                )
                 self.assertIn(
-                    warp["dest_map"],
+                    destination,
                     included_ids | {"MAP_DYNAMIC", "MAP_UNDEFINED"},
                 )
             for connection in map_data.get("connections") or []:

@@ -36,6 +36,62 @@ COMMON_DATA struct BackupMapLayout gBackupMapLayout = {0};
 
 static const struct ConnectionFlags sDummyConnectionFlags = {0};
 
+static u32 NormalizeFrlgMetatileBehavior(u32 metatileBehavior)
+{
+    // FRLG stores several engine behaviors at different IDs. Keep values that
+    // already share the Emerald/HNS meaning unchanged.
+    switch (metatileBehavior)
+    {
+    case MB_FRLG_FAST_WATER:              return MB_FAST_WATER;
+    case MB_FRLG_CYCLING_ROAD_WATER:      return MB_CYCLING_ROAD_WATER;
+    case MB_FRLG_STRENGTH_BUTTON:         return MB_STRENGTH_BUTTON;
+    case MB_FRLG_ICE:                     return MB_ICE;
+    case MB_FRLG_THIN_ICE:                return MB_THIN_ICE;
+    case MB_FRLG_CRACKED_ICE:             return MB_CRACKED_ICE;
+    case MB_FRLG_HOT_SPRINGS:             return MB_HOT_SPRINGS;
+    case MB_FRLG_ROCK_STAIRS:             return MB_ROCK_STAIRS;
+    case MB_FRLG_FALL_WARP:               return MB_MT_PYRE_HOLE;
+    case MB_FRLG_REGULAR_WARP:            return MB_NON_ANIMATED_DOOR;
+    case MB_FRLG_UP_RIGHT_STAIR_WARP:     return MB_UP_RIGHT_STAIR_WARP;
+    case MB_FRLG_UP_LEFT_STAIR_WARP:      return MB_UP_LEFT_STAIR_WARP;
+    case MB_FRLG_DOWN_RIGHT_STAIR_WARP:   return MB_DOWN_RIGHT_STAIR_WARP;
+    case MB_FRLG_DOWN_LEFT_STAIR_WARP:    return MB_DOWN_LEFT_STAIR_WARP;
+    case MB_FRLG_UNION_ROOM_WARP:         return MB_BRIDGE_OVER_OCEAN;
+    case MB_FRLG_SIGNPOST:                return MB_SIGNPOST;
+    case MB_FRLG_POKEMON_CENTER_SIGN:     return MB_POKEMON_CENTER_SIGN;
+    case MB_FRLG_POKEMART_SIGN:           return MB_POKEMART_SIGN;
+    case MB_FRLG_CABINET:                 return MB_CABINET;
+    case MB_FRLG_KITCHEN:                 return MB_KITCHEN;
+    case MB_FRLG_DRESSER:                 return MB_DRESSER;
+    case MB_FRLG_SNACKS:                  return MB_SNACKS;
+    case MB_FRLG_CABLE_CLUB_WIRELESS_MONITOR: return MB_CABLE_CLUB_WIRELESS_MONITOR;
+    case MB_FRLG_BATTLE_RECORDS:          return MB_BATTLE_RECORDS;
+    case MB_FRLG_FOOD:                    return MB_FOOD;
+    case MB_FRLG_INDIGO_PLATEAU_SIGN_1:   return MB_INDIGO_PLATEAU_SIGN_1;
+    case MB_FRLG_INDIGO_PLATEAU_SIGN_2:   return MB_INDIGO_PLATEAU_SIGN_2;
+    case MB_FRLG_BLUEPRINTS:              return MB_BLUEPRINTS;
+    case MB_FRLG_PAINTING:                return MB_PAINTING;
+    case MB_FRLG_POWER_PLANT_MACHINE:     return MB_POWER_PLANT_MACHINE;
+    case MB_FRLG_TELEPHONE:               return MB_TELEPHONE;
+    case MB_FRLG_COMPUTER:                return MB_COMPUTER;
+    case MB_FRLG_ADVERTISING_POSTER:      return MB_ADVERTISING_POSTER;
+    case MB_FRLG_FOOD_SMELLS_TASTY:       return MB_FOOD_SMELLS_TASTY;
+    case MB_FRLG_TRASH_BIN:               return MB_TRASH_CAN;
+    case MB_FRLG_CUP:                     return MB_CUP;
+    case MB_FRLG_PORTHOLE:                return MB_PORTHOLE;
+    case MB_FRLG_WINDOW:                  return MB_WINDOW;
+    case MB_FRLG_BLINKING_LIGHTS:         return MB_BLINKING_LIGHTS;
+    case MB_FRLG_NEATLY_LINED_UP_TOOLS:   return MB_NEATLY_LINED_UP_TOOLS;
+    case MB_FRLG_IMPRESSIVE_MACHINE:      return MB_IMPRESSIVE_MACHINE;
+    case MB_FRLG_VIDEO_GAME:              return MB_VIDEO_GAME;
+    case MB_FRLG_BURGLARY:                return MB_BURGLARY;
+    case MB_FRLG_TRAINER_TOWER_MONITOR:   return MB_TRAINER_TOWER_MONITOR;
+    case MB_FRLG_CYCLING_ROAD_PULL_DOWN:  return MB_CYCLING_ROAD_PULL_DOWN;
+    case MB_FRLG_CYCLING_ROAD_PULL_DOWN_GRASS: return MB_CYCLING_ROAD_PULL_DOWN_GRASS;
+    default:                              return metatileBehavior;
+    }
+}
+
 static void InitMapLayoutData(struct MapHeader *mapHeader);
 static void InitBackupMapLayoutData(const u16 *map, u16 width, u16 height);
 static void FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
@@ -505,11 +561,18 @@ void MapGridSetMetatileEntryAt(int x, int y, u16 metatile)
 
 u32 ExtractMetatileAttribute(u32 attributes, u8 attributeType, u8 layoutVersion)
 {
+    u32 attribute;
+
     if (attributeType >= METATILE_ATTRIBUTE_COUNT)
         return attributes;
 
     if (layoutVersion == LAYOUT_VERSION_FRLG)
-        return (attributes & sMetatileAttrMasks[attributeType]) >> sMetatileAttrShifts[attributeType];
+    {
+        attribute = (attributes & sMetatileAttrMasks[attributeType]) >> sMetatileAttrShifts[attributeType];
+        if (attributeType == METATILE_ATTRIBUTE_BEHAVIOR)
+            return NormalizeFrlgMetatileBehavior(attribute);
+        return attribute;
+    }
 
     return (attributes & sMetatileAttrMasksEmerald[attributeType]) >> sMetatileAttrShiftsEmerald[attributeType];
 }
@@ -1059,6 +1122,11 @@ void CopyPrimaryTilesetToVram(struct MapLayout const *mapLayout)
     CopyTilesetToVram(mapLayout->primaryTileset, GetNumTilesInPrimary(mapLayout), 0);
 }
 
+void CopyPrimaryTilesetToVramUsingHeap(struct MapLayout const *mapLayout)
+{
+    CopyTilesetToVramUsingHeap(mapLayout->primaryTileset, GetNumTilesInPrimary(mapLayout), 0);
+}
+
 void CopySecondaryTilesetToVram(struct MapLayout const *mapLayout)
 {
     CopyTilesetToVram(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
@@ -1069,9 +1137,9 @@ void CopySecondaryTilesetToVramUsingHeap(struct MapLayout const *mapLayout)
     CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
 }
 
-static void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout)
+void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded)
 {
-    LoadTilesetPalette(mapLayout->primaryTileset, 0, GetNumPalsInPrimary(mapLayout) * PLTT_SIZE_4BPP, FALSE, GetNumPalsInPrimary(mapLayout));
+    LoadTilesetPalette(mapLayout->primaryTileset, 0, GetNumPalsInPrimary(mapLayout) * PLTT_SIZE_4BPP, skipFaded, GetNumPalsInPrimary(mapLayout));
 }
 
 void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded)
@@ -1092,7 +1160,7 @@ void LoadMapTilesetPalettes(struct MapLayout const *mapLayout)
 {
     if (mapLayout)
     {
-        LoadPrimaryTilesetPalette(mapLayout);
+        LoadPrimaryTilesetPalette(mapLayout, FALSE);
         LoadSecondaryTilesetPalette(mapLayout, FALSE);
     }
 }

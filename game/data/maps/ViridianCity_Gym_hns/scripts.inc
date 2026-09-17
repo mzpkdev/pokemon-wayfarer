@@ -4,6 +4,14 @@ ViridianCity_Gym_hns_MapScripts::
 ViridianCity_Gym_EventScript_Blue::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED, ViridianCity_Gym_EventScript_BlueKnown
+	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED
+	setflag FLAG_HIDE_VIRIDIAN_BLUE_INTRO
+	msgbox ViridianCity_Gym_Text_BlueFirstMeeting, MSGBOX_DEFAULT
+	goto ViridianCity_Gym_EventScript_BlueKnown
+ViridianCity_Gym_EventScript_BlueKnown::
+#endif
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	goto_if_unset FLAG_BADGE16_GET, ViridianCity_Gym_EventScript_BlueOfficialChallenge
 #endif
@@ -27,9 +35,7 @@ ViridianCity_Gym_EventScript_BlueOfficialChallenge::
 	call Common_EventScript_SetGymTrainers_hns
 	closemessage
 	setflag FLAG_HIDE_LEAGUE_BLACKBELT
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	call_if_set FLAG_BADGE15_GET, ViridianCity_Gym_EventScript_MoveDefeatedBlaine
-#else
+#if !IS_WAYFARER
 	setflag FLAG_HIDE_SEAFOAM_BLAINE
 	clearflag FLAG_HIDE_CINNABAR_BLAINE
 #endif
@@ -62,19 +68,15 @@ ViridianCity_Gym_EventScript_BlueAtDojo::
 	end
 
 ViridianCity_Gym_Text_LeaderBlue_Before:
+#if IS_WAYFARER
+	.string "BLUE: You made it.\p"
+	.string "I'll know how good you are when\n"
+	.string "we battle. Ready, {PLAYER}?$"
+#else
 	.string "BLUE: Yo! Finally got here, huh?\p"
 	.string "I wasn't in the mood at CINNABAR,\p"
 	.string "but now I'm ready to battle you.\p"
 	.string "…\p"
-#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	.string "You've made quite a name for\n"
-	.string "yourself on the road.\p"
-	.string "But reputations don't decide\n"
-	.string "battles.\p"
-	.string "I'll know if you are good or not by\n"
-	.string "battling you right now.\p"
-	.string "Ready, {PLAYER}?$"
-#else
 	.string "You're telling me you conquered all\n"
 	.string "the GYMS in JOHTO?\p"
 	.string "Heh! JOHTO's GYMS must be pretty\n"
@@ -83,6 +85,13 @@ ViridianCity_Gym_Text_LeaderBlue_Before:
 	.string "I'll know if you are good or not by\n"
 	.string "battling you right now.\p"
 	.string "Ready, JOHTO CHAMP?$"
+#endif
+
+#if IS_WAYFARER
+ViridianCity_Gym_Text_BlueFirstMeeting:
+	.string "BLUE: First time here? I'm BLUE,\n"
+	.string "VIRIDIAN's GYM LEADER.\p"
+	.string "Come on, let's see what you've got.$"
 #endif
 
 ViridianCity_Gym_Text_LeaderBlue_Win:
@@ -166,7 +175,9 @@ ViridianCity_Gym_Text_GymStatuePlayerWon::
 	.string "BLUE, RED, {PLAYER}$"
 
 
+#if !IS_WAYFARER
 ViridianCity_Gym_EventScript_MoveDefeatedBlaine::
 	setflag FLAG_HIDE_SEAFOAM_BLAINE
 	clearflag FLAG_HIDE_CINNABAR_BLAINE
 	return
+#endif

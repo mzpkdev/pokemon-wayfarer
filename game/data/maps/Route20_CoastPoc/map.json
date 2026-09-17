@@ -1,0 +1,29 @@
+{
+  "id": "MAP_ROUTE20_COAST_POC",
+  "name": "Route20_CoastPoc",
+  "game_version": "hns",
+  "layout": "LAYOUT_ROUTE20_COAST_POC",
+  "music": "MUS_HG_ROUTE11",
+  "region": "REGION_KANTO",
+  "region_map_section": "MAPSEC_ROUTE_20",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "floor_number": 0,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    { "map": "MAP_CINNABAR_SEAM_POC", "offset": 0, "direction": "left" },
+    { "map": "MAP_ROUTE19_COAST_POC", "offset": -40, "direction": "right" }
+  ],
+  "object_events": [],
+  "warp_events": [
+    { "x": 60, "y": 8, "elevation": 15, "dest_map": "MAP_SEAFOAM_ISLANDS_1F_COAST_POC", "dest_warp_id": "3" },
+    { "x": 72, "y": 14, "elevation": 15, "dest_map": "MAP_SEAFOAM_ISLANDS_1F_COAST_POC", "dest_warp_id": "4" }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

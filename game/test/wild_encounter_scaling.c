@@ -282,6 +282,11 @@ TEST("Standard Rod weighted selection covers every exact boundary")
 }
 
 #if IS_HNS
+#if IS_WAYFARER
+#define CINNABAR_ENCOUNTER_MAP MAP_CINNABAR_SEAM_POC
+#else
+#define CINNABAR_ENCOUNTER_MAP MAP_CINNABAR_ISLAND_HNS
+#endif
 TEST("Kanto land and Surf profiles are unchanged by Hoenn Sound")
 {
     static const u8 sRatings[] = { 0, 4, 8, 16, 30, 40, 55, 65, 80 };
@@ -295,7 +300,7 @@ TEST("Kanto land and Surf profiles are unchanged by Hoenn Sound")
         { MAP_ROUTE1_HNS, WILD_AREA_LAND },
         { MAP_ROUTE10_HNS, WILD_AREA_LAND },
         { MAP_ROUTE10_HNS, WILD_AREA_WATER },
-        { MAP_CINNABAR_ISLAND_HNS, WILD_AREA_WATER },
+        { CINNABAR_ENCOUNTER_MAP, WILD_AREA_WATER },
         { MAP_MT_MOON_CAVE_HNS, WILD_AREA_LAND },
     };
     struct WildEncounterProfileView hoennSoundView = MakeTestProfile(&sHoennSoundSelectionInfo, sHoennSoundSelectionWeights, ARRAY_COUNT(sHoennSoundSelectionMons));
@@ -377,8 +382,8 @@ TEST("Kanto Chinchou records retain exact Old Rod accessibility")
         { MAP_VERMILION_CITY_HNS, TIME_NIGHT },
         { MAP_VERMILION_CITY_PORT_OUTSIDE_HNS, TIME_DAY },
         { MAP_VERMILION_CITY_PORT_OUTSIDE_HNS, TIME_NIGHT },
-        { MAP_CINNABAR_ISLAND_HNS, TIME_DAY },
-        { MAP_CINNABAR_ISLAND_HNS, TIME_NIGHT },
+        { CINNABAR_ENCOUNTER_MAP, TIME_DAY },
+        { CINNABAR_ENCOUNTER_MAP, TIME_NIGHT },
     };
     u8 recordId;
     u32 oldRodBitePercent = CalculateFishingBiteOddsWithBonuses(OLD_ROD, FALSE, 0, 0, 0);

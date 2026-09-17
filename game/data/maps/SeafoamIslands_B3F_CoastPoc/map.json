@@ -1,0 +1,33 @@
+{
+  "id": "MAP_SEAFOAM_ISLANDS_B3F_COAST_POC",
+  "name": "SeafoamIslands_B3F_CoastPoc",
+  "game_version": "hns",
+  "layout": "LAYOUT_SEAFOAM_ISLANDS_B3F_COAST_POC",
+  "music": "MUS_HG_ICE_PATH",
+  "region": "REGION_KANTO",
+  "region_map_section": "MAPSEC_SEAFOAM_ISLANDS",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": true,
+  "allow_escaping": true,
+  "allow_running": true,
+  "show_map_name": true,
+  "floor_number": 0,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    { "x": 8, "y": 14, "elevation": 4, "dest_map": "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "dest_warp_id": "0" },
+    { "x": 31, "y": 4, "elevation": 3, "dest_map": "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "dest_warp_id": "1" },
+    { "x": 31, "y": 16, "elevation": 4, "dest_map": "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "dest_warp_id": "2" },
+    { "x": 12, "y": 9, "elevation": 3, "dest_map": "MAP_SEAFOAM_ISLANDS_B4F_COAST_POC", "dest_warp_id": "0" },
+    { "x": 29, "y": 5, "elevation": 3, "dest_map": "MAP_SEAFOAM_ISLANDS_B4F_COAST_POC", "dest_warp_id": "1" },
+    { "x": 23, "y": 9, "elevation": 1, "dest_map": "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "dest_warp_id": "7" },
+    { "x": 24, "y": 9, "elevation": 1, "dest_map": "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "dest_warp_id": "8" },
+    { "x": 6, "y": 18, "elevation": 3, "dest_map": "MAP_SEAFOAM_ISLANDS_B4F_COAST_POC", "dest_warp_id": "2" },
+    { "x": 9, "y": 18, "elevation": 3, "dest_map": "MAP_SEAFOAM_ISLANDS_B4F_COAST_POC", "dest_warp_id": "3" }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

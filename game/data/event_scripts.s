@@ -2005,7 +2005,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/CeladonCity_hns/scripts.inc"
 	.include "data/maps/SaffronCity_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/CinnabarIsland_hns/scripts.inc"
+#endif
 	.include "data/maps/Route1_hns/scripts.inc"
 	.include "data/maps/Route2_hns/scripts.inc"
 	.include "data/maps/Route3_hns/scripts.inc"
@@ -2026,7 +2028,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/Route18_hns/scripts.inc"
 	.include "data/maps/Route19_hns/scripts.inc"
 	.include "data/maps/Route20_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/Route21_hns/scripts.inc"
+#endif
 	.include "data/maps/Route22_hns/scripts.inc"
 	.include "data/maps/Route23_hns/scripts.inc"
 	.include "data/maps/IndigoPlateau_hns/scripts.inc"
@@ -2202,7 +2206,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/FuchsiaCity_SafariZoneBrush_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_SafariZoneMountain_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_SafariZoneCave_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/CinnabarIsland_PokemonCenter_hns/scripts.inc"
+#endif
 	.include "data/maps/IndigoPlateau_PokemonCenter_hns/scripts.inc"
 	.include "data/maps/PokemonLeague_WillsRoom_hns/scripts.inc"
 	.include "data/maps/PokemonLeague_KogasRoom_hns/scripts.inc"
@@ -2348,10 +2354,12 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/DiglettsCave_EntranceNorth_hns/scripts.inc"
 	.include "data/maps/DiglettsCave_EntranceSouth_hns/scripts.inc"
 	.include "data/maps/DiglettsCave_Tunnel_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/SeafoamIslands_1F_hns/scripts.inc"
 	.include "data/maps/SeafoamIslands_Gym_hns/scripts.inc"
 	.include "data/maps/SeafoamIslands_B1F_hns/scripts.inc"
 	.include "data/maps/SeafoamIslands_SecretCave_hns/scripts.inc"
+#endif
 	.include "data/maps/MtSilver_Outside_hns/scripts.inc"
 	.include "data/maps/MtSilver_1F_ItemRoom_hns/scripts.inc"
 	.include "data/maps/MtSilver_1F_WaterfallRoom_hns/scripts.inc"

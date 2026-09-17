@@ -19,8 +19,8 @@
       "direction": "right"
     },
     {
-      "map": "MAP_CINNABAR_ISLAND_HNS",
-      "offset": 1,
+      "map": "MAP_CINNABAR_SEAM_POC",
+      "offset": 0,
       "direction": "left"
     }
   ],

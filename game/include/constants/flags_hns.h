@@ -1327,6 +1327,11 @@
 
 #define HNS_SYS_FLAGS_END                           (SYS_FLAGS + 0xA9)
 
+// Persistent Blue introduction state shared by HNS and Wayfarer.
+// Keep these above the daily range and below Wayfarer's 0x930 milestones.
+#define FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED      0x92A
+#define FLAG_HIDE_VIRIDIAN_BLUE_INTRO               0x92B
+
 // Daily flags
 #define DAILY_FLAGS_START                            0x910
 

@@ -4,7 +4,11 @@ PalletTown_House2_hns_MapScripts::
 PalletTown_House2_EventScript_Daisy::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	goto_if_unset FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED, PalletTown_House2_EventScript_Blue
+#else
 	goto_if_unset FLAG_HIDE_CINNABAR_BLUE, PalletTown_House2_EventScript_Blue
+#endif
 	goto_if_unset FLAG_DAILY_DAISY_GROOMED, PalletTown_House2_EventScript_DaisyGrooming
 	msgbox PalletTown_House2_Text_AlreadyGroomed, MSGBOX_DEFAULT
 	closemessage
@@ -56,11 +60,18 @@ PalletTown_House2_EventScript_DaisyGrooming::
 	end
 
 PalletTown_House2_Text_Hello:
+#if IS_WAYFARER
+	.string "DAISY: My kid brother BLUE leads\n"
+	.string "the VIRIDIAN CITY GYM.\p"
+	.string "If you're looking for him, you\n"
+	.string "should head there.$"
+#else
 	.string "DAISY: Hi! My kid brother is the\n"
 	.string "GYM LEADER in VIRIDIAN CITY.\p"
 	.string "But he goes out of town so\n"
 	.string "often, it causes problems for\l"
 	.string "the trainers.$"
+#endif
 
 PalletTown_House2_Text_OfferGrooming:
 	.string "DAISY: Hi! Good timing. I'm about\n"

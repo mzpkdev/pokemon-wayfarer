@@ -47,13 +47,34 @@ ViridianCity_EventScript_GrampsDoubted::
 	end
 
 VirianCity_EventScript_GymGramps::
+#if IS_WAYFARER
+	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, VirianCity_EventScript_GymGrampsBlue
+	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED, VirianCity_EventScript_GymGrampsBlue
+#else
 	goto_if_set FLAG_HIDE_CINNABAR_BLUE, VirianCity_EventScript_GymGrampsBlue
+#endif
 	msgbox ViridianCity_Text_GrampsNearGym, MSGBOX_NPC
 	end
 
 VirianCity_EventScript_GymGrampsBlue::
 	msgbox ViridianCity_Text_GrampsNearGym_BlueReturned, MSGBOX_NPC
 	end
+
+ViridianCity_EventScript_BlueIntro::
+	lock
+	faceplayer
+	msgbox ViridianCity_Text_BlueIntro, MSGBOX_DEFAULT
+	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED
+	setflag FLAG_HIDE_VIRIDIAN_BLUE_INTRO
+	removeobject LOCALID_VIRIDIAN_BLUE_INTRO
+	release
+	end
+
+ViridianCity_Text_BlueIntro:
+	.string "BLUE: Haven't seen you around.\p"
+	.string "I'm BLUE, the GYM LEADER here.\p"
+	.string "Looking for a battle? Come inside\n"
+	.string "and show me what you've got.$"
 
 ViridianCity_EventScript_Fisher::
 	goto_if_set FLAG_GOT_VIRIDIAN_TM_DREAM_EATER, ViridianCity_EventScript_FisherAfter
@@ -102,10 +123,16 @@ ViridianCity_Text_CoffeeGramps_Doubted:
 	.string "show you a thing or two. Humph!$"
 
 ViridianCity_Text_GrampsNearGym:
+#if IS_WAYFARER
+	.string "BLUE leads the GYM here.\p"
+	.string "He's right inside if you want to\n"
+	.string "challenge him.$"
+#else
 	.string "This GYM didn't have a LEADER\n"
 	.string "until recently.\p"
 	.string "A young man from PALLET became\n"
 	.string "the LEADER, but he's often away.$"
+#endif
 
 ViridianCity_Text_GrampsNearGym_BlueReturned:
 	.string "Are you going to battle the\n"

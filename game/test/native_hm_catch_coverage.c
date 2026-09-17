@@ -53,6 +53,23 @@ struct MoveCacheEntry
 
 static struct MoveCacheEntry sMoveCache[256];
 
+// The approved coverage fixture names HNS source maps. Resolve only the
+// retired coastal maps to their selected Wayfarer counterparts at runtime.
+static u16 SelectedWayfarerCoverageMap(u16 map)
+{
+    switch (map)
+    {
+    case MAP_CINNABAR_ISLAND_HNS:
+        return MAP_CINNABAR_SEAM_POC;
+    case MAP_SEAFOAM_ISLANDS_1F_HNS:
+        return MAP_SEAFOAM_ISLANDS_1F_COAST_POC;
+    case MAP_SEAFOAM_ISLANDS_B1F_HNS:
+        return MAP_SEAFOAM_ISLANDS_B1F_COAST_POC;
+    default:
+        return map;
+    }
+}
+
 static void SetCoverageMode(bool8 modern)
 {
     gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
@@ -89,10 +106,11 @@ static bool8 CaughtMonKnowsMove(u16 species, u8 level, u16 move)
 static bool8 ResolveCoverageProfile(const struct CoverageProfile *profile, struct WildEncounterProfileView *view)
 {
     u16 header;
+    u16 map = SelectedWayfarerCoverageMap(profile->map);
     for (header = 0; gWildMonHeaders[header].mapGroup != MAP_GROUP(MAP_UNDEFINED); header++)
     {
-        if (gWildMonHeaders[header].mapGroup == MAP_GROUP(profile->map)
-         && gWildMonHeaders[header].mapNum == MAP_NUM(profile->map))
+        if (gWildMonHeaders[header].mapGroup == MAP_GROUP(map)
+         && gWildMonHeaders[header].mapNum == MAP_NUM(map))
         {
             struct WildEncounterProfileContext context =
             {

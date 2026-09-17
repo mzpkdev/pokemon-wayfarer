@@ -178,7 +178,12 @@
     "Route26_hns",
     "Route26North_hns",
     "Route27_hns",
-    "Route28_hns"
+    "Route28_hns",
+    "CinnabarIsland_SeamPoc",
+    "Route20_CoastPoc",
+    "Route21_North_CoastPoc",
+    "Route21_South_CoastPoc",
+    "Route19_CoastPoc"
   ],
   "gMapGroup_IndoorNewBark_Hns": [
     "NewBarkTown_Lab_hns",
@@ -380,7 +385,19 @@
     "FuchsiaCity_Route15_Gate_hns"
   ],
   "gMapGroup_IndoorCinnabar_Hns": [
-    "CinnabarIsland_PokemonCenter_hns"
+    "CinnabarIsland_PokemonCenter_hns",
+    "CinnabarIsland_PokemonCenter_1F_Port",
+    "CinnabarIsland_PokemonCenter_2F_Port",
+    "CinnabarIsland_Mart_Port",
+    "CinnabarIsland_PokemonLab_Entrance_Port",
+    "CinnabarIsland_PokemonLab_Lounge_Port",
+    "CinnabarIsland_PokemonLab_ResearchRoom_Port",
+    "CinnabarIsland_PokemonLab_ExperimentRoom_Port",
+    "CinnabarIsland_Gym_Port",
+    "PokemonMansion_1F_Port",
+    "PokemonMansion_2F_Port",
+    "PokemonMansion_3F_Port",
+    "PokemonMansion_B1F_Port"
   ],
   "gMapGroup_IndoorIndigo_Hns": [
     "IndigoPlateau_PokemonCenter_hns",
@@ -530,6 +547,11 @@
     "SeafoamIslands_Gym_hns",
     "SeafoamIslands_B1F_hns",
     "SeafoamIslands_SecretCave_hns",
+    "SeafoamIslands_1F_CoastPoc",
+    "SeafoamIslands_B1F_CoastPoc",
+    "SeafoamIslands_B2F_CoastPoc",
+    "SeafoamIslands_B3F_CoastPoc",
+    "SeafoamIslands_B4F_CoastPoc",
     "MtSilver_Outside_hns",
     "MtSilver_1F_ItemRoom_hns",
     "MtSilver_1F_WaterfallRoom_hns",

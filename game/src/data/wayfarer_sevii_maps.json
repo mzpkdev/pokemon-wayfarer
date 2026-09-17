@@ -12151,7 +12151,7 @@
   "baseline": {
     "projection_sha256": "4c4444b40b78ed37b7d6923d1c86c5103ec87175143520ddb645fc3248208a0c",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
-    "event_island_baseline_sha256": "e96f9c7f62cdfba0dfcd860bab476067ea4ee60ea3a8da2944374f140d49c972"
+    "event_island_baseline_sha256": "651a1a1f07ac8dce9dbfa2c3d32d7e8006fab49c8b8c973bcfa75878cf10f379"
   },
   "content_domains": {
     "exploration": {
@@ -13385,7 +13385,7 @@
           "label": "Common_EventScript_OutOfCenterPartyHeal",
           "kind": "script_symbol",
           "path": "data/event_scripts.s",
-          "sha256": "e74f3a533f3937cd84c409b22d10babe3d2574f638e06bd771ff0c77f7accced"
+          "sha256": "52109d56c14d2f8046ed244bd7588844a476bb96ac6db213be528257a26682ff"
         },
         {
           "label": "CompareHeracrossSize",

@@ -41,6 +41,7 @@
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/field_poison.h"
+#include "constants/layouts.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
@@ -75,6 +76,7 @@ static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *, u16, u16, u8)
 static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *, u16, u16, u8);
 static bool8 TryStartCoordEventScript(struct MapPosition *);
 static bool8 TryStartWarpEventScript(struct MapPosition *, u16);
+static bool8 IsCinnabarPortWarpFallbackLayout(u16 layoutId);
 static bool8 TryStartMiscWalkingScripts(u16);
 static bool8 TryStartStepCountScript(u16);
 static void UpdateFriendshipStepCounter(void);
@@ -1075,7 +1077,57 @@ static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileB
         DoWarp();
         return TRUE;
     }
+
+    // The imported Cinnabar Port layouts retain several source warp events on
+    // normal or cave metatiles. Limit their compatibility fallback to these
+    // layouts so unrelated FRLG maps continue to require a warp behavior.
+    if (warpEventId != WARP_ID_NONE
+     && IsCinnabarPortWarpFallbackLayout(gMapHeader.mapLayoutId)
+     && (metatileBehavior == MB_NORMAL || metatileBehavior == MB_CAVE))
+    {
+        StoreInitialPlayerAvatarState();
+        SetupWarp(&gMapHeader, warpEventId, position);
+        DoWarp();
+        return TRUE;
+    }
+
+#if IS_WAYFARER
+    // The preview Seafoam entrances have exit events on non-warp metatiles.
+    // Honor only those two declared exits; the cave's other tiles keep their
+    // normal behavior requirements.
+    if (gMapHeader.mapLayoutId == LAYOUT_SEAFOAM_ISLANDS_1F_COAST_POC
+     && (warpEventId == 3 || warpEventId == 4))
+    {
+        StoreInitialPlayerAvatarState();
+        SetupWarp(&gMapHeader, warpEventId, position);
+        DoWarp();
+        return TRUE;
+    }
+#endif
+
     return FALSE;
+}
+
+static bool8 IsCinnabarPortWarpFallbackLayout(u16 layoutId)
+{
+    switch (layoutId)
+    {
+    case LAYOUT_CINNABAR_ISLAND_POKEMON_CENTER_1F_PORT:
+    case LAYOUT_CINNABAR_ISLAND_POKEMON_CENTER_2F_PORT:
+    case LAYOUT_CINNABAR_ISLAND_MART_PORT:
+    case LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_ENTRANCE_PORT:
+    case LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_LOUNGE_PORT:
+    case LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_RESEARCH_ROOM_PORT:
+    case LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_EXPERIMENT_ROOM_PORT:
+    case LAYOUT_CINNABAR_ISLAND_GYM_PORT:
+    case LAYOUT_POKEMON_MANSION_1F_PORT:
+    case LAYOUT_POKEMON_MANSION_2F_PORT:
+    case LAYOUT_POKEMON_MANSION_3F_PORT:
+    case LAYOUT_POKEMON_MANSION_B1F_PORT:
+        return TRUE;
+    default:
+        return FALSE;
+    }
 }
 
 static bool8 IsWarpMetatileBehavior(u16 metatileBehavior)

@@ -95,7 +95,7 @@
       "species": "SPECIES_PELIPPER"
     },
     {
-      "map": "MAP_CINNABAR_ISLAND_HNS",
+      "map": "MAP_CINNABAR_SEAM_POC",
       "method": "fishing_mons",
       "slot": 1,
       "expected_species": "SPECIES_MAGIKARP",

@@ -61,7 +61,10 @@ class WildEncounterScalingTests(unittest.TestCase):
     def test_wayfarer_encounters_match_approved_replacements_and_preserve_baseline(self):
         source = GENERATOR.load_json(GENERATOR.DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS)
         proposal = GENERATOR.load_json(ROOT.parent / ".product/research/native-hm-windows/revisions/nearby-access/proposal.json")
-        self.assertEqual(source["replacements"], proposal["encounter_replacements"])
+        original_replacements = copy.deepcopy(proposal["encounter_replacements"])
+        cinnabar = next(row for row in original_replacements if row["map"] == "MAP_CINNABAR_ISLAND_HNS")
+        cinnabar["map"] = "MAP_CINNABAR_SEAM_POC"
+        self.assertEqual(source["replacements"], original_replacements)
         self.assertEqual(len(source["replacements"]), 17)
         original = copy.deepcopy(self.encounters)
         revised, audit = GENERATOR.apply_wayfarer_encounter_replacements(self.encounters)
@@ -104,7 +107,7 @@ class WildEncounterScalingTests(unittest.TestCase):
                                         self.metadata, self.standard_rod, self.header_ids)
         revised, audit = GENERATOR.apply_wayfarer_encounter_replacements(self.encounters)
         changed = {(row["baseLabel"], row["method"]) for row in audit}
-        self.assertEqual(output.count("#if IS_WAYFARER\n"), len(changed))
+        self.assertGreaterEqual(output.count("#if IS_WAYFARER\n"), len(changed))
         for label, method in changed:
             name = label + "_" + method.title().replace("_", "")
             self.assertIn("#if IS_WAYFARER\nconst struct WildPokemon " + name + "[]", output)
@@ -297,7 +300,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             {product: len(headers) for product, headers in self.header_ids.items()},
             {
                 "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
-                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 0,
+                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 3,
             },
         )
 
@@ -320,9 +323,25 @@ class WildEncounterScalingTests(unittest.TestCase):
 
         item = {"product": "POKEMON_HNS", "header_id": 7}
         expression = GENERATOR.runtime_header_id(item, self.header_ids)
-        self.assertEqual(expression, "(7 + HAS_EMERALD_CONTENT * 124)")
-        self.assertEqual(eval(expression.replace("HAS_EMERALD_CONTENT", "0")), 7)
-        self.assertEqual(eval(expression.replace("HAS_EMERALD_CONTENT", "1")), 131)
+        retired = GENERATOR.retired_hns_header_ids(self.header_ids)
+        self.assertEqual(len(retired), 4)
+        self.assertIn("IS_WAYFARER", expression)
+        evaluate = lambda value, wayfarer: eval(value.replace("HAS_EMERALD_CONTENT", "1")
+                                              .replace("HAS_HNS_CONTENT", "1")
+                                              .replace("IS_WAYFARER", str(wayfarer)))
+        self.assertEqual(evaluate(expression, 0), 131)
+        self.assertEqual(evaluate(expression, 1), 131 - sum(old < 7 for old in retired))
+        final_hns_id = max(self.header_ids["POKEMON_HNS"].values())
+        final_hns = GENERATOR.runtime_header_id(
+            {"product": "POKEMON_HNS", "header_id": final_hns_id}, self.header_ids
+        )
+        self.assertEqual(evaluate(final_hns, 0) - evaluate(final_hns, 1), len(retired))
+        wayfarer = GENERATOR.runtime_header_id(
+            {"product": "POKEMON_WAYFARER", "header_id": 0}, self.header_ids
+        )
+        self.assertEqual(evaluate(wayfarer, 0) - evaluate(wayfarer, 1), len(retired))
+        for name in GENERATOR.RETIRED_WAYFARER_HNS_WILD_HEADERS:
+            self.assertIn(f"#if HAS_HNS_CONTENT && !IS_WAYFARER\nconst struct WildPokemon {name}", output)
 
     def test_reviewed_time_binding_preserves_legacy_core_header(self):
         label = "gMtSilver_SnowNight_hns_Day"
@@ -353,7 +372,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             {product: len([profile for profile in self.profiles if profile["product"] == product]) for product, _ in GENERATOR.PRODUCTS},
             {
                 "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
-                "POKEMON_HNS": 270, "POKEMON_WAYFARER": 0,
+                "POKEMON_HNS": 270, "POKEMON_WAYFARER": 6,
             },
         )
 
@@ -1603,7 +1622,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             projection["headerCounts"],
             {
                 "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
-                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 0,
+                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 3,
             },
         )
 

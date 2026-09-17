@@ -1,0 +1,26 @@
+{
+  "id": "MAP_ROUTE21_NORTH_COAST_POC",
+  "name": "Route21_North_CoastPoc",
+  "game_version": "hns",
+  "layout": "LAYOUT_ROUTE21_NORTH_COAST_POC",
+  "music": "MUS_HG_ROUTE11",
+  "region": "REGION_KANTO",
+  "region_map_section": "MAPSEC_ROUTE_21",
+  "requires_flash": false,
+  "weather": "WEATHER_SUNNY",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "floor_number": 0,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": [
+    { "map": "MAP_PALLET_TOWN_HNS", "offset": 0, "direction": "up" },
+    { "map": "MAP_ROUTE21_SOUTH_COAST_POC", "offset": 0, "direction": "down" }
+  ],
+  "object_events": [],
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
+}

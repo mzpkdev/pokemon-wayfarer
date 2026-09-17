@@ -14,8 +14,8 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_CINNABAR_ISLAND_HNS",
-      "offset": -4,
+      "map": "MAP_CINNABAR_SEAM_POC",
+      "offset": 0,
       "direction": "down"
     },
     {

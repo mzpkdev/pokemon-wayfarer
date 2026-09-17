@@ -1,0 +1,27 @@
+{
+  "id": "MAP_CINNABAR_ISLAND_GYM_PORT",
+  "name": "CinnabarIsland_Gym_Port",
+  "game_version": "hns",
+  "layout": "LAYOUT_CINNABAR_ISLAND_GYM_PORT",
+  "music": "MUS_HG_GYM",
+  "region": "REGION_KANTO",
+  "region_map_section": "MAPSEC_CINNABAR_ISLAND",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": false,
+  "show_map_name": false,
+  "floor_number": 0,
+  "battle_scene": "MAP_BATTLE_SCENE_GYM",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    { "x": 24, "y": 23, "elevation": 3, "dest_map": "MAP_CINNABAR_SEAM_POC", "dest_warp_id": "4" },
+    { "x": 25, "y": 23, "elevation": 3, "dest_map": "MAP_CINNABAR_SEAM_POC", "dest_warp_id": "4" },
+    { "x": 26, "y": 23, "elevation": 3, "dest_map": "MAP_CINNABAR_SEAM_POC", "dest_warp_id": "4" }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

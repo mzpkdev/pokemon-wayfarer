@@ -573,11 +573,11 @@
     {
       "id": "HEAL_LOCATION_CINNABAR_ISLAND_HNS",
       "source": "HNS",
-      "map": "MAP_CINNABAR_ISLAND_HNS",
-      "x": 45,
-      "y": 30,
-      "respawn_map": "MAP_CINNABAR_ISLAND_POKEMON_CENTER_HNS",
-      "respawn_npc": "0"
+      "map": "MAP_CINNABAR_SEAM_POC",
+      "x": 14,
+      "y": 12,
+      "respawn_map": "MAP_CINNABAR_ISLAND_POKEMON_CENTER_1F_PORT",
+      "respawn_npc": "LOCALID_OLDALE_NURSE"
     },
     {
       "id": "HEAL_LOCATION_MT_SILVER_HNS",

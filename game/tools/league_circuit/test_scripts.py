@@ -147,7 +147,8 @@ class CircuitScriptTests(unittest.TestCase):
                 self.assertLess(source.index(legacy_gate), source.index(target + "::"))
                 self.assertIn(trainer, source.split(target + "::", 1)[1])
         source = script("ViridianCity_Gym_hns")
-        self.assertIn("call_if_set FLAG_BADGE15_GET, ViridianCity_Gym_EventScript_MoveDefeatedBlaine", source)
+        self.assertNotIn("call_if_set FLAG_BADGE15_GET, ViridianCity_Gym_EventScript_MoveDefeatedBlaine", source)
+        self.assertIn("#if !IS_WAYFARER\n\tsetflag FLAG_HIDE_SEAFOAM_BLAINE", source)
 
     def test_fixed_room_selection_uses_saved_run_and_recovers_invalid_state(self):
         for room in ("Wills", "Kogas", "Brunos", "Karens", "Champions"):

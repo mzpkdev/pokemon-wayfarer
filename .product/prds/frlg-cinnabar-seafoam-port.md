@@ -1,6 +1,10 @@
 # FRLG Cinnabar and Seafoam Islands port
 
-Status: Approved product direction. Not implemented.
+Status: Approved product direction. The unlocked Cinnabar interior preview and
+retirement of the six superseded HNS maps and the unreachable HNS Route 21
+payload from Wayfarer are in
+[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full town
+and Seafoam port is not implemented.
 
 ## Intent
 
@@ -9,6 +13,11 @@ one playable stretch of Wayfarer's Kanto coast. Cinnabar is a town with its
 Mansion, Blaine's Gym, Pokémon Lab, Pokémon Center, and Mart. Seafoam is the
 five-floor cave with its boulder and current puzzle and Articuno encounter.
 Neither location depends on an unrelated regional story being completed.
+
+The [unlocked interior preview](../specs/frlg-cinnabar-unlocked-interiors.md)
+is an interim playable slice. It connects twelve FRLG-layout Cinnabar interiors
+to the current coast preview, with Center healing and Mart shopping. Its empty
+Gym, Mansion, and Lab do not complete the local stories and services below.
 
 ## Design
 
@@ -107,6 +116,8 @@ difficulty.
 ## References
 
 - [Cinnabar implementation specification](../specs/frlg-cinnabar-town-port.md)
+- [Unlocked Cinnabar interior preview](../specs/frlg-cinnabar-unlocked-interiors.md)
+- [HNS Cinnabar and Seafoam map retirement](../specs/frlg-cinnabar-seafoam-hns-retirement.md)
 - [Seafoam implementation specification](../specs/frlg-seafoam-islands-port.md)
 - [Coastal and state integration specification](../specs/frlg-cinnabar-seafoam-integration.md)
 - [FRLG Kanto independent story beats](frlg-kanto-independent-story-beats.md)
