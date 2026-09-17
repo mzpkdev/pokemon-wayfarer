@@ -149,7 +149,6 @@
     "SaffronCity_hns",
     "FuchsiaCity_hns",
     "CinnabarIsland_hns",
-    "CinnabarIsland_SeamPoc",
     "Route1_hns",
     "Route2_hns",
     "Route3_hns",
@@ -179,7 +178,8 @@
     "Route26_hns",
     "Route26North_hns",
     "Route27_hns",
-    "Route28_hns"
+    "Route28_hns",
+    "CinnabarIsland_SeamPoc"
   ],
   "gMapGroup_IndoorNewBark_Hns": [
     "NewBarkTown_Lab_hns",

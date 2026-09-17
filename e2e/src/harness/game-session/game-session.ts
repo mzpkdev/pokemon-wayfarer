@@ -110,8 +110,8 @@ export class GameSession {
     protocolTestInternals.set(this, { runtime, mailbox })
   }
 
-  static launch = async (): Promise<GameSession> => {
-    const rom = await createIsolatedRom(requireRomPath())
+  static launch = async (savePath?: string): Promise<GameSession> => {
+    const rom = await createIsolatedRom(requireRomPath(), savePath)
     try {
       const symbols = await readSkyEmuSymbols(requireSymbolsPath())
       const running = await startSkyEmu(rom.path)

@@ -7,10 +7,11 @@ export type IsolatedRom = {
   path: string
 }
 
-export const createIsolatedRom = async (sourcePath: string): Promise<IsolatedRom> => {
+export const createIsolatedRom = async (sourcePath: string, savePath?: string): Promise<IsolatedRom> => {
   const directory = await fs.promises.mkdtemp(path.join(os.tmpdir(), "wayfarer-skyemu-smoke-"))
   const romPath = path.join(directory, "wayfarer.gba")
   await fs.promises.copyFile(sourcePath, romPath)
+  if (savePath) await fs.promises.copyFile(savePath, path.join(directory, "wayfarer.sav"))
 
   return {
     cleanup: () => fs.promises.rm(directory, { force: true, recursive: true }),

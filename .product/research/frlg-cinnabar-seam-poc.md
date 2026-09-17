@@ -19,8 +19,8 @@ elevation, so emulator traversal remains necessary.
 `make -C game wayfarer -j4 CXX=g++` links a Wayfarer ROM with this map. The
 linked ROM reports 33,365,812 bytes used of 32 MiB (99.44%). This is the
 whole build's footprint, not the PoC's isolated incremental cost. The map
-generator accepts the new map, layout, and catalog. No emulator or Porymap
-traversal has been performed in this environment.
+generator accepts the new map, layout, and catalog. The playable E2E ROM also
+builds, and four focused SkyEmu checks pass. Porymap inspection remains open.
 
 The major visual blind spot is the primary tileset: the FRLG town uses
 `gTileset_General_Frlg`, while both HNS routes use
@@ -33,7 +33,22 @@ metatile 299, but two of its referenced primary tile graphics (indices 65 and
 art must be verified in both directions before the full port can claim a
 seamless crossing.
 
-Acceptance for this probe: generate the Wayfarer catalog and layout; link a
-Wayfarer ROM; traverse Route 20 ↔ Cinnabar and Route 21 ↔ Cinnabar in an
-emulator while Surfing; inspect both edge strips, collision, map names, music,
-and the return position. Porymap inspection should confirm shoreline details.
+SkyEmu traverses both links while Surfing. From Route 21 `(2,99)`, moving down
+loads the PoC town at `(2,0)`; from the town `(23,10)`, moving right loads
+Route 20 at `(0,10)`. Save/reload preserves the Surf state and coordinates in
+both cases. Both packaged ROM/save pairs were booted in fresh SkyEmu processes
+and returned to their intended approach positions.
+
+The visual mismatch is observable. The screenshot taken immediately after the
+Route 21 camera crossing renders the town's coast and buildings differently
+from a full warp into the same town position. This confirms that coordinate
+and collision continuity alone cannot certify a seamless visual transition.
+The screenshots and playable ROM/save pairs live in the task's `artifacts/`
+directory, outside the source worktree. The focused reproduction is
+`e2e/src/journeys/cinnabar-seam-poc.e2e.ts`; set `SKYEMU_ROM`, `SKYEMU_SYMS`,
+and `CINNABAR_POC_ARTIFACTS` to run it.
+
+Remaining acceptance for the full port includes Surf traversal in both
+directions on both links, shoreline inspection in Porymap, music transitions,
+and the final tileset solution. This probe exercises Route 21 → Cinnabar and
+Cinnabar → Route 20; the other two directions have not been exercised.
