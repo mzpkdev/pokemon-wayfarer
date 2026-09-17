@@ -1,0 +1,10 @@
+Route20_CoastPoc_MapScripts::
+Route21_North_CoastPoc_MapScripts::
+Route21_South_CoastPoc_MapScripts::
+Route19_CoastPoc_MapScripts::
+SeafoamIslands_1F_CoastPoc_MapScripts::
+SeafoamIslands_B1F_CoastPoc_MapScripts::
+SeafoamIslands_B2F_CoastPoc_MapScripts::
+SeafoamIslands_B3F_CoastPoc_MapScripts::
+SeafoamIslands_B4F_CoastPoc_MapScripts::
+	.byte 0

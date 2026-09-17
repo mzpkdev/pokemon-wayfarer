@@ -179,7 +179,11 @@
     "Route26North_hns",
     "Route27_hns",
     "Route28_hns",
-    "CinnabarIsland_SeamPoc"
+    "CinnabarIsland_SeamPoc",
+    "Route20_CoastPoc",
+    "Route21_North_CoastPoc",
+    "Route21_South_CoastPoc",
+    "Route19_CoastPoc"
   ],
   "gMapGroup_IndoorNewBark_Hns": [
     "NewBarkTown_Lab_hns",
@@ -531,6 +535,11 @@
     "SeafoamIslands_Gym_hns",
     "SeafoamIslands_B1F_hns",
     "SeafoamIslands_SecretCave_hns",
+    "SeafoamIslands_1F_CoastPoc",
+    "SeafoamIslands_B1F_CoastPoc",
+    "SeafoamIslands_B2F_CoastPoc",
+    "SeafoamIslands_B3F_CoastPoc",
+    "SeafoamIslands_B4F_CoastPoc",
     "MtSilver_Outside_hns",
     "MtSilver_1F_ItemRoom_hns",
     "MtSilver_1F_WaterfallRoom_hns",

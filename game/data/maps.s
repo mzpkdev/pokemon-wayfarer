@@ -17,3 +17,4 @@
 	.include "data/maps/groups.inc"
 	.include "data/maps/connections.inc"
 	.include "data/maps/CinnabarIsland_SeamPoc/scripts.inc"
+	.include "data/maps/frlg_coast_overworld_poc_scripts.inc"
