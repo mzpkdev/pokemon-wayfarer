@@ -118,6 +118,23 @@ pocIt("boots the packaged Route 21 save in a new SkyEmu process", async () => {
   }
 })
 
+pocIt("captures the Pallet Town preview from Route 21", async () => {
+  if (!output) throw new Error("CINNABAR_POC_ARTIFACTS must name the artifact directory")
+  await fs.mkdir(output, { recursive: true })
+  const game = await GameSession.launch()
+  try {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "route-21", x: 12, y: 1 } },
+      story: { flags: { disableEncounters: true } },
+    })
+    await game.wait.forReady()
+    await fs.writeFile(path.join(output, "route21-pallet-preview.png"), await game.screenshot())
+  } finally {
+    await game.close()
+  }
+})
+
 pocIt("crosses the Route 20 Cinnabar seam while surfing", async () => {
   if (!output) throw new Error("CINNABAR_POC_ARTIFACTS must name the artifact directory")
   const game = await GameSession.launch()

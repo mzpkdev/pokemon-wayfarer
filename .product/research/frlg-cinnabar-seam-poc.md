@@ -39,22 +39,29 @@ The focused SkyEmu checks pass, and the Route 21 view **after** crossing now
 matches a full load visually apart from animation phase. The Route 20 return
 no longer shows garbled town art. This repairs the entering frame only.
 
-The departing frame still previews the neighboring map through the current
-map's tileset. `FillConnection` copies raw neighbor metatile IDs into the
-current map backup, and the renderer resolves them using the current layout.
-In Route 21, that means FRLG Cinnabar building IDs are decoded with HNS
-Pallet Town secondary art. The manually played mGBA ROM and the saved
-`route21-approach.png` both show the garbled building one step before the
-crossing. Route 20 has the same underlying issue on its Cinnabar preview.
+The departing frame previews the neighboring map through the current map's
+tileset. `FillConnection` copies raw neighbor metatile IDs into the current
+map backup, and the renderer resolves them using the current layout. The
+original mGBA screenshot showed Cinnabar's building garbled one step before
+the Route 21 crossing. Route 21 now uses `gTileset_CinnabarIsland` as its
+secondary tileset; the building preview renders correctly in SkyEmu. Its own
+map contains only primary metatile IDs, so this swap does not change its
+authored route blocks.
 
-A temporary Route 21 layout trial using Cinnabar's secondary tileset made
-the pre-crossing building look correct (`trial-route21-cinnabar-secondary-approach.png`).
-It was reverted: Route 21 also previews Pallet Town at its north edge, whose
-secondary metatiles require Pallet Town art. A corresponding Route 20 trial
-still showed mismatched shoreline art and was also reverted. Neither trial
-changed `map.bin`. A complete visual seam needs compatible metatile graphics
-and definitions on both sides, or a context-sensitive rendering scheme that
-preserves the other route connections.
+This moves the unresolved preview to Route 21's *north* connection. Pallet
+Town's southern seven rows contain 98 secondary cells using 25 distinct IDs;
+they now decode with Cinnabar secondary art while the player is on Route 21.
+`route21-pallet-preview.png` visibly differs from
+`baseline-route21-pallet-preview.png`. A Pallet Town edge reauthoring pass in
+Porymap, or a context-sensitive renderer, is required before this can ship.
+Route 20's outgoing Cinnabar preview also remains mismatched. A simple
+Route 20 secondary swap was trialed and reverted because its own shoreline
+still rendered incorrectly. No trial changed `map.bin`.
+
+An additional isolated ROM pairs Cinnabar's Johto general primary with this
+Route 21 secondary swap. It improves the town view after crossing, but Route
+20's Surf prompt at the saved approach does not appear. This combined trial
+is packaged separately and is not the current source configuration.
 
 SkyEmu traverses both links while Surfing. From Route 21 `(2,99)`, moving down
 loads the PoC town at `(2,0)`; from the town `(23,10)`, moving right loads
@@ -71,8 +78,9 @@ directory, outside the source worktree. The focused reproduction is
 `e2e/src/journeys/cinnabar-seam-poc.e2e.ts`; set `SKYEMU_ROM`, `SKYEMU_SYMS`,
 and `CINNABAR_POC_ARTIFACTS` to run it.
 
-Remaining acceptance for the full port includes a fix for the departing-frame
-preview on both routes, shoreline inspection in Porymap, and music transitions.
+Remaining acceptance for the full port includes Pallet Town's southern
+preview, Route 20's Cinnabar preview, shoreline inspection in Porymap, and
+music transitions.
 This PoC tests only an empty exterior, so it does not validate town
 events, entrances, services, or the full port's assets. Full-view redraw on
 map crossings should be checked for frame cost on hardware before general use.
