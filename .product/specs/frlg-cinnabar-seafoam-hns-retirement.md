@@ -44,6 +44,8 @@ entering Viridian. Neither path hides an undefeated Gym leader. Viridian and Pal
 dialogue does not claim a Cinnabar meeting or eruption. Retiring Cinnabar's
 Blaine script also removes its Fighting Dojo relocation trigger. No retired
 Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
+Entering the Fighting Dojo re-hides relocated Blaine on older Wayfarer saves
+that had already cleared his actor flag before the HNS island was retired.
 
 The Wayfarer release link map contains no layout, event, script, or wild
 encounter payload for the seven retired HNS maps. The generated standalone HNS
@@ -61,7 +63,8 @@ content.
    environment selection.
 3. Meet Blue on the Viridian exterior and, in a separate run, enter his Gym
    first. Check that each path leaves one accessible Gym leader and truthful
-   local dialogue, without enabling old Blaine or Groudon paths.
+   local dialogue, without enabling old Blaine or Groudon paths. Enter the
+   Fighting Dojo with Blaine's old hide flag clear and confirm he stays hidden.
 4. Confirm the seven old payloads are absent from the Wayfarer release link map,
    remain in the generated HNS catalog, and the Wayfarer release reserve still
    passes.
