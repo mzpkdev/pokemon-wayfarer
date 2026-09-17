@@ -45,9 +45,9 @@ Route8_Text_BikerDwayneAfter:
 	.string "never fall!$"
 
 Route8_Text_BikerHarrisSeen:
-	.string "The cops shut down our\n"
-	.string "UNDERGROUND PATH!\p"
-	.string "That really fries me!$"
+	.string "The UNDERGROUND PATH is open\n"
+	.string "again!\p"
+	.string "Now, let's battle!$"
 
 Route8_Text_BikerHarrisBeaten:
 	.string "F-forgive me!$"
@@ -87,10 +87,3 @@ Route8_Text_SupernerdTomBeaten:
 Route8_Text_SupernerdTomAfter:
 	.string "GYM BADGES give you advantages in\n"
 	.string "battles.$"
-
-Route8_Text_LockedDoor:
-	.string "It's locked…$"
-
-Route8_Text_UndergroundPathSign:
-	.string "The flyer's torn.\p"
-	.string "It's impossible to read…$"

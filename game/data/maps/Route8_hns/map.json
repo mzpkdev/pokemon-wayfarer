@@ -236,10 +236,10 @@
     },
     {
       "x": 12,
-      "y": 17,
+      "y": 18,
       "elevation": 0,
       "dest_map": "MAP_ROUTE8_TUNNEL_ENTRANCE_HNS",
-      "dest_warp_id": "0"
+      "dest_warp_id": "1"
     }
   ],
   "coord_events": [],
@@ -251,14 +251,6 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route7_EventScript_Sign"
-    },
-    {
-      "type": "sign",
-      "x": 12,
-      "y": 18,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "Route7_EventScript_Door"
     },
     {
       "type": "hidden_item",

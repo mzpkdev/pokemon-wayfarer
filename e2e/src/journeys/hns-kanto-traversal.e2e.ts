@@ -459,6 +459,61 @@ describe.sequential("HNS Kanto traversal", () => {
     it("crosses the Route 8 gate out of Saffron without restoration state", async () => {
       await crossSaffronGate("saffron-route-8-gate", 10, "right", "route-8")
     })
+
+    const crossUndergroundPath = async (
+      start: { map: "route-7" | "route-8"; x: number; y: number },
+      entrance: "route-7-tunnel-entrance" | "route-8-tunnel-entrance",
+      firstTurn: "left" | "right",
+      corridorDirection: "left" | "right",
+      otherEntrance: "route-7-tunnel-entrance" | "route-8-tunnel-entrance",
+      lastTurn: "left" | "right",
+      destination: "route-7" | "route-8",
+    ): Promise<void> => {
+      await game.arrange({
+        checkpoint: "new-bark-after-intro",
+        player: { facing: "up", position: start },
+        story: {
+          flags: { disableEncounters: true, returnedMachinePart: false },
+          vars: { saffronCityState: 1, kantoRocketStoryState: 0 },
+        },
+      })
+
+      await moveUntilMap(game, "up", entrance)
+      await movePath(game, ["up", "up", firstTurn, "up", "up"])
+      await moveUntilMap(game, corridorDirection, "saffron-underground-path")
+      await movePath(
+        game,
+        Array.from({ length: 73 }, () => corridorDirection),
+      )
+      await moveUntilMap(game, corridorDirection, otherEntrance)
+      await movePath(game, ["down", "down", lastTurn, "down", "down"])
+      await moveUntilMap(game, "down", destination)
+      await expectRestorationUnset()
+    }
+
+    it("crosses the Underground Path from Route 7 to Route 8 before Power Plant restoration", async () => {
+      await crossUndergroundPath(
+        { map: "route-7", x: 7, y: 17 },
+        "route-7-tunnel-entrance",
+        "left",
+        "right",
+        "route-8-tunnel-entrance",
+        "left",
+        "route-8",
+      )
+    })
+
+    it("crosses the Underground Path from Route 8 to Route 7 before Power Plant restoration", async () => {
+      await crossUndergroundPath(
+        { map: "route-8", x: 12, y: 19 },
+        "route-8-tunnel-entrance",
+        "right",
+        "left",
+        "route-7-tunnel-entrance",
+        "right",
+        "route-7",
+      )
+    })
   })
 
   describe("prepared native Surf routes", () => {
