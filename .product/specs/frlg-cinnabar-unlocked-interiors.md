@@ -3,7 +3,7 @@
 PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
 Implemented: No
 
-The behavior is implemented in draft [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110).
+The behavior is implemented in [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110).
 Change the marker to `Yes` once that implementation lands on `main`.
 
 ## Scope

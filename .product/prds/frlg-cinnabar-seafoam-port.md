@@ -1,7 +1,7 @@
 # FRLG Cinnabar and Seafoam Islands port
 
 Status: Approved product direction. The unlocked Cinnabar interior preview is in
-draft [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full
+[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full
 town and Seafoam port is not implemented.
 
 ## Intent
