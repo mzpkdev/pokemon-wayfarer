@@ -1,24 +1,31 @@
 # HNS Cinnabar and Seafoam map retirement
 
 PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-Implemented: No
+Implemented: Partial
 
-This slice is being implemented in [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110).
-Change the marker to `Yes` once it lands on `main`.
+The interim retirement preview merged in
+[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110). The final
+route retirement and full coastal port remain unimplemented.
 
 ## Scope
 
-Retire seven superseded or unreachable HNS maps from the Wayfarer ROM: Cinnabar Island,
-Cinnabar Pokémon Center, Seafoam Islands 1F and B1F, Seafoam Gym, and Seafoam
-Secret Cave, plus Route 21. Remove their map, layout, script, and wild encounter
-payloads from Wayfarer while retaining them for standalone HNS. HNS Route 21
-has no playable incoming connection in this preview: Pallet and Cinnabar use
-the CoastPoc route instead. Its three Trainers, hidden items, and encounters
-remain in source for the final coastal integration, which must place that
-content on a playable route. HNS Route 20 remains reachable through Route 19
-and Seafoam's two exits, preserving its authored Trainers and fishing.
+The approved full coastal port retires the superseded HNS Cinnabar, Seafoam,
+Route 19 through Route 21, and Route 19 Kyogre Cave content from the active
+Wayfarer selection. Hoenn Marine Cave remains the later Kyogre capture site.
+Wayfarer instead selects FRLG Cinnabar, Seafoam, Route 19, Route 20, and Route
+21 North and South with their route layouts, ordinary NPCs, Trainers, items,
+and wild encounter profiles. The final port does not retain HNS Route 19, 20,
+or 21 content as active Wayfarer content; standalone HNS retains its own maps,
+scripts, and encounters unchanged.
 
-## Behavior
+The interim preview retired seven superseded or unreachable HNS maps from the
+Wayfarer ROM: Cinnabar Island, Cinnabar Pokémon Center, Seafoam Islands 1F and
+B1F, Seafoam Gym, Seafoam Secret Cave, and Route 21. In that preview, Pallet
+and Cinnabar use the CoastPoc route while HNS Route 20 remains reachable
+through HNS Route 19 and Seafoam's two exits. Those preview selections are
+historical and are superseded by the full coastal port.
+
+## Historical preview behavior
 
 Entering the current Cinnabar exterior preview sets
 `FLAG_VISITED_CINNABAR_ISLAND`, which unlocks Fly. Fly lands on that exterior;
@@ -51,7 +58,7 @@ their scripts or encounter profiles. Map IDs may remain defined for shared
 source code, but Wayfarer must not route the player or Fly to their retired
 content.
 
-### Acceptance
+### Historical preview acceptance
 
 1. Visit Cinnabar and Fly back; heal and whiteout at its preview Center. Check
    a visit before Center activation does not move the recovery point.
@@ -64,6 +71,14 @@ content.
 4. Confirm the seven old payloads are absent from the Wayfarer release link map,
    remain in the generated HNS catalog, and the Wayfarer release reserve still
    passes.
+
+## Full coastal port direction
+
+The final port must preserve native-Surf access between Pallet and Cinnabar
+through the selected FRLG Route 21 North and South maps. Its ordinary coastal
+wild ecology follows the existing Kanto FireRed and LeafGreen merge, authored
+day-and-night, and Trainer Rating policies. The full port's implementation and
+acceptance requirements remain owned by the coastal and route specifications.
 
 ## References
 

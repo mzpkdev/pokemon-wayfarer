@@ -13,7 +13,9 @@ rewards specified here.
 Select the intact FRLG Cinnabar exterior and its twelve local interior maps for
 Wayfarer: Mansion 1F, 2F, 3F, B1F; Gym; Lab entrance, lounge, research room,
 experiment room; Pokémon Center 1F and 2F; and Mart. This spec owns their
-local events and rewards. The companion integration spec owns route seams,
+local events and rewards. The
+[route specification](frlg-kanto-coastal-routes-port.md) owns FRLG Route 20
+and both Route 21 sections. The companion integration spec owns route seams,
 state allocation, Fly/respawn routing, and Blue's Viridian introduction.
 
 ## Behavior

@@ -1,9 +1,10 @@
 # FireRed and LeafGreen open-world regional traversal
 
 The [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
-supersedes this PRD's future Cinnabar map, Seafoam, and Bill-at-Cinnabar
-assumptions. This PRD retains the historical implementation record below; the
-port keeps Cinnabar, Seafoam, the Meteorite story, and Sevii travel independent.
+supersedes this PRD's future Cinnabar, Seafoam, Route 19 through Route 21, and
+Bill-at-Cinnabar assumptions. This PRD retains the historical implementation
+record below; the port keeps Cinnabar, Seafoam, the Meteorite story, and Sevii
+travel independent. The full coastal port remains unimplemented.
 
 ## Player outcome
 
@@ -30,7 +31,7 @@ The Sevii Islands require the Seagallop shakedown in Vermilion. It awards the Ra
 
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Route 12 is the core Fuchsia approach; its Snorlax remains asleep beside an open lane. Route 16 and Cycling Road remain an optional Bicycle shortcut. Native Surf connects Pallet to the selected FRLG Cinnabar through HNS Route 21. The encounter policy owns the selected coastal fishing sources. HNS Route 20 and the selected FRLG Seafoam remain optional. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | Pallet through Cerulean use the Route 1, Route 2, Viridian Forest, Route 3, Mt. Moon, and Route 4 land spine. Cerulean's south and east exits plus the four open Saffron gates connect Vermilion, Lavender, Celadon, and Saffron. Route 12 is the core Fuchsia approach; its Snorlax remains asleep beside an open lane. Route 16 and Cycling Road remain an optional Bicycle shortcut. Native Surf connects Pallet to the selected FRLG Cinnabar through FRLG Route 21 North and South. The encounter policy owns the selected FRLG coastal fishing sources. FRLG Route 19, Route 20, and Seafoam remain optional. |
 | Sevii Islands | The settlement hubs on One, Two, Three, Four, Five, Six, and Seven Island | The Seagallop service is the core network. The unlock trip introduces One Island; immediately afterward, every Sevii port offers all seven islands and Vermilion. |
 
 Indigo Plateau and event-only islands are not settlements in this pass. A route, cave, or optional landmark does not enter scope merely because it has a healing point.
@@ -62,7 +63,12 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 
 ## Native Surf recovery boundary
 
-The Standard Rod fishing PRD makes the existing Horsea and Krabby slots eligible with the Old Rod. A player who already has the rod and capture supplies can therefore obtain another native Surf user from the existing encounter tables. This PRD does not change encounters, terrain, rod distribution, fishing probabilities, or capture-supply availability.
+The historical implementation used existing Horsea and Krabby Old Rod slots as
+native-Surf sources. The full coastal port selects FRLG Route 21 North and
+South and Cinnabar sources under the Kanto encounter policy while retaining
+Pallet-to-Cinnabar native-Surf access. This PRD does not itself change
+encounters, terrain, rod distribution, fishing probabilities, or capture-supply
+availability.
 
 Acceptance here covers a prepared player crossing Route 21 in both directions. It does not guarantee recovery when the player lacks the Old Rod or Poké Balls, has a full party, or deposits, releases, or forgets Surf on the last user.
 
@@ -87,9 +93,9 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.
 - Enter Two Island's Game Corner and Three Island's port before starting the original detour. Confirm Lostelle, the bikers, PC storage, and detour-completion state remain unchanged.
 - Reach Four and Six Island before the postgame Sevii story in both visit orders and confirm the shared rival scene remains pending. Satisfy the original prerequisite later and confirm it plays exactly once at whichever location resolves first.
-- In both versions, confirm native Horsea and Krabby remain in the existing fishing tables on the Pallet and Cinnabar sides. With a native Surf user prepared before each crossing, cross Route 21 in both directions without HM03 or a badge.
+- Historical implementation check: in both versions, confirm native Horsea and Krabby remain in the existing fishing tables on the Pallet and Cinnabar sides. With a native Surf user prepared before each crossing, cross HNS Route 21 in both directions without HM03 or a badge.
 - Confirm FireRed and LeafGreen behave the same.
-- Confirm this pass does not change the position, trainer type, or sight range of any ordinary sight-based trainer.
+- Historical implementation check: confirm this traversal pass did not change the position, trainer type, or sight range of any ordinary sight-based trainer. The full coastal port uses FRLG route actors.
 
 ## References
 

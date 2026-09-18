@@ -159,8 +159,9 @@ not satisfy this design.
 ### Encounter methods
 
 The selected Wayfarer map and its usable terrain decide which ordinary methods
-exist on a map. For Cinnabar and Seafoam, the selected maps are the FRLG town
-and five-floor cave defined by the [FRLG Cinnabar and Seafoam Islands
+exist on a map. For Cinnabar, Seafoam, and Routes 19 through 21, the selected
+maps are the FRLG town, five-floor cave, Route 19, Route 20, and Route 21 North
+and South defined by the [FRLG Cinnabar and Seafoam Islands
 port](frlg-cinnabar-seafoam-port.md), not their replaced HNS maps.
 The FRLG source decides the Generation I anchors and rarity roles where a
 comparable method exists. Restrained Generation II additions follow the regional
@@ -209,8 +210,9 @@ Generation III family direction above remains binding for its future PRD.
 Mainland ownership is based on this manifest rather than region-map-section
 ranges alone:
 
-- Routes: `MAP_ROUTE1_HNS` through `MAP_ROUTE22_HNS`, plus
-  `MAP_ROUTE24_HNS` and `MAP_ROUTE25_HNS`.
+- Routes: `MAP_ROUTE1_HNS` through `MAP_ROUTE18_HNS`, `MAP_ROUTE22_HNS`,
+  `MAP_ROUTE24_HNS`, `MAP_ROUTE25_HNS`, and the selected FRLG `MAP_ROUTE19`,
+  `MAP_ROUTE20`, `MAP_ROUTE21_NORTH`, and `MAP_ROUTE21_SOUTH`.
 - Cities and surface subareas: Pallet Town, Viridian City, Pewter City,
   Cerulean City, Lavender Town, Vermilion City, Vermilion port outside,
   Celadon City, Fuchsia City, the selected FRLG Cinnabar Island, and Saffron
@@ -222,11 +224,12 @@ ranges alone:
 - Kanto League caves: all three `MAP_VICTORY_ROAD_KANTO_*_HNS` maps.
 
 The historical HNS-only manifest had 52 active map IDs plus Route 23 as a
-reserved 53rd owner. The port replaces `MAP_CINNABAR_ISLAND_HNS` and
-`MAP_SEAFOAM_ISLANDS_{1F,B1F}_HNS` with the FRLG Cinnabar map and all five
-FRLG Seafoam floors. Regenerate the active-map and profile counts from that
-selected set; do not retain an HNS coast profile merely to preserve the old
-denominator. Route 22 remains Kanto-owned transition ecology.
+reserved 53rd owner. The port replaces `MAP_CINNABAR_ISLAND_HNS`,
+`MAP_SEAFOAM_ISLANDS_{1F,B1F}_HNS`, and `MAP_ROUTE{19,20,21}_HNS` with the
+FRLG Cinnabar map, all five FRLG Seafoam floors, FRLG Route 19, FRLG Route 20,
+and FRLG Route 21 North and South. Regenerate the active-map and profile
+counts from that selected set; do not retain an HNS coast profile merely to
+preserve the old denominator. Route 22 remains Kanto-owned transition ecology.
 `MAP_ROUTE23_HNS` remains a reserved owner even though it currently has no HNS
 encounter profile and carries `MAPSEC_INDIGO_PLATEAU`. Its target profile stem
 is `gRoute23_hns`; land, Surf, and fishing are the expected methods if its

@@ -4,11 +4,12 @@ PRD: [FireRed and LeafGreen open-world regional traversal](../prds/frlg-open-wor
 Implemented: Yes
 
 The [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-supersedes this feature's future Cinnabar and Seafoam selection and its
-Bill-at-Cinnabar coupling. The existing implementation below remains a
-historical compatibility record. Future work keeps the Route 21 native-Surf
-contract, uses the selected FRLG Cinnabar endpoint, and leaves the Meteorite
-story and Sevii travel independently owned.
+supersedes this feature's future Cinnabar, Seafoam, and Route 19 through Route
+21 selection and its Bill-at-Cinnabar coupling. The existing implementation
+below remains a historical compatibility record. Future work keeps the native-
+Surf contract through FRLG Route 21 North and South, uses the selected FRLG
+Cinnabar endpoint, and leaves the Meteorite story and Sevii travel
+independently owned. The full coastal port remains unimplemented.
 
 ## Scope
 
@@ -298,12 +299,13 @@ credential.
 
 ### Native Surf crossing
 
-The historical implementation keeps Route 21's water and encounter tables and
-allows a prepared Horsea or Krabby to Surf without HM03 or the Soul Badge. The
-Cinnabar and Seafoam port retains HNS Route 21 but selects FRLG Cinnabar and
-its encounter table; the Kanto encounter policy owns its native-Surf source.
-No part of this specification changes rods, fishing odds, capture supplies,
-party storage, terrain, or learnsets.
+The historical implementation keeps HNS Route 21's water and encounter tables
+and allows a prepared Horsea or Krabby to Surf without HM03 or the Soul Badge.
+The full coastal port supersedes that route with FRLG Route 21 North and South
+while preserving the Pallet-to-Cinnabar native-Surf access contract. The Kanto
+encounter policy owns the selected FRLG coastal fishing source and ecology.
+No part of this historical specification changes rods, fishing odds, capture
+supplies, party storage, terrain, or learnsets.
 
 Acceptance covers a player who prepares a native Surf user before each Pallet
 to Cinnabar crossing. It does not guarantee recovery when the player lacks an
@@ -357,7 +359,8 @@ known only for the Route 21 crossing:
 10. Historical implementation check: after early travel, take Bill's Cinnabar trip, finish the Meteorite detour,
    deliver the Ruby, and complete the later Sevii story. Confirm no duplicate
    Tri-Pass, Rainbow Pass, Town Map, or map-page reward appears.
-11. Prepare the named native Surf users on both sides of Route 21 and cross in
+11. Historical implementation check: prepare the named native Surf users on
+    both sides of HNS Route 21 and cross in
     both directions without HM03 or a badge.
 12. Repeat the complete suite in FireRed and LeafGreen and confirm identical
     traversal and state behavior.

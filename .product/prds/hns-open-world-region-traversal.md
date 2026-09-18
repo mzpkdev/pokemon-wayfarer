@@ -7,10 +7,12 @@ field-use authorization, scaling and unrelated mechanics remain unchanged;
 standalone builds retain their existing contract.
 
 The [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
-supersedes this PRD's future Cinnabar and Seafoam map and encounter selection.
-This PRD continues to require the Route 21 native-Surf settlement connection;
-the port owns its FRLG Cinnabar endpoint, the FRLG Seafoam replacement, and
-the Route 20/21 seam work.
+supersedes this PRD's future Cinnabar, Seafoam, and Route 19 through Route 21
+map and encounter selection. This PRD continues to require the native-Surf
+settlement connection to Cinnabar; the port owns its FRLG Cinnabar endpoint,
+the FRLG Seafoam replacement, and FRLG Route 19, Route 20, and Route 21 North
+and South. The HNS coast behavior below is historical once that port lands;
+standalone HNS remains unchanged.
 
 ## Player outcome
 
@@ -38,7 +40,7 @@ Kanto opens through the S.S. Aqua maiden voyage, which awards the S.S. Ticket. O
 | Region | Settlements in scope | Core access contract |
 | --- | --- | --- |
 | Johto | New Bark Town, Cherrygrove City, Violet City, Azalea Town, Goldenrod City, Ecruteak City, Olivine City, Cianwood City, and Mahogany Town | The existing land network serves the eight settlements other than Cianwood once the listed road actors and turnbacks stop blocking it. Native Surf crosses Routes 40 and 41 to Cianwood. Existing mainland encounters provide Wooper and Chinchou; Cianwood fishing provides native Chinchou by day. Route 44, Ice Path, Blackthorn City, Safari Zone Gate, Lake of Rage, the League corridor, and Mt. Silver are outside this pass. |
-| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | The S.S. Aqua releases the player in Vermilion. Route 6 and Saffron connect Celadon, Lavender, and Cerulean. The nonblocking Mt. Moon route continues to Pewter, Viridian, and Pallet. Celadon's loan-bicycle access to Cycling Road reaches Fuchsia. Native Surf reaches the selected FRLG Cinnabar through HNS Route 21, with Chinchou fishing at Vermilion and the selected town providing directional coverage. HNS Route 20 remains optional and connects to the selected FRLG Seafoam entrances. |
+| Kanto | Pallet Town, Viridian City, Pewter City, Cerulean City, Vermilion City, Lavender Town, Celadon City, Saffron City, Fuchsia City, and Cinnabar Island | The S.S. Aqua releases the player in Vermilion. Route 6 and Saffron connect Celadon, Lavender, and Cerulean. The nonblocking Mt. Moon route continues to Pewter, Viridian, and Pallet. Celadon's loan-bicycle access to Cycling Road reaches Fuchsia. Native Surf reaches the selected FRLG Cinnabar through FRLG Route 21 North and South, with Chinchou fishing at Vermilion and the selected town providing directional coverage. FRLG Route 20 remains optional and connects to the selected FRLG Seafoam entrances. |
 
 A healing point or Fly marker does not make a route or landmark a settlement. This roster, rather than every named map, is the acceptance boundary.
 
@@ -97,6 +99,8 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Alola and Sinjoh retain their existing entry, travel, encounter, and reward progression. Early access to either region requires a later PRD.
 - Mt. Silver, the League corridor, Victory Road, Cerulean Cave, and other endgame locations are outside this pass.
 - The Vermilion Snorlax route, Route 19 coast, Underground Paths, and other redundant connections may remain gated shortcuts.
+- The full coastal port supersedes that Route 19 allowance: its selected FRLG
+  route stays open independently of Blaine and the HNS Kingler blockade.
 - This pass does not redesign those redundant shortcuts and does not approve their current broad campaign gates as a pattern for future work.
 
 ## Target acceptance
@@ -117,10 +121,10 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Confirm this pass does not change Alola or Sinjoh entry, transport, visit flags, encounters, or rewards.
 - Return from Kanto without repeating the maiden-voyage story.
 - Use each bypass first, then return and complete its preserved story normally.
-- With a native Surf user prepared before each crossing, cross to Cianwood and Cinnabar in both directions using the existing encounter geometry and no HM03 or badge.
+- Historical implementation check: with a native Surf user prepared before each crossing, cross to Cianwood and Cinnabar in both directions using the then-selected encounter geometry and no HM03 or badge. The full FRLG coastal port has its own route and encounter acceptance.
 - Confirm no native HM other than Surf becomes a prerequisite for settlement access.
 - Confirm Cut and Rock Smash still expose shortcuts and optional content where intended.
-- Confirm this pass does not change the position, trainer type, or sight range of any ordinary sight-based trainer.
+- Historical implementation check: confirm this traversal pass did not change the position, trainer type, or sight range of any ordinary sight-based trainer. The full coastal port uses FRLG route actors.
 
 ## References
 

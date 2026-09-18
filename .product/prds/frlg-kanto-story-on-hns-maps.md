@@ -1,8 +1,9 @@
 # FRLG Kanto story on HNS maps
 
 Status: Draft product design. Not implemented. FRLG is Kanto's narrative
-baseline and HNS is its general geographic base. The full FRLG Cinnabar and
-Seafoam port is owned by [its dedicated PRD](frlg-cinnabar-seafoam-port.md).
+baseline and HNS is its general geographic base. The full FRLG Cinnabar,
+Seafoam, and Routes 19–21 port is owned by
+[its dedicated PRD](frlg-cinnabar-seafoam-port.md).
 The S.S. Anne remains permanently available, with travel design
 owned by a separate specification. Selected HNS story adaptations are
 recorded below; remaining choices stay open.
@@ -39,8 +40,8 @@ those spaces rather than requiring FRLG's exterior coordinates.
 Import the Celadon Rocket Hideout, Pokémon Tower, and Silph's missing floors
 as the principal story interiors owned here. Use the existing FRLG
 layouts and their recognizable puzzles as the starting point. A small entrance
-or transition adjustment is acceptable. Cinnabar and Seafoam are selected
-exceptions owned by the [coastal port](frlg-cinnabar-seafoam-port.md). Other
+or transition adjustment is acceptable. Cinnabar, Seafoam, and Routes 19–21
+are selected exceptions owned by the [coastal port](frlg-cinnabar-seafoam-port.md). Other
 wholesale city or route replacements remain outside this design.
 
 Do not replace these adventures with a single room containing their final
@@ -48,11 +49,11 @@ battle and reward. The player should investigate the hideout, navigate Silph,
 climb the Tower, and explore the separately specified Mansion. Exact layout reuse, shared tilesets,
 floor connections, and entrance positions belong in the implementation specs.
 
-### Cinnabar and Seafoam ownership
+### Coastal port ownership
 
-The [FRLG Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) owns both
-complete locations, their local puzzles, services, encounters, rewards, Blue's
-Viridian introduction, and the coastal connection work. Its Mansion Secret
+The [FRLG coastal port](frlg-cinnabar-seafoam-port.md) owns Cinnabar, Seafoam,
+Routes 19–21, their local puzzles, services, encounters, rewards, Blue's
+Viridian introduction, and the coastal connections. Its Mansion Secret
 Key leads to Blaine's Cinnabar Gym. Its Seafoam cave contains the FRLG current
 puzzle and Articuno. Bill's Sevii story remains independent, and Groudon is
 catchable through Hoenn's Terra Cave rather than the removed HNS Seafoam
@@ -115,7 +116,7 @@ Preservation is the default. Each overlapping HNS scene must be explicitly retai
 in a follow-up content specification. This includes the Machine Part theft,
 Misty's absence, the radio upgrade, Vermilion Snorlax, and Blue's broader story
 role. The coastal port resolves Blaine's location, Blue's introduction, and
-Cinnabar and Seafoam's condition. Unrelated HNS
+Cinnabar and Seafoam's condition, and Routes 19–21. Unrelated HNS
 flavor, services, and side content remain available unless a named conflict
 requires a change. Dropping content requires a named conflict and a product
 decision after considering dialogue, event placement, and dependency changes.
@@ -218,7 +219,7 @@ rival battle as a required visitor battle.
   contract but does not implement starter selection or the Kanto opening.
   Visiting players do not need an Oak's Parcel opening to access Kanto stories.
 - No wholesale replacement of HNS city or route layouts beyond the selected
-  Cinnabar and Seafoam exceptions, new parallel Kanto,
+  Cinnabar, Seafoam, and Routes 19–21 exceptions, new parallel Kanto,
   or general import of every FRLG house, gate, cave, tileset, or soundtrack.
 - No new quest-selection interface or quest journal is required.
 - No change to the global TR formula, scaling rules, League order, or total
@@ -435,8 +436,8 @@ provide a valid return to the HNS world.
 - Do repeat Anne visits preserve one-time rewards and Blue's actual progression?
 - Can the player leave and return to Kanto throughout every adventure without
   affecting the Aqua circuit or unrelated regional progress?
-- Do the separately specified Cinnabar and Seafoam ports pass their coastal,
-  service, Gym, and cave acceptance checks?
+- Does the separately specified coastal port pass its route, town, service,
+  Gym, and cave acceptance checks?
 - Are the Tower/radio and Giovanni/Blue choices coherent to a
   player who knows either original game?
 - Does a later Blue encounter retire all earlier chapters across save/reload,
