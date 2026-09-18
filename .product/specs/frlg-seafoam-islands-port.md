@@ -7,8 +7,9 @@ Implemented: No
 
 Select and adapt Seafoam Islands 1F, B1F, B2F, B3F, and B4F for Wayfarer,
 including the boulder/current puzzle, Articuno, items, encounters, and two
-Route 20 entrances. The companion integration specification owns the coastal
-route boundary, persistent-state allocation, and release measurement. The
+Route 20 entrances. The [route specification](frlg-kanto-coastal-routes-port.md)
+owns the selected FRLG Route 20 exterior; coastal integration owns its
+boundaries, persistent-state allocation, and release measurement. The
 Cinnabar specification owns Blaine's Gym.
 
 ## Behavior
@@ -36,8 +37,8 @@ B2F, B3F, and B4F. On B3F and B4F, the two required boulders stop the local
 current and select the corresponding `*_CurrentStopped_Layout`. Current and
 stopped-current layouts remain separate selectable layouts. Each floor
 restores the correct boulder, collision, and current state on entrance and
-save/reload. The retained HNS Route 20 must run the FRLG reset when the player
-returns to that route: reset only unfinished B3F/B4F boulder paths to their
+save/reload. The selected FRLG Route 20 must run the FRLG reset on every
+transition into that route: reset only unfinished B3F/B4F boulder paths to their
 starting positions, while preserving completed stopped-current state. One
 boulder alone does not stop a two-boulder current; completed current state
 does not regress on reentry.

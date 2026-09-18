@@ -10,6 +10,9 @@ The full FRLG Cinnabar port and a persistent S.S. Anne accepting any S.S.
 Ticket are selected. Anne travel routes belong in a separate specification. Subsequent accepted
 quest and League choices are recorded in the PRD; alternatives in this audit
 remain historical analysis, not competing requirements.
+The recommendation below to retain HNS Routes 19–21 has since been superseded
+by the [full FRLG coastal port](../prds/frlg-cinnabar-seafoam-port.md), which
+selects FRLG Route 19, Route 20, and both Route 21 sections with their content.
 
 Evidence comes from scripts and map metadata in this task's source snapshot.
 A script's presence does not establish that every inherited scene is reachable

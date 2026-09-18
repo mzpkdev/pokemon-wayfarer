@@ -1,10 +1,9 @@
 # FRLG Cinnabar unlocked interior preview
 
 PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-Implemented: No
+Implemented: Yes
 
-The behavior is implemented in [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110).
-Change the marker to `Yes` once that implementation lands on `main`.
+The behavior merged in [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110).
 
 ## Scope
 

@@ -101,13 +101,14 @@ show these records, but `changes` are not compiled into the ROM.
 The 53-map HNS-only manifest below is the implemented baseline. The [FRLG
 Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
 supersedes it for future Wayfarer encounter work: replace
-`MAP_CINNABAR_ISLAND_HNS` and `MAP_SEAFOAM_ISLANDS_{1F,B1F}_HNS` with
-the existing FRLG IDs `MAP_CINNABAR_ISLAND` and
-`MAP_SEAFOAM_ISLANDS_{1F,B1F,B2F,B3F,B4F}`.
-No HNS Cinnabar or Seafoam encounter map remains selected. Preserve HNS Route
-20 and Route 21 and their ordinary encounter ownership. The regenerated
-manifest must report its selected map IDs and profile denominator; the old
-53-map and 129-profile counts are historical values, not future targets.
+`MAP_CINNABAR_ISLAND_HNS`, `MAP_SEAFOAM_ISLANDS_{1F,B1F}_HNS`, and
+`MAP_ROUTE{19,20,21}_HNS` with `MAP_CINNABAR_ISLAND`,
+`MAP_SEAFOAM_ISLANDS_{1F,B1F,B2F,B3F,B4F}`, `MAP_ROUTE19`, `MAP_ROUTE20`,
+and `MAP_ROUTE21_{NORTH,SOUTH}`. No HNS Cinnabar, Seafoam, Route 19, Route
+20, or Route 21 encounter profile remains selected for the full port. The
+regenerated manifest must report its selected map IDs and profile denominator;
+the old 53-map and 129-profile counts are historical values, not future
+targets.
 
 The historical baseline contains these 53 map IDs and no others:
 
@@ -160,12 +161,19 @@ does not aggregate: every target slot still selects one exact source slot from
 its ecology source group as `levelSource`.
 
 Use the same numbered FireRed and LeafGreen route, city, forest, or cave as the
-`DIRECT` source when that source has the target method. The following target
-maps use named `EQUIVALENT` sources:
+`DIRECT` source when that source has the target method. For the selected FRLG
+coast, `MAP_ROUTE19` uses
+`sRoute19_{FireRed,LeafGreen}`, `MAP_ROUTE20` uses
+`sRoute20_{FireRed,LeafGreen}`, and `MAP_ROUTE21_{NORTH,SOUTH}` uses the
+matching `sRoute21{North,South}_{FireRed,LeafGreen}` profile as its `DIRECT`
+source for every authored method. The historical HNS Route 21 mapping remains
+in the baseline-only `EQUIVALENT` table below.
+
+The following target maps use named `EQUIVALENT` sources:
 
 | HNS target | FireRed and LeafGreen source |
 | --- | --- |
-| Route 21 | `sRoute21North_FireRed` and `sRoute21North_LeafGreen`; the generator also confirms the corresponding South profiles are identical |
+| Route 21 (historical HNS baseline) | `sRoute21North_FireRed` and `sRoute21North_LeafGreen`; the generator also confirms the corresponding South profiles are identical |
 | Vermilion port outside | `sSSAnneExterior_FireRed` and `sSSAnneExterior_LeafGreen` |
 | Safari beach | `sSafariZoneCenter_FireRed` and `sSafariZoneCenter_LeafGreen` |
 | Safari brush | `sSafariZoneEast_FireRed` and `sSafariZoneEast_LeafGreen` |
@@ -430,8 +438,10 @@ the discrete-slot tie breaks; source-range selection; explicit day aliases;
 night retention and distance boundaries; generation classification; forbidden
 authored and effective species; and deterministic report ordering.
 
-Update the profile-count fixtures for Route 23, the selected FRLG Cinnabar and
-five Seafoam floors, and the explicit night bindings. Run `make wild-encounter-scaling-test` and
+Update the profile-count fixtures for Route 23, selected FRLG Routes 19, 20,
+21 North and South, Cinnabar, all five Seafoam floors, and their explicit
+night bindings. Check the two Route 21 source profiles separately even when
+their authored slots match. Run `make wild-encounter-scaling-test` and
 `make wild-encounter-balance-audit`. The generated audit must pass every Rating
 from 0 through 80 in Wayfarer and all three rod qualities.
 
@@ -445,8 +455,10 @@ Cartographer schema changes.
 Compile the affected encounter, radio, Pokédex, and DexNav objects for
 Wayfarer, then build one Wayfarer release ROM. Playtest a new Kanto start
 through the first badge at day and night, all three rod qualities, both
-Chinchou coasts, the selected Cinnabar and every Seafoam floor, one unchanged
-cave night, one materially changed route night, Safari Zone, Power Plant
+Chinchou coasts, selected FRLG Routes 19, 20, 21 North and South, Cinnabar,
+and every Seafoam floor. Check every authored land, Surf, and fishing method
+on the four routes, one unchanged cave night, one materially changed route
+night, Safari Zone, Power Plant
 approach on Route 10, and Route 23. Confirm special acquisitions and Sevii
 encounters did not change.
 

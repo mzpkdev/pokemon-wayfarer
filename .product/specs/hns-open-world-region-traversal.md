@@ -11,11 +11,13 @@ PRD: [HNS open-world regional traversal](../prds/hns-open-world-region-traversal
 Implemented: Yes
 
 The [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-supersedes this implemented feature's future Cinnabar and Seafoam selection.
-The existing HNS coast behavior remains historical evidence. Future Wayfarer
-work keeps the Route 21 native-Surf access contract while selecting FRLG
-Cinnabar and all five FRLG Seafoam floors, with HNS Route 20 and Route 21
-adapted at their seams.
+supersedes this implemented feature's future Cinnabar, Seafoam, and Route 19
+through Route 21 selection. The existing HNS coast behavior remains historical
+evidence. Future Wayfarer work keeps the native-Surf access contract while
+selecting FRLG Cinnabar, all five FRLG Seafoam floors, FRLG Route 19, FRLG
+Route 20, and FRLG Route 21 North and South. It does not retain HNS Route 19,
+20, or 21 content as active Wayfarer content after integration; standalone HNS
+remains unchanged.
 
 ## Scope
 
@@ -223,11 +225,12 @@ script.
 
 #### Existing open routes
 
-Do not edit the Route 6 to Saffron or Route 21 to Cinnabar map geometry. The
-Route 6 gate officer already stands beside the lane, and the engineer guards
-only the redundant Underground Path entrance. The Route 21 water connection
-is already continuous. Acceptance, rather than a map change, proves each
-route works with its unrelated campaign state unset.
+This historical implementation did not edit the Route 6 to Saffron or HNS
+Route 21 to Cinnabar map geometry. The Route 6 gate officer already stands
+beside the lane, and the engineer guards only the redundant Underground Path
+entrance. HNS Route 21's water connection is already continuous. Acceptance,
+rather than a map change, proves each route works with its unrelated campaign
+state unset.
 
 #### Cycling Road loan
 
@@ -350,9 +353,10 @@ but the player must prepare a Pokemon that already knows Surf.
   Wooper, Olivine fishing supplies Chinchou, and Cianwood daytime fishing
   supplies a return-side Chinchou. HNS Krabby does not receive native Surf and
   is not part of the recovery contract.
-- Route 21 connects Pallet to Cinnabar. The Cinnabar and Seafoam port keeps
-  Route 21 and requires the selected FRLG Cinnabar fishing table to provide
-  the approved native-Surf directional coverage with the Kanto network.
+- The historical HNS Route 21 connects Pallet to Cinnabar. The full coastal
+  port supersedes it with FRLG Route 21 North and South, whose selected FRLG
+  Cinnabar fishing table provides the approved native-Surf directional
+  coverage with the Kanto network.
 
 This specification does not change encounters, Standard Rod probabilities,
 rod distribution, capture supplies, party storage, terrain, or learnsets.
@@ -429,8 +433,8 @@ The acceptance suite must cover:
   Copycat's quest, Route 5 and Route 6 Underground Path access, and both Magnet
   Train stations. Both S.S. Aqua desks must remain independent of the flag.
 - Vermilion through Route 6 to Saffron and onward through Routes 5, 7, and 8
-  with Machine Part unset; Pallet through HNS Route 21 to the selected FRLG
-  Cinnabar and back with a prepared native Surf user; and Olivine through
+  with Machine Part unset; historically, Pallet through HNS Route 21 to the
+  selected FRLG Cinnabar and back with a prepared native Surf user; and Olivine through
   Routes 40 and 41 to Cianwood and back with a prepared native Surf user.
 - Regression checks that Route 44, Ice Path, Blackthorn, Route 13 Alola access,
   Snowswept Cavern, New Sinjoh, the League corridor, and Mt. Silver retain

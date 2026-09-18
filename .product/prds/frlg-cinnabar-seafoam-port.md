@@ -1,18 +1,26 @@
-# FRLG Cinnabar and Seafoam Islands port
+# FRLG Cinnabar, Seafoam Islands, and coastal routes port
 
-Status: Approved product direction. The unlocked Cinnabar interior preview and
-retirement of the six superseded HNS maps and the unreachable HNS Route 21
-payload from Wayfarer are in
+Status: Approved product direction. Full FRLG Route 19, Route 20, and both
+Route 21 sections belong to the final port. The unlocked Cinnabar interior
+preview and retirement of the six superseded HNS maps and the unreachable
+HNS Route 21 payload merged in
 [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full town
-and Seafoam port is not implemented.
+and coastal port is not implemented.
 
 ## Intent
 
-Restore the intact FireRed and LeafGreen Cinnabar Island and Seafoam Islands as
-one playable stretch of Wayfarer's Kanto coast. Cinnabar is a town with its
+Restore FireRed and LeafGreen Route 19, Route 20, Route 21 North and South,
+Cinnabar Island, and Seafoam Islands as one playable stretch of Wayfarer's
+Kanto coast. Cinnabar is a town with its
 Mansion, Blaine's Gym, Pokémon Lab, Pokémon Center, and Mart. Seafoam is the
 five-floor cave with its boulder and current puzzle and Articuno encounter.
-Neither location depends on an unrelated regional story being completed.
+Access to this coast does not depend on an unrelated regional story being completed.
+
+The four route maps retain their FRLG Trainers, other NPCs, signs, hidden
+items, and ordinary wild encounters. Route 19 connects Fuchsia to Route 20;
+Route 20 connects Cinnabar, both Seafoam entrances, and Route 19; both Route
+21 sections connect Pallet to Cinnabar. The HNS Kingler blockade and its
+Blaine-dependent Route 19 dialogue do not control this coast.
 
 The [unlocked interior preview](../specs/frlg-cinnabar-unlocked-interiors.md)
 is an interim playable slice. It connects twelve FRLG-layout Cinnabar interiors
@@ -56,6 +64,24 @@ The HNS Secret Cave contains only a Groudon battle and no other reward or
 activity. Do not carry that cave or a second Groudon into FRLG Seafoam. Groudon's
 capture belongs to Hoenn's Terra Cave and its separate story rules.
 
+### Routes 19, 20, and 21
+
+Replace Wayfarer's HNS route selection and empty coast-preview events with
+the complete FRLG route content. Preserve the FRLG route layouts and their
+ordinary Trainers, non-Trainer NPCs, signs, hidden items, Surf and fishing
+encounters, and Route 21 land encounters. The two FRLG Route 21 maps form one
+continuous Pallet-to-Cinnabar crossing. Trainer battles use Wayfarer's scaling
+and defeat-state rules, and route encounter sources follow its combined
+FireRed/LeafGreen day/night ecology policy.
+
+Keep both Seafoam doorways on Route 20, with FRLG's reset of unfinished
+boulder paths when the player returns to the route. Preserve the open-world
+native-Surf crossing without requiring Blaine's badge, a story victory, or an
+HM item. The route port does not bring back the HNS Route 19 Kingler blockade,
+Seafoam Gym directions, or duplicate HNS route Trainers and encounters.
+The old HNS Route 19 Cave is not another Wayfarer Kyogre site; Hoenn's Marine
+Cave remains the later Kyogre capture destination under its own story rules.
+
 ### Blue and independent stories
 
 Move Blue's one-time Cinnabar introduction to the Viridian City exterior at
@@ -77,12 +103,13 @@ requirements.
 
 - This is a Wayfarer selection of existing FRLG maps and gameplay. Standalone
   HNS and FRLG retain their own maps and behavior.
-- Route 20, Route 21, Pallet, and Route 19 are external coast interfaces. Keep
-  Wayfarer's open-world access and ordinary encounters. Choose connection and
-  shoreline changes by Porymap inspection and traversal rather than assuming
-  matching dimensions prove a usable crossing.
+- Pallet and Fuchsia are the external coast interfaces. Keep Wayfarer's
+  open-world access and ordinary encounters. Choose connection and shoreline
+  changes by Porymap inspection and traversal rather than assuming matching
+  dimensions prove a usable crossing.
 - The feature does not add an eruption state, another Blaine Gym, a Kanto
-  Groudon encounter, a Bill-triggered Sevii unlock, or a new campaign order.
+  Groudon or Kyogre encounter, a Bill-triggered Sevii unlock, or a new
+  campaign order.
 - Existing Hoenn Groudon story and capture rules, global badge accounting,
   Trainer Rating, and regional League admission remain owned by their designs.
 
@@ -102,8 +129,11 @@ difficulty.
 
 ## Playtesting
 
-- Reach Cinnabar from Pallet and Seafoam from both Route 20 sides, cross back,
-  and Surf onto and off each shore without collision or camera breaks.
+- Reach Cinnabar from Pallet through both Route 21 maps and from Fuchsia
+  through Routes 19 and 20. Enter Seafoam from both Route 20 sides, cross
+  back, and Surf onto and off each shore without collision or camera breaks.
+- Challenge every selected route Trainer, speak to the other route NPCs, claim
+  route hidden items, and sample every authored wild method on each route map.
 - Complete the Mansion switch and Secret Key loop, all six Gym quizzes, the
   Blaine battle and deferred TM handoff, then return after saving.
 - Use every Lab service, heal and whiteout at the Center, Fly back to town, and
@@ -119,6 +149,7 @@ difficulty.
 - [Unlocked Cinnabar interior preview](../specs/frlg-cinnabar-unlocked-interiors.md)
 - [HNS Cinnabar and Seafoam map retirement](../specs/frlg-cinnabar-seafoam-hns-retirement.md)
 - [Seafoam implementation specification](../specs/frlg-seafoam-islands-port.md)
+- [Coastal route implementation specification](../specs/frlg-kanto-coastal-routes-port.md)
 - [Coastal and state integration specification](../specs/frlg-cinnabar-seafoam-integration.md)
 - [FRLG Kanto independent story beats](frlg-kanto-independent-story-beats.md)
 - [Sevii independent story beats](sevii-independent-story-beats.md)
