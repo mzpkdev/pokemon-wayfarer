@@ -31,7 +31,7 @@ const waitForTrainerBattle = async (
   interact = true,
 ): Promise<void> => {
   if (interact) await game.player.interact()
-  for (let attempt = 0; attempt < 300; attempt++) {
+  for (let attempt = 0; attempt < 600; attempt++) {
     const state = await game.state.read()
     if (state.battle.ui === "action-menu") return
     if (

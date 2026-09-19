@@ -52,9 +52,10 @@ Every Kanto `profiles` record has these fields:
 - `dayBaseLabel` and `nightBaseLabel`, the resolved target identities.
 - `nightMode`, either `AUTHORED` or `DAY_ALIAS`.
 - `activeSlotCount`, equal to 12, 5, 5, or 10 for the four methods.
-- `sourceKind`, either `DIRECT`, `EQUIVALENT`, or `ANALOG`.
-- `fireRedSource` and `leafGreenSource`, each an array of one or more exact
-  source base labels.
+- `sourceKind`, one of `DIRECT`, `EQUIVALENT`, `ANALOG`, or `HNS_ADAPTED`.
+- `fireRedSource` and `leafGreenSource`, each an array of exact source base
+  labels for FRLG-sourced profiles. `HNS_ADAPTED` instead names one HNS day
+  donor in `hnsSource`.
 - `habitat`, one of `ROUTE_GRASS`, `FOREST`, `CAVE`, `MOUNTAIN`, `URBAN_EDGE`,
   `POND`, `COAST`, `OFFSHORE`, `FACILITY`, or `SAFARI`.
 
@@ -66,6 +67,12 @@ contributing version. `levelSource` identifies one version, base label, method,
 slot, minimum level, and maximum level. `reason` is one of `FRLG_SHARED`,
 `FRLG_VERSION_COUNTERPART`, `FRLG_DUPLICATE`, `GEN2_LOCAL_ADDITION`,
 `LATER_FAMILY_CONTINUITY`, or `NIGHT_REWEIGHT`.
+
+For `HNS_ADAPTED`, each slot instead records `targetTime`, `targetSlot`,
+`sourceSlot`, and reason `HNS_ADAPTED`. The source and target slot indices are
+identical, and generation checks the complete encounter method, including
+species, levels, and rates, against the HNS donor. An authored night row uses
+the matching HNS night donor; `DAY_ALIAS` uses the HNS day donor at night.
 
 `FRLG_DUPLICATE` marks a surplus copy from a shared FRLG ecology group, where
 FireRed and LeafGreen have the same species and the selected assignment already
@@ -161,13 +168,19 @@ does not aggregate: every target slot still selects one exact source slot from
 its ecology source group as `levelSource`.
 
 Use the same numbered FireRed and LeafGreen route, city, forest, or cave as the
-`DIRECT` source when that source has the target method. For the selected FRLG
-coast, `MAP_ROUTE19` uses
-`sRoute19_{FireRed,LeafGreen}`, `MAP_ROUTE20` uses
-`sRoute20_{FireRed,LeafGreen}`, and `MAP_ROUTE21_{NORTH,SOUTH}` uses the
-matching `sRoute21{North,South}_{FireRed,LeafGreen}` profile as its `DIRECT`
-source for every authored method. The historical HNS Route 21 mapping remains
-in the baseline-only `EQUIVALENT` table below.
+`DIRECT` source when that source has the target method, except for these
+selected coast profiles. Cinnabar water and fishing use HNS Cinnabar;
+Route 19 and Route 20 water and fishing use their matching HNS routes; both
+Route 21 maps use HNS Route 21 land, water, and fishing; and Seafoam 1F/B1F
+land uses its matching HNS floor. These are `HNS_ADAPTED` profiles with
+Wayfarer-owned target labels, leaving standalone HNS rows unchanged.
+Seafoam B2F–B4F and Mansion floors, which lack matching HNS donors, use
+adapted FRLG profiles. Their night rows may alias day. The historical HNS
+Route 21 FRLG mapping remains in the baseline-only `EQUIVALENT` table below.
+The separate Wayfarer native-HM catch overlay may replace an effective slot
+on selected Cinnabar to meet the existing Surf accessibility floor. It does
+not change the authored donor profile, HNS source row, or Chinchou's exact
+Old Rod rate; it must not apply to standalone FireRed or LeafGreen.
 
 The following target maps use named `EQUIVALENT` sources:
 
@@ -187,8 +200,7 @@ The following target maps use named `EQUIVALENT` sources:
 | Kanto Victory Road 1F | `sVictoryRoad1F_FireRed` and `sVictoryRoad1F_LeafGreen` |
 | Kanto Victory Road B1F | `sVictoryRoad2F_FireRed` and `sVictoryRoad2F_LeafGreen` |
 | Kanto Victory Road B2F | `sVictoryRoad3F_FireRed` and `sVictoryRoad3F_LeafGreen` |
-| Selected FRLG Cinnabar | `sCinnabarIsland_FireRed` and `sCinnabarIsland_LeafGreen` |
-| Selected FRLG Seafoam 1F, B1F, B2F, B3F, and B4F | The matching FireRed and LeafGreen Seafoam floor for each selected map |
+| Selected FRLG Seafoam B2F, B3F, and B4F | The matching FireRed and LeafGreen Seafoam floor for each selected map |
 
 When one of those sources lacks an active target method, use these `ANALOG`
 sources. This table is exhaustive, so the implementation does not choose an
@@ -390,6 +402,12 @@ schedule begins at level 5 in both learnset modes as required by the
 interregional circuit. Preserve the utility moves through level 100 and update
 the native-HM tests in the same implementation.
 
+The selected Cinnabar HNS donor retains its authored Chinchou slots and exact
+Old Rod rate. A Wayfarer-only native-HM overlay replaces its surplus Magikarp
+slot with level 25–35 Kingler, so `MAP_CINNABAR_ISLAND` meets the immediate
+eight-percent Surf floor in both learnset modes. This exception does not alter
+standalone HNS Cinnabar or its source row.
+
 ### Radio and ordinary population readers
 
 With independent Generation III species absent, Hoenn Sound must produce the
@@ -433,15 +451,15 @@ because it is an exception.
 
 Add regional-manifest and Kanto portfolio cases to
 `game/tools/wild_encounters/tests/test_scaling.py`. Fixtures must cover direct,
-equivalent, and analog mapping; a valid and invalid version-counterpart merge;
+equivalent, analog, and HNS-adapted mapping; a valid and invalid version-counterpart merge;
 the discrete-slot tie breaks; source-range selection; explicit day aliases;
 night retention and distance boundaries; generation classification; forbidden
 authored and effective species; and deterministic report ordering.
 
 Update the profile-count fixtures for Route 23, selected FRLG Routes 19, 20,
 21 North and South, Cinnabar, all five Seafoam floors, and their explicit
-night bindings. Check the two Route 21 source profiles separately even when
-their authored slots match. Run `make wild-encounter-scaling-test` and
+night bindings. Check that both Route 21 target profiles exactly retain the
+shared HNS Route 21 donor slots. Run `make wild-encounter-scaling-test` and
 `make wild-encounter-balance-audit`. The generated audit must pass every Rating
 from 0 through 80 in Wayfarer and all three rod qualities.
 

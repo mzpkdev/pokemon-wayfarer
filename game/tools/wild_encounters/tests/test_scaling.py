@@ -63,7 +63,8 @@ class WildEncounterScalingTests(unittest.TestCase):
         proposal = GENERATOR.load_json(ROOT.parent / ".product/research/native-hm-windows/revisions/nearby-access/proposal.json")
         original_replacements = copy.deepcopy(proposal["encounter_replacements"])
         cinnabar = next(row for row in original_replacements if row["map"] == "MAP_CINNABAR_ISLAND_HNS")
-        cinnabar["map"] = "MAP_CINNABAR_SEAM_POC"
+        cinnabar["map"] = "MAP_CINNABAR_ISLAND"
+        cinnabar["product"] = "POKEMON_WAYFARER"
         self.assertEqual(source["replacements"], original_replacements)
         self.assertEqual(len(source["replacements"]), 17)
         original = copy.deepcopy(self.encounters)
@@ -88,7 +89,9 @@ class WildEncounterScalingTests(unittest.TestCase):
                      dict(records[0], slot=100),
                      dict(records[0], min_level=101),
                      dict(records[0], min_level=True),
-                     dict(records[0], min_level=50, max_level=20)]
+                     dict(records[0], min_level=50, max_level=20),
+                     dict(records[0], product="POKEMON_HNS"),
+                     dict(records[0], map="MAP_CINNABAR_SEAM_POC")]
         for record in mutations:
             with self.subTest(record=record), self.assertRaises(GENERATOR.ValidationError):
                 GENERATOR.apply_wayfarer_encounter_replacements(self.encounters, [record])
@@ -112,6 +115,39 @@ class WildEncounterScalingTests(unittest.TestCase):
             name = label + "_" + method.title().replace("_", "")
             self.assertIn("#if IS_WAYFARER\nconst struct WildPokemon " + name + "[]", output)
             self.assertIn("#else\nconst struct WildPokemon " + name + "[]", output)
+
+    def test_wayfarer_regional_overlay_preserves_hns_source_rows(self):
+        profile = {
+            "map": "MAP_ROUTE3_HNS", "method": "land_mons", "nightMode": "AUTHORED",
+            "dayBaseLabel": "gRoute3_hns_Day", "nightBaseLabel": "gRoute3_hns_Night",
+        }
+        change = {
+            "map": "MAP_ROUTE3_HNS", "method": "land_mons", "time": "NIGHT", "slot": 7,
+            "beforeSpecies": "SPECIES_JIGGLYPUFF", "afterSpecies": "SPECIES_SPINARAK",
+            "changeKind": "ADDITION", "reason": "ROUTE_GRASS night ecology", "runtimeScope": "WAYFARER",
+        }
+        baseline = copy.deepcopy(self.encounters)
+        revised, audit = GENERATOR.apply_wayfarer_regional_overlays(
+            self.encounters, {"profiles": [profile], "changes": [change]}
+        )
+        self.assertEqual(self.encounters, baseline)
+        self.assertEqual(len(audit), 1)
+        by_label = {
+            entry["base_label"]
+            for group in revised["wild_encounter_groups"]
+            for entry in group["encounters"]
+        }
+        self.assertIn("gRoute3_hns_Night", by_label)
+        entry = next(
+            entry for group in revised["wild_encounter_groups"] for entry in group["encounters"]
+            if entry["base_label"] == "gRoute3_hns_Night"
+        )
+        self.assertEqual(entry["land_mons"]["mons"][7]["species"], "SPECIES_SPINARAK")
+        source_entry = next(
+            entry for group in self.encounters["wild_encounter_groups"] for entry in group["encounters"]
+            if entry["base_label"] == "gRoute3_hns_Night"
+        )
+        self.assertEqual(source_entry["land_mons"]["mons"][7]["species"], "SPECIES_JIGGLYPUFF")
 
     def test_sevii_manifest_freezes_topology_and_explicit_night_aliases(self):
         header_ids = {product: dict(values) for product, values in self.header_ids.items()}
@@ -140,6 +176,31 @@ class WildEncounterScalingTests(unittest.TestCase):
         name = profile["label"] + "_" + profile["method"].title().replace("_", "") + "Info"
         self.assertGreaterEqual(output.count("&" + name), 2)
 
+    def test_wayfarer_coast_profiles_are_authored_for_every_selected_map(self):
+        profiles = [
+            profile for profile in self.profiles
+            if (profile["product"] == "POKEMON_WAYFARER"
+                and profile["map"] in GENERATOR.WAYFARER_COAST_MAPS)
+        ]
+        self.assertEqual(len(profiles), 26)
+        self.assertEqual(
+            {profile["map"] for profile in profiles},
+            {
+                "MAP_ROUTE19", "MAP_ROUTE20", "MAP_ROUTE21_NORTH", "MAP_ROUTE21_SOUTH",
+                "MAP_CINNABAR_ISLAND", "MAP_SEAFOAM_ISLANDS_1F", "MAP_SEAFOAM_ISLANDS_B1F",
+                "MAP_SEAFOAM_ISLANDS_B2F", "MAP_SEAFOAM_ISLANDS_B3F", "MAP_SEAFOAM_ISLANDS_B4F",
+                "MAP_POKEMON_MANSION_1F", "MAP_POKEMON_MANSION_2F", "MAP_POKEMON_MANSION_3F",
+                "MAP_POKEMON_MANSION_B1F",
+            },
+        )
+        self.assertEqual(
+            {method: sum(method in profile["encounter"] for profile in profiles if profile["time"] == "TIME_DAY")
+             for method in GENERATOR.ACTIVE_SLOT_COUNTS},
+            {"land_mons": 11, "water_mons": 7, "rock_smash_mons": 0, "fishing_mons": 7},
+        )
+        self.assertTrue(all(profile["label"].endswith(("_Day", "_Night")) for profile in profiles))
+        self.assertTrue(all("_HNS" not in profile["map"] for profile in profiles))
+
     def test_standard_rod_source_is_strict_and_exact(self):
         self.assertEqual(self.standard_rod["schemaVersion"], 1)
         self.assertEqual(
@@ -150,7 +211,7 @@ class WildEncounterScalingTests(unittest.TestCase):
                 "SUPER_ROD": [12, 10, 11, 10, 10, 10, 10, 9, 9, 9],
             },
         )
-        self.assertEqual(len(self.standard_rod["nativeSurfAccessibility"]), 20)
+        self.assertEqual(len(self.standard_rod["nativeSurfAccessibility"]), 22)
         expected_recovery = {
             ("FIRERED", label, "TIME_DAY", species, expected)
             for label in ("sPalletTown_FireRed", "sCinnabarIsland_FireRed")
@@ -167,6 +228,9 @@ class WildEncounterScalingTests(unittest.TestCase):
                 "gVermilionCity_PortOutside_hns_Day", "gVermilionCity_PortOutside_hns_Night",
                 "gCinnabarIsland_hns_Day", "gCinnabarIsland_hns_Night",
             )
+        } | {
+            ("POKEMON_WAYFARER", label, "TIME_NIGHT" if label.endswith("_Night") else "TIME_DAY", "SPECIES_CHINCHOU", 11)
+            for label in ("gCinnabarIsland_Wayfarer_Day", "gCinnabarIsland_Wayfarer_Night")
         } | {
             ("POKEMON_HNS", "gCianwoodCity_hns_Day", "TIME_DAY", "SPECIES_CHINCHOU", 12),
             ("EMERALD", "gLilycoveCity", "TIME_DAY", "SPECIES_WAILMER", 19),
@@ -300,7 +364,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             {product: len(headers) for product, headers in self.header_ids.items()},
             {
                 "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
-                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 3,
+                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 17,
             },
         )
 
@@ -324,7 +388,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         item = {"product": "POKEMON_HNS", "header_id": 7}
         expression = GENERATOR.runtime_header_id(item, self.header_ids)
         retired = GENERATOR.retired_hns_header_ids(self.header_ids)
-        self.assertEqual(len(retired), 4)
+        self.assertEqual(len(retired), 6)
         self.assertIn("IS_WAYFARER", expression)
         evaluate = lambda value, wayfarer: eval(value.replace("HAS_EMERALD_CONTENT", "1")
                                               .replace("HAS_HNS_CONTENT", "1")
@@ -372,7 +436,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             {product: len([profile for profile in self.profiles if profile["product"] == product]) for product, _ in GENERATOR.PRODUCTS},
             {
                 "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
-                "POKEMON_HNS": 270, "POKEMON_WAYFARER": 6,
+                "POKEMON_HNS": 270, "POKEMON_WAYFARER": 32,
             },
         )
 
@@ -759,7 +823,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(by_identity[("MAP_ROUTE1_HNS", "land_mons")]["sourceKind"], "DIRECT")
         self.assertEqual(by_identity[("MAP_MT_MOON_CAVE_HNS", "land_mons")]["sourceKind"], "EQUIVALENT")
         self.assertEqual(by_identity[("MAP_ROUTE1_HNS", "water_mons")]["sourceKind"], "ANALOG")
-        self.assertEqual(len(manifest["profiles"]), 129)
+        self.assertEqual(len(manifest["profiles"]), 142)
         self.assertEqual(
             [(row["map"], row["method"], row["time"], row["slot"], row["afterSpecies"]) for row in manifest["changes"]],
             sorted((row["map"], row["method"], row["time"], row["slot"], row["afterSpecies"]) for row in manifest["changes"]),
@@ -787,12 +851,12 @@ class WildEncounterScalingTests(unittest.TestCase):
         encounters = copy.deepcopy(self.encounters)
         target = next(
             row for row in encounters["wild_encounter_groups"][0]["encounters"]
-            if row["base_label"] == "gRoute1_hns_Day"
+            if row["base_label"] == "gRoute23_hns_Day"
         )
         target["land_mons"]["encounter_rate"] += 1
         config = GENERATOR.Config(GENERATOR.DEFAULT_CONFIG, GENERATOR.DEFAULT_RTC, encounters)
         profiles, _ = GENERATOR.validate_encounters(encounters, self.species, config)
-        with self.assertRaisesRegex(GENERATOR.ValidationError, "frozen Kanto topology or encounter rates changed"):
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "Route 23 rates"):
             GENERATOR.validate_regional_manifest(
                 document, profiles, config, self.species,
                 GENERATOR.DEFAULT_REGIONS, nat_dex,
@@ -867,8 +931,8 @@ class WildEncounterScalingTests(unittest.TestCase):
             )
 
         before = copy.deepcopy(document)
-        before["regions"]["KANTO"]["changes"][0]["beforeSpecies"] = "SPECIES_MEW"
-        with self.assertRaisesRegex(GENERATOR.ValidationError, "beforeSpecies ledger does not match"):
+        before["regions"]["KANTO"]["changes"][0]["beforeSpecies"] = before["regions"]["KANTO"]["changes"][0]["afterSpecies"]
+        with self.assertRaisesRegex(GENERATOR.ValidationError, "change must alter the species"):
             GENERATOR.validate_regional_manifest(
                 before, self.profiles, self.config, self.species,
                 GENERATOR.DEFAULT_REGIONS, nat_dex,
@@ -1351,8 +1415,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertEqual(audit["schemaVersion"], 4)
         self.assertTrue(audit["invariants"]["passed"], audit["invariants"]["failures"])
         kanto = audit["regions"]["KANTO"]
-        self.assertEqual(kanto["ownership"]["profileDenominatorByTime"], {"DAY": 129, "NIGHT": 129})
-        self.assertEqual(kanto["authoredSpeciesUnionCount"], 110)
+        self.assertEqual(kanto["ownership"]["profileDenominatorByTime"], {"DAY": 142, "NIGHT": 142})
         self.assertTrue(kanto["counterpartSolverProofs"])
         omission_proofs = [
             proof for proof in kanto["counterpartSolverProofs"]
@@ -1375,9 +1438,30 @@ class WildEncounterScalingTests(unittest.TestCase):
         self.assertGreaterEqual(kanto["materiallyDistinctLandProfileCount"], 25)
         self.assertTrue(kanto["forbiddenSpecies"]["passed"])
         self.assertTrue(kanto["hoennSoundComparison"]["passed"])
+        native_hm = audit["wayfarerNativeHmOverlays"]
+        self.assertEqual(len(native_hm), 23)
+        self.assertFalse(any(row["map"] in GENERATOR.RETIRED_WAYFARER_COAST_POC_WILD_MAPS
+                             for row in native_hm))
+        cinnabar_native_hm = [
+            row for row in native_hm
+            if row["map"] == "MAP_CINNABAR_ISLAND"
+        ]
+        self.assertEqual(
+            [(row["baseLabel"], row["old"]["species"], row["new"]["species"])
+            for row in cinnabar_native_hm],
+            [
+                ("gCinnabarIsland_Wayfarer_Day", "SPECIES_MAGIKARP", "SPECIES_KINGLER"),
+                ("gCinnabarIsland_Wayfarer_Night", "SPECIES_MAGIKARP", "SPECIES_KINGLER"),
+            ],
+        )
+        self.assertTrue(any(
+            row["map"] == "MAP_CINNABAR_ISLAND"
+            and "SPECIES_MAGIKARP" in row["sourceSpecies"]
+            for row in kanto["sourceUnionCapacityProofs"]
+        ))
         self.assertEqual(
             len(kanto["hoennSoundComparison"]["profileComparisons"]),
-            (41 + 31) * 2 * 81,
+            (48 + 34) * 2 * 81,
         )
         self.assertTrue(all(
             row["randomized"] is False
@@ -1485,7 +1569,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             [rating for sample in row["samples"] for rating in sample["ratings"]] == list(range(0, 81))
             for row in fishing
         ))
-        self.assertEqual(len(audit["nativeSurfAccessibility"]), 20)
+        self.assertEqual(len(audit["nativeSurfAccessibility"]), 22)
         self.assertEqual(audit["minimumEligibleOldRodEntryProbability"], {"numerator": 1, "denominator": 50})
 
         for recovery in audit["nativeSurfAccessibility"]:
@@ -1579,6 +1663,7 @@ class WildEncounterScalingTests(unittest.TestCase):
         level = {"version": "FIRERED", "baseLabel": "fire", "method": "land_mons", "slot": 0, "minLevel": 5, "maxLevel": 5}
         profile = {
             "map": "MAP_FIXTURE", "method": "land_mons",
+            "sourceKind": "DIRECT",
             "fireRedSource": ["fire"], "leafGreenSource": ["leaf"],
             "dayBaseLabel": "day", "nightBaseLabel": "day", "nightMode": "DAY_ALIAS",
             "provenance": [
@@ -1622,7 +1707,7 @@ class WildEncounterScalingTests(unittest.TestCase):
             projection["headerCounts"],
             {
                 "EMERALD": 124, "FIRERED": 132, "LEAFGREEN": 132,
-                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 3,
+                "POKEMON_HNS": 168, "POKEMON_WAYFARER": 17,
             },
         )
 

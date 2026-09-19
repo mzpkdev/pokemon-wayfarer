@@ -18,7 +18,7 @@ from pathlib import Path
 GAME_ROOT = Path(__file__).resolve().parents[2]
 DATA_PATH = GAME_ROOT / "src/data/wayfarer_marts.h"
 DEFAULT_OUTPUT = Path(__file__).with_name("catalog_manifest.json")
-PROFILE_COUNT = 36
+PROFILE_COUNT = 37
 TIER_RATINGS = (0, 4, 16, 30, 40, 55)
 WAYFARER_CONDITIONS = {
     "IS_WAYFARER": True,
@@ -206,11 +206,14 @@ def active_wayfarer_lines(text: str) -> list[tuple[int, str]]:
 
 def active_wayfarer_map_names() -> set[str]:
     source = (GAME_ROOT / "data/event_scripts.s").read_text()
-    return {
+    maps = {
         match.group(1)
         for _, line in active_wayfarer_lines(source)
         if (match := re.match(r'^\s*\.include "data/maps/([^/]+)/scripts\.inc"$', line))
     }
+    if 'data/maps/wayfarer_cinnabar_full_scripts.inc' in source:
+        maps.add("CinnabarIsland_Mart_Frlg")
+    return maps
 
 
 def reachable_mart_commands(map_name: str) -> list[dict]:

@@ -16,10 +16,6 @@
 #include "pokedex.h"
 #endif
 
-// Despite having a variable to track it, the roamer is
-// hard-coded to only ever be in map group 0
-#define ROAMER_MAP_GROUP 0
-
 enum
 {
     MAP_GRP, // map group
@@ -31,7 +27,7 @@ EWRAM_DATA static u8 sLocationHistory[ROAMER_COUNT][3][2] = {0};
 EWRAM_DATA static u8 sRoamerLocation[ROAMER_COUNT][2] = {0};
 EWRAM_DATA u8 gEncounteredRoamerIndex = 0;
 
-#define ___ MAP_NUM(MAP_UNDEFINED) // For empty spots in the location table
+#define ___ MAP_UNDEFINED // For empty spots in the location table
 
 // Note: There are two potential softlocks that can occur with this table if its maps are
 //       changed in particular ways. They can be avoided by ensuring the following:
@@ -54,7 +50,7 @@ enum
     ROAMER_LOC_TABLE_COUNT,
 };
 
-static const u8 sRoamerLocationsJohto[][6] =
+static const u16 sRoamerLocationsJohto[][6] =
 {
     { MAP_NUM(MAP_ROUTE29_HNS), MAP_NUM(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE46_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE30_HNS), MAP_NUM(MAP_ROUTE29_HNS), MAP_NUM(MAP_ROUTE31_HNS), ___, ___, ___ },
@@ -75,7 +71,7 @@ static const u8 sRoamerLocationsJohto[][6] =
     { ___, ___, ___, ___, ___, ___ },
 };
 
-static const u8 sRoamerLocationsKanto[][6] =
+static const u16 sRoamerLocationsKanto[][6] =
 {
     { MAP_NUM(MAP_ROUTE1_HNS),  MAP_NUM(MAP_ROUTE2_HNS),  MAP_NUM(MAP_ROUTE22_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE2_HNS),  MAP_NUM(MAP_ROUTE1_HNS),  MAP_NUM(MAP_ROUTE3_HNS),  ___, ___, ___ },
@@ -95,9 +91,16 @@ static const u8 sRoamerLocationsKanto[][6] =
     { MAP_NUM(MAP_ROUTE16_HNS), MAP_NUM(MAP_ROUTE7_HNS),  MAP_NUM(MAP_ROUTE17_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE16_HNS), MAP_NUM(MAP_ROUTE18_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE18_HNS), MAP_NUM(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE15_HNS), ___, ___, ___ },
+#if IS_WAYFARER
+    { MAP_ROUTE19, MAP_ROUTE20, MAP_ROUTE21_NORTH, ___, ___, ___ },
+    { MAP_ROUTE20, MAP_ROUTE19, MAP_ROUTE21_SOUTH, ___, ___, ___ },
+    { MAP_ROUTE21_NORTH, MAP_ROUTE21_SOUTH, MAP_ROUTE20, ___, ___, ___ },
+    { MAP_ROUTE21_SOUTH, MAP_ROUTE21_NORTH, MAP_ROUTE20, ___, ___, ___ },
+#else
     { MAP_NUM(MAP_ROUTE19_HNS), MAP_NUM(MAP_ROUTE20_HNS), MAP_NUM(MAP_ROUTE21_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE20_HNS), MAP_NUM(MAP_ROUTE19_HNS), MAP_NUM(MAP_ROUTE21_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE21_HNS), MAP_NUM(MAP_ROUTE19_HNS), MAP_NUM(MAP_ROUTE20_HNS), ___, ___, ___ },
+#endif
     { MAP_NUM(MAP_ROUTE22_HNS), MAP_NUM(MAP_ROUTE1_HNS),  MAP_NUM(MAP_ROUTE23_HNS), ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE23_HNS), MAP_NUM(MAP_ROUTE22_HNS), MAP_NUM(MAP_ROUTE1_HNS),  ___, ___, ___ },
     { MAP_NUM(MAP_ROUTE24_HNS), MAP_NUM(MAP_ROUTE4_HNS),  MAP_NUM(MAP_ROUTE25_HNS), ___, ___, ___ },
@@ -107,7 +110,7 @@ static const u8 sRoamerLocationsKanto[][6] =
 
 struct RoamerLocationTable
 {
-    const u8 (*locations)[6];
+    const u16 (*locations)[6];
     u8 numSets;
 };
 
@@ -119,7 +122,7 @@ static const struct RoamerLocationTable sRoamerLocationTables[ROAMER_LOC_TABLE_C
 
 #else
 
-static const u8 sRoamerLocationsHoenn[][6] =
+static const u16 sRoamerLocationsHoenn[][6] =
 {
     { MAP_NUM(MAP_ROUTE110), MAP_NUM(MAP_ROUTE111), MAP_NUM(MAP_ROUTE117), MAP_NUM(MAP_ROUTE118), MAP_NUM(MAP_ROUTE134), ___ },
     { MAP_NUM(MAP_ROUTE111), MAP_NUM(MAP_ROUTE110), MAP_NUM(MAP_ROUTE117), MAP_NUM(MAP_ROUTE118), ___, ___ },
@@ -152,7 +155,7 @@ enum
 
 struct RoamerLocationTable
 {
-    const u8 (*locations)[6];
+    const u16 (*locations)[6];
     u8 numSets;
 };
 
@@ -166,7 +169,7 @@ static const struct RoamerLocationTable sRoamerLocationTables[ROAMER_LOC_TABLE_C
 #undef ___
 #define NUM_LOCATIONS_PER_SET 6
 
-static inline const u8 (*GetRoamerLocations(u32 roamerIndex))[6]
+static inline const u16 (*GetRoamerLocations(u32 roamerIndex))[6]
 {
     return sRoamerLocationTables[ROAMER(roamerIndex)->locationTableId].locations;
 }
@@ -176,15 +179,26 @@ static inline u8 GetRoamerNumLocationSets(u32 roamerIndex)
     return sRoamerLocationTables[ROAMER(roamerIndex)->locationTableId].numSets;
 }
 
-static bool8 IsMapInRoamerTable(u32 roamerIndex, u8 mapNum)
+static u16 GetRoamerMapId(u32 roamerIndex)
 {
-    const u8 (*locs)[6] = GetRoamerLocations(roamerIndex);
+    return (sRoamerLocation[roamerIndex][MAP_GRP] << 8) | sRoamerLocation[roamerIndex][MAP_NUM];
+}
+
+static void SetRoamerMapId(u32 roamerIndex, u16 mapId)
+{
+    sRoamerLocation[roamerIndex][MAP_GRP] = MAP_GROUP(mapId);
+    sRoamerLocation[roamerIndex][MAP_NUM] = MAP_NUM(mapId);
+}
+
+static bool8 IsMapInRoamerTable(u32 roamerIndex, u16 mapId)
+{
+    const u16 (*locs)[6] = GetRoamerLocations(roamerIndex);
     u8 numSets = GetRoamerNumLocationSets(roamerIndex);
     u32 i;
 
     for (i = 0; i < numSets; i++)
     {
-        if (locs[i][0] == mapNum)
+        if (locs[i][0] == mapId)
             return TRUE;
     }
     return FALSE;
@@ -209,18 +223,18 @@ static u8 CountLegendariesInParty(void)
 
 static void TryAttractRoamer(u32 roamerIndex)
 {
-    u8 playerMapNum = gSaveBlock1Ptr->location.mapNum;
+    u16 playerMapId = (gSaveBlock1Ptr->location.mapGroup << 8) | gSaveBlock1Ptr->location.mapNum;
     u8 legendCount = CountLegendariesInParty();
 
     if (legendCount == 0)
         return;
 
-    if (!IsMapInRoamerTable(roamerIndex, playerMapNum))
+    if (!IsMapInRoamerTable(roamerIndex, playerMapId))
         return;
 
     // 2% per legendary in party (max 12% with 6)
     if ((Random() % 100) < (legendCount * 2))
-        sRoamerLocation[roamerIndex][MAP_NUM] = playerMapNum;
+        SetRoamerMapId(roamerIndex, playerMapId);
 }
 
 void DeactivateAllRoamers(void)
@@ -299,10 +313,9 @@ static void CreateInitialRoamerMon(u8 index, u16 species, u8 level, u8 locationT
     ROAMER(index)->tough = GetMonData(&gEnemyParty[0], MON_DATA_TOUGH);
     ROAMER(index)->shiny = GetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY);
     ROAMER(index)->active = TRUE;
-    sRoamerLocation[index][MAP_GRP] = ROAMER_MAP_GROUP;
-    const u8 (*locs)[6] = GetRoamerLocations(index);
+    const u16 (*locs)[6] = GetRoamerLocations(index);
     u8 numSets = GetRoamerNumLocationSets(index);
-    sRoamerLocation[index][MAP_NUM] = locs[Random() % numSets][0];
+    SetRoamerMapId(index, locs[Random() % numSets][0]);
 }
 
 static u8 GetFirstInactiveRoamerIndex(void)
@@ -389,26 +402,24 @@ void UpdateLocationHistoryForRoamer(void)
 
 void RoamerMoveToOtherLocationSet(u32 roamerIndex)
 {
-    u8 mapNum = 0;
+    u16 mapId = 0;
 
     if (!ROAMER(roamerIndex)->active)
         return;
 
-    const u8 (*locs)[6] = GetRoamerLocations(roamerIndex);
+    const u16 (*locs)[6] = GetRoamerLocations(roamerIndex);
     u8 numSets = GetRoamerNumLocationSets(roamerIndex);
-
-    sRoamerLocation[roamerIndex][MAP_GRP] = ROAMER_MAP_GROUP;
 
     do
     {
-        mapNum = locs[Random() % numSets][0];
-        if (sRoamerLocation[roamerIndex][MAP_NUM] != mapNum)
+        mapId = locs[Random() % numSets][0];
+        if (GetRoamerMapId(roamerIndex) != mapId)
         {
-            sRoamerLocation[roamerIndex][MAP_NUM] = mapNum;
+            SetRoamerMapId(roamerIndex, mapId);
             return;
         }
-    } while (sRoamerLocation[roamerIndex][MAP_NUM] == mapNum);
-    sRoamerLocation[roamerIndex][MAP_NUM] = mapNum;
+    } while (GetRoamerMapId(roamerIndex) == mapId);
+    SetRoamerMapId(roamerIndex, mapId);
 }
 
 void RoamerMove(u32 roamerIndex)
@@ -424,19 +435,19 @@ void RoamerMove(u32 roamerIndex)
         if (!ROAMER(roamerIndex)->active)
             return;
 
-        const u8 (*locs)[6] = GetRoamerLocations(roamerIndex);
+        const u16 (*locs)[6] = GetRoamerLocations(roamerIndex);
         u8 numSets = GetRoamerNumLocationSets(roamerIndex);
 
         while (locSet < numSets)
         {
-            if (sRoamerLocation[roamerIndex][MAP_NUM] == locs[locSet][0])
+            if (GetRoamerMapId(roamerIndex) == locs[locSet][0])
             {
-                u8 mapNum;
+                u16 mapId;
                 do
                 {
-                    mapNum = locs[locSet][(Random() % (NUM_LOCATIONS_PER_SET - 1)) + 1];
-                } while (mapNum == MAP_NUM(MAP_UNDEFINED));
-                sRoamerLocation[roamerIndex][MAP_NUM] = mapNum;
+                    mapId = locs[locSet][(Random() % (NUM_LOCATIONS_PER_SET - 1)) + 1];
+                } while (mapId == MAP_UNDEFINED);
+                SetRoamerMapId(roamerIndex, mapId);
                 return;
             }
             locSet++;

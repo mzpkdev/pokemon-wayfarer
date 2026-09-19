@@ -1,0 +1,570 @@
+{
+  "allocation": {
+    "allocations": [
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_RICHARD",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_RICHARD",
+        "kind": "base",
+        "numeric_id": 1651,
+        "policy": "ORDINARY",
+        "slot": 0,
+        "source_hash": "27cd237493d88781aa5fd4be80bb65557d28b6d40bb4f86617a71e00c51da27e",
+        "source_trainer": "TRAINER_SWIMMER_MALE_RICHARD"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_REECE",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_REECE",
+        "kind": "base",
+        "numeric_id": 1652,
+        "policy": "ORDINARY",
+        "slot": 1,
+        "source_hash": "78f012cff9bdbb884fea94b01b3a8f229c0ee9819f61a2a19db3eb476a558036",
+        "source_trainer": "TRAINER_SWIMMER_MALE_REECE"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_MATTHEW",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_MATTHEW",
+        "kind": "base",
+        "numeric_id": 1653,
+        "policy": "ORDINARY",
+        "slot": 2,
+        "source_hash": "2faf03eb2c029b67ff46df3c4823e6041efa3931a103a50627759ad02d9c65dd",
+        "source_trainer": "TRAINER_SWIMMER_MALE_MATTHEW"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_DOUGLAS",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_DOUGLAS",
+        "kind": "base",
+        "numeric_id": 1654,
+        "policy": "ORDINARY",
+        "slot": 3,
+        "source_hash": "0e8ad7e655bc56dcfd9df6841bc113e8cd240c2ecfcf7e037be71d4cbb644122",
+        "source_trainer": "TRAINER_SWIMMER_MALE_DOUGLAS"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_DAVID",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_DAVID",
+        "kind": "base",
+        "numeric_id": 1655,
+        "policy": "ORDINARY",
+        "slot": 4,
+        "source_hash": "de6f29594a385083e76527cb58d8fc4bc60a95dc7ddb3102ca4cfdd1a26ff47d",
+        "source_trainer": "TRAINER_SWIMMER_MALE_DAVID"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_TONY",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_TONY",
+        "kind": "base",
+        "numeric_id": 1656,
+        "policy": "ORDINARY",
+        "slot": 5,
+        "source_hash": "2868a03bad57fb599893cbdd08788a2bcb21558d7a7caab161dca10f262369d3",
+        "source_trainer": "TRAINER_SWIMMER_MALE_TONY"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_AXLE",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_AXLE",
+        "kind": "base",
+        "numeric_id": 1657,
+        "policy": "ORDINARY",
+        "slot": 6,
+        "source_hash": "be7da8787a37890a2dd7fc45aa69516231484904c7193fc3271cd27c652e9e34",
+        "source_trainer": "TRAINER_SWIMMER_MALE_AXLE"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_ANYA",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ANYA",
+        "kind": "base",
+        "numeric_id": 1658,
+        "policy": "ORDINARY",
+        "slot": 7,
+        "source_hash": "1d0955d1c1e26f6ce7e44e20bbfb3e3b0798ad0b324d1dffcac0d6bb0a11a605",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_ANYA"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_ALICE",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE",
+        "kind": "base",
+        "numeric_id": 1659,
+        "policy": "ORDINARY",
+        "slot": 8,
+        "source_hash": "18c79d6437e9b642e10a9259c81ee9f9908148a4e514227534207090394e463c",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_ALICE"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_CONNIE",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_CONNIE",
+        "kind": "base",
+        "numeric_id": 1660,
+        "policy": "ORDINARY",
+        "slot": 9,
+        "source_hash": "e1b8bdcea550eadc03da4b8218b815531c675d83d87644a680ee716a7728f3f2",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_CONNIE"
+      },
+      {
+        "defeat_base": "TRAINER_SIS_AND_BRO_LIA_LUC",
+        "id": "TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIA_LUC",
+        "kind": "base",
+        "numeric_id": 1661,
+        "policy": "ORDINARY",
+        "slot": 10,
+        "source_hash": "ecfb204cf25e59e6ab6275a996dd671b8adb09baed46c015b9adff957f872d60",
+        "source_trainer": "TRAINER_SIS_AND_BRO_LIA_LUC"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_BARRY",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_BARRY",
+        "kind": "base",
+        "numeric_id": 1662,
+        "policy": "ORDINARY",
+        "slot": 11,
+        "source_hash": "ecdb7ae5926a8016064cbcc557fcf4a08c4f9cbdb704f750f5ad16b784d3ba9c",
+        "source_trainer": "TRAINER_SWIMMER_MALE_BARRY"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_DEAN",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_DEAN",
+        "kind": "base",
+        "numeric_id": 1663,
+        "policy": "ORDINARY",
+        "slot": 12,
+        "source_hash": "12a80519c6cb1199bc7e402eb8e7b867d905b6fc11a1a46b921256f14bf147b0",
+        "source_trainer": "TRAINER_SWIMMER_MALE_DEAN"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_DARRIN",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_DARRIN",
+        "kind": "base",
+        "numeric_id": 1664,
+        "policy": "ORDINARY",
+        "slot": 13,
+        "source_hash": "39cece3188046662a265cd49d97bcd2753b1a43e45a45f82aaebdf78b6f1836b",
+        "source_trainer": "TRAINER_SWIMMER_MALE_DARRIN"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_TIFFANY",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_TIFFANY",
+        "kind": "base",
+        "numeric_id": 1665,
+        "policy": "ORDINARY",
+        "slot": 14,
+        "source_hash": "6561cb11bd85c257398fe00c4ae722cd4442876b3a62bf986ae95e8d4bda0acd",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_TIFFANY"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_NORA",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_NORA",
+        "kind": "base",
+        "numeric_id": 1666,
+        "policy": "ORDINARY",
+        "slot": 15,
+        "source_hash": "c1045d57f1360664f527e081cc833d3ca127152343fff4461cda19c01389240a",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_NORA"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_SHIRLEY",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_SHIRLEY",
+        "kind": "base",
+        "numeric_id": 1667,
+        "policy": "ORDINARY",
+        "slot": 16,
+        "source_hash": "ecd774ff4fb7f0d6dd3aa10c4a091d7f32c35d246338dcb5108c9cbece5eba49",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_SHIRLEY"
+      },
+      {
+        "defeat_base": "TRAINER_BIRD_KEEPER_ROGER",
+        "id": "TRAINER_WAYFARER_COAST_BIRD_KEEPER_ROGER",
+        "kind": "base",
+        "numeric_id": 1668,
+        "policy": "ORDINARY",
+        "slot": 17,
+        "source_hash": "29a1d8366c47eff289b57602ccd327394d28889f91a5d77e1646cb8d5ef434b1",
+        "source_trainer": "TRAINER_BIRD_KEEPER_ROGER"
+      },
+      {
+        "defeat_base": "TRAINER_PICNICKER_MISSY",
+        "id": "TRAINER_WAYFARER_COAST_PICNICKER_MISSY",
+        "kind": "base",
+        "numeric_id": 1669,
+        "policy": "ORDINARY",
+        "slot": 18,
+        "source_hash": "6a969d7a7a486b85be21b240b221b538bafa3971915b6f96acf279a0ef28081f",
+        "source_trainer": "TRAINER_PICNICKER_MISSY"
+      },
+      {
+        "defeat_base": "TRAINER_PICNICKER_IRENE",
+        "id": "TRAINER_WAYFARER_COAST_PICNICKER_IRENE",
+        "kind": "base",
+        "numeric_id": 1670,
+        "policy": "ORDINARY",
+        "slot": 19,
+        "source_hash": "933a992c620504938a1302c9a179781e1c0e81cfda932ca42f0a9327d882c42f",
+        "source_trainer": "TRAINER_PICNICKER_IRENE"
+      },
+      {
+        "defeat_base": "TRAINER_FISHERMAN_RONALD",
+        "id": "TRAINER_WAYFARER_COAST_FISHERMAN_RONALD",
+        "kind": "base",
+        "numeric_id": 1671,
+        "policy": "ORDINARY",
+        "slot": 20,
+        "source_hash": "e210a9f3e21802dbed947be4b60362f1a11a7142ed402a2b144ffa0521c92e25",
+        "source_trainer": "TRAINER_FISHERMAN_RONALD"
+      },
+      {
+        "defeat_base": "TRAINER_FISHERMAN_CLAUDE",
+        "id": "TRAINER_WAYFARER_COAST_FISHERMAN_CLAUDE",
+        "kind": "base",
+        "numeric_id": 1672,
+        "policy": "ORDINARY",
+        "slot": 21,
+        "source_hash": "c4e0448c6d3ddad590c88cc7952989a6df929d6be5957b74f7c7e9871bcecd70",
+        "source_trainer": "TRAINER_FISHERMAN_CLAUDE"
+      },
+      {
+        "defeat_base": "TRAINER_FISHERMAN_WADE",
+        "id": "TRAINER_WAYFARER_COAST_FISHERMAN_WADE",
+        "kind": "base",
+        "numeric_id": 1673,
+        "policy": "ORDINARY",
+        "slot": 22,
+        "source_hash": "b119f350391c8668cc6974562ea43ac59274fa91427201e35f9eb3381ee1995c",
+        "source_trainer": "TRAINER_FISHERMAN_WADE"
+      },
+      {
+        "defeat_base": "TRAINER_FISHERMAN_NOLAN",
+        "id": "TRAINER_WAYFARER_COAST_FISHERMAN_NOLAN",
+        "kind": "base",
+        "numeric_id": 1674,
+        "policy": "ORDINARY",
+        "slot": 23,
+        "source_hash": "5247b372c1777e84380004f8ef9125c39c8fc48c8386e91a7135823c62a33498",
+        "source_trainer": "TRAINER_FISHERMAN_NOLAN"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_SPENCER",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_SPENCER",
+        "kind": "base",
+        "numeric_id": 1675,
+        "policy": "ORDINARY",
+        "slot": 24,
+        "source_hash": "0a56bb71a4b96b0aca8bf2c626371e8cc174a8c53e5f954ade32ca48de7da7f8",
+        "source_trainer": "TRAINER_SWIMMER_MALE_SPENCER"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_JACK",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_JACK",
+        "kind": "base",
+        "numeric_id": 1676,
+        "policy": "ORDINARY",
+        "slot": 25,
+        "source_hash": "a7f9184040cf68262621e7b7b1a25d57d0332c8799de721badfa999777e4e656",
+        "source_trainer": "TRAINER_SWIMMER_MALE_JACK"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_JEROME",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_JEROME",
+        "kind": "base",
+        "numeric_id": 1677,
+        "policy": "ORDINARY",
+        "slot": 26,
+        "source_hash": "3430d00ace13c06ed0216dd3ff92cb95e9d0b687b9168effbe5fabbe1d62dc2b",
+        "source_trainer": "TRAINER_SWIMMER_MALE_JEROME"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_ROLAND",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_ROLAND",
+        "kind": "base",
+        "numeric_id": 1678,
+        "policy": "ORDINARY",
+        "slot": 27,
+        "source_hash": "ab68e925bdabc13a6e397ef81ff02bf435080f2824f3633493c1abf611a9638e",
+        "source_trainer": "TRAINER_SWIMMER_MALE_ROLAND"
+      },
+      {
+        "defeat_base": "TRAINER_SIS_AND_BRO_LIL_IAN",
+        "id": "TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN",
+        "kind": "base",
+        "numeric_id": 1679,
+        "policy": "ORDINARY",
+        "slot": 28,
+        "source_hash": "359c366672853adccb0258815baae539b5203f79476490cae7974fa742dc25fb",
+        "source_trainer": "TRAINER_SIS_AND_BRO_LIL_IAN"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_MELISSA",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA",
+        "kind": "base",
+        "numeric_id": 1680,
+        "policy": "ORDINARY",
+        "slot": 29,
+        "source_hash": "0ed9107aa57e0959e05100fd7039ae26ac46a03f354c628e685c9ec8e246ebbf",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_MELISSA"
+      },
+      {
+        "defeat_base": "TRAINER_SCIENTIST_TED",
+        "id": "TRAINER_WAYFARER_COAST_SCIENTIST_TED",
+        "kind": "base",
+        "numeric_id": 1681,
+        "policy": "ORDINARY",
+        "slot": 30,
+        "source_hash": "752c488eb07a64b99a1db4ba4c277d55a3d3d86a0076cfa76e7cde054cbad0a4",
+        "source_trainer": "TRAINER_SCIENTIST_TED"
+      },
+      {
+        "defeat_base": "TRAINER_YOUNGSTER_JOHNSON",
+        "id": "TRAINER_WAYFARER_COAST_YOUNGSTER_JOHNSON",
+        "kind": "base",
+        "numeric_id": 1682,
+        "policy": "ORDINARY",
+        "slot": 31,
+        "source_hash": "ab4b8665a01be6b12734a7e5d873d0a192d4199e3ca4929e3a21cadbad6da4b7",
+        "source_trainer": "TRAINER_YOUNGSTER_JOHNSON"
+      },
+      {
+        "defeat_base": "TRAINER_BURGLAR_ARNIE",
+        "id": "TRAINER_WAYFARER_COAST_BURGLAR_ARNIE",
+        "kind": "base",
+        "numeric_id": 1683,
+        "policy": "ORDINARY",
+        "slot": 32,
+        "source_hash": "f283d390cefd91ebc6a571b9229201802885f27d123c54612dd0670f7a69170d",
+        "source_trainer": "TRAINER_BURGLAR_ARNIE"
+      },
+      {
+        "defeat_base": "TRAINER_BURGLAR_SIMON",
+        "id": "TRAINER_WAYFARER_COAST_BURGLAR_SIMON",
+        "kind": "base",
+        "numeric_id": 1684,
+        "policy": "ORDINARY",
+        "slot": 33,
+        "source_hash": "b92e5a90859ce059ffc4d4dc4cb343c2f3a1c421b9e9e1c437f38ac84368ebec",
+        "source_trainer": "TRAINER_BURGLAR_SIMON"
+      },
+      {
+        "defeat_base": "TRAINER_SCIENTIST_BRAYDON",
+        "id": "TRAINER_WAYFARER_COAST_SCIENTIST_BRAYDON",
+        "kind": "base",
+        "numeric_id": 1685,
+        "policy": "ORDINARY",
+        "slot": 34,
+        "source_hash": "585f617fbeeb8d01b07aeb3762162a193b3d23021b19ed84e963ba026b24d6ec",
+        "source_trainer": "TRAINER_SCIENTIST_BRAYDON"
+      },
+      {
+        "defeat_base": "TRAINER_BURGLAR_LEWIS",
+        "id": "TRAINER_WAYFARER_COAST_BURGLAR_LEWIS",
+        "kind": "base",
+        "numeric_id": 1686,
+        "policy": "ORDINARY",
+        "slot": 35,
+        "source_hash": "760d6af016e9c6899140d1687a4e86e7107c31b2608e1e48605161504c1a620d",
+        "source_trainer": "TRAINER_BURGLAR_LEWIS"
+      },
+      {
+        "defeat_base": "TRAINER_SCIENTIST_IVAN",
+        "id": "TRAINER_WAYFARER_COAST_SCIENTIST_IVAN",
+        "kind": "base",
+        "numeric_id": 1687,
+        "policy": "ORDINARY",
+        "slot": 36,
+        "source_hash": "b12a9192289d69f5b0a03412f6c9a2a815c75cc87a502dbc55062dcc5b04cf3f",
+        "source_trainer": "TRAINER_SCIENTIST_IVAN"
+      },
+      {
+        "defeat_base": "TRAINER_SUPER_NERD_ERIK",
+        "id": "TRAINER_WAYFARER_COAST_SUPER_NERD_ERIK",
+        "kind": "base",
+        "numeric_id": 1688,
+        "policy": "GYM_MEMBER",
+        "slot": 37,
+        "source_hash": "eb1f0e3bbd572b01293f2af8bdcf720d7c84e635168232bb39618e06e026794a",
+        "source_trainer": "TRAINER_SUPER_NERD_ERIK"
+      },
+      {
+        "defeat_base": "TRAINER_SUPER_NERD_AVERY",
+        "id": "TRAINER_WAYFARER_COAST_SUPER_NERD_AVERY",
+        "kind": "base",
+        "numeric_id": 1689,
+        "policy": "GYM_MEMBER",
+        "slot": 38,
+        "source_hash": "714d3e6998bf0d80f8ea9b1690800d1488ecce305b60cada7f6e24b2240559e5",
+        "source_trainer": "TRAINER_SUPER_NERD_AVERY"
+      },
+      {
+        "defeat_base": "TRAINER_SUPER_NERD_DEREK",
+        "id": "TRAINER_WAYFARER_COAST_SUPER_NERD_DEREK",
+        "kind": "base",
+        "numeric_id": 1690,
+        "policy": "GYM_MEMBER",
+        "slot": 39,
+        "source_hash": "91949ea041b7a7de6a4333eb0d35b64d4295fd0b98f96197ee557b27ab6d7608",
+        "source_trainer": "TRAINER_SUPER_NERD_DEREK"
+      },
+      {
+        "defeat_base": "TRAINER_SUPER_NERD_ZAC",
+        "id": "TRAINER_WAYFARER_COAST_SUPER_NERD_ZAC",
+        "kind": "base",
+        "numeric_id": 1691,
+        "policy": "GYM_MEMBER",
+        "slot": 40,
+        "source_hash": "9c5e7736efb49da5b24abd4bda202f7177467c08f4bb3afe98ee681c958830eb",
+        "source_trainer": "TRAINER_SUPER_NERD_ZAC"
+      },
+      {
+        "defeat_base": "TRAINER_BURGLAR_QUINN",
+        "id": "TRAINER_WAYFARER_COAST_BURGLAR_QUINN",
+        "kind": "base",
+        "numeric_id": 1692,
+        "policy": "GYM_MEMBER",
+        "slot": 41,
+        "source_hash": "c46e59e8a40440d6d7d86a483f57f8a24284e9419519013f6aad38bca9d1d296",
+        "source_trainer": "TRAINER_BURGLAR_QUINN"
+      },
+      {
+        "defeat_base": "TRAINER_BURGLAR_RAMON",
+        "id": "TRAINER_WAYFARER_COAST_BURGLAR_RAMON",
+        "kind": "base",
+        "numeric_id": 1693,
+        "policy": "GYM_MEMBER",
+        "slot": 42,
+        "source_hash": "8f85cf90fbdcb685d8d455ed7f609b8be1af8f63298d0bdc7bf5a3b95215d2d0",
+        "source_trainer": "TRAINER_BURGLAR_RAMON"
+      },
+      {
+        "defeat_base": "TRAINER_BURGLAR_DUSTY",
+        "id": "TRAINER_WAYFARER_COAST_BURGLAR_DUSTY",
+        "kind": "base",
+        "numeric_id": 1694,
+        "policy": "GYM_MEMBER",
+        "slot": 43,
+        "source_hash": "4a82b87372fcef59e31da863a80a9e13dcf82c6216578d49eb1d549ed1768541",
+        "source_trainer": "TRAINER_BURGLAR_DUSTY"
+      },
+      {
+        "defeat_base": "TRAINER_LEADER_BLAINE",
+        "id": "TRAINER_WAYFARER_COAST_LEADER_BLAINE",
+        "kind": "base",
+        "numeric_id": 1695,
+        "policy": "GYM_LEADER",
+        "slot": 44,
+        "source_hash": "2217445e3f721aed8670c7cf39441ca372730a5cff975b987d6e15cf8c13660b",
+        "source_trainer": "TRAINER_LEADER_BLAINE"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_ALICE",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_ALICE_2",
+        "kind": "rematch",
+        "numeric_id": 1696,
+        "policy": "ORDINARY",
+        "slot": 45,
+        "source_hash": "eaf89f07ec8cf98caa1d93050fadf2df7d507539508c021f8f8513ad64484bda",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_ALICE_2"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_DARRIN",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_DARRIN_2",
+        "kind": "rematch",
+        "numeric_id": 1697,
+        "policy": "ORDINARY",
+        "slot": 46,
+        "source_hash": "12612df4372e2e76cc16d485033f2bb16667f7d0428b9bff1e1917e4f67feb86",
+        "source_trainer": "TRAINER_SWIMMER_MALE_DARRIN_2"
+      },
+      {
+        "defeat_base": "TRAINER_PICNICKER_MISSY",
+        "id": "TRAINER_WAYFARER_COAST_PICNICKER_MISSY_2",
+        "kind": "rematch",
+        "numeric_id": 1698,
+        "policy": "ORDINARY",
+        "slot": 47,
+        "source_hash": "58736b5db2dd339775984602765afb912762135b3b8d59f248cec329a5b380ef",
+        "source_trainer": "TRAINER_PICNICKER_MISSY_2"
+      },
+      {
+        "defeat_base": "TRAINER_PICNICKER_MISSY",
+        "id": "TRAINER_WAYFARER_COAST_PICNICKER_MISSY_3",
+        "kind": "rematch",
+        "numeric_id": 1699,
+        "policy": "ORDINARY",
+        "slot": 48,
+        "source_hash": "8b9ecf501da703c7f06b65c9b157596a1b7389a7761fab3a30eeec4d29c51da7",
+        "source_trainer": "TRAINER_PICNICKER_MISSY_3"
+      },
+      {
+        "defeat_base": "TRAINER_FISHERMAN_WADE",
+        "id": "TRAINER_WAYFARER_COAST_FISHERMAN_WADE_2",
+        "kind": "rematch",
+        "numeric_id": 1700,
+        "policy": "ORDINARY",
+        "slot": 49,
+        "source_hash": "b34af70bf4a2a27f140ff857c734d47bf276633437a5f0c3d595245f48fe4123",
+        "source_trainer": "TRAINER_FISHERMAN_WADE_2"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_JACK",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_JACK_2",
+        "kind": "rematch",
+        "numeric_id": 1701,
+        "policy": "ORDINARY",
+        "slot": 50,
+        "source_hash": "b0206dd5da8a4a6005abc120ae06b4c3d9dc605664ef446b054d673c27b586a8",
+        "source_trainer": "TRAINER_SWIMMER_MALE_JACK_2"
+      },
+      {
+        "defeat_base": "TRAINER_SIS_AND_BRO_LIL_IAN",
+        "id": "TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN_2",
+        "kind": "rematch",
+        "numeric_id": 1702,
+        "policy": "ORDINARY",
+        "slot": 51,
+        "source_hash": "75f81aa6d8c72e5002d121ebf8e8b525ce5a2e6d6d3383d31be300c01f2fa23e",
+        "source_trainer": "TRAINER_SIS_AND_BRO_LIL_IAN_2"
+      },
+      {
+        "defeat_base": "TRAINER_SIS_AND_BRO_LIL_IAN",
+        "id": "TRAINER_WAYFARER_COAST_SIS_AND_BRO_LIL_IAN_3",
+        "kind": "rematch",
+        "numeric_id": 1703,
+        "policy": "ORDINARY",
+        "slot": 52,
+        "source_hash": "57bc29566bb020bc99d6a1346dce77d26e603e4bde670e50fc775efbb064b2d5",
+        "source_trainer": "TRAINER_SIS_AND_BRO_LIL_IAN_3"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_MATTHEW",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_MATTHEW_2",
+        "kind": "rematch",
+        "numeric_id": 1704,
+        "policy": "ORDINARY",
+        "slot": 53,
+        "source_hash": "04a482e25663c4e7547982dae13568b43a3473e63fc1f7e42115e9b41a5607b2",
+        "source_trainer": "TRAINER_SWIMMER_MALE_MATTHEW_2"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_MALE_TONY",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_MALE_TONY_2",
+        "kind": "rematch",
+        "numeric_id": 1705,
+        "policy": "ORDINARY",
+        "slot": 54,
+        "source_hash": "9f08c36bfdbf36fa56bd10f988818bf636ae2b8c0e416664e6a68dd84598d869",
+        "source_trainer": "TRAINER_SWIMMER_MALE_TONY_2"
+      },
+      {
+        "defeat_base": "TRAINER_SWIMMER_FEMALE_MELISSA",
+        "id": "TRAINER_WAYFARER_COAST_SWIMMER_FEMALE_MELISSA_2",
+        "kind": "rematch",
+        "numeric_id": 1706,
+        "policy": "ORDINARY",
+        "slot": 55,
+        "source_hash": "5e76cd708a4ddeb4c3501474f24309ca473cbc1d46b13d2ca8789a1965099942",
+        "source_trainer": "TRAINER_SWIMMER_FEMALE_MELISSA_2"
+      }
+    ],
+    "base": 1651,
+    "count": 56,
+    "next_id": 1707
+  },
+  "schema_version": 1
+}

@@ -1089,6 +1089,9 @@ gStdScripts_End::
 
 #if IS_WAYFARER
 	.include "data/wayfarer_common_source_constants.inc"
+	.include "data/scripts/wayfarer_kanto_coast_routes.inc"
+	.include "data/scripts/wayfarer_seafoam.inc"
+	.include "data/maps/wayfarer_cinnabar_full_scripts.inc"
 #endif
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
@@ -2026,8 +2029,10 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/Route16_hns/scripts.inc"
 	.include "data/maps/Route17_hns/scripts.inc"
 	.include "data/maps/Route18_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/Route19_hns/scripts.inc"
 	.include "data/maps/Route20_hns/scripts.inc"
+#endif
 #if !IS_WAYFARER
 	.include "data/maps/Route21_hns/scripts.inc"
 #endif
@@ -2199,7 +2204,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/FuchsiaCity_House1_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_House2_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_Gym_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/FuchsiaCity_Route19_Gate_hns/scripts.inc"
+#endif
 	.include "data/maps/FuchsiaCity_Route15_Gate_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_SafariZoneEntrance_hns/scripts.inc"
 	.include "data/maps/FuchsiaCity_SafariZoneBeach_hns/scripts.inc"
@@ -2379,7 +2386,9 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/maps/RuinsOfAlph_WordsRoom2_hns/scripts.inc"
 	.include "data/maps/RuinsOfAlph_WordsRoom3_hns/scripts.inc"
 	.include "data/maps/RuinsOfAlph_WordsRoom4_hns/scripts.inc"
+#if !IS_WAYFARER
 	.include "data/maps/Route19_Cave_hns/scripts.inc"
+#endif
 	.include "data/maps/SnowsweptCavern_hns/scripts.inc"
 	.include "data/maps/NewSinjoh_HotSprings_hns/scripts.inc"
 	.include "data/maps/UnionRoom_hns/scripts.inc"

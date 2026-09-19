@@ -85,8 +85,11 @@ starting Bill's story.
 
 ### Town encounters and presentation
 
-Select FRLG Cinnabar's Surf and fishing ecology through Wayfarer's encounter
-pipeline; remove the selected HNS volcanic land/water/day/night bindings.
+Select HNS Cinnabar's Surf and fishing tables as donors for the FRLG town map
+through Wayfarer's encounter pipeline; keep standalone HNS bindings intact.
+The effective Wayfarer catch table may apply a product-scoped native Surf
+replacement where required to meet the existing accessibility floor. Preserve
+the authored HNS donor slots and the exact Old Rod Chinchou rate.
 If Wayfarer's active encounter policy requires a native Surf source or
 day/night coverage, preserve it explicitly under the new town map identity.
 Keep building objects, signs, doors, sounds, and collision consistent with

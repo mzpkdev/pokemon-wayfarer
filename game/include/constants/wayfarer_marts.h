@@ -38,7 +38,8 @@
 #define MART_PROFILE_BATTLE_FRONTIER             33
 #define MART_PROFILE_TRAINER_HILL_HNS            34
 #define MART_PROFILE_TRAINER_HILL                35
-#define MART_PROFILE_COUNT                       36
+#define MART_PROFILE_CINNABAR                    36
+#define MART_PROFILE_COUNT                       37
 
 #define MART_CLERK_FAMILY_CHERRYGROVE             0
 #define MART_CLERK_FAMILY_VIOLET                  1

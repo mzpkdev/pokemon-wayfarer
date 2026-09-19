@@ -117,6 +117,15 @@ static u8 *GetWayfarerSeviiFlagPointer(u16 id)
         return NULL;
     return &gSaveBlock3Ptr->wayfarerSevii.flags[index / 8];
 }
+
+static u8 *GetWayfarerCoastFlagPointer(u16 id)
+{
+    u16 index = id & WAYFARER_PERSISTENCE_VALUE_MASK;
+
+    if (index >= WAYFARER_COAST_FLAG_COUNT)
+        return NULL;
+    return &gSaveBlock3Ptr->wayfarerCoast.flags[index / 8];
+}
 #endif
 
 // Capped at 8: every consumer indexes 8-entry tables with the count this yields.
@@ -325,6 +334,13 @@ u16 *GetVarPointer(u16 id)
             return &gSaveBlock3Ptr->wayfarerSevii.vars[index];
         return NULL;
     }
+    if (IS_WAYFARER_COAST_VAR_ID(id))
+    {
+        u16 index = id & WAYFARER_PERSISTENCE_VALUE_MASK;
+        if (index < WAYFARER_COAST_VAR_COUNT)
+            return &gSaveBlock3Ptr->wayfarerCoast.vars[index];
+        return NULL;
+    }
 #endif
 
     if (id < VARS_START)
@@ -380,6 +396,8 @@ u8 *GetFlagPointer(u16 id)
     }
     if (IS_WAYFARER_SEVII_FLAG_ID(id))
         return GetWayfarerSeviiFlagPointer(id);
+    if (IS_WAYFARER_COAST_FLAG_ID(id))
+        return GetWayfarerCoastFlagPointer(id);
 #endif
 
     if (id == 0)

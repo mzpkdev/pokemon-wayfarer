@@ -298,6 +298,8 @@ gSpecials::
 	def_special WayfarerGetHoennBadgeCountForScript
 	def_special WayfarerShouldWhiteOutToLavaridge
 	def_special WayfarerPrepareHoennEntry
+	def_special WayfarerCoast_IsArticunoEligible
+	def_special WayfarerGrantKantoBadge15
 #endif
 	def_special MoveElevator
 	def_special ShowGlassWorkshopMenu

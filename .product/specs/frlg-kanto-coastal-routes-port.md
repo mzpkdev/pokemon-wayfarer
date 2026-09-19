@@ -105,18 +105,13 @@ that still name the old route IDs. Preserve standalone HNS behavior.
 
 Use `game/src/data/wild_encounters.json` as the authored source. Register each
 selected route map in the Kanto encounter manifest with separate map identity
-and complete day/night source binding. Use `sRoute19_{FireRed,LeafGreen}` and
-`sRoute20_{FireRed,LeafGreen}` for Surf and fishing, and the matching
-`sRoute21{North,South}_{FireRed,LeafGreen}` sources for land, Surf, and
-fishing. If the two Route 21 source profiles are identical for a method,
-record and validate that equivalence; retain both playable map bindings.
-
-Apply the existing Kanto FireRed/LeafGreen species-merge, level provenance,
-night-authoring, Standard Rod, and Trainer Rating rules. Preserve every
-authored method on its playable terrain and do not silently carry an HNS route
-encounter header into the FRLG layouts. The retired HNS route profiles remain
-available to standalone HNS. No encounter header in the Wayfarer release
-points to a route that is absent or unreachable.
+and complete day/night source binding. Reuse the HNS Route 19 and Route 20
+Surf and fishing tables on the matching FRLG layouts. Reuse the HNS Route 21
+land, Surf, and fishing tables for both FRLG North and South, retaining both
+playable map bindings. Copy donor slots and level ranges exactly into
+Wayfarer-owned encounter rows; leave standalone HNS rows unchanged. Apply
+Wayfarer's Standard Rod and Trainer Rating rules. No encounter header in the
+Wayfarer release points to a route that is absent or unreachable.
 
 ## Acceptance
 

@@ -520,7 +520,7 @@ describe.sequential("HNS Kanto traversal", () => {
     it("crosses the Pallet end of Route 21 in both directions without the HM item", async () => {
       await startPreparedSurf(game, { map: "pallet-town", x: 7, y: 16 }, "down")
       await movePath(game, ["down", "down"])
-      await moveUntilMap(game, "down", "route-21-north-coast-poc")
+      await moveUntilMap(game, "down", "route-21-north-frlg")
       await moveUntilMap(game, "up", "pallet-town")
 
       await expect(game.state.read()).resolves.toMatchObject({
@@ -530,13 +530,13 @@ describe.sequential("HNS Kanto traversal", () => {
     })
 
     it("crosses the Cinnabar end of Route 21 in both directions without the HM item", async () => {
-      await startPreparedSurf(game, { map: "cinnabar-seam-poc", x: 22, y: 10 }, "right")
-      await game.player.warp("route-21-south-coast-poc", 2, 49, "down")
-      await moveUntilMap(game, "down", "cinnabar-seam-poc")
-      await moveUntilMap(game, "up", "route-21-south-coast-poc")
+      await startPreparedSurf(game, { map: "cinnabar-island-frlg", x: 22, y: 10 }, "right")
+      await game.player.warp("route-21-south-frlg", 2, 49, "down")
+      await moveUntilMap(game, "down", "cinnabar-island-frlg")
+      await moveUntilMap(game, "up", "route-21-south-frlg")
 
       await expect(game.state.read()).resolves.toMatchObject({
-        map: { name: "route-21-south-coast-poc" },
+        map: { name: "route-21-south-frlg" },
         player: { surfing: true },
       })
     })

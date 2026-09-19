@@ -49,7 +49,7 @@ ViridianCity_EventScript_GrampsDoubted::
 VirianCity_EventScript_GymGramps::
 #if IS_WAYFARER
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, VirianCity_EventScript_GymGrampsBlue
-	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED, VirianCity_EventScript_GymGrampsBlue
+	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, VirianCity_EventScript_GymGrampsBlue
 #else
 	goto_if_set FLAG_HIDE_CINNABAR_BLUE, VirianCity_EventScript_GymGrampsBlue
 #endif
@@ -64,8 +64,13 @@ ViridianCity_EventScript_BlueIntro::
 	lock
 	faceplayer
 	msgbox ViridianCity_Text_BlueIntro, MSGBOX_DEFAULT
+#if IS_WAYFARER
+	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST
+	setflag FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST
+#else
 	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED
 	setflag FLAG_HIDE_VIRIDIAN_BLUE_INTRO
+#endif
 	removeobject LOCALID_VIRIDIAN_BLUE_INTRO
 	release
 	end
@@ -174,8 +179,12 @@ ViridianCity_Text_Sign:
 
 ViridianCity_Text_GymSign:
 	.string "VIRIDIAN CITY POKéMON GYM\n"
+#if IS_WAYFARER
+	.string "LEADER: BLUE$"
+#else
 	.string "LEADER: …\p"
 	.string "The rest of the text is illegible…$"
+#endif
 
 ViridianCity_Text_WelcomeSign:
 	.string "WELCOME TO VIRIDIAN CITY,\p"

@@ -64,12 +64,12 @@ Articuno state without changing these outcomes.
 
 Preserve FRLG floor items and hidden items, including Ice Heal, Water Stone,
 Revive, Big Pearl, Ultra Ball, Nugget, and the B4F Water Stone. Each uses
-collision-safe placement and a one-time Wayfarer flag. Select the authored
-FireRed/LeafGreen Seafoam encounter tables for all five floors and adapt them
-to Wayfarer's day/night and Trainer Rating pipeline without silently losing a
-method, version species, or floor. Remove the HNS 1F/B1F encounter bindings
-from the active Kanto manifest; the resulting catalog must cover every
-active Seafoam floor.
+collision-safe placement and a one-time Wayfarer flag. Reuse HNS Seafoam 1F
+and B1F land encounters as donors under the selected FRLG map identities.
+Adapt FireRed/LeafGreen tables for B2F, B3F, and B4F through Wayfarer's
+day/night and Trainer Rating pipeline. A floor without an authored night
+source may use its day table at night. Keep standalone HNS bindings available;
+the selected Wayfarer catalog covers every active Seafoam floor.
 
 Groudon is absent from Seafoam. Do not replace the old Secret Cave with a new
 room, alternate entrance, or second Groudon. Hoenn's Terra Cave remains the

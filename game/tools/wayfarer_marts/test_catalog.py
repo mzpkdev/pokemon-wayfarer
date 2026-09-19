@@ -49,6 +49,7 @@ SIGNATURES = {
     "MART_PROFILE_CELADON_2F": ("ITEM_LUXURY_BALL", "ITEM_POKE_DOLL", "ITEM_RETRO_MAIL"),
     "MART_PROFILE_SAFFRON": ("ITEM_X_SP_ATK", "ITEM_X_SP_DEF", "ITEM_GUARD_SPEC"),
     "MART_PROFILE_FUCHSIA": ("ITEM_NET_BALL", "ITEM_NEST_BALL", "ITEM_FLUFFY_TAIL"),
+    "MART_PROFILE_CINNABAR": ("ITEM_BURN_HEAL", "ITEM_ESCAPE_ROPE", "ITEM_DUSK_BALL"),
     "MART_PROFILE_OLDALE": ("ITEM_HEAL_BALL", "ITEM_NEST_BALL"),
     "MART_PROFILE_PETALBURG": ("ITEM_NEST_BALL", "ITEM_X_DEFENSE", "ITEM_ORANGE_MAIL"),
     "MART_PROFILE_RUSTBORO": ("ITEM_TIMER_BALL", "ITEM_REPEAT_BALL"),
@@ -125,7 +126,7 @@ def main() -> int:
         fail("common catalog or display order differs from approved tiers")
     if tuple((entry["minimum_tr"], entry["item"]) for entry in manifest["challenge_pp_items_in_display_order"]) != PP:
         fail("challenge PP thresholds differ from approved tiers")
-    if len(profiles) != 35 or set(SIGNATURES) - set(profiles):
+    if len(profiles) != 36 or set(SIGNATURES) - set(profiles):
         fail("conversion registry is incomplete")
     if not classifications or any(not row["reason"] for row in classifications):
         fail("every authored mart source needs a preserved/excluded/converted classification")
@@ -202,8 +203,8 @@ def main() -> int:
                 if len(resolved) != len(set(resolved)) or len(resolved) > 63:
                     fail(f"duplicate or oversized catalog for {profile_id}")
 
-    if len(town_signatures) != 29 or len(set(town_signatures)) != 29:
-        fail("town signatures must be 29 pairwise-distinct 2..4 item sets")
+    if len(town_signatures) != 30 or len(set(town_signatures)) != 30:
+        fail("town signatures must be 30 pairwise-distinct 2..4 item sets")
     if max(len(expected_output(profile_id, 55, True)) for profile_id in profiles) != 31:
         fail("largest catalog must remain 31 items")
 
@@ -230,8 +231,13 @@ def main() -> int:
         map_name = profile["map"]
         if profile["script_binding"] in shared_labels:
             continue
-        source = (GAME_ROOT / "data/maps" / map_name / "scripts.inc").read_text()
-        if GUARD not in source or f"setvar VAR_0x8004, {profile_id}" not in source:
+        if profile_id == "MART_PROFILE_CINNABAR":
+            source = (GAME_ROOT / "data/maps/wayfarer_cinnabar_full_scripts.inc").read_text()
+            guarded = 'data/maps/wayfarer_cinnabar_full_scripts.inc' in (GAME_ROOT / "data/event_scripts.s").read_text()
+        else:
+            source = (GAME_ROOT / "data/maps" / map_name / "scripts.inc").read_text()
+            guarded = GUARD in source
+        if not guarded or f"setvar VAR_0x8004, {profile_id}" not in source:
             fail(f"direct profile branch is incomplete for {profile_id}")
         if "special WayfarerOpenMartProfile" not in source or "waitstate" not in source:
             fail(f"direct profile opener/resume is incomplete for {profile_id}")

@@ -48,6 +48,8 @@
 #include "vs_seeker.h"
 #include "wayfarer_sevii_rematches.h"
 #include "wayfarer_sevii_trainer_defeats.h"
+#include "wayfarer_coast_trainers.h"
+#include "wayfarer_coast_trainer_defeats.h"
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -201,7 +203,9 @@ const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES] =
     [REMATCH_CARTER_HNS]  = REMATCH(TRAINER_CARTER_HNS,   TRAINER_CARTER_2_HNS,  TRAINER_CARTER_3_HNS,  TRAINER_CARTER_3_HNS,  TRAINER_CARTER_3_HNS,  MAP_ROUTE14_HNS),
     [REMATCH_HILLARY_HNS] = REMATCH(TRAINER_HILLARY_HNS,  TRAINER_HILLARY_2_HNS, TRAINER_HILLARY_3_HNS, TRAINER_HILLARY_3_HNS, TRAINER_HILLARY_3_HNS, MAP_ROUTE15_HNS),
     [REMATCH_ROB_HNS]     = REMATCH(TRAINER_ROB_HNS,      TRAINER_ROB_2_HNS,     TRAINER_ROB_3_HNS,     TRAINER_ROB_3_HNS,     TRAINER_ROB_3_HNS,     MAP_ROUTE2_HNS),
+#if !IS_WAYFARER
     [REMATCH_NICOLE_HNS]  = REMATCH(TRAINER_NICOLE_HNS,   TRAINER_NICOLE_2_HNS,  TRAINER_NICOLE_3_HNS,  TRAINER_NICOLE_3_HNS,  TRAINER_NICOLE_3_HNS,  MAP_ROUTE20_HNS),
+#endif
     [REMATCH_BILLY_HNS]   = REMATCH(TRAINER_BILLY_HNS,    TRAINER_BILLY_2_HNS,   TRAINER_BILLY_3_HNS,   TRAINER_BILLY_3_HNS,   TRAINER_BILLY_3_HNS,   MAP_ROUTE15_HNS),
     [REMATCH_KENNY_HNS]   = REMATCH(TRAINER_KENNY_HNS,    TRAINER_KENNY_2_HNS,   TRAINER_KENNY_3_HNS,   TRAINER_KENNY_3_HNS,   TRAINER_KENNY_3_HNS,   MAP_ROUTE13_HNS),
     [REMATCH_JOEL_HNS]    = REMATCH(TRAINER_JOEL_HNS,     TRAINER_JOEL_2_HNS,    TRAINER_JOEL_3_HNS,    TRAINER_JOEL_3_HNS,    TRAINER_JOEL_3_HNS,    MAP_ROUTE17_HNS),
@@ -887,7 +891,7 @@ static const struct {
     {MAP_CIANWOOD_CITY_HNS,                     BATTLE_ENVIRONMENT_SAND},
     {MAP_FUCHSIA_CITY_SAFARI_ZONE_BEACH_HNS,    BATTLE_ENVIRONMENT_SAND},
 #if IS_WAYFARER
-    {MAP_CINNABAR_SEAM_POC,                     BATTLE_ENVIRONMENT_SAND},
+    {MAP_CINNABAR_ISLAND,                      BATTLE_ENVIRONMENT_SAND},
 #else
     {MAP_CINNABAR_ISLAND_HNS,                   BATTLE_ENVIRONMENT_SAND},
 #endif
@@ -971,11 +975,11 @@ static const struct {
     {MAP_ICE_PATH_B3F_HNS,                       BATTLE_ENVIRONMENT_SNOW_CAVE},
     {MAP_ICE_PATH_B4F_HNS,                       BATTLE_ENVIRONMENT_SNOW_CAVE},
 #if IS_WAYFARER
-    {MAP_SEAFOAM_ISLANDS_1F_COAST_POC,          BATTLE_ENVIRONMENT_SNOW_CAVE},
-    {MAP_SEAFOAM_ISLANDS_B1F_COAST_POC,         BATTLE_ENVIRONMENT_SNOW_CAVE},
-    {MAP_SEAFOAM_ISLANDS_B2F_COAST_POC,         BATTLE_ENVIRONMENT_SNOW_CAVE},
-    {MAP_SEAFOAM_ISLANDS_B3F_COAST_POC,         BATTLE_ENVIRONMENT_SNOW_CAVE},
-    {MAP_SEAFOAM_ISLANDS_B4F_COAST_POC,         BATTLE_ENVIRONMENT_SNOW_CAVE},
+    {MAP_SEAFOAM_ISLANDS_1F,                    BATTLE_ENVIRONMENT_SNOW_CAVE},
+    {MAP_SEAFOAM_ISLANDS_B1F,                   BATTLE_ENVIRONMENT_SNOW_CAVE},
+    {MAP_SEAFOAM_ISLANDS_B2F,                   BATTLE_ENVIRONMENT_SNOW_CAVE},
+    {MAP_SEAFOAM_ISLANDS_B3F,                   BATTLE_ENVIRONMENT_SNOW_CAVE},
+    {MAP_SEAFOAM_ISLANDS_B4F,                   BATTLE_ENVIRONMENT_SNOW_CAVE},
 #else
     {MAP_SEAFOAM_ISLANDS_1F_HNS,                 BATTLE_ENVIRONMENT_SNOW_CAVE},
     {MAP_SEAFOAM_ISLANDS_B1F_HNS,                BATTLE_ENVIRONMENT_SNOW_CAVE},
@@ -1657,6 +1661,7 @@ bool8 HasTrainerBeenFought(u16 trainerId)
 {
 #if IS_WAYFARER
     u16 seviiDefeatSlot;
+    u16 coastDefeatSlot;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1670,6 +1675,9 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     seviiDefeatSlot = WayfarerSeviiTrainerGetDefeatSlot(trainerId);
     if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
         return WayfarerSeviiTrainerDefeatGet(seviiDefeatSlot);
+    coastDefeatSlot = WayfarerCoastTrainerGetDefeatSlot(trainerId);
+    if (coastDefeatSlot != WAYFARER_COAST_TRAINER_DEFEAT_SLOT_NONE)
+        return WayfarerCoastTrainerDefeatGet(coastDefeatSlot);
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1682,6 +1690,7 @@ void SetTrainerFlag(u16 trainerId)
 {
 #if IS_WAYFARER
     u16 seviiDefeatSlot;
+    u16 coastDefeatSlot;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1701,6 +1710,12 @@ void SetTrainerFlag(u16 trainerId)
         WayfarerSeviiTrainerDefeatSet(seviiDefeatSlot);
         return;
     }
+    coastDefeatSlot = WayfarerCoastTrainerGetDefeatSlot(trainerId);
+    if (coastDefeatSlot != WAYFARER_COAST_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerCoastTrainerDefeatSet(coastDefeatSlot);
+        return;
+    }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1713,6 +1728,7 @@ void ClearTrainerFlag(u16 trainerId)
 {
 #if IS_WAYFARER
     u16 seviiDefeatSlot;
+    u16 coastDefeatSlot;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1730,6 +1746,12 @@ void ClearTrainerFlag(u16 trainerId)
     if (seviiDefeatSlot != WAYFARER_SEVII_TRAINER_DEFEAT_SLOT_NONE)
     {
         WayfarerSeviiTrainerDefeatClear(seviiDefeatSlot);
+        return;
+    }
+    coastDefeatSlot = WayfarerCoastTrainerGetDefeatSlot(trainerId);
+    if (coastDefeatSlot != WAYFARER_COAST_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerCoastTrainerDefeatClear(coastDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
@@ -2605,6 +2627,8 @@ bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum)
 static u16 GetRematchTrainerId(u16 trainerId)
 {
 #if IS_WAYFARER
+    if (WayfarerCoastRematchHasFamily(trainerId))
+        return WayfarerCoastRematchGetOpponent(trainerId);
     if (WayfarerSeviiRematchHasFamily(trainerId))
         return WayfarerSeviiRematchGetOpponent(trainerId);
 #endif
@@ -2629,6 +2653,8 @@ bool8 ShouldTryRematchBattle(void)
 bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 {
 #if IS_WAYFARER
+    if (WayfarerCoastRematchHasFamily(trainerId))
+        return WayfarerCoastRematchIsReady(trainerId);
     if (WayfarerSeviiRematchHasFamily(trainerId))
         return WayfarerSeviiRematchIsReady(trainerId);
 #endif
@@ -2642,6 +2668,8 @@ bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
 bool8 IsTrainerReadyForRematch(void)
 {
 #if IS_WAYFARER
+    if (WayfarerCoastRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+        return WayfarerCoastRematchIsReady(TRAINER_BATTLE_PARAM.opponentA);
     if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
         return WayfarerSeviiRematchIsReady(TRAINER_BATTLE_PARAM.opponentA);
 #endif
@@ -2655,7 +2683,9 @@ static void HandleRematchVarsOnBattleEnd(void)
         ClearRematchMovementByTrainerId();
 
 #if IS_WAYFARER
-    if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+    if (WayfarerCoastRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
+        WayfarerCoastRematchCompleteIfReady(TRAINER_BATTLE_PARAM.opponentA);
+    else if (WayfarerSeviiRematchHasFamily(TRAINER_BATTLE_PARAM.opponentA))
     {
         WayfarerSeviiRematchClearReady(TRAINER_BATTLE_PARAM.opponentA);
         WayfarerSeviiRematchAdvance(TRAINER_BATTLE_PARAM.opponentA);

@@ -75,6 +75,7 @@ static const u16 sLavender[] = { ITEM_DUSK_BALL, ITEM_HEAL_BALL, ITEM_SHADOW_MAI
 static const u16 sCeladon[] = { ITEM_LUXURY_BALL, ITEM_POKE_DOLL, ITEM_RETRO_MAIL };
 static const u16 sSaffron[] = { ITEM_X_SP_ATK, ITEM_X_SP_DEF, ITEM_GUARD_SPEC };
 static const u16 sFuchsia[] = { ITEM_NET_BALL, ITEM_NEST_BALL, ITEM_FLUFFY_TAIL };
+static const u16 sCinnabar[] = { ITEM_BURN_HEAL, ITEM_ESCAPE_ROPE, ITEM_DUSK_BALL };
 static const u16 sOldale[] = { ITEM_HEAL_BALL, ITEM_NEST_BALL };
 static const u16 sPetalburg[] = { ITEM_NEST_BALL, ITEM_X_DEFENSE, ITEM_ORANGE_MAIL };
 static const u16 sRustboro[] = { ITEM_TIMER_BALL, ITEM_REPEAT_BALL };
@@ -151,6 +152,7 @@ static const struct ExpectedProfile sExpectedProfiles[] =
     PROFILE_FACILITY(MART_PROFILE_BATTLE_FRONTIER, MART_CATEGORY_FACILITY, sVitamins),
     PROFILE_EMPTY_FACILITY(MART_PROFILE_TRAINER_HILL_HNS, MART_CATEGORY_FACILITY),
     PROFILE_FACILITY(MART_PROFILE_TRAINER_HILL, MART_CATEGORY_FACILITY, sTrainerHillRetained),
+    PROFILE_NO_RETAINED(MART_PROFILE_CINNABAR, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN, sCinnabar),
 };
 
 #undef PROFILE
@@ -297,7 +299,7 @@ TEST("Wayfarer town signatures are distinct and two to four items at every tier"
             EXPECT(!same);
         }
     }
-    EXPECT_EQ(townCount, 29);
+    EXPECT_EQ(townCount, 30);
 }
 
 TEST("Wayfarer mart resolver keeps PP supplements and Lilycove's common split exact")

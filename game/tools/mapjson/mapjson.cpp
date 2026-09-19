@@ -140,8 +140,62 @@ bool source_version_is_selected(const string &source_version) {
     return source_version == selected_version;
 }
 
+// The mainland coast is selected as one closed FRLG set.  Keep this separate
+// from the Sevii manifest: its event filter deliberately excludes ordinary
+// Trainers, while the coast must retain all of its source events.
+const set<string> wayfarer_coast_map_names = {
+    "Route19_Frlg", "Route20_Frlg", "Route21_North_Frlg", "Route21_South_Frlg",
+    "CinnabarIsland_Frlg", "CinnabarIsland_Gym_Frlg",
+    "CinnabarIsland_PokemonLab_Entrance_Frlg", "CinnabarIsland_PokemonLab_Lounge_Frlg",
+    "CinnabarIsland_PokemonLab_ResearchRoom_Frlg", "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg",
+    "CinnabarIsland_PokemonCenter_1F_Frlg", "CinnabarIsland_PokemonCenter_2F_Frlg",
+    "CinnabarIsland_Mart_Frlg", "PokemonMansion_1F_Frlg", "PokemonMansion_2F_Frlg",
+    "PokemonMansion_3F_Frlg", "PokemonMansion_B1F_Frlg",
+    "SeafoamIslands_1F_Frlg", "SeafoamIslands_B1F_Frlg", "SeafoamIslands_B2F_Frlg",
+    "SeafoamIslands_B3F_Frlg", "SeafoamIslands_B4F_Frlg",
+};
+
+const set<string> wayfarer_coast_layout_ids = {
+    "LAYOUT_ROUTE19", "LAYOUT_ROUTE20", "LAYOUT_ROUTE21_NORTH", "LAYOUT_ROUTE21_SOUTH",
+    "LAYOUT_CINNABAR_ISLAND", "LAYOUT_CINNABAR_ISLAND_GYM",
+    "LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_ENTRANCE", "LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_LOUNGE",
+    "LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_RESEARCH_ROOM", "LAYOUT_CINNABAR_ISLAND_POKEMON_LAB_EXPERIMENT_ROOM",
+    "LAYOUT_POKEMON_CENTER_1F_FRLG", "LAYOUT_POKEMON_CENTER_2F_FRLG", "LAYOUT_MART_FRLG",
+    "LAYOUT_POKEMON_MANSION_1F", "LAYOUT_POKEMON_MANSION_2F", "LAYOUT_POKEMON_MANSION_3F",
+    "LAYOUT_POKEMON_MANSION_B1F", "LAYOUT_SEAFOAM_ISLANDS_1F", "LAYOUT_SEAFOAM_ISLANDS_B1F",
+    "LAYOUT_SEAFOAM_ISLANDS_B2F", "LAYOUT_SEAFOAM_ISLANDS_B3F", "LAYOUT_SEAFOAM_ISLANDS_B4F",
+    "LAYOUT_SEAFOAM_ISLANDS_B3F_CURRENT_STOPPED", "LAYOUT_SEAFOAM_ISLANDS_B4F_CURRENT_STOPPED",
+};
+
 bool data_matches_version(const Json &data) {
-    // The coast preview replaces this complete HNS map cluster in Wayfarer.
+    // Navigation-only coast previews are retired from every product catalog.
+    // Standalone HNS keeps its authored coast maps; standalone FRLG keeps its
+    // source coast maps. Neither product needs the former Wayfarer prototypes.
+    if (version == "wayfarer" && get_source_version(data) == "hns") {
+        static const set<string> retired_preview_ids = {
+            "MAP_CINNABAR_SEAM_POC", "MAP_ROUTE19_COAST_POC", "MAP_ROUTE20_COAST_POC",
+            "MAP_ROUTE21_NORTH_COAST_POC", "MAP_ROUTE21_SOUTH_COAST_POC",
+            "MAP_SEAFOAM_ISLANDS_1F_COAST_POC", "MAP_SEAFOAM_ISLANDS_B1F_COAST_POC",
+            "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "MAP_SEAFOAM_ISLANDS_B3F_COAST_POC",
+            "MAP_SEAFOAM_ISLANDS_B4F_COAST_POC",
+            "LAYOUT_CINNABAR_SEAM_POC", "LAYOUT_ROUTE19_COAST_POC", "LAYOUT_ROUTE20_COAST_POC",
+            "LAYOUT_ROUTE21_NORTH_COAST_POC", "LAYOUT_ROUTE21_SOUTH_COAST_POC",
+            "LAYOUT_SEAFOAM_ISLANDS_1F_COAST_POC", "LAYOUT_SEAFOAM_ISLANDS_B1F_COAST_POC",
+            "LAYOUT_SEAFOAM_ISLANDS_B2F_COAST_POC", "LAYOUT_SEAFOAM_ISLANDS_B3F_COAST_POC",
+            "LAYOUT_SEAFOAM_ISLANDS_B4F_COAST_POC",
+        };
+        const string id = json_to_string(data, "id", true);
+        if (retired_preview_ids.count(id))
+            return false;
+        if (id.size() >= 5 && id.substr(id.size() - 5) == "_PORT"
+         && (id.rfind("MAP_CINNABAR_ISLAND_", 0) == 0
+          || id.rfind("MAP_POKEMON_MANSION_", 0) == 0
+          || id.rfind("LAYOUT_CINNABAR_ISLAND_", 0) == 0
+          || id.rfind("LAYOUT_POKEMON_MANSION_", 0) == 0))
+            return false;
+    }
+
+    // The FRLG coast replaces this complete HNS map cluster in Wayfarer.
     // Retain the source maps and stable map/layout IDs for standalone HNS.
     if (version == "wayfarer" && get_source_version(data) == "hns") {
         static const set<string> replaced_hns_ids = {
@@ -149,15 +203,46 @@ bool data_matches_version(const Json &data) {
             "MAP_SEAFOAM_ISLANDS_1F_HNS", "MAP_SEAFOAM_ISLANDS_B1F_HNS",
             "MAP_SEAFOAM_ISLANDS_GYM_HNS", "MAP_SEAFOAM_ISLANDS_SECRET_CAVE_HNS",
             "MAP_ROUTE21_HNS",
+            "MAP_ROUTE19_HNS", "MAP_ROUTE20_HNS", "MAP_ROUTE19_CAVE_HNS",
+            "MAP_FUCHSIA_ROUTE19GATE_HNS",
+            "MAP_CINNABAR_SEAM_POC", "MAP_ROUTE19_COAST_POC", "MAP_ROUTE20_COAST_POC",
+            "MAP_ROUTE21_NORTH_COAST_POC", "MAP_ROUTE21_SOUTH_COAST_POC",
+            "MAP_SEAFOAM_ISLANDS_1F_COAST_POC", "MAP_SEAFOAM_ISLANDS_B1F_COAST_POC",
+            "MAP_SEAFOAM_ISLANDS_B2F_COAST_POC", "MAP_SEAFOAM_ISLANDS_B3F_COAST_POC",
+            "MAP_SEAFOAM_ISLANDS_B4F_COAST_POC",
             "LAYOUT_CINNABAR_ISLAND_HNS", "LAYOUT_CINNABAR_ISLAND_POKEMON_CENTER_HNS",
             "LAYOUT_SEAFOAM_ISLANDS_1F_HNS", "LAYOUT_SEAFOAM_ISLANDS_B1F_HNS",
             "LAYOUT_SEAFOAM_ISLANDS_GYM_HNS", "LAYOUT_SEAFOAM_ISLANDS_SECRET_CAVE_HNS",
             "LAYOUT_ROUTE21_HNS",
+            "LAYOUT_ROUTE19_HNS", "LAYOUT_ROUTE20_HNS", "LAYOUT_ROUTE19_CAVE_HNS",
+            "LAYOUT_FUCHSIA_ROUTE19GATE_HNS",
+            "LAYOUT_CINNABAR_SEAM_POC", "LAYOUT_ROUTE19_COAST_POC", "LAYOUT_ROUTE20_COAST_POC",
+            "LAYOUT_ROUTE21_NORTH_COAST_POC", "LAYOUT_ROUTE21_SOUTH_COAST_POC",
+            "LAYOUT_SEAFOAM_ISLANDS_1F_COAST_POC", "LAYOUT_SEAFOAM_ISLANDS_B1F_COAST_POC",
+            "LAYOUT_SEAFOAM_ISLANDS_B2F_COAST_POC", "LAYOUT_SEAFOAM_ISLANDS_B3F_COAST_POC",
+            "LAYOUT_SEAFOAM_ISLANDS_B4F_COAST_POC",
         };
         if (replaced_hns_ids.find(json_to_string(data, "id", true)) != replaced_hns_ids.end())
             return false;
+        string id = json_to_string(data, "id", true);
+        if (id.size() >= 5 && id.substr(id.size() - 5) == "_PORT"
+         && (id.rfind("MAP_CINNABAR_ISLAND_", 0) == 0
+          || id.rfind("MAP_POKEMON_MANSION_", 0) == 0
+          || id.rfind("LAYOUT_CINNABAR_ISLAND_", 0) == 0
+          || id.rfind("LAYOUT_POKEMON_MANSION_", 0) == 0))
+            return false;
+        string name = json_to_string(data, "name", true);
+        if (name.rfind("CinnabarIsland_", 0) == 0 && name.size() >= 5
+         && name.substr(name.size() - 5) == "_Port")
+            return false;
+        if (name.rfind("PokemonMansion_", 0) == 0 && name.size() >= 5
+         && name.substr(name.size() - 5) == "_Port")
+            return false;
     }
     if (version == "wayfarer" && get_source_version(data) == "frlg") {
+        if (wayfarer_coast_map_names.count(json_to_string(data, "name", true))
+         || wayfarer_coast_layout_ids.count(json_to_string(data, "id", true)))
+            return true;
         if (!wayfarer_sevii_release_link_enabled)
             return false;
         string name = json_to_string(data, "name", true);
@@ -497,6 +582,140 @@ Json sanitize_wayfarer_sevii_map_events(const Json &map_data) {
     return output;
 }
 
+Json resolve_wayfarer_coast_map_events(Json map_data) {
+    map_data = sanitize_wayfarer_sevii_map_events(map_data);
+    if (version != "wayfarer")
+        return map_data;
+
+    const string name = json_to_string(map_data, "name");
+    if (name == "ViridianCity_hns") {
+        Json::object output = map_data.object_items();
+        Json::array objects;
+        for (const Json &source : map_data["object_events"].array_items()) {
+            Json::object object = source.object_items();
+            if (json_to_string(source, "flag", true) == "FLAG_HIDE_VIRIDIAN_BLUE_INTRO")
+                object["flag"] = "FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST";
+            objects.push_back(object);
+        }
+        output["object_events"] = objects;
+        return output;
+    }
+    if (!wayfarer_coast_map_names.count(name))
+        return map_data;
+
+    auto coast_flag = [](const string &flag) -> string {
+        if (flag == "FLAG_HIDE_ARTICUNO") return "FLAG_WAYFARER_HIDE_ARTICUNO";
+        if (flag == "FLAG_HIDE_POKEMON_MANSION_B1F_SECRET_KEY") return "FLAG_WAYFARER_CINNABAR_SECRET_KEY";
+        const vector<std::pair<string, string>> prefixes = {
+            {"FLAG_HIDE_SEAFOAM_ISLANDS_", "FLAG_WAYFARER_HIDE_SEAFOAM_"},
+            {"FLAG_HIDE_SEAFOAM_", "FLAG_WAYFARER_HIDE_SEAFOAM_"},
+            {"FLAG_HIDDEN_ITEM_SEAFOAM_ISLANDS_", "FLAG_WAYFARER_HIDDEN_ITEM_SEAFOAM_"},
+            {"FLAG_HIDE_POKEMON_MANSION_", "FLAG_WAYFARER_HIDE_POKEMON_MANSION_"},
+            {"FLAG_HIDDEN_ITEM_POKEMON_MANSION_", "FLAG_WAYFARER_HIDDEN_ITEM_POKEMON_MANSION_"},
+            {"FLAG_HIDDEN_ITEM_ROUTE20_", "FLAG_WAYFARER_HIDDEN_ITEM_ROUTE20_"},
+            {"FLAG_HIDDEN_ITEM_ROUTE21_NORTH_", "FLAG_WAYFARER_HIDDEN_ITEM_ROUTE21_NORTH_"},
+        };
+        for (const auto &prefix : prefixes) {
+            if (flag.rfind(prefix.first, 0) == 0)
+                return prefix.second + flag.substr(prefix.first.size());
+        }
+        return flag;
+    };
+
+    auto update_event = [&coast_flag](Json::object event) -> Json::object {
+        for (const string field : {"flag", "trainer_type"}) {
+            auto it = event.find(field);
+            if (it != event.end() && it->second.type() == Json::Type::STRING)
+                it->second = coast_flag(it->second.string_value());
+        }
+        return event;
+    };
+
+    Json::array objects;
+    for (const Json &source : map_data["object_events"].array_items()) {
+        const string local_id = json_to_string(source, "local_id", true);
+        if (name == "CinnabarIsland_Frlg"
+         && (local_id == "LOCALID_CINNABAR_BILL" || local_id == "LOCALID_CINNABAR_SEAGALLOP"))
+            continue;
+        if (name == "CinnabarIsland_PokemonCenter_1F_Frlg"
+         && local_id == "LOCALID_CINNABAR_POKEMON_CENTER_BILL")
+            continue;
+        if (name == "Route21_North_Frlg" && json_to_string(source, "type", true) == "clone") {
+            // HNS Pallet's boundary actor is a different local ID from FRLG's.
+            // Render the boundary actor without cloning the wrong NPC.
+            objects.push_back(Json::object{
+                {"type", "object"}, {"graphics_id", "OBJ_EVENT_GFX_FAT_MAN_HNS"},
+                {"x", 19}, {"y", -3}, {"elevation", 0},
+                {"movement_type", "MOVEMENT_TYPE_LOOK_AROUND"},
+                {"movement_range_x", 0}, {"movement_range_y", 0},
+                {"trainer_type", "TRAINER_TYPE_NONE"},
+                {"trainer_sight_or_berry_tree_id", "0"},
+                {"script", "PalletTown_EventScript_Fatman"}, {"flag", "0"},
+            });
+            continue;
+        }
+        Json::object object = update_event(source.object_items());
+        if (name == "CinnabarIsland_PokemonCenter_2F_Frlg") {
+            const string script = json_to_string(source, "script", true);
+            if (script == "Common_EventScript_UnionRoomAttendant")
+                object["script"] = "CinnabarIsland_PokemonCenter_2F_EventScript_UnionRoomAttendant";
+            else if (script == "Common_EventScript_WirelessClubAttendant")
+                object["script"] = "CinnabarIsland_PokemonCenter_2F_EventScript_WirelessClubAttendant";
+            else if (script == "Common_EventScript_DirectCornerAttendant")
+                object["script"] = "CinnabarIsland_PokemonCenter_2F_EventScript_DirectCornerAttendant";
+            else if (script == "CableClub_EventScript_MysteryGiftMan_Frlg")
+                object["script"] = "CinnabarIsland_PokemonCenter_2F_EventScript_MysteryGiftMan";
+        }
+        objects.push_back(object);
+    }
+    Json::object output = map_data.object_items();
+    output["object_events"] = objects;
+    Json::array coords;
+    for (const Json &source : map_data["coord_events"].array_items()) {
+        Json::object event = update_event(source.object_items());
+        if (name == "SeafoamIslands_B4F_Frlg"
+         && json_to_string(source, "var", true) == "VAR_MAP_SCENE_SEAFOAM_ISLANDS_B4F")
+            event["var"] = "VAR_WAYFARER_SEAFOAM_B4F_CURRENT_ENTRY";
+        coords.push_back(event);
+    }
+    // The FRLG Lab tileset does not mark its interior doorway tiles as warp
+    // behaviors. Coordinate triggers make the six authored door positions
+    // traversable without changing the source layouts or standalone FRLG.
+    auto add_lab_door = [&coords](int x, int y, const string &script) {
+        coords.push_back(Json::object{
+            {"type", "trigger"}, {"x", x}, {"y", y}, {"elevation", 0},
+            {"var", "VAR_TEMP_0"}, {"var_value", "0"}, {"script", script},
+        });
+    };
+    if (name == "CinnabarIsland_PokemonLab_Entrance_Frlg") {
+        add_lab_door(13, 5, "WayfarerCinnabar_Lab_WarpLounge");
+        add_lab_door(19, 5, "WayfarerCinnabar_Lab_WarpResearch");
+        add_lab_door(25, 5, "WayfarerCinnabar_Lab_WarpExperiment");
+    } else if (name == "CinnabarIsland_PokemonLab_Lounge_Frlg") {
+        add_lab_door(7, 9, "WayfarerCinnabar_Lab_WarpFromLounge");
+    } else if (name == "CinnabarIsland_PokemonLab_ResearchRoom_Frlg") {
+        add_lab_door(7, 9, "WayfarerCinnabar_Lab_WarpFromResearch");
+    } else if (name == "CinnabarIsland_PokemonLab_ExperimentRoom_Frlg") {
+        add_lab_door(7, 9, "WayfarerCinnabar_Lab_WarpFromExperiment");
+    }
+    output["coord_events"] = coords;
+    Json::array backgrounds;
+    for (const Json &source : map_data["bg_events"].array_items())
+        backgrounds.push_back(update_event(source.object_items()));
+    output["bg_events"] = backgrounds;
+    if (name == "CinnabarIsland_PokemonCenter_2F_Frlg") {
+        // The FRLG cable rooms are outside Wayfarer's selected catalog.
+        // Attendants on this floor give an explicit service response instead.
+        Json::array exits;
+        for (const Json &warp : map_data["warp_events"].array_items()) {
+            if (json_to_string(warp, "dest_map") == "MAP_CINNABAR_ISLAND_POKEMON_CENTER_1F")
+                exits.push_back(warp);
+        }
+        output["warp_events"] = exits;
+    }
+    return output;
+}
+
 Json sanitize_wayfarer_sevii_map_connections(const Json &map_data) {
     if (!is_registered_wayfarer_sevii_map(map_data))
         return map_data;
@@ -507,6 +726,32 @@ Json sanitize_wayfarer_sevii_map_connections(const Json &map_data) {
             connections.push_back(connection);
     }
     output["connections"] = connections;
+    return output;
+}
+
+Json resolve_wayfarer_coast_connections(Json map_data) {
+    map_data = sanitize_wayfarer_sevii_map_connections(map_data);
+    if (version != "wayfarer")
+        return map_data;
+
+    const string name = json_to_string(map_data, "name");
+    Json::array connections;
+    for (const Json &source : map_data["connections"].array_items()) {
+        Json::object connection = source.object_items();
+        const string destination = json_to_string(source, "map");
+        if (name == "FuchsiaCity_hns" && destination == "MAP_ROUTE19_COAST_POC")
+            connection["map"] = "MAP_ROUTE19";
+        else if (name == "PalletTown_hns" && destination == "MAP_ROUTE21_NORTH_COAST_POC")
+            connection["map"] = "MAP_ROUTE21_NORTH";
+        else if (name == "Route19_Frlg" && destination == "MAP_FUCHSIA_CITY")
+            connection["map"] = "MAP_FUCHSIA_CITY_HNS";
+        else if (name == "Route21_North_Frlg" && destination == "MAP_PALLET_TOWN")
+            connection["map"] = "MAP_PALLET_TOWN_HNS";
+        connections.push_back(connection);
+    }
+    Json::object output = map_data.object_items();
+    if (map_data["connections"].type() == Json::Type::ARRAY)
+        output["connections"] = connections;
     return output;
 }
 
@@ -534,7 +779,7 @@ string get_include_guard_end(const string &name) {
 }
 
 string generate_map_header_text(Json map_data, Json layouts_data) {
-    Json effective_map_data = sanitize_wayfarer_sevii_map_connections(map_data);
+    Json effective_map_data = resolve_wayfarer_coast_connections(map_data);
     string map_layout_id = json_to_string(map_data, "layout");
 
     vector<Json> matched;
@@ -570,7 +815,15 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
     else
         text << "\t.4byte " << mapName << "_MapEvents\n";
 
-    if (map_data.object_items().find("shared_scripts_map") != map_data.object_items().end())
+    if (version == "wayfarer" && mapName == "Route19_Frlg")
+        text << "\t.4byte WayfarerKantoCoast_Route19_MapScripts\n";
+    else if (version == "wayfarer" && mapName == "Route20_Frlg")
+        text << "\t.4byte WayfarerKantoCoast_Route20_MapScripts\n";
+    else if (version == "wayfarer" && mapName == "Route21_North_Frlg")
+        text << "\t.4byte WayfarerKantoCoast_Route21_North_MapScripts\n";
+    else if (version == "wayfarer" && mapName == "Route21_South_Frlg")
+        text << "\t.4byte WayfarerKantoCoast_Route21_South_MapScripts\n";
+    else if (map_data.object_items().find("shared_scripts_map") != map_data.object_items().end())
         text << "\t.4byte " << json_to_string(map_data, "shared_scripts_map") << "_MapScripts\n";
     else
         text << "\t.4byte " << mapName << "_MapScripts\n";
@@ -623,7 +876,7 @@ vector<string> get_existing_maps() {
 }
 
 string generate_map_connections_text(Json map_data) {
-    map_data = sanitize_wayfarer_sevii_map_connections(map_data);
+    map_data = resolve_wayfarer_coast_connections(map_data);
     if (map_data["connections"] == Json())
         return string("\n");
 
@@ -691,7 +944,7 @@ Json resolve_wayfarer_coast_warp(const Json &map_data, const Json &warp, size_t 
 }
 
 string generate_map_events_text(Json map_data) {
-    map_data = sanitize_wayfarer_sevii_map_events(map_data);
+    map_data = resolve_wayfarer_coast_map_events(map_data);
     if (map_data.object_items().find("shared_events_map") != map_data.object_items().end())
         return string("\n");
 
@@ -1230,9 +1483,12 @@ void validate_wayfarer_heal_locations(const set<string> &included_map_ids) {
             FATAL_ERROR("Heal location %s has unknown content source %s.\n", id.c_str(), source.c_str());
 
         string map_id = json_to_string(heal_location, "map");
+        if (version == "wayfarer" && id == "HEAL_LOCATION_CINNABAR_ISLAND_HNS")
+            continue;
         if (version == "wayfarer" && source_version == "frlg") {
-            if (!wayfarer_sevii_release_link_enabled
-             || wayfarer_sevii_enabled_map_ids.find(map_id) == wayfarer_sevii_enabled_map_ids.end())
+            if (map_id != "MAP_CINNABAR_ISLAND"
+             && (!wayfarer_sevii_release_link_enabled
+              || wayfarer_sevii_enabled_map_ids.find(map_id) == wayfarer_sevii_enabled_map_ids.end()))
                 continue;
         } else if (!source_version_is_selected(source_version)) {
             continue;
@@ -1271,8 +1527,8 @@ void validate_wayfarer_map_catalog(const Json &groups_data, const map<string, Js
     const set<string> dynamic_destinations = {"MAP_DYNAMIC", "MAP_UNDEFINED"};
     for (const Json &map_data : included_maps) {
         string map_name = json_to_string(map_data, "name");
-        Json event_data = sanitize_wayfarer_sevii_map_events(map_data);
-        Json connection_data = sanitize_wayfarer_sevii_map_connections(map_data);
+        Json event_data = resolve_wayfarer_coast_map_events(map_data);
+        Json connection_data = resolve_wayfarer_coast_connections(map_data);
         size_t warp_index = 0;
         for (const Json &source_warp : event_data["warp_events"].array_items()) {
             Json warp = resolve_wayfarer_coast_warp(map_data, source_warp, warp_index++);

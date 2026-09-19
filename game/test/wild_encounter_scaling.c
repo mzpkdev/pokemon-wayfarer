@@ -283,7 +283,7 @@ TEST("Standard Rod weighted selection covers every exact boundary")
 
 #if IS_HNS
 #if IS_WAYFARER
-#define CINNABAR_ENCOUNTER_MAP MAP_CINNABAR_SEAM_POC
+#define CINNABAR_ENCOUNTER_MAP MAP_CINNABAR_ISLAND
 #else
 #define CINNABAR_ENCOUNTER_MAP MAP_CINNABAR_ISLAND_HNS
 #endif

@@ -5,9 +5,9 @@ ViridianCity_Gym_EventScript_Blue::
 	lock
 	faceplayer
 #if IS_WAYFARER
-	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED, ViridianCity_Gym_EventScript_BlueKnown
-	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED
-	setflag FLAG_HIDE_VIRIDIAN_BLUE_INTRO
+	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, ViridianCity_Gym_EventScript_BlueKnown
+	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST
+	setflag FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST
 	msgbox ViridianCity_Gym_Text_BlueFirstMeeting, MSGBOX_DEFAULT
 	goto ViridianCity_Gym_EventScript_BlueKnown
 ViridianCity_Gym_EventScript_BlueKnown::
