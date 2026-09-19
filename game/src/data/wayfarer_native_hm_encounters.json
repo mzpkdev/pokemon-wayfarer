@@ -95,7 +95,8 @@
       "species": "SPECIES_PELIPPER"
     },
     {
-      "map": "MAP_CINNABAR_SEAM_POC",
+      "map": "MAP_CINNABAR_ISLAND",
+      "product": "POKEMON_WAYFARER",
       "method": "fishing_mons",
       "slot": 1,
       "expected_species": "SPECIES_MAGIKARP",

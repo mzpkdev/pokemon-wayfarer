@@ -18,6 +18,7 @@
 #include "fieldmap.h"
 #include "vs_seeker.h"
 #include "wayfarer_sevii_rematches.h"
+#include "wayfarer_coast_trainers.h"
 #include "menu.h"
 #include "string_util.h"
 #include "tv.h"
@@ -491,6 +492,10 @@ static u8 GetVsSeekerResponseInArea(void)
             // state, which survives a save until this charged use resolves.
             WayfarerSeviiRematchSetReady(trainerIdx);
         }
+        else if (WayfarerCoastRematchHasFamily(trainerIdx))
+        {
+            WayfarerCoastRematchSetReady(trainerIdx);
+        }
         else
 #endif
         {
@@ -536,12 +541,13 @@ void ClearRematchMovementByTrainerId(void)
     int vsSeekerDataIdx = TrainerIdToRematchTableId(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
 #if IS_WAYFARER
     s32 wayfarerFamily = WayfarerSeviiRematchFamilyIndex(TRAINER_BATTLE_PARAM.opponentA);
+    s32 coastFamily = WayfarerCoastRematchFamilyIndex(TRAINER_BATTLE_PARAM.opponentA);
 #endif
 
     if (!I_VS_SEEKER_CHARGING) return;
 
 #if IS_WAYFARER
-    if (vsSeekerDataIdx == -1 && wayfarerFamily == -1)
+    if (vsSeekerDataIdx == -1 && wayfarerFamily == -1 && coastFamily == -1)
 #else
     if (vsSeekerDataIdx == -1)
 #endif
@@ -553,7 +559,9 @@ void ClearRematchMovementByTrainerId(void)
 #if IS_WAYFARER
         || (wayfarerFamily != -1
             ? wayfarerFamily != WayfarerSeviiRematchFamilyIndex(GetTrainerFlagFromScript(objectEventTemplates[i].script))
-            : vsSeekerDataIdx != TrainerIdToRematchTableId(gRematchTable, GetTrainerFlagFromScript(objectEventTemplates[i].script))))
+            : coastFamily != -1
+                ? coastFamily != WayfarerCoastRematchFamilyIndex(GetTrainerFlagFromScript(objectEventTemplates[i].script))
+                : vsSeekerDataIdx != TrainerIdToRematchTableId(gRematchTable, GetTrainerFlagFromScript(objectEventTemplates[i].script))))
 #else
         || vsSeekerDataIdx != TrainerIdToRematchTableId(gRematchTable, GetTrainerFlagFromScript(objectEventTemplates[i].script)))
 #endif
@@ -598,6 +606,8 @@ u16 GetRematchTrainerIdVSSeeker(u16 trainerId)
     if (!I_VS_SEEKER_CHARGING)
         return 0;
 #if IS_WAYFARER
+    if (WayfarerCoastRematchHasFamily(trainerId))
+        return WayfarerCoastRematchGetOpponent(trainerId);
     if (WayfarerSeviiRematchHasFamily(trainerId))
         return WayfarerSeviiRematchGetOpponent(trainerId);
 #endif
@@ -787,6 +797,7 @@ static void ClearAllTrainerRematchStates(void)
 
 #if IS_WAYFARER
     WayfarerSeviiRematchClearAllReady();
+    WayfarerCoastRematchClearAllReady();
 #endif
 
     if (!CheckBagHasItem(ITEM_VS_SEEKER, 1))
@@ -866,7 +877,8 @@ static void StartAllRespondantIdleMovements(void)
             TryOverrideTemplateCoordsForObjectEvent(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
         }
 #if IS_WAYFARER
-        if (!WayfarerSeviiRematchHasFamily(sVsSeeker->trainerInfo[j].trainerIdx))
+        if (!WayfarerSeviiRematchHasFamily(sVsSeeker->trainerInfo[j].trainerIdx)
+         && !WayfarerCoastRematchHasFamily(sVsSeeker->trainerInfo[j].trainerIdx))
 #endif
             gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[j].localId)] = GetRematchTrainerIdVSSeeker(sVsSeeker->trainerInfo[j].trainerIdx);
     }

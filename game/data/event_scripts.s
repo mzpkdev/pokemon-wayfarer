@@ -1089,6 +1089,9 @@ gStdScripts_End::
 
 #if IS_WAYFARER
 	.include "data/wayfarer_common_source_constants.inc"
+	.include "data/scripts/wayfarer_kanto_coast_routes.inc"
+	.include "data/scripts/wayfarer_seafoam.inc"
+	.include "data/maps/wayfarer_cinnabar_full_scripts.inc"
 #endif
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"

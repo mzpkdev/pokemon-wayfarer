@@ -668,6 +668,11 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext = REGION_JOHTO;
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions = 1 << REGION_JOHTO;
     memset(&gSaveBlock3Ptr->wayfarerHoenn.leagueRun, 0, sizeof(gSaveBlock3Ptr->wayfarerHoenn.leagueRun));
+    memset(&gSaveBlock3Ptr->wayfarerCoast, 0, sizeof(gSaveBlock3Ptr->wayfarerCoast));
+    gSaveBlock3Ptr->wayfarerCoast.magic = WAYFARER_COAST_STATE_MAGIC;
+    gSaveBlock3Ptr->wayfarerCoast.flags[0] = 0xA5;
+    gSaveBlock3Ptr->wayfarerCoast.vars[0] = 0x1234;
+    gSaveBlock3Ptr->wayfarerCoast.vars[WAYFARER_COAST_VAR_COUNT - 1] = 0xABCD;
     memset(&gSaveBlock3Ptr->wayfarerSevii, 0, sizeof(gSaveBlock3Ptr->wayfarerSevii));
     gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
     WayfarerSeviiRematchStageSet(63, 3);

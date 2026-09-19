@@ -53,18 +53,20 @@ struct MoveCacheEntry
 
 static struct MoveCacheEntry sMoveCache[256];
 
-// The approved coverage fixture names HNS source maps. Resolve only the
-// retired coastal maps to their selected Wayfarer counterparts at runtime.
+// The approved coverage fixture names HNS source maps. Resolve retired coast
+// maps to the selected full Wayfarer maps before measuring their real tables.
 static u16 SelectedWayfarerCoverageMap(u16 map)
 {
     switch (map)
     {
     case MAP_CINNABAR_ISLAND_HNS:
-        return MAP_CINNABAR_SEAM_POC;
+        return MAP_CINNABAR_ISLAND;
+    case MAP_ROUTE19_HNS:
+        return MAP_ROUTE19;
     case MAP_SEAFOAM_ISLANDS_1F_HNS:
-        return MAP_SEAFOAM_ISLANDS_1F_COAST_POC;
+        return MAP_SEAFOAM_ISLANDS_1F;
     case MAP_SEAFOAM_ISLANDS_B1F_HNS:
-        return MAP_SEAFOAM_ISLANDS_B1F_COAST_POC;
+        return MAP_SEAFOAM_ISLANDS_B1F;
     default:
         return map;
     }
@@ -205,7 +207,11 @@ TEST("Wayfarer native HM windows cover all 3888 approved regional cells")
         struct WildEncounterProfileView view;
         struct CoverageChance chance;
 
-        EXPECT(ResolveCoverageProfile(profile, &view));
+        if (!ResolveCoverageProfile(profile, &view))
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__,
+                ":L%s:%d: regional %s TR %d is missing map %d area %d time %d rod %d",
+                gTestRunnerState.test->filename, __LINE__, cell->name, rating,
+                profile->map, profile->area, profile->time, profile->rod);
         if (cell->move == MOVE_SURF)
             EXPECT(profile->area == WILD_AREA_LAND || profile->area == WILD_AREA_FISHING);
         chance = ProfileMoveChance(&view, rating, cell->move);

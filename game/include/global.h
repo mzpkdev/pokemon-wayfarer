@@ -389,6 +389,13 @@ struct WayfarerSeviiPersistentState
     u8 magic;
     struct WayfarerSeviiTrainerTowerRecords trainerTower;
 };
+
+struct WayfarerCoastPersistentState
+{
+    u8 flags[WAYFARER_COAST_FLAG_BYTES];
+    u16 vars[WAYFARER_COAST_VAR_COUNT];
+    u8 magic;
+};
 #endif
 
 struct SaveBlock3
@@ -412,6 +419,7 @@ struct SaveBlock3
 #if IS_WAYFARER
     struct WayfarerHoennPersistentState wayfarerHoenn;
     struct WayfarerSeviiPersistentState wayfarerSevii;
+    struct WayfarerCoastPersistentState wayfarerCoast;
 #endif
 }; /* max size 1624 bytes */
 

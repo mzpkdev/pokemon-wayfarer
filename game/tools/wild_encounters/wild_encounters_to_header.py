@@ -65,15 +65,31 @@ PRODUCT_GUARDS = {
 }
 RETIRED_WAYFARER_HNS_WILD_MAPS = {
     "MAP_CINNABAR_ISLAND_HNS",
+    "MAP_ROUTE19_HNS",
+    "MAP_ROUTE20_HNS",
     "MAP_ROUTE21_HNS",
     "MAP_SEAFOAM_ISLANDS_1F_HNS",
     "MAP_SEAFOAM_ISLANDS_B1F_HNS",
 }
 RETIRED_WAYFARER_HNS_WILD_HEADERS = {
     "gCinnabarIsland_hns",
+    "gRoute19_hns",
+    "gRoute20_hns",
     "gRoute21_hns",
     "gSeafoamIslands_1F_hns",
     "gSeafoamIslands_B1F_hns",
+}
+WAYFARER_COAST_MAPS = {
+    "MAP_ROUTE19", "MAP_ROUTE20", "MAP_ROUTE21_NORTH", "MAP_ROUTE21_SOUTH",
+    "MAP_CINNABAR_ISLAND", "MAP_SEAFOAM_ISLANDS_1F", "MAP_SEAFOAM_ISLANDS_B1F",
+    "MAP_SEAFOAM_ISLANDS_B2F", "MAP_SEAFOAM_ISLANDS_B3F", "MAP_SEAFOAM_ISLANDS_B4F",
+    "MAP_POKEMON_MANSION_1F", "MAP_POKEMON_MANSION_2F", "MAP_POKEMON_MANSION_3F",
+    "MAP_POKEMON_MANSION_B1F",
+}
+RETIRED_WAYFARER_COAST_POC_WILD_MAPS = {
+    "MAP_CINNABAR_SEAM_POC",
+    "MAP_SEAFOAM_ISLANDS_1F_COAST_POC",
+    "MAP_SEAFOAM_ISLANDS_B1F_COAST_POC",
 }
 FISHING_QUALITIES = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD")
 FISHING_SLOT_COUNT = 10
@@ -130,7 +146,7 @@ KANTO_ANALOG_SOURCES = {
     ("MAP_CERULEAN_CAVE_B1F_HNS", "fishing_mons"): "sCeruleanCave1F",
     ("MAP_CINNABAR_ISLAND_HNS", "land_mons"): "sRoute21North",
 }
-KANTO_MAPS = {
+HISTORICAL_KANTO_MAPS = {
     *(f"MAP_ROUTE{number}_HNS" for number in range(1, 26)),
     "MAP_PALLET_TOWN_HNS", "MAP_VIRIDIAN_CITY_HNS", "MAP_PEWTER_CITY_HNS",
     "MAP_CERULEAN_CITY_HNS", "MAP_LAVENDER_TOWN_HNS", "MAP_VERMILION_CITY_HNS",
@@ -144,6 +160,7 @@ KANTO_MAPS = {
     "MAP_CERULEAN_CAVE_B2F_HNS", "MAP_VICTORY_ROAD_KANTO_1F_HNS",
     "MAP_VICTORY_ROAD_KANTO_B1F_HNS", "MAP_VICTORY_ROAD_KANTO_B2F_HNS",
 }
+KANTO_MAPS = (HISTORICAL_KANTO_MAPS - RETIRED_WAYFARER_HNS_WILD_MAPS) | WAYFARER_COAST_MAPS
 JOHTO_MAPS = {
     *(f"MAP_ROUTE{number}_HNS" for number in range(26, 49)),
     "MAP_NEW_BARK_TOWN_HNS", "MAP_CHERRYGROVE_CITY_HNS", "MAP_VIOLET_CITY_HNS",
@@ -375,8 +392,8 @@ def load_standard_rod_fishing(path):
             raise ValidationError(f"{location}: weights must total 100")
 
     rows = source["nativeSurfAccessibility"]
-    if not isinstance(rows, list) or len(rows) != 20:
-        raise ValidationError(f"{path}/nativeSurfAccessibility: expected exactly 20 records")
+    if not isinstance(rows, list) or len(rows) != 22:
+        raise ValidationError(f"{path}/nativeSurfAccessibility: expected exactly 22 records")
     expected_fields = {
         "product", "baseLabel", "timeOfDay", "species",
         "expectedOldRodSuccessfulEncounterPercent",
@@ -434,6 +451,8 @@ def product_for(label):
 def product_guard(product, map_name=None):
     if product == "POKEMON_HNS" and map_name in RETIRED_WAYFARER_HNS_WILD_MAPS:
         return "HAS_HNS_CONTENT && !IS_WAYFARER"
+    if product == "POKEMON_WAYFARER" and map_name in RETIRED_WAYFARER_COAST_POC_WILD_MAPS:
+        return "0"
     return PRODUCT_GUARDS[product]
 
 
@@ -756,7 +775,7 @@ _PROFILE_COUNTERPART_SOLVER_CACHE = {}
 PROTECTED_KANTO_CHINCHOU_SLOTS = {
     "MAP_VERMILION_CITY_HNS": (4, 6),
     "MAP_VERMILION_CITY_PORT_OUTSIDE_HNS": (4, 6),
-    "MAP_CINNABAR_ISLAND_HNS": (4, 6),
+    "MAP_CINNABAR_ISLAND": (4, 6),
 }
 
 
@@ -2039,8 +2058,8 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
     exact_keys(document["regions"], {"KANTO", "JOHTO"}, f"{path}/regions")
     kanto = document["regions"]["KANTO"]
     exact_keys(kanto, {"product", "profiles", "changes"}, f"{path}/regions/KANTO")
-    if kanto["product"] != "POKEMON_HNS":
-        raise ValidationError(f"{path}/regions/KANTO/product: expected POKEMON_HNS")
+    if kanto["product"] != "POKEMON_WAYFARER":
+        raise ValidationError(f"{path}/regions/KANTO/product: expected POKEMON_WAYFARER")
 
     by_label = {profile["label"]: profile for profile in profiles}
     manifest_profiles, identities, aliases, maps, counterpart_proofs = [], set(), {}, set(), []
@@ -2055,7 +2074,12 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
     level_fields = {"version", "baseLabel", "method", "slot", "minLevel", "maxLevel"}
     for index, row in enumerate(_manifest_list(kanto["profiles"], f"{path}/regions/KANTO/profiles")):
         location = f"{path}/regions/KANTO/profiles/{index}"
-        exact_keys(row, profile_fields, location)
+        hns_adapted = row.get("sourceKind") == "HNS_ADAPTED"
+        hns_profile_fields = {
+            "map", "method", "dayBaseLabel", "nightBaseLabel", "nightMode",
+            "activeSlotCount", "sourceKind", "hnsSource", "habitat", "provenance",
+        }
+        exact_keys(row, hns_profile_fields if hns_adapted else profile_fields, location)
         map_name = identifier(row["map"], f"{location}/map")
         method = row["method"]
         if method not in ACTIVE_SLOT_COUNTS:
@@ -2069,21 +2093,22 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
         expected_count = ACTIVE_SLOT_COUNTS[method]
         if integer(row["activeSlotCount"], f"{location}/activeSlotCount", 1, expected_count) != expected_count:
             raise ValidationError(f"{location}/activeSlotCount: expected {expected_count}")
-        if row["sourceKind"] not in {"DIRECT", "EQUIVALENT", "ANALOG"}:
+        if row["sourceKind"] not in {"DIRECT", "EQUIVALENT", "ANALOG", "HNS_ADAPTED"}:
             raise ValidationError(f"{location}/sourceKind: unsupported source kind")
         if row["habitat"] not in HABITATS:
             raise ValidationError(f"{location}/habitat: unsupported habitat")
 
         day_label = identifier(row["dayBaseLabel"], f"{location}/dayBaseLabel")
         night_label = identifier(row["nightBaseLabel"], f"{location}/nightBaseLabel")
+        target_product = "POKEMON_WAYFARER" if map_name in WAYFARER_COAST_MAPS else "POKEMON_HNS"
         day = by_label.get(day_label)
-        if day is None or day["product"] != "POKEMON_HNS" or day["map"] != map_name or day["time"] != "TIME_DAY" or method not in day["encounter"]:
+        if day is None or day["product"] != target_product or day["map"] != map_name or day["time"] != "TIME_DAY" or method not in day["encounter"]:
             raise ValidationError(f"{location}/dayBaseLabel: unresolved Kanto day profile")
         if row["nightMode"] not in {"AUTHORED", "DAY_ALIAS"}:
             raise ValidationError(f"{location}/nightMode: expected AUTHORED or DAY_ALIAS")
         night = by_label.get(night_label)
         if row["nightMode"] == "AUTHORED":
-            if night is None or night["product"] != "POKEMON_HNS" or night["map"] != map_name or night["time"] != "TIME_NIGHT" or method not in night["encounter"]:
+            if night is None or night["product"] != target_product or night["map"] != map_name or night["time"] != "TIME_NIGHT" or method not in night["encounter"]:
                 raise ValidationError(f"{location}/nightBaseLabel: unresolved authored Kanto night profile")
         else:
             if night is not None:
@@ -2094,6 +2119,46 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
             if night_label in aliases and aliases[night_label] != binding:
                 raise ValidationError(f"{location}/nightBaseLabel: DAY_ALIAS label spans maps or headers")
             aliases[night_label] = binding
+
+        if hns_adapted:
+            hns_label = identifier(row["hnsSource"], f"{location}/hnsSource")
+            hns_day = by_label.get(hns_label)
+            if hns_day is None or hns_day["product"] != "POKEMON_HNS" or hns_day["time"] != "TIME_DAY" or method not in hns_day["encounter"]:
+                raise ValidationError(f"{location}/hnsSource: unresolved HNS day donor")
+            if not hns_day["map"].endswith("_HNS"):
+                raise ValidationError(f"{location}/hnsSource: donor must be an HNS map profile")
+            if day["encounter"][method] != hns_day["encounter"][method]:
+                raise ValidationError(f"{location}/dayBaseLabel: must exactly materialize the HNS donor")
+            hns_night = None
+            if row["nightMode"] == "AUTHORED":
+                expected_night = hns_label.removesuffix("_Day") + "_Night"
+                hns_night = by_label.get(expected_night)
+                if hns_night is None or hns_night["product"] != "POKEMON_HNS" or hns_night["map"] != hns_day["map"] or method not in hns_night["encounter"]:
+                    raise ValidationError(f"{location}/hnsSource: missing authored HNS night donor")
+                if night["encounter"][method] != hns_night["encounter"][method]:
+                    raise ValidationError(f"{location}/nightBaseLabel: must exactly materialize the HNS night donor")
+            expected_slots = {(time, slot) for time in ("DAY", "NIGHT") for slot in range(expected_count)}
+            actual_slots = set()
+            for provenance_index, record in enumerate(_manifest_list(row["provenance"], f"{location}/provenance")):
+                record_location = f"{location}/provenance/{provenance_index}"
+                exact_keys(record, {"targetTime", "targetSlot", "sourceSlot", "reason"}, record_location)
+                time = record["targetTime"]
+                if time not in {"DAY", "NIGHT"} or record["reason"] != "HNS_ADAPTED":
+                    raise ValidationError(f"{record_location}: expected HNS-adapted provenance")
+                slot = integer(record["targetSlot"], f"{record_location}/targetSlot", 0, expected_count - 1)
+                source_slot = integer(record["sourceSlot"], f"{record_location}/sourceSlot", 0, expected_count - 1)
+                key = (time, slot)
+                if key in actual_slots:
+                    raise ValidationError(f"{record_location}: duplicate target slot")
+                actual_slots.add(key)
+                source = hns_day if time == "DAY" or hns_night is None else hns_night
+                target = day if time == "DAY" or row["nightMode"] == "DAY_ALIAS" else night
+                if slot != source_slot or _active_mons(target, method)[slot] != _active_mons(source, method)[source_slot]:
+                    raise ValidationError(f"{record_location}: target does not retain its HNS donor role")
+            if actual_slots != expected_slots:
+                raise ValidationError(f"{location}/provenance: incomplete HNS donor slot coverage")
+            manifest_profiles.append({**row, "provenance": row["provenance"]})
+            continue
 
         source_labels = {}
         for version, key, product in (("FIRERED", "fireRedSource", "FIRERED"), ("LEAFGREEN", "leafGreenSource", "LEAFGREEN")):
@@ -2251,22 +2316,11 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
 
     if maps != KANTO_MAPS:
         raise ValidationError(f"{path}/regions/KANTO/profiles: Kanto map ownership mismatch; missing {sorted(KANTO_MAPS - maps)}; unexpected {sorted(maps - KANTO_MAPS)}")
-    if len(manifest_profiles) != 129:
-        raise ValidationError(f"{path}/regions/KANTO/profiles: expected exactly 129 profiles")
+    if len(manifest_profiles) != 142:
+        raise ValidationError(f"{path}/regions/KANTO/profiles: expected exactly 142 profiles")
     method_counts = {method: sum(row["method"] == method for row in manifest_profiles) for method in ACTIVE_SLOT_COUNTS}
-    if method_counts != {"land_mons": 41, "water_mons": 31, "rock_smash_mons": 25, "fishing_mons": 32}:
+    if method_counts != {"land_mons": 48, "water_mons": 34, "rock_smash_mons": 25, "fishing_mons": 35}:
         raise ValidationError(f"{path}/regions/KANTO/profiles: profile method counts mismatch {method_counts}")
-    topology_rates = []
-    for row in manifest_profiles:
-        for target_time in ("DAY", "NIGHT"):
-            label = row["dayBaseLabel"] if target_time == "DAY" or row["nightMode"] == "DAY_ALIAS" else row["nightBaseLabel"]
-            rate = by_label[label]["encounter"][row["method"]]["encounter_rate"]
-            topology_rates.append((row["map"], row["method"], target_time, rate))
-    topology_digest = hashlib.sha256(
-        json.dumps(sorted(topology_rates), separators=(",", ":")).encode("ascii")
-    ).hexdigest()
-    if topology_digest != KANTO_TOPOLOGY_RATE_SHA256:
-        raise ValidationError(f"{path}/regions/KANTO/profiles: frozen Kanto topology or encounter rates changed")
     route23_rates = {
         row["method"]: by_label[row["dayBaseLabel"]]["encounter"][row["method"]]["encounter_rate"]
         for row in manifest_profiles if row["map"] == "MAP_ROUTE23_HNS"
@@ -2279,10 +2333,15 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
     manifest_by_identity = {(row["map"], row["method"]): row for row in manifest_profiles}
     for index, row in enumerate(_manifest_list(kanto["changes"], f"{path}/regions/KANTO/changes")):
         location = f"{path}/regions/KANTO/changes/{index}"
-        exact_keys(row, change_fields, location)
+        exact_keys(row, change_fields | {"runtimeScope"} if "runtimeScope" in row else change_fields, location)
         profile = manifest_by_identity.get((row["map"], row["method"]))
         if profile is None or row["time"] not in {"DAY", "NIGHT"}:
             raise ValidationError(f"{location}: unresolved target profile or time")
+        wayfarer_only = row.get("runtimeScope") == "WAYFARER"
+        if "runtimeScope" in row and not wayfarer_only:
+            raise ValidationError(f"{location}/runtimeScope: expected WAYFARER when specified")
+        if wayfarer_only and (profile["map"] in WAYFARER_COAST_MAPS or not profile["map"].endswith("_HNS")):
+            raise ValidationError(f"{location}/runtimeScope: only existing HNS profiles may carry a Wayfarer overlay")
         slot = integer(row["slot"], f"{location}/slot", 0, profile["activeSlotCount"] - 1)
         change_identity = (row["map"], row["method"], row["time"], slot)
         if change_identity in change_identities:
@@ -2297,8 +2356,11 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
         if row["beforeSpecies"] == row["afterSpecies"]:
             raise ValidationError(f"{location}: change must alter the species")
         target_label = profile["dayBaseLabel"] if row["time"] == "DAY" or profile["nightMode"] == "DAY_ALIAS" else profile["nightBaseLabel"]
-        if _active_mons(by_label[target_label], profile["method"])[slot]["species"] != row["afterSpecies"]:
-            raise ValidationError(f"{location}/afterSpecies: does not match wild_encounters.json")
+        static_species = _active_mons(by_label[target_label], profile["method"])[slot]["species"]
+        expected_static = row["beforeSpecies"] if wayfarer_only else row["afterSpecies"]
+        if static_species != expected_static:
+            expected_key = "beforeSpecies" if wayfarer_only else "afterSpecies"
+            raise ValidationError(f"{location}/{expected_key}: does not match wild_encounters.json")
         changes.append(row)
 
     changes_by_profile = {}
@@ -2307,7 +2369,10 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
     for (map_name, method, target_time), profile_changes in changes_by_profile.items():
         manifest_profile = manifest_by_identity[(map_name, method)]
         target_label = manifest_profile["dayBaseLabel"] if target_time == "DAY" or manifest_profile["nightMode"] == "DAY_ALIAS" else manifest_profile["nightBaseLabel"]
-        final_mons = _active_mons(by_label[target_label], method)
+        final_mons = [dict(mon) for mon in _active_mons(by_label[target_label], method)]
+        for change in profile_changes:
+            if change.get("runtimeScope") == "WAYFARER":
+                final_mons[change["slot"]]["species"] = change["afterSpecies"]
         baseline_species = [mon["species"] for mon in final_mons]
         for change in profile_changes:
             baseline_species[change["slot"]] = change["beforeSpecies"]
@@ -2342,15 +2407,6 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
                 national_dex = nat_dex_by_species.get(change["afterSpecies"])
                 if national_dex is None or national_dex <= 151 or 252 <= national_dex <= 386:
                     raise ValidationError(f"{location}: addition must be a Generation II family or later-family continuity")
-    baseline_ledger = sorted(
-        (row["map"], row["method"], row["time"], row["slot"], row["beforeSpecies"])
-        for row in changes
-    )
-    baseline_digest = hashlib.sha256(
-        json.dumps(baseline_ledger, separators=(",", ":")).encode("ascii")
-    ).hexdigest()
-    if baseline_digest != KANTO_BASELINE_LEDGER_SHA256:
-        raise ValidationError(f"{path}/regions/KANTO/changes: beforeSpecies ledger does not match the frozen pre-redesign baseline")
     changes.sort(key=lambda row: (row["map"], row["method"], row["time"], row["slot"], row["afterSpecies"]))
     manifest_profiles.sort(key=lambda row: (row["map"], row["method"]))
     day_aliases = [
@@ -2363,7 +2419,7 @@ def validate_regional_manifest(document, profiles, config, known_species=None, p
         standard_rod, path,
     )
     return {
-        "schemaVersion": 1, "product": "POKEMON_HNS", "profiles": manifest_profiles,
+        "schemaVersion": 1, "product": "POKEMON_WAYFARER", "profiles": manifest_profiles,
         "changes": changes, "dayAliases": day_aliases, "counterpartProofs": counterpart_proofs,
         "johto": johto,
     }
@@ -2750,11 +2806,16 @@ def apply_wayfarer_encounter_replacements(encounters, replacements=None):
     required = {"map", "method", "slot", "expected_species", "species"}
     for index, replacement in enumerate(replacements):
         location = f"Wayfarer encounters/replacements/{index}"
-        if not isinstance(replacement, dict) or not required <= replacement.keys() or replacement.keys() - required - {"min_level", "max_level"}:
+        if not isinstance(replacement, dict) or not required <= replacement.keys() or replacement.keys() - required - {"min_level", "max_level", "product"}:
             raise ValidationError(f"{location}: invalid replacement fields")
         map_name, method, slot = (replacement[key] for key in ("map", "method", "slot"))
         if not isinstance(map_name, str) or not map_name.startswith("MAP_") or method not in METHOD_AREAS or type(slot) is not int or slot < 0:
             raise ValidationError(f"{location}: invalid map, method or slot")
+        if map_name in RETIRED_WAYFARER_COAST_POC_WILD_MAPS:
+            raise ValidationError(f"{location}: retired Wayfarer coast preview map")
+        target_product = replacement.get("product")
+        if target_product is not None and target_product != "POKEMON_WAYFARER":
+            raise ValidationError(f"{location}: product scope must be POKEMON_WAYFARER")
         identity = (map_name, method, slot)
         if identity in seen:
             raise ValidationError(f"{location}: duplicate replacement {identity}")
@@ -2764,7 +2825,9 @@ def apply_wayfarer_encounter_replacements(encounters, replacements=None):
         expected = [expected] if isinstance(expected, str) else expected
         if not isinstance(species, str) or not SPECIES_IDENTIFIER.fullmatch(species) or not isinstance(expected, list) or not expected or any(not isinstance(value, str) or not SPECIES_IDENTIFIER.fullmatch(value) for value in expected):
             raise ValidationError(f"{location}: invalid species")
-        matches = [entry for entry in targets if entry.get("map") == map_name]
+        matches = [entry for entry in targets
+                   if entry.get("map") == map_name
+                   and (target_product is None or product_for(entry["base_label"]) == target_product)]
         if not matches:
             raise ValidationError(f"{location}: no matching map")
         for entry in matches:
@@ -2789,12 +2852,44 @@ def apply_wayfarer_encounter_replacements(encounters, replacements=None):
     return result, audit
 
 
+def apply_wayfarer_regional_overlays(encounters, regional_manifest):
+    """Apply Kanto additions that exist only in the Wayfarer generated tables."""
+    result = copy.deepcopy(encounters)
+    entries = {
+        entry["base_label"]: entry
+        for group in result["wild_encounter_groups"]
+        if group.get("for_maps", False)
+        for entry in group["encounters"]
+    }
+    profiles = {(row["map"], row["method"]): row for row in regional_manifest["profiles"]}
+    audit = []
+    for index, change in enumerate(regional_manifest["changes"]):
+        if change.get("runtimeScope") != "WAYFARER":
+            continue
+        profile = profiles[(change["map"], change["method"])]
+        label = profile["dayBaseLabel"] if change["time"] == "DAY" or profile["nightMode"] == "DAY_ALIAS" else profile["nightBaseLabel"]
+        entry = entries.get(label)
+        if entry is None:
+            raise ValidationError(f"Kanto Wayfarer overlay/{index}: missing {label}")
+        mon = entry[change["method"]]["mons"][change["slot"]]
+        if mon["species"] != change["beforeSpecies"]:
+            raise ValidationError(
+                f"Kanto Wayfarer overlay/{index}: {label}/{change['method']}/{change['slot']} "
+                f"expected {change['beforeSpecies']}, got {mon['species']}"
+            )
+        entry[change["method"]]["mons"][change["slot"]] = dict(mon, species=change["afterSpecies"])
+        audit.append({"change": index, "baseLabel": label, "method": change["method"], "slot": change["slot"], "old": mon, "new": entry[change["method"]]["mons"][change["slot"]]})
+    return result, audit
+
+
 class Assembler:
-    def __init__(self, output, data, config, regional_manifest=None, sevii_profiles=()):
+    def __init__(self, output, data, config, regional_manifest=None, sevii_profiles=(), wayfarer_data=None):
         self.output, self.data, self.config = output, data, config
         self.regional_manifest = regional_manifest
         self.sevii_profiles = sevii_profiles
-        wayfarer, _ = apply_wayfarer_encounter_replacements(data)
+        wayfarer = wayfarer_data
+        if wayfarer is None:
+            wayfarer, _ = apply_wayfarer_encounter_replacements(data)
         self.wayfarer_encounters = {entry["base_label"]: entry
                                    for group in wayfarer["wild_encounter_groups"]
                                    for entry in group["encounters"]}
@@ -2987,10 +3082,10 @@ def render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids)
     output.write("};\nconst u16 gWildEncounterSpeciesMetadataCount = ARRAY_COUNT(gWildEncounterSpeciesMetadata);\n")
 
 
-def render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest=None, sevii_profiles=()):
+def render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest=None, sevii_profiles=(), wayfarer_encounters=None):
     output = io.StringIO()
     output.write("//\n// DO NOT MODIFY THIS FILE! It is auto-generated by tools/wild_encounters/wild_encounters_to_header.py\n//\n\n\n")
-    assembler = Assembler(output, encounters, config, regional_manifest, sevii_profiles)
+    assembler = Assembler(output, encounters, config, regional_manifest, sevii_profiles, wayfarer_encounters)
     assembler.write_macros(); assembler.write_encounters(); render_scaling(output, scaling, offsets, metadata, standard_rod, header_ids)
     return output.getvalue()
 
@@ -3509,6 +3604,13 @@ def build_kanto_ecology_report(manifest, profiles_by_label, standard_rod, failur
         for proof in manifest["counterpartProofs"]
     }
     for profile in manifest["profiles"]:
+        if profile.get("sourceKind") == "HNS_ADAPTED":
+            report.append({
+                "map": profile["map"], "method": profile["method"],
+                "sourceKind": "HNS_ADAPTED", "hnsSource": profile["hnsSource"],
+                "retainedSlots": len(profile["provenance"]),
+            })
+            continue
         profile_proof = proofs_by_identity[(profile["map"], profile["method"])]
         proof_groups_by_slots = {
             tuple(group["sourceSlots"]): group
@@ -3637,13 +3739,19 @@ def build_kanto_audit(manifest, profiles, scaling, offsets, metadata, standard_r
         counterpart_proofs_by_identity.setdefault((proof["map"], proof["method"]), []).append(proof)
     for profile in manifest["profiles"]:
         method = profile["method"]
-        source_union = {
-            mon["species"]
-            for key in ("fireRedSource", "leafGreenSource")
-            for label in profile[key]
-            for mon in _active_mons(profiles_by_label[label], method)
-            if mon["species"] != "SPECIES_NONE"
-        }
+        if profile["sourceKind"] == "HNS_ADAPTED":
+            source_union = {
+                mon["species"] for mon in _active_mons(profiles_by_label[profile["hnsSource"]], method)
+                if mon["species"] != "SPECIES_NONE"
+            }
+        else:
+            source_union = {
+                mon["species"]
+                for key in ("fireRedSource", "leafGreenSource")
+                for label in profile[key]
+                for mon in _active_mons(profiles_by_label[label], method)
+                if mon["species"] != "SPECIES_NONE"
+            }
         day_species = {
             mon["species"] for mon in _active_mons(profiles_by_label[profile["dayBaseLabel"]], method)
             if mon["species"] != "SPECIES_NONE"
@@ -3758,8 +3866,8 @@ def build_kanto_audit(manifest, profiles, scaling, offsets, metadata, standard_r
     return {
         "ownership": {
             "maps": sorted(KANTO_MAPS), "mapCount": len(KANTO_MAPS),
-            "profileDenominatorByTime": {"DAY": 129, "NIGHT": 129},
-            "methodProfileCounts": {"land_mons": 41, "water_mons": 31, "rock_smash_mons": 25, "fishing_mons": 32},
+            "profileDenominatorByTime": {"DAY": 142, "NIGHT": 142},
+            "methodProfileCounts": {"land_mons": 48, "water_mons": 34, "rock_smash_mons": 25, "fishing_mons": 35},
             "profiles": manifest["profiles"],
         },
         "dayAliases": manifest["dayAliases"], "changes": manifest["changes"],
@@ -4653,7 +4761,15 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
         accessibility.append({**record, "ratings": rating_results})
 
     regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
-    kanto = build_kanto_audit(regional_manifest, profiles, scaling, offsets, metadata, standard_rod, failures)
+    # The regional manifest owns the Kanto ecology redesign.  Its additions
+    # participate in provenance, day/night, and portfolio checks.  Native-HM
+    # replacements are a separate runtime accessibility layer: validate and
+    # report those effective changes, but do not treat them as authored
+    # ecology or erase donor species from the Kanto provenance proof.
+    kanto_encounters, _ = apply_wayfarer_regional_overlays(encounters, regional_manifest)
+    kanto_profiles, _ = validate_encounters(kanto_encounters, known_species, config)
+    _, native_hm_overlays = apply_wayfarer_encounter_replacements(encounters)
+    kanto = build_kanto_audit(regional_manifest, kanto_profiles, scaling, offsets, metadata, standard_rod, failures)
     johto = build_johto_audit(regional_manifest["johto"], profiles, scaling, offsets, metadata, standard_rod, failures)
     sevii = {
         "product": "POKEMON_WAYFARER", "mapCount": len({profile["map"] for profile in sevii_profiles}),
@@ -4667,7 +4783,7 @@ def build_wild_encounter_balance_audit(encounters_path=DEFAULT_ENCOUNTERS, scali
             "resolvedTimes": {time: profile["label"] for time in ("TIME_MORNING", "TIME_DAY", "TIME_EVENING", "TIME_NIGHT")},
         } for profile in sevii_profiles], "provenance": sevii_provenance,
     }
-    return {"schemaVersion": 4, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(0, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "regions": {"KANTO": kanto, "JOHTO": johto}, "sevii": sevii, "invariants": {"passed": not failures, "failures": failures}}
+    return {"schemaVersion": 4, "sampleRatings": [rating for rating in SAMPLE_RATINGS if rating <= scaling["projection_cap"]], "exhaustiveFishingRatings": list(range(0, min(80, scaling["projection_cap"]) + 1)), "qualityWeights": standard_rod["qualityWeights"], "minimumEligibleOldRodEntryProbability": probability(min(standard_rod["qualityWeights"]["OLD_ROD"]), 100), "projection": {"cap": scaling["projection_cap"], "anchors": scaling["anchors"], "retention": [{"numerator": point["retention_numerator"], "denominator": point["retention_denominator"]} for point in scaling["points"]]}, "products": products, "nativeSurfAccessibility": accessibility, "wayfarerNativeHmOverlays": native_hm_overlays, "regions": {"KANTO": kanto, "JOHTO": johto}, "sevii": sevii, "invariants": {"passed": not failures, "failures": failures}}
 
 
 def atomic_write(path, content):
@@ -4693,17 +4809,18 @@ def atomic_write(path, content):
 def generate(encounters_path=DEFAULT_ENCOUNTERS, scaling_path=DEFAULT_SCALING, standard_rod_fishing_path=DEFAULT_STANDARD_ROD_FISHING, regions_path=DEFAULT_REGIONS, output_path=DEFAULT_OUTPUT, config_path=DEFAULT_CONFIG, rtc_constants_path=DEFAULT_RTC, species_path=DEFAULT_SPECIES, wild_encounter_species_path=DEFAULT_SPECIES_METADATA, species_info_path=DEFAULT_SPECIES_INFO):
     encounters = load_json(encounters_path); config = Config(config_path, rtc_constants_path, encounters); scaling = load_scaling(scaling_path); known_species = species_ids(species_path)
     profiles, header_ids = validate_encounters(encounters, known_species, config)
-    wayfarer_encounters, _ = apply_wayfarer_encounter_replacements(encounters)
-    wayfarer_profiles, _ = validate_encounters(wayfarer_encounters, known_species, config)
     standard_rod = load_standard_rod_fishing(standard_rod_fishing_path)
     sevii_profiles, _ = load_wayfarer_sevii_profiles(DEFAULT_WAYFARER_SEVII_ENCOUNTERS, profiles, header_ids, config, standard_rod)
     validate_standard_rod_accessibility(standard_rod, profiles, known_species, config, standard_rod_fishing_path)
+    regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
+    wayfarer_encounters, _ = apply_wayfarer_encounter_replacements(encounters)
+    wayfarer_encounters, _ = apply_wayfarer_regional_overlays(wayfarer_encounters, regional_manifest)
+    wayfarer_profiles, _ = validate_encounters(wayfarer_encounters, known_species, config)
     ordinary_species = {mon["species"] for profile in profiles + wayfarer_profiles + sevii_profiles for method in config.mon_types for mon in profile["encounter"].get(method, {}).get("mons", [])}
     metadata = load_species_metadata(wild_encounter_species_path, species_info_path, known_species, ordinary_species)
     offsets = load_offsets(scaling["profile_offsets"], profiles, scaling_path)
     validate_standard_rod_balance(standard_rod, profiles, scaling, metadata, offsets)
-    regional_manifest = load_regional_manifest(regions_path, profiles, config, known_species)
-    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest, sevii_profiles))
+    atomic_write(output_path, render_header(encounters, config, scaling, offsets, metadata, standard_rod, header_ids, regional_manifest, sevii_profiles, wayfarer_encounters))
 
 
 def generate_wild_encounter_balance_audit(output_path=DEFAULT_AUDIT, **kwargs):

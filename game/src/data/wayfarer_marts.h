@@ -53,6 +53,7 @@ static const u16 sSignatureLavender[] = { ITEM_DUSK_BALL, ITEM_HEAL_BALL, ITEM_S
 static const u16 sSignatureCeladon2F[] = { ITEM_LUXURY_BALL, ITEM_POKE_DOLL, ITEM_RETRO_MAIL };
 static const u16 sSignatureSaffron[] = { ITEM_X_SP_ATK, ITEM_X_SP_DEF, ITEM_GUARD_SPEC };
 static const u16 sSignatureFuchsia[] = { ITEM_NET_BALL, ITEM_NEST_BALL, ITEM_FLUFFY_TAIL };
+static const u16 sSignatureCinnabar[] = { ITEM_BURN_HEAL, ITEM_ESCAPE_ROPE, ITEM_DUSK_BALL };
 static const u16 sSignatureOldale[] = { ITEM_HEAL_BALL, ITEM_NEST_BALL };
 static const u16 sSignaturePetalburg[] = { ITEM_NEST_BALL, ITEM_X_DEFENSE, ITEM_ORANGE_MAIL };
 static const u16 sSignatureRustboro[] = { ITEM_TIMER_BALL, ITEM_REPEAT_BALL };
@@ -145,6 +146,7 @@ static const struct WayfarerMartProfile sWayfarerMartProfiles[MART_PROFILE_COUNT
     [MART_PROFILE_CELADON_2F] = MART_PROFILE_NO_RETAINED(sSignatureCeladon2F, MART_COMMON_ALL, TRUE, MART_CATEGORY_DEPT),
     [MART_PROFILE_SAFFRON] = MART_PROFILE_NO_RETAINED(sSignatureSaffron, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN),
     [MART_PROFILE_FUCHSIA] = MART_PROFILE_NO_RETAINED(sSignatureFuchsia, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN),
+    [MART_PROFILE_CINNABAR] = MART_PROFILE_NO_RETAINED(sSignatureCinnabar, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN),
     [MART_PROFILE_OLDALE] = MART_PROFILE_NO_RETAINED(sSignatureOldale, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN),
     [MART_PROFILE_PETALBURG] = MART_PROFILE_WITH_RETAINED(sSignaturePetalburg, sRetainedPetalburg, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN),
     [MART_PROFILE_RUSTBORO] = MART_PROFILE_WITH_RETAINED(sSignatureRustboro, sRetainedRustboro, MART_COMMON_ALL, TRUE, MART_CATEGORY_TOWN),
@@ -187,6 +189,7 @@ static const struct WayfarerMartProfile sWayfarerMartProfiles[MART_PROFILE_COUNT
     X(MART_PROFILE_CELADON_2F, "CeladonCity_DepartmentStore_2F_hns", MAP_CELADON_CITY_DEPARTMENT_STORE_2F_HNS, "VioletCity_Mart_EventScript_Clerk", MART_CATEGORY_DEPT, "legacy shared NULL catalog") \
     X(MART_PROFILE_SAFFRON, "SaffronCity_Mart_hns", MAP_SAFFRON_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
     X(MART_PROFILE_FUCHSIA, "FuchsiaCity_Mart_hns", MAP_FUCHSIA_CITY_MART_HNS, "Cherrygrove_Pokemart_EventScript_Clerk", MART_CATEGORY_TOWN, "legacy shared NULL catalog") \
+    X(MART_PROFILE_CINNABAR, "CinnabarIsland_Mart_Frlg", MAP_CINNABAR_ISLAND_MART, "CinnabarIsland_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "CinnabarIsland_Mart_Frlg/scripts.inc:CinnabarIsland_Mart_EventScript_Clerk") \
     X(MART_PROFILE_OLDALE, "OldaleTown_Mart", MAP_OLDALE_TOWN_MART, "OldaleTown_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "OldaleTown_Mart/scripts.inc:OldaleTown_Mart_EventScript_Clerk") \
     X(MART_PROFILE_PETALBURG, "PetalburgCity_Mart", MAP_PETALBURG_CITY_MART, "PetalburgCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "PetalburgCity_Mart/scripts.inc:PetalburgCity_Mart_EventScript_ClerkItems") \
     X(MART_PROFILE_RUSTBORO, "RustboroCity_Mart", MAP_RUSTBORO_CITY_MART, "RustboroCity_Mart_EventScript_Clerk", MART_CATEGORY_TOWN, "RustboroCity_Mart/scripts.inc:RustboroCity_Mart_EventScript_ClerkItems") \

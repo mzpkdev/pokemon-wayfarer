@@ -10,6 +10,8 @@
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
+#include "wayfarer_sevii_story.h"
+#include "trainer_rating.h"
 #include "constants/heal_locations.h"
 #include "constants/maps.h"
 #include "constants/opponents.h"
@@ -143,6 +145,8 @@ void WayfarerInitPersistentState(void)
     VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
     FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));
     WayfarerSeviiInitPersistentState();
+    memset(&gSaveBlock3Ptr->wayfarerCoast, 0, sizeof(gSaveBlock3Ptr->wayfarerCoast));
+    gSaveBlock3Ptr->wayfarerCoast.magic = WAYFARER_COAST_STATE_MAGIC;
 #endif
 }
 
@@ -300,6 +304,7 @@ bool8 WayfarerPersistentStateIsValid(void)
     return WayfarerGetPlayerAppearanceId() != APPEARANCE_NONE
         && gSaveBlock3Ptr->wayfarerHoenn.magic == WAYFARER_HOENN_STATE_MAGIC
         && WayfarerSeviiPersistentStateIsValid()
+        && gSaveBlock3Ptr->wayfarerCoast.magic == WAYFARER_COAST_STATE_MAGIC
         && WayfarerGetOriginProfile(WayfarerGetStartingOriginId()) != NULL
         && GetHealLocation(gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation) != NULL
         && gSaveBlock3Ptr->wayfarerHoenn.initialized <= TRUE
@@ -641,6 +646,24 @@ void SetBadgeStateForRegion(enum Region region, u8 badgeIndex, bool8 value)
     else
         FlagClear(flagId);
 }
+
+#if IS_WAYFARER
+u16 WayfarerCoast_IsArticunoEligible(void)
+{
+    return !FlagGet(FLAG_WAYFARER_FOUGHT_ARTICUNO)
+        && GetTrainerRating() >= WAYFARER_BIRD_CAPTURE_TR;
+}
+
+void WayfarerGrantKantoBadge15(void)
+{
+    if (GetBadgeStateForRegion(REGION_KANTO, 6))
+        return;
+
+    SetBadgeStateForRegion(REGION_KANTO, 6, TRUE);
+    VarSet(VAR_NUM_BADGES, VarGet(VAR_NUM_BADGES) + 1);
+    GetTrainerRating();
+}
+#endif
 
 u8 GetBadgeCountForRegion(enum Region region)
 {

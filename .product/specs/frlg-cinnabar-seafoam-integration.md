@@ -122,10 +122,9 @@ specifications; no step here advances an unplayed rival chapter.
 
 Update the Kanto encounter manifest and day/night source bindings for the
 selected four coastal route maps, Cinnabar, and five Seafoam maps. Preserve
-the approved regional ecology and native Surf availability; adapt
-version-specific FRLG species
-through the existing encounter policy rather than silently substituting HNS
-volcanic or ice-cave tables. Update rod-source contracts that still name
+the approved regional ecology and native Surf availability. Reuse the HNS
+encounter tables as donors where the coast maps have matching HNS maps;
+adapt FRLG tables for the remaining Seafoam and Mansion floors. Update rod-source contracts that still name
 `MAP_CINNABAR_ISLAND_HNS`. Register the 32 FRLG route Trainer objects,
 including two shared-identity double-battle pairs, and Mansion and Gym
 Trainers, including Blaine, in Wayfarer's scaling, defeat, rematch, and

@@ -273,7 +273,7 @@ static const u16 sOlivinePortMaps[] = { MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS };
 static const u16 sCianwoodMaps[] = { MAP_CIANWOOD_CITY_HNS };
 static const u16 sVermilionMaps[] = { MAP_VERMILION_CITY_HNS, MAP_VERMILION_CITY_PORT_OUTSIDE_HNS };
 #if IS_WAYFARER
-static const u16 sCinnabarMaps[] = { MAP_CINNABAR_SEAM_POC };
+static const u16 sCinnabarMaps[] = { MAP_CINNABAR_ISLAND };
 #else
 static const u16 sCinnabarMaps[] = { MAP_CINNABAR_ISLAND_HNS };
 #endif
@@ -661,7 +661,7 @@ TEST("Wayfarer Chinchou fishing catches retain utility moves from Rating zero th
     {
         MAP_VERMILION_CITY_HNS,
         MAP_VERMILION_CITY_PORT_OUTSIDE_HNS,
-        MAP_CINNABAR_SEAM_POC,
+        MAP_CINNABAR_ISLAND,
         MAP_OLIVINE_CITY_PORT_OUTSIDE_HNS,
         MAP_CIANWOOD_CITY_HNS,
     };

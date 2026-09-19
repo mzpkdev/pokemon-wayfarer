@@ -578,9 +578,9 @@ TEST("Trainer scaling rejects invalid opponents without altering supplied partie
     EXPECT_EQ(GetMonData(&gEnemyParty[0], MON_DATA_LEVEL), 10);
 }
 
+#if !B_TRAINER_PARTY_SCALING
 TEST("Trainer scaling rollback bypasses level species and move changes together")
 {
-    ASSUME(!B_TRAINER_PARTY_SCALING);
     PrepareScalingPartyTest(0);
     AllocateBattleResources();
     gBattleStruct->opponentMonCanDynamax = (1 << PARTY_SIZE) - 1;
@@ -593,5 +593,6 @@ TEST("Trainer scaling rollback bypasses level species and move changes together"
     EXPECT_EQ((u32)gBattleStruct->opponentMonCanTera, (1 << PARTY_SIZE) - 1);
     FreeBattleResources();
 }
+#endif
 
 #endif

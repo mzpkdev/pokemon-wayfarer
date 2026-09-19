@@ -5,7 +5,7 @@ PalletTown_House2_EventScript_Daisy::
 	lock
 	faceplayer
 #if IS_WAYFARER
-	goto_if_unset FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED, PalletTown_House2_EventScript_Blue
+	goto_if_unset FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, PalletTown_House2_EventScript_Blue
 #else
 	goto_if_unset FLAG_HIDE_CINNABAR_BLUE, PalletTown_House2_EventScript_Blue
 #endif

@@ -19,7 +19,10 @@
 	.include "data/maps/headers.inc"
 	.include "data/maps/groups.inc"
 	.include "data/maps/connections.inc"
+
+#if HAS_HNS_CONTENT && !IS_WAYFARER
 	.include "data/maps/CinnabarIsland_SeamPoc/scripts.inc"
 	.include "data/maps/frlg_coast_overworld_poc_scripts.inc"
 	.include "data/maps/cinnabar_service_port_scripts.inc"
 	.include "data/maps/cinnabar_gym_mansion_port_scripts.inc"
+#endif
