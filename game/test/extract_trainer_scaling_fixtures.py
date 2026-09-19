@@ -15,7 +15,7 @@ def render():
     for filename, ids in RECORDS.items():
         source = (ROOT / "src/data" / filename).read_text()
         for trainer_id in ids:
-            match = re.search(r"^    \[DIFFICULTY_NORMAL\]\[" + trainer_id + r"\] =\n", source, re.M)
+            match = re.search(r"^    \[" + trainer_id + r"\] =\n", source, re.M)
             if match is None:
                 raise ValueError(f"Missing {trainer_id} in {filename}")
             start = match.start()

@@ -1,5 +1,3 @@
-[DIFFICULTY_NORMAL] =
-{
 #ifndef TEST_TRAINER_SLIDE_PARTNERS
     [TRAINER_LEAF_TEST] =
     {
@@ -51,4 +49,3 @@
         [TRAINER_SLIDE_DYNAMAX] = COMPOUND_STRING("Trainer Partner: This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
     },
 #endif
-},

@@ -33,7 +33,6 @@ struct GymLeaderScalingRoster
 {
     u16 trainerId;
     u16 ownerId;
-    u8 difficulty;
     const struct TrainerMon *party;
     const struct TrainerMon *legacyParty;
     u8 legacyPartySize;
@@ -53,7 +52,6 @@ struct LeagueScalingRoster
     u16 trainerId;
     u16 ownerId;
     u8 region;
-    u8 difficulty;
     u8 encounterIndex;
     s8 encounterOffset;
     u8 count;
@@ -66,7 +64,7 @@ struct LeagueScalingRoster
 
 u8 GetLeagueScalingBaseline(u32 rating);
 u8 GetLeagueScalingLevel(u32 rating, s8 encounterOffset, s8 slotOffset);
-const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty);
+const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId);
 bool32 IsLeagueScalingRosterValid(const struct LeagueScalingRoster *roster, const struct TrainerMon *party, u32 count);
 
 u8 GetTrainerScalingLevel(u32 rating, u32 authoredLevel, u32 policy);
@@ -75,10 +73,10 @@ u16 ResolveTrainerScalingSpecies(u16 species, u8 level);
 bool32 IsTrainerScalingBattleContext(u32 battleTypeFlags);
 void ResetTrainerScalingSnapshot(void);
 u8 GetTrainerScalingSnapshot(void);
-bool32 HasTrainerScalingMoveException(u32 owner, u32 variant, u32 slot);
+bool32 HasTrainerScalingMoveException(u32 owner, u32 slot);
 bool32 CanRetainTrainerScalingMoves(const struct TrainerMon *entry, u16 species, u8 level);
 u32 GetTrainerScalingAbility(u16 species, u32 authoredAbility, u32 personalityHash);
-const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty);
+const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId);
 u8 GetGymLeaderScalingPartySize(u32 rating);
 u8 GetGymLeaderScalingLevel(u32 rating, s8 levelOffset);
 bool32 BuildGymLeaderScalingPlan(const struct GymLeaderScalingRoster *roster, u32 rating, struct GymLeaderScalingPlan *plan);

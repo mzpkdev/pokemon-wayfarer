@@ -86,7 +86,7 @@ You can test your new trainer back pic by going to [`src/data/battle_partners.pa
 
 Otherwise if you use [`src/data/battle_partners.h`](./src/data/battle_partners.h), change the `trainerPic` field instead. For example:
 ```diff
-     [DIFFICULTY_NORMAL][PARTNER_STEVEN] =
+     [PARTNER_STEVEN] =
      {
          .trainerName = _("STEVEN"),
          .trainerClass = TRAINER_CLASS_RIVAL,

@@ -3,7 +3,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
 {
     {
         .trainerId = TRAINER_WILL_1_HNS, .ownerId = TRAINER_WILL_1_HNS,
-        .region = REGION_KANTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_KANTO,
         .encounterIndex = 0, .encounterOffset = -4,
         .count = 5, .aceSlot = 4,
         .offsets = { -2, -1, -2, -1, 0 },
@@ -19,7 +19,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_KOGA_1_HNS, .ownerId = TRAINER_KOGA_1_HNS,
-        .region = REGION_KANTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_KANTO,
         .encounterIndex = 1, .encounterOffset = -3,
         .count = 5, .aceSlot = 4,
         .offsets = { -2, -1, -2, -1, 0 },
@@ -35,7 +35,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_BRUNO_1_HNS, .ownerId = TRAINER_BRUNO_1_HNS,
-        .region = REGION_KANTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_KANTO,
         .encounterIndex = 2, .encounterOffset = -2,
         .count = 5, .aceSlot = 4,
         .offsets = { -1, -2, -1, -1, 0 },
@@ -51,7 +51,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_KAREN_1_HNS, .ownerId = TRAINER_KAREN_1_HNS,
-        .region = REGION_KANTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_KANTO,
         .encounterIndex = 3, .encounterOffset = -1,
         .count = 5, .aceSlot = 4,
         .offsets = { -1, -2, -2, -2, 0 },
@@ -67,7 +67,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_LANCE_1_HNS, .ownerId = TRAINER_LANCE_1_HNS,
-        .region = REGION_KANTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_KANTO,
         .encounterIndex = 4, .encounterOffset = 1,
         .count = 6, .aceSlot = 5,
         .offsets = { -2, -1, -2, -1, -2, 0 },
@@ -84,7 +84,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_WILL_2_HNS, .ownerId = TRAINER_WILL_2_HNS,
-        .region = REGION_JOHTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_JOHTO,
         .encounterIndex = 0, .encounterOffset = -4,
         .count = 6, .aceSlot = 5,
         .offsets = { -2, -1, -1, -1, -2, 0 },
@@ -101,7 +101,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_KOGA_2_HNS, .ownerId = TRAINER_KOGA_2_HNS,
-        .region = REGION_JOHTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_JOHTO,
         .encounterIndex = 1, .encounterOffset = -3,
         .count = 6, .aceSlot = 5,
         .offsets = { -1, -1, -1, -1, -1, 0 },
@@ -118,7 +118,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_BRUNO_2_HNS, .ownerId = TRAINER_BRUNO_2_HNS,
-        .region = REGION_JOHTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_JOHTO,
         .encounterIndex = 2, .encounterOffset = -2,
         .count = 6, .aceSlot = 5,
         .offsets = { -1, -1, -1, -1, -1, 0 },
@@ -135,7 +135,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_KAREN_2_HNS, .ownerId = TRAINER_KAREN_2_HNS,
-        .region = REGION_JOHTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_JOHTO,
         .encounterIndex = 3, .encounterOffset = -1,
         .count = 6, .aceSlot = 5,
         .offsets = { -1, -2, -1, -1, -2, 0 },
@@ -152,7 +152,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_LANCE_2_HNS, .ownerId = TRAINER_LANCE_2_HNS,
-        .region = REGION_JOHTO, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_JOHTO,
         .encounterIndex = 4, .encounterOffset = 1,
         .count = 6, .aceSlot = 5,
         .offsets = { -1, -2, -1, -2, -1, 0 },
@@ -169,7 +169,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_SIDNEY, .ownerId = TRAINER_SIDNEY,
-        .region = REGION_HOENN, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_HOENN,
         .encounterIndex = 0, .encounterOffset = -4,
         .count = 5, .aceSlot = 4,
         .offsets = { -1, -1, -1, -1, 0 },
@@ -185,7 +185,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_PHOEBE, .ownerId = TRAINER_PHOEBE,
-        .region = REGION_HOENN, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_HOENN,
         .encounterIndex = 1, .encounterOffset = -3,
         .count = 5, .aceSlot = 4,
         .offsets = { -1, -1, -1, -1, 0 },
@@ -201,7 +201,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_GLACIA, .ownerId = TRAINER_GLACIA,
-        .region = REGION_HOENN, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_HOENN,
         .encounterIndex = 2, .encounterOffset = -2,
         .count = 5, .aceSlot = 4,
         .offsets = { -1, -1, -1, -1, 0 },
@@ -217,7 +217,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_DRAKE, .ownerId = TRAINER_DRAKE,
-        .region = REGION_HOENN, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_HOENN,
         .encounterIndex = 3, .encounterOffset = -1,
         .count = 5, .aceSlot = 4,
         .offsets = { -1, -1, -1, -1, 0 },
@@ -233,7 +233,7 @@ static const struct LeagueScalingRoster sLeagueScalingRosters[] =
     },
     {
         .trainerId = TRAINER_WALLACE, .ownerId = TRAINER_WALLACE,
-        .region = REGION_HOENN, .difficulty = DIFFICULTY_NORMAL,
+        .region = REGION_HOENN,
         .encounterIndex = 4, .encounterOffset = 1,
         .count = 6, .aceSlot = 5,
         .offsets = { -1, -2, -1, -1, -1, 0 },

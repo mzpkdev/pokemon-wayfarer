@@ -10,7 +10,6 @@
 #include "constants/opponents.h"
 #include "constants/pokeball.h"
 #include "constants/regions.h"
-#include "constants/difficulty.h"
 
 struct TrainerScalingPredecessor
 {
@@ -22,7 +21,6 @@ struct TrainerScalingPredecessor
 struct TrainerScalingMoveException
 {
     u16 owner;
-    u8 variant;
     u8 slot;
 };
 
@@ -62,14 +60,14 @@ u8 GetLeagueScalingLevel(u32 rating, s8 encounterOffset, s8 slotOffset)
     return min(max(level, 1), 100);
 }
 
-const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty)
+const struct LeagueScalingRoster *GetLeagueScalingRoster(u16 trainerId, u16 ownerId)
 {
 #if IS_WAYFARER
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sLeagueScalingRosters); i++)
     {
         const struct LeagueScalingRoster *roster = &sLeagueScalingRosters[i];
-        if (roster->trainerId == trainerId && roster->ownerId == ownerId && roster->difficulty == difficulty)
+        if (roster->trainerId == trainerId && roster->ownerId == ownerId)
             return roster;
     }
 #endif
@@ -237,13 +235,13 @@ bool32 BuildGymLeaderScalingPlan(const struct GymLeaderScalingRoster *roster, u3
 }
 
 #if IS_WAYFARER && B_GYM_LEADER_SCALING
-const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId, u8 difficulty)
+const struct GymLeaderScalingRoster *GetGymLeaderScalingRoster(u16 trainerId, u16 ownerId)
 {
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sGymLeaderScalingRosters); i++)
     {
         const struct GymLeaderScalingRoster *roster = &sGymLeaderScalingRosters[i];
-        if (roster->trainerId == trainerId && roster->ownerId == ownerId && roster->difficulty == difficulty)
+        if (roster->trainerId == trainerId && roster->ownerId == ownerId)
             return roster;
     }
     return NULL;
@@ -255,7 +253,7 @@ u32 GetTrainerScalingPolicy(u32 trainerId)
 #if IS_WAYFARER
     if (trainerId >= TRAINERS_COUNT)
         return TRAINER_SCALING_EXCLUDED;
-    if (GetLeagueScalingRoster(trainerId, trainerId, DIFFICULTY_NORMAL) != NULL)
+    if (GetLeagueScalingRoster(trainerId, trainerId) != NULL)
         return TRAINER_SCALING_LEAGUE;
     if (trainerId < ARRAY_COUNT(sTrainerScalingPolicies))
         return sTrainerScalingPolicies[trainerId];
@@ -335,13 +333,12 @@ u32 GetTrainerScalingAbility(u16 species, u32 authoredAbility, u32 personalityHa
     return count ? legal[0] : 0;
 }
 
-bool32 HasTrainerScalingMoveException(u32 owner, u32 variant, u32 slot)
+bool32 HasTrainerScalingMoveException(u32 owner, u32 slot)
 {
 #if IS_WAYFARER
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sTrainerScalingMoveExceptions); i++)
         if (sTrainerScalingMoveExceptions[i].owner == owner
-         && sTrainerScalingMoveExceptions[i].variant == variant
          && sTrainerScalingMoveExceptions[i].slot == slot)
             return TRUE;
 #endif

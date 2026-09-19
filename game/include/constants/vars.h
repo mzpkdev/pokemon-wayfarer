@@ -352,7 +352,6 @@
 
 #if TESTING
 #define TESTING_VARS_START                  0x9000
-#define TESTING_VAR_DIFFICULTY              (TESTING_VARS_START + 0x0)
 #define TESTING_VAR_TRAINER_SLIDES          (TESTING_VARS_START + 0x1)
 #define TESTING_VAR_UNUSED_2                (TESTING_VARS_START + 0x2)
 #define TESTING_VAR_UNUSED_3                (TESTING_VARS_START + 0x3)

@@ -7,15 +7,12 @@ We are going to add a Trainer Slide to Wally's first Victory Road battle, before
 ```diff
 + const u8 gText_ThatsTheWay[] = _("That's the way, Gallade! Go!{PAUSE_UNTIL_PRESS}");
 
-static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINERS_COUNT][TRAINER_SLIDE_COUNT] =
+static const u8* const sTrainerSlides[TRAINERS_COUNT][TRAINER_SLIDE_COUNT] =
 {
-    [DIFFICULTY_NORMAL] =
+    [TRAINER_WALLY_VR_1] = // use the Trainer's Id from include/constants/opponents.h
     {
-+        [TRAINER_WALLY_VR_1] = // use the Trainer's Id from include/constants/opponents.h
-+        {
-+            [TRAINER_SLIDE_MEGA_EVOLUTION] = COMPOUND_STRING("That's the way, Gallade! Go!{PAUSE_UNTIL_PRESS}"), // find the id for the slide to be used.
-+            //[TRAINER_SLIDE_MEGA_EVOLUTION] = gText_ThatsTheWay, // You can use globals or COMPOUND_STRING to define text here.
-+        }
++        [TRAINER_SLIDE_MEGA_EVOLUTION] = COMPOUND_STRING("That's the way, Gallade! Go!{PAUSE_UNTIL_PRESS}"), // find the id for the slide to be used.
++        //[TRAINER_SLIDE_MEGA_EVOLUTION] = gText_ThatsTheWay, // You can use globals or COMPOUND_STRING to define text here.
     },
 };
 ```
@@ -24,14 +21,11 @@ If we were to edit a Trainer that appears in a Battle Facility, `sFrontierTraine
 
 ### `src/trainer_slide.c`
 ```diff
-static const u8* const sFrontierTrainerSlides[DIFFICULTY_COUNT][FRONTIER_TRAINERS_COUNT][TRAINER_SLIDE_COUNT] =
+static const u8* const sFrontierTrainerSlides[FRONTIER_TRAINERS_COUNT][TRAINER_SLIDE_COUNT] =
 {
-    [DIFFICULTY_NORMAL] =
+    [TRAINER_ANABEL] =
     {
-+        [TRAINER_ANABEL] =
-+        {
-+            [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING("Victory...is ours!"), //{PAUSE_UNTIL_PRESS} is omitted, so the battle will continue as soon as the next is finished printing.
-+        }
++        [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING("Victory...is ours!"), //{PAUSE_UNTIL_PRESS} is omitted, so the battle will continue as soon as the next is finished printing.
     },
 };
 ```
@@ -69,7 +63,7 @@ Each Trainer Slide has a unique id and needs to be added to this list.
 If your new Trainer Slide needs to check for beforen initalized, a function is declared here to be used externally. Critical hits are used to initalize this Trainer Slide but the slide doesn't play instantly, so we will create an function to initialize it.
 
 ```diff
-void SetTrainerSlideMessage(enum DifficultyLevel, u32, u32);
+void SetTrainerSlideMessage(u32, u32);
 void TryInitializeFirstSTABMoveTrainerSlide(u32, u32, u32);
 void TryInitializeTrainerSlidePlayerLandsFirstCriticalHit(u32);
 + void TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(u32);

@@ -327,7 +327,7 @@ TEST("Trainer scaling move exceptions require the whole tuple at its active lear
     EXPECT(!CanRetainTrainerScalingMoves(&entry, SPECIES_CHARMELEON, 100));
     entry.moves[1] = MOVE_SPLASH;
     EXPECT(!CanRetainTrainerScalingMoves(&entry, entry.species, 100));
-    EXPECT(!HasTrainerScalingMoveException(TRAINER_JOEY_2_HNS, DIFFICULTY_NORMAL, 0));
+    EXPECT(!HasTrainerScalingMoveException(TRAINER_JOEY_2_HNS, 0));
 }
 
 static void PrepareScalingPartyTest(u32 rating)
@@ -335,7 +335,6 @@ static void PrepareScalingPartyTest(u32 rating)
     SetTrainerRating(rating);
     gIsDebugBattle = FALSE;
     ResetTrainerScalingSnapshot();
-    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     gSaveBlock3Ptr->challengeSettings.tx_Random_Trainer = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = FALSE;
@@ -395,7 +394,7 @@ TEST("Trainer scaling constructs reversed parties with legal moves and retained 
     Free(party);
 }
 
-TEST("Trainer scaling resolves aliases pools and difficulty before projecting selected slots")
+TEST("Trainer scaling resolves aliases and pools before projecting selected slots")
 {
     ASSUME(B_TRAINER_PARTY_SCALING);
     PrepareScalingPartyTest(0);
@@ -407,11 +406,6 @@ TEST("Trainer scaling resolves aliases pools and difficulty before projecting se
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 15);
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_SPECIES), SPECIES_SCYTHER);
     EXPECT_EQ(GetMonData(&party[1], MON_DATA_LEVEL), 14);
-    SetCurrentDifficultyLevel(DIFFICULTY_HARD);
-    CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_5_HNS, TRUE, BATTLE_TYPE_TRAINER);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);
-    EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 15);
-    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_5_HNS, TRUE, BATTLE_TYPE_TRAINER);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_RATTATA);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), 7);

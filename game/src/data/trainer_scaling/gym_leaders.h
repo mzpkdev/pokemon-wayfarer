@@ -3592,7 +3592,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_BROCK_HNS,
         .ownerId = TRAINER_BROCK_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerBrockHnsParty,
         .legacyParty = sGymLeaderTrainerBrockHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3609,7 +3608,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_MISTY_HNS,
         .ownerId = TRAINER_MISTY_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerMistyHnsParty,
         .legacyParty = sGymLeaderTrainerMistyHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3626,7 +3624,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_LTSURGE_HNS,
         .ownerId = TRAINER_LTSURGE_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerLtsurgeHnsParty,
         .legacyParty = sGymLeaderTrainerLtsurgeHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3643,7 +3640,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_ERIKA_HNS,
         .ownerId = TRAINER_ERIKA_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerErikaHnsParty,
         .legacyParty = sGymLeaderTrainerErikaHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3660,7 +3656,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_JANINE_HNS,
         .ownerId = TRAINER_JANINE_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerJanineHnsParty,
         .legacyParty = sGymLeaderTrainerJanineHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3677,7 +3672,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_SABRINA_HNS,
         .ownerId = TRAINER_SABRINA_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerSabrinaHnsParty,
         .legacyParty = sGymLeaderTrainerSabrinaHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3694,7 +3688,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_BLAINE_HNS,
         .ownerId = TRAINER_BLAINE_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerBlaineHnsParty,
         .legacyParty = sGymLeaderTrainerBlaineHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3711,7 +3704,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_BLUE_HNS,
         .ownerId = TRAINER_BLUE_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerBlueHnsParty,
         .legacyParty = sGymLeaderTrainerBlueHnsLegacyParty,
         .legacyPartySize = 6,
@@ -3728,7 +3720,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_FALKNER_1_HNS,
         .ownerId = TRAINER_FALKNER_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerFalkner1HnsParty,
         .legacyParty = sGymLeaderTrainerFalkner1HnsLegacyParty,
         .legacyPartySize = 2,
@@ -3745,7 +3736,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_BUGSY_1_HNS,
         .ownerId = TRAINER_BUGSY_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerBugsy1HnsParty,
         .legacyParty = sGymLeaderTrainerBugsy1HnsLegacyParty,
         .legacyPartySize = 3,
@@ -3762,7 +3752,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_WHITNEY_1_HNS,
         .ownerId = TRAINER_WHITNEY_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerWhitney1HnsParty,
         .legacyParty = sGymLeaderTrainerWhitney1HnsLegacyParty,
         .legacyPartySize = 3,
@@ -3779,7 +3768,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_MORTY_1_HNS,
         .ownerId = TRAINER_MORTY_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerMorty1HnsParty,
         .legacyParty = sGymLeaderTrainerMorty1HnsLegacyParty,
         .legacyPartySize = 4,
@@ -3796,7 +3784,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_CHUCK_1_HNS,
         .ownerId = TRAINER_CHUCK_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerChuck1HnsParty,
         .legacyParty = sGymLeaderTrainerChuck1HnsLegacyParty,
         .legacyPartySize = 4,
@@ -3813,7 +3800,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_CHUCK_1_2_HNS,
         .ownerId = TRAINER_CHUCK_1_2_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerChuck12HnsParty,
         .legacyParty = sGymLeaderTrainerChuck12HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3830,7 +3816,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_CHUCK_1_3_HNS,
         .ownerId = TRAINER_CHUCK_1_3_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerChuck13HnsParty,
         .legacyParty = sGymLeaderTrainerChuck13HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3847,7 +3832,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_JASMINE_1_HNS,
         .ownerId = TRAINER_JASMINE_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerJasmine1HnsParty,
         .legacyParty = sGymLeaderTrainerJasmine1HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3864,7 +3848,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_JASMINE_1_2_HNS,
         .ownerId = TRAINER_JASMINE_1_2_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerJasmine12HnsParty,
         .legacyParty = sGymLeaderTrainerJasmine12HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3881,7 +3864,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_JASMINE_1_3_HNS,
         .ownerId = TRAINER_JASMINE_1_3_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerJasmine13HnsParty,
         .legacyParty = sGymLeaderTrainerJasmine13HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3898,7 +3880,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_PRYCE_1_HNS,
         .ownerId = TRAINER_PRYCE_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerPryce1HnsParty,
         .legacyParty = sGymLeaderTrainerPryce1HnsLegacyParty,
         .legacyPartySize = 4,
@@ -3915,7 +3896,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_PRYCE_1_2_HNS,
         .ownerId = TRAINER_PRYCE_1_2_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerPryce12HnsParty,
         .legacyParty = sGymLeaderTrainerPryce12HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3932,7 +3912,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_PRYCE_1_3_HNS,
         .ownerId = TRAINER_PRYCE_1_3_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerPryce13HnsParty,
         .legacyParty = sGymLeaderTrainerPryce13HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3949,7 +3928,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_CLAIR_1_HNS,
         .ownerId = TRAINER_CLAIR_1_HNS,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerClair1HnsParty,
         .legacyParty = sGymLeaderTrainerClair1HnsLegacyParty,
         .legacyPartySize = 5,
@@ -3966,7 +3944,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_ROXANNE_1,
         .ownerId = TRAINER_ROXANNE_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerRoxanne1Party,
         .legacyParty = sGymLeaderTrainerRoxanne1LegacyParty,
         .legacyPartySize = 3,
@@ -3983,7 +3960,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_BRAWLY_1,
         .ownerId = TRAINER_BRAWLY_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerBrawly1Party,
         .legacyParty = sGymLeaderTrainerBrawly1LegacyParty,
         .legacyPartySize = 3,
@@ -4000,7 +3976,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_WATTSON_1,
         .ownerId = TRAINER_WATTSON_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerWattson1Party,
         .legacyParty = sGymLeaderTrainerWattson1LegacyParty,
         .legacyPartySize = 4,
@@ -4017,7 +3992,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_FLANNERY_1,
         .ownerId = TRAINER_FLANNERY_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerFlannery1Party,
         .legacyParty = sGymLeaderTrainerFlannery1LegacyParty,
         .legacyPartySize = 4,
@@ -4034,7 +4008,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_NORMAN_1,
         .ownerId = TRAINER_NORMAN_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerNorman1Party,
         .legacyParty = sGymLeaderTrainerNorman1LegacyParty,
         .legacyPartySize = 4,
@@ -4051,7 +4024,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_WINONA_1,
         .ownerId = TRAINER_WINONA_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerWinona1Party,
         .legacyParty = sGymLeaderTrainerWinona1LegacyParty,
         .legacyPartySize = 5,
@@ -4068,7 +4040,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_TATE_AND_LIZA_1,
         .ownerId = TRAINER_TATE_AND_LIZA_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerTateAndLiza1Party,
         .legacyParty = sGymLeaderTrainerTateAndLiza1LegacyParty,
         .legacyPartySize = 4,
@@ -4085,7 +4056,6 @@ static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =
     {
         .trainerId = TRAINER_JUAN_1,
         .ownerId = TRAINER_JUAN_1,
-        .difficulty = DIFFICULTY_NORMAL,
         .party = sGymLeaderTrainerJuan1Party,
         .legacyParty = sGymLeaderTrainerJuan1LegacyParty,
         .legacyPartySize = 5,

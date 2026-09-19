@@ -4,7 +4,6 @@
 #include "constants/moves.h"
 #include "constants/trainers.h"
 #include "constants/battle.h"
-#include "difficulty.h"
 #include "debug.h"
 
 #define MAX_TRAINER_ITEMS 4
@@ -205,8 +204,8 @@ extern const union AnimCmd *const gAnims_Trainer[];
 extern const struct TrainerSprite gTrainerSprites[];
 extern const struct TrainerBacksprite gTrainerBacksprites[];
 
-extern const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT];
-extern const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT];
+extern const struct Trainer gTrainers[TRAINERS_COUNT];
+extern const struct Trainer gBattlePartners[PARTNER_COUNT];
 
 extern const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT];
 
@@ -267,17 +266,14 @@ static inline u16 GetPartnerIdFromTrainerId(u16 trainerId)
 static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
 {
     if (gIsDebugBattle) return GetDebugAiTrainer();
-    enum DifficultyLevel difficulty;
 
     if (IsPartnerTrainerId(trainerId))
     {
-        difficulty = GetBattlePartnerDifficultyLevel(trainerId);
-        return &gBattlePartners[difficulty][GetPartnerIdFromTrainerId(trainerId)];
+        return &gBattlePartners[GetPartnerIdFromTrainerId(trainerId)];
     }
     else
     {
-        difficulty = GetTrainerDifficultyLevel(trainerId);
-        return &gTrainers[difficulty][SanitizeTrainerId(trainerId)];
+        return &gTrainers[SanitizeTrainerId(trainerId)];
     }
 }
 

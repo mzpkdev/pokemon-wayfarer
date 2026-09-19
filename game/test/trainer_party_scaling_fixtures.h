@@ -1,5 +1,5 @@
 #if IS_WAYFARER
-[DIFFICULTY_NORMAL][TRAINER_JOEY_2_HNS] = {
+[TRAINER_JOEY_2_HNS] = {
     .trainerName = _("SCALING"),
     .trainerClass = TRAINER_CLASS_YOUNGSTER,
     .partySize = 3,
@@ -17,11 +17,11 @@
         { .species = SPECIES_SCYTHER, .lvl = 5, .ability = ABILITY_SWARM },
     },
 },
-[DIFFICULTY_NORMAL][TRAINER_JOEY_3_HNS] = {
+[TRAINER_JOEY_3_HNS] = {
     .trainerName = _("ALIAS"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
     .overrideTrainer = TRAINER_JOEY_2_HNS,
 },
-[DIFFICULTY_NORMAL][TRAINER_JOEY_4_HNS] = {
+[TRAINER_JOEY_4_HNS] = {
     .trainerName = _("POOL"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
     .partySize = 2, .poolSize = 4,
     .party = (const struct TrainerMon[]) {
@@ -31,17 +31,12 @@
         { .species = SPECIES_SCYTHER, .lvl = 40, .tags = MON_POOL_TAG_ACE },
     },
 },
-[DIFFICULTY_NORMAL][TRAINER_JOEY_5_HNS] = {
-    .trainerName = _("NORMAL"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
+[TRAINER_JOEY_5_HNS] = {
+    .trainerName = _("AUTHORED"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
     .partySize = 1,
     .party = (const struct TrainerMon[]) {{ .species = SPECIES_RATTATA, .lvl = 5 }},
 },
-[DIFFICULTY_HARD][TRAINER_JOEY_5_HNS] = {
-    .trainerName = _("HARD"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
-    .partySize = 1,
-    .party = (const struct TrainerMon[]) {{ .species = SPECIES_CHARIZARD, .lvl = 60 }},
-},
-[DIFFICULTY_NORMAL][TRAINER_ROD_HNS] = {
+[TRAINER_ROD_HNS] = {
     .trainerName = _("GYM"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
     .partySize = 1,
     .party = (const struct TrainerMon[]) {{
@@ -49,7 +44,7 @@
         .dynamaxLevel = 10, .shouldUseDynamax = TRUE,
     }},
 },
-[DIFFICULTY_NORMAL][TRAINER_FALKNER_1_HNS] = {
+[TRAINER_FALKNER_1_HNS] = {
     .trainerName = _("BOSS"), .trainerClass = TRAINER_CLASS_YOUNGSTER,
     .partySize = 1,
     .party = (const struct TrainerMon[]) {{

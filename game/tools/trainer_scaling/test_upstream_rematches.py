@@ -56,7 +56,7 @@ class UpstreamRematchTests(unittest.TestCase):
         manifest = {row['id']: row for row in json.loads(gen.MANIFEST.read_text())['records']}
         for leader in POSTOBC:
             trainer = postobc_id(leader)
-            self.assertEqual(self.raw[trainer]['DIFFICULTY_NORMAL']['partySize'], 6)
+            self.assertEqual(self.raw[trainer]['partySize'], 6)
             self.assertEqual(manifest[trainer]['policy'], 'EXCLUDED')
             self.assertTrue(manifest[trainer]['reason'])
 

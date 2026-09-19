@@ -16,7 +16,6 @@
 static void SeedScalingBattle(u32 rating, bool32 modern)
 {
     gIsDebugBattle = FALSE;
-    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     SetTrainerRating(rating);
     ResetTrainerScalingSnapshot();
     gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;

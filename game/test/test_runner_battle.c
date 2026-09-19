@@ -112,7 +112,7 @@ static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 #define TRAINER_LEAF_TEST   2
 #define PARTNER_STEVEN_TEST 1
 
-const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
+const struct Trainer gTrainers[TRAINERS_COUNT] =
 {
     #include "battle/trainer_control.h"
 #if !IS_FRLG
@@ -122,7 +122,7 @@ const struct Trainer gTrainers[DIFFICULTY_COUNT][TRAINERS_COUNT] =
     #include "trainer_scaling_production_fixtures.h"
 };
 
-const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =
+const struct Trainer gBattlePartners[PARTNER_COUNT] =
 {
     #include "battle/partner_control.h"
 };
@@ -1973,8 +1973,6 @@ static void TearDownBattle(void)
     // Zero out the parties, data in them could potentially carry over
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
-    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
-
     // Set Battle Controllers to BATTLE_CONTROLLER_NONE
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {

@@ -54,7 +54,6 @@
 #include "union_room_chat.h"
 #include "constants/map_groups.h"
 #include "constants/items.h"
-#include "difficulty.h"
 #include "follower_npc.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
@@ -326,7 +325,6 @@ void NewGameInitData(void)
     ResetTrainerHillResults();
     ResetTrainerTowerResults();
     ResetContestLinkResults();
-    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
     ResetItemFlags();
     ResetDexNav();
     ClearFollowerNPCData();
