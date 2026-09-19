@@ -1447,22 +1447,6 @@
       ]
     },
     {
-      "id": "TRAINER_ARNOLD_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_ARNOLD_HNS",
-          "role": "TRAINER_CLASS_FISHERMAN_HNS"
-        },
-        {
-          "path": "data/maps/Route21_hns/scripts.inc",
-          "symbol": "TRAINER_ARNOLD_HNS"
-        }
-      ]
-    },
-    {
       "id": "TRAINER_ASHLEY",
       "policy": "GYM_MEMBER",
       "region": "Hoenn",
@@ -3485,22 +3469,6 @@
       ]
     },
     {
-      "id": "TRAINER_CAMERON_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_CAMERON_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_M_HNS"
-        },
-        {
-          "path": "data/maps/Route20_hns/scripts.inc",
-          "symbol": "TRAINER_CAMERON_HNS"
-        }
-      ]
-    },
-    {
       "id": "TRAINER_CAMRON",
       "policy": "ORDINARY",
       "region": "Hoenn",
@@ -5346,22 +5314,6 @@
         {
           "path": "data/maps/Route123/scripts.inc",
           "symbol": "TRAINER_DAVIS"
-        }
-      ]
-    },
-    {
-      "id": "TRAINER_DAWN_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_DAWN_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_F_HNS"
-        },
-        {
-          "path": "data/maps/Route19_hns/scripts.inc",
-          "symbol": "TRAINER_DAWN_HNS"
         }
       ]
     },
@@ -9681,22 +9633,6 @@
       ]
     },
     {
-      "id": "TRAINER_HAROLD_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_HAROLD_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_M_HNS"
-        },
-        {
-          "path": "data/maps/Route19_hns/scripts.inc",
-          "symbol": "TRAINER_HAROLD_HNS"
-        }
-      ]
-    },
-    {
       "id": "TRAINER_HARRISON",
       "policy": "ORDINARY",
       "region": "Hoenn",
@@ -11510,22 +11446,6 @@
         {
           "path": "data/maps/Route108/scripts.inc",
           "symbol": "TRAINER_JEROME"
-        }
-      ]
-    },
-    {
-      "id": "TRAINER_JEROME_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_JEROME_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_M_HNS"
-        },
-        {
-          "path": "data/maps/Route19_hns/scripts.inc",
-          "symbol": "TRAINER_JEROME_HNS"
         }
       ]
     },
@@ -14416,22 +14336,6 @@
       ]
     },
     {
-      "id": "TRAINER_LORI_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_LORI_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_F_HNS"
-        },
-        {
-          "path": "data/maps/Route20_hns/scripts.inc",
-          "symbol": "TRAINER_LORI_HNS"
-        }
-      ]
-    },
-    {
       "id": "TRAINER_LTSURGE_HNS",
       "policy": "GYM_LEADER",
       "region": "Kanto",
@@ -16318,22 +16222,6 @@
       ]
     },
     {
-      "id": "TRAINER_NICOLE_2_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_NICOLE_2_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_F_HNS"
-        },
-        {
-          "path": "data/maps/Route20_hns/scripts.inc",
-          "symbol": "TRAINER_NICOLE_2_HNS"
-        }
-      ]
-    },
-    {
       "id": "TRAINER_NICOLE_3_HNS",
       "policy": "ORDINARY",
       "region": "HNS unplaced",
@@ -16345,22 +16233,6 @@
         }
       ],
       "region_review": "Compiled HNS roster has no direct regional map reference; retained in unplaced inventory rather than assigning a region from its name."
-    },
-    {
-      "id": "TRAINER_NICOLE_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_NICOLE_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_F_HNS"
-        },
-        {
-          "path": "data/maps/Route20_hns/scripts.inc",
-          "symbol": "TRAINER_NICOLE_HNS"
-        }
-      ]
     },
     {
       "id": "TRAINER_NICO_HNS",
@@ -16391,22 +16263,6 @@
         {
           "path": "data/maps/Route126/scripts.inc",
           "symbol": "TRAINER_NIKKI"
-        }
-      ]
-    },
-    {
-      "id": "TRAINER_NIKKI_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_NIKKI_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_F_HNS"
-        },
-        {
-          "path": "data/maps/Route21_hns/scripts.inc",
-          "symbol": "TRAINER_NIKKI_HNS"
         }
       ]
     },
@@ -19305,22 +19161,6 @@
       ]
     },
     {
-      "id": "TRAINER_SETH_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_SETH_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_M_HNS"
-        },
-        {
-          "path": "data/maps/Route21_hns/scripts.inc",
-          "symbol": "TRAINER_SETH_HNS"
-        }
-      ]
-    },
-    {
       "id": "TRAINER_SHANE",
       "policy": "ORDINARY",
       "region": "Hoenn",
@@ -21177,22 +21017,6 @@
       ],
       "reason": "Authored boss, rival, facility head, or special story opponent.",
       "region_review": "Compiled HNS roster has no direct regional map reference; retained in unplaced inventory rather than assigning a region from its name."
-    },
-    {
-      "id": "TRAINER_TUCKER_HNS",
-      "policy": "ORDINARY",
-      "region": "Kanto",
-      "evidence": [
-        {
-          "path": "src/data/trainers_hns.party",
-          "symbol": "TRAINER_TUCKER_HNS",
-          "role": "TRAINER_CLASS_SWIMMER_M_HNS"
-        },
-        {
-          "path": "data/maps/Route19_hns/scripts.inc",
-          "symbol": "TRAINER_TUCKER_HNS"
-        }
-      ]
     },
     {
       "id": "TRAINER_TULLY_2_HNS",
