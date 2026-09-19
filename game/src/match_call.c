@@ -207,7 +207,9 @@ static const struct HnsMatchCallTrainerInfo sHnsMatchCallTrainers[] =
     HNS_MC_ENTRY2(Carter,   TRAINER_CARTER_HNS),
     HNS_MC_ENTRY2(Hillary,  TRAINER_HILLARY_HNS),
     HNS_MC_ENTRY2(Rob,      TRAINER_ROB_HNS),
+#if !IS_WAYFARER
     HNS_MC_ENTRY2(Nicole,   TRAINER_NICOLE_HNS),
+#endif
     HNS_MC_ENTRY2(Billy,    TRAINER_BILLY_HNS),
     HNS_MC_ENTRY2(Kenny,    TRAINER_KENNY_HNS),
     HNS_MC_ENTRY2(Joel,     TRAINER_JOEL_HNS),

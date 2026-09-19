@@ -1186,6 +1186,7 @@ MatchCall_HNS_Rob_Battle::
 	.string "Come to ROUTE 2 for a\n"
 	.string "rematch!$"
 
+#if !IS_WAYFARER
 @ Nicole - Swimmer, Route 20
 MatchCall_HNS_Nicole_General1::
 	.string "Hi, {PLAYER}!\n"
@@ -1207,6 +1208,7 @@ MatchCall_HNS_Nicole_Battle::
 	.string "My water POKéMON are\n"
 	.string "raring to battle!\p"
 	.string "Come to ROUTE 20!$"
+#endif
 
 @ Billy - School Kid, Route 15
 MatchCall_HNS_Billy_General1::
