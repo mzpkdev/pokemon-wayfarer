@@ -198,12 +198,12 @@ void PlayerPartnerBufferExecCompleted(enum BattlerId battler)
     }
 }
 
-static enum TrainerPicID PlayerPartnerGetTrainerBackPicId(enum DifficultyLevel difficulty)
+static enum TrainerPicID PlayerPartnerGetTrainerBackPicId(void)
 {
     enum TrainerPicID trainerPicId;
 
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
+        trainerPicId = gBattlePartners[gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
     else
         trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_PLAYER_MALE;
 
@@ -219,8 +219,6 @@ static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler)
     s16 xPos, yPos;
     enum TrainerPicID trainerPicId;
 
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
-
     if (IsMultibattleTest())
     {
         trainerPicId = TRAINER_PIC_BACK_STEVEN;
@@ -229,7 +227,7 @@ static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler)
     }
     else if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        trainerPicId = PlayerPartnerGetTrainerBackPicId(difficulty);
+        trainerPicId = PlayerPartnerGetTrainerBackPicId();
         xPos = 90;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
@@ -257,8 +255,7 @@ static void PlayerPartnerHandleDrawTrainerPic(enum BattlerId battler)
 
 static void PlayerPartnerHandleTrainerSlide(enum BattlerId battler)
 {
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
-    enum TrainerPicID trainerPicId = PlayerPartnerGetTrainerBackPicId(difficulty);
+    enum TrainerPicID trainerPicId = PlayerPartnerGetTrainerBackPicId();
     BtlController_HandleTrainerSlide(battler, trainerPicId);
 }
 
@@ -354,10 +351,8 @@ static void PlayerPartnerHandleChoosePokemon(enum BattlerId battler)
 static void PlayerPartnerHandleIntroTrainerBallThrow(enum BattlerId battler)
 {
     const u16 *trainerPal;
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
-
     if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
-        trainerPal = gTrainerBacksprites[gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic].palette.data;
+        trainerPal = gTrainerBacksprites[gBattlePartners[gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic].palette.data;
     else if (IsAiVsAiBattle())
         trainerPal = gTrainerSprites[GetTrainerBackPicFromId(gPartnerTrainerId)].palette.data;
     else

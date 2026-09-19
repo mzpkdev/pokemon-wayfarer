@@ -70,7 +70,6 @@ Pic: Red
 Gender: Male
 Music: Male
 Battle Type: Singles
-Difficulty: Normal
 
 Mewtwo
 Level: 5
@@ -82,34 +81,9 @@ Pic: Red
 Gender: Male
 Music: Male
 Battle Type: Singles
-Difficulty: Normal
 
 Mewtwo
 Level: 50
-
-=== 5 ===
-Name: Test2
-Class: Pkmn Trainer 1
-Pic: Red
-Gender: Male
-Music: Male
-Battle Type: Singles
-Difficulty: Easy
-
-Metapod
-Level: 1
-
-=== 5 ===
-Name: Test2
-Class: Pkmn Trainer 1
-Pic: Red
-Gender: Male
-Music: Male
-Battle Type: Singles
-Difficulty: Hard
-
-Arceus
-Level: 99
 
 === 6 ===
 Name: Test3

@@ -3,7 +3,6 @@
 #include "battle_main.h"
 #include "data.h"
 #include "debug.h"
-#include "difficulty.h"
 #include "event_data.h"
 #include "pokemon.h"
 #include "test/test.h"
@@ -18,7 +17,7 @@
 
 #if IS_WAYFARER
 
-TEST("League tiers keep authored fallback without an admitted run across difficulty")
+TEST("League tiers keep authored fallback without an admitted run")
 {
     static const struct
     {
@@ -57,7 +56,7 @@ TEST("League tiers keep authored fallback without an admitted run across difficu
         { { 8, 8, 8 }, 3, 76, MAP_GROUP(MAP_PALLET_TOWN_HNS), MAP_NUM(MAP_PALLET_TOWN_HNS) },
         { { 0, 0, 0 }, 7, 80, MAP_GROUP(MAP_NEW_BARK_TOWN_HNS), MAP_NUM(MAP_NEW_BARK_TOWN_HNS) },
     };
-    u32 fact, difficulty, row, region, badge, mon, move;
+    u32 fact, row, region, badge, mon, move;
 
     gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
     gIsDebugBattle = FALSE;
@@ -73,25 +72,20 @@ TEST("League tiers keep authored fallback without an admitted run across difficu
         SetTrainerRating(sFacts[fact].rating);
         gSaveBlock1Ptr->location.mapGroup = sFacts[fact].mapGroup;
         gSaveBlock1Ptr->location.mapNum = sFacts[fact].mapNum;
-        for (difficulty = DIFFICULTY_MIN; difficulty <= DIFFICULTY_MAX; difficulty++)
+        for (row = 0; row < ARRAY_COUNT(sLeagueParties); row++)
         {
-            SetCurrentDifficultyLevel(difficulty);
-            for (row = 0; row < ARRAY_COUNT(sLeagueParties); row++)
+            const struct Trainer *trainer = GetTrainerStructFromId(sLeagueParties[row].trainer);
+            EXPECT(trainer == &gTrainers[sLeagueParties[row].trainer]);
+            EXPECT(trainer->party != NULL);
+            EXPECT_EQ(trainer->partySize, sLeagueParties[row].levels[5] == 0 ? 5 : 6);
+            EXPECT_EQ(CreateNPCTrainerPartyFromTrainer(gEnemyParty, trainer, TRUE, BATTLE_TYPE_TRAINER), trainer->partySize);
+            for (mon = 0; mon < trainer->partySize; mon++)
             {
-                const struct Trainer *trainer = GetTrainerStructFromId(sLeagueParties[row].trainer);
-                EXPECT_EQ(GetTrainerDifficultyLevel(sLeagueParties[row].trainer), DIFFICULTY_NORMAL);
-                EXPECT(trainer == &gTrainers[DIFFICULTY_NORMAL][sLeagueParties[row].trainer]);
-                EXPECT(trainer->party != NULL);
-                EXPECT_EQ(trainer->partySize, sLeagueParties[row].levels[5] == 0 ? 5 : 6);
-                EXPECT_EQ(CreateNPCTrainerPartyFromTrainer(gEnemyParty, trainer, TRUE, BATTLE_TYPE_TRAINER), trainer->partySize);
-                for (mon = 0; mon < trainer->partySize; mon++)
-                {
-                    EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_LEVEL), sLeagueParties[row].levels[mon]);
-                    EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_SPECIES), trainer->party[mon].species);
-                    EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_HELD_ITEM), trainer->party[mon].heldItem);
-                    for (move = 0; move < MAX_MON_MOVES; move++)
-                        EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_MOVE1 + move), trainer->party[mon].moves[move]);
-                }
+                EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_LEVEL), sLeagueParties[row].levels[mon]);
+                EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_SPECIES), trainer->party[mon].species);
+                EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_HELD_ITEM), trainer->party[mon].heldItem);
+                for (move = 0; move < MAX_MON_MOVES; move++)
+                    EXPECT_EQ(GetMonData(&gEnemyParty[mon], MON_DATA_MOVE1 + move), trainer->party[mon].moves[move]);
             }
         }
     }
@@ -155,7 +149,7 @@ TEST("League scaling uses its own exact rounded curve and clamps after both offs
         EXPECT_EQ(GetLeagueScalingBaseline(rating), oracle[rating]);
         for (u32 row = 0; row < ARRAY_COUNT(sLeagueIds); row++)
         {
-            const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(sLeagueIds[row], sLeagueIds[row], DIFFICULTY_NORMAL);
+            const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(sLeagueIds[row], sLeagueIds[row]);
             EXPECT(roster != NULL);
             EXPECT_EQ(GetTrainerScalingPolicy(sLeagueIds[row]), TRAINER_SCALING_LEAGUE);
             for (u32 slot = 0; slot < roster->count; slot++)
@@ -170,17 +164,16 @@ TEST("League scaling uses its own exact rounded curve and clamps after both offs
     EXPECT_EQ(GetLeagueScalingBaseline(UINT_MAX), 100);
     EXPECT_EQ(GetLeagueScalingLevel(80, 1, -1), 100);
     EXPECT_EQ(GetLeagueScalingLevel(0, -100, -100), 1);
-    EXPECT(GetLeagueScalingRoster(TRAINER_LANCE_2_HNS, TRAINER_LANCE_1_HNS, DIFFICULTY_NORMAL) == NULL);
-    EXPECT(GetLeagueScalingRoster(TRAINER_LANCE_2_HNS, TRAINER_LANCE_2_HNS, DIFFICULTY_HARD) == NULL);
+    EXPECT(GetLeagueScalingRoster(TRAINER_LANCE_2_HNS, TRAINER_LANCE_1_HNS) == NULL);
+    EXPECT(GetLeagueScalingRoster(TRAINER_LANCE_2_HNS, TRAINER_NONE) == NULL);
 }
 
-TEST("League construction and reconstruction preserve authored identity at every TR and difficulty")
+TEST("League construction and reconstruction preserve authored identity at every TR")
 {
-    u32 difficulty = DIFFICULTY_NORMAL, row = 0, firstRating = 0;
-    for (u32 d = DIFFICULTY_MIN; d <= DIFFICULTY_MAX; d++)
-        for (u32 r = 0; r < ARRAY_COUNT(sLeagueIds); r++)
-            for (u32 first = 0; first <= 80; first += 9)
-                PARAMETRIZE { difficulty = d; row = r; firstRating = first; }
+    u32 row = 0, firstRating = 0;
+    for (u32 r = 0; r < ARRAY_COUNT(sLeagueIds); r++)
+        for (u32 first = 0; first <= 80; first += 9)
+            PARAMETRIZE { row = r; firstRating = first; }
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     struct Pokemon *authored = AllocZeroed(PARTY_SIZE * sizeof(*authored));
     static const u8 fields[] = {
@@ -190,10 +183,8 @@ TEST("League construction and reconstruction preserve authored identity at every
         MON_DATA_DYNAMAX_LEVEL, MON_DATA_GIGANTAMAX_FACTOR, MON_DATA_TERA_TYPE,
     };
     {
-        SetCurrentDifficultyLevel(difficulty);
         const struct Trainer *trainer = GetTrainerStructFromId(sLeagueIds[row]);
-        const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(sLeagueIds[row], sLeagueIds[row], GetTrainerDifficultyLevel(sLeagueIds[row]));
-        EXPECT_EQ(GetTrainerDifficultyLevel(sLeagueIds[row]), DIFFICULTY_NORMAL);
+        const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(sLeagueIds[row], sLeagueIds[row]);
         EXPECT(IsLeagueScalingRosterValid(roster, trainer->party, trainer->partySize));
         for (u32 rating = firstRating; rating < firstRating + 9; rating++)
         {
@@ -229,7 +220,7 @@ TEST("League scaling rejects invalid roster metadata and run context")
 {
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     const struct Trainer *trainer = GetTrainerStructFromId(TRAINER_WILL_1_HNS);
-    const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(TRAINER_WILL_1_HNS, TRAINER_WILL_1_HNS, DIFFICULTY_NORMAL);
+    const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(TRAINER_WILL_1_HNS, TRAINER_WILL_1_HNS);
     struct TrainerMon changed[PARTY_SIZE];
     memcpy(changed, trainer->party, trainer->partySize * sizeof(*changed));
     EXPECT(!IsLeagueScalingRosterValid(roster, changed, trainer->partySize - 1));
@@ -280,7 +271,7 @@ TEST("League species randomizer preserves the complete authored constructor bypa
 
 #elif !IS_FRLG
 
-TEST("Standalone League constructor keeps authored parties at every difficulty")
+TEST("Standalone League constructor keeps authored parties")
 {
 #if IS_HNS
     static const u16 ids[] = {
@@ -297,29 +288,25 @@ TEST("Standalone League constructor keeps authored parties at every difficulty")
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingIVs = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_TrainerScalingEVs = FALSE;
-    for (u32 difficulty = DIFFICULTY_MIN; difficulty <= DIFFICULTY_MAX; difficulty++)
+    for (u32 row = 0; row < ARRAY_COUNT(ids); row++)
     {
-        SetCurrentDifficultyLevel(difficulty);
-        for (u32 row = 0; row < ARRAY_COUNT(ids); row++)
+        const struct Trainer *trainer = GetTrainerStructFromId(ids[row]);
+        EXPECT(trainer->party != NULL);
+        EXPECT_EQ(GetTrainerScalingPolicy(ids[row]), TRAINER_SCALING_EXCLUDED);
+        SeedRng(123);
+        CreateNPCTrainerPartyFromTrainer(authored, trainer, TRUE, BATTLE_TYPE_TRAINER);
+        SeedRng(123);
+        EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, ids[row], TRUE, BATTLE_TYPE_TRAINER), trainer->partySize);
+        for (u32 slot = 0; slot < trainer->partySize; slot++)
         {
-            const struct Trainer *trainer = GetTrainerStructFromId(ids[row]);
-            EXPECT(trainer->party != NULL);
-            EXPECT_EQ(GetTrainerScalingPolicy(ids[row]), TRAINER_SCALING_EXCLUDED);
-            SeedRng(123);
-            CreateNPCTrainerPartyFromTrainer(authored, trainer, TRUE, BATTLE_TYPE_TRAINER);
-            SeedRng(123);
-            EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, ids[row], TRUE, BATTLE_TYPE_TRAINER), trainer->partySize);
-            for (u32 slot = 0; slot < trainer->partySize; slot++)
-            {
-                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_LEVEL), trainer->party[slot].lvl);
-                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_SPECIES), trainer->party[slot].species);
-                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_HELD_ITEM), trainer->party[slot].heldItem);
-                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_PERSONALITY), GetMonData(&authored[slot], MON_DATA_PERSONALITY));
-                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_IVS), GetMonData(&authored[slot], MON_DATA_IVS));
-                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_ABILITY_NUM), GetMonData(&authored[slot], MON_DATA_ABILITY_NUM));
-                for (u32 move = 0; move < MAX_MON_MOVES; move++)
-                    EXPECT_EQ(GetMonData(&party[slot], MON_DATA_MOVE1 + move), GetMonData(&authored[slot], MON_DATA_MOVE1 + move));
-            }
+            EXPECT_EQ(GetMonData(&party[slot], MON_DATA_LEVEL), trainer->party[slot].lvl);
+            EXPECT_EQ(GetMonData(&party[slot], MON_DATA_SPECIES), trainer->party[slot].species);
+            EXPECT_EQ(GetMonData(&party[slot], MON_DATA_HELD_ITEM), trainer->party[slot].heldItem);
+            EXPECT_EQ(GetMonData(&party[slot], MON_DATA_PERSONALITY), GetMonData(&authored[slot], MON_DATA_PERSONALITY));
+            EXPECT_EQ(GetMonData(&party[slot], MON_DATA_IVS), GetMonData(&authored[slot], MON_DATA_IVS));
+            EXPECT_EQ(GetMonData(&party[slot], MON_DATA_ABILITY_NUM), GetMonData(&authored[slot], MON_DATA_ABILITY_NUM));
+            for (u32 move = 0; move < MAX_MON_MOVES; move++)
+                EXPECT_EQ(GetMonData(&party[slot], MON_DATA_MOVE1 + move), GetMonData(&authored[slot], MON_DATA_MOVE1 + move));
         }
     }
     Free(authored);

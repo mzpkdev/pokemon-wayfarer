@@ -303,9 +303,9 @@ def compiled_frlg_records(allocations: list[dict]) -> dict[str, str]:
     result = {}
     for row in allocations:
         source = row["source_trainer"]
-        if source not in records or "DIFFICULTY_NORMAL" not in records[source]:
+        if source not in records:
             raise InventoryError(f"selected Trainer compiler output is absent: {source}")
-        match = re.search(rf"\[DIFFICULTY_NORMAL\]\[{re.escape(source)}\]\s*=\s*\{{", header)
+        match = re.search(rf"\[{re.escape(source)}\]\s*=\s*\{{", header)
         if match is None:
             raise InventoryError(f"selected Trainer compiled record is absent: {source}")
         _, end = parser.balanced(header, match.end() - 1)
@@ -313,8 +313,8 @@ def compiled_frlg_records(allocations: list[dict]) -> dict[str, str]:
         # Wayfarer compilation unit. The record itself remains byte-for-byte
         # trainerproc output apart from its destination identity.
         record = re.sub(r"(?m)^#line .*\n", "", header[match.start():end])
-        record = record.replace(f"[DIFFICULTY_NORMAL][{source}]", f"[DIFFICULTY_NORMAL][{row['id']}]", 1)
-        if f"[DIFFICULTY_NORMAL][{source}]" in record:
+        record = record.replace(f"[{source}]", f"[{row['id']}]", 1)
+        if f"[{source}]" in record:
             raise InventoryError(f"raw FRLG Trainer ID leaked into generated record: {source}")
         result[source] = record.strip() + "\n"
     if len(result) != len(allocations):
@@ -359,7 +359,7 @@ def render_runtime_roster(report: dict) -> str:
         lines.append("")
     result = "\n".join(lines)
     expected = len(allocations)
-    actual = len(re.findall(r"\[DIFFICULTY_NORMAL\]\[TRAINER_WAYFARER_SEVII_", result))
+    actual = len(re.findall(r"\[TRAINER_WAYFARER_SEVII_", result))
     if actual != expected:
         raise InventoryError(f"generated roster count drift: expected {expected}, found {actual}")
     return result

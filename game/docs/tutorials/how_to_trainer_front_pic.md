@@ -86,7 +86,7 @@ You can test your trainer type by going to [`src/data/trainers.party`](./src/dat
 
 Otherwise if you use [`src/data/trainers.h`](./src/data/trainers.h), change the `.trainerPic` field instead. For example:
 ```diff
-     [DIFFICULTY_NORMAL][TRAINER_BRENDAN_PLACEHOLDER] =
+     [TRAINER_BRENDAN_PLACEHOLDER] =
      {
          .trainerName = _("BRENDAN"),
          .trainerClass = TRAINER_CLASS_RS_PROTAG,

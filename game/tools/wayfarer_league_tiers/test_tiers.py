@@ -41,8 +41,8 @@ class LeagueTiersTest(unittest.TestCase):
                 for row in INVENTORY:
                     if row['tier'] != 3:
                         continue
-                    body = re.search(r'\[DIFFICULTY_NORMAL\]\[' + row['trainer'] +
-                                     r'\] =(.*?)(?=\[DIFFICULTY|\Z)', generated, re.S)[1]
+                    body = re.search(r'\[' + row['trainer'] +
+                                     r'\] =(.*?)(?=\n    \[|\Z)', generated, re.S)[1]
                     expected = row['levels'] if wayfarer else row['emeraldLevels']
                     self.assertEqual(list(map(int, re.findall(r'\.lvl = (\d+)', body))), expected)
 
@@ -74,7 +74,7 @@ class LeagueTiersTest(unittest.TestCase):
                     # Preprocessor conditionals leave blank lines, which are not party fields.
                     roster = '\n'.join(line for line in roster.splitlines() if line.strip())
                     self.assertEqual(hashlib.sha256(roster.encode()).hexdigest(), row['rosterSha256'])
-                    self.assertNotRegex(body, r'(?m)^Difficulty:', 'League parties must use the fixed Normal row')
+                    self.assertNotRegex(body, r'(?m)^Difficulty:', 'League parties must use the single authored row')
 
     def test_tiers_increase_across_the_complete_sequence(self):
         ranges = {tier: [level for row in INVENTORY if row['tier'] == tier

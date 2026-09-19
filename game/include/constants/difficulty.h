@@ -1,15 +1,7 @@
 #ifndef GUARD_DIFFICULTY_CONSTANTS_H
 #define GUARD_DIFFICULTY_CONSTANTS_H
 
-enum DifficultyLevel
-{
-    DIFFICULTY_EASY,
-    DIFFICULTY_NORMAL, //If you rename this, the word "Normal" in fprint_trainers must be replaced with the new difficulty name.
-    DIFFICULTY_HARD,
-    DIFFICULTY_COUNT,
-};
-
-#define DIFFICULTY_MIN 0
-#define DIFFICULTY_MAX (DIFFICULTY_COUNT - 1)
+// Retained as an empty event-script include because source-integrity manifests
+// pin data/event_scripts.s. Trainer data has a single authored layer.
 
 #endif // GUARD_DIFFICULTY_CONSTANTS_H

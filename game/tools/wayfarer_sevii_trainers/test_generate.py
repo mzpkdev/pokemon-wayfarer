@@ -26,8 +26,8 @@ class SelectedRosterTests(unittest.TestCase):
     def test_runtime_roster_contains_only_generated_selected_ids(self):
         roster = generate.render_runtime_roster(self.report)
         rows = self.report["allocation"]["allocations"]
-        self.assertEqual(len(re.findall(r"\[DIFFICULTY_NORMAL\]\[TRAINER_WAYFARER_SEVII_", roster)), 136)
-        self.assertFalse(any(f"[DIFFICULTY_NORMAL][{row['source_trainer']}]" in roster for row in rows))
+        self.assertEqual(len(re.findall(r"\[TRAINER_WAYFARER_SEVII_", roster)), 136)
+        self.assertFalse(any(f"[{row['source_trainer']}]" in roster for row in rows))
         self.assertTrue(all(row["source_hash"] == generate.source_hash(generate.party_blocks()[row["source_trainer"]]) for row in rows))
 
     def test_runtime_constants_match_roster_extent(self):

@@ -63,13 +63,13 @@ The audit evaluated 509,166 slot, Rating, and learnset-mode combinations with 0 
 
 ## Species and retained-field observations
 
-- Custom authored moves replaced: 2771 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Authored ability requires fallback: 1 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Held item retained after species reversal: 158 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- Opponent above player soft cap: 879 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
-- High-stat species without numeric predecessor: 1274 distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.
+- Custom authored moves replaced: 2771 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Authored ability requires fallback: 1 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Held item retained after species reversal: 158 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Opponent above player soft cap: 879 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- High-stat species without numeric predecessor: 1274 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 
 ## Representative parties
 

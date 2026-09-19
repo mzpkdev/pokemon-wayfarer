@@ -13,7 +13,7 @@ class GymLeaderRosterTests(unittest.TestCase):
         cls.rosters = cls.inventory["rosters"]
         cls.projections = cls.inventory["projections"]
 
-    def test_exact_initial_identity_and_variant_coverage(self):
+    def test_exact_initial_identity_and_record_coverage(self):
         self.assertEqual(self.inventory["encounterIdentities"], 24)
         self.assertEqual(self.inventory["resolvedVariants"], 30)
         self.assertEqual(len({row["identity"] for row in self.rosters}), 24)

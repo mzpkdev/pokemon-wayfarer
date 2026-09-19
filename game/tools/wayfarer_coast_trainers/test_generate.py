@@ -24,9 +24,9 @@ class CoastRosterTests(unittest.TestCase):
 
     def test_compiled_roster_only_uses_runtime_ids(self):
         roster = generate.render_roster(self.rows)
-        self.assertEqual(len(re.findall(r"\[DIFFICULTY_NORMAL\]\[TRAINER_WAYFARER_COAST_", roster)), 56)
+        self.assertEqual(len(re.findall(r"\[TRAINER_WAYFARER_COAST_", roster)), 56)
         self.assertFalse(any(
-            f"[DIFFICULTY_NORMAL][{row['source_trainer']}]" in roster
+            f"[{row['source_trainer']}]" in roster
             for row in self.rows
         ))
 

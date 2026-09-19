@@ -137,84 +137,75 @@ def initial_moves(schedule, level):
 def build_audit(records, manifest):
     species_data, schedules, move_pp = load_data()
     policies = {row["id"]: row["policy"] for row in manifest["records"]}
-    eligible_species = {slot["species"] for trainer, variants in records.items() if policies.get(trainer) in ("ORDINARY", "GYM_MEMBER") for row in variants.values() for slot in row["slots"]}
+    eligible_species = {slot["species"] for trainer, roster in records.items() if policies.get(trainer) in ("ORDINARY", "GYM_MEMBER") for slot in roster["slots"]}
     metadata = wild.load_trainer_species_metadata(wild.DEFAULT_SPECIES_METADATA, wild.DEFAULT_SPECIES_INFO, wild.species_ids(wild.DEFAULT_SPECIES), eligible_species)
     graph = {row["species"]: row for row in metadata}
-    exceptions = {(row["owner"], str(row["variant"]), row["slot"]): row for row in manifest.get("move_exceptions", [])}
+    exceptions = {(row["owner"], row["slot"]): row for row in manifest.get("move_exceptions", [])}
     failures, slots, parties = [], [], []
     total = 0
-    for trainer, variants in sorted(records.items()):
+    for trainer, roster in sorted(records.items()):
         policy = policies.get(trainer)
         if policy not in ("ORDINARY", "GYM_MEMBER"):
             continue
-        variant_groups = {}
-        for variant, roster in sorted(variants.items()):
-            key = json.dumps(roster, sort_keys=True, separators=(",", ":"))
-            # A reviewed exception can distinguish otherwise identical difficulty selections.
-            key += json.dumps([row for row in manifest.get("move_exceptions", []) if row["owner"] == roster.get("owner", trainer) and row["variant"] == variant], sort_keys=True)
-            variant_groups.setdefault(key, []).append(variant)
-        for selectable_variants in variant_groups.values():
-            variant = "DIFFICULTY_NORMAL" if "DIFFICULTY_NORMAL" in selectable_variants else selectable_variants[0]
-            roster = variants[variant]
-            projected_slots = []
-            for index, slot in enumerate(roster["slots"]):
-                authored = slot["species"]
-                owner = roster.get("owner", trainer)
-                row = {"id": trainer, "owner": owner, "variant": variant, "selectable_variants": selectable_variants, "slot": index, "authored": slot, "modes": {}}
-                outcomes = {}
-                for mode in ("normal", "legacy"):
-                    intervals = []
-                    for rating in range(81):
-                        level = project(rating, slot["lvl"], policy)
-                        species, _ = wild.effective_species(authored, level, graph)
-                        data = species_data[species]
-                        schedule = schedules[species, mode]
-                        moves = initial_moves(schedule, level)
-                        original_moves = [move for move in slot.get("moves", []) if move != "MOVE_NONE"]
-                        retained = False
-                        if (owner, str(variant), index) in exceptions and species == authored and original_moves and all(move in {m for required, m in schedule if required <= level} for move in original_moves):
-                            moves, retained = original_moves, True
-                        abilities = [ability for ability in data["abilities"] if ability != "ABILITY_NONE"]
-                        ability = slot.get("ability", "ABILITY_NONE")
-                        fallback = ability != "ABILITY_NONE" and ability not in abilities
-                        gender = slot.get("gender", "TRAINER_MON_RANDOM_GENDER")
-                        ratio = data["gender"]
-                        gender_adjusted = ("FEMALE" in gender and ratio in ("MON_MALE", "0")) or ("MALE" in gender and "FEMALE" not in gender and ratio in ("MON_FEMALE", "254")) or (gender in ("TRAINER_MON_MALE", "TRAINER_MON_FEMALE") and ratio in ("MON_GENDERLESS", "255"))
-                        changed = species != authored
-                        enabled = lambda key: slot.get(key) not in (None, 0, "0", "FALSE", "TYPE_NONE")
-                        gimmicks = []
-                        if enabled("gigantamaxFactor") and not data.get("gigantamax", False):
-                            gimmicks.append("gigantamaxFactor")
-                        if enabled("shouldUseDynamax") and any(species.startswith("SPECIES_" + base) for base in ("ZACIAN", "ZAMAZENTA", "ETERNATUS")):
-                            gimmicks.append("shouldUseDynamax")
-                        held = slot.get("heldItem", "ITEM_NONE")
-                        result = {"species": species, "moves": moves, "ability_fallback": fallback, "legal_abilities": abilities, "gender_adjustment": gender_adjusted,
-                                  "gimmick_suppression": gimmicks, "held_item_review": held if changed and held != "ITEM_NONE" else None,
-                                  "authored_moves_retained": retained, "custom_moves_replaced": bool(original_moves) and not retained,
-                                  "above_soft_cap": level > interpolate(rating, CAPS), "base_exp": data["base_exp"],
-                                  "utility_only_moves": not any(move in move_pp["__damaging__"] for move in moves) if "__damaging__" in move_pp else None,
-                                  "high_bst_no_predecessor": data["bst"] >= 480 and graph[species]["predecessor"] == "SPECIES_NONE"}
-                        if not abilities or not any(move_pp.get(move, 0) > 0 for move in moves):
-                            failure = {"id": trainer, "variant": variant, "slot": index, "mode": mode, "rating": rating, "species": species, "level": level, "reason": "no legal ability" if not abilities else "empty usable moves"}
-                            failures.append(failure)
-                        outcomes[mode, rating] = {"level": level, **result}
-                        if intervals and intervals[-1]["outcome"] == result:
-                            intervals[-1]["rating_end"] = rating
-                            intervals[-1]["level_end"] = level
-                        else:
-                            intervals.append({"rating_start": rating, "rating_end": rating, "level_start": level, "level_end": level, "outcome": result})
-                        total += 1
-                    row["modes"][mode] = intervals
-                slots.append(row)
-                projected_slots.append(outcomes)
-            for rating in MILESTONES:
-                parties.append({"id": trainer, "variant": variant, "selectable_variants": selectable_variants, "rating": rating, "party_size": roster["partySize"], "pool_size": roster.get("poolSize", 0),
-                                "selection": "source order; pools list every candidate, runtime selects without replacement",
-                                "money_inputs": {"null_party_fixed_reward": 20 if roster.get("money_party_null") else None, "authored_level": roster.get("money_level"), "trainer_class": roster.get("money_trainer_class", roster.get("trainerClass")), "single_multiplier": 4, "single_trainer_double_multiplier": 8, "two_opponents": "sum each opponent's single reward", "unknown_class_value": 5},
-                                "modes": {mode: [outcomes[mode, rating] for outcomes in projected_slots] for mode in ("normal", "legacy")}})
+        projected_slots = []
+        for index, slot in enumerate(roster["slots"]):
+            authored = slot["species"]
+            owner = roster.get("owner", trainer)
+            row = {"id": trainer, "owner": owner, "slot": index, "authored": slot, "modes": {}}
+            outcomes = {}
+            for mode in ("normal", "legacy"):
+                intervals = []
+                for rating in range(81):
+                    level = project(rating, slot["lvl"], policy)
+                    species, _ = wild.effective_species(authored, level, graph)
+                    data = species_data[species]
+                    schedule = schedules[species, mode]
+                    moves = initial_moves(schedule, level)
+                    original_moves = [move for move in slot.get("moves", []) if move != "MOVE_NONE"]
+                    retained = False
+                    if (owner, index) in exceptions and species == authored and original_moves and all(move in {m for required, m in schedule if required <= level} for move in original_moves):
+                        moves, retained = original_moves, True
+                    abilities = [ability for ability in data["abilities"] if ability != "ABILITY_NONE"]
+                    ability = slot.get("ability", "ABILITY_NONE")
+                    fallback = ability != "ABILITY_NONE" and ability not in abilities
+                    gender = slot.get("gender", "TRAINER_MON_RANDOM_GENDER")
+                    ratio = data["gender"]
+                    gender_adjusted = ("FEMALE" in gender and ratio in ("MON_MALE", "0")) or ("MALE" in gender and "FEMALE" not in gender and ratio in ("MON_FEMALE", "254")) or (gender in ("TRAINER_MON_MALE", "TRAINER_MON_FEMALE") and ratio in ("MON_GENDERLESS", "255"))
+                    changed = species != authored
+                    enabled = lambda key: slot.get(key) not in (None, 0, "0", "FALSE", "TYPE_NONE")
+                    gimmicks = []
+                    if enabled("gigantamaxFactor") and not data.get("gigantamax", False):
+                        gimmicks.append("gigantamaxFactor")
+                    if enabled("shouldUseDynamax") and any(species.startswith("SPECIES_" + base) for base in ("ZACIAN", "ZAMAZENTA", "ETERNATUS")):
+                        gimmicks.append("shouldUseDynamax")
+                    held = slot.get("heldItem", "ITEM_NONE")
+                    result = {"species": species, "moves": moves, "ability_fallback": fallback, "legal_abilities": abilities, "gender_adjustment": gender_adjusted,
+                              "gimmick_suppression": gimmicks, "held_item_review": held if changed and held != "ITEM_NONE" else None,
+                              "authored_moves_retained": retained, "custom_moves_replaced": bool(original_moves) and not retained,
+                              "above_soft_cap": level > interpolate(rating, CAPS), "base_exp": data["base_exp"],
+                              "utility_only_moves": not any(move in move_pp["__damaging__"] for move in moves) if "__damaging__" in move_pp else None,
+                              "high_bst_no_predecessor": data["bst"] >= 480 and graph[species]["predecessor"] == "SPECIES_NONE"}
+                    if not abilities or not any(move_pp.get(move, 0) > 0 for move in moves):
+                        failure = {"id": trainer, "slot": index, "mode": mode, "rating": rating, "species": species, "level": level, "reason": "no legal ability" if not abilities else "empty usable moves"}
+                        failures.append(failure)
+                    outcomes[mode, rating] = {"level": level, **result}
+                    if intervals and intervals[-1]["outcome"] == result:
+                        intervals[-1]["rating_end"] = rating
+                        intervals[-1]["level_end"] = level
+                    else:
+                        intervals.append({"rating_start": rating, "rating_end": rating, "level_start": level, "level_end": level, "outcome": result})
+                    total += 1
+                row["modes"][mode] = intervals
+            slots.append(row)
+            projected_slots.append(outcomes)
+        for rating in MILESTONES:
+            parties.append({"id": trainer, "rating": rating, "party_size": roster["partySize"], "pool_size": roster.get("poolSize", 0),
+                            "selection": "source order; pools list every candidate, runtime selects without replacement",
+                            "money_inputs": {"null_party_fixed_reward": 20 if roster.get("money_party_null") else None, "authored_level": roster.get("money_level"), "trainer_class": roster.get("money_trainer_class", roster.get("trainerClass")), "single_multiplier": 4, "single_trainer_double_multiplier": 8, "two_opponents": "sum each opponent's single reward", "unknown_class_value": 5},
+                            "modes": {mode: [outcomes[mode, rating] for outcomes in projected_slots] for mode in ("normal", "legacy")}})
     early = [row for row in parties if row["rating"] == 0]
-    highest = sorted(early, key=lambda row: (-max((slot["level"] for slot in row["modes"]["normal"]), default=0), row["id"], str(row["variant"])))
-    largest = sorted(early, key=lambda row: (-row["party_size"], row["id"], str(row["variant"])))
+    highest = sorted(early, key=lambda row: (-max((slot["level"] for slot in row["modes"]["normal"]), default=0), row["id"]))
+    largest = sorted(early, key=lambda row: (-row["party_size"], row["id"]))
     regions = {row["id"]: row.get("region", "unknown") for row in manifest["records"]}
     representatives = set()
     for ordering in (early, highest, largest, list(reversed(highest))):
@@ -222,7 +213,7 @@ def build_audit(records, manifest):
         for row in ordering:
             key = regions[row["id"]], policies[row["id"]]
             if key not in covered:
-                representatives.add((row["id"], row["variant"]))
+                representatives.add(row["id"])
                 covered.add(key)
     projections, projection_ids = [], {}
     for row in slots:
@@ -262,7 +253,7 @@ def build_audit(records, manifest):
     return {"structural_failures": failures, "evaluated_slot_ratings_modes": total, "baseline_anchors": ANCHORS, "slots": slots, "projections": projections, "outcomes": outcome_rows,
             "report_indexing": "Each slot's projection indexes projections; each interval's outcome indexes outcomes. Both tables use zero-based indices. Representative parties are expanded in full.",
             "slot_concern_counts": concern_counts,
-            "representative_parties": [row for row in parties if (row["id"], row["variant"]) in representatives],
+            "representative_parties": [row for row in parties if row["id"] in representatives],
             "representative_selection": "For each region and policy: first ID, strongest early party, largest early party, and weakest early party. Every pool candidate is included; projections cover every other source slot.",
             "highest_early_parties": unique_trainers(highest),
             "largest_early_parties": unique_trainers(largest),

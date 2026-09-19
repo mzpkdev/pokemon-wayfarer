@@ -43,14 +43,14 @@ def member(owner, slot, battle_order, *, ace=False, offset=-2, policy=AUTHORED):
 
 
 def roster(identity, region, trainer, script, members, *, double=False,
-           selection="DIFFICULTY_NORMAL", aliases=(), runtime_overrides=()):
+           aliases=(), runtime_overrides=()):
     return dict(identity=identity, region=region, trainer=trainer,
-                owner=trainer, difficulty=selection, script=script,
+                owner=trainer, script=script,
                 members=members, isDoubleBattle=double,
                 aliases=list(aliases), runtimeOverrides=list(runtime_overrides))
 
 
-# The 24 named identities have 30 resolved initial-battle source variants.
+# The 24 named identities have 30 resolved initial-battle source records.
 # Each tuple is (identity, active Trainer ID, source-slot index) followed by
 # explicit battle metadata.  All current authored custom moves are retained;
 # no slot relies on a generated level-up tuple in this first roster review.
@@ -226,10 +226,10 @@ def level(rating, offset):
     return min(100, max(1, 100 + offset))
 
 
-def source_variant(records, owner):
+def source_record(records, owner):
     if owner not in records:
         raise ValidationError(f"unknown party source owner {owner}")
-    return records[owner]["DIFFICULTY_NORMAL"]
+    return records[owner]
 
 
 def resolve(records, ids):
@@ -246,7 +246,7 @@ def resolve(records, ids):
         seen_trainers.add(trainer)
         if trainer not in ids:
             raise ValidationError(f"unknown enrolled trainer ID {trainer}")
-        legacy = source_variant(records, trainer)
+        legacy = source_record(records, trainer)
         if not legacy["slots"] or not legacy.get("partySize"):
             raise ValidationError(f"{trainer}: missing legacy initial party")
         if len(spec["members"]) != PARTY_SIZE:
@@ -254,7 +254,7 @@ def resolve(records, ids):
         expanded = []
         for source_index, descriptor in enumerate(spec["members"]):
             owner = descriptor["owner"]
-            owner_record = source_variant(records, owner)
+            owner_record = source_record(records, owner)
             slot = descriptor["slot"]
             if owner not in ids or not isinstance(slot, int) or not 0 <= slot < len(owner_record["slots"]):
                 raise ValidationError(f"{trainer}: invalid source reference {owner}/{slot}")
@@ -293,11 +293,11 @@ def resolve(records, ids):
         # remain a byte-for-byte authored roster rather than silently taking
         # the initial badge encounter's runtime scaling policy.
         for alias in (item for item in spec["aliases"] if item.endswith("_DOJO_HNS")):
-            alias_legacy = source_variant(records, alias)
+            alias_legacy = source_record(records, alias)
             aliases_fields = {key: value for key, value in alias_legacy.items()
-                              if key not in ("owner", "owner_variant")}
+                              if key != "owner"}
             legacy_fields = {key: value for key, value in legacy.items()
-                             if key not in ("owner", "owner_variant")}
+                             if key != "owner"}
             if alias not in ids or aliases_fields != legacy_fields:
                 raise ValidationError(f"{trainer}: excluded alias {alias} is not an exact legacy clone")
         for override in spec["runtimeOverrides"]:
@@ -362,7 +362,7 @@ def render_header(resolved):
     lines.extend(("static const struct GymLeaderScalingRoster sGymLeaderScalingRosters[] =", "{"))
     for record in resolved:
         lines.extend(("    {", f"        .trainerId = {record['trainer']},", f"        .ownerId = {record['owner']},",
-                      f"        .difficulty = {record['difficulty']},", f"        .party = {symbol(record, 'Party')},",
+                      f"        .party = {symbol(record, 'Party')},",
                       f"        .legacyParty = {symbol(record, 'LegacyParty')},", f"        .legacyPartySize = {record['legacy']['partySize']},", "        .slots = {"))
         for entry in record["expanded"]:
             policy = "GYM_LEADER_MOVE_AUTHORED" if entry["movePolicy"] == AUTHORED else "GYM_LEADER_MOVE_LEVEL_UP"
@@ -380,7 +380,7 @@ def report_rows(resolved):
             retained = record["expanded"][:count]
             ordered = sorted(retained, key=lambda entry: entry["battleOrder"])
             rows.append(dict(identity=record["identity"], region=record["region"], trainer=record["trainer"],
-                             owner=record["owner"], difficulty=record["difficulty"], rating=rating, count=count,
+                             owner=record["owner"], rating=rating, count=count,
                              selectedSourceIndices=[entry["sourceIndex"] for entry in retained],
                              outputSourceIndices=[entry["sourceIndex"] for entry in ordered],
                              members=[dict(sourceIndex=entry["sourceIndex"], sourceOwner=entry["sourceOwner"],
@@ -393,9 +393,9 @@ def report_rows(resolved):
 
 
 def render_markdown(resolved):
-    lines = ["# Gym Leader scaling roster inventory", "", "This generated inventory covers all 24 initial badge identities and all 30 resolved active source variants. It is structural evidence, not a claim that required ROM playtesting has succeeded.", "", "The complete 0–80 Trainer Rating table, including retained source indices, output order, levels, moves, items, aces, and legacy money basis, is in `gym_leaders.json` alongside this report.", ""]
+    lines = ["# Gym Leader scaling roster inventory", "", "This generated inventory covers all 24 initial badge identities and all 30 resolved active source records. It is structural evidence, not a claim that required ROM playtesting has succeeded.", "", "The complete 0–80 Trainer Rating table, including retained source indices, output order, levels, moves, items, aces, and legacy money basis, is in `gym_leaders.json` alongside this report.", ""]
     for record in resolved:
-        lines.extend((f"## {record['identity']} — `{record['trainer']}`", "", f"Initial script: `{record['script']}`. Resolved owner/difficulty: `{record['owner']}` / `{record['difficulty']}`. Legacy money basis: level {record['moneyBasis']['authoredLevel']}, class `{record['moneyBasis']['trainerClass']}`, legacy size {record['moneyBasis']['partySize']}.", "", "| Retention | Battle order | Role | Offset | Source | Species | Moves | Item |", "| ---: | ---: | --- | ---: | --- | --- | --- | --- |"))
+        lines.extend((f"## {record['identity']} — `{record['trainer']}`", "", f"Initial script: `{record['script']}`. Resolved owner: `{record['owner']}`. Legacy money basis: level {record['moneyBasis']['authoredLevel']}, class `{record['moneyBasis']['trainerClass']}`, legacy size {record['moneyBasis']['partySize']}.", "", "| Retention | Battle order | Role | Offset | Source | Species | Moves | Item |", "| ---: | ---: | --- | ---: | --- | --- | --- | --- |"))
         for entry in record["expanded"]:
             mon = entry["mon"]
             lines.append("| %d | %d | %s | %d | `%s` slot %d | %s | %s | %s |" % (entry["sourceIndex"], entry["battleOrder"], "Ace" if entry["isAce"] else "Support", entry["levelOffset"], entry["sourceOwner"], entry["sourceSlot"], mon["species"].removeprefix("SPECIES_"), ", ".join(move.removeprefix("MOVE_") for move in mon.get("moves", [])) if entry["movePolicy"] == AUTHORED else "LEVEL_UP", mon.get("heldItem", "ITEM_NONE").removeprefix("ITEM_")))
@@ -425,7 +425,7 @@ def generate(check=False):
     inventory = dict(version=1, encounterIdentities=24, resolvedVariants=len(resolved),
                      partySizeThresholds=[dict(beforeRating=threshold, partySize=size) for threshold, size in SIZE_THRESHOLDS],
                      levelAnchors=[dict(rating=rating, aceLevel=ace_level) for rating, ace_level in LEADER_ANCHORS],
-                     rosters=[dict(identity=row["identity"], region=row["region"], trainer=row["trainer"], owner=row["owner"], difficulty=row["difficulty"], script=row["script"], aliases=row["aliases"], runtimeOverrides=row["runtimeOverrides"], legacyPartySize=row["legacy"]["partySize"], moneyBasis=row["moneyBasis"], isDoubleBattle=row["isDoubleBattle"], members=[dict(sourceIndex=entry["sourceIndex"], sourceOwner=entry["sourceOwner"], sourceSlot=entry["sourceSlot"], species=entry["mon"]["species"], moves=entry["mon"].get("moves", []), item=entry["mon"].get("heldItem", "ITEM_NONE"), battleOrder=entry["battleOrder"], isAce=entry["isAce"], levelOffset=entry["levelOffset"], movePolicy=entry["movePolicy"]) for entry in row["expanded"]]) for row in resolved],
+                     rosters=[dict(identity=row["identity"], region=row["region"], trainer=row["trainer"], owner=row["owner"], script=row["script"], aliases=row["aliases"], runtimeOverrides=row["runtimeOverrides"], legacyPartySize=row["legacy"]["partySize"], moneyBasis=row["moneyBasis"], isDoubleBattle=row["isDoubleBattle"], members=[dict(sourceIndex=entry["sourceIndex"], sourceOwner=entry["sourceOwner"], sourceSlot=entry["sourceSlot"], species=entry["mon"]["species"], moves=entry["mon"].get("moves", []), item=entry["mon"].get("heldItem", "ITEM_NONE"), battleOrder=entry["battleOrder"], isAce=entry["isAce"], levelOffset=entry["levelOffset"], movePolicy=entry["movePolicy"]) for entry in row["expanded"]]) for row in resolved],
                      projections=report_rows(resolved),
                      balanceStatus="Generated roster tables are not balance or emulator-playtest acceptance.")
     write(INVENTORY, json.dumps(inventory, indent=2) + "\n", check)

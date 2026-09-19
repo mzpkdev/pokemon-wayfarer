@@ -1,12 +1,12 @@
 # Gym Leader scaling roster inventory
 
-This generated inventory covers all 24 initial badge identities and all 30 resolved active source variants. It is structural evidence, not a claim that required ROM playtesting has succeeded.
+This generated inventory covers all 24 initial badge identities and all 30 resolved active source records. It is structural evidence, not a claim that required ROM playtesting has succeeded.
 
 The complete 0–80 Trainer Rating table, including retained source indices, output order, levels, moves, items, aces, and legacy money basis, is in `gym_leaders.json` alongside this report.
 
 ## Brock — `TRAINER_BROCK_HNS`
 
-Initial script: `data/maps/PewterCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_BROCK_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 66, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/PewterCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_BROCK_HNS`. Legacy money basis: level 66, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ Excluded aliases: `TRAINER_BROCK_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Misty — `TRAINER_MISTY_HNS`
 
-Initial script: `data/maps/CeruleanCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_MISTY_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 63, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/CeruleanCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_MISTY_HNS`. Legacy money basis: level 63, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ Excluded aliases: `TRAINER_MISTY_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Lt. Surge — `TRAINER_LTSURGE_HNS`
 
-Initial script: `data/maps/VermilionCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_LTSURGE_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 60, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/VermilionCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_LTSURGE_HNS`. Legacy money basis: level 60, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ Excluded aliases: `TRAINER_LTSURGE_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Erika — `TRAINER_ERIKA_HNS`
 
-Initial script: `data/maps/CeladonCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_ERIKA_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 62, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/CeladonCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_ERIKA_HNS`. Legacy money basis: level 62, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ Excluded aliases: `TRAINER_ERIKA_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Janine — `TRAINER_JANINE_HNS`
 
-Initial script: `data/maps/FuchsiaCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_JANINE_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 64, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/FuchsiaCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_JANINE_HNS`. Legacy money basis: level 64, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -81,7 +81,7 @@ Excluded aliases: `TRAINER_JANINE_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Sabrina — `TRAINER_SABRINA_HNS`
 
-Initial script: `data/maps/SaffronCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_SABRINA_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 66, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/SaffronCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_SABRINA_HNS`. Legacy money basis: level 66, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -96,7 +96,7 @@ Excluded aliases: `TRAINER_SABRINA_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Blaine — `TRAINER_BLAINE_HNS`
 
-Initial script: `data/maps/SeafoamIslands_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_BLAINE_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 67, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/SeafoamIslands_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_BLAINE_HNS`. Legacy money basis: level 67, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -111,7 +111,7 @@ Excluded aliases: `TRAINER_BLAINE_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Blue — `TRAINER_BLUE_HNS`
 
-Initial script: `data/maps/ViridianCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_BLUE_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 69, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
+Initial script: `data/maps/ViridianCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_BLUE_HNS`. Legacy money basis: level 69, class `TRAINER_CLASS_LEADER_KANTO_HNS`, legacy size 6.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -126,7 +126,7 @@ Excluded aliases: `TRAINER_BLUE_DOJO_HNS`. Runtime rematch overrides: none.
 
 ## Falkner — `TRAINER_FALKNER_1_HNS`
 
-Initial script: `data/maps/VioletCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_FALKNER_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 11, class `TRAINER_CLASS_LEADER_HNS`, legacy size 2.
+Initial script: `data/maps/VioletCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_FALKNER_1_HNS`. Legacy money basis: level 11, class `TRAINER_CLASS_LEADER_HNS`, legacy size 2.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -141,7 +141,7 @@ Excluded aliases: `TRAINER_FALKNER_2_HNS`. Runtime rematch overrides: none.
 
 ## Bugsy — `TRAINER_BUGSY_1_HNS`
 
-Initial script: `data/maps/AzaleaTown_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_BUGSY_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 16, class `TRAINER_CLASS_LEADER_HNS`, legacy size 3.
+Initial script: `data/maps/AzaleaTown_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_BUGSY_1_HNS`. Legacy money basis: level 16, class `TRAINER_CLASS_LEADER_HNS`, legacy size 3.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -156,7 +156,7 @@ Excluded aliases: `TRAINER_BUGSY_2_HNS`. Runtime rematch overrides: none.
 
 ## Whitney — `TRAINER_WHITNEY_1_HNS`
 
-Initial script: `data/maps/GoldenrodCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_WHITNEY_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 21, class `TRAINER_CLASS_LEADER_HNS`, legacy size 3.
+Initial script: `data/maps/GoldenrodCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_WHITNEY_1_HNS`. Legacy money basis: level 21, class `TRAINER_CLASS_LEADER_HNS`, legacy size 3.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -171,7 +171,7 @@ Excluded aliases: `TRAINER_WHITNEY_2_HNS`. Runtime rematch overrides: none.
 
 ## Morty — `TRAINER_MORTY_1_HNS`
 
-Initial script: `data/maps/EcruteakCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_MORTY_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 25, class `TRAINER_CLASS_LEADER_HNS`, legacy size 4.
+Initial script: `data/maps/EcruteakCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_MORTY_1_HNS`. Legacy money basis: level 25, class `TRAINER_CLASS_LEADER_HNS`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -186,7 +186,7 @@ Excluded aliases: `TRAINER_MORTY_2_HNS`. Runtime rematch overrides: none.
 
 ## Chuck — `TRAINER_CHUCK_1_HNS`
 
-Initial script: `data/maps/CianwoodGym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_CHUCK_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 31, class `TRAINER_CLASS_LEADER_HNS`, legacy size 4.
+Initial script: `data/maps/CianwoodGym_hns/scripts.inc`. Resolved owner: `TRAINER_CHUCK_1_HNS`. Legacy money basis: level 31, class `TRAINER_CLASS_LEADER_HNS`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -201,7 +201,7 @@ Excluded aliases: `TRAINER_CHUCK_2_HNS`. Runtime rematch overrides: none.
 
 ## Chuck — `TRAINER_CHUCK_1_2_HNS`
 
-Initial script: `data/maps/CianwoodGym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_CHUCK_1_2_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 36, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/CianwoodGym_hns/scripts.inc`. Resolved owner: `TRAINER_CHUCK_1_2_HNS`. Legacy money basis: level 36, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -216,7 +216,7 @@ Excluded aliases: `TRAINER_CHUCK_2_HNS`. Runtime rematch overrides: none.
 
 ## Chuck — `TRAINER_CHUCK_1_3_HNS`
 
-Initial script: `data/maps/CianwoodGym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_CHUCK_1_3_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 38, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/CianwoodGym_hns/scripts.inc`. Resolved owner: `TRAINER_CHUCK_1_3_HNS`. Legacy money basis: level 38, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -231,7 +231,7 @@ Excluded aliases: `TRAINER_CHUCK_2_HNS`. Runtime rematch overrides: none.
 
 ## Jasmine — `TRAINER_JASMINE_1_HNS`
 
-Initial script: `data/maps/OlivineCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_JASMINE_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 36, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/OlivineCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_JASMINE_1_HNS`. Legacy money basis: level 36, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -246,7 +246,7 @@ Excluded aliases: `TRAINER_JASMINE_2_HNS`. Runtime rematch overrides: none.
 
 ## Jasmine — `TRAINER_JASMINE_1_2_HNS`
 
-Initial script: `data/maps/OlivineCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_JASMINE_1_2_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 36, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/OlivineCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_JASMINE_1_2_HNS`. Legacy money basis: level 36, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -261,7 +261,7 @@ Excluded aliases: `TRAINER_JASMINE_2_HNS`. Runtime rematch overrides: none.
 
 ## Jasmine — `TRAINER_JASMINE_1_3_HNS`
 
-Initial script: `data/maps/OlivineCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_JASMINE_1_3_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 38, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/OlivineCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_JASMINE_1_3_HNS`. Legacy money basis: level 38, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -276,7 +276,7 @@ Excluded aliases: `TRAINER_JASMINE_2_HNS`. Runtime rematch overrides: none.
 
 ## Pryce — `TRAINER_PRYCE_1_HNS`
 
-Initial script: `data/maps/MahoganyTown_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_PRYCE_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 33, class `TRAINER_CLASS_LEADER_HNS`, legacy size 4.
+Initial script: `data/maps/MahoganyTown_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_PRYCE_1_HNS`. Legacy money basis: level 33, class `TRAINER_CLASS_LEADER_HNS`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -291,7 +291,7 @@ Excluded aliases: `TRAINER_PRYCE_2_HNS`. Runtime rematch overrides: none.
 
 ## Pryce — `TRAINER_PRYCE_1_2_HNS`
 
-Initial script: `data/maps/MahoganyTown_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_PRYCE_1_2_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 35, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/MahoganyTown_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_PRYCE_1_2_HNS`. Legacy money basis: level 35, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -306,7 +306,7 @@ Excluded aliases: `TRAINER_PRYCE_2_HNS`. Runtime rematch overrides: none.
 
 ## Pryce — `TRAINER_PRYCE_1_3_HNS`
 
-Initial script: `data/maps/MahoganyTown_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_PRYCE_1_3_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 38, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/MahoganyTown_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_PRYCE_1_3_HNS`. Legacy money basis: level 38, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -321,7 +321,7 @@ Excluded aliases: `TRAINER_PRYCE_2_HNS`. Runtime rematch overrides: none.
 
 ## Clair — `TRAINER_CLAIR_1_HNS`
 
-Initial script: `data/maps/BlackthornCity_Gym_hns/scripts.inc`. Resolved owner/difficulty: `TRAINER_CLAIR_1_HNS` / `DIFFICULTY_NORMAL`. Legacy money basis: level 45, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
+Initial script: `data/maps/BlackthornCity_Gym_hns/scripts.inc`. Resolved owner: `TRAINER_CLAIR_1_HNS`. Legacy money basis: level 45, class `TRAINER_CLASS_LEADER_HNS`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -336,7 +336,7 @@ Excluded aliases: `TRAINER_CLAIR_2_HNS`. Runtime rematch overrides: none.
 
 ## Roxanne — `TRAINER_ROXANNE_1`
 
-Initial script: `data/maps/RustboroCity_Gym/scripts.inc`. Resolved owner/difficulty: `TRAINER_ROXANNE_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 15, class `TRAINER_CLASS_LEADER`, legacy size 3.
+Initial script: `data/maps/RustboroCity_Gym/scripts.inc`. Resolved owner: `TRAINER_ROXANNE_1`. Legacy money basis: level 15, class `TRAINER_CLASS_LEADER`, legacy size 3.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -351,7 +351,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_ROXANNE_2`, `TRAINER
 
 ## Brawly — `TRAINER_BRAWLY_1`
 
-Initial script: `data/maps/DewfordTown_Gym/scripts.inc`. Resolved owner/difficulty: `TRAINER_BRAWLY_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 19, class `TRAINER_CLASS_LEADER`, legacy size 3.
+Initial script: `data/maps/DewfordTown_Gym/scripts.inc`. Resolved owner: `TRAINER_BRAWLY_1`. Legacy money basis: level 19, class `TRAINER_CLASS_LEADER`, legacy size 3.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -366,7 +366,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_BRAWLY_2`, `TRAINER_
 
 ## Wattson — `TRAINER_WATTSON_1`
 
-Initial script: `data/maps/MauvilleCity_Gym/scripts.inc`. Resolved owner/difficulty: `TRAINER_WATTSON_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 24, class `TRAINER_CLASS_LEADER`, legacy size 4.
+Initial script: `data/maps/MauvilleCity_Gym/scripts.inc`. Resolved owner: `TRAINER_WATTSON_1`. Legacy money basis: level 24, class `TRAINER_CLASS_LEADER`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -381,7 +381,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_WATTSON_2`, `TRAINER
 
 ## Flannery — `TRAINER_FLANNERY_1`
 
-Initial script: `data/maps/LavaridgeTown_Gym_1F/scripts.inc`. Resolved owner/difficulty: `TRAINER_FLANNERY_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 29, class `TRAINER_CLASS_LEADER`, legacy size 4.
+Initial script: `data/maps/LavaridgeTown_Gym_1F/scripts.inc`. Resolved owner: `TRAINER_FLANNERY_1`. Legacy money basis: level 29, class `TRAINER_CLASS_LEADER`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -396,7 +396,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_FLANNERY_2`, `TRAINE
 
 ## Norman — `TRAINER_NORMAN_1`
 
-Initial script: `data/maps/PetalburgCity_Gym/scripts.inc`. Resolved owner/difficulty: `TRAINER_NORMAN_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 31, class `TRAINER_CLASS_LEADER`, legacy size 4.
+Initial script: `data/maps/PetalburgCity_Gym/scripts.inc`. Resolved owner: `TRAINER_NORMAN_1`. Legacy money basis: level 31, class `TRAINER_CLASS_LEADER`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -411,7 +411,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_NORMAN_2`, `TRAINER_
 
 ## Winona — `TRAINER_WINONA_1`
 
-Initial script: `data/maps/FortreeCity_Gym/scripts.inc`. Resolved owner/difficulty: `TRAINER_WINONA_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 33, class `TRAINER_CLASS_LEADER`, legacy size 5.
+Initial script: `data/maps/FortreeCity_Gym/scripts.inc`. Resolved owner: `TRAINER_WINONA_1`. Legacy money basis: level 33, class `TRAINER_CLASS_LEADER`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -426,7 +426,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_WINONA_2`, `TRAINER_
 
 ## Tate/Liza — `TRAINER_TATE_AND_LIZA_1`
 
-Initial script: `data/maps/MossdeepCity_Gym/scripts.inc`. Resolved owner/difficulty: `TRAINER_TATE_AND_LIZA_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 42, class `TRAINER_CLASS_LEADER`, legacy size 4.
+Initial script: `data/maps/MossdeepCity_Gym/scripts.inc`. Resolved owner: `TRAINER_TATE_AND_LIZA_1`. Legacy money basis: level 42, class `TRAINER_CLASS_LEADER`, legacy size 4.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |
@@ -441,7 +441,7 @@ Excluded aliases: none. Runtime rematch overrides: `TRAINER_TATE_AND_LIZA_2`, `T
 
 ## Juan — `TRAINER_JUAN_1`
 
-Initial script: `data/maps/SootopolisCity_Gym_1F/scripts.inc`. Resolved owner/difficulty: `TRAINER_JUAN_1` / `DIFFICULTY_NORMAL`. Legacy money basis: level 46, class `TRAINER_CLASS_LEADER`, legacy size 5.
+Initial script: `data/maps/SootopolisCity_Gym_1F/scripts.inc`. Resolved owner: `TRAINER_JUAN_1`. Legacy money basis: level 46, class `TRAINER_CLASS_LEADER`, legacy size 5.
 
 | Retention | Battle order | Role | Offset | Source | Species | Moves | Item |
 | ---: | ---: | --- | ---: | --- | --- | --- | --- |

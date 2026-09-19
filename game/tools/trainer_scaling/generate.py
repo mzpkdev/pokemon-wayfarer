@@ -65,8 +65,8 @@ def fields(body):
 def parse_output(text, source):
     text = re.sub(r'^#.*$', '', text, flags=re.M)
     result = {}
-    for match in re.finditer(r'\[(DIFFICULTY_\w+)\]\[(TRAINER_\w+)\]\s*=\s*\{', text):
-        variant, trainer = match.groups()
+    for match in re.finditer(r'^[ \t]*\[(TRAINER_\w+)\]\s*=\s*\{', text, re.M):
+        trainer = match.group(1)
         body, _ = balanced(text, match.end() - 1)
         party = re.search(r'\.party\s*=\s*\(const struct TrainerMon\[\]\)\s*\{', body)
         record = fields(body[:party.start()] if party else body)
@@ -78,9 +78,9 @@ def parse_output(text, source):
             while (pos := slots.find('{', pos)) != -1:
                 slot, pos = balanced(slots, pos)
                 record['slots'].append(fields(slot))
-        if variant in result.setdefault(trainer, {}):
-            raise ValidationError(f'duplicate {trainer}/{variant}')
-        result[trainer][variant] = record
+        if trainer in result:
+            raise ValidationError(f'duplicate {trainer}')
+        result[trainer] = record
     return result
 
 def load_inventory():
@@ -198,40 +198,33 @@ def trainer_ids(names):
 
 def resolve_rosters(records):
     result = {}
-    def resolve(trainer, variant, chain=()):
-        key = (trainer, variant)
+    def resolve(trainer, chain=()):
+        key = trainer
         if key in chain: raise ValidationError(f'override cycle: {chain + (key,)}')
         if trainer not in records: raise ValidationError(f'override references missing {trainer}')
-        variants = records[trainer]
-        fixed_hoenn = any(row.get('source') == 'src/data/trainers.party' for row in variants.values())
-        actual = variant if variant in variants and not fixed_hoenn else 'DIFFICULTY_NORMAL'
-        if actual not in variants: raise ValidationError(f'{trainer} lacks normal difficulty')
-        row = dict(variants[actual])
+        row = dict(records[trainer])
         money_slots = row.get('slots', [])
         money_size = row.get('partySize', 0)
         row['money_party_null'] = not bool(money_slots)
         row['money_level'] = money_slots[money_size - 1]['lvl'] if money_slots and 0 < money_size <= len(money_slots) else None
         row['money_trainer_class'] = row.get('trainerClass')
         if row.get('overrideTrainer'):
-            parent = resolve(row['overrideTrainer'], variant, chain + (key,))
-            row.update(slots=parent['slots'], owner=parent['owner'], owner_variant=parent['owner_variant'], poolSize=parent.get('poolSize', 0))
+            parent = resolve(row['overrideTrainer'], chain + (key,))
+            row.update(slots=parent['slots'], owner=parent['owner'], poolSize=parent.get('poolSize', 0))
             row.setdefault('partySize', parent.get('partySize', 0))
         else:
-            row.update(owner=trainer, owner_variant=actual)
+            row.update(owner=trainer)
         size = row.get('partySize', 0)
         if row['slots'] and (not isinstance(size, int) or not 1 <= size <= 6 or size > len(row['slots'])):
-            raise ValidationError(f'{trainer}/{variant}: invalid party size {size}/{len(row["slots"])}')
+            raise ValidationError(f'{trainer}: invalid party size {size}/{len(row["slots"])}')
         if row.get('poolSize', 0) not in (0, len(row['slots'])):
-            raise ValidationError(f'{trainer}/{variant}: pool size mismatch')
+            raise ValidationError(f'{trainer}: pool size mismatch')
         for slot in row['slots']:
-            if not 1 <= slot.get('lvl', 0) <= 100: raise ValidationError(f'{trainer}/{variant}: invalid level')
+            if not 1 <= slot.get('lvl', 0) <= 100: raise ValidationError(f'{trainer}: invalid level')
             if not str(slot.get('species', '')).startswith('SPECIES_'): raise ValidationError(f'{trainer}: missing species')
         return row
-    # Difficulty fallback and overrides are evaluated for every selectable variant.
-    variants = {'DIFFICULTY_NORMAL', 'DIFFICULTY_EASY', 'DIFFICULTY_HARD'}
-    variants.update(v for rows in records.values() for v in rows)
     for trainer in records:
-        result[trainer] = {variant: resolve(trainer, variant) for variant in sorted(variants)}
+        result[trainer] = resolve(trainer)
     return result
 
 def references():
@@ -284,9 +277,8 @@ def propose(records, refs):
     bosses = ('LEADER', 'ELITE_FOUR', 'CHAMPION', 'RIVAL', 'ADMIN', 'AQUA_LEADER', 'MAGMA_LEADER', 'ARENA_TYCOON', 'DOME_ACE', 'FACTORY_HEAD', 'PALACE_MAVEN', 'PIKE_QUEEN', 'PYRAMID_KING', 'SALON_MAIDEN', 'RS_PROTAG')
     special = ('WALLY', 'BRENDAN', 'MAY_', 'STEVEN', 'RED_', 'EUSINE', 'SAMSON_OAK', 'PHANTONOMY')
     rows = []
-    for trainer, variants in sorted(records.items()):
-        if not any(row['slots'] for row in variants.values()): continue
-        row = variants['DIFFICULTY_NORMAL']
+    for trainer, row in sorted(records.items()):
+        if not row['slots']: continue
         cls = row.get('trainerClass', '')
         evidence = refs.get(trainer, [])
         excluded = any(x in cls for x in bosses) or any(trainer.removeprefix('TRAINER_').startswith(x) for x in special)
@@ -302,7 +294,7 @@ def propose(records, refs):
 def validate_manifest(manifest, records, ids, refs):
     if manifest.get('version') != 1 or isinstance(manifest.get('version'), bool): raise ValidationError('unsupported classification manifest version')
     seen = set()
-    populated = {trainer for trainer, variants in records.items() if any(row['slots'] for row in variants.values())}
+    populated = {trainer for trainer, row in records.items() if row['slots']}
     for row in manifest.get('records', []):
         trainer = row.get('id')
         if trainer in seen: raise ValidationError(f'duplicate manifest ID {trainer}')
@@ -314,7 +306,7 @@ def validate_manifest(manifest, records, ids, refs):
         for evidence in row['evidence']:
             path = ROOT / evidence['path']
             if not path.is_file() or evidence.get('symbol', trainer) not in path.read_text(): raise ValidationError(f'{trainer}: stale evidence {evidence}')
-            if evidence.get('role') and evidence['role'] not in {record.get('trainerClass') for record in records[trainer].values()}: raise ValidationError(f'{trainer}: stale authored role {evidence}')
+            if evidence.get('role') and evidence['role'] != records[trainer].get('trainerClass'): raise ValidationError(f'{trainer}: stale authored role {evidence}')
         locations = refs.get(trainer, [])
         if any('Gym' in ref for ref in locations) and any('/maps/' in ref and 'Gym' not in ref for ref in locations) and row['policy'] != 'EXCLUDED' and not row.get('role_review'):
             raise ValidationError(f'{trainer}: shared Gym/ordinary role requires review')
@@ -324,13 +316,13 @@ def validate_manifest(manifest, records, ids, refs):
         if trainer not in populated: raise ValidationError(f'script/rematch references hole or empty roster: {trainer}: {refs[trainer]}')
     exception_keys = set()
     for exception in manifest.get('move_exceptions', []):
-        owner, variant, slot = exception.get('owner'), exception.get('variant'), exception.get('slot')
-        key = (owner, variant, slot)
+        owner, slot = exception.get('owner'), exception.get('slot')
+        key = (owner, slot)
         if key in exception_keys: raise ValidationError(f'duplicate move exception {key}')
         exception_keys.add(key)
-        if owner not in records or variant not in records[owner] or not isinstance(slot, int) or not 0 <= slot < len(records[owner][variant]['slots']):
+        if owner not in records or not isinstance(slot, int) or not 0 <= slot < len(records[owner]['slots']):
             raise ValidationError(f'invalid move exception {key}')
-        if records[owner][variant]['owner'] != owner or not exception.get('reason'):
+        if records[owner]['owner'] != owner or not exception.get('reason'):
             raise ValidationError(f'move exception requires resolved owner and reviewed reason: {key}')
 
 def review_report(report, manifest):
@@ -352,7 +344,7 @@ def review_report(report, manifest):
         outcomes = balance['outcomes']
         lines += ['', '## Species and retained-field observations', '']
         for key, label in [('custom_moves_replaced', 'Custom authored moves replaced'), ('ability_fallback', 'Authored ability requires fallback'), ('gender_adjustment', 'Authored gender requires adjustment'), ('gimmick_suppression', 'Incompatible gimmick suppressed'), ('held_item_review', 'Held item retained after species reversal'), ('above_soft_cap', 'Opponent above player soft cap'), ('high_bst_no_predecessor', 'High-stat species without numeric predecessor')]:
-            lines.append(f"- {label}: {sum(bool(outcome.get(key)) for outcome in outcomes)} distinct projected outcomes. Exact affected IDs, variants, slots, and Rating intervals are indexed in inventory.json.")
+            lines.append(f"- {label}: {sum(bool(outcome.get(key)) for outcome in outcomes)} distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.")
         lines += ['', '## Representative parties', '', 'The machine-readable inventory contains full normal and legacy moves, abilities, XP species inputs, authored money inputs, and every pool candidate for representative parties at Ratings 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80. Its slot and projection tables cover all other eligible source slots.', '', '## Remaining validation', '', 'Playtest early, middle, and late careers in every included region, including Gym doubles, utility-heavy learnsets, powerful species without numeric predecessors, and the largest early parties above. Passing structural validation is not a balance approval.']
     return '\n'.join(lines) + '\n'
 
@@ -382,8 +374,8 @@ def generate(check=False, proposal=None, no_audit=False):
     header += '};\n'
     write_output(OUTPUT / 'policies.h', header, check)
     exceptions = '// Generated by tools/trainer_scaling/generate.py.\nstatic const struct TrainerScalingMoveException sTrainerScalingMoveExceptions[] =\n{\n'
-    exceptions += ''.join(f'    {{{row["owner"]}, {row["variant"]}, {row["slot"]}}},\n' for row in sorted(manifest['move_exceptions'], key=lambda row: (row['owner'], row['variant'], row['slot'])))
-    exceptions += '    {TRAINERS_COUNT, 0, 0},\n};\n'
+    exceptions += ''.join(f'    {{{row["owner"]}, {row["slot"]}}},\n' for row in sorted(manifest['move_exceptions'], key=lambda row: (row['owner'], row['slot'])))
+    exceptions += '    {TRAINERS_COUNT, 0},\n};\n'
     write_output(OUTPUT / 'move_exceptions.h', exceptions, check)
     import sys
     sys.path.insert(0, str(ROOT / 'tools/wild_encounters'))
@@ -391,10 +383,10 @@ def generate(check=False, proposal=None, no_audit=False):
     # Gym Leaders have their own authored six-slot curve.  They intentionally
     # do not feed the ordinary predecessor table (or the ordinary audit).
     eligible = {row['id'] for row in rows if row['policy'] in ('ORDINARY', 'GYM_MEMBER')}
-    species = {slot['species'] for trainer in eligible for record in records[trainer].values() for slot in record['slots']}
+    species = {slot['species'] for trainer in eligible for slot in records[trainer]['slots']}
     metadata = wild.load_trainer_species_metadata(wild.DEFAULT_SPECIES_METADATA, wild.DEFAULT_SPECIES_INFO, wild.species_ids(wild.DEFAULT_SPECIES), species)
     write_output(OUTPUT / 'predecessors.h', wild.render_trainer_predecessor_header(metadata), check)
-    report = {'counts': dict(Counter(row['policy'] for row in rows)), 'region_counts': dict(Counter(row['region'] for row in rows)), 'populated_ids': len(rows), 'unresolved_classification_candidates': [], 'structural_failures': [], 'move_exceptions': manifest['move_exceptions'], 'excluded': [{'id': row['id'], 'reason': row['reason']} for row in rows if row['policy'] == 'EXCLUDED'], 'records': raw, 'roster_inventory': 'Trainerproc source variants appear once in records. Balance slots name resolved owners and all selectable difficulty variants, including fallbacks.', 'context_exclusions': ['Frontier', 'Trainer Hill', 'e-Reader', 'Secret Base', 'rental', 'link', 'recorded', 'external', 'partner', 'player', 'raw Trainer pointer/debug'], 'reward_policy': 'Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.'}
+    report = {'counts': dict(Counter(row['policy'] for row in rows)), 'region_counts': dict(Counter(row['region'] for row in rows)), 'populated_ids': len(rows), 'unresolved_classification_candidates': [], 'structural_failures': [], 'move_exceptions': manifest['move_exceptions'], 'excluded': [{'id': row['id'], 'reason': row['reason']} for row in rows if row['policy'] == 'EXCLUDED'], 'records': raw, 'roster_inventory': 'Trainerproc source records appear once in the one-layer inventory. Balance slots name resolved owners.', 'context_exclusions': ['Frontier', 'Trainer Hill', 'e-Reader', 'Secret Base', 'rental', 'link', 'recorded', 'external', 'partner', 'player', 'raw Trainer pointer/debug'], 'reward_policy': 'Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.'}
     if not no_audit:
         from audit import build_audit
         report['balance'] = build_audit(records, manifest)

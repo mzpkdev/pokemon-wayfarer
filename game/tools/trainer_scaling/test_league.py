@@ -29,7 +29,6 @@ class LeagueScalingTests(unittest.TestCase):
         self.assertEqual(len(self.rows),15)
         for i,row in enumerate(self.rows):
             self.assertEqual(row['owner'],row['trainer'])
-            self.assertEqual(row['difficulty'],'DIFFICULTY_NORMAL')
             self.assertEqual(row['encounterIndex'],i%5)
             self.assertEqual(row['source']['partySize'],6 if i%5==4 or 5<=i<10 else 5)
             self.assertEqual(row['offsets'].count(0),1)

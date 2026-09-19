@@ -166,15 +166,15 @@ def compiled_records(rows: list[dict]) -> dict[str, str]:
     result = {}
     for row in rows:
         source = row["source_trainer"]
-        if source not in records or "DIFFICULTY_NORMAL" not in records[source]:
+        if source not in records:
             raise InventoryError(f"compiled record missing {source}")
-        match = re.search(rf"\[DIFFICULTY_NORMAL\]\[{re.escape(source)}\]\s*=\s*\{{", header)
+        match = re.search(rf"\[{re.escape(source)}\]\s*=\s*\{{", header)
         if match is None:
             raise InventoryError(f"compiled source missing {source}")
         _, end = parser.balanced(header, match.end() - 1)
         record = re.sub(r"(?m)^#line .*\n", "", header[match.start():end])
-        record = record.replace(f"[DIFFICULTY_NORMAL][{source}]", f"[DIFFICULTY_NORMAL][{row['id']}]", 1)
-        if f"[DIFFICULTY_NORMAL][{source}]" in record:
+        record = record.replace(f"[{source}]", f"[{row['id']}]", 1)
+        if f"[{source}]" in record:
             raise InventoryError(f"raw ID leaked for {source}")
         result[source] = record.strip() + "\n"
     return result
