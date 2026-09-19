@@ -29,7 +29,7 @@ Baseline anchors: 0:7, 4:8, 8:10, 16:15, 30:22, 40:34, 55:52, 65:72, 80:92. Each
 
 Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.
 
-The audit evaluated 509,166 slot, Rating, and learnset-mode combinations with 0 structural failures.
+The audit evaluated 254,583 slot and Rating combinations using the modern level-up learnsets, with 0 structural failures.
 
 ## Highest early parties
 
@@ -63,17 +63,17 @@ The audit evaluated 509,166 slot, Rating, and learnset-mode combinations with 0 
 
 ## Species and retained-field observations
 
-- Custom authored moves replaced: 2771 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Custom authored moves replaced: 1743 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Authored ability requires fallback: 1 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
-- Held item retained after species reversal: 158 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
-- Opponent above player soft cap: 879 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
-- High-stat species without numeric predecessor: 1274 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Held item retained after species reversal: 95 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Opponent above player soft cap: 557 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- High-stat species without numeric predecessor: 896 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 
 ## Representative parties
 
-The machine-readable inventory contains full normal and legacy moves, abilities, XP species inputs, authored money inputs, and every pool candidate for representative parties at Ratings 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80. Its slot and projection tables cover all other eligible source slots.
+The machine-readable inventory contains full modern level-up moves, abilities, XP species inputs, authored money inputs, and every pool candidate for representative parties at Ratings 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80. Its slot and projection tables cover all other eligible source slots.
 
 ## Remaining validation
 

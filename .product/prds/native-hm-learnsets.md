@@ -265,12 +265,10 @@ An encounter-specific exception would require a separate product and technical
 decision to add encounter data and a wild-creation hook. This PRD does not imply
 or authorize that system.
 
-The game has an active normal learnset and a Generation III legacy learnset
-path. Native utility moves must be present in both modes, either by updating
-both data sources or by centralizing the additions in shared learnset
-selection. Within each build, normal and legacy-moves mode must produce the
-same native utility roster. This parity requirement does not make the regional
-rosters identical across builds.
+The game uses the current learnset path for native utility moves. Native
+utility moves must be authored in that active source and produce the same
+utility roster for each build. This does not make the regional rosters
+identical across builds.
 
 Existing HM compatibility must remain intact in the generated runtime
 teachable learnsets. If the compatibility source changes, regenerate and check

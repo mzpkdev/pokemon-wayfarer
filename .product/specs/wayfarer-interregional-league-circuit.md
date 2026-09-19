@@ -294,12 +294,10 @@ Preserve high-water semantics for prerelease saves with the old larger Kanto
 bonus; no downgrade migration is required. Validate the revised progression
 with fresh or deliberately seeded state.
 
-The HNS Chinchou learnsets add `Flash`, `Surf`, and `Whirlpool` at level 5 in
-both normal and legacy-moves mode, after any existing level-5 entries. The
-later repeat entries remain unchanged. In the HNS modern learnset only, the
-otherwise final level-50 `Charge` entry is omitted so the added level-5 triplet
-and all utility repeats fit below the forty-entry engine limit; non-HNS
-learnsets retain `Charge`. This ensures that the authored level-5 Chinchou
+The HNS Chinchou learnset adds `Flash`, `Surf`, and `Whirlpool` at level 5,
+after any existing level-5 entries. The later repeat entries remain unchanged.
+The otherwise final level-50 `Charge` entry is omitted so the added level-5
+triplet and all utility repeats fit below the forty-entry engine limit. This ensures that the authored level-5 Chinchou
 fishing sources around Vermilion and Cinnabar still provide the native Surf user
 required by Kanto traversal at Rating 0.
 

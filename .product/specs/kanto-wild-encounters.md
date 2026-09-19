@@ -398,14 +398,14 @@ Olivine and Cianwood accessibility records in the same file.
 
 Every qualifying Kanto Chinchou catch knows Surf. Wayfarer Rating 0 produces a
 level-5 catch from the authored level-5 sources, so the Wayfarer Chinchou
-schedule begins at level 5 in both learnset modes as required by the
+schedule begins at level 5 in the current learnset as required by the
 interregional circuit. Preserve the utility moves through level 100 and update
 the native-HM tests in the same implementation.
 
 The selected Cinnabar HNS donor retains its authored Chinchou slots and exact
 Old Rod rate. A Wayfarer-only native-HM overlay replaces its surplus Magikarp
 slot with level 25–35 Kingler, so `MAP_CINNABAR_ISLAND` meets the immediate
-eight-percent Surf floor in both learnset modes. This exception does not alter
+eight-percent Surf floor using the current learnset. This exception does not alter
 standalone HNS Cinnabar or its source row.
 
 ### Radio and ordinary population readers

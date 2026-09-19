@@ -123,8 +123,8 @@ Preserve exact forms unless a validated predecessor edge specifies otherwise.
 Report powerful species with no numeric predecessor for balance review.
 
 The default move policy for every eligible slot is `LEVEL_UP`: create its
-normal four-move set for the final species and effective level using the active
-learnset mode. Bypass `CustomTrainerPartyAssignMoves` for these slots, including
+normal four-move set for the final species and effective level using the current
+learnset. Bypass `CustomTrainerPartyAssignMoves` for these slots, including
 slots that originally authored custom moves. Do not retain late-game custom
 moves as an accidental fallback. Honor existing move-randomizer policy after
 this baseline where that option explicitly applies.
@@ -135,7 +135,7 @@ final species equals the authored species and every nonempty move appears in
 that species' active level-up learnset at or below the effective level.
 Otherwise regenerate the entire set. This conservative rule intentionally
 does not preserve TM, tutor, or egg moves without a level-up justification.
-Validate both normal and legacy learnsets. No slot may end with zero usable
+Validate the current learnset. No slot may end with zero usable
 moves; generation must identify such outcomes and require a reviewed source
 correction before release.
 
@@ -200,8 +200,8 @@ merely to make reward readers observe projected values.
 The implementation must deliver a deterministic host command that inventories
 all compiled Wayfarer Trainer records and emits policy data plus a reviewable
 report. Validate all selectable pool slots and resolved overrides, not only
-the first party-size entries. Enumerate every Rating 0 through 80 and both
-learnset modes for each eligible source slot. Cache equivalent calculations
+the first party-size entries. Enumerate every Rating 0 through 80 using the
+current learnset for each eligible source slot. Cache equivalent calculations
 where useful; emit summarized intervals rather than duplicate rows.
 
 Report coverage counts by policy and region, excluded reasons, unresolved
@@ -231,7 +231,7 @@ all custom-move Trainers into excluded opponents to satisfy the audit.
 3. Test multi-stage reversal, ambiguous ancestry rejection, forms, non-level
    evolutions, no forward evolution, and no wild floor filtering.
 4. Test move regeneration and exceptions below and at thresholds, changed
-   species, both learnset modes, utility-heavy schedules, and usable moves.
+   species, the current learnset, utility-heavy schedules, and usable moves.
 5. Test legal ability and gender assignment after reversal and randomization,
    species-specific items and gimmicks, and retained IV/EV and AI behavior.
 6. Test real battle construction, pools, two opponents with mixed policies,

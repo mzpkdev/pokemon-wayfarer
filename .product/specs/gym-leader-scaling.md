@@ -65,8 +65,8 @@ the ordering by filtering; they do not get separate randomized orders.
 positions, and requires at least one nonempty valid move. Existing custom
 tuples must be copied unchanged, without a learnset or minimum-level gate.
 `LEVEL_UP` applies to members without custom moves and generates their normal
-four-move set at the effective level using the active learnset mode. Require
-at least one usable move at every supported TR and learnset mode; report an
+four-move set at the effective level using the current learnset. Require at
+least one usable move at every supported TR; report an
 invalid low-level learnset as an authoring error, not a reason to drop a slot.
 
 Retain the source slot identity for move tuples, abilities, items, gimmick

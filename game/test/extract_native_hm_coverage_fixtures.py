@@ -23,6 +23,8 @@ def render():
     profiles = []
     cells = []
     for row in coverage:
+        if row['mode'] != 'modern':
+            continue
         assert set(row['witnesses']) == {str(n) for n in range(81)}
         ids = []
         for rating in range(81):
@@ -37,7 +39,7 @@ def render():
         lines.append(f'    {{ {map_name}, {time}, WILD_AREA_{area}, WILD_ENCOUNTER_FISHING_ROD_{rod} }},')
     lines += ['};', '', 'static const struct RegionalCoverage sRegionalCoverage[] =', '{']
     for row, ids in cells:
-        lines.append(f'    {{ "{row["region"]}/{row["mode"]}/{row["move"]}", {row["move"]}, {"TRUE" if row["mode"] == "modern" else "FALSE"},')
+        lines.append(f'    {{ "{row["region"]}/{row["move"]}", {row["move"]},')
         lines.append('      { ' + ', '.join(map(str, ids)) + ' } },')
     lines += ['};', '']
     for index, scenario in enumerate(scenarios):

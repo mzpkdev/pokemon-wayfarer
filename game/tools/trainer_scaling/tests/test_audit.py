@@ -29,43 +29,41 @@ class ProjectionAuditTests(unittest.TestCase):
         self.assertEqual(audit.initial_moves(schedule, 5), ["A", "B", "C", "D"])
         self.assertEqual(audit.initial_moves(schedule, 7), ["C", "D", "E", "A"])
 
-    def test_both_modes_exhaust_every_pool_slot_and_empty_moves_fail(self):
+    def test_modern_learnset_exhausts_every_pool_slot_and_empty_moves_fail(self):
         data = {"SPECIES_TEST": {"abilities": ["ABILITY_ONE"], "gender": "MON_GENDERLESS", "base_exp": 10, "bst": 500}}
-        schedules = {("SPECIES_TEST", "normal"): [(1, "MOVE_HIT")], ("SPECIES_TEST", "legacy"): []}
+        schedules = {("SPECIES_TEST", "modern"): []}
         records = {"TRAINER_TEST": {"partySize": 1, "poolSize": 2, "slots": [{"species": "SPECIES_TEST", "lvl": 5}, {"species": "SPECIES_TEST", "lvl": 50, "ability": "ABILITY_BAD", "gender": "TRAINER_MON_MALE"}]}}
         metadata = [{"species": "SPECIES_TEST", "predecessor": "SPECIES_NONE", "predecessor_level": 0}]
         with patch.object(audit, "load_data", return_value=(data, schedules, {"MOVE_HIT": 10})), patch.object(audit.wild, "load_trainer_species_metadata", return_value=metadata):
             report = audit.build_audit(records, {"records": [{"id": "TRAINER_TEST", "policy": "ORDINARY"}], "move_exceptions": []})
-        self.assertEqual(report["evaluated_slot_ratings_modes"], 324)
+        self.assertEqual(report["evaluated_slot_ratings"], 162)
         self.assertEqual(len(report["structural_failures"]), 162)
-        outcome = report["outcomes"][report["projections"][report["slots"][1]["projection"]]["normal"][0]["outcome"]]
+        outcome = report["outcomes"][report["projections"][report["slots"][1]["projection"]]["modern"][0]["outcome"]]
         self.assertTrue(outcome["ability_fallback"])
         self.assertTrue(outcome["gender_adjustment"])
         self.assertTrue(outcome["high_bst_no_predecessor"])
 
-    def test_active_data_covers_both_learnsets(self):
+    def test_active_data_covers_modern_learnset(self):
         species, schedules, moves = audit.load_data()
         self.assertGreater(len(species), 1000)
         self.assertEqual(species["SPECIES_BULBASAUR"]["bst"], 318)
         self.assertIn("ABILITY_OVERGROW", species["SPECIES_BULBASAUR"]["abilities"])
-        self.assertNotEqual(schedules["SPECIES_BULBASAUR", "normal"], schedules["SPECIES_BULBASAUR", "legacy"])
+        self.assertIn(("SPECIES_BULBASAUR", "modern"), schedules)
         self.assertGreater(moves["MOVE_TACKLE"], 0)
 
     def test_reviewed_exception_requires_unchanged_species_and_active_level(self):
         data = {name: {"abilities": ["ABILITY_ONE"], "gender": "MON_MALE", "base_exp": 10, "bst": 100} for name in ("SPECIES_BASE", "SPECIES_EVOLVED")}
-        schedules = {(name, mode): [(1, "MOVE_HIT"), (10 if mode == "normal" else 12, "MOVE_LATER")] for name in data for mode in ("normal", "legacy")}
+        schedules = {(name, "modern"): [(1, "MOVE_HIT"), (10, "MOVE_LATER")] for name in data}
         records = {"TRAINER_ALIAS": {"owner": "TRAINER_OWNER", "partySize": 1, "slots": [{"species": "SPECIES_EVOLVED", "lvl": 5, "moves": ["MOVE_LATER"]}]}}
         metadata = [{"species": "SPECIES_BASE", "predecessor": "SPECIES_NONE", "predecessor_level": 0}, {"species": "SPECIES_EVOLVED", "predecessor": "SPECIES_BASE", "predecessor_level": 10}]
         manifest = {"records": [{"id": "TRAINER_ALIAS", "policy": "ORDINARY"}], "move_exceptions": [{"owner": "TRAINER_OWNER", "slot": 0, "reason": "fixture"}]}
         with patch.object(audit, "load_data", return_value=(data, schedules, {"MOVE_HIT": 10, "MOVE_LATER": 10})), patch.object(audit.wild, "load_trainer_species_metadata", return_value=metadata):
             report = audit.build_audit(records, manifest)
         projection = report["projections"][0]
-        at = lambda mode, rating: next(report["outcomes"][row["outcome"]] for row in projection[mode] if row["rating_start"] <= rating <= row["rating_end"])
-        self.assertEqual(at("normal", 0)["species"], "SPECIES_BASE")
-        self.assertFalse(at("normal", 0)["authored_moves_retained"])
-        self.assertTrue(at("normal", 8)["authored_moves_retained"])
-        self.assertFalse(at("legacy", 8)["authored_moves_retained"])
-        self.assertTrue(at("legacy", 16)["authored_moves_retained"])
+        at = lambda rating: next(report["outcomes"][row["outcome"]] for row in projection["modern"] if row["rating_start"] <= rating <= row["rating_end"])
+        self.assertEqual(at(0)["species"], "SPECIES_BASE")
+        self.assertFalse(at(0)["authored_moves_retained"])
+        self.assertTrue(at(8)["authored_moves_retained"])
 
 
 if __name__ == "__main__":

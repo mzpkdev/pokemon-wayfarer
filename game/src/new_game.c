@@ -146,7 +146,6 @@ void SetDefaultChallengeSettings(void)
     gSaveblock3.challengeSettings.runType = 0;
 
     // Challenge menu — "RECOMMENDED" defaults
-    gSaveblock3.challengeSettings.tx_Mode_Modern_Moves       = 1;
     gSaveblock3.challengeSettings.tx_Mode_Synchronize        = 1;
     gSaveblock3.challengeSettings.tx_Mode_Sturdy             = 1;
     gSaveblock3.challengeSettings.tx_Mode_New_Citrus         = 1;

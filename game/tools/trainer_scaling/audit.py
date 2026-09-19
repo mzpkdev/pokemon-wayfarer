@@ -14,6 +14,7 @@ spec.loader.exec_module(wild)
 ANCHORS = ((0, 7), (4, 8), (8, 10), (16, 15), (30, 22), (40, 34), (55, 52), (65, 72), (80, 92))
 CAPS = ((0, 15), (4, 16), (8, 18), (16, 23), (30, 30), (40, 42), (55, 60), (65, 80), (80, 100))
 MILESTONES = (0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, 80)
+MODES = ('modern',)
 
 
 def interpolate(rating, anchors=ANCHORS):
@@ -95,13 +96,7 @@ def load_data():
         ability_match = re.search(r"\.abilities\s*=\s*\{([^}]+)\}", body)
         if ability_match:
             species[name]["abilities"] = re.findall(r"ABILITY_\w+", ability_match.group(1))
-    selection = "\n".join((f"#if P_LVL_UP_LEARNSETS == GEN_{generation}" if generation == 1 else f"#elif P_LVL_UP_LEARNSETS == GEN_{generation}") + f'\n#include "src/data/pokemon/level_up_learnsets/gen_{generation}.h"' for generation in range(1, 10)) + "\n#endif\n"
-    normal = learnsets(preprocess(selection))
-    legacy_source = (ROOT / "src/data/pokemon/level_up_learnsets_gen3.c").read_text()
-    legacy_source = re.sub(r'^#include.*$', '', legacy_source, flags=re.M)
-    legacy_source = preprocess('#include "src/data/pokemon/level_up_learnsets/gen_3.h"\n' + legacy_source)
-    legacy = learnsets(legacy_source)
-    legacy_map = dict(re.findall(r"\[\s*(SPECIES_\w+)\s*\]\s*=\s*(s\w+LevelUpLearnset)", legacy_source))
+    modern = learnsets(preprocess('#include "src/data/pokemon/level_up_learnsets/gen_7.h"\n'))
     moves, damaging = {}, set()
     move_source = preprocess('#include "src/data/moves_info.h"\n')
     for name, body in blocks(move_source, r"\[\s*(MOVE_\w+)\s*\]\s*=\s*\{"):
@@ -111,14 +106,15 @@ def load_data():
         if power and int(power.group(1)):
             damaging.add(name)
     moves["__damaging__"] = frozenset(damaging)
-    schedules = {(name, mode): (legacy[legacy_map[name]] if mode == "legacy" and name in legacy_map else normal[data["learnset"]]) for name, data in species.items() for mode in ("normal", "legacy")}
+    schedules = {(name, mode): modern[data["learnset"]]
+                 for name, data in species.items() for mode in MODES}
     ids = wild.species_ids(wild.DEFAULT_SPECIES)
     canonical = {ids[name]: name for name in species if name in ids}
     for name, species_id in ids.items():
         if name not in species and species_id in canonical:
             original = canonical[species_id]
             species[name] = species[original]
-            for mode in ("normal", "legacy"):
+            for mode in MODES:
                 schedules[name, mode] = schedules[original, mode]
     return species, schedules, moves
 
@@ -153,7 +149,7 @@ def build_audit(records, manifest):
             owner = roster.get("owner", trainer)
             row = {"id": trainer, "owner": owner, "slot": index, "authored": slot, "modes": {}}
             outcomes = {}
-            for mode in ("normal", "legacy"):
+            for mode in MODES:
                 intervals = []
                 for rating in range(81):
                     level = project(rating, slot["lvl"], policy)
@@ -202,9 +198,9 @@ def build_audit(records, manifest):
             parties.append({"id": trainer, "rating": rating, "party_size": roster["partySize"], "pool_size": roster.get("poolSize", 0),
                             "selection": "source order; pools list every candidate, runtime selects without replacement",
                             "money_inputs": {"null_party_fixed_reward": 20 if roster.get("money_party_null") else None, "authored_level": roster.get("money_level"), "trainer_class": roster.get("money_trainer_class", roster.get("trainerClass")), "single_multiplier": 4, "single_trainer_double_multiplier": 8, "two_opponents": "sum each opponent's single reward", "unknown_class_value": 5},
-                            "modes": {mode: [outcomes[mode, rating] for outcomes in projected_slots] for mode in ("normal", "legacy")}})
+                            "modes": {mode: [outcomes[mode, rating] for outcomes in projected_slots] for mode in MODES}})
     early = [row for row in parties if row["rating"] == 0]
-    highest = sorted(early, key=lambda row: (-max((slot["level"] for slot in row["modes"]["normal"]), default=0), row["id"]))
+    highest = sorted(early, key=lambda row: (-max((slot["level"] for slot in row["modes"]["modern"]), default=0), row["id"]))
     largest = sorted(early, key=lambda row: (-row["party_size"], row["id"]))
     regions = {row["id"]: row.get("region", "unknown") for row in manifest["records"]}
     representatives = set()
@@ -250,7 +246,7 @@ def build_audit(records, manifest):
             if len(output) == 10:
                 break
         return output
-    return {"structural_failures": failures, "evaluated_slot_ratings_modes": total, "baseline_anchors": ANCHORS, "slots": slots, "projections": projections, "outcomes": outcome_rows,
+    return {"structural_failures": failures, "evaluated_slot_ratings": total, "baseline_anchors": ANCHORS, "slots": slots, "projections": projections, "outcomes": outcome_rows,
             "report_indexing": "Each slot's projection indexes projections; each interval's outcome indexes outcomes. Both tables use zero-based indices. Representative parties are expanded in full.",
             "slot_concern_counts": concern_counts,
             "representative_parties": [row for row in parties if row["id"] in representatives],

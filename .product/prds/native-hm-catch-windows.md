@@ -27,8 +27,8 @@ for Wayfarer. Wayfarer includes Johto, HNS Kanto and Hoenn together. Standalone
 Emerald, FireRed, LeafGreen and HNS builds remain outside this revision.
 
 The selected nearby-access revision contains 121 species and 154 species/utility
-roles. Its exact modern and legacy levels, caught-level windows, locations,
-enumerated encounter replacements and route evidence are attached. Its
+roles. Its historical modern and legacy source data, caught-level windows,
+locations, enumerated encounter replacements and route evidence are attached. Its
 `proposal.json` is the current distribution authority. Preserve the original
 117-species, 148-role approval as a historical attachment, not the implementation
 target. Static simulation passing does not establish production acceptance.
@@ -51,7 +51,7 @@ an alternative acquisition route, not a replacement for HM rewards.
 
 ## Distribution requirements
 
-- Add an assigned utility only once in each learnset mode. If it already occurs
+- Add an assigned utility only once in the current learnset. If it already occurs
   natively, preserve its original occurrence instead of adding another.
 - Preserve all original native moves, levels and relative order. Remove the
   previous feature's injections, not unrelated native moves or other features.
@@ -62,8 +62,8 @@ an alternative acquisition route, not a replacement for HM rewards.
   elemental identity; numerical coverage alone is not enough.
 - Stagger levels and overlap catch windows across species. No species must
   retain every utility in its generated wild moveset at every later level.
-- Support both modern and legacy learnsets. The roles stay consistent between
-  modes, but learning levels and catch windows may differ.
+- Use the current/modern learnset unconditionally. Learning levels and catch
+  windows are defined by that source.
 - Keep original utility occurrences elsewhere unchanged, including unrelated
   baseline duplicates. The rule prohibits newly introduced repetition.
 
@@ -79,7 +79,7 @@ balancing.
 ## Coverage and travel
 
 Maintain regional encounter-table coverage for all eight utilities at every
-integer TR from 0 through 80 in both modes. Qualify practical acquisition
+integer TR from 0 through 80 using the current learnset. Qualify practical acquisition
 separately: a claimed source must be reachable without the utility it is
 supposed to provide, and the player must be able to return. A detour through
 nearby routes or the next town is acceptable. Do not require same-town catches
@@ -104,7 +104,7 @@ after depositing, releasing or forgetting the last Surf user.
 The selected revision tests 11 acquisition scenarios, including Blackthorn's
 Surf approach and Dragon's Den Whirlpool requirement. Each must provide an
 8% or better chance of a catch actually knowing the required move at one
-reachable source, across TR 0-80, both learnset modes and both clock cases.
+reachable source, across TR 0-80 and both clock cases using the current learnset.
 The qualifying source can be an ordinary land encounter or a successful Old
 Rod fishing encounter. Sum eligible carrier outcomes within that source;
 never add probabilities from different places or methods. For fishing, 8%

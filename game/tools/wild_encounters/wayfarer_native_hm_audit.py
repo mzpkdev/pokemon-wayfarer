@@ -15,6 +15,7 @@ import wild_encounters_to_header as g
 
 REVISION = g.ROOT.parent / '.product/research/native-hm-windows/revisions/nearby-access'
 LEARNSET_HELPER = g.ROOT / 'tools/learnset_helpers/test_native_hm_windows.py'
+MODE = 'modern'
 
 
 def fraction(value):
@@ -132,9 +133,10 @@ class Model:
 def build_report():
     model = Model()
     failures, regional, directional = [], [], []
-    coverage = g.load_json(REVISION / 'coverage.json')['results']
-    if len(coverage) != 48:
-        raise g.ValidationError('Expected 48 region/mode/utility rows')
+    coverage = [row for row in g.load_json(REVISION / 'coverage.json')['results']
+                if row['mode'] == MODE]
+    if len(coverage) != 24:
+        raise g.ValidationError('Expected 24 region/utility rows')
     for row in coverage:
         observations = []
         for rating in range(81):
@@ -149,7 +151,7 @@ def build_report():
     if len(scenarios) != 11:
         raise g.ValidationError('Expected 11 directional scenarios')
     for scenario in scenarios:
-        for mode in ('modern', 'legacy'):
+        for mode in (MODE,):
             for clock in ('DAY', 'NIGHT'):
                 for rod in g.FISHING_QUALITIES:
                     candidates = []
@@ -206,7 +208,7 @@ def build_report():
                          (g.DEFAULT_ENCOUNTERS, g.DEFAULT_WAYFARER_NATIVE_HM_ENCOUNTERS, g.DEFAULT_SCALING,
                           g.DEFAULT_SPECIES_METADATA, g.DEFAULT_STANDARD_ROD_FISHING, REVISION / 'roster.json', REVISION / 'scenarios.json',
                           LEARNSET_HELPER.with_name('native_hm_upstream_delta.json'),
-                          g.ROOT / 'src/data/pokemon/level_up_learnsets/gen_7.h', g.ROOT / 'src/data/pokemon/level_up_learnsets/gen_3.h')},
+                          g.ROOT / 'src/data/pokemon/level_up_learnsets/gen_7.h')},
         'encounterReplacements': model.replacements,
         'qualityWeights': model.rods['qualityWeights'],
         'nativeSurfAccessibility': [r for r in directional if r['move'] == 'MOVE_SURF'],
