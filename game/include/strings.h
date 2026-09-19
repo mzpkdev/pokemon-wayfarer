@@ -1879,9 +1879,11 @@ extern const u8 MatchCall_HNS_Hillary_Battle[];
 extern const u8 MatchCall_HNS_Rob_General1[];
 extern const u8 MatchCall_HNS_Rob_General2[];
 extern const u8 MatchCall_HNS_Rob_Battle[];
+#if !IS_WAYFARER
 extern const u8 MatchCall_HNS_Nicole_General1[];
 extern const u8 MatchCall_HNS_Nicole_General2[];
 extern const u8 MatchCall_HNS_Nicole_Battle[];
+#endif
 extern const u8 MatchCall_HNS_Billy_General1[];
 extern const u8 MatchCall_HNS_Billy_General2[];
 extern const u8 MatchCall_HNS_Billy_Battle[];

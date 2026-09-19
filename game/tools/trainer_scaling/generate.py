@@ -228,19 +228,18 @@ def resolve_rosters(records):
     return result
 
 def references():
-    groups = json.loads((ROOT / 'data/maps/map_groups.json').read_text())
-    maps = {name for group in groups.get('group_order', []) if not group.endswith('_Frlg') for name in groups.get(group, [])}
     refs = defaultdict(set)
     non_opponents = set()
     for header in (ROOT / 'include/constants').glob('*.h'):
         if header.name.startswith('opponents'): continue
         non_opponents.update(re.findall(r'^#define\s+(TRAINER_[A-Z0-9_]+)', header.read_text(), re.M))
-    paths = [ROOT / 'data/maps' / name / 'scripts.inc' for name in sorted(maps)]
-    # Common script units are assembly includes rather than C #includes.
+    # Follow the product-selected assembly includes rather than every map in
+    # map_groups.json. Retired source maps remain catalogued for standalone
+    # products, but their scripts and Trainer references are not in Wayfarer.
     event_source = (ROOT / 'data/event_scripts.s').read_text()
-    for relative in re.findall(r'\.include\s+"(data/scripts/[^"]+)"', event_source):
-        if '_frlg' not in relative:
-            paths.append(ROOT / relative)
+    event_source = '\n'.join(line for line in event_source.splitlines() if not line.startswith('#include'))
+    event_source = command(['cpp', '-P', '-DPOKEMON_WAYFARER', '-DPOKEMON_HNS', '-DIS_WAYFARER=1', '-DIS_HNS=1', '-DIS_FRLG=0', '-DIS_EMERALD=0', '-'], input=event_source)
+    paths = [ROOT / relative for relative in re.findall(r'\.include\s+"((?:data/maps/[^\"]+|data/scripts/[^\"]+))"', event_source) if '_frlg' not in relative.lower()]
     active_sources = {}
     for path in sorted(set(paths)):
         if not path.exists(): continue

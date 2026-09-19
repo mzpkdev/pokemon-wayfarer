@@ -49,6 +49,11 @@ class InventoryTests(unittest.TestCase):
         with self.assertRaisesRegex(gen.ValidationError, 'hole or empty'):
             gen.validate_manifest({'version': 1, 'records': []}, {}, {}, {'TRAINER_GONE': ['map']})
 
+    def test_references_follow_wayfarer_selected_script_includes(self):
+        refs = gen.references()
+        self.assertIn('TRAINER_JUSTIN_HNS', refs)
+        self.assertNotIn('TRAINER_HAROLD_HNS', refs)
+
     def test_sparse_ids_are_not_missing_records(self):
         gen.validate_manifest({'version': 1, 'records': []}, {'TRAINER_HOLE': roster([])}, {'TRAINER_HOLE': 700}, {})
 
