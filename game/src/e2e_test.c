@@ -575,6 +575,8 @@ static bool32 IsValidFixtureFlag(u16 id)
 #if IS_WAYFARER
     if (IS_WAYFARER_SEVII_FLAG_ID(id))
         return WAYFARER_SEVII_ID_INDEX(id) < WAYFARER_SEVII_FLAG_COUNT;
+    if (IS_WAYFARER_COAST_FLAG_ID(id))
+        return WAYFARER_COAST_ID_INDEX(id) < WAYFARER_COAST_FLAG_COUNT;
 #endif
     return FALSE;
 }
@@ -1036,7 +1038,7 @@ static void BeginRequest(void)
 
     if (sRequest.command == E2E_TEST_COMMAND_OBSERVE_FLAG)
     {
-        if (!IsSettledOverworld())
+        if (gSaveBlock1Ptr == NULL || gSaveBlock3Ptr == NULL)
         {
             FailRequest(E2E_TEST_ERROR_BUSY);
             return;
