@@ -2365,7 +2365,9 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 #include "data/pokemon/trainer_class_lookups.h"
 #include "data/pokemon/experience_tables.h"
 
-#if P_LVL_UP_LEARNSETS >= GEN_9
+#if P_LVL_UP_LEARNSETS == GEN_3
+#error "GEN_3 level-up learnsets are not included"
+#elif P_LVL_UP_LEARNSETS >= GEN_9
 #include "data/pokemon/level_up_learnsets/gen_9.h" // Scarlet/Violet
 #elif P_LVL_UP_LEARNSETS >= GEN_8
 #include "data/pokemon/level_up_learnsets/gen_8.h" // Sword/Shield
@@ -2377,8 +2379,6 @@ const struct NatureInfo gNaturesInfo[NUM_NATURES] =
 #include "data/pokemon/level_up_learnsets/gen_5.h" // Black 2/White 2
 #elif P_LVL_UP_LEARNSETS >= GEN_4
 #include "data/pokemon/level_up_learnsets/gen_4.h" // HeartGold/SoulSilver
-#elif P_LVL_UP_LEARNSETS >= GEN_3
-#include "data/pokemon/level_up_learnsets/gen_3.h" // Ruby/Sapphire/Emerald
 #elif P_LVL_UP_LEARNSETS >= GEN_2
 #include "data/pokemon/level_up_learnsets/gen_2.h" // Crystal
 #elif P_LVL_UP_LEARNSETS >= GEN_1
@@ -5361,17 +5361,7 @@ u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
 
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
 {
-    const struct LevelUpMove *learnset;
-    u16 sanitized = SanitizeSpeciesId(species);
-
-    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves == 0)
-    {
-        learnset = gLevelUpLearnsets_Gen3[sanitized];
-        if (learnset != NULL)
-            return learnset;
-    }
-
-    learnset = gSpeciesInfo[sanitized].levelUpLearnset;
+    const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].levelUpLearnset;
     return learnset;
@@ -5387,17 +5377,7 @@ const u16 *GetSpeciesTeachableLearnset(u16 species)
 
 const u16 *GetSpeciesEggMoves(u16 species)
 {
-    const u16 *learnset;
-    u16 sanitized = SanitizeSpeciesId(species);
-
-    if (gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves == 0)
-    {
-        learnset = gEggMoves_Gen3[sanitized];
-        if (learnset != NULL)
-            return learnset;
-    }
-
-    learnset = gSpeciesInfo[sanitized].eggMoveLearnset;
+    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].eggMoveLearnset;
     if (learnset == NULL)
         return gSpeciesInfo[SPECIES_NONE].eggMoveLearnset;
     return learnset;

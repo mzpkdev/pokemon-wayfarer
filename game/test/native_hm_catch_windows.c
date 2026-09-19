@@ -20,7 +20,6 @@ struct ExpectedCatchMoves
 struct ExpectedCatchSpecies
 {
     u16 species;
-    bool8 modern;
     u8 entryCount;
     const struct ExpectedCatchEntry *entries;
     u8 movesetCount;
@@ -29,9 +28,8 @@ struct ExpectedCatchSpecies
 
 #include "data/native_hm_catch_windows.h"
 
-static void SelectCatchMode(bool8 modern)
+static void SelectCatchMode(void)
 {
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
 }
 
@@ -59,13 +57,13 @@ TEST("Wayfarer catch windows preserve every approved ordered native and added en
     u32 id = 0;
 
     for (u32 i = 0; i < ARRAY_COUNT(sCatchSpecies); i++)
-        PARAMETRIZE_LABEL("species %d modern %d", sCatchSpecies[i].species, sCatchSpecies[i].modern) { id = i; }
+        PARAMETRIZE_LABEL("species %d", sCatchSpecies[i].species) { id = i; }
 
     {
         const struct ExpectedCatchSpecies *expected = &sCatchSpecies[id];
         const struct LevelUpMove *actual;
 
-        SelectCatchMode(expected->modern);
+        SelectCatchMode();
         actual = GetSpeciesLevelUpLearnset(expected->species);
         EXPECT_LT(expected->entryCount, MAX_LEVEL_UP_MOVES);
         EXPECT_LT(expected->entryCount, MAX_RELEARNER_MOVES);
@@ -78,18 +76,18 @@ TEST("Wayfarer catch windows preserve every approved ordered native and added en
     }
 }
 
-TEST("Wayfarer catch windows match all four production move slots at every level in both modes")
+TEST("Wayfarer catch windows match all four production move slots at every level")
 {
     u32 id = 0;
 
     for (u32 i = 0; i < ARRAY_COUNT(sCatchSpecies); i++)
-        PARAMETRIZE_LABEL("species %d modern %d", sCatchSpecies[i].species, sCatchSpecies[i].modern) { id = i; }
+        PARAMETRIZE_LABEL("species %d", sCatchSpecies[i].species) { id = i; }
 
     {
         const struct ExpectedCatchSpecies *expected = &sCatchSpecies[id];
         u32 moveset = 0;
 
-        SelectCatchMode(expected->modern);
+        SelectCatchMode();
         for (u32 level = 1; level <= MAX_LEVEL; level++)
         {
             struct Pokemon mon;
@@ -104,9 +102,9 @@ TEST("Wayfarer catch windows match all four production move slots at every level
 
                 if (actual != expected->movesets[moveset].moves[slot])
                     Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__,
-                        ":L%s:%d: species %d mode %d level %d slot %d: got %d expected %d",
+                        ":L%s:%d: species %d level %d slot %d: got %d expected %d",
                         gTestRunnerState.test->filename, __LINE__, expected->species,
-                        expected->modern, level, slot, actual, expected->movesets[moveset].moves[slot]);
+                        level, slot, actual, expected->movesets[moveset].moves[slot]);
             }
         }
     }
@@ -114,13 +112,12 @@ TEST("Wayfarer catch windows match all four production move slots at every level
 
 TEST("Wayfarer catch windows do not remove owned moves after a window or evolution")
 {
-    for (u32 mode = 0; mode < 2; mode++)
     {
         struct Pokemon mon;
         u32 evolved = SPECIES_AMBIPOM;
         u32 experience;
 
-        SelectCatchMode(mode);
+        SelectCatchMode();
         CreateMon(&mon, SPECIES_AIPOM, 10, 0, OTID_STRUCT_PRESET(0));
         GiveMonInitialMoveset(&mon);
         ASSUME(CatchMonKnowsMove(&mon, MOVE_ROCK_SMASH));
@@ -147,11 +144,10 @@ TEST("Wayfarer catch windows do not remove owned moves after a window or evoluti
 
 TEST("Wayfarer listed descendants relearn their own entries without blanket level-one copies")
 {
-    for (u32 mode = 0; mode < 2; mode++)
     {
         struct Pokemon mon;
 
-        SelectCatchMode(mode);
+        SelectCatchMode();
         CreateMon(&mon, SPECIES_GOLDUCK, MAX_LEVEL, 0, OTID_STRUCT_PRESET(0));
         for (u32 slot = 0; slot < MAX_MON_MOVES; slot++)
             SetMonMoveSlot(&mon, MOVE_NONE, slot);

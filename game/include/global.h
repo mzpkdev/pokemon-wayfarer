@@ -330,7 +330,6 @@ struct ChallengeSettings
     u8 tx_Mode_New_Citrus:1;
     u8 tx_Mode_Fairy_Types:1;
     u8 tx_Mode_Sturdy:1;
-    u8 tx_Mode_Modern_Moves:1;
     u8 tx_Mode_Legendary_Abilities:1;
     u8 tx_Features_ShinyColors:1;
     u8 tx_Features_RTCType:1;

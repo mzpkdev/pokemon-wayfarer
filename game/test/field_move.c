@@ -544,7 +544,6 @@ TEST("Wayfarer native catch carriers use normal field eligibility across catch-w
     u16 hp = 0;
 
     ResetFieldMoveTestState();
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = TRUE;
     CreateMon(&gPlayerParty[0], SPECIES_PSYDUCK, 10, 0, OTID_STRUCT_PRESET(0));
     GiveMonInitialMoveset(&gPlayerParty[0]);
     gPlayerPartyCount = 1;

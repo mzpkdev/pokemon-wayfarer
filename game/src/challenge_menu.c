@@ -48,7 +48,6 @@ enum {
 
 enum {
     ITEM_MODE_GAMEMODE,
-    ITEM_MODE_MODERN_MOVES,
     ITEM_MODE_SPLIT,
     ITEM_MODE_FAIRY_TYPES,
     ITEM_MODE_INFINITE_TMS,
@@ -366,10 +365,6 @@ static const u8 *const sDesc_Gamemode[] = {
     COMPOUND_STRING("Recommended settings."),
     COMPOUND_STRING("Choose your own rules."),
 };
-static const u8 *const sDesc_ModernMoves[] = {
-    COMPOUND_STRING("Generation 3 LEARNSETS and EGG\n MOVES with no changes."),
-    COMPOUND_STRING("Generation 7 LEARNSETS and EGG\n MOVES + minor changes."),
-};
 static const u8 *const sDesc_Synchronize[] = {
     COMPOUND_STRING("SYNCHRONIZE works as in GEN III.\n50% chance to copy nature."),
     COMPOUND_STRING("SYNCHRONIZE works as in GEN VIII+.\n100% chance to copy nature."),
@@ -406,10 +401,6 @@ static const u8 *const sDesc_Split[] = {
     COMPOUND_STRING("PHYSICAL and SPECIAL MOVES\ndepend on the {PKMN} TYPE."),
     COMPOUND_STRING("PHYSICAL and SPECIAL MOVES\nare MOVE specific."),
 };
-static const u8 *const sChoices_Gen3Gen7[] = {
-    COMPOUND_STRING("GEN 3"),
-    COMPOUND_STRING("GEN 7"),
-};
 static const u8 *const sChoices_Gen3Gen1[] = {
     COMPOUND_STRING("GEN 3"),
     COMPOUND_STRING("GEN 1"),
@@ -428,12 +419,6 @@ static const struct ChallengeMenuItem sTabItems_Mode[] = {
         .descriptions = sDesc_Gamemode,
         .numChoices   = 2,
         .choiceNames  = sChoices_Gamemode,
-    },
-    [ITEM_MODE_MODERN_MOVES] = {
-        .name         = COMPOUND_STRING("{PKMN} MOVEPOOL"),
-        .descriptions = sDesc_ModernMoves,
-        .numChoices   = 2,
-        .choiceNames  = sChoices_Gen3Gen7,
     },
     [ITEM_MODE_SYNCHRONIZE] = {
         .name         = COMPOUND_STRING("SYNCHRONIZE"),
@@ -1353,7 +1338,6 @@ static bool8 CheckConditions(u8 tab, u8 itemIndex)
 static void ApplyRecommendedPresets(void)
 {
     // When RECOMMENDED is selected, force all mode options to their "on/new" values
-    *GetSelectionPtr(TAB_MODE, ITEM_MODE_MODERN_MOVES)       = 1; // ON
     *GetSelectionPtr(TAB_MODE, ITEM_MODE_SYNCHRONIZE)        = 1; // NEW
     *GetSelectionPtr(TAB_MODE, ITEM_MODE_STURDY)             = 1; // NEW
     *GetSelectionPtr(TAB_MODE, ITEM_MODE_NEW_CITRUS)         = 1; // NEW
@@ -1957,7 +1941,6 @@ static void Task_ConfirmSaveYes(u8 taskId)
 #endif
 
     // Mode tab
-    cs->tx_Mode_Modern_Moves       = *GetSelectionPtr(TAB_MODE, ITEM_MODE_MODERN_MOVES);
     cs->tx_Mode_Synchronize        = *GetSelectionPtr(TAB_MODE, ITEM_MODE_SYNCHRONIZE);
     cs->tx_Mode_Sturdy             = *GetSelectionPtr(TAB_MODE, ITEM_MODE_STURDY);
     cs->tx_Mode_New_Citrus         = *GetSelectionPtr(TAB_MODE, ITEM_MODE_NEW_CITRUS);
@@ -2185,7 +2168,6 @@ void CB2_InitChallengeMenu(void)
             struct ChallengeSettings *cs = &gSaveBlock3Ptr->challengeSettings;
 
             // Mode tab — load sub-items, then derive GAMEMODE from whether they match recommended
-            *GetSelectionPtr(TAB_MODE, ITEM_MODE_MODERN_MOVES)       = cs->tx_Mode_Modern_Moves;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_SYNCHRONIZE)        = cs->tx_Mode_Synchronize;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_STURDY)             = cs->tx_Mode_Sturdy;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_NEW_CITRUS)         = cs->tx_Mode_New_Citrus;
@@ -2197,8 +2179,7 @@ void CB2_InitChallengeMenu(void)
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_SPLIT)              = !cs->optionStyle;
             *GetSelectionPtr(TAB_MODE, ITEM_MODE_GEN_ONE_RECHARGE)   = cs->genOneRecharge;
 
-            if (cs->tx_Mode_Modern_Moves == 1
-             && cs->tx_Mode_Synchronize == 1
+            if (cs->tx_Mode_Synchronize == 1
              && cs->tx_Mode_Sturdy == 1
              && cs->tx_Mode_New_Citrus == 1
              && cs->tx_Mode_Fairy_Types == 1

@@ -301,10 +301,6 @@ TEST("Trainer scaling policies identify roles by ID and fail closed for invalid 
 
 TEST("Trainer scaling move exceptions require the whole tuple at its active learnset threshold")
 {
-    u32 modern;
-    PARAMETRIZE { modern = FALSE; }
-    PARAMETRIZE { modern = TRUE; }
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
     struct TrainerMon entry = { .species = SPECIES_CHARMANDER };
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(entry.species);
     u32 threshold = 0;
@@ -364,11 +360,7 @@ static bool32 HasLegalLevelMoves(struct Pokemon *mon)
 TEST("Trainer scaling constructs reversed parties with legal moves and retained authored fields")
 {
     ASSUME(B_TRAINER_PARTY_SCALING);
-    u32 modern;
-    PARAMETRIZE { modern = FALSE; }
-    PARAMETRIZE { modern = TRUE; }
     PrepareScalingPartyTest(0);
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
     EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_JOEY_2_HNS, TRUE, BATTLE_TYPE_TRAINER), 3);
     EXPECT_EQ(GetMonData(&party[0], MON_DATA_SPECIES), SPECIES_CHARMANDER);

@@ -13,12 +13,11 @@
 
 #if IS_WAYFARER
 
-static void SeedScalingBattle(u32 rating, bool32 modern)
+static void SeedScalingBattle(u32 rating)
 {
     gIsDebugBattle = FALSE;
     SetTrainerRating(rating);
     ResetTrainerScalingSnapshot();
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
     gSaveBlock3Ptr->challengeSettings.tx_Random_Trainer = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Challenges_LevelCap = FALSE;
@@ -39,16 +38,13 @@ static void ConstructCurrentOpponent(u16 trainerId)
 
 SINGLE_BATTLE_TEST("Trainer scaling generated moves execute at early middle and late Ratings")
 {
-    u32 rating = 0, modern = FALSE;
-    PARAMETRIZE { rating = 0; modern = FALSE; }
-    PARAMETRIZE { rating = 0; modern = TRUE; }
-    PARAMETRIZE { rating = 40; modern = FALSE; }
-    PARAMETRIZE { rating = 40; modern = TRUE; }
-    PARAMETRIZE { rating = 80; modern = FALSE; }
-    PARAMETRIZE { rating = 80; modern = TRUE; }
+    u32 rating = 0;
+    PARAMETRIZE { rating = 0; }
+    PARAMETRIZE { rating = 40; }
+    PARAMETRIZE { rating = 80; }
     GIVEN {
         ASSUME(B_TRAINER_PARTY_SCALING);
-        SeedScalingBattle(rating, modern);
+        SeedScalingBattle(rating);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RATTATA) {
             ConstructCurrentOpponent(TRAINER_JOEY_5_HNS);
@@ -71,7 +67,7 @@ AI_SINGLE_BATTLE_TEST("Trainer scaling battle XP uses effective levels and money
         ASSUME(B_TRAINER_PARTY_SCALING);
         ASSUME(B_SCALED_EXP == GEN_3);
         ASSUME(B_TRAINER_EXP_MULTIPLIER == GEN_3);
-        SeedScalingBattle(rating, TRUE);
+        SeedScalingBattle(rating);
         Mom_EnableSaving(FALSE);
         SetMoney(&gSaveBlock1Ptr->money, 0);
         RemoveBagItem(ITEM_EXP_CHARM, 99);
@@ -102,7 +98,7 @@ ONE_VS_TWO_BATTLE_TEST("Trainer scaling mixed Gym and boss doubles execute their
 {
     GIVEN {
         ASSUME(B_TRAINER_PARTY_SCALING);
-        SeedScalingBattle(0, TRUE);
+        SeedScalingBattle(0);
         MULTI_PLAYER(SPECIES_WOBBUFFET);
         MULTI_PLAYER(SPECIES_WOBBUFFET);
         MULTI_OPPONENT_A(SPECIES_RATTATA) {

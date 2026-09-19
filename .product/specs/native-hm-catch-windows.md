@@ -40,8 +40,8 @@ Use these attachments as a consistent set:
 
 - Original `baseline.json`: native learnsets with the old feature injections
   removed in the research model, plus compatibility and pointer provenance.
-- Revision `proposal.json`: assigned utilities and candidate insertion levels. A scalar
-  means both modes; an object selects `modern` and `legacy` separately.
+- Revision `proposal.json`: assigned utilities and candidate insertion levels for
+  the current learnset source.
 - Revision `roster.json`: effective ordered learnsets, actual native/addition levels,
   and calculated catch windows after preserving existing native occurrences.
 - Revision `roster.md` and `roster.csv`: human-readable and spreadsheet views of those
@@ -50,7 +50,7 @@ Use these attachments as a consistent set:
 Reject unexplained disagreement between these artifacts. Do not treat a
 candidate level in `proposal.json` as permission to move an original native
 occurrence. The selected effective inventory has 121 species and 154 roles;
-take per-mode addition counts from the generated revision inventory.
+take addition counts from the generated revision inventory.
 
 Before implementing against a newer base, diff its learnsets, species
 compatibility, evolution data and encounter rules against this snapshot.
@@ -62,11 +62,9 @@ with the research baseline.
 
 ### Learnset transformation
 
-Use the active normal and legacy sources:
+Use the active current source:
 
-- `game/src/data/pokemon/level_up_learnsets/gen_7.h` for modern mode;
-- `game/src/data/pokemon/level_up_learnsets/gen_3.h` and its species selector for
-  Generation III legacy mode.
+- `game/src/data/pokemon/level_up_learnsets/gen_7.h`.
 
 For Wayfarer only, remove the old native-HM feature's anchor injections and
 successor reminder additions before applying the new roster. Do not leave
@@ -75,7 +73,7 @@ including Chinchou's modern Charge at level 50. Do not disable content flags
 globally in production: the extraction script does that only to construct an
 isolated research baseline.
 
-For each selected species and mode:
+For each selected species:
 
 1. Keep every original native entry at its original level and relative position.
 2. If an assigned utility already occurs natively, keep its native occurrences
@@ -88,8 +86,8 @@ For each selected species and mode:
 5. Validate the resulting ordered learnset against `roster.json` for this
    snapshot, or against a reviewed regenerated revision after source drift.
 
-No new utility occurrence may duplicate another occurrence of that utility in
-the same mode. Existing unrelated native duplicates are not removed to satisfy
+No new utility occurrence may duplicate another occurrence of that utility.
+Existing unrelated native duplicates are not removed to satisfy
 this rule. The feature does not change a utility's move data or field PP rules.
 
 Assignments are species-level learnset changes, not wild-only overrides.
@@ -102,10 +100,9 @@ data transformation.
 
 Count Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Whirlpool and Dive.
 For each selected species, the union of original native utility types across
-both modes and all proposed assignments must have cardinality at most two.
+all proposed assignments must have cardinality at most two.
 The union along any evolution path touching the roster, including unselected
-ancestors and successors, must also remain at most two. Test both mode data
-sets; a mode switch must not conceal a third authored role.
+ancestors and successors, must also remain at most two.
 
 This restriction does not cap manually taught, egg or copied moves at runtime.
 Do not introduce a new rejection rule for player actions or rewrite an owned
@@ -132,8 +129,8 @@ the oldest if necessary. A repeated native occurrence is only reconsidered if
 its move has already left the current moveset.
 
 A catch window is the inclusive set of levels 1-100 at which that algorithm
-produces a moveset containing the utility. It is not a Trainer Rating range
-and need not match the other learnset mode. Test presence and absence, including
+produces a moveset containing the utility. It is not a Trainer Rating range.
+Test presence and absence, including
 the levels immediately outside each declared window.
 
 Leveling an owned Pokemon follows normal move-learning choices. Its utility
@@ -162,9 +159,9 @@ Underlevel evolved slots may provide predecessors; a high-level base slot
 does not automatically evolve. Do not approximate TR 80 as every catch being
 exactly level 90.
 
-Enumerate all integer TR values 0-80 in both modes. Maintain at least one
+Enumerate all integer TR values 0-80 using the current learnset source. Maintain at least one
 encounter-table witness per region and utility, with Johto, HNS Kanto and Hoenn
-reported separately. This is 3,888 region/mode/utility/TR cells. Keep probability
+reported separately. This is 1,944 region/utility/TR cells. Keep probability
 and witness identity, map, method, time and rod in the report. Mark optional,
 late, underwater and unclassified areas explicitly. The current research's
 filtered regional check covers all cells but does not establish reachability.
@@ -202,7 +199,7 @@ also verify rod and capture preparation assumptions; it does not promise
 recovery after a player deliberately loses their last usable Surf carrier.
 
 The selected Blackthorn Surf and Den Whirlpool assignments each provide a
-qualifying local source across all tested TRs, modes and clock cases. Their
+qualifying local source across all tested TRs and clock cases. Their
 mandatory acquisition proof must not depend on traversing Ice Path.
 
 For the optional Blackthorn westward detour, explicitly require the cleared Ice Path
@@ -322,11 +319,11 @@ that does not justify a cleanup migration or break the new-data cap.
 
 1. Audit baseline drift and isolate the old feature injections. Keep standalone
    behavior intact with mutually exclusive build guards.
-2. Apply the selected single-entry distribution to both modes and the exact
+2. Apply the selected single-entry distribution to the current learnset and the exact
    enumerated encounter replacements. Keep research tooling out of the runtime;
    no moveset override or post-catch patch is needed.
 3. Replace Wayfarer's permanent-anchor tests with production-path tests of all
-   selected species at every level 1-100 in both modes. Compare complete ordered
+   selected species at every level 1-100. Compare complete ordered
    movesets where possible, not only one utility-presence bit.
 4. Validate original native entries/order, exact added-entry counts, per-species
    and evolutionary caps, compatibility, and both configured table limits.
@@ -339,8 +336,8 @@ that does not justify a cleanup migration or break the new-data cap.
    behavior. Test field use with the HM absent/present, fainted users and Eggs;
    verify Dive still fails before authorization and succeeds afterward in valid
    contexts. Keep species/learnset randomizers disabled for coverage tests.
-7. Build the affected Wayfarer objects and ROM in both modes as applicable, run
-   deterministic tests, and compile/test standalone configurations for unchanged
+7. Build the affected Wayfarer objects and ROM, run deterministic tests, and
+   compile/test standalone configurations for unchanged
    behavior. Avoid simultaneous builds that share generated map files.
 8. Validate the 11 directional acquisition scenarios with the HM absent at
    handover boundaries and lowest-odds intervals. Verify their named banks,

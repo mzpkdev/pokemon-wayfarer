@@ -18,7 +18,6 @@ struct RegionalCoverage
 {
     const char *name;
     u16 move;
-    bool8 modern;
     u16 profiles[81];
 };
 
@@ -72,9 +71,8 @@ static u16 SelectedWayfarerCoverageMap(u16 map)
     }
 }
 
-static void SetCoverageMode(bool8 modern)
+static void SetCoverageMode(void)
 {
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
     gSaveBlock3Ptr->challengeSettings.tx_Random_WildPokemon = FALSE;
     memset(sMoveCache, 0, sizeof(sMoveCache));
@@ -85,8 +83,7 @@ static bool8 CaughtMonKnowsMove(u16 species, u8 level, u16 move)
     u32 key = species * 128 + level;
     struct MoveCacheEntry *cache = &sMoveCache[key % ARRAY_COUNT(sMoveCache)];
 
-    // Each test case asks about one move in one learnset mode. Only actual
-    // production-created movesets enter this cache.
+    // Only actual production-created movesets enter this cache.
     if (cache->key != key)
     {
         struct Pokemon mon;
@@ -188,7 +185,7 @@ static struct CoverageChance ProfileMoveChance(const struct WildEncounterProfile
     return chance;
 }
 
-TEST("Wayfarer native HM windows cover all 3888 approved regional cells")
+TEST("Wayfarer native HM windows cover all 1944 approved regional cells")
 {
     u16 row = 0;
     u16 parameterRow;
@@ -198,9 +195,9 @@ TEST("Wayfarer native HM windows cover all 3888 approved regional cells")
     for (parameterRow = 0; parameterRow < ARRAY_COUNT(sRegionalCoverage); parameterRow++)
         PARAMETRIZE_LABEL("%s", sRegionalCoverage[parameterRow].name) { row = parameterRow; }
 
-    EXPECT_EQ(ARRAY_COUNT(sRegionalCoverage) * 81, 3888);
+    EXPECT_EQ(ARRAY_COUNT(sRegionalCoverage) * 81, 1944);
     cell = &sRegionalCoverage[row];
-    SetCoverageMode(cell->modern);
+    SetCoverageMode();
     for (rating = 0; rating <= 80; rating++)
     {
         const struct CoverageProfile *profile = &sRegionalProfiles[cell->profiles[rating]];
@@ -225,29 +222,27 @@ TEST("Wayfarer native HM windows cover all 3888 approved regional cells")
 
 TEST("Wayfarer native HM acquisition has a source in all 10692 directional cases")
 {
-    u8 scenarioId = 0, modern = FALSE, clock = TIME_DAY, rod = WILD_ENCOUNTER_FISHING_ROD_OLD;
-    u8 parameterScenario, parameterMode, parameterClock, parameterRod, parameterBlock;
+    u8 scenarioId = 0, clock = TIME_DAY, rod = WILD_ENCOUNTER_FISHING_ROD_OLD;
+    u8 parameterScenario, parameterClock, parameterRod, parameterBlock;
     u8 ratingStart = 0;
     u16 rating;
     const struct AcquisitionScenario *scenario;
 
     for (parameterScenario = 0; parameterScenario < ARRAY_COUNT(sAcquisitionScenarios); parameterScenario++)
-    for (parameterMode = 0; parameterMode < 2; parameterMode++)
     for (parameterClock = 0; parameterClock < 2; parameterClock++)
     for (parameterRod = WILD_ENCOUNTER_FISHING_ROD_OLD; parameterRod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; parameterRod++)
     for (parameterBlock = 0; parameterBlock < 9; parameterBlock++)
-        PARAMETRIZE_LABEL("%s mode %d clock %d rod %d TR %d-%d", sAcquisitionScenarios[parameterScenario].name, parameterMode, parameterClock, parameterRod, parameterBlock * 9, parameterBlock * 9 + 8)
+        PARAMETRIZE_LABEL("%s clock %d rod %d TR %d-%d", sAcquisitionScenarios[parameterScenario].name, parameterClock, parameterRod, parameterBlock * 9, parameterBlock * 9 + 8)
         {
             scenarioId = parameterScenario;
-            modern = parameterMode;
             clock = parameterClock == 0 ? TIME_DAY : TIME_NIGHT;
             rod = parameterRod;
             ratingStart = parameterBlock * 9;
         }
 
-    EXPECT_EQ(ARRAY_COUNT(sAcquisitionScenarios) * 2 * 2 * 3 * 81, 10692);
+    EXPECT_EQ(ARRAY_COUNT(sAcquisitionScenarios) * 2 * 3 * 81, 5346);
     scenario = &sAcquisitionScenarios[scenarioId];
-    SetCoverageMode(modern);
+    SetCoverageMode();
     // Bound each parameter case below the mechanics runner's GBA timeout.
     // Nine disjoint blocks still enumerate every supported rating exactly once.
     for (rating = ratingStart; rating < ratingStart + 9; rating++)
@@ -277,8 +272,8 @@ TEST("Wayfarer native HM acquisition has a source in all 10692 directional cases
         }
         if (!found)
             Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__,
-                ":L%s:%d: scenario %s mode %d time %d rod %d TR %d has no qualifying single source",
-                gTestRunnerState.test->filename, __LINE__, scenario->name, modern, clock, rod, rating);
+                ":L%s:%d: scenario %s time %d rod %d TR %d has no qualifying single source",
+                gTestRunnerState.test->filename, __LINE__, scenario->name, clock, rod, rating);
     }
 }
 #endif

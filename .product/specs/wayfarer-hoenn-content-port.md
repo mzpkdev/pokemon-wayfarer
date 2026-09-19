@@ -186,8 +186,8 @@ The union behavior follows these rules:
 - Existing HNS utility additions remain available to their Johto and Kanto
   encounter populations.
 - Existing Hoenn utility additions remain available to Hoenn encounter
-  populations in both normal and Generation III legacy-moves modes.
-- Duplicate additions for the same species, move, level, and mode are emitted
+  populations through the current learnset source.
+- Duplicate additions for the same species, move, and level are emitted
   once.
 - Standalone HNS and Emerald builds retain their existing regional rows.
 - Wayfarer adds no new utility species or schedules beyond the two existing

@@ -396,9 +396,8 @@ static const struct NativeHmEncounterPlace sEncounterPlaces[] =
 #endif
 };
 
-static void SelectLearnsetMode(bool8 modern)
+static void SelectLearnsetMode(void)
 {
-    gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = modern;
     gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
 }
 
@@ -464,25 +463,22 @@ static bool8 EncounterPlaceContainsMap(const struct NativeHmEncounterPlace *plac
     return FALSE;
 }
 
-TEST("Native HM anchors use the exact gated schedules and same-level ordering in both modes")
+TEST("Native HM anchors use the exact gated schedules and same-level ordering")
 {
-    u8 mode;
     u8 anchorId;
 
-    for (mode = 0; mode < 2; mode++)
+    SelectLearnsetMode();
+    for (anchorId = 0; anchorId < ARRAY_COUNT(sAnchors); anchorId++)
     {
-        SelectLearnsetMode(mode);
-        for (anchorId = 0; anchorId < ARRAY_COUNT(sAnchors); anchorId++)
-        {
-            const struct NativeHmAnchor *anchor = &sAnchors[anchorId];
-            const struct ExpectedLevelMove *expected = mode ? anchor->modern : anchor->legacy;
-            const u8 expectedCount = mode ? anchor->modernCount : anchor->legacyCount;
-            const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(anchor->species);
-            u8 found = 0;
-            u8 i;
+        const struct NativeHmAnchor *anchor = &sAnchors[anchorId];
+        const struct ExpectedLevelMove *expected = anchor->modern;
+        const u8 expectedCount = anchor->modernCount;
+        const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(anchor->species);
+        u8 found = 0;
+        u8 i;
 
-            for (i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
-            {
+        for (i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
+        {
                 if (MoveIsInList(learnset[i].move, anchor->moves, anchor->moveCount))
                 {
                     if (found >= expectedCount)
@@ -499,31 +495,25 @@ TEST("Native HM anchors use the exact gated schedules and same-level ordering in
                 {
                     EXPECT(FALSE);
                 }
-            }
-            EXPECT_EQ(found, expectedCount);
         }
+        EXPECT_EQ(found, expectedCount);
     }
 }
 
 TEST("Native HM anchors retain every assigned move from their encounter floor through level 100")
 {
     struct Pokemon mon;
-    u8 mode;
     u8 anchorId;
 
-    for (mode = 0; mode < 2; mode++)
+    for (anchorId = 0; anchorId < ARRAY_COUNT(sAnchors); anchorId++)
     {
-        SelectLearnsetMode(mode);
-        for (anchorId = 0; anchorId < ARRAY_COUNT(sAnchors); anchorId++)
-        {
-            const struct NativeHmAnchor *anchor = &sAnchors[anchorId];
-            u8 level;
+        const struct NativeHmAnchor *anchor = &sAnchors[anchorId];
+        u8 level;
 
-            for (level = anchor->floor; level <= MAX_LEVEL; level++)
-            {
-                CreateNativeHmMon(&mon, anchor->species, level);
-                ExpectNativeMoves(&mon, anchor->moves, anchor->moveCount);
-            }
+        for (level = anchor->floor; level <= MAX_LEVEL; level++)
+        {
+            CreateNativeHmMon(&mon, anchor->species, level);
+            ExpectNativeMoves(&mon, anchor->moves, anchor->moveCount);
         }
     }
 }
@@ -531,18 +521,13 @@ TEST("Native HM anchors retain every assigned move from their encounter floor th
 TEST("Named native HM encounter profiles retain anchors through production Trainer Rating scaling")
 {
     struct Pokemon mon;
-    u8 mode = 0;
     u8 placeId = 0;
-    u8 parameterMode;
     u8 parameterPlaceId;
 
-    for (parameterMode = 0; parameterMode < 2; parameterMode++)
-    {
-        for (parameterPlaceId = 0; parameterPlaceId < ARRAY_COUNT(sEncounterPlaces); parameterPlaceId++)
-            PARAMETRIZE_LABEL("mode %d, place %d", parameterMode, parameterPlaceId) { mode = parameterMode; placeId = parameterPlaceId; }
-    }
+    for (parameterPlaceId = 0; parameterPlaceId < ARRAY_COUNT(sEncounterPlaces); parameterPlaceId++)
+        PARAMETRIZE_LABEL("place %d", parameterPlaceId) { placeId = parameterPlaceId; }
 
-    SelectLearnsetMode(mode);
+    SelectLearnsetMode();
     {
         const struct NativeHmEncounterPlace *place = &sEncounterPlaces[placeId];
         const struct NativeHmAnchor *anchor = FindAnchor(place->species);
@@ -666,34 +651,30 @@ TEST("Wayfarer Chinchou fishing catches retain utility moves from Rating zero th
         MAP_CIANWOOD_CITY_HNS,
     };
     static const u8 times[] = { TIME_DAY, TIME_NIGHT };
-    u8 mode = 0;
     u8 mapId = 0;
     u8 timeId = 0;
     u8 rod = WILD_ENCOUNTER_FISHING_ROD_OLD;
-    u8 parameterMode;
     u8 parameterMap;
     u8 parameterTime;
     u8 parameterRod;
     u16 headerId;
     bool8 foundProfile = FALSE;
 
-    for (parameterMode = 0; parameterMode < 2; parameterMode++)
     for (parameterMap = 0; parameterMap < ARRAY_COUNT(maps); parameterMap++)
     for (parameterTime = 0; parameterTime < ARRAY_COUNT(times); parameterTime++)
     for (parameterRod = WILD_ENCOUNTER_FISHING_ROD_OLD; parameterRod <= WILD_ENCOUNTER_FISHING_ROD_SUPER; parameterRod++)
     {
         if (parameterMap == 4 && times[parameterTime] == TIME_NIGHT)
             continue;
-        PARAMETRIZE_LABEL("mode %d, map %d, time %d, rod %d", parameterMode, parameterMap, parameterTime, parameterRod)
+        PARAMETRIZE_LABEL("map %d, time %d, rod %d", parameterMap, parameterTime, parameterRod)
         {
-            mode = parameterMode;
             mapId = parameterMap;
             timeId = parameterTime;
             rod = parameterRod;
         }
     }
 
-    SelectLearnsetMode(mode);
+    SelectLearnsetMode();
     for (headerId = 0; gWildMonHeaders[headerId].mapGroup != MAP_GROUP(MAP_UNDEFINED); headerId++)
     {
         struct WildEncounterProfileContext context =
@@ -756,14 +737,11 @@ TEST("Native HM successors have exact level-one roles and exact Move Reminder ut
 {
     struct Pokemon mon;
     u16 reminderMoves[MAX_RELEARNER_MOVES];
-    u8 mode;
     u8 successorId;
 
-    for (mode = 0; mode < 2; mode++)
+    SelectLearnsetMode();
+    for (successorId = 0; successorId < ARRAY_COUNT(sSuccessors); successorId++)
     {
-        SelectLearnsetMode(mode);
-        for (successorId = 0; successorId < ARRAY_COUNT(sSuccessors); successorId++)
-        {
             const struct NativeHmSuccessor *successor = &sSuccessors[successorId];
             const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(successor->species);
             u8 levelOneFound = 0;
@@ -807,21 +785,17 @@ TEST("Native HM successors have exact level-one roles and exact Move Reminder ut
             }
             EXPECT_EQ(reminderFound, successor->moveCount);
 
-        }
     }
 }
 
 TEST("Native HM moves survive the species mutation used by evolution")
 {
     struct Pokemon mon;
-    u8 mode;
     u8 successorId;
 
-    for (mode = 0; mode < 2; mode++)
+    SelectLearnsetMode();
+    for (successorId = 0; successorId < ARRAY_COUNT(sSuccessors); successorId++)
     {
-        SelectLearnsetMode(mode);
-        for (successorId = 0; successorId < ARRAY_COUNT(sSuccessors); successorId++)
-        {
             const struct NativeHmSuccessor *successor = &sSuccessors[successorId];
             u32 targetSpecies = successor->species;
             u8 i;
@@ -837,7 +811,6 @@ TEST("Native HM moves survive the species mutation used by evolution")
             CalculateMonStats(&mon);
             EXPECT_EQ(GetMonData(&mon, MON_DATA_SPECIES), successor->species);
             ExpectNativeMoves(&mon, successor->moves, successor->moveCount);
-        }
     }
 }
 
@@ -1054,37 +1027,32 @@ static void ExpectNoHoennAdditions(bool8 modern)
 
 TEST("Native HM exclusions and regional build gates remain exact")
 {
-    u8 mode;
-
-    for (mode = 0; mode < 2; mode++)
-    {
-        SelectLearnsetMode(mode);
+    SelectLearnsetMode();
 #if HAS_FRLG_CONTENT
         ExpectNoLevelUpMove(SPECIES_PICHU, MOVE_FLASH);
         ExpectNoLevelUpMove(SPECIES_RATTATA_ALOLA, MOVE_CUT);
         ExpectNoLevelUpMove(SPECIES_VOLTORB_HISUI, MOVE_FLASH);
         ExpectNoLevelUpMove(SPECIES_GEODUDE_ALOLA, MOVE_STRENGTH);
         ExpectNoLevelUpMove(SPECIES_GEODUDE_ALOLA, MOVE_ROCK_SMASH);
-        ExpectNoJohtoAdditions(mode);
-        ExpectNoHoennAdditions(mode);
+        ExpectNoJohtoAdditions(TRUE);
+        ExpectNoHoennAdditions(TRUE);
 #elif HAS_HNS_CONTENT && !HAS_EMERALD_CONTENT
         ExpectNoLevelUpMove(SPECIES_AZURILL, MOVE_WATERFALL);
         ExpectNoLevelUpMove(SPECIES_MANTYKE, MOVE_WHIRLPOOL);
         ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_SURF);
         ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_WATERFALL);
-        ExpectNoKantoAdditions(mode);
-        ExpectNoHoennAdditions(mode);
+        ExpectNoKantoAdditions(TRUE);
+        ExpectNoHoennAdditions(TRUE);
 #elif HAS_HNS_CONTENT && HAS_EMERALD_CONTENT
         ExpectNoLevelUpMove(SPECIES_AZURILL, MOVE_WATERFALL);
         ExpectNoLevelUpMove(SPECIES_MANTYKE, MOVE_WHIRLPOOL);
         ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_SURF);
         ExpectNoLevelUpMove(SPECIES_WOOPER_PALDEA, MOVE_WATERFALL);
-        ExpectNoKantoAdditions(mode);
+        ExpectNoKantoAdditions(TRUE);
 #else
-        ExpectNoKantoAdditions(mode);
-        ExpectNoJohtoAdditions(mode);
+        ExpectNoKantoAdditions(TRUE);
+        ExpectNoJohtoAdditions(TRUE);
 #endif
-    }
 }
 
 #if IS_WAYFARER
@@ -1101,7 +1069,7 @@ TEST("Native HM anchors retain generated HM compatibility and successor exceptio
 {
     u8 anchorId;
 
-    SelectLearnsetMode(TRUE);
+        SelectLearnsetMode();
     for (anchorId = 0; anchorId < ARRAY_COUNT(sAnchors); anchorId++)
     {
         const struct NativeHmAnchor *anchor = &sAnchors[anchorId];
@@ -1131,18 +1099,13 @@ TEST("Native HM anchors retain generated HM compatibility and successor exceptio
 
 #endif // !IS_WAYFARER
 
-TEST("All species stay below both learnset limits in modern and legacy modes")
+TEST("All species stay below both learnset limits")
 {
-    u8 mode;
+    u16 species;
 
-    for (mode = 0; mode < 2; mode++)
+    gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
+    for (species = 1; species < SPECIES_EGG; species++)
     {
-        u16 species;
-
-        gSaveBlock3Ptr->challengeSettings.tx_Mode_Modern_Moves = mode;
-        gSaveBlock3Ptr->challengeSettings.tx_Random_Moves = FALSE;
-        for (species = 1; species < SPECIES_EGG; species++)
-        {
             const struct LevelUpMove *learnset;
             u8 count = 0;
 
@@ -1153,6 +1116,5 @@ TEST("All species stay below both learnset limits in modern and legacy modes")
                 count++;
             EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
             EXPECT_LT(count, MAX_RELEARNER_MOVES);
-        }
     }
 }

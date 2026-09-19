@@ -333,19 +333,19 @@ def review_report(report, manifest):
     lines += ['', 'HNS unplaced means a compiled roster lacks a direct regional map reference. The manifest preserves that uncertainty instead of assigning a region from its Trainer name.', '', 'All eligible slots use generated level-up moves unless listed in the reviewed exception manifest. Bosses, rivals, facility heads, the eight Kimono story opponents, and four Sinjoh Plate gates retain authored construction.', '', '## Level and reward inputs', '', 'Baseline anchors: 0:7, 4:8, 8:10, 16:15, 30:22, 40:34, 55:52, 65:72, 80:92. Each slot adds its bounded authored-level adjustment; Gym members add two levels. Final levels stop at 100. The player soft cap does not clamp opponents.', '', report['reward_policy'], '']
     balance = report.get('balance', {})
     if balance:
-        lines += [f"The audit evaluated {balance['evaluated_slot_ratings_modes']:,} slot, Rating, and learnset-mode combinations with {len(balance['structural_failures'])} structural failures.", '', '## Highest early parties', '', '| Trainer | Party size | Rating 0 species and levels |', '| --- | ---: | --- |']
+        lines += [f"The audit evaluated {balance['evaluated_slot_ratings']:,} slot and Rating combinations using the modern level-up learnsets, with {len(balance['structural_failures'])} structural failures.", '', '## Highest early parties', '', '| Trainer | Party size | Rating 0 species and levels |', '| --- | ---: | --- |']
         for party in balance['highest_early_parties']:
-            mons = ', '.join(f"{slot['species'].removeprefix('SPECIES_')} {slot['level']}" for slot in party['modes']['normal'])
+            mons = ', '.join(f"{slot['species'].removeprefix('SPECIES_')} {slot['level']}" for slot in party['modes']['modern'])
             lines.append(f"| {party['id']} | {party['party_size']} | {mons} |")
         lines += ['', '## Largest early parties', '', '| Trainer | Party size | Rating 0 species and levels |', '| --- | ---: | --- |']
         for party in balance['largest_early_parties']:
-            mons = ', '.join(f"{slot['species'].removeprefix('SPECIES_')} {slot['level']}" for slot in party['modes']['normal'])
+            mons = ', '.join(f"{slot['species'].removeprefix('SPECIES_')} {slot['level']}" for slot in party['modes']['modern'])
             lines.append(f"| {party['id']} | {party['party_size']} | {mons} |")
         outcomes = balance['outcomes']
         lines += ['', '## Species and retained-field observations', '']
         for key, label in [('custom_moves_replaced', 'Custom authored moves replaced'), ('ability_fallback', 'Authored ability requires fallback'), ('gender_adjustment', 'Authored gender requires adjustment'), ('gimmick_suppression', 'Incompatible gimmick suppressed'), ('held_item_review', 'Held item retained after species reversal'), ('above_soft_cap', 'Opponent above player soft cap'), ('high_bst_no_predecessor', 'High-stat species without numeric predecessor')]:
             lines.append(f"- {label}: {sum(bool(outcome.get(key)) for outcome in outcomes)} distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.")
-        lines += ['', '## Representative parties', '', 'The machine-readable inventory contains full normal and legacy moves, abilities, XP species inputs, authored money inputs, and every pool candidate for representative parties at Ratings 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80. Its slot and projection tables cover all other eligible source slots.', '', '## Remaining validation', '', 'Playtest early, middle, and late careers in every included region, including Gym doubles, utility-heavy learnsets, powerful species without numeric predecessors, and the largest early parties above. Passing structural validation is not a balance approval.']
+        lines += ['', '## Representative parties', '', 'The machine-readable inventory contains full modern level-up moves, abilities, XP species inputs, authored money inputs, and every pool candidate for representative parties at Ratings 0, 4, 8, 16, 30, 40, 55, 63, 65, 68, 76, and 80. Its slot and projection tables cover all other eligible source slots.', '', '## Remaining validation', '', 'Playtest early, middle, and late careers in every included region, including Gym doubles, utility-heavy learnsets, powerful species without numeric predecessors, and the largest early parties above. Passing structural validation is not a balance approval.']
     return '\n'.join(lines) + '\n'
 
 

@@ -21,7 +21,6 @@ REVISION = EVIDENCE / 'revisions/nearby-access'
 BASE_COMMIT = '479b0c83aea4ad90feb0af649e83ccb1a5916770'
 SOURCES = {
     'modern': 'game/src/data/pokemon/level_up_learnsets/gen_7.h',
-    'legacy': 'game/src/data/pokemon/level_up_learnsets/gen_3.h',
 }
 UTILITIES = {'MOVE_' + move for move in (
     'CUT', 'FLASH', 'SURF', 'STRENGTH', 'ROCK_SMASH', 'WATERFALL', 'WHIRLPOOL', 'DIVE')}
@@ -80,7 +79,7 @@ class NativeHmWindowsDataTest(unittest.TestCase):
         self.assertEqual(digest, results['distributions']['revised']['proposal_sha256'])
         self.assertEqual(len(self.roster), 121)
         self.assertEqual(sum(len(row['roles']) for row in self.roster), 154)
-        for mode, count in [('modern', 137), ('legacy', 147)]:
+        for mode, count in [('modern', 137)]:
             self.assertEqual(sum(len(row['modes'][mode]['added']) for row in self.roster), count)
 
     def test_upstream_delta_preserves_utility_assignments(self):
@@ -152,8 +151,7 @@ class NativeHmWindowsDataTest(unittest.TestCase):
                     tables = preprocess(self.sources[mode], content=content)
                     canonical = json.dumps(tables, sort_keys=True, separators=(',', ':')).encode()
                     self.assertEqual(hashlib.sha256(canonical).hexdigest(),
-                                     (UPSTREAM_DELTA['modern_standalone_sha256'] if mode == 'modern'
-                                      else record['standalone_sha256'])[content or 'NONE'])
+                                     UPSTREAM_DELTA['modern_standalone_sha256'][content or 'NONE'])
 
     def test_evolution_paths_use_at_most_two_utility_types(self):
         edges = {}
@@ -175,8 +173,7 @@ class NativeHmWindowsDataTest(unittest.TestCase):
             moves = set()
             for mode in SOURCES:
                 symbol = record[mode + '_symbol']
-                entries = self.production[mode].get(symbol, self.production['modern'].get(
-                    record['modern_symbol'], []))
+                entries = self.production[mode].get(symbol, [])
                 moves.update(move for _, move in entries if move in UTILITIES)
             return moves
 

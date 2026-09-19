@@ -21,7 +21,7 @@ lines = [f'// Approved roster SHA256: {hashlib.sha256(roster_path.read_bytes()).
          '// Regenerate with python3 game/test/data/generate_native_hm_catch_windows.py']
 rows = []
 for species in roster:
-    for modern, mode in enumerate(('legacy', 'modern')):
+    for mode in ('modern',):
         data = species['modes'][mode]
         entries = helper.with_upstream_moves(
             data['entries'], mode, baseline[species['species']][mode + '_symbol'])
@@ -44,7 +44,7 @@ for species in roster:
                 lines.append(f'    {{ {level}, {{ {", ".join(moves)} }} }},')
                 prior = moves
         lines.append('};')
-        rows.append(f'    {{ {species["species"]}, {modern}, ARRAY_COUNT(sEntries_{name}), sEntries_{name}, ARRAY_COUNT(sMoves_{name}), sMoves_{name} }},')
+        rows.append(f'    {{ {species["species"]}, ARRAY_COUNT(sEntries_{name}), sEntries_{name}, ARRAY_COUNT(sMoves_{name}), sMoves_{name} }},')
 lines += ['static const struct ExpectedCatchSpecies sCatchSpecies[] = {', *rows, '};', '']
 output = Path(__file__).with_name('native_hm_catch_windows.h')
 rendered = '\n'.join(lines)

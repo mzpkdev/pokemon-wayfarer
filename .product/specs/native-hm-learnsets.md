@@ -11,7 +11,7 @@ existing implementation and retains authority for standalone builds.
 
 ## Scope
 
-This specification defines the level-up learnset additions that let selected wild Pokémon provide Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Dive, or Whirlpool before the matching HM is obtained. It covers Emerald, FireRed, LeafGreen, and HNS in both the normal and Generation III legacy-moves modes. Dive additions apply only to Emerald. HNS receives Whirlpool additions but no Dive additions.
+This specification defines the level-up learnset additions that let selected wild Pokémon provide Cut, Flash, Surf, Strength, Rock Smash, Waterfall, Dive, or Whirlpool before the matching HM is obtained. It covers Emerald, FireRed, LeafGreen, and HNS using the current level-up learnsets. Dive additions apply only to Emerald. HNS receives Whirlpool additions but no Dive additions.
 
 The feature changes species learnsets only. It does not change encounters, HM compatibility, move data, field-action eligibility, story rewards, map access, fishing availability, or Trainer Rating scaling. The existing HM field-use system remains responsible for resolving a party Pokémon that knows the move and for enforcing terrain and map context.
 
@@ -21,12 +21,11 @@ Fly remains excluded. Wild-species and learnset randomizers may replace the auth
 
 ### Learnset sources and ordering
 
-Add the utility moves directly to both active learnset sources:
+Add the utility moves directly to the active current learnset source:
 
-- `game/src/data/pokemon/level_up_learnsets/gen_7.h` for normal mode;
-- `game/src/data/pokemon/level_up_learnsets/gen_3.h` for Generation III legacy-moves mode.
+- `game/src/data/pokemon/level_up_learnsets/gen_7.h`.
 
-Do not add a runtime moveset override, encounter-specific move field, or post-catch correction. Gate the additions by build: compile the Kanto rows only when `IS_FRLG` is true, the Johto rows only when `IS_HNS` is true, and the Hoenn rows only when both `IS_FRLG` and `IS_HNS` are false. Apply the same condition to an anchor and all of its successor additions in both learnset sources. Within a build, normal and legacy-moves mode use the same utility roster but different repeat levels because their existing native move cadences differ.
+Do not add a runtime moveset override, encounter-specific move field, or post-catch correction. Gate the additions by build: compile the Kanto rows only when `IS_FRLG` is true, the Johto rows only when `IS_HNS` is true, and the Hoenn rows only when both `IS_FRLG` and `IS_HNS` are false. Apply the same condition to an anchor and all of its successor additions in the current learnset source.
 
 At a level that already contains one or more moves, place the additions after all existing entries at that level. When a row assigns several utility moves at one level, preserve the order shown. Existing entries and their relative ordering remain unchanged.
 
@@ -87,43 +86,43 @@ Trainer Rating projects ordinary encounters above their authored levels. The aut
 
 Add the following entries to the anchor species. `L` means level. Multiple moves at one level are inserted in the displayed order after existing entries at that level.
 
-| Build | Anchor | Normal mode additions | Legacy-moves additions |
-| --- | --- | --- | --- |
-| FireRed and LeafGreen | Paras | L5 Cut; L17 Cut; L38 Cut | L5 Cut; L25 Cut; L49 Cut |
-| FireRed and LeafGreen | Rattata | L2 Cut; L13 Cut; L25 Cut | L2 Cut; L27 Cut |
-| FireRed and LeafGreen | Voltorb | L14 Flash; L26 Flash; L37 Flash | L14 Flash; L32 Flash; L49 Flash |
-| FireRed and LeafGreen | Pikachu | L3 Flash; L13 Flash; L26 Flash; L39 Flash; L50 Flash | L3 Flash; L15 Flash; L41 Flash |
-| FireRed and LeafGreen | Horsea | L5 Surf, Waterfall; L17 Surf, Waterfall; L31 Surf, Waterfall; L46 Surf, Waterfall | L5 Surf, Waterfall; L22 Surf, Waterfall; L43 Surf, Waterfall |
-| FireRed and LeafGreen | Krabby | L5 Surf; L19 Surf; L31 Surf; L45 Surf | L5 Surf; L27 Surf |
-| FireRed and LeafGreen | Machop | L16 Strength; L27 Strength; L39 Strength | L16 Strength; L31 Strength; L49 Strength |
-| FireRed and LeafGreen | Geodude | L7 Strength, Rock Smash; L16 Strength, Rock Smash; L24 Strength, Rock Smash; L34 Strength, Rock Smash; L42 Strength, Rock Smash | L7 Strength, Rock Smash; L21 Strength, Rock Smash; L36 Strength, Rock Smash |
-| FireRed and LeafGreen | Mankey | L2 Rock Smash; L15 Rock Smash; L29 Rock Smash; L43 Rock Smash | L2 Rock Smash; L27 Rock Smash; L51 Rock Smash |
-| FireRed and LeafGreen | Goldeen | L5 Waterfall; L21 Waterfall; L40 Waterfall | L5 Waterfall; L29 Waterfall |
-| HNS | Gligar | L19 Cut; L35 Cut; L55 Cut | L19 Cut; L44 Cut |
-| HNS | Aipom | L10 Cut, Rock Smash; L18 Cut, Rock Smash; L29 Cut, Rock Smash; L39 Cut, Rock Smash | L10 Cut, Rock Smash; L25 Cut, Rock Smash; L38 Cut, Rock Smash |
-| HNS | Chinchou | L5 Flash, Surf, Whirlpool; L9 Flash, Surf, Whirlpool; L17 Flash, Surf, Whirlpool; L23 Flash, Surf, Whirlpool; L31 Flash, Surf, Whirlpool; L39 Flash, Surf, Whirlpool; L45 Flash, Surf, Whirlpool; L50 Flash, Surf, Whirlpool | L5 Flash, Surf, Whirlpool; L9 Flash, Surf, Whirlpool; L17 Flash, Surf, Whirlpool; L29 Flash, Surf, Whirlpool; L41 Flash, Surf, Whirlpool |
-| HNS | Mareep | L5 Flash; L18 Flash; L32 Flash; L46 Flash | L5 Flash; L30 Flash |
-| HNS | Wooper | L4 Surf, Waterfall; L15 Surf, Waterfall; L29 Surf, Waterfall; L43 Surf, Waterfall | L4 Surf, Waterfall; L21 Surf, Waterfall; L41 Surf, Waterfall |
-| HNS | Snubbull | L13 Strength; L37 Strength | L13 Strength; L43 Strength |
-| HNS | Miltank | L21 Strength, Rock Smash; L35 Strength, Rock Smash; L50 Strength, Rock Smash | L21 Strength, Rock Smash; L43 Strength, Rock Smash |
-| HNS | Marill | L8 Waterfall; L16 Waterfall; L31 Waterfall | L8 Waterfall; L28 Waterfall |
-| HNS | Mantine | L15 Whirlpool; L27 Whirlpool; L46 Whirlpool | L15 Whirlpool; L43 Whirlpool |
-| Emerald | Corphish | L10 Cut, Rock Smash; L20 Cut, Rock Smash; L31 Cut, Rock Smash; L39 Cut, Rock Smash | L10 Cut, Rock Smash; L23 Cut, Rock Smash; L35 Cut, Rock Smash |
-| Emerald | Sableye | L9 Cut, Flash; L16 Cut, Flash; L24 Cut, Flash; L31 Cut, Flash; L39 Cut, Flash; L46 Cut, Flash | L9 Cut, Flash; L21 Cut, Flash; L33 Cut, Flash; L45 Cut, Flash |
-| Emerald | Electrike | L12 Flash; L24 Flash; L44 Flash | L12 Flash; L28 Flash |
-| Emerald | Lotad | L3 Surf; L15 Surf; L27 Surf | L3 Surf; L31 Surf |
-| Emerald | Wailmer | L10 Surf, Dive; L19 Surf, Dive; L29 Surf, Dive; L45 Surf, Dive | L10 Surf, Dive; L23 Surf, Dive; L37 Surf, Dive; L50 Surf, Dive |
-| Emerald | Makuhita | L6 Strength; L16 Strength; L28 Strength; L40 Strength | L6 Strength; L22 Strength; L40 Strength |
-| Emerald | Torkoal | L14 Strength; L25 Strength; L38 Strength; L47 Strength | L14 Strength; L30 Strength; L46 Strength |
-| Emerald | Aron | L7 Rock Smash; L19 Rock Smash; L31 Rock Smash; L43 Rock Smash | L7 Rock Smash; L21 Rock Smash; L39 Rock Smash |
-| Emerald | Barboach | L10 Waterfall; L20 Waterfall; L32 Waterfall | L10 Waterfall; L26 Waterfall |
-| Emerald | Carvanha | L10 Waterfall, Dive; L18 Waterfall, Dive; L29 Waterfall, Dive; L39 Waterfall, Dive | L10 Waterfall, Dive; L22 Waterfall, Dive; L37 Waterfall, Dive |
+| Build | Anchor | Current learnset additions |
+| --- | --- | --- |
+| FireRed and LeafGreen | Paras | L5 Cut; L17 Cut; L38 Cut |
+| FireRed and LeafGreen | Rattata | L2 Cut; L13 Cut; L25 Cut |
+| FireRed and LeafGreen | Voltorb | L14 Flash; L26 Flash; L37 Flash |
+| FireRed and LeafGreen | Pikachu | L3 Flash; L13 Flash; L26 Flash; L39 Flash; L50 Flash |
+| FireRed and LeafGreen | Horsea | L5 Surf, Waterfall; L17 Surf, Waterfall; L31 Surf, Waterfall; L46 Surf, Waterfall |
+| FireRed and LeafGreen | Krabby | L5 Surf; L19 Surf; L31 Surf; L45 Surf |
+| FireRed and LeafGreen | Machop | L16 Strength; L27 Strength; L39 Strength |
+| FireRed and LeafGreen | Geodude | L7 Strength, Rock Smash; L16 Strength, Rock Smash; L24 Strength, Rock Smash; L34 Strength, Rock Smash; L42 Strength, Rock Smash |
+| FireRed and LeafGreen | Mankey | L2 Rock Smash; L15 Rock Smash; L29 Rock Smash; L43 Rock Smash |
+| FireRed and LeafGreen | Goldeen | L5 Waterfall; L21 Waterfall; L40 Waterfall |
+| HNS | Gligar | L19 Cut; L35 Cut; L55 Cut |
+| HNS | Aipom | L10 Cut, Rock Smash; L18 Cut, Rock Smash; L29 Cut, Rock Smash; L39 Cut, Rock Smash |
+| HNS | Chinchou | L5 Flash, Surf, Whirlpool; L9 Flash, Surf, Whirlpool; L17 Flash, Surf, Whirlpool; L23 Flash, Surf, Whirlpool; L31 Flash, Surf, Whirlpool; L39 Flash, Surf, Whirlpool; L45 Flash, Surf, Whirlpool; L50 Flash, Surf, Whirlpool |
+| HNS | Mareep | L5 Flash; L18 Flash; L32 Flash; L46 Flash |
+| HNS | Wooper | L4 Surf, Waterfall; L15 Surf, Waterfall; L29 Surf, Waterfall; L43 Surf, Waterfall |
+| HNS | Snubbull | L13 Strength; L37 Strength |
+| HNS | Miltank | L21 Strength, Rock Smash; L35 Strength, Rock Smash; L50 Strength, Rock Smash |
+| HNS | Marill | L8 Waterfall; L16 Waterfall; L31 Waterfall |
+| HNS | Mantine | L15 Whirlpool; L27 Whirlpool; L46 Whirlpool |
+| Emerald | Corphish | L10 Cut, Rock Smash; L20 Cut, Rock Smash; L31 Cut, Rock Smash; L39 Cut, Rock Smash |
+| Emerald | Sableye | L9 Cut, Flash; L16 Cut, Flash; L24 Cut, Flash; L31 Cut, Flash; L39 Cut, Flash; L46 Cut, Flash |
+| Emerald | Electrike | L12 Flash; L24 Flash; L44 Flash |
+| Emerald | Lotad | L3 Surf; L15 Surf; L27 Surf |
+| Emerald | Wailmer | L10 Surf, Dive; L19 Surf, Dive; L29 Surf, Dive; L45 Surf, Dive |
+| Emerald | Makuhita | L6 Strength; L16 Strength; L28 Strength; L40 Strength |
+| Emerald | Torkoal | L14 Strength; L25 Strength; L38 Strength; L47 Strength |
+| Emerald | Aron | L7 Rock Smash; L19 Rock Smash; L31 Rock Smash; L43 Rock Smash |
+| Emerald | Barboach | L10 Waterfall; L20 Waterfall; L32 Waterfall |
+| Emerald | Carvanha | L10 Waterfall, Dive; L18 Waterfall, Dive; L29 Waterfall, Dive; L39 Waterfall, Dive |
 
-These additions keep every table below `MAX_LEVEL_UP_MOVES` and `MAX_RELEARNER_MOVES`. The largest resulting anchor table is the normal-mode Sableye table with 32 learned entries.
+These additions keep every table below `MAX_LEVEL_UP_MOVES` and `MAX_RELEARNER_MOVES`. The largest resulting anchor table is the Sableye table with 32 learned entries.
 
 ### Evolution and Move Reminder behavior
 
-Ensure that each assigned utility move appears at level 1 for every ordinary forward successor listed below in both learnset sources. Apply each family under the same build condition as its anchor schedule. Add an entry only where that mode does not already have the move at level 1. Place additions after the successor's existing level 1 entries, in the move order shown. One level 1 entry per assigned move is sufficient because successors do not need to generate as wild native users; the entry makes the move available to the Move Reminder while normal evolution preserves a move that is already known. Normal-mode Machamp already has Strength at level 1 and needs no duplicate entry; its legacy table still needs the addition.
+Ensure that each assigned utility move appears at level 1 for every ordinary forward successor listed below in the current learnset source. Apply each family under the same build condition as its anchor schedule. Add an entry only where it does not already have the move at level 1. Place additions after the successor's existing level 1 entries, in the move order shown. One level 1 entry per assigned move is sufficient because successors do not need to generate as wild native users; the entry makes the move available to the Move Reminder while normal evolution preserves a move that is already known. Machop's successors already have any native level-1 Strength entry where applicable and need no duplicate entry.
 
 | Anchor family | Successors receiving the assigned moves |
 | --- | --- |
@@ -165,7 +164,7 @@ The feature adds no persistent state and requires no save migration. Existing Po
 
 ### Validation
 
-Add deterministic learnset coverage around the existing Pokémon learnset tests. For every anchor in its applicable build, run both normal and legacy-moves selection and construct its initial moveset at every integer level from the lowest qualifying level in the coverage inventory through level 100. At every level, assert that all assigned utility moves are among the four known moves. The test must exercise the production initial-moveset path rather than a separately reimplemented last-four calculation.
+Add deterministic learnset coverage around the existing Pokémon learnset tests. For every anchor in its applicable build, select the current learnset and construct its initial moveset at every integer level from the lowest qualifying level in the coverage inventory through level 100. At every level, assert that all assigned utility moves are among the four known moves. The test must exercise the production initial-moveset path rather than a separately reimplemented last-four calculation.
 
 Add data validation in each applicable build that enumerates the named
 qualifying encounter profiles, all applicable version and time-of-day variants,
@@ -177,22 +176,20 @@ Olivine and Cianwood Chinchou anchor range is 0 through 80. Also assert that
 the profile still contains the intended anchor, so an encounter edit cannot
 silently invalidate coverage.
 
-Expose the production Move Reminder result to tests through a test-only helper or a public read-only list function, or drive the Move Reminder UI and inspect the offered move IDs. For each listed successor in its applicable build and both learnset modes, assert that every assigned utility move is offered when it is not currently known. `CanBoxMonRelearnMoves` alone is insufficient because it proves only that some move is relearnable. Confirm separately that evolving an anchor which knows its utility moves preserves them. Assert that Pichu, Azurill, Mantyke, and the excluded regional base forms do not gain the role.
+Expose the production Move Reminder result to tests through a test-only helper or a public read-only list function, or drive the Move Reminder UI and inspect the offered move IDs. For each listed successor in its applicable build, assert that every assigned utility move is offered when it is not currently known. `CanBoxMonRelearnMoves` alone is insufficient because it proves only that some move is relearnable. Confirm separately that evolving an anchor which knows its utility moves preserves them. Assert that Pichu, Azurill, Mantyke, and the excluded regional base forms do not gain the role.
 
 Keep the existing all-species learnset limit test passing. Validate `all_learnables.json` and the generated teachable learnsets for every anchor and assigned move. Assert that this feature does not change any species' HM compatibility, including the existing Alolan Raichu and Annihilape exceptions. The highest resulting table count must remain below both configured limits.
 
-For each build and learnset mode, assert that only its regional additions are present. In particular, HNS must not receive the Wailmer, Wailord, Carvanha, or Sharpedo Dive additions; FireRed and LeafGreen must not receive Dive or Whirlpool additions; and Emerald must not receive Johto Whirlpool additions. Existing moves outside this feature remain unchanged.
+For each build, assert that only its regional additions are present. In particular, HNS must not receive the Wailmer, Wailord, Carvanha, or Sharpedo Dive additions; FireRed and LeafGreen must not receive Dive or Whirlpool additions; and Emerald must not receive Johto Whirlpool additions. Existing moves outside this feature remain unchanged.
 
 The field-use behavior is already covered by its own resolver tests. Integration playtesting for this feature must catch at least one anchor for each active regional HM with the HM item absent and badges unset, then use that caught Pokémon at a valid field interaction. Multi-role catches must show every assigned move. HNS testing covers Whirlpool and explicitly excludes Dive. Include FireRed and LeafGreen Pallet-to-Cinnabar Surf coverage in both directions, HNS Olivine-to-Cianwood and Kanto-mainland-to-Cinnabar Surf coverage in both directions, and Emerald Route 118 plus Lilycove-to-Mossdeep or Pacifidlog Surf coverage. Fishing checks assume the Standard Rod feature and available capture supplies.
 
-Compile the affected learnset and Pokémon objects for Emerald, FireRed, LeafGreen, and HNS. Run deterministic tests in both learnset modes and with the learnset randomizer disabled.
+Compile the affected learnset and Pokémon objects for Emerald, FireRed, LeafGreen, and HNS. Run deterministic tests with the learnset randomizer disabled.
 
 ## References
 
 - [HM field-use specification](hm-field-use.md)
 - [Normal level-up learnsets](../../game/src/data/pokemon/level_up_learnsets/gen_7.h)
-- [Generation III legacy learnsets](../../game/src/data/pokemon/level_up_learnsets/gen_3.h)
-- [Legacy learnset species table](../../game/src/data/pokemon/level_up_learnsets_gen3.c)
 - [Initial moveset and learnset selection](../../game/src/pokemon.c)
 - [HM compatibility data](../../game/src/data/pokemon/all_learnables.json)
 - [Wild encounter data](../../game/src/data/wild_encounters.json)
