@@ -167,6 +167,27 @@ const set<string> wayfarer_coast_layout_ids = {
     "LAYOUT_SEAFOAM_ISLANDS_B3F_CURRENT_STOPPED", "LAYOUT_SEAFOAM_ISLANDS_B4F_CURRENT_STOPPED",
 };
 
+// S.S. Anne is deliberately a closed interior-only adventure.  Its exterior
+// remains a source-only map: the two corridor exits are resolved directly to
+// the existing Vermilion dock instead.
+const set<string> wayfarer_anne_map_names = {
+    "SSAnne_1F_Corridor_Frlg", "SSAnne_1F_Room1_Frlg", "SSAnne_1F_Room2_Frlg",
+    "SSAnne_1F_Room3_Frlg", "SSAnne_1F_Room4_Frlg", "SSAnne_1F_Room5_Frlg",
+    "SSAnne_1F_Room6_Frlg", "SSAnne_1F_Room7_Frlg", "SSAnne_2F_Corridor_Frlg",
+    "SSAnne_2F_Room1_Frlg", "SSAnne_2F_Room2_Frlg", "SSAnne_2F_Room3_Frlg",
+    "SSAnne_2F_Room4_Frlg", "SSAnne_2F_Room5_Frlg", "SSAnne_2F_Room6_Frlg",
+    "SSAnne_3F_Corridor_Frlg", "SSAnne_B1F_Corridor_Frlg", "SSAnne_B1F_Room1_Frlg",
+    "SSAnne_B1F_Room2_Frlg", "SSAnne_B1F_Room3_Frlg", "SSAnne_B1F_Room4_Frlg",
+    "SSAnne_B1F_Room5_Frlg", "SSAnne_CaptainsOffice_Frlg", "SSAnne_Deck_Frlg",
+    "SSAnne_Kitchen_Frlg",
+};
+
+const set<string> wayfarer_anne_layout_ids = {
+    "LAYOUT_SSANNE_1F_CORRIDOR", "LAYOUT_SSANNE_2F_CORRIDOR", "LAYOUT_SSANNE_3F_CORRIDOR",
+    "LAYOUT_SSANNE_B1F_CORRIDOR", "LAYOUT_SSANNE_CAPTAINS_OFFICE", "LAYOUT_SSANNE_DECK",
+    "LAYOUT_SSANNE_KITCHEN", "LAYOUT_SSANNE_ROOM1", "LAYOUT_SSANNE_ROOM2",
+};
+
 bool data_matches_version(const Json &data) {
     // Navigation-only coast previews are retired from every product catalog.
     // Standalone HNS keeps its authored coast maps; standalone FRLG keeps its
@@ -241,7 +262,9 @@ bool data_matches_version(const Json &data) {
     }
     if (version == "wayfarer" && get_source_version(data) == "frlg") {
         if (wayfarer_coast_map_names.count(json_to_string(data, "name", true))
-         || wayfarer_coast_layout_ids.count(json_to_string(data, "id", true)))
+         || wayfarer_coast_layout_ids.count(json_to_string(data, "id", true))
+         || wayfarer_anne_map_names.count(json_to_string(data, "name", true))
+         || wayfarer_anne_layout_ids.count(json_to_string(data, "id", true)))
             return true;
         if (!wayfarer_sevii_release_link_enabled)
             return false;
@@ -588,6 +611,47 @@ Json resolve_wayfarer_coast_map_events(Json map_data) {
         return map_data;
 
     const string name = json_to_string(map_data, "name");
+    if (wayfarer_anne_map_names.count(name)) {
+        static const map<string, string> flags = {
+            {"FLAG_HIDE_SSANNE_1F_ROOM2_TM31", "FLAG_WAYFARER_SS_ANNE_ITEM_TM31"},
+            {"FLAG_HIDE_SSANNE_2F_ROOM2_STARDUST", "FLAG_WAYFARER_SS_ANNE_ITEM_STARDUST"},
+            {"FLAG_HIDE_SSANNE_2F_ROOM4_X_ATTACK", "FLAG_WAYFARER_SS_ANNE_ITEM_X_ATTACK"},
+            {"FLAG_HIDE_SSANNE_B1F_ROOM2_TM44", "FLAG_WAYFARER_SS_ANNE_ITEM_TM44"},
+            {"FLAG_HIDE_SSANNE_B1F_ROOM3_ETHER", "FLAG_WAYFARER_SS_ANNE_ITEM_ETHER"},
+            {"FLAG_HIDE_SSANNE_B1F_ROOM5_SUPER_POTION", "FLAG_WAYFARER_SS_ANNE_ITEM_SUPER_POTION"},
+            {"FLAG_HIDE_SSANNE_KITCHEN_GREAT_BALL", "FLAG_WAYFARER_SS_ANNE_ITEM_GREAT_BALL"},
+            {"FLAG_HIDDEN_ITEM_SSANNE_B1F_CORRIDOR_HYPER_POTION", "FLAG_WAYFARER_SS_ANNE_ITEM_HYPER_POTION"},
+            {"FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_CHESTO_BERRY", "FLAG_WAYFARER_SS_ANNE_ITEM_CHESTO_BERRY"},
+            {"FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_PECHA_BERRY", "FLAG_WAYFARER_SS_ANNE_ITEM_PECHA_BERRY"},
+            {"FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_CHERI_BERRY", "FLAG_WAYFARER_SS_ANNE_ITEM_CHERI_BERRY"},
+            {"FLAG_HIDE_SS_ANNE_RIVAL", "FLAG_WAYFARER_SS_ANNE_HIDE_BLUE"},
+        };
+        Json::object output = map_data.object_items();
+        auto remap = [](Json::object event) {
+            auto flag = event.find("flag");
+            if (flag != event.end() && flag->second.type() == Json::Type::STRING) {
+                auto found = flags.find(flag->second.string_value());
+                if (found != flags.end()) flag->second = found->second;
+            }
+            return event;
+        };
+        Json::array objects, bgs;
+        Json::array coords;
+        for (const Json &event : map_data["object_events"].array_items())
+            objects.push_back(remap(event.object_items()));
+        for (const Json &event : map_data["bg_events"].array_items())
+            bgs.push_back(remap(event.object_items()));
+        for (const Json &event : map_data["coord_events"].array_items()) {
+            Json::object coord = event.object_items();
+            if (json_to_string(event, "var", true) == "VAR_MAP_SCENE_S_S_ANNE_2F_CORRIDOR")
+                coord["var"] = "VAR_WAYFARER_SS_ANNE_BLUE_SCENE";
+            coords.push_back(coord);
+        }
+        output["object_events"] = objects;
+        output["bg_events"] = bgs;
+        output["coord_events"] = coords;
+        return output;
+    }
     if (name == "ViridianCity_hns") {
         Json::object output = map_data.object_items();
         Json::array objects;
@@ -597,6 +661,24 @@ Json resolve_wayfarer_coast_map_events(Json map_data) {
                 object["flag"] = "FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST";
             objects.push_back(object);
         }
+        output["object_events"] = objects;
+        return output;
+    }
+    if (name == "Route25_BillsHouse_hns") {
+        // Keep the HNS grandfather and regional-form service intact; Bill is
+        // an additional Wayfarer-only actor on a walkable interior tile. Use
+        // a fixed sprite because arrange/warp fixtures enter after transition
+        // scripts have run and must still instantiate the actor consistently.
+        Json::object output = map_data.object_items();
+        Json::array objects = map_data["object_events"].array_items();
+        objects.push_back(Json::object{
+            {"type", "object"}, {"local_id", 5}, {"graphics_id", "OBJ_EVENT_GFX_BILL_HNS"},
+            {"x", 4}, {"y", 6}, {"elevation", 0},
+            {"movement_type", "MOVEMENT_TYPE_FACE_RIGHT"}, {"movement_range_x", 0},
+            {"movement_range_y", 0}, {"trainer_type", "TRAINER_TYPE_NONE"},
+            {"trainer_sight_or_berry_tree_id", "0"},
+            {"script", "Route25_BillsHouse_EventScript_Bill"}, {"flag", "0"},
+        });
         output["object_events"] = objects;
         return output;
     }
@@ -909,6 +991,13 @@ Json resolve_wayfarer_coast_warp(const Json &map_data, const Json &warp, size_t 
         return warp;
 
     string map_name = json_to_string(map_data, "name");
+    if (map_name == "SSAnne_1F_Corridor_Frlg" && (index == 2 || index == 3)) {
+        Json::object resolved = warp.object_items();
+        // The load script sets this dynamic return to the dock's walkable
+        // (8, 9) tile. Keeping both exits dynamic avoids an exterior map.
+        resolved["dest_map"] = "MAP_DYNAMIC";
+        return resolved;
+    }
     if (map_name == "Route20_hns" && index < 2) {
         const string expected_x = index == 0 ? "60" : "72";
         const string expected_y = index == 0 ? "8" : "14";

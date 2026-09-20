@@ -15,6 +15,9 @@ AUTO_GEN_TARGETS += include/wayfarer_sevii_trainer_defeats.h
 AUTO_GEN_TARGETS += include/constants/wayfarer_coast_trainers.h
 AUTO_GEN_TARGETS += src/data/trainers_wayfarer_coast.h
 AUTO_GEN_TARGETS += include/wayfarer_coast_trainer_defeats.h
+AUTO_GEN_TARGETS += include/constants/wayfarer_ss_anne_trainers.h
+AUTO_GEN_TARGETS += src/data/trainers_wayfarer_ss_anne.h
+AUTO_GEN_TARGETS += include/wayfarer_ss_anne_trainer_defeats.h
 
 WAYFARER_SEVII_TRAINER_GENERATOR := tools/wayfarer_sevii_trainers/generate.py
 WAYFARER_SEVII_TRAINER_OUTPUTS := include/constants/wayfarer_sevii_trainers.h src/data/trainers_wayfarer_sevii.h include/wayfarer_sevii_trainer_defeats.h
@@ -31,6 +34,13 @@ WAYFARER_COAST_TRAINER_DEPS := $(WAYFARER_COAST_TRAINER_GENERATOR) src/data/trai
 
 $(WAYFARER_COAST_TRAINER_OUTPUTS) &: $(WAYFARER_COAST_TRAINER_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_COAST_TRAINER_GENERATOR)
+
+WAYFARER_SS_ANNE_TRAINER_GENERATOR := tools/wayfarer_ss_anne_trainers/generate.py
+WAYFARER_SS_ANNE_TRAINER_OUTPUTS := include/constants/wayfarer_ss_anne_trainers.h src/data/trainers_wayfarer_ss_anne.h include/wayfarer_ss_anne_trainer_defeats.h
+WAYFARER_SS_ANNE_TRAINER_DEPS := $(WAYFARER_SS_ANNE_TRAINER_GENERATOR) src/data/trainers_frlg.party tools/trainerproc/main.c tools/trainer_scaling/generate.py
+
+$(WAYFARER_SS_ANNE_TRAINER_OUTPUTS) &: $(WAYFARER_SS_ANNE_TRAINER_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SS_ANNE_TRAINER_GENERATOR)
 
 src/data/trainers.h test/league_tiers.h: $(LEARNSET_HELPERS_BUILD_VERSION)
 

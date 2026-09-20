@@ -6,12 +6,20 @@ SSAnne_1F_Room2_EventScript_Woman::
 	end
 
 SSAnne_1F_Room2_EventScript_Ann::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_LASS_ANN, SSAnne_1F_Room2_Text_AnnIntro, SSAnne_1F_Room2_Text_AnnDefeat
+#else
 	trainerbattle_single TRAINER_LASS_ANN, SSAnne_1F_Room2_Text_AnnIntro, SSAnne_1F_Room2_Text_AnnDefeat
+#endif
 	msgbox SSAnne_1F_Room2_Text_AnnPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAnne_1F_Room2_EventScript_Tyler::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER, SSAnne_1F_Room2_Text_TylerIntro, SSAnne_1F_Room2_Text_TylerDefeat
+#else
 	trainerbattle_single TRAINER_YOUNGSTER_TYLER, SSAnne_1F_Room2_Text_TylerIntro, SSAnne_1F_Room2_Text_TylerDefeat
+#endif
 	msgbox SSAnne_1F_Room2_Text_TylerPostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -45,4 +53,3 @@ SSAnne_1F_Room2_Text_AnnPostBattle::
 SSAnne_1F_Room2_Text_CruisingAroundWorld::
 	.string "We are cruising around the world,\n"
 	.string "my children and I.$"
-

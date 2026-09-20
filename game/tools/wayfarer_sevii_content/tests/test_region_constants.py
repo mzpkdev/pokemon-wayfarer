@@ -13,7 +13,7 @@ class RegionConstantTests(unittest.TestCase):
         data = GAME / 'src/data/region_map/region_map_sections.json'
         template = data.with_name('region_map_sections.constants.json.txt')
         sections = [row['id'] for row in json.loads(data.read_text())['map_sections']
-                    if row.get('wayfarer_sevii')]
+                    if row.get('wayfarer_sevii') or row.get('wayfarer_hns')]
         self.assertTrue(sections)
         with tempfile.TemporaryDirectory() as directory:
             directory = Path(directory)

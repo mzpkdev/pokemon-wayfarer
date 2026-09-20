@@ -20,6 +20,35 @@ SSAnne_2F_Corridor_EventScript_RivalTriggerRight::
 	end
 
 SSAnne_2F_Corridor_EventScript_RivalTrigger::
+#if IS_WAYFARER
+	goto_if_set FLAG_WAYFARER_SS_ANNE_BLUE_MET, SSAnne_2F_Corridor_EventScript_VisitorDone
+	textcolor NPC_TEXT_COLOR_MALE
+	clearflag FLAG_WAYFARER_SS_ANNE_HIDE_BLUE
+	playse SE_EXIT
+	addobject LOCALID_SS_ANNE_RIVAL
+	delay 5
+	applymovement LOCALID_SS_ANNE_RIVAL, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	delay 20
+	call_if_eq VAR_TEMP_1, 0, SSAnne_2F_Corridor_EventScript_RivalApproachLeft
+	call_if_eq VAR_TEMP_1, 1, SSAnne_2F_Corridor_EventScript_RivalApproachMid
+	call_if_eq VAR_TEMP_1, 2, SSAnne_2F_Corridor_EventScript_RivalApproachRight
+	msgbox SSAnne_2F_Corridor_Text_VisitorIntro
+	setflag FLAG_WAYFARER_SS_ANNE_BLUE_MET
+	setvar VAR_WAYFARER_SS_ANNE_BLUE_SCENE, 1
+	closemessage
+	call_if_eq VAR_TEMP_1, 0, SSAnne_2F_Corridor_EventScript_RivalExitLeft
+	call_if_eq VAR_TEMP_1, 1, SSAnne_2F_Corridor_EventScript_RivalExitMid
+	call_if_eq VAR_TEMP_1, 2, SSAnne_2F_Corridor_EventScript_RivalExitRight
+	removeobject LOCALID_SS_ANNE_RIVAL
+	setflag FLAG_WAYFARER_SS_ANNE_HIDE_BLUE
+	releaseall
+	end
+
+SSAnne_2F_Corridor_EventScript_VisitorDone::
+	releaseall
+	end
+#else
 	textcolor NPC_TEXT_COLOR_MALE
 	playse SE_EXIT
 	delay 5
@@ -49,6 +78,7 @@ SSAnne_2F_Corridor_EventScript_RivalTrigger::
 	setvar VAR_MAP_SCENE_S_S_ANNE_2F_CORRIDOR, 1
 	releaseall
 	end
+#endif
 
 SSAnne_2F_Corridor_EventScript_RivalApproachLeft::
 	applymovement LOCALID_SS_ANNE_RIVAL, SSAnne_2F_Corridor_Movement_RivalApproachLeft
@@ -185,6 +215,14 @@ SSAnne_2F_Corridor_Text_RivalIntro::
 	.string "Crawl around in grassy areas, and\n"
 	.string "look hard for them.$"
 
+#if IS_WAYFARER
+SSAnne_2F_Corridor_Text_VisitorIntro::
+	.string "BLUE: Hey! I'm BLUE. I didn't expect\n"
+	.string "another visiting TRAINER here.\p"
+	.string "I heard the CAPTAIN knows a useful\n"
+	.string "technique. You should say hello.$"
+#endif
+
 SSAnne_2F_Corridor_Text_RivalDefeat::
 	.string "Humph!\p"
 	.string "At least you're raising your\n"
@@ -204,4 +242,3 @@ SSAnne_2F_Corridor_Text_RivalPostBattle::
 	.string "Yup, it'll be handy.\p"
 	.string "You should go see him, too.\n"
 	.string "Smell ya!$"
-

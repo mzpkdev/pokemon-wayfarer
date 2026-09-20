@@ -768,6 +768,7 @@ gSpecials::
     def_special GetWayfarerVermilionSeviiDestination
     def_special WayfarerCanSailToBirthIsland
     def_special WayfarerCanSailToNavelRock
+    def_special WayfarerSSAnne_HasUnfinishedContent
     def_special WayfarerSevii_HasPartyCapacity
     def_special WayfarerSevii_PartyHasSpecies
     def_special WayfarerSevii_PartyHasFriendshipAtLeast

@@ -114,6 +114,10 @@
 #define VAR_UNUSED_HNS_0x40CA                            0x40CA
 
 #define VAR_UNUSED_HNS_0x40D8                           0x40D8
+#if IS_WAYFARER
+#undef VAR_UNUSED_HNS_0x40D8
+#define VAR_WAYFARER_SS_ANNE_BLUE_SCENE                  0x40D8
+#endif
 #define VAR_UNUSED_HNS_0x40D9                           0x40D9
 #define VAR_UNUSED_HNS_0x40DA                           0x40DA
 #define VAR_UNUSED_HNS_0x40DB                           0x40DB

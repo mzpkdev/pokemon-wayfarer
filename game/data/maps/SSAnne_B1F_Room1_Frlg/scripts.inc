@@ -2,12 +2,20 @@ SSAnne_B1F_Room1_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_B1F_Room1_EventScript_Barny::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY, SSAnne_B1F_Room1_Text_BarnyIntro, SSAnne_B1F_Room1_Text_BarnyDefeat
+#else
 	trainerbattle_single TRAINER_FISHERMAN_BARNY, SSAnne_B1F_Room1_Text_BarnyIntro, SSAnne_B1F_Room1_Text_BarnyDefeat
+#endif
 	msgbox SSAnne_B1F_Room1_Text_BarnyPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAnne_B1F_Room1_EventScript_Phillip::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP, SSAnne_B1F_Room1_Text_PhillipIntro, SSAnne_B1F_Room1_Text_PhillipDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_PHILLIP, SSAnne_B1F_Room1_Text_PhillipIntro, SSAnne_B1F_Room1_Text_PhillipDefeat
+#endif
 	msgbox SSAnne_B1F_Room1_Text_PhillipPostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -36,4 +44,3 @@ SSAnne_B1F_Room1_Text_BarnyDefeat::
 SSAnne_B1F_Room1_Text_BarnyPostBattle::
 	.string "I was going to make you my\n"
 	.string "assistant, too!$"
-

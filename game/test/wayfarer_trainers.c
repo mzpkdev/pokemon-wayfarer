@@ -2,6 +2,7 @@
 #include "battle_setup.h"
 #include "test/test.h"
 #include "constants/opponents.h"
+#include "wayfarer_ss_anne_trainer_defeats.h"
 #include "wayfarer_sevii_trainer_defeats.h"
 
 TEST("Trainer defeat helpers reject sentinel and out-of-range IDs")
@@ -30,7 +31,9 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINER_FALKNER_POSTOBC_HNS, 1493);
     EXPECT_EQ(TRAINER_ERIKA_POSTOBC_HNS, 1514);
     EXPECT_EQ(TRAINER_WAYFARER_COAST_FIRST, 1651);
-    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1707);
+    EXPECT_EQ(TRAINER_WAYFARER_SS_ANNE_FIRST, 1707);
+    EXPECT_EQ(TRAINER_WAYFARER_SS_ANNE_LAST, 1722);
+    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1723);
     EXPECT_EQ(MAX_TRAINERS_COUNT, MAX_TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_PARTNER(PARTNER_NONE), 2048);
 }
@@ -108,6 +111,30 @@ TEST("Wayfarer Sevii Trainer defeat routing uses frozen allocation slots")
     EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_LADY_SELPHY));
     EXPECT(HasTrainerBeenFought(TRAINER_BEVERLY_5_HNS));
     EXPECT(HasTrainerBeenFought(TRAINER_SAWYER_1));
+}
+
+TEST("Wayfarer S.S. Anne Trainer defeats use their isolated one-time flags")
+{
+    ClearTrainerFlag(TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER);
+    ClearTrainerFlag(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR);
+    ClearTrainerFlag(TRAINER_BEVERLY_5_HNS);
+    ClearTrainerFlag(TRAINER_SAWYER_1);
+
+    EXPECT_EQ(WayfarerSSAnneTrainerGetDefeatSlot(TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER), 0);
+    EXPECT_EQ(WayfarerSSAnneTrainerGetDefeatSlot(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR), 15);
+    EXPECT_EQ(WayfarerSSAnneTrainerGetDefeatSlot(TRAINER_WAYFARER_SS_ANNE_FIRST - 1), WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE);
+    EXPECT_EQ(WayfarerSSAnneTrainerGetDefeatSlot(TRAINER_WAYFARER_SS_ANNE_LAST + 1), WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE);
+
+    SetTrainerFlag(TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER);
+    SetTrainerFlag(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR);
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR));
+    EXPECT(!HasTrainerBeenFought(TRAINER_BEVERLY_5_HNS));
+    EXPECT(!HasTrainerBeenFought(TRAINER_SAWYER_1));
+
+    ClearTrainerFlag(TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER);
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR));
 }
 
 TEST("Wayfarer Sevii rematch parties share their base Trainer defeat state")

@@ -402,4 +402,3 @@ Route25_SeaCottage_Text_BillsFavoriteMonList::
 
 Route25_SeaCottage_Text_SeeWhichMon::
 	.string "Which POKéMON do you want to see?$"
-

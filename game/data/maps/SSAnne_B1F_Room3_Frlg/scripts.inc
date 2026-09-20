@@ -2,7 +2,11 @@ SSAnne_B1F_Room3_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_B1F_Room3_EventScript_Dylan::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_SAILOR_DYLAN, SSAnne_B1F_Room3_Text_DylanIntro, SSAnne_B1F_Room3_Text_DylanDefeat
+#else
 	trainerbattle_single TRAINER_SAILOR_DYLAN, SSAnne_B1F_Room3_Text_DylanIntro, SSAnne_B1F_Room3_Text_DylanDefeat
+#endif
 	msgbox SSAnne_B1F_Room3_Text_DylanPostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -16,4 +20,3 @@ SSAnne_B1F_Room3_Text_DylanDefeat::
 SSAnne_B1F_Room3_Text_DylanPostBattle::
 	.string "Sea POKéMON live in deep water.\n"
 	.string "You'll need a ROD to fish them up!$"
-

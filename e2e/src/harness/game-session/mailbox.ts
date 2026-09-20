@@ -64,8 +64,11 @@ export const createMailboxApi = (runtime: SessionRuntime, state: StateApi): Mail
           return result
         }
 
+        const requestStatus = (
+          await runtime.readBytes(requestAddress + runtime.abi.requestStatusOffset, 1)
+        )[0]
         throw new Error(
-          `${description} timed out in ${maxFrames} frames; ${describeState(await state.read())}`,
+          `${description} timed out in ${maxFrames} frames; requestStatus=${requestStatus}; result=${JSON.stringify(result)}; ${describeState(await state.read())}`,
         )
       })
       commandQueue = run.then(

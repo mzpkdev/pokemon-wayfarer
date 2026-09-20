@@ -1,0 +1,138 @@
+{
+  "allocation": {
+    "allocations": [
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_YOUNGSTER_TYLER",
+        "numeric_id": 1707,
+        "policy": "ORDINARY",
+        "slot": 0,
+        "source": "TRAINER_YOUNGSTER_TYLER",
+        "source_hash": "13f14953eb98f69b08d6114cd0b5f6158787c3c6a25280871e0ddae7eae0082b"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_LASS_ANN",
+        "numeric_id": 1708,
+        "policy": "ORDINARY",
+        "slot": 1,
+        "source": "TRAINER_LASS_ANN",
+        "source_hash": "8dfe478f97c3dccbe0ddff9be399d10a0dc613c32c8f9ada45af3a630221062f"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_ARTHUR",
+        "numeric_id": 1709,
+        "policy": "ORDINARY",
+        "slot": 2,
+        "source": "TRAINER_GENTLEMAN_ARTHUR",
+        "source_hash": "40111681129785e33c53ae940cbfc215160eb7276eed1c65a1d9c97b86b4ab89"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_THOMAS",
+        "numeric_id": 1710,
+        "policy": "ORDINARY",
+        "slot": 3,
+        "source": "TRAINER_GENTLEMAN_THOMAS",
+        "source_hash": "9901ad2b9be52d8635bd3f8dc775da45a92e455f9a41642ed7e6500e76e040b0"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_FISHERMAN_DALE",
+        "numeric_id": 1711,
+        "policy": "ORDINARY",
+        "slot": 4,
+        "source": "TRAINER_FISHERMAN_DALE",
+        "source_hash": "f7bc45c827bf7d32325e092f28543db43224ca45f66a583c10c61bc30abbf0d9"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_BROOKS",
+        "numeric_id": 1712,
+        "policy": "ORDINARY",
+        "slot": 5,
+        "source": "TRAINER_GENTLEMAN_BROOKS",
+        "source_hash": "75964eaa9ab5b5487f3252484bcc93f3e70e3fbe9fa913da5f94fde173bd7eba"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR",
+        "numeric_id": 1713,
+        "policy": "ORDINARY",
+        "slot": 6,
+        "source": "TRAINER_GENTLEMAN_LAMAR",
+        "source_hash": "59d28242bd341f9be0ba427cdf0451f46bf2d662270ce2beca3dbef8c1d2644f"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_LASS_DAWN",
+        "numeric_id": 1714,
+        "policy": "ORDINARY",
+        "slot": 7,
+        "source": "TRAINER_LASS_DAWN",
+        "source_hash": "bb0f31ad3ec0dde8779f9eb0eee4c0e7ae461beeabb4daf2e0d5ce4eaf4f76b6"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_FISHERMAN_BARNY",
+        "numeric_id": 1715,
+        "policy": "ORDINARY",
+        "slot": 8,
+        "source": "TRAINER_FISHERMAN_BARNY",
+        "source_hash": "d8dc9edaefd5d4cf675dad9b6191a79eae4d96e03451398fd64ac9faf060e8b7"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_PHILLIP",
+        "numeric_id": 1716,
+        "policy": "ORDINARY",
+        "slot": 9,
+        "source": "TRAINER_SAILOR_PHILLIP",
+        "source_hash": "6502b020bb5939d7b8435fa46f38aae56e35c8a62b55f55c2d66bce6064e179f"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_HUEY",
+        "numeric_id": 1717,
+        "policy": "ORDINARY",
+        "slot": 10,
+        "source": "TRAINER_SAILOR_HUEY",
+        "source_hash": "51be7ef6896921d81977b61f51a39738325ed33e8755e3ff5504ac63e2f7f132"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_DYLAN",
+        "numeric_id": 1718,
+        "policy": "ORDINARY",
+        "slot": 11,
+        "source": "TRAINER_SAILOR_DYLAN",
+        "source_hash": "b08d7d79a855700271e01f28f4bb314df3401b23f760f29ed5e4fa21bb32b9db"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_LEONARD",
+        "numeric_id": 1719,
+        "policy": "ORDINARY",
+        "slot": 12,
+        "source": "TRAINER_SAILOR_LEONARD",
+        "source_hash": "aa9ebdb850516549c42dd4b20818d96734f92b04e1c4bb79b4a5549933f26c57"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_DUNCAN",
+        "numeric_id": 1720,
+        "policy": "ORDINARY",
+        "slot": 13,
+        "source": "TRAINER_SAILOR_DUNCAN",
+        "source_hash": "d729213dd0c29d9bb600ac7fc1cb980551da391276ff2f43a517a3dafe79832a"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_EDMOND",
+        "numeric_id": 1721,
+        "policy": "ORDINARY",
+        "slot": 14,
+        "source": "TRAINER_SAILOR_EDMOND",
+        "source_hash": "8bb4d13a7a8525d274d1a4971182caf2a60212f7b2c85935cbb433de4953d796"
+      },
+      {
+        "id": "TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR",
+        "numeric_id": 1722,
+        "policy": "ORDINARY",
+        "slot": 15,
+        "source": "TRAINER_SAILOR_TREVOR",
+        "source_hash": "3d14802c8c6e85598744ea5d32e65096ff022e693b20b2e4177e2ad975a2424c"
+      }
+    ],
+    "base": 1707,
+    "count": 16,
+    "next_id": 1723
+  },
+  "schema_version": 1
+}

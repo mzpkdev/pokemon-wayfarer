@@ -75,23 +75,26 @@ export class GameSession {
 
       const stateAddress = runtime.address("gE2ETestState")
       const saveStatusAddress = runtime.address("gSaveFileStatus")
+      const preResetFrame = await runtime.readUint32(stateAddress)
       let hookFrame = 0
       let saveStatus = 0
       let saveLoaded = false
+      let resetObserved = false
       for (let elapsed = 0; elapsed <= 600; elapsed += 2) {
         await runtime.advance(2)
         ;[hookFrame, saveStatus] = await Promise.all([
           runtime.readUint32(stateAddress),
           runtime.readUint16(saveStatusAddress),
         ])
-        if (hookFrame > 0 && saveStatus === 1) {
+        if (hookFrame < preResetFrame) resetObserved = true
+        if (resetObserved && hookFrame > 0 && saveStatus === 1) {
           saveLoaded = true
           break
         }
       }
       if (!saveLoaded)
         throw new Error(
-          `Saved ROM did not reload its test hook and flash data within 600 frames (hook=${hookFrame}, saveStatus=${saveStatus})`,
+          `Saved ROM did not reset, reload its test hook, and read flash within 600 frames (before=${preResetFrame}, hook=${hookFrame}, reset=${resetObserved}, saveStatus=${saveStatus})`,
         )
 
       // A valid save puts Continue first on the main menu. Use isolated presses

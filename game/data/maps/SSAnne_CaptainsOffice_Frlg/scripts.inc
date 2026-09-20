@@ -2,6 +2,45 @@ SSAnne_CaptainsOffice_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_CaptainsOffice_EventScript_Captain::
+#if IS_WAYFARER
+	lock
+	faceplayer
+	goto_if_set FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED, SSAnne_CaptainsOffice_EventScript_WayfarerComplete
+	msgbox SSAnne_CaptainsOffice_Text_CaptainIFeelSeasick
+	textcolor NPC_TEXT_COLOR_NEUTRAL
+	message SSAnne_CaptainsOffice_Text_RubbedCaptainsBack
+	waitmessage
+	playfanfare MUS_HEAL
+	waitfanfare
+	call EventScript_RestorePrevTextColor
+	delay 50
+	applymovement LOCALID_SS_ANNE_CAPTAIN, Common_Movement_FacePlayer
+	waitmovement 0
+	msgbox SSAnne_CaptainsOffice_Text_ThankYouHaveHMForCut
+	checkitem ITEM_HM_CUT
+	goto_if_eq VAR_RESULT, TRUE, SSAnne_CaptainsOffice_EventScript_WayfarerAlreadyOwnsCut
+	setorcopyvar VAR_0x8000, ITEM_HM_CUT
+	setorcopyvar VAR_0x8001, 1
+	call Std_ObtainItem
+	goto_if_eq VAR_RESULT, FALSE, SSAnne_CaptainsOffice_EventScript_NoRoomForCut
+	checkitem ITEM_HM_CUT
+	goto_if_eq VAR_RESULT, FALSE, SSAnne_CaptainsOffice_EventScript_NoRoomForCut
+	msgbox SSAnne_CaptainsOffice_Text_ExplainCut
+	setflag FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED
+	release
+	end
+
+SSAnne_CaptainsOffice_EventScript_WayfarerAlreadyOwnsCut::
+	msgbox SSAnne_CaptainsOffice_Text_WayfarerAlreadyOwnsCut
+	setflag FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED
+	release
+	end
+
+SSAnne_CaptainsOffice_EventScript_WayfarerComplete::
+	msgbox SSAnne_CaptainsOffice_Text_WayfarerComplete
+	release
+	end
+#else
 	lock
 	goto_if_set FLAG_GOT_HM01, SSAnne_CaptainsOffice_EventScript_AlreadyGotCut
 	msgbox SSAnne_CaptainsOffice_Text_CaptainIFeelSeasick
@@ -21,6 +60,7 @@ SSAnne_CaptainsOffice_EventScript_Captain::
 	setvar VAR_MAP_SCENE_VERMILION_CITY, 1
 	release
 	end
+#endif
 
 @ Unused
 SSAnne_CaptainsOffice_EventScript_NoRoomForCut::
@@ -86,12 +126,27 @@ SSAnne_CaptainsOffice_Text_ExplainCut::
 	.string "replaced like any other move.$"
 
 SSAnne_CaptainsOffice_Text_SSAnneWillSetSailSoon::
+#if IS_WAYFARER
+	.string "CAPTAIN: The S.S. ANNE is staying\n"
+	.string "in port for visiting TRAINERS.$"
+#else
 	.string "CAPTAIN: …Whew!\p"
 	.string "Now that I'm not sick anymore,\n"
 	.string "I guess it's time.\p"
 	.string "The S.S. ANNE will set sail soon!\p"
 	.string "Farewell, until our return to\n"
 	.string "VERMILION CITY!$"
+#endif
+
+#if IS_WAYFARER
+SSAnne_CaptainsOffice_Text_WayfarerAlreadyOwnsCut::
+	.string "CAPTAIN: You already carry the CUT\n"
+	.string "technique. Put it to good use!$"
+
+SSAnne_CaptainsOffice_Text_WayfarerComplete::
+	.string "CAPTAIN: Whew! I'm feeling much\n"
+	.string "better. Enjoy the rest of your visit!$"
+#endif
 
 SSAnne_CaptainsOffice_Text_YouHaveNoRoomForThis::
 	.string "Oh, no!\n"
