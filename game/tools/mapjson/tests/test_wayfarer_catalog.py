@@ -1,6 +1,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import tempfile
 import unittest
@@ -1072,6 +1073,164 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 self.assertIn(item["map"], included_ids)
                 if "respawn_map" in item:
                     self.assertIn(item["respawn_map"], included_ids)
+
+    def test_repository_ss_anne_is_exact_closed_interior_selection(self):
+        expected_maps = {
+            "SSAnne_1F_Corridor_Frlg", "SSAnne_1F_Room1_Frlg", "SSAnne_1F_Room2_Frlg",
+            "SSAnne_1F_Room3_Frlg", "SSAnne_1F_Room4_Frlg", "SSAnne_1F_Room5_Frlg",
+            "SSAnne_1F_Room6_Frlg", "SSAnne_1F_Room7_Frlg", "SSAnne_2F_Corridor_Frlg",
+            "SSAnne_2F_Room1_Frlg", "SSAnne_2F_Room2_Frlg", "SSAnne_2F_Room3_Frlg",
+            "SSAnne_2F_Room4_Frlg", "SSAnne_2F_Room5_Frlg", "SSAnne_2F_Room6_Frlg",
+            "SSAnne_3F_Corridor_Frlg", "SSAnne_B1F_Corridor_Frlg", "SSAnne_B1F_Room1_Frlg",
+            "SSAnne_B1F_Room2_Frlg", "SSAnne_B1F_Room3_Frlg", "SSAnne_B1F_Room4_Frlg",
+            "SSAnne_B1F_Room5_Frlg", "SSAnne_CaptainsOffice_Frlg", "SSAnne_Deck_Frlg",
+            "SSAnne_Kitchen_Frlg",
+        }
+        expected_layouts = {
+            "LAYOUT_SSANNE_1F_CORRIDOR", "LAYOUT_SSANNE_2F_CORRIDOR", "LAYOUT_SSANNE_3F_CORRIDOR",
+            "LAYOUT_SSANNE_B1F_CORRIDOR", "LAYOUT_SSANNE_CAPTAINS_OFFICE", "LAYOUT_SSANNE_DECK",
+            "LAYOUT_SSANNE_KITCHEN", "LAYOUT_SSANNE_ROOM1", "LAYOUT_SSANNE_ROOM2",
+        }
+        source = (GAME_ROOT / "tools/mapjson/mapjson.cpp").read_text()
+
+        def selected_set(name):
+            match = re.search(rf"const set<string> {name} = \{{(.*?)\}};", source, re.DOTALL)
+            self.assertIsNotNone(match)
+            return set(re.findall(r'"([^"]+)"', match.group(1)))
+
+        self.assertEqual(selected_set("wayfarer_anne_map_names"), expected_maps)
+        self.assertEqual(selected_set("wayfarer_anne_layout_ids"), expected_layouts)
+        self.assertNotIn("SSAnne_Exterior_Frlg", expected_maps)
+
+        map_data = {
+            name: json.loads((GAME_ROOT / "data/maps" / name / "map.json").read_text())
+            for name in expected_maps
+        }
+        self.assertEqual({entry["layout"] for entry in map_data.values()}, expected_layouts)
+        self.assertTrue(all(entry["game_version"] == "frlg" for entry in map_data.values()))
+        exterior_warps = [
+            (name, index) for name, entry in map_data.items()
+            for index, warp in enumerate(entry.get("warp_events", []))
+            if warp["dest_map"] == "MAP_SSANNE_EXTERIOR"
+        ]
+        self.assertEqual(exterior_warps, [("SSAnne_1F_Corridor_Frlg", 2), ("SSAnne_1F_Corridor_Frlg", 3)])
+        self.assertIn('resolved["dest_map"] = "MAP_DYNAMIC";', source)
+        self.assertIn("setdynamicwarp MAP_VERMILION_CITY_PORT_INSIDE_HNS, 8, 9", (GAME_ROOT / "data/maps/SSAnne_1F_Corridor_Frlg/scripts.inc").read_text())
+        map_names_by_id = {entry["id"]: name for name, entry in map_data.items()}
+        graph = {name: set() for name in expected_maps}
+        for name, entry in map_data.items():
+            for warp in entry.get("warp_events", []):
+                destination = warp["dest_map"]
+                if destination == "MAP_SSANNE_EXTERIOR":
+                    self.assertEqual(name, "SSAnne_1F_Corridor_Frlg")
+                    continue
+                self.assertIn(destination, map_names_by_id, f"{name} leaves the Anne interior closure")
+                graph[name].add(map_names_by_id[destination])
+        exit_map = "SSAnne_1F_Corridor_Frlg"
+        for source_map in expected_maps:
+            frontier, visited = [source_map], set()
+            while frontier:
+                current = frontier.pop()
+                if current in visited:
+                    continue
+                visited.add(current)
+                frontier.extend(graph[current] - visited)
+            self.assertIn(exit_map, visited, f"{source_map} cannot reach the two dock exits")
+
+        expected_item_remaps = {
+            "FLAG_HIDE_SSANNE_1F_ROOM2_TM31": "FLAG_WAYFARER_SS_ANNE_ITEM_TM31",
+            "FLAG_HIDE_SSANNE_2F_ROOM2_STARDUST": "FLAG_WAYFARER_SS_ANNE_ITEM_STARDUST",
+            "FLAG_HIDE_SSANNE_2F_ROOM4_X_ATTACK": "FLAG_WAYFARER_SS_ANNE_ITEM_X_ATTACK",
+            "FLAG_HIDE_SSANNE_B1F_ROOM2_TM44": "FLAG_WAYFARER_SS_ANNE_ITEM_TM44",
+            "FLAG_HIDE_SSANNE_B1F_ROOM3_ETHER": "FLAG_WAYFARER_SS_ANNE_ITEM_ETHER",
+            "FLAG_HIDE_SSANNE_B1F_ROOM5_SUPER_POTION": "FLAG_WAYFARER_SS_ANNE_ITEM_SUPER_POTION",
+            "FLAG_HIDE_SSANNE_KITCHEN_GREAT_BALL": "FLAG_WAYFARER_SS_ANNE_ITEM_GREAT_BALL",
+            "FLAG_HIDDEN_ITEM_SSANNE_B1F_CORRIDOR_HYPER_POTION": "FLAG_WAYFARER_SS_ANNE_ITEM_HYPER_POTION",
+            "FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_CHESTO_BERRY": "FLAG_WAYFARER_SS_ANNE_ITEM_CHESTO_BERRY",
+            "FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_PECHA_BERRY": "FLAG_WAYFARER_SS_ANNE_ITEM_PECHA_BERRY",
+            "FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_CHERI_BERRY": "FLAG_WAYFARER_SS_ANNE_ITEM_CHERI_BERRY",
+        }
+        for source_flag, target_flag in expected_item_remaps.items():
+            self.assertIn(f'{{"{source_flag}", "{target_flag}"}}', source)
+        self.assertIn(
+            '{"FLAG_HIDE_SS_ANNE_RIVAL", "FLAG_WAYFARER_SS_ANNE_HIDE_BLUE"}',
+            source,
+        )
+        self.assertIn('coord["var"] = "VAR_WAYFARER_SS_ANNE_BLUE_SCENE"', source)
+        persistence = (GAME_ROOT / "src/wayfarer_persistence.c").read_text()
+        self.assertIn("FlagSet(FLAG_WAYFARER_SS_ANNE_HIDE_BLUE);", persistence)
+        visitor_script = (GAME_ROOT / "data/maps/SSAnne_2F_Corridor_Frlg/scripts.inc").read_text()
+        self.assertIn("clearflag FLAG_WAYFARER_SS_ANNE_HIDE_BLUE", visitor_script)
+        self.assertIn("addobject LOCALID_SS_ANNE_RIVAL", visitor_script)
+        self.assertIn("setflag FLAG_WAYFARER_SS_ANNE_HIDE_BLUE", visitor_script)
+        self.assertIn("METATILE_SSAnne_Door", (GAME_ROOT / "src/field_door.c").read_text())
+        graphics_pointers = (GAME_ROOT / "src/data/object_events/object_event_graphics_info_pointers.h").read_text()
+        sevii_graphics = graphics_pointers[
+            graphics_pointers.index("#if HAS_SEVII_CONTENT"):
+            graphics_pointers.index("#endif // HAS_SEVII_CONTENT")
+        ]
+        self.assertIn(
+            "[OBJ_EVENT_GFX_CAPTAIN]                  = &gObjectEventGraphicsInfo_Captain,",
+            sevii_graphics,
+        )
+        regions_source = (GAME_ROOT / "include/regions.h").read_text()
+        self.assertIn(
+            "#if IS_WAYFARER\n    if (sectionId == MAPSEC_S_S_ANNE)\n"
+            "        return REGION_KANTO;\n#endif",
+            regions_source,
+        )
+        bill_map = json.loads((GAME_ROOT / "data/maps/Route25_BillsHouse_hns/map.json").read_text())
+        self.assertEqual([event["local_id"] for event in bill_map["object_events"]], [
+            "LOCALID_BILLS_GRANDPA", "LOCALID_BILLS_GRANDPA_NEW_MON",
+            "LOCALID_BILLS_GRANDPA_OLD_MON", "LOCALID_BILLS_GRANDPA_PLAYER",
+        ])
+        self.assertIn('if (name == "Route25_BillsHouse_hns")', source)
+        self.assertIn('{"local_id", 5}', source)
+        self.assertIn('"Route25_BillsHouse_EventScript_Bill"', source)
+        self.assertIn('"OBJ_EVENT_GFX_BILL_HNS"', source)
+        flag_source = (GAME_ROOT / "include/constants/flags_hns.h").read_text()
+        self.assertIn("#define FLAG_WAYFARER_BILL_RESCUED                              0x4B3", flag_source)
+        self.assertIn("#define FLAG_WAYFARER_BILL_SS_TICKET_SETTLED                    0x4B4", flag_source)
+        region_map_source = (GAME_ROOT / "src/region_map.c").read_text()
+        jk_entries = region_map_source[
+            region_map_source.index("static const struct RegionMapLocation sRegionMapEntries_JK[]"):
+            region_map_source.index("const struct RegionMapLocation *GetActiveRegionMapEntries")
+        ]
+        self.assertIn(
+            '[MAPSEC_S_S_ANNE]          = { 24, 7,  1, 1, COMPOUND_STRING("S.S. ANNE") }',
+            jk_entries,
+        )
+        heal_locations = region_map_source[
+            region_map_source.index("static const u8 sMapHealLocations[][3]"):
+            region_map_source.index("static const struct FlyLocation sFlyLocations[]")
+        ]
+        anne_fallback = re.search(
+            r"\[MAPSEC_S_S_ANNE\]\s*=\s*\{([^}]*)\}", heal_locations
+        )
+        self.assertIsNotNone(anne_fallback)
+        self.assertIn("MAP_PALLET_TOWN", anne_fallback.group(1))
+        self.assertNotIn("MAP_SSANNE", anne_fallback.group(1))
+        fly_locations = region_map_source[
+            region_map_source.index("static const struct FlyLocation sFlyLocations[]"):
+            region_map_source.index("// Sprite data for SpriteCB_FlyDestIcon")
+        ]
+        self.assertNotIn("MAPSEC_S_S_ANNE", fly_locations)
+        section_rows = json.loads(
+            (GAME_ROOT / "src/data/region_map/region_map_sections.json").read_text()
+        )["map_sections"]
+        anne_section = next(row for row in section_rows if row["id"] == "MAPSEC_S_S_ANNE")
+        self.assertTrue(anne_section["wayfarer_hns"])
+        for template_name in (
+            "region_map_sections.constants.json.txt",
+            "region_map_sections.json.txt",
+        ):
+            template = (GAME_ROOT / "src/data/region_map" / template_name).read_text()
+            self.assertIn('existsIn(map_section, "wayfarer_hns")', template)
+
+        room6 = (GAME_ROOT / "data/maps/SSAnne_1F_Room6_Frlg/scripts.inc").read_text()
+        wayfarer_room6 = room6.split("#if IS_WAYFARER", 1)[1].split("#else", 1)[0]
+        self.assertIn("MSGBOX_NPC", wayfarer_room6)
+        self.assertNotIn("PartyHeal", wayfarer_room6)
 
 
 if __name__ == "__main__":

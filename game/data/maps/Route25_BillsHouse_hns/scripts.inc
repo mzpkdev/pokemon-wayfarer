@@ -387,6 +387,62 @@ Route25_BillsHouse_EventScript_Gramps_Declined::
 	release
 	end
 
+#if IS_WAYFARER
+// Bill is injected beside, not instead of, the existing HNS grandfather.
+// The receipt flag is set only after a successful grant or an already-owned
+// ticket, so a full Bag can safely retry this interaction.
+Route25_BillsHouse_EventScript_Bill::
+	lock
+	faceplayer
+	goto_if_set FLAG_WAYFARER_BILL_RESCUED, Route25_BillsHouse_EventScript_BillTicket
+	msgbox Route25_BillsHouse_Text_BillNeedsHelp, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, FALSE, Route25_BillsHouse_EventScript_BillDeclined
+	msgbox Route25_BillsHouse_Text_BillResetTeleporter, MSGBOX_DEFAULT
+	closemessage
+	playse SE_PIN
+	delay 30
+	playse SE_WARP_IN
+	delay 30
+	removeobject 5
+	setvar VAR_OBJ_GFX_ID_3, OBJ_EVENT_GFX_BILL_HNS
+	addobject 5
+	msgbox Route25_BillsHouse_Text_BillRescued, MSGBOX_DEFAULT
+	setflag FLAG_WAYFARER_BILL_RESCUED
+
+Route25_BillsHouse_EventScript_BillTicket::
+	goto_if_set FLAG_WAYFARER_BILL_SS_TICKET_SETTLED, Route25_BillsHouse_EventScript_BillFinished
+	checkitem ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, TRUE, Route25_BillsHouse_EventScript_BillTicketAlreadyOwned
+	checkitemspace ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, Route25_BillsHouse_EventScript_BillNoRoom
+	giveitem_msg Route25_BillsHouse_Text_BillReceivedTicket, ITEM_SS_TICKET, 1, MUS_RG_OBTAIN_KEY_ITEM
+	setflag FLAG_WAYFARER_BILL_SS_TICKET_SETTLED
+	goto Route25_BillsHouse_EventScript_BillFinished
+
+Route25_BillsHouse_EventScript_BillTicketAlreadyOwned::
+	msgbox Route25_BillsHouse_Text_BillAlreadyHaveTicket, MSGBOX_DEFAULT
+	setflag FLAG_WAYFARER_BILL_SS_TICKET_SETTLED
+	goto Route25_BillsHouse_EventScript_BillFinished
+
+Route25_BillsHouse_EventScript_BillNoRoom::
+	msgbox Route25_BillsHouse_Text_BillNoRoom, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+Route25_BillsHouse_EventScript_BillDeclined::
+	msgbox Route25_BillsHouse_Text_BillDeclined, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+Route25_BillsHouse_EventScript_BillFinished::
+	msgbox Route25_BillsHouse_Text_BillFinished, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
+
 Route25_BillsHouse_EventScript_Gramps_WrongMon::
 	msgbox Route25_BillsHouse_Text_WrongPokemon, MSGBOX_DEFAULT
 	closemessage
@@ -622,4 +678,36 @@ Route25_BillsHouse_Text_WrongPokemon:
 	.string "That's not the POKéMON that I\n"
 	.string "was told about.$"
 
+#if IS_WAYFARER
+Route25_BillsHouse_Text_BillNeedsHelp:
+	.string "BILL is trapped inside this test\n"
+	.string "TELEPORTER! Will you\n"
+	.string "reset it?$"
 
+Route25_BillsHouse_Text_BillResetTeleporter:
+	.string "You reset the TELEPORTER's\n"
+	.string "emergency controls…$"
+
+Route25_BillsHouse_Text_BillRescued:
+	.string "BILL: Whew! That was close!\n"
+	.string "Thanks for getting me out.$"
+
+Route25_BillsHouse_Text_BillReceivedTicket:
+	.string "BILL gave you an S.S. TICKET!$"
+
+Route25_BillsHouse_Text_BillAlreadyHaveTicket:
+	.string "BILL: You already have an\n"
+	.string "S.S. TICKET. Keep it safe!$"
+
+Route25_BillsHouse_Text_BillNoRoom:
+	.string "BILL: Make room in your BAG,\n"
+	.string "then talk to me again.$"
+
+Route25_BillsHouse_Text_BillDeclined:
+	.string "BILL: Please come back if you\n"
+	.string "can help with the reset.$"
+
+Route25_BillsHouse_Text_BillFinished:
+	.string "BILL: Thanks again. I'm keeping\n"
+	.string "the rest of my work packed away.$"
+#endif

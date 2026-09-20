@@ -2,7 +2,11 @@ SSAnne_1F_Room7_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_1F_Room7_EventScript_Thomas::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_THOMAS, SSAnne_1F_Room7_Text_ThomasIntro, SSAnne_1F_Room7_Text_ThomasDefeat
+#else
 	trainerbattle_single TRAINER_GENTLEMAN_THOMAS, SSAnne_1F_Room7_Text_ThomasIntro, SSAnne_1F_Room7_Text_ThomasDefeat
+#endif
 	msgbox SSAnne_1F_Room7_Text_ThomasPostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -16,4 +20,3 @@ SSAnne_1F_Room7_Text_ThomasDefeat::
 
 SSAnne_1F_Room7_Text_ThomasPostBattle::
 	.string "You should be nice to friends!$"
-

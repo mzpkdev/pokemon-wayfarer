@@ -1060,7 +1060,8 @@
       "x": 14,
       "y": 9,
       "width": 1,
-      "height": 1
+      "height": 1,
+      "wayfarer_hns": true
     },
     {
       "id": "MAPSEC_UNDERGROUND_PATH",

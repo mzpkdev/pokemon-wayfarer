@@ -1,4 +1,4 @@
-import { items, type Item } from "../catalog"
+import { hms, items, type Hm, type Item } from "../catalog"
 import { type SessionRuntime } from "../runtime"
 
 const keyItemsPocketId = 5
@@ -19,11 +19,27 @@ const uint32 = (bytes: Uint8Array, offset: number): number =>
   0
 
 export type StandardRod = "oldRod" | "goodRod" | "superRod"
+export type FillablePocket = "items" | "keyItems" | "tmHm"
 
 export type InventoryApi = {
-  contains: (item: Item) => Promise<boolean>
+  /**
+   * Looks in every bag pocket, including TM/HM. This keeps reward journeys
+   * from treating a received HM as a normal Items-pocket reward.
+   */
+  contains: (item: Item | Hm) => Promise<boolean>
+  /**
+   * Test-fixture support for a retry-safe reward: make exactly one native Bag
+   * slot available without resetting the save or any event flags.
+   */
+  freeSlot: (pocket: FillablePocket) => Promise<void>
   rodSlots: () => Promise<Record<StandardRod, number>>
 }
+
+const fillablePocketIds = {
+  items: 3,
+  tmHm: 4,
+  keyItems: 5,
+} as const satisfies Record<FillablePocket, number>
 
 type BagPocket = {
   itemSlots: number
@@ -79,7 +95,7 @@ const readPocketSlots = async (runtime: SessionRuntime, pocket: BagPocket): Prom
 
 export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
   contains: async (name) => {
-    const item = items[name]
+    const item = { ...items, ...hms }[name]
     for (const pocketId of [0, 1, 2, 3, 4, 5]) {
       const pocket = await readBagPocket(runtime, pocketId)
       const slots = await readPocketSlots(runtime, pocket)
@@ -88,6 +104,17 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
       }
     }
     return false
+  },
+  freeSlot: async (name) => {
+    const pocket = await readBagPocket(runtime, fillablePocketIds[name])
+    const slots = await readPocketSlots(runtime, pocket)
+    for (let slot = 0; slot < pocket.capacity; slot++) {
+      if (uint16(slots, slot * itemSlotSize) !== 0) {
+        await runtime.writeBytes(pocket.itemSlots + slot * itemSlotSize, new Uint8Array(itemSlotSize))
+        return
+      }
+    }
+    throw new Error(`Cannot free a slot in already empty ${name} Bag pocket`)
   },
   rodSlots: async () => {
     const pocket = await readKeyItemsPocket(runtime)

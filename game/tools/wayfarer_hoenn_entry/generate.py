@@ -408,13 +408,27 @@ def audit_menus_and_routes(game_root: Path) -> dict:
         and _case_targets(wayfarer_top_level) == {
             0: "VermilionPort_EventScript_Sailor_Sevii",
             1: "VermilionPort_EventScript_Sailor_OtherDestinations",
-            2: "VermilionPort_EventScript_Sailor_Cancel",
+            2: "VermilionPort_EventScript_Sailor_BoardSSAnne",
+            3: "VermilionPort_EventScript_Sailor_Cancel",
         },
-        "Wayfarer Vermilion must expose fixed Sevii, other-destinations, and cancel choices",
+        "Wayfarer Vermilion must expose fixed Sevii, other-destinations, Anne, and cancel choices",
     )
     require(
         re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerCanUseRegularAqua\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*VermilionPort_EventScript_Sailor_AfterKanto", wayfarer_regular_branch) is not None,
         "Wayfarer Vermilion must gate only its regular route on profile eligibility",
+    )
+    anne_branch = wayfarer_index.block("VermilionPort_EventScript_Sailor_BoardSSAnne")
+    anne_complete = wayfarer_index.block("VermilionPort_EventScript_Sailor_SSAnneComplete")
+    require(
+        re.search(r"specialvar\s+VAR_RESULT\s*,\s*WayfarerSSAnne_HasUnfinishedContent\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*VermilionPort_EventScript_Sailor_SSAnneComplete", anne_branch) is not None
+        and re.search(r"checkitem\s+ITEM_SS_TICKET", anne_branch) is not None
+        and "WayfarerCanUseRegularAqua" not in anne_branch
+        and "warp MAP_SSANNE_1F_CORRIDOR, 19, 2" in anne_branch,
+        "Wayfarer Anne must be an independent ticket-only unfinished-content route",
+    )
+    require(
+        re.search(r"\b(?:setvar|setflag|clearflag|giveitem|removeitem|setrespawn|warp|warpsilent|special|specialvar)\b", anne_complete) is None,
+        "Wayfarer Anne full-clear refusal must not mutate travel or persistent state",
     )
     require(re.search(r"goto_if_ge\s+VAR_SSAQUA_STATE\s*,\s*8\s*,", hns_root) is not None
             and "WayfarerCanUseRegularAqua" not in hns_root,
@@ -440,7 +454,8 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     for index in range(1, 6):
         label = wayfarer_cases[index]
         require(
-            wayfarer_index.reachable_text(label) == hns_index.reachable_text(label),
+            "\n".join(line.strip() for line in wayfarer_index.reachable_text(label).splitlines() if line.strip())
+            == "\n".join(line.strip() for line in hns_index.reachable_text(label).splitlines() if line.strip()),
             f"Wayfarer changed optional Vermilion destination behavior at slot {index}",
         )
     slateport_label = wayfarer_cases[0]
@@ -514,6 +529,32 @@ def audit_menus_and_routes(game_root: Path) -> dict:
     require("WayfarerCanUseRegularAqua" not in wayfarer_top_level
             and "WayfarerCanUseRegularAqua" not in sevii_branch,
             "Wayfarer Sevii service must be offered before the regular Aqua gate")
+    bill_path = game_root / "data/maps/Route25_BillsHouse_hns/scripts.inc"
+    bill_raw = read_text(bill_path)
+    bill_source = filter_product(bill_raw, wayfarer=True)
+    bill_standalone = filter_product(bill_raw, wayfarer=False)
+    bill_index = ScriptIndex([(bill_path, bill_source)])
+    bill_gift = bill_index.reachable_text("Route25_BillsHouse_EventScript_Bill")
+    require(
+        "FLAG_WAYFARER_BILL_RESCUED" in bill_gift
+        and "removeobject 5" in bill_gift
+        and "setvar VAR_OBJ_GFX_ID_3, OBJ_EVENT_GFX_BILL_HNS" in bill_gift
+        and "addobject 5" in bill_gift
+        and re.search(r"checkitem\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*TRUE\s*,\s*Route25_BillsHouse_EventScript_BillTicketAlreadyOwned", bill_gift) is not None,
+        "Wayfarer Bill must visibly resolve and branch around an existing S.S. Ticket",
+    )
+    require(
+        "setflag FLAG_WAYFARER_BILL_SS_TICKET_SETTLED" in bill_index.block("Route25_BillsHouse_EventScript_BillTicketAlreadyOwned")
+        and not re.search(r"(?:giveitem_msg|additem)", bill_index.block("Route25_BillsHouse_EventScript_BillTicketAlreadyOwned"))
+        and re.search(r"checkitemspace\s+ITEM_SS_TICKET\s+goto_if_eq\s+VAR_RESULT\s*,\s*FALSE\s*,\s*Route25_BillsHouse_EventScript_BillNoRoom", bill_gift) is not None
+        and "setflag FLAG_WAYFARER_BILL_SS_TICKET_SETTLED" not in bill_index.block("Route25_BillsHouse_EventScript_BillNoRoom"),
+        "Wayfarer Bill must leave a full-Bag ticket reward retryable without duplicates",
+    )
+    require(
+        "Route25_BillsHouse_EventScript_Bill::" not in bill_standalone
+        and "Route25_BillsHouse_EventScript_Gramps::" in bill_standalone,
+        "standalone HNS Bill's House service must remain unchanged",
+    )
     require(
         re.search(r"u16\s+WayfarerCanSailToBirthIsland\s*\([^)]*\)\s*\{\s*return\s+WayfarerCanUseRegularAqua\s*\(\s*\)\s*&&\s*CheckBagHasItem\s*\(\s*ITEM_AURORA_TICKET\s*,\s*1\s*\)\s*;\s*\}", ferry_source, re.DOTALL) is not None,
         "Birth Island eligibility must be the read-only Aqua and Aurora Ticket conjunction",
@@ -591,7 +632,7 @@ def audit_menus_and_routes(game_root: Path) -> dict:
             "wayfarerOlivine": wayfarer_olivine,
             "slateportSlot": 0,
             "preservedOptionalSlots": list(range(1, 6)),
-            "wayfarerTopLevel": ["SEVII ISLANDS", "OTHER DESTINATIONS", "CANCEL"],
+            "wayfarerTopLevel": ["SEVII ISLANDS", "OTHER DESTINATIONS", "BOARD S.S. ANNE", "CANCEL"],
             "seviiFirstDestination": "ONE ISLAND",
         },
         "departure": {

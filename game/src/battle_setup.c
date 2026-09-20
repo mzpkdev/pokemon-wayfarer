@@ -50,6 +50,8 @@
 #include "wayfarer_sevii_trainer_defeats.h"
 #include "wayfarer_coast_trainers.h"
 #include "wayfarer_coast_trainer_defeats.h"
+#include "wayfarer_ss_anne.h"
+#include "wayfarer_ss_anne_trainer_defeats.h"
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -1662,6 +1664,7 @@ bool8 HasTrainerBeenFought(u16 trainerId)
 #if IS_WAYFARER
     u16 seviiDefeatSlot;
     u16 coastDefeatSlot;
+    u16 anneDefeatSlot;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1678,6 +1681,9 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     coastDefeatSlot = WayfarerCoastTrainerGetDefeatSlot(trainerId);
     if (coastDefeatSlot != WAYFARER_COAST_TRAINER_DEFEAT_SLOT_NONE)
         return WayfarerCoastTrainerDefeatGet(coastDefeatSlot);
+    anneDefeatSlot = WayfarerSSAnneTrainerGetDefeatSlot(trainerId);
+    if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
+        return WayfarerSSAnneTrainerDefeatGet(anneDefeatSlot);
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1691,6 +1697,7 @@ void SetTrainerFlag(u16 trainerId)
 #if IS_WAYFARER
     u16 seviiDefeatSlot;
     u16 coastDefeatSlot;
+    u16 anneDefeatSlot;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1716,6 +1723,12 @@ void SetTrainerFlag(u16 trainerId)
         WayfarerCoastTrainerDefeatSet(coastDefeatSlot);
         return;
     }
+    anneDefeatSlot = WayfarerSSAnneTrainerGetDefeatSlot(trainerId);
+    if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerSSAnneTrainerDefeatSet(anneDefeatSlot);
+        return;
+    }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1729,6 +1742,7 @@ void ClearTrainerFlag(u16 trainerId)
 #if IS_WAYFARER
     u16 seviiDefeatSlot;
     u16 coastDefeatSlot;
+    u16 anneDefeatSlot;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1752,6 +1766,12 @@ void ClearTrainerFlag(u16 trainerId)
     if (coastDefeatSlot != WAYFARER_COAST_TRAINER_DEFEAT_SLOT_NONE)
     {
         WayfarerCoastTrainerDefeatClear(coastDefeatSlot);
+        return;
+    }
+    anneDefeatSlot = WayfarerSSAnneTrainerGetDefeatSlot(trainerId);
+    if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
+    {
+        WayfarerSSAnneTrainerDefeatClear(anneDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.

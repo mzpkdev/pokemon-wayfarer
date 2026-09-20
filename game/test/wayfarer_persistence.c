@@ -15,6 +15,7 @@
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
+#include "wayfarer_ss_anne.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
 #include "constants/heal_locations.h"
@@ -24,6 +25,61 @@
 #include "config/league_circuit.h"
 
 #if IS_WAYFARER
+
+TEST("Wayfarer new-game state hides Blue until the Anne visitor scene")
+{
+    FlagClear(FLAG_WAYFARER_SS_ANNE_HIDE_BLUE);
+    WayfarerInitPersistentState();
+    EXPECT(FlagGet(FLAG_WAYFARER_SS_ANNE_HIDE_BLUE));
+}
+
+TEST("Wayfarer S.S. Anne access remains open until every one-time receipt is complete")
+{
+    static const u16 receiptFlags[] =
+    {
+        FLAG_WAYFARER_SS_ANNE_ITEM_TM31, FLAG_WAYFARER_SS_ANNE_ITEM_STARDUST,
+        FLAG_WAYFARER_SS_ANNE_ITEM_X_ATTACK, FLAG_WAYFARER_SS_ANNE_ITEM_TM44,
+        FLAG_WAYFARER_SS_ANNE_ITEM_ETHER, FLAG_WAYFARER_SS_ANNE_ITEM_SUPER_POTION,
+        FLAG_WAYFARER_SS_ANNE_ITEM_GREAT_BALL, FLAG_WAYFARER_SS_ANNE_ITEM_HYPER_POTION,
+        FLAG_WAYFARER_SS_ANNE_ITEM_CHESTO_BERRY, FLAG_WAYFARER_SS_ANNE_ITEM_PECHA_BERRY,
+        FLAG_WAYFARER_SS_ANNE_ITEM_CHERI_BERRY, FLAG_WAYFARER_SS_ANNE_BLUE_MET,
+        FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED,
+    };
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(receiptFlags); i++)
+        FlagSet(receiptFlags[i]);
+    for (i = 0; i < TRAINER_WAYFARER_SS_ANNE_COUNT; i++)
+        WayfarerSSAnneTrainerDefeatSet(i);
+    EXPECT(!WayfarerSSAnneHasUnfinishedContent());
+
+    FlagClear(FLAG_WAYFARER_SS_ANNE_ITEM_TM31);
+    EXPECT(WayfarerSSAnneHasUnfinishedContent());
+    FlagSet(FLAG_WAYFARER_SS_ANNE_ITEM_TM31);
+    FlagClear(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
+    EXPECT(WayfarerSSAnneHasUnfinishedContent());
+    FlagSet(FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED);
+    WayfarerSSAnneTrainerDefeatClear(0);
+    EXPECT(WayfarerSSAnneHasUnfinishedContent());
+    WayfarerSSAnneTrainerDefeatSet(0);
+    EXPECT(!WayfarerSSAnneHasUnfinishedContent());
+}
+
+TEST("Wayfarer Bill rescue state is distinct from Anne completion state")
+{
+    FlagClear(FLAG_WAYFARER_BILL_RESCUED);
+    FlagClear(FLAG_WAYFARER_BILL_SS_TICKET_SETTLED);
+    EXPECT_NE(FLAG_WAYFARER_BILL_RESCUED, FLAG_WAYFARER_SS_ANNE_TRAINER_TREVOR);
+    EXPECT_NE(FLAG_WAYFARER_BILL_SS_TICKET_SETTLED, FLAG_WAYFARER_BILL_RESCUED);
+    EXPECT(!FlagGet(FLAG_WAYFARER_BILL_RESCUED));
+    EXPECT(!FlagGet(FLAG_WAYFARER_BILL_SS_TICKET_SETTLED));
+
+    FlagSet(FLAG_WAYFARER_BILL_RESCUED);
+    EXPECT(FlagGet(FLAG_WAYFARER_BILL_RESCUED));
+    EXPECT(!FlagGet(FLAG_WAYFARER_BILL_SS_TICKET_SETTLED));
+    FlagSet(FLAG_WAYFARER_BILL_SS_TICKET_SETTLED);
+    EXPECT(FlagGet(FLAG_WAYFARER_BILL_SS_TICKET_SETTLED));
+}
 
 extern int GameClear(void);
 

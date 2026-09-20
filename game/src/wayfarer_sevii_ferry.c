@@ -9,6 +9,7 @@
 #include "string_util.h"
 #include "strings.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_ss_anne.h"
 #include "constants/items.h"
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
@@ -17,11 +18,13 @@ enum WayfarerVermilionPortChoice
 {
     WAYFARER_VERMILION_PORT_SEVII = 0,
     WAYFARER_VERMILION_PORT_OTHER_DESTINATIONS = 1,
-    WAYFARER_VERMILION_PORT_CANCEL = 2,
+    WAYFARER_VERMILION_PORT_SS_ANNE = 2,
+    WAYFARER_VERMILION_PORT_CANCEL = 3,
 };
 
 static const u8 sTextSeviiIslands[] = _("SEVII ISLANDS");
 static const u8 sTextOtherDestinations[] = _("OTHER DESTINATIONS");
+static const u8 sTextBoardSSAnne[] = _("BOARD S.S. ANNE");
 static const u8 sTextOneIsland[] = _("ONE ISLAND");
 
 static struct ListMenuItem *CreateMenuItems(const u8 *const *labels, const s32 *destinations, u8 count)
@@ -55,12 +58,14 @@ void DrawWayfarerVermilionPortMenu(void)
     {
         sTextSeviiIslands,
         sTextOtherDestinations,
+        sTextBoardSSAnne,
         gText_Cancel2,
     };
     static const s32 sDestinations[] =
     {
         WAYFARER_VERMILION_PORT_SEVII,
         WAYFARER_VERMILION_PORT_OTHER_DESTINATIONS,
+        WAYFARER_VERMILION_PORT_SS_ANNE,
         WAYFARER_VERMILION_PORT_CANCEL,
     };
 

@@ -10,6 +10,10 @@ enum KantoSubRegion GetKantoSubregion(u32 mapSecId);
 static inline enum Region GetRegionForSectionId(u32 sectionId)
 {
 #if IS_HNS
+#if IS_WAYFARER
+    if (sectionId == MAPSEC_S_S_ANNE)
+        return REGION_KANTO;
+#endif
     // Must precede the Johto test: the Hisui mapsecs sit inside the Johto range.
     if (sectionId >= HISUI_MAPSEC_START && sectionId <= HISUI_MAPSEC_END)
         return REGION_HISUI;

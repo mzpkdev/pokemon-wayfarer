@@ -2,12 +2,20 @@ SSAnne_2F_Room4_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_2F_Room4_EventScript_Lamar::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_GENTLEMAN_LAMAR, SSAnne_2F_Room4_Text_LamarIntro, SSAnne_2F_Room4_Text_LamarDefeat
+#else
 	trainerbattle_single TRAINER_GENTLEMAN_LAMAR, SSAnne_2F_Room4_Text_LamarIntro, SSAnne_2F_Room4_Text_LamarDefeat
+#endif
 	msgbox SSAnne_2F_Room4_Text_LamarPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 SSAnne_2F_Room4_EventScript_Dawn::
+#if IS_WAYFARER
+	trainerbattle_single TRAINER_WAYFARER_SS_ANNE_LASS_DAWN, SSAnne_2F_Room4_Text_DawnIntro, SSAnne_2F_Room4_Text_DawnDefeat
+#else
 	trainerbattle_single TRAINER_LASS_DAWN, SSAnne_2F_Room4_Text_DawnIntro, SSAnne_2F_Room4_Text_DawnDefeat
+#endif
 	msgbox SSAnne_2F_Room4_Text_DawnPostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -32,4 +40,3 @@ SSAnne_2F_Room4_Text_DawnDefeat::
 SSAnne_2F_Room4_Text_DawnPostBattle::
 	.string "Oh, I adore your strong POKéMON!\n"
 	.string "Oh, how I envy you for them!$"
-

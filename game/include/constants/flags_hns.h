@@ -2755,6 +2755,44 @@
 #define FLAG_HIDDEN_ITEM_SIX_ISLAND_WATER_PATH_ASPEAR_BERRY     FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_SIX_ISLAND_WATER_PATH_ORAN_BERRY       FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_SIX_ISLAND_WATER_PATH_PINAP_BERRY      FLAG_HIDDEN_ITEMS_START
+#if IS_WAYFARER
+// Dedicated S.S. Anne receipts occupy the verified free saved-flag window.
+// They are intentionally raw HNS SaveBlock1 flags, not source FRLG aliases.
+#define FLAG_WAYFARER_SS_ANNE_ITEM_TM31                         0x496
+#define FLAG_WAYFARER_SS_ANNE_ITEM_STARDUST                     0x497
+#define FLAG_WAYFARER_SS_ANNE_ITEM_X_ATTACK                     0x498
+#define FLAG_WAYFARER_SS_ANNE_ITEM_TM44                         0x499
+#define FLAG_WAYFARER_SS_ANNE_ITEM_ETHER                        0x49A
+#define FLAG_WAYFARER_SS_ANNE_ITEM_SUPER_POTION                 0x49B
+#define FLAG_WAYFARER_SS_ANNE_ITEM_GREAT_BALL                   0x49C
+#define FLAG_WAYFARER_SS_ANNE_CAPTAIN_REWARDED                  0x49D
+#define FLAG_WAYFARER_SS_ANNE_ITEM_HYPER_POTION                 0x49E
+#define FLAG_WAYFARER_SS_ANNE_ITEM_CHESTO_BERRY                 0x49F
+#define FLAG_WAYFARER_SS_ANNE_ITEM_PECHA_BERRY                  0x4A0
+#define FLAG_WAYFARER_SS_ANNE_ITEM_CHERI_BERRY                  0x4A1
+#define FLAG_WAYFARER_SS_ANNE_BLUE_MET                          0x4A2
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_TYLER                     0x4A3
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_ANN                       0x4A4
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_ARTHUR                    0x4A5
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_THOMAS                    0x4A6
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_DALE                      0x4A7
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_BROOKS                    0x4A8
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_LAMAR                     0x4A9
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_DAWN                      0x4AA
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_BARNY                     0x4AB
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_PHILLIP                   0x4AC
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_HUEY                      0x4AD
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_DYLAN                     0x4AE
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_LEONARD                   0x4AF
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_DUNCAN                    0x4B0
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_EDMOND                    0x4B1
+#define FLAG_WAYFARER_SS_ANNE_TRAINER_TREVOR                    0x4B2
+// Bill's selected HNS house keeps its rescue/ticket state outside Anne.
+#define FLAG_WAYFARER_BILL_RESCUED                              0x4B3
+#define FLAG_WAYFARER_BILL_SS_TICKET_SETTLED                    0x4B4
+#define FLAG_WAYFARER_SS_ANNE_HIDE_BLUE                         0x4B5
+#endif
+
 #define FLAG_HIDDEN_ITEM_SSANNE_B1F_CORRIDOR_HYPER_POTION       FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_SSANNE_EXTERIOR_LAVA_COOKIE            FLAG_HIDDEN_ITEMS_START
 #define FLAG_HIDDEN_ITEM_SSANNE_KITCHEN_CHERI_BERRY             FLAG_HIDDEN_ITEMS_START

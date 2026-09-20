@@ -8,7 +8,7 @@ Supporting requirements:
 - [Wayfarer Hoenn entry and S.S. Aqua circuit](wayfarer-hoenn-entry.md): existing Vermilion services remain unchanged; and
 - [HM field use](hm-field-use.md): the captain explains Wayfarer's badge-free Cut behavior.
 
-Implemented: No
+Implemented: Yes
 
 ## Outcome
 

@@ -26,7 +26,8 @@ VermilionPort_EventScript_Sailor::
 	switch VAR_RESULT
 	case 0, VermilionPort_EventScript_Sailor_Sevii
 	case 1, VermilionPort_EventScript_Sailor_OtherDestinations
-	case 2, VermilionPort_EventScript_Sailor_Cancel
+	case 2, VermilionPort_EventScript_Sailor_BoardSSAnne
+	case 3, VermilionPort_EventScript_Sailor_Cancel
 	case MULTI_B_PRESSED, VermilionPort_EventScript_Sailor_Cancel
 	release
 	end
@@ -55,6 +56,28 @@ VermilionPort_EventScript_Sailor_OtherDestinations::
 	goto_if_ge VAR_SSAQUA_STATE, 8, VermilionPort_EventScript_Sailor_AfterKanto
 #endif
 	goto VermilionPort_EventScript_SailorCantSail
+
+#if IS_WAYFARER
+VermilionPort_EventScript_Sailor_BoardSSAnne::
+	specialvar VAR_RESULT, WayfarerSSAnne_HasUnfinishedContent
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_SSAnneComplete
+	checkitem ITEM_SS_TICKET
+	bufferitemname STR_VAR_1, ITEM_SS_TICKET
+	goto_if_eq VAR_RESULT, FALSE, VermilionPort_EventScript_Sailor_NoCredentials
+	msgbox VermilionPort_Text_BoardSSAnne, MSGBOX_DEFAULT
+	closemessage
+	fadescreenswapbuffers FADE_TO_BLACK
+	warp MAP_SSANNE_1F_CORRIDOR, 19, 2
+	waitstate
+	release
+	end
+
+VermilionPort_EventScript_Sailor_SSAnneComplete::
+	msgbox VermilionPort_Text_SSAnneComplete, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+#endif
 
 VermilionPort_EventScript_SailorCantSail::
 	msgbox VermilionPort_Text_SailorCantSail, MSGBOX_NPC
@@ -204,6 +227,16 @@ VermilionPort_EventScript_Sailor_NoCredentials::
 	closemessage
 	release
 	end
+
+#if IS_WAYFARER
+VermilionPort_Text_BoardSSAnne:
+	.string "We'll take you aboard the\n"
+	.string "S.S. ANNE.$"
+
+VermilionPort_Text_SSAnneComplete:
+	.string "The S.S. ANNE's visiting hours are\n"
+	.string "over. Thank you for your visit.$"
+#endif
 
 VermilionPort_Movement_SailorEnterBoat:
 	walk_down

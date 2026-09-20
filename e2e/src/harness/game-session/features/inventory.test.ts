@@ -19,6 +19,7 @@ describe("game-session inventory", () => {
       [5, { address: 0x0200_5000, capacity: 60, item: 727 }],
     ])
     const bagReadLengths: number[] = []
+    const writes: { address: number; bytes: Uint8Array }[] = []
     const runtime = {
       abi: {} as SessionRuntime["abi"],
       address: (symbol: string) => {
@@ -45,7 +46,9 @@ describe("game-session inventory", () => {
       },
       readUint16: async () => 0,
       readUint32: async () => 0,
-      writeBytes: async () => {},
+      writeBytes: async (address, bytes) => {
+        writes.push({ address, bytes })
+      },
       advance: async () => {},
       press: async () => {},
     } satisfies SessionRuntime
@@ -56,6 +59,13 @@ describe("game-session inventory", () => {
     await expect(inventory.contains("tmThunder")).resolves.toBe(true)
     await expect(inventory.contains("ssTicket")).resolves.toBe(true)
     await expect(inventory.contains("pass")).resolves.toBe(false)
+    await expect(inventory.contains("cut")).resolves.toBe(false)
+    pocketContents.get(4)!.item = 682
+    await expect(inventory.contains("cut")).resolves.toBe(true)
+    await inventory.freeSlot("tmHm")
+    expect(writes).toEqual([
+      { address: pocketContents.get(4)!.address, bytes: new Uint8Array([0, 0, 0, 0]) },
+    ])
     expect(Math.max(...bagReadLengths)).toBeLessThanOrEqual(32)
   })
 

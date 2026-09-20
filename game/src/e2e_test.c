@@ -10,6 +10,7 @@
 #include "field_move.h"
 #include "field_effect.h"
 #include "field_message_box.h"
+#include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "item.h"
@@ -45,9 +46,9 @@
 #include "constants/wayfarer_persistence.h"
 #include "data/map_group_count.h"
 
-volatile struct E2ETestRequest gE2ETestRequest;
-volatile struct E2ETestResult gE2ETestResult;
-volatile struct E2ETestState gE2ETestState;
+EWRAM_DATA volatile struct E2ETestRequest gE2ETestRequest;
+EWRAM_DATA volatile struct E2ETestResult gE2ETestResult;
+EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
@@ -94,33 +95,33 @@ static const enum Region sCircuitRegions[E2E_TEST_LEAGUE_COUNT] =
     REGION_HOENN,
 };
 
-static struct E2ETestRequest sRequest;
-static enum E2ETestInternalStage sStage;
-static u16 sMapGroup;
-static u16 sMapNum;
-static s16 sX;
-static s16 sY;
-static u16 sLastFieldMove = MOVE_NONE;
-static u8 sLastFieldMoveUser;
-static u8 sLastFieldMoveResult;
-static bool32 sLastFieldMoveUnlocked;
-static u8 sLastDialogueMessage;
-static u32 sDialogueSequence;
-static u8 sLastDialogueText[E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH];
-static struct E2ETestBagItem sObservedBagItems[E2E_TEST_MAX_BAG_ITEMS];
-static struct E2ETestPcSlot sObservedPcSlots[E2E_TEST_MAX_PC_SLOTS];
-static u8 sObservedBagItemCount;
-static u8 sObservedPcSlotCount;
-static u16 sCaughtSpecies;
-static u8 sCatchSwapState;
-static u8 sCatchSwapCursor;
-static u8 sCatchSwapSelectedParty;
-static u8 sCatchSwapBox;
-static u8 sCatchSwapSlot;
-static bool32 sNicknamePrompt;
-static u8 sNicknameCursor;
-static u8 sRejectedResultFrames;
-static struct RegionMap sObservedPokedexRegionMap;
+static EWRAM_DATA struct E2ETestRequest sRequest;
+static EWRAM_DATA enum E2ETestInternalStage sStage;
+static EWRAM_DATA u16 sMapGroup;
+static EWRAM_DATA u16 sMapNum;
+static EWRAM_DATA s16 sX;
+static EWRAM_DATA s16 sY;
+static EWRAM_DATA u16 sLastFieldMove = MOVE_NONE;
+static EWRAM_DATA u8 sLastFieldMoveUser;
+static EWRAM_DATA u8 sLastFieldMoveResult;
+static EWRAM_DATA bool32 sLastFieldMoveUnlocked;
+static EWRAM_DATA u8 sLastDialogueMessage;
+static EWRAM_DATA u32 sDialogueSequence;
+static EWRAM_DATA u8 sLastDialogueText[E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH];
+static EWRAM_DATA struct E2ETestBagItem sObservedBagItems[E2E_TEST_MAX_BAG_ITEMS];
+static EWRAM_DATA struct E2ETestPcSlot sObservedPcSlots[E2E_TEST_MAX_PC_SLOTS];
+static EWRAM_DATA u8 sObservedBagItemCount;
+static EWRAM_DATA u8 sObservedPcSlotCount;
+static EWRAM_DATA u16 sCaughtSpecies;
+static EWRAM_DATA u8 sCatchSwapState;
+static EWRAM_DATA u8 sCatchSwapCursor;
+static EWRAM_DATA u8 sCatchSwapSelectedParty;
+static EWRAM_DATA u8 sCatchSwapBox;
+static EWRAM_DATA u8 sCatchSwapSlot;
+static EWRAM_DATA bool32 sNicknamePrompt;
+static EWRAM_DATA u8 sNicknameCursor;
+static EWRAM_DATA u8 sRejectedResultFrames;
+static EWRAM_DATA struct RegionMap sObservedPokedexRegionMap;
 
 extern void UpdateSurfBlobFieldEffect(struct Sprite *sprite);
 
@@ -978,6 +979,7 @@ static void BeginRequest(void)
         }
         gE2ETestRequest.status = E2E_TEST_STATUS_RUNNING;
         PublishResult(E2E_TEST_STATUS_RUNNING, E2E_TEST_ARRANGE_PHASE_STATE, E2E_TEST_ERROR_NONE);
+        SaveMapView();
         if (gDifferentSaveFile == TRUE)
         {
             saveStatus = TrySavingData(SAVE_OVERWRITE_DIFFERENT_FILE);

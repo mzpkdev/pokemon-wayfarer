@@ -4,6 +4,8 @@ import { type MailboxApi } from "../mailbox"
 import { type SessionRuntime } from "../runtime"
 import { createArrangeApi, type ArrangeGame } from "./arrange"
 
+const appearanceIdOffset = 369
+
 const captureArrange = () => {
   const requests: Uint8Array[] = []
   const runtime = { abi: { requestSize: 432 } } as SessionRuntime
@@ -29,10 +31,10 @@ describe("appearance arrangement fixtures", () => {
         checkpoint: "new-bark-after-intro",
         player: { appearanceStyle: style },
       })
-      expect(fixture.requests.at(-1)![429]).toBe(id)
+      expect(fixture.requests.at(-1)![appearanceIdOffset]).toBe(id)
     }
     await fixture.arrange({ checkpoint: "new-bark-after-intro" })
-    expect(fixture.requests.at(-1)![429]).toBe(0)
+    expect(fixture.requests.at(-1)![appearanceIdOffset]).toBe(0)
   })
 
   it("rejects invalid styles before submitting a mailbox request", async () => {
