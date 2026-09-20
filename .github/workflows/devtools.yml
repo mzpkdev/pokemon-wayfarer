@@ -1,6 +1,9 @@
 name: Devtools
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types:
       - opened
@@ -117,26 +120,30 @@ jobs:
   preview:
     name: Preview
     if: >-
-      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event_name == 'push' ||
       (
+        github.event.pull_request.head.repo.full_name == github.repository &&
         (
-          (github.event.action == 'labeled' || github.event.action == 'unlabeled') &&
-          github.event.label.name == 'preview'
-        ) ||
-        (
-          (github.event.action == 'converted_to_draft' || github.event.action == 'closed') &&
-          contains(github.event.pull_request.labels.*.name, 'preview')
-        ) ||
-        (
-          github.event.pull_request.draft == false &&
-          contains(github.event.pull_request.labels.*.name, 'preview')
+          (
+            (github.event.action == 'labeled' || github.event.action == 'unlabeled') &&
+            github.event.label.name == 'preview'
+          ) ||
+          (
+            (github.event.action == 'converted_to_draft' || github.event.action == 'closed') &&
+            contains(github.event.pull_request.labels.*.name, 'preview')
+          ) ||
+          (
+            github.event.pull_request.draft == false &&
+            contains(github.event.pull_request.labels.*.name, 'preview')
+          )
         )
       )
     runs-on: ubuntu-latest
     timeout-minutes: 45
     concurrency:
       group: devtools-pages
-      cancel-in-progress: true
+      cancel-in-progress: false
+      queue: max
     permissions:
       contents: read
       id-token: write
@@ -172,14 +179,13 @@ jobs:
             --jq '.[] | select(.head.repo.full_name == env.GITHUB_REPOSITORY) | select(.draft == false) | select(any(.labels[]; .name == env.PREVIEW_LABEL)) | [.number, .head.sha] | @tsv' \
             > "$RUNNER_TEMP/wayfarer-preview-refs.tsv"
 
-      - name: Build every open preview
+      - name: Build main and every open preview
         id: outcome
         env:
           GH_TOKEN: ${{ github.token }}
-          EVENT_ACTION: ${{ github.event.action }}
-          EVENT_LABEL: ${{ github.event.label.name }}
+          EVENT_NAME: ${{ github.event_name }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          PR_DRAFT: ${{ github.event.pull_request.draft }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
           PREVIEW_LABEL: preview
           PREVIEW_SITE: ${{ runner.temp }}/wayfarer-preview-site
           PREVIEW_REFS: ${{ runner.temp }}/wayfarer-preview-refs.tsv
@@ -189,11 +195,11 @@ jobs:
           : > "$SUCCESSFUL_PREVIEW_REFS"
           authorization="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 --wrap=0)"
 
-          build_preview() {
-            number="$1"
+          build_site() {
+            key="$1"
             sha="$2"
-            checkout="$RUNNER_TEMP/wayfarer-preview-pr-${number}"
-            site="$PREVIEW_SITE/preview/pr-${number}"
+            site="$3"
+            checkout="$RUNNER_TEMP/wayfarer-preview-${key}"
 
             git init --quiet "$checkout" || return 1
             git -C "$checkout" remote add origin "https://github.com/${GITHUB_REPOSITORY}.git" || return 1
@@ -209,9 +215,12 @@ jobs:
             test -f "$site/index.html"
           }
 
+          main_sha="$(gh api "/repos/${GITHUB_REPOSITORY}/commits/${DEFAULT_BRANCH}" --jq .sha)"
+          build_site main "$main_sha" "$PREVIEW_SITE/preview/main"
+
           while IFS=$'\t' read -r number sha; do
             [ -n "$number" ] || continue
-            if build_preview "$number" "$sha"; then
+            if build_site "pr-${number}" "$sha" "$PREVIEW_SITE/preview/pr-${number}"; then
               printf '%s\t%s\n' "$number" "$sha" >> "$SUCCESSFUL_PREVIEW_REFS"
             else
               rm -rf "$PREVIEW_SITE/preview/pr-${number}"
@@ -219,16 +228,24 @@ jobs:
             fi
           done < "$PREVIEW_REFS"
 
-          if [ "$EVENT_ACTION" = closed ]; then
-            status=closed
-          elif [ "$EVENT_ACTION" = unlabeled ] && [ "$EVENT_LABEL" = "$PREVIEW_LABEL" ]; then
-            status=removed
-          elif [ "$PR_DRAFT" = true ]; then
-            status=draft
-          elif awk -F '\t' -v number="$PR_NUMBER" '$1 == number { found = 1 } END { exit !found }' "$SUCCESSFUL_PREVIEW_REFS"; then
-            status=ready
+          if [ "$EVENT_NAME" = push ]; then
+            status=main
           else
-            status=unavailable
+            pr_metadata="$(gh api "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" \
+              --jq '[.state, .draft, any(.labels[]; .name == env.PREVIEW_LABEL)] | @tsv')"
+            IFS=$'\t' read -r pr_state pr_draft pr_labeled <<< "$pr_metadata"
+
+            if awk -F '\t' -v number="$PR_NUMBER" '$1 == number { found = 1 } END { exit !found }' "$SUCCESSFUL_PREVIEW_REFS"; then
+              status=ready
+            elif [ "$pr_state" = closed ]; then
+              status=closed
+            elif [ "$pr_labeled" != true ]; then
+              status=removed
+            elif [ "$pr_draft" = true ]; then
+              status=draft
+            else
+              status=unavailable
+            fi
           fi
           printf 'trigger_preview_status=%s\n' "$status" >> "$GITHUB_OUTPUT"
 
@@ -252,21 +269,37 @@ jobs:
         uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
 
       - name: Create or update preview comment
-        if: always()
+        if: always() && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          PREVIEW_LABEL: preview
           DEPLOYMENT_RESULT: ${{ steps.deployment.outcome }}
           PREVIEW_STATUS: ${{ steps.outcome.outputs.trigger_preview_status }}
-          EVENT_ACTION: ${{ github.event.action }}
         run: |
           marker='<!-- devtools-preview -->'
           preview_url="https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}/preview/pr-${PR_NUMBER}/"
           docs_url="${preview_url}#docs"
 
-          if [ "$EVENT_ACTION" = closed ] && [ "$DEPLOYMENT_RESULT" = success ]; then
+          if [ -z "$PREVIEW_STATUS" ]; then
+            pr_metadata="$(gh api "/repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}" \
+              --jq '[.state, .draft, any(.labels[]; .name == env.PREVIEW_LABEL)] | @tsv')"
+            IFS=$'\t' read -r pr_state pr_draft pr_labeled <<< "$pr_metadata"
+
+            if [ "$pr_state" = closed ]; then
+              PREVIEW_STATUS=closed
+            elif [ "$pr_labeled" != true ]; then
+              PREVIEW_STATUS=removed
+            elif [ "$pr_draft" = true ]; then
+              PREVIEW_STATUS=draft
+            else
+              PREVIEW_STATUS=unavailable
+            fi
+          fi
+
+          if [ "$PREVIEW_STATUS" = closed ] && [ "$DEPLOYMENT_RESULT" = success ]; then
             body="${marker}"$'\n'"This devtools preview was removed because the pull request is closed."
-          elif [ "$EVENT_ACTION" = closed ]; then
+          elif [ "$PREVIEW_STATUS" = closed ]; then
             body="${marker}"$'\n'"This pull request is closed, but preview removal is pending because the Pages deployment did not complete."
           elif [ "$DEPLOYMENT_RESULT" = success ] && [ "$PREVIEW_STATUS" = removed ]; then
             body="${marker}"$'\n'"This devtools preview was removed because the preview label was removed."

@@ -27,13 +27,14 @@ export const previewNumbersFromTsv = (contents) => {
 }
 
 export const previewIndexHtml = (previews) => {
-  const items = previews
+  const previewItems = previews
     .map((number) => {
       const label = `Pull request #${number}`
       return `      <li><a href="preview/pr-${number}/">${escapeHtml(label)}</a></li>`
     })
     .join("\n")
-  const content = items || "      <li>No same-repository pull requests are currently open.</li>"
+  const pullRequests =
+    previewItems || "      <li>No same-repository pull requests are currently open.</li>"
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -45,9 +46,10 @@ export const previewIndexHtml = (previews) => {
   <body>
     <main>
       <h1>Pokémon Wayfarer previews</h1>
-      <p>Open Devtools previews.</p>
+      <p>Open the deployed main build or a pull-request preview.</p>
       <ul>
-${content}
+      <li><a href="preview/main/">Main</a></li>
+${pullRequests}
       </ul>
     </main>
   </body>
