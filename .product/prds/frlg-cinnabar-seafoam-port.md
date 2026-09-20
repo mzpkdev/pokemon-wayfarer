@@ -1,11 +1,10 @@
 # FRLG Cinnabar, Seafoam Islands, and coastal routes port
 
-Status: Approved product direction. Full FRLG Route 19, Route 20, and both
-Route 21 sections belong to the final port. The unlocked Cinnabar interior
-preview and retirement of the six superseded HNS maps and the unreachable
-HNS Route 21 payload merged in
-[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110); the full town
-and coastal port is not implemented.
+Status: Implemented. The unlocked Cinnabar interior preview and initial HNS
+map retirement merged in
+[PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110). The full FRLG
+Cinnabar, Seafoam, Route 19, Route 20, and Route 21 North/South port replaced
+that preview in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
 ## Intent
 
@@ -23,9 +22,9 @@ Route 20 connects Cinnabar, both Seafoam entrances, and Route 19; both Route
 Blaine-dependent Route 19 dialogue do not control this coast.
 
 The [unlocked interior preview](../specs/frlg-cinnabar-unlocked-interiors.md)
-is an interim playable slice. It connects twelve FRLG-layout Cinnabar interiors
-to the current coast preview, with Center healing and Mart shopping. Its empty
-Gym, Mansion, and Lab do not complete the local stories and services below.
+records the interim slice delivered before the full port. Its empty Gym,
+Mansion, and Lab behavior is historical and is superseded by the completed
+town and coastal specifications below.
 
 ## Design
 

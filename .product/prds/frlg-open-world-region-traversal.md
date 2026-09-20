@@ -1,10 +1,10 @@
 # FireRed and LeafGreen open-world regional traversal
 
-The [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
-supersedes this PRD's future Cinnabar, Seafoam, Route 19 through Route 21, and
+The implemented [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
+supersedes this PRD's former Cinnabar, Seafoam, Route 19 through Route 21, and
 Bill-at-Cinnabar assumptions. This PRD retains the historical implementation
 record below; the port keeps Cinnabar, Seafoam, the Meteorite story, and Sevii
-travel independent. The full coastal port remains unimplemented.
+travel independent.
 
 ## Player outcome
 
@@ -49,12 +49,17 @@ Indigo Plateau and event-only islands are not settlements in this pass. A route,
 
 ## Sevii unlock story
 
+The S.S. Anne behavior in this implemented historical design is superseded for
+future work by the [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md).
+The Sevii service and its isolation remain binding; the future Anne stays
+accessible as one non-resetting adventure and does not depart.
+
 ### Seagallop shakedown
 
 - Start: speak to the port builder beside Machop's construction lot in Vermilion. This is available on the first visit to the city.
 - Job: inspect three marked soft spots in the construction lot. Machop follows the player to each marker and tamps it down. This uses no battle, item, field move, badge, or earlier story flag.
 - Turn-in: report to the builder, who certifies the pier for Seagallop service. The ferry sailor gives the player the Rainbow Pass and adds Sevii Islands to the shared dock's service choices. This does not change the S.S. Anne scene.
-- Shared dock: while the S.S. Anne is present, the sailor offers S.S. Anne and Sevii Islands. The S.S. Anne choice keeps its existing Ticket, boarding, captain, rival, Cut, and departure behavior. Sevii Islands never advances or departs the S.S. Anne. After the player causes the ship's normal departure, the sailor offers only Sevii Islands.
+- Shared dock: the shipped baseline keeps the source Anne departure behavior. The dedicated Anne specification supersedes that branch when implemented; Sevii Islands never advances, resets, or hides the Anne.
 - First Sevii trip: choosing Sevii Islands for the first time takes the player to One Island. Celio gives a new travel-only introduction and expands the Town Map. This introduction does not give the Meteorite or Tri-Pass, disable PC storage, move Bill, or advance the existing One Island quest state.
 - Existing Meteorite story: its independently owned entry remains available after early Sevii travel. Its owner defines any later invitation, location, rewards, and state transitions. It may reuse the player's Rainbow Pass without giving a duplicate pass, but it does not depend on visiting Cinnabar or defeating Blaine.
 - Permanent service: as soon as Celio's introduction ends, the One Island sailor offers One through Seven Island and Vermilion. Every other Sevii port uses that same eight-destination menu from its first visit. The Rainbow Pass is the only credential.
@@ -87,7 +92,8 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Run every required core settlement route with no HM items in the Bag. No party Pokémon may know an HM move other than Surf on the Cinnabar crossing.
 - Leave Pewter through the free lower lane, pass Miguel without a battle, and walk past Route 12 Snorlax. Then return and complete each preserved scene and reward normally.
 - Complete the Seagallop shakedown and receive the Rainbow Pass without leaving Vermilion or satisfying another story flag.
-- Open Sevii service while the S.S. Anne is still present, use both dock choices, and confirm neither choice changes the other's independent story state.
+- Open Sevii service before and after the Anne adventure, use both dock choices,
+  and confirm neither choice changes the other's independent state.
 - Confirm the first Sevii trip goes to One Island, Celio's travel introduction does not start the Meteorite delivery, and the ferry then exposes the permanent eight-destination menu.
 - After early Sevii travel, start the independently owned Meteorite story and confirm it does not replace or duplicate the Rainbow Pass or require visiting Cinnabar or defeating Blaine.
 - Visit all seven named Sevii settlement hubs and return to Vermilion without further story checks, HM items, known HM moves, field-move use, forced battles, or a lost return option.

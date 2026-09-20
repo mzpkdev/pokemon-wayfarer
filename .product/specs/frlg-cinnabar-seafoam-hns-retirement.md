@@ -1,11 +1,12 @@
 # HNS Cinnabar and Seafoam map retirement
 
 PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-Implemented: Partial
+Implemented: Yes
 
 The interim retirement preview merged in
 [PR #110](https://github.com/mzpkdev/pokemon-wayfarer/pull/110). The final
-route retirement and full coastal port remain unimplemented.
+route retirement and full coastal port merged in
+[PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
 ## Scope
 
@@ -27,7 +28,7 @@ historical and are superseded by the full coastal port.
 
 ## Historical preview behavior
 
-Entering the current Cinnabar exterior preview sets
+In the historical preview, entering the Cinnabar exterior set
 `FLAG_VISITED_CINNABAR_ISLAND`, which unlocks Fly. Fly lands on that exterior;
 Center healing and whiteout use its reachable 1F nurse and Cinnabar heal
 location. An arrival before visiting the Center must not create an invalid

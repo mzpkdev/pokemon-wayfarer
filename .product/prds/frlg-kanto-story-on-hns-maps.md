@@ -4,9 +4,9 @@ Status: Draft product design. Not implemented. FRLG is Kanto's narrative
 baseline and HNS is its general geographic base. The full FRLG Cinnabar,
 Seafoam, and Routes 19–21 port is owned by
 [its dedicated PRD](frlg-cinnabar-seafoam-port.md).
-The S.S. Anne remains permanently available, with travel design
-owned by a separate specification. Selected HNS story adaptations are
-recorded below; remaining choices stay open.
+The [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md)
+defines its permanently recoverable, one-time adventure. Selected HNS story
+adaptations are recorded below; remaining choices stay open.
 
 ## Intent
 
@@ -67,7 +67,7 @@ eruption state.
 | Mt. Moon | Place the Rocket encounters, Super Nerd battle, and fossil choice in the existing HNS cave where practical. Preserve the local sequence and reward choice; reproducing FRLG's full cave topology is not required. |
 | Cerulean burglary | Use the HNS city and a suitable house/back-exit arrangement for the theft, Rocket confrontation, and recovered TM. Local doorway or event changes are allowed. |
 | Nugget Bridge | Adapt the ordered Trainer challenge, prize, and recruitment attempt to HNS Route 24. Avoid overlapping its existing Rocket scenes. |
-| Bill and the S.S. Anne | Preserve Bill's rescue and Ticket reward, plus the captain's adventure and Cut reward aboard a persistent Anne. Any S.S. Ticket permits boarding; Bill is not a prerequisite for players who already have one. Anne travel is specified separately. |
+| Bill and the S.S. Anne | Preserve Bill's rescue and Ticket reward, plus the captain's adventure and Cut reward aboard a persistent Anne. Any S.S. Ticket permits boarding; Bill is not a prerequisite for players who already have one. Persistence prevents missable content; the ship provides no transport or recurring utility. |
 | Celadon Rocket Hideout | Connect imported hideout interiors to the HNS Game Corner. Preserve discovery of the entrance, local key and lift progression, Giovanni, and the Silph Scope reward. Mahogany's HNS Rocket Hideout remains a separate Johto location. |
 | Pokémon Tower and Fuji | Restore the Tower adventure in Lavender, including the Scope-dependent ghost identification, Marowak resolution, Rocket rescue, Fuji's return, and Flute handoff. Resolve its relationship to the HNS radio station explicitly. |
 | Snorlax | Preserve the two FRLG encounters associated with Routes 12 and 16 and the Flute requirement, adapting event placement to HNS geography. Neither encounter may close the only ordinary travel route. Resolve the existing HNS Vermilion Snorlax separately rather than accidentally duplicating the same encounter. |
@@ -254,82 +254,19 @@ Ball and legendary captures, with thresholds decided separately. A deferred
 Master Ball does not delay Silph's rescue or Giovanni's finale. No Sevii
 delivery requirement is imported for Mewtwo.
 
-### Transport and regional access
+### S.S. Anne ownership
 
-Keep the S.S. Anne as a persistent, distinct ship. Helping the captain and
-receiving Cut complete its local adventure without permanently departing,
-removing, or closing the ship. Players may leave and return to its interiors
-and unfinished content. Adapt the original farewell dialogue and departure
-scene to this persistent presence.
+The [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md) is the
+single implementation authority for its 25 imported interiors, Vermilion
+boarding, return path, Trainers, items, Blue scene, captain, Cut reward, and
+saved state. Any S.S. Ticket permits boarding. Bill remains the normal Kanto
+source, but his rescue stays playable when the player already owns a Ticket.
 
-Any S.S. Ticket permits Anne boarding, regardless of its regional source.
-Bill remains the normal Ticket source for the planned Kanto opening. Players
-who obtained a Ticket elsewhere can board without first rescuing Bill. His
-rescue remains independently playable afterward; acknowledge an existing
-Ticket without awarding a duplicate or skipping the rescue. Possessing the
-Ticket does not complete the captain's adventure or grant Cut.
-
-Retain the Ticket after the captain's reward and all ship visits. Completing
-the Anne adventure cannot reset or revoke Aqua travel. Preserve the existing
-Aqua circuit: Olivine to Vermilion to Slateport to Olivine. Shared possession
-of the Ticket does not authorize this feature to alter Aqua's other existing
-travel rules or initialization.
-
-### Vermilion boarding: existing sailor and dock
-
-Add **Board S.S. Anne** to the existing Vermilion dock sailor's harbor menu.
-Retain its existing Slateport, Southern Island, Birth Island, Faraway Island,
-Battle Frontier, and Exit options. This is an additive entry, not a new
-ship-selection submenu or a replacement three-option menu. Preserve existing
-option identifiers/indices and route handlers when extending the list; menu
-placement and input handling belong in the implementation specification.
-
-Slateport remains Aqua's fixed next regional stop. Aqua continues its
-Olivine → Vermilion → Slateport → Olivine circuit. Its existing regular-trip
-eligibility, Ticket checks, arrival initialization, and departure presentation
-remain intact. The inherited special destinations remain in this same menu
-with their existing eligibility and credential rules. They do not become
-alternative regional circuit ports or require a separate NPC interaction.
-
-Make Anne boarding available independently of regular Aqua eligibility.
-Move any whole-menu Aqua eligibility check to the existing service branches
-as needed, so an Anne Ticket holder can reach the new option without gaining
-premature access to the old services. Preserve those services' prior eligibility,
-including the regular-service prerequisite for the special destinations.
-Do not change Olivine's menu or Slateport's Aqua yes/no interaction in this port.
-
-Selecting Anne checks for any S.S. Ticket, then fades and warps directly into
-Anne's explorable interior. It must not be hidden behind Aqua's regular-voyage
-eligibility check or trigger its maiden-voyage state. Without a Ticket, give
-the normal refusal and leave the player at the dock. Cancel leaves the player
-at the dock without changing story or transport state.
-
-Leaving Anne returns the player to a safe walkable position in the same
-Vermilion dock. Do not automatically sail, reopen the menu, or reboard. Anne
-remains available after the captain's reward and on later visits.
-
-Reuse the existing dock terrain, sailor, and displayed Aqua ship graphic.
-A brief boarding message and fade are sufficient to represent transfer to the
-Anne. This intentionally simple presentation does not require a second visible
-ship, a second berth, a dock variant, a new exterior map, or dock `map.bin`
-edits. Anne's own interiors and their events still require content integration.
-A later presentation improvement is not a prerequisite for this story port.
-
-### Anne travel: separate specification
-
-This PRD settles Vermilion boarding and the persistent onboard story, not
-Anne's transport network. A separate travel specification owns its future
-destinations, direction, other ports, schedules, travel menus, and arrival
-integration. No reverse Aqua circuit or alternate city is selected here.
-The additional Vermilion boarding option above is settled, not deferred to that work.
-Do not make future travel design a prerequisite for the local boarding flow.
-
-Future travel must preserve onboard state and permit the player to leave
-without completing an optional adventure. Sailing must not reset Trainers,
-repeat one-time rewards, complete Bill's rescue, or retire Blue's Anne scene.
-That scene follows only the origin-specific forward-progression rule above.
-The original one-time ship departure must not be used to discard unfinished
-content. Exact interior/event integration belongs in the content specification.
+The Anne remains accessible so players can recover unfinished one-time
+content. It does not depart after the captain's reward, reset on revisit, sail
+to another port, or provide recurring services, battles, or rewards. S.S. Aqua
+and Seagallop remain the travel networks. The port must preserve their menus,
+eligibility, state, and destinations.
 
 Keep the current open-traversal behavior and supported Johto/Hoenn origins.
 Tower, Silph, ship, and Gym completion must not newly gate ordinary city access,
@@ -352,9 +289,9 @@ adventure and reward recovery requirements remain unchanged.
 
 For the Anne, this PRD supersedes the independent-story design's temporary
 ship/departure requirement and strict Bill-before-boarding sequence. The Anne
-persists, any existing S.S. Ticket permits boarding, and Bill's rescue remains
-available independently. His reward still provides a route to boarding for a
-player without the Ticket. Travel routing is outside this story PRD.
+persists only to keep its one-time adventure recoverable, any existing S.S.
+Ticket permits boarding, and Bill's rescue remains available independently.
+His reward still provides a route to boarding for a player without the Ticket.
 
 ### Superseded transport and League requirements
 
@@ -363,16 +300,9 @@ implementation. Their corresponding specifications record the same scoped
 overrides; the runtime and existing audits remain unchanged in this docs-only
 proposal.
 
-- **Vermilion menu extension:** Supersede the
-  [Aqua specification](../specs/wayfarer-hoenn-entry.md#approved-future-vermilion-menu-extension)'s
-  restriction that Wayfarer only replaces menu slot 0 and otherwise keeps an
-  exact six-entry menu. Preserve slots 0–5, including Exit, and append Anne at
-  slot 6. Existing service eligibility and destination behavior remain binding.
-  The implementation must revise `game/tools/wayfarer_hoenn_entry/generate.py`
-  to accept the additional entry and dispatch case, and to verify preserved
-  original slots plus per-service eligibility. Keep its standalone HNS checks
-  unchanged. Do not disable the audit or change its acceptance rules before
-  implementing the feature it validates.
+- **Vermilion menu extension:** The
+  [S.S. Anne specification](../specs/frlg-kanto-ss-anne-adventure.md#boarding-and-return)
+  owns the exact additive menu contract and the required Aqua audit changes.
 - **Separate League opponents:** Supersede the
   [League circuit specification](../specs/wayfarer-interregional-league-circuit.md#approved-future-kanto-and-johto-lineups)'s
   shared HNS opponent-lineup requirement. Kanto's authored Tier 1 lineup is
@@ -423,17 +353,10 @@ provide a valid return to the HNS world.
 - Do Mt. Moon and Safari retain their intended objectives in the HNS spaces?
 - Can both supported origins complete the adventures in varied orders,
   including with HMs already obtained elsewhere?
-- Does the Vermilion sailor retain every existing option and add Anne boarding,
-  without changing the directional circuit, old option behavior, or dock terrain?
-- Can an Anne-eligible Ticket holder board even without regular Aqua eligibility,
-  with cancellation and Ticket refusal leaving both ships' state untouched?
-- Does leaving Anne return safely to the existing dock without automatic travel
-  or reboarding, and do special services retain their original eligibility?
-- Can a player with a Ticket from any origin board Anne, help the captain,
-  leave, and revisit afterward without losing unfinished content or the Ticket?
+- Does the dedicated Anne specification pass its boarding, return, one-time
+  content, revisit, isolation, and no-recurring-utility acceptance checks?
 - Can an existing Ticket holder rescue Bill later without a duplicate reward
   or an automatic story completion? Can a player without one obtain it normally?
-- Do repeat Anne visits preserve one-time rewards and Blue's actual progression?
 - Can the player leave and return to Kanto throughout every adventure without
   affecting the Aqua circuit or unrelated regional progress?
 - Does the separately specified coastal port pass its route, town, service,
@@ -468,12 +391,6 @@ provide a valid return to the HNS world.
 4. **Steven's gift:** Decide whether to retain the Hoenn starter choice as an
    additional local gift for every origin or adapt the reward. It must not
    modify origin selection or consume another region's opening reward.
-5. **Anne travel: separate specification.** Define the future route, other
-   ports, schedules, and travel presentation outside this story PRD. Vermilion
-   sailor boarding, shared Ticket eligibility, and persistent onboard content
-   are settled. Existing special destinations remain on the Vermilion sailor
-   menu; no additional NPC interaction is required.
-
 Exact entrance tiles, per-floor event placement, state allocation, reward
 thresholds, and any required supplementary puzzle rooms belong in follow-up
 specifications once these product choices are resolved.

@@ -1,11 +1,14 @@
 # FRLG Kanto coastal routes port
 
 PRD: [FRLG Cinnabar, Seafoam Islands, and coastal routes port](../prds/frlg-cinnabar-seafoam-port.md)
-Implemented: No
+Implemented: Yes
 
-The current `CoastPoc` maps prove navigation with empty object and encounter
-events. This specification replaces that preview with the complete FRLG Route
-19, Route 20, Route 21 North, and Route 21 South content in Wayfarer. The
+Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
+
+The historical `CoastPoc` maps proved navigation with empty object and
+encounter events. This implemented specification replaced that preview with
+the complete FRLG Route 19, Route 20, Route 21 North, and Route 21 South
+content in Wayfarer. The
 [coastal integration specification](frlg-cinnabar-seafoam-integration.md)
 owns links to Cinnabar, Seafoam, Fuchsia, and Pallet, shared state allocation,
 and the release budget.

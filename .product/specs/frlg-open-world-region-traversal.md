@@ -3,13 +3,18 @@
 PRD: [FireRed and LeafGreen open-world regional traversal](../prds/frlg-open-world-region-traversal.md)
 Implemented: Yes
 
-The [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-supersedes this feature's future Cinnabar, Seafoam, and Route 19 through Route
-21 selection and its Bill-at-Cinnabar coupling. The existing implementation
-below remains a historical compatibility record. Future work keeps the native-
-Surf contract through FRLG Route 21 North and South, uses the selected FRLG
+The implemented [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
+supersedes this feature's former Cinnabar, Seafoam, Route 19 through Route 21,
+and Bill-at-Cinnabar assumptions. The implementation record below is retained
+for historical compatibility. The completed port keeps the native-Surf
+contract through FRLG Route 21 North and South, uses the selected FRLG
 Cinnabar endpoint, and leaves the Meteorite story and Sevii travel
-independently owned. The full coastal port remains unimplemented.
+independently owned.
+
+The unimplemented [S.S. Anne adventure port](frlg-kanto-ss-anne-adventure.md)
+also supersedes this historical implementation's Anne departure and removal
+behavior. The Seagallop unlock, destinations, and state-isolation requirements
+remain binding; future implementation must adapt only the Anne branch.
 
 ## Scope
 
@@ -120,27 +125,20 @@ Reward reconciliation uses possession as the authority:
 | Yes | Yes | Use completed dialogue and give no duplicate. |
 | No | Yes | Treat the reward as still owed. Restore the pass when space is available and keep turn-in retryable otherwise. |
 
-### Shared Vermilion dock
+### Historical shared Vermilion dock
 
-Keep `LOCALID_VERMILION_FERRY_SAILOR`, the two ticket-check triggers, and
-`VAR_MAP_SCENE_VERMILION_CITY`. In particular, only the original S.S. Anne
-departure may set the Vermilion scene to 3.
+The shipped traversal feature kept `LOCALID_VERMILION_FERRY_SAILOR`, the two
+ticket-check triggers, and `VAR_MAP_SCENE_VERMILION_CITY`. Its source Anne
+branch set scene 3 on departure and then removed the Anne choice, while its
+Sevii branch remained available. This describes the implemented baseline only;
+it is not an Anne requirement for future work.
 
-When the Rainbow Pass is not available through the shakedown, the sailor and
-ticket triggers retain their existing S.S. Anne behavior. Once the player owns
-the Rainbow Pass and `FLAG_SEVII_SHAKEDOWN_COMPLETE` is set, both entry paths
-use this dispatch:
-
-| S.S. Anne state | Dock behavior |
-| --- | --- |
-| `VAR_MAP_SCENE_VERMILION_CITY < 3` | Offer S.S. Anne, Sevii Islands, and Cancel. S.S. Anne enters the existing ticket check and boarding flow. Sevii Islands does not run any S.S. Anne script. |
-| `VAR_MAP_SCENE_VERMILION_CITY == 3` | Offer Sevii Islands and Cancel. Do not restore the S.S. Anne choice. |
-
-Cancel returns the player to the walkable side of the sailor without changing
-state. Selecting the S.S. Anne preserves the Ticket check, ship rival, captain,
-Cut reward, departure, and all existing movement. Selecting Sevii Islands never
-writes the Vermilion scene, S.S. Anne variables, Ticket flags, or ship object
-state.
+The [dedicated Anne specification](frlg-kanto-ss-anne-adventure.md) replaces
+that branch, owns the future selector, and forbids departure. This
+specification continues to require bidirectional isolation: selecting Sevii
+never writes Anne scenes, variables, Ticket flags, or object state, and Anne
+boarding or completion never writes Seagallop state. Cancel returns the player
+to the walkable side of the sailor without changing state.
 
 If `FLAG_SEVII_TRAVEL_INTRO_SEEN` is unset, the Sevii choice always sails to One
 Island and does not show another destination. Once that flag is set, it routes
@@ -150,9 +148,9 @@ Aurora Ticket branches when those branches are independently available.
 ### Historical travel-only One Island introduction
 
 The details in this section describe the shipped feature before the Cinnabar
-port. They do not require a future Cinnabar meeting with Bill. The port owns
-removal of that coupling; the owning Meteorite and Sevii story specifications
-must define any future invitation and preserve this feature's completed state.
+port. They did not require a Cinnabar meeting with Bill. The completed port
+removed that coupling; the owning Meteorite and Sevii story specifications
+define any later invitation and preserve this feature's completed state.
 
 The early trip uses dedicated travel states without changing
 `VAR_MAP_SCENE_ONE_ISLAND_POKEMON_CENTER_1F`. It must not reuse scene value 5,
@@ -336,9 +334,11 @@ known only for the Route 21 crossing:
 4. Complete the three shakedown spots in every order. Save and reload after
    each spot, exercise a full Key Items pocket at turn-in, and inject every row
    of the Rainbow Pass reconciliation table.
-5. While the S.S. Anne is present, select Cancel, fail and pass its Ticket
-   check, board it, and use Sevii travel. Confirm neither branch changes the
-   other's state. Repeat after the ship's normal departure.
+5. Historical implementation check: while the S.S. Anne is present, select
+   Cancel, fail and pass its Ticket check, board it, and use Sevii travel.
+   Confirm neither branch changes the other's state. Repeat after the source
+   ship's normal departure. The dedicated Anne port replaces this departure
+   expectation when implemented.
 6. Historical implementation check: interrupt the first Sevii introduction with a full Key Items pocket, return
    to Vermilion, make room, and finish it. Confirm no Meteorite, Tri-Pass,
    storage-disable flag, visible Bill, or One Island quest state changed. Then

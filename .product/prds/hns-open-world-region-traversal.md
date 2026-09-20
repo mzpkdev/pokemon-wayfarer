@@ -6,12 +6,12 @@ assumptions in this document. It is not implemented yet. Regional routes,
 field-use authorization, scaling and unrelated mechanics remain unchanged;
 standalone builds retain their existing contract.
 
-The [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
-supersedes this PRD's future Cinnabar, Seafoam, and Route 19 through Route 21
+The implemented [FRLG Cinnabar and Seafoam Islands port](frlg-cinnabar-seafoam-port.md)
+supersedes this PRD's former Cinnabar, Seafoam, and Route 19 through Route 21
 map and encounter selection. This PRD continues to require the native-Surf
 settlement connection to Cinnabar; the port owns its FRLG Cinnabar endpoint,
 the FRLG Seafoam replacement, and FRLG Route 19, Route 20, and Route 21 North
-and South. The HNS coast behavior below is historical once that port lands;
+and South. The HNS coast behavior below is historical;
 standalone HNS remains unchanged.
 
 ## Player outcome
