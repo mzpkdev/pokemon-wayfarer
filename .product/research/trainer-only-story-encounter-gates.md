@@ -166,7 +166,7 @@ solve, not permission to relocate or auto-complete the rival chapter.
 | Oak's Lab starter battles | [scripts:333](../../game/data/maps/PalletTown_ProfessorOaksLab_Frlg/scripts.inc#L333), other starter branches at 386/442. | U. Authored starter/tutorial outcome. |
 | Route 22 early and late rival | [scripts:61](../../game/data/maps/Route22_Frlg/scripts.inc#L61), later family at 211. | R/T. Defer chapters while preserving road access and narrative order. |
 | Cerulean rival | [scripts:15](../../game/data/maps/CeruleanCity_Frlg/scripts.inc#L15), Fame Checker continuation around 68. | R/T. Bill access cannot depend on completing this chapter; reward remains local. |
-| S.S. Anne corridor rival | [scripts:4](../../game/data/maps/SSAnne_2F_Corridor_Frlg/scripts.inc#L4). | R/U. Captain access must remain independent; ship departure cannot erase a pending chapter. Anne/Aqua adaptation remains unresolved. |
+| S.S. Anne corridor rival | [scripts:4](../../game/data/maps/SSAnne_2F_Corridor_Frlg/scripts.inc#L4). | R/U. Captain access remains independent. The [Anne specification](../specs/frlg-kanto-ss-anne-adventure.md) settles persistent recovery and Aqua isolation. |
 | Pokémon Tower 2F rival | [scripts:60](../../game/data/maps/PokemonTower_2F_Frlg/scripts.inc#L60). | R. Defer without blocking the Fuji investigation; port geography unresolved. |
 | Silph 7F rival | [scripts:71](../../game/data/maps/SilphCo_7F_Frlg/scripts.inc#L71). | R. Rescue/occupation must complete independently while leaving chapter recoverable. |
 | Champion rival | [scripts:102](../../game/data/maps/PokemonLeague_ChampionsRoom_Frlg/scripts.inc#L102). | G/U. League finale, excluded from generic rival deferral. Follow authored League entry/loss policy. |

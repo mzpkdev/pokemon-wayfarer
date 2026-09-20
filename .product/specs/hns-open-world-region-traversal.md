@@ -10,14 +10,13 @@ their existing contract.
 PRD: [HNS open-world regional traversal](../prds/hns-open-world-region-traversal.md)
 Implemented: Yes
 
-The [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-supersedes this implemented feature's future Cinnabar, Seafoam, and Route 19
-through Route 21 selection. The existing HNS coast behavior remains historical
-evidence. Future Wayfarer work keeps the native-Surf access contract while
-selecting FRLG Cinnabar, all five FRLG Seafoam floors, FRLG Route 19, FRLG
-Route 20, and FRLG Route 21 North and South. It does not retain HNS Route 19,
-20, or 21 content as active Wayfarer content after integration; standalone HNS
-remains unchanged.
+The implemented [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
+supersedes this feature's former Cinnabar, Seafoam, and Route 19 through Route
+21 selection. The existing HNS coast behavior remains historical evidence.
+Wayfarer keeps the native-Surf access contract while selecting FRLG Cinnabar,
+all five FRLG Seafoam floors, FRLG Route 19, FRLG Route 20, and FRLG Route 21
+North and South. It does not retain HNS Route 19, 20, or 21 content as active
+Wayfarer content; standalone HNS remains unchanged.
 
 ## Scope
 

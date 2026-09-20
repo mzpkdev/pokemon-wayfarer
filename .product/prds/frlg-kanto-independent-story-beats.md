@@ -40,7 +40,7 @@ Returning after the real prerequisite is satisfied makes it available normally.
 | Mt. Moon fossils | Rocket encounters, the Super Nerd battle, and the existing fossil choice. | Treat as a local cave adventure. No later Rocket adventure requires its completion. Fossil rewards remain attached to their existing interactions. |
 | Cerulean burglary | Investigate the robbed house, confront the Rocket, and recover the TM. | Keep independent of Bill, travel to Vermilion, and the major Rocket stories. |
 | Nugget Bridge | Trainer challenge, prize, and Rocket recruitment attempt. | Preserve the local challenge order without requiring another Rocket adventure. |
-| Bill and the S.S. Anne | Help Bill, receive his Ticket, board the ship, help the captain, and receive Cut. | Keep this direct sequence. No unrelated badge or rival chapter is required to reach Bill or complete the captain's adventure. |
+| Bill and the S.S. Anne | Help Bill and receive his Ticket; board the ship, help the captain, and receive Cut. | Bill is one route to the Ticket, not a boarding prerequisite when the player already owns one. The [dedicated Anne specification](../specs/frlg-kanto-ss-anne-adventure.md) owns the persistent, one-time ship adventure. |
 | Celadon and Pokémon Tower | Discover the hideout, defeat Giovanni, obtain the Scope, resolve Marowak's ghost, rescue Fuji, and receive the Flute. | Keep as a connected investigation, independent of Silph Co., Mt. Moon completion, and specific Gyms. |
 | Snorlax | Use the Poké Flute for the existing Route 12 and Route 16 encounters. | Retain the Flute prerequisite. Either encounter may be completed first; neither gates ordinary regional travel. |
 | Silph Co. | Infiltrate the occupied company, solve its local access puzzles, defeat Giovanni, and rescue the staff. | Remove Mr. Fuji's rescue as an entrance prerequisite. Keep this adventure independently available in Saffron. |
@@ -55,14 +55,11 @@ Player origin and starter selection belong to the separate opening design.
 ### Bill and the S.S. Anne
 
 Bill remains the Ticket giver, and the captain remains the Cut reward giver.
-Preserve the ship's normal local progression and departure after the captain's
-adventure. Boarding and departure must not advance a rival chapter that was not
-played or change another travel service's entitlement.
-
-The ship is a temporary location. A deferred rival scene or outstanding reward
-must not silently disappear when the ship departs. Resolve that scene ownership
-in the specification; do not make the entire previous rival itinerary an implicit
-requirement for obtaining Cut.
+The [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md)
+supersedes this document's former temporary-ship and strict Bill-first design.
+The ship remains accessible so unfinished one-time content cannot disappear,
+but it offers no transport, recurring service, rematch, or renewable reward.
+Its Blue scene must not become an implicit requirement for obtaining Cut.
 
 ### Celadon, Lavender, and the Flute
 
@@ -224,8 +221,8 @@ distinct from unrelated regional progression.
   the major Rocket investigations and Giovanni finale. No incident is erased or
   attributes an unplayed encounter to the player.
 - Help Bill and complete the captain's adventure without unrelated Gym or rival
-  progress. Verify Ticket, Cut, ship departure, outstanding rewards, and deferred
-  rival handling together.
+  progress. Verify Ticket and Cut handling, persistent access to outstanding
+  one-time content, and the absence of recurring ship utility.
 - Discover the Tower problem before visiting Celadon. Follow locally understandable
   guidance, obtain the Scope normally, and return to complete the rescue and Flute.
 - Finish Silph before Celadon/Lavender, then test the opposite order and interrupted
@@ -259,9 +256,9 @@ Giovanni's finale without a replacement plot.
    Scope when the player discovers the Tower first?
 2. Which dialogue and visibility changes preserve optional minor Rocket incidents
    after Giovanni's withdrawal without adding mandatory prerequisites?
-3. Which rival chapters genuinely depend on earlier scenes, and how can the S.S.
-   Anne departure and other temporary scenes preserve them without blocking the
-   local adventure? Review the League appearance separately from access to Silph.
+3. Which rival chapters genuinely depend on earlier scenes? Review the League
+   appearance separately from access to Silph; the dedicated Anne specification
+   has settled recovery and captain access aboard the ship.
 4. What TR thresholds govern the Master Ball, birds, and Mewtwo? Where should
    Mewtwo's readiness be enforced within the existing Cerulean Cave access flow?
 5. How should the President explain deferred Master Ball collection, and which

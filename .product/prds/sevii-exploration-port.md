@@ -131,7 +131,9 @@ they do not replace the authored Sevii roster.
 
 The existing Wayfarer Vermilion dock remains the authority for the S.S. Aqua
 and other approved special destinations. Sevii adds one independent choice and
-must not advance, consume, or hide another route.
+must not advance, consume, or hide another route. The future
+[S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md) adds its
+own independent choice and owns all Anne behavior.
 
 Field moves follow the existing Wayfarer field-use and native-learnset rules.
 Optional island branches may require Surf, Cut, Rock Smash, Strength, or

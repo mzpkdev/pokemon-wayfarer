@@ -1,7 +1,9 @@
 # Cinnabar and Seafoam coastal integration
 
 PRD: [FRLG Cinnabar, Seafoam Islands, and coastal routes port](../prds/frlg-cinnabar-seafoam-port.md)
-Implemented: No
+Implemented: Yes
+
+Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
 ## Scope
 

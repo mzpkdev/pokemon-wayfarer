@@ -7,9 +7,10 @@ FRLG is Kanto's narrative baseline; preserve as much HNS Kanto content as
 possible through adaptation. Wayfarer's date is deliberately imprecise.
 Recommendations below are options for product review, not approved cuts.
 The full FRLG Cinnabar port and a persistent S.S. Anne accepting any S.S.
-Ticket are selected. Anne travel routes belong in a separate specification. Subsequent accepted
-quest and League choices are recorded in the PRD; alternatives in this audit
-remain historical analysis, not competing requirements.
+Ticket are selected. The [dedicated Anne specification](../specs/frlg-kanto-ss-anne-adventure.md)
+defines it as one non-resetting adventure with no transport or recurring
+utility. Subsequent accepted quest and League choices are recorded in the PRD;
+alternatives in this audit remain historical analysis, not competing requirements.
 The recommendation below to retain HNS Routes 19–21 has since been superseded
 by the [full FRLG coastal port](../prds/frlg-cinnabar-seafoam-port.md), which
 selects FRLG Route 19, Route 20, and both Route 21 sections with their content.
@@ -132,21 +133,21 @@ succession system to ship this port.
 
 ## Selected Vermilion boarding approach
 
-Add Board S.S. Anne to the existing Vermilion sailor menu, retaining Slateport,
-Southern Island, Birth Island, Faraway Island, Battle Frontier, and Exit.
-Anne boarding checks the shared Ticket and warps to its interior; exiting
-returns to the current dock. Reuse existing terrain and the visible Aqua
-object. No second berth, dock variant, or dock `map.bin` edit is required by
-this design. Anne's future travel routes remain separately specified.
+The [dedicated Anne specification](../specs/frlg-kanto-ss-anne-adventure.md)
+adds Board S.S. Anne to Wayfarer's current top-level Vermilion selector without
+changing the Sevii or Aqua branches. Anne boarding checks the shared Ticket and
+warps to its interior; exiting returns to the current dock. Reuse existing
+terrain and the visible Aqua object. No second berth, dock variant, dock
+`map.bin` edit, Anne route, or recurring service is part of this design.
 
 Evidence: [Vermilion dock events](../../game/data/maps/VermilionCity_PortInside_hns/map.json)
 contain one exterior return warp, a sailor, and an Aqua object. The
 [boarding scripts](../../game/data/maps/VermilionCity_PortInside_hns/scripts.inc)
 already drive travel through the sailor rather than a ship-door warp.
-The inherited destinations stay on this same menu, with their existing option
-identifiers and eligibility. Anne must remain accessible to any S.S. Ticket
-holder without opening other services before their regular eligibility.
-Olivine and Slateport interactions remain unchanged. See the PRD.
+The inherited destinations retain their existing submenu identifiers and
+eligibility. Anne must remain accessible to any S.S. Ticket holder without
+opening other services before their regular eligibility. Olivine and Slateport
+interactions remain unchanged. See the specification.
 
 ## Cross-region follow-up
 

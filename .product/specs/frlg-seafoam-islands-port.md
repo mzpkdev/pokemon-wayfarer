@@ -1,7 +1,9 @@
 # FRLG Seafoam Islands port
 
 PRD: [FRLG Cinnabar and Seafoam Islands port](../prds/frlg-cinnabar-seafoam-port.md)
-Implemented: No
+Implemented: Yes
+
+Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
 ## Scope
 

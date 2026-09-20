@@ -3,6 +3,12 @@
 PRD: [Sevii exploration port](../prds/sevii-exploration-port.md)
 Implemented: Yes
 
+The unimplemented [S.S. Anne adventure port](frlg-kanto-ss-anne-adventure.md)
+will extend the top-level Vermilion selector defined below. It supersedes only
+the selector's current three-result shape and Anne departure assumptions;
+Sevii ordering, dispatch, eligibility, destinations, and isolation remain
+binding until and after that port lands.
+
 ## Scope
 
 This specification defines how the FRLG Sevii map catalog becomes selectable
@@ -201,11 +207,14 @@ without consuming or advancing unrelated campaign state.
 
 ### Ferry and recovery
 
-Add a Wayfarer-only top-level selector to
-`VermilionCity_PortInside_hns` with fixed results `0 = SEVII ISLANDS`,
-`1 = OTHER DESTINATIONS`, and `2 = CANCEL`. `MULTI_B_PRESSED` has the same
-effect as `CANCEL`: close the message, release the player, and leave the player
-on the walkable side of the sailor.
+The shipped baseline adds a Wayfarer-only top-level selector to
+`VermilionCity_PortInside_hns` with results `0 = SEVII ISLANDS`,
+`1 = OTHER DESTINATIONS`, and `2 = CANCEL`. The
+[Anne specification](frlg-kanto-ss-anne-adventure.md#boarding-and-return)
+supersedes only that three-result shape: it keeps results 0 and 1, assigns Anne
+to result 2, and moves Cancel to result 3. All Sevii behavior below remains
+binding. `MULTI_B_PRESSED` has the same effect as `CANCEL`: close the message,
+release the player, and leave the player on the walkable side of the sailor.
 
 Result 0 enters a Wayfarer-owned dynamic Vermilion Sevii selector. Its first
 entry is always `ONE ISLAND`, followed by each eligible special island, then
