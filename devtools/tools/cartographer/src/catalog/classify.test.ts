@@ -22,9 +22,9 @@ describe("Wayfarer map regions", () => {
         "MAPSEC_BATTLE_FRONTIER",
       ).id,
     ).toBe("hoenn")
-    expect(regionFor("Route201", "gMapGroup_TownsAndRoutes", "MAPSEC_LITTLEROOT_TOWN", "sinnoh").id).toBe(
-      "sinnoh",
-    )
+    expect(
+      regionFor("Route201", "gMapGroup_TownsAndRoutes", "MAPSEC_LITTLEROOT_TOWN", "sinnoh").id,
+    ).toBe("sinnoh")
     expect(sourceRegionFor("sinnoh")).toBe("sinnoh")
     expect(sourceRegionFor("hns")).toBeNull()
     expect(

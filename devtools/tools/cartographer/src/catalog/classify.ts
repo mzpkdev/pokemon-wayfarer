@@ -37,7 +37,9 @@ const allCatalogRegions: CatalogRegion[] = [...catalogRegions, sinnoh]
 
 export const catalogRegionsFor = (regionIds: Iterable<string>): CatalogRegion[] => {
   const present = new Set(regionIds)
-  return allCatalogRegions.filter((region) => catalogRegions.includes(region) || present.has(region.id))
+  return allCatalogRegions.filter(
+    (region) => catalogRegions.includes(region) || present.has(region.id),
+  )
 }
 
 /**
