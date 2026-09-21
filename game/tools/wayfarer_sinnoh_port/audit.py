@@ -55,26 +55,113 @@ def validate_porymap_contract(root: Path, rows: list[dict[str, Any]]) -> dict[st
     if any(row.get("layout_format") != "emerald" for row in rows):
         raise FoundationError("frozen manifest rows must declare layout_format emerald")
     layouts = load_json(root / "data/layouts/layouts.json").get("layouts", [])
-    current_layouts = {
-        layout.get("id") for layout in layouts
+    by_id = {
+        layout.get("id"): layout for layout in layouts
         if isinstance(layout, dict) and isinstance(layout.get("id"), str)
     }
-    imported_targets = sorted(
-        row["target_layout"] for row in rows if row.get("target_layout") in current_layouts
-    )
-    if imported_targets:
-        raise FoundationError(
-            "imported target layouts require verification: " + ", ".join(imported_targets)
-        )
+    imported_targets = [row["target_layout"] for row in rows]
+    if any(target not in by_id for target in imported_targets):
+        raise FoundationError("Sinnoh imported target layouts are incomplete")
+    for row in rows:
+        layout = by_id[row["target_layout"]]
+        if layout.get("game_version") != "sinnoh" or layout.get("layout_version") != "emerald":
+            raise FoundationError(f"Sinnoh imported layout provenance drifted: {row['target_layout']}")
     return {
         "base_game_version": {"value": "pokeemerald", "verified": True},
         "frozen_manifest_layout_format": {
             "value": "emerald", "verified": True, "map_count": len(rows),
         },
         "imported_layout_verification": {
-            "verified": False, "layout_count": len(imported_targets),
+            "verified": True, "layout_count": len(imported_targets),
         },
     }
+
+
+def expected_imported_map(row: dict[str, Any]) -> dict[str, Any]:
+    properties = row["map_properties"]
+    return {
+        "id": row["target_map_id"], "name": row["target_map"], "game_version": "sinnoh",
+        "layout": row["target_layout"], "region": "REGION_SINNOH",
+        "region_map_section": properties["target_map_section"],
+        "music": properties["music"], "weather": properties["weather"],
+        "map_type": properties["map_type"], "requires_flash": properties["requires_flash"],
+        "allow_cycling": properties["allow_cycling"], "allow_escaping": properties["allow_escaping"],
+        "allow_running": properties["allow_running"], "show_map_name": properties["show_map_name"],
+        "battle_scene": properties["battle_scene"], "warp_events": row["warps"],
+        # The frozen donor represents no connections as numeric 0; populated
+        # rows preserve their explicit connection vectors.
+        "connections": row["connections"] if row["connections"] else 0,
+        "object_events": [], "coord_events": [], "bg_events": [],
+    }
+
+
+def require_exact_projection(actual: dict[str, Any], expected: dict[str, Any], kind: str, name: str) -> None:
+    changed = sorted(key for key in set(actual) | set(expected) if actual.get(key) != expected.get(key))
+    if changed:
+        raise FoundationError(f"Sinnoh {kind} projection drifted: {name} ({', '.join(changed)})")
+
+
+def expected_imported_layout(root: Path, row: dict[str, Any], assets: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    from import_catalog import asset_path
+
+    return {
+        "id": row["target_layout"], "name": f"{row['target_map']}_Layout",
+        "width": row["dimensions"]["width"], "height": row["dimensions"]["height"],
+        "primary_tileset": row["tilesets"]["proposed_target_primary"],
+        "secondary_tileset": row["tilesets"]["proposed_target_secondary"],
+        "blockdata_filepath": asset_path(root, row, assets[row["asset_records"]["blockdata"]], "blockdata"),
+        "border_filepath": asset_path(root, row, assets[row["asset_records"]["border"]], "border"),
+        "game_version": "sinnoh", "layout_version": "emerald",
+    }
+
+
+def validate_imported_catalog(root: Path, rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Verify the pending catalog is authored but cannot be runtime-selected yet."""
+    from import_catalog import expected_sections
+
+    if any(row["inclusion"]["state"] != "FROZEN_NOT_SELECTED" for row in rows):
+        raise FoundationError("imported Sinnoh catalog must remain pending topology selection")
+    if any(row["topology"] != {"state": "FROZEN_SOURCE_PENDING_REVIEW", "repair": None} for row in rows):
+        raise FoundationError("imported Sinnoh catalog topology is not frozen pending review")
+
+    groups = load_json(root / "data/maps/map_groups.json")
+    expected_groups = list(GROUPS)
+    if groups.get("group_order", [])[-len(expected_groups):] != expected_groups:
+        raise FoundationError("Sinnoh map groups are not appended contiguously")
+    expected_members = {group: [] for group in expected_groups}
+    for row in rows:
+        expected_members[row["source_group"]].append(row["target_map"])
+    if any(groups.get(group) != members for group, members in expected_members.items()):
+        raise FoundationError("Sinnoh map-group membership differs from the frozen manifest")
+
+    layouts = load_json(root / "data/layouts/layouts.json").get("layouts", [])
+    target_layouts = [row["target_layout"] for row in rows]
+    imported_layouts = [layout for layout in layouts if isinstance(layout, dict) and layout.get("id") in set(target_layouts)]
+    if [layout.get("id") for layout in imported_layouts] != target_layouts or layouts[-len(rows):] != imported_layouts:
+        raise FoundationError("Sinnoh layouts are not appended in frozen manifest order")
+    for row, layout in zip(rows, imported_layouts, strict=True):
+        expected = expected_imported_layout(root, row, assets)
+        require_exact_projection(layout, expected, "layout", row["target_layout"])
+        for kind, path in (("blockdata", expected["blockdata_filepath"]),
+                           ("border", expected["border_filepath"])):
+            if not (root / path).is_file():
+                raise FoundationError(f"Sinnoh layout payload is missing: {path}")
+            asset = assets[row["asset_records"][kind]]
+            if asset.get("reuse_class") != "EXACT_ALIAS" and sha256_file(root / path) != asset.get("source_sha256"):
+                raise FoundationError(f"Sinnoh layout payload hash drifted: {path}")
+
+    sections = load_json(root / "src/data/region_map/region_map_sections.json").get("map_sections", [])
+    expected_map_sections = expected_sections(rows)
+    if sections[-len(expected_map_sections):] != expected_map_sections:
+        raise FoundationError("Sinnoh map sections are not appended in frozen manifest order")
+
+    for row in rows:
+        path = root / "data/maps" / row["target_map"] / "map.json"
+        imported = load_json(path)
+        require_exact_projection(imported, expected_imported_map(row), "map", row["target_map"])
+
+    return {"verified": True, "map_count": len(rows), "layout_count": len(imported_layouts),
+            "map_section_count": len(expected_map_sections), "release_link_enabled": False}
 
 
 def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
@@ -89,6 +176,8 @@ def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]
         raise FoundationError("map and asset release selection gates disagree")
     if selection.get("asset_manifest_ready") != asset_selection.get("asset_manifest_ready"):
         raise FoundationError("map and asset readiness gates disagree")
+    if selection.get("release_link_enabled") or selection.get("asset_manifest_ready"):
+        raise FoundationError("pending topology catalog must keep release selection closed")
     if selection.get("allowed_inclusion_states") != ["FROZEN_NOT_SELECTED", "INCLUDED", "EXCLUDED"]:
         raise FoundationError("map manifest has invalid inclusion-state contract")
     expected_groups = [{"source_group": group, "target_group": group, "order": order} for order, group in enumerate(GROUPS)]
@@ -108,6 +197,12 @@ def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]
         raise FoundationError("map manifest must contain exactly 133 maps")
     asset_rows = records_by_id(assets)
     map_ids, layout_ids = current_symbols(root)
+    # Imported symbols are intentional appended declarations, not pre-existing
+    # collisions that would require a second SINNOH rename.
+    declared_map_targets = {row.get("target_map_id") for row in rows if isinstance(row, dict)}
+    declared_layout_targets = {row.get("target_layout") for row in rows if isinstance(row, dict)}
+    map_ids -= declared_map_targets
+    layout_ids -= declared_layout_targets
     seen_maps: set[str] = set()
     seen_targets: set[str] = set()
     seen_layout_targets: set[str] = set()
@@ -261,6 +356,7 @@ def build_report(root: Path, maps_path: Path, assets_path: Path, donor_root: Pat
     asset_manifest = load_json(assets_path)
     rows, assets = validate_checked_in(root, maps, asset_manifest)
     porymap_contract = validate_porymap_contract(root, rows)
+    catalog = validate_imported_catalog(root, rows, assets)
     validate_exact_worktree_assets(root, assets)
     donor_counts = validate_donor(donor_root, rows, assets) if donor_root is not None else None
     blockers = sorted(record_id for record_id, row in assets.items() if row.get("reuse_class") == "REVIEW_REQUIRED" or row.get("selection_blocker"))
@@ -279,7 +375,7 @@ def build_report(root: Path, maps_path: Path, assets_path: Path, donor_root: Pat
                                 "frozen_manifest_counts": {"warps": sum(len(row["warps"]) for row in rows), "connections": sum(len(row["connections"]) for row in rows),
                                                            "object_events": 0, "coord_events": 0, "bg_events": 0, "nonempty_map_scripts": 0, "wild_encounter_profiles": 0},
                                 "exact_worktree_aliases_verified": sum(1 for row in assets.values() if row.get("reuse_class") == "EXACT_ALIAS"),
-                                "porymap": porymap_contract},
+                                "porymap": porymap_contract, "catalog": catalog},
         "donor_source_verification": {"performed": donor_root is not None, "hashes_verified": donor_root is not None,
                                         "observed_empty_content_counts": donor_counts},
         "selection": maps["selection"], "asset_record_count": len(assets), "review_required": blockers,

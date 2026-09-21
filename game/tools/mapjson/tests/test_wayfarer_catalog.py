@@ -665,6 +665,38 @@ class MapjsonWayfarerTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("gSinnoh::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
 
+    def test_wayfarer_pending_sinnoh_map_has_no_script_table(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        map_dir = root / "data/maps/TwinleafTown"
+        map_dir.mkdir()
+        source = json.loads((GAME_ROOT / "data/maps/TwinleafTown/map.json").read_text())
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps(source))
+        (root / "include/constants/map_groups.h").write_text(
+            (GAME_ROOT / "include/constants/map_groups.h").read_text()
+        )
+        layout = next(
+            row for row in json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())["layouts"]
+            if row["id"] == source["layout"]
+        )
+        layouts_file = root / "data/layouts/layouts.json"
+        layouts_file.write_text(json.dumps({"layouts": [layout]}))
+        record = {
+            "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
+            "target_map": "TwinleafTown", "target_map_id": "MAP_TWINLEAF_TOWN",
+            "source_layout": source["layout"], "target_layout": source["layout"],
+        }
+        manifest = self.write_sinnoh_manifest(root, [record])
+        assets = self.write_sinnoh_asset_manifest(root, [record])
+
+        result = self.run_map(root, "wayfarer", map_file, layouts_file, sinnoh_manifest=manifest, sinnoh_assets=assets)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        header = (map_dir / "header.inc").read_text()
+        self.assertIn("\t.4byte TwinleafTown_MapEvents\n\t.4byte NULL\n", header)
+        self.assertNotIn("TwinleafTown_MapScripts", header)
+
     def test_wayfarer_sinnoh_release_requires_ready_asset_manifest_without_blockers(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)

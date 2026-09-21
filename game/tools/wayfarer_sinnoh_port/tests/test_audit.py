@@ -45,7 +45,11 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertEqual(integrity["porymap"], {
             "base_game_version": {"value": "pokeemerald", "verified": True},
             "frozen_manifest_layout_format": {"value": "emerald", "verified": True, "map_count": 133},
-            "imported_layout_verification": {"verified": False, "layout_count": 0},
+            "imported_layout_verification": {"verified": True, "layout_count": 133},
+        })
+        self.assertEqual(integrity["catalog"], {
+            "verified": True, "map_count": 133, "layout_count": 133,
+            "map_section_count": 60, "release_link_enabled": False,
         })
 
     def test_audit_report_is_deterministic_without_a_donor_checkout(self):
@@ -103,14 +107,14 @@ class SinnohFoundationAuditTests(unittest.TestCase):
             with self.assertRaisesRegex(AUDIT.FoundationError, "layout_format emerald"):
                 AUDIT.validate_porymap_contract(root, [{"layout_format": "frlg"}])
 
-    def test_rejects_imported_target_layout_without_verification(self):
+    def test_rejects_imported_target_layout_provenance_drift(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "porymap.project.json").write_text(json.dumps({"base_game_version": "pokeemerald"}))
             layouts = root / "data/layouts/layouts.json"
             layouts.parent.mkdir(parents=True)
             layouts.write_text(json.dumps({"layouts": [{"id": "LAYOUT_SINNOH_ROUTE201"}]}))
-            with self.assertRaisesRegex(AUDIT.FoundationError, "require verification"):
+            with self.assertRaisesRegex(AUDIT.FoundationError, "layout provenance drifted"):
                 AUDIT.validate_porymap_contract(root, [{
                     "layout_format": "emerald", "target_layout": "LAYOUT_SINNOH_ROUTE201",
                 }])
@@ -141,6 +145,51 @@ class SinnohFoundationAuditTests(unittest.TestCase):
     def test_release_selection_stays_blocked_by_frozen_selection_gate(self):
         with self.assertRaisesRegex(AUDIT.FoundationError, "asset gate"):
             AUDIT.build_report(GAME, self.maps_path, self.assets_path, release_selection=True)
+
+    def test_rejects_open_pending_topology_catalog_gate(self):
+        maps = json.loads(self.maps_path.read_text())
+        assets = json.loads(self.assets_path.read_text())
+        maps["selection"]["release_link_enabled"] = True
+        assets["selection"]["release_link_enabled"] = True
+        with self.assertRaisesRegex(AUDIT.FoundationError, "pending topology"):
+            AUDIT.validate_checked_in(GAME, maps, assets)
+
+    def test_imported_map_projection_rejects_frozen_content_drift(self):
+        maps = json.loads(self.maps_path.read_text())
+        row = maps["maps"][0]
+        actual = json.loads((GAME / "data/maps" / row["target_map"] / "map.json").read_text())
+        mutations = {
+            "warp_events": [*actual["warp_events"], {"dest_map": "MAP_BAD"}],
+            "connections": [{"direction": "left", "map": "MAP_BAD", "offset": 0}],
+            "music": "MUS_NONE",
+            "weather": "WEATHER_RAIN",
+            "allow_cycling": not actual["allow_cycling"],
+        }
+        for field, value in mutations.items():
+            with self.subTest(field=field):
+                changed = copy.deepcopy(actual)
+                changed[field] = value
+                with self.assertRaisesRegex(AUDIT.FoundationError, field):
+                    AUDIT.require_exact_projection(
+                        changed, AUDIT.expected_imported_map(row), "map", row["target_map"]
+                    )
+
+    def test_imported_layout_projection_rejects_metadata_drift(self):
+        maps = json.loads(self.maps_path.read_text())
+        assets = AUDIT.records_by_id(json.loads(self.assets_path.read_text()))
+        row = maps["maps"][0]
+        actual = next(
+            layout for layout in json.loads((GAME / "data/layouts/layouts.json").read_text())["layouts"]
+            if layout["id"] == row["target_layout"]
+        )
+        for field, value in {"width": actual["width"] + 1, "name": "Drifted_Layout"}.items():
+            with self.subTest(field=field):
+                changed = copy.deepcopy(actual)
+                changed[field] = value
+                with self.assertRaisesRegex(AUDIT.FoundationError, field):
+                    AUDIT.require_exact_projection(
+                        changed, AUDIT.expected_imported_layout(GAME, row, assets), "layout", row["target_layout"]
+                    )
 
     def test_tileset_implementation_is_technical_and_has_no_attribution_state(self):
         maps = json.loads(self.maps_path.read_text())

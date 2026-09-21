@@ -1112,6 +1112,11 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
         text << "\t.4byte WayfarerKantoCoast_Route21_North_MapScripts\n";
     else if (version == "wayfarer" && mapName == "Route21_South_Frlg")
         text << "\t.4byte WayfarerKantoCoast_Route21_South_MapScripts\n";
+    else if (get_source_version(map_data) == "sinnoh")
+        // The frozen donor catalog has no map-script tables.  A null pointer
+        // is the complete representation; do not manufacture 133 empty labels
+        // merely to satisfy the ordinary per-map script convention.
+        text << "\t.4byte NULL\n";
     else if (map_data.object_items().find("shared_scripts_map") != map_data.object_items().end())
         text << "\t.4byte " << json_to_string(map_data, "shared_scripts_map") << "_MapScripts\n";
     else
