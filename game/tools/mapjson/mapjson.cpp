@@ -40,7 +40,10 @@ string version;
 // System directory separator
 string sep;
 string wayfarer_sevii_manifest_path;
+string wayfarer_sinnoh_manifest_path;
+string wayfarer_sinnoh_asset_manifest_path;
 bool wayfarer_sevii_release_link_enabled = false;
+bool wayfarer_sinnoh_release_link_enabled = false;
 set<string> wayfarer_sevii_map_names;
 set<string> wayfarer_sevii_map_ids;
 set<string> wayfarer_sevii_layout_ids;
@@ -50,6 +53,9 @@ set<string> wayfarer_sevii_enabled_layout_ids;
 map<string, Json> wayfarer_sevii_records;
 map<string, bool> wayfarer_sevii_content_domains;
 map<string, string> wayfarer_sevii_content_inventory;
+map<string, Json> wayfarer_sinnoh_records;
+set<string> wayfarer_sinnoh_enabled_map_names;
+set<string> wayfarer_sinnoh_enabled_layout_ids;
 
 string read_text_file(string filepath) {
     ifstream in_file(filepath);
@@ -129,7 +135,11 @@ string json_to_string(const Json &data, const string &field = "", bool silent = 
 
 string get_source_version(const Json &data) {
     string source_version = json_to_string(data, "game_version", true);
-    return source_version.empty() ? "emerald" : source_version;
+    source_version = source_version.empty() ? "emerald" : source_version;
+    if (source_version != "emerald" && source_version != "frlg"
+     && source_version != "hns" && source_version != "sinnoh")
+        FATAL_ERROR("Unsupported map source version %s.\n", source_version.c_str());
+    return source_version;
 }
 
 bool source_version_is_selected(const string &source_version) {
@@ -138,6 +148,41 @@ bool source_version_is_selected(const string &source_version) {
 
     string selected_version = version == "firered" ? "frlg" : version;
     return source_version == selected_version;
+}
+
+const vector<std::pair<string, int>> wayfarer_sinnoh_source_groups = {
+    {"gMapGroup_SinnohTownsRoutes", 55}, {"gMapGroup_SpecialAreasSinnoh", 5},
+    {"gMapGroup_DungeonsSinnoh", 8}, {"gMapGroup_IndoorSinnoh", 14},
+    {"gMapGroup_IndoorTwinleaf", 6}, {"gMapGroup_IndoorSandgem", 6},
+    {"gMapGroup_IndoorJubilife", 20}, {"gMapGroup_IndoorOreburgh", 13},
+    {"gMapGroup_IndoorFloaroma", 6},
+};
+
+const map<string, int> wayfarer_sinnoh_expected_counts = {
+    {"maps", 133}, {"layouts", 133}, {"warps", 233}, {"connections", 114},
+    {"object_events", 0}, {"coord_events", 0}, {"bg_events", 0},
+    {"nonempty_map_scripts", 0}, {"wild_encounter_profiles", 0},
+};
+
+bool wayfarer_sinnoh_record_is_enabled(const Json &record) {
+    return wayfarer_sinnoh_release_link_enabled
+        && json_to_string(record["inclusion"], "state") == "INCLUDED";
+}
+
+bool wayfarer_sinnoh_map_is_selected(const Json &data) {
+    const string map_name = json_to_string(data, "name", true);
+    auto record = wayfarer_sinnoh_records.find(map_name);
+    if (record == wayfarer_sinnoh_records.end())
+        FATAL_ERROR("Sinnoh map %s is not registered in the Wayfarer Sinnoh manifest.\n", map_name.c_str());
+    if (json_to_string(data, "id") != json_to_string(record->second, "target_map_id")
+     || json_to_string(data, "layout") != json_to_string(record->second, "target_layout"))
+        FATAL_ERROR("Sinnoh map %s does not match its reviewed target IDs.\n", map_name.c_str());
+    return wayfarer_sinnoh_record_is_enabled(record->second);
+}
+
+bool wayfarer_sinnoh_layout_is_selected(const Json &data) {
+    const string layout_id = json_to_string(data, "id");
+    return wayfarer_sinnoh_enabled_layout_ids.find(layout_id) != wayfarer_sinnoh_enabled_layout_ids.end();
 }
 
 // The mainland coast is selected as one closed FRLG set.  Keep this separate
@@ -189,6 +234,19 @@ const set<string> wayfarer_anne_layout_ids = {
 };
 
 bool data_matches_version(const Json &data) {
+    if (get_source_version(data) == "sinnoh") {
+        // Sinnoh is not an Emerald binary-layout format. Its maps deliberately
+        // retain Emerald layout_version while this source provenance is gated
+        // through the reviewed Wayfarer manifest.
+        if (version != "wayfarer")
+            return false;
+        if (wayfarer_sinnoh_manifest_path.empty())
+            return false;
+        if (data["layout"].type() == Json::Type::STRING)
+            return wayfarer_sinnoh_map_is_selected(data);
+        return wayfarer_sinnoh_layout_is_selected(data);
+    }
+
     // Navigation-only coast previews are retired from every product catalog.
     // Standalone HNS keeps its authored coast maps; standalone FRLG keeps its
     // source coast maps. Neither product needs the former Wayfarer prototypes.
@@ -274,6 +332,155 @@ bool data_matches_version(const Json &data) {
             || wayfarer_sevii_enabled_layout_ids.find(id) != wayfarer_sevii_enabled_layout_ids.end();
     }
     return source_version_is_selected(get_source_version(data));
+}
+
+void validate_wayfarer_sinnoh_donor(const Json &manifest, const string &kind) {
+    if (manifest["schema_version"].int_value() != 1)
+        FATAL_ERROR("Wayfarer Sinnoh %s manifest has unsupported schema version.\n", kind.c_str());
+    const Json donor = manifest["donor"];
+    if (donor.type() != Json::Type::OBJECT
+     || json_to_string(donor, "url", true) != "https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion"
+     || json_to_string(donor, "commit", true) != "4eed17cc63c4ec8c24fbb20fe49e8d65cb4870d8")
+        FATAL_ERROR("Wayfarer Sinnoh %s manifest donor identity does not match the frozen baseline.\n", kind.c_str());
+}
+
+void validate_wayfarer_sinnoh_selection(const Json &selection, const string &kind) {
+    if (selection.type() != Json::Type::OBJECT
+     || selection["release_link_enabled"].type() != Json::Type::BOOL
+     || selection["asset_manifest_ready"].type() != Json::Type::BOOL
+     || selection["blockers"].type() != Json::Type::ARRAY)
+        FATAL_ERROR("Wayfarer Sinnoh %s manifest must declare its complete selection gate.\n", kind.c_str());
+}
+
+void load_wayfarer_sinnoh_manifest() {
+    if (version != "wayfarer" || wayfarer_sinnoh_manifest_path.empty())
+        return;
+    if (wayfarer_sinnoh_asset_manifest_path.empty())
+        FATAL_ERROR("Wayfarer Sinnoh selection requires the checked-in asset manifest.\n");
+
+    string err;
+    Json manifest = Json::parse(read_text_file(wayfarer_sinnoh_manifest_path), err);
+    if (manifest == Json())
+        FATAL_ERROR("Failed to read Wayfarer Sinnoh manifest: %s\n", err.c_str());
+    validate_wayfarer_sinnoh_donor(manifest, "map");
+    const Json selection = manifest["selection"];
+    validate_wayfarer_sinnoh_selection(selection, "map");
+    if (manifest["source_groups"].type() != Json::Type::ARRAY
+     || manifest["expected_counts"].type() != Json::Type::OBJECT
+     || manifest["maps"].type() != Json::Type::ARRAY)
+        FATAL_ERROR("Wayfarer Sinnoh map manifest is missing its frozen catalog metadata.\n");
+    if (manifest["source_groups"].array_items().size() != wayfarer_sinnoh_source_groups.size()
+     || manifest["expected_counts"].object_items().size() != wayfarer_sinnoh_expected_counts.size()
+     || manifest["maps"].array_items().size() != static_cast<size_t>(wayfarer_sinnoh_expected_counts.at("maps")))
+        FATAL_ERROR("Wayfarer Sinnoh map manifest does not contain the complete frozen catalog.\n");
+    for (const auto &expected : wayfarer_sinnoh_expected_counts)
+        if (manifest["expected_counts"][expected.first].int_value() != expected.second)
+            FATAL_ERROR("Wayfarer Sinnoh map manifest has an unexpected frozen %s count.\n", expected.first.c_str());
+    for (size_t index = 0; index < wayfarer_sinnoh_source_groups.size(); index++) {
+        const Json group = manifest["source_groups"].array_items()[index];
+        if (json_to_string(group, "source_group") != wayfarer_sinnoh_source_groups[index].first
+         || json_to_string(group, "target_group") != wayfarer_sinnoh_source_groups[index].first
+         || group["order"].int_value() != static_cast<int>(index)
+         || group["map_count"].int_value() != wayfarer_sinnoh_source_groups[index].second)
+            FATAL_ERROR("Wayfarer Sinnoh map manifest source group %zu is not frozen.\n", index);
+    }
+
+    wayfarer_sinnoh_release_link_enabled = selection["release_link_enabled"].bool_value();
+    if (wayfarer_sinnoh_release_link_enabled
+     && (!selection["asset_manifest_ready"].bool_value()
+      || !selection["blockers"].array_items().empty()))
+        FATAL_ERROR("Wayfarer Sinnoh content cannot link until the asset manifest is ready and blockers are clear.\n");
+    set<string> source_maps;
+    set<string> target_map_ids;
+    set<string> target_layout_ids;
+    set<string> asset_record_ids;
+    vector<int> maps_by_group(wayfarer_sinnoh_source_groups.size(), 0);
+    int warp_count = 0;
+    int connection_count = 0;
+    for (size_t index = 0; index < manifest["maps"].array_items().size(); index++) {
+        const Json record = manifest["maps"].array_items()[index];
+        const string source_map = json_to_string(record, "source_map");
+        const string target_map_id = json_to_string(record, "target_map_id");
+        const string target_layout = json_to_string(record, "target_layout");
+        const string source_group = json_to_string(record, "source_group");
+        int group_index = -1;
+        for (size_t group = 0; group < wayfarer_sinnoh_source_groups.size(); group++)
+            if (source_group == wayfarer_sinnoh_source_groups[group].first)
+                group_index = group;
+        const Json inclusion = record["inclusion"];
+        const string inclusion_state = json_to_string(inclusion, "state");
+        if (record["order"].int_value() != static_cast<int>(index)
+         || group_index < 0
+         || record["source_group_order"].int_value() != maps_by_group[group_index]
+         || json_to_string(record, "source_map_id").empty()
+         || json_to_string(record, "source_layout").empty()
+         || json_to_string(record, "target_map").empty()
+         || json_to_string(record, "layout_format") != "emerald"
+         || inclusion.type() != Json::Type::OBJECT
+         || (inclusion_state != "INCLUDED" && inclusion_state != "FROZEN_NOT_SELECTED"
+          && inclusion_state != "EXCLUDED"))
+            FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu is not a frozen Emerald-layout map.\n", index);
+        if (!source_maps.insert(source_map).second
+         || !target_map_ids.insert(target_map_id).second
+         || !target_layout_ids.insert(target_layout).second)
+            FATAL_ERROR("Wayfarer Sinnoh manifest contains duplicate selected map or layout IDs.\n");
+        maps_by_group[group_index]++;
+        const Json warps = record["warps"];
+        const Json connections = record["connections"];
+        const Json empty_content = record["empty_content"];
+        if (warps.type() != Json::Type::ARRAY || connections.type() != Json::Type::ARRAY
+         || empty_content.type() != Json::Type::OBJECT)
+            FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu has incomplete topology data.\n", index);
+        warp_count += warps.array_items().size();
+        connection_count += connections.array_items().size();
+        for (const string key : {"object_events", "coord_events", "bg_events", "map_scripts", "wild_encounter_profiles"})
+            if (empty_content[key].int_value() != 0)
+                FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu has unexpected authored %s.\n", index, key.c_str());
+        const Json assets = record["asset_records"];
+        if (assets.type() != Json::Type::OBJECT || assets["tilesets"].type() != Json::Type::ARRAY)
+            FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu has no asset authority references.\n", index);
+        asset_record_ids.insert(json_to_string(assets, "blockdata"));
+        asset_record_ids.insert(json_to_string(assets, "border"));
+        for (const Json &asset_id : assets["tilesets"].array_items())
+            asset_record_ids.insert(json_to_string(asset_id));
+        wayfarer_sinnoh_records.emplace(source_map, record);
+        if (wayfarer_sinnoh_record_is_enabled(record)) {
+            wayfarer_sinnoh_enabled_map_names.insert(source_map);
+            wayfarer_sinnoh_enabled_layout_ids.insert(target_layout);
+        }
+    }
+    for (size_t index = 0; index < maps_by_group.size(); index++)
+        if (maps_by_group[index] != wayfarer_sinnoh_source_groups[index].second)
+            FATAL_ERROR("Wayfarer Sinnoh map manifest source group %zu has an unexpected map count.\n", index);
+    if (warp_count != wayfarer_sinnoh_expected_counts.at("warps")
+     || connection_count != wayfarer_sinnoh_expected_counts.at("connections"))
+        FATAL_ERROR("Wayfarer Sinnoh map manifest topology counts are not frozen.\n");
+
+    Json assets = Json::parse(read_text_file(wayfarer_sinnoh_asset_manifest_path), err);
+    if (assets == Json())
+        FATAL_ERROR("Failed to read Wayfarer Sinnoh asset manifest: %s\n", err.c_str());
+    validate_wayfarer_sinnoh_donor(assets, "asset");
+    const Json asset_selection = assets["selection"];
+    validate_wayfarer_sinnoh_selection(asset_selection, "asset");
+    if (asset_selection["release_link_enabled"].bool_value() != selection["release_link_enabled"].bool_value()
+     || asset_selection["asset_manifest_ready"].bool_value() != selection["asset_manifest_ready"].bool_value()
+     || asset_selection["blockers"].dump() != selection["blockers"].dump())
+        FATAL_ERROR("Wayfarer Sinnoh map and asset selection gates disagree.\n");
+    if (assets["records"].type() != Json::Type::ARRAY)
+        FATAL_ERROR("Wayfarer Sinnoh asset manifest has no records.\n");
+    set<string> known_asset_records;
+    for (const Json &asset : assets["records"].array_items()) {
+        const string asset_id = json_to_string(asset, "record_id");
+        const string reuse_class = json_to_string(asset, "reuse_class");
+        if (!known_asset_records.insert(asset_id).second || asset["selection_blocker"].type() != Json::Type::BOOL)
+            FATAL_ERROR("Wayfarer Sinnoh asset manifest has an invalid asset record.\n");
+        if (wayfarer_sinnoh_release_link_enabled
+         && (reuse_class == "REVIEW_REQUIRED" || asset["selection_blocker"].bool_value()))
+            FATAL_ERROR("Wayfarer Sinnoh asset manifest contains unresolved release asset %s.\n", asset_id.c_str());
+    }
+    for (const string &asset_id : asset_record_ids)
+        if (known_asset_records.find(asset_id) == known_asset_records.end())
+            FATAL_ERROR("Wayfarer Sinnoh map manifest references unknown asset record %s.\n", asset_id.c_str());
 }
 
 void load_wayfarer_sevii_manifest() {
@@ -1848,11 +2055,20 @@ int main(int argc, char *argv[]) {
     if (version != "emerald" && version != "ruby" && version != "firered" && version != "hns" && version != "wayfarer")
         FATAL_ERROR("ERROR: <game-version> must be 'emerald', 'firered', 'hns', 'wayfarer', or 'ruby'.\n");
 
-    if (argc >= 5 && string(argv[argc - 2]) == "--wayfarer-sevii-manifest") {
-        wayfarer_sevii_manifest_path = argv[argc - 1];
+    while (argc >= 5) {
+        const string option = argv[argc - 2];
+        if (option == "--wayfarer-sevii-manifest")
+            wayfarer_sevii_manifest_path = argv[argc - 1];
+        else if (option == "--wayfarer-sinnoh-manifest")
+            wayfarer_sinnoh_manifest_path = argv[argc - 1];
+        else if (option == "--wayfarer-sinnoh-asset-manifest")
+            wayfarer_sinnoh_asset_manifest_path = argv[argc - 1];
+        else
+            break;
         argc -= 2;
     }
     load_wayfarer_sevii_manifest();
+    load_wayfarer_sinnoh_manifest();
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

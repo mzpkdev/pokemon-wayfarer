@@ -12,10 +12,11 @@ import {
 import {
   buildsForSourceVersion,
   catalogBuilds,
-  catalogRegions,
+  catalogRegionsFor,
   categoryFor,
   mapOutputPaths,
   regionFor,
+  sourceRegionFor,
 } from "./classify"
 import { catalogObjects, objectSourceTables } from "./objects"
 import type { ObjectSourceTables } from "./objects"
@@ -52,7 +53,7 @@ const createCatalogMap = (
   objectTables: ObjectSourceTables,
   wildEncounters: CatalogWildEncounters,
 ): CatalogMap => {
-  const region = regionFor(name, group, source.region_map_section)
+  const region = regionFor(name, group, source.region_map_section, source.game_version)
   const category = categoryFor(source.map_type)
   const paths = mapOutputPaths(output, region.id, category, name)
   fs.mkdirSync(path.dirname(paths.native), { recursive: true })
@@ -76,7 +77,7 @@ const createCatalogMap = (
     builds: buildsForSourceVersion(source.game_version),
     category,
     sourceGroup: group,
-    sourceRegion: null,
+    sourceRegion: sourceRegionFor(source.game_version),
     mapType: source.map_type,
     mapSection: source.region_map_section ?? null,
     image: {
@@ -202,7 +203,7 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
       const names = maps.filter((map) => map.builds.includes(build.id)).map((map) => map.name)
       return { ...build, mapCount: names.length, maps: names }
     }),
-    regions: catalogRegions.map((region) => {
+    regions: catalogRegionsFor(maps.map((map) => map.region)).map((region) => {
       const names = maps.filter((map) => map.region === region.id).map((map) => map.name)
       return { ...region, mapCount: names.length, maps: names }
     }),

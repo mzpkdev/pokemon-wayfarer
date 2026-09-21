@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest"
 
-import { buildsForSourceVersion, catalogRegions, regionFor } from "./classify"
+import {
+  buildsForSourceVersion,
+  catalogRegions,
+  catalogRegionsFor,
+  regionFor,
+  sourceRegionFor,
+} from "./classify"
 
 describe("Wayfarer map regions", () => {
   it("retains each source map family's native region", () => {
@@ -16,6 +22,11 @@ describe("Wayfarer map regions", () => {
         "MAPSEC_BATTLE_FRONTIER",
       ).id,
     ).toBe("hoenn")
+    expect(regionFor("Route201", "gMapGroup_TownsAndRoutes", "MAPSEC_LITTLEROOT_TOWN", "sinnoh").id).toBe(
+      "sinnoh",
+    )
+    expect(sourceRegionFor("sinnoh")).toBe("sinnoh")
+    expect(sourceRegionFor("hns")).toBeNull()
     expect(
       regionFor("TrainerHill_Courtyard_hns", "gMapGroup_SpecialArea_Hns", "MAPSEC_TRAINER_HILL").id,
     ).toBe("hoenn")
@@ -30,6 +41,13 @@ describe("Wayfarer map regions", () => {
 
   it("publishes the regions represented by Wayfarer maps", () => {
     expect(catalogRegions.map((region) => region.id)).toEqual(["johto", "kanto", "hoenn", "alola"])
+    expect(catalogRegionsFor(["sinnoh"]).map((region) => region.id)).toEqual([
+      "johto",
+      "kanto",
+      "hoenn",
+      "alola",
+      "sinnoh",
+    ])
   })
 })
 
@@ -38,6 +56,7 @@ describe("Cartographer map build membership", () => {
     expect(buildsForSourceVersion(undefined)).toEqual(["emerald", "wayfarer"])
     expect(buildsForSourceVersion("frlg")).toEqual(["firered", "leafgreen"])
     expect(buildsForSourceVersion("hns")).toEqual(["hns", "wayfarer"])
+    expect(buildsForSourceVersion("sinnoh")).toEqual(["wayfarer"])
   })
 
   it("rejects unknown source versions instead of inferring a build from a map name", () => {

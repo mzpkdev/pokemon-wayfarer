@@ -496,6 +496,7 @@ endif
 check: $(TESTELF) frlg-traversal-static-test hns-traversal-static-test summary-screen-test legacy-multiboot-test
 ifeq ($(BUILD_NAME),wayfarer)
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit wayfarer-sevii-port-audit
+check: wayfarer-sinnoh-port-audit
 check: league-circuit-test
 check: native-hm-windows-test
 check: wayfarer-hoenn-content-audit wayfarer-hoenn-entry-audit league-circuit-test trainer-party-scaling-audit
@@ -880,6 +881,19 @@ $(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SEVII_PORT_TOOL_DIR)/audit.py --root . --output $@
 
 wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
+
+WAYFARER_SINNOH_PORT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_sinnoh_port
+WAYFARER_SINNOH_PORT_AUDIT := $(BUILD_DIR)/wayfarer-sinnoh-port-audit.json
+WAYFARER_SINNOH_PORT_DEPS := $(WAYFARER_SINNOH_PORT_TOOL_DIR)/foundation.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/freeze.py $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_maps.json $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_assets.json $(MAPS_DIR)/map_groups.json $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
+
+.PHONY: wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
+wayfarer-sinnoh-port-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_SINNOH_PORT_TOOL_DIR)/tests -p 'test_*.py' -q
+
+$(WAYFARER_SINNOH_PORT_AUDIT): $(WAYFARER_SINNOH_PORT_DEPS)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py --root . --output $@
+
+wayfarer-sinnoh-port-audit: wayfarer-sinnoh-port-test $(WAYFARER_SINNOH_PORT_AUDIT)
 
 .PHONY: wayfarer-sevii-content-test wayfarer-sevii-content-audit
 wayfarer-sevii-content-test:
