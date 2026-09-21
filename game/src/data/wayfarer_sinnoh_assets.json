@@ -223456,6 +223456,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223505,6 +223507,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223554,6 +223558,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223603,6 +223612,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223652,6 +223666,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223701,6 +223720,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223750,6 +223774,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223799,6 +223828,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223848,6 +223882,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223897,6 +223936,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223946,6 +223990,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -223995,6 +224044,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224044,6 +224098,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224093,6 +224152,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224142,6 +224206,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224191,6 +224260,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224240,6 +224314,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224289,6 +224368,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224338,6 +224422,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224387,6 +224476,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224495,6 +224589,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224711,6 +224810,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224819,6 +224920,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -224927,6 +225030,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225035,6 +225143,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225143,6 +225256,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225251,6 +225369,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225359,6 +225482,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225467,6 +225595,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225575,6 +225708,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225683,6 +225821,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225791,6 +225934,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -225899,6 +226047,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226007,6 +226160,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226115,6 +226273,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226223,6 +226386,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226331,6 +226499,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226439,6 +226612,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226547,6 +226725,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226646,15 +226829,23 @@
       "source_sha256": "355d5dc8625e332ceb34cbe685092d96540ece0b7a39293e493d27c02b6db300",
       "source_bytes": 1575,
       "generated_path": "data/tilesets/primary/building/tiles.4bpp.smol",
-      "generated_sha256": "c92538bf8f61e2f782a796e8b4ac573b20ecfda7be3e683603ce4a51e54b90df",
-      "decoded_sha256": "4b480ba4be41d62af25f83daacaa5b02a3ce88bc33ff2cf01679e6f416f946c4",
-      "decoded_bytes": 16384,
+      "generated_sha256": "d211c3978b967bf9f32cd09f025b5937a4a45ed857f3e55dfabbfc540e670c0e",
+      "decoded_sha256": "c858eac54d5538af77ae33855141fc2283d7f263c0b12591f45f65a98160fa27",
+      "decoded_bytes": 16064,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 4096
+        "element_count": 4016
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/primary/building/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "502",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226735,9 +226926,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "c92538bf8f61e2f782a796e8b4ac573b20ecfda7be3e683603ce4a51e54b90df",
-      "donor_decoded_sha256": "4b480ba4be41d62af25f83daacaa5b02a3ce88bc33ff2cf01679e6f416f946c4",
-      "donor_decoded_bytes": 16384,
+      "donor_generated_sha256": "d211c3978b967bf9f32cd09f025b5937a4a45ed857f3e55dfabbfc540e670c0e",
+      "donor_decoded_sha256": "c858eac54d5538af77ae33855141fc2283d7f263c0b12591f45f65a98160fa27",
+      "donor_decoded_bytes": 16064,
       "checked_in_source_path": "data/tilesets/primary/building/tiles.png",
       "checked_in_source_sha256": "355d5dc8625e332ceb34cbe685092d96540ece0b7a39293e493d27c02b6db300",
       "storage_role": "runtime",
@@ -226807,6 +226998,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226851,6 +227044,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226895,6 +227090,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226939,6 +227139,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -226983,6 +227188,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227027,6 +227237,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227071,6 +227286,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227115,6 +227335,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227159,6 +227384,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227203,6 +227433,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227247,6 +227482,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227291,6 +227531,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227335,6 +227580,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227379,6 +227629,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227423,6 +227678,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227467,6 +227727,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227511,6 +227776,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227561,6 +227831,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227611,6 +227886,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227661,6 +227941,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227711,6 +227996,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227761,6 +228051,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227811,6 +228106,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227861,6 +228161,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -227961,6 +228266,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228011,6 +228318,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228061,6 +228370,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228111,6 +228425,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228161,6 +228480,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228211,6 +228535,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228261,6 +228590,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228311,6 +228645,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228361,6 +228700,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228411,6 +228755,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228461,6 +228810,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228511,6 +228865,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228561,6 +228920,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228611,6 +228975,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228661,6 +229030,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228711,6 +229085,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228761,6 +229140,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228811,6 +229195,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228852,15 +229241,23 @@
       "source_sha256": "bcffd7ad24c8acb328cee23598dca4dadeb527299c76565e6a9d939e25e40c76",
       "source_bytes": 5787,
       "generated_path": "data/tilesets/secondary/cave/tiles.4bpp.fastSmol",
-      "generated_sha256": "5bd88be3d3f119cd6ad48e78fa95baf27411abc31e9c7a20939d376488ee1f32",
-      "decoded_sha256": "c5f9dff24b61e2f44050ad0a8051c72bae0e9b028cef4eedf097583ccbbe0766",
-      "decoded_bytes": 13824,
+      "generated_sha256": "d9a5cfb46246f1e2531fb0d5d36a3d4c98bceea80fce26701d0680629f0cc074",
+      "decoded_sha256": "8b7f86ca591796cc3dcec3d75c1019ad7f84fa2adcc5269b48f55132e34f5433",
+      "decoded_bytes": 13600,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 3456
+        "element_count": 3400
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/cave/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "425",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -228883,9 +229280,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "5bd88be3d3f119cd6ad48e78fa95baf27411abc31e9c7a20939d376488ee1f32",
-      "donor_decoded_sha256": "c5f9dff24b61e2f44050ad0a8051c72bae0e9b028cef4eedf097583ccbbe0766",
-      "donor_decoded_bytes": 13824,
+      "donor_generated_sha256": "d9a5cfb46246f1e2531fb0d5d36a3d4c98bceea80fce26701d0680629f0cc074",
+      "donor_decoded_sha256": "8b7f86ca591796cc3dcec3d75c1019ad7f84fa2adcc5269b48f55132e34f5433",
+      "donor_decoded_bytes": 13600,
       "checked_in_source_path": "data/tilesets/secondary/cave/tiles.png",
       "checked_in_source_sha256": "bcffd7ad24c8acb328cee23598dca4dadeb527299c76565e6a9d939e25e40c76",
       "storage_role": "runtime",
@@ -228961,6 +229358,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229011,6 +229410,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229061,6 +229462,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229111,6 +229517,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229161,6 +229572,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229211,6 +229627,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229261,6 +229682,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229311,6 +229737,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229361,6 +229792,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229411,6 +229847,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229461,6 +229902,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229511,6 +229957,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229561,6 +230012,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229611,6 +230067,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229661,6 +230122,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229711,6 +230177,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229761,6 +230232,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229806,6 +230282,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229851,6 +230332,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229896,6 +230382,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229941,6 +230432,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -229986,6 +230482,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230031,6 +230532,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230076,6 +230582,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230166,6 +230677,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230211,6 +230724,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230256,6 +230771,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230301,6 +230821,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230346,6 +230871,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230391,6 +230921,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230436,6 +230971,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230481,6 +231021,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230526,6 +231071,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230571,6 +231121,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230616,6 +231171,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230661,6 +231221,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230706,6 +231271,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230751,6 +231321,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230796,6 +231371,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230841,6 +231421,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230886,6 +231471,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230931,6 +231521,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -230976,6 +231571,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231067,6 +231667,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231113,6 +231715,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231159,6 +231763,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231205,6 +231814,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231251,6 +231865,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231297,6 +231916,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231343,6 +231967,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231389,6 +232018,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231435,6 +232069,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231481,6 +232120,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231527,6 +232171,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231573,6 +232222,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231619,6 +232273,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231665,6 +232324,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231711,6 +232375,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231757,6 +232426,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231803,6 +232477,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231849,6 +232528,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231895,6 +232579,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -231941,6 +232630,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232052,6 +232746,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232163,6 +232862,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232274,6 +232978,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232385,6 +233094,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232496,6 +233210,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232607,6 +233326,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232718,6 +233442,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232829,6 +233558,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -232940,6 +233674,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233051,6 +233790,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233162,6 +233906,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233273,6 +234022,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233384,6 +234138,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233495,6 +234254,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233606,6 +234370,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233717,6 +234486,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233828,6 +234602,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -233939,6 +234718,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234050,6 +234834,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234161,6 +234950,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234272,6 +235066,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234383,6 +235182,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234494,6 +235298,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234605,6 +235414,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234716,6 +235530,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -234938,6 +235757,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235049,6 +235870,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235160,6 +235983,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235271,6 +236099,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235382,6 +236215,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235493,6 +236331,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235604,6 +236447,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235715,6 +236563,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235826,6 +236679,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -235937,6 +236795,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236048,6 +236911,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236159,6 +237027,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236270,6 +237143,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236381,6 +237259,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236492,6 +237375,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236603,6 +237491,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236714,6 +237607,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236825,6 +237723,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -236936,6 +237839,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237113,6 +238021,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237179,6 +238089,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237245,6 +238157,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237311,6 +238228,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237377,6 +238299,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237443,6 +238370,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237509,6 +238441,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237575,6 +238512,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237641,6 +238583,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237707,6 +238654,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237773,6 +238725,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237839,6 +238796,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237905,6 +238867,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -237971,6 +238938,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238037,6 +239009,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238103,6 +239080,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238169,6 +239151,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238235,6 +239222,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238292,15 +239284,23 @@
       "source_sha256": "7783d199aaaaa51db286c745ddc6907a576f2930767a2f52862128c39cf15be8",
       "source_bytes": 4990,
       "generated_path": "data/tilesets/secondary/generic_building/tiles.4bpp.fastSmol",
-      "generated_sha256": "b7807527e3c2bf58cfe5ef40f6a367495226d66fa4e0203fea812696c0d48f2a",
-      "decoded_sha256": "7691f057888b60eb377deaff5f47cabe8811bfe4d978228051242608b77c510e",
-      "decoded_bytes": 16384,
+      "generated_sha256": "a533e3d5fad1ec94e6ea42d3ae6365d5da9de001d854e520fa9ecb054d5b5546",
+      "decoded_sha256": "5c78fb9eeb32a1123dec079576087628a7d683c35fd8ef6a28c27019feabde97",
+      "decoded_bytes": 16288,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 4096
+        "element_count": 4072
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/generic_building/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "509",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238339,9 +239339,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "b7807527e3c2bf58cfe5ef40f6a367495226d66fa4e0203fea812696c0d48f2a",
-      "donor_decoded_sha256": "7691f057888b60eb377deaff5f47cabe8811bfe4d978228051242608b77c510e",
-      "donor_decoded_bytes": 16384,
+      "donor_generated_sha256": "a533e3d5fad1ec94e6ea42d3ae6365d5da9de001d854e520fa9ecb054d5b5546",
+      "donor_decoded_sha256": "5c78fb9eeb32a1123dec079576087628a7d683c35fd8ef6a28c27019feabde97",
+      "donor_decoded_bytes": 16288,
       "checked_in_source_path": "data/tilesets/secondary/generic_building/tiles.png",
       "checked_in_source_sha256": "7783d199aaaaa51db286c745ddc6907a576f2930767a2f52862128c39cf15be8",
       "storage_role": "runtime",
@@ -238411,6 +239411,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238455,6 +239457,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238499,6 +239503,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238543,6 +239552,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238587,6 +239601,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238631,6 +239650,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238675,6 +239699,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238719,6 +239748,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238763,6 +239797,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238807,6 +239846,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238851,6 +239895,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238895,6 +239944,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238939,6 +239993,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -238983,6 +240042,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239027,6 +240091,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239071,6 +240140,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239165,6 +240239,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239215,6 +240291,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239265,6 +240343,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239315,6 +240398,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239365,6 +240453,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239415,6 +240508,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239465,6 +240563,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239515,6 +240618,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239565,6 +240673,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239615,6 +240728,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239665,6 +240783,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239715,6 +240838,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239765,6 +240893,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239815,6 +240948,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239865,6 +241003,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239915,6 +241058,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -239965,6 +241113,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240009,6 +241162,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240053,6 +241211,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240097,6 +241260,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240185,6 +241353,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240229,6 +241399,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240273,6 +241445,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240317,6 +241494,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240361,6 +241543,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240405,6 +241592,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240449,6 +241641,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240493,6 +241690,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240537,6 +241739,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240581,6 +241788,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240625,6 +241837,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240669,6 +241886,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240713,6 +241935,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240757,6 +241984,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240801,6 +242033,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240845,6 +242082,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240889,6 +242131,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240933,6 +242180,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -240977,6 +242229,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241067,6 +242324,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241113,6 +242372,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241159,6 +242420,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241205,6 +242471,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241251,6 +242522,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241297,6 +242573,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241343,6 +242624,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241389,6 +242675,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241435,6 +242726,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241481,6 +242777,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241527,6 +242828,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241573,6 +242879,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241619,6 +242930,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241665,6 +242981,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241711,6 +243032,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241757,6 +243083,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241803,6 +243134,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241849,6 +243185,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241895,6 +243236,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241941,6 +243287,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -241989,6 +243340,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242037,6 +243393,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242085,6 +243446,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242133,6 +243499,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242181,6 +243552,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242229,6 +243605,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242277,6 +243658,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242325,6 +243711,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242373,6 +243764,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242469,6 +243865,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242517,6 +243915,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242565,6 +243965,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242613,6 +244018,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242661,6 +244071,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242709,6 +244124,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242757,6 +244177,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242805,6 +244230,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242853,6 +244283,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242901,6 +244336,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242949,6 +244389,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -242997,6 +244442,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243045,6 +244495,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243093,6 +244548,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243141,6 +244601,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243189,6 +244654,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243237,6 +244707,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243285,6 +244760,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243333,6 +244813,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243438,6 +244923,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243495,6 +244982,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243552,6 +245041,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243609,6 +245103,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243666,6 +245165,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243723,6 +245227,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243780,6 +245289,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243837,6 +245351,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243894,6 +245413,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -243951,6 +245475,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244008,6 +245537,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244065,6 +245599,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244122,6 +245661,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244179,6 +245723,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244236,6 +245785,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244293,6 +245847,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244402,6 +245961,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244454,6 +246015,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244506,6 +246069,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244558,6 +246126,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244610,6 +246183,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244662,6 +246240,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244714,6 +246297,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244766,6 +246354,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244818,6 +246411,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244870,6 +246468,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244922,6 +246525,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -244974,6 +246582,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245026,6 +246639,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245078,6 +246696,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245130,6 +246753,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245182,6 +246810,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245234,6 +246867,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245286,6 +246924,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245338,6 +246981,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245441,6 +247089,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245492,6 +247142,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245543,6 +247195,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245594,6 +247251,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245645,6 +247307,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245696,6 +247363,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245747,6 +247419,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245798,6 +247475,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245849,6 +247531,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245900,6 +247587,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -245951,6 +247643,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246002,6 +247699,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246053,6 +247755,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246104,6 +247811,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246155,6 +247867,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246206,6 +247923,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246257,6 +247979,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246308,6 +248035,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246350,15 +248082,23 @@
       "source_sha256": "c7d0da06a04b3ecb28494b48f933034388dea850de910d3303e6770d2a6a12fd",
       "source_bytes": 3487,
       "generated_path": "data/tilesets/secondary/pokemon_center/tiles.4bpp.fastSmol",
-      "generated_sha256": "c82d8365ffd5ba6be750bef7a96c7d1e2fb1c9b80dc862169acb9c599911ed5e",
-      "decoded_sha256": "8bd339d205475e4c56d9e43649a83e866c5405a655e87ece455d7cffdad25ddd",
-      "decoded_bytes": 15360,
+      "generated_sha256": "7c9c360c62f8562144603077a5b87a435f8fdd732fc0891a944ad97b92d1b278",
+      "decoded_sha256": "35e7cd4c26deab7661f72ab291f4546b72fca47d802e5e53f83f26fc6bdd908f",
+      "decoded_bytes": 15296,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 3840
+        "element_count": 3824
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/pokemon_center/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "478",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246382,9 +248122,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "c82d8365ffd5ba6be750bef7a96c7d1e2fb1c9b80dc862169acb9c599911ed5e",
-      "donor_decoded_sha256": "8bd339d205475e4c56d9e43649a83e866c5405a655e87ece455d7cffdad25ddd",
-      "donor_decoded_bytes": 15360,
+      "donor_generated_sha256": "7c9c360c62f8562144603077a5b87a435f8fdd732fc0891a944ad97b92d1b278",
+      "donor_decoded_sha256": "35e7cd4c26deab7661f72ab291f4546b72fca47d802e5e53f83f26fc6bdd908f",
+      "donor_decoded_bytes": 15296,
       "checked_in_source_path": "data/tilesets/secondary/pokemon_center/tiles.png",
       "checked_in_source_sha256": "c7d0da06a04b3ecb28494b48f933034388dea850de910d3303e6770d2a6a12fd",
       "storage_role": "runtime",
@@ -246454,6 +248194,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246498,6 +248240,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246542,6 +248286,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246586,6 +248335,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246630,6 +248384,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246674,6 +248433,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246718,6 +248482,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246762,6 +248531,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246806,6 +248580,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246850,6 +248629,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246894,6 +248678,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246938,6 +248727,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -246982,6 +248776,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247026,6 +248825,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247070,6 +248874,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247114,6 +248923,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247158,6 +248972,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247202,6 +249021,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247237,15 +249061,23 @@
       "source_sha256": "9ea0e8d6f195e156a8de3c7c93d742831bab509c7ba61b799169479561914a21",
       "source_bytes": 1021,
       "generated_path": "data/tilesets/secondary/pokemon_school/tiles.4bpp.fastSmol",
-      "generated_sha256": "afbdafb809906437ccda982ebef973c32587b26609bdc6af3811f268c290a242",
-      "decoded_sha256": "6b81de74b82fa44d19cfe0c7d6776d696b17c51a239a7153b5fb618347312ea7",
-      "decoded_bytes": 9216,
+      "generated_sha256": "d28216f30290ad30774822ca731090129e9b6794b8e4ba9067517b6502916017",
+      "decoded_sha256": "d9a103994907383e5c2995d22e3f4cd1491d9d6f612952f72b4d2897470d30e8",
+      "decoded_bytes": 8896,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 2304
+        "element_count": 2224
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/pokemon_school/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "278",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247262,9 +249094,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "afbdafb809906437ccda982ebef973c32587b26609bdc6af3811f268c290a242",
-      "donor_decoded_sha256": "6b81de74b82fa44d19cfe0c7d6776d696b17c51a239a7153b5fb618347312ea7",
-      "donor_decoded_bytes": 9216,
+      "donor_generated_sha256": "d28216f30290ad30774822ca731090129e9b6794b8e4ba9067517b6502916017",
+      "donor_decoded_sha256": "d9a103994907383e5c2995d22e3f4cd1491d9d6f612952f72b4d2897470d30e8",
+      "donor_decoded_bytes": 8896,
       "checked_in_source_path": "data/tilesets/secondary/pokemon_school/tiles.png",
       "checked_in_source_sha256": "9ea0e8d6f195e156a8de3c7c93d742831bab509c7ba61b799169479561914a21",
       "storage_role": "runtime",
@@ -247334,6 +249166,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247378,6 +249212,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247422,6 +249258,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247466,6 +249307,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247510,6 +249356,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247554,6 +249405,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247598,6 +249454,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247642,6 +249503,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247686,6 +249552,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247730,6 +249601,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247774,6 +249650,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247818,6 +249699,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247862,6 +249748,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247906,6 +249797,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247950,6 +249846,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -247994,6 +249895,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248038,6 +249944,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248082,6 +249993,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248117,15 +250033,23 @@
       "source_sha256": "ea83dfee7ce044d3c4058ef17a27ad3c826d7107f4f4dfdb4ebdc28673d0eeac",
       "source_bytes": 1876,
       "generated_path": "data/tilesets/secondary/pretty_petal_flower_shop/tiles.4bpp.fastSmol",
-      "generated_sha256": "3fe39091b69f0ac9ac9486d6694925373ee5296fa881481b9090d043c8e41b8f",
-      "decoded_sha256": "724f1ea98c2b829738797ddc13431e4c41ff9850a0e8f4c279c5588b66a0d00e",
-      "decoded_bytes": 11264,
+      "generated_sha256": "27374f84270fed9837a83baf31d259225c43bf83a7c804fd993e5f1c3a612c66",
+      "decoded_sha256": "5d90ac8e17632f09d8a19594dfc3112f292c96cf216de6df61c0fc6d51343042",
+      "decoded_bytes": 11040,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 2816
+        "element_count": 2760
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/pretty_petal_flower_shop/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "345",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248142,9 +250066,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "3fe39091b69f0ac9ac9486d6694925373ee5296fa881481b9090d043c8e41b8f",
-      "donor_decoded_sha256": "724f1ea98c2b829738797ddc13431e4c41ff9850a0e8f4c279c5588b66a0d00e",
-      "donor_decoded_bytes": 11264,
+      "donor_generated_sha256": "27374f84270fed9837a83baf31d259225c43bf83a7c804fd993e5f1c3a612c66",
+      "donor_decoded_sha256": "5d90ac8e17632f09d8a19594dfc3112f292c96cf216de6df61c0fc6d51343042",
+      "donor_decoded_bytes": 11040,
       "checked_in_source_path": "data/tilesets/secondary/pretty_petal_flower_shop/tiles.png",
       "checked_in_source_sha256": "ea83dfee7ce044d3c4058ef17a27ad3c826d7107f4f4dfdb4ebdc28673d0eeac",
       "storage_role": "runtime",
@@ -248170,6 +250094,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248216,6 +250145,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248262,6 +250196,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248308,6 +250247,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248354,6 +250298,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248400,6 +250349,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248446,6 +250400,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248492,6 +250451,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248538,6 +250502,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248584,6 +250553,11 @@
       },
       "alignment": 4,
       "compression": false,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248676,6 +250650,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248722,6 +250698,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248768,6 +250746,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248814,6 +250797,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248860,6 +250848,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248906,6 +250899,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248952,6 +250950,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -248998,6 +251001,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249044,6 +251052,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249090,6 +251103,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249136,6 +251154,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249182,6 +251205,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249228,6 +251256,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249274,6 +251307,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249320,6 +251358,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249366,6 +251409,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249412,6 +251460,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249458,6 +251511,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249504,6 +251562,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249594,6 +251657,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249638,6 +251703,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249682,6 +251749,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249726,6 +251798,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249770,6 +251847,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249814,6 +251896,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249858,6 +251945,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249902,6 +251994,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249946,6 +252043,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -249990,6 +252092,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250034,6 +252141,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250078,6 +252190,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250122,6 +252239,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250166,6 +252288,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250210,6 +252337,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250254,6 +252386,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250298,6 +252435,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250342,6 +252484,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250377,15 +252524,23 @@
       "source_sha256": "1a3c5f4dd62ebddecd4ed8c0a63a4c401f3423e41c414ca376aca5375019d92d",
       "source_bytes": 813,
       "generated_path": "data/tilesets/secondary/rustboro_gym/tiles.4bpp.fastSmol",
-      "generated_sha256": "eac58e03484d626782ae1deeff16e256d4ebb06d4a4f049910e0f0f0916b57a9",
-      "decoded_sha256": "605c6102b5543923203cd39a116e47cccd29f7e33afb7b73212e35818a0fb709",
-      "decoded_bytes": 2048,
+      "generated_sha256": "656d6f31cbc4452656ffb42ed2d93b86001a2c6153815a225ccf341c9b0a51ba",
+      "decoded_sha256": "e352fdaa711e025e49a33dd1d9e038ec68387a56bca12245a46eec3d438583eb",
+      "decoded_bytes": 1920,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 512
+        "element_count": 480
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/rustboro_gym/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "60",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250402,9 +252557,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "eac58e03484d626782ae1deeff16e256d4ebb06d4a4f049910e0f0f0916b57a9",
-      "donor_decoded_sha256": "605c6102b5543923203cd39a116e47cccd29f7e33afb7b73212e35818a0fb709",
-      "donor_decoded_bytes": 2048,
+      "donor_generated_sha256": "656d6f31cbc4452656ffb42ed2d93b86001a2c6153815a225ccf341c9b0a51ba",
+      "donor_decoded_sha256": "e352fdaa711e025e49a33dd1d9e038ec68387a56bca12245a46eec3d438583eb",
+      "donor_decoded_bytes": 1920,
       "checked_in_source_path": "data/tilesets/secondary/rustboro_gym/tiles.png",
       "checked_in_source_sha256": "1a3c5f4dd62ebddecd4ed8c0a63a4c401f3423e41c414ca376aca5375019d92d",
       "storage_role": "runtime",
@@ -250481,6 +252636,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250532,6 +252689,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250583,6 +252742,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250634,6 +252798,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250685,6 +252854,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250736,6 +252910,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250787,6 +252966,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250838,6 +253022,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250889,6 +253078,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250940,6 +253134,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -250991,6 +253190,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251042,6 +253246,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251093,6 +253302,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251144,6 +253358,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251195,6 +253414,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251246,6 +253470,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251297,6 +253526,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251348,6 +253582,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251390,15 +253629,23 @@
       "source_sha256": "126543a3d5b56c106749de8cf3cbde20597898bbea7a991fc7887a2d868f7739",
       "source_bytes": 3899,
       "generated_path": "data/tilesets/secondary/shop/tiles.4bpp.fastSmol",
-      "generated_sha256": "dcb8bb53894c4126356cb2889e76ce7c2321a2799571b4cb48da06e0589c63c0",
-      "decoded_sha256": "0ee41757ab8ef51d759e508e1a9ae675ec2ba9c4032db6d71727734ec8b4e44f",
-      "decoded_bytes": 16384,
+      "generated_sha256": "39394483f0c4b272dfce6a5eebfc7802bb7b47785d6d3cdf5eec92561a137228",
+      "decoded_sha256": "76511d91552f5bcc3c70c603498d1c4ba90e4e2759dce3a09f470b0677040d75",
+      "decoded_bytes": 16064,
       "array_shape": {
         "element_type": "u32",
-        "element_count": 4096
+        "element_count": 4016
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "graphics_file_rules.mk:data/tilesets/secondary/shop/tiles.4bpp",
+      "encoder_args": [
+        "$<",
+        "$@",
+        "-num_tiles",
+        "502",
+        "-Wnum_tiles"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251422,9 +253669,9 @@
         "version": 3
       },
       "expected_linked_delta": 0,
-      "donor_generated_sha256": "dcb8bb53894c4126356cb2889e76ce7c2321a2799571b4cb48da06e0589c63c0",
-      "donor_decoded_sha256": "0ee41757ab8ef51d759e508e1a9ae675ec2ba9c4032db6d71727734ec8b4e44f",
-      "donor_decoded_bytes": 16384,
+      "donor_generated_sha256": "39394483f0c4b272dfce6a5eebfc7802bb7b47785d6d3cdf5eec92561a137228",
+      "donor_decoded_sha256": "76511d91552f5bcc3c70c603498d1c4ba90e4e2759dce3a09f470b0677040d75",
+      "donor_decoded_bytes": 16064,
       "checked_in_source_path": "data/tilesets/secondary/shop/tiles.png",
       "checked_in_source_sha256": "126543a3d5b56c106749de8cf3cbde20597898bbea7a991fc7887a2d868f7739",
       "storage_role": "runtime",
@@ -251498,6 +253745,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251546,6 +253795,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251594,6 +253845,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251642,6 +253898,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251690,6 +253951,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251738,6 +254004,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251786,6 +254057,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251834,6 +254110,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251882,6 +254163,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251930,6 +254216,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -251978,6 +254269,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252026,6 +254322,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252074,6 +254375,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252122,6 +254428,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252170,6 +254481,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252218,6 +254534,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252312,6 +254633,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252358,6 +254681,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252404,6 +254729,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252450,6 +254780,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252496,6 +254831,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252542,6 +254882,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252588,6 +254933,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252634,6 +254984,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252680,6 +255035,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252726,6 +255086,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252772,6 +255137,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252818,6 +255188,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252864,6 +255239,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252910,6 +255290,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -252956,6 +255341,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253002,6 +255392,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253104,6 +255499,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253160,6 +255557,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253216,6 +255615,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253272,6 +255676,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253328,6 +255737,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253384,6 +255798,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253440,6 +255859,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253496,6 +255920,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253552,6 +255981,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253608,6 +256042,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253664,6 +256103,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253720,6 +256164,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253776,6 +256225,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253832,6 +256286,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253888,6 +256347,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -253944,6 +256408,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254044,6 +256513,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254088,6 +256559,8 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": null,
+      "encoder_args": null,
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254132,6 +256605,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254176,6 +256654,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254220,6 +256703,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254264,6 +256752,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254308,6 +256801,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254352,6 +256850,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254396,6 +256899,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254440,6 +256948,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254484,6 +256997,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254528,6 +257046,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254572,6 +257095,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254616,6 +257144,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254660,6 +257193,11 @@
       },
       "alignment": 2,
       "compression": false,
+      "encoder_rule": "Makefile:%.gbapal:%.pal",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",
@@ -254704,6 +257242,11 @@
       },
       "alignment": 4,
       "compression": true,
+      "encoder_rule": "Makefile:%.4bpp:%.png",
+      "encoder_args": [
+        "$<",
+        "$@"
+      ],
       "layout_format": "emerald",
       "linkage": "external",
       "visibility": "public",

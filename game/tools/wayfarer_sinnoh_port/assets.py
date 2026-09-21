@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import re
+import shlex
 import subprocess
 import tempfile
 from pathlib import Path
@@ -131,18 +132,127 @@ def checked_source_path(root: Path, row: dict[str, Any]) -> Path:
     return production_source(row)
 
 
-def generate_component(root: Path, source: Path, output: Path) -> None:
+def tileset_gfx_dir(root: Path, *, rules_text: str | None = None) -> Path:
+    """Resolve the single supported TILESETGFXDIR assignment from Make rules."""
+    rules = rules_text if rules_text is not None else (root / "graphics_file_rules.mk").read_text(encoding="utf-8")
+    candidates = [line for line in rules.splitlines() if re.match(r"\s*TILESETGFXDIR\s*(?::=|\?=|\+=|=)", line)]
+    if len(candidates) != 1:
+        raise ValueError("missing or ambiguous TILESETGFXDIR assignment")
+    match = re.fullmatch(r"\s*TILESETGFXDIR\s*:=\s*([^\s#]+)\s*(?:#.*)?", candidates[0])
+    if match is None:
+        raise ValueError(f"unsupported TILESETGFXDIR assignment: {candidates[0]}")
+    directory = Path(match.group(1))
+    if directory.is_absolute() or "$" in match.group(1) or any(part in {".", ".."} for part in directory.parts):
+        raise ValueError(f"unsupported TILESETGFXDIR value: {match.group(1)}")
+    return directory
+
+
+def graphics_encoder_args(root: Path, output: Path, *, rules_text: str | None = None) -> tuple[str, ...]:
+    """Return the exact gbagfx arguments selected by the production Make rule.
+
+    Tileset graphics are normally converted with gbagfx defaults, but a small
+    set of existing targets intentionally limits their decoded tile count.
+    The proof generator must use the target rule, not merely the source
+    filename, otherwise a stale generic ``.4bpp`` can make the manifest look
+    valid while a clean Make build emits different bytes.
+    """
+    raw = decoded_path(output)
+    if raw.suffix != ".4bpp":
+        return ()
+    try:
+        relative = raw.relative_to(root).as_posix()
+    except ValueError:
+        relative = raw.as_posix()
+    rules_text = rules_text if rules_text is not None else (root / "graphics_file_rules.mk").read_text(encoding="utf-8")
+    directory = tileset_gfx_dir(root, rules_text=rules_text)
+    rules = rules_text.splitlines()
+    target: str | None = None
+    for line in rules:
+        match = re.match(r"\$\(TILESETGFXDIR\)/([^:]+):", line)
+        if match:
+            target = (directory / match.group(1)).as_posix()
+            continue
+        if target != relative:
+            continue
+        recipe = re.match(r"\s*\$\(GFX\)\s+\$<\s+\$@(?:\s+(.*))?$", line)
+        if recipe:
+            return tuple(shlex.split(recipe.group(1) or ""))
+        if line.startswith("\t"):
+            raise ValueError(f"unsupported graphics rule recipe for {relative}: {line}")
+    return ()
+
+
+def generic_gbagfx_args(root: Path, output_suffix: str, source_suffix: str, *,
+                         makefile_text: str | None = None) -> tuple[str, ...]:
+    """Parse a generic GFX Make recipe and reject semantic drift."""
+    makefile = makefile_text if makefile_text is not None else (root / "Makefile").read_text(encoding="utf-8")
+    pattern = re.compile(rf"^%{re.escape(output_suffix)}:\s+%{re.escape(source_suffix)}\s*;\s+\$\(GFX\)\s+(.+?)\s*$", re.M)
+    match = pattern.search(makefile)
+    if match is None:
+        raise ValueError(f"missing generic GFX recipe for %{output_suffix}:%{source_suffix}")
+    args = tuple(shlex.split(match.group(1)))
+    if args != ("$<", "$@"):
+        raise ValueError(f"generic GFX recipe semantic drift for %{output_suffix}:%{source_suffix}")
+    return args
+
+
+def gbagfx_recipe(root: Path, source: Path, output: Path, *, rule_output: Path | None = None,
+                  graphics_rules_text: str | None = None, makefile_text: str | None = None) -> tuple[str, tuple[str, ...]]:
+    """Return the exact Make-derived GFX recipe for one transformed source."""
+    target = rule_output if rule_output is not None else output
+    if source.suffix == ".pal":
+        if target.suffix != ".gbapal":
+            raise ValueError(f"unexpected palette production target: {target}")
+        return "Makefile:%.gbapal:%.pal", generic_gbagfx_args(root, ".gbapal", ".pal", makefile_text=makefile_text)
+    if source.suffix == ".png":
+        raw = decoded_path(target)
+        if raw.suffix != ".4bpp":
+            raise ValueError(f"unexpected PNG production target: {target}")
+        generic = generic_gbagfx_args(root, ".4bpp", ".png", makefile_text=makefile_text)
+        special = graphics_encoder_args(root, target, rules_text=graphics_rules_text)
+        if special:
+            try:
+                relative = raw.relative_to(root).as_posix()
+            except ValueError:
+                relative = raw.as_posix()
+            return f"graphics_file_rules.mk:{relative}", generic + special
+        return "Makefile:%.4bpp:%.png", generic
+    raise ValueError(f"unsupported GFX source: {source}")
+
+
+def compression_encoder_args(root: Path, output: Path, *, makefile_text: str | None = None) -> tuple[str, ...]:
+    """Parse and fail closed on the generic Make compression recipe we use."""
+    expected = {
+        ".fastSmol": ("-w", "$<", "$@", "false", "false", "false"),
+        ".smol": ("-w", "$<", "$@"),
+    }.get(output.suffix)
+    if expected is None:
+        return ()
+    makefile = makefile_text if makefile_text is not None else (root / "Makefile").read_text(encoding="utf-8")
+    pattern = re.compile(rf"^%{re.escape(output.suffix)}:\s+%\s*;\s+\$\(SMOL\)\s+(.+?)\s*$", re.M)
+    match = pattern.search(makefile)
+    if match is None:
+        raise ValueError(f"missing generic compression recipe for {output.suffix}")
+    args = tuple(shlex.split(match.group(1)))
+    if args != expected:
+        raise ValueError(f"compression recipe semantic drift for {output.suffix}")
+    return args
+
+
+def generate_component(root: Path, source: Path, output: Path, *, rule_output: Path | None = None,
+                       graphics_rules_text: str | None = None, makefile_text: str | None = None) -> None:
     """Use the checked-in production encoders, never a filename-only shortcut."""
     output.parent.mkdir(parents=True, exist_ok=True)
-    if source.suffix == ".pal":
-        subprocess.run([str(root / "tools/gbagfx/gbagfx"), str(source), str(output)], check=True)
-    elif source.suffix == ".png":
-        raw = output.with_suffix("") if output.suffix in {".smol", ".fastSmol"} else output
-        subprocess.run([str(root / "tools/gbagfx/gbagfx"), str(source), str(raw)], check=True)
-        if output.suffix == ".fastSmol":
-            subprocess.run([str(root / "tools/compresSmol/compresSmol"), "-w", str(raw), str(output), "false", "false", "false"], check=True)
-        elif output.suffix == ".smol":
-            subprocess.run([str(root / "tools/compresSmol/compresSmol"), "-w", str(raw), str(output)], check=True)
+    target = rule_output if rule_output is not None else output
+    raw = output.with_suffix("") if output.suffix in {".smol", ".fastSmol"} else output
+    _, recipe = gbagfx_recipe(root, source, output, rule_output=target,
+                              graphics_rules_text=graphics_rules_text, makefile_text=makefile_text)
+    args = [str(source) if arg == "$<" else str(raw) if arg == "$@" else arg for arg in recipe]
+    subprocess.run([str(root / "tools/gbagfx/gbagfx"), *args], check=True)
+    compression = compression_encoder_args(root, output, makefile_text=makefile_text)
+    if compression:
+        args = [str(raw) if arg == "$<" else str(output) if arg == "$@" else arg for arg in compression]
+        subprocess.run([str(root / "tools/compresSmol/compresSmol"), *args], check=True)
 
 
 def generate_production(root: Path, manifest: dict[str, Any]) -> None:
@@ -173,7 +283,7 @@ def refresh_donor_proofs(root: Path, donor: Path, manifest: dict[str, Any]) -> N
             source = donor / row["source_path"]
             output = temp / row["generated_path"]
             if source.suffix in {".pal", ".png"}:
-                generate_component(root, source, output)
+                generate_component(root, source, output, rule_output=root / row["generated_path"])
             else:
                 output.parent.mkdir(parents=True, exist_ok=True)
                 output.write_bytes(source.read_bytes())
@@ -343,7 +453,9 @@ def build_manifest(root: Path, donor: Path) -> dict[str, Any]:
             component_cls = component_class(symbol, relative)
             runtime_symbol, production, element_type = runtime_component(root, symbol, relative, runtime)
             component = component_name(relative)
-            records.append({"record_id": record_id(symbol, relative), "asset_family": "tileset_component", "component": component, "source_symbol": symbol, "proposed_target_symbol": descriptor_target, "generated_symbol": runtime_symbol, "source_path": (source / relative).as_posix(), "source_sha256": sha256_file(path), "source_bytes": path.stat().st_size, "generated_path": production.as_posix(), "generated_sha256": None, "decoded_sha256": None, "decoded_bytes": None, "array_shape": None, "alignment": production_alignment(component, element_type), "compression": component == "graphics" and production.suffix in {".smol", ".fastSmol"}, "layout_format": "emerald", "linkage": "external", "visibility": "public", "output_section": ".rodata", "consumers": consumers, "reuse_class": component_cls, "canonical_owner": runtime_symbol if component_cls == "EXISTING_REFERENCE" else None, "selection_blocker": False, "rationale": "Direct byte-verified Wayfarer component." if component_cls == "EXISTING_REFERENCE" else "Dedicated Sinnoh production component."})
+            transformed = path.suffix in {".png", ".pal"}
+            encoder_rule, encoder_args = (gbagfx_recipe(root, path, production) if transformed else (None, ()))
+            records.append({"record_id": record_id(symbol, relative), "asset_family": "tileset_component", "component": component, "source_symbol": symbol, "proposed_target_symbol": descriptor_target, "generated_symbol": runtime_symbol, "source_path": (source / relative).as_posix(), "source_sha256": sha256_file(path), "source_bytes": path.stat().st_size, "generated_path": production.as_posix(), "generated_sha256": None, "decoded_sha256": None, "decoded_bytes": None, "array_shape": None, "alignment": production_alignment(component, element_type), "compression": component == "graphics" and production.suffix in {".smol", ".fastSmol"}, "encoder_rule": encoder_rule, "encoder_args": list(encoder_args) if transformed else None, "layout_format": "emerald", "linkage": "external", "visibility": "public", "output_section": ".rodata", "consumers": consumers, "reuse_class": component_cls, "canonical_owner": runtime_symbol if component_cls == "EXISTING_REFERENCE" else None, "selection_blocker": False, "rationale": "Direct byte-verified Wayfarer component." if component_cls == "EXISTING_REFERENCE" else "Dedicated Sinnoh production component."})
     groups, maps, layouts = selected_source(donor)
     for _, _, name in groups:
         layout = layouts[maps[name]["layout"]]
@@ -515,7 +627,41 @@ def animations_symbol_uses(root: Path, symbol: str) -> int:
     return (root / "src/tileset_anims.c").read_text(encoding="utf-8").count(symbol)
 
 
-def verify(root: Path, manifest: dict[str, Any], production: bool = True) -> dict[str, int]:
+def verify_fresh_transformed_components(root: Path, manifest: dict[str, Any], *,
+                                        graphics_rules_text: str | None = None,
+                                        makefile_text: str | None = None) -> int:
+    """Prove every PNG/palette production output matches its current Make recipe."""
+    generic_gbagfx_args(root, ".4bpp", ".png", makefile_text=makefile_text)
+    generic_gbagfx_args(root, ".gbapal", ".pal", makefile_text=makefile_text)
+    compression_encoder_args(root, Path("tiles.4bpp.fastSmol"), makefile_text=makefile_text)
+    compression_encoder_args(root, Path("tiles.4bpp.smol"), makefile_text=makefile_text)
+    transformed = [
+        row for row in manifest.get("records", [])
+        if row.get("asset_family") == "tileset_component"
+        and row.get("component") != "descriptor"
+        and production_source(row).suffix in {".png", ".pal"}
+    ]
+    if not transformed:
+        raise ValueError("Sinnoh asset closure lost transformed components")
+    with tempfile.TemporaryDirectory(prefix="sinnoh-fresh-production-") as directory:
+        temporary = Path(directory)
+        for row in transformed:
+            target = root / row["generated_path"]
+            fresh = temporary / row["generated_path"]
+            source = root / production_source(row)
+            decoded_target = root / decoded_path(Path(row["generated_path"]))
+            decoded_fresh = decoded_path(fresh)
+            if not source.is_file() or not target.is_file() or not decoded_target.is_file():
+                raise ValueError(f"stale or missing production output for {row['record_id']}")
+            generate_component(root, source, fresh, rule_output=target,
+                               graphics_rules_text=graphics_rules_text, makefile_text=makefile_text)
+            if fresh.read_bytes() != target.read_bytes() or decoded_fresh.read_bytes() != decoded_target.read_bytes():
+                raise ValueError(f"fresh transformed production drift for {row['record_id']}")
+    return len(transformed)
+
+
+def verify(root: Path, manifest: dict[str, Any], production: bool = True, *,
+           graphics_rules_text: str | None = None, makefile_text: str | None = None) -> dict[str, int]:
     rows = manifest.get("records", [])
     if manifest.get("selection", {}).get("release_link_enabled") or manifest.get("selection", {}).get("asset_manifest_ready"):
         raise ValueError("Sinnoh asset milestone must not open the release gate")
@@ -525,6 +671,9 @@ def verify(root: Path, manifest: dict[str, Any], production: bool = True) -> dic
         raise ValueError("Sinnoh asset manifest implementation head drifted")
     classes = {"EXISTING_REFERENCE", "SINNOH_VARIANT", "SINNOH_NEW", "EXACT_ALIAS"}
     counts = {key: 0 for key in classes}
+    if production:
+        verify_fresh_transformed_components(root, manifest, graphics_rules_text=graphics_rules_text,
+                                            makefile_text=makefile_text)
     verify_runtime_component_closure(root, manifest)
     runtime = production_runtime(root)
     for row in rows:
@@ -564,6 +713,14 @@ def verify(root: Path, manifest: dict[str, Any], production: bool = True) -> dic
             compressed_path = row["generated_path"].endswith((".4bpp.fastSmol", ".4bpp.smol"))
             if row["compression"] != compressed or (compressed and not compressed_path):
                 raise ValueError(f"production compression drift for {row['record_id']}")
+            if source_path.suffix in {".png", ".pal"}:
+                encoder_rule, encoder_args = gbagfx_recipe(root, source_path, Path(row["generated_path"]),
+                                                           graphics_rules_text=graphics_rules_text,
+                                                           makefile_text=makefile_text)
+                if row.get("encoder_rule") != encoder_rule or row.get("encoder_args") != list(encoder_args):
+                    raise ValueError(f"production GFX encoder rule drift for {row['record_id']}")
+            elif row.get("encoder_rule") is not None or row.get("encoder_args") is not None:
+                raise ValueError(f"unexpected GFX encoder contract for {row['record_id']}")
             if row["reuse_class"] != "EXISTING_REFERENCE" and compressed and not row["generated_path"].endswith(".4bpp.fastSmol"):
                 raise ValueError(f"Sinnoh graphics compression drift for {row['record_id']}")
         if row["reuse_class"] == "SINNOH_VARIANT" and row["component"] != "descriptor" and (not row["proposed_target_symbol"].startswith("gTileset_Sinnoh_") or not row["generated_path"].startswith("data/tilesets/sinnoh/")):

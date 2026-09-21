@@ -3,6 +3,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -174,12 +175,134 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertFalse(maps["selection"]["asset_manifest_ready"])
         self.assertTrue(all(row["inclusion"]["state"] == "FROZEN_NOT_SELECTED" for row in maps["maps"]))
 
+    def test_closed_asset_gate_excludes_sinnoh_aggregates_from_wayfarer(self):
+        global_header = (GAME / "include/constants/global.h").read_text(encoding="utf-8")
+        wayfarer = global_header.split("#elif defined(POKEMON_WAYFARER)", 1)[1].split("#elif defined(POKEMON_HNS)", 1)[0]
+        self.assertIn("#define HAS_SINNOH_CONTENT 0", wayfarer)
+
+    def test_special_graphics_proofs_use_exact_make_rules_and_fresh_outputs(self):
+        manifest = json.loads(self.assets_path.read_text())
+        expected = {
+            "data/tilesets/primary/building/tiles.4bpp.smol": ("-num_tiles", "502", "-Wnum_tiles"),
+            "data/tilesets/secondary/shop/tiles.4bpp.fastSmol": ("-num_tiles", "502", "-Wnum_tiles"),
+            "data/tilesets/secondary/pokemon_center/tiles.4bpp.fastSmol": ("-num_tiles", "478", "-Wnum_tiles"),
+            "data/tilesets/secondary/cave/tiles.4bpp.fastSmol": ("-num_tiles", "425", "-Wnum_tiles"),
+            "data/tilesets/secondary/pokemon_school/tiles.4bpp.fastSmol": ("-num_tiles", "278", "-Wnum_tiles"),
+            "data/tilesets/secondary/pretty_petal_flower_shop/tiles.4bpp.fastSmol": ("-num_tiles", "345", "-Wnum_tiles"),
+            "data/tilesets/secondary/generic_building/tiles.4bpp.fastSmol": ("-num_tiles", "509", "-Wnum_tiles"),
+            "data/tilesets/secondary/rustboro_gym/tiles.4bpp.fastSmol": ("-num_tiles", "60", "-Wnum_tiles"),
+        }
+        graphics = [row for row in manifest["records"] if row.get("component") == "graphics"]
+        self.assertEqual(ASSETS.tileset_gfx_dir(GAME), Path("data/tilesets"))
+        self.assertEqual({row["generated_path"] for row in graphics if ASSETS.graphics_encoder_args(GAME, GAME / row["generated_path"])}, set(expected))
+        self.assertEqual(ASSETS.compression_encoder_args(GAME, Path("tiles.4bpp.fastSmol")), ("-w", "$<", "$@", "false", "false", "false"))
+        self.assertEqual(ASSETS.compression_encoder_args(GAME, Path("tiles.4bpp.smol")), ("-w", "$<", "$@"))
+        for row in graphics:
+            rule = ASSETS.graphics_encoder_args(GAME, GAME / row["generated_path"])
+            self.assertEqual(rule, expected.get(row["generated_path"], ()))
+            expected_rule = (f"graphics_file_rules.mk:{ASSETS.decoded_path(Path(row['generated_path'])).as_posix()}"
+                             if rule else "Makefile:%.4bpp:%.png")
+            self.assertEqual(row["encoder_rule"], expected_rule)
+            self.assertEqual(row["encoder_args"], ["$<", "$@", *rule])
+
+        # Regenerate every special target outside the worktree.  A generic
+        # stale .4bpp cannot satisfy this byte comparison with a clean-like
+        # invocation of the production rule.
+        with tempfile.TemporaryDirectory() as directory:
+            fresh_root = Path(directory)
+            for row in graphics:
+                if row["generated_path"] not in expected:
+                    continue
+                target = GAME / row["generated_path"]
+                fresh = fresh_root / Path(row["generated_path"]).name
+                ASSETS.generate_component(GAME, GAME / ASSETS.production_source(row), fresh, rule_output=target)
+                self.assertEqual(fresh.read_bytes(), target.read_bytes(), row["record_id"])
+                self.assertEqual(fresh.with_suffix("").read_bytes(), target.with_suffix("").read_bytes(), row["record_id"])
+
+    def test_full_transformed_closure_uses_current_make_recipes(self):
+        manifest = json.loads(self.assets_path.read_text())
+        transformed = [
+            row for row in manifest["records"]
+            if row.get("asset_family") == "tileset_component"
+            and row.get("component") != "descriptor"
+            and ASSETS.production_source(row).suffix in {".png", ".pal"}
+        ]
+        self.assertEqual(len(transformed), 483)
+        self.assertEqual({row["encoder_rule"] for row in transformed if row["component"] == "palette"}, {"Makefile:%.gbapal:%.pal"})
+        self.assertEqual({row["encoder_rule"] for row in transformed if row["component"] == "animation"}, {"Makefile:%.4bpp:%.png"})
+        for row in transformed:
+            rule, args = ASSETS.gbagfx_recipe(GAME, ASSETS.production_source(row), Path(row["generated_path"]))
+            self.assertEqual(row["encoder_rule"], rule)
+            self.assertEqual(row["encoder_args"], list(args))
+        self.assertEqual(ASSETS.verify_fresh_transformed_components(GAME, manifest), len(transformed))
+
+    def test_production_verify_rejects_encoder_rule_drift_with_stale_outputs(self):
+        manifest = json.loads(self.assets_path.read_text())
+        rules = (GAME / "graphics_file_rules.mk").read_text(encoding="utf-8")
+        drifted_rules = rules.replace("-num_tiles 502 -Wnum_tiles", "-num_tiles 501 -Wnum_tiles", 1)
+        with self.assertRaisesRegex(ValueError, "fresh transformed production drift|GFX encoder rule drift"):
+            ASSETS.verify(GAME, manifest, graphics_rules_text=drifted_rules)
+
+        relocated_rules = rules.replace("TILESETGFXDIR := data/tilesets", "TILESETGFXDIR := data/alternate_tilesets", 1)
+        with self.assertRaisesRegex(ValueError, "fresh transformed production drift|GFX encoder rule drift"):
+            ASSETS.verify(GAME, manifest, graphics_rules_text=relocated_rules)
+        with self.assertRaisesRegex(ValueError, "missing or ambiguous TILESETGFXDIR assignment"):
+            ASSETS.tileset_gfx_dir(GAME, rules_text=rules.replace("TILESETGFXDIR := data/tilesets\n", "", 1))
+        with self.assertRaisesRegex(ValueError, "unsupported TILESETGFXDIR assignment"):
+            ASSETS.tileset_gfx_dir(GAME, rules_text=rules.replace(":= data/tilesets", "?= data/tilesets", 1))
+
+        makefile = (GAME / "Makefile").read_text(encoding="utf-8")
+        drifted_makefile = makefile.replace("%.fastSmol: %      ; $(SMOL) -w $< $@ false false false", "%.fastSmol: %      ; $(SMOL) $< $@ false false false", 1)
+        with self.assertRaisesRegex(ValueError, "compression recipe semantic drift"):
+            ASSETS.verify(GAME, manifest, makefile_text=drifted_makefile)
+
+    def test_production_verify_rejects_generic_graphics_palette_and_animation_rule_drift(self):
+        manifest = json.loads(self.assets_path.read_text())
+        makefile = (GAME / "Makefile").read_text(encoding="utf-8")
+        generic_graphics = makefile.replace("%.4bpp:     %.png  ; $(GFX) $< $@", "%.4bpp:     %.png  ; $(GFX) $@ $<", 1)
+        with self.assertRaisesRegex(ValueError, "generic GFX recipe semantic drift for %\\.4bpp:%\\.png"):
+            ASSETS.verify(GAME, manifest, makefile_text=generic_graphics)
+        animation = next(row for row in manifest["records"] if row.get("component") == "animation")
+        self.assertEqual(animation["encoder_rule"], "Makefile:%.4bpp:%.png")
+
+        generic_palette = makefile.replace("%.gbapal:   %.pal  ; $(GFX) $< $@", "%.gbapal:   %.pal  ; $(GFX) $@ $<", 1)
+        with self.assertRaisesRegex(ValueError, "generic GFX recipe semantic drift for %\\.gbapal:%\\.pal"):
+            ASSETS.verify(GAME, manifest, makefile_text=generic_palette)
+        palette = next(row for row in manifest["records"] if row.get("component") == "palette")
+        self.assertEqual(palette["encoder_rule"], "Makefile:%.gbapal:%.pal")
+
+    def test_runtime_inputs_schedule_asset_verification(self):
+        runtime_inputs = (
+            "Makefile",
+            "graphics_file_rules.mk",
+            "tools/gbagfx/gbagfx",
+            "tools/compresSmol/compresSmol",
+            "src/data/tilesets/graphics.h",
+            "src/data/tilesets/headers.h",
+            "src/data/tilesets/metatiles.h",
+            "src/tileset_anims.c",
+        )
+        for path in runtime_inputs:
+            result = subprocess.run(
+                ["make", "NODEP=1", "BUILD=wayfarer", "-n", "-W", path, "wayfarer-sinnoh-port-assets"],
+                cwd=GAME,
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("assets.py --root . --verify", result.stdout, path)
+            if path.startswith("tools/"):
+                tool_directory = path.rsplit("/", 1)[0]
+                self.assertLess(result.stdout.index(f"make -C {tool_directory}"), result.stdout.index("assets.py --root . --verify"), path)
+
     def test_asset_verifier_rejects_stale_production_proof_and_missing_consumer(self):
         manifest = json.loads(self.assets_path.read_text())
         component = next(row for row in manifest["records"] if row["asset_family"] == "tileset_component" and row["component"] != "descriptor")
         component["generated_sha256"] = "0" * 64
         with self.assertRaisesRegex(ValueError, "exact reference production mismatch|generated production hash"):
-            ASSETS.verify(GAME, manifest)
+            ASSETS.verify(GAME, manifest, production=False)
         manifest = json.loads(self.assets_path.read_text())
         component = next(row for row in manifest["records"] if row["asset_family"] == "tileset_component")
         component["consumers"] = []
@@ -203,7 +326,7 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         component = next(row for row in manifest["records"] if row.get("asset_family") == "tileset_component" and row["component"] == "graphics")
         component["decoded_bytes"] += 1
         with self.assertRaisesRegex(ValueError, "production shape drift|generated production hash|exact reference production mismatch"):
-            ASSETS.verify(GAME, manifest)
+            ASSETS.verify(GAME, manifest, production=False)
         manifest = json.loads(self.assets_path.read_text())
         component = next(row for row in manifest["records"] if row.get("asset_family") == "tileset_component" and row["component"] == "graphics")
         component["compression"] = False

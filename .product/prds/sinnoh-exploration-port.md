@@ -204,9 +204,10 @@ content-preserving aliasing or compression change.
 - Which later document owns Sinnoh's regional map, Fly destinations, healing
   network, Pokedex, field-move additions, encounters, Trainers, story, badges,
   and League participation?
-- Are all nine donor-specific tileset families cleared for redistribution and
-  properly attributed? Implementation must resolve provenance before importing
-  them into the repository.
+- Does the asset manifest retain donor identity, pinned revision, and
+  byte-level production proof for every donor-derived tileset component? This
+  is technical traceability only, not a permission, attribution, or release
+  gate.
 
 ## References
 
