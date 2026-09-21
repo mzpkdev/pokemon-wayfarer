@@ -73,6 +73,12 @@ UI bundle beside that catalog, making `build/cartographer/map-catalog/` a
 self-contained static site. It copies only the small UI bundle, not the catalog
 itself. CI follows the same path from a clean catalog directory.
 
+GitHub Pages publishes the current `main` build at `preview/main/` alongside
+eligible pull-request builds at `preview/pr-<number>/`. Each deployment rebuilds
+one atomic artifact containing `main` and every open, ready-for-review pull
+request carrying the `preview` label. A failing `main` build blocks publication;
+a failing pull-request build is omitted without removing the other previews.
+
 `pnpm run clean` removes package build output and the generated Cartographer and
 metatile catalogs under the repository's `build/` directory. It does not touch
 the ROM build output.

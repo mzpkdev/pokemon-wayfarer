@@ -17,14 +17,18 @@ test("keeps only valid, sorted same-repository preview numbers", () => {
   assert.throws(() => previewNumbersFromTsv("../4\tsha\n"), /Invalid pull request number/)
 })
 
-test("writes a relative preview index without a production site copy", (t) => {
+test("writes a relative preview index with main and pull-request deployments", (t) => {
   const output = fs.mkdtempSync(path.join(os.tmpdir(), "wayfarer-pages-index-"))
   t.after(() => fs.rmSync(output, { recursive: true, force: true }))
 
   writePreviewIndex({ output, previews: [4, 12] })
 
   assert.equal(fs.readdirSync(output).join(","), "index.html")
-  assert.match(fs.readFileSync(path.join(output, "index.html"), "utf8"), /href="preview\/pr-4\/"/)
+  const index = fs.readFileSync(path.join(output, "index.html"), "utf8")
+  assert.match(index, /href="preview\/main\/"/)
+  assert.match(index, /href="preview\/pr-4\/"/)
+  assert.ok(index.indexOf('href="preview/main/"') < index.indexOf('href="preview/pr-4/"'))
+  assert.match(previewIndexHtml([]), /href="preview\/main\/"/)
   assert.match(previewIndexHtml([]), /No same-repository pull requests/)
 })
 
