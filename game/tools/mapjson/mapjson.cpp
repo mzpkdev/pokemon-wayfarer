@@ -44,6 +44,12 @@ string sep;
 string wayfarer_sevii_manifest_path;
 string wayfarer_sinnoh_manifest_path;
 string wayfarer_sinnoh_asset_manifest_path;
+string map_layout_storage_policy_path;
+string map_layout_storage_mode = "raw";
+string map_layout_storage_report_path;
+string map_layout_source_revision = "unknown";
+uint32_t map_layout_catalog_crc;
+uint32_t map_layout_policy_crc;
 bool wayfarer_sevii_release_link_enabled = false;
 bool wayfarer_sinnoh_release_link_enabled = false;
 set<string> wayfarer_sevii_map_names;
@@ -1946,6 +1952,262 @@ static uint32_t crc32_iso_hdlc(const string &bytes) {
     return crc ^ 0xFFFFFFFF;
 }
 
+struct LayoutStorageRecord {
+    string layoutId;
+    string layoutName;
+    string sourcePath;
+    string sourceVersion;
+    string policy;
+    string reason;
+    string raw;
+    string stored;
+    uint32_t width;
+    uint32_t height;
+    uint32_t logicalBytes;
+    uint32_t storedCrc;
+    uint32_t decodedCrc;
+    uint32_t candidateBytes;
+    uint32_t codecPaddingBytes;
+    bool compressed;
+    bool conditionallyLinked;
+    bool compressionEvaluated;
+    bool explicitPolicy;
+};
+
+static map<string, LayoutStorageRecord> layout_storage_records;
+static vector<string> layout_storage_order;
+static Json::array layout_storage_excluded;
+static uint32_t map_layout_max_decoded_file_bytes;
+static uint32_t map_layout_max_logical_tile_bytes;
+static uint32_t map_layout_max_stored_bytes;
+static bool is_guarded_sinnoh_layout(const Json &layout);
+
+static string gba_lz77_compress(const string &source) {
+    if (source.empty() || source.size() > 0xFFFFFF)
+        FATAL_ERROR("GBA LZ77 source length is invalid.\n");
+    string output;
+    output.reserve(4 + source.size() + (source.size() + 7) / 8 + 3);
+    output.push_back(0x10);
+    output.push_back(source.size() & 0xFF);
+    output.push_back((source.size() >> 8) & 0xFF);
+    output.push_back((source.size() >> 16) & 0xFF);
+    size_t sourcePosition = 0;
+    while (sourcePosition < source.size()) {
+        size_t flagsPosition = output.size();
+        output.push_back(0);
+        for (int bit = 0; bit < 8 && sourcePosition < source.size(); bit++) {
+            size_t bestDistance = 0;
+            size_t bestLength = 0;
+            for (size_t distance = 2; distance <= sourcePosition && distance <= 0x1000; distance++) {
+                size_t length = 0;
+                size_t match = sourcePosition - distance;
+                while (length < 18 && sourcePosition + length < source.size()
+                    && source[match + length] == source[sourcePosition + length])
+                    length++;
+                if (length > bestLength) {
+                    bestDistance = distance;
+                    bestLength = length;
+                    if (length == 18)
+                        break;
+                }
+            }
+            if (bestLength >= 3) {
+                output[flagsPosition] |= 0x80 >> bit;
+                uint16_t token = static_cast<uint16_t>(((bestLength - 3) << 12) | (bestDistance - 1));
+                output.push_back(token >> 8);
+                output.push_back(token & 0xFF);
+                sourcePosition += bestLength;
+            } else {
+                output.push_back(source[sourcePosition++]);
+            }
+        }
+    }
+    while ((output.size() & 3) != 0)
+        output.push_back(0);
+    return output;
+}
+
+static string gba_lz77_decode_bounded(const string &stream, size_t expectedSize,
+                                      size_t *codecPaddingBytes = nullptr) {
+    if (stream.size() < 4 || static_cast<unsigned char>(stream[0]) != 0x10)
+        FATAL_ERROR("Generated GBA LZ77 stream has no schema-1 header.\n");
+    size_t headerSize = static_cast<unsigned char>(stream[1])
+                      | static_cast<size_t>(static_cast<unsigned char>(stream[2])) << 8
+                      | static_cast<size_t>(static_cast<unsigned char>(stream[3])) << 16;
+    if (headerSize != expectedSize)
+        FATAL_ERROR("Generated GBA LZ77 stream has the wrong decoded length.\n");
+    string output;
+    output.reserve(expectedSize);
+    size_t position = 4;
+    while (output.size() < expectedSize) {
+        if (position >= stream.size())
+            FATAL_ERROR("Generated GBA LZ77 stream has truncated flags.\n");
+        unsigned char flags = stream[position++];
+        for (int bit = 0; bit < 8 && output.size() < expectedSize; bit++) {
+            if ((flags & (0x80 >> bit)) != 0) {
+                if (stream.size() - position < 2)
+                    FATAL_ERROR("Generated GBA LZ77 stream has a truncated backreference.\n");
+                uint16_t token = static_cast<unsigned char>(stream[position]) << 8
+                               | static_cast<unsigned char>(stream[position + 1]);
+                position += 2;
+                size_t length = (token >> 12) + 3;
+                size_t distance = (token & 0xFFF) + 1;
+                if (distance > output.size() || length > expectedSize - output.size())
+                    FATAL_ERROR("Generated GBA LZ77 stream has an invalid backreference.\n");
+                while (length-- != 0)
+                    output.push_back(output[output.size() - distance]);
+            } else {
+                if (position >= stream.size())
+                    FATAL_ERROR("Generated GBA LZ77 stream has a truncated literal.\n");
+                output.push_back(stream[position++]);
+            }
+        }
+    }
+    if ((position + 3) / 4 * 4 != stream.size())
+        FATAL_ERROR("Generated GBA LZ77 stream has trailing encoded data.\n");
+    if (codecPaddingBytes != nullptr)
+        *codecPaddingBytes = stream.size() - position;
+    while (position < stream.size())
+        if (stream[position++] != 0)
+            FATAL_ERROR("Generated GBA LZ77 stream has nonzero padding.\n");
+    return output;
+}
+
+static void emit_asm_bytes(ostringstream &text, const string &bytes) {
+    for (size_t offset = 0; offset < bytes.size(); offset += 16) {
+        text << "\t.byte ";
+        for (size_t index = offset; index < bytes.size() && index < offset + 16; index++) {
+            if (index != offset)
+                text << ", ";
+            text << static_cast<unsigned int>(static_cast<unsigned char>(bytes[index]));
+        }
+        text << "\n";
+    }
+}
+
+static map<string, std::pair<string, string>> load_map_layout_storage_policy(void) {
+    map<string, std::pair<string, string>> rules;
+    if (map_layout_storage_policy_path.empty())
+        return rules;
+    string error;
+    string policyText = read_text_file(map_layout_storage_policy_path);
+    map_layout_policy_crc = crc32_iso_hdlc(policyText);
+    Json policy = Json::parse(policyText, error);
+    if (!policy.is_object() || policy["schema_version"].int_value() != 1)
+        FATAL_ERROR("Invalid map layout storage policy: %s\n", error.c_str());
+    string defaultPolicy = json_to_string(policy, "default_policy");
+    if (defaultPolicy != "raw" && defaultPolicy != "auto" && defaultPolicy != "gba_lz77")
+        FATAL_ERROR("Unknown default map layout storage policy %s.\n", defaultPolicy.c_str());
+    if (!policy["rules"].is_array())
+        FATAL_ERROR("Map layout storage policy rules must be an array.\n");
+    rules[""] = {defaultPolicy, ""};
+    for (const Json &rule : policy["rules"].array_items()) {
+        if (!rule.is_object())
+            FATAL_ERROR("Each map layout storage rule must be an object.\n");
+        string name = json_to_string(rule, "layout");
+        string selection = json_to_string(rule, "policy");
+        string reason = json_to_string(rule, "reason", true);
+        if (selection != "raw" && selection != "auto" && selection != "gba_lz77")
+            FATAL_ERROR("Unknown storage policy %s for %s.\n", selection.c_str(), name.c_str());
+        if (selection == "raw" && reason.empty())
+            FATAL_ERROR("Raw map layout exception %s requires a reason.\n", name.c_str());
+        if (!rules.emplace(name, std::make_pair(selection, reason)).second)
+            FATAL_ERROR("Duplicate map layout storage rule for %s.\n", name.c_str());
+    }
+    return rules;
+}
+
+static void prepare_layout_storage(const Json &layouts_data) {
+    layout_storage_records.clear();
+    layout_storage_order.clear();
+    layout_storage_excluded.clear();
+    map_layout_max_decoded_file_bytes = 0;
+    map_layout_max_logical_tile_bytes = 0;
+    map_layout_max_stored_bytes = 0;
+    auto rules = load_map_layout_storage_policy();
+    set<string> matchedRules;
+    set<string> selectedLayoutIds;
+    for (const Json &layout : layouts_data["layouts"].array_items()) {
+        if (layout == Json::object())
+            continue;
+        if (!layout_matches_version(layout)) {
+            layout_storage_excluded.push_back(Json::object{
+                {"layout_id", json_to_string(layout, "id", true)},
+                {"layout_name", json_to_string(layout, "name", true)},
+                {"source_version", get_source_version(layout)},
+                {"reason", "not selected for product"},
+            });
+            continue;
+        }
+        string borderPath = json_to_string(layout, "border_filepath");
+        if (!std::filesystem::exists(borderPath))
+            FATAL_ERROR("Selected layout %s is missing border file %s.\n",
+                        json_to_string(layout, "name").c_str(), borderPath.c_str());
+        LayoutStorageRecord record;
+        record.layoutId = json_to_string(layout, "id");
+        record.layoutName = json_to_string(layout, "name");
+        if (!selectedLayoutIds.insert(record.layoutId).second
+         || layout_storage_records.find(record.layoutName) != layout_storage_records.end())
+            FATAL_ERROR("Duplicate selected map layout ID or name for %s.\n", record.layoutName.c_str());
+        record.sourcePath = json_to_string(layout, "blockdata_filepath");
+        record.sourceVersion = get_source_version(layout);
+        record.conditionallyLinked = is_guarded_sinnoh_layout(layout);
+        int width = layout["width"].int_value();
+        int height = layout["height"].int_value();
+        if (width <= 0 || height <= 0
+         || (static_cast<uint64_t>(width) + 15) * (static_cast<uint64_t>(height) + 14) > 10240)
+            FATAL_ERROR("Layout %s dimensions do not fit the runtime backup map.\n",
+                        record.layoutName.c_str());
+        record.width = width;
+        record.height = height;
+        record.raw = read_binary_file(record.sourcePath);
+        uint64_t logicalBytes = static_cast<uint64_t>(record.width)
+                              * static_cast<uint64_t>(record.height) * 2;
+        if (logicalBytes == 0 || logicalBytes > UINT32_MAX || record.raw.size() < logicalBytes
+         || record.raw.size() > 0xFFFFFF)
+            FATAL_ERROR("Invalid layout payload dimensions or length for %s.\n", record.layoutName.c_str());
+        record.logicalBytes = logicalBytes;
+        auto rule = rules.find(record.layoutName);
+        if (rule == rules.end())
+            rule = rules.find(record.layoutId);
+        if (rule != rules.end()) {
+            record.policy = rule->second.first;
+            record.reason = rule->second.second;
+            record.explicitPolicy = true;
+            matchedRules.insert(rule->first);
+        } else {
+            record.policy = rules.empty() ? "raw" : rules.at("").first;
+            record.explicitPolicy = false;
+        }
+        string compressed;
+        bool considerCompression = version == "wayfarer" && map_layout_storage_mode == "hybrid"
+                                && record.policy != "raw";
+        size_t codecPaddingBytes = 0;
+        if (considerCompression) {
+            compressed = gba_lz77_compress(record.raw);
+            if (gba_lz77_decode_bounded(compressed, record.raw.size(), &codecPaddingBytes) != record.raw)
+                FATAL_ERROR("Map layout compression round trip failed for %s.\n", record.layoutName.c_str());
+        }
+        record.compressionEvaluated = considerCompression;
+        record.candidateBytes = compressed.size();
+        record.codecPaddingBytes = codecPaddingBytes;
+        record.compressed = considerCompression
+                         && (record.policy == "gba_lz77"
+                          || (record.policy == "auto" && compressed.size() < ((record.raw.size() + 3) & ~3)));
+        record.stored = record.compressed ? compressed : record.raw;
+        record.storedCrc = crc32_iso_hdlc(record.stored);
+        record.decodedCrc = crc32_iso_hdlc(record.raw);
+        map_layout_max_decoded_file_bytes = std::max<uint32_t>(map_layout_max_decoded_file_bytes, record.raw.size());
+        map_layout_max_logical_tile_bytes = std::max(map_layout_max_logical_tile_bytes, record.logicalBytes);
+        map_layout_max_stored_bytes = std::max<uint32_t>(map_layout_max_stored_bytes, record.stored.size());
+        layout_storage_order.push_back(record.layoutName);
+        layout_storage_records.emplace(record.layoutName, std::move(record));
+    }
+    for (const auto &rule : rules)
+        if (!rule.first.empty() && matchedRules.find(rule.first) == matchedRules.end())
+            FATAL_ERROR("Unknown or unselected map layout storage rule %s.\n", rule.first.c_str());
+}
+
 static string asm_hex_u32(uint32_t value) {
     ostringstream text;
     text << "0x" << std::hex << std::uppercase << value;
@@ -1971,6 +2233,7 @@ string generate_layout_headers_text(Json layouts_data) {
     ostringstream text;
 
     text << get_generated_warning("data/layouts/layouts.json", true);
+    prepare_layout_storage(layouts_data);
 
     // Borders remain ordinary immutable layout data. Only map.bin payloads are
     // wrapped in the storage descriptor contract.
@@ -1995,9 +2258,14 @@ string generate_layout_headers_text(Json layouts_data) {
          || !layout_matches_version(layout))
             continue;
         string layoutName = json_to_string(layout, "name");
+        const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
         begin_layout_guard(text, layout);
-        text << "\t.align 2\n.L" << layoutName << "_Blockdata:\n"
-             << "\t.incbin \"" << json_to_string(layout, "blockdata_filepath") << "\"\n\n";
+        text << "\t.align 2\n.L" << layoutName << "_Blockdata:\n";
+        if (storage.compressed)
+            emit_asm_bytes(text, storage.stored);
+        else
+            text << "\t.incbin \"" << storage.sourcePath << "\"\n";
+        text << "\n";
         end_layout_guard(text, layout);
     }
     if (version == "wayfarer")
@@ -2010,26 +2278,19 @@ string generate_layout_headers_text(Json layouts_data) {
         string layout_version = json_to_string(layout, "layout_version", true);
         if (layout_version.empty()) layout_version = "emerald";
         string layoutName = json_to_string(layout, "name");
-        string blockdataPath = json_to_string(layout, "blockdata_filepath");
-        string blockdata = read_binary_file(blockdataPath);
-        uint64_t logicalBytes = static_cast<uint64_t>(layout["width"].int_value())
-                              * static_cast<uint64_t>(layout["height"].int_value()) * 2;
-        if (logicalBytes == 0 || logicalBytes > UINT32_MAX || blockdata.size() < logicalBytes
-         || blockdata.size() > UINT32_MAX)
-            FATAL_ERROR("Invalid layout payload dimensions or length for %s.\n", layoutName.c_str());
+        const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
         string payload_label = ".L" + layoutName + "_Blockdata";
         string map_data_label = version == "wayfarer" ? ".L" + layoutName + "_MapData" : payload_label;
         begin_layout_guard(text, layout);
         if (version == "wayfarer") {
-            uint32_t crc = crc32_iso_hdlc(blockdata);
             text << "\t.align 2\n" << map_data_label << ":\n"
                  << "\t.4byte " << payload_label << "\n"
-                 << "\t.4byte " << blockdata.size() << "\n"
-                 << "\t.4byte " << blockdata.size() << "\n"
-                 << "\t.4byte " << logicalBytes << "\n"
-                 << "\t.4byte " << asm_hex_u32(crc) << "\n"
-                 << "\t.4byte " << asm_hex_u32(crc) << "\n"
-                 << "\t.byte 1\n\t.byte 0\n\t.2byte 0\n\n";
+                 << "\t.4byte " << storage.stored.size() << "\n"
+                 << "\t.4byte " << storage.raw.size() << "\n"
+                 << "\t.4byte " << storage.logicalBytes << "\n"
+                 << "\t.4byte " << asm_hex_u32(storage.storedCrc) << "\n"
+                 << "\t.4byte " << asm_hex_u32(storage.decodedCrc) << "\n"
+                 << "\t.byte 1\n\t.byte " << (storage.compressed ? 1 : 0) << "\n\t.2byte 0\n\n";
         }
         text << "\t.align 2\n" << layoutName << "::\n"
              << "\t.4byte " << json_to_string(layout, "width") << "\n"
@@ -2061,6 +2322,222 @@ string generate_layout_headers_text(Json layouts_data) {
         text << "\n";
     }
 
+    return text.str();
+}
+
+static string generate_layout_storage_constants_text(void) {
+    ostringstream text;
+    text << get_include_guard_start("CONSTANTS_MAP_LAYOUT_STORAGE")
+         << get_generated_warning("data/layouts/layouts.json", false)
+         << "#define MAP_LAYOUT_STORAGE_SCHEMA_VERSION 1\n"
+         << "#define MAP_LAYOUT_STORAGE_HYBRID " << (map_layout_storage_mode == "hybrid" ? 1 : 0) << "\n"
+         << "#define MAP_LAYOUT_MAX_DECODED_FILE_BYTES " << map_layout_max_decoded_file_bytes << "\n"
+         << "#define MAP_LAYOUT_MAX_LOGICAL_TILE_BYTES " << map_layout_max_logical_tile_bytes << "\n"
+         << "#define MAP_LAYOUT_MAX_STORED_BYTES " << map_layout_max_stored_bytes << "\n"
+         << get_include_guard_end("CONSTANTS_MAP_LAYOUT_STORAGE");
+    return text.str();
+}
+
+static string generate_layout_storage_report_text(void) {
+    Json::array rows;
+    uint64_t rawBytes = 0;
+    uint64_t storedBytes = 0;
+    uint64_t compressedStoredBytes = 0;
+    uint64_t rawStoredBytes = 0;
+    uint64_t descriptorBytes = 0;
+    uint64_t checksumBytes = 0;
+    uint64_t payloadAlignmentBytes = 0;
+    uint64_t codecPaddingBytes = 0;
+    uint64_t trailingBytes = 0;
+    uint64_t rawExceptionBytes = 0;
+    uint64_t nonProfitableRawBytes = 0;
+    uint64_t nonProfitableCandidateBytes = 0;
+    uint64_t unconditionalRawBytes = 0;
+    uint64_t unconditionalStoredBytes = 0;
+    uint64_t conditionalRawBytes = 0;
+    uint64_t conditionalStoredBytes = 0;
+    unsigned int compressedCount = 0;
+    unsigned int rawCount = 0;
+    unsigned int conditionalCount = 0;
+    unsigned int rawExceptionCount = 0;
+    unsigned int nonProfitableCount = 0;
+    string largestDecodedLayout;
+    uint32_t largestDecodedBytes = 0;
+    for (const string &name : layout_storage_order) {
+        const LayoutStorageRecord &record = layout_storage_records.at(name);
+        uint32_t alignmentCost = (4 - (record.stored.size() & 3)) & 3;
+        rawBytes += record.raw.size();
+        storedBytes += record.stored.size();
+        compressedStoredBytes += record.compressed ? record.stored.size() : 0;
+        rawStoredBytes += record.compressed ? 0 : record.stored.size();
+        descriptorBytes += version == "wayfarer" ? 28 : 0;
+        checksumBytes += version == "wayfarer" ? 8 : 0;
+        payloadAlignmentBytes += alignmentCost;
+        codecPaddingBytes += record.codecPaddingBytes;
+        trailingBytes += record.raw.size() - record.logicalBytes;
+        compressedCount += record.compressed;
+        rawCount += !record.compressed;
+        conditionalCount += record.conditionallyLinked;
+        if (record.conditionallyLinked) {
+            conditionalRawBytes += record.raw.size();
+            conditionalStoredBytes += record.stored.size();
+        } else {
+            unconditionalRawBytes += record.raw.size();
+            unconditionalStoredBytes += record.stored.size();
+        }
+        if (record.explicitPolicy && record.policy == "raw") {
+            rawExceptionCount++;
+            rawExceptionBytes += record.raw.size();
+        }
+        if (record.compressionEvaluated
+         && record.candidateBytes >= ((record.raw.size() + 3) & ~3)) {
+            nonProfitableCount++;
+            nonProfitableRawBytes += record.raw.size();
+            nonProfitableCandidateBytes += record.candidateBytes;
+        }
+        if (record.raw.size() > largestDecodedBytes) {
+            largestDecodedBytes = record.raw.size();
+            largestDecodedLayout = record.layoutName;
+        }
+        rows.push_back(Json::object{
+            {"layout_id", record.layoutId}, {"layout_name", record.layoutName},
+            {"source_path", record.sourcePath}, {"source_version", record.sourceVersion},
+            {"width", static_cast<int>(record.width)}, {"height", static_cast<int>(record.height)},
+            {"storage", record.compressed ? "gba_lz77" : "raw"},
+            {"policy", record.policy}, {"raw_exception_reason", record.reason},
+            {"raw_file_bytes", static_cast<int>(record.raw.size())},
+            {"logical_tile_bytes", static_cast<int>(record.logicalBytes)},
+            {"stored_bytes", static_cast<int>(record.stored.size())},
+            {"alignment_cost", static_cast<int>(alignmentCost)},
+            {"codec_padding_bytes", static_cast<int>(record.codecPaddingBytes)},
+            {"trailing_bytes", static_cast<int>(record.raw.size() - record.logicalBytes)},
+            {"stored_crc32", asm_hex_u32(record.storedCrc)},
+            {"decoded_crc32", asm_hex_u32(record.decodedCrc)},
+            {"round_trip", true},
+            {"conditionally_linked", record.conditionallyLinked},
+        });
+    }
+    int64_t grossSavedBytes = static_cast<int64_t>(rawBytes) - static_cast<int64_t>(storedBytes);
+    Json report = Json::object{
+        {"schema_version", 1}, {"codec_version", 1},
+        {"product", version}, {"storage_mode", map_layout_storage_mode},
+        {"source_revision", map_layout_source_revision},
+        {"catalog_crc32", asm_hex_u32(map_layout_catalog_crc)},
+        {"storage_policy_crc32", asm_hex_u32(map_layout_policy_crc)},
+        {"storage_policy", map_layout_storage_policy_path},
+        {"compressor", "mapjson-gba-lz77-v1"},
+        {"catalog_layout_count", static_cast<int>(rows.size())},
+        {"unconditionally_linked_layout_count", static_cast<int>(rows.size() - conditionalCount)},
+        {"conditionally_linked_layout_count", static_cast<int>(conditionalCount)},
+        {"totals_scope", "generated catalog including conditionally linked entries"},
+        {"linkage_totals", Json::object{
+            {"unconditionally_linked", Json::object{
+                {"layout_count", static_cast<int>(rows.size() - conditionalCount)},
+                {"raw_payload_bytes", static_cast<double>(unconditionalRawBytes)},
+                {"stored_payload_bytes", static_cast<double>(unconditionalStoredBytes)},
+                {"gross_payload_saved_bytes", static_cast<double>(static_cast<int64_t>(unconditionalRawBytes) - static_cast<int64_t>(unconditionalStoredBytes))},
+                {"descriptor_bytes", static_cast<double>(version == "wayfarer" ? (rows.size() - conditionalCount) * 28 : 0)},
+            }},
+            {"conditionally_linked", Json::object{
+                {"layout_count", static_cast<int>(conditionalCount)},
+                {"raw_payload_bytes", static_cast<double>(conditionalRawBytes)},
+                {"stored_payload_bytes", static_cast<double>(conditionalStoredBytes)},
+                {"gross_payload_saved_bytes", static_cast<double>(static_cast<int64_t>(conditionalRawBytes) - static_cast<int64_t>(conditionalStoredBytes))},
+                {"descriptor_bytes", static_cast<double>(version == "wayfarer" ? conditionalCount * 28 : 0)},
+            }},
+        }},
+        {"excluded_layouts", layout_storage_excluded},
+        {"missing_layouts", Json::array{}},
+        {"largest_decoded_layout", Json::object{
+            {"layout_name", largestDecodedLayout},
+            {"decoded_file_bytes", static_cast<int>(largestDecodedBytes)},
+            {"generated_bound_bytes", static_cast<int>(map_layout_max_decoded_file_bytes)},
+        }},
+        {"linked_net_savings", Json::object{
+            {"status", "unavailable"},
+            {"reason", "requires paired production-equivalent legacy-size and hybrid ROM reports"},
+        }},
+        {"totals", Json::object{
+            {"raw_payload_bytes", static_cast<double>(rawBytes)},
+            {"stored_payload_bytes", static_cast<double>(storedBytes)},
+            {"compressed_stored_payload_bytes", static_cast<double>(compressedStoredBytes)},
+            {"raw_stored_payload_bytes", static_cast<double>(rawStoredBytes)},
+            {"gross_payload_saved_bytes", static_cast<double>(grossSavedBytes)},
+            {"descriptor_bytes", static_cast<double>(descriptorBytes)},
+            {"checksum_bytes_within_descriptors", static_cast<double>(checksumBytes)},
+            {"payload_alignment_bytes", static_cast<double>(payloadAlignmentBytes)},
+            {"codec_padding_bytes", static_cast<double>(codecPaddingBytes)},
+            {"trailing_bytes", static_cast<double>(trailingBytes)},
+            {"compressed_entries", static_cast<int>(compressedCount)},
+            {"raw_entries", static_cast<int>(rawCount)},
+            {"raw_exception_entries", static_cast<int>(rawExceptionCount)},
+            {"raw_exception_bytes", static_cast<double>(rawExceptionBytes)},
+            {"non_profitable_entries", static_cast<int>(nonProfitableCount)},
+            {"non_profitable_raw_bytes", static_cast<double>(nonProfitableRawBytes)},
+            {"non_profitable_candidate_bytes", static_cast<double>(nonProfitableCandidateBytes)},
+            {"max_decoded_file_bytes", static_cast<int>(map_layout_max_decoded_file_bytes)},
+            {"max_logical_tile_bytes", static_cast<int>(map_layout_max_logical_tile_bytes)},
+            {"max_stored_bytes", static_cast<int>(map_layout_max_stored_bytes)},
+        }},
+        {"layouts", rows},
+    };
+    return report.dump() + "\n";
+}
+
+static string generate_layout_storage_human_report_text(void) {
+    uint64_t rawBytes = 0;
+    uint64_t storedBytes = 0;
+    uint64_t unconditionallyLinkedRawBytes = 0;
+    uint64_t unconditionallyLinkedStoredBytes = 0;
+    uint64_t payloadAlignmentBytes = 0;
+    unsigned int compressedCount = 0;
+    unsigned int rawCount = 0;
+    unsigned int conditionalCount = 0;
+    unsigned int rawExceptionCount = 0;
+    unsigned int nonProfitableCount = 0;
+    for (const string &name : layout_storage_order) {
+        const LayoutStorageRecord &record = layout_storage_records.at(name);
+        rawBytes += record.raw.size();
+        storedBytes += record.stored.size();
+        if (!record.conditionallyLinked) {
+            unconditionallyLinkedRawBytes += record.raw.size();
+            unconditionallyLinkedStoredBytes += record.stored.size();
+        }
+        payloadAlignmentBytes += (4 - (record.stored.size() & 3)) & 3;
+        compressedCount += record.compressed;
+        rawCount += !record.compressed;
+        conditionalCount += record.conditionallyLinked;
+        rawExceptionCount += record.explicitPolicy && record.policy == "raw";
+        nonProfitableCount += record.compressionEvaluated
+                           && record.candidateBytes >= ((record.raw.size() + 3) & ~3);
+    }
+    int64_t grossSavedBytes = static_cast<int64_t>(rawBytes) - static_cast<int64_t>(storedBytes);
+    int64_t unconditionallyLinkedGrossSavedBytes = static_cast<int64_t>(unconditionallyLinkedRawBytes)
+                                                 - static_cast<int64_t>(unconditionallyLinkedStoredBytes);
+    ostringstream text;
+    text << "Map layout storage\n"
+         << "product: " << version << "\n"
+         << "mode: " << map_layout_storage_mode << "\n"
+         << "schema: 1\ncodec: gba_lz77-v1\n"
+         << "catalog layouts: " << layout_storage_order.size() << "\n"
+         << "unconditionally linked: " << layout_storage_order.size() - conditionalCount << "\n"
+         << "conditionally linked: " << conditionalCount << "\n"
+         << "unconditionally linked raw payload bytes: " << unconditionallyLinkedRawBytes << "\n"
+         << "unconditionally linked stored payload bytes: " << unconditionallyLinkedStoredBytes << "\n"
+         << "unconditionally linked gross payload saving: " << unconditionallyLinkedGrossSavedBytes << "\n"
+         << "compressed: " << compressedCount << "\nraw: " << rawCount << "\n"
+         << "raw payload bytes: " << rawBytes << "\n"
+         << "stored payload bytes: " << storedBytes << "\n"
+         << "gross payload saving: " << grossSavedBytes << "\n"
+         << "descriptor bytes: " << (version == "wayfarer" ? layout_storage_order.size() * 28 : 0) << "\n"
+         << "checksum bytes within descriptors: " << (version == "wayfarer" ? layout_storage_order.size() * 8 : 0) << "\n"
+         << "payload alignment bytes: " << payloadAlignmentBytes << "\n"
+         << "raw exceptions: " << rawExceptionCount << "\n"
+         << "non-profitable candidates: " << nonProfitableCount << "\n"
+         << "excluded catalog layouts: " << layout_storage_excluded.size() << "\n"
+         << "missing selected layouts: 0\n"
+         << "maximum decoded bytes: " << map_layout_max_decoded_file_bytes << "\n"
+         << "linked net saving: unavailable (requires paired production-equivalent reports)\n";
     return text.str();
 }
 
@@ -2153,7 +2630,9 @@ void process_layouts(string layouts_filepath, string output_asm, string output_c
     output_c = strip_trailing_separator(output_c).append(sep);
 
     string err;
-    Json layouts_data = Json::parse(read_text_file(layouts_filepath), err);
+    string layoutsText = read_text_file(layouts_filepath);
+    map_layout_catalog_crc = crc32_iso_hdlc(layoutsText);
+    Json layouts_data = Json::parse(layoutsText, err);
 
     if (layouts_data == Json())
         FATAL_ERROR("%s\n", err.c_str());
@@ -2161,10 +2640,19 @@ void process_layouts(string layouts_filepath, string output_asm, string output_c
     string layout_headers_text = generate_layout_headers_text(layouts_data);
     string layouts_table_text = generate_layouts_table_text(layouts_data);
     string layouts_constants_text = generate_layouts_constants_text(layouts_data);
+    string storage_constants_text = generate_layout_storage_constants_text();
 
     write_text_file(output_asm + "layouts.inc", layout_headers_text);
     write_text_file(output_asm + "layouts_table.inc", layouts_table_text);
     write_text_file(output_c + "layouts.h", layouts_constants_text);
+    write_text_file(output_c + "map_layout_storage.h", storage_constants_text);
+    if (!map_layout_storage_report_path.empty()) {
+        std::filesystem::path reportParent = std::filesystem::path(map_layout_storage_report_path).parent_path();
+        if (!reportParent.empty())
+            std::filesystem::create_directories(reportParent);
+        write_text_file(map_layout_storage_report_path, generate_layout_storage_report_text());
+        write_text_file(map_layout_storage_report_path + ".txt", generate_layout_storage_human_report_text());
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -2184,12 +2672,22 @@ int main(int argc, char *argv[]) {
             wayfarer_sinnoh_manifest_path = argv[argc - 1];
         else if (option == "--wayfarer-sinnoh-asset-manifest")
             wayfarer_sinnoh_asset_manifest_path = argv[argc - 1];
+        else if (option == "--map-layout-storage-policy")
+            map_layout_storage_policy_path = argv[argc - 1];
+        else if (option == "--map-layout-storage-mode")
+            map_layout_storage_mode = argv[argc - 1];
+        else if (option == "--map-layout-storage-report")
+            map_layout_storage_report_path = argv[argc - 1];
+        else if (option == "--map-layout-source-revision")
+            map_layout_source_revision = argv[argc - 1];
         else
             break;
         argc -= 2;
     }
     load_wayfarer_sevii_manifest();
     load_wayfarer_sinnoh_manifest();
+    if (map_layout_storage_mode != "raw" && map_layout_storage_mode != "hybrid")
+        FATAL_ERROR("Map layout storage mode must be raw or hybrid.\n");
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

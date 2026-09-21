@@ -147,12 +147,19 @@ class MapjsonWayfarerTest(unittest.TestCase):
             )
         return subprocess.run(command, cwd=root, text=True, capture_output=True)
 
-    def run_layouts(self, root, version):
+    def run_layouts(self, root, version, storage_mode=None, policy=None, report=None):
+        command = [
+            str(self.mapjson), "layouts", version,
+            "data/layouts/layouts.json", "data/layouts", "include/constants",
+        ]
+        if policy is not None:
+            command.extend(["--map-layout-storage-policy", str(policy.relative_to(root))])
+        if storage_mode is not None:
+            command.extend(["--map-layout-storage-mode", storage_mode])
+        if report is not None:
+            command.extend(["--map-layout-storage-report", str(report.relative_to(root))])
         return subprocess.run(
-            [
-                str(self.mapjson), "layouts", version,
-                "data/layouts/layouts.json", "data/layouts", "include/constants",
-            ],
+            command,
             cwd=root,
             text=True,
             capture_output=True,
@@ -204,6 +211,90 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotIn("_MapData:", standalone)
         self.assertIn("\t.4byte .LTest_Layout_Blockdata", standalone)
 
+    def test_wayfarer_hybrid_layouts_round_trip_and_report_compressed_storage(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        payload = b"\x34\x12" * 100
+        self.add_layout(root, payload)
+        policy = root / "storage.json"
+        report = root / "build/storage.json"
+        policy.write_text(json.dumps({"schema_version": 1, "default_policy": "auto", "rules": []}))
+
+        result = self.run_layouts(root, "wayfarer", "hybrid", policy, report)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        generated = (root / "data/layouts/layouts.inc").read_text()
+        descriptor = generated.split(".LTest_Layout_MapData:", 1)[1].split("Test_Layout::", 1)[0]
+        self.assertIn("\t.byte 1\n\t.byte 1\n\t.2byte 0", descriptor)
+        self.assertNotIn('map.bin"', generated)
+        storage_report = json.loads(report.read_text())
+        self.assertEqual(storage_report["storage_mode"], "hybrid")
+        self.assertEqual(storage_report["totals"]["compressed_entries"], 1)
+        self.assertEqual(storage_report["totals"]["compressed_stored_payload_bytes"],
+                         storage_report["totals"]["stored_payload_bytes"])
+        self.assertIn("payload_alignment_bytes", storage_report["totals"])
+        self.assertIn("codec_padding_bytes", storage_report["totals"])
+        self.assertIn("raw_exception_entries", storage_report["totals"])
+        self.assertIn("non_profitable_entries", storage_report["totals"])
+        self.assertEqual(storage_report["totals_scope"],
+                         "generated catalog including conditionally linked entries")
+        self.assertIn("unconditionally_linked", storage_report["linkage_totals"])
+        self.assertEqual(storage_report["missing_layouts"], [])
+        self.assertEqual(storage_report["linked_net_savings"]["status"], "unavailable")
+        self.assertEqual(storage_report["layouts"][0]["decoded_crc32"], f"0x{zlib.crc32(payload):X}")
+
+    def test_layout_storage_report_counts_forced_unprofitable_compression(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x34\x12")
+        policy = root / "storage.json"
+        report = root / "report.json"
+        policy.write_text(json.dumps({
+            "schema_version": 1,
+            "default_policy": "raw",
+            "rules": [{"layout": "Test_Layout", "policy": "gba_lz77"}],
+        }))
+
+        result = self.run_layouts(root, "wayfarer", "hybrid", policy, report)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        storage_report = json.loads(report.read_text())
+        self.assertEqual(storage_report["totals"]["compressed_entries"], 1)
+        self.assertEqual(storage_report["totals"]["non_profitable_entries"], 1)
+        self.assertEqual(storage_report["totals"]["non_profitable_raw_bytes"], 2)
+        self.assertGreater(storage_report["totals"]["non_profitable_candidate_bytes"], 4)
+
+    def test_layout_storage_policy_rejects_malformed_rules(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\0\0")
+        policy = root / "storage.json"
+        for rules, message in (({}, "rules must be an array"),
+                               (["not an object"], "rule must be an object")):
+            with self.subTest(rules=rules):
+                policy.write_text(json.dumps({
+                    "schema_version": 1, "default_policy": "raw", "rules": rules,
+                }))
+                result = self.run_layouts(root, "wayfarer", "hybrid", policy)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn(message, result.stderr)
+
+    def test_layout_storage_policy_rejects_duplicate_rules(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\0\0")
+        policy = root / "storage.json"
+        policy.write_text(json.dumps({
+            "schema_version": 1,
+            "default_policy": "raw",
+            "rules": [
+                {"layout": "Missing", "policy": "raw", "reason": "fixture"},
+                {"layout": "Missing", "policy": "raw", "reason": "duplicate"},
+            ],
+        }))
+
+        result = self.run_layouts(root, "wayfarer", "hybrid", policy)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Duplicate map layout storage rule", result.stderr)
+
     def test_layout_generation_rejects_source_shorter_than_logical_tiles(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
@@ -212,6 +303,32 @@ class MapjsonWayfarerTest(unittest.TestCase):
         result = self.run_layouts(root, "wayfarer")
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Invalid layout payload dimensions or length", result.stderr)
+
+    def test_layout_generation_rejects_missing_selected_border(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\0\0")
+        (root / "data/layouts/TestLayout/border.bin").unlink()
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing border file", result.stderr)
+
+    def test_layout_generation_rejects_invalid_or_oversized_dimensions(self):
+        for width, height, payload_size in ((-1, -1, 2), (100, 100, 20000)):
+            with self.subTest(width=width, height=height):
+                fixture, root = self.make_fixture()
+                self.addCleanup(fixture.cleanup)
+                self.add_layout(root, b"\0" * payload_size)
+                catalog_path = root / "data/layouts/layouts.json"
+                catalog = json.loads(catalog_path.read_text())
+                catalog["layouts"][0]["width"] = width
+                catalog["layouts"][0]["height"] = height
+                catalog_path.write_text(json.dumps(catalog))
+
+                result = self.run_layouts(root, "wayfarer")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("do not fit the runtime backup map", result.stderr)
 
     def test_wayfarer_unlinks_replaced_and_orphaned_hns_maps_and_layouts(self):
         fixture, root = self.make_fixture()
