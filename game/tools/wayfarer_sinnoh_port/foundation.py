@@ -23,7 +23,6 @@ EXPECTED_COUNTS = {
     "object_events": 0, "coord_events": 0, "bg_events": 0,
     "nonempty_map_scripts": 0, "wild_encounter_profiles": 0,
 }
-NEW_FAMILIES = {"Jubilife", "Hearthome", "Celestic", "Veilstone", "Canalave", "Snowpoint", "Sunnyshore", "Valor", "Pasos"}
 EVENT_KINDS = ("object_events", "coord_events", "bg_events")
 REUSE_CLASSES = {"EXISTING_REFERENCE", "EXACT_ALIAS", "SINNOH_VARIANT", "SINNOH_NEW", "REVIEW_REQUIRED"}
 

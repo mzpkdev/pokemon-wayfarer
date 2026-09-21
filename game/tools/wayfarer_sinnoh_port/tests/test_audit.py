@@ -139,6 +139,44 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(AUDIT.FoundationError, "asset gate"):
             AUDIT.build_report(GAME, self.maps_path, self.assets_path, release_selection=True)
 
+    def test_tileset_review_gate_is_technical_not_legal_or_attribution_state(self):
+        maps = json.loads(self.maps_path.read_text())
+        assets = json.loads(self.assets_path.read_text())
+
+        def has_key(value, key):
+            if isinstance(value, dict):
+                return key in value or any(has_key(item, key) for item in value.values())
+            if isinstance(value, list):
+                return any(has_key(item, key) for item in value)
+            return False
+
+        self.assertFalse(has_key(maps, "attribution"))
+        self.assertFalse(has_key(assets, "attribution"))
+
+        blockers = assets["selection"]["blockers"]
+        review_required = [row for row in assets["records"] if row["record_id"] in blockers]
+        self.assertEqual(len(blockers), 561)
+        self.assertEqual(maps["selection"]["blockers"], blockers)
+        self.assertTrue(all(row["reuse_class"] == "REVIEW_REQUIRED" for row in review_required))
+        self.assertTrue(all(row["selection_blocker"] is True for row in review_required))
+        self.assertTrue(all(
+            "generated and decoded production-byte, shape, linkage, and runtime-meaning verification"
+            in row["rationale"]
+            for row in review_required
+        ))
+        selection_rationales = [
+            maps["selection"]["reason"],
+            *(row["inclusion"]["reason"] for row in maps["maps"]),
+            *(row["rationale"] for row in review_required),
+        ]
+        self.assertTrue(all(
+            all(word not in rationale.lower() for word in ("legal", "attribution", "license", "permission"))
+            for rationale in selection_rationales
+        ))
+        self.assertFalse(maps["selection"]["release_link_enabled"])
+        self.assertFalse(maps["selection"]["asset_manifest_ready"])
+        self.assertTrue(all(row["inclusion"]["state"] == "FROZEN_NOT_SELECTED" for row in maps["maps"]))
+
     def test_collision_sections_keep_natural_sinnoh_labels(self):
         rows = {row["source_map"]: row for row in json.loads(self.maps_path.read_text())["maps"]}
         for name in ("TwinleafTown_Haouse1", "TwinleafTown_House2"):

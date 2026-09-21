@@ -13,7 +13,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from foundation import (DONOR_COMMIT, DONOR_URL, EXPECTED_COUNTS, GROUPS, NEW_FAMILIES,
+from foundation import (DONOR_COMMIT, DONOR_URL, EXPECTED_COUNTS, GROUPS,
                         EVENT_KINDS, canonical_json, current_symbols, load_json, rel, section_target,
                         selected_source, sha256_bytes, sha256_file, source_hashes,
                         source_tree_hashes, target_symbol, tileset_path)
@@ -101,10 +101,14 @@ def tileset_records(root: Path, donor_root: Path, layouts: list[dict[str, Any]])
         descriptor = common | {"record_id": descriptor_id, "component": "descriptor", "source_path": "src/data/tilesets/headers.h",
                                "source_sha256": sha256_bytes(header_block(donor_headers, symbol)), "source_bytes": len(header_block(donor_headers, symbol)),
                                "array_shape": None, "alignment": None, "compression": None}
-        if name in NEW_FAMILIES:
-            descriptor.update(reuse_class="REVIEW_REQUIRED", attribution={"state": "REVIEW_REQUIRED", "reason": "donor-specific tileset family attribution is not yet approved"}, selection_blocker=True, rationale="Do not import or select this family until provenance review is complete.")
-        else:
-            descriptor.update(reuse_class="REVIEW_REQUIRED", attribution={"state": "REVIEW_REQUIRED", "reason": "generated and decoded component proof is not yet available"}, selection_blocker=True, rationale="Do not classify this source input as a variant or reuse until production-byte proof is reviewed.")
+        descriptor.update(
+            reuse_class="REVIEW_REQUIRED",
+            selection_blocker=True,
+            rationale=(
+                "Do not classify or select this source input until generated and decoded "
+                "production-byte, shape, linkage, and runtime-meaning verification is reviewed."
+            ),
+        )
         records[descriptor_id] = descriptor
         component_ids.append(descriptor_id)
         for source_file in source_files:
@@ -115,10 +119,14 @@ def tileset_records(root: Path, donor_root: Path, layouts: list[dict[str, Any]])
                                "source_path": source_file["path"], "source_sha256": source_file["sha256"], "source_bytes": source_file["bytes"],
                                "array_shape": [16] if component == "palette" else None, "alignment": 2 if component in {"palette", "metatiles", "metatile_attributes"} else 4, "compression": None,
                                "generated_path": None, "generated_symbol": None, "generated_sha256": None, "decoded_sha256": None, "decoded_bytes": None}
-            if name in NEW_FAMILIES:
-                record.update(reuse_class="REVIEW_REQUIRED", attribution={"state": "REVIEW_REQUIRED", "reason": "donor-specific tileset family attribution is not yet approved"}, selection_blocker=True, rationale="Do not import or select this payload until provenance review is complete.")
-            else:
-                record.update(reuse_class="REVIEW_REQUIRED", attribution={"state": "REVIEW_REQUIRED", "reason": "generated and decoded component proof is not yet available"}, selection_blocker=True, rationale="Do not classify this source input as a variant or reuse until production-byte proof is reviewed.")
+            record.update(
+                reuse_class="REVIEW_REQUIRED",
+                selection_blocker=True,
+                rationale=(
+                    "Do not classify or select this source input until generated and decoded "
+                    "production-byte, shape, linkage, and runtime-meaning verification is reviewed."
+                ),
+            )
             records[record["record_id"]] = record
             component_ids.append(record["record_id"])
         closure[symbol] = component_ids
@@ -173,14 +181,14 @@ def build_manifests(root: Path, donor_root: Path, baseline_commit: str) -> tuple
             "warps": source.get("warp_events") or [], "connections": source.get("connections") or [],
             "empty_content": {key: len(source.get(key, [])) for key in EVENT_KINDS} | {"map_scripts": 0, "wild_encounter_profiles": 0},
             "asset_records": asset_refs, "topology": {"state": "FROZEN_SOURCE_PENDING_REVIEW", "repair": None},
-            "inclusion": {"state": "FROZEN_NOT_SELECTED", "reason": "Asset attribution and later topology review are intentionally incomplete in the source-only foundation."},
+            "inclusion": {"state": "FROZEN_NOT_SELECTED", "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."},
         })
     blockers = sorted(row["record_id"] for row in asset_rows if row.get("selection_blocker"))
     map_manifest = {
         "schema_version": 1, "donor": {"url": DONOR_URL, "commit": DONOR_COMMIT, "layout_catalog_sha256": layout_catalog_hash},
         "selection": {"release_link_enabled": False, "asset_manifest_ready": False, "blockers": blockers,
                       "allowed_inclusion_states": ["FROZEN_NOT_SELECTED", "INCLUDED", "EXCLUDED"],
-                      "reason": "Frozen provenance only; no public travel, story, encounters, or asset import is selected."},
+                      "reason": "Frozen source inventory only; no public travel, story, encounters, or asset import is selected."},
         "source_groups": [{"source_group": group, "target_group": group, "order": order,
                            "map_count": sum(1 for source_group, _, _ in groups if source_group == group)} for order, group in enumerate(GROUPS)],
         "expected_counts": EXPECTED_COUNTS, "maps": maps,
