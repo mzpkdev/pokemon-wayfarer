@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from foundation import DONOR_COMMIT, DONOR_URL, EXPECTED_COUNTS, FoundationError, load_json, sha256_file
+from topology import effective_connections, effective_warps
 
 
 def contained_path(base: Path, relative: str | Path, field: str) -> Path:
@@ -64,8 +65,6 @@ def manifest_rows(root: Path) -> list[dict[str, Any]]:
         raise FoundationError("Sinnoh catalog import requires exactly 133 manifest maps")
     if [row.get("order") for row in rows] != list(range(EXPECTED_COUNTS["maps"])):
         raise FoundationError("Sinnoh catalog import requires deterministic manifest ordering")
-    if any(row.get("inclusion", {}).get("state") != "FROZEN_NOT_SELECTED" for row in rows):
-        raise FoundationError("Sinnoh catalog import must remain pending topology selection")
     return rows
 
 
@@ -88,6 +87,8 @@ def transformed_map(source: dict[str, Any], row: dict[str, Any]) -> dict[str, An
         "layout": row["target_layout"],
         "region_map_section": row["map_properties"]["target_map_section"],
         "region": "REGION_SINNOH",
+        "warp_events": effective_warps(row),
+        "connections": effective_connections(row)[0] or 0,
     })
     for key in ("object_events", "coord_events", "bg_events"):
         if result.get(key) != []:

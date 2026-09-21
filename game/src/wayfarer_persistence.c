@@ -32,6 +32,13 @@ static bool8 IsWayfarerCoreRegion(enum Region region)
 {
     return region == REGION_JOHTO || region == REGION_KANTO || region == REGION_HOENN;
 }
+
+// The saved location may be in Sinnoh even though only the three core regions
+// participate in the League circuit and have dedicated progression banks.
+static bool8 IsWayfarerStoredRegion(enum Region region)
+{
+    return IsWayfarerCoreRegion(region) || region == REGION_SINNOH;
+}
 #endif
 
 #if !IS_WAYFARER
@@ -112,7 +119,7 @@ static enum Region GetRegionFromSavedMap(void)
                                                    gSaveBlock1Ptr->location.mapNum,
                                                    REGION_JOHTO);
 
-    return IsWayfarerCoreRegion(region) ? region : REGION_JOHTO;
+    return IsWayfarerStoredRegion(region) ? region : REGION_JOHTO;
 }
 
 static enum Region GetSavedHnsRegionContext(void)
@@ -319,12 +326,20 @@ void WayfarerValidatePersistentState(void)
 {
 #if IS_WAYFARER
     enum Region savedMapRegion = GetRegionFromSavedMap();
+    enum Region explicitMapRegion = GetWayfarerExplicitMapRegion(gSaveBlock1Ptr->location.mapGroup,
+                                                                 gSaveBlock1Ptr->location.mapNum);
 
     if (!WayfarerPersistentStateIsValid())
         return;
 
-    if (!IsWayfarerCoreRegion(gSaveBlock3Ptr->wayfarerHoenn.currentRegion))
+    // Explicit map provenance is authoritative on load. HNS auxiliary maps
+    // retain their saved Kanto/Johto context, so a stale Sinnoh value cannot
+    // survive an explicitly identified HNS side-region map either.
+    if (IsWayfarerStoredRegion(explicitMapRegion)
+     || !IsWayfarerStoredRegion(gSaveBlock3Ptr->wayfarerHoenn.currentRegion))
         gSaveBlock3Ptr->wayfarerHoenn.currentRegion = savedMapRegion;
+    else if (explicitMapRegion != REGION_NONE)
+        gSaveBlock3Ptr->wayfarerHoenn.currentRegion = GetSavedHnsRegionContext();
 
     if (gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext != REGION_KANTO
      && gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext != REGION_JOHTO)
@@ -338,7 +353,7 @@ void WayfarerValidatePersistentState(void)
     }
 
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions &=
-        (1 << REGION_JOHTO) | (1 << REGION_KANTO) | (1 << REGION_HOENN);
+        (1 << REGION_JOHTO) | (1 << REGION_KANTO) | (1 << REGION_HOENN) | (1 << REGION_SINNOH);
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |=
         1 << gSaveBlock3Ptr->wayfarerHoenn.currentRegion;
     LeagueRunValidateSavedLocation();
@@ -365,7 +380,7 @@ enum Region WayfarerGetSavedCurrentRegion(void)
 {
 #if IS_WAYFARER
     enum Region region = gSaveBlock3Ptr->wayfarerHoenn.currentRegion;
-    return IsWayfarerCoreRegion(region) ? region : REGION_JOHTO;
+    return IsWayfarerStoredRegion(region) ? region : REGION_JOHTO;
 #else
     return GetCurrentRegion();
 #endif
@@ -374,7 +389,7 @@ enum Region WayfarerGetSavedCurrentRegion(void)
 void WayfarerSetSavedCurrentRegion(enum Region region)
 {
 #if IS_WAYFARER
-    if (!IsWayfarerCoreRegion(region))
+    if (!IsWayfarerStoredRegion(region))
         return;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = region;
     if (region == REGION_KANTO || region == REGION_JOHTO)
@@ -398,17 +413,17 @@ enum Region WayfarerGetCurrentMapRegion(void)
 
 void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
 {
-    enum Region explicitRegion;
+    enum Region region;
 
-    if (IsWayfarerMapHoennSource(mapGroup, mapNum))
-    {
-        WayfarerSetSavedCurrentRegion(REGION_HOENN);
+    if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
+     || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
         return;
-    }
 
-    explicitRegion = GetWayfarerExplicitMapRegion(mapGroup, mapNum);
-    if (explicitRegion == REGION_JOHTO || explicitRegion == REGION_KANTO)
-        WayfarerSetSavedCurrentRegion(explicitRegion);
+    region = WayfarerGetRegionForMap(mapGroup, mapNum);
+    if (IsWayfarerStoredRegion(region))
+        WayfarerSetSavedCurrentRegion(region);
+    else if (GetWayfarerExplicitMapRegion(mapGroup, mapNum) != REGION_NONE)
+        WayfarerSetSavedCurrentRegion(GetSavedHnsRegionContext());
 }
 
 bool8 WayfarerIsCurrentMapHoennSource(void)
@@ -803,6 +818,8 @@ bool8 GetRegionVisitedState(enum Region region)
         return FlagGet(FLAG_VISITED_KANTO);
     if (region == REGION_HOENN)
         return (gSaveBlock3Ptr->wayfarerHoenn.visitedRegions >> REGION_HOENN) & 1;
+    if (region == REGION_SINNOH)
+        return (gSaveBlock3Ptr->wayfarerHoenn.visitedRegions >> REGION_SINNOH) & 1;
     return FALSE;
 #elif IS_HNS
     if (region == REGION_JOHTO)
@@ -827,7 +844,7 @@ void SetRegionVisitedState(enum Region region, bool8 value)
         else
             FlagClear(FLAG_VISITED_KANTO);
     }
-    else if (region == REGION_HOENN || region == REGION_JOHTO)
+    else if (region == REGION_HOENN || region == REGION_JOHTO || region == REGION_SINNOH)
     {
         if (value)
             gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << region;

@@ -42,13 +42,6 @@
       "elevation": 0,
       "dest_map": "MAP_ROUTE205_NORTH",
       "dest_warp_id": "1"
-    },
-    {
-      "x": 59,
-      "y": 7,
-      "elevation": 0,
-      "dest_map": "MAP_ETERNA_FOREST",
-      "dest_warp_id": "0"
     }
   ],
   "coord_events": [],

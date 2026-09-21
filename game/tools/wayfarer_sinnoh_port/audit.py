@@ -12,6 +12,7 @@ from foundation import (DONOR_COMMIT, DONOR_URL, EXPECTED_COUNTS, GROUPS, REUSE_
                         FoundationError, canonical_json, current_symbols, load_json, selected_source,
                         sha256_bytes, sha256_file, source_hashes, source_tree_hashes, target_symbol,
                         tileset_path)
+from topology import effective_connections, effective_warps, validate_raw_layout_topology, validate_topology
 
 
 def records_by_id(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -87,10 +88,10 @@ def expected_imported_map(row: dict[str, Any]) -> dict[str, Any]:
         "map_type": properties["map_type"], "requires_flash": properties["requires_flash"],
         "allow_cycling": properties["allow_cycling"], "allow_escaping": properties["allow_escaping"],
         "allow_running": properties["allow_running"], "show_map_name": properties["show_map_name"],
-        "battle_scene": properties["battle_scene"], "warp_events": row["warps"],
+        "battle_scene": properties["battle_scene"], "warp_events": effective_warps(row),
         # The frozen donor represents no connections as numeric 0; populated
         # rows preserve their explicit connection vectors.
-        "connections": row["connections"] if row["connections"] else 0,
+        "connections": effective_connections(row)[0] or 0,
         "object_events": [], "coord_events": [], "bg_events": [],
     }
 
@@ -116,13 +117,11 @@ def expected_imported_layout(root: Path, row: dict[str, Any], assets: dict[str, 
 
 
 def validate_imported_catalog(root: Path, rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]]) -> dict[str, Any]:
-    """Verify the pending catalog is authored but cannot be runtime-selected yet."""
+    """Verify the reviewed catalog is authored but not production-selected."""
     from import_catalog import expected_sections
 
     if any(row["inclusion"]["state"] != "FROZEN_NOT_SELECTED" for row in rows):
-        raise FoundationError("imported Sinnoh catalog must remain pending topology selection")
-    if any(row["topology"] != {"state": "FROZEN_SOURCE_PENDING_REVIEW", "repair": None} for row in rows):
-        raise FoundationError("imported Sinnoh catalog topology is not frozen pending review")
+        raise FoundationError("reviewed Sinnoh catalog must remain outside production selection")
 
     groups = load_json(root / "data/maps/map_groups.json")
     expected_groups = list(GROUPS)
@@ -160,8 +159,12 @@ def validate_imported_catalog(root: Path, rows: list[dict[str, Any]], assets: di
         imported = load_json(path)
         require_exact_projection(imported, expected_imported_map(row), "map", row["target_map"])
 
+    topology = validate_topology(rows)
+    topology["raw_layout"] = validate_raw_layout_topology(root, rows)
     return {"verified": True, "map_count": len(rows), "layout_count": len(imported_layouts),
-            "map_section_count": len(expected_map_sections), "release_link_enabled": False}
+            "map_section_count": len(expected_map_sections), "release_link_enabled": False,
+            "topology_verdict": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+            "topology": topology}
 
 
 def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
@@ -177,7 +180,7 @@ def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]
     if selection.get("asset_manifest_ready") != asset_selection.get("asset_manifest_ready"):
         raise FoundationError("map and asset readiness gates disagree")
     if selection.get("release_link_enabled") or selection.get("asset_manifest_ready"):
-        raise FoundationError("pending topology catalog must keep release selection closed")
+        raise FoundationError("reviewed topology catalog must keep release selection closed")
     if selection.get("allowed_inclusion_states") != ["FROZEN_NOT_SELECTED", "INCLUDED", "EXCLUDED"]:
         raise FoundationError("map manifest has invalid inclusion-state contract")
     expected_groups = [{"source_group": group, "target_group": group, "order": order} for order, group in enumerate(GROUPS)]
@@ -227,8 +230,8 @@ def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]
         inclusion = row["inclusion"]
         if inclusion.get("state") not in selection["allowed_inclusion_states"] or not isinstance(inclusion.get("reason"), str):
             raise FoundationError(f"map {row['source_map']} has invalid inclusion metadata")
-        if row["topology"] != {"state": "FROZEN_SOURCE_PENDING_REVIEW", "repair": None}:
-            raise FoundationError(f"map {row['source_map']} has an unreviewed topology change")
+        effective_warps(row)
+        effective_connections(row)
         if row["empty_content"] != {"object_events": 0, "coord_events": 0, "bg_events": 0, "map_scripts": 0, "wild_encounter_profiles": 0}:
             raise FoundationError(f"map {row['source_map']} violates frozen empty-content policy")
         for key in ("warps", "connections"):

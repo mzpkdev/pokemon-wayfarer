@@ -50,6 +50,23 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertEqual(integrity["catalog"], {
             "verified": True, "map_count": 133, "layout_count": 133,
             "map_section_count": 60, "release_link_enabled": False,
+            "topology_verdict": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+            "topology": {
+                "structurally_verified": True, "source_warp_count": 233,
+                "live_warp_count": 228, "connection_count": 114, "repair_count": 34,
+                "connection_repair_count": 3, "one_way_connection_count": 2,
+                "raw_layout": {
+                    "level": "STRUCTURAL_ONLY", "layouts_verified": 133,
+                    "borders_verified": 133, "warp_destination_bounds_verified": 228,
+                    "connection_overlap_tiles": 3940, "walkable_seam_tiles": 759,
+                    "walkable_seam_elevation_mismatches": 14,
+                    "remaining_runtime_proof": [
+                        "warp_door_walkability_and_elevation",
+                        "connection_seam_walkability_and_elevation",
+                        "camera_border_transition",
+                    ],
+                },
+            },
         })
 
     def test_audit_report_is_deterministic_without_a_donor_checkout(self):
@@ -151,8 +168,64 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         assets = json.loads(self.assets_path.read_text())
         maps["selection"]["release_link_enabled"] = True
         assets["selection"]["release_link_enabled"] = True
-        with self.assertRaisesRegex(AUDIT.FoundationError, "pending topology"):
+        with self.assertRaisesRegex(AUDIT.FoundationError, "topology catalog"):
             AUDIT.validate_checked_in(GAME, maps, assets)
+
+    def test_reviewed_topology_closes_facades_and_repairs_known_donor_warps(self):
+        maps = json.loads(self.maps_path.read_text())["maps"]
+        by_name = {row["source_map"]: row for row in maps}
+
+        self.assertEqual(AUDIT.effective_warps(by_name["SandgemTown"])[0]["dest_map"],
+                         "MAP_SANDGEM_TOWN_POKEMON_CENTER_1F")
+        self.assertEqual(AUDIT.effective_warps(by_name["Route218"])[0]["dest_map"],
+                         "MAP_ROUTE218_EAST")
+        self.assertEqual(AUDIT.effective_warps(by_name["JubilifeCity_PoketchCompany_F2"])[0]["dest_warp_id"], "4")
+        self.assertEqual(AUDIT.effective_warps(by_name["FloaromaTown_PokemonCenter_1F"])[2]["dest_map"],
+                         "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F")
+        self.assertEqual(AUDIT.effective_connections(by_name["ValleyWindworks"])[0][0]["offset"], -65)
+        self.assertEqual(AUDIT.validate_topology(maps)["live_warp_count"], 228)
+        self.assertEqual(AUDIT.validate_topology(maps)["repair_count"], 34)
+
+    def test_topology_repairs_require_complete_input_output_return_fixtures(self):
+        maps = json.loads(self.maps_path.read_text())["maps"]
+        repairs = [repair for row in maps for repair in row["topology"]["repairs"]]
+        self.assertEqual(len(repairs), 31)
+        self.assertTrue(all(set(repair["fixture"]) == {"input", "output", "return"}
+                            for repair in repairs))
+
+        missing_return = copy.deepcopy(next(row for row in maps if row["source_map"] == "Route218"))
+        del missing_return["topology"]["repairs"][0]["fixture"]["return"]
+        with self.assertRaisesRegex(AUDIT.FoundationError, "incomplete topology repair fixture"):
+            AUDIT.effective_warps(missing_return)
+
+        extra_fixture_field = copy.deepcopy(next(row for row in maps if row["source_map"] == "Route218"))
+        extra_fixture_field["topology"]["repairs"][0]["fixture"]["unreviewed"] = True
+        with self.assertRaisesRegex(AUDIT.FoundationError, "incomplete topology repair fixture"):
+            AUDIT.effective_warps(extra_fixture_field)
+
+        connection_repairs = [repair for row in maps
+                              for repair in row["topology"].get("connection_repairs", [])]
+        self.assertEqual(len(connection_repairs), 3)
+        self.assertTrue(all(set(repair["fixture"]) == {"input", "output", "return"}
+                            for repair in connection_repairs))
+        missing_connection_return = copy.deepcopy(next(row for row in maps if row["source_map"] == "ValleyWindworks"))
+        del missing_connection_return["topology"]["connection_repairs"][0]["fixture"]["return"]
+        with self.assertRaisesRegex(AUDIT.FoundationError, "incomplete connection repair fixture"):
+            AUDIT.effective_connections(missing_connection_return)
+
+    def test_topology_requires_the_selected_destination_warp_to_return(self):
+        maps = json.loads(self.maps_path.read_text())["maps"]
+        by_name = {row["source_map"]: row for row in maps}
+        by_name["Route218_East"]["warps"][1]["dest_map"] = "MAP_JUBILIFE_CITY"
+        with self.assertRaisesRegex(AUDIT.FoundationError, "reciprocal selected return"):
+            AUDIT.validate_topology(maps)
+
+    def test_topology_rejects_duplicate_connection_destination_inverse(self):
+        maps = json.loads(self.maps_path.read_text())["maps"]
+        duplicate_destination = next(row for row in maps if row["source_map"] == "Route221")
+        del duplicate_destination["topology"]["connection_repairs"]
+        with self.assertRaisesRegex(AUDIT.FoundationError, "uniquely consumed inverse"):
+            AUDIT.validate_topology(maps)
 
     def test_imported_map_projection_rejects_frozen_content_drift(self):
         maps = json.loads(self.maps_path.read_text())

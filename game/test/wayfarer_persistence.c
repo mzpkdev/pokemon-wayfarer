@@ -285,6 +285,24 @@ TEST("Wayfarer HNS side regions retain their explicit runtime identity")
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
 }
 
+TEST("Wayfarer HNS side regions recover stale Sinnoh persistence to their HNS context")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+    WayfarerSetSavedCurrentRegion(REGION_SINNOH);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_AKALA_ISLE_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_AKALA_ISLE_HNS);
+
+    WayfarerValidatePersistentState();
+    EXPECT_EQ(GetCurrentRegion(), REGION_ALOLA);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+
+    WayfarerSetSavedCurrentRegion(REGION_SINNOH);
+    WayfarerUpdateHnsRegionContextForMap(MAP_GROUP(MAP_AKALA_ISLE_HNS),
+                                       MAP_NUM(MAP_AKALA_ISLE_HNS));
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+}
+
 TEST("Wayfarer explicit HNS map transitions update special-map fallback context")
 {
     WayfarerInitPersistentState();
@@ -555,6 +573,61 @@ TEST("Wayfarer Hoenn visited state is region aware")
     EXPECT(GetRegionVisitedState(REGION_HOENN));
     EXPECT(GetLocationVisitedStateForRegion(REGION_HOENN, littleroot));
     EXPECT(!GetLocationVisitedStateForRegion(REGION_JOHTO, littleroot));
+}
+
+TEST("Wayfarer preserves Sinnoh current and visited state without a progression bank")
+{
+    WayfarerInitPersistentState();
+    EXPECT(!GetRegionVisitedState(REGION_SINNOH));
+
+    WayfarerSetSavedCurrentRegion(REGION_SINNOH);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_SINNOH);
+    EXPECT(GetRegionVisitedState(REGION_SINNOH));
+
+    SetBadgeStateForRegion(REGION_SINNOH, 0, TRUE);
+    SetChampionStateForRegion(REGION_SINNOH, TRUE);
+    SetGameClearStateForRegion(REGION_SINNOH, TRUE);
+    EXPECT_EQ(GetBadgeCountForRegion(REGION_SINNOH), 0);
+    EXPECT(!GetChampionStateForRegion(REGION_SINNOH));
+    EXPECT(!GetGameClearStateForRegion(REGION_SINNOH));
+
+    gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << REGION_UNOVA;
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_TWINLEAF_TOWN);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_TWINLEAF_TOWN);
+    WayfarerValidatePersistentState();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_SINNOH);
+    EXPECT(GetRegionVisitedState(REGION_SINNOH));
+    EXPECT(!(gSaveBlock3Ptr->wayfarerHoenn.visitedRegions & (1 << REGION_UNOVA)));
+}
+
+TEST("Wayfarer loaded Sinnoh provenance replaces a stale saved core region")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_TWINLEAF_TOWN);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_TWINLEAF_TOWN);
+
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_SINNOH);
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+    WayfarerValidatePersistentState();
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_SINNOH);
+    EXPECT(GetRegionVisitedState(REGION_SINNOH));
+    EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext, REGION_KANTO);
+}
+
+TEST("Wayfarer explicit core provenance clears stale Sinnoh state on departure")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_SINNOH);
+    gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << REGION_ALOLA;
+    gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_PALLET_TOWN_HNS);
+    gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_PALLET_TOWN_HNS);
+
+    WayfarerValidatePersistentState();
+
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
+    EXPECT(GetRegionVisitedState(REGION_SINNOH));
+    EXPECT(!(gSaveBlock3Ptr->wayfarerHoenn.visitedRegions & (1 << REGION_ALOLA)));
 }
 
 TEST("Wayfarer actual Kanto map entry marks the legacy visited flag as well as current region")

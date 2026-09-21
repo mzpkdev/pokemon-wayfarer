@@ -50,13 +50,6 @@
       "dest_warp_id": "0"
     },
     {
-      "x": 54,
-      "y": 14,
-      "elevation": 0,
-      "dest_map": "MAP_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F",
-      "dest_warp_id": "0"
-    },
-    {
       "x": 20,
       "y": 21,
       "elevation": 0,
@@ -82,13 +75,6 @@
       "y": 22,
       "elevation": 0,
       "dest_map": "MAP_OREBURGH_CITY_POKEMON_CENTER_1F",
-      "dest_warp_id": "0"
-    },
-    {
-      "x": 59,
-      "y": 29,
-      "elevation": 0,
-      "dest_map": "MAP_OREBURGH_CITY_FLAT3_F1",
       "dest_warp_id": "0"
     },
     {

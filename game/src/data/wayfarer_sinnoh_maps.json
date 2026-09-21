@@ -14,7 +14,7 @@
       "INCLUDED",
       "EXCLUDED"
     ],
-    "reason": "Frozen source inventory and verified asset closure; no public travel, story, encounters, or map catalog is selected."
+    "reason": "Reviewed frozen topology; production linking remains closed until common layout compression and release-size validation."
   },
   "source_groups": [
     {
@@ -263,12 +263,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -462,12 +462,39 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "close_warp",
+            "warp_index": 0,
+            "source": {
+              "x": 9,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB",
+              "dest_warp_id": "0"
+            },
+            "replacement": null,
+            "reason": "Donor facade targets an unselected Hoenn laboratory; leave the facade closed.",
+            "fixture": {
+              "input": {
+                "x": 9,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_LITTLEROOT_TOWN_PROFESSOR_BIRCHS_LAB",
+                "dest_warp_id": "0"
+              },
+              "output": null,
+              "return": {
+                "state": "closed"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -711,12 +738,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -967,12 +994,65 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "close_warp",
+            "warp_index": 4,
+            "source": {
+              "x": 54,
+              "y": 14,
+              "elevation": 0,
+              "dest_map": "MAP_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F",
+              "dest_warp_id": "0"
+            },
+            "replacement": null,
+            "reason": "Donor facade targets an unselected Hoenn museum; leave the facade closed.",
+            "fixture": {
+              "input": {
+                "x": 54,
+                "y": 14,
+                "elevation": 0,
+                "dest_map": "MAP_LILYCOVE_CITY_LILYCOVE_MUSEUM_1F",
+                "dest_warp_id": "0"
+              },
+              "output": null,
+              "return": {
+                "state": "closed"
+              }
+            }
+          },
+          {
+            "kind": "close_warp",
+            "warp_index": 9,
+            "source": {
+              "x": 59,
+              "y": 29,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY_FLAT3_F1",
+              "dest_warp_id": "0"
+            },
+            "replacement": null,
+            "reason": "Flat3 1F has no selected return warp; leave the facade closed.",
+            "fixture": {
+              "input": {
+                "x": 59,
+                "y": 29,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY_FLAT3_F1",
+                "dest_warp_id": "0"
+              },
+              "output": null,
+              "return": {
+                "state": "closed"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -1171,12 +1251,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -1339,12 +1419,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -1528,12 +1608,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -1683,12 +1763,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -1838,12 +1918,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2022,12 +2102,39 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "close_warp",
+            "warp_index": 3,
+            "source": {
+              "x": 25,
+              "y": 30,
+              "elevation": 0,
+              "dest_map": "MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F",
+              "dest_warp_id": "0"
+            },
+            "replacement": null,
+            "reason": "Donor facade targets an unselected Hoenn department store; leave the facade closed.",
+            "fixture": {
+              "input": {
+                "x": 25,
+                "y": 30,
+                "elevation": 0,
+                "dest_map": "MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F",
+                "dest_warp_id": "0"
+              },
+              "output": null,
+              "return": {
+                "state": "closed"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2188,12 +2295,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2346,12 +2453,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2496,12 +2603,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2659,12 +2766,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2825,12 +2932,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -2988,12 +3095,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -3146,12 +3253,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -3317,12 +3424,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -3500,12 +3607,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -3675,12 +3782,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -3868,12 +3975,40 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [],
+        "connection_repairs": [
+          {
+            "kind": "allow_one_way_connection",
+            "connection_index": 3,
+            "source": {
+              "map": "MAP_VALLEY_WINDWORKS",
+              "offset": 0,
+              "direction": "right"
+            },
+            "replacement": null,
+            "reason": "The second donor Route 205 east overlap cannot share Valley Windworks' single west-edge return; keep it explicit one-way.",
+            "fixture": {
+              "input": {
+                "map": "MAP_VALLEY_WINDWORKS",
+                "offset": 0,
+                "direction": "right"
+              },
+              "output": {
+                "map": "MAP_VALLEY_WINDWORKS",
+                "offset": 0,
+                "direction": "right"
+              },
+              "return": {
+                "state": "one_way"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -4059,12 +4194,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -4222,12 +4357,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -4400,12 +4535,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -4563,12 +4698,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -4718,12 +4853,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -4878,12 +5013,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -5036,12 +5171,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -5194,12 +5329,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -5367,12 +5502,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -5525,12 +5660,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -5702,12 +5837,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -5872,12 +6007,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6035,12 +6170,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6193,12 +6328,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6348,12 +6483,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6518,12 +6653,50 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 59,
+              "y": 24,
+              "elevation": 0,
+              "dest_map": "MAP_ROUTE211_EAST",
+              "dest_warp_id": "1"
+            },
+            "replacement": {
+              "dest_map": "MAP_ROUTE218_EAST",
+              "dest_warp_id": "1"
+            },
+            "reason": "Route 218 east gate was misaddressed to Route 211 East in the donor.",
+            "fixture": {
+              "input": {
+                "x": 59,
+                "y": 24,
+                "elevation": 0,
+                "dest_map": "MAP_ROUTE211_EAST",
+                "dest_warp_id": "1"
+              },
+              "output": {
+                "x": 59,
+                "y": 24,
+                "elevation": 0,
+                "dest_map": "MAP_ROUTE218_EAST",
+                "dest_warp_id": "1"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_ROUTE218_EAST",
+                "warp_id": "1"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6676,12 +6849,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6839,12 +7012,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -6997,12 +7170,40 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [],
+        "connection_repairs": [
+          {
+            "kind": "allow_one_way_connection",
+            "connection_index": 1,
+            "source": {
+              "map": "MAP_ROUTE220",
+              "offset": 4,
+              "direction": "left"
+            },
+            "replacement": null,
+            "reason": "The duplicate donor Route 221 west seam shares Route 220's single inverse; retain it only as an explicit one-way edge.",
+            "fixture": {
+              "input": {
+                "map": "MAP_ROUTE220",
+                "offset": 4,
+                "direction": "left"
+              },
+              "output": {
+                "map": "MAP_ROUTE220",
+                "offset": 4,
+                "direction": "left"
+              },
+              "return": {
+                "state": "one_way"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -7160,12 +7361,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -7315,12 +7516,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -7476,12 +7677,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -7631,12 +7832,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -7791,12 +7992,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -7948,12 +8149,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -8116,12 +8317,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -8276,12 +8477,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -8431,12 +8632,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -8599,12 +8800,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -8774,12 +8975,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -8929,12 +9130,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -9084,12 +9285,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -9239,12 +9440,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -9389,12 +9590,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -9551,12 +9752,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -9710,12 +9911,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -9854,12 +10055,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -10022,12 +10223,45 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [],
+        "connection_repairs": [
+          {
+            "kind": "replace_connection",
+            "connection_index": 0,
+            "source": {
+              "map": "MAP_ROUTE205_SOUTH",
+              "offset": 0,
+              "direction": "left"
+            },
+            "replacement": {
+              "offset": -65
+            },
+            "reason": "Route 205 South east connection at offset 65 requires the unique negated Valley Windworks west return.",
+            "fixture": {
+              "input": {
+                "map": "MAP_ROUTE205_SOUTH",
+                "offset": 0,
+                "direction": "left"
+              },
+              "output": {
+                "map": "MAP_ROUTE205_SOUTH",
+                "offset": -65,
+                "direction": "left"
+              },
+              "return": {
+                "state": "selected_inverse",
+                "map": "MAP_ROUTE205_SOUTH",
+                "direction": "left",
+                "offset": 65
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -10202,12 +10436,39 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "close_warp",
+            "warp_index": 4,
+            "source": {
+              "x": 59,
+              "y": 7,
+              "elevation": 0,
+              "dest_map": "MAP_ETERNA_FOREST",
+              "dest_warp_id": "0"
+            },
+            "replacement": null,
+            "reason": "Donor self-loop facade has no selected interior; leave it closed.",
+            "fixture": {
+              "input": {
+                "x": 59,
+                "y": 7,
+                "elevation": 0,
+                "dest_map": "MAP_ETERNA_FOREST",
+                "dest_warp_id": "0"
+              },
+              "output": null,
+              "return": {
+                "state": "closed"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -10372,12 +10633,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -10531,12 +10792,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 11,
+              "y": 1,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "11"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "9"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original mine return.",
+            "fixture": {
+              "input": {
+                "x": 11,
+                "y": 1,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "11"
+              },
+              "output": {
+                "x": 11,
+                "y": 1,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "9"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "9"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 12,
+              "y": 1,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "14"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "12"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original mine return.",
+            "fixture": {
+              "input": {
+                "x": 12,
+                "y": 1,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "14"
+              },
+              "output": {
+                "x": 12,
+                "y": 1,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "12"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "12"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -10686,12 +11022,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -10856,12 +11192,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11026,12 +11362,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11196,12 +11532,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11373,12 +11709,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11543,12 +11879,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11678,12 +12014,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11813,12 +12149,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -11948,12 +12284,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12083,12 +12419,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12218,12 +12554,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12353,12 +12689,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12488,12 +12824,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12623,12 +12959,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12758,12 +13094,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -12893,12 +13229,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13028,12 +13364,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13148,12 +13484,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13268,12 +13604,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13403,12 +13739,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13548,12 +13884,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13679,12 +14015,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13824,12 +14160,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -13955,12 +14291,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14093,12 +14429,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14231,12 +14567,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14376,12 +14712,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 1,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "4"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "3"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 1,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "4"
+              },
+              "output": {
+                "x": 1,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "3"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "3"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 2,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "4"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "3"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 2,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "4"
+              },
+              "output": {
+                "x": 2,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "3"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "3"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14507,12 +14918,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14645,12 +15056,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 3,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "3"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "2"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "3"
+              },
+              "output": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "2"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "2"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 4,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "3"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "2"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "3"
+              },
+              "output": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "2"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "2"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14790,12 +15276,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 6,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "1"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "0"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 6,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "1"
+              },
+              "output": {
+                "x": 6,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "0"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "0"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 7,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "1"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "0"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 7,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "1"
+              },
+              "output": {
+                "x": 7,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "0"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "0"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -14921,12 +15482,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15059,12 +15620,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 3,
+              "y": 7,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "2"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "1"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 3,
+                "y": 7,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "2"
+              },
+              "output": {
+                "x": 3,
+                "y": 7,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "1"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "1"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 4,
+              "y": 7,
+              "elevation": 0,
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "2"
+            },
+            "replacement": {
+              "dest_map": "MAP_SANDGEM_TOWN",
+              "dest_warp_id": "1"
+            },
+            "reason": "Sandgem facade closure removes source warp 0; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 4,
+                "y": 7,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "2"
+              },
+              "output": {
+                "x": 4,
+                "y": 7,
+                "elevation": 0,
+                "dest_map": "MAP_SANDGEM_TOWN",
+                "dest_warp_id": "1"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_SANDGEM_TOWN",
+                "warp_id": "1"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15197,12 +15833,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15342,12 +15978,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15480,12 +16116,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15618,12 +16254,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15749,12 +16385,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -15908,12 +16544,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16046,12 +16682,50 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 14,
+              "y": 1,
+              "elevation": 0,
+              "dest_map": "MAP_JUBILIFE_CITY_POKETCH_COMPANY_F1",
+              "dest_warp_id": "2"
+            },
+            "replacement": {
+              "dest_map": "MAP_JUBILIFE_CITY_POKETCH_COMPANY_F1",
+              "dest_warp_id": "4"
+            },
+            "reason": "Poketch F2 return must target the F1 stair rather than the exterior door.",
+            "fixture": {
+              "input": {
+                "x": 14,
+                "y": 1,
+                "elevation": 0,
+                "dest_map": "MAP_JUBILIFE_CITY_POKETCH_COMPANY_F1",
+                "dest_warp_id": "2"
+              },
+              "output": {
+                "x": 14,
+                "y": 1,
+                "elevation": 0,
+                "dest_map": "MAP_JUBILIFE_CITY_POKETCH_COMPANY_F1",
+                "dest_warp_id": "4"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_JUBILIFE_CITY_POKETCH_COMPANY_F1",
+                "warp_id": "4"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16177,12 +16851,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16322,12 +16996,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16460,12 +17134,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16591,12 +17265,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16736,12 +17410,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -16874,12 +17548,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17005,12 +17679,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17150,12 +17824,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17288,12 +17962,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17419,12 +18093,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17564,12 +18238,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17695,12 +18369,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17833,12 +18507,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -17978,12 +18652,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18109,12 +18783,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18254,12 +18928,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18385,12 +19059,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18508,12 +19182,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18631,12 +19305,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18769,12 +19443,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 3,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "7"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "6"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "7"
+              },
+              "output": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "6"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "6"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 4,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "7"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "6"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "7"
+              },
+              "output": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "6"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "6"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -18907,12 +19656,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 3,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "5"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "4"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "5"
+              },
+              "output": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "4"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "4"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 4,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "5"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "4"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "5"
+              },
+              "output": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "4"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "4"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19045,12 +19869,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 3,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "10"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "8"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "10"
+              },
+              "output": {
+                "x": 3,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "8"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "8"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 4,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "10"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "8"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "10"
+              },
+              "output": {
+                "x": 4,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "8"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "8"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19183,12 +20082,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 5,
+              "y": 19,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "6"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "5"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 5,
+                "y": 19,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "6"
+              },
+              "output": {
+                "x": 5,
+                "y": 19,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "5"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "5"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 6,
+              "y": 19,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "6"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "5"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 6,
+                "y": 19,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "6"
+              },
+              "output": {
+                "x": 6,
+                "y": 19,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "5"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "5"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19328,12 +20302,87 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 6,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "8"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "7"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 6,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "8"
+              },
+              "output": {
+                "x": 6,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "7"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "7"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 7,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "8"
+            },
+            "replacement": {
+              "dest_map": "MAP_OREBURGH_CITY",
+              "dest_warp_id": "7"
+            },
+            "reason": "Oreburgh City facade closures remove source warps 4 and 9; preserve the original exterior return.",
+            "fixture": {
+              "input": {
+                "x": 7,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "8"
+              },
+              "output": {
+                "x": 7,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_OREBURGH_CITY",
+                "dest_warp_id": "7"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_OREBURGH_CITY",
+                "warp_id": "7"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19459,12 +20508,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19597,12 +20646,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19735,12 +20784,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -19873,12 +20922,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -20011,12 +21060,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -20156,12 +21205,124 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 6,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+              "dest_warp_id": "0"
+            },
+            "replacement": {
+              "dest_map": "MAP_FLOAROMA_TOWN",
+              "dest_warp_id": "0"
+            },
+            "reason": "Pokemon Center entrance must return to the Floaroma exterior.",
+            "fixture": {
+              "input": {
+                "x": 6,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+                "dest_warp_id": "0"
+              },
+              "output": {
+                "x": 6,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TOWN",
+                "dest_warp_id": "0"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_FLOAROMA_TOWN",
+                "warp_id": "0"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 1,
+            "source": {
+              "x": 7,
+              "y": 8,
+              "elevation": 0,
+              "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+              "dest_warp_id": "0"
+            },
+            "replacement": {
+              "dest_map": "MAP_FLOAROMA_TOWN",
+              "dest_warp_id": "0"
+            },
+            "reason": "Pokemon Center entrance must return to the Floaroma exterior.",
+            "fixture": {
+              "input": {
+                "x": 7,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+                "dest_warp_id": "0"
+              },
+              "output": {
+                "x": 7,
+                "y": 8,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TOWN",
+                "dest_warp_id": "0"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_FLOAROMA_TOWN",
+                "warp_id": "0"
+              }
+            }
+          },
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 2,
+            "source": {
+              "x": 1,
+              "y": 6,
+              "elevation": 0,
+              "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+              "dest_warp_id": "0"
+            },
+            "replacement": {
+              "dest_map": "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F",
+              "dest_warp_id": "0"
+            },
+            "reason": "Pokemon Center stair must lead to the retained second floor.",
+            "fixture": {
+              "input": {
+                "x": 1,
+                "y": 6,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+                "dest_warp_id": "0"
+              },
+              "output": {
+                "x": 1,
+                "y": 6,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F",
+                "dest_warp_id": "0"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F",
+                "warp_id": "0"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -20287,12 +21448,50 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": [
+          {
+            "kind": "replace_warp_destination",
+            "warp_index": 0,
+            "source": {
+              "x": 1,
+              "y": 6,
+              "elevation": 0,
+              "dest_map": "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F",
+              "dest_warp_id": "0"
+            },
+            "replacement": {
+              "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+              "dest_warp_id": "2"
+            },
+            "reason": "Pokemon Center stair must return to the first-floor stair.",
+            "fixture": {
+              "input": {
+                "x": 1,
+                "y": 6,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F",
+                "dest_warp_id": "0"
+              },
+              "output": {
+                "x": 1,
+                "y": 6,
+                "elevation": 0,
+                "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+                "dest_warp_id": "2"
+              },
+              "return": {
+                "state": "selected_destination_warp",
+                "map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+                "warp_id": "2"
+              }
+            }
+          }
+        ]
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     },
     {
@@ -20425,12 +21624,12 @@
         ]
       },
       "topology": {
-        "state": "FROZEN_SOURCE_PENDING_REVIEW",
-        "repair": null
+        "state": "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION",
+        "repairs": []
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
+        "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
       }
     }
   ]

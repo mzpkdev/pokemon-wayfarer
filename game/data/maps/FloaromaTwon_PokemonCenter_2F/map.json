@@ -19,8 +19,8 @@
       "x": 1,
       "y": 6,
       "elevation": 0,
-      "dest_map": "MAP_FLOAROMA_TWON_POKEMON_CENTER_2F",
-      "dest_warp_id": "0"
+      "dest_map": "MAP_FLOAROMA_TOWN_POKEMON_CENTER_1F",
+      "dest_warp_id": "2"
     }
   ],
   "coord_events": [],
