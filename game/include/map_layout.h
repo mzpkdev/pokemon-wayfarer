@@ -76,4 +76,42 @@ enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view);
 enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout, u32 x, u32 y,
                                           u16 *tile);
 
+#if TESTING && IS_WAYFARER
+struct MapLayoutTestDescriptor
+{
+    const u8 *payload;
+    u32 storedBytes;
+    u32 decodedFileBytes;
+    u32 logicalTileBytes;
+    u32 storedCrc32;
+    u32 decodedCrc32;
+    u8 schemaVersion;
+    u8 codec;
+    u16 flags;
+};
+
+struct MapLayoutTestTelemetry
+{
+    u32 requestedScratchBytes;
+    u32 allocationCount;
+    u32 releaseCount;
+    u32 openCount;
+    u32 decodeCount;
+    u32 decodePhaseCount;
+    u32 beforeAllocationLargestFreeBytes;
+    u32 afterAllocationLargestFreeBytes;
+    u32 afterDecodeLargestFreeBytes;
+    u32 afterReleaseLargestFreeBytes;
+    u32 minimumLargestFreeBytes;
+};
+
+void Test_MapLayoutResetHooks(void);
+void Test_MapLayoutSetPayloadBounds(const void *start, const void *end);
+void Test_MapLayoutForceAllocationFailure(bool8 enabled);
+void Test_MapLayoutSetAllocationLimit(u32 maximumBytes);
+void Test_MapLayoutInjectOpenError(u32 call, enum MapLayoutLoadError error);
+const struct MapLayoutTestTelemetry *Test_MapLayoutGetTelemetry(void);
+const struct MapLayoutTestDescriptor *Test_MapLayoutGetDescriptor(const struct MapLayout *layout);
+#endif
+
 #endif // GUARD_MAP_LAYOUT_H

@@ -85,6 +85,18 @@ const struct MapHeader *const GetMapHeaderFromConnection(const struct MapConnect
 const struct MapConnection *GetMapConnectionAtPos(s16 x, s16 y);
 void MapGridSetMetatileImpassabilityAt(int x, int y, bool32 impassable);
 
+#if TESTING
+enum MapLayoutLoadError Test_InitMapLayoutData(struct MapHeader *mapHeader);
+#if IS_WAYFARER
+enum MapLayoutLoadError Test_InitLegacyRawMapLayoutData(const struct MapHeader *mapHeader,
+                                                        u16 *dest, u32 destCapacity,
+                                                        s32 *width, s32 *height, u8 *connectionFlags);
+#endif
+void Test_SetMapConnectionHeaderOverride(const struct MapHeader *mapHeader);
+void Test_ResetMapConnectionFlags(void);
+u8 Test_GetMapConnectionFlags(void);
+#endif
+
 // field_region_map.c
 void FieldInitRegionMap(MainCallback callback);
 

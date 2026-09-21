@@ -192,6 +192,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
         result = self.run_layouts(root, "wayfarer")
         self.assertEqual(result.returncode, 0, result.stderr)
         generated = (root / "data/layouts/layouts.inc").read_text()
+        table = (root / "data/layouts/layouts_table.inc").read_text()
+        constants = (root / "include/constants/layouts.h").read_text()
         crc = zlib.crc32(payload)
         self.assertIn("__map_layout_payloads_start::", generated)
         self.assertIn("__map_layout_payloads_end::", generated)
@@ -204,6 +206,14 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertIn("\t.byte 1\n\t.byte 0\n\t.2byte 0", descriptor)
         layout_record = generated.split("Test_Layout::", 1)[1]
         self.assertIn("\t.4byte .LTest_Layout_MapData", layout_record)
+        self.assertIn("\t.if MAP_LAYOUT_TESTING_ASM", generated)
+        self.assertIn(".LTest_Layout_RawOracle:", generated)
+        self.assertIn("gMapLayoutPeakTestPayload::", generated)
+        self.assertIn("gMapLayoutPeakTestDescriptor::", generated)
+        self.assertIn("gMapLayoutPeakTestLayout::", generated)
+        self.assertIn("\t.global gMapLayoutRawOracles", table)
+        self.assertIn("\t.4byte .LTest_Layout_RawOracle", table)
+        self.assertIn("#define MAP_LAYOUT_COUNT 1", constants)
 
         result = self.run_layouts(root, "emerald")
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -225,7 +235,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
         generated = (root / "data/layouts/layouts.inc").read_text()
         descriptor = generated.split(".LTest_Layout_MapData:", 1)[1].split("Test_Layout::", 1)[0]
         self.assertIn("\t.byte 1\n\t.byte 1\n\t.2byte 0", descriptor)
-        self.assertNotIn('map.bin"', generated)
+        production_payloads = generated.split("\t.if MAP_LAYOUT_TESTING_ASM", 1)[0]
+        self.assertNotIn('map.bin"', production_payloads)
         storage_report = json.loads(report.read_text())
         self.assertEqual(storage_report["storage_mode"], "hybrid")
         self.assertEqual(storage_report["totals"]["compressed_entries"], 1)
@@ -1429,7 +1440,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotIn("gMapLayout_Frlg::", headers)
         self.assertIn("\t.4byte gMapLayout_Emerald", table)
         self.assertIn("\t.4byte gMapLayout_Hns", table)
-        self.assertTrue(table.rstrip().endswith("\t.4byte NULL"))
+        production_table = table.split("\t.if MAP_LAYOUT_TESTING_ASM", 1)[0]
+        self.assertTrue(production_table.rstrip().endswith("\t.4byte NULL"))
 
         map_dir = root / "data/maps/HnsMap"
         map_dir.mkdir()

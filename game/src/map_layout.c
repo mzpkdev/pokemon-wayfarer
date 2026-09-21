@@ -46,6 +46,38 @@ STATIC_ASSERT(offsetof(struct MapLayoutDataDescriptor, flags) == 0x1A, MapLayout
 extern const u8 __map_layout_payloads_start[];
 extern const u8 __map_layout_payloads_end[];
 static bool8 sCompressedViewActive;
+#if TESTING
+static const u8 *sTestPayloadsStart;
+static const u8 *sTestPayloadsEnd;
+static bool8 sTestForceAllocationFailure;
+static u32 sTestAllocationLimit;
+static u32 sTestInjectedOpenCall;
+static enum MapLayoutLoadError sTestInjectedOpenError;
+static struct MapLayoutTestTelemetry sTestTelemetry;
+
+static u32 Test_GetLargestFreeBlock(void)
+{
+    const struct MemBlock *head = HeapHead();
+    const struct MemBlock *block = head;
+    u32 largest = 0;
+
+    do
+    {
+        if (!block->allocated && block->size > largest)
+            largest = block->size;
+        block = block->next;
+    } while (block != head);
+    return largest;
+}
+
+static void Test_RecordLargestFree(u32 *phase)
+{
+    *phase = Test_GetLargestFreeBlock();
+    if (sTestTelemetry.minimumLargestFreeBytes == 0
+     || *phase < sTestTelemetry.minimumLargestFreeBytes)
+        sTestTelemetry.minimumLargestFreeBytes = *phase;
+}
+#endif
 #endif
 
 EWRAM_DATA struct MapLayoutLoadFailure gMapLayoutLoadError = {0};
@@ -265,6 +297,14 @@ static enum MapLayoutLoadError ValidateDescriptor(const struct MapLayout *layout
     uintptr_t payloadsStart = (uintptr_t)__map_layout_payloads_start;
     uintptr_t payloadsEnd = (uintptr_t)__map_layout_payloads_end;
 
+#if TESTING
+    if (sTestPayloadsStart != NULL)
+    {
+        payloadsStart = (uintptr_t)sTestPayloadsStart;
+        payloadsEnd = (uintptr_t)sTestPayloadsEnd;
+    }
+#endif
+
     if (layout->mapData == NULL)
         return MAP_LAYOUT_LOAD_NO_DESCRIPTOR;
     descriptor = layout->mapData;
@@ -324,6 +364,36 @@ static enum MapLayoutLoadError GetRequiredScratch(const struct MapLayout *layout
     return MAP_LAYOUT_LOAD_OK;
 }
 
+static void *AllocateScratch(u32 size)
+{
+    void *scratch;
+
+#if IS_WAYFARER && TESTING
+    sTestTelemetry.requestedScratchBytes = size;
+    Test_RecordLargestFree(&sTestTelemetry.beforeAllocationLargestFreeBytes);
+    if (size == 0 || sTestForceAllocationFailure
+     || (sTestAllocationLimit != 0 && size > sTestAllocationLimit))
+        return NULL;
+    scratch = Alloc(size);
+    if (scratch != NULL)
+        sTestTelemetry.allocationCount++;
+    Test_RecordLargestFree(&sTestTelemetry.afterAllocationLargestFreeBytes);
+#else
+    scratch = size == 0 ? NULL : Alloc(size);
+#endif
+    return scratch;
+}
+
+static void ReleaseScratch(void *scratch)
+{
+    Free(scratch);
+#if IS_WAYFARER && TESTING
+    if (scratch != NULL)
+        sTestTelemetry.releaseCount++;
+    Test_RecordLargestFree(&sTestTelemetry.afterReleaseLargestFreeBytes);
+#endif
+}
+
 static enum MapLayoutLoadError OpenTiles(const struct MapLayout *layout, void *scratch,
                                          u32 scratchCapacity, const u16 **tiles,
                                          bool8 *compressed)
@@ -337,6 +407,11 @@ static enum MapLayoutLoadError OpenTiles(const struct MapLayout *layout, void *s
 #if IS_WAYFARER
     {
         const struct MapLayoutDataDescriptor *descriptor;
+#if TESTING
+        sTestTelemetry.openCount++;
+        if (sTestInjectedOpenCall != 0 && sTestTelemetry.openCount == sTestInjectedOpenCall)
+            return sTestInjectedOpenError;
+#endif
         error = ValidateDescriptor(layout, logicalBytes, TRUE, &descriptor);
         if (error != MAP_LAYOUT_LOAD_OK)
             return error;
@@ -349,7 +424,14 @@ static enum MapLayoutLoadError OpenTiles(const struct MapLayout *layout, void *s
         }
         if (scratch == NULL || descriptor->decodedFileBytes > scratchCapacity)
             return MAP_LAYOUT_LOAD_SCRATCH_LIMIT;
+#if TESTING
+        sTestTelemetry.decodeCount++;
+#endif
         FastLZ77UnCompWram((const u32 *)descriptor->payload, scratch);
+#if TESTING
+        Test_RecordLargestFree(&sTestTelemetry.afterDecodeLargestFreeBytes);
+        sTestTelemetry.decodePhaseCount++;
+#endif
         if (CalcCrc32(scratch, descriptor->decodedFileBytes) != descriptor->decodedCrc32)
             return MAP_LAYOUT_LOAD_BAD_DECODED_CRC;
         *tiles = scratch;
@@ -374,7 +456,7 @@ static enum MapLayoutLoadError BeginContextForLayout(const struct MapLayout *lay
     error = GetRequiredScratch(layout, &required);
     if (error != MAP_LAYOUT_LOAD_OK)
         return error;
-    context->scratch = required == 0 ? NULL : Alloc(required);
+    context->scratch = AllocateScratch(required);
     if (required != 0 && context->scratch == NULL)
         return MAP_LAYOUT_LOAD_ALLOC_FAILED;
     context->capacity = required;
@@ -394,7 +476,7 @@ static enum MapLayoutLoadError ValidateRectArguments(const struct MapLayout *lay
     if (dest == NULL || width == 0 || height == 0 || x > (u32)layout->width
      || y > (u32)layout->height || width > (u32)layout->width - x
      || height > (u32)layout->height - y || destStride < width
-     || height - 1 > UINT32_MAX / destStride)
+     || height - 1 > (UINT32_MAX - width) / destStride)
         return MAP_LAYOUT_LOAD_BAD_BOUNDS;
     required = (height - 1) * destStride + width;
     return required > destTileCapacity ? MAP_LAYOUT_LOAD_BAD_BOUNDS : MAP_LAYOUT_LOAD_OK;
@@ -440,7 +522,7 @@ enum MapLayoutLoadError MapLayoutBeginLoadContext(const struct MapHeader *mapHea
     }
     if (maximum > MAP_LAYOUT_MAX_DECODED_FILE_BYTES)
         return MAP_LAYOUT_LOAD_SCRATCH_LIMIT;
-    context->scratch = maximum == 0 ? NULL : Alloc(maximum);
+    context->scratch = AllocateScratch(maximum);
     if (maximum != 0 && context->scratch == NULL)
         return MAP_LAYOUT_LOAD_ALLOC_FAILED;
     context->capacity = maximum;
@@ -452,7 +534,7 @@ enum MapLayoutLoadError MapLayoutEndLoadContext(struct MapLayoutLoadContext *con
 {
     if (context == NULL || !context->active)
         return MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME;
-    Free(context->scratch);
+    ReleaseScratch(context->scratch);
     context->scratch = NULL;
     context->capacity = 0;
     context->active = FALSE;
@@ -539,13 +621,13 @@ enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
     if (required != 0 && sCompressedViewActive)
         return MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME;
 #endif
-    view->allocation = required == 0 ? NULL : Alloc(required);
+    view->allocation = AllocateScratch(required);
     if (required != 0 && view->allocation == NULL)
         return MAP_LAYOUT_LOAD_ALLOC_FAILED;
     error = OpenTiles(layout, view->allocation, required, &view->tiles, &view->compressed);
     if (error != MAP_LAYOUT_LOAD_OK)
     {
-        Free(view->allocation);
+        ReleaseScratch(view->allocation);
         view->allocation = NULL;
         return error;
     }
@@ -567,7 +649,7 @@ enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view)
     if (view->compressed)
         sCompressedViewActive = FALSE;
 #endif
-    Free(view->allocation);
+    ReleaseScratch(view->allocation);
     view->tiles = NULL;
     view->width = 0;
     view->height = 0;
@@ -599,3 +681,48 @@ enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout, u32 x,
     MapLayoutEndLoadContext(&context);
     return error;
 }
+
+#if IS_WAYFARER && TESTING
+void Test_MapLayoutResetHooks(void)
+{
+    sTestPayloadsStart = NULL;
+    sTestPayloadsEnd = NULL;
+    sTestForceAllocationFailure = FALSE;
+    sTestAllocationLimit = 0;
+    sTestInjectedOpenCall = 0;
+    sTestInjectedOpenError = MAP_LAYOUT_LOAD_OK;
+    sTestTelemetry = (struct MapLayoutTestTelemetry){0};
+}
+
+void Test_MapLayoutSetPayloadBounds(const void *start, const void *end)
+{
+    sTestPayloadsStart = start;
+    sTestPayloadsEnd = end;
+}
+
+void Test_MapLayoutForceAllocationFailure(bool8 enabled)
+{
+    sTestForceAllocationFailure = enabled;
+}
+
+void Test_MapLayoutSetAllocationLimit(u32 maximumBytes)
+{
+    sTestAllocationLimit = maximumBytes;
+}
+
+void Test_MapLayoutInjectOpenError(u32 call, enum MapLayoutLoadError error)
+{
+    sTestInjectedOpenCall = call;
+    sTestInjectedOpenError = error;
+}
+
+const struct MapLayoutTestTelemetry *Test_MapLayoutGetTelemetry(void)
+{
+    return &sTestTelemetry;
+}
+
+const struct MapLayoutTestDescriptor *Test_MapLayoutGetDescriptor(const struct MapLayout *layout)
+{
+    return layout == NULL ? NULL : layout->mapData;
+}
+#endif

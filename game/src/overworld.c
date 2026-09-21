@@ -654,6 +654,8 @@ static void InitMapView(void)
 
 const struct MapLayout *GetMapLayout(u16 mapLayoutId)
 {
+    if (mapLayoutId == 0 || mapLayoutId > MAP_LAYOUT_COUNT)
+        return NULL;
     return gMapLayouts[mapLayoutId - 1];
 }
 

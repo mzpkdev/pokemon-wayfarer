@@ -2271,6 +2271,45 @@ string generate_layout_headers_text(Json layouts_data) {
     if (version == "wayfarer")
         text << "\t.align 2\n\t.global __map_layout_payloads_end\n__map_layout_payloads_end::\n\n";
 
+    if (version == "wayfarer") {
+        text << "\t.if MAP_LAYOUT_TESTING_ASM\n";
+        const LayoutStorageRecord *peak = nullptr;
+        for (const string &name : layout_storage_order) {
+            const LayoutStorageRecord &candidate = layout_storage_records.at(name);
+            if (peak == nullptr || candidate.raw.size() > peak->raw.size())
+                peak = &candidate;
+        }
+        if (peak != nullptr) {
+            string compressed = gba_lz77_compress(peak->raw);
+            text << "\t.align 2\n\t.global gMapLayoutPeakTestPayload\n"
+                 << "gMapLayoutPeakTestPayload::\n";
+            emit_asm_bytes(text, compressed);
+            text << "\n\t.align 2\n\t.global gMapLayoutPeakTestDescriptor\n"
+                 << "gMapLayoutPeakTestDescriptor::\n"
+                 << "\t.4byte gMapLayoutPeakTestPayload\n"
+                 << "\t.4byte " << compressed.size() << "\n"
+                 << "\t.4byte " << peak->raw.size() << "\n"
+                 << "\t.4byte " << peak->logicalBytes << "\n"
+                 << "\t.4byte " << asm_hex_u32(crc32_iso_hdlc(compressed)) << "\n"
+                 << "\t.4byte " << asm_hex_u32(peak->decodedCrc) << "\n"
+                 << "\t.byte 1\n\t.byte 1\n\t.2byte 0\n"
+                 << "\t.global gMapLayoutPeakTestLayout\n"
+                 << "gMapLayoutPeakTestLayout::\n\t.4byte " << peak->layoutName << "\n\n";
+        }
+        for (auto &layout : layouts_data["layouts"].array_items()) {
+            if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
+             || !layout_matches_version(layout))
+                continue;
+            string layoutName = json_to_string(layout, "name");
+            const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
+            begin_layout_guard(text, layout);
+            text << "\t.align 2\n.L" << layoutName << "_RawOracle:\n"
+                 << "\t.incbin \"" << storage.sourcePath << "\"\n\n";
+            end_layout_guard(text, layout);
+        }
+        text << "\t.endif\n\n";
+    }
+
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
          || !layout_matches_version(layout))
@@ -2565,6 +2604,30 @@ string generate_layouts_table_text(Json layouts_data) {
         }
     }
 
+    if (version == "wayfarer") {
+        text << "\n\t.if MAP_LAYOUT_TESTING_ASM\n"
+             << "\t.align 2\n\t.global gMapLayoutRawOracles\n"
+             << "gMapLayoutRawOracles::\n";
+        for (auto &layout : layouts_data["layouts"].array_items()) {
+            if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+                continue;
+            if (!layout_matches_version(layout)) {
+                text << "\t.4byte NULL\n";
+            } else {
+                string layoutName = json_to_string(layout, "name", true);
+                if (layoutName.empty()) {
+                    text << "\t.4byte NULL\n";
+                } else if (!wayfarer_sinnoh_release_link_enabled && get_source_version(layout) == "sinnoh") {
+                    text << "\t.if HAS_SINNOH_CONTENT_ASM\n\t.4byte .L" << layoutName
+                         << "_RawOracle\n\t.else\n\t.4byte NULL\n\t.endif\n";
+                } else {
+                    text << "\t.4byte .L" << layoutName << "_RawOracle\n";
+                }
+            }
+        }
+        text << "\t.endif\n";
+    }
+
     return text.str();
 }
 
@@ -2620,6 +2683,7 @@ string generate_layouts_constants_text(Json layouts_data) {
         text << "#define " << layout << string(max_length - layout.length(), ' ')
              << "  0xFFFF\n";
     }
+    text << "\n#define MAP_LAYOUT_COUNT " << i - 1 << "\n";
     text << "\n" << get_include_guard_end(guard_name);
 
     return text.str();

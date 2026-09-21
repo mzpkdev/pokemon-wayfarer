@@ -12,6 +12,7 @@
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
 	.set HAS_SINNOH_CONTENT_ASM, HAS_SINNOH_CONTENT
+	.set MAP_LAYOUT_TESTING_ASM, TESTING
 
 	.section .rodata
 
