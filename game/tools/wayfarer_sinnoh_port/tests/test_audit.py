@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 
 TOOLS = Path(__file__).resolve().parents[1]
@@ -272,11 +273,17 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertEqual(palette["encoder_rule"], "Makefile:%.gbapal:%.pal")
 
     def test_runtime_inputs_schedule_asset_verification(self):
+        makefile = (GAME / "Makefile").read_text(encoding="utf-8")
+        dependencies = next(
+            line for line in makefile.splitlines()
+            if line.startswith("WAYFARER_SINNOH_PORT_DEPS :=")
+        )
+        self.assertIn("$(GFX)", dependencies)
+        self.assertIn("$(SMOL)", dependencies)
+
         runtime_inputs = (
             "Makefile",
             "graphics_file_rules.mk",
-            "tools/gbagfx/gbagfx",
-            "tools/compresSmol/compresSmol",
             "src/data/tilesets/graphics.h",
             "src/data/tilesets/headers.h",
             "src/data/tilesets/metatiles.h",
@@ -293,9 +300,6 @@ class SinnohFoundationAuditTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("assets.py --root . --verify", result.stdout, path)
-            if path.startswith("tools/"):
-                tool_directory = path.rsplit("/", 1)[0]
-                self.assertLess(result.stdout.index(f"make -C {tool_directory}"), result.stdout.index("assets.py --root . --verify"), path)
 
     def test_asset_verifier_rejects_stale_production_proof_and_missing_consumer(self):
         manifest = json.loads(self.assets_path.read_text())
@@ -346,9 +350,23 @@ class SinnohFoundationAuditTests(unittest.TestCase):
             ASSETS.verify(GAME, manifest, production=False)
         manifest = json.loads(self.assets_path.read_text())
         component = next(row for row in manifest["records"] if row["reuse_class"] == "EXISTING_REFERENCE" and row["component"] != "descriptor")
-        component["source_sha256"] = "0" * 64
-        with self.assertRaisesRegex(AUDIT.FoundationError, "donor tileset source hash drift"):
-            AUDIT.validate_donor(Path("/tmp/sinnoh-donor-4eed17"), json.loads(self.maps_path.read_text())["maps"], AUDIT.records_by_id(manifest))
+        with tempfile.TemporaryDirectory() as directory:
+            donor = Path(directory)
+            source = donor / component["source_path"]
+            source.parent.mkdir(parents=True)
+            source.write_bytes(b"wrong donor bytes")
+            with (
+                mock.patch.object(AUDIT, "selected_source", return_value=([], {}, {})),
+                mock.patch.object(AUDIT, "donor_empty_counts", return_value={
+                    "object_events": 0,
+                    "coord_events": 0,
+                    "bg_events": 0,
+                    "nonempty_map_scripts": 0,
+                    "wild_encounter_profiles": 0,
+                }),
+            ):
+                with self.assertRaisesRegex(AUDIT.FoundationError, "donor tileset source hash drift"):
+                    AUDIT.validate_donor(donor, [], {component["record_id"]: component})
 
     def test_asset_runtime_closure_uses_actual_descriptor_consumers(self):
         manifest = json.loads(self.assets_path.read_text())
