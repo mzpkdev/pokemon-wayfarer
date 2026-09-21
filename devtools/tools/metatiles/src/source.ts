@@ -66,7 +66,11 @@ export const sourceMaps = (root: string): SourceMapReference[] => {
       if (!map.id || !map.layout) {
         throw new Error(`${mapPath}: map is missing an id or layout`)
       }
-      return [{ name, id: map.id, layoutId: map.layout }]
+      const sinnoh =
+        map.game_version === "sinnoh"
+          ? { sourceRegion: "sinnoh" as const, region: "sinnoh" as const }
+          : {}
+      return [{ name, id: map.id, layoutId: map.layout, ...sinnoh }]
     })
 }
 

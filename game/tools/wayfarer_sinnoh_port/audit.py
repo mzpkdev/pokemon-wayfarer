@@ -46,6 +46,35 @@ def validate_identity(maps: dict[str, Any], assets: dict[str, Any]) -> None:
         raise FoundationError("asset manifest has no exact actual Wayfarer baseline commit")
 
 
+def validate_porymap_contract(root: Path, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    project = load_json(root / "porymap.project.json")
+    if project.get("base_game_version") != "pokeemerald":
+        raise FoundationError("Porymap project must use base_game_version pokeemerald")
+    if any(row.get("layout_format") != "emerald" for row in rows):
+        raise FoundationError("frozen manifest rows must declare layout_format emerald")
+    layouts = load_json(root / "data/layouts/layouts.json").get("layouts", [])
+    current_layouts = {
+        layout.get("id") for layout in layouts
+        if isinstance(layout, dict) and isinstance(layout.get("id"), str)
+    }
+    imported_targets = sorted(
+        row["target_layout"] for row in rows if row.get("target_layout") in current_layouts
+    )
+    if imported_targets:
+        raise FoundationError(
+            "imported target layouts require verification: " + ", ".join(imported_targets)
+        )
+    return {
+        "base_game_version": {"value": "pokeemerald", "verified": True},
+        "frozen_manifest_layout_format": {
+            "value": "emerald", "verified": True, "map_count": len(rows),
+        },
+        "imported_layout_verification": {
+            "verified": False, "layout_count": len(imported_targets),
+        },
+    }
+
+
 def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]) -> tuple[list[dict[str, Any]], dict[str, dict[str, Any]]]:
     validate_identity(maps, assets)
     if maps.get("schema_version") != 1:
@@ -229,6 +258,7 @@ def build_report(root: Path, maps_path: Path, assets_path: Path, donor_root: Pat
     maps = load_json(maps_path)
     asset_manifest = load_json(assets_path)
     rows, assets = validate_checked_in(root, maps, asset_manifest)
+    porymap_contract = validate_porymap_contract(root, rows)
     validate_exact_worktree_assets(root, assets)
     donor_counts = validate_donor(donor_root, rows, assets) if donor_root is not None else None
     blockers = sorted(record_id for record_id, row in assets.items() if row.get("reuse_class") == "REVIEW_REQUIRED" or row.get("selection_blocker"))
@@ -246,7 +276,8 @@ def build_report(root: Path, maps_path: Path, assets_path: Path, donor_root: Pat
         "manifest_integrity": {"verified": True, "selected_map_count": len(rows), "selected_layout_count": len({row["source_layout"] for row in rows}),
                                 "frozen_manifest_counts": {"warps": sum(len(row["warps"]) for row in rows), "connections": sum(len(row["connections"]) for row in rows),
                                                            "object_events": 0, "coord_events": 0, "bg_events": 0, "nonempty_map_scripts": 0, "wild_encounter_profiles": 0},
-                                "exact_worktree_aliases_verified": sum(1 for row in assets.values() if row.get("reuse_class") == "EXACT_ALIAS")},
+                                "exact_worktree_aliases_verified": sum(1 for row in assets.values() if row.get("reuse_class") == "EXACT_ALIAS"),
+                                "porymap": porymap_contract},
         "donor_source_verification": {"performed": donor_root is not None, "hashes_verified": donor_root is not None,
                                         "observed_empty_content_counts": donor_counts},
         "selection": maps["selection"], "asset_record_count": len(assets), "review_required": blockers,

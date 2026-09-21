@@ -884,7 +884,7 @@ wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
 
 WAYFARER_SINNOH_PORT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_sinnoh_port
 WAYFARER_SINNOH_PORT_AUDIT := $(BUILD_DIR)/wayfarer-sinnoh-port-audit.json
-WAYFARER_SINNOH_PORT_DEPS := $(WAYFARER_SINNOH_PORT_TOOL_DIR)/foundation.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/freeze.py $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_maps.json $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_assets.json $(MAPS_DIR)/map_groups.json $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
+WAYFARER_SINNOH_PORT_DEPS := $(WAYFARER_SINNOH_PORT_TOOL_DIR)/foundation.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/freeze.py porymap.project.json $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_maps.json $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_assets.json $(MAPS_DIR)/map_groups.json $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
 
 .PHONY: wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
 wayfarer-sinnoh-port-test:

@@ -81,7 +81,7 @@ const slug = (value: string): string => {
     .toLowerCase()
 }
 
-const contextId = (
+export const contextId = (
   layout: Pick<
     SourceLayout,
     "format" | "game_version" | "layout_version" | "primary_tileset" | "secondary_tileset"

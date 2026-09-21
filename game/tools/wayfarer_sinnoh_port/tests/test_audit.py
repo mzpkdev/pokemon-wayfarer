@@ -39,6 +39,11 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertFalse(report["donor_source_verification"]["performed"])
         self.assertIsNone(report["donor_source_verification"]["observed_empty_content_counts"])
         self.assertTrue(report["review_required"])
+        self.assertEqual(integrity["porymap"], {
+            "base_game_version": {"value": "pokeemerald", "verified": True},
+            "frozen_manifest_layout_format": {"value": "emerald", "verified": True, "map_count": 133},
+            "imported_layout_verification": {"verified": False, "layout_count": 0},
+        })
 
     def test_audit_report_is_deterministic_without_a_donor_checkout(self):
         first = AUDIT.build_report(GAME, self.maps_path, self.assets_path)
@@ -80,6 +85,32 @@ class SinnohFoundationAuditTests(unittest.TestCase):
                       "runtime_meaning_proven": True, "source_shape": shape, "candidate_shape": shape}]}
             with self.assertRaisesRegex(AUDIT.FoundationError, "layout shape drifted"):
                 AUDIT.validate_exact_worktree_assets(root, {record["record_id"]: record})
+
+    def test_rejects_porymap_base_game_drift(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "porymap.project.json").write_text(json.dumps({"base_game_version": "pokefirered"}))
+            with self.assertRaisesRegex(AUDIT.FoundationError, "base_game_version pokeemerald"):
+                AUDIT.validate_porymap_contract(root, [{"layout_format": "emerald"}])
+
+    def test_rejects_frozen_manifest_layout_format_drift(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "porymap.project.json").write_text(json.dumps({"base_game_version": "pokeemerald"}))
+            with self.assertRaisesRegex(AUDIT.FoundationError, "layout_format emerald"):
+                AUDIT.validate_porymap_contract(root, [{"layout_format": "frlg"}])
+
+    def test_rejects_imported_target_layout_without_verification(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "porymap.project.json").write_text(json.dumps({"base_game_version": "pokeemerald"}))
+            layouts = root / "data/layouts/layouts.json"
+            layouts.parent.mkdir(parents=True)
+            layouts.write_text(json.dumps({"layouts": [{"id": "LAYOUT_SINNOH_ROUTE201"}]}))
+            with self.assertRaisesRegex(AUDIT.FoundationError, "require verification"):
+                AUDIT.validate_porymap_contract(root, [{
+                    "layout_format": "emerald", "target_layout": "LAYOUT_SINNOH_ROUTE201",
+                }])
 
     def test_donor_empty_content_check_rejects_actual_nonempty_source(self):
         with tempfile.TemporaryDirectory() as directory:
