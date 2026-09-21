@@ -11,6 +11,7 @@
 	.include "asm/macros.inc"
 	.include "asm/macros/event.inc"
 	.include "constants/constants.inc"
+	.set HAS_SINNOH_CONTENT_ASM, HAS_SINNOH_CONTENT
 
 	.section .rodata
 

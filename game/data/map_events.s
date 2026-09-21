@@ -17,6 +17,7 @@
 #include "constants/apricorn_tree.h"
 	.include "asm/macros.inc"
 	.include "constants/constants.inc"
+	.set HAS_SINNOH_CONTENT_ASM, HAS_SINNOH_CONTENT
 
 	.section .rodata
 

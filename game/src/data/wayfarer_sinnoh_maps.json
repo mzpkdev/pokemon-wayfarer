@@ -269,6 +269,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -495,6 +502,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 20,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -744,6 +758,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 46,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -786,7 +807,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_RG_FUCHSIA",
@@ -1053,6 +1074,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 44,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -1257,6 +1285,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -1299,7 +1334,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_PETALBURG",
@@ -1425,6 +1460,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 12,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -1467,7 +1509,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Hearthome",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Hearthome"
+        "proposed_target_secondary": "gTileset_Sinnoh_Hearthome"
       },
       "map_properties": {
         "music": "MUS_SLATEPORT",
@@ -1614,6 +1656,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 20,
+        "y": 5,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -1656,7 +1705,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -1769,6 +1818,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -1811,7 +1867,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_DEWFORD",
@@ -1924,6 +1980,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 5,
+        "facing": "DIR_SOUTH",
+        "elevation": 4,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -1966,7 +2029,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Veilstone",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Veilstone"
+        "proposed_target_secondary": "gTileset_Sinnoh_Veilstone"
       },
       "map_properties": {
         "music": "MUS_RG_SEVII_123",
@@ -2135,6 +2198,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -2301,6 +2371,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 34,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -2343,7 +2420,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Canalave",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Canalave"
+        "proposed_target_secondary": "gTileset_Sinnoh_Canalave"
       },
       "map_properties": {
         "music": "MUS_FORTREE",
@@ -2459,6 +2536,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -2501,7 +2585,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Snowpoint",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Snowpoint"
+        "proposed_target_secondary": "gTileset_Sinnoh_Snowpoint"
       },
       "map_properties": {
         "music": "MUS_RG_FUCHSIA",
@@ -2609,6 +2693,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 12,
+        "y": 7,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -2651,7 +2742,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Sunnyshore",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Sunnyshore"
+        "proposed_target_secondary": "gTileset_Sinnoh_Sunnyshore"
       },
       "map_properties": {
         "music": "MUS_DEWFORD",
@@ -2772,6 +2863,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -2938,6 +3036,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -3101,6 +3206,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 42,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -3259,6 +3371,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -3430,6 +3549,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 6,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -3613,6 +3739,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -3655,7 +3788,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE3",
@@ -3788,6 +3921,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 54,
+        "y": 5,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4009,6 +4149,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 22,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4051,7 +4198,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Sunnyshore",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Sunnyshore"
+        "proposed_target_secondary": "gTileset_Sinnoh_Sunnyshore"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE11",
@@ -4200,6 +4347,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 5,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4242,7 +4396,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -4363,6 +4517,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 13,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4541,6 +4702,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 6,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4583,7 +4751,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -4704,6 +4872,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 49,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4746,7 +4921,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE11",
@@ -4859,6 +5034,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 48,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -4901,7 +5083,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE11",
@@ -5019,6 +5201,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 24,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -5061,7 +5250,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE11",
@@ -5177,6 +5366,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 5,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -5219,7 +5415,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE11",
@@ -5335,6 +5531,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 4,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -5508,6 +5711,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 12,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -5666,6 +5876,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 10,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -5708,7 +5925,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE3",
@@ -5843,6 +6060,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 47,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -5885,7 +6109,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -6013,6 +6237,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 16,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -6055,7 +6286,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Celestic",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Celestic"
+        "proposed_target_secondary": "gTileset_Sinnoh_Celestic"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -6176,6 +6407,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 52,
+        "y": 4,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -6218,7 +6456,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Snowpoint",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Snowpoint"
+        "proposed_target_secondary": "gTileset_Sinnoh_Snowpoint"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -6334,6 +6572,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -6376,7 +6621,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Snowpoint",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Snowpoint"
+        "proposed_target_secondary": "gTileset_Sinnoh_Snowpoint"
       },
       "map_properties": {
         "music": "MUS_ROUTE113",
@@ -6489,6 +6734,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 22,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -6531,7 +6783,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_ROUTE110",
@@ -6697,6 +6949,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -6855,6 +7114,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 22,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7018,6 +7284,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7204,6 +7477,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7246,7 +7526,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -7367,6 +7647,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7409,7 +7696,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Sunnyshore",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Sunnyshore"
+        "proposed_target_secondary": "gTileset_Sinnoh_Sunnyshore"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE11",
@@ -7522,6 +7809,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 6,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7683,6 +7977,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7725,7 +8026,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_ROUTE104",
@@ -7838,6 +8139,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 10,
+        "y": 8,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -7880,7 +8188,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_ROUTE118",
@@ -7998,6 +8306,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 76,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -8155,6 +8470,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 12,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -8323,6 +8645,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 9,
+        "y": 8,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -8365,7 +8694,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_ROUTE110",
@@ -8483,6 +8812,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -8525,7 +8861,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_ROUTE120",
@@ -8638,6 +8974,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 26,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -8806,6 +9149,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 4,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -8848,7 +9198,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_ROUTE110",
@@ -8981,6 +9331,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 50,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9023,7 +9380,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Snowpoint",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Snowpoint"
+        "proposed_target_secondary": "gTileset_Sinnoh_Snowpoint"
       },
       "map_properties": {
         "music": "MUS_RG_ROUTE24",
@@ -9136,6 +9493,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 3,
+        "y": 23,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9178,7 +9542,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_RG_CINNABAR",
@@ -9291,6 +9655,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 22,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9333,7 +9704,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_RG_CELADON",
@@ -9446,6 +9817,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 9,
+        "y": 4,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9488,7 +9866,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_FALLARBOR",
@@ -9596,6 +9974,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9758,6 +10143,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9800,7 +10192,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_RG_SURF",
@@ -9917,6 +10309,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 32,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -9959,7 +10358,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Snowpoint",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Snowpoint"
+        "proposed_target_secondary": "gTileset_Sinnoh_Snowpoint"
       },
       "map_properties": {
         "music": "MUS_RG_CINNABAR",
@@ -10061,6 +10460,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 30,
+        "y": 5,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -10262,6 +10668,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 70,
+        "facing": "DIR_SOUTH",
+        "elevation": 1,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -10304,7 +10717,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Valor",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Valor"
+        "proposed_target_secondary": "gTileset_Sinnoh_Valor"
       },
       "map_properties": {
         "music": "MUS_PETALBURG_WOODS",
@@ -10469,6 +10882,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 54,
+        "y": 7,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -10639,6 +11059,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 7,
+        "y": 4,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -10681,7 +11108,7 @@
         "source_primary": "gTileset_General",
         "source_secondary": "gTileset_Jubilife",
         "proposed_target_primary": "gTileset_Sinnoh_General",
-        "proposed_target_secondary": "gTileset_Jubilife"
+        "proposed_target_secondary": "gTileset_Sinnoh_Jubilife"
       },
       "map_properties": {
         "music": "MUS_RG_MT_MOON",
@@ -10873,6 +11300,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 5,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11028,6 +11462,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 15,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11198,6 +11639,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 26,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11368,6 +11816,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11538,6 +11993,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 29,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11715,6 +12177,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 7,
+        "y": 3,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11885,6 +12354,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -11927,7 +12403,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12020,6 +12496,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12062,7 +12545,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12155,6 +12638,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12197,7 +12687,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12290,6 +12780,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12332,7 +12829,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12425,6 +12922,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12467,7 +12971,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12560,6 +13064,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12602,7 +13113,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_RG_POKE_CENTER",
@@ -12695,6 +13206,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12737,7 +13255,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12830,6 +13348,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -12872,7 +13397,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -12965,6 +13490,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13007,7 +13539,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -13100,6 +13632,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13142,7 +13681,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -13235,6 +13774,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13277,7 +13823,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -13370,6 +13916,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13412,7 +13965,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -13490,6 +14043,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 4,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13532,7 +14092,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -13610,6 +14170,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13652,7 +14219,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Pasos",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Pasos"
+        "proposed_target_secondary": "gTileset_Sinnoh_Pasos"
       },
       "map_properties": {
         "music": "MUS_RG_SS_ANNE",
@@ -13745,6 +14312,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 7,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13787,7 +14361,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_BrendansMaysHouse",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_BrendansMaysHouse"
+        "proposed_target_secondary": "gTileset_BrendansMaysHouse"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -13890,6 +14464,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 5,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -13932,7 +14513,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_BrendansMaysHouse",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_BrendansMaysHouse"
+        "proposed_target_secondary": "gTileset_BrendansMaysHouse"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -14021,6 +14602,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 7,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14063,7 +14651,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_BrendansMaysHouse",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_BrendansMaysHouse"
+        "proposed_target_secondary": "gTileset_BrendansMaysHouse"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -14166,6 +14754,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14208,7 +14803,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_BrendansMaysHouse",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_BrendansMaysHouse"
+        "proposed_target_secondary": "gTileset_BrendansMaysHouse"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -14297,6 +14892,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14339,7 +14941,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -14435,6 +15037,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14477,7 +15086,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_LITTLEROOT_TEST",
@@ -14573,6 +15182,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14615,7 +15231,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_BrendansMaysHouse",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_BrendansMaysHouse"
+        "proposed_target_secondary": "gTileset_BrendansMaysHouse"
       },
       "map_properties": {
         "music": "MUS_RG_CINNABAR",
@@ -14793,6 +15409,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14835,7 +15458,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_BrendansMaysHouse",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_BrendansMaysHouse"
+        "proposed_target_secondary": "gTileset_BrendansMaysHouse"
       },
       "map_properties": {
         "music": "MUS_RG_CINNABAR",
@@ -14924,6 +15547,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -14966,7 +15596,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RG_CINNABAR",
@@ -15137,6 +15767,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -15179,7 +15816,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -15357,6 +15994,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -15399,7 +16043,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -15488,6 +16132,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -15701,6 +16352,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -15743,7 +16401,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonSchool",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonSchool"
+        "proposed_target_secondary": "gTileset_PokemonSchool"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -15839,6 +16497,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -15984,6 +16649,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16122,6 +16794,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16260,6 +16939,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16391,6 +17077,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16433,7 +17126,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Facility",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_Facility"
+        "proposed_target_secondary": "gTileset_Facility"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -16550,6 +17243,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 14,
+        "y": 0,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16592,7 +17292,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Facility",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_Facility"
+        "proposed_target_secondary": "gTileset_Facility"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -16726,6 +17426,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16768,7 +17475,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_Facility",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_Facility"
+        "proposed_target_secondary": "gTileset_Facility"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -16857,6 +17564,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -16899,7 +17613,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17002,6 +17716,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 3,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17044,7 +17765,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17140,6 +17861,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17182,7 +17910,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17271,6 +17999,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17313,7 +18048,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17416,6 +18151,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 3,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17458,7 +18200,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17554,6 +18296,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17596,7 +18345,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17685,6 +18434,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17727,7 +18483,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17830,6 +18586,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 3,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -17872,7 +18635,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -17968,6 +18731,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18010,7 +18780,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_RUSTBORO",
@@ -18099,6 +18869,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18141,7 +18918,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -18244,6 +19021,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18286,7 +19070,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -18375,6 +19159,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18513,6 +19304,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18555,7 +19353,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -18658,6 +19456,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18700,7 +19505,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -18789,6 +19594,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18831,7 +19643,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -18934,6 +19746,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -18976,7 +19795,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -19065,6 +19884,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -19107,7 +19933,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -19188,6 +20014,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -19230,7 +20063,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -19311,6 +20144,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 2,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -19353,7 +20193,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -19524,6 +20364,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -19566,7 +20413,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -19737,6 +20584,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -19779,7 +20633,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -19950,6 +20804,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -19992,7 +20853,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_RustboroGym",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_RustboroGym"
+        "proposed_target_secondary": "gTileset_RustboroGym"
       },
       "map_properties": {
         "music": "MUS_DUMMY",
@@ -20163,6 +21024,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 1,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -20205,7 +21073,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -20383,6 +21251,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -20425,7 +21300,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -20514,6 +21389,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -20652,6 +21534,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -20694,7 +21583,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_FALLARBOR",
@@ -20790,6 +21679,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -20832,7 +21728,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_GenericBuilding",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_GenericBuilding"
+        "proposed_target_secondary": "gTileset_GenericBuilding"
       },
       "map_properties": {
         "music": "MUS_FALLARBOR",
@@ -20928,6 +21824,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 8,
+        "y": 1,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -20970,7 +21873,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PrettyPetalFlowerShop",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PrettyPetalFlowerShop"
+        "proposed_target_secondary": "gTileset_PrettyPetalFlowerShop"
       },
       "map_properties": {
         "music": "MUS_FALLARBOR",
@@ -21066,6 +21969,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -21108,7 +22018,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -21323,6 +22233,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -21365,7 +22282,7 @@
         "source_primary": "gTileset_Building",
         "source_secondary": "gTileset_PokemonCenter",
         "proposed_target_primary": "gTileset_Sinnoh_Building",
-        "proposed_target_secondary": "gTileset_Sinnoh_PokemonCenter"
+        "proposed_target_secondary": "gTileset_PokemonCenter"
       },
       "map_properties": {
         "music": "MUS_POKE_CENTER",
@@ -21492,6 +22409,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 0,
+        "basis": "raw_walkable_block"
       }
     },
     {
@@ -21630,6 +22554,13 @@
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
         "reason": "Reviewed for test-only topology validation; production selection remains deferred until common layout compression and protected-reserve size validation."
+      },
+      "test_entry": {
+        "x": 0,
+        "y": 2,
+        "facing": "DIR_SOUTH",
+        "elevation": 3,
+        "basis": "raw_walkable_block"
       }
     }
   ]

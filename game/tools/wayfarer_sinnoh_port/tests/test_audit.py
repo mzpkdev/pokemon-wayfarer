@@ -57,7 +57,8 @@ class SinnohFoundationAuditTests(unittest.TestCase):
                 "connection_repair_count": 3, "one_way_connection_count": 2,
                 "raw_layout": {
                     "level": "STRUCTURAL_ONLY", "layouts_verified": 133,
-                    "borders_verified": 133, "warp_destination_bounds_verified": 228,
+                    "borders_verified": 133, "test_entries_verified": 133,
+                    "warp_destination_bounds_verified": 228,
                     "connection_overlap_tiles": 3940, "walkable_seam_tiles": 759,
                     "walkable_seam_elevation_mismatches": 14,
                     "remaining_runtime_proof": [

@@ -96,9 +96,13 @@ enum Language
     #define HAS_TRAINER_TOWER_CONTENT 1
     #define HAS_HNS_CONTENT 1
     #define HAS_EMERALD_CONTENT 1
-    // Sinnoh remains an audited, frozen asset inventory until a later map
-    // catalog milestone explicitly opens its release-link gate.
-    #define HAS_SINNOH_CONTENT 0
+    // Sinnoh remains release-closed, but isolated test/E2E map generation may
+    // link its reviewed catalog without enabling it in any shipped product.
+    #if TESTING || defined(E2E_TESTING)
+        #define HAS_SINNOH_CONTENT 1
+    #else
+        #define HAS_SINNOH_CONTENT 0
+    #endif
 #elif defined(POKEMON_HNS)
     #define GAME_VERSION (VERSION_EMERALD)
     #define IS_FRLG 0

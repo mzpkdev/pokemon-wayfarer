@@ -1,5 +1,6 @@
 #include "global.h"
 #include "item_use.h"
+#include "region_map.h"
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_pyramid.h"
@@ -1758,6 +1759,11 @@ static void ItemUseOnFieldCB_TownMap(u8 taskId)
 
 void ItemUseOutOfBattle_TownMap(u8 taskId)
 {
+    if (!IsCurrentRegionMapSupported())
+    {
+        DisplayCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem, gText_CantUseHere);
+        return;
+    }
     if (!gTasks[taskId].tUsingRegisteredKeyItem)
     {
         sItemUseOnFieldCB = ItemUseOnFieldCB_TownMap;

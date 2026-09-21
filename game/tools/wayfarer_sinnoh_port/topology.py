@@ -215,10 +215,19 @@ def validate_raw_layout_topology(root: Path, rows: list[dict[str, Any]]) -> dict
                                          for index in range(0, len(payload), 2)])
 
     warp_destinations = 0
+    test_entries = 0
     overlap_tiles = 0
     walkable_seam_tiles = 0
     walkable_seam_elevation_mismatches = 0
     for row in rows:
+        entry = row["test_entry"]
+        width, height, grid = grids[row["target_map_id"]]
+        if not 0 <= entry["x"] < width or not 0 <= entry["y"] < height:
+            raise FoundationError(f"Sinnoh test entry is out of raw-layout bounds: {row['source_map']}")
+        tile = grid[entry["y"] * width + entry["x"]]
+        if ((tile >> 10) & 3) != 0 or ((tile >> 12) & 0xF) != entry["elevation"]:
+            raise FoundationError(f"Sinnoh test entry is not raw-walkable: {row['source_map']}")
+        test_entries += 1
         for warp in effective_warps(row):
             destination = by_id[warp["dest_map"]]
             width, height, _ = grids[warp["dest_map"]]
@@ -252,7 +261,8 @@ def validate_raw_layout_topology(root: Path, rows: list[dict[str, Any]]) -> dict
                         walkable_seam_elevation_mismatches += 1
                     walkable_seam_tiles += 1
     return {"level": "STRUCTURAL_ONLY", "layouts_verified": len(grids),
-            "borders_verified": len(grids), "warp_destination_bounds_verified": warp_destinations,
+            "borders_verified": len(grids), "test_entries_verified": test_entries,
+            "warp_destination_bounds_verified": warp_destinations,
             "connection_overlap_tiles": overlap_tiles, "walkable_seam_tiles": walkable_seam_tiles,
             "walkable_seam_elevation_mismatches": walkable_seam_elevation_mismatches,
             "remaining_runtime_proof": ["warp_door_walkability_and_elevation",

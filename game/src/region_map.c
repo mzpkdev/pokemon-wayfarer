@@ -1662,6 +1662,15 @@ enum RegionMapType GetRegionMapType(u32 mapSecId)
 #endif
 }
 
+bool8 IsCurrentRegionMapSupported(void)
+{
+#if IS_WAYFARER
+    return GetCurrentRegion() != REGION_SINNOH;
+#else
+    return TRUE;
+#endif
+}
+
 static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
 {
     if (y < MAPCURSOR_Y_MIN || y > MAPCURSOR_Y_MAX || x < MAPCURSOR_X_MIN || x > MAPCURSOR_X_MAX)
@@ -1677,6 +1686,10 @@ static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
 
 #if IS_HNS
 #if IS_WAYFARER
+    // Sinnoh has no production Town Map/Fly art or destination table. Test
+    // traversal must fail closed instead of borrowing the Kanto/Johto UI.
+    if (GetCurrentRegion() == REGION_SINNOH)
+        return MAPSEC_NONE;
     if (WayfarerIsCurrentMapHoennSource())
         return sWayfarerHoennRegionMapSections[y][x];
     if (IsWayfarerSeviiMapSecId(gMapHeader.regionMapSectionId))
@@ -2757,6 +2770,11 @@ bool32 IsEventIslandMapSecId(mapsec_u8_t mapSecId)
 
 void CB2_OpenFlyMap(void)
 {
+    if (!IsCurrentRegionMapSupported())
+    {
+        SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
+        return;
+    }
     switch (gMain.state)
     {
     case 0:
@@ -3500,6 +3518,10 @@ u32 FilterFlyDestination(struct RegionMap* regionMap)
 
 void SetFlyDestination(struct RegionMap* regionMap)
 {
+#if IS_WAYFARER
+    if (GetCurrentRegion() == REGION_SINNOH)
+        return;
+#endif
     u32 flyDestination = FilterFlyDestination(regionMap);
 
     if (flyDestination != WARP_ID_NONE)

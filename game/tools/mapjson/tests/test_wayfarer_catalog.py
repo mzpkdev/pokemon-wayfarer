@@ -645,15 +645,19 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "target_map_id": "MAP_TWINLEAF_TOWN",
             "source_layout": "LAYOUT_TWINLEAF_TOWN",
             "target_layout": "LAYOUT_TWINLEAF_TOWN",
-            "inclusion": {"state": "INCLUDED"},
+            "inclusion": {"state": "FROZEN_NOT_SELECTED"},
         }
         manifest = self.write_sinnoh_manifest(root, [record])
         assets = self.write_sinnoh_asset_manifest(root, [record])
 
         result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("gSinnoh::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
+        self.assertIn(
+            "gSinnoh::\n\t.if HAS_SINNOH_CONTENT_ASM\n\t.4byte TwinleafTown\n\t.else\n\t.4byte NULL\n\t.endif",
+            (root / "data/maps/groups.inc").read_text(),
+        )
 
+        record["inclusion"]["state"] = "INCLUDED"
         manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True)
         assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True)
         result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
@@ -680,6 +684,12 @@ class MapjsonWayfarerTest(unittest.TestCase):
             row for row in json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())["layouts"]
             if row["id"] == source["layout"]
         )
+        layout["border_filepath"] = "data/layouts/TwinleafTown/border.bin"
+        layout["blockdata_filepath"] = "data/layouts/TwinleafTown/map.bin"
+        layout_dir = root / "data/layouts/TwinleafTown"
+        layout_dir.mkdir()
+        (layout_dir / "border.bin").write_bytes(b"\0" * 8)
+        (layout_dir / "map.bin").write_bytes(b"\0" * (int(layout["width"]) * int(layout["height"]) * 2))
         layouts_file = root / "data/layouts/layouts.json"
         layouts_file.write_text(json.dumps({"layouts": [layout]}))
         record = {

@@ -144,7 +144,7 @@ string get_source_version(const Json &data) {
 
 bool source_version_is_selected(const string &source_version) {
     if (version == "wayfarer")
-        return source_version == "hns" || source_version == "emerald";
+        return source_version == "hns" || source_version == "emerald" || source_version == "sinnoh";
 
     string selected_version = version == "firered" ? "frlg" : version;
     return source_version == selected_version;
@@ -165,8 +165,9 @@ const map<string, int> wayfarer_sinnoh_expected_counts = {
 };
 
 bool wayfarer_sinnoh_record_is_enabled(const Json &record) {
-    return wayfarer_sinnoh_release_link_enabled
-        && json_to_string(record["inclusion"], "state") == "INCLUDED";
+    const string state = json_to_string(record["inclusion"], "state");
+    return (wayfarer_sinnoh_release_link_enabled && state == "INCLUDED")
+        || state == "FROZEN_NOT_SELECTED";
 }
 
 bool wayfarer_sinnoh_map_is_selected(const Json &data) {
@@ -1479,7 +1480,7 @@ void process_event_constants(const vector<string> &map_filepaths, string output_
     write_text_file(output_ids_file, ids_file_text.str());
 }
 
-string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
+string generate_groups_text(Json groups_data, vector<string> &invalid_maps, const map<string, Json> &maps_by_name) {
     ostringstream text;
 
     text << get_generated_warning("data/maps/map_groups.json", true);
@@ -1493,7 +1494,11 @@ string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
             string map_name_str = json_to_string(map_name);
             auto it = find(invalid_maps.begin(), invalid_maps.end(), map_name_str);
             if (it == invalid_maps.end()) {
-                text << "\t.4byte " << map_name_str << "\n";
+                if (version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled
+                 && get_source_version(maps_by_name.at(map_name_str)) == "sinnoh")
+                    text << "\t.if HAS_SINNOH_CONTENT_ASM\n\t.4byte " << map_name_str << "\n\t.else\n\t.4byte NULL\n\t.endif\n";
+                else
+                    text << "\t.4byte " << map_name_str << "\n";
             } else {
                 text << "\t.4byte NULL\n";
             }
@@ -1510,7 +1515,7 @@ string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
     return text.str();
 }
 
-string generate_connections_text(Json groups_data, vector<string> &invalid_maps, string include_path) {
+string generate_connections_text(Json groups_data, vector<string> &invalid_maps, string include_path, const map<string, Json> &maps_by_name) {
     vector<Json> map_names;
 
     for (auto &group : groups_data["group_order"].array_items()) {
@@ -1539,8 +1544,14 @@ string generate_connections_text(Json groups_data, vector<string> &invalid_maps,
 
     text << get_generated_warning("data/maps/map_groups.json", true);
 
-    for (Json map_name : map_names)
-        text << "\t.include \"" << include_path << "/" <<  json_to_string(map_name) << "/connections.inc\"\n";
+    for (Json map_name : map_names) {
+        const string name = json_to_string(map_name);
+        const bool sinnoh = version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled
+                         && get_source_version(maps_by_name.at(name)) == "sinnoh";
+        if (sinnoh) text << "\t.if HAS_SINNOH_CONTENT_ASM\n";
+        text << "\t.include \"" << include_path << "/" << name << "/connections.inc\"\n";
+        if (sinnoh) text << "\t.endif\n";
+    }
 
     return text.str();
 }
@@ -1571,7 +1582,9 @@ string generate_headers_text(Json groups_data, vector<string> &invalid_maps, str
                 text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
             active_source = map_source;
         }
+        if (version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled && map_source == "sinnoh") text << "\t.if HAS_SINNOH_CONTENT_ASM\n";
         text << "\t.include \"" << include_path << "/" << map_name << "/header.inc\"\n";
+        if (version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled && map_source == "sinnoh") text << "\t.endif\n";
     }
 
     if (version == "wayfarer" && active_source == "emerald")
@@ -1607,7 +1620,9 @@ string generate_events_text(Json groups_data, vector<string> &invalid_maps, stri
                 text << "\t.include \"data/wayfarer_engine_source_constants.inc\"\n";
             active_source = map_source;
         }
+        if (version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled && map_source == "sinnoh") text << "\t.if HAS_SINNOH_CONTENT_ASM\n";
         text << "\t.include \"" << include_path << "/" << map_name << "/events.inc\"\n";
+        if (version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled && map_source == "sinnoh") text << "\t.endif\n";
     }
 
     if (version == "wayfarer" && active_source == "emerald")
@@ -1882,8 +1897,8 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     if (version == "wayfarer")
         validate_wayfarer_map_catalog(groups_data, maps_by_name);
 
-    string groups_text = generate_groups_text(groups_data, invalid_maps);
-    string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
+    string groups_text = generate_groups_text(groups_data, invalid_maps, maps_by_name);
+    string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
@@ -1916,6 +1931,9 @@ string generate_layout_headers_text(Json layouts_data) {
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
         string blockdata_label = layoutName + "_Blockdata";
+        const bool sinnoh = version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled
+                         && get_source_version(layout) == "sinnoh";
+        if (sinnoh) text << "\t.if HAS_SINNOH_CONTENT_ASM\n";
         text << border_label << "::\n"
              << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n"
              << blockdata_label << "::\n"
@@ -1947,6 +1965,7 @@ string generate_layout_headers_text(Json layouts_data) {
                  << "\t.byte 0\n";
         }
         text << "\n";
+        if (sinnoh) text << "\t.endif\n\n";
     }
 
     return text.str();
@@ -1968,7 +1987,11 @@ string generate_layouts_table_text(Json layouts_data) {
         } else {
             string layout_name = json_to_string(layout, "name", true);
             if (layout_name.empty()) layout_name = "NULL";
-            text << "\t.4byte " << layout_name << "\n";
+            if (version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled
+             && get_source_version(layout) == "sinnoh")
+                text << "\t.if HAS_SINNOH_CONTENT_ASM\n\t.4byte " << layout_name << "\n\t.else\n\t.4byte NULL\n\t.endif\n";
+            else
+                text << "\t.4byte " << layout_name << "\n";
         }
     }
 

@@ -5,6 +5,7 @@
 #include "main.h"
 #include "event_scripts.h"
 #include "field_screen_effect.h"
+#include "field_specials.h"
 #include "overworld.h"
 #include "pokemon.h"
 #include "region_map.h"
@@ -15,6 +16,7 @@
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
+#include "wayfarer_sinnoh_test.h"
 #include "wayfarer_ss_anne.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
@@ -87,6 +89,66 @@ EWRAM_DATA static struct SaveSector sWayfarerTestSector = {0};
 EWRAM_DATA static u8 sWayfarerTestChunks[NUM_SECTORS_PER_SLOT][SAVE_BLOCK_3_CHUNK_SIZE] = {0};
 EWRAM_DATA static u8 sWayfarerExpectedSaveBlock3[sizeof(struct SaveBlock3)] = {0};
 EWRAM_DATA static struct RegionMap sWayfarerTestRegionMap = {0};
+
+TEST("Wayfarer test-only Sinnoh traversal rejects invalid inputs and restores transient entry")
+{
+    struct WarpData savedHeal;
+    struct WarpData savedEscape;
+    s16 sourceGroup = MAP_GROUP(MAP_PALLET_TOWN_HNS);
+    s16 sourceNum = MAP_NUM(MAP_PALLET_TOWN_HNS);
+    const u16 origin = WayfarerGetStartingOriginId();
+    const u16 storyFlag = FLAG_WAYFARER_BILL_RESCUED;
+    const u16 leagueState = VarGet(VAR_LEAGUE_STATE);
+    MainCallback runnerCallback = gMain.callback2;
+
+    SetWarpDestination(sourceGroup, sourceNum, WARP_ID_NONE, 8, 8);
+    WarpIntoMap();
+    savedHeal = gSaveBlock1Ptr->lastHealLocation;
+    savedEscape = gSaveBlock1Ptr->escapeWarp;
+    FlagSet(storyFlag);
+
+    EXPECT(!EnterSinnohForTest(-1, 0, 8, 0));
+    EXPECT(!EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), -1, 8, 0));
+    EXPECT(!EnterSinnohForTest(MAP_GROUP(MAP_PALLET_TOWN_HNS), MAP_NUM(MAP_PALLET_TOWN_HNS), 8, 8));
+    EXPECT(!EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), MAP_NUM(MAP_TWINLEAF_TOWN), -1, 0));
+    EXPECT(!EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), MAP_NUM(MAP_TWINLEAF_TOWN), 128, 0));
+    EXPECT(!EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), MAP_NUM(MAP_TWINLEAF_TOWN), 0, 0));
+    EXPECT(!IsSinnohTestTraversalActive());
+
+    EXPECT(EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), MAP_NUM(MAP_TWINLEAF_TOWN), 8, 0));
+    EXPECT(IsSinnohTestTraversalActive());
+    EXPECT_EQ(WayfarerGetCurrentMapRegion(), REGION_SINNOH);
+    EXPECT(!IsCurrentRegionMapSupported());
+    FieldShowRegionMap();
+    EXPECT(gMain.callback2 == CB2_ReturnToFieldContinueScriptPlayMapMusic);
+    SetMainCallback2(runnerCallback);
+    EXPECT(!EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), MAP_NUM(MAP_TWINLEAF_TOWN), 8, 0));
+    EXPECT(ReturnFromSinnohTest());
+    EXPECT(!IsSinnohTestTraversalActive());
+    EXPECT(!ReturnFromSinnohTest());
+    EXPECT_EQ(gSaveBlock1Ptr->location.mapGroup, sourceGroup);
+    EXPECT_EQ(gSaveBlock1Ptr->location.mapNum, sourceNum);
+    EXPECT_EQ(gSaveBlock1Ptr->pos.x, 8);
+    EXPECT_EQ(gSaveBlock1Ptr->pos.y, 8);
+    EXPECT(IsCurrentRegionMapSupported());
+    EXPECT_EQ(gSaveBlock1Ptr->lastHealLocation.mapGroup, savedHeal.mapGroup);
+    EXPECT_EQ(gSaveBlock1Ptr->lastHealLocation.mapNum, savedHeal.mapNum);
+    EXPECT_EQ(gSaveBlock1Ptr->escapeWarp.mapGroup, savedEscape.mapGroup);
+    EXPECT_EQ(gSaveBlock1Ptr->escapeWarp.mapNum, savedEscape.mapNum);
+    EXPECT_EQ(WayfarerGetStartingOriginId(), origin);
+    EXPECT(FlagGet(storyFlag));
+    EXPECT_EQ(VarGet(VAR_LEAGUE_STATE), leagueState);
+
+    SetWarpDestination(MAP_GROUP(MAP_ROUTE17_HNS), MAP_NUM(MAP_ROUTE17_HNS), WARP_ID_NONE, 8, 8);
+    WarpIntoMap();
+    gSaveBlock1Ptr->pos.y = 128;
+    EXPECT(EnterSinnohForTest(MAP_GROUP(MAP_TWINLEAF_TOWN), MAP_NUM(MAP_TWINLEAF_TOWN), 8, 0));
+    EXPECT(ReturnFromSinnohTest());
+    EXPECT_EQ(gSaveBlock1Ptr->location.mapGroup, MAP_GROUP(MAP_ROUTE17_HNS));
+    EXPECT_EQ(gSaveBlock1Ptr->location.mapNum, MAP_NUM(MAP_ROUTE17_HNS));
+    EXPECT_EQ(gSaveBlock1Ptr->pos.x, 8);
+    EXPECT_EQ(gSaveBlock1Ptr->pos.y, 128);
+}
 
 TEST("Wayfarer Hoenn variables use an isolated full-size bank")
 {

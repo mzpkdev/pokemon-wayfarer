@@ -211,7 +211,7 @@ def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]
     seen_layout_targets: set[str] = set()
     totals = {key: 0 for key in ("warps", "connections", "object_events", "coord_events", "bg_events", "nonempty_map_scripts", "wild_encounter_profiles")}
     for order, row in enumerate(rows):
-        required = {"record_id", "order", "source_group", "source_group_order", "source_map", "source_map_id", "target_map_id", "source_layout", "target_layout", "renames", "source_paths", "source_hashes", "dimensions", "layout_format", "tilesets", "map_properties", "warps", "connections", "empty_content", "asset_records", "topology", "inclusion"}
+        required = {"record_id", "order", "source_group", "source_group_order", "source_map", "source_map_id", "target_map_id", "source_layout", "target_layout", "renames", "source_paths", "source_hashes", "dimensions", "layout_format", "tilesets", "map_properties", "warps", "connections", "empty_content", "asset_records", "topology", "inclusion", "test_entry"}
         if not isinstance(row, dict) or required - row.keys():
             raise FoundationError(f"map row {order} is missing required frozen fields")
         if row["order"] != order or row["source_map"] in seen_maps:
@@ -227,6 +227,12 @@ def validate_checked_in(root: Path, maps: dict[str, Any], assets: dict[str, Any]
             raise FoundationError(f"map {row['source_map']} has an unrecorded or non-minimal target collision rename")
         if row["layout_format"] != "emerald" or row["map_properties"].get("region") != "sinnoh":
             raise FoundationError(f"map {row['source_map']} lacks explicit Sinnoh Emerald provenance")
+        entry = row["test_entry"]
+        if not isinstance(entry, dict) or set(entry) != {"x", "y", "facing", "elevation", "basis"} \
+         or not isinstance(entry["x"], int) or not isinstance(entry["y"], int) \
+         or entry["facing"] not in {"DIR_SOUTH", "DIR_NORTH", "DIR_WEST", "DIR_EAST"} \
+         or not isinstance(entry["elevation"], int) or entry["basis"] != "raw_walkable_block":
+            raise FoundationError(f"map {row['source_map']} lacks a deterministic test entry")
         inclusion = row["inclusion"]
         if inclusion.get("state") not in selection["allowed_inclusion_states"] or not isinstance(inclusion.get("reason"), str):
             raise FoundationError(f"map {row['source_map']} has invalid inclusion metadata")

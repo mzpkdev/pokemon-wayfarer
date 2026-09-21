@@ -4183,6 +4183,12 @@ static void CursorCb_FieldMove(u8 taskId)
                 sPartyMenuInternal->data[0] = fieldMove;
                 break;
             case FIELD_MOVE_FLY:
+                if (!IsCurrentRegionMapSupported())
+                {
+                    DisplayPartyMenuStdMessage(PARTY_MSG_CANT_USE_HERE);
+                    gTasks[taskId].func = Task_CancelAfterAorBPress;
+                    break;
+                }
                 gPartyMenu.exitCallback = CB2_OpenFlyMap;
                 Task_ClosePartyMenu(taskId);
                 break;
