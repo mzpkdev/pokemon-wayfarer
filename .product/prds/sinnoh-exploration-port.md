@@ -95,8 +95,12 @@ FireRed, and LeafGreen catalogs and linked assets remain unchanged.
 
 Imported maps have explicit Sinnoh provenance and resolve to `REGION_SINNOH`.
 Do not infer the region from map names, map-section ranges, tilesets, or music.
-Append all new map groups, maps, layouts, map sections, and heal records without
-renumbering an existing identifier.
+Append all new map groups, maps, layouts, Sinnoh-specific map sections, and heal
+records without renumbering an existing identifier. Preserve each donor
+map-section value as provenance, but resolve it through a reviewed source-to-
+target mapping. A donor section that collides with an existing Wayfarer section
+must receive an appended Sinnoh target instead of inheriting the existing
+section's label, coordinates, or regional meaning.
 
 The milestone may expose a test-only entry and return route for automated and
 manual validation. It does not add a production travel destination, starting

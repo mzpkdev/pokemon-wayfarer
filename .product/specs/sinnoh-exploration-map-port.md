@@ -49,7 +49,8 @@ Each record contains at least:
 - source group and deterministic order;
 - map JSON, layout JSON, `map.bin`, and `border.bin` hashes;
 - width, height, source and target tileset pair, and layout format;
-- map section, music, weather, map type, and field-action properties;
+- source and target map sections, music, weather, map type, and field-action
+  properties;
 - every warp and connection with its source and destination coordinates;
 - asset-manifest record IDs;
 - topology status and any approved repair; and
@@ -89,6 +90,18 @@ layouts without changing any existing numeric value. Preserve the donor's
 public map, layout, and tileset symbol names when they do not collide; the
 manifest records any required rename and keeps the donor name as provenance.
 Runtime and generated data use symbols rather than donor numeric IDs.
+
+Every manifest record stores both `source_map_section` and
+`target_map_section`. Generation resolves only the target symbol; the source
+value is provenance and is never assumed to be safe merely because that symbol
+already exists in Wayfarer. Append Sinnoh-specific target sections and labels
+without changing existing IDs. At minimum, map the donor's
+`MAPSEC_LITTLEROOT_TOWN` values on `TwinleafTown_Haouse1` and
+`TwinleafTown_House2` to the appended Twinleaf Town section, and map the donor's
+`MAPSEC_POKEMON_LEAGUE` value on `PokmonLeague` to an appended Sinnoh Pokemon
+League section. The generator rejects a source/target pair that is absent from
+the manifest, an unreviewed collision with an existing section, or a target
+whose label and regional ownership do not match the manifest.
 
 The generator enforces all existing signed-byte bounds. After insertion:
 
@@ -187,8 +200,9 @@ map and one test-only escape that returns to the fixture's saved origin. These
 helpers compile out of production and write no story, ticket, origin, badge,
 League, or encounter state.
 
-Sinnoh maps receive their source map-section names so map-name popups and
-diagnostics are meaningful. This milestone adds no Sinnoh Town Map image,
+Sinnoh maps receive their manifest-mapped target map-section names so map-name
+popups and diagnostics are meaningful. Diagnostics also expose the donor
+source section when it differs. This milestone adds no Sinnoh Town Map image,
 cursor grid, Fly markers, or Pokedex-area page. Attempting to open a
 region-specific Town Map or Fly selection while a test is on a Sinnoh map must
 fail safely or use an explicit test-only stub; it must not render Hoenn, Johto,
@@ -259,6 +273,8 @@ The implementation must provide automated evidence for:
 - deterministic generation with no untracked second-pass changes;
 - complete header, layout, tileset, map-section, music, weather, warp,
   connection, border, and script-symbol resolution;
+- complete manifest-backed source-to-target map-section resolution, including
+  collision fixtures for Twinleaf Town and the Sinnoh Pokemon League;
 - byte-exact imported blockdata and borders except documented Porymap repairs;
 - every connection in both directions and every warp's entry and return;
 - explicit Sinnoh region resolution on every selected map and correct region
