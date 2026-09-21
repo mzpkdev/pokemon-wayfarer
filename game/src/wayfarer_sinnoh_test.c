@@ -1,5 +1,6 @@
 #include "global.h"
 #include "fieldmap.h"
+#include "map_layout.h"
 #include "overworld.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_sinnoh_test.h"
@@ -40,7 +41,8 @@ bool8 EnterSinnohForTest(s16 mapGroup, s16 mapNum, s16 x, s16 y)
     mapHeader = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
     if (mapHeader == NULL || mapHeader->mapLayout == NULL || x >= mapHeader->mapLayout->width || y >= mapHeader->mapLayout->height)
         return FALSE;
-    block = mapHeader->mapLayout->map[y * mapHeader->mapLayout->width + x];
+    if (MapLayoutReadTile(mapHeader->mapLayout, x, y, &block) != MAP_LAYOUT_LOAD_OK)
+        return FALSE;
     if (UNPACK_COLLISION(block) != 0)
         return FALSE;
 

@@ -2,6 +2,7 @@
 #include "league_circuit.h"
 #include "event_data.h"
 #include "heal_location.h"
+#include "map_layout.h"
 #include "overworld.h"
 #include "regions.h"
 #include "script.h"
@@ -492,10 +493,11 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
         return FALSE;
 
     mapLayout = mapHeader->mapLayout;
-    if (mapLayout->map == NULL || x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
+    if (x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
         return FALSE;
 
-    metatile = mapLayout->map[y * mapLayout->width + x];
+    if (MapLayoutReadTile(mapLayout, x, y, &metatile) != MAP_LAYOUT_LOAD_OK)
+        return FALSE;
     if (UNPACK_COLLISION(metatile) != 0 || UNPACK_ELEVATION(metatile) != ELEVATION_DEFAULT)
         return FALSE;
 

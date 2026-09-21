@@ -12,6 +12,7 @@
 #include "international_string_util.h"
 #include "item.h"
 #include "main.h"
+#include "map_layout.h"
 #include "menu.h"
 #include "money.h"
 #include "overworld.h"
@@ -771,7 +772,6 @@ static u16 GetMapDataForFloor(u8 floorId, u32 x, u32 y, u32 floorWidth) // floor
 void GenerateTrainerHillFloorLayout(u16 *mapArg)
 {
     s32 y, x;
-    const u16 *src;
     u16 *dst;
     u8 mapId = GetCurrentTrainerHillMapId();
 
@@ -790,7 +790,6 @@ void GenerateTrainerHillFloorLayout(u16 *mapArg)
     }
 
     mapId = GetFloorId();
-    src = gMapHeader.mapLayout->map;
     gBackupMapLayout.map = mapArg;
     // Dimensions include border area loaded beyond map
     gBackupMapLayout.width = HILL_FLOOR_WIDTH + 15;
@@ -798,12 +797,12 @@ void GenerateTrainerHillFloorLayout(u16 *mapArg)
     dst = mapArg + 224;
 
     // First 5 rows of the map (Entrance / Exit) are always the same
-    for (y = 0; y < HILL_FLOOR_HEIGHT_MARGIN; y++)
+    if (MapLayoutCopyRect(gMapHeader.mapLayout, 0, 0,
+                          HILL_FLOOR_WIDTH, HILL_FLOOR_HEIGHT_MARGIN,
+                          dst, MAX_MAP_DATA_SIZE - (dst - mapArg), 31) != MAP_LAYOUT_LOAD_OK)
     {
-        for (x = 0; x < HILL_FLOOR_WIDTH; x++)
-            dst[x] = src[x];
-        dst += 31;
-        src += 16;
+        FreeDataStruct();
+        return;
     }
 
     // Load the 16x16 floor-specific layout

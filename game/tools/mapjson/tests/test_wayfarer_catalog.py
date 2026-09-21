@@ -5,6 +5,7 @@ import re
 import subprocess
 import tempfile
 import unittest
+import zlib
 
 
 GAME_ROOT = Path(__file__).resolve().parents[3]
@@ -156,6 +157,61 @@ class MapjsonWayfarerTest(unittest.TestCase):
             text=True,
             capture_output=True,
         )
+
+    @staticmethod
+    def add_layout(root, payload):
+        layout_dir = root / "data/layouts/TestLayout"
+        layout_dir.mkdir()
+        (layout_dir / "border.bin").write_bytes(b"\0\0")
+        (layout_dir / "map.bin").write_bytes(payload)
+        (root / "data/layouts/layouts.json").write_text(json.dumps({
+            "layouts_table_label": "gMapLayouts",
+            "layouts": [{
+                "id": "LAYOUT_TEST", "name": "Test_Layout",
+                "game_version": "emerald", "width": 1, "height": 1,
+                "border_filepath": "data/layouts/TestLayout/border.bin",
+                "blockdata_filepath": "data/layouts/TestLayout/map.bin",
+                "primary_tileset": "gTileset_Primary",
+                "secondary_tileset": "gTileset_Secondary",
+            }],
+        }))
+
+    def test_wayfarer_layouts_emit_raw_descriptor_for_complete_source_file(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        payload = b"\x34\x12\r\n\x1atrailing"
+        self.add_layout(root, payload)
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        generated = (root / "data/layouts/layouts.inc").read_text()
+        crc = zlib.crc32(payload)
+        self.assertIn("__map_layout_payloads_start::", generated)
+        self.assertIn("__map_layout_payloads_end::", generated)
+        self.assertIn(".LTest_Layout_MapData:", generated)
+        descriptor = generated.split(".LTest_Layout_MapData:", 1)[1].split("Test_Layout::", 1)[0]
+        self.assertIn("\t.4byte .LTest_Layout_Blockdata", descriptor)
+        self.assertEqual(descriptor.count(f"\t.4byte 0x{crc:X}"), 2)
+        self.assertIn(f"\t.4byte {len(payload)}", descriptor)
+        self.assertIn("\t.4byte 2", descriptor)
+        self.assertIn("\t.byte 1\n\t.byte 0\n\t.2byte 0", descriptor)
+        layout_record = generated.split("Test_Layout::", 1)[1]
+        self.assertIn("\t.4byte .LTest_Layout_MapData", layout_record)
+
+        result = self.run_layouts(root, "emerald")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        standalone = (root / "data/layouts/layouts.inc").read_text()
+        self.assertNotIn("_MapData:", standalone)
+        self.assertIn("\t.4byte .LTest_Layout_Blockdata", standalone)
+
+    def test_layout_generation_rejects_source_shorter_than_logical_tiles(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x00")
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Invalid layout payload dimensions or length", result.stderr)
 
     def test_wayfarer_unlinks_replaced_and_orphaned_hns_maps_and_layouts(self):
         fixture, root = self.make_fixture()
@@ -978,7 +1034,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             border = root / f"data/layouts/{name}.border.bin"
             blockdata = root / f"data/layouts/{name}.map.bin"
             border.touch()
-            blockdata.touch()
+            blockdata.write_bytes(b"\0\0")
             layouts.append({
                 "id": source_data["layout"], "name": f"gMapLayout_{name}",
                 "game_version": source, "layout_version": source, "width": 1, "height": 1,
@@ -1211,7 +1267,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             border = root / f"data/layouts/{suffix}.border.bin"
             blockdata = root / f"data/layouts/{suffix}.map.bin"
             border.touch()
-            blockdata.touch()
+            blockdata.write_bytes(b"\0\0")
             layouts.append(
                 {
                     "id": f"LAYOUT_{suffix.upper()}",

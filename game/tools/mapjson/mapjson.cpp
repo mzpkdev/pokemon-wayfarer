@@ -27,6 +27,8 @@ using std::ostringstream;
 #include <limits>
 using std::numeric_limits;
 
+#include <cstdint>
+
 #include "json11.h"
 using json11::Json;
 
@@ -74,6 +76,26 @@ string read_text_file(string filepath) {
     in_file.close();
 
     return text;
+}
+
+string read_binary_file(string filepath) {
+    ifstream in_file(filepath, std::ios::binary);
+    string bytes;
+
+    if (!in_file.is_open())
+        FATAL_ERROR("Cannot open file %s for reading.\n", filepath.c_str());
+
+    in_file.seekg(0, std::ios::end);
+    std::streamoff size = in_file.tellg();
+    if (size < 0 || static_cast<uint64_t>(size) > SIZE_MAX)
+        FATAL_ERROR("Cannot measure file %s.\n", filepath.c_str());
+    bytes.resize(static_cast<size_t>(size));
+    in_file.seekg(0, std::ios::beg);
+    if (!bytes.empty())
+        in_file.read(&bytes[0], bytes.size());
+    if (!in_file || in_file.gcount() != static_cast<std::streamsize>(bytes.size()))
+        FATAL_ERROR("Cannot read file %s.\n", filepath.c_str());
+    return bytes;
 }
 
 void write_text_file(string filepath, string text) {
@@ -1914,36 +1936,106 @@ bool layout_matches_version(const Json &layout) {
     return data_matches_version(layout);
 }
 
+static uint32_t crc32_iso_hdlc(const string &bytes) {
+    uint32_t crc = 0xFFFFFFFF;
+    for (unsigned char byte : bytes) {
+        crc ^= byte;
+        for (int bit = 0; bit < 8; bit++)
+            crc = (crc >> 1) ^ (0xEDB88320U & (0U - (crc & 1U)));
+    }
+    return crc ^ 0xFFFFFFFF;
+}
+
+static string asm_hex_u32(uint32_t value) {
+    ostringstream text;
+    text << "0x" << std::hex << std::uppercase << value;
+    return text.str();
+}
+
+static bool is_guarded_sinnoh_layout(const Json &layout) {
+    return version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled
+        && get_source_version(layout) == "sinnoh";
+}
+
+static void begin_layout_guard(ostringstream &text, const Json &layout) {
+    if (is_guarded_sinnoh_layout(layout))
+        text << "\t.if HAS_SINNOH_CONTENT_ASM\n";
+}
+
+static void end_layout_guard(ostringstream &text, const Json &layout) {
+    if (is_guarded_sinnoh_layout(layout))
+        text << "\t.endif\n";
+}
+
 string generate_layout_headers_text(Json layouts_data) {
     ostringstream text;
 
     text << get_generated_warning("data/layouts/layouts.json", true);
 
+    // Borders remain ordinary immutable layout data. Only map.bin payloads are
+    // wrapped in the storage descriptor contract.
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object()) continue;
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
         if (!layout_matches_version(layout))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
-        if (layout_version.empty())
-            layout_version = "emerald";
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
-        string blockdata_label = layoutName + "_Blockdata";
-        const bool sinnoh = version == "wayfarer" && !wayfarer_sinnoh_release_link_enabled
-                         && get_source_version(layout) == "sinnoh";
-        if (sinnoh) text << "\t.if HAS_SINNOH_CONTENT_ASM\n";
+        begin_layout_guard(text, layout);
         text << border_label << "::\n"
-             << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n"
-             << blockdata_label << "::\n"
-             << "\t.incbin \"" << json_to_string(layout, "blockdata_filepath") << "\"\n\n"
-             << "\t.align 2\n"
-             << layoutName << "::\n"
+             << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n";
+        end_layout_guard(text, layout);
+    }
+
+    if (version == "wayfarer")
+        text << "\t.align 2\n\t.global __map_layout_payloads_start\n__map_layout_payloads_start::\n";
+    for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
+         || !layout_matches_version(layout))
+            continue;
+        string layoutName = json_to_string(layout, "name");
+        begin_layout_guard(text, layout);
+        text << "\t.align 2\n.L" << layoutName << "_Blockdata:\n"
+             << "\t.incbin \"" << json_to_string(layout, "blockdata_filepath") << "\"\n\n";
+        end_layout_guard(text, layout);
+    }
+    if (version == "wayfarer")
+        text << "\t.align 2\n\t.global __map_layout_payloads_end\n__map_layout_payloads_end::\n\n";
+
+    for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
+         || !layout_matches_version(layout))
+            continue;
+        string layout_version = json_to_string(layout, "layout_version", true);
+        if (layout_version.empty()) layout_version = "emerald";
+        string layoutName = json_to_string(layout, "name");
+        string blockdataPath = json_to_string(layout, "blockdata_filepath");
+        string blockdata = read_binary_file(blockdataPath);
+        uint64_t logicalBytes = static_cast<uint64_t>(layout["width"].int_value())
+                              * static_cast<uint64_t>(layout["height"].int_value()) * 2;
+        if (logicalBytes == 0 || logicalBytes > UINT32_MAX || blockdata.size() < logicalBytes
+         || blockdata.size() > UINT32_MAX)
+            FATAL_ERROR("Invalid layout payload dimensions or length for %s.\n", layoutName.c_str());
+        string payload_label = ".L" + layoutName + "_Blockdata";
+        string map_data_label = version == "wayfarer" ? ".L" + layoutName + "_MapData" : payload_label;
+        begin_layout_guard(text, layout);
+        if (version == "wayfarer") {
+            uint32_t crc = crc32_iso_hdlc(blockdata);
+            text << "\t.align 2\n" << map_data_label << ":\n"
+                 << "\t.4byte " << payload_label << "\n"
+                 << "\t.4byte " << blockdata.size() << "\n"
+                 << "\t.4byte " << blockdata.size() << "\n"
+                 << "\t.4byte " << logicalBytes << "\n"
+                 << "\t.4byte " << asm_hex_u32(crc) << "\n"
+                 << "\t.4byte " << asm_hex_u32(crc) << "\n"
+                 << "\t.byte 1\n\t.byte 0\n\t.2byte 0\n\n";
+        }
+        text << "\t.align 2\n" << layoutName << "::\n"
              << "\t.4byte " << json_to_string(layout, "width") << "\n"
              << "\t.4byte " << json_to_string(layout, "height") << "\n"
-             << "\t.4byte " << border_label << "\n"
-             << "\t.4byte " << blockdata_label << "\n"
+             << "\t.4byte " << layoutName << "_Border\n"
+             << "\t.4byte " << map_data_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
         if (layout_version == "frlg")
@@ -1965,7 +2057,8 @@ string generate_layout_headers_text(Json layouts_data) {
                  << "\t.byte 0\n";
         }
         text << "\n";
-        if (sinnoh) text << "\t.endif\n\n";
+        end_layout_guard(text, layout);
+        text << "\n";
     }
 
     return text.str();

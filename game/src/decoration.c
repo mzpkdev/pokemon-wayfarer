@@ -17,6 +17,7 @@
 #include "item_menu.h"
 #include "list_menu.h"
 #include "main.h"
+#include "map_layout.h"
 #include "menu.h"
 #include "menu_helpers.h"
 #include "metatile_behavior.h"
@@ -2298,6 +2299,10 @@ static void ClearRearrangementNonSprites(void)
     int posX;
     int posY;
     u8 perm;
+    struct MapLayoutView view = {0};
+
+    if (MapLayoutAcquireView(gMapHeader.mapLayout, &view) != MAP_LAYOUT_LOAD_OK)
+        return;
 
     for (i = 0; i < sCurDecorSelectedInRearrangement; i++)
     {
@@ -2310,13 +2315,15 @@ static void ClearRearrangementNonSprites(void)
             {
                 for (x = 0; x < sDecorRearrangementDataBuffer[i].width; x++)
                 {
-                    MapGridSetMetatileEntryAt(posX + MAP_OFFSET + x, posY + MAP_OFFSET - y, gMapHeader.mapLayout->map[posX + x + gMapHeader.mapLayout->width * (posY - y)] | 0x3000);
+                    MapGridSetMetatileEntryAt(posX + MAP_OFFSET + x, posY + MAP_OFFSET - y,
+                        view.tiles[posX + x + gMapHeader.mapLayout->width * (posY - y)] | 0x3000);
                 }
             }
 
             ClearDecorationContextIndex(sDecorRearrangementDataBuffer[i].idx);
         }
     }
+    MapLayoutReleaseView(&view);
 }
 
 static void Task_PutAwayDecoration(u8 taskId)

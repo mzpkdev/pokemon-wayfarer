@@ -6,6 +6,7 @@
 #include "fldeff_misc.h"
 #include "frontier_util.h"
 #include "menu.h"
+#include "map_layout.h"
 #include "mirage_tower.h"
 #include "overworld.h"
 #include "palette.h"
@@ -93,7 +94,7 @@ static u32 NormalizeFrlgMetatileBehavior(u32 metatileBehavior)
 }
 
 static void InitMapLayoutData(struct MapHeader *mapHeader);
-static void InitBackupMapLayoutData(const u16 *map, u16 width, u16 height);
+static bool8 InitBackupMapLayoutData(const struct MapLayout *mapLayout);
 static void FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
 static void FillNorthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
 static void FillWestConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
@@ -230,23 +231,19 @@ static void InitMapLayoutData(struct MapHeader *mapHeader)
     gBackupMapLayout.height = height;
     if (width * height <= MAX_MAP_DATA_SIZE)
     {
-        InitBackupMapLayoutData(mapLayout->map, mapLayout->width, mapLayout->height);
-        InitBackupMapLayoutConnections(mapHeader);
+        if (InitBackupMapLayoutData(mapLayout))
+            InitBackupMapLayoutConnections(mapHeader);
     }
 }
 
-static void InitBackupMapLayoutData(const u16 *map, u16 width, u16 height)
+static bool8 InitBackupMapLayoutData(const struct MapLayout *mapLayout)
 {
     u16 *dest;
-    int y;
     dest = gBackupMapLayout.map;
     dest += gBackupMapLayout.width * 7 + MAP_OFFSET;
-    for (y = 0; y < height; y++)
-    {
-        CpuCopy16(map, dest, width * 2);
-        dest += width + MAP_OFFSET_W;
-        map += width;
-    }
+    return MapLayoutCopyFull(mapLayout, dest,
+                             MAX_MAP_DATA_SIZE - (dest - sBackupMapData),
+                             gBackupMapLayout.width) == MAP_LAYOUT_LOAD_OK;
 }
 
 static void InitBackupMapLayoutConnections(struct MapHeader *mapHeader)
@@ -289,21 +286,11 @@ static void InitBackupMapLayoutConnections(struct MapHeader *mapHeader)
 
 static void FillConnection(int x, int y, struct MapHeader const *connectedMapHeader, int x2, int y2, int width, int height)
 {
-    int i;
-    const u16 *src;
     u16 *dest;
-    int mapWidth;
-
-    mapWidth = connectedMapHeader->mapLayout->width;
-    src = &connectedMapHeader->mapLayout->map[mapWidth * y2 + x2];
     dest = &gBackupMapLayout.map[gBackupMapLayout.width * y + x];
-
-    for (i = 0; i < height; i++)
-    {
-        CpuCopy16(src, dest, width * 2);
-        dest += gBackupMapLayout.width;
-        src += mapWidth;
-    }
+    MapLayoutCopyRect(connectedMapHeader->mapLayout, x2, y2, width, height,
+                      dest, MAX_MAP_DATA_SIZE - (dest - sBackupMapData),
+                      gBackupMapLayout.width);
 }
 
 static void FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset)

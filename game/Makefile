@@ -899,10 +899,16 @@ $(WAYFARER_SINNOH_PORT_VERIFY_STAMP): $(WAYFARER_SINNOH_PORT_DEPS) $(WAYFARER_SI
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/assets.py --root . --verify
 	@touch $@
 
-.PHONY: wayfarer-sinnoh-port-assets wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
+.PHONY: map-layout-storage-test map-layout-storage-audit wayfarer-sinnoh-port-assets wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
+map-layout-storage-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/map_layout_storage -p 'test_*.py' -q
+
+map-layout-storage-audit: map-layout-storage-test $(DATA_ASM_BUILDDIR)/maps.o
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/map_layout_storage/audit.py --root . --object $(DATA_ASM_BUILDDIR)/maps.o --nm $(PREFIX)nm
+
 wayfarer-sinnoh-port-assets: $(WAYFARER_SINNOH_PORT_VERIFY_STAMP)
 
-wayfarer-sinnoh-port-test: wayfarer-sinnoh-port-assets
+wayfarer-sinnoh-port-test: wayfarer-sinnoh-port-assets map-layout-storage-audit
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_SINNOH_PORT_TOOL_DIR)/tests -p 'test_*.py' -q
 
 $(WAYFARER_SINNOH_PORT_AUDIT): $(WAYFARER_SINNOH_PORT_DEPS)

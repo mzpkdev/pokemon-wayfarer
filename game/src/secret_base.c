@@ -20,6 +20,7 @@
 #include "link.h"
 #include "list_menu.h"
 #include "main.h"
+#include "map_layout.h"
 #include "map_name_popup.h"
 #include "menu.h"
 #include "menu_helpers.h"
@@ -301,19 +302,25 @@ static void FindMetatileIdMapCoords(s16 *x, s16 *y, u16 metatileId)
 {
     s16 i, j;
     const struct MapLayout *mapLayout = gMapHeader.mapLayout;
+    struct MapLayoutView view = {0};
+
+    if (MapLayoutAcquireView(mapLayout, &view) != MAP_LAYOUT_LOAD_OK)
+        return;
 
     for (j = 0; j < mapLayout->height; j++)
     {
         for (i = 0; i < mapLayout->width; i++)
         {
-            if ((mapLayout->map[j * mapLayout->width + i] & MAPGRID_METATILE_ID_MASK) == metatileId)
+            if ((view.tiles[j * mapLayout->width + i] & MAPGRID_METATILE_ID_MASK) == metatileId)
             {
                 *x = i;
                 *y = j;
+                MapLayoutReleaseView(&view);
                 return;
             }
         }
     }
+    MapLayoutReleaseView(&view);
 }
 
 // Opens or closes the secret base entrance metatile in front of the player.

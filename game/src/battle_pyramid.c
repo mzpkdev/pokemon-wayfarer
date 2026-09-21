@@ -24,6 +24,7 @@
 #include "trainer_see.h"
 #include "main.h"
 #include "load_save.h"
+#include "map_layout.h"
 #include "script.h"
 #include "malloc.h"
 #include "overworld.h"
@@ -1782,6 +1783,7 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
     GetPyramidEntranceAndExitSquareIds(&entranceSquareId, &exitSquareId);
     for (i = 0; i < NUM_PYRAMID_FLOOR_SQUARES; i++)
     {
+        struct MapLayoutView layoutView = {0};
         u16 *map;
         int yOffset, xOffset;
     #if IS_HNS
@@ -1789,7 +1791,11 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
     #else
         const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR];
     #endif
-        const u16 *layoutMap = mapLayout->map;
+        const u16 *layoutMap;
+
+        if (MapLayoutAcquireView(mapLayout, &layoutView) != MAP_LAYOUT_LOAD_OK)
+            break;
+        layoutMap = layoutView.tiles;
 
         gBackupMapLayout.map = backupMapData;
         gBackupMapLayout.width = mapLayout->width * PYRAMID_FLOOR_SQUARES_WIDE + MAP_OFFSET_W;
@@ -1824,6 +1830,7 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
             map += MAP_OFFSET_W + (mapLayout->width * PYRAMID_FLOOR_SQUARES_WIDE);
             layoutMap += mapLayout->width;
         }
+        MapLayoutReleaseView(&layoutView);
     }
     RunOnLoadMapScript();
     Free(floorLayoutOffsets);

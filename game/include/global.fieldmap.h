@@ -121,7 +121,7 @@ struct MapLayout
     /*0x00*/ s32 width;
     /*0x04*/ s32 height;
     /*0x08*/ const u16 *border;
-    /*0x0C*/ const u16 *map;
+    /*0x0C*/ const void *mapData;
     /*0x10*/ const struct Tileset *primaryTileset;
     /*0x14*/ const struct Tileset *secondaryTileset;
     u8 layoutVersion;
