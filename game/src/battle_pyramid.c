@@ -1772,12 +1772,16 @@ static u16 GetUniqueTrainerId(u8 objectEventId)
     return trainerId;
 }
 
-void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition)
+enum MapLayoutLoadError GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition)
 {
     int y, x;
     int i;
     u8 entranceSquareId, exitSquareId;
     u8 *floorLayoutOffsets = AllocZeroed(NUM_PYRAMID_FLOOR_SQUARES);
+    enum MapLayoutLoadError error = MAP_LAYOUT_LOAD_OK;
+
+    if (floorLayoutOffsets == NULL)
+        return MAP_LAYOUT_LOAD_ALLOC_FAILED;
 
     GetPyramidFloorLayoutOffsets(floorLayoutOffsets);
     GetPyramidEntranceAndExitSquareIds(&entranceSquareId, &exitSquareId);
@@ -1793,7 +1797,8 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
     #endif
         const u16 *layoutMap;
 
-        if (MapLayoutAcquireView(mapLayout, &layoutView) != MAP_LAYOUT_LOAD_OK)
+        error = MapLayoutAcquireView(mapLayout, &layoutView);
+        if (error != MAP_LAYOUT_LOAD_OK)
             break;
         layoutMap = layoutView.tiles;
 
@@ -1830,10 +1835,12 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
             map += MAP_OFFSET_W + (mapLayout->width * PYRAMID_FLOOR_SQUARES_WIDE);
             layoutMap += mapLayout->width;
         }
-        MapLayoutReleaseView(&layoutView);
+        error = MapLayoutReleaseView(&layoutView);
+        if (error != MAP_LAYOUT_LOAD_OK)
+            break;
     }
-    RunOnLoadMapScript();
     Free(floorLayoutOffsets);
+    return error;
 }
 
 void LoadBattlePyramidObjectEventTemplates(void)

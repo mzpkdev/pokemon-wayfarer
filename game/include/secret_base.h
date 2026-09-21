@@ -1,6 +1,8 @@
 #ifndef GUARD_SECRET_BASE_H
 #define GUARD_SECRET_BASE_H
 
+#include "map_layout.h"
+
 void HideSecretBaseDecorationSprites(void);
 void CopyCurSecretBaseOwnerName_StrVar1(void);
 void ClearJapaneseSecretBases(struct SecretBase *bases);
@@ -8,7 +10,7 @@ void SetPlayerSecretBaseParty(void);
 u8 *GetSecretBaseMapName(u8 *dest);
 const u8 *GetSecretBaseTrainerLoseText(void);
 void SetOccupiedSecretBaseEntranceMetatiles(struct MapEvents const *events);
-void InitSecretBaseAppearance(bool8 hidePC);
+enum MapLayoutLoadError InitSecretBaseAppearance(bool8 hidePC);
 bool8 CurMapIsSecretBase(void);
 void SecretBasePerStepCallback(u8 taskId);
 bool8 TrySetCurSecretBase(void);

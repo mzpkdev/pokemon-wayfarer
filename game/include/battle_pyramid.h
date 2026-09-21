@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_PYRAMID_H
 #define GUARD_BATTLE_PYRAMID_H
 
+#include "map_layout.h"
 #include "constants/battle_pyramid.h"
 
 void CallBattlePyramidFunction(void);
@@ -17,7 +18,7 @@ void CopyPyramidTrainerSpeechBefore(u16 trainerId);
 void CopyPyramidTrainerWinSpeech(u16 trainerId);
 void CopyPyramidTrainerLoseSpeech(u16 trainerId);
 u8 GetTrainerEncounterMusicIdInBattlePyramid(u16 trainerId);
-void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition);
+enum MapLayoutLoadError GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition);
 void LoadBattlePyramidObjectEventTemplates(void);
 void LoadBattlePyramidFloorObjectEventScripts(void);
 u8 GetNumBattlePyramidObjectEvents(void);

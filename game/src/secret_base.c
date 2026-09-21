@@ -298,14 +298,15 @@ void GetSecretBaseTypeInFrontOfPlayer(void)
     gSpecialVar_0x8007 = GetSecretBaseTypeInFrontOfPlayer_();
 }
 
-static void FindMetatileIdMapCoords(s16 *x, s16 *y, u16 metatileId)
+static enum MapLayoutLoadError FindMetatileIdMapCoords(s16 *x, s16 *y, u16 metatileId)
 {
     s16 i, j;
     const struct MapLayout *mapLayout = gMapHeader.mapLayout;
     struct MapLayoutView view = {0};
 
-    if (MapLayoutAcquireView(mapLayout, &view) != MAP_LAYOUT_LOAD_OK)
-        return;
+    enum MapLayoutLoadError error = MapLayoutAcquireView(mapLayout, &view);
+    if (error != MAP_LAYOUT_LOAD_OK)
+        return error;
 
     for (j = 0; j < mapLayout->height; j++)
     {
@@ -315,12 +316,11 @@ static void FindMetatileIdMapCoords(s16 *x, s16 *y, u16 metatileId)
             {
                 *x = i;
                 *y = j;
-                MapLayoutReleaseView(&view);
-                return;
+                return MapLayoutReleaseView(&view);
             }
         }
     }
-    MapLayoutReleaseView(&view);
+    return MapLayoutReleaseView(&view);
 }
 
 // Opens or closes the secret base entrance metatile in front of the player.
@@ -477,10 +477,17 @@ static void EnterNewlyCreatedSecretBase_WaitFadeIn(u8 taskId)
 static void EnterNewlyCreatedSecretBase_StartFadeIn(void)
 {
     s16 x = 0, y = 0;
+    enum MapLayoutLoadError error;
 
     LockPlayerFieldControls();
     HideMapNamePopUpWindow();
-    FindMetatileIdMapCoords(&x, &y, METATILE_SecretBase_PC);
+    error = FindMetatileIdMapCoords(&x, &y, METATILE_SecretBase_PC);
+    if (error != MAP_LAYOUT_LOAD_OK)
+    {
+        AbortMapLayoutLoad(error, gSaveBlock1Ptr->location.mapGroup,
+                           gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+        return;
+    }
     x += MAP_OFFSET;
     y += MAP_OFFSET;
     MapGridSetMetatileIdAt(x, y, METATILE_SecretBase_PC | MAPGRID_IMPASSABLE);
@@ -522,12 +529,13 @@ bool8 CurMapIsSecretBase(void)
         return FALSE;
 }
 
-void InitSecretBaseAppearance(bool8 hidePC)
+enum MapLayoutLoadError InitSecretBaseAppearance(bool8 hidePC)
 {
     u16 secretBaseIdx;
     s16 x, y = 0;
     u8 *decorations;
     u8 *decorPos;
+    enum MapLayoutLoadError error;
 
     if (CurMapIsSecretBase())
     {
@@ -543,16 +551,21 @@ void InitSecretBaseAppearance(bool8 hidePC)
         if (secretBaseIdx != 0)
         {
             // Another player's secret base. Change PC type to the "Register" PC.
-            FindMetatileIdMapCoords(&x, &y, METATILE_SecretBase_PC);
+            error = FindMetatileIdMapCoords(&x, &y, METATILE_SecretBase_PC);
+            if (error != MAP_LAYOUT_LOAD_OK)
+                return error;
             MapGridSetMetatileIdAt(x + MAP_OFFSET, y + MAP_OFFSET, METATILE_SecretBase_RegisterPC | MAPGRID_IMPASSABLE);
         }
         else if (hidePC == TRUE && VarGet(VAR_SECRET_BASE_INITIALIZED) == 1)
         {
             // Change PC to regular ground tile.
-            FindMetatileIdMapCoords(&x, &y, METATILE_SecretBase_PC);
+            error = FindMetatileIdMapCoords(&x, &y, METATILE_SecretBase_PC);
+            if (error != MAP_LAYOUT_LOAD_OK)
+                return error;
             MapGridSetMetatileIdAt(x + MAP_OFFSET, y + MAP_OFFSET, METATILE_SecretBase_Ground | MAPGRID_IMPASSABLE);
         }
     }
+    return MAP_LAYOUT_LOAD_OK;
 }
 
 void InitSecretBaseDecorationSprites(void)

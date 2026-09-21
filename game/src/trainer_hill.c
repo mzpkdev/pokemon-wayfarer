@@ -769,24 +769,21 @@ static u16 GetMapDataForFloor(u8 floorId, u32 x, u32 y, u32 floorWidth) // floor
     return PACK_COLLISION(impassable) | elevation | PACK_METATILE(metatileId);
 }
 
-void GenerateTrainerHillFloorLayout(u16 *mapArg)
+enum MapLayoutLoadError GenerateTrainerHillFloorLayout(u16 *mapArg)
 {
     s32 y, x;
     u16 *dst;
     u8 mapId = GetCurrentTrainerHillMapId();
 
     if (mapId == TRAINER_HILL_ENTRANCE)
-    {
-        InitMapFromSavedGame();
-        return;
-    }
+        return InitMapFromSavedGame();
 
     SetUpDataStruct();
     if (mapId == TRAINER_HILL_ROOF)
     {
-        InitMapFromSavedGame();
+        enum MapLayoutLoadError error = InitMapFromSavedGame();
         FreeDataStruct();
-        return;
+        return error;
     }
 
     mapId = GetFloorId();
@@ -797,12 +794,15 @@ void GenerateTrainerHillFloorLayout(u16 *mapArg)
     dst = mapArg + 224;
 
     // First 5 rows of the map (Entrance / Exit) are always the same
-    if (MapLayoutCopyRect(gMapHeader.mapLayout, 0, 0,
-                          HILL_FLOOR_WIDTH, HILL_FLOOR_HEIGHT_MARGIN,
-                          dst, MAX_MAP_DATA_SIZE - (dst - mapArg), 31) != MAP_LAYOUT_LOAD_OK)
     {
-        FreeDataStruct();
-        return;
+        enum MapLayoutLoadError error = MapLayoutCopyRect(gMapHeader.mapLayout, 0, 0,
+                                      HILL_FLOOR_WIDTH, HILL_FLOOR_HEIGHT_MARGIN,
+                                      dst, MAX_MAP_DATA_SIZE - (dst - mapArg), 31);
+        if (error != MAP_LAYOUT_LOAD_OK)
+        {
+            FreeDataStruct();
+            return error;
+        }
     }
 
     // Load the 16x16 floor-specific layout
@@ -813,8 +813,8 @@ void GenerateTrainerHillFloorLayout(u16 *mapArg)
         dst += 31;
     }
 
-    RunOnLoadMapScript();
     FreeDataStruct();
+    return MAP_LAYOUT_LOAD_OK;
 }
 
 bool32 InTrainerHill(void)

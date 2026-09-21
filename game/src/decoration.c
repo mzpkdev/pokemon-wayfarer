@@ -2291,7 +2291,7 @@ void GetObjectEventLocalIdByFlag(void)
     }
 }
 
-static void ClearRearrangementNonSprites(void)
+static enum MapLayoutLoadError ClearRearrangementNonSprites(void)
 {
     u8 i;
     u8 y;
@@ -2301,8 +2301,9 @@ static void ClearRearrangementNonSprites(void)
     u8 perm;
     struct MapLayoutView view = {0};
 
-    if (MapLayoutAcquireView(gMapHeader.mapLayout, &view) != MAP_LAYOUT_LOAD_OK)
-        return;
+    enum MapLayoutLoadError error = MapLayoutAcquireView(gMapHeader.mapLayout, &view);
+    if (error != MAP_LAYOUT_LOAD_OK)
+        return error;
 
     for (i = 0; i < sCurDecorSelectedInRearrangement; i++)
     {
@@ -2323,7 +2324,7 @@ static void ClearRearrangementNonSprites(void)
             ClearDecorationContextIndex(sDecorRearrangementDataBuffer[i].idx);
         }
     }
-    MapLayoutReleaseView(&view);
+    return MapLayoutReleaseView(&view);
 }
 
 static void Task_PutAwayDecoration(u8 taskId)
@@ -2331,9 +2332,17 @@ static void Task_PutAwayDecoration(u8 taskId)
     switch (gTasks[taskId].tState)
     {
     case 0:
-        ClearRearrangementNonSprites();
+    {
+        enum MapLayoutLoadError error = ClearRearrangementNonSprites();
+        if (error != MAP_LAYOUT_LOAD_OK)
+        {
+            AbortMapLayoutLoad(error, gSaveBlock1Ptr->location.mapGroup,
+                               gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+            return;
+        }
         gTasks[taskId].tState = 1;
         break;
+    }
     case 1:
         if (!gPaletteFade.active)
         {

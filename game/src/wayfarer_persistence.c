@@ -484,6 +484,7 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
     const struct HealLocation *healLocation;
     u32 i;
     u16 metatile;
+    enum MapLayoutLoadError layoutError;
 
     if (!IsWayfarerMapHoennSource(mapGroup, mapNum))
         return FALSE;
@@ -496,8 +497,12 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
     if (x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
         return FALSE;
 
-    if (MapLayoutReadTile(mapLayout, x, y, &metatile) != MAP_LAYOUT_LOAD_OK)
+    layoutError = MapLayoutReadTile(mapLayout, x, y, &metatile);
+    if (layoutError != MAP_LAYOUT_LOAD_OK)
+    {
+        AbortMapLayoutLoad(layoutError, mapGroup, mapNum, mapHeader->mapLayoutId);
         return FALSE;
+    }
     if (UNPACK_COLLISION(metatile) != 0 || UNPACK_ELEVATION(metatile) != ELEVATION_DEFAULT)
         return FALSE;
 

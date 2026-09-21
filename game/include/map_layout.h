@@ -29,7 +29,41 @@ struct MapLayoutView
     u32 height;
     void *allocation;
     bool8 active;
+    bool8 compressed;
 };
+
+struct MapLayoutLoadContext
+{
+    void *scratch;
+    u32 capacity;
+    bool8 active;
+};
+
+struct MapLayoutLoadFailure
+{
+    enum MapLayoutLoadError error;
+    s16 mapGroup;
+    s16 mapNum;
+    u16 layoutId;
+    bool8 active;
+};
+
+extern struct MapLayoutLoadFailure gMapLayoutLoadError;
+
+void AbortMapLayoutLoad(enum MapLayoutLoadError error, s16 mapGroup, s16 mapNum,
+                        u16 layoutId);
+void CB2_MapLayoutLoadError(void);
+
+enum MapLayoutLoadError MapLayoutBeginLoadContext(const struct MapHeader *mapHeader,
+                                                  struct MapLayoutLoadContext *context);
+enum MapLayoutLoadError MapLayoutEndLoadContext(struct MapLayoutLoadContext *context);
+enum MapLayoutLoadError MapLayoutCopyFullWithContext(struct MapLayoutLoadContext *context,
+                                          const struct MapLayout *layout, u16 *dest,
+                                          u32 destTileCapacity, u32 destStride);
+enum MapLayoutLoadError MapLayoutCopyRectWithContext(struct MapLayoutLoadContext *context,
+                                          const struct MapLayout *layout,
+                                          u32 x, u32 y, u32 width, u32 height,
+                                          u16 *dest, u32 destTileCapacity, u32 destStride);
 
 enum MapLayoutLoadError MapLayoutCopyFull(const struct MapLayout *layout, u16 *dest,
                                           u32 destTileCapacity, u32 destStride);

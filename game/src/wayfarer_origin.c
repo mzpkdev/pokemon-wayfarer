@@ -120,8 +120,14 @@ static bool8 IsProfileValid(const struct WayfarerOriginProfile *profile)
         return FALSE;
     {
         u16 tile;
-        if (MapLayoutReadTile(map->mapLayout, x, y, &tile) != MAP_LAYOUT_LOAD_OK
-         || UNPACK_COLLISION(tile) != 0)
+        enum MapLayoutLoadError layoutError = MapLayoutReadTile(map->mapLayout, x, y, &tile);
+        if (layoutError != MAP_LAYOUT_LOAD_OK)
+        {
+            AbortMapLayoutLoad(layoutError, profile->mapGroup, profile->mapNum,
+                               map->mapLayoutId);
+            return FALSE;
+        }
+        if (UNPACK_COLLISION(tile) != 0)
             return FALSE;
     }
     for (i = 0; i < ORIGIN_SCENES_COUNT; i++)

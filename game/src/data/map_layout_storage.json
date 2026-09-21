@@ -1,5 +1,11 @@
 {
   "schema_version": 1,
   "default_policy": "raw",
-  "rules": []
+  "rules": [
+    {
+      "layout": "Harbor_Layout",
+      "policy": "gba_lz77",
+      "reason": "Stage 0 unconnected canary shared by two ordinary warp-only harbor interiors."
+    }
+  ]
 }
