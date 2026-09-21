@@ -5178,3 +5178,7 @@ const u16 gTilesetPalettes_MtEmber_Hns[][16] =
 };
 
 #endif // HAS_HNS_CONTENT
+
+#if HAS_SINNOH_CONTENT
+#include "sinnoh_graphics.h"
+#endif // HAS_SINNOH_CONTENT

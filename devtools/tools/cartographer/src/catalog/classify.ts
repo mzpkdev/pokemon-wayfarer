@@ -28,8 +28,19 @@ const johto: CatalogRegion = { id: "johto", label: "Johto" }
 const kanto: CatalogRegion = { id: "kanto", label: "Kanto" }
 const hoenn: CatalogRegion = { id: "hoenn", label: "Hoenn" }
 const alola: CatalogRegion = { id: "alola", label: "Alola" }
+export const sinnoh: CatalogRegion = { id: "sinnoh", label: "Sinnoh" }
 
+// Keep a no-Sinnoh source checkout byte-stable. Sinnoh joins generated region
+// indexes only after a map with explicit Sinnoh provenance is actually present.
 export const catalogRegions: CatalogRegion[] = [johto, kanto, hoenn, alola]
+const allCatalogRegions: CatalogRegion[] = [...catalogRegions, sinnoh]
+
+export const catalogRegionsFor = (regionIds: Iterable<string>): CatalogRegion[] => {
+  const present = new Set(regionIds)
+  return allCatalogRegions.filter(
+    (region) => catalogRegions.includes(region) || present.has(region.id),
+  )
+}
 
 /**
  * Build targets mirror mapjson's source_version_is_selected logic. FireRed and
@@ -47,6 +58,7 @@ const buildsBySourceVersion: Record<string, CatalogBuildId[]> = {
   emerald: ["emerald", "wayfarer"],
   frlg: ["firered", "leafgreen"],
   hns: ["hns", "wayfarer"],
+  sinnoh: ["wayfarer"],
 }
 
 /** Resolve source metadata into the game builds that include a map. */
@@ -57,13 +69,25 @@ export const buildsForSourceVersion = (sourceVersion: string | undefined): Catal
   return builds
 }
 
+/** Source provenance is reported independently from a map's physical region. */
+export const sourceRegionFor = (sourceVersion: string | undefined): "sinnoh" | null =>
+  sourceVersion === "sinnoh" ? "sinnoh" : null
+
 const hoennHnsMapSections = new Set([
   "MAPSEC_BATTLE_FRONTIER",
   "MAPSEC_TRAINER_HILL",
   "MAPSEC_SOUTHERN_ISLAND",
 ])
 
-export const regionFor = (name: string, group: string, mapSection?: string): CatalogRegion => {
+export const regionFor = (
+  name: string,
+  group: string,
+  mapSection?: string,
+  sourceVersion?: string,
+): CatalogRegion => {
+  // Provenance, not a source group's name or a map-section range, owns the
+  // physical region for imported Sinnoh maps.
+  if (sourceVersion === "sinnoh") return sinnoh
   if (group.includes("Alola")) return alola
   if (group.endsWith("_Frlg")) return kanto
   if (!group.endsWith("_Hns")) {

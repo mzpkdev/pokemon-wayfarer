@@ -2716,3 +2716,7 @@ const struct Tileset gTileset_MtEmber_Hns =
     .callback = InitTilesetAnim_MtEmber_Hns,
 };
 #endif // HAS_HNS_CONTENT
+
+#if HAS_SINNOH_CONTENT
+#include "sinnoh_headers.h"
+#endif // HAS_SINNOH_CONTENT

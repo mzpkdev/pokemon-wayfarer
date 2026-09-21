@@ -222,7 +222,7 @@ export type CatalogEncounterDiagnostic =
 
 export type SourceMap = {
   id: string
-  game_version?: string
+  game_version?: MapSourceVersion
   layout: string
   music?: string
   region_map_section?: string
@@ -256,8 +256,12 @@ export type MapGroups = {
   [group: string]: string[]
 }
 
+export type MapSourceVersion = "emerald" | "frlg" | "hns" | "sinnoh"
+
+export type CatalogRegionId = "johto" | "kanto" | "hoenn" | "alola" | "sinnoh"
+
 export type CatalogRegion = {
-  id: string
+  id: CatalogRegionId
   label: string
 }
 
@@ -323,11 +327,11 @@ export type TopologyDiagnostic = TopologyDirectConnectionMismatch | TopologyMiss
 export type CatalogMap = {
   name: string
   id: string
-  region: string
+  region: CatalogRegionId
   builds: CatalogBuildId[]
   category: string
   sourceGroup: string
-  sourceRegion: null
+  sourceRegion: "sinnoh" | null
   mapType: string
   mapSection: string | null
   image: {

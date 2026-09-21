@@ -16,6 +16,9 @@ const sourceRoot = path.resolve(import.meta.dirname, "../../../../..", "game")
 describe("Wayfarer layout formats", () => {
   it("uses layout_version instead of a legacy conditional header define", () => {
     expect(normalizeLayoutFormat({ layout_version: "emerald" })).toBe("emerald")
+    expect(normalizeLayoutFormat({ game_version: "sinnoh", layout_version: "emerald" })).toBe(
+      "emerald",
+    )
     expect(normalizeLayoutFormat({ layout_version: "frlg" })).toBe("frlg")
     expect(normalizeLayoutFormat({ layout_version: "hns" })).toBe("hns")
     expect(readLayoutFormatCounts("emerald")).toEqual([512, 512, 6])

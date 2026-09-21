@@ -18,12 +18,16 @@ export type SourceLayout = {
 export type SourceMap = {
   id: string
   layout: string
+  game_version?: string
 }
 
 export type SourceMapReference = {
   name: string
   id: string
   layoutId: string
+  /** Source provenance is distinct from a map's physical region. */
+  sourceRegion?: "sinnoh"
+  region?: "sinnoh"
 }
 
 export type MetatilePlacement = {

@@ -149,6 +149,28 @@ extern const struct Tileset gTileset_WhirlIslands_Hns;
 extern const struct Tileset gTileset_ssaqua_Hns;
 extern const struct Tileset gTileset_AlolaIsland;
 
+#if HAS_SINNOH_CONTENT
+extern const struct Tileset gTileset_Sinnoh_General;
+extern const struct Tileset gTileset_Sinnoh_Building;
+extern const struct Tileset gTileset_Sinnoh_Petalburg;
+extern const struct Tileset gTileset_Sinnoh_Rustboro;
+extern const struct Tileset gTileset_Sinnoh_Jubilife;
+extern const struct Tileset gTileset_Sinnoh_Mauville;
+extern const struct Tileset gTileset_Sinnoh_Hearthome;
+extern const struct Tileset gTileset_Sinnoh_Celestic;
+extern const struct Tileset gTileset_Sinnoh_Veilstone;
+extern const struct Tileset gTileset_Sinnoh_Lilycove;
+extern const struct Tileset gTileset_Sinnoh_Canalave;
+extern const struct Tileset gTileset_Sinnoh_Snowpoint;
+extern const struct Tileset gTileset_Sinnoh_Sunnyshore;
+extern const struct Tileset gTileset_Sinnoh_EverGrande;
+extern const struct Tileset gTileset_Sinnoh_Valor;
+extern const struct Tileset gTileset_Sinnoh_Lavaridge;
+extern const struct Tileset gTileset_Sinnoh_Cave;
+extern const struct Tileset gTileset_Sinnoh_Pasos;
+extern const struct Tileset gTileset_Sinnoh_Shop;
+#endif // HAS_SINNOH_CONTENT
+
 
 // HnS tileset declarations
 extern const struct Tileset gTileset_BikeShop_Hns;

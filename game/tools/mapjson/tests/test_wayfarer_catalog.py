@@ -76,7 +76,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         (map_dir / "map.json").write_text(json.dumps(data))
         return map_dir / "map.json"
 
-    def run_groups(self, root, version, map_files, manifest=None):
+    def run_groups(self, root, version, map_files, manifest=None, sinnoh_manifest=None, sinnoh_assets=None):
         command = [
             str(self.mapjson),
             "groups",
@@ -93,6 +93,20 @@ class MapjsonWayfarerTest(unittest.TestCase):
                     str(manifest.relative_to(root)),
                 ]
             )
+        if sinnoh_manifest is not None:
+            command.extend(
+                [
+                    "--wayfarer-sinnoh-manifest",
+                    str(sinnoh_manifest.relative_to(root)),
+                ]
+            )
+        if sinnoh_assets is not None:
+            command.extend(
+                [
+                    "--wayfarer-sinnoh-asset-manifest",
+                    str(sinnoh_assets.relative_to(root)),
+                ]
+            )
         return subprocess.run(
             command,
             cwd=root,
@@ -100,7 +114,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             capture_output=True,
         )
 
-    def run_map(self, root, version, map_file, layouts_file, manifest=None):
+    def run_map(self, root, version, map_file, layouts_file, manifest=None, sinnoh_manifest=None, sinnoh_assets=None):
         command = [
             str(self.mapjson),
             "map",
@@ -114,6 +128,20 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 [
                     "--wayfarer-sevii-manifest",
                     str(manifest.relative_to(root)),
+                ]
+            )
+        if sinnoh_manifest is not None:
+            command.extend(
+                [
+                    "--wayfarer-sinnoh-manifest",
+                    str(sinnoh_manifest.relative_to(root)),
+                ]
+            )
+        if sinnoh_assets is not None:
+            command.extend(
+                [
+                    "--wayfarer-sinnoh-asset-manifest",
+                    str(sinnoh_assets.relative_to(root)),
                 ]
             )
         return subprocess.run(command, cwd=root, text=True, capture_output=True)
@@ -334,6 +362,130 @@ class MapjsonWayfarerTest(unittest.TestCase):
         )
         return path
 
+    @staticmethod
+    def frozen_sinnoh_records(maps, frozen=True):
+        groups = [
+            ("gMapGroup_SinnohTownsRoutes", 55), ("gMapGroup_SpecialAreasSinnoh", 5),
+            ("gMapGroup_DungeonsSinnoh", 8), ("gMapGroup_IndoorSinnoh", 14),
+            ("gMapGroup_IndoorTwinleaf", 6), ("gMapGroup_IndoorSandgem", 6),
+            ("gMapGroup_IndoorJubilife", 20), ("gMapGroup_IndoorOreburgh", 13),
+            ("gMapGroup_IndoorFloaroma", 6),
+        ]
+        records = [dict(record) for record in maps]
+        if not frozen:
+            groups = groups[:1]
+        for record in records:
+            record.setdefault("source_group", groups[0][0])
+        for group_order, (group, count) in enumerate(groups):
+            while sum(record.get("source_group") == group for record in records) < count:
+                index = len(records)
+                records.append({
+                    "source_map": f"FrozenMap{index}",
+                    "source_map_id": f"MAP_FROZEN_{index}",
+                    "target_map": f"FrozenMap{index}",
+                    "target_map_id": f"MAP_FROZEN_{index}",
+                    "source_layout": f"LAYOUT_FROZEN_{index}",
+                    "target_layout": f"LAYOUT_FROZEN_{index}",
+                    "source_group": group,
+                })
+        source_group_orders = {group: 0 for group, _ in groups}
+        for index, record in enumerate(records):
+            group_order = next(
+                group_index for group_index, (group, _) in enumerate(groups)
+                if record.get("source_group", groups[0][0]) == group
+            )
+            record.setdefault("source_group", groups[group_order][0])
+            record.setdefault("source_map", f"FrozenMap{index}")
+            record.setdefault("source_map_id", f"MAP_FROZEN_{index}")
+            record.setdefault("target_map", record["source_map"])
+            record.setdefault("target_map_id", record["source_map_id"])
+            record.setdefault("source_layout", f"LAYOUT_FROZEN_{index}")
+            record.setdefault("target_layout", record["source_layout"])
+            record["order"] = index
+            record["source_group_order"] = source_group_orders[record["source_group"]]
+            source_group_orders[record["source_group"]] += 1
+            record.setdefault("layout_format", "emerald")
+            record.setdefault("warps", [])
+            record.setdefault("connections", [])
+            record.setdefault("empty_content", {
+                "object_events": 0, "coord_events": 0, "bg_events": 0,
+                "map_scripts": 0, "wild_encounter_profiles": 0,
+            })
+            record.setdefault("asset_records", {
+                "blockdata": f"blockdata.{record['target_layout']}",
+                "border": f"border.{record['target_layout']}",
+                "tilesets": [],
+            })
+            record.setdefault("inclusion", {"state": "FROZEN_NOT_SELECTED"})
+        if frozen:
+            records[0]["warps"] = [{}] * 233
+            records[0]["connections"] = [{}] * 114
+        return records, groups
+
+    @classmethod
+    def write_sinnoh_manifest(
+        cls, root, maps, release_link_enabled=False, asset_manifest_ready=True, blockers=None, frozen=True,
+    ):
+        records, groups = cls.frozen_sinnoh_records(maps, frozen)
+        path = root / "src/data/wayfarer_sinnoh_maps.json"
+        path.write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "donor": {
+                        "url": "https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion",
+                        "commit": "4eed17cc63c4ec8c24fbb20fe49e8d65cb4870d8",
+                    },
+                    "selection": {
+                        "release_link_enabled": release_link_enabled,
+                        "asset_manifest_ready": asset_manifest_ready,
+                        "blockers": blockers or [],
+                    },
+                    "source_groups": [
+                        {"source_group": group, "target_group": group, "order": order, "map_count": count}
+                        for order, (group, count) in enumerate(groups)
+                    ],
+                    "expected_counts": {
+                        "maps": 133, "layouts": 133, "warps": 233, "connections": 114,
+                        "object_events": 0, "coord_events": 0, "bg_events": 0,
+                        "nonempty_map_scripts": 0, "wild_encounter_profiles": 0,
+                    },
+                    "maps": records,
+                }
+            )
+        )
+        return path
+
+    @classmethod
+    def write_sinnoh_asset_manifest(
+        cls, root, maps, release_link_enabled=False, asset_manifest_ready=True, blockers=None,
+        review_required=False, frozen=True,
+    ):
+        records, _ = cls.frozen_sinnoh_records(maps, frozen)
+        assets = []
+        for record in records:
+            for asset_id in (record["asset_records"]["blockdata"], record["asset_records"]["border"]):
+                assets.append({
+                    "record_id": asset_id,
+                    "reuse_class": "REVIEW_REQUIRED" if review_required and not assets else "SINNOH_NEW",
+                    "selection_blocker": False,
+                })
+        path = root / "src/data/wayfarer_sinnoh_assets.json"
+        path.write_text(json.dumps({
+            "schema_version": 1,
+            "donor": {
+                "url": "https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion",
+                "commit": "4eed17cc63c4ec8c24fbb20fe49e8d65cb4870d8",
+            },
+            "selection": {
+                "release_link_enabled": release_link_enabled,
+                "asset_manifest_ready": asset_manifest_ready,
+                "blockers": blockers or [],
+            },
+            "records": assets,
+        }))
+        return path
+
     def test_wayfarer_selects_hns_and_emerald_without_mutating_heal_data(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
@@ -467,6 +619,183 @@ class MapjsonWayfarerTest(unittest.TestCase):
         result = self.run_groups(root, "wayfarer", [hns, frlg], manifest)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("gFrlg::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
+
+    def test_wayfarer_sinnoh_manifest_is_the_only_selection_gate(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        hns = self.add_map(root, "HnsMap", "MAP_HNS", "hns")
+        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
+        sinnoh_data = json.loads(sinnoh.read_text())
+        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
+        sinnoh.write_text(json.dumps(sinnoh_data))
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps(
+                {
+                    "group_order": ["gHns", "gSinnoh"],
+                    "gHns": ["HnsMap"],
+                    "gSinnoh": ["TwinleafTown"],
+                    "connections_include_order": [],
+                }
+            )
+        )
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        record = {
+            "source_map": "TwinleafTown",
+            "source_map_id": "MAP_TWINLEAF_TOWN",
+            "target_map_id": "MAP_TWINLEAF_TOWN",
+            "source_layout": "LAYOUT_TWINLEAF_TOWN",
+            "target_layout": "LAYOUT_TWINLEAF_TOWN",
+            "inclusion": {"state": "INCLUDED"},
+        }
+        manifest = self.write_sinnoh_manifest(root, [record])
+        assets = self.write_sinnoh_asset_manifest(root, [record])
+
+        result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("gSinnoh::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
+
+        manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True)
+        assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True)
+        result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("gSinnoh::\n\t.4byte TwinleafTown", (root / "data/maps/groups.inc").read_text())
+
+        for standalone_version in ("hns", "emerald", "firered"):
+            result = self.run_groups(root, standalone_version, [hns, sinnoh])
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("gSinnoh::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
+
+    def test_wayfarer_sinnoh_release_requires_ready_asset_manifest_without_blockers(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
+        sinnoh_data = json.loads(sinnoh.read_text())
+        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
+        sinnoh.write_text(json.dumps(sinnoh_data))
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps({"group_order": ["gSinnoh"], "gSinnoh": ["TwinleafTown"], "connections_include_order": []})
+        )
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        record = {
+            "source_map": "TwinleafTown",
+            "source_map_id": "MAP_TWINLEAF_TOWN",
+            "target_map_id": "MAP_TWINLEAF_TOWN",
+            "source_layout": "LAYOUT_TWINLEAF_TOWN",
+            "target_layout": "LAYOUT_TWINLEAF_TOWN",
+            "inclusion": {"state": "INCLUDED"},
+        }
+        manifest = self.write_sinnoh_manifest(
+            root, [record], release_link_enabled=True, asset_manifest_ready=False,
+        )
+        assets = self.write_sinnoh_asset_manifest(
+            root, [record], release_link_enabled=True, asset_manifest_ready=False,
+        )
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("asset manifest is ready and blockers are clear", result.stderr)
+
+        manifest = self.write_sinnoh_manifest(
+            root, [record], release_link_enabled=True, blockers=["REVIEW_REQUIRED"],
+        )
+        assets = self.write_sinnoh_asset_manifest(
+            root, [record], release_link_enabled=True, blockers=["REVIEW_REQUIRED"],
+        )
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("asset manifest is ready and blockers are clear", result.stderr)
+
+    def test_wayfarer_sinnoh_release_rejects_a_partial_frozen_catalog(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
+        sinnoh_data = json.loads(sinnoh.read_text())
+        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
+        sinnoh.write_text(json.dumps(sinnoh_data))
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps({"group_order": ["gSinnoh"], "gSinnoh": ["TwinleafTown"], "connections_include_order": []})
+        )
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        record = {
+            "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
+            "target_map_id": "MAP_TWINLEAF_TOWN", "source_layout": "LAYOUT_TWINLEAF_TOWN",
+            "target_layout": "LAYOUT_TWINLEAF_TOWN", "inclusion": {"state": "INCLUDED"},
+        }
+        manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True, frozen=False)
+        assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True, frozen=False)
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("complete frozen catalog", result.stderr)
+
+    def test_wayfarer_sinnoh_release_rejects_unresolved_asset_rows(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
+        sinnoh_data = json.loads(sinnoh.read_text())
+        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
+        sinnoh.write_text(json.dumps(sinnoh_data))
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps({"group_order": ["gSinnoh"], "gSinnoh": ["TwinleafTown"], "connections_include_order": []})
+        )
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        record = {
+            "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
+            "target_map_id": "MAP_TWINLEAF_TOWN", "source_layout": "LAYOUT_TWINLEAF_TOWN",
+            "target_layout": "LAYOUT_TWINLEAF_TOWN", "inclusion": {"state": "INCLUDED"},
+        }
+        manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True)
+        assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True, review_required=True)
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("contains unresolved release asset", result.stderr)
+
+    def test_wayfarer_sinnoh_manifest_rejects_unreviewed_target_ids(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
+        sinnoh_data = json.loads(sinnoh.read_text())
+        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
+        sinnoh.write_text(json.dumps(sinnoh_data))
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps({"group_order": ["gSinnoh"], "gSinnoh": ["TwinleafTown"], "connections_include_order": []})
+        )
+        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        manifest = self.write_sinnoh_manifest(
+            root,
+            [
+                {
+                    "source_map": "TwinleafTown",
+                    "source_map_id": "MAP_TWINLEAF_TOWN",
+                    "target_map_id": "MAP_UNREVIEWED",
+                    "source_layout": "LAYOUT_TWINLEAF_TOWN",
+                    "target_layout": "LAYOUT_TWINLEAF_TOWN",
+                    "inclusion": {"state": "INCLUDED"},
+                }
+            ],
+            release_link_enabled=True,
+        )
+        assets = self.write_sinnoh_asset_manifest(root, [
+            {
+                "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
+                "target_map_id": "MAP_UNREVIEWED", "source_layout": "LAYOUT_TWINLEAF_TOWN",
+                "target_layout": "LAYOUT_TWINLEAF_TOWN", "inclusion": {"state": "INCLUDED"},
+            }
+        ], release_link_enabled=True)
+
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("does not match its reviewed target IDs", result.stderr)
+
+    def test_rejects_unsupported_map_provenance(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        unknown = self.add_map(root, "UnknownMap", "MAP_UNKNOWN", "crystal")
+        (root / "data/maps/map_groups.json").write_text(
+            json.dumps({"group_order": ["gUnknown"], "gUnknown": ["UnknownMap"], "connections_include_order": []})
+        )
+
+        result = self.run_groups(root, "emerald", [unknown])
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Unsupported map source version crystal", result.stderr)
 
     def test_wayfarer_sevii_events_strip_story_and_link_room_warps(self):
         fixture, root = self.make_fixture()
