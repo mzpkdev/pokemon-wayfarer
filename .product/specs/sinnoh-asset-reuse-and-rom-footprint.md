@@ -145,8 +145,8 @@ payload. Otherwise retain the conservative independent palette tables.
 
 ### New Sinnoh tilesets
 
-Add these nine secondary families as `SINNOH_NEW` after provenance and
-attribution review:
+Add these nine secondary families as `SINNOH_NEW` after technical source and
+production-byte review:
 
 - Jubilife;
 - Hearthome;
@@ -164,9 +164,10 @@ current Wayfarer asset, not merely the same pathname. The planning audit found
 no byte-identical Wayfarer graphics, metatiles, or attribute payload for these
 nine families.
 
-Keep the source art and attribution in the repository. Missing or unclear
-provenance leaves the row `REVIEW_REQUIRED` and blocks import; it is not a
-reason to relabel the asset as Emerald.
+Keep the checked-in source inputs and their donor identity/hashes in the
+repository. Provenance is technical traceability, not an attribution or
+permission release gate; missing technical source identity or byte proof
+blocks import and is not a reason to relabel the asset as Emerald.
 
 ### Layout blockdata and borders
 
@@ -260,8 +261,8 @@ Before compilation, a host verifier:
 6. proves every variant has a separate symbol and cannot reach a preexisting
    map descriptor;
 7. decompresses every selected layout and compares it with raw `map.bin`;
-8. rejects a stale baseline identity, missing attribution, or
-   `REVIEW_REQUIRED` row; and
+8. rejects a stale baseline identity, missing technical source proof, or
+   unresolved row; and
 9. writes a deterministic report containing raw, generated, decoded, gross,
    and expected linked bytes without modifying the manifest.
 
@@ -310,7 +311,8 @@ or drops a map.
    shape, format, and consumer checks.
 4. Every changed Emerald-derived component uses a Sinnoh variant; every
    preexisting map renders and behaves identically.
-5. All nine new tileset families have reviewed provenance and attribution.
+5. All nine new tileset families have reviewed technical source identity and
+   production-byte evidence.
 6. Exactly 33 blockdata rows and 95 borders reuse canonical Wayfarer payloads
    unless a refreshed audit deliberately updates the manifest and counts.
 7. Every unique raw or compressed layout round-trips byte-for-byte; its source

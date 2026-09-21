@@ -733,3 +733,7 @@ const u16 gMetatiles_MtEmber_Hns[] = INCBIN_U16("data/tilesets/secondary/mt_embe
 const u16 gMetatileAttributes_MtEmber_Hns[] = INCBIN_U16("data/tilesets/secondary/mt_ember_hns/metatile_attributes.bin");
 
 #endif // HAS_HNS_CONTENT
+
+#if HAS_SINNOH_CONTENT
+#include "sinnoh_metatiles.h"
+#endif // HAS_SINNOH_CONTENT

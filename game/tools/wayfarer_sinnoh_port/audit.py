@@ -30,8 +30,8 @@ def records_by_id(manifest: dict[str, Any]) -> dict[str, dict[str, Any]]:
             required = {"source_symbol", "proposed_target_symbol", "component", "source_path", "source_sha256", "source_bytes", "generated_path", "generated_symbol", "generated_sha256", "decoded_sha256", "decoded_bytes", "array_shape", "alignment", "compression", "linkage", "visibility", "output_section"}
             if required - row.keys():
                 raise FoundationError(f"tileset component {row['record_id']} lacks source/generation contract fields")
-            if row["reuse_class"] == "EXISTING_REFERENCE" and (not row["generated_sha256"] or not row["decoded_sha256"]):
-                raise FoundationError(f"tileset component {row['record_id']} claims exact reuse without generated and decoded proof")
+            if not row["generated_sha256"] or not row["decoded_sha256"] or not isinstance(row["decoded_bytes"], int):
+                raise FoundationError(f"tileset component {row['record_id']} lacks generated and decoded production proof")
         result[row["record_id"]] = row
     return result
 
@@ -44,6 +44,8 @@ def validate_identity(maps: dict[str, Any], assets: dict[str, Any]) -> None:
     baseline = assets.get("wayfarer_baseline", {}).get("commit")
     if not isinstance(baseline, str) or len(baseline) != 40:
         raise FoundationError("asset manifest has no exact actual Wayfarer baseline commit")
+    if assets.get("implementation_head") != "d26a524d66a2772e81efe7a3838b5702f7960719":
+        raise FoundationError("asset manifest implementation head drifted")
 
 
 def validate_porymap_contract(root: Path, rows: list[dict[str, Any]]) -> dict[str, Any]:

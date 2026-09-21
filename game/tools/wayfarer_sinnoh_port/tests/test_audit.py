@@ -21,6 +21,7 @@ def load_module(name, path):
 
 
 AUDIT = load_module("wayfarer_sinnoh_audit", TOOLS / "audit.py")
+ASSETS = load_module("wayfarer_sinnoh_assets", TOOLS / "assets.py")
 FREEZE = load_module("wayfarer_sinnoh_freeze", TOOLS / "freeze.py")
 
 
@@ -38,7 +39,7 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertEqual(integrity["frozen_manifest_counts"]["connections"], 114)
         self.assertFalse(report["donor_source_verification"]["performed"])
         self.assertIsNone(report["donor_source_verification"]["observed_empty_content_counts"])
-        self.assertTrue(report["review_required"])
+        self.assertEqual(report["review_required"], [])
         self.assertEqual(integrity["porymap"], {
             "base_game_version": {"value": "pokeemerald", "verified": True},
             "frozen_manifest_layout_format": {"value": "emerald", "verified": True, "map_count": 133},
@@ -135,11 +136,11 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         with self.assertRaisesRegex(AUDIT.FoundationError, "missing or malformed asset reference"):
             AUDIT.validate_checked_in(GAME, maps, assets)
 
-    def test_release_selection_stays_blocked_by_review_required_assets(self):
+    def test_release_selection_stays_blocked_by_frozen_selection_gate(self):
         with self.assertRaisesRegex(AUDIT.FoundationError, "asset gate"):
             AUDIT.build_report(GAME, self.maps_path, self.assets_path, release_selection=True)
 
-    def test_tileset_review_gate_is_technical_not_legal_or_attribution_state(self):
+    def test_tileset_implementation_is_technical_and_has_no_attribution_state(self):
         maps = json.loads(self.maps_path.read_text())
         assets = json.loads(self.assets_path.read_text())
 
@@ -153,21 +154,17 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertFalse(has_key(maps, "attribution"))
         self.assertFalse(has_key(assets, "attribution"))
 
-        blockers = assets["selection"]["blockers"]
-        review_required = [row for row in assets["records"] if row["record_id"] in blockers]
-        self.assertEqual(len(blockers), 561)
-        self.assertEqual(maps["selection"]["blockers"], blockers)
-        self.assertTrue(all(row["reuse_class"] == "REVIEW_REQUIRED" for row in review_required))
-        self.assertTrue(all(row["selection_blocker"] is True for row in review_required))
-        self.assertTrue(all(
-            "generated and decoded production-byte, shape, linkage, and runtime-meaning verification"
-            in row["rationale"]
-            for row in review_required
-        ))
+        records = [row for row in assets["records"] if row["asset_family"] == "tileset_component"]
+        self.assertEqual(len(records), 561)
+        self.assertEqual(maps["selection"]["blockers"], [])
+        self.assertEqual(assets["selection"]["blockers"], [])
+        self.assertTrue(all(row["reuse_class"] != "REVIEW_REQUIRED" for row in records))
+        self.assertTrue(all(row["selection_blocker"] is False for row in records))
+        self.assertTrue(all(row["generated_sha256"] and row["decoded_sha256"] and row["decoded_bytes"] >= 0 for row in records))
         selection_rationales = [
             maps["selection"]["reason"],
             *(row["inclusion"]["reason"] for row in maps["maps"]),
-            *(row["rationale"] for row in review_required),
+            *(row["rationale"] for row in records),
         ]
         self.assertTrue(all(
             all(word not in rationale.lower() for word in ("legal", "attribution", "license", "permission"))
@@ -176,6 +173,98 @@ class SinnohFoundationAuditTests(unittest.TestCase):
         self.assertFalse(maps["selection"]["release_link_enabled"])
         self.assertFalse(maps["selection"]["asset_manifest_ready"])
         self.assertTrue(all(row["inclusion"]["state"] == "FROZEN_NOT_SELECTED" for row in maps["maps"]))
+
+    def test_asset_verifier_rejects_stale_production_proof_and_missing_consumer(self):
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row["asset_family"] == "tileset_component" and row["component"] != "descriptor")
+        component["generated_sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "exact reference production mismatch|generated production hash"):
+            ASSETS.verify(GAME, manifest)
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row["asset_family"] == "tileset_component")
+        component["consumers"] = []
+        with self.assertRaisesRegex(ValueError, "undeclared consumer"):
+            ASSETS.verify(GAME, manifest, production=False)
+
+    def test_layout_alias_resolver_rejects_chains_and_wrong_owner(self):
+        manifest = json.loads(self.assets_path.read_text())
+        alias = next(row for row in manifest["records"] if row["asset_family"] == "blockdata" and row["reuse_class"] == "EXACT_ALIAS")
+        alias["alias_of"] = alias["record_id"]
+        with self.assertRaisesRegex(ValueError, "chains"):
+            ASSETS.resolve_layout_aliases(GAME, manifest)
+        manifest = json.loads(self.assets_path.read_text())
+        alias = next(row for row in manifest["records"] if row["asset_family"] == "border" and row["reuse_class"] == "EXACT_ALIAS")
+        alias["canonical_owner"] = "LAYOUT_NOT_AN_OWNER"
+        with self.assertRaisesRegex(ValueError, "canonical layout owner"):
+            ASSETS.resolve_layout_aliases(GAME, manifest)
+
+    def test_asset_contract_rejects_shape_length_compression_and_existing_target_drift(self):
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row.get("asset_family") == "tileset_component" and row["component"] == "graphics")
+        component["decoded_bytes"] += 1
+        with self.assertRaisesRegex(ValueError, "production shape drift|generated production hash|exact reference production mismatch"):
+            ASSETS.verify(GAME, manifest)
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row.get("asset_family") == "tileset_component" and row["component"] == "graphics")
+        component["compression"] = False
+        with self.assertRaisesRegex(ValueError, "compression"):
+            ASSETS.verify(GAME, manifest, production=False)
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row["reuse_class"] == "SINNOH_VARIANT" and row["component"] != "descriptor")
+        component["proposed_target_symbol"] = "gTileset_General"
+        with self.assertRaisesRegex(ValueError, "variant reaches"):
+            ASSETS.verify(GAME, manifest, production=False)
+
+    def test_asset_contract_rejects_missing_checked_source_and_filename_only_match(self):
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row.get("storage_role") == "source_only_proof")
+        component["checked_in_source_sha256"] = "0" * 64
+        with self.assertRaisesRegex(ValueError, "checked-in source drift"):
+            ASSETS.verify(GAME, manifest, production=False)
+        manifest = json.loads(self.assets_path.read_text())
+        component = next(row for row in manifest["records"] if row["reuse_class"] == "EXISTING_REFERENCE" and row["component"] != "descriptor")
+        component["source_sha256"] = "0" * 64
+        with self.assertRaisesRegex(AUDIT.FoundationError, "donor tileset source hash drift"):
+            AUDIT.validate_donor(Path("/tmp/sinnoh-donor-4eed17"), json.loads(self.maps_path.read_text())["maps"], AUDIT.records_by_id(manifest))
+
+    def test_asset_runtime_closure_uses_actual_descriptor_consumers(self):
+        manifest = json.loads(self.assets_path.read_text())
+        ASSETS.verify_runtime_component_closure(GAME, manifest)
+        building_tiles = next(row for row in manifest["records"] if row["record_id"] == "tileset.gTileset_Building.tiles.png")
+        self.assertEqual(building_tiles["generated_symbol"], "gTilesetTiles_InsideBuilding")
+        self.assertEqual(building_tiles["generated_path"], "data/tilesets/primary/building/tiles.4bpp.smol")
+        self.assertEqual(building_tiles["canonical_owner"], "gTilesetTiles_InsideBuilding")
+
+        nonexistent = copy.deepcopy(manifest)
+        component = next(row for row in nonexistent["records"] if row["record_id"] == "tileset.gTileset_Building.tiles.png")
+        component["generated_symbol"] = "gTilesetTiles_Sinnoh_Building"
+        with self.assertRaisesRegex(ValueError, "runtime symbol closure drift"):
+            ASSETS.verify(GAME, nonexistent, production=False)
+
+        unreachable = copy.deepcopy(manifest)
+        component = next(row for row in unreachable["records"] if row["record_id"] == "tileset.gTileset_Building.tiles.png")
+        component["generated_path"] = "data/tilesets/sinnoh/primary/building/tiles.4bpp.fastSmol"
+        with self.assertRaisesRegex(ValueError, "runtime path closure drift"):
+            ASSETS.verify(GAME, unreachable, production=False)
+
+    def test_animation_contract_uses_production_u16_declarations(self):
+        manifest = json.loads(self.assets_path.read_text())
+        animation = next(row for row in manifest["records"] if row["record_id"] == "tileset.gTileset_Building.anim.tv_turned_on.0.png")
+        self.assertEqual(animation["array_shape"]["element_type"], "u16")
+        self.assertEqual(animation["array_shape"]["element_count"], animation["decoded_bytes"] // 2)
+        self.assertEqual(animation["alignment"], 4)
+
+        wrong_type = copy.deepcopy(manifest)
+        animation = next(row for row in wrong_type["records"] if row["record_id"] == "tileset.gTileset_Building.anim.tv_turned_on.0.png")
+        animation["array_shape"]["element_type"] = "u8"
+        with self.assertRaisesRegex(ValueError, "production shape drift"):
+            ASSETS.verify(GAME, wrong_type, production=False)
+
+        wrong_alignment = copy.deepcopy(manifest)
+        animation = next(row for row in wrong_alignment["records"] if row["record_id"] == "tileset.gTileset_Building.anim.tv_turned_on.0.png")
+        animation["alignment"] = 2
+        with self.assertRaisesRegex(ValueError, "production alignment drift"):
+            ASSETS.verify(GAME, wrong_alignment, production=False)
 
     def test_collision_sections_keep_natural_sinnoh_labels(self):
         rows = {row["source_map"]: row for row in json.loads(self.maps_path.read_text())["maps"]}

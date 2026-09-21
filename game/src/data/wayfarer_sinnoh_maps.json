@@ -8,575 +8,13 @@
   "selection": {
     "release_link_enabled": false,
     "asset_manifest_ready": false,
-    "blockers": [
-      "tileset.gTileset_BrendansMaysHouse.descriptor",
-      "tileset.gTileset_BrendansMaysHouse.metatile_attributes.bin",
-      "tileset.gTileset_BrendansMaysHouse.metatiles.bin",
-      "tileset.gTileset_BrendansMaysHouse.palettes.00.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.01.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.02.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.03.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.04.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.05.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.06.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.07.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.08.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.09.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.10.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.11.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.12.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.13.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.14.pal",
-      "tileset.gTileset_BrendansMaysHouse.palettes.15.pal",
-      "tileset.gTileset_BrendansMaysHouse.tiles.png",
-      "tileset.gTileset_Building.anim.tv_turned_on.0.png",
-      "tileset.gTileset_Building.anim.tv_turned_on.1.png",
-      "tileset.gTileset_Building.descriptor",
-      "tileset.gTileset_Building.metatile_attributes.bin",
-      "tileset.gTileset_Building.metatiles.bin",
-      "tileset.gTileset_Building.palettes.00.pal",
-      "tileset.gTileset_Building.palettes.01.pal",
-      "tileset.gTileset_Building.palettes.02.pal",
-      "tileset.gTileset_Building.palettes.03.pal",
-      "tileset.gTileset_Building.palettes.04.pal",
-      "tileset.gTileset_Building.palettes.05.pal",
-      "tileset.gTileset_Building.palettes.06.pal",
-      "tileset.gTileset_Building.palettes.07.pal",
-      "tileset.gTileset_Building.palettes.08.pal",
-      "tileset.gTileset_Building.palettes.09.pal",
-      "tileset.gTileset_Building.palettes.10.pal",
-      "tileset.gTileset_Building.palettes.11.pal",
-      "tileset.gTileset_Building.palettes.12.pal",
-      "tileset.gTileset_Building.palettes.13.pal",
-      "tileset.gTileset_Building.palettes.14.pal",
-      "tileset.gTileset_Building.palettes.15.pal",
-      "tileset.gTileset_Building.tiles.png",
-      "tileset.gTileset_Canalave.descriptor",
-      "tileset.gTileset_Canalave.metatile_attributes.bin",
-      "tileset.gTileset_Canalave.metatiles.bin",
-      "tileset.gTileset_Canalave.palettes.00.pal",
-      "tileset.gTileset_Canalave.palettes.01.pal",
-      "tileset.gTileset_Canalave.palettes.02.pal",
-      "tileset.gTileset_Canalave.palettes.03.pal",
-      "tileset.gTileset_Canalave.palettes.04.pal",
-      "tileset.gTileset_Canalave.palettes.05.pal",
-      "tileset.gTileset_Canalave.palettes.06.pal",
-      "tileset.gTileset_Canalave.palettes.07.pal",
-      "tileset.gTileset_Canalave.palettes.08.pal",
-      "tileset.gTileset_Canalave.palettes.09.pal",
-      "tileset.gTileset_Canalave.palettes.10.pal",
-      "tileset.gTileset_Canalave.palettes.11.pal",
-      "tileset.gTileset_Canalave.palettes.12.pal",
-      "tileset.gTileset_Canalave.tiles.png",
-      "tileset.gTileset_Cave.anim.lava.0.png",
-      "tileset.gTileset_Cave.anim.lava.1.png",
-      "tileset.gTileset_Cave.anim.lava.2.png",
-      "tileset.gTileset_Cave.anim.lava.3.png",
-      "tileset.gTileset_Cave.anim.lava.4.png",
-      "tileset.gTileset_Cave.anim.lava.5.png",
-      "tileset.gTileset_Cave.anim.lava.6.png",
-      "tileset.gTileset_Cave.anim.lava.7.png",
-      "tileset.gTileset_Cave.descriptor",
-      "tileset.gTileset_Cave.metatile_attributes.bin",
-      "tileset.gTileset_Cave.metatiles.bin",
-      "tileset.gTileset_Cave.palettes.00.pal",
-      "tileset.gTileset_Cave.palettes.01.pal",
-      "tileset.gTileset_Cave.palettes.02.pal",
-      "tileset.gTileset_Cave.palettes.03.pal",
-      "tileset.gTileset_Cave.palettes.04.pal",
-      "tileset.gTileset_Cave.palettes.05.pal",
-      "tileset.gTileset_Cave.palettes.06.pal",
-      "tileset.gTileset_Cave.palettes.07.pal",
-      "tileset.gTileset_Cave.palettes.08.pal",
-      "tileset.gTileset_Cave.palettes.09.pal",
-      "tileset.gTileset_Cave.palettes.10.pal",
-      "tileset.gTileset_Cave.palettes.11.pal",
-      "tileset.gTileset_Cave.palettes.12.pal",
-      "tileset.gTileset_Cave.palettes.13.pal",
-      "tileset.gTileset_Cave.palettes.14.pal",
-      "tileset.gTileset_Cave.palettes.15.pal",
-      "tileset.gTileset_Cave.tiles.png",
-      "tileset.gTileset_Celestic.descriptor",
-      "tileset.gTileset_Celestic.metatile_attributes.bin",
-      "tileset.gTileset_Celestic.metatiles.bin",
-      "tileset.gTileset_Celestic.palettes.00.pal",
-      "tileset.gTileset_Celestic.palettes.01.pal",
-      "tileset.gTileset_Celestic.palettes.02.pal",
-      "tileset.gTileset_Celestic.palettes.03.pal",
-      "tileset.gTileset_Celestic.palettes.04.pal",
-      "tileset.gTileset_Celestic.palettes.05.pal",
-      "tileset.gTileset_Celestic.palettes.06.pal",
-      "tileset.gTileset_Celestic.palettes.07.pal",
-      "tileset.gTileset_Celestic.palettes.08.pal",
-      "tileset.gTileset_Celestic.palettes.09.pal",
-      "tileset.gTileset_Celestic.palettes.10.pal",
-      "tileset.gTileset_Celestic.palettes.11.pal",
-      "tileset.gTileset_Celestic.palettes.12.pal",
-      "tileset.gTileset_Celestic.tiles.png",
-      "tileset.gTileset_EverGrande.anim.flowers.0.png",
-      "tileset.gTileset_EverGrande.anim.flowers.1.png",
-      "tileset.gTileset_EverGrande.anim.flowers.2.png",
-      "tileset.gTileset_EverGrande.anim.flowers.3.png",
-      "tileset.gTileset_EverGrande.anim.flowers.4.png",
-      "tileset.gTileset_EverGrande.anim.flowers.5.png",
-      "tileset.gTileset_EverGrande.anim.flowers.6.png",
-      "tileset.gTileset_EverGrande.anim.flowers.7.png",
-      "tileset.gTileset_EverGrande.descriptor",
-      "tileset.gTileset_EverGrande.metatile_attributes.bin",
-      "tileset.gTileset_EverGrande.metatiles.bin",
-      "tileset.gTileset_EverGrande.palettes.00.pal",
-      "tileset.gTileset_EverGrande.palettes.01.pal",
-      "tileset.gTileset_EverGrande.palettes.02.pal",
-      "tileset.gTileset_EverGrande.palettes.03.pal",
-      "tileset.gTileset_EverGrande.palettes.04.pal",
-      "tileset.gTileset_EverGrande.palettes.05.pal",
-      "tileset.gTileset_EverGrande.palettes.06.pal",
-      "tileset.gTileset_EverGrande.palettes.07.pal",
-      "tileset.gTileset_EverGrande.palettes.08.pal",
-      "tileset.gTileset_EverGrande.palettes.09.pal",
-      "tileset.gTileset_EverGrande.palettes.10.pal",
-      "tileset.gTileset_EverGrande.palettes.11.pal",
-      "tileset.gTileset_EverGrande.palettes.12.pal",
-      "tileset.gTileset_EverGrande.palettes.13.pal",
-      "tileset.gTileset_EverGrande.palettes.14.pal",
-      "tileset.gTileset_EverGrande.palettes.15.pal",
-      "tileset.gTileset_EverGrande.tiles.png",
-      "tileset.gTileset_Facility.descriptor",
-      "tileset.gTileset_Facility.metatile_attributes.bin",
-      "tileset.gTileset_Facility.metatiles.bin",
-      "tileset.gTileset_Facility.palettes.00.pal",
-      "tileset.gTileset_Facility.palettes.01.pal",
-      "tileset.gTileset_Facility.palettes.02.pal",
-      "tileset.gTileset_Facility.palettes.03.pal",
-      "tileset.gTileset_Facility.palettes.04.pal",
-      "tileset.gTileset_Facility.palettes.05.pal",
-      "tileset.gTileset_Facility.palettes.06.pal",
-      "tileset.gTileset_Facility.palettes.07.pal",
-      "tileset.gTileset_Facility.palettes.08.pal",
-      "tileset.gTileset_Facility.palettes.09.pal",
-      "tileset.gTileset_Facility.palettes.10.pal",
-      "tileset.gTileset_Facility.palettes.11.pal",
-      "tileset.gTileset_Facility.palettes.12.pal",
-      "tileset.gTileset_Facility.palettes.13.pal",
-      "tileset.gTileset_Facility.palettes.14.pal",
-      "tileset.gTileset_Facility.palettes.15.pal",
-      "tileset.gTileset_Facility.tiles.png",
-      "tileset.gTileset_General.anim.flower.0.png",
-      "tileset.gTileset_General.anim.flower.1.png",
-      "tileset.gTileset_General.anim.flower.2.png",
-      "tileset.gTileset_General.anim.land_water_edge.0.png",
-      "tileset.gTileset_General.anim.land_water_edge.1.png",
-      "tileset.gTileset_General.anim.land_water_edge.2.png",
-      "tileset.gTileset_General.anim.land_water_edge.3.png",
-      "tileset.gTileset_General.anim.sand_water_edge.0.png",
-      "tileset.gTileset_General.anim.sand_water_edge.1.png",
-      "tileset.gTileset_General.anim.sand_water_edge.2.png",
-      "tileset.gTileset_General.anim.sand_water_edge.3.png",
-      "tileset.gTileset_General.anim.sand_water_edge.4.png",
-      "tileset.gTileset_General.anim.sand_water_edge.5.png",
-      "tileset.gTileset_General.anim.sand_water_edge.6.png",
-      "tileset.gTileset_General.anim.water.0.png",
-      "tileset.gTileset_General.anim.water.1.png",
-      "tileset.gTileset_General.anim.water.2.png",
-      "tileset.gTileset_General.anim.water.3.png",
-      "tileset.gTileset_General.anim.water.4.png",
-      "tileset.gTileset_General.anim.water.5.png",
-      "tileset.gTileset_General.anim.water.6.png",
-      "tileset.gTileset_General.anim.water.7.png",
-      "tileset.gTileset_General.anim.waterfall.0.png",
-      "tileset.gTileset_General.anim.waterfall.1.png",
-      "tileset.gTileset_General.anim.waterfall.2.png",
-      "tileset.gTileset_General.anim.waterfall.3.png",
-      "tileset.gTileset_General.descriptor",
-      "tileset.gTileset_General.metatile_attributes.bin",
-      "tileset.gTileset_General.metatiles.bin",
-      "tileset.gTileset_General.palettes.00.pal",
-      "tileset.gTileset_General.palettes.01.pal",
-      "tileset.gTileset_General.palettes.02.pal",
-      "tileset.gTileset_General.palettes.03.pal",
-      "tileset.gTileset_General.palettes.04.pal",
-      "tileset.gTileset_General.palettes.05.pal",
-      "tileset.gTileset_General.palettes.06.pal",
-      "tileset.gTileset_General.palettes.07.pal",
-      "tileset.gTileset_General.palettes.08.pal",
-      "tileset.gTileset_General.palettes.09.pal",
-      "tileset.gTileset_General.palettes.10.pal",
-      "tileset.gTileset_General.palettes.11.pal",
-      "tileset.gTileset_General.palettes.12.pal",
-      "tileset.gTileset_General.palettes.13.pal",
-      "tileset.gTileset_General.palettes.14.pal",
-      "tileset.gTileset_General.palettes.15.pal",
-      "tileset.gTileset_General.tiles.png",
-      "tileset.gTileset_GenericBuilding.descriptor",
-      "tileset.gTileset_GenericBuilding.metatile_attributes.bin",
-      "tileset.gTileset_GenericBuilding.metatiles.bin",
-      "tileset.gTileset_GenericBuilding.palettes.00.pal",
-      "tileset.gTileset_GenericBuilding.palettes.01.pal",
-      "tileset.gTileset_GenericBuilding.palettes.02.pal",
-      "tileset.gTileset_GenericBuilding.palettes.03.pal",
-      "tileset.gTileset_GenericBuilding.palettes.04.pal",
-      "tileset.gTileset_GenericBuilding.palettes.05.pal",
-      "tileset.gTileset_GenericBuilding.palettes.06.pal",
-      "tileset.gTileset_GenericBuilding.palettes.07.pal",
-      "tileset.gTileset_GenericBuilding.palettes.08.pal",
-      "tileset.gTileset_GenericBuilding.palettes.09.pal",
-      "tileset.gTileset_GenericBuilding.palettes.10.pal",
-      "tileset.gTileset_GenericBuilding.palettes.11.pal",
-      "tileset.gTileset_GenericBuilding.palettes.12.pal",
-      "tileset.gTileset_GenericBuilding.palettes.13.pal",
-      "tileset.gTileset_GenericBuilding.palettes.14.pal",
-      "tileset.gTileset_GenericBuilding.palettes.15.pal",
-      "tileset.gTileset_GenericBuilding.tiles.png",
-      "tileset.gTileset_Hearthome.descriptor",
-      "tileset.gTileset_Hearthome.metatile_attributes.bin",
-      "tileset.gTileset_Hearthome.metatiles.bin",
-      "tileset.gTileset_Hearthome.palettes.00.pal",
-      "tileset.gTileset_Hearthome.palettes.01.pal",
-      "tileset.gTileset_Hearthome.palettes.02.pal",
-      "tileset.gTileset_Hearthome.palettes.03.pal",
-      "tileset.gTileset_Hearthome.palettes.04.pal",
-      "tileset.gTileset_Hearthome.palettes.05.pal",
-      "tileset.gTileset_Hearthome.palettes.06.pal",
-      "tileset.gTileset_Hearthome.palettes.07.pal",
-      "tileset.gTileset_Hearthome.palettes.08.pal",
-      "tileset.gTileset_Hearthome.palettes.09.pal",
-      "tileset.gTileset_Hearthome.palettes.10.pal",
-      "tileset.gTileset_Hearthome.palettes.11.pal",
-      "tileset.gTileset_Hearthome.palettes.12.pal",
-      "tileset.gTileset_Hearthome.tiles.png",
-      "tileset.gTileset_Jubilife.descriptor",
-      "tileset.gTileset_Jubilife.metatile_attributes.bin",
-      "tileset.gTileset_Jubilife.metatiles.bin",
-      "tileset.gTileset_Jubilife.palettes.00.pal",
-      "tileset.gTileset_Jubilife.palettes.01.pal",
-      "tileset.gTileset_Jubilife.palettes.02.pal",
-      "tileset.gTileset_Jubilife.palettes.03.pal",
-      "tileset.gTileset_Jubilife.palettes.04.pal",
-      "tileset.gTileset_Jubilife.palettes.05.pal",
-      "tileset.gTileset_Jubilife.palettes.06.pal",
-      "tileset.gTileset_Jubilife.palettes.07.pal",
-      "tileset.gTileset_Jubilife.palettes.08.pal",
-      "tileset.gTileset_Jubilife.palettes.09.pal",
-      "tileset.gTileset_Jubilife.palettes.10.pal",
-      "tileset.gTileset_Jubilife.palettes.11.pal",
-      "tileset.gTileset_Jubilife.palettes.12.pal",
-      "tileset.gTileset_Jubilife.tiles.png",
-      "tileset.gTileset_Lavaridge.anim.steam.0.png",
-      "tileset.gTileset_Lavaridge.anim.steam.1.png",
-      "tileset.gTileset_Lavaridge.anim.steam.2.png",
-      "tileset.gTileset_Lavaridge.anim.steam.3.png",
-      "tileset.gTileset_Lavaridge.descriptor",
-      "tileset.gTileset_Lavaridge.metatile_attributes.bin",
-      "tileset.gTileset_Lavaridge.metatiles.bin",
-      "tileset.gTileset_Lavaridge.palettes.00.pal",
-      "tileset.gTileset_Lavaridge.palettes.01.pal",
-      "tileset.gTileset_Lavaridge.palettes.02.pal",
-      "tileset.gTileset_Lavaridge.palettes.03.pal",
-      "tileset.gTileset_Lavaridge.palettes.04.pal",
-      "tileset.gTileset_Lavaridge.palettes.05.pal",
-      "tileset.gTileset_Lavaridge.palettes.06.pal",
-      "tileset.gTileset_Lavaridge.palettes.07.pal",
-      "tileset.gTileset_Lavaridge.palettes.08.pal",
-      "tileset.gTileset_Lavaridge.palettes.09.pal",
-      "tileset.gTileset_Lavaridge.palettes.10.pal",
-      "tileset.gTileset_Lavaridge.palettes.11.pal",
-      "tileset.gTileset_Lavaridge.palettes.12.pal",
-      "tileset.gTileset_Lavaridge.palettes.13.pal",
-      "tileset.gTileset_Lavaridge.palettes.14.pal",
-      "tileset.gTileset_Lavaridge.palettes.15.pal",
-      "tileset.gTileset_Lavaridge.tiles.png",
-      "tileset.gTileset_Lilycove.descriptor",
-      "tileset.gTileset_Lilycove.metatile_attributes.bin",
-      "tileset.gTileset_Lilycove.metatiles.bin",
-      "tileset.gTileset_Lilycove.palettes.00.pal",
-      "tileset.gTileset_Lilycove.palettes.01.pal",
-      "tileset.gTileset_Lilycove.palettes.02.pal",
-      "tileset.gTileset_Lilycove.palettes.03.pal",
-      "tileset.gTileset_Lilycove.palettes.04.pal",
-      "tileset.gTileset_Lilycove.palettes.05.pal",
-      "tileset.gTileset_Lilycove.palettes.06.pal",
-      "tileset.gTileset_Lilycove.palettes.07.pal",
-      "tileset.gTileset_Lilycove.palettes.08.pal",
-      "tileset.gTileset_Lilycove.palettes.09.pal",
-      "tileset.gTileset_Lilycove.palettes.10.pal",
-      "tileset.gTileset_Lilycove.palettes.11.pal",
-      "tileset.gTileset_Lilycove.palettes.12.pal",
-      "tileset.gTileset_Lilycove.palettes.13.pal",
-      "tileset.gTileset_Lilycove.palettes.14.pal",
-      "tileset.gTileset_Lilycove.palettes.15.pal",
-      "tileset.gTileset_Lilycove.tiles.png",
-      "tileset.gTileset_Mauville.anim.flower_1.0.png",
-      "tileset.gTileset_Mauville.anim.flower_1.1.png",
-      "tileset.gTileset_Mauville.anim.flower_1.2.png",
-      "tileset.gTileset_Mauville.anim.flower_1.3.png",
-      "tileset.gTileset_Mauville.anim.flower_1.4.png",
-      "tileset.gTileset_Mauville.anim.flower_2.0.png",
-      "tileset.gTileset_Mauville.anim.flower_2.1.png",
-      "tileset.gTileset_Mauville.anim.flower_2.2.png",
-      "tileset.gTileset_Mauville.anim.flower_2.3.png",
-      "tileset.gTileset_Mauville.anim.flower_2.4.png",
-      "tileset.gTileset_Mauville.descriptor",
-      "tileset.gTileset_Mauville.metatile_attributes.bin",
-      "tileset.gTileset_Mauville.metatiles.bin",
-      "tileset.gTileset_Mauville.palettes.00.pal",
-      "tileset.gTileset_Mauville.palettes.01.pal",
-      "tileset.gTileset_Mauville.palettes.02.pal",
-      "tileset.gTileset_Mauville.palettes.03.pal",
-      "tileset.gTileset_Mauville.palettes.04.pal",
-      "tileset.gTileset_Mauville.palettes.05.pal",
-      "tileset.gTileset_Mauville.palettes.06.pal",
-      "tileset.gTileset_Mauville.palettes.07.pal",
-      "tileset.gTileset_Mauville.palettes.08.pal",
-      "tileset.gTileset_Mauville.palettes.09.pal",
-      "tileset.gTileset_Mauville.palettes.10.pal",
-      "tileset.gTileset_Mauville.palettes.11.pal",
-      "tileset.gTileset_Mauville.palettes.12.pal",
-      "tileset.gTileset_Mauville.palettes.13.pal",
-      "tileset.gTileset_Mauville.palettes.14.pal",
-      "tileset.gTileset_Mauville.palettes.15.pal",
-      "tileset.gTileset_Mauville.tiles.png",
-      "tileset.gTileset_Pasos.descriptor",
-      "tileset.gTileset_Pasos.metatile_attributes.bin",
-      "tileset.gTileset_Pasos.metatiles.bin",
-      "tileset.gTileset_Pasos.palettes.00.pal",
-      "tileset.gTileset_Pasos.palettes.01.pal",
-      "tileset.gTileset_Pasos.palettes.02.pal",
-      "tileset.gTileset_Pasos.palettes.03.pal",
-      "tileset.gTileset_Pasos.palettes.04.pal",
-      "tileset.gTileset_Pasos.palettes.05.pal",
-      "tileset.gTileset_Pasos.palettes.06.pal",
-      "tileset.gTileset_Pasos.palettes.07.pal",
-      "tileset.gTileset_Pasos.palettes.08.pal",
-      "tileset.gTileset_Pasos.palettes.09.pal",
-      "tileset.gTileset_Pasos.palettes.10.pal",
-      "tileset.gTileset_Pasos.palettes.11.pal",
-      "tileset.gTileset_Pasos.palettes.12.pal",
-      "tileset.gTileset_Pasos.tiles.png",
-      "tileset.gTileset_Petalburg.descriptor",
-      "tileset.gTileset_Petalburg.metatile_attributes.bin",
-      "tileset.gTileset_Petalburg.metatiles.bin",
-      "tileset.gTileset_Petalburg.palettes.00.pal",
-      "tileset.gTileset_Petalburg.palettes.01.pal",
-      "tileset.gTileset_Petalburg.palettes.02.pal",
-      "tileset.gTileset_Petalburg.palettes.03.pal",
-      "tileset.gTileset_Petalburg.palettes.04.pal",
-      "tileset.gTileset_Petalburg.palettes.05.pal",
-      "tileset.gTileset_Petalburg.palettes.06.pal",
-      "tileset.gTileset_Petalburg.palettes.07.pal",
-      "tileset.gTileset_Petalburg.palettes.08.pal",
-      "tileset.gTileset_Petalburg.palettes.09.pal",
-      "tileset.gTileset_Petalburg.palettes.10.pal",
-      "tileset.gTileset_Petalburg.palettes.11.pal",
-      "tileset.gTileset_Petalburg.palettes.12.pal",
-      "tileset.gTileset_Petalburg.palettes.13.pal",
-      "tileset.gTileset_Petalburg.palettes.14.pal",
-      "tileset.gTileset_Petalburg.palettes.15.pal",
-      "tileset.gTileset_Petalburg.tiles.png",
-      "tileset.gTileset_PokemonCenter.descriptor",
-      "tileset.gTileset_PokemonCenter.metatile_attributes.bin",
-      "tileset.gTileset_PokemonCenter.metatiles.bin",
-      "tileset.gTileset_PokemonCenter.palettes.00.pal",
-      "tileset.gTileset_PokemonCenter.palettes.01.pal",
-      "tileset.gTileset_PokemonCenter.palettes.02.pal",
-      "tileset.gTileset_PokemonCenter.palettes.03.pal",
-      "tileset.gTileset_PokemonCenter.palettes.04.pal",
-      "tileset.gTileset_PokemonCenter.palettes.05.pal",
-      "tileset.gTileset_PokemonCenter.palettes.06.pal",
-      "tileset.gTileset_PokemonCenter.palettes.07.pal",
-      "tileset.gTileset_PokemonCenter.palettes.08.pal",
-      "tileset.gTileset_PokemonCenter.palettes.09.pal",
-      "tileset.gTileset_PokemonCenter.palettes.10.pal",
-      "tileset.gTileset_PokemonCenter.palettes.11.pal",
-      "tileset.gTileset_PokemonCenter.palettes.12.pal",
-      "tileset.gTileset_PokemonCenter.palettes.13.pal",
-      "tileset.gTileset_PokemonCenter.palettes.14.pal",
-      "tileset.gTileset_PokemonCenter.palettes.15.pal",
-      "tileset.gTileset_PokemonCenter.tiles.png",
-      "tileset.gTileset_PokemonSchool.descriptor",
-      "tileset.gTileset_PokemonSchool.metatile_attributes.bin",
-      "tileset.gTileset_PokemonSchool.metatiles.bin",
-      "tileset.gTileset_PokemonSchool.palettes.00.pal",
-      "tileset.gTileset_PokemonSchool.palettes.01.pal",
-      "tileset.gTileset_PokemonSchool.palettes.02.pal",
-      "tileset.gTileset_PokemonSchool.palettes.03.pal",
-      "tileset.gTileset_PokemonSchool.palettes.04.pal",
-      "tileset.gTileset_PokemonSchool.palettes.05.pal",
-      "tileset.gTileset_PokemonSchool.palettes.06.pal",
-      "tileset.gTileset_PokemonSchool.palettes.07.pal",
-      "tileset.gTileset_PokemonSchool.palettes.08.pal",
-      "tileset.gTileset_PokemonSchool.palettes.09.pal",
-      "tileset.gTileset_PokemonSchool.palettes.10.pal",
-      "tileset.gTileset_PokemonSchool.palettes.11.pal",
-      "tileset.gTileset_PokemonSchool.palettes.12.pal",
-      "tileset.gTileset_PokemonSchool.palettes.13.pal",
-      "tileset.gTileset_PokemonSchool.palettes.14.pal",
-      "tileset.gTileset_PokemonSchool.palettes.15.pal",
-      "tileset.gTileset_PokemonSchool.tiles.png",
-      "tileset.gTileset_PrettyPetalFlowerShop.descriptor",
-      "tileset.gTileset_PrettyPetalFlowerShop.metatile_attributes.bin",
-      "tileset.gTileset_PrettyPetalFlowerShop.metatiles.bin",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.00.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.01.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.02.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.03.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.04.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.05.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.06.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.07.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.08.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.09.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.10.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.11.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.12.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.13.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.14.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.palettes.15.pal",
-      "tileset.gTileset_PrettyPetalFlowerShop.tiles.png",
-      "tileset.gTileset_Rustboro.anim.fountain.0.png",
-      "tileset.gTileset_Rustboro.anim.fountain.1.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.0.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.1.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.2.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.3.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.4.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.5.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.6.png",
-      "tileset.gTileset_Rustboro.anim.windy_water.7.png",
-      "tileset.gTileset_Rustboro.descriptor",
-      "tileset.gTileset_Rustboro.metatile_attributes.bin",
-      "tileset.gTileset_Rustboro.metatiles.bin",
-      "tileset.gTileset_Rustboro.palettes.00.pal",
-      "tileset.gTileset_Rustboro.palettes.01.pal",
-      "tileset.gTileset_Rustboro.palettes.02.pal",
-      "tileset.gTileset_Rustboro.palettes.03.pal",
-      "tileset.gTileset_Rustboro.palettes.04.pal",
-      "tileset.gTileset_Rustboro.palettes.05.pal",
-      "tileset.gTileset_Rustboro.palettes.06.pal",
-      "tileset.gTileset_Rustboro.palettes.07.pal",
-      "tileset.gTileset_Rustboro.palettes.08.pal",
-      "tileset.gTileset_Rustboro.palettes.09.pal",
-      "tileset.gTileset_Rustboro.palettes.10.pal",
-      "tileset.gTileset_Rustboro.palettes.11.pal",
-      "tileset.gTileset_Rustboro.palettes.12.pal",
-      "tileset.gTileset_Rustboro.palettes.13.pal",
-      "tileset.gTileset_Rustboro.palettes.14.pal",
-      "tileset.gTileset_Rustboro.palettes.15.pal",
-      "tileset.gTileset_Rustboro.tiles.png",
-      "tileset.gTileset_RustboroGym.descriptor",
-      "tileset.gTileset_RustboroGym.metatile_attributes.bin",
-      "tileset.gTileset_RustboroGym.metatiles.bin",
-      "tileset.gTileset_RustboroGym.palettes.00.pal",
-      "tileset.gTileset_RustboroGym.palettes.01.pal",
-      "tileset.gTileset_RustboroGym.palettes.02.pal",
-      "tileset.gTileset_RustboroGym.palettes.03.pal",
-      "tileset.gTileset_RustboroGym.palettes.04.pal",
-      "tileset.gTileset_RustboroGym.palettes.05.pal",
-      "tileset.gTileset_RustboroGym.palettes.06.pal",
-      "tileset.gTileset_RustboroGym.palettes.07.pal",
-      "tileset.gTileset_RustboroGym.palettes.08.pal",
-      "tileset.gTileset_RustboroGym.palettes.09.pal",
-      "tileset.gTileset_RustboroGym.palettes.10.pal",
-      "tileset.gTileset_RustboroGym.palettes.11.pal",
-      "tileset.gTileset_RustboroGym.palettes.12.pal",
-      "tileset.gTileset_RustboroGym.palettes.13.pal",
-      "tileset.gTileset_RustboroGym.palettes.14.pal",
-      "tileset.gTileset_RustboroGym.palettes.15.pal",
-      "tileset.gTileset_RustboroGym.tiles.png",
-      "tileset.gTileset_Shop.descriptor",
-      "tileset.gTileset_Shop.metatile_attributes.bin",
-      "tileset.gTileset_Shop.metatiles.bin",
-      "tileset.gTileset_Shop.palettes.00.pal",
-      "tileset.gTileset_Shop.palettes.01.pal",
-      "tileset.gTileset_Shop.palettes.02.pal",
-      "tileset.gTileset_Shop.palettes.03.pal",
-      "tileset.gTileset_Shop.palettes.04.pal",
-      "tileset.gTileset_Shop.palettes.05.pal",
-      "tileset.gTileset_Shop.palettes.06.pal",
-      "tileset.gTileset_Shop.palettes.07.pal",
-      "tileset.gTileset_Shop.palettes.08.pal",
-      "tileset.gTileset_Shop.palettes.09.pal",
-      "tileset.gTileset_Shop.palettes.10.pal",
-      "tileset.gTileset_Shop.palettes.11.pal",
-      "tileset.gTileset_Shop.palettes.12.pal",
-      "tileset.gTileset_Shop.palettes.13.pal",
-      "tileset.gTileset_Shop.palettes.14.pal",
-      "tileset.gTileset_Shop.palettes.15.pal",
-      "tileset.gTileset_Shop.tiles.png",
-      "tileset.gTileset_Snowpoint.descriptor",
-      "tileset.gTileset_Snowpoint.metatile_attributes.bin",
-      "tileset.gTileset_Snowpoint.metatiles.bin",
-      "tileset.gTileset_Snowpoint.palettes.00.pal",
-      "tileset.gTileset_Snowpoint.palettes.01.pal",
-      "tileset.gTileset_Snowpoint.palettes.02.pal",
-      "tileset.gTileset_Snowpoint.palettes.03.pal",
-      "tileset.gTileset_Snowpoint.palettes.04.pal",
-      "tileset.gTileset_Snowpoint.palettes.05.pal",
-      "tileset.gTileset_Snowpoint.palettes.06.pal",
-      "tileset.gTileset_Snowpoint.palettes.07.pal",
-      "tileset.gTileset_Snowpoint.palettes.08.pal",
-      "tileset.gTileset_Snowpoint.palettes.09.pal",
-      "tileset.gTileset_Snowpoint.palettes.10.pal",
-      "tileset.gTileset_Snowpoint.palettes.11.pal",
-      "tileset.gTileset_Snowpoint.palettes.12.pal",
-      "tileset.gTileset_Snowpoint.tiles.png",
-      "tileset.gTileset_Sunnyshore.descriptor",
-      "tileset.gTileset_Sunnyshore.metatile_attributes.bin",
-      "tileset.gTileset_Sunnyshore.metatiles.bin",
-      "tileset.gTileset_Sunnyshore.palettes.00.pal",
-      "tileset.gTileset_Sunnyshore.palettes.01.pal",
-      "tileset.gTileset_Sunnyshore.palettes.02.pal",
-      "tileset.gTileset_Sunnyshore.palettes.03.pal",
-      "tileset.gTileset_Sunnyshore.palettes.04.pal",
-      "tileset.gTileset_Sunnyshore.palettes.05.pal",
-      "tileset.gTileset_Sunnyshore.palettes.06.pal",
-      "tileset.gTileset_Sunnyshore.palettes.07.pal",
-      "tileset.gTileset_Sunnyshore.palettes.08.pal",
-      "tileset.gTileset_Sunnyshore.palettes.09.pal",
-      "tileset.gTileset_Sunnyshore.palettes.10.pal",
-      "tileset.gTileset_Sunnyshore.palettes.11.pal",
-      "tileset.gTileset_Sunnyshore.palettes.12.pal",
-      "tileset.gTileset_Sunnyshore.tiles.png",
-      "tileset.gTileset_Valor.descriptor",
-      "tileset.gTileset_Valor.metatile_attributes.bin",
-      "tileset.gTileset_Valor.metatiles.bin",
-      "tileset.gTileset_Valor.palettes.00.pal",
-      "tileset.gTileset_Valor.palettes.01.pal",
-      "tileset.gTileset_Valor.palettes.02.pal",
-      "tileset.gTileset_Valor.palettes.03.pal",
-      "tileset.gTileset_Valor.palettes.04.pal",
-      "tileset.gTileset_Valor.palettes.05.pal",
-      "tileset.gTileset_Valor.palettes.06.pal",
-      "tileset.gTileset_Valor.palettes.07.pal",
-      "tileset.gTileset_Valor.palettes.08.pal",
-      "tileset.gTileset_Valor.palettes.09.pal",
-      "tileset.gTileset_Valor.palettes.10.pal",
-      "tileset.gTileset_Valor.palettes.11.pal",
-      "tileset.gTileset_Valor.palettes.12.pal",
-      "tileset.gTileset_Valor.tiles.png",
-      "tileset.gTileset_Veilstone.descriptor",
-      "tileset.gTileset_Veilstone.metatile_attributes.bin",
-      "tileset.gTileset_Veilstone.metatiles.bin",
-      "tileset.gTileset_Veilstone.palettes.00.pal",
-      "tileset.gTileset_Veilstone.palettes.01.pal",
-      "tileset.gTileset_Veilstone.palettes.02.pal",
-      "tileset.gTileset_Veilstone.palettes.03.pal",
-      "tileset.gTileset_Veilstone.palettes.04.pal",
-      "tileset.gTileset_Veilstone.palettes.05.pal",
-      "tileset.gTileset_Veilstone.palettes.06.pal",
-      "tileset.gTileset_Veilstone.palettes.07.pal",
-      "tileset.gTileset_Veilstone.palettes.08.pal",
-      "tileset.gTileset_Veilstone.palettes.09.pal",
-      "tileset.gTileset_Veilstone.palettes.10.pal",
-      "tileset.gTileset_Veilstone.palettes.11.pal",
-      "tileset.gTileset_Veilstone.palettes.12.pal",
-      "tileset.gTileset_Veilstone.tiles.png"
-    ],
+    "blockers": [],
     "allowed_inclusion_states": [
       "FROZEN_NOT_SELECTED",
       "INCLUDED",
       "EXCLUDED"
     ],
-    "reason": "Frozen source inventory only; no public travel, story, encounters, or asset import is selected."
+    "reason": "Frozen source inventory and verified asset closure; no public travel, story, encounters, or map catalog is selected."
   },
   "source_groups": [
     {
@@ -830,7 +268,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -1029,7 +467,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -1278,7 +716,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -1534,7 +972,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -1738,7 +1176,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -1906,7 +1344,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -2095,7 +1533,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -2250,7 +1688,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -2405,7 +1843,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -2589,7 +2027,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -2755,7 +2193,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -2913,7 +2351,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -3063,7 +2501,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -3226,7 +2664,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -3392,7 +2830,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -3555,7 +2993,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -3713,7 +3151,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -3884,7 +3322,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -4067,7 +3505,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -4242,7 +3680,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -4435,7 +3873,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -4626,7 +4064,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -4789,7 +4227,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -4967,7 +4405,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -5130,7 +4568,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -5285,7 +4723,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -5445,7 +4883,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -5603,7 +5041,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -5761,7 +5199,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -5934,7 +5372,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -6092,7 +5530,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -6269,7 +5707,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -6439,7 +5877,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -6602,7 +6040,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -6760,7 +6198,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -6915,7 +6353,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -7085,7 +6523,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -7243,7 +6681,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -7406,7 +6844,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -7564,7 +7002,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -7727,7 +7165,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -7882,7 +7320,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8043,7 +7481,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8198,7 +7636,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8358,7 +7796,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8515,7 +7953,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8683,7 +8121,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8843,7 +8281,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -8998,7 +8436,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -9166,7 +8604,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -9341,7 +8779,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -9496,7 +8934,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -9651,7 +9089,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -9806,7 +9244,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -9956,7 +9394,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -10118,7 +9556,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -10277,7 +9715,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -10421,7 +9859,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -10589,7 +10027,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -10769,7 +10207,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -10939,7 +10377,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -11098,7 +10536,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -11253,7 +10691,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -11423,7 +10861,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -11593,7 +11031,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -11763,7 +11201,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -11940,7 +11378,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12110,7 +11548,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12245,7 +11683,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12380,7 +11818,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12515,7 +11953,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12650,7 +12088,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12785,7 +12223,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -12920,7 +12358,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13055,7 +12493,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13190,7 +12628,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13325,7 +12763,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13460,7 +12898,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13595,7 +13033,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13715,7 +13153,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13835,7 +13273,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -13970,7 +13408,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14115,7 +13553,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14246,7 +13684,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14391,7 +13829,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14522,7 +13960,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14660,7 +14098,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14798,7 +14236,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -14943,7 +14381,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15074,7 +14512,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15212,7 +14650,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15357,7 +14795,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15488,7 +14926,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15626,7 +15064,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15764,7 +15202,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -15909,7 +15347,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16047,7 +15485,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16185,7 +15623,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16316,7 +15754,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16475,7 +15913,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16613,7 +16051,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16744,7 +16182,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -16889,7 +16327,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17027,7 +16465,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17158,7 +16596,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17303,7 +16741,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17441,7 +16879,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17572,7 +17010,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17717,7 +17155,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17855,7 +17293,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -17986,7 +17424,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18131,7 +17569,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18262,7 +17700,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18400,7 +17838,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18545,7 +17983,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18676,7 +18114,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18821,7 +18259,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -18952,7 +18390,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19075,7 +18513,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19198,7 +18636,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19336,7 +18774,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19474,7 +18912,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19612,7 +19050,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19750,7 +19188,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -19895,7 +19333,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20026,7 +19464,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20164,7 +19602,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20302,7 +19740,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20440,7 +19878,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20578,7 +20016,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20723,7 +20161,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20854,7 +20292,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     },
     {
@@ -20992,7 +20430,7 @@
       },
       "inclusion": {
         "state": "FROZEN_NOT_SELECTED",
-        "reason": "Generated asset verification and later topology review are intentionally incomplete in the source-only foundation."
+        "reason": "Verified asset closure is ready; topology and catalog selection remain intentionally deferred."
       }
     }
   ]
