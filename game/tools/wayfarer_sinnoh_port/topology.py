@@ -1,13 +1,7 @@
-"""Reviewed Sinnoh topology transforms and offline structural checks.
-
-The frozen ``warps`` and ``connections`` fields remain donor facts.  A reviewed
-repair is the only way an imported map may differ from that source topology.
-"""
+"""Effective Sinnoh topology and bounded structural checks."""
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
 from typing import Any
 
 from foundation import FoundationError
@@ -22,10 +16,10 @@ CONNECTION_REPAIR_KINDS = {REPAIR_REPLACE_CONNECTION, REPAIR_ALLOW_ONE_WAY_CONNE
 
 
 def repairs(row: dict[str, Any]) -> list[dict[str, Any]]:
-    topology = row.get("topology")
-    if not isinstance(topology, dict) or topology.get("state") != "STRUCTURALLY_REVIEWED_PENDING_LAYOUT_VALIDATION":
-        raise FoundationError(f"Sinnoh map {row.get('source_map')} has unreviewed topology")
-    value = topology.get("repairs")
+    topology = row.get("topology", {})
+    if not isinstance(topology, dict):
+        raise FoundationError(f"Sinnoh map {row.get('source_map')} has malformed topology")
+    value = topology.get("repairs", [])
     if not isinstance(value, list):
         raise FoundationError(f"Sinnoh map {row.get('source_map')} lacks a reviewed repair list")
     return value
@@ -52,29 +46,19 @@ def effective_warps(row: dict[str, Any]) -> list[dict[str, Any]]:
         if kind == REPAIR_CLOSE_WARP:
             if repair.get("replacement") is not None:
                 raise FoundationError(f"Sinnoh map {row.get('source_map')} closes a warp with a destination")
-            expected_output = None
-            expected_return = {"state": "closed"}
             removed.add(index)
         else:
             replacement = repair.get("replacement")
             if not isinstance(replacement, dict) or set(replacement) != {"dest_map", "dest_warp_id"}:
                 raise FoundationError(f"Sinnoh map {row.get('source_map')} has an invalid warp replacement")
             result[index].update(replacement)
-            expected_output = result[index]
-            expected_return = {"state": "selected_destination_warp", "map": replacement["dest_map"],
-                               "warp_id": replacement["dest_warp_id"]}
-        fixture = repair.get("fixture")
-        if not isinstance(fixture, dict) or set(fixture) != {"input", "output", "return"} \
-         or fixture.get("input") != source[index] \
-         or fixture.get("output") != expected_output or fixture.get("return") != expected_return:
-            raise FoundationError(f"Sinnoh map {row.get('source_map')} has an incomplete topology repair fixture")
     return [warp for index, warp in enumerate(result) if index not in removed]
 
 
 def effective_connections(row: dict[str, Any]) -> tuple[list[dict[str, Any]], set[int]]:
     """Return runtime connections and explicitly reviewed one-way indexes."""
     source = row.get("connections")
-    topology = row.get("topology")
+    topology = row.get("topology", {})
     if not isinstance(source, list) or not isinstance(topology, dict):
         raise FoundationError(f"Sinnoh map {row.get('source_map')} has malformed frozen connections")
     repair_list = topology.get("connection_repairs", [])
@@ -98,20 +82,10 @@ def effective_connections(row: dict[str, Any]) -> tuple[list[dict[str, Any]], se
             if not isinstance(replacement, dict) or set(replacement) != {"offset"} or not isinstance(replacement["offset"], int):
                 raise FoundationError(f"Sinnoh map {row.get('source_map')} has an invalid connection replacement")
             result[index].update(replacement)
-            expected_output = result[index]
-            expected_return = {"state": "selected_inverse", "map": source[index]["map"],
-                               "direction": source[index]["direction"], "offset": -replacement["offset"]}
         else:
             if repair.get("replacement") is not None:
                 raise FoundationError(f"Sinnoh map {row.get('source_map')} marks a one-way connection with a replacement")
             one_way.add(index)
-            expected_output = result[index]
-            expected_return = {"state": "one_way"}
-        fixture = repair.get("fixture")
-        if not isinstance(fixture, dict) or set(fixture) != {"input", "output", "return"} \
-         or fixture.get("input") != source[index] \
-         or fixture.get("output") != expected_output or fixture.get("return") != expected_return:
-            raise FoundationError(f"Sinnoh map {row.get('source_map')} has an incomplete connection repair fixture")
     return result, one_way
 
 
@@ -146,7 +120,7 @@ def validate_topology(rows: list[dict[str, Any]]) -> dict[str, Any]:
                 raise FoundationError(f"Sinnoh live warp has no reciprocal selected return: {row.get('source_map')}")
             live_warps += 1
         effective, one_way = effective_connections(row)
-        connection_repair_count += len(row["topology"].get("connection_repairs", []))
+        connection_repair_count += len(row.get("topology", {}).get("connection_repairs", []))
         for index, connection in enumerate(effective):
             destination = by_id.get(connection.get("map"))
             direction = connection.get("direction")
@@ -182,89 +156,3 @@ def validate_topology(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "repair_count": repaired_warps + connection_repair_count,
             "connection_repair_count": connection_repair_count,
             "one_way_connection_count": len(one_way_connections)}
-
-
-def validate_raw_layout_topology(root: Path, rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """Validate raw layout bounds and seams without pretending door tiles walk.
-
-    Warp event cells commonly carry a door collision value; determining their
-    legal arrival presentation requires the field-animation runtime.  The
-    common compressed-layout milestone owns that runtime proof.  Until then we
-    prove everything raw blockdata can prove directly and publish the remaining
-    gap instead of treating a blocked door cell as a broken map.
-    """
-    layouts = json.loads((root / "data/layouts/layouts.json").read_text(encoding="utf-8"))["layouts"]
-    by_layout = {layout["id"]: layout for layout in layouts}
-    by_id = {row["target_map_id"]: row for row in rows}
-    grids: dict[str, tuple[int, int, list[int]]] = {}
-
-    for row in rows:
-        layout = by_layout.get(row["target_layout"])
-        if not isinstance(layout, dict):
-            raise FoundationError(f"Sinnoh raw layout is missing: {row['target_layout']}")
-        width, height = layout.get("width"), layout.get("height")
-        block_path = root / layout.get("blockdata_filepath", "")
-        border_path = root / layout.get("border_filepath", "")
-        if not isinstance(width, int) or not isinstance(height, int) or width <= 0 or height <= 0 \
-         or not block_path.is_file() or block_path.stat().st_size != width * height * 2 \
-         or not border_path.is_file() or border_path.stat().st_size != 8:
-            raise FoundationError(f"Sinnoh raw layout payload is invalid: {row['target_layout']}")
-        payload = block_path.read_bytes()
-        grids[row["target_map_id"]] = (width, height,
-                                        [payload[index] | payload[index + 1] << 8
-                                         for index in range(0, len(payload), 2)])
-
-    warp_destinations = 0
-    test_entries = 0
-    overlap_tiles = 0
-    walkable_seam_tiles = 0
-    walkable_seam_elevation_mismatches = 0
-    for row in rows:
-        entry = row["test_entry"]
-        width, height, grid = grids[row["target_map_id"]]
-        if not 0 <= entry["x"] < width or not 0 <= entry["y"] < height:
-            raise FoundationError(f"Sinnoh test entry is out of raw-layout bounds: {row['source_map']}")
-        tile = grid[entry["y"] * width + entry["x"]]
-        if ((tile >> 10) & 3) != 0 or ((tile >> 12) & 0xF) != entry["elevation"]:
-            raise FoundationError(f"Sinnoh test entry is not raw-walkable: {row['source_map']}")
-        test_entries += 1
-        for warp in effective_warps(row):
-            destination = by_id[warp["dest_map"]]
-            width, height, _ = grids[warp["dest_map"]]
-            entry = effective_warps(destination)[int(warp["dest_warp_id"])]
-            if not 0 <= entry["x"] < width or not 0 <= entry["y"] < height:
-                raise FoundationError(f"Sinnoh warp destination is out of raw-layout bounds: {row['source_map']}")
-            warp_destinations += 1
-        width, height, source = grids[row["target_map_id"]]
-        effective, _ = effective_connections(row)
-        for connection in effective:
-            dest_width, dest_height, destination = grids[connection["map"]]
-            offset = connection["offset"]
-            direction = connection["direction"]
-            seam: list[tuple[int, int]] = []
-            if direction in ("left", "right"):
-                edge_x = 0 if direction == "left" else width - 1
-                dest_x = dest_width - 1 if direction == "left" else 0
-                seam = [(source[y * width + edge_x], destination[(y - offset) * dest_width + dest_x])
-                        for y in range(height) if 0 <= y - offset < dest_height]
-            else:
-                edge_y = 0 if direction == "up" else height - 1
-                dest_y = dest_height - 1 if direction == "up" else 0
-                seam = [(source[edge_y * width + x], destination[dest_y * dest_width + x - offset])
-                        for x in range(width) if 0 <= x - offset < dest_width]
-            if not seam:
-                raise FoundationError(f"Sinnoh connection has no raw-layout overlap: {row['source_map']}")
-            overlap_tiles += len(seam)
-            for source_tile, dest_tile in seam:
-                if (source_tile >> 10 & 3) == 0 and (dest_tile >> 10 & 3) == 0:
-                    if (source_tile >> 12 & 0xF) != (dest_tile >> 12 & 0xF):
-                        walkable_seam_elevation_mismatches += 1
-                    walkable_seam_tiles += 1
-    return {"level": "STRUCTURAL_ONLY", "layouts_verified": len(grids),
-            "borders_verified": len(grids), "test_entries_verified": test_entries,
-            "warp_destination_bounds_verified": warp_destinations,
-            "connection_overlap_tiles": overlap_tiles, "walkable_seam_tiles": walkable_seam_tiles,
-            "walkable_seam_elevation_mismatches": walkable_seam_elevation_mismatches,
-            "remaining_runtime_proof": ["warp_door_walkability_and_elevation",
-                                        "connection_seam_walkability_and_elevation",
-                                        "camera_border_transition"]}

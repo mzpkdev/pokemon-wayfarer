@@ -22,10 +22,7 @@ WAYFARER_SEVII_MANIFEST := $(DATA_SRC_SUBDIR)/wayfarer_sevii_maps.json
 WAYFARER_SEVII_MANIFEST_ARG := $(if $(filter wayfarer,$(MAP_VERSION)),--wayfarer-sevii-manifest $(WAYFARER_SEVII_MANIFEST))
 WAYFARER_SINNOH_MANIFEST := $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_maps.json
 WAYFARER_SINNOH_MANIFEST_ARG := $(if $(filter wayfarer,$(MAP_VERSION)),--wayfarer-sinnoh-manifest $(WAYFARER_SINNOH_MANIFEST))
-WAYFARER_SINNOH_ASSET_MANIFEST := $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_assets.json
-WAYFARER_SINNOH_ASSET_MANIFEST_ARG := $(if $(filter wayfarer,$(MAP_VERSION)),--wayfarer-sinnoh-asset-manifest $(WAYFARER_SINNOH_ASSET_MANIFEST))
 WAYFARER_SINNOH_MANIFEST_DEP := $(if $(filter wayfarer,$(MAP_VERSION)),$(WAYFARER_SINNOH_MANIFEST))
-WAYFARER_SINNOH_ASSET_MANIFEST_DEP := $(if $(filter wayfarer,$(MAP_VERSION)),$(WAYFARER_SINNOH_ASSET_MANIFEST))
 WAYFARER_SEVII_SCRIPT_TOOL := $(TOOLS_DIR)/wayfarer_sevii_scripts/generate.py
 WAYFARER_SEVII_EVENT_SCRIPTS := $(DATA_ASM_SUBDIR)/wayfarer_sevii_event_scripts.inc
 WAYFARER_SEVII_CONTENT_TOOLS := $(wildcard $(TOOLS_DIR)/wayfarer_sevii_content/*.py)
@@ -46,18 +43,13 @@ endif
 MAP_VERSION_STAMP := .map_version.$(MAP_VERSION)
 MAP_VERSION_STAMPS := .map_version.emerald .map_version.firered .map_version.hns .map_version.wayfarer
 .NOTINTERMEDIATE: $(MAP_VERSION_STAMP)
-ifneq ($(filter $(MAP_LAYOUT_STORAGE),legacy raw hybrid),$(MAP_LAYOUT_STORAGE))
-$(error MAP_LAYOUT_STORAGE must be legacy, raw, or hybrid)
+ifneq ($(filter $(MAP_LAYOUT_STORAGE),raw hybrid),$(MAP_LAYOUT_STORAGE))
+$(error MAP_LAYOUT_STORAGE must be raw or hybrid)
 endif
-MAP_LAYOUT_STORAGE_POLICY := src/data/map_layout_storage.json
 MAP_LAYOUT_STORAGE_STAMP := .map_layout_storage.$(MAP_VERSION).$(MAP_LAYOUT_STORAGE)
 MAP_LAYOUT_STORAGE_STAMPS := $(wildcard .map_layout_storage.*)
 MAP_LAYOUT_STORAGE_REPORT := $(OBJ_DIR)/map-layout-storage.json
-MAP_LAYOUT_SOURCE_REVISION := $(shell git rev-parse --verify HEAD 2>/dev/null || echo unknown)
-MAP_LAYOUT_SOURCE_REVISION_STAMP := .map_layout_source_revision.$(MAP_LAYOUT_SOURCE_REVISION)
-MAP_LAYOUT_SOURCE_REVISION_STAMPS := $(wildcard .map_layout_source_revision.*)
 .NOTINTERMEDIATE: $(MAP_LAYOUT_STORAGE_STAMP)
-.NOTINTERMEDIATE: $(MAP_LAYOUT_SOURCE_REVISION_STAMP)
 
 AUTO_GEN_TARGETS += $(INCLUDECONSTS_OUTDIR)/map_groups.h
 AUTO_GEN_TARGETS += $(INCLUDECONSTS_OUTDIR)/layouts.h
@@ -77,7 +69,7 @@ MAP_HEADERS := $(patsubst $(MAPS_DIR)/%/,$(MAPS_DIR)/%/header.inc,$(MAP_DIRS))
 MAP_JSONS := $(patsubst $(MAPS_DIR)/%/,$(MAPS_DIR)/%/map.json,$(MAP_DIRS))
 MAP_LAYOUT_BIN_INPUTS := $(sort $(shell find $(LAYOUTS_DIR) -type f -name 'map.bin' 2>/dev/null))
 MAP_GROUP_OUTPUTS := $(MAPS_OUTDIR)/connections.inc $(MAPS_OUTDIR)/groups.inc $(MAPS_OUTDIR)/events.inc $(MAPS_OUTDIR)/headers.inc $(INCLUDECONSTS_OUTDIR)/map_groups.h $(DATA_SRC_SUBDIR)/map_group_count.h $(WAYFARER_MAP_SOURCES)
-MAP_LAYOUT_OUTPUTS := $(LAYOUTS_OUTDIR)/layouts.inc $(LAYOUTS_OUTDIR)/layouts_table.inc $(INCLUDECONSTS_OUTDIR)/layouts.h $(INCLUDECONSTS_OUTDIR)/map_layout_storage.h $(MAP_LAYOUT_STORAGE_REPORT) $(MAP_LAYOUT_STORAGE_REPORT).txt
+MAP_LAYOUT_OUTPUTS := $(LAYOUTS_OUTDIR)/layouts.inc $(LAYOUTS_OUTDIR)/layouts_table.inc $(INCLUDECONSTS_OUTDIR)/layouts.h $(INCLUDECONSTS_OUTDIR)/map_layout_storage.h $(MAP_LAYOUT_STORAGE_REPORT)
 
 $(DATA_ASM_BUILDDIR)/maps.o: $(DATA_ASM_SUBDIR)/maps.s $(LAYOUTS_DIR)/layouts.inc $(LAYOUTS_DIR)/layouts_table.inc $(MAPS_DIR)/headers.inc $(MAPS_DIR)/groups.inc $(MAPS_DIR)/connections.inc $(MAP_CONNECTIONS) $(MAP_HEADERS)
 	$(PREPROC) $< charmap.txt | $(CPP) $(CPPFLAGS) -I include - | $(PREPROC) -ie $< charmap.txt | $(AS) $(ASFLAGS) -o $@
@@ -98,18 +90,18 @@ $(WAYFARER_HOENN_SOURCE_CONSTANTS) $(WAYFARER_ENGINE_SOURCE_CONSTANTS) $(WAYFARE
 
 # mapjson preserves identical output timestamps. Mark each grouped rule current
 # only after Make selected it because a semantic input was newer.
-$(MAPS_OUTDIR)/%/header.inc $(MAPS_OUTDIR)/%/events.inc $(MAPS_OUTDIR)/%/connections.inc &: $(MAPS_DIR)/%/map.json $(INCLUDECONSTS_OUTDIR)/map_groups.h $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP) $(WAYFARER_SINNOH_ASSET_MANIFEST_DEP)
-	$(MAPJSON) map $(MAP_DETAIL_VERSION) $< $(LAYOUTS_DIR)/layouts.json $(@D) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG) $(WAYFARER_SINNOH_ASSET_MANIFEST_ARG)
+$(MAPS_OUTDIR)/%/header.inc $(MAPS_OUTDIR)/%/events.inc $(MAPS_OUTDIR)/%/connections.inc &: $(MAPS_DIR)/%/map.json $(INCLUDECONSTS_OUTDIR)/map_groups.h $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP)
+	$(MAPJSON) map $(MAP_DETAIL_VERSION) $< $(LAYOUTS_DIR)/layouts.json $(@D) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG)
 	@touch $(@D)/header.inc $(@D)/events.inc $(@D)/connections.inc
 
 
-$(MAP_GROUP_OUTPUTS) &: $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP) $(WAYFARER_SINNOH_ASSET_MANIFEST_DEP)
-	@$(MAPJSON) groups $(MAP_VERSION) $(filter-out $(MAP_VERSION_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST) $(WAYFARER_SINNOH_ASSET_MANIFEST),$^) $(MAPS_OUTDIR) $(INCLUDECONSTS_OUTDIR) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG) $(WAYFARER_SINNOH_ASSET_MANIFEST_ARG)
+$(MAP_GROUP_OUTPUTS) &: $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP)
+	@$(MAPJSON) groups $(MAP_VERSION) $(filter-out $(MAP_VERSION_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST),$^) $(MAPS_OUTDIR) $(INCLUDECONSTS_OUTDIR) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG)
 	@echo "$(MAPJSON) groups $(MAP_VERSION) $(MAPS_DIR)/map_groups.json <MAP_JSONS> $(MAPS_OUTDIR) $(INCLUDECONSTS_OUTDIR)"
 	@touch $(MAP_GROUP_OUTPUTS)
 
-$(MAP_LAYOUT_OUTPUTS) &: $(LAYOUTS_DIR)/layouts.json $(MAP_LAYOUT_BIN_INPUTS) $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAP_LAYOUT_STORAGE_STAMP) $(MAP_LAYOUT_SOURCE_REVISION_STAMP) $(MAPJSON) $(MAP_LAYOUT_STORAGE_POLICY) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP) $(WAYFARER_SINNOH_ASSET_MANIFEST_DEP)
-	$(MAPJSON) layouts $(MAP_VERSION) $< $(LAYOUTS_OUTDIR) $(INCLUDECONSTS_OUTDIR) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG) $(WAYFARER_SINNOH_ASSET_MANIFEST_ARG) --map-layout-storage-policy $(MAP_LAYOUT_STORAGE_POLICY) --map-layout-storage-mode $(MAP_LAYOUT_STORAGE) --map-layout-storage-report $(MAP_LAYOUT_STORAGE_REPORT) --map-layout-source-revision $(MAP_LAYOUT_SOURCE_REVISION) --map-layout-canary-catalog $(MAPS_DIR)/map_groups.json
+$(MAP_LAYOUT_OUTPUTS) &: $(LAYOUTS_DIR)/layouts.json $(MAP_LAYOUT_BIN_INPUTS) $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAP_LAYOUT_STORAGE_STAMP) $(MAPJSON) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP)
+	$(MAPJSON) layouts $(MAP_VERSION) $< $(LAYOUTS_OUTDIR) $(INCLUDECONSTS_OUTDIR) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG) --map-layout-storage-mode $(MAP_LAYOUT_STORAGE) --map-layout-storage-report $(MAP_LAYOUT_STORAGE_REPORT)
 	@touch $(MAP_LAYOUT_OUTPUTS)
 
 # Generate constants for map events, which depend on data that's distributed across the map.json files.
@@ -126,10 +118,6 @@ $(MAP_VERSION_STAMP):
 $(MAP_LAYOUT_STORAGE_STAMP):
 	@rm -f $(filter-out $@,$(MAP_LAYOUT_STORAGE_STAMPS))
 	@echo "$(MAP_VERSION) $(MAP_LAYOUT_STORAGE)" > $@
-
-$(MAP_LAYOUT_SOURCE_REVISION_STAMP):
-	@rm -f $(filter-out $@,$(MAP_LAYOUT_SOURCE_REVISION_STAMPS))
-	@echo "$(MAP_LAYOUT_SOURCE_REVISION)" > $@
 
 FORCE:
 .PHONY : FORCE

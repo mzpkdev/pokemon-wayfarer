@@ -28,24 +28,6 @@ static void FillUndefined(u16 *map)
     CpuFastFill16(MAPGRID_UNDEFINED, map, MAX_MAP_DATA_SIZE * sizeof(*map));
 }
 
-TEST("Map layout special consumers keep raw exceptions explicit")
-{
-    u32 layoutId;
-
-    for (layoutId = LAYOUT_SECRET_BASE_RED_CAVE1;
-         layoutId <= LAYOUT_SECRET_BASE_SHRUB4;
-         layoutId++)
-        EXPECT_EQ(Test_MapLayoutGetDescriptor(gMapLayouts[layoutId - 1])->codec, 0);
-    for (layoutId = LAYOUT_TRAINER_HILL_1F_HNS;
-         layoutId <= LAYOUT_TRAINER_HILL_4F_HNS;
-         layoutId++)
-        EXPECT_EQ(Test_MapLayoutGetDescriptor(gMapLayouts[layoutId - 1])->codec, 0);
-    for (layoutId = LAYOUT_BATTLE_PYRAMID_SQUARE01_HNS;
-         layoutId <= LAYOUT_BATTLE_PYRAMID_SQUARE16_HNS;
-         layoutId++)
-        EXPECT_EQ(Test_MapLayoutGetDescriptor(gMapLayouts[layoutId - 1])->codec, 0);
-}
-
 TEST("Map layout special consumers generate every Battle Pyramid template identically")
 {
     u16 *expected = Alloc(MAX_MAP_DATA_SIZE * sizeof(*expected));

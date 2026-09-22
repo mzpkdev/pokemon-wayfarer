@@ -34,11 +34,9 @@ static bool8 IsWayfarerCoreRegion(enum Region region)
     return region == REGION_JOHTO || region == REGION_KANTO || region == REGION_HOENN;
 }
 
-// The saved location may be in Sinnoh even though only the three core regions
-// participate in the League circuit and have dedicated progression banks.
 static bool8 IsWayfarerStoredRegion(enum Region region)
 {
-    return IsWayfarerCoreRegion(region) || region == REGION_SINNOH;
+    return IsWayfarerCoreRegion(region);
 }
 #endif
 
@@ -334,8 +332,7 @@ void WayfarerValidatePersistentState(void)
         return;
 
     // Explicit map provenance is authoritative on load. HNS auxiliary maps
-    // retain their saved Kanto/Johto context, so a stale Sinnoh value cannot
-    // survive an explicitly identified HNS side-region map either.
+    // retain their saved Kanto/Johto context.
     if (IsWayfarerStoredRegion(explicitMapRegion)
      || !IsWayfarerStoredRegion(gSaveBlock3Ptr->wayfarerHoenn.currentRegion))
         gSaveBlock3Ptr->wayfarerHoenn.currentRegion = savedMapRegion;
@@ -354,7 +351,7 @@ void WayfarerValidatePersistentState(void)
     }
 
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions &=
-        (1 << REGION_JOHTO) | (1 << REGION_KANTO) | (1 << REGION_HOENN) | (1 << REGION_SINNOH);
+        (1 << REGION_JOHTO) | (1 << REGION_KANTO) | (1 << REGION_HOENN);
     gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |=
         1 << gSaveBlock3Ptr->wayfarerHoenn.currentRegion;
     LeagueRunValidateSavedLocation();
@@ -825,8 +822,6 @@ bool8 GetRegionVisitedState(enum Region region)
         return FlagGet(FLAG_VISITED_KANTO);
     if (region == REGION_HOENN)
         return (gSaveBlock3Ptr->wayfarerHoenn.visitedRegions >> REGION_HOENN) & 1;
-    if (region == REGION_SINNOH)
-        return (gSaveBlock3Ptr->wayfarerHoenn.visitedRegions >> REGION_SINNOH) & 1;
     return FALSE;
 #elif IS_HNS
     if (region == REGION_JOHTO)
@@ -851,7 +846,7 @@ void SetRegionVisitedState(enum Region region, bool8 value)
         else
             FlagClear(FLAG_VISITED_KANTO);
     }
-    else if (region == REGION_HOENN || region == REGION_JOHTO || region == REGION_SINNOH)
+    else if (region == REGION_HOENN || region == REGION_JOHTO)
     {
         if (value)
             gSaveBlock3Ptr->wayfarerHoenn.visitedRegions |= 1 << region;

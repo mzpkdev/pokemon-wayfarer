@@ -9,18 +9,14 @@ enum MapLayoutLoadError
     MAP_LAYOUT_LOAD_OK = 0x00,
     MAP_LAYOUT_LOAD_BAD_ID = 0x01,
     MAP_LAYOUT_LOAD_NO_DESCRIPTOR = 0x02,
-    MAP_LAYOUT_LOAD_BAD_SCHEMA = 0x03,
-    MAP_LAYOUT_LOAD_BAD_CODEC_FLAGS = 0x04,
-    MAP_LAYOUT_LOAD_BAD_ROM_RANGE = 0x05,
-    MAP_LAYOUT_LOAD_BAD_SIZE = 0x06,
-    MAP_LAYOUT_LOAD_BAD_BOUNDS = 0x07,
-    MAP_LAYOUT_LOAD_BAD_STREAM = 0x08,
-    MAP_LAYOUT_LOAD_BAD_STORED_CRC = 0x09,
-    MAP_LAYOUT_LOAD_BAD_DECODED_CRC = 0x0A,
-    MAP_LAYOUT_LOAD_SCRATCH_LIMIT = 0x0B,
-    MAP_LAYOUT_LOAD_ALLOC_FAILED = 0x0C,
-    MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME = 0x0D,
-    MAP_LAYOUT_LOAD_INTERNAL = 0x0E,
+    MAP_LAYOUT_LOAD_BAD_ROM_RANGE = 0x03,
+    MAP_LAYOUT_LOAD_BAD_SIZE = 0x04,
+    MAP_LAYOUT_LOAD_BAD_BOUNDS = 0x05,
+    MAP_LAYOUT_LOAD_BAD_STREAM = 0x06,
+    MAP_LAYOUT_LOAD_SCRATCH_LIMIT = 0x07,
+    MAP_LAYOUT_LOAD_ALLOC_FAILED = 0x08,
+    MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME = 0x09,
+    MAP_LAYOUT_LOAD_INTERNAL = 0x0A,
 };
 
 struct MapLayoutView
@@ -30,7 +26,6 @@ struct MapLayoutView
     u32 height;
     void *allocation;
     bool8 active;
-    bool8 compressed;
 };
 
 struct MapLayoutLoadContext
@@ -49,100 +44,6 @@ struct MapLayoutLoadFailure
     bool8 active;
 };
 
-#if IS_WAYFARER && MAP_LAYOUT_STORAGE_LEGACY
-// The production legacy-size artifact must contain the pre-feature raw loader,
-// not a raw descriptor flowing through the new runtime.  Keep these adapters
-// header-only so migrated callers compile back to direct raw reads/copies and
-// no descriptor, checksum, codec, allocation, or terminal-error code is linked.
-#define gMapLayoutLoadError ((const struct MapLayoutLoadFailure){0})
-
-static inline void AbortMapLayoutLoad(enum MapLayoutLoadError error, s16 mapGroup,
-                                      s16 mapNum, u16 layoutId)
-{
-}
-
-static inline enum MapLayoutLoadError MapLayoutBeginLoadContext(const struct MapHeader *mapHeader,
-                                                                 struct MapLayoutLoadContext *context)
-{
-    context->scratch = NULL;
-    context->capacity = 0;
-    context->active = TRUE;
-    return MAP_LAYOUT_LOAD_OK;
-}
-
-static inline enum MapLayoutLoadError MapLayoutEndLoadContext(struct MapLayoutLoadContext *context)
-{
-    context->active = FALSE;
-    return MAP_LAYOUT_LOAD_OK;
-}
-
-static inline enum MapLayoutLoadError MapLayoutCopyRectWithContext(
-    struct MapLayoutLoadContext *context, const struct MapLayout *layout,
-    u32 x, u32 y, u32 width, u32 height, u16 *dest,
-    u32 destTileCapacity, u32 destStride)
-{
-    const u16 *source = (const u16 *)layout->mapData + y * layout->width + x;
-    u32 row;
-
-    for (row = 0; row < height; row++)
-    {
-        CpuCopy16(source, dest, width * sizeof(u16));
-        source += layout->width;
-        dest += destStride;
-    }
-    return MAP_LAYOUT_LOAD_OK;
-}
-
-static inline enum MapLayoutLoadError MapLayoutCopyFullWithContext(
-    struct MapLayoutLoadContext *context, const struct MapLayout *layout,
-    u16 *dest, u32 destTileCapacity, u32 destStride)
-{
-    return MapLayoutCopyRectWithContext(context, layout, 0, 0,
-                                        layout->width, layout->height,
-                                        dest, destTileCapacity, destStride);
-}
-
-static inline enum MapLayoutLoadError MapLayoutCopyRect(const struct MapLayout *layout,
-    u32 x, u32 y, u32 width, u32 height, u16 *dest,
-    u32 destTileCapacity, u32 destStride)
-{
-    struct MapLayoutLoadContext context = {0};
-    return MapLayoutCopyRectWithContext(&context, layout, x, y, width, height,
-                                        dest, destTileCapacity, destStride);
-}
-
-static inline enum MapLayoutLoadError MapLayoutCopyFull(const struct MapLayout *layout,
-    u16 *dest, u32 destTileCapacity, u32 destStride)
-{
-    return MapLayoutCopyRect(layout, 0, 0, layout->width, layout->height,
-                             dest, destTileCapacity, destStride);
-}
-
-static inline enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
-                                                            struct MapLayoutView *view)
-{
-    view->tiles = layout->mapData;
-    view->width = layout->width;
-    view->height = layout->height;
-    view->allocation = NULL;
-    view->active = TRUE;
-    view->compressed = FALSE;
-    return MAP_LAYOUT_LOAD_OK;
-}
-
-static inline enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view)
-{
-    view->active = FALSE;
-    return MAP_LAYOUT_LOAD_OK;
-}
-
-static inline enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout,
-                                                         u32 x, u32 y, u16 *tile)
-{
-    *tile = ((const u16 *)layout->mapData)[y * layout->width + x];
-    return MAP_LAYOUT_LOAD_OK;
-}
-#else
 extern struct MapLayoutLoadFailure gMapLayoutLoadError;
 
 void AbortMapLayoutLoad(enum MapLayoutLoadError error, s16 mapGroup, s16 mapNum,
@@ -170,7 +71,6 @@ enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
 enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view);
 enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout, u32 x, u32 y,
                                           u16 *tile);
-#endif
 
 #if TESTING && IS_WAYFARER
 struct MapLayoutTestDescriptor
@@ -178,12 +78,9 @@ struct MapLayoutTestDescriptor
     const u8 *payload;
     u32 storedBytes;
     u32 decodedFileBytes;
-    u32 logicalTileBytes;
-    u32 storedCrc32;
-    u32 decodedCrc32;
-    u8 schemaVersion;
     u8 codec;
-    u16 flags;
+    u8 padding;
+    u16 reserved;
 };
 
 struct MapLayoutTestTelemetry
@@ -193,7 +90,6 @@ struct MapLayoutTestTelemetry
     u32 releaseCount;
     u32 openCount;
     u32 decodeCount;
-    u32 decodePhaseCount;
     u32 beforeAllocationLargestFreeBytes;
     u32 afterAllocationLargestFreeBytes;
     u32 afterDecodeLargestFreeBytes;

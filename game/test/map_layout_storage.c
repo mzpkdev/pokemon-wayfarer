@@ -90,20 +90,6 @@ static void ExpectSyntheticConnectionsMatch(const struct MapConnection *connecti
     Free(expected);
 }
 
-static u32 TestCrc32(const u8 *data, u32 size)
-{
-    u32 crc = 0xFFFFFFFF;
-    u32 i;
-
-    while (size-- != 0)
-    {
-        crc ^= *data++;
-        for (i = 0; i < 8; i++)
-            crc = (crc >> 1) ^ (0xEDB88320 & (0 - (crc & 1)));
-    }
-    return crc ^ 0xFFFFFFFF;
-}
-
 #if MAP_LAYOUT_STORAGE_HYBRID
 static void ExpectRejectedLzStream(const u8 *stream, u32 size, u32 decodedBytes)
 {
@@ -112,10 +98,6 @@ static void ExpectRejectedLzStream(const u8 *stream, u32 size, u32 decodedBytes)
         .payload = stream,
         .storedBytes = size,
         .decodedFileBytes = decodedBytes,
-        .logicalTileBytes = 2,
-        .storedCrc32 = TestCrc32(stream, size),
-        .decodedCrc32 = 0,
-        .schemaVersion = 1,
         .codec = 1,
     };
     struct MapLayout layout =
@@ -150,14 +132,13 @@ TEST("Map layout storage APIs agree for the unconnected canary")
     EXPECT_EQ(copy[2 * layout->width + 2], tile);
     EXPECT_EQ(MapLayoutAcquireView(layout, &first), MAP_LAYOUT_LOAD_OK);
     EXPECT_EQ(first.tiles[2 * layout->width + 2], tile);
-#if MAP_LAYOUT_STORAGE_HYBRID
-    EXPECT(first.compressed);
-    EXPECT_EQ(MapLayoutAcquireView(layout, &second), MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME);
-#else
-    EXPECT(!first.compressed);
-    EXPECT_EQ(MapLayoutAcquireView(layout, &second), MAP_LAYOUT_LOAD_OK);
-    EXPECT_EQ(MapLayoutReleaseView(&second), MAP_LAYOUT_LOAD_OK);
-#endif
+    if (first.allocation != NULL)
+        EXPECT_EQ(MapLayoutAcquireView(layout, &second), MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME);
+    else
+    {
+        EXPECT_EQ(MapLayoutAcquireView(layout, &second), MAP_LAYOUT_LOAD_OK);
+        EXPECT_EQ(MapLayoutReleaseView(&second), MAP_LAYOUT_LOAD_OK);
+    }
     EXPECT_EQ(MapLayoutReleaseView(&first), MAP_LAYOUT_LOAD_OK);
     EXPECT(!first.active);
     EXPECT(first.tiles == NULL);
@@ -485,7 +466,10 @@ TEST("Map layout storage owns one scratch allocation for current map and neighbo
 #if MAP_LAYOUT_STORAGE_HYBRID
     EXPECT_EQ(telemetry->allocationCount, 1);
     EXPECT_EQ(telemetry->requestedScratchBytes,
-              Test_MapLayoutGetDescriptor(canary->mapLayout)->decodedFileBytes);
+              Test_MapLayoutGetDescriptor(route->mapLayout)->decodedFileBytes
+                  > Test_MapLayoutGetDescriptor(canary->mapLayout)->decodedFileBytes
+                  ? Test_MapLayoutGetDescriptor(route->mapLayout)->decodedFileBytes
+                  : Test_MapLayoutGetDescriptor(canary->mapLayout)->decodedFileBytes);
 #else
     EXPECT_EQ(telemetry->allocationCount, 0);
 #endif
@@ -622,7 +606,7 @@ TEST("Map layout storage repeated raw and compressed reads do not fragment the h
     EXPECT_EQ(after.largestFreeBytes, before.largestFreeBytes);
 }
 
-TEST("Map layout storage profiles the connection-heaviest real map")
+ TEST("Map layout storage profiles the connection-heaviest real map")
 {
     const struct MapHeader *heaviest = NULL;
     u32 heaviestCount = 0;
@@ -654,7 +638,6 @@ TEST("Map layout storage profiles the connection-heaviest real map")
     telemetry = Test_MapLayoutGetTelemetry();
 #if MAP_LAYOUT_STORAGE_HYBRID
     EXPECT(telemetry->openCount > 1);
-    EXPECT_EQ(telemetry->decodePhaseCount, telemetry->decodeCount);
     if (telemetry->requestedScratchBytes != 0)
     {
         EXPECT_EQ(telemetry->allocationCount, 1);
@@ -673,7 +656,6 @@ TEST("Map layout storage profiles the connection-heaviest real map")
 #else
     EXPECT_EQ(telemetry->allocationCount, 0);
     EXPECT_EQ(telemetry->decodeCount, 0);
-    EXPECT_EQ(telemetry->decodePhaseCount, 0);
 #endif
     after = TakeHeapSnapshot();
     EXPECT_EQ(after.blockCount, before.blockCount);
@@ -681,9 +663,9 @@ TEST("Map layout storage profiles the connection-heaviest real map")
     EXPECT_EQ(after.freeBytes, before.freeBytes);
     EXPECT_EQ(after.largestFreeBytes, before.largestFreeBytes);
     EXPECT(CheckHeap());
-    Test_MgbaPrintf("{\"kind\":\"memory\",\"case\":\"connection-heaviest\",\"connections\":%d,\"scratch\":%d,\"decodes\":%d,\"decodePhases\":%d,\"status\":\"passed\"}",
+    Test_MgbaPrintf("{\"kind\":\"memory\",\"case\":\"connection-heaviest\",\"connections\":%d,\"scratch\":%d,\"decodes\":%d,\"status\":\"passed\"}",
                     heaviestCount, telemetry->requestedScratchBytes,
-                    telemetry->decodeCount, telemetry->decodePhaseCount);
+                    telemetry->decodeCount);
     Test_MapLayoutResetHooks();
 }
 
@@ -726,7 +708,7 @@ TEST("Map layout storage reports allocation and mid-connection failures without 
     Test_MapLayoutResetHooks();
 }
 
-TEST("Map layout storage rejects malformed descriptors and streams deterministically")
+TEST("Map layout storage rejects malformed descriptors deterministically")
 {
     const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
         MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
@@ -734,114 +716,50 @@ TEST("Map layout storage rejects malformed descriptors and streams deterministic
         *Test_MapLayoutGetDescriptor(canary->mapLayout);
     struct MapLayoutTestDescriptor descriptor = original;
     struct MapLayout layout = *canary->mapLayout;
-    u16 *dest = Alloc(original.logicalTileBytes);
-    u8 *payload = Alloc(original.storedBytes);
-    const u16 *raw = gMapLayoutRawOracles[canary->mapLayoutId - 1];
+    u32 tileCount = layout.width * layout.height;
+    u16 *dest = Alloc(tileCount * sizeof(*dest));
 
     EXPECT(dest != NULL);
-    EXPECT(payload != NULL);
     Test_MapLayoutResetHooks();
     layout.mapData = NULL;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width),
               MAP_LAYOUT_LOAD_NO_DESCRIPTOR);
-
     layout.mapData = (const u8 *)&descriptor + 1;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width),
               MAP_LAYOUT_LOAD_NO_DESCRIPTOR);
 
     layout.mapData = &descriptor;
-    descriptor.schemaVersion = 0;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SCHEMA);
-    descriptor = original;
     descriptor.codec = 0xFF;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_CODEC_FLAGS);
-    descriptor = original;
-    descriptor.flags = 1;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_CODEC_FLAGS);
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width), MAP_LAYOUT_LOAD_BAD_SIZE);
     descriptor = original;
     descriptor.storedBytes = 0;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SIZE);
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width), MAP_LAYOUT_LOAD_BAD_SIZE);
     descriptor = original;
     descriptor.storedBytes = MAP_LAYOUT_MAX_STORED_BYTES + 1;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SIZE);
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width), MAP_LAYOUT_LOAD_BAD_SIZE);
     descriptor = original;
     descriptor.decodedFileBytes = 0;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SIZE);
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width), MAP_LAYOUT_LOAD_BAD_SIZE);
     descriptor = original;
     descriptor.decodedFileBytes = MAP_LAYOUT_MAX_DECODED_FILE_BYTES + 1;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SIZE);
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width), MAP_LAYOUT_LOAD_BAD_SIZE);
     descriptor = original;
-    descriptor.logicalTileBytes--;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SIZE);
-    descriptor = original;
-    descriptor.logicalTileBytes = descriptor.decodedFileBytes + 2;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_SIZE);
+    descriptor.decodedFileBytes = tileCount * sizeof(*dest) - 1;
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width), MAP_LAYOUT_LOAD_BAD_SIZE);
     descriptor = original;
     descriptor.payload = NULL;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width),
               MAP_LAYOUT_LOAD_BAD_ROM_RANGE);
     descriptor = original;
     descriptor.payload++;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width),
               MAP_LAYOUT_LOAD_BAD_ROM_RANGE);
     descriptor = original;
     Test_MapLayoutSetPayloadBounds(original.payload, original.payload + original.storedBytes);
     descriptor.payload = original.payload + original.storedBytes;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
+    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, tileCount, layout.width),
               MAP_LAYOUT_LOAD_BAD_ROM_RANGE);
     Test_MapLayoutResetHooks();
-    descriptor = original;
-    descriptor.storedCrc32 ^= 1;
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_STORED_CRC);
-    EXPECT_EQ(Test_MapLayoutGetTelemetry()->decodeCount, 0);
-
-#if MAP_LAYOUT_STORAGE_HYBRID
-    memcpy(payload, original.payload, original.storedBytes);
-    descriptor = original;
-    descriptor.payload = payload;
-    Test_MapLayoutResetHooks();
-    Test_MapLayoutSetPayloadBounds(payload, payload + original.storedBytes);
-    payload[0] = 0;
-    descriptor.storedCrc32 = TestCrc32(payload, original.storedBytes);
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_STREAM);
-    EXPECT_EQ(Test_MapLayoutGetTelemetry()->decodeCount, 0);
-
-    memcpy(payload, original.payload, original.storedBytes);
-    descriptor = original;
-    descriptor.payload = payload;
-    descriptor.decodedCrc32 ^= 1;
-    Test_MapLayoutResetHooks();
-    Test_MapLayoutSetPayloadBounds(payload, payload + original.storedBytes);
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_DECODED_CRC);
-    EXPECT_EQ(Test_MapLayoutGetTelemetry()->decodeCount, 1);
-#endif
-
-    descriptor = original;
-    descriptor.codec = 0;
-    descriptor.payload = (const u8 *)raw;
-    descriptor.storedBytes = original.decodedFileBytes;
-    descriptor.storedCrc32 = TestCrc32((const u8 *)raw, descriptor.storedBytes);
-    descriptor.decodedCrc32 = descriptor.storedCrc32 ^ 1;
-    Test_MapLayoutResetHooks();
-    Test_MapLayoutSetPayloadBounds(raw, (const u8 *)raw + descriptor.storedBytes);
-    EXPECT_EQ(MapLayoutCopyFull(&layout, dest, original.logicalTileBytes / 2, layout.width),
-              MAP_LAYOUT_LOAD_BAD_DECODED_CRC);
-    EXPECT_EQ(Test_MapLayoutGetTelemetry()->decodeCount, 0);
-
-    Test_MapLayoutResetHooks();
-    Free(payload);
     Free(dest);
 }
 
@@ -858,13 +776,14 @@ TEST("Map layout storage preflight rejects every malformed LZ stream class")
     {
         0x10, 0x09, 0x00, 0x00, 0x00, 0, 0, 0, 0, 0, 0, 0, 0,
     };
-    static const ALIGNED(4) u8 trailingData[] =
-    {
-        0x10, 0x02, 0x00, 0x00, 0x00, 0xAA, 0xBB, 0x00, 0, 0, 0, 0,
-    };
     static const ALIGNED(4) u8 nonzeroPadding[] =
     {
         0x10, 0x02, 0x00, 0x00, 0x00, 0xAA, 0xBB, 0x7F,
+    };
+    static const ALIGNED(4) u8 trailingData[] =
+    {
+        0x10, 0x02, 0x00, 0x00, 0x00, 0xAA, 0xBB, 0x00,
+        0x00, 0x00, 0x00, 0x00,
     };
 
     ExpectRejectedLzStream(badHeader, sizeof(badHeader), 2);
@@ -874,8 +793,8 @@ TEST("Map layout storage preflight rejects every malformed LZ stream class")
     ExpectRejectedLzStream(invalidBackref, sizeof(invalidBackref), 2);
     ExpectRejectedLzStream(outputOverrun, sizeof(outputOverrun), 2);
     ExpectRejectedLzStream(earlyEnd, sizeof(earlyEnd), 9);
-    ExpectRejectedLzStream(trailingData, sizeof(trailingData), 2);
     ExpectRejectedLzStream(nonzeroPadding, sizeof(nonzeroPadding), 2);
+    ExpectRejectedLzStream(trailingData, sizeof(trailingData), 2);
     Test_MapLayoutResetHooks();
 #endif
 }
@@ -922,17 +841,11 @@ TEST("Map layout storage accepts minimum geometry and rejects oversized backup g
         .payload = (const u8 *)payload,
         .storedBytes = sizeof(payload),
         .decodedFileBytes = sizeof(payload),
-        .logicalTileBytes = sizeof(payload),
-        .storedCrc32 = 0,
-        .decodedCrc32 = 0,
-        .schemaVersion = 1,
         .codec = 0,
     };
     struct MapLayout layout = {.width = 1, .height = 1, .mapData = &descriptor};
     struct MapHeader header = {.mapLayout = &layout};
 
-    descriptor.storedCrc32 = TestCrc32((const u8 *)payload, sizeof(payload));
-    descriptor.decodedCrc32 = descriptor.storedCrc32;
     Test_MapLayoutResetHooks();
     Test_MapLayoutSetPayloadBounds(payload, payload + ARRAY_COUNT(payload));
     EXPECT_EQ(Test_InitMapLayoutData(&header), MAP_LAYOUT_LOAD_OK);
@@ -957,10 +870,10 @@ TEST("Map layout storage failure enters the terminal no-save state")
     gMapLayoutLoadError = (struct MapLayoutLoadFailure){0};
     sBackupMapData[0] = 0;
     sBackupMapData[MAX_MAP_DATA_SIZE - 1] = 0;
-    AbortMapLayoutLoad(MAP_LAYOUT_LOAD_BAD_DECODED_CRC, 0x12, 0x34, 0x5678);
+    AbortMapLayoutLoad(MAP_LAYOUT_LOAD_BAD_STREAM, 0x12, 0x34, 0x5678);
 
     EXPECT(gMapLayoutLoadError.active);
-    EXPECT_EQ(gMapLayoutLoadError.error, MAP_LAYOUT_LOAD_BAD_DECODED_CRC);
+    EXPECT_EQ(gMapLayoutLoadError.error, MAP_LAYOUT_LOAD_BAD_STREAM);
     EXPECT_EQ(gMapLayoutLoadError.mapGroup, 0x12);
     EXPECT_EQ(gMapLayoutLoadError.mapNum, 0x34);
     EXPECT_EQ(gMapLayoutLoadError.layoutId, 0x5678);

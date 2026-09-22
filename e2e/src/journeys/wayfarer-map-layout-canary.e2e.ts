@@ -20,7 +20,7 @@ const canaries = [
   },
 ] as const
 
-describe.sequential("Wayfarer Stage 1 map-layout canaries", () => {
+describe.sequential("Wayfarer map-layout canaries", () => {
   let game: GameSession
 
   beforeAll(async () => {

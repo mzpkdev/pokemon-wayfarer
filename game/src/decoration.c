@@ -2451,9 +2451,9 @@ enum MapLayoutLoadError Test_ApplyDecoration(s16 posX, s16 posY, u16 decoration)
         if (sTestDecorationItems[0] != decoration)
             return MAP_LAYOUT_LOAD_NO_DESCRIPTOR;
         if (sTestDecorationPositions[0] != ((posX << 4) | posY))
-            return MAP_LAYOUT_LOAD_BAD_SCHEMA;
+            return MAP_LAYOUT_LOAD_INTERNAL;
         if (gSpecialVar_0x8006 != posX || gSpecialVar_0x8007 != posY)
-            return MAP_LAYOUT_LOAD_BAD_CODEC_FLAGS;
+            return MAP_LAYOUT_LOAD_INTERNAL;
         if (gObjectEvents[objectEventId].currentCoords.x != posX + MAP_OFFSET
          || gObjectEvents[objectEventId].currentCoords.y != posY + MAP_OFFSET)
             return MAP_LAYOUT_LOAD_BAD_BOUNDS;
