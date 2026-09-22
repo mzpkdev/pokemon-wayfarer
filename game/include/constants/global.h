@@ -98,7 +98,7 @@ enum Language
     #define HAS_EMERALD_CONTENT 1
     // Sinnoh remains release-closed, but isolated test/E2E map generation may
     // link its reviewed catalog without enabling it in any shipped product.
-    #if TESTING || defined(E2E_TESTING)
+    #if WAYFARER_SINNOH_TEST_CONTENT
         #define HAS_SINNOH_CONTENT 1
     #else
         #define HAS_SINNOH_CONTENT 0

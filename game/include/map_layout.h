@@ -2,6 +2,7 @@
 #define GUARD_MAP_LAYOUT_H
 
 #include "global.h"
+#include "constants/map_layout_storage.h"
 
 enum MapLayoutLoadError
 {
@@ -48,6 +49,100 @@ struct MapLayoutLoadFailure
     bool8 active;
 };
 
+#if IS_WAYFARER && MAP_LAYOUT_STORAGE_LEGACY
+// The production legacy-size artifact must contain the pre-feature raw loader,
+// not a raw descriptor flowing through the new runtime.  Keep these adapters
+// header-only so migrated callers compile back to direct raw reads/copies and
+// no descriptor, checksum, codec, allocation, or terminal-error code is linked.
+#define gMapLayoutLoadError ((const struct MapLayoutLoadFailure){0})
+
+static inline void AbortMapLayoutLoad(enum MapLayoutLoadError error, s16 mapGroup,
+                                      s16 mapNum, u16 layoutId)
+{
+}
+
+static inline enum MapLayoutLoadError MapLayoutBeginLoadContext(const struct MapHeader *mapHeader,
+                                                                 struct MapLayoutLoadContext *context)
+{
+    context->scratch = NULL;
+    context->capacity = 0;
+    context->active = TRUE;
+    return MAP_LAYOUT_LOAD_OK;
+}
+
+static inline enum MapLayoutLoadError MapLayoutEndLoadContext(struct MapLayoutLoadContext *context)
+{
+    context->active = FALSE;
+    return MAP_LAYOUT_LOAD_OK;
+}
+
+static inline enum MapLayoutLoadError MapLayoutCopyRectWithContext(
+    struct MapLayoutLoadContext *context, const struct MapLayout *layout,
+    u32 x, u32 y, u32 width, u32 height, u16 *dest,
+    u32 destTileCapacity, u32 destStride)
+{
+    const u16 *source = (const u16 *)layout->mapData + y * layout->width + x;
+    u32 row;
+
+    for (row = 0; row < height; row++)
+    {
+        CpuCopy16(source, dest, width * sizeof(u16));
+        source += layout->width;
+        dest += destStride;
+    }
+    return MAP_LAYOUT_LOAD_OK;
+}
+
+static inline enum MapLayoutLoadError MapLayoutCopyFullWithContext(
+    struct MapLayoutLoadContext *context, const struct MapLayout *layout,
+    u16 *dest, u32 destTileCapacity, u32 destStride)
+{
+    return MapLayoutCopyRectWithContext(context, layout, 0, 0,
+                                        layout->width, layout->height,
+                                        dest, destTileCapacity, destStride);
+}
+
+static inline enum MapLayoutLoadError MapLayoutCopyRect(const struct MapLayout *layout,
+    u32 x, u32 y, u32 width, u32 height, u16 *dest,
+    u32 destTileCapacity, u32 destStride)
+{
+    struct MapLayoutLoadContext context = {0};
+    return MapLayoutCopyRectWithContext(&context, layout, x, y, width, height,
+                                        dest, destTileCapacity, destStride);
+}
+
+static inline enum MapLayoutLoadError MapLayoutCopyFull(const struct MapLayout *layout,
+    u16 *dest, u32 destTileCapacity, u32 destStride)
+{
+    return MapLayoutCopyRect(layout, 0, 0, layout->width, layout->height,
+                             dest, destTileCapacity, destStride);
+}
+
+static inline enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
+                                                            struct MapLayoutView *view)
+{
+    view->tiles = layout->mapData;
+    view->width = layout->width;
+    view->height = layout->height;
+    view->allocation = NULL;
+    view->active = TRUE;
+    view->compressed = FALSE;
+    return MAP_LAYOUT_LOAD_OK;
+}
+
+static inline enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view)
+{
+    view->active = FALSE;
+    return MAP_LAYOUT_LOAD_OK;
+}
+
+static inline enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout,
+                                                         u32 x, u32 y, u16 *tile)
+{
+    *tile = ((const u16 *)layout->mapData)[y * layout->width + x];
+    return MAP_LAYOUT_LOAD_OK;
+}
+#else
 extern struct MapLayoutLoadFailure gMapLayoutLoadError;
 
 void AbortMapLayoutLoad(enum MapLayoutLoadError error, s16 mapGroup, s16 mapNum,
@@ -75,6 +170,7 @@ enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
 enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view);
 enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout, u32 x, u32 y,
                                           u16 *tile);
+#endif
 
 #if TESTING && IS_WAYFARER
 struct MapLayoutTestDescriptor

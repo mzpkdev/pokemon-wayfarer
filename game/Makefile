@@ -4,6 +4,7 @@ GAME_CODE    ?= BPEE
 BUILD_NAME   ?= emerald
 MAP_VERSION  ?= emerald
 MAP_LAYOUT_STORAGE ?= raw
+MAP_LAYOUT_STORAGE_BUILD_SUFFIX := $(if $(filter raw,$(MAP_LAYOUT_STORAGE)),,-$(MAP_LAYOUT_STORAGE))
 
 # E2E always builds the Wayfarer product. Resolve it before setup prerequisites
 # run: the outer `make e2e` otherwise defaults to Emerald and can generate
@@ -64,6 +65,14 @@ COMPARE     ?= 0
 TEST         ?= 0
 # Builds the playable test ROM used by the external SkyEmu suite.
 E2E          ?= 0
+# E2E normally exposes the frozen Sinnoh catalog. Storage-rollout journeys can
+# disable it explicitly so the raw/Stage 1 images stay below the hardware ROM
+# ceiling without changing production selection.
+WAYFARER_SINNOH_TEST_CONTENT ?= $(if $(filter 1,$(TEST) $(E2E)),1,0)
+ifneq ($(filter $(WAYFARER_SINNOH_TEST_CONTENT),0 1),$(WAYFARER_SINNOH_TEST_CONTENT))
+$(error WAYFARER_SINNOH_TEST_CONTENT must be 0 or 1)
+endif
+SINNOH_TEST_BUILD_SUFFIX := $(if $(and $(filter 1,$(E2E)),$(filter 0,$(WAYFARER_SINNOH_TEST_CONTENT))),-nosinnoh,)
 # Enables -fanalyzer C flag to analyze in depth potential UBs
 ANALYZE      ?= 0
 # Count unused warnings as errors. Used by RH-Hideout's repo
@@ -140,15 +149,15 @@ ifeq ($(RELEASE),1)
 	FILE_NAME := $(FILE_NAME)-release
 endif
 ifeq ($(E2E),1)
-	FILE_NAME := pokemon-wayfarer-e2e
+	FILE_NAME := pokemon-wayfarer-e2e$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)$(SINNOH_TEST_BUILD_SUFFIX)
 endif
 
 ROM_NAME := $(FILE_NAME).gba
-OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)
-OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)-test
-OBJ_DIR_NAME_E2E := $(BUILD_DIR)/$(BUILD_NAME)-e2e
-OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/$(BUILD_NAME)-debug
-OBJ_DIR_NAME_RELEASE := $(BUILD_DIR)/$(BUILD_NAME)-release
+OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)
+OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-test
+OBJ_DIR_NAME_E2E := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)$(SINNOH_TEST_BUILD_SUFFIX)-e2e
+OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-debug
+OBJ_DIR_NAME_RELEASE := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-release
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
@@ -178,8 +187,8 @@ ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
 SYM := $(ROM:.gba=.sym)
 ROM_REPORT := $(ROM:.gba=-size.json)
-E2E_ROM := pokemon-wayfarer-e2e.gba
-E2E_SYM := pokemon-wayfarer-e2e.sym
+E2E_ROM := pokemon-wayfarer-e2e$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)$(SINNOH_TEST_BUILD_SUFFIX).gba
+E2E_SYM := pokemon-wayfarer-e2e$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)$(SINNOH_TEST_BUILD_SUFFIX).sym
 
 WAYFARER_ROM_BASELINE ?=
 # Set this to 1 only when deliberately creating the first report for a new
@@ -258,6 +267,7 @@ CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -D$(
 override CPPFLAGS += $(foreach capability,$(LEGACY_MULTIBOOT_CAPABILITIES),-D$(capability)=$($(capability)))
 ifeq ($(GAME_VERSION),POKEMON_WAYFARER)
   override CPPFLAGS += -DPOKEMON_HNS
+  override CPPFLAGS += -DWAYFARER_SINNOH_TEST_CONTENT=$(WAYFARER_SINNOH_TEST_CONTENT)
 endif
 ifeq ($(E2E),1)
   override CPPFLAGS += -DE2E_TESTING=1
@@ -800,9 +810,11 @@ league-circuit-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/league_circuit -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_league_tiers -p 'test_*.py' -q
 
-.PHONY: e2e
+.PHONY: e2e e2e-inner
 e2e:
-	+$(MAKE) BUILD=wayfarer E2E=1 $(E2E_ROM) $(E2E_SYM)
+	+$(MAKE) BUILD=wayfarer E2E=1 e2e-inner
+
+e2e-inner: $(E2E_ROM) $(E2E_SYM)
 
 emerald-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_emerald_traversal.py' -q
@@ -900,9 +912,14 @@ $(WAYFARER_SINNOH_PORT_VERIFY_STAMP): $(WAYFARER_SINNOH_PORT_DEPS) $(WAYFARER_SI
 	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/assets.py --root . --verify
 	@touch $@
 
-.PHONY: map-layout-storage-test map-layout-storage-audit wayfarer-sinnoh-port-assets wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
+.PHONY: map-layout-storage-test map-layout-storage-audit map-layout-stage1-evidence wayfarer-sinnoh-port-assets wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
 map-layout-storage-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/map_layout_storage -p 'test_*.py' -q
+
+map-layout-stage1-evidence:
+	@test -n "$(MAP_LAYOUT_TIMING_EVIDENCE)" || { echo "MAP_LAYOUT_TIMING_EVIDENCE is required"; exit 2; }
+	@test -n "$(MAP_LAYOUT_ROLLBACK_EVIDENCE)" || { echo "MAP_LAYOUT_ROLLBACK_EVIDENCE is required"; exit 2; }
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/map_layout_storage/evidence.py --root build/map-layout-rollout/stage1 --artifact-root . --source-revision $(MAP_LAYOUT_SOURCE_REVISION) --timing $(MAP_LAYOUT_TIMING_EVIDENCE) --rollback $(MAP_LAYOUT_ROLLBACK_EVIDENCE) --output build/map-layout-rollout/stage1/evidence.json
 
 map-layout-storage-audit: map-layout-storage-test $(DATA_ASM_BUILDDIR)/maps.o
 	PYTHONDONTWRITEBYTECODE=1 python3 tools/map_layout_storage/audit.py --root . --object $(DATA_ASM_BUILDDIR)/maps.o --nm $(PREFIX)nm

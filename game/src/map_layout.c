@@ -14,6 +14,8 @@
 #include "data/map_group_count.h"
 #include "constants/rgb.h"
 
+#if !(IS_WAYFARER && MAP_LAYOUT_STORAGE_LEGACY)
+
 #define MAP_LAYOUT_STORAGE_SCHEMA_V1 1
 #define MAP_LAYOUT_CODEC_RAW 0
 #define MAP_LAYOUT_CODEC_GBA_LZ77 1
@@ -43,7 +45,7 @@ STATIC_ASSERT(offsetof(struct MapLayoutDataDescriptor, schemaVersion) == 0x18, M
 STATIC_ASSERT(offsetof(struct MapLayoutDataDescriptor, codec) == 0x19, MapLayoutDataDescriptor_codec);
 STATIC_ASSERT(offsetof(struct MapLayoutDataDescriptor, flags) == 0x1A, MapLayoutDataDescriptor_flags);
 
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
 extern const u8 __map_layout_payloads_start[];
 extern const u8 __map_layout_payloads_end[];
 static bool8 sCompressedViewActive;
@@ -227,6 +229,7 @@ void CB2_MapLayoutLoadError(void)
     gMain.state = 1;
 }
 
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
 static u32 CalcCrc32(const u8 *data, u32 size)
 {
     u32 crc = 0xFFFFFFFF;
@@ -240,6 +243,7 @@ static u32 CalcCrc32(const u8 *data, u32 size)
     }
     return crc ^ 0xFFFFFFFF;
 }
+#endif
 
 static enum MapLayoutLoadError ValidateLayoutGeometry(const struct MapLayout *layout, u32 *logicalBytes)
 {
@@ -253,7 +257,7 @@ static enum MapLayoutLoadError ValidateLayoutGeometry(const struct MapLayout *la
     return MAP_LAYOUT_LOAD_OK;
 }
 
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
 static enum MapLayoutLoadError PreflightLz77(const struct MapLayoutDataDescriptor *descriptor)
 {
     const u8 *stream = descriptor->payload;
@@ -364,7 +368,7 @@ static enum MapLayoutLoadError GetRequiredScratch(const struct MapLayout *layout
     enum MapLayoutLoadError error = ValidateLayoutGeometry(layout, &logicalBytes);
     if (error != MAP_LAYOUT_LOAD_OK)
         return error;
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
     {
         const struct MapLayoutDataDescriptor *descriptor;
 #if TESTING
@@ -391,7 +395,7 @@ static void *AllocateScratch(u32 size)
 {
     void *scratch;
 
-#if IS_WAYFARER && TESTING
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY && TESTING
     sTestTelemetry.requestedScratchBytes = size;
     Test_RecordLargestFree(&sTestTelemetry.beforeAllocationLargestFreeBytes);
     if (size == 0 || sTestForceAllocationFailure
@@ -410,7 +414,7 @@ static void *AllocateScratch(u32 size)
 static void ReleaseScratch(void *scratch)
 {
     Free(scratch);
-#if IS_WAYFARER && TESTING
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY && TESTING
     if (scratch != NULL)
         sTestTelemetry.releaseCount++;
     Test_RecordLargestFree(&sTestTelemetry.afterReleaseLargestFreeBytes);
@@ -427,7 +431,7 @@ static enum MapLayoutLoadError OpenTiles(const struct MapLayout *layout, void *s
         return error;
     if (tiles == NULL)
         return MAP_LAYOUT_LOAD_INTERNAL;
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
     {
         const struct MapLayoutDataDescriptor *descriptor;
 #if TESTING
@@ -647,7 +651,7 @@ enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
     error = GetRequiredScratch(layout, &required);
     if (error != MAP_LAYOUT_LOAD_OK)
         return error;
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
     if (required != 0 && sCompressedViewActive)
         return MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME;
 #endif
@@ -664,7 +668,7 @@ enum MapLayoutLoadError MapLayoutAcquireView(const struct MapLayout *layout,
     view->width = layout->width;
     view->height = layout->height;
     view->active = TRUE;
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
     if (view->compressed)
         sCompressedViewActive = TRUE;
 #endif
@@ -675,7 +679,7 @@ enum MapLayoutLoadError MapLayoutReleaseView(struct MapLayoutView *view)
 {
     if (view == NULL || !view->active)
         return MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME;
-#if IS_WAYFARER
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY
     if (view->compressed)
         sCompressedViewActive = FALSE;
 #endif
@@ -712,7 +716,7 @@ enum MapLayoutLoadError MapLayoutReadTile(const struct MapLayout *layout, u32 x,
     return error;
 }
 
-#if IS_WAYFARER && TESTING
+#if IS_WAYFARER && !MAP_LAYOUT_STORAGE_LEGACY && TESTING
 void Test_MapLayoutResetHooks(void)
 {
     sTestPayloadsStart = NULL;
@@ -762,3 +766,5 @@ const struct MapLayoutTestDescriptor *Test_MapLayoutGetDescriptor(const struct M
     return layout == NULL ? NULL : layout->mapData;
 }
 #endif
+
+#endif // !(IS_WAYFARER && MAP_LAYOUT_STORAGE_LEGACY)

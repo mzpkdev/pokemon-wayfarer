@@ -10,6 +10,7 @@ export type SessionRuntime = {
   readUint32: (address: number) => Promise<number>
   writeBytes: (address: number, bytes: Uint8Array) => Promise<void>
   advance: (frames: number) => Promise<void>
+  measuredFrames?: () => number
   press: (button: SkyEmuButton, holdFrames?: number, releaseFrames?: number) => Promise<void>
 }
 
@@ -18,9 +19,11 @@ export const createSessionRuntime = (
   symbols: SkyEmuSymbols,
   abi: SessionAbi,
 ): SessionRuntime => {
+  let measuredFrames = 0
   const advance = async (frames: number): Promise<void> => {
     const result = await client.step(frames)
     if (result !== "ok") throw new Error(`SkyEmu failed to advance ${frames} frames: ${result}`)
+    measuredFrames += frames
   }
 
   const press = async (button: SkyEmuButton, holdFrames = 2, releaseFrames = 2): Promise<void> => {
@@ -40,6 +43,7 @@ export const createSessionRuntime = (
     readUint32: (address) => client.readUint32LE(address),
     writeBytes: (address, bytes) => client.writeBytes(address, bytes),
     advance,
+    measuredFrames: () => measuredFrames,
     press,
   }
 }

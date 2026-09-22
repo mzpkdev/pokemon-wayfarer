@@ -46,8 +46,8 @@ endif
 MAP_VERSION_STAMP := .map_version.$(MAP_VERSION)
 MAP_VERSION_STAMPS := .map_version.emerald .map_version.firered .map_version.hns .map_version.wayfarer
 .NOTINTERMEDIATE: $(MAP_VERSION_STAMP)
-ifneq ($(filter $(MAP_LAYOUT_STORAGE),raw hybrid),$(MAP_LAYOUT_STORAGE))
-$(error MAP_LAYOUT_STORAGE must be raw or hybrid)
+ifneq ($(filter $(MAP_LAYOUT_STORAGE),legacy raw hybrid),$(MAP_LAYOUT_STORAGE))
+$(error MAP_LAYOUT_STORAGE must be legacy, raw, or hybrid)
 endif
 MAP_LAYOUT_STORAGE_POLICY := src/data/map_layout_storage.json
 MAP_LAYOUT_STORAGE_STAMP := .map_layout_storage.$(MAP_VERSION).$(MAP_LAYOUT_STORAGE)
@@ -108,8 +108,8 @@ $(MAP_GROUP_OUTPUTS) &: $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(MAP_VERSION_S
 	@echo "$(MAPJSON) groups $(MAP_VERSION) $(MAPS_DIR)/map_groups.json <MAP_JSONS> $(MAPS_OUTDIR) $(INCLUDECONSTS_OUTDIR)"
 	@touch $(MAP_GROUP_OUTPUTS)
 
-$(MAP_LAYOUT_OUTPUTS) &: $(LAYOUTS_DIR)/layouts.json $(MAP_LAYOUT_BIN_INPUTS) $(MAP_VERSION_STAMP) $(MAP_LAYOUT_STORAGE_STAMP) $(MAP_LAYOUT_SOURCE_REVISION_STAMP) $(MAPJSON) $(MAP_LAYOUT_STORAGE_POLICY) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP) $(WAYFARER_SINNOH_ASSET_MANIFEST_DEP)
-	$(MAPJSON) layouts $(MAP_VERSION) $< $(LAYOUTS_OUTDIR) $(INCLUDECONSTS_OUTDIR) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG) $(WAYFARER_SINNOH_ASSET_MANIFEST_ARG) --map-layout-storage-policy $(MAP_LAYOUT_STORAGE_POLICY) --map-layout-storage-mode $(MAP_LAYOUT_STORAGE) --map-layout-storage-report $(MAP_LAYOUT_STORAGE_REPORT) --map-layout-source-revision $(MAP_LAYOUT_SOURCE_REVISION)
+$(MAP_LAYOUT_OUTPUTS) &: $(LAYOUTS_DIR)/layouts.json $(MAP_LAYOUT_BIN_INPUTS) $(MAPS_DIR)/map_groups.json $(MAP_JSONS) $(MAP_VERSION_STAMP) $(MAP_LAYOUT_STORAGE_STAMP) $(MAP_LAYOUT_SOURCE_REVISION_STAMP) $(MAPJSON) $(MAP_LAYOUT_STORAGE_POLICY) $(WAYFARER_SEVII_MANIFEST) $(WAYFARER_SINNOH_MANIFEST_DEP) $(WAYFARER_SINNOH_ASSET_MANIFEST_DEP)
+	$(MAPJSON) layouts $(MAP_VERSION) $< $(LAYOUTS_OUTDIR) $(INCLUDECONSTS_OUTDIR) $(WAYFARER_SEVII_MANIFEST_ARG) $(WAYFARER_SINNOH_MANIFEST_ARG) $(WAYFARER_SINNOH_ASSET_MANIFEST_ARG) --map-layout-storage-policy $(MAP_LAYOUT_STORAGE_POLICY) --map-layout-storage-mode $(MAP_LAYOUT_STORAGE) --map-layout-storage-report $(MAP_LAYOUT_STORAGE_REPORT) --map-layout-source-revision $(MAP_LAYOUT_SOURCE_REVISION) --map-layout-canary-catalog $(MAPS_DIR)/map_groups.json
 	@touch $(MAP_LAYOUT_OUTPUTS)
 
 # Generate constants for map events, which depend on data that's distributed across the map.json files.

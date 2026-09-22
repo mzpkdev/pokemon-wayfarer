@@ -158,6 +158,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
             command.extend(["--map-layout-storage-mode", storage_mode])
         if report is not None:
             command.extend(["--map-layout-storage-report", str(report.relative_to(root))])
+        if (root / "data/maps/map_groups.json").exists():
+            command.extend(["--map-layout-canary-catalog", "data/maps/map_groups.json"])
         return subprocess.run(
             command,
             cwd=root,
@@ -253,6 +255,25 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(storage_report["linked_net_savings"]["status"], "unavailable")
         self.assertEqual(storage_report["layouts"][0]["decoded_crc32"], f"0x{zlib.crc32(payload):X}")
 
+    def test_wayfarer_legacy_size_layouts_emit_raw_records_without_descriptors(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x34\x12" * 100)
+        policy = root / "storage.json"
+        report = root / "build/storage.json"
+        policy.write_text(json.dumps({"schema_version": 1, "default_policy": "auto", "rules": []}))
+
+        result = self.run_layouts(root, "wayfarer", "legacy", policy, report)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        generated = (root / "data/layouts/layouts.inc").read_text()
+        self.assertNotIn("_MapData:", generated)
+        self.assertNotIn("__map_layout_payloads_start", generated)
+        layout_record = generated.split("Test_Layout::", 1)[1]
+        self.assertIn("\t.4byte .LTest_Layout_Blockdata", layout_record)
+        storage_report = json.loads(report.read_text())
+        self.assertEqual(storage_report["storage_mode"], "legacy")
+        self.assertEqual(storage_report["totals"]["descriptor_bytes"], 0)
+
     def test_layout_storage_report_counts_forced_unprofitable_compression(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
@@ -305,6 +326,74 @@ class MapjsonWayfarerTest(unittest.TestCase):
         result = self.run_layouts(root, "wayfarer", "hybrid", policy)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("Duplicate map layout storage rule", result.stderr)
+
+    def test_stage1_canary_must_not_be_a_connection_endpoint(self):
+        for connections, message in (
+            ([{"direction": "north", "offset": 0, "map": "MAP_OTHER"}], "MapConnection endpoint"),
+            ([], None),
+        ):
+            with self.subTest(connections=connections):
+                fixture, root = self.make_fixture()
+                self.addCleanup(fixture.cleanup)
+                self.add_layout(root, b"\x34\x12" * 100)
+                test_map = self.add_map(root, "TestMap", "MAP_TEST", "emerald")
+                map_data = json.loads(test_map.read_text())
+                map_data["layout"] = "LAYOUT_TEST"
+                map_data["connections"] = connections
+                test_map.write_text(json.dumps(map_data))
+                names = ["TestMap"]
+                if connections:
+                    other = self.add_map(root, "Other", "MAP_OTHER", "emerald")
+                    other_data = json.loads(other.read_text())
+                    other_data["layout"] = "LAYOUT_TEST"
+                    other.write_text(json.dumps(other_data))
+                    names.append("Other")
+                (root / "data/maps/map_groups.json").write_text(json.dumps({
+                    "group_order": ["gTest"], "gTest": names,
+                    "connections_include_order": [],
+                }))
+                policy = root / "storage.json"
+                report = root / "report.json"
+                policy.write_text(json.dumps({
+                    "schema_version": 1, "default_policy": "raw",
+                    "rules": [{"layout": "Test_Layout", "policy": "gba_lz77",
+                               "rollout_stage": "stage1"}],
+                }))
+
+                result = self.run_layouts(root, "wayfarer", "hybrid", policy, report)
+                if message:
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn(message, result.stderr)
+                else:
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    row = json.loads(report.read_text())["layouts"][0]
+                    self.assertEqual(row["rollout_stage"], "stage1")
+
+    def test_stage1_canary_rejects_special_immutable_consumer(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x34\x12" * 100)
+        layouts = json.loads((root / "data/layouts/layouts.json").read_text())
+        layouts["layouts"][0]["name"] = "SecretBase_Test_Layout"
+        (root / "data/layouts/layouts.json").write_text(json.dumps(layouts))
+        test_map = self.add_map(root, "TestMap", "MAP_TEST", "emerald")
+        map_data = json.loads(test_map.read_text())
+        map_data["layout"] = "LAYOUT_TEST"
+        test_map.write_text(json.dumps(map_data))
+        (root / "data/maps/map_groups.json").write_text(json.dumps({
+            "group_order": ["gTest"], "gTest": ["TestMap"],
+            "connections_include_order": [],
+        }))
+        policy = root / "storage.json"
+        policy.write_text(json.dumps({
+            "schema_version": 1, "default_policy": "raw",
+            "rules": [{"layout": "SecretBase_Test_Layout", "policy": "gba_lz77",
+                       "rollout_stage": "stage1"}],
+        }))
+
+        result = self.run_layouts(root, "wayfarer", "hybrid", policy)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("special immutable consumer", result.stderr)
 
     def test_layout_generation_rejects_source_shorter_than_logical_tiles(self):
         fixture, root = self.make_fixture()

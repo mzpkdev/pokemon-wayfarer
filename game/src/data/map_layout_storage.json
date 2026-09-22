@@ -3,9 +3,22 @@
   "default_policy": "raw",
   "rules": [
     {
-      "layout": "Harbor_Layout",
+      "layout": "FortreeCity_House1_Layout",
       "policy": "gba_lz77",
-      "reason": "Stage 0 unconnected canary shared by two ordinary warp-only harbor interiors."
+      "reason": "Stage 1 unconnected Emerald canary shared by ordinary warp-only houses.",
+      "rollout_stage": "stage1"
+    },
+    {
+      "layout": "OlivineCity_Cafe_hns_Layout",
+      "policy": "gba_lz77",
+      "reason": "Stage 1 unconnected HNS canary with ordinary indoor warp behavior.",
+      "rollout_stage": "stage1"
+    },
+    {
+      "layout": "FiveIsland_ResortGorgeous_House_Layout",
+      "policy": "gba_lz77",
+      "reason": "Stage 1 unconnected FRLG canary with ordinary house warp behavior.",
+      "rollout_stage": "stage1"
     },
     {
       "layout": "SecretBase_RedCave1_Layout",

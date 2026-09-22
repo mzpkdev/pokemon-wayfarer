@@ -136,7 +136,7 @@ static void ExpectRejectedLzStream(const u8 *stream, u32 size, u32 decodedBytes)
 TEST("Map layout storage APIs agree for the unconnected canary")
 {
     const struct MapHeader *header = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
     const struct MapLayout *layout = header->mapLayout;
     struct MapLayoutView first = {0};
     struct MapLayoutView second = {0};
@@ -145,11 +145,11 @@ TEST("Map layout storage APIs agree for the unconnected canary")
     u16 tile;
 
     EXPECT(copy != NULL);
-    EXPECT_EQ(MapLayoutReadTile(layout, 9, 11, &tile), MAP_LAYOUT_LOAD_OK);
+    EXPECT_EQ(MapLayoutReadTile(layout, 2, 2, &tile), MAP_LAYOUT_LOAD_OK);
     EXPECT_EQ(MapLayoutCopyFull(layout, copy, tileCount, layout->width), MAP_LAYOUT_LOAD_OK);
-    EXPECT_EQ(copy[11 * layout->width + 9], tile);
+    EXPECT_EQ(copy[2 * layout->width + 2], tile);
     EXPECT_EQ(MapLayoutAcquireView(layout, &first), MAP_LAYOUT_LOAD_OK);
-    EXPECT_EQ(first.tiles[11 * layout->width + 9], tile);
+    EXPECT_EQ(first.tiles[2 * layout->width + 2], tile);
 #if MAP_LAYOUT_STORAGE_HYBRID
     EXPECT(first.compressed);
     EXPECT_EQ(MapLayoutAcquireView(layout, &second), MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME);
@@ -203,13 +203,13 @@ TEST("Map layout storage shares scratch with a compressed connected layout")
 {
     const struct MapHeader *route = Overworld_GetMapHeaderByGroupAndId(
         MAP_GROUP(MAP_ROUTE101), MAP_NUM(MAP_ROUTE101));
-    const struct MapHeader *harbor = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
+    const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
     const struct MapConnection connection =
     {
         .direction = CONNECTION_NORTH,
-        .mapGroup = MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
-        .mapNum = MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
+        .mapGroup = MAP_GROUP(MAP_FORTREE_CITY_HOUSE1),
+        .mapNum = MAP_NUM(MAP_FORTREE_CITY_HOUSE1),
     };
     const struct MapConnections connections = {1, &connection};
     struct MapHeader connectedHeader = *route;
@@ -218,14 +218,14 @@ TEST("Map layout storage shares scratch with a compressed connected layout")
     u16 actual;
 
     connectedHeader.connections = &connections;
-    EXPECT_EQ(MapLayoutReadTile(harbor->mapLayout, 0, harbor->mapLayout->height - 1, &expected),
+    EXPECT_EQ(MapLayoutReadTile(canary->mapLayout, 0, canary->mapLayout->height - 1, &expected),
               MAP_LAYOUT_LOAD_OK);
     EXPECT_EQ(MapLayoutBeginLoadContext(&connectedHeader, &context), MAP_LAYOUT_LOAD_OK);
 #if MAP_LAYOUT_STORAGE_HYBRID
     EXPECT(context.scratch != NULL);
 #endif
-    EXPECT_EQ(MapLayoutCopyRectWithContext(&context, harbor->mapLayout,
-                                           0, harbor->mapLayout->height - 1, 1, 1,
+    EXPECT_EQ(MapLayoutCopyRectWithContext(&context, canary->mapLayout,
+                                           0, canary->mapLayout->height - 1, 1, 1,
                                            &actual, 1, 1),
               MAP_LAYOUT_LOAD_OK);
     EXPECT_EQ(actual, expected);
@@ -460,13 +460,13 @@ TEST("Map layout storage owns one scratch allocation for current map and neighbo
 {
     const struct MapHeader *route = Overworld_GetMapHeaderByGroupAndId(
         MAP_GROUP(MAP_ROUTE101), MAP_NUM(MAP_ROUTE101));
-    const struct MapHeader *harbor = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
+    const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
     const struct MapConnection connection =
     {
         .direction = CONNECTION_NORTH,
-        .mapGroup = MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR),
-        .mapNum = MAP_NUM(MAP_SLATEPORT_CITY_HARBOR),
+        .mapGroup = MAP_GROUP(MAP_FORTREE_CITY_HOUSE1),
+        .mapNum = MAP_NUM(MAP_FORTREE_CITY_HOUSE1),
     };
     const struct MapConnections connections = {1, &connection};
     struct MapHeader connectedHeader = *route;
@@ -485,15 +485,15 @@ TEST("Map layout storage owns one scratch allocation for current map and neighbo
 #if MAP_LAYOUT_STORAGE_HYBRID
     EXPECT_EQ(telemetry->allocationCount, 1);
     EXPECT_EQ(telemetry->requestedScratchBytes,
-              Test_MapLayoutGetDescriptor(harbor->mapLayout)->decodedFileBytes);
+              Test_MapLayoutGetDescriptor(canary->mapLayout)->decodedFileBytes);
 #else
     EXPECT_EQ(telemetry->allocationCount, 0);
 #endif
     EXPECT_EQ(MapLayoutCopyRectWithContext(&context, route->mapLayout, 0, 0, 1, 1,
                                            &tile, 1, 1), MAP_LAYOUT_LOAD_OK);
-    EXPECT_EQ(MapLayoutCopyRectWithContext(&context, harbor->mapLayout, 0, 0, 1, 1,
+    EXPECT_EQ(MapLayoutCopyRectWithContext(&context, canary->mapLayout, 0, 0, 1, 1,
                                            &tile, 1, 1), MAP_LAYOUT_LOAD_OK);
-    EXPECT_EQ(MapLayoutCopyRectWithContext(&context, harbor->mapLayout, 1, 1, 1, 1,
+    EXPECT_EQ(MapLayoutCopyRectWithContext(&context, canary->mapLayout, 1, 1, 1, 1,
                                            &tile, 1, 1), MAP_LAYOUT_LOAD_OK);
     EXPECT_EQ(telemetry->allocationCount, MAP_LAYOUT_STORAGE_HYBRID ? 1 : 0);
     EXPECT_EQ(MapLayoutEndLoadContext(&context), MAP_LAYOUT_LOAD_OK);
@@ -600,8 +600,8 @@ TEST("Map layout storage repeated raw and compressed reads do not fragment the h
 {
     const struct MapHeader *route = Overworld_GetMapHeaderByGroupAndId(
         MAP_GROUP(MAP_ROUTE101), MAP_NUM(MAP_ROUTE101));
-    const struct MapHeader *harbor = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
+    const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
     struct HeapSnapshot before = TakeHeapSnapshot();
     struct HeapSnapshot after;
     u16 tile;
@@ -611,7 +611,7 @@ TEST("Map layout storage repeated raw and compressed reads do not fragment the h
     {
         EXPECT_EQ(MapLayoutReadTile(route->mapLayout, i % route->mapLayout->width, 0, &tile),
                   MAP_LAYOUT_LOAD_OK);
-        EXPECT_EQ(MapLayoutReadTile(harbor->mapLayout, i % harbor->mapLayout->width, 0, &tile),
+        EXPECT_EQ(MapLayoutReadTile(canary->mapLayout, i % canary->mapLayout->width, 0, &tile),
                   MAP_LAYOUT_LOAD_OK);
         EXPECT(CheckHeap());
     }
@@ -694,8 +694,8 @@ TEST("Map layout storage reports allocation and mid-connection failures without 
     u32 i;
 
 #if MAP_LAYOUT_STORAGE_HYBRID
-    const struct MapHeader *harbor = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
+    const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
     struct MapLayoutLoadContext context = {0};
 
     {
@@ -703,14 +703,14 @@ TEST("Map layout storage reports allocation and mid-connection failures without 
 
         Test_MapLayoutResetHooks();
         Test_MapLayoutForceAllocationFailure(TRUE);
-        EXPECT_EQ(MapLayoutAcquireView(harbor->mapLayout, &view), MAP_LAYOUT_LOAD_ALLOC_FAILED);
+        EXPECT_EQ(MapLayoutAcquireView(canary->mapLayout, &view), MAP_LAYOUT_LOAD_ALLOC_FAILED);
         EXPECT(!view.active);
         EXPECT(view.tiles == NULL);
         EXPECT(view.allocation == NULL);
     }
     Test_MapLayoutResetHooks();
     Test_MapLayoutForceAllocationFailure(TRUE);
-    EXPECT_EQ(MapLayoutBeginLoadContext(harbor, &context), MAP_LAYOUT_LOAD_ALLOC_FAILED);
+    EXPECT_EQ(MapLayoutBeginLoadContext(canary, &context), MAP_LAYOUT_LOAD_ALLOC_FAILED);
     EXPECT(!context.active);
     EXPECT(context.scratch == NULL);
     EXPECT_EQ(Test_MapLayoutGetTelemetry()->allocationCount, 0);
@@ -728,15 +728,15 @@ TEST("Map layout storage reports allocation and mid-connection failures without 
 
 TEST("Map layout storage rejects malformed descriptors and streams deterministically")
 {
-    const struct MapHeader *harbor = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
+    const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
     const struct MapLayoutTestDescriptor original =
-        *Test_MapLayoutGetDescriptor(harbor->mapLayout);
+        *Test_MapLayoutGetDescriptor(canary->mapLayout);
     struct MapLayoutTestDescriptor descriptor = original;
-    struct MapLayout layout = *harbor->mapLayout;
+    struct MapLayout layout = *canary->mapLayout;
     u16 *dest = Alloc(original.logicalTileBytes);
     u8 *payload = Alloc(original.storedBytes);
-    const u16 *raw = gMapLayoutRawOracles[harbor->mapLayoutId - 1];
+    const u16 *raw = gMapLayoutRawOracles[canary->mapLayoutId - 1];
 
     EXPECT(dest != NULL);
     EXPECT(payload != NULL);
@@ -882,17 +882,17 @@ TEST("Map layout storage preflight rejects every malformed LZ stream class")
 
 TEST("Map layout storage rejects geometry and destination size overflow")
 {
-    const struct MapHeader *harbor = Overworld_GetMapHeaderByGroupAndId(
-        MAP_GROUP(MAP_SLATEPORT_CITY_HARBOR), MAP_NUM(MAP_SLATEPORT_CITY_HARBOR));
-    struct MapLayout layout = *harbor->mapLayout;
+    const struct MapHeader *canary = Overworld_GetMapHeaderByGroupAndId(
+        MAP_GROUP(MAP_FORTREE_CITY_HOUSE1), MAP_NUM(MAP_FORTREE_CITY_HOUSE1));
+    struct MapLayout layout = *canary->mapLayout;
     u16 tile;
 
     layout.width = 0;
     EXPECT_EQ(MapLayoutCopyFull(&layout, &tile, 1, 1), MAP_LAYOUT_LOAD_BAD_SIZE);
-    layout = *harbor->mapLayout;
+    layout = *canary->mapLayout;
     layout.height = 0;
     EXPECT_EQ(MapLayoutCopyFull(&layout, &tile, 1, 1), MAP_LAYOUT_LOAD_BAD_SIZE);
-    layout = *harbor->mapLayout;
+    layout = *canary->mapLayout;
     EXPECT_EQ(MapLayoutCopyRect(&layout, 0, 0, 0, 1, &tile, 1, 1), MAP_LAYOUT_LOAD_BAD_BOUNDS);
     EXPECT_EQ(MapLayoutCopyRect(&layout, 0, 0, 1, 1, NULL, 1, 1), MAP_LAYOUT_LOAD_BAD_BOUNDS);
     EXPECT_EQ(MapLayoutCopyRect(&layout, layout.width, 0, 1, 1, &tile, 1, 1), MAP_LAYOUT_LOAD_BAD_BOUNDS);
@@ -902,12 +902,12 @@ TEST("Map layout storage rejects geometry and destination size overflow")
 #if MAP_LAYOUT_STORAGE_HYBRID
     {
         struct MapLayoutLoadContext context = {.active = TRUE};
-        u32 tileCount = harbor->mapLayout->width * harbor->mapLayout->height;
+        u32 tileCount = canary->mapLayout->width * canary->mapLayout->height;
         u16 *dest = Alloc(tileCount * sizeof(*dest));
 
         EXPECT(dest != NULL);
-        EXPECT_EQ(MapLayoutCopyFullWithContext(&context, harbor->mapLayout, dest,
-                                               tileCount, harbor->mapLayout->width),
+        EXPECT_EQ(MapLayoutCopyFullWithContext(&context, canary->mapLayout, dest,
+                                               tileCount, canary->mapLayout->width),
                   MAP_LAYOUT_LOAD_SCRATCH_LIMIT);
         Free(dest);
     }

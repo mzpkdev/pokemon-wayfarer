@@ -75,6 +75,9 @@ export type ArrangeGame = {
   challenge?: {
     hmsOverwrite?: boolean
   }
+  secretBase?: {
+    decorated: boolean
+  }
   circuit?: {
     badges?: Partial<Record<LeagueRegion, number>>
     clears?: Partial<Record<LeagueRegion, boolean>>
@@ -190,6 +193,7 @@ export const createArrangeApi = (runtime: SessionRuntime, mailbox: MailboxApi): 
           regionalBadgeCounts,
           leagueClears,
           applyLeagueCircuit: options.circuit !== undefined,
+          decoratedSecretBase: options.secretBase?.decorated ?? false,
         }),
       "arrange game",
     )

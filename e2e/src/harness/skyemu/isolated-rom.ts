@@ -4,6 +4,7 @@ import * as path from "node:path"
 
 export type IsolatedRom = {
   cleanup: () => Promise<void>
+  exportSave: (destination: string) => Promise<void>
   path: string
 }
 
@@ -15,6 +16,10 @@ export const createIsolatedRom = async (sourcePath: string, savePath?: string): 
 
   return {
     cleanup: () => fs.promises.rm(directory, { force: true, recursive: true }),
+    exportSave: async (destination) => {
+      await fs.promises.mkdir(path.dirname(destination), { recursive: true })
+      await fs.promises.copyFile(path.join(directory, "wayfarer.sav"), destination)
+    },
     path: romPath,
   }
 }

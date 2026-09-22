@@ -47,6 +47,7 @@ string wayfarer_sinnoh_asset_manifest_path;
 string map_layout_storage_policy_path;
 string map_layout_storage_mode = "raw";
 string map_layout_storage_report_path;
+string map_layout_canary_catalog_path;
 string map_layout_source_revision = "unknown";
 uint32_t map_layout_catalog_crc;
 uint32_t map_layout_policy_crc;
@@ -1959,6 +1960,7 @@ struct LayoutStorageRecord {
     string sourceVersion;
     string policy;
     string reason;
+    string rolloutStage;
     string raw;
     string stored;
     uint32_t width;
@@ -1972,6 +1974,12 @@ struct LayoutStorageRecord {
     bool conditionallyLinked;
     bool compressionEvaluated;
     bool explicitPolicy;
+};
+
+struct LayoutStoragePolicyRule {
+    string selection;
+    string reason;
+    string rolloutStage;
 };
 
 static map<string, LayoutStorageRecord> layout_storage_records;
@@ -2085,8 +2093,8 @@ static void emit_asm_bytes(ostringstream &text, const string &bytes) {
     }
 }
 
-static map<string, std::pair<string, string>> load_map_layout_storage_policy(void) {
-    map<string, std::pair<string, string>> rules;
+static map<string, LayoutStoragePolicyRule> load_map_layout_storage_policy(void) {
+    map<string, LayoutStoragePolicyRule> rules;
     if (map_layout_storage_policy_path.empty())
         return rules;
     string error;
@@ -2100,21 +2108,92 @@ static map<string, std::pair<string, string>> load_map_layout_storage_policy(voi
         FATAL_ERROR("Unknown default map layout storage policy %s.\n", defaultPolicy.c_str());
     if (!policy["rules"].is_array())
         FATAL_ERROR("Map layout storage policy rules must be an array.\n");
-    rules[""] = {defaultPolicy, ""};
+    rules[""] = {defaultPolicy, "", ""};
     for (const Json &rule : policy["rules"].array_items()) {
         if (!rule.is_object())
             FATAL_ERROR("Each map layout storage rule must be an object.\n");
         string name = json_to_string(rule, "layout");
         string selection = json_to_string(rule, "policy");
         string reason = json_to_string(rule, "reason", true);
+        string rolloutStage = json_to_string(rule, "rollout_stage", true);
         if (selection != "raw" && selection != "auto" && selection != "gba_lz77")
             FATAL_ERROR("Unknown storage policy %s for %s.\n", selection.c_str(), name.c_str());
         if (selection == "raw" && reason.empty())
             FATAL_ERROR("Raw map layout exception %s requires a reason.\n", name.c_str());
-        if (!rules.emplace(name, std::make_pair(selection, reason)).second)
+        if (!rolloutStage.empty() && rolloutStage != "stage0" && rolloutStage != "stage1")
+            FATAL_ERROR("Unknown rollout stage %s for %s.\n", rolloutStage.c_str(), name.c_str());
+        if (!rolloutStage.empty() && selection == "raw")
+            FATAL_ERROR("Rollout layout %s cannot select raw storage.\n", name.c_str());
+        if (!rules.emplace(name, LayoutStoragePolicyRule{selection, reason, rolloutStage}).second)
             FATAL_ERROR("Duplicate map layout storage rule for %s.\n", name.c_str());
     }
     return rules;
+}
+
+static void validate_stage1_canaries(const map<string, LayoutStoragePolicyRule> &rules) {
+    set<string> stage1Layouts;
+    for (const auto &rule : rules)
+        if (rule.second.rolloutStage == "stage1")
+            stage1Layouts.insert(rule.first);
+    if (stage1Layouts.empty())
+        return;
+    if (version != "wayfarer" || map_layout_canary_catalog_path.empty())
+        FATAL_ERROR("Stage 1 canaries require the selected Wayfarer map catalog.\n");
+
+    string error;
+    Json groups = Json::parse(read_text_file(map_layout_canary_catalog_path), error);
+    if (!groups.is_object() || !groups["group_order"].is_array())
+        FATAL_ERROR("Invalid Stage 1 canary map catalog: %s\n", error.c_str());
+    map<string, Json> selectedById;
+    for (const Json &groupValue : groups["group_order"].array_items()) {
+        string group = json_to_string(groupValue);
+        for (const Json &nameValue : groups[group].array_items()) {
+            string name = json_to_string(nameValue);
+            std::filesystem::path path = std::filesystem::path(map_layout_canary_catalog_path).parent_path()
+                                       / name / "map.json";
+            Json mapData = Json::parse(read_text_file(path.string()), error);
+            if (!mapData.is_object())
+                FATAL_ERROR("Invalid map data for Stage 1 eligibility: %s\n", path.string().c_str());
+            if (data_matches_version(mapData))
+                selectedById.emplace(json_to_string(mapData, "id"), mapData);
+        }
+    }
+
+    set<string> endpointLayouts;
+    set<string> usedLayouts;
+    for (const auto &entry : selectedById) {
+        Json mapData = resolve_wayfarer_coast_connections(entry.second);
+        string sourceLayout = json_to_string(mapData, "layout");
+        usedLayouts.insert(sourceLayout);
+        for (const Json &connection : mapData["connections"].array_items()) {
+            string destination = json_to_string(connection, "map");
+            auto destinationMap = selectedById.find(destination);
+            if (destinationMap == selectedById.end())
+                FATAL_ERROR("Selected map %s has unresolved Stage 1 connection destination %s.\n",
+                            json_to_string(mapData, "name").c_str(), destination.c_str());
+            endpointLayouts.insert(sourceLayout);
+            endpointLayouts.insert(json_to_string(destinationMap->second, "layout"));
+        }
+    }
+
+    for (const string &ruleName : stage1Layouts) {
+        auto record = layout_storage_records.find(ruleName);
+        if (record == layout_storage_records.end()) {
+            auto byId = std::find_if(layout_storage_records.begin(), layout_storage_records.end(),
+                [&ruleName](const auto &entry) { return entry.second.layoutId == ruleName; });
+            if (byId == layout_storage_records.end())
+                continue;
+            record = byId;
+        }
+        if (!usedLayouts.count(record->second.layoutId))
+            FATAL_ERROR("Stage 1 canary %s is not used by a selected map header.\n", ruleName.c_str());
+        if (endpointLayouts.count(record->second.layoutId))
+            FATAL_ERROR("Stage 1 canary %s is a selected MapConnection endpoint.\n", ruleName.c_str());
+        if (record->second.layoutName.rfind("SecretBase_", 0) == 0
+         || record->second.layoutName.rfind("TrainerHill_", 0) == 0
+         || record->second.layoutName.rfind("BattlePyramidSquare", 0) == 0)
+            FATAL_ERROR("Stage 1 canary %s has a special immutable consumer.\n", ruleName.c_str());
+    }
 }
 
 static void prepare_layout_storage(const Json &layouts_data) {
@@ -2171,12 +2250,13 @@ static void prepare_layout_storage(const Json &layouts_data) {
         if (rule == rules.end())
             rule = rules.find(record.layoutId);
         if (rule != rules.end()) {
-            record.policy = rule->second.first;
-            record.reason = rule->second.second;
+            record.policy = rule->second.selection;
+            record.reason = rule->second.reason;
+            record.rolloutStage = rule->second.rolloutStage;
             record.explicitPolicy = true;
             matchedRules.insert(rule->first);
         } else {
-            record.policy = rules.empty() ? "raw" : rules.at("").first;
+            record.policy = rules.empty() ? "raw" : rules.at("").selection;
             record.explicitPolicy = false;
         }
         string compressed;
@@ -2206,6 +2286,7 @@ static void prepare_layout_storage(const Json &layouts_data) {
     for (const auto &rule : rules)
         if (!rule.first.empty() && matchedRules.find(rule.first) == matchedRules.end())
             FATAL_ERROR("Unknown or unselected map layout storage rule %s.\n", rule.first.c_str());
+    validate_stage1_canaries(rules);
 }
 
 static string asm_hex_u32(uint32_t value) {
@@ -2251,7 +2332,7 @@ string generate_layout_headers_text(Json layouts_data) {
         end_layout_guard(text, layout);
     }
 
-    if (version == "wayfarer")
+    if (version == "wayfarer" && map_layout_storage_mode != "legacy")
         text << "\t.align 2\n\t.global __map_layout_payloads_start\n__map_layout_payloads_start::\n";
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
@@ -2268,10 +2349,10 @@ string generate_layout_headers_text(Json layouts_data) {
         text << "\n";
         end_layout_guard(text, layout);
     }
-    if (version == "wayfarer")
+    if (version == "wayfarer" && map_layout_storage_mode != "legacy")
         text << "\t.align 2\n\t.global __map_layout_payloads_end\n__map_layout_payloads_end::\n\n";
 
-    if (version == "wayfarer") {
+    if (version == "wayfarer" && map_layout_storage_mode != "legacy") {
         text << "\t.if MAP_LAYOUT_TESTING_ASM\n";
         const LayoutStorageRecord *peak = nullptr;
         for (const string &name : layout_storage_order) {
@@ -2319,9 +2400,10 @@ string generate_layout_headers_text(Json layouts_data) {
         string layoutName = json_to_string(layout, "name");
         const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
         string payload_label = ".L" + layoutName + "_Blockdata";
-        string map_data_label = version == "wayfarer" ? ".L" + layoutName + "_MapData" : payload_label;
+        string map_data_label = version == "wayfarer" && map_layout_storage_mode != "legacy"
+                              ? ".L" + layoutName + "_MapData" : payload_label;
         begin_layout_guard(text, layout);
-        if (version == "wayfarer") {
+        if (version == "wayfarer" && map_layout_storage_mode != "legacy") {
             text << "\t.align 2\n" << map_data_label << ":\n"
                  << "\t.4byte " << payload_label << "\n"
                  << "\t.4byte " << storage.stored.size() << "\n"
@@ -2369,6 +2451,7 @@ static string generate_layout_storage_constants_text(void) {
     text << get_include_guard_start("CONSTANTS_MAP_LAYOUT_STORAGE")
          << get_generated_warning("data/layouts/layouts.json", false)
          << "#define MAP_LAYOUT_STORAGE_SCHEMA_VERSION 1\n"
+         << "#define MAP_LAYOUT_STORAGE_LEGACY " << (map_layout_storage_mode == "legacy" ? 1 : 0) << "\n"
          << "#define MAP_LAYOUT_STORAGE_HYBRID " << (map_layout_storage_mode == "hybrid" ? 1 : 0) << "\n"
          << "#define MAP_LAYOUT_MAX_DECODED_FILE_BYTES " << map_layout_max_decoded_file_bytes << "\n"
          << "#define MAP_LAYOUT_MAX_LOGICAL_TILE_BYTES " << map_layout_max_logical_tile_bytes << "\n"
@@ -2409,8 +2492,8 @@ static string generate_layout_storage_report_text(void) {
         storedBytes += record.stored.size();
         compressedStoredBytes += record.compressed ? record.stored.size() : 0;
         rawStoredBytes += record.compressed ? 0 : record.stored.size();
-        descriptorBytes += version == "wayfarer" ? 28 : 0;
-        checksumBytes += version == "wayfarer" ? 8 : 0;
+        descriptorBytes += version == "wayfarer" && map_layout_storage_mode != "legacy" ? 28 : 0;
+        checksumBytes += version == "wayfarer" && map_layout_storage_mode != "legacy" ? 8 : 0;
         payloadAlignmentBytes += alignmentCost;
         codecPaddingBytes += record.codecPaddingBytes;
         trailingBytes += record.raw.size() - record.logicalBytes;
@@ -2444,6 +2527,7 @@ static string generate_layout_storage_report_text(void) {
             {"width", static_cast<int>(record.width)}, {"height", static_cast<int>(record.height)},
             {"storage", record.compressed ? "gba_lz77" : "raw"},
             {"policy", record.policy}, {"raw_exception_reason", record.reason},
+            {"rollout_stage", record.rolloutStage},
             {"raw_file_bytes", static_cast<int>(record.raw.size())},
             {"logical_tile_bytes", static_cast<int>(record.logicalBytes)},
             {"stored_bytes", static_cast<int>(record.stored.size())},
@@ -2475,14 +2559,14 @@ static string generate_layout_storage_report_text(void) {
                 {"raw_payload_bytes", static_cast<double>(unconditionalRawBytes)},
                 {"stored_payload_bytes", static_cast<double>(unconditionalStoredBytes)},
                 {"gross_payload_saved_bytes", static_cast<double>(static_cast<int64_t>(unconditionalRawBytes) - static_cast<int64_t>(unconditionalStoredBytes))},
-                {"descriptor_bytes", static_cast<double>(version == "wayfarer" ? (rows.size() - conditionalCount) * 28 : 0)},
+                {"descriptor_bytes", static_cast<double>(version == "wayfarer" && map_layout_storage_mode != "legacy" ? (rows.size() - conditionalCount) * 28 : 0)},
             }},
             {"conditionally_linked", Json::object{
                 {"layout_count", static_cast<int>(conditionalCount)},
                 {"raw_payload_bytes", static_cast<double>(conditionalRawBytes)},
                 {"stored_payload_bytes", static_cast<double>(conditionalStoredBytes)},
                 {"gross_payload_saved_bytes", static_cast<double>(static_cast<int64_t>(conditionalRawBytes) - static_cast<int64_t>(conditionalStoredBytes))},
-                {"descriptor_bytes", static_cast<double>(version == "wayfarer" ? conditionalCount * 28 : 0)},
+                {"descriptor_bytes", static_cast<double>(version == "wayfarer" && map_layout_storage_mode != "legacy" ? conditionalCount * 28 : 0)},
             }},
         }},
         {"excluded_layouts", layout_storage_excluded},
@@ -2568,8 +2652,8 @@ static string generate_layout_storage_human_report_text(void) {
          << "raw payload bytes: " << rawBytes << "\n"
          << "stored payload bytes: " << storedBytes << "\n"
          << "gross payload saving: " << grossSavedBytes << "\n"
-         << "descriptor bytes: " << (version == "wayfarer" ? layout_storage_order.size() * 28 : 0) << "\n"
-         << "checksum bytes within descriptors: " << (version == "wayfarer" ? layout_storage_order.size() * 8 : 0) << "\n"
+         << "descriptor bytes: " << (version == "wayfarer" && map_layout_storage_mode != "legacy" ? layout_storage_order.size() * 28 : 0) << "\n"
+         << "checksum bytes within descriptors: " << (version == "wayfarer" && map_layout_storage_mode != "legacy" ? layout_storage_order.size() * 8 : 0) << "\n"
          << "payload alignment bytes: " << payloadAlignmentBytes << "\n"
          << "raw exceptions: " << rawExceptionCount << "\n"
          << "non-profitable candidates: " << nonProfitableCount << "\n"
@@ -2744,14 +2828,16 @@ int main(int argc, char *argv[]) {
             map_layout_storage_report_path = argv[argc - 1];
         else if (option == "--map-layout-source-revision")
             map_layout_source_revision = argv[argc - 1];
+        else if (option == "--map-layout-canary-catalog")
+            map_layout_canary_catalog_path = argv[argc - 1];
         else
             break;
         argc -= 2;
     }
     load_wayfarer_sevii_manifest();
     load_wayfarer_sinnoh_manifest();
-    if (map_layout_storage_mode != "raw" && map_layout_storage_mode != "hybrid")
-        FATAL_ERROR("Map layout storage mode must be raw or hybrid.\n");
+    if (map_layout_storage_mode != "legacy" && map_layout_storage_mode != "raw" && map_layout_storage_mode != "hybrid")
+        FATAL_ERROR("Map layout storage mode must be legacy, raw, or hybrid.\n");
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

@@ -38,6 +38,7 @@
 #include "money.h"
 #include "trainer_only_encounter.h"
 #include "constants/field_effects.h"
+#include "constants/decorations.h"
 #include "constants/flags.h"
 #include "constants/global.h"
 #include "constants/maps.h"
@@ -52,7 +53,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 18,
+    .version = 19,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -64,10 +65,11 @@ const struct E2ETestAbi gE2ETestAbi =
 
 STATIC_ASSERT(sizeof(struct E2ETestRequest) == 372, E2ETestRequestSize);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, appearanceId) == 369, E2ETestRequestAppearanceOffset);
+STATIC_ASSERT(offsetof(struct E2ETestRequest, decoratedSecretBase) == 370, E2ETestRequestSecretBaseOffset);
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 440, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 448, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
@@ -436,6 +438,8 @@ static void CopyRequest(void)
     }
     sRequest.applyLeagueCircuit = gE2ETestRequest.applyLeagueCircuit;
     sRequest.appearanceId = gE2ETestRequest.appearanceId;
+    sRequest.decoratedSecretBase = gE2ETestRequest.decoratedSecretBase;
+    sRequest.reserved = gE2ETestRequest.reserved;
 }
 
 static void PublishResult(u8 status, u8 phase, u16 error)
@@ -698,6 +702,8 @@ static enum E2ETestError ValidateArrangeRequest(void)
         return E2E_TEST_ERROR_FULL_POCKET_MASK;
     if (sRequest.applyLeagueCircuit > TRUE)
         return E2E_TEST_ERROR_CIRCUIT;
+    if (sRequest.decoratedSecretBase > TRUE || sRequest.reserved != 0)
+        return E2E_TEST_ERROR_COMMAND;
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
     {
         if (sRequest.regionalBadgeCounts[i] > 8 || sRequest.leagueClears[i] > TRUE)
@@ -809,6 +815,18 @@ static bool32 ApplyOverrides(void)
     ApplyHMsOverwriteFixture();
     if (sRequest.applyLeagueCircuit)
         ApplyLeagueCircuitFixture();
+    if (sRequest.decoratedSecretBase)
+    {
+        struct SecretBase *base = &gSaveBlock1Ptr->secretBases[1];
+
+        memset(base, 0, sizeof(*base));
+        base->secretBaseId = 1;
+        base->decorations[0] = DECOR_SMALL_DESK;
+        base->decorationPositions[0] = (4 << 4) | 4;
+        base->decorations[1] = DECOR_PICHU_DOLL;
+        base->decorationPositions[1] = (6 << 4) | 4;
+        VarSet(VAR_CURRENT_SECRET_BASE, 1);
+    }
     ResetObservations();
 
     return TRUE;
@@ -1200,6 +1218,27 @@ static u8 CountSurfBlobs(void)
     return count;
 }
 
+static void RecordSecretBaseState(void)
+{
+    u16 baseIndex = VarGet(VAR_CURRENT_SECRET_BASE);
+    const struct SecretBase *base;
+    u32 fingerprint = 2166136261;
+    u32 i;
+
+    if (baseIndex >= SECRET_BASES_COUNT)
+        baseIndex = 0;
+    base = &gSaveBlock1Ptr->secretBases[baseIndex];
+    gE2ETestState.secretBaseDecorationCount = 0;
+    for (i = 0; i < DECOR_MAX_SECRET_BASE; i++)
+    {
+        if (base->decorations[i] != DECOR_NONE)
+            gE2ETestState.secretBaseDecorationCount++;
+        fingerprint = (fingerprint ^ base->decorations[i]) * 16777619;
+        fingerprint = (fingerprint ^ base->decorationPositions[i]) * 16777619;
+    }
+    gE2ETestState.secretBaseDecorationFingerprint = fingerprint;
+}
+
 static void UpdateState(void)
 {
     bool32 overworld = gMain.callback1 == CB1_Overworld && gMain.callback2 == CB2_Overworld;
@@ -1395,6 +1434,7 @@ static void UpdateState(void)
     gE2ETestState.partyCount = gPlayerPartyCount;
     gE2ETestState.money = GetMoney(&gSaveBlock1Ptr->money);
     gE2ETestState.hmsOverwrite = HMsOverwriteOptionActive();
+    RecordSecretBaseState();
     for (i = 0; i < E2E_TEST_MAX_PARTY; i++)
     {
         u32 move;

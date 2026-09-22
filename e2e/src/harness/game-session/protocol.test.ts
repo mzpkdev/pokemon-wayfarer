@@ -21,14 +21,14 @@ import {
 const abi: SessionAbi = {
   requestSize: 372,
   resultSize: 16,
-  stateSize: 440,
+  stateSize: 448,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 18): Uint8Array => {
+const abiBytes = (version = 19): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -75,11 +75,16 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(356))).toEqual(Array(16).fill(0))
 }
 
-describe("game-session v18 protocol", () => {
+describe("game-session v19 protocol", () => {
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
     expect(encodeCommandRequest(abi, request())[369]).toBe(0)
     for (const id of [1, 2, 5, 6])
       expect(encodeCommandRequest(abi, { ...request(), appearanceId: id })[369]).toBe(id)
+  })
+
+  it("encodes the decorated Secret Base fixture in the reserved request tail", () => {
+    expect(encodeCommandRequest(abi, request())[370]).toBe(0)
+    expect(encodeCommandRequest(abi, { ...request(), decoratedSecretBase: true })[370]).toBe(1)
   })
 
   it("accepts only the exact versioned ABI layout", () => {

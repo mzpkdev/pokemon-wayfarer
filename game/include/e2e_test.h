@@ -277,6 +277,8 @@ struct E2ETestRequest
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 applyLeagueCircuit;
     u8 appearanceId;
+    u8 decoratedSecretBase;
+    u8 reserved;
 };
 
 struct E2ETestObservedPcSlot
@@ -400,6 +402,9 @@ struct E2ETestState
     u32 money;
     u16 partyHp[E2E_TEST_MAX_PARTY];
     u32 partyStatus[E2E_TEST_MAX_PARTY];
+    u8 secretBaseDecorationCount;
+    u8 reserved[3];
+    u32 secretBaseDecorationFingerprint;
 };
 
 struct E2ETestAbi
