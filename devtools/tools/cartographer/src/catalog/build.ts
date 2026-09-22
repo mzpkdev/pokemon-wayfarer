@@ -42,9 +42,8 @@ import type {
 
 export const compactJson = (value: unknown): string => `${JSON.stringify(value)}\n`
 
-export const isPlayerFacingCatalogSource = (
-  source: Pick<SourceMap, "game_version">,
-): boolean => source.game_version !== "sinnoh"
+export const isPlayerFacingCatalogSource = (source: Pick<SourceMap, "game_version">): boolean =>
+  source.game_version !== "sinnoh"
 
 const createCatalogMap = (
   root: string,
