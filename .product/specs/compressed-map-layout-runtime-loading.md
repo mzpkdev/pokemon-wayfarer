@@ -43,6 +43,12 @@ Raw layouts require no decode buffer. Short-lived view APIs used by special cons
 may allocate and release a buffer around one operation. No decompressed layout remains
 resident during ordinary field play.
 
+Hybrid loading may produce a brief visible hitch when the player crosses a connected-map
+boundary without a fade. This is accepted for the current implementation. The loader does
+not preload adjacent layouts or retain a decoded-layout cache solely to remove that pause;
+those mechanisms would extend memory lifetimes and add state that this feature does not
+otherwise need. Faded warps use the same bounded loading model.
+
 ## Access API
 
 Production code uses the map-layout module for:

@@ -25,6 +25,10 @@ preserving every authored layout byte and keeping map transitions acceptable in 
   Wayfarer ROM is not a release artifact because the linked image exceeds 32 MiB.
 - Hybrid is Wayfarer's default storage mode.
 - Standalone Emerald, HNS, and FireRed-family builds remain raw.
+- A brief hitch while crossing an unfaded connected-map seam is an accepted hybrid-mode
+  tradeoff. Faded warps normally conceal the same loading work. Do not add adjacent-map
+  preloading, a resident decoded-map cache, or extra lifetime state solely to eliminate
+  this minor pause.
 
 ## Deliberate non-requirements
 
@@ -49,7 +53,9 @@ Acceptance requires:
 
 There is no permanent multi-stage evidence bureaucracy, synthetic timing dossier, or
 per-layout numerical gate. A material, player-visible regression in the playable journeys
-must be investigated before enabling hybrid by default.
+must be investigated before enabling hybrid by default. The accepted brief hitch at an
+otherwise seamless connection is not such a regression; prolonged stalls, broken input,
+audio disruption, or incorrect map presentation are.
 
 ## Recovery
 

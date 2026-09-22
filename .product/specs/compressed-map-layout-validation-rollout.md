@@ -41,6 +41,11 @@ The hybrid E2E image must pass:
 - a connection-heavy journey that crosses and returns across seams; and
 - existing gameplay regression journeys relevant to map loading.
 
+A brief hitch at an unfaded connected-map seam is accepted. Playable validation still
+fails on prolonged stalls, lost or stuck input, audio disruption, corrupted presentation,
+or incorrect connection results. Removing the accepted hitch does not justify adjacent-map
+preloading or a persistent decoded-layout cache in this version.
+
 ## Size and memory checks
 
 Before default enablement, compare the linker's computed raw and hybrid Wayfarer sizes.
