@@ -756,6 +756,12 @@ void WarpIntoMap(void)
 {
     ApplyCurrentWarp();
     LoadCurrentMapData();
+    if (gMapHeader.mapLayout == NULL)
+    {
+        AbortMapLayoutLoad(MAP_LAYOUT_LOAD_BAD_ID, gSaveBlock1Ptr->location.mapGroup,
+                           gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+        return;
+    }
     SetPlayerCoordsFromWarp();
 }
 

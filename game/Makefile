@@ -142,7 +142,7 @@ ifeq ($(RELEASE),1)
 	FILE_NAME := $(FILE_NAME)-release
 endif
 ifeq ($(E2E),1)
-	FILE_NAME := pokemon-wayfarer-e2e$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)
+	FILE_NAME := pokemon-wayfarer-e2e
 endif
 
 ROM_NAME := $(FILE_NAME).gba
@@ -180,8 +180,8 @@ ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
 SYM := $(ROM:.gba=.sym)
 ROM_REPORT := $(ROM:.gba=-size.json)
-E2E_ROM := pokemon-wayfarer-e2e$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX).gba
-E2E_SYM := pokemon-wayfarer-e2e$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX).sym
+E2E_ROM := pokemon-wayfarer-e2e.gba
+E2E_SYM := pokemon-wayfarer-e2e.sym
 
 WAYFARER_ROM_BASELINE ?=
 # Set this to 1 only when deliberately creating the first report for a new
