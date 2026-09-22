@@ -11,6 +11,9 @@ u8 *GetSecretBaseMapName(u8 *dest);
 const u8 *GetSecretBaseTrainerLoseText(void);
 void SetOccupiedSecretBaseEntranceMetatiles(struct MapEvents const *events);
 enum MapLayoutLoadError InitSecretBaseAppearance(bool8 hidePC);
+#if TESTING && IS_WAYFARER
+enum MapLayoutLoadError Test_FindSecretBaseMetatile(s16 *x, s16 *y, u16 metatileId);
+#endif
 bool8 CurMapIsSecretBase(void);
 void SecretBasePerStepCallback(u8 taskId);
 bool8 TrySetCurSecretBase(void);

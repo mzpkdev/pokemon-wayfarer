@@ -323,6 +323,13 @@ static enum MapLayoutLoadError FindMetatileIdMapCoords(s16 *x, s16 *y, u16 metat
     return MapLayoutReleaseView(&view);
 }
 
+#if TESTING && IS_WAYFARER
+enum MapLayoutLoadError Test_FindSecretBaseMetatile(s16 *x, s16 *y, u16 metatileId)
+{
+    return FindMetatileIdMapCoords(x, y, metatileId);
+}
+#endif
+
 // Opens or closes the secret base entrance metatile in front of the player.
 void ToggleSecretBaseEntranceMetatile(void)
 {

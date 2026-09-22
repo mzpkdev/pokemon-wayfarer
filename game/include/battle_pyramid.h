@@ -19,6 +19,11 @@ void CopyPyramidTrainerWinSpeech(u16 trainerId);
 void CopyPyramidTrainerLoseSpeech(u16 trainerId);
 u8 GetTrainerEncounterMusicIdInBattlePyramid(u16 trainerId);
 enum MapLayoutLoadError GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition);
+#if TESTING && IS_WAYFARER
+enum MapLayoutLoadError Test_GenerateBattlePyramidFloorLayout(u16 *backupMapData,
+    u8 templateId, const u8 *layoutOptions, u8 entranceSquareId, u8 exitSquareId,
+    bool8 setPlayerPosition);
+#endif
 void LoadBattlePyramidObjectEventTemplates(void);
 void LoadBattlePyramidFloorObjectEventScripts(void);
 u8 GetNumBattlePyramidObjectEvents(void);

@@ -138,6 +138,7 @@ EWRAM_DATA static struct DecorRearrangementDataBuffer sDecorRearrangementDataBuf
 EWRAM_DATA static u8 sCurDecorSelectedInRearrangement = 0;
 
 static void HandleDecorationActionsMenuInput(u8 taskId);
+static void SetDecorRearrangementShape(u8 decor, struct DecorRearrangementDataBuffer *data);
 static void PrintCurMainMenuDescription(void);
 static void DecorationMenuAction_Decorate(u8 taskId);
 static void DecorationMenuAction_PutAway(u8 taskId);
@@ -2291,11 +2292,25 @@ void GetObjectEventLocalIdByFlag(void)
     }
 }
 
+static void RestoreDecorationTiles(const struct MapLayoutView *view,
+                                   s16 posX, s16 posY, u8 width, u8 height)
+{
+    u8 y;
+    u8 x;
+
+    for (y = 0; y < height; y++)
+    {
+        for (x = 0; x < width; x++)
+        {
+            MapGridSetMetatileEntryAt(posX + MAP_OFFSET + x, posY + MAP_OFFSET - y,
+                view->tiles[posX + x + gMapHeader.mapLayout->width * (posY - y)] | 0x3000);
+        }
+    }
+}
+
 static enum MapLayoutLoadError ClearRearrangementNonSprites(void)
 {
     u8 i;
-    u8 y;
-    u8 x;
     int posX;
     int posY;
     u8 perm;
@@ -2312,20 +2327,214 @@ static enum MapLayoutLoadError ClearRearrangementNonSprites(void)
         posY = sDecorationContext.pos[sDecorRearrangementDataBuffer[i].idx] & 0x0F;
         if (perm != DECORPERM_SPRITE)
         {
-            for (y = 0; y < sDecorRearrangementDataBuffer[i].height; y++)
-            {
-                for (x = 0; x < sDecorRearrangementDataBuffer[i].width; x++)
-                {
-                    MapGridSetMetatileEntryAt(posX + MAP_OFFSET + x, posY + MAP_OFFSET - y,
-                        view.tiles[posX + x + gMapHeader.mapLayout->width * (posY - y)] | 0x3000);
-                }
-            }
+            RestoreDecorationTiles(&view, posX, posY,
+                                   sDecorRearrangementDataBuffer[i].width,
+                                   sDecorRearrangementDataBuffer[i].height);
 
             ClearDecorationContextIndex(sDecorRearrangementDataBuffer[i].idx);
         }
     }
     return MapLayoutReleaseView(&view);
 }
+
+#if TESTING && IS_WAYFARER
+static struct DecorationPCContext sTestSavedDecorationContext;
+static struct DecorRearrangementDataBuffer sTestSavedRearrangement;
+static const struct Decoration *sTestSavedPlacementDecoration;
+static u8 *sTestSavedCurDecorationItems;
+static u8 sTestDecorationItems[1];
+static u8 sTestDecorationPositions[1];
+static u8 sTestDecorationInventory[1];
+static u8 sTestSavedPlayerRoomItemIndices[DECOR_MAX_PLAYERS_HOUSE];
+static u8 sTestSavedCurDecorationIndex;
+static u8 sTestSavedRearrangementCount;
+static u16 sTestSavedIteration;
+static u16 sTestSavedMapX;
+static u16 sTestSavedMapY;
+static u16 sTestSavedSpecialVar8005;
+static u16 sTestSavedSpecialVar8006;
+static u16 sTestSavedSpecialVar8007;
+static u16 sTestSavedGraphicsVar;
+static u16 sTestSavedSpecialResult;
+static bool8 sTestSavedDecorationFlag;
+static bool8 sTestSpriteDecorationActive;
+static struct Task sTestSavedTask;
+EWRAM_DATA static struct ObjectEvent sTestSavedObjectEvents[OBJECT_EVENTS_COUNT];
+EWRAM_DATA static struct ObjectEventTemplate sTestSavedObjectEventTemplates[OBJECT_EVENT_TEMPLATES_COUNT];
+
+enum MapLayoutLoadError Test_RestoreDecorationTiles(s16 posX, s16 posY,
+                                                     u8 width, u8 height,
+                                                     bool8 isSprite)
+{
+    struct MapLayoutView view = {0};
+    enum MapLayoutLoadError error;
+
+    if (isSprite)
+        return MAP_LAYOUT_LOAD_OK;
+    if (width == 0 || height == 0 || posX < 0 || posY < height - 1
+     || posX + width > gMapHeader.mapLayout->width
+     || posY >= gMapHeader.mapLayout->height)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    error = MapLayoutAcquireView(gMapHeader.mapLayout, &view);
+    if (error != MAP_LAYOUT_LOAD_OK)
+        return error;
+    RestoreDecorationTiles(&view, posX, posY, width, height);
+    return MapLayoutReleaseView(&view);
+}
+
+enum MapLayoutLoadError Test_ApplyDecoration(s16 posX, s16 posY, u16 decoration)
+{
+    u8 width;
+    u8 height;
+    u8 objectEventId;
+
+    if (decoration == DECOR_NONE || decoration > NUM_DECORATIONS)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    SetDecorRearrangementShape(decoration, &sDecorRearrangementDataBuffer[0]);
+    width = sDecorRearrangementDataBuffer[0].width;
+    height = sDecorRearrangementDataBuffer[0].height;
+    if (width == 0 || height == 0 || posX < 0 || posY < height - 1
+     || posX + width > gMapHeader.mapLayout->width
+     || posY >= gMapHeader.mapLayout->height)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+
+    if (gDecorations[decoration].permission == DECORPERM_SPRITE)
+    {
+        sTestSpriteDecorationActive = FALSE;
+        sTestSavedDecorationContext = sDecorationContext;
+        sTestSavedRearrangement = sDecorRearrangementDataBuffer[0];
+        sTestSavedPlacementDecoration = sPlaceDecorationGraphicsDataBuffer.decoration;
+        sTestSavedCurDecorationItems = gCurDecorationItems;
+        sTestSavedCurDecorationIndex = gCurDecorationIndex;
+        sTestSavedRearrangementCount = sCurDecorSelectedInRearrangement;
+        sTestSavedIteration = gSpecialVar_0x8004;
+        sTestSavedMapX = sCurDecorMapX;
+        sTestSavedMapY = sCurDecorMapY;
+        sTestSavedSpecialVar8005 = gSpecialVar_0x8005;
+        sTestSavedSpecialVar8006 = gSpecialVar_0x8006;
+        sTestSavedSpecialVar8007 = gSpecialVar_0x8007;
+        sTestSavedSpecialResult = gSpecialVar_Result;
+        sTestSavedGraphicsVar = VarGet(VAR_OBJ_GFX_ID_0);
+        sTestSavedDecorationFlag = FlagGet(FLAG_DECORATION_1);
+        sTestSavedTask = gTasks[0];
+        memcpy(sTestSavedObjectEvents, gObjectEvents, sizeof(sTestSavedObjectEvents));
+        memcpy(sTestSavedObjectEventTemplates, gSaveBlock1Ptr->objectEventTemplates,
+               sizeof(sTestSavedObjectEventTemplates));
+        memcpy(sTestSavedPlayerRoomItemIndices, sPlayerRoomItemsIndicesBuffer,
+               sizeof(sTestSavedPlayerRoomItemIndices));
+
+        sTestDecorationItems[0] = DECOR_NONE;
+        sTestDecorationPositions[0] = 0;
+        sTestDecorationInventory[0] = decoration;
+        sDecorationContext.items = sTestDecorationItems;
+        sDecorationContext.pos = sTestDecorationPositions;
+        sDecorationContext.size = ARRAY_COUNT(sTestDecorationItems);
+        sDecorationContext.isPlayerRoom = TRUE;
+        gCurDecorationItems = sTestDecorationInventory;
+        gCurDecorationIndex = 0;
+        gTasks[0].tCursorX = posX + MAP_OFFSET;
+        gTasks[0].tCursorY = posY + MAP_OFFSET;
+        PlaceDecoration_(0);
+
+        sPlaceDecorationGraphicsDataBuffer.decoration = &gDecorations[decoration];
+        sCurDecorMapX = posX;
+        sCurDecorMapY = posY;
+        LoadObjEventTemplatesFromHeader();
+        FlagSet(FLAG_DECORATION_1);
+        SetDecoration();
+        sTestSpriteDecorationActive = TRUE;
+        if (TryGetObjectEventIdByLocalIdAndMap(gSpecialVar_0x8005,
+                                               gSaveBlock1Ptr->location.mapNum,
+                                               gSaveBlock1Ptr->location.mapGroup,
+                                               &objectEventId))
+            return MAP_LAYOUT_LOAD_BAD_ID;
+        if (sTestDecorationItems[0] != decoration)
+            return MAP_LAYOUT_LOAD_NO_DESCRIPTOR;
+        if (sTestDecorationPositions[0] != ((posX << 4) | posY))
+            return MAP_LAYOUT_LOAD_BAD_SCHEMA;
+        if (gSpecialVar_0x8006 != posX || gSpecialVar_0x8007 != posY)
+            return MAP_LAYOUT_LOAD_BAD_CODEC_FLAGS;
+        if (gObjectEvents[objectEventId].currentCoords.x != posX + MAP_OFFSET
+         || gObjectEvents[objectEventId].currentCoords.y != posY + MAP_OFFSET)
+            return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        return MAP_LAYOUT_LOAD_OK;
+    }
+
+    ShowDecorationOnMap(posX + MAP_OFFSET, posY + MAP_OFFSET, decoration);
+    return MAP_LAYOUT_LOAD_OK;
+}
+
+enum MapLayoutLoadError Test_RemoveDecoration(s16 posX, s16 posY, u16 decoration)
+{
+    u8 width;
+    u8 height;
+
+    if (decoration == DECOR_NONE || decoration > NUM_DECORATIONS)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    SetDecorRearrangementShape(decoration, &sDecorRearrangementDataBuffer[0]);
+    width = sDecorRearrangementDataBuffer[0].width;
+    height = sDecorRearrangementDataBuffer[0].height;
+    if (width == 0 || height == 0 || posX < 0 || posY < height - 1
+     || posX + width > gMapHeader.mapLayout->width
+     || posY >= gMapHeader.mapLayout->height)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+
+    if (gDecorations[decoration].permission == DECORPERM_SPRITE)
+    {
+        enum MapLayoutLoadError error = MAP_LAYOUT_LOAD_OK;
+        u8 localId;
+        u8 objectEventId;
+
+        if (!sTestSpriteDecorationActive)
+            return MAP_LAYOUT_LOAD_BAD_VIEW_LIFETIME;
+        sDecorRearrangementDataBuffer[0].idx = 0;
+        sDecorRearrangementDataBuffer[0].flagId = FLAG_DECORATION_1;
+        sCurDecorSelectedInRearrangement = 1;
+        gSpecialVar_0x8004 = 0;
+        PutAwayDecorationIteration();
+        localId = gSpecialVar_0x8006;
+        RemoveObjectEventByLocalIdAndMap(localId,
+                                         gSaveBlock1Ptr->location.mapNum,
+                                         gSaveBlock1Ptr->location.mapGroup);
+        if (sTestDecorationItems[0] != DECOR_NONE)
+            error = MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        if (!TryGetObjectEventIdByLocalIdAndMap(localId,
+                                                gSaveBlock1Ptr->location.mapNum,
+                                                gSaveBlock1Ptr->location.mapGroup,
+                                                &objectEventId))
+            error = MAP_LAYOUT_LOAD_BAD_BOUNDS;
+
+        sDecorationContext = sTestSavedDecorationContext;
+        sDecorRearrangementDataBuffer[0] = sTestSavedRearrangement;
+        sPlaceDecorationGraphicsDataBuffer.decoration = sTestSavedPlacementDecoration;
+        gCurDecorationItems = sTestSavedCurDecorationItems;
+        gCurDecorationIndex = sTestSavedCurDecorationIndex;
+        sCurDecorSelectedInRearrangement = sTestSavedRearrangementCount;
+        gSpecialVar_0x8004 = sTestSavedIteration;
+        gSpecialVar_0x8005 = sTestSavedSpecialVar8005;
+        gSpecialVar_0x8006 = sTestSavedSpecialVar8006;
+        gSpecialVar_0x8007 = sTestSavedSpecialVar8007;
+        gSpecialVar_Result = sTestSavedSpecialResult;
+        sCurDecorMapX = sTestSavedMapX;
+        sCurDecorMapY = sTestSavedMapY;
+        VarSet(VAR_OBJ_GFX_ID_0, sTestSavedGraphicsVar);
+        gTasks[0] = sTestSavedTask;
+        memcpy(gObjectEvents, sTestSavedObjectEvents, sizeof(sTestSavedObjectEvents));
+        memcpy(gSaveBlock1Ptr->objectEventTemplates, sTestSavedObjectEventTemplates,
+               sizeof(sTestSavedObjectEventTemplates));
+        memcpy(sPlayerRoomItemsIndicesBuffer, sTestSavedPlayerRoomItemIndices,
+               sizeof(sTestSavedPlayerRoomItemIndices));
+        if (sTestSavedDecorationFlag)
+            FlagSet(FLAG_DECORATION_1);
+        else
+            FlagClear(FLAG_DECORATION_1);
+        sTestSpriteDecorationActive = FALSE;
+        return error;
+    }
+
+    return Test_RestoreDecorationTiles(posX, posY, width, height, FALSE);
+}
+#endif
 
 static void Task_PutAwayDecoration(u8 taskId)
 {

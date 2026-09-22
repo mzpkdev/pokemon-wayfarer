@@ -10,6 +10,7 @@
 #include "task.h"
 #include "constants/map_groups.h"
 #include "constants/map_layout_storage.h"
+#include "constants/layouts.h"
 #include "data/map_group_count.h"
 #include "constants/rgb.h"
 
@@ -47,9 +48,12 @@ extern const u8 __map_layout_payloads_start[];
 extern const u8 __map_layout_payloads_end[];
 static bool8 sCompressedViewActive;
 #if TESTING
+extern const struct MapLayout *const gMapLayouts[];
+extern const u16 *const gMapLayoutRawOracles[];
 static const u8 *sTestPayloadsStart;
 static const u8 *sTestPayloadsEnd;
 static bool8 sTestForceAllocationFailure;
+static bool8 sTestUseRawOracle;
 static u32 sTestAllocationLimit;
 static u32 sTestInjectedOpenCall;
 static enum MapLayoutLoadError sTestInjectedOpenError;
@@ -76,6 +80,18 @@ static void Test_RecordLargestFree(u32 *phase)
     if (sTestTelemetry.minimumLargestFreeBytes == 0
      || *phase < sTestTelemetry.minimumLargestFreeBytes)
         sTestTelemetry.minimumLargestFreeBytes = *phase;
+}
+
+static const u16 *Test_GetRawOracle(const struct MapLayout *layout)
+{
+    u32 i;
+
+    if (!sTestUseRawOracle)
+        return NULL;
+    for (i = 0; i < MAP_LAYOUT_COUNT; i++)
+        if (gMapLayouts[i] == layout)
+            return gMapLayoutRawOracles[i];
+    return NULL;
 }
 #endif
 #endif
@@ -351,6 +367,13 @@ static enum MapLayoutLoadError GetRequiredScratch(const struct MapLayout *layout
 #if IS_WAYFARER
     {
         const struct MapLayoutDataDescriptor *descriptor;
+#if TESTING
+        if (Test_GetRawOracle(layout) != NULL)
+        {
+            *required = 0;
+            return MAP_LAYOUT_LOAD_OK;
+        }
+#endif
         error = ValidateDescriptor(layout, logicalBytes, FALSE, &descriptor);
         if (error != MAP_LAYOUT_LOAD_OK)
             return error;
@@ -411,6 +434,13 @@ static enum MapLayoutLoadError OpenTiles(const struct MapLayout *layout, void *s
         sTestTelemetry.openCount++;
         if (sTestInjectedOpenCall != 0 && sTestTelemetry.openCount == sTestInjectedOpenCall)
             return sTestInjectedOpenError;
+        if (Test_GetRawOracle(layout) != NULL)
+        {
+            *tiles = Test_GetRawOracle(layout);
+            if (compressed != NULL)
+                *compressed = FALSE;
+            return MAP_LAYOUT_LOAD_OK;
+        }
 #endif
         error = ValidateDescriptor(layout, logicalBytes, TRUE, &descriptor);
         if (error != MAP_LAYOUT_LOAD_OK)
@@ -688,6 +718,7 @@ void Test_MapLayoutResetHooks(void)
     sTestPayloadsStart = NULL;
     sTestPayloadsEnd = NULL;
     sTestForceAllocationFailure = FALSE;
+    sTestUseRawOracle = FALSE;
     sTestAllocationLimit = 0;
     sTestInjectedOpenCall = 0;
     sTestInjectedOpenError = MAP_LAYOUT_LOAD_OK;
@@ -714,6 +745,11 @@ void Test_MapLayoutInjectOpenError(u32 call, enum MapLayoutLoadError error)
 {
     sTestInjectedOpenCall = call;
     sTestInjectedOpenError = error;
+}
+
+void Test_MapLayoutUseRawOracle(bool8 enabled)
+{
+    sTestUseRawOracle = enabled;
 }
 
 const struct MapLayoutTestTelemetry *Test_MapLayoutGetTelemetry(void)

@@ -6,6 +6,226 @@
       "layout": "Harbor_Layout",
       "policy": "gba_lz77",
       "reason": "Stage 0 unconnected canary shared by two ordinary warp-only harbor interiors."
+    },
+    {
+      "layout": "SecretBase_RedCave1_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BrownCave1_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BlueCave1_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_YellowCave1_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Tree1_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Shrub1_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_RedCave2_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BrownCave2_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BlueCave2_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_YellowCave2_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Tree2_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Shrub2_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_RedCave3_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BrownCave3_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BlueCave3_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_YellowCave3_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Tree3_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Shrub3_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_RedCave4_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BrownCave4_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_BlueCave4_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_YellowCave4_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Tree4_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "SecretBase_Shrub4_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "TrainerHill_1F_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "TrainerHill_2F_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "TrainerHill_3F_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "TrainerHill_4F_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare01_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare02_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare03_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare04_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare05_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare06_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare07_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare08_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare09_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare10_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare11_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare12_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare13_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare14_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare15_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
+    },
+    {
+      "layout": "BattlePyramidSquare16_hns_Layout",
+      "policy": "raw",
+      "reason": "Special consumer retained raw until its staged migration milestone; direct differential coverage is required independently."
     }
   ]
 }

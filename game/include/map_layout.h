@@ -110,6 +110,7 @@ void Test_MapLayoutSetPayloadBounds(const void *start, const void *end);
 void Test_MapLayoutForceAllocationFailure(bool8 enabled);
 void Test_MapLayoutSetAllocationLimit(u32 maximumBytes);
 void Test_MapLayoutInjectOpenError(u32 call, enum MapLayoutLoadError error);
+void Test_MapLayoutUseRawOracle(bool8 enabled);
 const struct MapLayoutTestTelemetry *Test_MapLayoutGetTelemetry(void);
 const struct MapLayoutTestDescriptor *Test_MapLayoutGetDescriptor(const struct MapLayout *layout);
 #endif
