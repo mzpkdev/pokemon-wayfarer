@@ -113,6 +113,10 @@ export type GameState = {
   challenge: {
     hmsOverwrite: boolean
   }
+  secretBase: {
+    decorationCount: number
+    decorationFingerprint: number
+  }
   partyMenu: {
     open: boolean
     actions: number[]
@@ -355,6 +359,10 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       },
       challenge: {
         hmsOverwrite: snapshot.hmsOverwrite,
+      },
+      secretBase: {
+        decorationCount: snapshot.secretBaseDecorationCount,
+        decorationFingerprint: snapshot.secretBaseDecorationFingerprint,
       },
       partyMenu: {
         open: snapshot.uiMode === 3,

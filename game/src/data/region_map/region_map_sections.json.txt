@@ -36,7 +36,7 @@ const struct RegionMapLocation gRegionMapEntries[] = {
 ## endfor
 #if IS_WAYFARER
 ## for map_section in map_sections
-{% if existsIn(map_section, "wayfarer_sevii") or existsIn(map_section, "wayfarer_hns") %}
+{% if existsIn(map_section, "wayfarer_sevii") or existsIn(map_section, "wayfarer_hns") or existsIn(map_section, "wayfarer_sinnoh") %}
     [{{ map_section.id }}] = {
 {% if existsIn(map_section, "x") %}
         .x = {{ map_section.x }},

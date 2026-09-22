@@ -44,6 +44,7 @@ To edit and visualize EMERALD maps, you want:
 #define MAP_OFFSET_H (MAP_OFFSET * 2)
 
 #include "main.h"
+#include "map_layout.h"
 
 extern struct BackupMapLayout gBackupMapLayout;
 extern u16 ALIGNED(4) sBackupMapData[MAX_MAP_DATA_SIZE];
@@ -68,10 +69,10 @@ u8 MapGridGetElevationAt(int x, int y);
 bool8 CameraMove(int x, int y);
 void SaveMapView(void);
 void SetCameraFocusCoords(u16 x, u16 y);
-void InitMap(void);
-void InitMapFromSavedGame(void);
-void InitTrainerHillMap(void);
-void InitBattlePyramidMap(bool8 setPlayerPosition);
+enum MapLayoutLoadError InitMap(void);
+enum MapLayoutLoadError InitMapFromSavedGame(void);
+enum MapLayoutLoadError InitTrainerHillMap(void);
+enum MapLayoutLoadError InitBattlePyramidMap(bool8 setPlayerPosition);
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout);
 void LoadMapTilesetPalettes(struct MapLayout const *mapLayout);
 void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded);
@@ -83,6 +84,18 @@ void CopySecondaryTilesetToVram(struct MapLayout const *mapLayout);
 const struct MapHeader *const GetMapHeaderFromConnection(const struct MapConnection *connection);
 const struct MapConnection *GetMapConnectionAtPos(s16 x, s16 y);
 void MapGridSetMetatileImpassabilityAt(int x, int y, bool32 impassable);
+
+#if TESTING
+enum MapLayoutLoadError Test_InitMapLayoutData(struct MapHeader *mapHeader);
+#if IS_WAYFARER
+enum MapLayoutLoadError Test_InitLegacyRawMapLayoutData(const struct MapHeader *mapHeader,
+                                                        u16 *dest, u32 destCapacity,
+                                                        s32 *width, s32 *height, u8 *connectionFlags);
+#endif
+void Test_SetMapConnectionHeaderOverride(const struct MapHeader *mapHeader);
+void Test_ResetMapConnectionFlags(void);
+u8 Test_GetMapConnectionFlags(void);
+#endif
 
 // field_region_map.c
 void FieldInitRegionMap(MainCallback callback);

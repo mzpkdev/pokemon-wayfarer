@@ -1662,6 +1662,11 @@ enum RegionMapType GetRegionMapType(u32 mapSecId)
 #endif
 }
 
+bool8 IsCurrentRegionMapSupported(void)
+{
+    return TRUE;
+}
+
 static mapsec_u16_t GetMapSecIdAt(u16 x, u16 y)
 {
     if (y < MAPCURSOR_Y_MIN || y > MAPCURSOR_Y_MAX || x < MAPCURSOR_X_MIN || x > MAPCURSOR_X_MAX)
@@ -2757,6 +2762,11 @@ bool32 IsEventIslandMapSecId(mapsec_u8_t mapSecId)
 
 void CB2_OpenFlyMap(void)
 {
+    if (!IsCurrentRegionMapSupported())
+    {
+        SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
+        return;
+    }
     switch (gMain.state)
     {
     case 0:

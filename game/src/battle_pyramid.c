@@ -24,6 +24,7 @@
 #include "trainer_see.h"
 #include "main.h"
 #include "load_save.h"
+#include "map_layout.h"
 #include "script.h"
 #include "malloc.h"
 #include "overworld.h"
@@ -1771,17 +1772,16 @@ static u16 GetUniqueTrainerId(u8 objectEventId)
     return trainerId;
 }
 
-void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition)
+static enum MapLayoutLoadError GenerateBattlePyramidFloorLayoutFromOffsets(u16 *backupMapData,
+    bool8 setPlayerPosition, const u8 *floorLayoutOffsets, u8 entranceSquareId, u8 exitSquareId)
 {
     int y, x;
     int i;
-    u8 entranceSquareId, exitSquareId;
-    u8 *floorLayoutOffsets = AllocZeroed(NUM_PYRAMID_FLOOR_SQUARES);
+    enum MapLayoutLoadError error = MAP_LAYOUT_LOAD_OK;
 
-    GetPyramidFloorLayoutOffsets(floorLayoutOffsets);
-    GetPyramidEntranceAndExitSquareIds(&entranceSquareId, &exitSquareId);
     for (i = 0; i < NUM_PYRAMID_FLOOR_SQUARES; i++)
     {
+        struct MapLayoutView layoutView = {0};
         u16 *map;
         int yOffset, xOffset;
     #if IS_HNS
@@ -1789,7 +1789,12 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
     #else
         const struct MapLayout *mapLayout = gMapLayouts[floorLayoutOffsets[i] + LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR];
     #endif
-        const u16 *layoutMap = mapLayout->map;
+        const u16 *layoutMap;
+
+        error = MapLayoutAcquireView(mapLayout, &layoutView);
+        if (error != MAP_LAYOUT_LOAD_OK)
+            break;
+        layoutMap = layoutView.tiles;
 
         gBackupMapLayout.map = backupMapData;
         gBackupMapLayout.width = mapLayout->width * PYRAMID_FLOOR_SQUARES_WIDE + MAP_OFFSET_W;
@@ -1824,10 +1829,55 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
             map += MAP_OFFSET_W + (mapLayout->width * PYRAMID_FLOOR_SQUARES_WIDE);
             layoutMap += mapLayout->width;
         }
+        error = MapLayoutReleaseView(&layoutView);
+        if (error != MAP_LAYOUT_LOAD_OK)
+            break;
     }
-    RunOnLoadMapScript();
-    Free(floorLayoutOffsets);
+    return error;
 }
+
+enum MapLayoutLoadError GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPosition)
+{
+    u8 entranceSquareId, exitSquareId;
+    u8 *floorLayoutOffsets = AllocZeroed(NUM_PYRAMID_FLOOR_SQUARES);
+    enum MapLayoutLoadError error;
+
+    if (floorLayoutOffsets == NULL)
+        return MAP_LAYOUT_LOAD_ALLOC_FAILED;
+
+    GetPyramidFloorLayoutOffsets(floorLayoutOffsets);
+    GetPyramidEntranceAndExitSquareIds(&entranceSquareId, &exitSquareId);
+    error = GenerateBattlePyramidFloorLayoutFromOffsets(backupMapData, setPlayerPosition,
+                                                         floorLayoutOffsets,
+                                                         entranceSquareId, exitSquareId);
+    Free(floorLayoutOffsets);
+    return error;
+}
+
+#if TESTING && IS_WAYFARER
+enum MapLayoutLoadError Test_GenerateBattlePyramidFloorLayout(u16 *backupMapData,
+    u8 templateId, const u8 *layoutOptions, u8 entranceSquareId, u8 exitSquareId,
+    bool8 setPlayerPosition)
+{
+    u8 floorLayoutOffsets[NUM_PYRAMID_FLOOR_SQUARES];
+    u32 i;
+
+    if (templateId >= ARRAY_COUNT(sPyramidFloorTemplates)
+     || layoutOptions == NULL
+     || entranceSquareId >= NUM_PYRAMID_FLOOR_SQUARES
+     || exitSquareId >= NUM_PYRAMID_FLOOR_SQUARES)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    for (i = 0; i < ARRAY_COUNT(floorLayoutOffsets); i++)
+    {
+        if (layoutOptions[i] >= NUM_LAYOUT_OFFSETS)
+            return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        floorLayoutOffsets[i] = sPyramidFloorTemplates[templateId].layoutOffsets[layoutOptions[i]];
+    }
+    return GenerateBattlePyramidFloorLayoutFromOffsets(backupMapData, setPlayerPosition,
+                                                         floorLayoutOffsets,
+                                                         entranceSquareId, exitSquareId);
+}
+#endif
 
 void LoadBattlePyramidObjectEventTemplates(void)
 {

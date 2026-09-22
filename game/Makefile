@@ -48,6 +48,9 @@ endif
 endif
 endif
 
+MAP_LAYOUT_STORAGE ?= $(if $(filter wayfarer,$(BUILD_NAME)),hybrid,raw)
+MAP_LAYOUT_STORAGE_BUILD_SUFFIX := $(if $(filter raw,$(MAP_LAYOUT_STORAGE)),,-$(MAP_LAYOUT_STORAGE))
+
 # GBA rom header
 MAKER_CODE  := 01
 REVISION    := 0
@@ -143,11 +146,11 @@ ifeq ($(E2E),1)
 endif
 
 ROM_NAME := $(FILE_NAME).gba
-OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)
-OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)-test
-OBJ_DIR_NAME_E2E := $(BUILD_DIR)/$(BUILD_NAME)-e2e
-OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/$(BUILD_NAME)-debug
-OBJ_DIR_NAME_RELEASE := $(BUILD_DIR)/$(BUILD_NAME)-release
+OBJ_DIR_NAME := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)
+OBJ_DIR_NAME_TEST := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-test
+OBJ_DIR_NAME_E2E := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-e2e
+OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-debug
+OBJ_DIR_NAME_RELEASE := $(BUILD_DIR)/$(BUILD_NAME)$(MAP_LAYOUT_STORAGE_BUILD_SUFFIX)-release
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
@@ -420,7 +423,7 @@ ifeq ($(SETUP_PREREQS),1)
     $(error Errors occurred while building tools. See error messages above for more details)
   endif
   # Oh and also generate mapjson sources before we use `SCANINC`.
-  $(foreach line, $(shell $(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) TEST=$(TEST) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
+  $(foreach line, $(shell $(MAKE) BUILD=$(BUILD_NAME) MAP_VERSION=$(MAP_VERSION) MAP_LAYOUT_STORAGE=$(MAP_LAYOUT_STORAGE) TEST=$(TEST) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
   ifneq ($(.SHELLSTATUS),0)
     $(error Errors occurred while generating map-related sources. See error messages above for more details)
   endif
@@ -542,7 +545,7 @@ clean-assets:
 	rm -f $(MID_SUBDIR)/*.s
 	rm -f $(DATA_ASM_SUBDIR)/layouts/layouts.inc $(DATA_ASM_SUBDIR)/layouts/layouts_table.inc
 	rm -f $(DATA_ASM_SUBDIR)/maps/connections.inc $(DATA_ASM_SUBDIR)/maps/events.inc $(DATA_ASM_SUBDIR)/maps/groups.inc $(DATA_ASM_SUBDIR)/maps/headers.inc $(DATA_SRC_SUBDIR)/map_group_count.h
-	rm -f .map_version .map_version.*
+	rm -f .map_version .map_version.* .map_layout_storage.* .map_layout_source_revision.*
 	find sound -iname '*.bin' -exec rm {} +
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
@@ -799,9 +802,11 @@ league-circuit-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/league_circuit -p 'test_*.py' -q
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/wayfarer_league_tiers -p 'test_*.py' -q
 
-.PHONY: e2e
+.PHONY: e2e e2e-inner
 e2e:
-	+$(MAKE) BUILD=wayfarer E2E=1 $(E2E_ROM) $(E2E_SYM)
+	+$(MAKE) BUILD=wayfarer E2E=1 e2e-inner
+
+e2e-inner: $(E2E_ROM) $(E2E_SYM)
 
 emerald-traversal-static-test:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(TOOLS_DIR)/mapjson/tests -p 'test_emerald_traversal.py' -q
@@ -883,32 +888,17 @@ $(WAYFARER_SEVII_PORT_AUDIT): $(WAYFARER_SEVII_PORT_DEPS)
 wayfarer-sevii-port-audit: wayfarer-sevii-port-test $(WAYFARER_SEVII_PORT_AUDIT)
 
 WAYFARER_SINNOH_PORT_TOOL_DIR := $(TOOLS_DIR)/wayfarer_sinnoh_port
-WAYFARER_SINNOH_PORT_AUDIT := $(BUILD_DIR)/wayfarer-sinnoh-port-audit.json
-WAYFARER_SINNOH_PORT_VERIFY_STAMP := $(BUILD_DIR)/wayfarer-sinnoh-port-assets-verified.stamp
-WAYFARER_SINNOH_PORT_DEPS := Makefile graphics_file_rules.mk $(GFX) $(SMOL) $(WAYFARER_SINNOH_PORT_TOOL_DIR)/foundation.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/assets.py $(WAYFARER_SINNOH_PORT_TOOL_DIR)/freeze.py porymap.project.json $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_maps.json $(DATA_SRC_SUBDIR)/wayfarer_sinnoh_assets.json $(DATA_SRC_SUBDIR)/tilesets/graphics.h $(DATA_SRC_SUBDIR)/tilesets/headers.h $(DATA_SRC_SUBDIR)/tilesets/metatiles.h $(DATA_SRC_SUBDIR)/tilesets/sinnoh_graphics.h $(DATA_SRC_SUBDIR)/tilesets/sinnoh_metatiles.h $(DATA_SRC_SUBDIR)/tilesets/sinnoh_headers.h $(C_SUBDIR)/tileset_anims.c $(shell find $(DATA_DIR)/tilesets/sinnoh -type f 2>/dev/null) $(MAPS_DIR)/map_groups.json $(LAYOUTS_DIR)/layouts.json $(wildcard $(LAYOUTS_DIR)/*/*.bin)
-WAYFARER_SINNOH_PORT_ASSET_OUTPUTS := $(shell PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/assets.py --root . --list-generated)
 
-# scaninc does not traverse the generated conditional aggregate includes.  Keep
-# the tileset TU explicitly dependent on every Sinnoh production output.
-ifeq ($(BUILD_NAME),wayfarer)
-$(C_BUILDDIR)/tilesets.o: $(WAYFARER_SINNOH_PORT_VERIFY_STAMP)
-endif
+.PHONY: map-layout-storage-test map-layout-storage-audit wayfarer-sinnoh-port-audit
+map-layout-storage-test:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tools/map_layout_storage -p 'test_*.py' -q
 
+map-layout-storage-audit: map-layout-storage-test $(DATA_ASM_BUILDDIR)/maps.o
+	PYTHONDONTWRITEBYTECODE=1 python3 tools/map_layout_storage/audit.py --root . --object $(DATA_ASM_BUILDDIR)/maps.o --nm $(PREFIX)nm
 
-$(WAYFARER_SINNOH_PORT_VERIFY_STAMP): $(WAYFARER_SINNOH_PORT_DEPS) $(WAYFARER_SINNOH_PORT_ASSET_OUTPUTS)
-	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/assets.py --root . --verify
-	@touch $@
-
-.PHONY: wayfarer-sinnoh-port-assets wayfarer-sinnoh-port-test wayfarer-sinnoh-port-audit
-wayfarer-sinnoh-port-assets: $(WAYFARER_SINNOH_PORT_VERIFY_STAMP)
-
-wayfarer-sinnoh-port-test: wayfarer-sinnoh-port-assets
+wayfarer-sinnoh-port-audit:
 	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s $(WAYFARER_SINNOH_PORT_TOOL_DIR)/tests -p 'test_*.py' -q
-
-$(WAYFARER_SINNOH_PORT_AUDIT): $(WAYFARER_SINNOH_PORT_DEPS)
-	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py --root . --output $@
-
-wayfarer-sinnoh-port-audit: wayfarer-sinnoh-port-test $(WAYFARER_SINNOH_PORT_AUDIT)
+	PYTHONDONTWRITEBYTECODE=1 python3 $(WAYFARER_SINNOH_PORT_TOOL_DIR)/audit.py --root .
 
 .PHONY: wayfarer-sevii-content-test wayfarer-sevii-content-audit
 wayfarer-sevii-content-test:

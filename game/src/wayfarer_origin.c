@@ -6,6 +6,7 @@
 #include "field_special_scene.h"
 #include "data/map_group_count.h"
 #include "heal_location.h"
+#include "map_layout.h"
 #include "overworld.h"
 #include "pokemon.h"
 #include "pokedex.h"
@@ -94,7 +95,7 @@ static bool8 IsProfileValid(const struct WayfarerOriginProfile *profile)
      || WayfarerGetRegionForMap(profile->mapGroup, profile->mapNum) != profile->entryRegion)
         return FALSE;
     map = Overworld_GetMapHeaderByGroupAndId(profile->mapGroup, profile->mapNum);
-    if (map == NULL || map->mapLayout == NULL || map->events == NULL || map->mapLayout->map == NULL)
+    if (map == NULL || map->mapLayout == NULL || map->events == NULL)
         return FALSE;
     if (profile->warpId != WARP_ID_NONE)
     {
@@ -117,8 +118,18 @@ static bool8 IsProfileValid(const struct WayfarerOriginProfile *profile)
     }
     if (x < 0 || y < 0 || x >= map->mapLayout->width || y >= map->mapLayout->height)
         return FALSE;
-    if (UNPACK_COLLISION(map->mapLayout->map[y * map->mapLayout->width + x]) != 0)
-        return FALSE;
+    {
+        u16 tile;
+        enum MapLayoutLoadError layoutError = MapLayoutReadTile(map->mapLayout, x, y, &tile);
+        if (layoutError != MAP_LAYOUT_LOAD_OK)
+        {
+            AbortMapLayoutLoad(layoutError, profile->mapGroup, profile->mapNum,
+                               map->mapLayoutId);
+            return FALSE;
+        }
+        if (UNPACK_COLLISION(tile) != 0)
+            return FALSE;
+    }
     for (i = 0; i < ORIGIN_SCENES_COUNT; i++)
         if (profile->scenePolicies[i] > ORIGIN_SCENE_AUTHORED
          || (profile->scenePolicies[i] == ORIGIN_SCENE_AUTHORED && profile->authoredScene == NULL))

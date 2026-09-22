@@ -71,6 +71,13 @@ extern u8 gCurDecorationIndex;
 void InitDecorationContextItems(void);
 void DoSecretBaseDecorationMenu(u8 taskId);
 void ShowDecorationOnMap(u16 mapX, u16 mapY, u16 decoration);
+#if TESTING && IS_WAYFARER
+enum MapLayoutLoadError Test_RestoreDecorationTiles(s16 posX, s16 posY,
+                                                     u8 width, u8 height,
+                                                     bool8 isSprite);
+enum MapLayoutLoadError Test_ApplyDecoration(s16 posX, s16 posY, u16 decoration);
+enum MapLayoutLoadError Test_RemoveDecoration(s16 posX, s16 posY, u16 decoration);
+#endif
 void DoPlayerRoomDecorationMenu(u8 taskId);
 void ShowDecorationCategoriesWindow(u8 taskId);
 void CopyDecorationCategoryName(u8 *dest, u8 category);

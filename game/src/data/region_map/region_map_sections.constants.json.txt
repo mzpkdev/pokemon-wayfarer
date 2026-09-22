@@ -8,7 +8,7 @@
 
 enum {
 ## for map_section in map_sections
-{% if existsIn(map_section, "in_hns") %}{% else %}{% if existsIn(map_section, "wayfarer_sevii") or existsIn(map_section, "wayfarer_hns") %}
+{% if existsIn(map_section, "in_hns") %}{% else %}{% if existsIn(map_section, "wayfarer_sevii") or existsIn(map_section, "wayfarer_hns") or existsIn(map_section, "wayfarer_sinnoh") %}
 #if !IS_WAYFARER
     {{ map_section.id }} = 0,
 #endif
@@ -27,7 +27,7 @@ enum {
 ## endfor
 #if IS_WAYFARER
 ## for map_section in map_sections
-{% if existsIn(map_section, "wayfarer_sevii") or existsIn(map_section, "wayfarer_hns") %}
+{% if existsIn(map_section, "wayfarer_sevii") or existsIn(map_section, "wayfarer_hns") or existsIn(map_section, "wayfarer_sinnoh") %}
     {{ map_section.id }},
 {% endif %}
 ## endfor
@@ -62,9 +62,12 @@ enum {
 ## for map_section in map_sections
     {{ map_section.id }},
 ## endfor
-    MAPSEC_NONE,
     MAPSEC_COUNT
 };
+
+// Standalone games retain the save/API sentinel in the u8 map-section space.
+// Wayfarer uses the wider HNS branch above for its multi-region catalog.
+#define MAPSEC_NONE 0xFF
 
 #define KANTO_MAPSEC_START  MAPSEC_PALLET_TOWN
 #define KANTO_MAPSEC_END    MAPSEC_SPECIAL_AREA

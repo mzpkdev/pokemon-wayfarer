@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 18
+const abiVersion = 19
 const expectedRequestSize = 372
 const expectedResultSize = 16
-const expectedStateSize = 440
+const expectedStateSize = 448
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -203,6 +203,7 @@ export type CommandRequest = {
   leagueClears: boolean[]
   applyLeagueCircuit?: boolean
   appearanceId?: number
+  decoratedSecretBase?: boolean
 }
 
 export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wildMon"> & {
@@ -303,6 +304,8 @@ export type StateSnapshot = {
   partyStatus: number[]
   trainerOnly: TrainerOnlySnapshot
   littlerootTownState: number
+  secretBaseDecorationCount: number
+  secretBaseDecorationFingerprint: number
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -406,6 +409,7 @@ export const encodeCommandRequest = (abi: SessionAbi, request: CommandRequest): 
   }
   view.setUint8(368, request.applyLeagueCircuit ? 1 : 0)
   view.setUint8(369, request.appearanceId ?? 0)
+  view.setUint8(370, request.decoratedSecretBase ? 1 : 0)
   return bytes
 }
 
@@ -867,6 +871,8 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     money: uint32(bytes, 400),
     partyHp: Array.from({ length: maxParty }, (_, index) => uint16(bytes, 404 + index * 2)),
     partyStatus: Array.from({ length: maxParty }, (_, index) => uint32(bytes, 416 + index * 4)),
+    secretBaseDecorationCount: bytes[440]!,
+    secretBaseDecorationFingerprint: uint32(bytes, 444),
     trainerOnly: {
       active: bytes[386] !== 0,
       initialCatchFactor: bytes[387]!,

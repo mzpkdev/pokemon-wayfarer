@@ -2,6 +2,8 @@
 #include "battle.h"
 #include "event_data.h"
 #include "fieldmap.h"
+#include "map_layout.h"
+#include "malloc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "pokemon.h"
@@ -77,15 +79,21 @@ static void SetSourceParty(void)
     gPlayerPartyCount = 0;
 }
 
-static bool32 SelectGrassFromActualLayout(void)
+static bool32 SelectGrassFromActualLayout(u16 **layoutCopy)
 {
     u32 x, y;
     const struct MapLayout *layout = gMapHeader.mapLayout;
+    u32 tileCount = layout->width * layout->height;
+
+    *layoutCopy = Alloc(tileCount * sizeof(**layoutCopy));
+    if (*layoutCopy == NULL
+     || MapLayoutCopyFull(layout, *layoutCopy, tileCount, layout->width) != MAP_LAYOUT_LOAD_OK)
+        return FALSE;
 
     // Read the real map without executing its field scripts or loading graphics.
     gBackupMapLayout.width = layout->width;
     gBackupMapLayout.height = layout->height;
-    gBackupMapLayout.map = (u16 *)layout->map;
+    gBackupMapLayout.map = *layoutCopy;
     gPlayerAvatar.objectEventId = 0;
     for (y = 0; y < layout->height; y++)
         for (x = 0; x < layout->width; x++)
@@ -150,17 +158,19 @@ TEST("Trainer-only native encounter sources generate and initialize with an empt
     u32 seed;
     bool32 started = FALSE;
     bool32 passed = TRUE;
+    u16 *layoutCopy = NULL;
 
     SnapshotEncounterSourceTestState(&snapshot);
 
     PrepareSource(source);
     passed &= GetCurrentMapWildMonHeaderId() != HEADER_NONE;
-    passed &= SelectGrassFromActualLayout();
-    for (seed = 0; seed < 256 && !started; seed++)
-    {
-        SeedRng(seed);
-        started = TrySource(source);
-    }
+    passed &= SelectGrassFromActualLayout(&layoutCopy);
+    if (passed)
+        for (seed = 0; seed < 256 && !started; seed++)
+        {
+            SeedRng(seed);
+            started = TrySource(source);
+        }
     passed &= started;
     passed &= GetWildStartsForTesting() == 1;
     passed &= IsTrainerOnlyEncounter();
@@ -175,6 +185,7 @@ TEST("Trainer-only native encounter sources generate and initialize with an empt
     }
     if (source == SOURCE_FISHING)
         passed &= gIsFishingEncounter;
+    Free(layoutCopy);
     RestoreEncounterSourceTestState(&snapshot);
     EXPECT(passed);
 }

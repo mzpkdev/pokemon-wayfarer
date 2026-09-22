@@ -27,6 +27,8 @@ using std::ostringstream;
 #include <limits>
 using std::numeric_limits;
 
+#include <cstdint>
+
 #include "json11.h"
 using json11::Json;
 
@@ -41,9 +43,9 @@ string version;
 string sep;
 string wayfarer_sevii_manifest_path;
 string wayfarer_sinnoh_manifest_path;
-string wayfarer_sinnoh_asset_manifest_path;
+string map_layout_storage_mode = "raw";
+string map_layout_storage_report_path;
 bool wayfarer_sevii_release_link_enabled = false;
-bool wayfarer_sinnoh_release_link_enabled = false;
 set<string> wayfarer_sevii_map_names;
 set<string> wayfarer_sevii_map_ids;
 set<string> wayfarer_sevii_layout_ids;
@@ -74,6 +76,26 @@ string read_text_file(string filepath) {
     in_file.close();
 
     return text;
+}
+
+string read_binary_file(string filepath) {
+    ifstream in_file(filepath, std::ios::binary);
+    string bytes;
+
+    if (!in_file.is_open())
+        FATAL_ERROR("Cannot open file %s for reading.\n", filepath.c_str());
+
+    in_file.seekg(0, std::ios::end);
+    std::streamoff size = in_file.tellg();
+    if (size < 0 || static_cast<uint64_t>(size) > SIZE_MAX)
+        FATAL_ERROR("Cannot measure file %s.\n", filepath.c_str());
+    bytes.resize(static_cast<size_t>(size));
+    in_file.seekg(0, std::ios::beg);
+    if (!bytes.empty())
+        in_file.read(&bytes[0], bytes.size());
+    if (!in_file || in_file.gcount() != static_cast<std::streamsize>(bytes.size()))
+        FATAL_ERROR("Cannot read file %s.\n", filepath.c_str());
+    return bytes;
 }
 
 void write_text_file(string filepath, string text) {
@@ -144,7 +166,7 @@ string get_source_version(const Json &data) {
 
 bool source_version_is_selected(const string &source_version) {
     if (version == "wayfarer")
-        return source_version == "hns" || source_version == "emerald";
+        return source_version == "hns" || source_version == "emerald" || source_version == "sinnoh";
 
     string selected_version = version == "firered" ? "frlg" : version;
     return source_version == selected_version;
@@ -164,11 +186,6 @@ const map<string, int> wayfarer_sinnoh_expected_counts = {
     {"nonempty_map_scripts", 0}, {"wild_encounter_profiles", 0},
 };
 
-bool wayfarer_sinnoh_record_is_enabled(const Json &record) {
-    return wayfarer_sinnoh_release_link_enabled
-        && json_to_string(record["inclusion"], "state") == "INCLUDED";
-}
-
 bool wayfarer_sinnoh_map_is_selected(const Json &data) {
     const string map_name = json_to_string(data, "name", true);
     auto record = wayfarer_sinnoh_records.find(map_name);
@@ -177,7 +194,7 @@ bool wayfarer_sinnoh_map_is_selected(const Json &data) {
     if (json_to_string(data, "id") != json_to_string(record->second, "target_map_id")
      || json_to_string(data, "layout") != json_to_string(record->second, "target_layout"))
         FATAL_ERROR("Sinnoh map %s does not match its reviewed target IDs.\n", map_name.c_str());
-    return wayfarer_sinnoh_record_is_enabled(record->second);
+    return true;
 }
 
 bool wayfarer_sinnoh_layout_is_selected(const Json &data) {
@@ -344,27 +361,15 @@ void validate_wayfarer_sinnoh_donor(const Json &manifest, const string &kind) {
         FATAL_ERROR("Wayfarer Sinnoh %s manifest donor identity does not match the frozen baseline.\n", kind.c_str());
 }
 
-void validate_wayfarer_sinnoh_selection(const Json &selection, const string &kind) {
-    if (selection.type() != Json::Type::OBJECT
-     || selection["release_link_enabled"].type() != Json::Type::BOOL
-     || selection["asset_manifest_ready"].type() != Json::Type::BOOL
-     || selection["blockers"].type() != Json::Type::ARRAY)
-        FATAL_ERROR("Wayfarer Sinnoh %s manifest must declare its complete selection gate.\n", kind.c_str());
-}
-
 void load_wayfarer_sinnoh_manifest() {
     if (version != "wayfarer" || wayfarer_sinnoh_manifest_path.empty())
         return;
-    if (wayfarer_sinnoh_asset_manifest_path.empty())
-        FATAL_ERROR("Wayfarer Sinnoh selection requires the checked-in asset manifest.\n");
 
     string err;
     Json manifest = Json::parse(read_text_file(wayfarer_sinnoh_manifest_path), err);
     if (manifest == Json())
         FATAL_ERROR("Failed to read Wayfarer Sinnoh manifest: %s\n", err.c_str());
     validate_wayfarer_sinnoh_donor(manifest, "map");
-    const Json selection = manifest["selection"];
-    validate_wayfarer_sinnoh_selection(selection, "map");
     if (manifest["source_groups"].type() != Json::Type::ARRAY
      || manifest["expected_counts"].type() != Json::Type::OBJECT
      || manifest["maps"].type() != Json::Type::ARRAY)
@@ -385,15 +390,9 @@ void load_wayfarer_sinnoh_manifest() {
             FATAL_ERROR("Wayfarer Sinnoh map manifest source group %zu is not frozen.\n", index);
     }
 
-    wayfarer_sinnoh_release_link_enabled = selection["release_link_enabled"].bool_value();
-    if (wayfarer_sinnoh_release_link_enabled
-     && (!selection["asset_manifest_ready"].bool_value()
-      || !selection["blockers"].array_items().empty()))
-        FATAL_ERROR("Wayfarer Sinnoh content cannot link until the asset manifest is ready and blockers are clear.\n");
     set<string> source_maps;
     set<string> target_map_ids;
     set<string> target_layout_ids;
-    set<string> asset_record_ids;
     vector<int> maps_by_group(wayfarer_sinnoh_source_groups.size(), 0);
     int warp_count = 0;
     int connection_count = 0;
@@ -407,18 +406,13 @@ void load_wayfarer_sinnoh_manifest() {
         for (size_t group = 0; group < wayfarer_sinnoh_source_groups.size(); group++)
             if (source_group == wayfarer_sinnoh_source_groups[group].first)
                 group_index = group;
-        const Json inclusion = record["inclusion"];
-        const string inclusion_state = json_to_string(inclusion, "state");
         if (record["order"].int_value() != static_cast<int>(index)
          || group_index < 0
          || record["source_group_order"].int_value() != maps_by_group[group_index]
          || json_to_string(record, "source_map_id").empty()
          || json_to_string(record, "source_layout").empty()
          || json_to_string(record, "target_map").empty()
-         || json_to_string(record, "layout_format") != "emerald"
-         || inclusion.type() != Json::Type::OBJECT
-         || (inclusion_state != "INCLUDED" && inclusion_state != "FROZEN_NOT_SELECTED"
-          && inclusion_state != "EXCLUDED"))
+         || json_to_string(record, "layout_format") != "emerald")
             FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu is not a frozen Emerald-layout map.\n", index);
         if (!source_maps.insert(source_map).second
          || !target_map_ids.insert(target_map_id).second
@@ -436,18 +430,9 @@ void load_wayfarer_sinnoh_manifest() {
         for (const string key : {"object_events", "coord_events", "bg_events", "map_scripts", "wild_encounter_profiles"})
             if (empty_content[key].int_value() != 0)
                 FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu has unexpected authored %s.\n", index, key.c_str());
-        const Json assets = record["asset_records"];
-        if (assets.type() != Json::Type::OBJECT || assets["tilesets"].type() != Json::Type::ARRAY)
-            FATAL_ERROR("Wayfarer Sinnoh map manifest record %zu has no asset authority references.\n", index);
-        asset_record_ids.insert(json_to_string(assets, "blockdata"));
-        asset_record_ids.insert(json_to_string(assets, "border"));
-        for (const Json &asset_id : assets["tilesets"].array_items())
-            asset_record_ids.insert(json_to_string(asset_id));
         wayfarer_sinnoh_records.emplace(source_map, record);
-        if (wayfarer_sinnoh_record_is_enabled(record)) {
-            wayfarer_sinnoh_enabled_map_names.insert(source_map);
-            wayfarer_sinnoh_enabled_layout_ids.insert(target_layout);
-        }
+        wayfarer_sinnoh_enabled_map_names.insert(source_map);
+        wayfarer_sinnoh_enabled_layout_ids.insert(target_layout);
     }
     for (size_t index = 0; index < maps_by_group.size(); index++)
         if (maps_by_group[index] != wayfarer_sinnoh_source_groups[index].second)
@@ -455,32 +440,6 @@ void load_wayfarer_sinnoh_manifest() {
     if (warp_count != wayfarer_sinnoh_expected_counts.at("warps")
      || connection_count != wayfarer_sinnoh_expected_counts.at("connections"))
         FATAL_ERROR("Wayfarer Sinnoh map manifest topology counts are not frozen.\n");
-
-    Json assets = Json::parse(read_text_file(wayfarer_sinnoh_asset_manifest_path), err);
-    if (assets == Json())
-        FATAL_ERROR("Failed to read Wayfarer Sinnoh asset manifest: %s\n", err.c_str());
-    validate_wayfarer_sinnoh_donor(assets, "asset");
-    const Json asset_selection = assets["selection"];
-    validate_wayfarer_sinnoh_selection(asset_selection, "asset");
-    if (asset_selection["release_link_enabled"].bool_value() != selection["release_link_enabled"].bool_value()
-     || asset_selection["asset_manifest_ready"].bool_value() != selection["asset_manifest_ready"].bool_value()
-     || asset_selection["blockers"].dump() != selection["blockers"].dump())
-        FATAL_ERROR("Wayfarer Sinnoh map and asset selection gates disagree.\n");
-    if (assets["records"].type() != Json::Type::ARRAY)
-        FATAL_ERROR("Wayfarer Sinnoh asset manifest has no records.\n");
-    set<string> known_asset_records;
-    for (const Json &asset : assets["records"].array_items()) {
-        const string asset_id = json_to_string(asset, "record_id");
-        const string reuse_class = json_to_string(asset, "reuse_class");
-        if (!known_asset_records.insert(asset_id).second || asset["selection_blocker"].type() != Json::Type::BOOL)
-            FATAL_ERROR("Wayfarer Sinnoh asset manifest has an invalid asset record.\n");
-        if (wayfarer_sinnoh_release_link_enabled
-         && (reuse_class == "REVIEW_REQUIRED" || asset["selection_blocker"].bool_value()))
-            FATAL_ERROR("Wayfarer Sinnoh asset manifest contains unresolved release asset %s.\n", asset_id.c_str());
-    }
-    for (const string &asset_id : asset_record_ids)
-        if (known_asset_records.find(asset_id) == known_asset_records.end())
-            FATAL_ERROR("Wayfarer Sinnoh map manifest references unknown asset record %s.\n", asset_id.c_str());
 }
 
 void load_wayfarer_sevii_manifest() {
@@ -1112,6 +1071,11 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
         text << "\t.4byte WayfarerKantoCoast_Route21_North_MapScripts\n";
     else if (version == "wayfarer" && mapName == "Route21_South_Frlg")
         text << "\t.4byte WayfarerKantoCoast_Route21_South_MapScripts\n";
+    else if (get_source_version(map_data) == "sinnoh")
+        // The frozen donor catalog has no map-script tables.  A null pointer
+        // is the complete representation; do not manufacture 133 empty labels
+        // merely to satisfy the ordinary per-map script convention.
+        text << "\t.4byte NULL\n";
     else if (map_data.object_items().find("shared_scripts_map") != map_data.object_items().end())
         text << "\t.4byte " << json_to_string(map_data, "shared_scripts_map") << "_MapScripts\n";
     else
@@ -1474,7 +1438,7 @@ void process_event_constants(const vector<string> &map_filepaths, string output_
     write_text_file(output_ids_file, ids_file_text.str());
 }
 
-string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
+string generate_groups_text(Json groups_data, vector<string> &invalid_maps, const map<string, Json> &maps_by_name) {
     ostringstream text;
 
     text << get_generated_warning("data/maps/map_groups.json", true);
@@ -1487,11 +1451,10 @@ string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
         for (Json &map_name : maps) {
             string map_name_str = json_to_string(map_name);
             auto it = find(invalid_maps.begin(), invalid_maps.end(), map_name_str);
-            if (it == invalid_maps.end()) {
+            if (it == invalid_maps.end())
                 text << "\t.4byte " << map_name_str << "\n";
-            } else {
+            else
                 text << "\t.4byte NULL\n";
-            }
         }
         text << "\n";
     }
@@ -1505,7 +1468,7 @@ string generate_groups_text(Json groups_data, vector<string> &invalid_maps) {
     return text.str();
 }
 
-string generate_connections_text(Json groups_data, vector<string> &invalid_maps, string include_path) {
+string generate_connections_text(Json groups_data, vector<string> &invalid_maps, string include_path, const map<string, Json> &maps_by_name) {
     vector<Json> map_names;
 
     for (auto &group : groups_data["group_order"].array_items()) {
@@ -1534,8 +1497,10 @@ string generate_connections_text(Json groups_data, vector<string> &invalid_maps,
 
     text << get_generated_warning("data/maps/map_groups.json", true);
 
-    for (Json map_name : map_names)
-        text << "\t.include \"" << include_path << "/" <<  json_to_string(map_name) << "/connections.inc\"\n";
+    for (Json map_name : map_names) {
+        const string name = json_to_string(map_name);
+        text << "\t.include \"" << include_path << "/" << name << "/connections.inc\"\n";
+    }
 
     return text.str();
 }
@@ -1877,8 +1842,8 @@ void process_groups(string groups_filepath, vector<string> &map_filepaths, strin
     if (version == "wayfarer")
         validate_wayfarer_map_catalog(groups_data, maps_by_name);
 
-    string groups_text = generate_groups_text(groups_data, invalid_maps);
-    string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm);
+    string groups_text = generate_groups_text(groups_data, invalid_maps, maps_by_name);
+    string connections_text = generate_connections_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string headers_text = generate_headers_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string events_text = generate_events_text(groups_data, invalid_maps, output_asm, maps_by_name);
     string map_header_text = generate_map_constants_text(groups_filepath, groups_data, valid_map_ids);
@@ -1894,33 +1859,266 @@ bool layout_matches_version(const Json &layout) {
     return data_matches_version(layout);
 }
 
+struct LayoutStorageRecord {
+    string layoutId;
+    string layoutName;
+    string sourcePath;
+    string raw;
+    string stored;
+    bool compressed;
+};
+
+static map<string, LayoutStorageRecord> layout_storage_records;
+static vector<string> layout_storage_order;
+static uint32_t map_layout_max_decoded_file_bytes;
+static uint32_t map_layout_max_stored_bytes;
+
+static string gba_lz77_compress(const string &source) {
+    if (source.empty() || source.size() > 0xFFFFFF)
+        FATAL_ERROR("GBA LZ77 source length is invalid.\n");
+    string output;
+    output.reserve(4 + source.size() + (source.size() + 7) / 8 + 3);
+    output.push_back(0x10);
+    output.push_back(source.size() & 0xFF);
+    output.push_back((source.size() >> 8) & 0xFF);
+    output.push_back((source.size() >> 16) & 0xFF);
+    size_t sourcePosition = 0;
+    while (sourcePosition < source.size()) {
+        size_t flagsPosition = output.size();
+        output.push_back(0);
+        for (int bit = 0; bit < 8 && sourcePosition < source.size(); bit++) {
+            size_t bestDistance = 0;
+            size_t bestLength = 0;
+            for (size_t distance = 2; distance <= sourcePosition && distance <= 0x1000; distance++) {
+                size_t length = 0;
+                size_t match = sourcePosition - distance;
+                while (length < 18 && sourcePosition + length < source.size()
+                    && source[match + length] == source[sourcePosition + length])
+                    length++;
+                if (length > bestLength) {
+                    bestDistance = distance;
+                    bestLength = length;
+                    if (length == 18)
+                        break;
+                }
+            }
+            if (bestLength >= 3) {
+                output[flagsPosition] |= 0x80 >> bit;
+                uint16_t token = static_cast<uint16_t>(((bestLength - 3) << 12) | (bestDistance - 1));
+                output.push_back(token >> 8);
+                output.push_back(token & 0xFF);
+                sourcePosition += bestLength;
+            } else {
+                output.push_back(source[sourcePosition++]);
+            }
+        }
+    }
+    while ((output.size() & 3) != 0)
+        output.push_back(0);
+    return output;
+}
+
+static string gba_lz77_decode_bounded(const string &stream, size_t expectedSize) {
+    if (stream.size() < 4 || static_cast<unsigned char>(stream[0]) != 0x10)
+        FATAL_ERROR("Generated GBA LZ77 stream has no schema-1 header.\n");
+    size_t headerSize = static_cast<unsigned char>(stream[1])
+                      | static_cast<size_t>(static_cast<unsigned char>(stream[2])) << 8
+                      | static_cast<size_t>(static_cast<unsigned char>(stream[3])) << 16;
+    if (headerSize != expectedSize)
+        FATAL_ERROR("Generated GBA LZ77 stream has the wrong decoded length.\n");
+    string output;
+    output.reserve(expectedSize);
+    size_t position = 4;
+    while (output.size() < expectedSize) {
+        if (position >= stream.size())
+            FATAL_ERROR("Generated GBA LZ77 stream has truncated flags.\n");
+        unsigned char flags = stream[position++];
+        for (int bit = 0; bit < 8 && output.size() < expectedSize; bit++) {
+            if ((flags & (0x80 >> bit)) != 0) {
+                if (stream.size() - position < 2)
+                    FATAL_ERROR("Generated GBA LZ77 stream has a truncated backreference.\n");
+                uint16_t token = static_cast<unsigned char>(stream[position]) << 8
+                               | static_cast<unsigned char>(stream[position + 1]);
+                position += 2;
+                size_t length = (token >> 12) + 3;
+                size_t distance = (token & 0xFFF) + 1;
+                if (distance > output.size() || length > expectedSize - output.size())
+                    FATAL_ERROR("Generated GBA LZ77 stream has an invalid backreference.\n");
+                while (length-- != 0)
+                    output.push_back(output[output.size() - distance]);
+            } else {
+                if (position >= stream.size())
+                    FATAL_ERROR("Generated GBA LZ77 stream has a truncated literal.\n");
+                output.push_back(stream[position++]);
+            }
+        }
+    }
+    if ((position + 3) / 4 * 4 != stream.size())
+        FATAL_ERROR("Generated GBA LZ77 stream has trailing encoded data.\n");
+    while (position < stream.size())
+        if (stream[position++] != 0)
+            FATAL_ERROR("Generated GBA LZ77 stream has nonzero padding.\n");
+    return output;
+}
+
+static void emit_asm_bytes(ostringstream &text, const string &bytes) {
+    for (size_t offset = 0; offset < bytes.size(); offset += 16) {
+        text << "\t.byte ";
+        for (size_t index = offset; index < bytes.size() && index < offset + 16; index++) {
+            if (index != offset)
+                text << ", ";
+            text << static_cast<unsigned int>(static_cast<unsigned char>(bytes[index]));
+        }
+        text << "\n";
+    }
+}
+
+static void prepare_layout_storage(const Json &layouts_data) {
+    layout_storage_records.clear();
+    layout_storage_order.clear();
+    map_layout_max_decoded_file_bytes = 0;
+    map_layout_max_stored_bytes = 0;
+    set<string> selectedLayoutIds;
+    for (const Json &layout : layouts_data["layouts"].array_items()) {
+        if (layout == Json::object())
+            continue;
+        if (!layout_matches_version(layout))
+            continue;
+        string borderPath = json_to_string(layout, "border_filepath");
+        if (!std::filesystem::exists(borderPath))
+            FATAL_ERROR("Selected layout %s is missing border file %s.\n",
+                        json_to_string(layout, "name").c_str(), borderPath.c_str());
+        LayoutStorageRecord record;
+        record.layoutId = json_to_string(layout, "id");
+        record.layoutName = json_to_string(layout, "name");
+        if (!selectedLayoutIds.insert(record.layoutId).second
+         || layout_storage_records.find(record.layoutName) != layout_storage_records.end())
+            FATAL_ERROR("Duplicate selected map layout ID or name for %s.\n", record.layoutName.c_str());
+        record.sourcePath = json_to_string(layout, "blockdata_filepath");
+        int width = layout["width"].int_value();
+        int height = layout["height"].int_value();
+        if (width <= 0 || height <= 0
+         || (static_cast<uint64_t>(width) + 15) * (static_cast<uint64_t>(height) + 14) > 10240)
+            FATAL_ERROR("Layout %s dimensions do not fit the runtime backup map.\n",
+                        record.layoutName.c_str());
+        record.raw = read_binary_file(record.sourcePath);
+        uint64_t logicalBytes = static_cast<uint64_t>(width)
+                              * static_cast<uint64_t>(height) * 2;
+        if (logicalBytes == 0 || logicalBytes > UINT32_MAX || record.raw.size() < logicalBytes
+         || record.raw.size() > 0xFFFFFF)
+            FATAL_ERROR("Invalid layout payload dimensions or length for %s.\n", record.layoutName.c_str());
+        string compressed;
+        bool considerCompression = version == "wayfarer" && map_layout_storage_mode == "hybrid";
+        if (considerCompression) {
+            compressed = gba_lz77_compress(record.raw);
+            if (gba_lz77_decode_bounded(compressed, record.raw.size()) != record.raw)
+                FATAL_ERROR("Map layout compression round trip failed for %s.\n", record.layoutName.c_str());
+        }
+        size_t roundedRawBytes = (record.raw.size() + 3) & ~3;
+        record.compressed = considerCompression && compressed.size() < roundedRawBytes;
+        record.stored = record.compressed ? compressed : record.raw;
+        map_layout_max_decoded_file_bytes = std::max<uint32_t>(map_layout_max_decoded_file_bytes, record.raw.size());
+        map_layout_max_stored_bytes = std::max<uint32_t>(map_layout_max_stored_bytes, record.stored.size());
+        layout_storage_order.push_back(record.layoutName);
+        layout_storage_records.emplace(record.layoutName, std::move(record));
+    }
+}
+
 string generate_layout_headers_text(Json layouts_data) {
     ostringstream text;
 
     text << get_generated_warning("data/layouts/layouts.json", true);
+    prepare_layout_storage(layouts_data);
 
+    // Borders remain ordinary immutable layout data. Only map.bin payloads are
+    // wrapped in the storage descriptor contract.
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object()) continue;
         if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
             continue;
         if (!layout_matches_version(layout))
             continue;
-        string layout_version = json_to_string(layout, "layout_version", true);
-        if (layout_version.empty())
-            layout_version = "emerald";
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
-        string blockdata_label = layoutName + "_Blockdata";
         text << border_label << "::\n"
-             << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n"
-             << blockdata_label << "::\n"
-             << "\t.incbin \"" << json_to_string(layout, "blockdata_filepath") << "\"\n\n"
-             << "\t.align 2\n"
-             << layoutName << "::\n"
+             << "\t.incbin \"" << json_to_string(layout, "border_filepath") << "\"\n\n";
+    }
+
+    if (version == "wayfarer")
+        text << "\t.align 2\n\t.global __map_layout_payloads_start\n__map_layout_payloads_start::\n";
+    for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
+         || !layout_matches_version(layout))
+            continue;
+        string layoutName = json_to_string(layout, "name");
+        const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
+        text << "\t.align 2\n.L" << layoutName << "_Blockdata:\n";
+        if (storage.compressed)
+            emit_asm_bytes(text, storage.stored);
+        else
+            text << "\t.incbin \"" << storage.sourcePath << "\"\n";
+        text << "\n";
+    }
+    if (version == "wayfarer")
+        text << "\t.align 2\n\t.global __map_layout_payloads_end\n__map_layout_payloads_end::\n\n";
+
+    if (version == "wayfarer") {
+        text << "\t.if MAP_LAYOUT_TESTING_ASM\n";
+        const LayoutStorageRecord *peak = nullptr;
+        for (const string &name : layout_storage_order) {
+            const LayoutStorageRecord &candidate = layout_storage_records.at(name);
+            if (peak == nullptr || candidate.raw.size() > peak->raw.size())
+                peak = &candidate;
+        }
+        if (peak != nullptr) {
+            string compressed = gba_lz77_compress(peak->raw);
+            text << "\t.align 2\n\t.global gMapLayoutPeakTestPayload\n"
+                 << "gMapLayoutPeakTestPayload::\n";
+            emit_asm_bytes(text, compressed);
+            text << "\n\t.align 2\n\t.global gMapLayoutPeakTestDescriptor\n"
+                 << "gMapLayoutPeakTestDescriptor::\n"
+                 << "\t.4byte gMapLayoutPeakTestPayload\n"
+                 << "\t.4byte " << compressed.size() << "\n"
+                 << "\t.4byte " << peak->raw.size() << "\n"
+                 << "\t.byte 1\n\t.byte 0\n\t.2byte 0\n"
+                 << "\t.global gMapLayoutPeakTestLayout\n"
+                 << "gMapLayoutPeakTestLayout::\n\t.4byte " << peak->layoutName << "\n\n";
+        }
+        for (auto &layout : layouts_data["layouts"].array_items()) {
+            if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
+             || !layout_matches_version(layout))
+                continue;
+            string layoutName = json_to_string(layout, "name");
+            const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
+            text << "\t.align 2\n.L" << layoutName << "_RawOracle:\n"
+                 << "\t.incbin \"" << storage.sourcePath << "\"\n\n";
+        }
+        text << "\t.endif\n\n";
+    }
+
+    for (auto &layout : layouts_data["layouts"].array_items()) {
+        if (layout == Json::object() || !std::filesystem::exists(json_to_string(layout, "border_filepath"))
+         || !layout_matches_version(layout))
+            continue;
+        string layout_version = json_to_string(layout, "layout_version", true);
+        if (layout_version.empty()) layout_version = "emerald";
+        string layoutName = json_to_string(layout, "name");
+        const LayoutStorageRecord &storage = layout_storage_records.at(layoutName);
+        string payload_label = ".L" + layoutName + "_Blockdata";
+        string map_data_label = version == "wayfarer"
+                              ? ".L" + layoutName + "_MapData" : payload_label;
+        if (version == "wayfarer") {
+            text << "\t.align 2\n" << map_data_label << ":\n"
+                 << "\t.4byte " << payload_label << "\n"
+                 << "\t.4byte " << storage.stored.size() << "\n"
+                 << "\t.4byte " << storage.raw.size() << "\n"
+                 << "\t.byte " << (storage.compressed ? 1 : 0) << "\n\t.byte 0\n\t.2byte 0\n\n";
+        }
+        text << "\t.align 2\n" << layoutName << "::\n"
              << "\t.4byte " << json_to_string(layout, "width") << "\n"
              << "\t.4byte " << json_to_string(layout, "height") << "\n"
-             << "\t.4byte " << border_label << "\n"
-             << "\t.4byte " << blockdata_label << "\n"
+             << "\t.4byte " << layoutName << "_Border\n"
+             << "\t.4byte " << map_data_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
         if (layout_version == "frlg")
@@ -1942,9 +2140,58 @@ string generate_layout_headers_text(Json layouts_data) {
                  << "\t.byte 0\n";
         }
         text << "\n";
+        text << "\n";
     }
 
     return text.str();
+}
+
+static string generate_layout_storage_constants_text(void) {
+    ostringstream text;
+    text << get_include_guard_start("CONSTANTS_MAP_LAYOUT_STORAGE")
+         << get_generated_warning("data/layouts/layouts.json", false)
+         << "#define MAP_LAYOUT_STORAGE_HYBRID " << (map_layout_storage_mode == "hybrid" ? 1 : 0) << "\n"
+         << "#define MAP_LAYOUT_MAX_DECODED_FILE_BYTES " << map_layout_max_decoded_file_bytes << "\n"
+         << "#define MAP_LAYOUT_MAX_STORED_BYTES " << map_layout_max_stored_bytes << "\n"
+         << get_include_guard_end("CONSTANTS_MAP_LAYOUT_STORAGE");
+    return text.str();
+}
+
+static string generate_layout_storage_report_text(void) {
+    Json::array rows;
+    uint64_t rawBytes = 0;
+    uint64_t storedBytes = 0;
+    unsigned int compressedCount = 0;
+    for (const string &name : layout_storage_order) {
+        const LayoutStorageRecord &record = layout_storage_records.at(name);
+        rawBytes += record.raw.size();
+        storedBytes += record.stored.size();
+        compressedCount += record.compressed;
+        Json::object row{
+            {"layout_id", record.layoutId}, {"layout_name", record.layoutName},
+            {"storage", record.compressed ? "gba_lz77" : "raw"},
+            {"raw_file_bytes", static_cast<int>(record.raw.size())},
+            {"stored_bytes", static_cast<int>(record.stored.size())},
+        };
+        if (map_layout_storage_mode == "hybrid")
+            row["round_trip"] = true;
+        rows.push_back(row);
+    }
+    int64_t grossSavedBytes = static_cast<int64_t>(rawBytes) - static_cast<int64_t>(storedBytes);
+    Json report = Json::object{
+        {"product", version}, {"storage_mode", map_layout_storage_mode},
+        {"catalog_layout_count", static_cast<int>(rows.size())},
+        {"totals", Json::object{
+            {"raw_payload_bytes", static_cast<double>(rawBytes)},
+            {"stored_payload_bytes", static_cast<double>(storedBytes)},
+            {"gross_payload_saved_bytes", static_cast<double>(grossSavedBytes)},
+            {"compressed_entries", static_cast<int>(compressedCount)},
+            {"max_decoded_file_bytes", static_cast<int>(map_layout_max_decoded_file_bytes)},
+            {"max_stored_bytes", static_cast<int>(map_layout_max_stored_bytes)},
+        }},
+        {"layouts", rows},
+    };
+    return report.dump() + "\n";
 }
 
 string generate_layouts_table_text(Json layouts_data) {
@@ -1965,6 +2212,27 @@ string generate_layouts_table_text(Json layouts_data) {
             if (layout_name.empty()) layout_name = "NULL";
             text << "\t.4byte " << layout_name << "\n";
         }
+    }
+
+    if (version == "wayfarer") {
+        text << "\n\t.if MAP_LAYOUT_TESTING_ASM\n"
+             << "\t.align 2\n\t.global gMapLayoutRawOracles\n"
+             << "gMapLayoutRawOracles::\n";
+        for (auto &layout : layouts_data["layouts"].array_items()) {
+            if (!std::filesystem::exists(json_to_string(layout, "border_filepath")))
+                continue;
+            if (!layout_matches_version(layout)) {
+                text << "\t.4byte NULL\n";
+            } else {
+                string layoutName = json_to_string(layout, "name", true);
+                if (layoutName.empty()) {
+                    text << "\t.4byte NULL\n";
+                } else {
+                    text << "\t.4byte .L" << layoutName << "_RawOracle\n";
+                }
+            }
+        }
+        text << "\t.endif\n";
     }
 
     return text.str();
@@ -2022,6 +2290,7 @@ string generate_layouts_constants_text(Json layouts_data) {
         text << "#define " << layout << string(max_length - layout.length(), ' ')
              << "  0xFFFF\n";
     }
+    text << "\n#define MAP_LAYOUT_COUNT " << i - 1 << "\n";
     text << "\n" << get_include_guard_end(guard_name);
 
     return text.str();
@@ -2040,10 +2309,18 @@ void process_layouts(string layouts_filepath, string output_asm, string output_c
     string layout_headers_text = generate_layout_headers_text(layouts_data);
     string layouts_table_text = generate_layouts_table_text(layouts_data);
     string layouts_constants_text = generate_layouts_constants_text(layouts_data);
+    string storage_constants_text = generate_layout_storage_constants_text();
 
     write_text_file(output_asm + "layouts.inc", layout_headers_text);
     write_text_file(output_asm + "layouts_table.inc", layouts_table_text);
     write_text_file(output_c + "layouts.h", layouts_constants_text);
+    write_text_file(output_c + "map_layout_storage.h", storage_constants_text);
+    if (!map_layout_storage_report_path.empty()) {
+        std::filesystem::path reportParent = std::filesystem::path(map_layout_storage_report_path).parent_path();
+        if (!reportParent.empty())
+            std::filesystem::create_directories(reportParent);
+        write_text_file(map_layout_storage_report_path, generate_layout_storage_report_text());
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -2061,14 +2338,18 @@ int main(int argc, char *argv[]) {
             wayfarer_sevii_manifest_path = argv[argc - 1];
         else if (option == "--wayfarer-sinnoh-manifest")
             wayfarer_sinnoh_manifest_path = argv[argc - 1];
-        else if (option == "--wayfarer-sinnoh-asset-manifest")
-            wayfarer_sinnoh_asset_manifest_path = argv[argc - 1];
+        else if (option == "--map-layout-storage-mode")
+            map_layout_storage_mode = argv[argc - 1];
+        else if (option == "--map-layout-storage-report")
+            map_layout_storage_report_path = argv[argc - 1];
         else
             break;
         argc -= 2;
     }
     load_wayfarer_sevii_manifest();
     load_wayfarer_sinnoh_manifest();
+    if (map_layout_storage_mode != "raw" && map_layout_storage_mode != "hybrid")
+        FATAL_ERROR("Map layout storage mode must be raw or hybrid.\n");
 
     char *mode_arg = argv[1];
     string mode(mode_arg);

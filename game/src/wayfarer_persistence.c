@@ -2,6 +2,7 @@
 #include "league_circuit.h"
 #include "event_data.h"
 #include "heal_location.h"
+#include "map_layout.h"
 #include "overworld.h"
 #include "regions.h"
 #include "script.h"
@@ -31,6 +32,11 @@ extern const u8 WayfarerHoennVisitor_EventScript_InitializeArrival[];
 static bool8 IsWayfarerCoreRegion(enum Region region)
 {
     return region == REGION_JOHTO || region == REGION_KANTO || region == REGION_HOENN;
+}
+
+static bool8 IsWayfarerStoredRegion(enum Region region)
+{
+    return IsWayfarerCoreRegion(region);
 }
 #endif
 
@@ -112,7 +118,7 @@ static enum Region GetRegionFromSavedMap(void)
                                                    gSaveBlock1Ptr->location.mapNum,
                                                    REGION_JOHTO);
 
-    return IsWayfarerCoreRegion(region) ? region : REGION_JOHTO;
+    return IsWayfarerStoredRegion(region) ? region : REGION_JOHTO;
 }
 
 static enum Region GetSavedHnsRegionContext(void)
@@ -319,12 +325,19 @@ void WayfarerValidatePersistentState(void)
 {
 #if IS_WAYFARER
     enum Region savedMapRegion = GetRegionFromSavedMap();
+    enum Region explicitMapRegion = GetWayfarerExplicitMapRegion(gSaveBlock1Ptr->location.mapGroup,
+                                                                 gSaveBlock1Ptr->location.mapNum);
 
     if (!WayfarerPersistentStateIsValid())
         return;
 
-    if (!IsWayfarerCoreRegion(gSaveBlock3Ptr->wayfarerHoenn.currentRegion))
+    // Explicit map provenance is authoritative on load. HNS auxiliary maps
+    // retain their saved Kanto/Johto context.
+    if (IsWayfarerStoredRegion(explicitMapRegion)
+     || !IsWayfarerStoredRegion(gSaveBlock3Ptr->wayfarerHoenn.currentRegion))
         gSaveBlock3Ptr->wayfarerHoenn.currentRegion = savedMapRegion;
+    else if (explicitMapRegion != REGION_NONE)
+        gSaveBlock3Ptr->wayfarerHoenn.currentRegion = GetSavedHnsRegionContext();
 
     if (gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext != REGION_KANTO
      && gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext != REGION_JOHTO)
@@ -365,7 +378,7 @@ enum Region WayfarerGetSavedCurrentRegion(void)
 {
 #if IS_WAYFARER
     enum Region region = gSaveBlock3Ptr->wayfarerHoenn.currentRegion;
-    return IsWayfarerCoreRegion(region) ? region : REGION_JOHTO;
+    return IsWayfarerStoredRegion(region) ? region : REGION_JOHTO;
 #else
     return GetCurrentRegion();
 #endif
@@ -374,7 +387,7 @@ enum Region WayfarerGetSavedCurrentRegion(void)
 void WayfarerSetSavedCurrentRegion(enum Region region)
 {
 #if IS_WAYFARER
-    if (!IsWayfarerCoreRegion(region))
+    if (!IsWayfarerStoredRegion(region))
         return;
     gSaveBlock3Ptr->wayfarerHoenn.currentRegion = region;
     if (region == REGION_KANTO || region == REGION_JOHTO)
@@ -399,6 +412,10 @@ enum Region WayfarerGetCurrentMapRegion(void)
 void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
 {
     enum Region explicitRegion;
+
+    if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
+     || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
+        return;
 
     if (IsWayfarerMapHoennSource(mapGroup, mapNum))
     {
@@ -468,6 +485,7 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
     const struct HealLocation *healLocation;
     u32 i;
     u16 metatile;
+    enum MapLayoutLoadError layoutError;
 
     if (!IsWayfarerMapHoennSource(mapGroup, mapNum))
         return FALSE;
@@ -477,10 +495,15 @@ static bool8 IsWayfarerHoennEntryDestinationValid(s16 mapGroup, s16 mapNum, s16 
         return FALSE;
 
     mapLayout = mapHeader->mapLayout;
-    if (mapLayout->map == NULL || x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
+    if (x < 0 || y < 0 || x >= mapLayout->width || y >= mapLayout->height)
         return FALSE;
 
-    metatile = mapLayout->map[y * mapLayout->width + x];
+    layoutError = MapLayoutReadTile(mapLayout, x, y, &metatile);
+    if (layoutError != MAP_LAYOUT_LOAD_OK)
+    {
+        AbortMapLayoutLoad(layoutError, mapGroup, mapNum, mapHeader->mapLayoutId);
+        return FALSE;
+    }
     if (UNPACK_COLLISION(metatile) != 0 || UNPACK_ELEVATION(metatile) != ELEVATION_DEFAULT)
         return FALSE;
 

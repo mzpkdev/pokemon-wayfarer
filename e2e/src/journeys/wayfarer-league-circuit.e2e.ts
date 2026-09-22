@@ -139,6 +139,8 @@ const walkNorthToMap = async (game: GameSession, map: GameMap): Promise<void> =>
   for (let attempt = 0; attempt < 200; attempt++) {
     if ((await game.state.read()).map.name === map) {
       await game.wait.forMap(map)
+      // The room's on-frame entrance script starts one tick after the map first reports ready.
+      await game.wait.frames(2)
       await finishFieldScript(game, `enter ${map}`)
       return
     }

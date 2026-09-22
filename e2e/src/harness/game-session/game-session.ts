@@ -36,6 +36,9 @@ export class GameSession {
   readonly storage: StorageApi
   readonly story: StoryApi
   readonly wait: WaitApi
+  readonly continueSavedGame: () => Promise<void>
+  readonly measuredFrames: () => number
+  readonly reloadSavedGame: () => Promise<void>
   readonly saveAndReload: () => Promise<void>
 
   private constructor(
@@ -60,9 +63,31 @@ export class GameSession {
     this.storage = createStorageApi(state, wait, runtime, mailbox)
     this.story = createStoryApi(runtime, mailbox)
     this.wait = wait
-    this.saveAndReload = async () => {
-      await wait.forReady()
-      await mailbox.execute((requestId) => encodeSaveRequest(runtime.abi, requestId), "save game")
+    this.measuredFrames = runtime.measuredFrames ?? (() => 0)
+    this.continueSavedGame = async () => {
+      const saveStatusAddress = runtime.address("gSaveFileStatus")
+      let saveStatus = 0
+      for (let elapsed = 0; elapsed <= 600; elapsed += 2) {
+        saveStatus = await runtime.readUint16(saveStatusAddress)
+        if (saveStatus === 1) break
+        await runtime.advance(2)
+      }
+      if (saveStatus !== 1)
+        throw new Error(`ROM did not read a valid flash save within 600 frames (status=${saveStatus})`)
+
+      // A valid save puts Continue first on the main menu. Use isolated presses
+      // so no input leaks into the restored overworld.
+      for (let attempt = 0; attempt < 40; attempt++) {
+        await runtime.advance(30)
+        const current = await state.read()
+        if (current.ready) return
+        await runtime.press("A")
+      }
+      throw new Error(
+        `Saved ROM did not reach a ready overworld after Continue; ${JSON.stringify(await state.read())}`,
+      )
+    }
+    this.reloadSavedGame = async () => {
       // Reset through the GBA itself so the normal boot/load path reads the
       // just-written flash. SkyEmu's load_rom endpoint reloads its host .sav,
       // which is not flushed atomically with emulated flash writes.
@@ -97,18 +122,12 @@ export class GameSession {
           `Saved ROM did not reset, reload its test hook, and read flash within 600 frames (before=${preResetFrame}, hook=${hookFrame}, reset=${resetObserved}, saveStatus=${saveStatus})`,
         )
 
-      // A valid save puts Continue first on the main menu. Use isolated presses
-      // to skip boot/title screens and select it, checking between presses so
-      // no input leaks into the restored overworld.
-      for (let attempt = 0; attempt < 40; attempt++) {
-        await runtime.advance(30)
-        const current = await state.read()
-        if (current.ready) return
-        await runtime.press("A")
-      }
-      throw new Error(
-        `Saved ROM did not reach a ready overworld after Continue; ${JSON.stringify(await state.read())}`,
-      )
+      await this.continueSavedGame()
+    }
+    this.saveAndReload = async () => {
+      await wait.forReady()
+      await mailbox.execute((requestId) => encodeSaveRequest(runtime.abi, requestId), "save game")
+      await this.reloadSavedGame()
     }
     protocolTestInternals.set(this, { runtime, mailbox })
   }
@@ -142,9 +161,13 @@ export class GameSession {
 
   readonly screenshot = async (): Promise<Uint8Array> => this.running.client.screenshot()
 
-  readonly close = async (): Promise<void> => {
+  readonly close = async (exportSavePath?: string): Promise<void> => {
     await this.running.stop()
-    await this.rom.cleanup()
+    try {
+      if (exportSavePath) await this.rom.exportSave(exportSavePath)
+    } finally {
+      await this.rom.cleanup()
+    }
   }
 }
 

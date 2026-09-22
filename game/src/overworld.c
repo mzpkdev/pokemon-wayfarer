@@ -654,6 +654,8 @@ static void InitMapView(void)
 
 const struct MapLayout *GetMapLayout(u16 mapLayoutId)
 {
+    if (mapLayoutId == 0 || mapLayoutId > MAP_LAYOUT_COUNT)
+        return NULL;
     return gMapLayouts[mapLayoutId - 1];
 }
 
@@ -754,6 +756,12 @@ void WarpIntoMap(void)
 {
     ApplyCurrentWarp();
     LoadCurrentMapData();
+    if (gMapHeader.mapLayout == NULL)
+    {
+        AbortMapLayoutLoad(MAP_LAYOUT_LOAD_BAD_ID, gSaveBlock1Ptr->location.mapGroup,
+                           gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+        return;
+    }
     SetPlayerCoordsFromWarp();
 }
 
@@ -947,6 +955,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
 {
     const struct MapLayout *previousLayout = gMapHeader.mapLayout;
     bool8 reloadPrimaryTileset;
+    enum MapLayoutLoadError layoutError;
 
     SetWarpDestination(mapGroup, mapNum, WARP_ID_NONE, -1, -1);
 
@@ -956,6 +965,12 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
 
     ApplyCurrentWarp();
     LoadCurrentMapData();
+    layoutError = InitMap();
+    if (layoutError != MAP_LAYOUT_LOAD_OK)
+    {
+        AbortMapLayoutLoad(layoutError, mapGroup, mapNum, gMapHeader.mapLayoutId);
+        return;
+    }
     reloadPrimaryTileset = previousLayout->primaryTileset != gMapHeader.mapLayout->primaryTileset
                         || GetNumTilesInPrimary(previousLayout) != GetNumTilesInPrimary(gMapHeader.mapLayout)
                         || GetNumPalsInPrimary(previousLayout) != GetNumPalsInPrimary(gMapHeader.mapLayout);
@@ -978,7 +993,7 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
     RunOnTransitionMapScript();
-    InitMap();
+    RunOnLoadMapScript();
     if (reloadPrimaryTileset)
     {
         CopyPrimaryTilesetToVramUsingHeap(gMapHeader.mapLayout);
@@ -1016,12 +1031,39 @@ void LoadMapFromCameraTransition(u8 mapGroup, u8 mapNum)
     }
 }
 
-static void LoadMapFromWarp(bool32 a1)
+static bool32 LoadMapFromWarp(bool32 a1)
 {
     bool8 isOutdoors;
     bool8 isIndoors;
+    enum MapLayoutLoadError layoutError;
 
     LoadCurrentMapData();
+    isOutdoors = IsMapTypeOutdoors(gMapHeader.mapType);
+    isIndoors = IsMapTypeIndoors(gMapHeader.mapType);
+    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS))
+        layoutError = InitBattlePyramidMap(FALSE);
+    else if (InTrainerHill())
+        layoutError = InitTrainerHillMap();
+    else
+        layoutError = InitMap();
+    if (layoutError != MAP_LAYOUT_LOAD_OK)
+    {
+        AbortMapLayoutLoad(layoutError, gSaveBlock1Ptr->location.mapGroup,
+                           gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+        return FALSE;
+    }
+
+    if (a1 != TRUE && isIndoors)
+    {
+        UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
+        layoutError = InitSecretBaseAppearance(TRUE);
+        if (layoutError != MAP_LAYOUT_LOAD_OK)
+        {
+            AbortMapLayoutLoad(layoutError, gSaveBlock1Ptr->location.mapGroup,
+                               gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+            return FALSE;
+        }
+    }
     if (!(sObjectEventLoadFlag & SKIP_OBJECT_EVENT_LOAD))
     {
         if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS))
@@ -1031,9 +1073,6 @@ static void LoadMapFromWarp(bool32 a1)
         else
             LoadObjEventTemplatesFromHeader();
     }
-
-    isOutdoors = IsMapTypeOutdoors(gMapHeader.mapType);
-    isIndoors = IsMapTypeIndoors(gMapHeader.mapType);
 
     CheckLeftFriendsSecretBase();
     TrySetMapSaveWarpStatus();
@@ -1062,18 +1101,8 @@ static void LoadMapFromWarp(bool32 a1)
     UpdateLocationHistoryForRoamer();
     MoveAllRoamersToOtherLocationSets();
     gChainFishingDexNavStreak = 0;
-    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS))
-        InitBattlePyramidMap(FALSE);
-    else if (InTrainerHill())
-        InitTrainerHillMap();
-    else
-        InitMap();
-
-    if (a1 != TRUE && isIndoors)
-    {
-        UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
-        InitSecretBaseAppearance(TRUE);
-    }
+    RunOnLoadMapScript();
+    return TRUE;
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -2049,6 +2078,8 @@ void CB2_NewGame(void)
 #endif
     gFieldCallback2 = NULL;
     DoMapLoadLoop(&gMain.state);
+    if (gMapLayoutLoadError.active)
+        return;
     SetFieldVBlankCallback();
     SetMainCallback1(CB1_Overworld);
     SetMainCallback2(CB2_Overworld);
@@ -2083,6 +2114,8 @@ void CB2_WhiteOut(void)
         state = 0;
         SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
         DoMapLoadLoop(&state);
+        if (gMapLayoutLoadError.active)
+            return;
         SetFieldVBlankCallback();
         SetMainCallback1(CB1_Overworld);
         SetMainCallback2(CB2_Overworld);
@@ -2104,6 +2137,8 @@ void CB2_BugContestWhiteOut(void)
         gFieldCallback = FieldCB_WarpExitFadeFromBlack;
         state = 0;
         DoMapLoadLoop(&state);
+        if (gMapLayoutLoadError.active)
+            return;
         SetFieldVBlankCallback();
         SetMainCallback1(CB1_Overworld);
         SetMainCallback2(CB2_Overworld);
@@ -2124,6 +2159,8 @@ void CB2_LoadMap(void)
 static void CB2_LoadMap2(void)
 {
     DoMapLoadLoop(&gMain.state);
+    if (gMapLayoutLoadError.active)
+        return;
     SetFieldVBlankCallback();
     SetMainCallback1(CB1_Overworld);
     SetMainCallback2(CB2_Overworld);
@@ -2247,6 +2284,7 @@ static void FieldCB_FadeTryShowMapPopup(void)
 void CB2_ContinueSavedGame(void)
 {
     u8 trainerHillMapId;
+    enum MapLayoutLoadError layoutError;
 
     TrainerOnlyResetEncounter();
 
@@ -2288,6 +2326,19 @@ void CB2_ContinueSavedGame(void)
     ClearDiveAndHoleWarps();
     trainerHillMapId = GetCurrentTrainerHillMapId();
     if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS))
+        layoutError = InitBattlePyramidMap(TRUE);
+    else if (trainerHillMapId != 0)
+        layoutError = InitTrainerHillMap();
+    else
+        layoutError = InitMapFromSavedGame();
+    if (layoutError != MAP_LAYOUT_LOAD_OK)
+    {
+        AbortMapLayoutLoad(layoutError, gSaveBlock1Ptr->location.mapGroup,
+                           gSaveBlock1Ptr->location.mapNum, gMapHeader.mapLayoutId);
+        return;
+    }
+
+    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS))
         LoadBattlePyramidFloorObjectEventScripts();
     else if (trainerHillMapId != 0 && trainerHillMapId != TRAINER_HILL_ENTRANCE)
         LoadTrainerHillFloorObjectEventScripts();
@@ -2297,12 +2348,7 @@ void CB2_ContinueSavedGame(void)
     UnfreezeObjectEvents();
     DoTimeBasedEvents();
     UpdateMiscOverworldStates();
-    if ((gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR || gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR_HNS))
-        InitBattlePyramidMap(TRUE);
-    else if (trainerHillMapId != 0)
-        InitTrainerHillMap();
-    else
-        InitMapFromSavedGame();
+    RunOnLoadMapScript();
 
     PlayTimeCounter_Start();
     ScriptContext_Init();
@@ -2394,7 +2440,8 @@ static bool32 LoadMapInStepsLink(u8 *state)
         break;
     case 1:
         gExitStairsMovementDisabled = FALSE;
-        LoadMapFromWarp(TRUE);
+        if (!LoadMapFromWarp(TRUE))
+            return FALSE;
         (*state)++;
         break;
     case 2:
@@ -2466,7 +2513,8 @@ static bool32 LoadMapInStepsLocal(u8 *state, bool32 a2)
     {
     case 0:
         FieldClearVBlankHBlankCallbacks();
-        LoadMapFromWarp(a2);
+        if (!LoadMapFromWarp(a2))
+            return FALSE;
         (*state)++;
         break;
     case 1:
@@ -2645,7 +2693,7 @@ static bool32 ReturnToFieldLink(u8 *state)
 
 static void DoMapLoadLoop(u8 *state)
 {
-    while (!LoadMapInStepsLocal(state, FALSE));
+    while (!LoadMapInStepsLocal(state, FALSE) && !gMapLayoutLoadError.active);
 }
 
 static void ResetMirageTowerAndSaveBlockPtrs(void)
@@ -4143,7 +4191,8 @@ static bool8 MapLdr_Credits(void)
     {
     case 0:
         InitOverworldBgs_NoResetHeap();
-        LoadMapFromWarp(FALSE);
+        if (!LoadMapFromWarp(FALSE))
+            return FALSE;
         (*state)++;
         break;
     case 1:

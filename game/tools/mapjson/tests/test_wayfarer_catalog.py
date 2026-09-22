@@ -76,7 +76,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         (map_dir / "map.json").write_text(json.dumps(data))
         return map_dir / "map.json"
 
-    def run_groups(self, root, version, map_files, manifest=None, sinnoh_manifest=None, sinnoh_assets=None):
+    def run_groups(self, root, version, map_files, manifest=None, sinnoh_manifest=None):
         command = [
             str(self.mapjson),
             "groups",
@@ -100,13 +100,6 @@ class MapjsonWayfarerTest(unittest.TestCase):
                     str(sinnoh_manifest.relative_to(root)),
                 ]
             )
-        if sinnoh_assets is not None:
-            command.extend(
-                [
-                    "--wayfarer-sinnoh-asset-manifest",
-                    str(sinnoh_assets.relative_to(root)),
-                ]
-            )
         return subprocess.run(
             command,
             cwd=root,
@@ -114,7 +107,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             capture_output=True,
         )
 
-    def run_map(self, root, version, map_file, layouts_file, manifest=None, sinnoh_manifest=None, sinnoh_assets=None):
+    def run_map(self, root, version, map_file, layouts_file, manifest=None, sinnoh_manifest=None):
         command = [
             str(self.mapjson),
             "map",
@@ -137,25 +130,151 @@ class MapjsonWayfarerTest(unittest.TestCase):
                     str(sinnoh_manifest.relative_to(root)),
                 ]
             )
-        if sinnoh_assets is not None:
-            command.extend(
-                [
-                    "--wayfarer-sinnoh-asset-manifest",
-                    str(sinnoh_assets.relative_to(root)),
-                ]
-            )
         return subprocess.run(command, cwd=root, text=True, capture_output=True)
 
-    def run_layouts(self, root, version):
+    def run_layouts(self, root, version, storage_mode=None, report=None):
+        command = [
+            str(self.mapjson), "layouts", version,
+            "data/layouts/layouts.json", "data/layouts", "include/constants",
+        ]
+        if storage_mode is not None:
+            command.extend(["--map-layout-storage-mode", storage_mode])
+        if report is not None:
+            command.extend(["--map-layout-storage-report", str(report.relative_to(root))])
         return subprocess.run(
-            [
-                str(self.mapjson), "layouts", version,
-                "data/layouts/layouts.json", "data/layouts", "include/constants",
-            ],
+            command,
             cwd=root,
             text=True,
             capture_output=True,
         )
+
+    @staticmethod
+    def add_layout(root, payload):
+        layout_dir = root / "data/layouts/TestLayout"
+        layout_dir.mkdir()
+        (layout_dir / "border.bin").write_bytes(b"\0\0")
+        (layout_dir / "map.bin").write_bytes(payload)
+        (root / "data/layouts/layouts.json").write_text(json.dumps({
+            "layouts_table_label": "gMapLayouts",
+            "layouts": [{
+                "id": "LAYOUT_TEST", "name": "Test_Layout",
+                "game_version": "emerald", "width": 1, "height": 1,
+                "border_filepath": "data/layouts/TestLayout/border.bin",
+                "blockdata_filepath": "data/layouts/TestLayout/map.bin",
+                "primary_tileset": "gTileset_Primary",
+                "secondary_tileset": "gTileset_Secondary",
+            }],
+        }))
+
+    def test_wayfarer_layouts_emit_raw_descriptor_for_complete_source_file(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        payload = b"\x34\x12\r\n\x1atrailing"
+        self.add_layout(root, payload)
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        generated = (root / "data/layouts/layouts.inc").read_text()
+        table = (root / "data/layouts/layouts_table.inc").read_text()
+        constants = (root / "include/constants/layouts.h").read_text()
+        self.assertIn("__map_layout_payloads_start::", generated)
+        self.assertIn("__map_layout_payloads_end::", generated)
+        self.assertIn(".LTest_Layout_MapData:", generated)
+        descriptor = generated.split(".LTest_Layout_MapData:", 1)[1].split("Test_Layout::", 1)[0]
+        self.assertIn("\t.4byte .LTest_Layout_Blockdata", descriptor)
+        self.assertIn(f"\t.4byte {len(payload)}", descriptor)
+        self.assertIn("\t.byte 0\n\t.byte 0\n\t.2byte 0", descriptor)
+        layout_record = generated.split("Test_Layout::", 1)[1]
+        self.assertIn("\t.4byte .LTest_Layout_MapData", layout_record)
+        self.assertIn("\t.if MAP_LAYOUT_TESTING_ASM", generated)
+        self.assertIn(".LTest_Layout_RawOracle:", generated)
+        self.assertIn("gMapLayoutPeakTestPayload::", generated)
+        self.assertIn("gMapLayoutPeakTestDescriptor::", generated)
+        self.assertIn("gMapLayoutPeakTestLayout::", generated)
+        self.assertIn("\t.global gMapLayoutRawOracles", table)
+        self.assertIn("\t.4byte .LTest_Layout_RawOracle", table)
+        self.assertIn("#define MAP_LAYOUT_COUNT 1", constants)
+
+        result = self.run_layouts(root, "emerald")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        standalone = (root / "data/layouts/layouts.inc").read_text()
+        self.assertNotIn("_MapData:", standalone)
+        self.assertIn("\t.4byte .LTest_Layout_Blockdata", standalone)
+
+    def test_wayfarer_hybrid_layouts_round_trip_and_report_compressed_storage(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        payload = b"\x34\x12" * 100
+        self.add_layout(root, payload)
+        report = root / "build/storage.json"
+
+        result = self.run_layouts(root, "wayfarer", "hybrid", report)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        generated = (root / "data/layouts/layouts.inc").read_text()
+        descriptor = generated.split(".LTest_Layout_MapData:", 1)[1].split("Test_Layout::", 1)[0]
+        self.assertIn("\t.byte 1\n\t.byte 0\n\t.2byte 0", descriptor)
+        production_payloads = generated.split("\t.if MAP_LAYOUT_TESTING_ASM", 1)[0]
+        self.assertNotIn('map.bin"', production_payloads)
+        storage_report = json.loads(report.read_text())
+        self.assertEqual(storage_report["storage_mode"], "hybrid")
+        self.assertEqual(storage_report["totals"]["compressed_entries"], 1)
+        self.assertLess(storage_report["totals"]["stored_payload_bytes"],
+                        storage_report["totals"]["raw_payload_bytes"])
+        self.assertTrue(storage_report["layouts"][0]["round_trip"])
+
+    def test_hybrid_keeps_unprofitable_layouts_raw(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x34\x12")
+        result = self.run_layouts(root, "wayfarer", "hybrid")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        generated = (root / "data/layouts/layouts.inc").read_text()
+        descriptor = generated.split(".LTest_Layout_MapData:", 1)[1].split("Test_Layout::", 1)[0]
+        self.assertIn("\t.byte 0\n\t.byte 0\n\t.2byte 0", descriptor)
+
+    def test_layout_storage_rejects_retired_legacy_mode(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x34\x12")
+
+        result = self.run_layouts(root, "wayfarer", "legacy")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("raw or hybrid", result.stderr)
+
+    def test_layout_generation_rejects_source_shorter_than_logical_tiles(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\x00")
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Invalid layout payload dimensions or length", result.stderr)
+
+    def test_layout_generation_rejects_missing_selected_border(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        self.add_layout(root, b"\0\0")
+        (root / "data/layouts/TestLayout/border.bin").unlink()
+
+        result = self.run_layouts(root, "wayfarer")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("missing border file", result.stderr)
+
+    def test_layout_generation_rejects_invalid_or_oversized_dimensions(self):
+        for width, height, payload_size in ((-1, -1, 2), (100, 100, 20000)):
+            with self.subTest(width=width, height=height):
+                fixture, root = self.make_fixture()
+                self.addCleanup(fixture.cleanup)
+                self.add_layout(root, b"\0" * payload_size)
+                catalog_path = root / "data/layouts/layouts.json"
+                catalog = json.loads(catalog_path.read_text())
+                catalog["layouts"][0]["width"] = width
+                catalog["layouts"][0]["height"] = height
+                catalog_path.write_text(json.dumps(catalog))
+
+                result = self.run_layouts(root, "wayfarer")
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("do not fit the runtime backup map", result.stderr)
 
     def test_wayfarer_unlinks_replaced_and_orphaned_hns_maps_and_layouts(self):
         fixture, root = self.make_fixture()
@@ -411,12 +530,6 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 "object_events": 0, "coord_events": 0, "bg_events": 0,
                 "map_scripts": 0, "wild_encounter_profiles": 0,
             })
-            record.setdefault("asset_records", {
-                "blockdata": f"blockdata.{record['target_layout']}",
-                "border": f"border.{record['target_layout']}",
-                "tilesets": [],
-            })
-            record.setdefault("inclusion", {"state": "FROZEN_NOT_SELECTED"})
         if frozen:
             records[0]["warps"] = [{}] * 233
             records[0]["connections"] = [{}] * 114
@@ -424,7 +537,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
 
     @classmethod
     def write_sinnoh_manifest(
-        cls, root, maps, release_link_enabled=False, asset_manifest_ready=True, blockers=None, frozen=True,
+        cls, root, maps, frozen=True,
     ):
         records, groups = cls.frozen_sinnoh_records(maps, frozen)
         path = root / "src/data/wayfarer_sinnoh_maps.json"
@@ -435,11 +548,6 @@ class MapjsonWayfarerTest(unittest.TestCase):
                     "donor": {
                         "url": "https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion",
                         "commit": "4eed17cc63c4ec8c24fbb20fe49e8d65cb4870d8",
-                    },
-                    "selection": {
-                        "release_link_enabled": release_link_enabled,
-                        "asset_manifest_ready": asset_manifest_ready,
-                        "blockers": blockers or [],
                     },
                     "source_groups": [
                         {"source_group": group, "target_group": group, "order": order, "map_count": count}
@@ -454,36 +562,6 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 }
             )
         )
-        return path
-
-    @classmethod
-    def write_sinnoh_asset_manifest(
-        cls, root, maps, release_link_enabled=False, asset_manifest_ready=True, blockers=None,
-        review_required=False, frozen=True,
-    ):
-        records, _ = cls.frozen_sinnoh_records(maps, frozen)
-        assets = []
-        for record in records:
-            for asset_id in (record["asset_records"]["blockdata"], record["asset_records"]["border"]):
-                assets.append({
-                    "record_id": asset_id,
-                    "reuse_class": "REVIEW_REQUIRED" if review_required and not assets else "SINNOH_NEW",
-                    "selection_blocker": False,
-                })
-        path = root / "src/data/wayfarer_sinnoh_assets.json"
-        path.write_text(json.dumps({
-            "schema_version": 1,
-            "donor": {
-                "url": "https://github.com/LiderMorti00/Sinnoh-pokeemerald-expansion",
-                "commit": "4eed17cc63c4ec8c24fbb20fe49e8d65cb4870d8",
-            },
-            "selection": {
-                "release_link_enabled": release_link_enabled,
-                "asset_manifest_ready": asset_manifest_ready,
-                "blockers": blockers or [],
-            },
-            "records": assets,
-        }))
         return path
 
     def test_wayfarer_selects_hns_and_emerald_without_mutating_heal_data(self):
@@ -620,7 +698,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("gFrlg::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
 
-    def test_wayfarer_sinnoh_manifest_is_the_only_selection_gate(self):
+    def test_wayfarer_always_compiles_the_sinnoh_catalog(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
         hns = self.add_map(root, "HnsMap", "MAP_HNS", "hns")
@@ -645,18 +723,10 @@ class MapjsonWayfarerTest(unittest.TestCase):
             "target_map_id": "MAP_TWINLEAF_TOWN",
             "source_layout": "LAYOUT_TWINLEAF_TOWN",
             "target_layout": "LAYOUT_TWINLEAF_TOWN",
-            "inclusion": {"state": "INCLUDED"},
         }
         manifest = self.write_sinnoh_manifest(root, [record])
-        assets = self.write_sinnoh_asset_manifest(root, [record])
 
-        result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
-        self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn("gSinnoh::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
-
-        manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True)
-        assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True)
-        result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        result = self.run_groups(root, "wayfarer", [hns, sinnoh], sinnoh_manifest=manifest)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("gSinnoh::\n\t.4byte TwinleafTown", (root / "data/maps/groups.inc").read_text())
 
@@ -665,44 +735,42 @@ class MapjsonWayfarerTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn("gSinnoh::\n\t.4byte NULL", (root / "data/maps/groups.inc").read_text())
 
-    def test_wayfarer_sinnoh_release_requires_ready_asset_manifest_without_blockers(self):
+    def test_wayfarer_pending_sinnoh_map_has_no_script_table(self):
         fixture, root = self.make_fixture()
         self.addCleanup(fixture.cleanup)
-        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
-        sinnoh_data = json.loads(sinnoh.read_text())
-        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
-        sinnoh.write_text(json.dumps(sinnoh_data))
-        (root / "data/maps/map_groups.json").write_text(
-            json.dumps({"group_order": ["gSinnoh"], "gSinnoh": ["TwinleafTown"], "connections_include_order": []})
+        map_dir = root / "data/maps/TwinleafTown"
+        map_dir.mkdir()
+        source = json.loads((GAME_ROOT / "data/maps/TwinleafTown/map.json").read_text())
+        map_file = map_dir / "map.json"
+        map_file.write_text(json.dumps(source))
+        (root / "include/constants/map_groups.h").write_text(
+            (GAME_ROOT / "include/constants/map_groups.h").read_text()
         )
-        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
+        layout = next(
+            row for row in json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())["layouts"]
+            if row["id"] == source["layout"]
+        )
+        layout["border_filepath"] = "data/layouts/TwinleafTown/border.bin"
+        layout["blockdata_filepath"] = "data/layouts/TwinleafTown/map.bin"
+        layout_dir = root / "data/layouts/TwinleafTown"
+        layout_dir.mkdir()
+        (layout_dir / "border.bin").write_bytes(b"\0" * 8)
+        (layout_dir / "map.bin").write_bytes(b"\0" * (int(layout["width"]) * int(layout["height"]) * 2))
+        layouts_file = root / "data/layouts/layouts.json"
+        layouts_file.write_text(json.dumps({"layouts": [layout]}))
         record = {
-            "source_map": "TwinleafTown",
-            "source_map_id": "MAP_TWINLEAF_TOWN",
-            "target_map_id": "MAP_TWINLEAF_TOWN",
-            "source_layout": "LAYOUT_TWINLEAF_TOWN",
-            "target_layout": "LAYOUT_TWINLEAF_TOWN",
-            "inclusion": {"state": "INCLUDED"},
+            "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
+            "target_map": "TwinleafTown", "target_map_id": "MAP_TWINLEAF_TOWN",
+            "source_layout": source["layout"], "target_layout": source["layout"],
         }
-        manifest = self.write_sinnoh_manifest(
-            root, [record], release_link_enabled=True, asset_manifest_ready=False,
-        )
-        assets = self.write_sinnoh_asset_manifest(
-            root, [record], release_link_enabled=True, asset_manifest_ready=False,
-        )
-        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("asset manifest is ready and blockers are clear", result.stderr)
+        manifest = self.write_sinnoh_manifest(root, [record])
 
-        manifest = self.write_sinnoh_manifest(
-            root, [record], release_link_enabled=True, blockers=["REVIEW_REQUIRED"],
-        )
-        assets = self.write_sinnoh_asset_manifest(
-            root, [record], release_link_enabled=True, blockers=["REVIEW_REQUIRED"],
-        )
-        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("asset manifest is ready and blockers are clear", result.stderr)
+        result = self.run_map(root, "wayfarer", map_file, layouts_file, sinnoh_manifest=manifest)
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        header = (map_dir / "header.inc").read_text()
+        self.assertIn("\t.4byte TwinleafTown_MapEvents\n\t.4byte NULL\n", header)
+        self.assertNotIn("TwinleafTown_MapScripts", header)
 
     def test_wayfarer_sinnoh_release_rejects_a_partial_frozen_catalog(self):
         fixture, root = self.make_fixture()
@@ -718,35 +786,12 @@ class MapjsonWayfarerTest(unittest.TestCase):
         record = {
             "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
             "target_map_id": "MAP_TWINLEAF_TOWN", "source_layout": "LAYOUT_TWINLEAF_TOWN",
-            "target_layout": "LAYOUT_TWINLEAF_TOWN", "inclusion": {"state": "INCLUDED"},
+            "target_layout": "LAYOUT_TWINLEAF_TOWN",
         }
-        manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True, frozen=False)
-        assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True, frozen=False)
-        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        manifest = self.write_sinnoh_manifest(root, [record], frozen=False)
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("complete frozen catalog", result.stderr)
-
-    def test_wayfarer_sinnoh_release_rejects_unresolved_asset_rows(self):
-        fixture, root = self.make_fixture()
-        self.addCleanup(fixture.cleanup)
-        sinnoh = self.add_map(root, "TwinleafTown", "MAP_TWINLEAF_TOWN", "sinnoh")
-        sinnoh_data = json.loads(sinnoh.read_text())
-        sinnoh_data["layout"] = "LAYOUT_TWINLEAF_TOWN"
-        sinnoh.write_text(json.dumps(sinnoh_data))
-        (root / "data/maps/map_groups.json").write_text(
-            json.dumps({"group_order": ["gSinnoh"], "gSinnoh": ["TwinleafTown"], "connections_include_order": []})
-        )
-        (root / "src/data/heal_locations.json").write_text(json.dumps({"heal_locations": []}))
-        record = {
-            "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
-            "target_map_id": "MAP_TWINLEAF_TOWN", "source_layout": "LAYOUT_TWINLEAF_TOWN",
-            "target_layout": "LAYOUT_TWINLEAF_TOWN", "inclusion": {"state": "INCLUDED"},
-        }
-        manifest = self.write_sinnoh_manifest(root, [record], release_link_enabled=True)
-        assets = self.write_sinnoh_asset_manifest(root, [record], release_link_enabled=True, review_required=True)
-        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
-        self.assertNotEqual(result.returncode, 0)
-        self.assertIn("contains unresolved release asset", result.stderr)
 
     def test_wayfarer_sinnoh_manifest_rejects_unreviewed_target_ids(self):
         fixture, root = self.make_fixture()
@@ -768,20 +813,11 @@ class MapjsonWayfarerTest(unittest.TestCase):
                     "target_map_id": "MAP_UNREVIEWED",
                     "source_layout": "LAYOUT_TWINLEAF_TOWN",
                     "target_layout": "LAYOUT_TWINLEAF_TOWN",
-                    "inclusion": {"state": "INCLUDED"},
                 }
             ],
-            release_link_enabled=True,
         )
-        assets = self.write_sinnoh_asset_manifest(root, [
-            {
-                "source_map": "TwinleafTown", "source_map_id": "MAP_TWINLEAF_TOWN",
-                "target_map_id": "MAP_UNREVIEWED", "source_layout": "LAYOUT_TWINLEAF_TOWN",
-                "target_layout": "LAYOUT_TWINLEAF_TOWN", "inclusion": {"state": "INCLUDED"},
-            }
-        ], release_link_enabled=True)
 
-        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest, sinnoh_assets=assets)
+        result = self.run_groups(root, "wayfarer", [sinnoh], sinnoh_manifest=manifest)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn("does not match its reviewed target IDs", result.stderr)
 
@@ -936,7 +972,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             border = root / f"data/layouts/{name}.border.bin"
             blockdata = root / f"data/layouts/{name}.map.bin"
             border.touch()
-            blockdata.touch()
+            blockdata.write_bytes(b"\0\0")
             layouts.append({
                 "id": source_data["layout"], "name": f"gMapLayout_{name}",
                 "game_version": source, "layout_version": source, "width": 1, "height": 1,
@@ -1169,7 +1205,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
             border = root / f"data/layouts/{suffix}.border.bin"
             blockdata = root / f"data/layouts/{suffix}.map.bin"
             border.touch()
-            blockdata.touch()
+            blockdata.write_bytes(b"\0\0")
             layouts.append(
                 {
                     "id": f"LAYOUT_{suffix.upper()}",
@@ -1214,7 +1250,8 @@ class MapjsonWayfarerTest(unittest.TestCase):
         self.assertNotIn("gMapLayout_Frlg::", headers)
         self.assertIn("\t.4byte gMapLayout_Emerald", table)
         self.assertIn("\t.4byte gMapLayout_Hns", table)
-        self.assertTrue(table.rstrip().endswith("\t.4byte NULL"))
+        production_table = table.split("\t.if MAP_LAYOUT_TESTING_ASM", 1)[0]
+        self.assertTrue(production_table.rstrip().endswith("\t.4byte NULL"))
 
         map_dir = root / "data/maps/HnsMap"
         map_dir.mkdir()

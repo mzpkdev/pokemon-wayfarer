@@ -1773,6 +1773,306 @@
       "width": 1,
       "height": 1,
       "in_hns": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_TWINLEAF_TOWN",
+      "name": "TWINLEAF TOWN",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_SANDGEM_TOWN",
+      "name": "SANDGEM TOWN",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_JUBILIFE_CITY",
+      "name": "JUBILIFE CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_OREBURGH_CITY",
+      "name": "OREBURGH CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_FLOAROMA_TOWN",
+      "name": "FLOAROMA TOWN",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ETERNA_CITY",
+      "name": "ETERNA CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_HEARTHOME_CITY",
+      "name": "HEARTHOME CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_SOLACEON_TOWN",
+      "name": "SOLACEON TOWN",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_CELESTIC_TOWN",
+      "name": "CELESTIC TOWN",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_VEILSTONE_CITY",
+      "name": "VEILSTONE CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_PASTORIA_CITY",
+      "name": "PASTORIA CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_CANALAVE_CITY",
+      "name": "CANALAVE CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_SNOWPOINT_CITY",
+      "name": "SNOWPOINT CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_SUNYSHORE_CITY",
+      "name": "SUNYSHORE CITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_POKEMON_LEAGUE",
+      "name": "SINNOH POKEMON LEAGUE",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_201",
+      "name": "ROUTE 201",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_202",
+      "name": "ROUTE 202",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_203",
+      "name": "ROUTE 203",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_204",
+      "name": "ROUTE 204",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_205",
+      "name": "ROUTE 205",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_206",
+      "name": "ROUTE 206",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_207",
+      "name": "ROUTE 207",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_208",
+      "name": "ROUTE 208",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_209",
+      "name": "ROUTE 209",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_210",
+      "name": "ROUTE 210",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_211",
+      "name": "ROUTE 211",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_212",
+      "name": "ROUTE 212",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_213",
+      "name": "ROUTE 213",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_214",
+      "name": "ROUTE 214",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_215",
+      "name": "ROUTE 215",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_216",
+      "name": "ROUTE 216",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_217",
+      "name": "ROUTE 217",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_218",
+      "name": "ROUTE 218",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_219",
+      "name": "ROUTE 219",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_220",
+      "name": "ROUTE 220",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_221",
+      "name": "ROUTE 221",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_222",
+      "name": "ROUTE 222",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_223",
+      "name": "ROUTE 223",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_224",
+      "name": "ROUTE 224",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_225",
+      "name": "ROUTE 225",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_226",
+      "name": "ROUTE 226",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_227",
+      "name": "ROUTE 227",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_228",
+      "name": "ROUTE 228",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_229",
+      "name": "ROUTE 229",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ROUTE_230",
+      "name": "ROUTE 230",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_VERITY_LAKEFRONT",
+      "name": "VERITY LAKEFRONT",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_VALOR_LAKEFRONT",
+      "name": "VALOR LAKEFRONT",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ACUITY_LAKEFRONT",
+      "name": "ACUITY LAKEFRONT",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_FIGHT_AREA",
+      "name": "FIGHT AREA",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_SURVIVAL_AREA",
+      "name": "SURVIVAL AREA",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_RESORT_AREA",
+      "name": "RESORT AREA",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_LAKE_VERITY",
+      "name": "LAKE VERITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_LAKE_VALOR",
+      "name": "LAKE VALOR",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_LAKE_ACUITY",
+      "name": "LAKE ACUITY",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_VALLEY_WINDWORKS",
+      "name": "VALLEY WINDWORKS",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_ETERNA_FOREST",
+      "name": "ETERNA FOREST",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_OREBURGH_GATE",
+      "name": "OREBURGH GATE",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_OREBURGH_MINE",
+      "name": "OREBURGH MINE",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_RAVAGED_PATH",
+      "name": "RAVAGED PATH",
+      "wayfarer_sinnoh": true
+    },
+    {
+      "id": "MAPSEC_SINNOH_MT_CORONET",
+      "name": "MT CORONET",
+      "wayfarer_sinnoh": true
     }
   ],
   "hns_map_sections": [

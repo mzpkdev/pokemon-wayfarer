@@ -1,6 +1,7 @@
 #include "global.h"
 #include "event_data.h"
 #include "heal_location.h"
+#include "map_layout.h"
 #include "item.h"
 #include "overworld.h"
 #include "pokemon.h"
@@ -42,7 +43,8 @@ static bool8 HarborHasCoordEventAt(s16 x, s16 y)
 static void ExpectWalkableHarborTile(s16 x, s16 y)
 {
     const struct MapLayout *layout = GetSlateportHarborHeader()->mapLayout;
-    u16 metatile = layout->map[y * layout->width + x];
+    u16 metatile;
+    EXPECT_EQ(MapLayoutReadTile(layout, x, y, &metatile), MAP_LAYOUT_LOAD_OK);
 
     EXPECT_EQ(UNPACK_COLLISION(metatile), 0);
 }
@@ -52,6 +54,7 @@ TEST("Wayfarer Hoenn entry destination is safe and has an open path to Slateport
     const struct MapHeader *header = GetSlateportHarborHeader();
     const struct MapEvents *events = header->events;
     bool8 foundExit = FALSE;
+    u16 metatile;
     u32 i;
 
     EXPECT(header != NULL);
@@ -61,8 +64,8 @@ TEST("Wayfarer Hoenn entry destination is safe and has an open path to Slateport
 
     // The approved arrival tile and a direct route to the ordinary south exit.
     ExpectWalkableHarborTile(9, 11);
-    EXPECT_EQ(UNPACK_ELEVATION(header->mapLayout->map[11 * header->mapLayout->width + 9]),
-              ELEVATION_DEFAULT);
+    EXPECT_EQ(MapLayoutReadTile(header->mapLayout, 9, 11, &metatile), MAP_LAYOUT_LOAD_OK);
+    EXPECT_EQ(UNPACK_ELEVATION(metatile), ELEVATION_DEFAULT);
     ExpectWalkableHarborTile(9, 12);
     ExpectWalkableHarborTile(9, 13);
     ExpectWalkableHarborTile(9, 14);

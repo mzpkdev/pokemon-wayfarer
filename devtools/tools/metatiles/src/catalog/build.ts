@@ -597,7 +597,8 @@ const createContext = (
 export const buildMetatileCatalog = (root: string, output: string): MetatileCatalogResult => {
   const layouts = sourceLayouts(root)
   const mapsByLayout = new Map<string, SourceMapReference[]>()
-  for (const map of sourceMaps(root)) {
+  // Imported Sinnoh geography is inert source data until it has a player-facing entry contract.
+  for (const map of sourceMaps(root).filter((map) => map.sourceRegion !== "sinnoh")) {
     const maps = mapsByLayout.get(map.layoutId) ?? []
     maps.push(map)
     mapsByLayout.set(map.layoutId, maps)

@@ -1017,12 +1017,20 @@ u8 GetLeadMonFriendshipScore(void)
 
 static void CB2_FieldShowRegionMap(void)
 {
+    if (!IsCurrentRegionMapSupported())
+    {
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        return;
+    }
     FieldInitRegionMap(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
 void FieldShowRegionMap(void)
 {
-    SetMainCallback2(CB2_FieldShowRegionMap);
+    if (IsCurrentRegionMapSupported())
+        SetMainCallback2(CB2_FieldShowRegionMap);
+    else
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }
 
 static bool32 IsBuildingPCTile(u32 tileId)

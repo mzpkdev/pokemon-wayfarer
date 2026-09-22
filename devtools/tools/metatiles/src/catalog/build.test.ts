@@ -60,5 +60,14 @@ describe("metatile catalog decoding", () => {
     const contextCatalog = JSON.parse(contextCatalogFile)
     expect(contextCatalog).not.toHaveProperty("$schema")
     expect(contextCatalogFile).toBe(`${JSON.stringify(contextCatalog)}\n`)
+
+    for (const context of catalog.contexts) {
+      const generated = JSON.parse(fs.readFileSync(path.join(output, context.path), "utf8"))
+      expect(
+        generated.context.maps.some(
+          (map: { sourceRegion?: string }) => map.sourceRegion === "sinnoh",
+        ),
+      ).toBe(false)
+    }
   }, 30_000)
 })

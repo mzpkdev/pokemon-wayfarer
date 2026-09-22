@@ -6,6 +6,7 @@
 #include "fldeff_misc.h"
 #include "frontier_util.h"
 #include "menu.h"
+#include "map_layout.h"
 #include "mirage_tower.h"
 #include "overworld.h"
 #include "palette.h"
@@ -15,6 +16,7 @@
 #include "trainer_hill.h"
 #include "tv.h"
 #include "constants/rgb.h"
+#include "constants/layouts.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/metatile_behaviors_frlg.h"
 #include "wild_encounter.h"
@@ -35,6 +37,9 @@ EWRAM_DATA static struct ConnectionFlags sMapConnectionFlags = {0};
 COMMON_DATA struct BackupMapLayout gBackupMapLayout = {0};
 
 static const struct ConnectionFlags sDummyConnectionFlags = {0};
+#if TESTING
+static const struct MapHeader *sTestMapConnectionHeaderOverride;
+#endif
 
 static u32 NormalizeFrlgMetatileBehavior(u32 metatileBehavior)
 {
@@ -92,13 +97,13 @@ static u32 NormalizeFrlgMetatileBehavior(u32 metatileBehavior)
     }
 }
 
-static void InitMapLayoutData(struct MapHeader *mapHeader);
-static void InitBackupMapLayoutData(const u16 *map, u16 width, u16 height);
-static void FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
-static void FillNorthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
-static void FillWestConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
-static void FillEastConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset);
-static void InitBackupMapLayoutConnections(struct MapHeader *mapHeader);
+static enum MapLayoutLoadError InitMapLayoutData(struct MapHeader *mapHeader);
+static enum MapLayoutLoadError InitBackupMapLayoutData(const struct MapLayout *mapLayout, struct MapLayoutLoadContext *context);
+static enum MapLayoutLoadError FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context);
+static enum MapLayoutLoadError FillNorthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context);
+static enum MapLayoutLoadError FillWestConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context);
+static enum MapLayoutLoadError FillEastConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context);
+static enum MapLayoutLoadError InitBackupMapLayoutConnections(struct MapHeader *mapHeader, struct MapLayoutLoadContext *context);
 static void LoadSavedMapView(void);
 static bool8 SkipCopyingMetatileFromSavedMap(u16 *mapBlock, u16 mapWidth, u8 yMode);
 static const struct MapConnection *GetIncomingConnection(enum Connection direction, int x, int y);
@@ -184,76 +189,283 @@ static const u8 sMetatileAttrShiftsEmerald[METATILE_ATTRIBUTE_COUNT] = {
 
 const struct MapHeader *const GetMapHeaderFromConnection(const struct MapConnection *connection)
 {
+#if TESTING
+    if (sTestMapConnectionHeaderOverride != NULL)
+        return sTestMapConnectionHeaderOverride;
+#endif
     return Overworld_GetMapHeaderByGroupAndId(connection->mapGroup, connection->mapNum);
 }
 
-void InitMap(void)
+enum MapLayoutLoadError InitMap(void)
 {
-    InitMapLayoutData(&gMapHeader);
+    enum MapLayoutLoadError error = InitMapLayoutData(&gMapHeader);
+    if (error != MAP_LAYOUT_LOAD_OK)
+        return error;
     SetOccupiedSecretBaseEntranceMetatiles(gMapHeader.events);
-    RunOnLoadMapScript();
+    return MAP_LAYOUT_LOAD_OK;
 }
 
-void InitMapFromSavedGame(void)
+enum MapLayoutLoadError InitMapFromSavedGame(void)
 {
-    InitMapLayoutData(&gMapHeader);
-    InitSecretBaseAppearance(FALSE);
+    enum MapLayoutLoadError error = InitMapLayoutData(&gMapHeader);
+    if (error != MAP_LAYOUT_LOAD_OK)
+        return error;
+    error = InitSecretBaseAppearance(FALSE);
+    if (error != MAP_LAYOUT_LOAD_OK)
+        return error;
     SetOccupiedSecretBaseEntranceMetatiles(gMapHeader.events);
     LoadSavedMapView();
-    RunOnLoadMapScript();
     UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
+    return MAP_LAYOUT_LOAD_OK;
 }
 
-void InitBattlePyramidMap(bool8 setPlayerPosition)
+enum MapLayoutLoadError InitBattlePyramidMap(bool8 setPlayerPosition)
 {
     CpuFastFill16(MAPGRID_UNDEFINED, sBackupMapData, sizeof(sBackupMapData));
-    GenerateBattlePyramidFloorLayout(sBackupMapData, setPlayerPosition);
+    return GenerateBattlePyramidFloorLayout(sBackupMapData, setPlayerPosition);
 }
 
-void InitTrainerHillMap(void)
+enum MapLayoutLoadError InitTrainerHillMap(void)
 {
     CpuFastFill16(MAPGRID_UNDEFINED, sBackupMapData, sizeof(sBackupMapData));
-    GenerateTrainerHillFloorLayout(sBackupMapData);
+    return GenerateTrainerHillFloorLayout(sBackupMapData);
 }
 
-static void InitMapLayoutData(struct MapHeader *mapHeader)
+static enum MapLayoutLoadError InitMapLayoutData(struct MapHeader *mapHeader)
 {
     struct MapLayout const *mapLayout;
+    struct MapLayoutLoadContext context = {0};
+    enum MapLayoutLoadError error;
     int width;
     int height;
+    if (mapHeader == NULL || mapHeader->mapLayout == NULL)
+        return MAP_LAYOUT_LOAD_BAD_ID;
     mapLayout = mapHeader->mapLayout;
     CpuFastFill16(MAPGRID_UNDEFINED, sBackupMapData, sizeof(sBackupMapData));
     gBackupMapLayout.map = sBackupMapData;
+    if (mapLayout->width <= 0 || mapLayout->height <= 0
+     || mapLayout->width > INT_MAX - MAP_OFFSET_W
+     || mapLayout->height > INT_MAX - MAP_OFFSET_H)
+        return MAP_LAYOUT_LOAD_BAD_SIZE;
     width = mapLayout->width + MAP_OFFSET_W;
     gBackupMapLayout.width = width;
     height = mapLayout->height + MAP_OFFSET_H;
     gBackupMapLayout.height = height;
-    if (width * height <= MAX_MAP_DATA_SIZE)
+    if ((u32)width > MAX_MAP_DATA_SIZE / (u32)height)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    error = MapLayoutBeginLoadContext(mapHeader, &context);
+    if (error == MAP_LAYOUT_LOAD_OK)
     {
-        InitBackupMapLayoutData(mapLayout->map, mapLayout->width, mapLayout->height);
-        InitBackupMapLayoutConnections(mapHeader);
+        error = InitBackupMapLayoutData(mapLayout, &context);
+        if (error == MAP_LAYOUT_LOAD_OK)
+            error = InitBackupMapLayoutConnections(mapHeader, &context);
+        MapLayoutEndLoadContext(&context);
+    }
+    if (error != MAP_LAYOUT_LOAD_OK)
+        CpuFastFill16(MAPGRID_UNDEFINED, sBackupMapData, sizeof(sBackupMapData));
+    return error;
+}
+
+#if TESTING && IS_WAYFARER
+extern const u16 *const gMapLayoutRawOracles[];
+
+// Retained pre-abstraction raw loader used only as the Wayfarer differential oracle.
+// Keep this independent of MapLayoutCopy* and the descriptor decoder.
+static enum MapLayoutLoadError LegacyRawCopyConnection(u16 *dest, s32 destWidth,
+    s32 destHeight, const struct MapHeader *connectedMapHeader,
+    s32 x, s32 y, s32 x2, s32 y2, s32 width, s32 height)
+{
+    const struct MapLayout *layout;
+    const u16 *source;
+    s32 row;
+
+    if (connectedMapHeader == NULL || connectedMapHeader->mapLayout == NULL
+     || connectedMapHeader->mapLayoutId == 0 || connectedMapHeader->mapLayoutId > MAP_LAYOUT_COUNT)
+        return MAP_LAYOUT_LOAD_BAD_ID;
+    layout = connectedMapHeader->mapLayout;
+    source = gMapLayoutRawOracles[connectedMapHeader->mapLayoutId - 1];
+    if (source == NULL || x < 0 || y < 0 || x2 < 0 || y2 < 0 || width <= 0 || height <= 0
+     || x > destWidth - width || y > destHeight - height
+     || x2 > layout->width - width || y2 > layout->height - height)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    source += layout->width * y2 + x2;
+    dest += destWidth * y + x;
+    for (row = 0; row < height; row++)
+    {
+        CpuCopy16(source, dest, width * sizeof(u16));
+        source += layout->width;
+        dest += destWidth;
+    }
+    return MAP_LAYOUT_LOAD_OK;
+}
+#endif
+
+#if TESTING
+
+enum MapLayoutLoadError Test_InitMapLayoutData(struct MapHeader *mapHeader)
+{
+    return InitMapLayoutData(mapHeader);
+}
+
+#if IS_WAYFARER
+static enum MapLayoutLoadError LegacyRawFillConnection(u16 *dest, s32 destWidth,
+    s32 destHeight, const struct MapHeader *mapHeader,
+    const struct MapConnection *connection)
+{
+    const struct MapHeader *connected = GetMapHeaderFromConnection(connection);
+    const struct MapLayout *layout;
+    s32 offset = connection->offset;
+    s32 x, y, x2, y2, width, height;
+
+    if (connected == NULL || connected->mapLayout == NULL)
+        return MAP_LAYOUT_LOAD_BAD_ID;
+    layout = connected->mapLayout;
+    switch (connection->direction)
+    {
+    case CONNECTION_SOUTH:
+    case CONNECTION_NORTH:
+        x = offset + MAP_OFFSET;
+        if (x < 0)
+        {
+            x2 = -x;
+            width = min(x + layout->width, destWidth);
+            x = 0;
+        }
+        else
+        {
+            x2 = 0;
+            width = min(layout->width, destWidth - x);
+        }
+        if (connection->direction == CONNECTION_SOUTH)
+        {
+            y = mapHeader->mapLayout->height + MAP_OFFSET;
+            y2 = 0;
+        }
+        else
+        {
+            y = 0;
+            y2 = layout->height - MAP_OFFSET;
+        }
+        return LegacyRawCopyConnection(dest, destWidth, destHeight, connected,
+                                       x, y, x2, y2, width, MAP_OFFSET);
+    case CONNECTION_WEST:
+    case CONNECTION_EAST:
+        y = offset + MAP_OFFSET;
+        if (y < 0)
+        {
+            y2 = -y;
+            height = min(y + layout->height, destHeight);
+            y = 0;
+        }
+        else
+        {
+            y2 = 0;
+            height = min(layout->height, destHeight - y);
+        }
+        if (connection->direction == CONNECTION_WEST)
+        {
+            x = 0;
+            x2 = layout->width - MAP_OFFSET;
+            width = MAP_OFFSET;
+        }
+        else
+        {
+            x = mapHeader->mapLayout->width + MAP_OFFSET;
+            x2 = 0;
+            width = MAP_OFFSET + 1;
+        }
+        return LegacyRawCopyConnection(dest, destWidth, destHeight, connected,
+                                       x, y, x2, y2, width, height);
+    default:
+        return MAP_LAYOUT_LOAD_OK;
     }
 }
 
-static void InitBackupMapLayoutData(const u16 *map, u16 width, u16 height)
+enum MapLayoutLoadError Test_InitLegacyRawMapLayoutData(const struct MapHeader *mapHeader,
+                                                        u16 *dest, u32 destCapacity,
+                                                        s32 *width, s32 *height, u8 *connectionFlags)
+{
+    const struct MapLayout *layout;
+    const u16 *source;
+    s32 row;
+    s32 i;
+
+    if (mapHeader == NULL || mapHeader->mapLayout == NULL || dest == NULL
+     || width == NULL || height == NULL || connectionFlags == NULL
+     || mapHeader->mapLayoutId == 0 || mapHeader->mapLayoutId > MAP_LAYOUT_COUNT)
+        return MAP_LAYOUT_LOAD_BAD_ID;
+    layout = mapHeader->mapLayout;
+    source = gMapLayoutRawOracles[mapHeader->mapLayoutId - 1];
+    if (source == NULL)
+        return MAP_LAYOUT_LOAD_NO_DESCRIPTOR;
+    *width = layout->width + MAP_OFFSET_W;
+    *height = layout->height + MAP_OFFSET_H;
+    if (*width <= 0 || *height <= 0 || (u32)*width > destCapacity / (u32)*height)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+    for (i = 0; i < (s32)destCapacity; i++)
+        dest[i] = MAPGRID_UNDEFINED;
+    for (row = 0; row < layout->height; row++)
+        CpuCopy16(&source[row * layout->width],
+                  &dest[(row + MAP_OFFSET) * *width + MAP_OFFSET],
+                  layout->width * sizeof(u16));
+    *connectionFlags = 0;
+    if (mapHeader->connections != NULL)
+    {
+        for (i = 0; i < mapHeader->connections->count; i++)
+        {
+            const struct MapConnection *connection = &mapHeader->connections->connections[i];
+            enum MapLayoutLoadError error = LegacyRawFillConnection(dest, *width, *height,
+                                                                     mapHeader, connection);
+            if (error != MAP_LAYOUT_LOAD_OK)
+                return error;
+            switch (connection->direction)
+            {
+            case CONNECTION_SOUTH: *connectionFlags |= 1; break;
+            case CONNECTION_NORTH: *connectionFlags |= 2; break;
+            case CONNECTION_WEST:  *connectionFlags |= 4; break;
+            case CONNECTION_EAST:  *connectionFlags |= 8; break;
+            }
+        }
+    }
+    return MAP_LAYOUT_LOAD_OK;
+}
+#endif
+
+void Test_ResetMapConnectionFlags(void)
+{
+    sMapConnectionFlags = sDummyConnectionFlags;
+}
+
+void Test_SetMapConnectionHeaderOverride(const struct MapHeader *mapHeader)
+{
+    sTestMapConnectionHeaderOverride = mapHeader;
+}
+
+u8 Test_GetMapConnectionFlags(void)
+{
+    return sMapConnectionFlags.south
+         | sMapConnectionFlags.north << 1
+         | sMapConnectionFlags.west << 2
+         | sMapConnectionFlags.east << 3;
+}
+#endif
+
+static enum MapLayoutLoadError InitBackupMapLayoutData(const struct MapLayout *mapLayout, struct MapLayoutLoadContext *context)
 {
     u16 *dest;
-    int y;
     dest = gBackupMapLayout.map;
     dest += gBackupMapLayout.width * 7 + MAP_OFFSET;
-    for (y = 0; y < height; y++)
-    {
-        CpuCopy16(map, dest, width * 2);
-        dest += width + MAP_OFFSET_W;
-        map += width;
-    }
+    return MapLayoutCopyFullWithContext(context, mapLayout, dest,
+                                        MAX_MAP_DATA_SIZE - (dest - sBackupMapData),
+                                        gBackupMapLayout.width);
 }
 
-static void InitBackupMapLayoutConnections(struct MapHeader *mapHeader)
+static enum MapLayoutLoadError InitBackupMapLayoutConnections(struct MapHeader *mapHeader, struct MapLayoutLoadContext *context)
 {
     int count;
     const struct MapConnection *connection;
     int i;
+    enum MapLayoutLoadError error = MAP_LAYOUT_LOAD_OK;
 
     if (mapHeader->connections)
     {
@@ -267,198 +479,185 @@ static void InitBackupMapLayoutConnections(struct MapHeader *mapHeader)
             switch (connection->direction)
             {
             case CONNECTION_SOUTH:
-                FillSouthConnection(mapHeader, cMap, offset);
+                error = FillSouthConnection(mapHeader, cMap, offset, context);
+                if (error != MAP_LAYOUT_LOAD_OK)
+                    return error;
                 sMapConnectionFlags.south = TRUE;
                 break;
             case CONNECTION_NORTH:
-                FillNorthConnection(mapHeader, cMap, offset);
+                error = FillNorthConnection(mapHeader, cMap, offset, context);
+                if (error != MAP_LAYOUT_LOAD_OK)
+                    return error;
                 sMapConnectionFlags.north = TRUE;
                 break;
             case CONNECTION_WEST:
-                FillWestConnection(mapHeader, cMap, offset);
+                error = FillWestConnection(mapHeader, cMap, offset, context);
+                if (error != MAP_LAYOUT_LOAD_OK)
+                    return error;
                 sMapConnectionFlags.west = TRUE;
                 break;
             case CONNECTION_EAST:
-                FillEastConnection(mapHeader, cMap, offset);
+                error = FillEastConnection(mapHeader, cMap, offset, context);
+                if (error != MAP_LAYOUT_LOAD_OK)
+                    return error;
                 sMapConnectionFlags.east = TRUE;
                 break;
             }
         }
     }
+    return error;
 }
 
-static void FillConnection(int x, int y, struct MapHeader const *connectedMapHeader, int x2, int y2, int width, int height)
+static enum MapLayoutLoadError FillConnection(int x, int y, struct MapHeader const *connectedMapHeader, int x2, int y2, int width, int height, struct MapLayoutLoadContext *context)
 {
-    int i;
-    const u16 *src;
     u16 *dest;
-    int mapWidth;
 
-    mapWidth = connectedMapHeader->mapLayout->width;
-    src = &connectedMapHeader->mapLayout->map[mapWidth * y2 + x2];
+    if (x < 0 || y < 0 || width <= 0 || height <= 0
+     || x >= gBackupMapLayout.width || y >= gBackupMapLayout.height
+     || width > gBackupMapLayout.width - x || height > gBackupMapLayout.height - y)
+        return MAP_LAYOUT_LOAD_BAD_BOUNDS;
     dest = &gBackupMapLayout.map[gBackupMapLayout.width * y + x];
-
-    for (i = 0; i < height; i++)
-    {
-        CpuCopy16(src, dest, width * 2);
-        dest += gBackupMapLayout.width;
-        src += mapWidth;
-    }
+    return MapLayoutCopyRectWithContext(context, connectedMapHeader->mapLayout,
+                                        x2, y2, width, height, dest,
+                                        MAX_MAP_DATA_SIZE - (dest - sBackupMapData),
+                                        gBackupMapLayout.width);
 }
 
-static void FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset)
+static enum MapLayoutLoadError FillSouthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context)
 {
-    int x, y;
-    int x2;
-    int width;
-    int cWidth;
+    s64 x;
+    s64 x2;
+    s64 width;
+    s64 cWidth;
 
     if (connectedMapHeader)
     {
         cWidth = connectedMapHeader->mapLayout->width;
-        x = offset + MAP_OFFSET;
-        y = mapHeader->mapLayout->height + MAP_OFFSET;
+        x = (s64)offset + MAP_OFFSET;
+        x2 = 0;
+        width = cWidth;
         if (x < 0)
         {
             x2 = -x;
-            x += cWidth;
-            if (x < gBackupMapLayout.width)
-                width = x;
-            else
-                width = gBackupMapLayout.width;
+            width -= x2;
             x = 0;
         }
-        else
-        {
-            x2 = 0;
-            if (x + cWidth < gBackupMapLayout.width)
-                width = cWidth;
-            else
-                width = gBackupMapLayout.width - x;
-        }
+        if (x >= gBackupMapLayout.width || x2 >= cWidth || width <= 0)
+            return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        if (width > gBackupMapLayout.width - x)
+            width = gBackupMapLayout.width - x;
 
-        FillConnection(
-            x, y,
+        return FillConnection(
+            x, mapHeader->mapLayout->height + MAP_OFFSET,
             connectedMapHeader,
             x2, /*y2*/ 0,
-            width, /*height*/ MAP_OFFSET);
+            width, /*height*/ MAP_OFFSET, context);
     }
+    return MAP_LAYOUT_LOAD_OK;
 }
 
-static void FillNorthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset)
+static enum MapLayoutLoadError FillNorthConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context)
 {
-    int x;
-    int x2, y2;
-    int width;
-    int cWidth, cHeight;
+    s64 x;
+    s64 x2;
+    s64 width;
+    s64 cWidth;
+    int cHeight;
 
     if (connectedMapHeader)
     {
         cWidth = connectedMapHeader->mapLayout->width;
         cHeight = connectedMapHeader->mapLayout->height;
-        x = offset + MAP_OFFSET;
-        y2 = cHeight - MAP_OFFSET;
+        x = (s64)offset + MAP_OFFSET;
+        x2 = 0;
+        width = cWidth;
         if (x < 0)
         {
             x2 = -x;
-            x += cWidth;
-            if (x < gBackupMapLayout.width)
-                width = x;
-            else
-                width = gBackupMapLayout.width;
+            width -= x2;
             x = 0;
         }
-        else
-        {
-            x2 = 0;
-            if (x + cWidth < gBackupMapLayout.width)
-                width = cWidth;
-            else
-                width = gBackupMapLayout.width - x;
-        }
+        if (x >= gBackupMapLayout.width || x2 >= cWidth || width <= 0)
+            return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        if (width > gBackupMapLayout.width - x)
+            width = gBackupMapLayout.width - x;
 
-        FillConnection(
+        return FillConnection(
             x, /*y*/ 0,
             connectedMapHeader,
-            x2, y2,
-            width, /*height*/ MAP_OFFSET);
+            x2, cHeight - MAP_OFFSET,
+            width, /*height*/ MAP_OFFSET, context);
 
     }
+    return MAP_LAYOUT_LOAD_OK;
 }
 
-static void FillWestConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset)
+static enum MapLayoutLoadError FillWestConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context)
 {
-    int y;
-    int x2, y2;
-    int height;
-    int cWidth, cHeight;
+    s64 y;
+    s64 y2;
+    s64 height;
+    int cWidth;
+    s64 cHeight;
     if (connectedMapHeader)
     {
         cWidth = connectedMapHeader->mapLayout->width;
         cHeight = connectedMapHeader->mapLayout->height;
-        y = offset + MAP_OFFSET;
-        x2 = cWidth - MAP_OFFSET;
+        y = (s64)offset + MAP_OFFSET;
+        y2 = 0;
+        height = cHeight;
         if (y < 0)
         {
             y2 = -y;
-            if (y + cHeight < gBackupMapLayout.height)
-                height = y + cHeight;
-            else
-                height = gBackupMapLayout.height;
+            height -= y2;
             y = 0;
         }
-        else
-        {
-            y2 = 0;
-            if (y + cHeight < gBackupMapLayout.height)
-                height = cHeight;
-            else
-                height = gBackupMapLayout.height - y;
-        }
+        if (y >= gBackupMapLayout.height || y2 >= cHeight || height <= 0)
+            return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        if (height > gBackupMapLayout.height - y)
+            height = gBackupMapLayout.height - y;
 
-        FillConnection(
+        return FillConnection(
             /*x*/ 0, y,
             connectedMapHeader,
-            x2, y2,
-            /*width*/ MAP_OFFSET, height);
+            cWidth - MAP_OFFSET, y2,
+            /*width*/ MAP_OFFSET, height, context);
     }
+    return MAP_LAYOUT_LOAD_OK;
 }
 
-static void FillEastConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset)
+static enum MapLayoutLoadError FillEastConnection(struct MapHeader const *mapHeader, struct MapHeader const *connectedMapHeader, s32 offset, struct MapLayoutLoadContext *context)
 {
-    int x, y;
-    int y2;
-    int height;
-    int cHeight;
+    int x;
+    s64 y;
+    s64 y2;
+    s64 height;
+    s64 cHeight;
     if (connectedMapHeader)
     {
         cHeight = connectedMapHeader->mapLayout->height;
         x = mapHeader->mapLayout->width + MAP_OFFSET;
-        y = offset + MAP_OFFSET;
+        y = (s64)offset + MAP_OFFSET;
+        y2 = 0;
+        height = cHeight;
         if (y < 0)
         {
             y2 = -y;
-            if (y + cHeight < gBackupMapLayout.height)
-                height = y + cHeight;
-            else
-                height = gBackupMapLayout.height;
+            height -= y2;
             y = 0;
         }
-        else
-        {
-            y2 = 0;
-            if (y + cHeight < gBackupMapLayout.height)
-                height = cHeight;
-            else
-                height = gBackupMapLayout.height - y;
-        }
+        if (y >= gBackupMapLayout.height || y2 >= cHeight || height <= 0)
+            return MAP_LAYOUT_LOAD_BAD_BOUNDS;
+        if (height > gBackupMapLayout.height - y)
+            height = gBackupMapLayout.height - y;
 
-        FillConnection(
+        return FillConnection(
             x, y,
             connectedMapHeader,
             /*x2*/ 0, y2,
-            /*width*/ MAP_OFFSET + 1, height);
+            /*width*/ MAP_OFFSET + 1, height, context);
     }
+    return MAP_LAYOUT_LOAD_OK;
 }
 
 u8 MapGridGetElevationAt(int x, int y)
