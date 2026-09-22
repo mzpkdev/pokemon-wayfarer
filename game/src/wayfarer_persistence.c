@@ -411,17 +411,21 @@ enum Region WayfarerGetCurrentMapRegion(void)
 
 void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
 {
-    enum Region region;
+    enum Region explicitRegion;
 
     if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
      || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
         return;
 
-    region = WayfarerGetRegionForMap(mapGroup, mapNum);
-    if (IsWayfarerStoredRegion(region))
-        WayfarerSetSavedCurrentRegion(region);
-    else if (GetWayfarerExplicitMapRegion(mapGroup, mapNum) != REGION_NONE)
-        WayfarerSetSavedCurrentRegion(GetSavedHnsRegionContext());
+    if (IsWayfarerMapHoennSource(mapGroup, mapNum))
+    {
+        WayfarerSetSavedCurrentRegion(REGION_HOENN);
+        return;
+    }
+
+    explicitRegion = GetWayfarerExplicitMapRegion(mapGroup, mapNum);
+    if (explicitRegion == REGION_JOHTO || explicitRegion == REGION_KANTO)
+        WayfarerSetSavedCurrentRegion(explicitRegion);
 }
 
 bool8 WayfarerIsCurrentMapHoennSource(void)

@@ -286,6 +286,19 @@ TEST("Wayfarer HNS side regions retain their explicit runtime identity")
     EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_KANTO);
 }
 
+TEST("Wayfarer inert Sinnoh maps do not update saved region state")
+{
+    WayfarerInitPersistentState();
+    WayfarerSetSavedCurrentRegion(REGION_KANTO);
+    WayfarerSetSavedCurrentRegion(REGION_HOENN);
+
+    WayfarerUpdateHnsRegionContextForMap(MAP_GROUP(MAP_TWINLEAF_TOWN),
+                                        MAP_NUM(MAP_TWINLEAF_TOWN));
+
+    EXPECT_EQ(WayfarerGetSavedCurrentRegion(), REGION_HOENN);
+    EXPECT_EQ(gSaveBlock3Ptr->wayfarerHoenn.hnsRegionContext, REGION_KANTO);
+}
+
 TEST("Wayfarer explicit HNS map transitions update special-map fallback context")
 {
     WayfarerInitPersistentState();
