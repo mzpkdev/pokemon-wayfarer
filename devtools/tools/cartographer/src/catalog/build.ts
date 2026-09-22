@@ -42,6 +42,10 @@ import type {
 
 export const compactJson = (value: unknown): string => `${JSON.stringify(value)}\n`
 
+export const isPlayerFacingCatalogSource = (
+  source: Pick<SourceMap, "game_version">,
+): boolean => source.game_version !== "sinnoh"
+
 const createCatalogMap = (
   root: string,
   output: string,
@@ -154,7 +158,7 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
 
   for (const name of exteriorMaps) {
     const source = mapsByName.get(name)!
-    if (!exteriorMapTypes.has(source.map_type)) {
+    if (!isPlayerFacingCatalogSource(source) || !exteriorMapTypes.has(source.map_type)) {
       continue
     }
     const layout = layouts.get(source.layout)
