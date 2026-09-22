@@ -24,7 +24,8 @@ static-host deployment artifact. `ui/dist` remains a bundle only.
 Cartographer defaults to the Wayfarer build. Choose a build above the regions to
 browse its maps; region counts, search, and warp navigation use that selection.
 Build membership comes from each map's `game_version`, so Wayfarer includes both
-HNS and Emerald maps. The URL preserves the build, selected map, and camera state.
+HNS, Emerald, and developer-visible Sinnoh maps. Sinnoh remains unreachable in
+gameplay. The URL preserves the build, selected map, and camera state.
 Cartographer also provides native and overview image switching and map facts.
 Its generated input is ignored under
 `build/cartographer/map-catalog/`.

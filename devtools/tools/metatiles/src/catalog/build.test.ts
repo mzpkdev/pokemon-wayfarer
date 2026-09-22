@@ -61,13 +61,21 @@ describe("metatile catalog decoding", () => {
     expect(contextCatalog).not.toHaveProperty("$schema")
     expect(contextCatalogFile).toBe(`${JSON.stringify(contextCatalog)}\n`)
 
+    const sinnohMaps: Array<{
+      sourceRegion?: string
+      region?: string
+      layoutId?: string
+    }> = []
     for (const context of catalog.contexts) {
       const generated = JSON.parse(fs.readFileSync(path.join(output, context.path), "utf8"))
-      expect(
-        generated.context.maps.some(
+      sinnohMaps.push(
+        ...generated.context.maps.filter(
           (map: { sourceRegion?: string }) => map.sourceRegion === "sinnoh",
         ),
-      ).toBe(false)
+      )
     }
+    expect(sinnohMaps).toHaveLength(133)
+    expect(sinnohMaps.every((map) => map.region === "sinnoh")).toBe(true)
+    expect(new Set(sinnohMaps.map((map) => map.layoutId))).toHaveProperty("size", 133)
   }, 30_000)
 })
