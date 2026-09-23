@@ -116,5 +116,6 @@
       "quantity": 1,
       "underfoot": false
     }
-  ]
+  ],
+  "wayfarer_include": true
 }

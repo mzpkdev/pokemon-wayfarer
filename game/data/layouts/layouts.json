@@ -6182,7 +6182,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_ROCKET_HIDEOUT_B2F",
@@ -6196,7 +6197,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_ROCKET_HIDEOUT_B3F",
@@ -6210,7 +6212,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_ROCKET_HIDEOUT_B4F",
@@ -6224,7 +6227,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_1F",
@@ -7526,7 +7530,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SAFFRON_CITY_COPYCATS_HOUSE_1F",

@@ -52,8 +52,16 @@ TEST("Wayfarer resolves every projected ordinary Sevii Trainer graphics family")
 TEST("Wayfarer does not expose unrelated FRLG object graphics")
 {
     EXPECT(GetObjectEventGraphicsInfo(OBJ_EVENT_GFX_RED_NORMAL) == NULL);
-    EXPECT(GetObjectEventGraphicsInfo(OBJ_EVENT_GFX_GIOVANNI) == NULL);
     EXPECT(GetObjectEventGraphicsInfo(OBJ_EVENT_GFX_SS_ANNE) == NULL);
+}
+
+TEST("Wayfarer exposes the selected Hideout Giovanni object graphics")
+{
+    const struct ObjectEventGraphicsInfo *info = GetObjectEventGraphicsInfo(OBJ_EVENT_GFX_GIOVANNI);
+
+    EXPECT(info != NULL);
+    EXPECT(info->images != NULL);
+    EXPECT(info->images[0].data != NULL);
 }
 
 #endif // IS_WAYFARER

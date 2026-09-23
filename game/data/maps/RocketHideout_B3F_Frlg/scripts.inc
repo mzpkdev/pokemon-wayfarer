@@ -1,3 +1,4 @@
+#if !IS_WAYFARER
 RocketHideout_B3F_Frlg_MapScripts::
 	.byte 0
 
@@ -37,3 +38,4 @@ RocketHideout_B3F_Text_Grunt2PostBattle::
 	.string "But you can't run the elevator\n"
 	.string "without the LIFT KEY.$"
 
+#endif // !IS_WAYFARER

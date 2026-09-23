@@ -2499,7 +2499,9 @@
       "name": "ROCKET HIDEOUT",
       "width": 1,
       "x": 15,
-      "y": 2
+      "y": 2,
+      "wayfarer_x": 11,
+      "wayfarer_y": 6
     },
     {
       "height": 1,

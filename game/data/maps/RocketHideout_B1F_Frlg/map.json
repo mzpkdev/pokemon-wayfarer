@@ -122,7 +122,8 @@
       "y": 2,
       "elevation": 3,
       "dest_map": "MAP_CELADON_CITY_GAME_CORNER",
-      "dest_warp_id": "3"
+      "dest_warp_id": "3",
+      "wayfarer_dest_map": "MAP_DYNAMIC"
     },
     {
       "x": 17,
@@ -172,5 +173,6 @@
       "quantity": 1,
       "underfoot": false
     }
-  ]
+  ],
+  "wayfarer_include": true
 }

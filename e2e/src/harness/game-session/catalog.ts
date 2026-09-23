@@ -10,6 +10,12 @@ export const checkpoints = {
 } as const
 
 export const maps = {
+  "celadon-game-corner": { mapGroup: 17, mapNum: 9 },
+  "celadon-hideout-b1f": { mapGroup: 66, mapNum: 42 },
+  "celadon-hideout-b2f": { mapGroup: 66, mapNum: 43 },
+  "celadon-hideout-b3f": { mapGroup: 66, mapNum: 44 },
+  "celadon-hideout-b4f": { mapGroup: 66, mapNum: 45 },
+  "celadon-hideout-elevator": { mapGroup: 66, mapNum: 46 },
   // The selected Anne interiors retain their FRLG dungeon slots. The exterior
   // at slot 4 is deliberately absent from the Wayfarer map closure.
   "ss-anne-1f-corridor": { mapGroup: 66, mapNum: 5 },
@@ -453,6 +459,8 @@ export const seviiImportedMaps = [
 ] as const
 
 export const storyVars = {
+  celadonHideoutElevatorFloor: 0x40d9,
+  farawayIslandStepCounter: 0x403a,
   newBarkTownLabState: 0x4074,
   newBarkTownState: 0x4075,
   azaleaTownState: 0x4053,
@@ -479,6 +487,43 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  celadonHideoutItemEscapeRope: 0x4b6,
+  celadonHideoutItemHyperPotion: 0x4b7,
+  celadonHideoutItemXSpeed: 0x4b8,
+  celadonHideoutItemMoonStone: 0x4b9,
+  celadonHideoutItemTm12: 0x4ba,
+  celadonHideoutItemSuperPotion: 0x4bb,
+  celadonHideoutItemRareCandy: 0x4bc,
+  celadonHideoutItemTm21: 0x4bd,
+  celadonHideoutItemBlackGlasses: 0x4be,
+  celadonHideoutItemTm49: 0x4bf,
+  celadonHideoutItemMaxEther: 0x4c0,
+  celadonHideoutItemCalcium: 0x4c1,
+  celadonHideoutKeyHidden: 0x4c2,
+  celadonHideoutScopeHidden: 0x4c3,
+  celadonHideoutHiddenPpUp: 0x4c4,
+  celadonHideoutHiddenNugget: 0x4c5,
+  celadonHideoutHiddenNestBall: 0x4c6,
+  celadonHideoutHiddenNetBall: 0x4c7,
+  celadonHideoutOpened: 0x4c8,
+  celadonHideoutLiftEnabled: 0x4c9,
+  celadonHideoutGiovanniDefeated: 0x4ca,
+  celadonHideoutVisited: 0x4cb,
+  celadonHideoutKeyReceived: 0x4cc,
+  celadonHideoutScopeReceived: 0x4cd,
+  celadonHideoutEntranceGruntDefeated: 0x4ce,
+  celadonHideoutGrunt8Defeated: 0x4cf,
+  celadonHideoutGrunt9Defeated: 0x4d0,
+  celadonHideoutGrunt10Defeated: 0x4d1,
+  celadonHideoutGrunt11Defeated: 0x4d2,
+  celadonHideoutBarrierGruntDefeated: 0x4d3,
+  celadonHideoutGrunt13Defeated: 0x4d4,
+  celadonHideoutGrunt14Defeated: 0x4d5,
+  celadonHideoutGrunt15Defeated: 0x4d6,
+  celadonHideoutLeftGuardDefeated: 0x4d7,
+  celadonHideoutRightGuardDefeated: 0x4d8,
+  celadonHideoutKeyGruntDefeated: 0x4d9,
+  celadonHideoutGiovanniTrainerDefeated: 0x4da,
   ssAnneItemTm31: 0x496,
   ssAnneItemStardust: 0x497,
   ssAnneItemXAttack: 0x498,
@@ -659,6 +704,13 @@ export const hms = {
 } as const
 
 export const items = {
+  escapeRope: 120,
+  hyperPotion: 30,
+  moonStone: 217,
+  rareCandy: 102,
+  coinCase: 718,
+  liftKey: 751,
+  silphScope: 752,
   pokeBall: 1,
   ultraBall: 3,
   timerBall: 11,

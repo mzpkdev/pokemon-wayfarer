@@ -250,6 +250,22 @@ const set<string> wayfarer_anne_layout_ids = {
     "LAYOUT_SSANNE_KITCHEN", "LAYOUT_SSANNE_ROOM1", "LAYOUT_SSANNE_ROOM2",
 };
 
+const set<string> wayfarer_celadon_hideout_map_names = {
+    "RocketHideout_B1F_Frlg", "RocketHideout_B2F_Frlg",
+    "RocketHideout_B3F_Frlg", "RocketHideout_B4F_Frlg",
+    "RocketHideout_Elevator_Frlg",
+};
+
+const set<string> wayfarer_celadon_hideout_layout_ids = {
+    "LAYOUT_ROCKET_HIDEOUT_B1F", "LAYOUT_ROCKET_HIDEOUT_B2F",
+    "LAYOUT_ROCKET_HIDEOUT_B3F", "LAYOUT_ROCKET_HIDEOUT_B4F",
+    "LAYOUT_ROCKET_HIDEOUT_ELEVATOR",
+};
+
+bool event_matches_version(const Json &event) {
+    return !event["wayfarer_only"].bool_value() || version == "wayfarer";
+}
+
 bool data_matches_version(const Json &data) {
     if (get_source_version(data) == "sinnoh") {
         // Sinnoh is not an Emerald binary-layout format. Its maps deliberately
@@ -339,7 +355,9 @@ bool data_matches_version(const Json &data) {
         if (wayfarer_coast_map_names.count(json_to_string(data, "name", true))
          || wayfarer_coast_layout_ids.count(json_to_string(data, "id", true))
          || wayfarer_anne_map_names.count(json_to_string(data, "name", true))
-         || wayfarer_anne_layout_ids.count(json_to_string(data, "id", true)))
+         || wayfarer_anne_layout_ids.count(json_to_string(data, "id", true))
+         || wayfarer_celadon_hideout_map_names.count(json_to_string(data, "name", true))
+         || wayfarer_celadon_hideout_layout_ids.count(json_to_string(data, "id", true)))
             return true;
         if (!wayfarer_sevii_release_link_enabled)
             return false;
@@ -1161,6 +1179,13 @@ Json resolve_wayfarer_coast_warp(const Json &map_data, const Json &warp, size_t 
     if (version != "wayfarer")
         return warp;
 
+    const string wayfarer_destination = json_to_string(warp, "wayfarer_dest_map", true);
+    if (!wayfarer_destination.empty()) {
+        Json::object resolved = warp.object_items();
+        resolved["dest_map"] = wayfarer_destination;
+        return resolved;
+    }
+
     string map_name = json_to_string(map_data, "name");
     if (map_name == "SSAnne_1F_Corridor_Frlg" && (index == 2 || index == 3)) {
         Json::object resolved = warp.object_items();
@@ -1219,13 +1244,17 @@ string generate_map_events_text(Json map_data) {
     if (map_data["object_events"].array_items().size() > 0) {
         objects_label = mapName + "_ObjectEvents";
         text << objects_label << ":\n";
+        unsigned int object_count = 0;
         for (unsigned int i = 0; i < map_data["object_events"].array_items().size(); i++) {
             auto obj_event = map_data["object_events"].array_items()[i];
+            if (!event_matches_version(obj_event))
+                continue;
+            object_count++;
             string type = json_to_string(obj_event, "type", true);
 
             // If no type field is present, assume it's a regular object event.
             if (type == "" || type == "object") {
-                text << "\tobject_event " << i + 1 << ", "
+                text << "\tobject_event " << object_count << ", "
                      << json_to_string(obj_event, "graphics_id") << ", "
                      << json_to_string(obj_event, "x") << ", "
                      << json_to_string(obj_event, "y") << ", "
@@ -1238,7 +1267,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(obj_event, "script") << ", "
                      << json_to_string(obj_event, "flag") << "\n";
             } else if (type == "clone") {
-                text << "\tclone_event " << i + 1 << ", "
+                text << "\tclone_event " << object_count << ", "
                      << json_to_string(obj_event, "graphics_id") << ", "
                      << json_to_string(obj_event, "x") << ", "
                      << json_to_string(obj_event, "y") << ", "
@@ -1259,6 +1288,8 @@ string generate_map_events_text(Json map_data) {
         size_t warp_index = 0;
         for (auto &source_warp : map_data["warp_events"].array_items()) {
             Json warp_event = resolve_wayfarer_coast_warp(map_data, source_warp, warp_index++);
+            if (!event_matches_version(warp_event))
+                continue;
             text << "\twarp_def "
                  << json_to_string(warp_event, "x") << ", "
                  << json_to_string(warp_event, "y") << ", "
@@ -1275,6 +1306,8 @@ string generate_map_events_text(Json map_data) {
         coords_label = mapName + "_MapCoordEvents";
         text << coords_label << ":\n";
         for (auto &coord_event : map_data["coord_events"].array_items()) {
+            if (!event_matches_version(coord_event))
+                continue;
             string type = json_to_string(coord_event, "type");
             if (type == "trigger") {
                 text << "\tcoord_event "
@@ -1304,6 +1337,8 @@ string generate_map_events_text(Json map_data) {
         bgs_label = mapName + "_MapBGEvents";
         text << bgs_label << ":\n";
         for (auto &bg_event : map_data["bg_events"].array_items()) {
+            if (!event_matches_version(bg_event))
+                continue;
             string type = json_to_string(bg_event, "type");
             if (type == "sign") {
                 text << "\tbg_sign_event "
@@ -1415,17 +1450,25 @@ void process_event_constants(const vector<string> &map_filepaths, string output_
         // Get IDs from the object/clone events.
         ostringstream map_ids_text;
         auto obj_events = map_data["object_events"].array_items();
+        unsigned int generated_object_index = 0;
         for (unsigned int i = 0; i < obj_events.size(); i++) {
             auto obj_event = obj_events[i];
+            if (!event_matches_version(obj_event))
+                continue;
+            generated_object_index++;
             if (obj_event.object_items().find("local_id") != obj_event.object_items().end())
-                map_ids_text << "#define " << json_to_string(obj_event, "local_id") << " " << i + 1 << "\n";
+                map_ids_text << "#define " << json_to_string(obj_event, "local_id") << " " << generated_object_index << "\n";
         }
         // Get IDs from the warp events.
         auto warp_events = map_data["warp_events"].array_items();
+        unsigned int generated_warp_index = 0;
         for (unsigned int i = 0; i < warp_events.size(); i++) {
             auto warp_event = warp_events[i];
+            if (!event_matches_version(warp_event))
+                continue;
             if (warp_event.object_items().find("warp_id") != warp_event.object_items().end())
-                map_ids_text << "#define " << json_to_string(warp_event, "warp_id") << " " << i << "\n";
+                map_ids_text << "#define " << json_to_string(warp_event, "warp_id") << " " << generated_warp_index << "\n";
+            generated_warp_index++;
         }
         // Only output if we found any IDs
         string temp = map_ids_text.str();
