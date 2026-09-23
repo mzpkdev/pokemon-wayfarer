@@ -52,7 +52,7 @@ describe("Wayfarer map regions", () => {
 })
 
 describe("Cartographer map build membership", () => {
-  it("uses the map source version selected by each ROM build", () => {
+  it("includes Sinnoh only in the Wayfarer developer catalog", () => {
     expect(buildsForSourceVersion(undefined)).toEqual(["emerald", "wayfarer"])
     expect(buildsForSourceVersion("frlg")).toEqual(["firered", "leafgreen"])
     expect(buildsForSourceVersion("hns")).toEqual(["hns", "wayfarer"])

@@ -35,6 +35,10 @@ add:
 identity. Player-facing runtime state is deferred until a separate product proposal
 defines arrival, return, healing/blackout behavior, and progression.
 
+Sinnoh remains unavailable in player-facing gameplay. The Wayfarer Devtools
+Cartographer and Metatiles browsers may inspect its checked-in maps, layouts, and
+tilesets without adding runtime reachability or saved region state.
+
 ## Authority and maintenance
 
 One compact map manifest fixes donor identity, catalog counts/order, stable target IDs,

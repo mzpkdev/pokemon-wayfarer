@@ -352,6 +352,30 @@ test("shows the cartographer", async ({ page }) => {
   ).toHaveAttribute("aria-label", "gTileset_BattleDome:0x140")
 })
 
+test("exposes Sinnoh through Wayfarer developer map tools", async ({ page }) => {
+  await page.goto("/?build=wayfarer&region=sinnoh")
+  const build = page.getByRole("combobox", { name: "Game build" })
+  const regions = page.getByRole("navigation", { name: "Regions" })
+  const mapSearch = page.getByRole("combobox", { name: "Name or map section" })
+
+  await expect(build).toHaveValue("wayfarer")
+  await expect(page.getByRole("heading", { name: "Wayfarer · Sinnoh", exact: true })).toBeVisible()
+  await expect(regions.getByRole("button", { name: "Sinnoh 59 maps" })).toBeVisible()
+
+  await mapSearch.fill("LakeValor")
+  await page.getByRole("option", { name: /LakeValor/ }).click()
+  await expect(page.getByRole("heading", { name: "Wayfarer · Sinnoh", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "LakeValor", exact: true })).toBeVisible()
+  const sinnohInspector = page.getByRole("complementary").last()
+  await expect(sinnohInspector.getByText("MAP_LAKE_VALOR", { exact: true })).toBeVisible()
+  await expect(sinnohInspector.getByText("MAPSEC_SINNOH_LAKE_VALOR", { exact: true })).toBeVisible()
+  await sinnohInspector.locator('details[aria-label="Exits"] summary').click()
+  await sinnohInspector.getByRole("button", { name: /Warp 0.*ValorLakefront/ }).click()
+  await sinnohInspector.getByRole("button", { name: "Focus ValorLakefront" }).click()
+  await expect(page.getByRole("heading", { name: "ValorLakefront", exact: true })).toBeVisible()
+  await expect(page).toHaveURL(/build=wayfarer.*region=sinnoh.*map=ValorLakefront/)
+})
+
 test("browses a region within the selected game build", async ({ page }) => {
   await page.goto("/?region=hoenn")
 

@@ -6,7 +6,11 @@ const advance = async (game: GameSession, predicate: (state: GameState) => boole
   for (let frame = 0; frame < 9_600; frame += 15) {
     const state = await game.state.read()
     if (predicate(state)) return state
-    if (state.battle.ui === "text" || state.dialogueOpen || state.controlsLocked)
+    // Field lock and dialogue telemetry can remain set during battle menu transitions.
+    if (
+      state.battle.ui === "text" ||
+      (!state.battle.active && (state.dialogueOpen || state.controlsLocked))
+    )
       await game.controls.press("a")
     else await game.wait.frames(15)
   }
@@ -74,5 +78,4 @@ describe.sequential("Explicit trainer-only scenario flag", () => {
       await game.close()
     }
   })
-
 })

@@ -4,8 +4,10 @@ import * as path from "node:path"
 import { describe, expect, it } from "vitest"
 
 import {
+  loadRenderAssets,
   metatileAttributeSize,
   normalizeLayoutFormat,
+  readPalette,
   readLayoutFormatCounts,
   readMetatileAttribute,
   resolveTilesetAssets,
@@ -46,6 +48,33 @@ describe("Wayfarer layout formats", () => {
     const mtEmber = resolveTilesetAssets(sourceRoot, "gTileset_MtEmber_Hns")
     expect(mtEmber.tiles).toBe(
       path.join(sourceRoot, "data/tilesets/secondary/mt_ember_hns/tiles.png"),
+    )
+  })
+
+  it("resolves nested Sinnoh declarations and their reused Emerald assets", () => {
+    const general = resolveTilesetAssets(sourceRoot, "gTileset_Sinnoh_General")
+    expect(general.tiles).toBe(
+      path.join(sourceRoot, "data/tilesets/sinnoh/primary/general/tiles.png"),
+    )
+
+    const building = resolveTilesetAssets(sourceRoot, "gTileset_Sinnoh_Building")
+    expect(building.tiles).toBe(path.join(sourceRoot, "data/tilesets/primary/building/tiles.png"))
+    expect(building.metatiles).toBe(
+      path.join(sourceRoot, "data/tilesets/primary/building/metatiles.bin"),
+    )
+
+    const assets = loadRenderAssets(
+      sourceRoot,
+      {
+        primary_tileset: "gTileset_Sinnoh_Building",
+        secondary_tileset: "gTileset_Sinnoh_Shop",
+      },
+      512,
+      6,
+      16,
+    )
+    expect(assets.palettes[4]).toEqual(
+      readPalette(path.join(sourceRoot, "data/tilesets/sinnoh/primary/building/palettes/04.pal")),
     )
   })
 })

@@ -38,9 +38,23 @@ const splitTiles = (image: IndexedPng): Uint8Array[] => {
   return tiles
 }
 
+const readSourceWithLocalIncludes = (filePath: string, visited = new Set<string>()): string => {
+  const resolved = path.resolve(filePath)
+  if (visited.has(resolved)) return ""
+  visited.add(resolved)
+  return fs
+    .readFileSync(resolved, "utf8")
+    .replace(/^\s*#include\s+"([^"]+)"\s*$/gm, (include, relativePath: string) => {
+      const includedPath = path.resolve(path.dirname(resolved), relativePath)
+      return fs.existsSync(includedPath)
+        ? readSourceWithLocalIncludes(includedPath, visited)
+        : include
+    })
+}
+
 const tilesetGraphics = (root: string): string => {
   return [
-    fs.readFileSync(path.join(root, "src/data/tilesets/graphics.h"), "utf8"),
+    readSourceWithLocalIncludes(path.join(root, "src/data/tilesets/graphics.h")),
     fs.existsSync(path.join(root, "src/graphics.c"))
       ? fs.readFileSync(path.join(root, "src/graphics.c"), "utf8")
       : "",
@@ -68,9 +82,9 @@ const resolveTilesetDirectory = (root: string, symbol: string): string => {
 }
 
 export const resolveTilesetAssets = (root: string, symbol: string): TilesetAssets => {
-  const headers = fs.readFileSync(path.join(root, "src/data/tilesets/headers.h"), "utf8")
+  const headers = readSourceWithLocalIncludes(path.join(root, "src/data/tilesets/headers.h"))
   const graphics = tilesetGraphics(root)
-  const metatiles = fs.readFileSync(path.join(root, "src/data/tilesets/metatiles.h"), "utf8")
+  const metatiles = readSourceWithLocalIncludes(path.join(root, "src/data/tilesets/metatiles.h"))
   const header = new RegExp(`const struct Tileset ${symbol}\\s*=\\s*\\{([\\s\\S]*?)\\};`).exec(
     headers,
   )
@@ -119,6 +133,25 @@ export const resolveTilesetAssets = (root: string, symbol: string): TilesetAsset
   }
 }
 
+const resolvePalettePaths = (root: string, symbol: string): Map<number, string> => {
+  const headers = readSourceWithLocalIncludes(path.join(root, "src/data/tilesets/headers.h"))
+  const graphics = tilesetGraphics(root)
+  const header = new RegExp(`const struct Tileset ${symbol}\\s*=\\s*\\{([\\s\\S]*?)\\};`).exec(
+    headers,
+  )
+  const resource = header?.[1]?.match(/\.palettes\s*=\s*(\w+)/)?.[1]
+  if (!resource) return new Map()
+  const declaration = new RegExp(`${resource}\\b[^=]*=\\s*\\{([\\s\\S]*?)\\};`).exec(graphics)?.[1]
+  if (!declaration) return new Map()
+  return new Map(
+    [...declaration.matchAll(/"([^"]+\/palettes\/(\d+)\.(?:pal|gbapal))"/g)].map((match) => {
+      const declared = path.join(root, match[1]!)
+      const sourcePalette = declared.replace(/\.gbapal$/, ".pal")
+      return [Number(match[2]), fs.existsSync(sourcePalette) ? sourcePalette : declared]
+    }),
+  )
+}
+
 export const normalizeLayoutFormat = (
   layout: Pick<Layout, "format" | "game_version" | "layout_version">,
 ): LayoutFormat => {
@@ -158,7 +191,15 @@ export const readMetatileAttribute = (
   return attributeSize === 4 ? attributes.readUInt32LE(offset) : attributes.readUInt16LE(offset)
 }
 
-const choosePalettePath = (primary: string, secondary: string, index: number): string => {
+const choosePalettePath = (
+  primary: string,
+  secondary: string,
+  primaryDeclared: ReadonlyMap<number, string>,
+  secondaryDeclared: ReadonlyMap<number, string>,
+  index: number,
+): string => {
+  const declared = primaryDeclared.get(index) ?? secondaryDeclared.get(index)
+  if (declared) return declared
   const name = `${String(index).padStart(2, "0")}.pal`
   const preferred = path.join(primary, name)
   return fs.existsSync(preferred) ? preferred : path.join(secondary, name)
@@ -185,6 +226,8 @@ export const loadRenderAssets = (
   }
   const primary = resolveTilesetAssets(root, layout.primary_tileset)
   const secondary = resolveTilesetAssets(root, layout.secondary_tileset)
+  const primaryPalettes = resolvePalettePaths(root, layout.primary_tileset)
+  const secondaryPalettes = resolvePalettePaths(root, layout.secondary_tileset)
   const assets = {
     primaryTiles: splitTiles(readIndexedPng(primary.tiles)),
     secondaryTiles: splitTiles(readIndexedPng(secondary.tiles)),
@@ -197,6 +240,8 @@ export const loadRenderAssets = (
         choosePalettePath(
           index < primaryPaletteCount ? primary.palettes : secondary.palettes,
           index < primaryPaletteCount ? secondary.palettes : primary.palettes,
+          index < primaryPaletteCount ? primaryPalettes : secondaryPalettes,
+          index < primaryPaletteCount ? secondaryPalettes : primaryPalettes,
           index,
         ),
       ),
