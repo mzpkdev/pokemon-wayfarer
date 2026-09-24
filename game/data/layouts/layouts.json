@@ -6252,7 +6252,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_3F",
@@ -6266,7 +6267,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_4F",
@@ -6280,7 +6282,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_5F",
@@ -6294,7 +6297,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_6F",
@@ -6308,7 +6312,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_7F",
@@ -6322,7 +6327,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_8F",
@@ -6336,7 +6342,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_9F",
@@ -6350,7 +6357,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_10F",
@@ -6364,7 +6372,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_SILPH_CO_11F",
@@ -6378,7 +6387,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_POKEMON_MANSION_1F",
@@ -7582,7 +7592,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_ONE_ISLAND",

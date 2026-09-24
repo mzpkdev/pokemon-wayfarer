@@ -117,9 +117,15 @@ SaffronCity_SilphCo_Text_Steven4:
 	.string "for it will make me very happy.$"
 
 SaffronCity_SilphCo_EventScript_Receptionist::
+#if IS_WAYFARER
+	goto WayfarerSilph_EventScript_Receptionist
+#endif
 	msgbox SilphCo_Text_Receptionist, MSGBOX_NPC
 	end
 SaffronCity_SilphCo_EventScript_Officer::
+#if IS_WAYFARER
+	goto WayfarerSilph_EventScript_Officer
+#endif
 	goto_if_set FLAG_GOT_UP_GRADE, SaffronCity_SilphCo_EventScript_OfficerAfter
 	msgbox SilphCo_Text_Officer, MSGBOX_NPC
 	giveitem ITEM_UP_GRADE
@@ -133,6 +139,9 @@ SaffronCity_SilphCo_EventScript_Sign1::
 	end
 
 SaffronCity_SilphCo_EventScript_Sign2::
+#if IS_WAYFARER
+	goto WayfarerSilph_EventScript_ElevatorSign
+#endif
 	msgbox SilphCo_Text_Sign2, MSGBOX_SIGN
 	end
 
