@@ -19,7 +19,7 @@
   "object_events": [
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_MR_FUJI",
+      "graphics_id": "OBJ_EVENT_GFX_SAGE_ELDER_HNS",
       "x": 11,
       "y": 4,
       "elevation": 3,
@@ -29,7 +29,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_7F_EventScript_MrFuji",
-      "flag": "FLAG_HIDE_TOWER_FUJI"
+      "flag": "FLAG_WAYFARER_TOWER_FUJI_RESCUED"
     },
     {
       "local_id": "LOCALID_POKEMON_TOWER_GRUNT1",
@@ -44,7 +44,7 @@
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "4",
       "script": "PokemonTower_7F_EventScript_Grunt1",
-      "flag": "FLAG_HIDE_TOWER_ROCKET_1"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_ROCKET_1"
     },
     {
       "local_id": "LOCALID_POKEMON_TOWER_GRUNT2",
@@ -59,7 +59,7 @@
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "4",
       "script": "PokemonTower_7F_EventScript_Grunt2",
-      "flag": "FLAG_HIDE_TOWER_ROCKET_2"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_ROCKET_2"
     },
     {
       "local_id": "LOCALID_POKEMON_TOWER_GRUNT3",
@@ -74,7 +74,7 @@
       "trainer_type": "TRAINER_TYPE_NORMAL",
       "trainer_sight_or_berry_tree_id": "4",
       "script": "PokemonTower_7F_EventScript_Grunt3",
-      "flag": "FLAG_HIDE_TOWER_ROCKET_3"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_ROCKET_3"
     }
   ],
   "warp_events": [
@@ -86,7 +86,17 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 11,
+      "y": 16,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_7F_EventScript_Stair0"
+    }
+  ],
   "bg_events": [
     {
       "type": "hidden_item",
@@ -94,7 +104,7 @@
       "y": 4,
       "elevation": 3,
       "item": "ITEM_SOOTHE_BELL",
-      "flag": "FLAG_HIDDEN_ITEM_POKEMON_TOWER_7F_SOOTHE_BELL",
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_7F_SOOTHE_BELL",
       "quantity": 1,
       "underfoot": true
     }

@@ -720,4 +720,13 @@ Route21_North_Text_IanRematchIntro::
 	.string "IAN: My sis is still a slob.\n"
 	.string "Help me get her into shape!$"
 
+
+@ Kanto memorial floors use the Wayfarer event script set alongside the coast maps.
+	.include "data/maps/PokemonTower_2F_Frlg/scripts.inc"
+	.include "data/maps/PokemonTower_3F_Frlg/scripts.inc"
+	.include "data/maps/PokemonTower_4F_Frlg/scripts.inc"
+	.include "data/maps/PokemonTower_5F_Frlg/scripts.inc"
+	.include "data/maps/PokemonTower_6F_Frlg/scripts.inc"
+	.include "data/maps/PokemonTower_7F_Frlg/scripts.inc"
+
 #endif

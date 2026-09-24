@@ -2,7 +2,26 @@ LavenderTown_RadioStation_hns_MapScripts::
 	.byte 0
 
 LavenderTown_RadioStation_EventScript_Officer::
-	msgbox LavenderTown_RadioStation_Text_Officer, MSGBOX_NPC
+	lock
+	faceplayer
+	goto_if_set FLAG_WAYFARER_TOWER_FUJI_RESCUED, LavenderTown_RadioStation_EventScript_OfficerAfterRescue
+	msgbox LavenderTown_RadioStation_Text_Officer, MSGBOX_DEFAULT
+	goto LavenderTown_RadioStation_EventScript_OfficerOfferEntry
+
+LavenderTown_RadioStation_EventScript_OfficerAfterRescue::
+	msgbox LavenderTown_RadioStation_Text_OfficerAfterRescue, MSGBOX_DEFAULT
+
+LavenderTown_RadioStation_EventScript_OfficerOfferEntry::
+	msgbox LavenderTown_RadioStation_Text_OfficerEnter, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, LavenderTown_RadioStation_EventScript_OfficerDecline
+	closemessage
+	warp MAP_POKEMON_TOWER_2F, 18, 11
+	waitstate
+	release
+	end
+
+LavenderTown_RadioStation_EventScript_OfficerDecline::
+	release
 	end
 
 LavenderTown_RadioStation_EventScript_Receptionist::
@@ -57,18 +76,29 @@ LavenderTown_RadioStation_Text_Receptionist:
 	.string "anywhere on this floor.$"
 
 LavenderTown_RadioStation_Text_Officer:
-	.string "Sorry, but you can only tour the\n"
-	.string "ground floor.\p"
-	.string "Ever since JOHTO's RADIO TOWER\n"
-	.string "was taken over by a criminal gang,\l"
-	.string "we have had to step up our\l"
-	.string "security.$"
+	.string "The ground floor is being fitted\n"
+	.string "for radio. The memorial floors\l"
+	.string "above are still open.\p"
+	.string "MR. FUJI was helping move some\n"
+	.string "memorials to the SOUL HOUSE, but\l"
+	.string "he's gone missing. The work has\l"
+	.string "stopped while spirits stir.$"
+
+LavenderTown_RadioStation_Text_OfficerAfterRescue:
+	.string "MR. FUJI is safe at his home.\n"
+	.string "The memorial floors remain open\l"
+	.string "while we finish the radio work.$"
+
+LavenderTown_RadioStation_Text_OfficerEnter:
+	.string "Would you like to visit the\n"
+	.string "memorial floors upstairs?$"
 
 LavenderTown_RadioStation_Text_SuperNerd1:
-	.string "Many people are hard at work here\n"
-	.string "in the RADIO TOWER.\p"
-	.string "They must be doing their best to\n"
-	.string "put on good shows.$"
+	.string "The radio crew works down here\n"
+	.string "while the memorial floors stay\l"
+	.string "open above us.\p"
+	.string "The move to the SOUL HOUSE is\n"
+	.string "paused for now.$"
 
 LavenderTown_RadioStation_Text_Gentleman:
 	.string "Oh, no, no, no!\p"
@@ -115,9 +145,9 @@ LavenderTown_RadioStation_Text_SuperNerd2_GotExpnCard:
 	.string "off the air!$"
 
 LavenderTown_RadioStation_Text_Directory:
-	.string "1F RECEPTION 2F SALES\p"
-	.string "3F PERSONNEL 4F PRODUCTION\p"
-	.string "5F DIRECTOR'S OFFICE$"
+	.string "GROUND FLOOR: RADIO RECEPTION\p"
+	.string "2F-7F: POKéMON MEMORIAL\n"
+	.string "Access: ask the attendant.$"
 
 LavenderTown_RadioStation_Text_PokeFluteSign:
 	.string "Perk Up POKéMON with Mellow\n"
@@ -129,4 +159,3 @@ LavenderTown_RadioStation_Text_ReferenceLibrary:
 	.string "and videos.\p"
 	.string "This must be the reference\n"
 	.string "library.$"
-

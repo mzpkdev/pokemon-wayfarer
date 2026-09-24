@@ -1,18 +1,43 @@
 PokemonTower_3F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, PokemonTower_3F_OnTransition
 	.byte 0
 
+PokemonTower_3F_OnTransition::
+	setvar VAR_TEMP_0, 0
+	setescapewarp MAP_LAVENDER_TOWN_RADIO_STATION_HNS, 17, 5
+	end
+
+PokemonTower_3F_EventScript_Stair0::
+	lockall
+	warp MAP_POKEMON_TOWER_2F, 4, 11
+	waitstate
+	releaseall
+	end
+
+PokemonTower_3F_EventScript_Stair1::
+	lockall
+	warp MAP_POKEMON_TOWER_4F, 18, 11
+	waitstate
+	releaseall
+	end
+
+
+PokemonTower_3F_EventScript_ItemEscapeRope::
+	finditem ITEM_ESCAPE_ROPE
+	end
+
 PokemonTower_3F_EventScript_Patricia::
-	trainerbattle_single TRAINER_CHANNELER_PATRICIA, PokemonTower_3F_Text_PatriciaIntro, PokemonTower_3F_Text_PatriciaDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_PATRICIA, PokemonTower_3F_Text_PatriciaIntro, PokemonTower_3F_Text_PatriciaDefeat
 	msgbox PokemonTower_3F_Text_PatriciaPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 PokemonTower_3F_EventScript_Carly::
-	trainerbattle_single TRAINER_CHANNELER_CARLY, PokemonTower_3F_Text_CarlyIntro, PokemonTower_3F_Text_CarlyDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_CARLY, PokemonTower_3F_Text_CarlyIntro, PokemonTower_3F_Text_CarlyDefeat
 	msgbox PokemonTower_3F_Text_CarlyPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 PokemonTower_3F_EventScript_Hope::
-	trainerbattle_single TRAINER_CHANNELER_HOPE, PokemonTower_3F_Text_HopeIntro, PokemonTower_3F_Text_HopeDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_HOPE, PokemonTower_3F_Text_HopeIntro, PokemonTower_3F_Text_HopeDefeat
 	msgbox PokemonTower_3F_Text_HopePostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -51,4 +76,3 @@ PokemonTower_3F_Text_PatriciaDefeat::
 PokemonTower_3F_Text_PatriciaPostBattle::
 	.string "The others above…\n"
 	.string "They must have been possessed.$"
-

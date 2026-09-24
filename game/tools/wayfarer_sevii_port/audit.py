@@ -105,6 +105,17 @@ def restored_coast_wild_source(path: Path) -> bytes:
     if group is None:
         raise AuditError("coast wild source has no gWildMonHeaders group")
     encounters = group.get("encounters", [])
+    tower_maps = {f"MAP_POKEMON_TOWER_{floor}F" for floor in range(3, 8)}
+    tower_expected = {(name, time) for name in tower_maps for time in ("Day", "Night")}
+    if encounters and encounters[-1].get("map") in tower_maps:
+        tower_tail = encounters[-len(tower_expected):]
+        tower_actual = {
+            (row.get("map"), row.get("base_label", "").rsplit("_Wayfarer_", 1)[-1])
+            for row in tower_tail
+        }
+        if len(tower_tail) != len(tower_expected) or tower_actual != tower_expected:
+            raise AuditError("Tower wild source append is incomplete or reordered")
+        del encounters[-len(tower_expected):]
     coast_maps = {
         "MAP_CINNABAR_ISLAND", "MAP_ROUTE19", "MAP_ROUTE20",
         "MAP_ROUTE21_NORTH", "MAP_ROUTE21_SOUTH",

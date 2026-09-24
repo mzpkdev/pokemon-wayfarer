@@ -1,37 +1,42 @@
 LavenderTown_SoulHouse_hns_MapScripts::
 	.byte 0
 
-LavenderTownSoulHouse_EventScript_MrFuji::
-	msgbox MrFuji_Text_Main, MSGBOX_NPC
+LavenderTownSoulHouse_EventScript_ClefairyMourner::
+	msgbox SoulHouse_Text_ClefairyMourner, MSGBOX_NPC
 	end
 LavenderTownSoulHouse_EventScript_Lass::
 	msgbox SoulHouse_Text_Lass, MSGBOX_NPC
 	end
 LavenderTownSoulHouse_EventScript_Teacher::
+	goto_if_set FLAG_WAYFARER_TOWER_FUJI_RESCUED, LavenderTownSoulHouse_EventScript_TeacherAfterRescue
 	msgbox SoulHouse_Text_Teacher, MSGBOX_NPC
+	end
+LavenderTownSoulHouse_EventScript_TeacherAfterRescue::
+	msgbox SoulHouse_Text_TeacherAfterRescue, MSGBOX_NPC
 	end
 LavenderTownSoulHouse_EventScript_Granny::
 	msgbox SoulHouse_Text_Granny, MSGBOX_NPC
 	end
 
-MrFuji_Text_Main:
-	.string "MR.FUJI: Welcome.\p"
-	.string "Hmm… You appear to be raising\n"
-	.string "your POKéMON in a kind and\l"
-	.string "loving manner.\p"
-	.string "POKéMON lovers come here to pay\n"
-	.string "their respects to departed\l"
-	.string "POKéMON.\p"
-	.string "Please offer condolences for the\n"
-	.string "souls of the departed POKéMON.\p"
-	.string "I'm sure that will make them\n"
-	.string "happy.$"
+SoulHouse_Text_ClefairyMourner:
+	.string "I came to pray for my dearly\n"
+	.string "departed CLEFAIRY.\p"
+	.string "Some memorials have moved here\n"
+	.string "from the TOWER. Her grave is\l"
+	.string "still upstairs. Sniff…$"
 
 SoulHouse_Text_Teacher:
-	.string "There are other graves of POKéMON\n"
-	.string "here, I think.\p"
-	.string "There are many chambers that only\n"
-	.string "MR.FUJI may enter.$"
+	.string "A CHANNELER says spirits are\n"
+	.string "disturbed high in the TOWER.\p"
+	.string "The SILPH SCOPE from CELADON can\n"
+	.string "show what those ghosts are.\l"
+	.string "MR. FUJI went to help, but he\l"
+	.string "hasn't come back.$"
+
+SoulHouse_Text_TeacherAfterRescue:
+	.string "MR. FUJI is home again. Some\n"
+	.string "memorials have moved here, and\l"
+	.string "you can still pray upstairs.$"
 
 SoulHouse_Text_Lass:
 	.string "I came with my mom to visit\n"

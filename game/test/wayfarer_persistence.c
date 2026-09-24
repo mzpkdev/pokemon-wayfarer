@@ -513,6 +513,30 @@ TEST("Wayfarer clears Hoenn daily flags separately")
     EXPECT(!FlagGet(dailyFlag));
 }
 
+TEST("Lavender Tower state survives the daily flag reset")
+{
+    const u16 towerFlags[] = {
+        FLAG_WAYFARER_TOWER_MAROWAK_CALMED,
+        FLAG_WAYFARER_TOWER_FUJI_RESCUED,
+        FLAG_WAYFARER_TOWER_HIDE_ROCKET_1,
+        FLAG_WAYFARER_TOWER_HIDDEN_5F_BIG_MUSHROOM,
+        FLAG_WAYFARER_TOWER_HIDE_7F_SOOTHE_BELL,
+        FLAG_WAYFARER_TOWER_HIDE_6F_RARE_CANDY,
+    };
+    u32 i;
+
+    for (i = 0; i < ARRAY_COUNT(towerFlags); i++)
+        FlagSet(towerFlags[i]);
+    FlagSet(FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY);
+    ClearDailyFlags();
+    EXPECT(!FlagGet(FLAG_DAILY_SOOTOPOLIS_RECEIVED_BERRY));
+    for (i = 0; i < ARRAY_COUNT(towerFlags); i++)
+    {
+        EXPECT(FlagGet(towerFlags[i]));
+        FlagClear(towerFlags[i]);
+    }
+}
+
 TEST("Wayfarer regional badges and League state are isolated")
 {
     SetChampionStateForRegion(REGION_JOHTO, FALSE);

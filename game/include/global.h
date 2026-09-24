@@ -419,6 +419,7 @@ struct SaveBlock3
     struct WayfarerHoennPersistentState wayfarerHoenn;
     struct WayfarerSeviiPersistentState wayfarerSevii;
     struct WayfarerCoastPersistentState wayfarerCoast;
+    u16 wayfarerTowerTrainerDefeats;
 #endif
 }; /* max size 1624 bytes */
 

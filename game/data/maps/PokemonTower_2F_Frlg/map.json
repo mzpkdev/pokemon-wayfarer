@@ -29,8 +29,8 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
-      "flag": "FLAG_HIDE_TOWER_RIVAL"
+      "script": "PokemonTower_2F_EventScript_Blue",
+      "flag": "0"
     },
     {
       "type": "object",
@@ -54,33 +54,26 @@
       "elevation": 3,
       "dest_map": "MAP_POKEMON_TOWER_3F",
       "dest_warp_id": "0"
-    },
-    {
-      "x": 18,
-      "y": 10,
-      "elevation": 3,
-      "dest_map": "MAP_POKEMON_TOWER_1F",
-      "dest_warp_id": "3"
     }
   ],
   "coord_events": [
     {
       "type": "trigger",
-      "x": 17,
-      "y": 5,
+      "x": 18,
+      "y": 10,
       "elevation": 3,
-      "var": "VAR_MAP_SCENE_POKEMON_TOWER_2F",
+      "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "PokemonTower_2F_EventScript_RivalTriggerRight"
+      "script": "PokemonTower_2F_EventScript_ReturnToLobby"
     },
     {
       "type": "trigger",
-      "x": 16,
-      "y": 6,
+      "x": 4,
+      "y": 10,
       "elevation": 3,
-      "var": "VAR_MAP_SCENE_POKEMON_TOWER_2F",
+      "var": "VAR_TEMP_0",
       "var_value": "0",
-      "script": "PokemonTower_2F_EventScript_RivalTriggerDown"
+      "script": "PokemonTower_2F_EventScript_Stair0"
     }
   ],
   "bg_events": []
