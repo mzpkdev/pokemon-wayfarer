@@ -124,13 +124,10 @@ own conditions; Tower progress does not grant or disable them. The physical
 Poké Flute from Fuji remains a separate reward from the radio's Poké Flute
 program. The memorial floors remain accessible after the rescue.
 
-The initial port may use a guard-led transition from the radio lobby to the
-unchanged FRLG upper-floor layouts, with no `map.bin` changes. A later Porymap pass
-may add walkable stairs or a doorway and visible renovation details. That
-future geometry is an improvement to the same building, not a requirement for
-an annex or a new exterior. The [Tower specification](../specs/frlg-kanto-pokemon-tower.md)
-owns the floor graph, Fuji staging, source-content audit, and proof needed
-before either entrance ships.
+The port uses a guard-led fade transition from the radio lobby to 2F; the
+downward stair returns to the lobby. It reuses the FRLG upper-floor layouts
+without `map.bin` changes. The [Tower specification](../specs/frlg-kanto-pokemon-tower.md)
+owns the floor graph, Fuji staging, source-content audit, and entrance proof.
 
 ### One coherent Kanto cast and history
 
