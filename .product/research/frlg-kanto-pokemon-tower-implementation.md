@@ -15,9 +15,11 @@ The source stair tiles have FRLG behavior values `0xec` and `0xed`, which Wayfar
 
 Tower item balls use normal item pickup scripts and persistent hide flags. Tower Channelers and Rockets use IDs 1779–1794, after the IDs reserved by the open Celadon Hideout and local adventures work. Their defeat state has a dedicated 16-bit save field. The Marowak story battle uses Wayfarer's wild-level projection; its calmed flag is set only after victory. Rocket hide flags, Fuji rescue, and the House1 physical Poké Flute claim are separate persistent states. An already-owned Flute settles the gift, while a full Bag leaves it claimable.
 
-The Wayfarer wild table selects FRLG Tower land encounters on 3F–7F for day and night. Without a Silph Scope, the existing Tower battle setup presents ordinary wilds as unidentified ghosts. Celadon's actual Scope reward remains the intended acquisition route; combined end-to-end validation depends on the still-open Hideout integration.
+The Wayfarer wild table selects FRLG Tower land encounters on 3F–7F for day and night. Without a Silph Scope, the existing Tower battle setup presents ordinary wilds as unidentified ghosts. The [combined integration journey](kanto-port-integration.md) now verifies Celadon's actual Scope reward through Marowak, Fuji's rescue, and his physical Flute, including save/reload and independent radio progression.
 
 ## Emulator evidence
+
+The results below describe standalone validation. The later [combined validation](kanto-port-integration.md) passed the complete selected Wayfarer native sweep (121 cases), 11 Tower-related native cases, and all 160 selected emulator cases, with two startup-aborted cases covered by a successful targeted retry.
 
 The focused SkyEmu journey passed 13 of 13 checks on the E2E ROM. It covers early entry before Scope and radio repair, the lobby return and every floor edge, no-Scope ghost blocking, live wilds on 3F–7F, an ordinary Trainer and item, Marowak and Rocket loss/retry, the 5F healing space, full-Bag item retry, Fuji rescue and home staging, full-Bag and already-owned Flute handling, save/reload, and permanent post-rescue entry. The director's Machine Part condition and visiting-origin Blue interaction are included.
 
