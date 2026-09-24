@@ -7,15 +7,31 @@
 const struct RegionMapLocation gRegionMapEntries[] = {
 ## for map_section in hns_map_sections
     [{{ map_section.id }}] = {
+{% if existsIn(map_section, "wayfarer_x") %}
+#if IS_WAYFARER
+        .x = {{ map_section.wayfarer_x }},
+#else
+{% endif %}
 {% if existsIn(map_section, "x") %}
         .x = {{ map_section.x }},
 {% else %}
         .x = 0,
 {% endif %}
+{% if existsIn(map_section, "wayfarer_x") %}
+#endif
+{% endif %}
+{% if existsIn(map_section, "wayfarer_y") %}
+#if IS_WAYFARER
+        .y = {{ map_section.wayfarer_y }},
+#else
+{% endif %}
 {% if existsIn(map_section, "y") %}
         .y = {{ map_section.y }},
 {% else %}
         .y = 0,
+{% endif %}
+{% if existsIn(map_section, "wayfarer_y") %}
+#endif
 {% endif %}
 {% if existsIn(map_section, "width") %}
         .width = {{ map_section.width }},
