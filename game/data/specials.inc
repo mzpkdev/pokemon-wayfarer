@@ -749,6 +749,8 @@ gSpecials::
 #endif
 
 #if IS_WAYFARER
+    def_special WayfarerCanStartOrdinaryBattleForScript
+    def_special WayfarerInitSilphElevatorForScript
     def_special WayfarerDispatchOriginScene
     def_special WayfarerUsesNativeJohtoHousehold
     def_special WayfarerUsesNativeHoennHousehold

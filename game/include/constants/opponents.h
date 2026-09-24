@@ -879,6 +879,7 @@
 #include "constants/wayfarer_sevii_trainers.h"
 #include "constants/wayfarer_coast_trainers.h"
 #include "constants/wayfarer_ss_anne_trainers.h"
+#include "constants/wayfarer_local_trainers.h"
 #else
 #define TRAINERS_COUNT_WAYFARER     (TRAINERS_COUNT_HNS + TRAINERS_COUNT_EMERALD - 1)
 #endif

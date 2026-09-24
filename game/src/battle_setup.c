@@ -1684,6 +1684,8 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     anneDefeatSlot = WayfarerSSAnneTrainerGetDefeatSlot(trainerId);
     if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
         return WayfarerSSAnneTrainerDefeatGet(anneDefeatSlot);
+    if (trainerId >= TRAINER_WAYFARER_LOCAL_FIRST && trainerId <= TRAINER_WAYFARER_LOCAL_LAST)
+        return FlagGet(WAYFARER_LOCAL_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_LOCAL_FIRST);
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1729,6 +1731,11 @@ void SetTrainerFlag(u16 trainerId)
         WayfarerSSAnneTrainerDefeatSet(anneDefeatSlot);
         return;
     }
+    if (trainerId >= TRAINER_WAYFARER_LOCAL_FIRST && trainerId <= TRAINER_WAYFARER_LOCAL_LAST)
+    {
+        FlagSet(WAYFARER_LOCAL_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_LOCAL_FIRST);
+        return;
+    }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1772,6 +1779,11 @@ void ClearTrainerFlag(u16 trainerId)
     if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
     {
         WayfarerSSAnneTrainerDefeatClear(anneDefeatSlot);
+        return;
+    }
+    if (trainerId >= TRAINER_WAYFARER_LOCAL_FIRST && trainerId <= TRAINER_WAYFARER_LOCAL_LAST)
+    {
+        FlagClear(WAYFARER_LOCAL_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_LOCAL_FIRST);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.

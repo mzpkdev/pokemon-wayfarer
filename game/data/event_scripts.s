@@ -1930,6 +1930,11 @@ EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
 	.include "data/scripts/item_ball_scripts.inc"
 #if IS_WAYFARER
 	.include "data/scripts/wayfarer_ss_anne_item_balls.inc"
+	.include "data/scripts/wayfarer_mt_moon.inc"
+	.include "data/scripts/wayfarer_nugget_bridge.inc"
+	.include "data/scripts/wayfarer_fuchsia_safari.inc"
+	.include "data/scripts/wayfarer_silph.inc"
+	.include "data/scripts/silphco_doors.inc"
 #endif
 	.include "data/scripts/profile_man.inc"
 	.include "data/scripts/day_care.inc"

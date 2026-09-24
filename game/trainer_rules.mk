@@ -18,6 +18,7 @@ AUTO_GEN_TARGETS += include/wayfarer_coast_trainer_defeats.h
 AUTO_GEN_TARGETS += include/constants/wayfarer_ss_anne_trainers.h
 AUTO_GEN_TARGETS += src/data/trainers_wayfarer_ss_anne.h
 AUTO_GEN_TARGETS += include/wayfarer_ss_anne_trainer_defeats.h
+AUTO_GEN_TARGETS += src/data/trainers_wayfarer_local.h
 
 WAYFARER_SEVII_TRAINER_GENERATOR := tools/wayfarer_sevii_trainers/generate.py
 WAYFARER_SEVII_TRAINER_OUTPUTS := include/constants/wayfarer_sevii_trainers.h src/data/trainers_wayfarer_sevii.h include/wayfarer_sevii_trainer_defeats.h
