@@ -1,7 +1,7 @@
 # FRLG Kanto independent story beats
 
 Status: Draft product design for a future Wayfarer story port. Not implemented.
-Exact late-game reward thresholds and bounded scene decisions remain open.
+Some late-game reward thresholds and bounded scene decisions remain open.
 
 ## Intent
 
@@ -131,7 +131,7 @@ ordinary adventures playable. TR determines eligibility; it is not spent.
 | --- | --- |
 | Silph Master Ball | Require the resolved Silph rescue and sufficient TR. The President remains the reward giver. Below the threshold, he explains that the reward can be claimed later. |
 | Silph Lapras | Keep as an ordinary local gift with its existing giver and one-time delivery behavior. No legendary-tier TR gate is added. |
-| Articuno and Zapdos | Preserve their local exploration and puzzles. Gate each capture encounter by legendary readiness, without requiring the other bird or a Rocket story. The coastal port owns FRLG Seafoam and Articuno's placement. |
+| Articuno and Zapdos | Preserve their local exploration and puzzles. Gate each encounter by legendary readiness, without requiring the other bird or a Rocket story. The coastal port owns FRLG Seafoam and Articuno's placement; the [Power Plant specification](../specs/frlg-kanto-power-plant.md) selects Wayfarer's Zapdos hall, TR 55 battle threshold, and FRLG encounter outcomes. |
 | Mewtwo | Use a higher TR readiness threshold than the birds, replacing the unrelated Celio Ruby/Sapphire campaign dependency. Preserve Cerulean Cave and the existing encounter rather than add a new capture quest. |
 | Cut, Surf, Strength, Flute, fossils, and ordinary gifts | Retain their local acquisition requirements without late-game TR gates. |
 
@@ -150,7 +150,8 @@ boundary in Cerulean Cave. It must enforce the readiness requirement without
 requiring completion of Sevii's unrelated delivery chain. No new League-clear
 condition is introduced by this PRD.
 
-Exact thresholds for the Master Ball, birds, and Mewtwo remain balance decisions
+The Wayfarer Power Plant port sets Zapdos's battle threshold at TR 55. Exact
+thresholds for the Master Ball, Articuno, and Mewtwo remain balance decisions
 against the wider journey. Mewtwo's threshold is higher than the birds'; do not
 assume the Master Ball shares either threshold. All alternate activation paths
 must obey the final reward rules.
@@ -262,8 +263,9 @@ Giovanni's finale without a replacement plot.
 3. Which rival chapters genuinely depend on earlier scenes? Review the League
    appearance separately from access to Silph; the dedicated Anne specification
    has settled recovery and captain access aboard the ship.
-4. What TR thresholds govern the Master Ball, birds, and Mewtwo? Where should
-   Mewtwo's readiness be enforced within the existing Cerulean Cave access flow?
+4. What TR thresholds govern the Master Ball, Articuno, and Mewtwo? Zapdos's
+   Wayfarer threshold is TR 55. Where should Mewtwo's readiness be enforced
+   within the existing Cerulean Cave access flow?
 5. How should the President explain deferred Master Ball collection, and which
    existing local presentation explains each legendary readiness requirement?
 
