@@ -2479,9 +2479,30 @@
 #endif
 
 #if IS_WAYFARER
-// Wayfarer-owned HNS-bank milestones, outside the daily flag range.
+// Wayfarer-owned milestones.
 #define FLAG_JOHTO_STARTER_CHOICE_COMMITTED 0x930
 #define FLAG_JOHTO_STARTER_RECEIVED 0x931
+// HNS leaves system slots 0x8E5-0x8EF unused; its visited-map flags start at
+// 0x8F0. Hidden items require a 13-bit flag, so they stay in these slots.
+// Coast-bank slots 118-124 hold actor and ordinary item flags.
+#define FLAG_WAYFARER_TOWER_MAROWAK_CALMED          0x8E5
+#define FLAG_WAYFARER_TOWER_FUJI_RESCUED            0x8E6
+#define FLAG_WAYFARER_TOWER_FLUTE_CLAIMED           0x8E7
+#define FLAG_WAYFARER_TOWER_HIDE_ROCKET_1           0x8E8
+#define FLAG_WAYFARER_TOWER_HIDE_ROCKET_2           0x8E9
+#define FLAG_WAYFARER_TOWER_HIDE_ROCKET_3           0x8EA
+#define FLAG_WAYFARER_TOWER_HIDE_3F_ESCAPE_ROPE     0x8EB
+#define FLAG_WAYFARER_TOWER_HIDE_4F_ELIXIR          0x8EC
+#define FLAG_WAYFARER_TOWER_HIDE_4F_AWAKENING       0x8ED
+#define FLAG_WAYFARER_TOWER_HIDDEN_5F_BIG_MUSHROOM  0x8EE
+#define FLAG_WAYFARER_TOWER_HIDE_7F_SOOTHE_BELL     0x8EF
+#define FLAG_WAYFARER_TOWER_BLUE_MET                 WAYFARER_COAST_FLAG_ID(118)
+#define FLAG_WAYFARER_TOWER_HIDE_HOUSE1_FUJI         WAYFARER_COAST_FLAG_ID(119)
+#define FLAG_WAYFARER_TOWER_HIDE_4F_GREAT_BALL      WAYFARER_COAST_FLAG_ID(120)
+#define FLAG_WAYFARER_TOWER_HIDE_5F_NUGGET          WAYFARER_COAST_FLAG_ID(121)
+#define FLAG_WAYFARER_TOWER_HIDE_5F_CLEANSE_TAG     WAYFARER_COAST_FLAG_ID(122)
+#define FLAG_WAYFARER_TOWER_HIDE_6F_RARE_CANDY      WAYFARER_COAST_FLAG_ID(123)
+#define FLAG_WAYFARER_TOWER_HIDE_6F_X_ACCURACY      WAYFARER_COAST_FLAG_ID(124)
 // Sevii exploration state must not use the FRLG aliases that resolve to zero
 // in the HNS catalog. Icefall's nine cracked tiles are intentionally saved so
 // a reload does not silently restore a route the player has already crossed.

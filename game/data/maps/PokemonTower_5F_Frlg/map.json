@@ -99,7 +99,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_5F_EventScript_ItemNugget",
-      "flag": "FLAG_HIDE_POKEMON_TOWER_5F_NUGGET"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_5F_NUGGET"
     },
     {
       "type": "object",
@@ -113,7 +113,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_5F_EventScript_ItemCleanseTag",
-      "flag": "FLAG_HIDE_POKEMON_TOWER_5F_CLEANSE_TAG"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_5F_CLEANSE_TAG"
     }
   ],
   "warp_events": [
@@ -285,6 +285,24 @@
       "var": "VAR_TEMP_1",
       "var_value": "1",
       "script": "PokemonTower_5F_EventScript_ExitPurifiedZone"
+    },
+    {
+      "type": "trigger",
+      "x": 4,
+      "y": 10,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_5F_EventScript_Stair0"
+    },
+    {
+      "type": "trigger",
+      "x": 18,
+      "y": 10,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_5F_EventScript_Stair1"
     }
   ],
   "bg_events": [
@@ -294,7 +312,7 @@
       "y": 3,
       "elevation": 3,
       "item": "ITEM_BIG_MUSHROOM",
-      "flag": "FLAG_HIDDEN_ITEM_POKEMON_TOWER_5F_BIG_MUSHROOM",
+      "flag": "FLAG_WAYFARER_TOWER_HIDDEN_5F_BIG_MUSHROOM",
       "quantity": 1,
       "underfoot": false
     }

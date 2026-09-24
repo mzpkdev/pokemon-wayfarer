@@ -71,7 +71,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_4F_EventScript_ItemElixir",
-      "flag": "FLAG_HIDE_POKEMON_TOWER_4F_ELIXIR"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_4F_ELIXIR"
     },
     {
       "type": "object",
@@ -85,7 +85,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_4F_EventScript_ItemAwakening",
-      "flag": "FLAG_HIDE_POKEMON_TOWER_4F_AWAKENING"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_4F_AWAKENING"
     },
     {
       "type": "object",
@@ -99,7 +99,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_4F_EventScript_ItemGreatBall",
-      "flag": "FLAG_HIDE_POKEMON_TOWER_4F_GREAT_BALL"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_4F_GREAT_BALL"
     }
   ],
   "warp_events": [
@@ -118,6 +118,25 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 4,
+      "y": 10,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_4F_EventScript_Stair0"
+    },
+    {
+      "type": "trigger",
+      "x": 18,
+      "y": 10,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_4F_EventScript_Stair1"
+    }
+  ],
   "bg_events": []
 }

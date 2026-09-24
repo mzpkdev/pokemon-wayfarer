@@ -1,5 +1,34 @@
 PokemonTower_5F_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, PokemonTower_5F_OnTransition
 	.byte 0
+
+PokemonTower_5F_OnTransition::
+	setvar VAR_TEMP_0, 0
+	setescapewarp MAP_LAVENDER_TOWN_RADIO_STATION_HNS, 17, 5
+	end
+
+PokemonTower_5F_EventScript_Stair0::
+	lockall
+	warp MAP_POKEMON_TOWER_4F, 4, 11
+	waitstate
+	releaseall
+	end
+
+PokemonTower_5F_EventScript_Stair1::
+	lockall
+	warp MAP_POKEMON_TOWER_6F, 18, 11
+	waitstate
+	releaseall
+	end
+
+
+PokemonTower_5F_EventScript_ItemNugget::
+	finditem ITEM_NUGGET
+	end
+
+PokemonTower_5F_EventScript_ItemCleanseTag::
+	finditem ITEM_CLEANSE_TAG
+	end
 
 PokemonTower_5F_EventScript_Channeler::
 	msgbox PokemonTower_5F_Text_RestHereInPurifiedSpace, MSGBOX_NPC
@@ -22,22 +51,22 @@ PokemonTower_5F_EventScript_ExitPurifiedZone::
 	end
 
 PokemonTower_5F_EventScript_Tammy::
-	trainerbattle_single TRAINER_CHANNELER_TAMMY, PokemonTower_5F_Text_TammyIntro, PokemonTower_5F_Text_TammyDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_TAMMY, PokemonTower_5F_Text_TammyIntro, PokemonTower_5F_Text_TammyDefeat
 	msgbox PokemonTower_5F_Text_TammyPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 PokemonTower_5F_EventScript_Ruth::
-	trainerbattle_single TRAINER_CHANNELER_RUTH, PokemonTower_5F_Text_RuthIntro, PokemonTower_5F_Text_RuthDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_RUTH, PokemonTower_5F_Text_RuthIntro, PokemonTower_5F_Text_RuthDefeat
 	msgbox PokemonTower_5F_Text_RuthPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 PokemonTower_5F_EventScript_Karina::
-	trainerbattle_single TRAINER_CHANNELER_KARINA, PokemonTower_5F_Text_KarinaIntro, PokemonTower_5F_Text_KarinaDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_KARINA, PokemonTower_5F_Text_KarinaIntro, PokemonTower_5F_Text_KarinaDefeat
 	msgbox PokemonTower_5F_Text_KarinaPostBattle, MSGBOX_AUTOCLOSE
 	end
 
 PokemonTower_5F_EventScript_Janae::
-	trainerbattle_single TRAINER_CHANNELER_JANAE, PokemonTower_5F_Text_JanaeIntro, PokemonTower_5F_Text_JanaeDefeat
+	trainerbattle_single TRAINER_WAYFARER_TOWER_CHANNELER_JANAE, PokemonTower_5F_Text_JanaeIntro, PokemonTower_5F_Text_JanaeDefeat
 	msgbox PokemonTower_5F_Text_JanaePostBattle, MSGBOX_AUTOCLOSE
 	end
 
@@ -91,4 +120,3 @@ PokemonTower_5F_Text_PurifiedZoneMonsFullyHealed::
 	.string "zone.\p"
 	.string "{PLAYER}'s POKéMON were fully\n"
 	.string "healed.$"
-

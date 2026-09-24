@@ -7,7 +7,7 @@ This report checks authored source records and projected parties. It does not es
 | EXCLUDED | 217 |
 | GYM_LEADER | 31 |
 | GYM_MEMBER | 111 |
-| ORDINARY | 1406 |
+| ORDINARY | 1422 |
 
 | Region | Populated IDs |
 | --- | ---: |
@@ -15,7 +15,7 @@ This report checks authored source records and projected parties. It does not es
 | HNS unplaced | 245 |
 | Hoenn | 854 |
 | Johto | 236 |
-| Kanto | 266 |
+| Kanto | 282 |
 | Sevii | 136 |
 | Sinjoh | 8 |
 
@@ -29,7 +29,7 @@ Baseline anchors: 0:7, 4:8, 8:10, 16:15, 30:22, 40:34, 55:52, 65:72, 80:92. Each
 
 Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.
 
-The audit evaluated 266,652 slot and Rating combinations using the modern level-up learnsets, with 0 structural failures.
+The audit evaluated 268,677 slot and Rating combinations using the modern level-up learnsets, with 0 structural failures.
 
 ## Highest early parties
 

@@ -10,6 +10,15 @@ export const checkpoints = {
 } as const
 
 export const maps = {
+  "lavender-radio-lobby": { mapGroup: 16, mapNum: 5 },
+  "lavender-house1": { mapGroup: 16, mapNum: 2 },
+  "lavender-soul-house": { mapGroup: 16, mapNum: 6 },
+  "pokemon-tower-2f": { mapGroup: 66, mapNum: 89 },
+  "pokemon-tower-3f": { mapGroup: 66, mapNum: 90 },
+  "pokemon-tower-4f": { mapGroup: 66, mapNum: 91 },
+  "pokemon-tower-5f": { mapGroup: 66, mapNum: 92 },
+  "pokemon-tower-6f": { mapGroup: 66, mapNum: 93 },
+  "pokemon-tower-7f": { mapGroup: 66, mapNum: 94 },
   "silph-lobby": { mapGroup: 18, mapNum: 6 },
   "silph-2f": { mapGroup: 66, mapNum: 48 },
   "silph-3f": { mapGroup: 66, mapNum: 49 },
@@ -512,6 +521,15 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  towerMarowakCalmed: 0x8e5,
+  towerFujiRescued: 0x8e6,
+  towerFluteClaimed: 0x8e7,
+  towerRocket1Cleared: 0x8e8,
+  towerRocket2Cleared: 0x8e9,
+  towerRocket3Cleared: 0x8ea,
+  towerEscapeRopeClaimed: 0x8eb,
+  towerBlueMet: 0xe076,
+  towerHouse1FujiHidden: 0xe077,
   silph11FDoor: 0x94e,
   silph10FDoor: 0x94d,
   silph9FDoor4: 0x94c,
@@ -754,6 +772,9 @@ export const storyFlags = {
 export const species = {
   pikachu: 25,
   none: 0,
+  gastly: 92,
+  haunter: 93,
+  cubone: 104,
   pidgey: 16,
   shedinja: 292,
   rattata: 19,
@@ -824,6 +845,8 @@ export const hms = {
 } as const
 
 export const items = {
+  escapeRope: 120,
+  pokeFlute: 724,
   silphCardKey: 902,
   goldenrodCardKey: 750,
   helixFossil: 165,
@@ -847,7 +870,6 @@ export const items = {
   carbos: 70,
   ppUp: 71,
   rareCandy: 102,
-  escapeRope: 120,
   xSpecial: 123,
   upGrade: 228,
   tmFocusPunch: 582,

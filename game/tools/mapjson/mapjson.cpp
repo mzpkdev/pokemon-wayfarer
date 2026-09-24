@@ -275,6 +275,19 @@ const set<string> wayfarer_anne_layout_ids = {
     "LAYOUT_SSANNE_KITCHEN", "LAYOUT_SSANNE_ROOM1", "LAYOUT_SSANNE_ROOM2",
 };
 
+// Lavender's HNS radio lobby is the only ground floor. Keep the FRLG
+// memorial floors and their source stair graph without selecting FRLG 1F.
+const set<string> wayfarer_pokemon_tower_map_names = {
+    "PokemonTower_2F_Frlg", "PokemonTower_3F_Frlg", "PokemonTower_4F_Frlg",
+    "PokemonTower_5F_Frlg", "PokemonTower_6F_Frlg", "PokemonTower_7F_Frlg",
+};
+
+const set<string> wayfarer_pokemon_tower_layout_ids = {
+    "LAYOUT_POKEMON_TOWER_2F", "LAYOUT_POKEMON_TOWER_3F",
+    "LAYOUT_POKEMON_TOWER_4F", "LAYOUT_POKEMON_TOWER_5F",
+    "LAYOUT_POKEMON_TOWER_6F", "LAYOUT_POKEMON_TOWER_7F",
+};
+
 const set<string> wayfarer_celadon_hideout_map_names = {
     "RocketHideout_B1F_Frlg", "RocketHideout_B2F_Frlg",
     "RocketHideout_B3F_Frlg", "RocketHideout_B4F_Frlg",
@@ -383,6 +396,8 @@ bool data_matches_version(const Json &data) {
          || wayfarer_coast_layout_ids.count(json_to_string(data, "id", true))
          || wayfarer_anne_map_names.count(json_to_string(data, "name", true))
          || wayfarer_anne_layout_ids.count(json_to_string(data, "id", true))
+         || wayfarer_pokemon_tower_map_names.count(json_to_string(data, "name", true))
+         || wayfarer_pokemon_tower_layout_ids.count(json_to_string(data, "id", true))
          || wayfarer_celadon_hideout_map_names.count(json_to_string(data, "name", true))
          || wayfarer_celadon_hideout_layout_ids.count(json_to_string(data, "id", true)))
             return true;

@@ -52,6 +52,9 @@
 #include "wayfarer_coast_trainer_defeats.h"
 #include "wayfarer_ss_anne.h"
 #include "wayfarer_ss_anne_trainer_defeats.h"
+#include "constants/wayfarer_tower_trainers.h"
+#include "trainer_rating.h"
+#include "wild_encounter.h"
 #include "wayfarer_celadon_hideout.h"
 #include "item.h"
 #include "script.h"
@@ -631,8 +634,13 @@ void StartMarowakBattle(void)
     if (CheckBagHasItem(ITEM_SILPH_SCOPE, 1))
     {
         u32 personality = GetMonPersonality(SPECIES_MAROWAK, MON_FEMALE, NATURE_SERIOUS, RANDOM_UNOWN_LETTER);
+        u8 level = 30;
 
-        CreateMonWithIVsPersonality(&gEnemyParty[0], SPECIES_MAROWAK, 30, 31, personality);
+#if IS_WAYFARER
+        level = ProjectWildEncounterLevelWithOffset(30, GetTrainerRating(), 0);
+#endif
+
+        CreateMonWithIVsPersonality(&gEnemyParty[0], SPECIES_MAROWAK, level, 31, personality);
     }
 
     CreateBattleStartTask(GetWildBattleTransition(), 0);
@@ -1666,6 +1674,7 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     u16 seviiDefeatSlot;
     u16 coastDefeatSlot;
     u16 anneDefeatSlot;
+    u16 towerDefeatSlot;
     u16 hideoutDefeatFlag;
 #endif
 
@@ -1691,6 +1700,9 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);
     if (hideoutDefeatFlag != 0)
         return FlagGet(hideoutDefeatFlag);
+    towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
+    if (towerDefeatSlot < TRAINER_WAYFARER_TOWER_COUNT)
+        return (gSaveBlock3Ptr->wayfarerTowerTrainerDefeats >> towerDefeatSlot) & 1;
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1705,6 +1717,7 @@ void SetTrainerFlag(u16 trainerId)
     u16 seviiDefeatSlot;
     u16 coastDefeatSlot;
     u16 anneDefeatSlot;
+    u16 towerDefeatSlot;
     u16 hideoutDefeatFlag;
 #endif
 
@@ -1748,6 +1761,12 @@ void SetTrainerFlag(u16 trainerId)
         FlagSet(hideoutDefeatFlag);
         return;
     }
+    towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
+    if (towerDefeatSlot < TRAINER_WAYFARER_TOWER_COUNT)
+    {
+        gSaveBlock3Ptr->wayfarerTowerTrainerDefeats |= 1u << towerDefeatSlot;
+        return;
+    }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1762,6 +1781,7 @@ void ClearTrainerFlag(u16 trainerId)
     u16 seviiDefeatSlot;
     u16 coastDefeatSlot;
     u16 anneDefeatSlot;
+    u16 towerDefeatSlot;
     u16 hideoutDefeatFlag;
 #endif
 
@@ -1803,6 +1823,12 @@ void ClearTrainerFlag(u16 trainerId)
     if (hideoutDefeatFlag != 0)
     {
         FlagClear(hideoutDefeatFlag);
+        return;
+    }
+    towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
+    if (towerDefeatSlot < TRAINER_WAYFARER_TOWER_COUNT)
+    {
+        gSaveBlock3Ptr->wayfarerTowerTrainerDefeats &= ~(1u << towerDefeatSlot);
         return;
     }
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.

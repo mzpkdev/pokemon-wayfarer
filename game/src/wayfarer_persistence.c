@@ -153,6 +153,7 @@ void WayfarerInitPersistentState(void)
     WayfarerSeviiInitPersistentState();
     memset(&gSaveBlock3Ptr->wayfarerCoast, 0, sizeof(gSaveBlock3Ptr->wayfarerCoast));
     gSaveBlock3Ptr->wayfarerCoast.magic = WAYFARER_COAST_STATE_MAGIC;
+    gSaveBlock3Ptr->wayfarerTowerTrainerDefeats = 0;
     FlagSet(FLAG_WAYFARER_SS_ANNE_HIDE_BLUE);
 #endif
 }

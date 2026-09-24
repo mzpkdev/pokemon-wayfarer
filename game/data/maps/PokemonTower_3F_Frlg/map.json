@@ -71,7 +71,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonTower_3F_EventScript_ItemEscapeRope",
-      "flag": "FLAG_HIDE_POKEMON_TOWER_3F_ESCAPE_ROPE"
+      "flag": "FLAG_WAYFARER_TOWER_HIDE_3F_ESCAPE_ROPE"
     }
   ],
   "warp_events": [
@@ -90,6 +90,25 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 4,
+      "y": 10,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_3F_EventScript_Stair0"
+    },
+    {
+      "type": "trigger",
+      "x": 18,
+      "y": 10,
+      "elevation": 3,
+      "var": "VAR_TEMP_0",
+      "var_value": "0",
+      "script": "PokemonTower_3F_EventScript_Stair1"
+    }
+  ],
   "bg_events": []
 }
