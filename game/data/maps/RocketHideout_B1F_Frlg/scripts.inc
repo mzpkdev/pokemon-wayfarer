@@ -1,3 +1,4 @@
+#if !IS_WAYFARER
 RocketHideout_B1F_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, RocketHideout_B1F_OnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, RocketHideout_B1F_OnTransition
@@ -115,3 +116,4 @@ RocketHideout_B1F_Text_Grunt5PostBattle::
 	.string "Uh-oh, that ruckus somehow opened\n"
 	.string "the door!$"
 
+#endif // !IS_WAYFARER

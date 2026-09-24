@@ -13,6 +13,7 @@
 #include "task.h"
 #include "trainer_see.h"
 #include "wayfarer_local_adventures.h"
+#include "wayfarer_celadon_hideout.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
@@ -586,8 +587,12 @@ static u8 CheckTrainer(u8 objectEventId)
             {
                 trainerBattlePtr = NULL;
 #if IS_WAYFARER
-                // These scripts check battle eligibility before trainerbattle.
+                // Resolve exact trainer entry scripts after the party check.
                 trainerBattlePtr = WayfarerResolveLocalAdventureTrainerBattleScript(trainerScriptStart);
+                if (trainerBattlePtr == NULL)
+                    trainerBattlePtr = WayfarerResolveCeladonHideoutTrainerBattleScript(trainerScriptStart);
+                if (trainerBattlePtr != NULL && !WayfarerCanStartOrdinaryBattleForScript())
+                    return 0;
 #endif
             }
         }

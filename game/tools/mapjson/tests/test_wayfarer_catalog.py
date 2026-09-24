@@ -148,6 +148,46 @@ class MapjsonWayfarerTest(unittest.TestCase):
             capture_output=True,
         )
 
+    def test_celadon_hideout_events_preserve_standalone_casino_and_dynamic_exit(self):
+        fixture, root = self.make_fixture()
+        self.addCleanup(fixture.cleanup)
+        (root / "include/constants/map_groups.h").write_text("")
+        layouts = json.loads((GAME_ROOT / "data/layouts/layouts.json").read_text())["layouts"]
+
+        def selected_map(name, layout_id, versions):
+            source = GAME_ROOT / "data/maps" / name / "map.json"
+            target = root / "data/maps" / name
+            target.mkdir()
+            (target / "map.json").write_bytes(source.read_bytes())
+            layout = next(row for row in layouts if row["id"] == layout_id).copy()
+            for key in ("border_filepath", "blockdata_filepath"):
+                path = root / layout[key]
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes((GAME_ROOT / layout[key]).read_bytes())
+            layout_file = root / "data/layouts/layouts.json"
+            layout_file.write_text(json.dumps({"layouts": [layout]}))
+            result = {}
+            for version in versions:
+                process = self.run_map(root, version, target / "map.json", layout_file)
+                self.assertEqual(process.returncode, 0, process.stderr)
+                result[version] = (target / "events.inc").read_text()
+            return result
+
+        casino = selected_map("CeladonCity_GameCorner_hns", "LAYOUT_CELADON_CITY_GAME_CORNER_HNS", ("hns", "wayfarer"))
+        for script in ("MauvilleCity_GameCorner_EventScript_CoinsClerk",
+                       "GoldenrodCity_GameCorner_PrizeRoom_EventScript_PrizeClerkMons",
+                       "Roulette_EventScript_Table2"):
+            self.assertIn(script, casino["hns"])
+            self.assertIn(script, casino["wayfarer"])
+        self.assertNotIn("CeladonGameCorner_EventScript_HideoutGrunt", casino["hns"])
+        self.assertNotIn("CeladonGameCorner_EventScript_RocketHideoutPoster", casino["hns"])
+        self.assertIn("CeladonGameCorner_EventScript_HideoutGrunt", casino["wayfarer"])
+        self.assertIn("CeladonGameCorner_EventScript_RocketHideoutPoster", casino["wayfarer"])
+
+        basement = selected_map("RocketHideout_B1F_Frlg", "LAYOUT_ROCKET_HIDEOUT_B1F", ("firered", "wayfarer"))
+        self.assertIn("MAP_CELADON_CITY_GAME_CORNER", basement["firered"])
+        self.assertIn("MAP_DYNAMIC", basement["wayfarer"])
+
     @staticmethod
     def add_layout(root, payload):
         layout_dir = root / "data/layouts/TestLayout"

@@ -69,7 +69,7 @@ eruption state.
 | Nugget Bridge | Adapt the ordered Trainer challenge, prize, and recruitment attempt to HNS Route 24. Avoid overlapping its existing Rocket scenes. |
 | Bill and the S.S. Anne | Preserve Bill's rescue and Ticket reward, plus the captain's adventure and Cut reward aboard a persistent Anne. Any S.S. Ticket permits boarding; Bill is not a prerequisite for players who already have one. Persistence prevents missable content; the ship provides no transport or recurring utility. |
 | Celadon Rocket Hideout | Connect imported hideout interiors to the HNS Game Corner. Preserve discovery of the entrance, local key and lift progression, Giovanni, and the Silph Scope reward. Mahogany's HNS Rocket Hideout remains a separate Johto location. |
-| Pokémon Tower and Fuji | Restore the Tower adventure in Lavender, including the Scope-dependent ghost identification, Marowak resolution, Rocket rescue, Fuji's return, and Flute handoff. Resolve its relationship to the HNS radio station explicitly. |
+| Pokémon Tower and Fuji | Restore the upper memorial floors while the ground floor is being converted for radio use. Preserve the Scope-dependent ghosts, Marowak resolution, Rocket rescue, Fuji's return, and physical Flute handoff. The [Tower specification](../specs/frlg-kanto-pokemon-tower.md) owns the shared building and transition. |
 | Snorlax | Preserve the two FRLG encounters associated with Routes 12 and 16 and the Flute requirement, adapting event placement to HNS geography. Neither encounter may close the only ordinary travel route. Resolve the existing HNS Vermilion Snorlax separately rather than accidentally duplicating the same encounter. |
 | Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the deferred Master Ball reward. |
 | Safari Zone and Warden | Use HNS Fuchsia's existing Safari areas for the Surf destination and Gold Teeth search. Keep returning the Teeth for Strength as a separate local objective. Do not import the entire FRLG Safari merely to reproduce coordinates. |
@@ -105,6 +105,29 @@ Preserve the original objectives, important characters, battle identities,
 ordinary rewards, and dialogue where it remains true. Use short variants for
 different encounter orders and for the HNS setting. Do not invent replacement
 plots merely to avoid importing the selected interiors.
+
+### Lavender during the radio conversion
+
+Lavender is partway through converting Pokémon Tower for radio use. Its ground
+floor is the existing HNS radio lobby and studio; the old memorial
+floors, graves, and Channelers remain above. The Soul House is already open as
+a public chapel and has received some memorials. Mr. Fuji supervises the
+remaining relocation, which pauses when disturbances begin and he disappears.
+This is Wayfarer's local continuity, without a fixed year or a claim that all
+Gen 1 events preceded all Gen 2 events.
+
+Keep both purposes legible and independently playable. Visitors can reach the
+memorial floors before obtaining the Scope or restoring Power Plant service.
+The Scope remains necessary to resolve the ghost and rescue Fuji. The radio
+director's existing Machine Part upgrade, services, and broadcasts keep their
+own conditions; Tower progress does not grant or disable them. The physical
+Poké Flute from Fuji remains a separate reward from the radio's Poké Flute
+program. The memorial floors remain accessible after the rescue.
+
+The port uses a guard-led fade transition from the radio lobby to 2F; the
+downward stair returns to the lobby. It reuses the FRLG upper-floor layouts
+without `map.bin` changes. The [Tower specification](../specs/frlg-kanto-pokemon-tower.md)
+owns the floor graph, Fuji staging, source-content audit, and entrance proof.
 
 ### One coherent Kanto cast and history
 
@@ -377,9 +400,10 @@ provide a valid return to the HNS world.
 ## Open questions
 
 1. **HNS story preservation:** Review the linked conflict inventory and select
-   adaptations for the Power Plant setting, radio services, Snorlax, Copycat,
-   Bill's family, Fuchsia leadership, and other overlapping content. Do not
-   treat a recommendation to defer or remove content as an accepted cut.
+   adaptations for the Power Plant setting, Vermilion Snorlax, Copycat,
+   Bill's family, Fuchsia leadership, and other overlapping content. Lavender's
+   Tower and radio coexistence is settled above. Do not treat a recommendation
+   to defer or remove content as an accepted cut.
 2. **Battle rosters and leadership:** Define Blue's Champion roster for visitors
    and the future Kanto-origin starter branches. Resolve Koga/Janine's roles
    alongside HNS Johto League content; no additional sanctioned badge may be

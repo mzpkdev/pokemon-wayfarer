@@ -764,6 +764,8 @@ gSpecials::
     def_special WayfarerGrantRunningShoes
     def_special WayfarerHasSharedPokedex
     def_special WayfarerGrantSharedPokedex
+    def_special WayfarerCanStartOrdinaryBattleForScript
+    def_special WayfarerGetRocketHideoutElevatorFloorForScript
     def_special DrawWayfarerVermilionPortMenu
     def_special GetWayfarerVermilionPortChoice
     def_special DrawWayfarerVermilionSeviiDestinationMenu

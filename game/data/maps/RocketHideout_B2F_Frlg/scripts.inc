@@ -1,3 +1,4 @@
+#if !IS_WAYFARER
 RocketHideout_B2F_Frlg_MapScripts::
 	.byte 0
 
@@ -18,3 +19,4 @@ RocketHideout_B2F_Text_GruntPostBattle::
 	.string "underground floors.\p"
 	.string "Think you can reach the BOSS?$"
 
+#endif // !IS_WAYFARER

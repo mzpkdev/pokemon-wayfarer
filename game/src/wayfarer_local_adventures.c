@@ -112,17 +112,6 @@ static const struct LocalAdventureSightScript sSightScripts[] =
     {SilphCo_11F_EventScript_Grunt2, SilphCo_11F_EventScript_Grunt2_TrainerBattle},
 };
 
-u16 WayfarerCanStartOrdinaryBattleForScript(void)
-{
-    u32 i;
-    for (i = 0; i < PARTY_SIZE; i++)
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE
-         && !GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)
-         && GetMonData(&gPlayerParty[i], MON_DATA_HP) != 0)
-            return TRUE;
-    return FALSE;
-}
-
 const u8 *WayfarerResolveLocalAdventureTrainerBattleScript(const u8 *scriptStart)
 {
     u32 i;

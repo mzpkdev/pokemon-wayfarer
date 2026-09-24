@@ -1,3 +1,4 @@
+#if !IS_WAYFARER
 .equ NUM_DOOR_GRUNTS_DEFEATED, VAR_TEMP_1
 
 RocketHideout_B4F_Frlg_MapScripts::
@@ -176,3 +177,4 @@ RocketHideout_B4F_Text_Grunt1PostBattle::
 	.string "Oh, no!\n"
 	.string "I dropped the LIFT KEY!$"
 
+#endif // !IS_WAYFARER

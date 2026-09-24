@@ -13,7 +13,9 @@ rather than rewrite every scene as an unrelated episode.
 This document treats FRLG Kanto on its own. It prepares the story requirements
 for a future Wayfarer port; it does not decide how FRLG and HNS Kanto coexist or
 merge. References to Viridian, Lavender, the rival, and other content below mean
-their FRLG versions.
+their FRLG versions. The [Wayfarer Kanto story PRD](frlg-kanto-story-on-hns-maps.md#lavender-during-the-radio-conversion)
+selects Lavender's shared radio and memorial building; the
+[Tower specification](../specs/frlg-kanto-pokemon-tower.md) owns that adaptation.
 
 ## Design
 
@@ -79,7 +81,8 @@ not resolve Marowak, rescue Fuji, or award the Flute.
 Do not grant the Scope merely for entering the hideout or skip its normal reward
 event. Keep the Tower's ghost encounter, Rocket rescue, and Fuji's return as one
 recoverable sequence. Receiving the Flute does not automatically resolve either
-Snorlax encounter.
+Snorlax encounter. For Wayfarer, radio access and its Machine Part upgrade stay
+independent of this sequence; Fuji's physical Flute remains its own reward.
 
 ### Two investigations and Giovanni's finale
 

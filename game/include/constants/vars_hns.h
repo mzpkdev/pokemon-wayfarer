@@ -120,6 +120,8 @@
 #endif
 #define VAR_UNUSED_HNS_0x40D9                           0x40D9
 #if IS_WAYFARER
+#undef VAR_UNUSED_HNS_0x40D9
+#define VAR_CELADON_ROCKET_HIDEOUT_ELEVATOR_FLOOR         0x40D9
 #define VAR_SILPH_ELEVATOR_FLOOR_HNS                     0x40DA
 #define VAR_SILPH_GIOVANNI_SCENE_HNS                     0x40DB
 #else
