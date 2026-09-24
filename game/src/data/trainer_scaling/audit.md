@@ -4,10 +4,10 @@ This report checks authored source records and projected parties. It does not es
 
 | Policy | Populated IDs |
 | --- | ---: |
-| EXCLUDED | 215 |
+| EXCLUDED | 216 |
 | GYM_LEADER | 31 |
 | GYM_MEMBER | 111 |
-| ORDINARY | 1369 |
+| ORDINARY | 1381 |
 
 | Region | Populated IDs |
 | --- | ---: |
@@ -15,7 +15,7 @@ This report checks authored source records and projected parties. It does not es
 | HNS unplaced | 245 |
 | Hoenn | 854 |
 | Johto | 236 |
-| Kanto | 227 |
+| Kanto | 240 |
 | Sevii | 136 |
 | Sinjoh | 8 |
 
@@ -29,7 +29,7 @@ Baseline anchors: 0:7, 4:8, 8:10, 16:15, 30:22, 40:34, 55:52, 65:72, 80:92. Each
 
 Battle XP reads effective species and levels; prize money retains authored party levels and class multiplier.
 
-The audit evaluated 257,256 slot and Rating combinations using the modern level-up learnsets, with 0 structural failures.
+The audit evaluated 259,929 slot and Rating combinations using the modern level-up learnsets, with 0 structural failures.
 
 ## Highest early parties
 
@@ -63,7 +63,7 @@ The audit evaluated 257,256 slot and Rating combinations using the modern level-
 
 ## Species and retained-field observations
 
-- Custom authored moves replaced: 1743 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
+- Custom authored moves replaced: 1777 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Authored ability requires fallback: 1 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Authored gender requires adjustment: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.
 - Incompatible gimmick suppressed: 0 distinct projected outcomes. Exact affected IDs, slots, and Rating intervals are indexed in inventory.json.

@@ -1,9 +1,13 @@
 #include "global.h"
 #include "battle_setup.h"
+#include "pokemon.h"
 #include "test/test.h"
 #include "constants/opponents.h"
 #include "wayfarer_ss_anne_trainer_defeats.h"
 #include "wayfarer_sevii_trainer_defeats.h"
+#include "wayfarer_celadon_hideout.h"
+#include "constants/flags.h"
+#include "constants/species.h"
 
 TEST("Trainer defeat helpers reject sentinel and out-of-range IDs")
 {
@@ -36,6 +40,8 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINER_WAYFARER_TOWER_FIRST, 1779);
     EXPECT_EQ(TRAINER_WAYFARER_TOWER_LAST, 1794);
     EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1795);
+    EXPECT_EQ(TRAINER_CELADON_HIDEOUT_FIRST, 1723);
+    EXPECT_EQ(TRAINER_CELADON_HIDEOUT_LAST, 1735);
     EXPECT_EQ(MAX_TRAINERS_COUNT, MAX_TRAINERS_COUNT_WAYFARER);
     EXPECT_EQ(TRAINER_PARTNER(PARTNER_NONE), 2048);
 }
@@ -156,6 +162,53 @@ TEST("Pokemon Tower Trainer defeats use independent SaveBlock3 bits")
     EXPECT_EQ(gSaveBlock3Ptr->wayfarerTowerTrainerDefeats, 0x8000);
     EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_TOWER_ROCKET_GRUNT_21));
     ClearTrainerFlag(TRAINER_WAYFARER_TOWER_ROCKET_GRUNT_21);
+}
+
+TEST("Wayfarer Celadon Hideout Trainer defeats use isolated local flags")
+{
+    ClearTrainerFlag(TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS);
+    ClearTrainerFlag(TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS);
+    ClearTrainerFlag(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR);
+    ClearTrainerFlag(TRAINER_SAWYER_1);
+
+    EXPECT_EQ(WayfarerCeladonHideoutTrainerDefeatFlag(TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS), FLAG_WAYFARER_CELADON_HIDEOUT_TRAINER_GRUNT_7);
+    EXPECT_EQ(WayfarerCeladonHideoutTrainerDefeatFlag(TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS), FLAG_WAYFARER_CELADON_HIDEOUT_TRAINER_GIOVANNI);
+    EXPECT_EQ(WayfarerCeladonHideoutTrainerDefeatFlag(TRAINER_CELADON_HIDEOUT_FIRST - 1), 0);
+    EXPECT_EQ(WayfarerCeladonHideoutTrainerDefeatFlag(TRAINER_CELADON_HIDEOUT_LAST + 1), 0);
+
+    SetTrainerFlag(TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS);
+    SetTrainerFlag(TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS);
+    EXPECT(HasTrainerBeenFought(TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS));
+    EXPECT(HasTrainerBeenFought(TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS));
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SS_ANNE_SAILOR_TREVOR));
+    EXPECT(!HasTrainerBeenFought(TRAINER_SAWYER_1));
+
+    ClearTrainerFlag(TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS);
+    EXPECT(!HasTrainerBeenFought(TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS));
+    EXPECT(HasTrainerBeenFought(TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS));
+}
+
+TEST("Wayfarer Celadon Hideout battle gate needs a conscious non-Egg party member")
+{
+    u16 hp = 0;
+    bool8 egg = TRUE;
+
+    ZeroPlayerPartyMons();
+    EXPECT(!WayfarerCanStartOrdinaryBattleForScript());
+
+    CreateMon(&gPlayerParty[0], SPECIES_RATTATA, 5, 0, OTID_STRUCT_PLAYER_ID);
+    CalculateMonStats(&gPlayerParty[0]);
+    EXPECT(WayfarerCanStartOrdinaryBattleForScript());
+    SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
+    EXPECT(!WayfarerCanStartOrdinaryBattleForScript());
+    SetMonData(&gPlayerParty[0], MON_DATA_IS_EGG, &egg);
+    hp = 1;
+    SetMonData(&gPlayerParty[0], MON_DATA_HP, &hp);
+    EXPECT(!WayfarerCanStartOrdinaryBattleForScript());
+
+    CreateMon(&gPlayerParty[1], SPECIES_PIDGEY, 5, 0, OTID_STRUCT_PLAYER_ID);
+    CalculateMonStats(&gPlayerParty[1]);
+    EXPECT(WayfarerCanStartOrdinaryBattleForScript());
 }
 
 TEST("Wayfarer Sevii rematch parties share their base Trainer defeat state")

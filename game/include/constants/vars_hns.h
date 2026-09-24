@@ -119,6 +119,10 @@
 #define VAR_WAYFARER_SS_ANNE_BLUE_SCENE                  0x40D8
 #endif
 #define VAR_UNUSED_HNS_0x40D9                           0x40D9
+#if IS_WAYFARER
+#undef VAR_UNUSED_HNS_0x40D9
+#define VAR_CELADON_ROCKET_HIDEOUT_ELEVATOR_FLOOR         0x40D9
+#endif
 #define VAR_UNUSED_HNS_0x40DA                           0x40DA
 #define VAR_UNUSED_HNS_0x40DB                           0x40DB
 #define VAR_UNUSED_HNS_0x40DC                           0x40DC

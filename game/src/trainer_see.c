@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "trainer_see.h"
+#include "wayfarer_celadon_hideout.h"
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
@@ -552,6 +553,9 @@ bool8 CheckForTrainersWantingBattle(void)
 static u8 CheckTrainer(u8 objectEventId)
 {
     const u8 *trainerBattlePtr;
+#if IS_WAYFARER
+    const u8 *trainerScriptStart;
+#endif
     u8 numTrainers = 1;
 
     u8 approachDistance = GetTrainerApproachDistance(&gObjectEvents[objectEventId]);
@@ -565,13 +569,24 @@ static u8 CheckTrainer(u8 objectEventId)
     else
     {
         trainerBattlePtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
+#if IS_WAYFARER
+        trainerScriptStart = trainerBattlePtr;
+#endif
         struct ScriptContext ctx;
         if (RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, trainerBattlePtr, &ctx))
         {
             if (*ctx.scriptPtr == SCR_OP_TRAINERBATTLE)
                 trainerBattlePtr = ctx.scriptPtr;
             else
+            {
                 trainerBattlePtr = NULL;
+#if IS_WAYFARER
+                // The Hideout's exact trainer starts perform a party check first.
+                trainerBattlePtr = WayfarerResolveCeladonHideoutTrainerBattleScript(trainerScriptStart);
+                if (trainerBattlePtr != NULL && !WayfarerCanStartOrdinaryBattleForScript())
+                    return 0;
+#endif
+            }
         }
         else
         {

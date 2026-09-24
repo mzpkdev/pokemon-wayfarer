@@ -55,6 +55,7 @@
 #include "constants/wayfarer_tower_trainers.h"
 #include "trainer_rating.h"
 #include "wild_encounter.h"
+#include "wayfarer_celadon_hideout.h"
 #include "item.h"
 #include "script.h"
 #include "wayfarer_persistence.h"
@@ -1674,6 +1675,7 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     u16 coastDefeatSlot;
     u16 anneDefeatSlot;
     u16 towerDefeatSlot;
+    u16 hideoutDefeatFlag;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1693,6 +1695,9 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     anneDefeatSlot = WayfarerSSAnneTrainerGetDefeatSlot(trainerId);
     if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
         return WayfarerSSAnneTrainerDefeatGet(anneDefeatSlot);
+    hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);
+    if (hideoutDefeatFlag != 0)
+        return FlagGet(hideoutDefeatFlag);
     towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
     if (towerDefeatSlot < TRAINER_WAYFARER_TOWER_COUNT)
         return (gSaveBlock3Ptr->wayfarerTowerTrainerDefeats >> towerDefeatSlot) & 1;
@@ -1711,6 +1716,7 @@ void SetTrainerFlag(u16 trainerId)
     u16 coastDefeatSlot;
     u16 anneDefeatSlot;
     u16 towerDefeatSlot;
+    u16 hideoutDefeatFlag;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1742,6 +1748,12 @@ void SetTrainerFlag(u16 trainerId)
         WayfarerSSAnneTrainerDefeatSet(anneDefeatSlot);
         return;
     }
+    hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);
+    if (hideoutDefeatFlag != 0)
+    {
+        FlagSet(hideoutDefeatFlag);
+        return;
+    }
     towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
     if (towerDefeatSlot < TRAINER_WAYFARER_TOWER_COUNT)
     {
@@ -1763,6 +1775,7 @@ void ClearTrainerFlag(u16 trainerId)
     u16 coastDefeatSlot;
     u16 anneDefeatSlot;
     u16 towerDefeatSlot;
+    u16 hideoutDefeatFlag;
 #endif
 
     if (trainerId == TRAINER_NONE || trainerId == 0xFFFF || trainerId >= TRAINERS_COUNT)
@@ -1792,6 +1805,12 @@ void ClearTrainerFlag(u16 trainerId)
     if (anneDefeatSlot != WAYFARER_SS_ANNE_TRAINER_DEFEAT_SLOT_NONE)
     {
         WayfarerSSAnneTrainerDefeatClear(anneDefeatSlot);
+        return;
+    }
+    hideoutDefeatFlag = WayfarerCeladonHideoutTrainerDefeatFlag(trainerId);
+    if (hideoutDefeatFlag != 0)
+    {
+        FlagClear(hideoutDefeatFlag);
         return;
     }
     towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
