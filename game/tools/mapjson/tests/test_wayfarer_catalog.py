@@ -1445,8 +1445,9 @@ class MapjsonWayfarerTest(unittest.TestCase):
             for map_num, map_name in enumerate(groups[group_name]):
                 self.assertLessEqual(map_num, 127)
                 map_data = data[map_name]
-                if (map_data.get("game_version", "emerald") in {"hns", "emerald"}
-                        and map_name not in RETIRED_HNS_MAP_NAMES):
+                if ((map_data.get("game_version", "emerald") in {"hns", "emerald"}
+                        and map_name not in RETIRED_HNS_MAP_NAMES)
+                        or map_data.get("wayfarer_include")):
                     included.append(map_data)
 
         included_ids = {map_data["id"] for map_data in included}
@@ -1458,7 +1459,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
                 destination = (
                     "MAP_SEAFOAM_ISLANDS_1F_COAST_POC"
                     if map_data["name"] == "Route20_hns" and warp_index < 2
-                    else warp["dest_map"]
+                    else warp.get("wayfarer_dest_map", warp["dest_map"])
                 )
                 self.assertIn(
                     destination,

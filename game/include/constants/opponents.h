@@ -880,10 +880,17 @@
 #include "constants/wayfarer_coast_trainers.h"
 #include "constants/wayfarer_ss_anne_trainers.h"
 #include "constants/wayfarer_celadon_hideout_trainers.h"
+#include "constants/wayfarer_local_trainers.h"
 #else
 #define TRAINERS_COUNT_WAYFARER     (TRAINERS_COUNT_HNS + TRAINERS_COUNT_EMERALD - 1)
 #endif
 #define MAX_TRAINERS_COUNT_WAYFARER 2048
+
+#if IS_WAYFARER && (TRAINER_CELADON_HIDEOUT_FIRST != TRAINER_WAYFARER_SS_ANNE_LAST + 1 \
+                 || TRAINER_CELADON_HIDEOUT_LAST + 2 != TRAINER_WAYFARER_LOCAL_FIRST \
+                 || TRAINER_WAYFARER_LOCAL_LAST + 1 != TRAINERS_COUNT_WAYFARER)
+#error "Wayfarer Hideout and local Trainer ranges must remain distinct and ordered"
+#endif
 
 #if TRAINERS_COUNT_EMERALD != WAYFARER_HOENN_TRAINERS_COUNT
 #error "Wayfarer Hoenn Trainer storage must cover every Emerald Trainer ID"
@@ -898,10 +905,6 @@
 #error "New HNS Trainers must follow the fixed Hoenn range"
 #endif
 
-#if IS_WAYFARER && (TRAINER_WAYFARER_SS_ANNE_LAST + 1 != TRAINER_CELADON_HIDEOUT_GRUNT_7_HNS \
-                 || TRAINER_CELADON_HIDEOUT_GIOVANNI_HNS + 1 != TRAINERS_COUNT_WAYFARER)
-#error "Celadon Hideout Trainers must follow the current Wayfarer ranges"
-#endif
 
 #if TRAINERS_COUNT_HNS > MAX_TRAINERS_COUNT_HNS
 #error "HNS Trainer defeat flags exceed their reserved storage"

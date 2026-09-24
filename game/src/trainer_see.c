@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "trainer_see.h"
+#include "wayfarer_local_adventures.h"
 #include "wayfarer_celadon_hideout.h"
 #include "trainer_hill.h"
 #include "util.h"
@@ -439,6 +440,11 @@ bool8 CheckForTrainersWantingBattle(void)
     u8 trainerObjects[OBJECT_EVENTS_COUNT] = {0};
     u8 trainerObjectsCount = 0;
 
+#if IS_WAYFARER
+    if (!WayfarerCanStartOrdinaryBattleForScript())
+        return FALSE;
+#endif
+
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
 
@@ -581,8 +587,10 @@ static u8 CheckTrainer(u8 objectEventId)
             {
                 trainerBattlePtr = NULL;
 #if IS_WAYFARER
-                // The Hideout's exact trainer starts perform a party check first.
-                trainerBattlePtr = WayfarerResolveCeladonHideoutTrainerBattleScript(trainerScriptStart);
+                // Resolve exact trainer entry scripts after the party check.
+                trainerBattlePtr = WayfarerResolveLocalAdventureTrainerBattleScript(trainerScriptStart);
+                if (trainerBattlePtr == NULL)
+                    trainerBattlePtr = WayfarerResolveCeladonHideoutTrainerBattleScript(trainerScriptStart);
                 if (trainerBattlePtr != NULL && !WayfarerCanStartOrdinaryBattleForScript())
                     return 0;
 #endif
