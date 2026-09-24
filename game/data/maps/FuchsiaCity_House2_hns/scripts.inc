@@ -16,6 +16,14 @@ FuchsiaCity_House2_EventScript_Photo::
 	end
 
 FuchsiaCity_House2_Text_WardensGranddaughter1:
+#if IS_WAYFARER
+	.string "My grandpa is the SAFARI ZONE\n"
+	.string "WARDEN.\p"
+	.string "He's visiting our old FUCHSIA home\n"
+	.string "while he studies DEVON's SAFARI.\p"
+	.string "He lost his GOLD TEETH in the\n"
+	.string "Beach habitat!$"
+#else
 	.string "My grandpa is the SAFARI ZONE\n"
 	.string "WARDEN.\p"
 	.string "At least he was…\p"
@@ -23,11 +31,19 @@ FuchsiaCity_House2_Text_WardensGranddaughter1:
 	.string "took off overseas all by himself.\p"
 	.string "He quit running SAFARI ZONE just\n"
 	.string "like that.$"
+#endif
 
 FuchsiaCity_House2_Text_WardensGranddaughter2:
+#if IS_WAYFARER
+	.string "Grandpa still runs his research at\n"
+	.string "the SAFARI ZONE GATE.\p"
+	.string "DEVON keeps the FUCHSIA SAFARI\n"
+	.string "ZONE open for everyone.$"
+#else
 	.string "Many people were disappointed that\n"
 	.string "SAFARI ZONE closed down, but Grandpa\l"
 	.string "is so stubborn…$"
+#endif
 
 FuchsiaCity_House2_Text_WardenPhoto:
 	.string "It's a photo of a grinning old man\n"
