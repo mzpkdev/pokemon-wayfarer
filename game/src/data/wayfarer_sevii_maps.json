@@ -12151,7 +12151,7 @@
   "baseline": {
     "projection_sha256": "4c4444b40b78ed37b7d6923d1c86c5103ec87175143520ddb645fc3248208a0c",
     "wild_encounters_sha256": "a2264a3346ae5ac0a37cdc22169a1455b2a51a9b7b626f3090504d84eaabb0b7",
-    "event_island_baseline_sha256": "b7ad7fc7f09756bf524b02d720014cbf3f1fbf7ecc2e5a774be7275f84825ae7"
+    "event_island_baseline_sha256": "4a205e15bbbad0e33ad33f8d8348c5bea4b8779202f435c98665782f2ebbab2d"
   },
   "content_domains": {
     "exploration": {
@@ -12638,7 +12638,7 @@
           "label": "CalculatePlayerPartyCount",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "Common_Movement_FaceDown",
@@ -12662,25 +12662,25 @@
           "label": "CountPartyAliveNonEggMons_IgnoreVar0x8004Slot",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "CountPartyNonEggMons",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "DoSeagallopFerryScene",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "DrawSeagallopDestinationMenu",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "EventScript_PC",
@@ -12692,43 +12692,43 @@
           "label": "GetDaycareCost",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "GetDaycareState",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "GetSeagallopNumber",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "GetSelectedMonNicknameAndSpecies",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "GetSelectedSeagallopDestination",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "HealPlayerParty",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "IsEnoughForCostInVar0x8005",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "Movement_PkmnCenterNurse_Bow",
@@ -12812,25 +12812,25 @@
           "label": "ShowDaycareLevelMenu",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "StoreSelectedPokemonInDaycare",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "SubtractMoneyFromVar0x8005",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "TakePokemonFromDaycare",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "UpdateFollowingPokemon",
@@ -12962,13 +12962,13 @@
           "label": "SetIcefallCaveCrackedIceMetatiles",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "ShakeScreen",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         }
       ]
     },
@@ -13144,37 +13144,37 @@
           "label": "WayfarerSevii_HasActiveSelphyRequest",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_PartyHasSpecies",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_SampleSelphyRequest",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_TryClaimSelphyPendingReward",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_TryExchangeItemForRewardThenSetFlags",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_TryGiveItemThenSetFlag",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         }
       ]
     },
@@ -13361,43 +13361,43 @@
           "label": "CapeBrinkGetMoveToTeachLeadPokemon",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "ChooseMonForMoveRelearner",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "ChooseMonForMoveTutor",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "ChoosePartyMon",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "Common_EventScript_OutOfCenterPartyHeal",
           "kind": "script_symbol",
           "path": "data/event_scripts.s",
-          "sha256": "5de5bb7ea38dbf27c36b9a97f00e1386fb4b6f1d0ebc26af8118729eda13ef33"
+          "sha256": "4a9bcf0a3fd33e4f527d572dd025f4a96396fb623d78ae360ec5500d3b38a011"
         },
         {
           "label": "CompareHeracrossSize",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "DoesPlayerPartyContainSpecies",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "EventScript_RestorePrevTextColor",
@@ -13613,19 +13613,19 @@
           "label": "GetHeracrossSizeRecordInfo",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "GetLeadMonFriendship",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "IsSelectedMonEgg",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "OneIsland_KindleRoad_EmberSpa_Text_BrunoVisitsSpaOnOccasion",
@@ -13829,7 +13829,7 @@
           "label": "TeachMoveRelearnerMove",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "Text_AllowMeToTeachMonUltimateMove",
@@ -14129,7 +14129,7 @@
           "label": "WayfarerSevii_TryGiveEggThenSetFlag",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "gText_PleaseComeAgain",
@@ -14313,49 +14313,49 @@
           "label": "BattleSetup_StartLegendaryBattle",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "DrawWholeMapView",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_HasAnyLeagueClear",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_IsMainlandGiovanniComplete",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_IsMoltresEligible",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_ResolveMoltresBattle",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_TryGiveItemThenSetFlag",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         },
         {
           "label": "WayfarerSevii_TryRemoveItemThenSetFlag",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415"
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f"
         }
       ]
     },
@@ -15237,7 +15237,7 @@
           "label": "ShouldTryRematchBattle",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415",
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f",
           "implementation_path": "src/battle_setup.c",
           "implementation_sha256": "3da78d2cd8f822a2d345340cbb8216b6d1509391ac389bf02f7d2e15f7c3a772"
         }
@@ -15384,7 +15384,7 @@
           "label": "CallTrainerTowerFunc",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415",
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f",
           "implementation_path": "src/trainer_tower.c",
           "implementation_sha256": "e7e34f03054c71c1936e11b7344f66ec228b958f7178048ab92cb3a47fffd081"
         },
@@ -15392,7 +15392,7 @@
           "label": "HealPlayerParty",
           "kind": "special",
           "path": "data/specials.inc",
-          "sha256": "5ad2cc234daa6c0f2ee3ed20c0809e9f008579c541e4469440a879fc3a4fb415",
+          "sha256": "50d391e2b72bfea6072054722445b6246e1fc64ba2caf498b347af5c1ca22f8f",
           "implementation_path": "src/script_pokemon_util.c",
           "implementation_sha256": "2746911b4754d57a98509d4181fbbedfdd0c649b6180e827c4cc31df20d0bd51"
         },

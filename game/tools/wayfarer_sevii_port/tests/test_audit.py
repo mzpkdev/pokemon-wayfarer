@@ -77,6 +77,62 @@ class WayfarerSeviiPortAuditTests(unittest.TestCase):
         path.write_text(json.dumps(manifest))
         return AUDIT.build_report(self.root, path, expected_map_count=2, expected_layout_count=2, expected_raw_bytes=10)
 
+    def wild_source_with_mainland_appends(self):
+        coast_maps = (
+            "MAP_CINNABAR_ISLAND", "MAP_ROUTE19", "MAP_ROUTE20",
+            "MAP_ROUTE21_NORTH", "MAP_ROUTE21_SOUTH",
+            "MAP_SEAFOAM_ISLANDS_1F", "MAP_SEAFOAM_ISLANDS_B1F",
+            "MAP_SEAFOAM_ISLANDS_B2F", "MAP_SEAFOAM_ISLANDS_B3F",
+            "MAP_SEAFOAM_ISLANDS_B4F", "MAP_POKEMON_MANSION_1F",
+            "MAP_POKEMON_MANSION_2F", "MAP_POKEMON_MANSION_3F",
+            "MAP_POKEMON_MANSION_B1F",
+        )
+        rows = [{"map": "MAP_ORIGINAL", "base_label": "sOriginal"}]
+        for name in coast_maps:
+            rows.append({"map": name, "base_label": "sCoast_Wayfarer_Day"})
+            if name not in ("MAP_SEAFOAM_ISLANDS_1F", "MAP_SEAFOAM_ISLANDS_B1F"):
+                rows.append({"map": name, "base_label": "sCoast_Wayfarer_Night"})
+        for floor in range(3, 8):
+            for time in ("Day", "Night"):
+                rows.append({"map": f"MAP_POKEMON_TOWER_{floor}F",
+                             "base_label": f"sTower_Wayfarer_{time}"})
+        rows.extend((
+            {"map": "MAP_POWER_PLANT", "base_label": "sPowerPlant_Wayfarer_Day"},
+            {"map": "MAP_POWER_PLANT", "base_label": "sPowerPlant_Wayfarer_Night"},
+        ))
+        return {"wild_encounter_groups": [{"label": "gWildMonHeaders", "encounters": rows}]}
+
+    def test_restores_complete_power_plant_append_before_tower_and_coast(self):
+        path = self.root / "src/data/wild_encounters.json"
+        path.write_text(json.dumps(self.wild_source_with_mainland_appends()))
+        restored = json.loads(AUDIT.restored_coast_wild_source(path))
+        self.assertEqual(restored["wild_encounter_groups"][0]["encounters"], [
+            {"map": "MAP_ORIGINAL", "base_label": "sOriginal"},
+        ])
+
+    def test_rejects_incomplete_or_reordered_power_plant_append(self):
+        path = self.root / "src/data/wild_encounters.json"
+        cases = ("missing_both", "missing_night", "reversed", "before_tower", "duplicate", "wrong_map")
+        for case in cases:
+            with self.subTest(case=case):
+                source = self.wild_source_with_mainland_appends()
+                rows = source["wild_encounter_groups"][0]["encounters"]
+                if case == "missing_both":
+                    del rows[-2:]
+                elif case == "missing_night":
+                    rows.pop()
+                elif case == "reversed":
+                    rows[-2:] = reversed(rows[-2:])
+                elif case == "before_tower":
+                    rows.insert(-12, rows.pop())
+                elif case == "duplicate":
+                    rows.insert(-2, rows[-2].copy())
+                else:
+                    rows[-1]["map"] = "MAP_ROUTE10"
+                path.write_text(json.dumps(source))
+                with self.assertRaisesRegex(AUDIT.AuditError, "Power Plant wild source append"):
+                    AUDIT.restored_coast_wild_source(path)
+
     def test_reports_deterministic_source_provenance(self):
         report = self.report(self.source_fixture())
         self.assertEqual(report["selected_map_count"], 2)

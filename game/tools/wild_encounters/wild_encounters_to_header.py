@@ -91,6 +91,9 @@ RETIRED_WAYFARER_COAST_POC_WILD_MAPS = {
     "MAP_SEAFOAM_ISLANDS_1F_COAST_POC",
     "MAP_SEAFOAM_ISLANDS_B1F_COAST_POC",
 }
+WAYFARER_REPLACED_FRLG_WILD_MAPS = {
+    "MAP_POWER_PLANT",
+}
 FISHING_QUALITIES = ("OLD_ROD", "GOOD_ROD", "SUPER_ROD")
 FISHING_SLOT_COUNT = 10
 FISHING_BASE_BITE_PERCENT = {"OLD_ROD": 25, "GOOD_ROD": 50, "SUPER_ROD": 75}
@@ -449,6 +452,8 @@ def product_for(label):
 
 
 def product_guard(product, map_name=None):
+    if product in {"FIRERED", "LEAFGREEN"} and map_name in WAYFARER_REPLACED_FRLG_WILD_MAPS:
+        return f"{PRODUCT_GUARDS[product]} && !IS_WAYFARER"
     if product == "POKEMON_HNS" and map_name in RETIRED_WAYFARER_HNS_WILD_MAPS:
         return "HAS_HNS_CONTENT && !IS_WAYFARER"
     if product == "POKEMON_WAYFARER" and map_name in RETIRED_WAYFARER_COAST_POC_WILD_MAPS:

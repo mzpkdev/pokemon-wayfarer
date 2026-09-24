@@ -45,3 +45,23 @@ RocketHideout_B4F_EventScript_ItemMaxEther::
 RocketHideout_B4F_EventScript_ItemCalcium::
 	finditem ITEM_CALCIUM
 	end
+
+PowerPlant_EventScript_ItemMaxPotion::
+	finditem ITEM_MAX_POTION
+	end
+
+PowerPlant_EventScript_ItemTM17::
+	finditem ITEM_TM_PROTECT
+	end
+
+PowerPlant_EventScript_ItemTM25::
+	finditem ITEM_TM_THUNDER
+	end
+
+PowerPlant_EventScript_ItemThunderStone::
+	finditem ITEM_THUNDER_STONE
+	end
+
+PowerPlant_EventScript_ItemElixir::
+	finditem ITEM_ELIXIR
+	end

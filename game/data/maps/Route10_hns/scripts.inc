@@ -49,6 +49,7 @@ Route10_EventScript_PPSign::
 	msgbox Route10_Text_PowerPlant, MSGBOX_SIGN
 	end
 
+#if !IS_WAYFARER
 Route10_EventScript_Zapdos::
 	lock
 	faceplayer
@@ -71,6 +72,7 @@ waitstate
 Route10_EventScript_ZapdosRan::
 	release
 	end
+#endif
 
 
 Route10_Text_HikerJimSeen:

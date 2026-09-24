@@ -908,6 +908,38 @@ Json resolve_wayfarer_coast_map_events(Json map_data) {
         output["object_events"] = objects;
         return output;
     }
+    if (name == "PowerPlant_Frlg") {
+        static const map<string, string> flags = {
+            {"FLAG_HIDE_POWER_PLANT_MAX_POTION", "FLAG_WAYFARER_POWER_PLANT_MAX_POTION"},
+            {"FLAG_HIDE_POWER_PLANT_TM17", "FLAG_WAYFARER_POWER_PLANT_TM_PROTECT"},
+            {"FLAG_HIDE_POWER_PLANT_TM25", "FLAG_WAYFARER_POWER_PLANT_TM_THUNDER"},
+            {"FLAG_HIDE_POWER_PLANT_THUNDER_STONE", "FLAG_WAYFARER_POWER_PLANT_THUNDER_STONE"},
+            {"FLAG_HIDE_POWER_PLANT_ELIXIR", "FLAG_WAYFARER_POWER_PLANT_ELIXIR"},
+            {"FLAG_HIDE_POWER_PLANT_ELECTRODE_1", "FLAG_WAYFARER_POWER_PLANT_ELECTRODE_1"},
+            {"FLAG_HIDE_POWER_PLANT_ELECTRODE_2", "FLAG_WAYFARER_POWER_PLANT_ELECTRODE_2"},
+            {"FLAG_HIDE_ZAPDOS", "FLAG_WAYFARER_POWER_PLANT_HIDE_ZAPDOS"},
+            {"FLAG_HIDDEN_ITEM_POWER_PLANT_MAX_ELIXIR", "FLAG_WAYFARER_POWER_PLANT_HIDDEN_MAX_ELIXIR"},
+            {"FLAG_HIDDEN_ITEM_POWER_PLANT_THUNDER_STONE", "FLAG_WAYFARER_POWER_PLANT_HIDDEN_THUNDER_STONE"},
+        };
+        auto remap = [](Json::object event) {
+            auto flag = event.find("flag");
+            if (flag != event.end() && flag->second.type() == Json::Type::STRING) {
+                auto found = flags.find(flag->second.string_value());
+                if (found != flags.end())
+                    flag->second = found->second;
+            }
+            return event;
+        };
+        Json::object output = map_data.object_items();
+        Json::array objects, backgrounds;
+        for (const Json &event : map_data["object_events"].array_items())
+            objects.push_back(remap(event.object_items()));
+        for (const Json &event : map_data["bg_events"].array_items())
+            backgrounds.push_back(remap(event.object_items()));
+        output["object_events"] = objects;
+        output["bg_events"] = backgrounds;
+        return output;
+    }
     if (!wayfarer_coast_map_names.count(name))
         return map_data;
 
@@ -1222,9 +1254,20 @@ Json resolve_wayfarer_coast_warp(const Json &map_data, const Json &warp, size_t 
         return warp;
 
     const string wayfarer_destination = json_to_string(warp, "wayfarer_dest_map", true);
-    if (!wayfarer_destination.empty()) {
+    const string wayfarer_destination_warp = json_to_string(warp, "wayfarer_dest_warp_id", true);
+    const bool has_wayfarer_x = warp["wayfarer_x"] != Json();
+    const bool has_wayfarer_y = warp["wayfarer_y"] != Json();
+    if (!wayfarer_destination.empty() || !wayfarer_destination_warp.empty()
+        || has_wayfarer_x || has_wayfarer_y) {
         Json::object resolved = warp.object_items();
-        resolved["dest_map"] = wayfarer_destination;
+        if (!wayfarer_destination.empty())
+            resolved["dest_map"] = wayfarer_destination;
+        if (!wayfarer_destination_warp.empty())
+            resolved["dest_warp_id"] = wayfarer_destination_warp;
+        if (has_wayfarer_x)
+            resolved["x"] = warp["wayfarer_x"];
+        if (has_wayfarer_y)
+            resolved["y"] = warp["wayfarer_y"];
         return resolved;
     }
 
