@@ -75,7 +75,7 @@ eruption state.
 | Safari Zone and Warden | Use HNS Fuchsia's existing Safari areas for the Surf destination and Gold Teeth search. Keep returning the Teeth for Strength as a separate local objective. Do not import the entire FRLG Safari merely to reproduce coordinates. |
 | Mansion and Blaine | The dedicated coastal port owns the intact town, Mansion, Secret Key, Gym, Lab, Center, Mart, and Blaine's local rewards. No broader Rocket or League prerequisite is added. |
 | Giovanni's finale | Preserve the final confrontation after the two major investigations. Giovanni owns the initial Viridian challenge and Earth Badge. Blue is the rival only for Kanto-origin players and the Kanto Champion for all origins; a later Gym takeover is future work. |
-| Legendary sites | The dedicated coastal port owns full FRLG Seafoam and Articuno. Reuse HNS Power Plant and Cerulean Cave where their spaces support the other encounters; any missing puzzle space needs a named, bounded addition. Groudon belongs to Hoenn. |
+| Legendary sites | The dedicated coastal port owns full FRLG Seafoam and Articuno. Keep the operating HNS Power Plant and add its FRLG old generating hall for the sole Zapdos encounter, as specified [here](../specs/frlg-kanto-power-plant.md). Reuse HNS Cerulean Cave where its spaces support Mewtwo; any missing puzzle space needs a named, bounded addition. Groudon belongs to Hoenn. |
 
 The coastal port owns fossil revival at Cinnabar's laboratory, independently
 of unrelated regional campaign completion.
@@ -129,6 +129,23 @@ downward stair returns to the lobby. It reuses the FRLG upper-floor layouts
 without `map.bin` changes. The [Tower specification](../specs/frlg-kanto-pokemon-tower.md)
 owns the floor graph, Fuji staging, source-content audit, and entrance proof.
 
+### Power Plant old generating hall
+
+Keep the HNS Power Plant's staffed entrance, back room, Machine Part repair,
+trade, and power-dependent services. An existing entrance-hall worker offers a
+scripted fade into the complete FRLG old generating hall; all of its exits
+return safely to the HNS lobby. The hall's maze, encounters, items, and two
+Electrode are available independently of the repair. The back room's west exit
+keeps its repair condition. No exterior replacement or `map.bin` edit is part
+of this port.
+
+Move the only Route 10 Zapdos into the old hall. Players can explore it before
+Trainer Rating 55; the fixed level 50 battle becomes available at TR 55. Zapdos
+uses FRLG outcomes: catch or KO resolves it permanently, while running,
+teleporting, or blacking out leaves it available on return. League completion
+does not respawn it. The [Power Plant specification](../specs/frlg-kanto-power-plant.md)
+owns the entrance, returns, source content, and encounter state.
+
 ### One coherent Kanto cast and history
 
 The player experiences one version of each shared character and institution.
@@ -146,10 +163,9 @@ decision after considering dialogue, event placement, and dependency changes.
 The [HNS Kanto conflict inventory](../research/frlg-hns-kanto-story-conflicts.md)
 records recommendations separately from accepted decisions.
 
-If the Machine Part or radio story is replaced, specify how Misty becomes
-available and how the Magnet Train's power, Copycat's Pass, and any retained
-radio functions work afterward. Removing a predecessor scene must not leave
-one of these services or rewards permanently waiting for an unreachable event.
+Keep the Machine Part and radio story's current causal chain: repair enables
+Misty's return, the Magnet Train's power, Copycat's Pass, and the radio upgrade.
+The old generating hall and Zapdos neither require nor advance that chain.
 
 Retained HNS side quests must not become new prerequisites for the FRLG
 investigations or restore removed restrictions on interregional travel. Their
@@ -273,8 +289,9 @@ Repeated conversations cannot repeatedly award one-time items or Pokémon.
 Bag and party capacity failures leave rewards claimable later.
 
 Retain the independent-story design's readiness requirements for the Master
-Ball and legendary captures, with thresholds decided separately. A deferred
-Master Ball does not delay Silph's rescue or Giovanni's finale. No Sevii
+Ball and legendary captures. Zapdos's battle threshold is TR 55; other
+unsettled thresholds are decided separately. A deferred Master Ball does not
+delay Silph's rescue or Giovanni's finale. No Sevii
 delivery requirement is imported for Mewtwo.
 
 ### S.S. Anne ownership
@@ -400,10 +417,10 @@ provide a valid return to the HNS world.
 ## Open questions
 
 1. **HNS story preservation:** Review the linked conflict inventory and select
-   adaptations for the Power Plant setting, Vermilion Snorlax, Copycat,
+   adaptations for Vermilion Snorlax, Copycat,
    Bill's family, Fuchsia leadership, and other overlapping content. Lavender's
-   Tower and radio coexistence is settled above. Do not treat a recommendation
-   to defer or remove content as an accepted cut.
+   Tower/radio and Power Plant choices are settled above. Do not treat a
+   recommendation to defer or remove content as an accepted cut.
 2. **Battle rosters and leadership:** Define Blue's Champion roster for visitors
    and the future Kanto-origin starter branches. Resolve Koga/Janine's roles
    alongside HNS Johto League content; no additional sanctioned badge may be
