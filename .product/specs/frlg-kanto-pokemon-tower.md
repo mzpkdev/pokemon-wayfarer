@@ -4,7 +4,7 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md#lave
 
 Supporting requirements: [independent story beats](../prds/frlg-kanto-independent-story-beats.md#celadon-lavender-and-the-flute) and [HNS open-world traversal](hns-open-world-region-traversal.md).
 
-Implemented: No. This is the approved direction for a future Wayfarer port, not a claim about current ROM behavior.
+Implemented: Yes in Wayfarer. The standalone Tower journey and persistent state are verified in the E2E ROM; the combined Celadon Scope acquisition chain awaits integration of PR #124. See the [implementation review](../research/frlg-kanto-pokemon-tower-implementation.md).
 
 ## Outcome and boundary
 

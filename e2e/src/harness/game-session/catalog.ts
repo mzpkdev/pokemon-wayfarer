@@ -10,6 +10,15 @@ export const checkpoints = {
 } as const
 
 export const maps = {
+  "lavender-radio-lobby": { mapGroup: 16, mapNum: 5 },
+  "lavender-house1": { mapGroup: 16, mapNum: 2 },
+  "lavender-soul-house": { mapGroup: 16, mapNum: 6 },
+  "pokemon-tower-2f": { mapGroup: 66, mapNum: 89 },
+  "pokemon-tower-3f": { mapGroup: 66, mapNum: 90 },
+  "pokemon-tower-4f": { mapGroup: 66, mapNum: 91 },
+  "pokemon-tower-5f": { mapGroup: 66, mapNum: 92 },
+  "pokemon-tower-6f": { mapGroup: 66, mapNum: 93 },
+  "pokemon-tower-7f": { mapGroup: 66, mapNum: 94 },
   // The selected Anne interiors retain their FRLG dungeon slots. The exterior
   // at slot 4 is deliberately absent from the Wayfarer map closure.
   "ss-anne-1f-corridor": { mapGroup: 66, mapNum: 5 },
@@ -479,6 +488,15 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  towerMarowakCalmed: 0x8e5,
+  towerFujiRescued: 0x8e6,
+  towerFluteClaimed: 0x8e7,
+  towerRocket1Cleared: 0x8e8,
+  towerRocket2Cleared: 0x8e9,
+  towerRocket3Cleared: 0x8ea,
+  towerEscapeRopeClaimed: 0x8eb,
+  towerBlueMet: 0xe076,
+  towerHouse1FujiHidden: 0xe077,
   ssAnneItemTm31: 0x496,
   ssAnneItemStardust: 0x497,
   ssAnneItemXAttack: 0x498,
@@ -590,6 +608,9 @@ export const storyFlags = {
 
 export const species = {
   none: 0,
+  gastly: 92,
+  haunter: 93,
+  cubone: 104,
   pidgey: 16,
   shedinja: 292,
   rattata: 19,
@@ -659,6 +680,9 @@ export const hms = {
 } as const
 
 export const items = {
+  escapeRope: 120,
+  pokeFlute: 724,
+  silphScope: 752,
   pokeBall: 1,
   ultraBall: 3,
   timerBall: 11,
