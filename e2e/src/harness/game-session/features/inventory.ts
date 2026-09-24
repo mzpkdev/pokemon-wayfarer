@@ -2,6 +2,7 @@ import { hms, items, type Hm, type Item } from "../catalog"
 import { type SessionRuntime } from "../runtime"
 
 const keyItemsPocketId = 5
+const saveBlock2EncryptionKeyOffset = 0xac
 const keyItemsCapacity = 60
 const itemSlotSize = 4
 // SkyEmu encodes each requested byte as a query parameter. Keep requests
@@ -19,7 +20,7 @@ const uint32 = (bytes: Uint8Array, offset: number): number =>
   0
 
 export type StandardRod = "oldRod" | "goodRod" | "superRod"
-export type FillablePocket = "items" | "keyItems" | "tmHm"
+export type FillablePocket = "items" | "keyItems" | "tmHm" | "balls"
 
 export type InventoryApi = {
   /**
@@ -27,6 +28,7 @@ export type InventoryApi = {
    * from treating a received HM as a normal Items-pocket reward.
    */
   contains: (item: Item | Hm) => Promise<boolean>
+  count: (item: Item | Hm) => Promise<number>
   /**
    * Test-fixture support for a retry-safe reward: make exactly one native Bag
    * slot available without resetting the save or any event flags.
@@ -36,6 +38,7 @@ export type InventoryApi = {
 }
 
 const fillablePocketIds = {
+  balls: 1,
   items: 3,
   tmHm: 4,
   keyItems: 5,
@@ -104,6 +107,21 @@ export const createInventoryApi = (runtime: SessionRuntime): InventoryApi => ({
       }
     }
     return false
+  },
+  count: async (name) => {
+    const item = { ...items, ...hms }[name]
+    const saveBlock2 = await runtime.readUint32(runtime.address("gSaveBlock2Ptr"))
+    const encryptionKey = await runtime.readUint16(saveBlock2 + saveBlock2EncryptionKeyOffset)
+    let count = 0
+    for (const pocketId of [0, 1, 2, 3, 4, 5]) {
+      const pocket = await readBagPocket(runtime, pocketId)
+      const slots = await readPocketSlots(runtime, pocket)
+      for (let slot = 0; slot < pocket.capacity; slot++) {
+        if (uint16(slots, slot * itemSlotSize) === item)
+          count += uint16(slots, slot * itemSlotSize + 2) ^ encryptionKey
+      }
+    }
+    return count
   },
   freeSlot: async (name) => {
     const pocket = await readBagPocket(runtime, fillablePocketIds[name])

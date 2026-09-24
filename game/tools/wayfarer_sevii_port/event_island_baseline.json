@@ -671,7 +671,7 @@
     {
       "path": "game/data/event_scripts.s",
       "after": "\t.include \"data/scripts/item_ball_scripts.inc\"\n",
-      "insertion": "#if IS_WAYFARER\n\t.include \"data/scripts/wayfarer_ss_anne_item_balls.inc\"\n#endif\n"
+      "insertion": "#if IS_WAYFARER\n\t.include \"data/scripts/wayfarer_ss_anne_item_balls.inc\"\n\t.include \"data/scripts/wayfarer_mt_moon.inc\"\n\t.include \"data/scripts/wayfarer_nugget_bridge.inc\"\n\t.include \"data/scripts/wayfarer_fuchsia_safari.inc\"\n\t.include \"data/scripts/wayfarer_silph.inc\"\n\t.include \"data/scripts/silphco_doors.inc\"\n#endif\n"
     },
     {
       "path": "game/src/data/object_events/object_event_graphics_info_pointers.h",

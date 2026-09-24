@@ -22,7 +22,7 @@ ANNE_ROSTER = ROOT / 'src/data/trainers_wayfarer_ss_anne.h'
 TOWER_ROSTER = ROOT / 'src/data/trainers_wayfarer_tower.h'
 CELADON_HIDEOUT_ROSTER = ROOT / 'src/data/trainers_wayfarer_celadon_hideout.h'
 OUTPUT = ROOT / 'src/data/trainer_scaling'
-SOURCES = ('trainers_hns.party', 'trainers.party')
+SOURCES = ('trainers_hns.party', 'trainers.party', 'trainers_wayfarer_local.party')
 POLICIES = {'EXCLUDED': 0, 'ORDINARY': 1, 'GYM_MEMBER': 2, 'GYM_LEADER': 3}
 ID_RE = re.compile(r'\bTRAINER_[A-Z0-9_]+\b')
 
@@ -285,7 +285,7 @@ def references():
     refs = defaultdict(set)
     non_opponents = set()
     for header in (ROOT / 'include/constants').glob('*.h'):
-        if header.name.startswith('opponents'): continue
+        if header.name.startswith('opponents') or header.name == 'wayfarer_local_trainers.h': continue
         non_opponents.update(re.findall(r'^#define\s+(TRAINER_[A-Z0-9_]+)', header.read_text(), re.M))
     # Follow the product-selected assembly includes rather than every map in
     # map_groups.json. Retired source maps remain catalogued for standalone

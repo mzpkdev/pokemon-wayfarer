@@ -50,7 +50,7 @@ export const commands = {
   observeVar: 11,
   setVar: 12,
 } as const
-export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2 } as const
+export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2, balls: 1 << 3 } as const
 
 export const gamePhases = ["boot", "overworld", "dialogue", "battle"] as const
 export const arrangePhases = [

@@ -4,6 +4,9 @@ MtMoon_Cave_hns_MapScripts::
 	.byte 0
 
 MtMoon_Cave_OnTransition: 
+	#if IS_WAYFARER
+	call WayfarerMtMoon_OnTransition
+	#endif
 	callnative SetTimeBasedEncounters
 	goto_if_ne VAR_PEWTER_CITY_STATE, 0, MtMoon_Cave_EventScript_EndTransition
 	setvar VAR_PEWTER_CITY_STATE, 1

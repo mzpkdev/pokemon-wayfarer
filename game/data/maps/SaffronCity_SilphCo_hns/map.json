@@ -62,6 +62,14 @@
       "elevation": 0,
       "dest_map": "MAP_SAFFRON_CITY_HNS",
       "dest_warp_id": "11"
+    },
+    {
+      "x": 31,
+      "y": 3,
+      "elevation": 3,
+      "dest_map": "MAP_SILPH_CO_2F",
+      "dest_warp_id": "3",
+      "wayfarer_only": true
     }
   ],
   "coord_events": [],
@@ -81,6 +89,15 @@
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "SaffronCity_SilphCo_EventScript_Sign2"
+    },
+    {
+      "type": "sign",
+      "x": 22,
+      "y": 3,
+      "elevation": 3,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_NORTH",
+      "script": "WayfarerSilph_EventScript_ElevatorEntry",
+      "wayfarer_only": true
     }
   ],
   "game_version": "hns",

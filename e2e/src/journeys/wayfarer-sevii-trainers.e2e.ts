@@ -36,12 +36,11 @@ const waitForTrainerBattle = async (
     if (state.battle.ui === "action-menu") return
     if (
       state.battle.ui === "text" ||
-      state.dialogueOpen ||
-      state.scriptActive ||
-      state.controlsLocked
-    ) {
-      await game.controls.press("a")
-    } else await game.wait.frames(12)
+      (!state.battle.active && (state.dialogueOpen || state.scriptActive || state.controlsLocked))
+    )
+      await game.controls.press("a", { holdFrames: 1, releaseFrames: 1 })
+    else
+      await game.wait.frames(4)
   }
   throw new Error(
     `${description} did not reach its action menu: ${JSON.stringify(await game.state.read())}`,
