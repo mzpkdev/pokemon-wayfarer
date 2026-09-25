@@ -9,6 +9,49 @@ const readJson = <T>(filePath: string): T => {
   return JSON.parse(fs.readFileSync(filePath, "utf8")) as T
 }
 
+export type WayfarerSeviiSelection = {
+  maps: ReadonlySet<string>
+  releaseMaps: ReadonlySet<string>
+}
+
+export const sourceWayfarerSeviiSelection = (root: string): WayfarerSeviiSelection => {
+  const relativePath = "src/data/wayfarer_sevii_maps.json"
+  const manifest = readJson<unknown>(path.join(root, relativePath))
+  if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) {
+    throw new Error(`${relativePath}: expected an object`)
+  }
+  const rootRecord = manifest as Record<string, unknown>
+  if (typeof rootRecord.release_link_enabled !== "boolean") {
+    throw new Error(`${relativePath}: release_link_enabled must be a boolean`)
+  }
+  if (!Array.isArray(rootRecord.maps)) {
+    throw new Error(`${relativePath}: maps must be an array`)
+  }
+  const maps = new Set<string>()
+  const releaseMaps = new Set<string>()
+  for (const [index, value] of rootRecord.maps.entries()) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) {
+      throw new Error(`${relativePath}: maps/${index} must be an object`)
+    }
+    const record = value as Record<string, unknown>
+    const sourceMap = record.source_map
+    if (typeof sourceMap !== "string" || sourceMap.length === 0) {
+      throw new Error(`${relativePath}: maps/${index}/source_map must be a non-empty string`)
+    }
+    if (record.enabled !== undefined && typeof record.enabled !== "boolean") {
+      throw new Error(`${relativePath}: maps/${index}/enabled must be a boolean`)
+    }
+    if (maps.has(sourceMap)) {
+      throw new Error(`${relativePath}: duplicate source map ${JSON.stringify(sourceMap)}`)
+    }
+    maps.add(sourceMap)
+    if (rootRecord.release_link_enabled && (record.enabled ?? true)) {
+      releaseMaps.add(sourceMap)
+    }
+  }
+  return { maps, releaseMaps }
+}
+
 const git = (root: string, args: string[]): string | null => {
   try {
     return childProcess

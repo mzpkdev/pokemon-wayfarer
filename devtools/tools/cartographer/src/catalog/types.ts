@@ -258,7 +258,7 @@ export type MapGroups = {
 
 export type MapSourceVersion = "emerald" | "frlg" | "hns" | "sinnoh"
 
-export type CatalogRegionId = "johto" | "kanto" | "hoenn" | "alola" | "sinnoh"
+export type CatalogRegionId = "johto" | "kanto" | "sevii" | "hoenn" | "alola" | "sinnoh"
 
 export type CatalogRegion = {
   id: CatalogRegionId

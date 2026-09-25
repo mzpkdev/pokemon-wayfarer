@@ -30,6 +30,8 @@ import {
   sourceLayouts,
   sourceMaps,
   sourceState,
+  sourceWayfarerSeviiSelection,
+  type WayfarerSeviiSelection,
 } from "./source"
 import type {
   CatalogMap,
@@ -52,8 +54,10 @@ const createCatalogMap = (
   namesById: Map<string, string>,
   objectTables: ObjectSourceTables,
   wildEncounters: CatalogWildEncounters,
+  wayfarerSevii: WayfarerSeviiSelection,
 ): CatalogMap => {
-  const region = regionFor(name, group, source.region_map_section, source.game_version)
+  const isSeviiMap = wayfarerSevii.maps.has(name)
+  const region = regionFor(name, group, source.region_map_section, source.game_version, isSeviiMap)
   const category = categoryFor(source.map_type)
   const paths = mapOutputPaths(output, region.id, category, name)
   fs.mkdirSync(path.dirname(paths.native), { recursive: true })
@@ -74,7 +78,7 @@ const createCatalogMap = (
     name,
     id: source.id,
     region: region.id,
-    builds: buildsForSourceVersion(source.game_version),
+    builds: buildsForSourceVersion(source.game_version, wayfarerSevii.releaseMaps.has(name)),
     category,
     sourceGroup: group,
     sourceRegion: sourceRegionFor(source.game_version),
@@ -139,6 +143,7 @@ const createCatalogMap = (
 export const renderCatalog = (root: string, output: string): RenderCatalogResult => {
   const layouts = sourceLayouts(root)
   const groups = sourceGroups(root)
+  const wayfarerSevii = sourceWayfarerSeviiSelection(root)
   const exteriorMaps = discoverExteriorMaps(root)
   const mapsByName = sourceMaps(root, exteriorMaps)
   const namesById = new Map([...mapsByName].map(([name, map]) => [map.id, name]))
@@ -172,6 +177,7 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
         namesById,
         objectTables,
         wildEncountersByMap.get(name) ?? { sets: [], runtimeTimes: [], diagnostics: [] },
+        wayfarerSevii,
       ),
     )
   }
