@@ -1,7 +1,34 @@
 ViridianCity_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, ViridianCity_KantoOnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_EventScript_CityEnter
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, ViridianCity_OnFrame
 	.byte 0
+
+#if IS_WAYFARER
+ViridianCity_KantoOnLoad:
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_KantoHideBlue
+	goto_if_set FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST, ViridianCity_KantoHideBlue
+	goto_if_set FLAG_HIDE_VIRIDIAN_BLUE_INTRO, ViridianCity_KantoHideBlue
+	goto ViridianCity_KantoShowBlue
+
+ViridianCity_KantoHideBlue:
+	setflag FLAG_TEMP_3
+	end
+
+ViridianCity_KantoShowBlue:
+	clearflag FLAG_TEMP_3
+	end
+#else
+ViridianCity_KantoOnLoad:
+	goto_if_set FLAG_HIDE_VIRIDIAN_BLUE_INTRO, ViridianCity_KantoHideBlueStandalone
+	clearflag FLAG_TEMP_3
+	end
+
+ViridianCity_KantoHideBlueStandalone:
+	setflag FLAG_TEMP_3
+	end
+#endif
 
 ViridianCity_EventScript_CityEnter::
 	setflag FLAG_VISITED_VIRIDIAN_CITY
@@ -48,6 +75,8 @@ ViridianCity_EventScript_GrampsDoubted::
 
 VirianCity_EventScript_GymGramps::
 #if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, VirianCity_EventScript_KantoGymGramps
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, VirianCity_EventScript_GymGrampsBlue
 	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, VirianCity_EventScript_GymGrampsBlue
 #else
@@ -56,6 +85,16 @@ VirianCity_EventScript_GymGramps::
 	msgbox ViridianCity_Text_GrampsNearGym, MSGBOX_NPC
 	end
 
+#if IS_WAYFARER
+VirianCity_EventScript_KantoGymGramps::
+	msgbox ViridianCity_Text_KantoGymGramps, MSGBOX_NPC
+	end
+
+ViridianCity_Text_KantoGymGramps:
+	.string "The GYM is closed today.\p"
+	.string "There's plenty to see in town.$"
+#endif
+
 VirianCity_EventScript_GymGrampsBlue::
 	msgbox ViridianCity_Text_GrampsNearGym_BlueReturned, MSGBOX_NPC
 	end
@@ -63,6 +102,10 @@ VirianCity_EventScript_GymGrampsBlue::
 ViridianCity_EventScript_BlueIntro::
 	lock
 	faceplayer
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_EventScript_KantoBlueGuard
+#endif
 	msgbox ViridianCity_Text_BlueIntro, MSGBOX_DEFAULT
 #if IS_WAYFARER
 	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST
@@ -74,6 +117,12 @@ ViridianCity_EventScript_BlueIntro::
 	removeobject LOCALID_VIRIDIAN_BLUE_INTRO
 	release
 	end
+
+#if IS_WAYFARER
+ViridianCity_EventScript_KantoBlueGuard::
+	release
+	end
+#endif
 
 ViridianCity_Text_BlueIntro:
 	.string "BLUE: Haven't seen you around.\p"
@@ -105,8 +154,22 @@ ViridianCity_EventScript_CitySign2::
 	end
 
 ViridianCity_EventScript_GymSign::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_EventScript_KantoGymSign
+#endif
 	msgbox ViridianCity_Text_GymSign, MSGBOX_SIGN
 	end
+
+#if IS_WAYFARER
+ViridianCity_EventScript_KantoGymSign::
+	msgbox ViridianCity_Text_KantoGymSign, MSGBOX_SIGN
+	end
+
+ViridianCity_Text_KantoGymSign:
+	.string "VIRIDIAN CITY POKéMON GYM\p"
+	.string "Temporarily closed.$"
+#endif
 
 ViridianCity_Text_CoffeeGramps_Question:
 	.string "Hey, kid! I just had a double shot\n"

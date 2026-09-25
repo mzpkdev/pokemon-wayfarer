@@ -8,6 +8,8 @@ ViridianCity_PokemonCenter_OnTransition::
 
 ViridianCity_PokemonCenter_EventScript_CooltrainerM::
 #if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_PokemonCenter_EventScript_KantoVisitor
 	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
 	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
 #else
@@ -15,6 +17,16 @@ ViridianCity_PokemonCenter_EventScript_CooltrainerM::
 #endif
 	msgbox ViridianCity_PokemonCenter_Text_1FCooltrainerM, MSGBOX_NPC
 	end
+
+#if IS_WAYFARER
+ViridianCity_PokemonCenter_EventScript_KantoVisitor::
+	msgbox ViridianCity_PokemonCenter_Text_KantoVisitor, MSGBOX_NPC
+	end
+
+ViridianCity_PokemonCenter_Text_KantoVisitor:
+	.string "This POKéMON CENTER is a good\n"
+	.string "place to rest before ROUTE 1.$"
+#endif
 
 ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue::
 	msgbox ViridianCity_PokemonCenter_Text_1FCooltrainerM_BlueReturned, MSGBOX_NPC

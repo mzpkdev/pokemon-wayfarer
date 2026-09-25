@@ -406,6 +406,9 @@ struct E2ETestState
     u8 secretBaseDecorationCount;
     u8 reserved[3];
     u32 secretBaseDecorationFingerprint;
+    u8 palletOpeningPhase;
+    u8 palletStarterSlot;
+    u16 palletOpeningReceipts;
 };
 
 struct E2ETestAbi

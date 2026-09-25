@@ -76,7 +76,14 @@ export const maps = {
   "route-25": { mapGroup: 0, mapNum: 66 },
   "route25-bills-house": { mapGroup: 23, mapNum: 27 },
   "pallet-town": { mapGroup: 0, mapNum: 31 },
+  "route-1": { mapGroup: 0, mapNum: 41 },
+  "reds-house-1f": { mapGroup: 11, mapNum: 0 },
+  "reds-house-2f": { mapGroup: 11, mapNum: 1 },
+  "blues-house": { mapGroup: 11, mapNum: 2 },
+  "oak-lab": { mapGroup: 11, mapNum: 4 },
   "viridian-city": { mapGroup: 0, mapNum: 32 },
+  "viridian-pokemon-center": { mapGroup: 12, mapNum: 0 },
+  "viridian-mart": { mapGroup: 12, mapNum: 1 },
   "viridian-gym": { mapGroup: 12, mapNum: 4 },
   "cerulean-city": { mapGroup: 0, mapNum: 34 },
   "vermilion-city": { mapGroup: 0, mapNum: 35 },
@@ -513,6 +520,8 @@ export const storyVars = {
   saffronCityState: 0x40bd,
   ssAquaState: 0x408b,
   starterMon: 0x4023,
+  palletLabState: 0x4078,
+  viridianCityState: 0x40c1,
   train: 0x408e,
   triggerElmRocketCall: 0x40b3,
   blackthornCityState: 0x4056,
@@ -721,6 +730,7 @@ export const storyFlags = {
   hideMtMoonSilver: 0x0aa,
   hideViridianBlue: 0x0af,
   viridianBlueIntroduced: 0xe033,
+  defeatedViridianGym: 0x236,
   hideViridianBlueIntro: 0xe034,
   hideCinnabarBlue: 0x0d5,
   hideDragonsDenCavernClair: 0x09f,
@@ -785,6 +795,9 @@ export const storyFlags = {
 } as const
 
 export const species = {
+  bulbasaur: 1,
+  charmander: 4,
+  squirtle: 7,
   pikachu: 25,
   none: 0,
   gastly: 92,
@@ -867,6 +880,8 @@ export const hms = {
 } as const
 
 export const items = {
+  oaksParcel: 746,
+  townMap: 713,
   escapeRope: 120,
   pokeFlute: 724,
   silphCardKey: 902,

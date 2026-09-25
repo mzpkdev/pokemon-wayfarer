@@ -42,6 +42,7 @@ export type GameState = {
     hoennInitialized: boolean
     johtoChoice: number
     hoennChoice: number
+    pallet: { phase: number; starterSlot: number; receipts: number }
     johtoCommitted: boolean
     johtoReceived: boolean
     hoennReceived: boolean
@@ -262,6 +263,11 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         hoennInitialized: snapshot.originHoennInitialized,
         johtoChoice: snapshot.johtoStarterChoice,
         hoennChoice: snapshot.hoennStarterChoice,
+        pallet: {
+          phase: snapshot.palletOpeningPhase,
+          starterSlot: snapshot.palletStarterSlot,
+          receipts: snapshot.palletOpeningReceipts,
+        },
         johtoCommitted: snapshot.johtoStarterCommitted,
         johtoReceived: snapshot.johtoStarterReceived,
         hoennReceived: snapshot.hoennStarterReceived,

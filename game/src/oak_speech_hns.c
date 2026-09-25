@@ -250,12 +250,14 @@ static const struct MenuAction sMenuActions_Gender[] = {
 static const struct MenuAction sMenuActions_Origin[] = {
     {COMPOUND_STRING("JOHTO"), {NULL}},
     {COMPOUND_STRING("HOENN"), {NULL}},
+    {COMPOUND_STRING("KANTO"), {NULL}},
 };
 
-static const u16 sOakOriginIds[] = {ORIGIN_NEW_BARK, ORIGIN_LITTLEROOT};
+static const u16 sOakOriginIds[] = {ORIGIN_NEW_BARK, ORIGIN_LITTLEROOT, ORIGIN_PALLET};
 static const u8 *const sOakOriginConfirmations[] = {
     gText_Oak_OriginJohto,
     gText_Oak_OriginHoenn,
+    COMPOUND_STRING("Ah, KANTO! You'll begin in\nPALLET TOWN, then?"),
 };
 #endif
 

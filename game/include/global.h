@@ -395,6 +395,13 @@ struct WayfarerCoastPersistentState
     u16 vars[WAYFARER_COAST_VAR_COUNT];
     u8 magic;
 };
+
+struct WayfarerPalletOpeningState
+{
+    u8 phase;
+    u8 starterSlot;
+    u16 receipts;
+};
 #endif
 
 struct SaveBlock3
@@ -419,6 +426,7 @@ struct SaveBlock3
     struct WayfarerHoennPersistentState wayfarerHoenn;
     struct WayfarerSeviiPersistentState wayfarerSevii;
     struct WayfarerCoastPersistentState wayfarerCoast;
+    struct WayfarerPalletOpeningState wayfarerPalletOpening;
     u16 wayfarerTowerTrainerDefeats;
 #endif
 }; /* max size 1624 bytes */

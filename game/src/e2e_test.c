@@ -53,7 +53,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 19,
+    .version = 20,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -69,7 +69,7 @@ STATIC_ASSERT(offsetof(struct E2ETestRequest, decoratedSecretBase) == 370, E2ETe
 STATIC_ASSERT(offsetof(struct E2ETestRequest, status) == 87, E2ETestRequestStatusOffset);
 STATIC_ASSERT(sizeof(struct E2ETestResult) == 16, E2ETestResultSize);
 STATIC_ASSERT(offsetof(struct E2ETestResult, status) == 14, E2ETestResultStatusOffset);
-STATIC_ASSERT(sizeof(struct E2ETestState) == 448, E2ETestStateSize);
+STATIC_ASSERT(sizeof(struct E2ETestState) == 452, E2ETestStateSize);
 STATIC_ASSERT(offsetof(struct E2ETestState, playerAppearanceId) == 382, E2ETestAppearanceIdOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceCandidate) == 383, E2ETestAppearanceCandidateOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, appearanceConfirmed) == 384, E2ETestAppearanceConfirmedOffset);
@@ -1432,6 +1432,9 @@ static void UpdateState(void)
         gE2ETestState.leagueRunActive = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active;
         gE2ETestState.leagueRunRegion = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.region;
         gE2ETestState.leagueRunRating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
+        gE2ETestState.palletOpeningPhase = gSaveBlock3Ptr->wayfarerPalletOpening.phase;
+        gE2ETestState.palletStarterSlot = gSaveBlock3Ptr->wayfarerPalletOpening.starterSlot;
+        gE2ETestState.palletOpeningReceipts = gSaveBlock3Ptr->wayfarerPalletOpening.receipts;
     }
 #endif
     trainerCardState = E2ETest_GetTrainerCardState();

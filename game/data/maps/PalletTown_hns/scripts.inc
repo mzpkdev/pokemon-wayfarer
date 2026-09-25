@@ -1,10 +1,89 @@
 PalletTown_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, PalletTown_KantoOnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_EventScript_CityEnter
 	.byte 0
+
+PalletTown_KantoOnLoad:
+	setflag FLAG_TEMP_1
+	end
 
 PalletTown_EventScript_CityEnter::
 	setflag FLAG_VISITED_PALLET_TOWN
 	end
+
+PalletTown_EventScript_KantoNorthExit::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, FALSE, PalletTown_EventScript_KantoExitAllowed
+	specialvar VAR_RESULT, WayfarerKanto_GetPhase
+	goto_if_ge VAR_RESULT, PALLET_OPENING_LAB_STARTER_CHOICE, PalletTown_EventScript_KantoExitAllowed
+	lockall
+	specialvar VAR_RESULT, WayfarerKanto_TryStageInterception
+	goto_if_eq VAR_RESULT, FALSE, PalletTown_EventScript_KantoReleaseExit
+	clearflag FLAG_TEMP_1
+	addobject LOCALID_PALLET_KANTO_OAK
+	applymovement LOCALID_PALLET_KANTO_OAK, PalletTown_Movement_KantoOakApproach
+	waitmovement 0
+	msgbox PalletTown_Text_KantoOakWarning, MSGBOX_DEFAULT
+	msgbox PalletTown_Text_KantoOakLead, MSGBOX_DEFAULT
+	closemessage
+	warp MAP_PALLET_TOWN_LAB_HNS, 13, 14
+	waitstate
+PalletTown_EventScript_KantoReleaseExit:
+	releaseall
+	end
+#else
+	end
+#endif
+
+PalletTown_EventScript_KantoSouthCoast::
+#if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, FALSE, PalletTown_EventScript_KantoExitAllowed
+	specialvar VAR_RESULT, WayfarerKanto_IsOpeningComplete
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_EventScript_KantoExitAllowed
+	lockall
+	msgbox PalletTown_Text_KantoCoastClosed, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_PLAYER, PalletTown_Movement_KantoStepFromCoast
+	waitmovement 0
+	releaseall
+#endif
+	end
+
+PalletTown_EventScript_KantoOak::
+#if IS_WAYFARER
+	msgbox PalletTown_Text_KantoOakWarning, MSGBOX_NPC
+#endif
+	end
+
+#if IS_WAYFARER
+PalletTown_EventScript_KantoExitAllowed:
+	end
+
+PalletTown_Movement_KantoOakApproach:
+	walk_up
+	walk_up
+	step_end
+
+PalletTown_Movement_KantoStepFromCoast:
+	walk_up
+	step_end
+
+PalletTown_Text_KantoOakWarning:
+	.string "OAK: Wait, {PLAYER}!\p"
+	.string "Wild POKéMON live in the grass.\n"
+	.string "You need a partner to be safe.$"
+
+PalletTown_Text_KantoOakLead:
+	.string "OAK: Come with me to my LAB.\p"
+	.string "I have a POKéMON for you.$"
+
+PalletTown_Text_KantoCoastClosed:
+	.string "The southern sea can wait.\p"
+	.string "I should finish PROF. OAK's\n"
+	.string "errand first.$"
+#endif
 
 PalletTown_EventScript_Woman::
 	msgbox PalletTown_Text_Teacher, MSGBOX_NPC

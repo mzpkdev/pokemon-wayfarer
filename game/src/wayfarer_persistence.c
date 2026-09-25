@@ -10,6 +10,7 @@
 #include "wayfarer_persistence.h"
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_kanto_opening.h"
 #include "wayfarer_appearance.h"
 #include "wayfarer_sevii_story.h"
 #include "trainer_rating.h"
@@ -151,6 +152,7 @@ void WayfarerInitPersistentState(void)
     VarSet(VAR_HOENN_STARTER_CHOICE, HOENN_STARTER_CHOICE_NONE);
     FlagSet(HOENN_FLAG_ID(WAYFARER_HOENN_HIDE_ROUTE_103_RIVAL_FLAG));
     WayfarerSeviiInitPersistentState();
+    WayfarerKanto_InitializeOpening();
     memset(&gSaveBlock3Ptr->wayfarerCoast, 0, sizeof(gSaveBlock3Ptr->wayfarerCoast));
     gSaveBlock3Ptr->wayfarerCoast.magic = WAYFARER_COAST_STATE_MAGIC;
     gSaveBlock3Ptr->wayfarerTowerTrainerDefeats = 0;
@@ -306,6 +308,49 @@ void WayfarerSeviiRematchClearAllPending(void)
 #endif
 }
 
+#if IS_WAYFARER
+static bool8 IsPalletOpeningStateValid(void)
+{
+    const struct WayfarerPalletOpeningState *state = &gSaveBlock3Ptr->wayfarerPalletOpening;
+    const u16 receipts = state->receipts;
+    u16 expected = 0;
+
+    if (WayfarerGetStartingOriginId() != ORIGIN_PALLET)
+        return state->phase == PALLET_OPENING_HOME
+            && state->starterSlot == KANTO_STARTER_SLOT_NONE && receipts == 0;
+    if (state->phase > PALLET_OPENING_COMPLETE || state->starterSlot > KANTO_STARTER_SLOT_NONE)
+        return FALSE;
+    if (state->phase < PALLET_OPENING_LAB_STARTER_CHOICE)
+        return state->starterSlot == KANTO_STARTER_SLOT_NONE && receipts == 0;
+    if (state->phase == PALLET_OPENING_LAB_STARTER_CHOICE)
+        return receipts == 0;
+    if (state->starterSlot == KANTO_STARTER_SLOT_NONE)
+        return FALSE;
+    expected |= PALLET_RECEIPT_STARTER;
+    if (state->phase >= PALLET_OPENING_FIRST_BLUE_BATTLE_RESOLVED)
+        expected |= PALLET_RECEIPT_FIRST_BATTLE;
+    if (state->phase >= PALLET_OPENING_PARCEL_RECEIVED)
+        expected |= PALLET_RECEIPT_PARCEL_RECEIVED;
+    if (state->phase >= PALLET_OPENING_PARCEL_ACCEPTED)
+    {
+        expected |= PALLET_RECEIPT_PARCEL_ACCEPTED;
+        if (receipts & PALLET_RECEIPT_BLUE_ARRIVED)
+            expected |= PALLET_RECEIPT_BLUE_ARRIVED;
+    }
+    if (state->phase >= PALLET_OPENING_POKEDEX_HANDOFF_COMPLETE)
+        expected |= PALLET_RECEIPT_BLUE_ARRIVED | PALLET_RECEIPT_POKEDEX;
+    if (state->phase >= PALLET_OPENING_POKE_BALLS_RECEIVED)
+    {
+        expected |= PALLET_RECEIPT_POKE_BALLS;
+        if (receipts & PALLET_RECEIPT_PRESENTATION_DONE)
+            expected |= PALLET_RECEIPT_PRESENTATION_DONE;
+    }
+    if (state->phase == PALLET_OPENING_COMPLETE)
+        expected |= PALLET_RECEIPT_PRESENTATION_DONE | PALLET_RECEIPT_COMPLETE;
+    return receipts == expected;
+}
+#endif
+
 bool8 WayfarerPersistentStateIsValid(void)
 {
 #if IS_WAYFARER
@@ -314,6 +359,7 @@ bool8 WayfarerPersistentStateIsValid(void)
         && WayfarerSeviiPersistentStateIsValid()
         && gSaveBlock3Ptr->wayfarerCoast.magic == WAYFARER_COAST_STATE_MAGIC
         && WayfarerGetOriginProfile(WayfarerGetStartingOriginId()) != NULL
+        && IsPalletOpeningStateValid()
         && GetHealLocation(gSaveBlock3Ptr->wayfarerHoenn.fallbackHealLocation) != NULL
         && gSaveBlock3Ptr->wayfarerHoenn.initialized <= TRUE
         && (!WayfarerUsesNativeHoennOpening() || gSaveBlock3Ptr->wayfarerHoenn.initialized == TRUE);

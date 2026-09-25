@@ -60,6 +60,7 @@
 #include "script.h"
 #include "wayfarer_persistence.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_kanto_opening.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -1682,6 +1683,8 @@ bool8 HasTrainerBeenFought(u16 trainerId)
         return FALSE;
 
 #if IS_WAYFARER
+    if (trainerId >= TRAINER_WAYFARER_KANTO_FIRST && trainerId <= TRAINER_WAYFARER_KANTO_LAST)
+        return WayfarerKanto_HasFirstBattleResolved();
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
         return WayfarerHoennTrainerFlagGet(trainerId);
     // Selected Sevii IDs own a compact SaveBlock3 defeat bank. This must run
@@ -1725,6 +1728,11 @@ void SetTrainerFlag(u16 trainerId)
         return;
 
 #if IS_WAYFARER
+    if (trainerId >= TRAINER_WAYFARER_KANTO_FIRST && trainerId <= TRAINER_WAYFARER_KANTO_LAST)
+    {
+        WayfarerKanto_ResolveFirstBattle();
+        return;
+    }
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagSet(trainerId);
@@ -1789,6 +1797,8 @@ void ClearTrainerFlag(u16 trainerId)
         return;
 
 #if IS_WAYFARER
+    if (trainerId >= TRAINER_WAYFARER_KANTO_FIRST && trainerId <= TRAINER_WAYFARER_KANTO_LAST)
+        return;
     if (trainerId > WAYFARER_HOENN_TRAINER_OFFSET && trainerId < TRAINER_FALKNER_POSTOBC_HNS)
     {
         WayfarerHoennTrainerFlagClear(trainerId);

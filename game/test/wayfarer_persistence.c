@@ -18,6 +18,7 @@
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
+#include "wayfarer_kanto_opening.h"
 #include "wayfarer_ss_anne.h"
 #include "test/test.h"
 #include "gba/flash_internal.h"
@@ -788,6 +789,7 @@ TEST("Wayfarer incremental partial save commits and reloads every SaveBlock3 chu
     gSaveBlock3Ptr->wayfarerSevii.magic = WAYFARER_SEVII_STATE_MAGIC;
     WayfarerSeviiRematchStageSet(63, 3);
     WayfarerSeviiRematchPendingSet(63, TRUE);
+    WayfarerKanto_InitializeOpening();
     memcpy(sWayfarerExpectedSaveBlock3, saveBlock3Bytes, sizeof(sWayfarerExpectedSaveBlock3));
 
     // If a storage sector payload is accidentally replaced instead of merely

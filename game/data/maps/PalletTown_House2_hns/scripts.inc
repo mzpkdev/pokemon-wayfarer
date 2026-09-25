@@ -5,6 +5,8 @@ PalletTown_House2_EventScript_Daisy::
 	lock
 	faceplayer
 #if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_House2_EventScript_KantoDaisy
 	goto_if_unset FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, PalletTown_House2_EventScript_Blue
 #else
 	goto_if_unset FLAG_HIDE_CINNABAR_BLUE, PalletTown_House2_EventScript_Blue
@@ -14,6 +16,27 @@ PalletTown_House2_EventScript_Daisy::
 	closemessage
 	release
 	end
+
+#if IS_WAYFARER
+PalletTown_House2_EventScript_KantoDaisy::
+	specialvar VAR_RESULT, WayfarerKanto_GetPhase
+	goto_if_ge VAR_RESULT, PALLET_OPENING_STARTER_RECEIVED, PalletTown_House2_EventScript_KantoDaisyServices
+	msgbox PalletTown_House2_Text_KantoDaisy, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+PalletTown_House2_EventScript_KantoDaisyServices:
+	goto_if_unset FLAG_DAILY_DAISY_GROOMED, PalletTown_House2_EventScript_DaisyGrooming
+	msgbox PalletTown_House2_Text_AlreadyGroomed, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+PalletTown_House2_Text_KantoDaisy:
+	.string "DAISY: It's a fine day to begin\n"
+	.string "a journey. Take care, {PLAYER}!$"
+#endif
 
 PalletTown_House2_EventScript_Blue::
 	msgbox PalletTown_House2_Text_Hello, MSGBOX_DEFAULT

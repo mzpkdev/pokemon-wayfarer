@@ -1,10 +1,46 @@
 ViridianCity_Gym_hns_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, ViridianCity_Gym_KantoOnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, ViridianCity_Gym_KantoOnFrame
 	.byte 0
+
+#if IS_WAYFARER
+ViridianCity_Gym_KantoOnTransition:
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_Gym_KantoArmRefusal
+	setvar VAR_TEMP_1, 0
+	end
+
+ViridianCity_Gym_KantoArmRefusal:
+	setvar VAR_TEMP_1, 1
+	end
+
+ViridianCity_Gym_KantoOnFrame:
+	map_script_2 VAR_TEMP_1, 1, ViridianCity_Gym_KantoRefuseEntry
+	.2byte 0
+
+ViridianCity_Gym_KantoRefuseEntry::
+	lockall
+	setvar VAR_TEMP_1, 0
+	msgbox ViridianCity_Gym_Text_KantoClosed, MSGBOX_DEFAULT
+	closemessage
+	warp MAP_VIRIDIAN_CITY_HNS, 43, 15
+	waitstate
+	releaseall
+	end
+#else
+ViridianCity_Gym_KantoOnTransition:
+	end
+
+ViridianCity_Gym_KantoOnFrame:
+	.2byte 0
+#endif
 
 ViridianCity_Gym_EventScript_Blue::
 	lock
 	faceplayer
 #if IS_WAYFARER
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, TRUE, ViridianCity_Gym_EventScript_KantoClosed
 	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, ViridianCity_Gym_EventScript_BlueKnown
 	setflag FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST
 	setflag FLAG_WAYFARER_HIDE_VIRIDIAN_BLUE_INTRO_COAST
@@ -12,6 +48,7 @@ ViridianCity_Gym_EventScript_Blue::
 	goto ViridianCity_Gym_EventScript_BlueKnown
 ViridianCity_Gym_EventScript_BlueKnown::
 #endif
+
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	goto_if_unset FLAG_BADGE16_GET, ViridianCity_Gym_EventScript_BlueOfficialChallenge
 #endif
@@ -42,6 +79,18 @@ ViridianCity_Gym_EventScript_BlueOfficialChallenge::
 	setvar VAR_OAK_MT_SILVER_CALL, 1
 	release
 	end
+
+#if IS_WAYFARER
+ViridianCity_Gym_EventScript_KantoClosed::
+	msgbox ViridianCity_Gym_Text_KantoClosed, MSGBOX_DEFAULT
+	closemessage
+	release
+	end
+
+ViridianCity_Gym_Text_KantoClosed:
+	.string "The GYM is closed for now.\p"
+	.string "Come back another time.$"
+#endif
 
 ViridianCity_Gym_EventScript_Blue_Defeated::
 	msgbox ViridianCity_Gym_Text_LeaderBlue_Epilogue, MSGBOX_DEFAULT

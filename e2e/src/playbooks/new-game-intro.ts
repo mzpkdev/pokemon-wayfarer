@@ -1,6 +1,13 @@
 import { type GameSession } from "../harness/game-session"
 
-export type StartingOrigin = "johto" | "hoenn"
+export type StartingOrigin = "johto" | "hoenn" | "kanto"
+
+const originIds: Record<StartingOrigin, number> = { johto: 1, hoenn: 2, kanto: 3 }
+const originDestinations: Record<StartingOrigin, string> = {
+  johto: "players-bedroom",
+  hoenn: "inside-of-truck",
+  kanto: "reds-house-2f",
+}
 
 export const appearanceStyles = {
   1: { id: 1, gender: 0 },
@@ -93,12 +100,12 @@ export const finishOriginIntroduction = async (
   await waitForOriginStage(game, 2)
   await game.controls.press("a")
   await waitForOriginStage(game, 3)
-  const destination = origin === "johto" ? "players-bedroom" : "inside-of-truck"
+  const destination = originDestinations[origin]
   for (let interaction = 0; interaction < 60; interaction++) {
     await game.wait.frames(90)
     const state = await game.state.read()
     if (state.map.name === destination && state.ready) {
-      if (state.origin.id !== (origin === "johto" ? 1 : 2))
+      if (state.origin.id !== originIds[origin])
         throw new Error(`Wrong saved origin at ${destination}: ${JSON.stringify(state.origin)}`)
       return
     }
@@ -117,7 +124,8 @@ export const playThroughNewGameIntro = async (
   style: AppearanceStyle = 1,
 ): Promise<void> => {
   await reachOriginQuestion(game, style)
-  if (origin === "hoenn") await game.controls.press("down")
+  for (let index = 0; index < originIds[origin] - 1; index++)
+    await game.controls.press("down")
   await game.controls.press("a")
   await finishOriginIntroduction(game, origin)
   const state = await game.state.read()

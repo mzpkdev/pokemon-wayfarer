@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 19
+const abiVersion = 20
 const expectedRequestSize = 372
 const expectedResultSize = 16
-const expectedStateSize = 448
+const expectedStateSize = 452
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -306,6 +306,9 @@ export type StateSnapshot = {
   littlerootTownState: number
   secretBaseDecorationCount: number
   secretBaseDecorationFingerprint: number
+  palletOpeningPhase: number
+  palletStarterSlot: number
+  palletOpeningReceipts: number
 }
 
 const emptyMon = (): MonFixtureWire => ({ species: 0, moves: [0, 0, 0, 0], level: 0, egg: false })
@@ -873,6 +876,9 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     partyStatus: Array.from({ length: maxParty }, (_, index) => uint32(bytes, 416 + index * 4)),
     secretBaseDecorationCount: bytes[440]!,
     secretBaseDecorationFingerprint: uint32(bytes, 444),
+    palletOpeningPhase: bytes[448]!,
+    palletStarterSlot: bytes[449]!,
+    palletOpeningReceipts: uint16(bytes, 450),
     trainerOnly: {
       active: bytes[386] !== 0,
       initialCatchFactor: bytes[387]!,

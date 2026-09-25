@@ -21,14 +21,14 @@ import {
 const abi: SessionAbi = {
   requestSize: 372,
   resultSize: 16,
-  stateSize: 448,
+  stateSize: 452,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 19): Uint8Array => {
+const abiBytes = (version = 20): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -75,7 +75,7 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(356))).toEqual(Array(16).fill(0))
 }
 
-describe("game-session v19 protocol", () => {
+describe("game-session v20 protocol", () => {
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
     expect(encodeCommandRequest(abi, request())[369]).toBe(0)
     for (const id of [1, 2, 5, 6])
@@ -229,6 +229,20 @@ describe("game-session v19 protocol", () => {
         egg: false,
       },
     ])
+  })
+
+  it("decodes the independent Pallet opening state from the snapshot tail", () => {
+    const bytes = new Uint8Array(abi.stateSize)
+    const view = new DataView(bytes.buffer)
+    bytes[448] = 5
+    bytes[449] = 2
+    view.setUint16(450, 0x153, true)
+
+    expect(parseStateSnapshot(bytes)).toMatchObject({
+      palletOpeningPhase: 5,
+      palletStarterSlot: 2,
+      palletOpeningReceipts: 0x153,
+    })
   })
 
   it("decodes semantic League Circuit state", () => {

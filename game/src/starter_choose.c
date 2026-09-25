@@ -17,6 +17,7 @@
 #include "sprite.h"
 #include "starter_choose.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_kanto_opening.h"
 #include "strings.h"
 #include "task.h"
 #include "text.h"
@@ -497,7 +498,35 @@ u16 GetJohtoStarterPokemon(u16 chosenStarterId)
 #endif
     return species;
 }
+
+u16 GetKantoStarterPokemon(u16 chosenStarterId)
+{
+    static const u16 starters[] = {SPECIES_BULBASAUR, SPECIES_CHARMANDER, SPECIES_SQUIRTLE};
+    u16 species;
+
+    if (chosenStarterId >= ARRAY_COUNT(starters))
+        chosenStarterId = 0;
+    if (IsOneTypeChallengeActive())
+        return GetStarterPokemon(chosenStarterId);
+    species = starters[chosenStarterId];
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
+        species = RandomizeMon(RANDOMIZER_REASON_STARTER_AND_GIFT_MON,
+                               GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE),
+                               GetRandomizerSeed() ^ species, species);
 #endif
+    return species;
+}
+#endif
+
+static u16 GetDisplayedStarterPokemon(u16 selection)
+{
+#if IS_WAYFARER
+    if (WayfarerKanto_IsPalletOrigin() && WayfarerKanto_GetPhase() == PALLET_OPENING_LAB_STARTER_CHOICE)
+        return GetKantoStarterPokemon(selection);
+#endif
+    return GetStarterPokemon(selection);
+}
 
 static void VblankCB_StarterChoose(void)
 {
@@ -640,7 +669,7 @@ static void Task_HandleStarterChooseInput(u8 taskId)
         gTasks[taskId].tCircleSpriteId = spriteId;
 
         // Create Pokémon sprite
-        spriteId = CreatePokemonFrontSprite(GetStarterPokemon(gTasks[taskId].tStarterSelection), sPokeballCoords[selection][0], sPokeballCoords[selection][1]);
+        spriteId = CreatePokemonFrontSprite(GetDisplayedStarterPokemon(gTasks[taskId].tStarterSelection), sPokeballCoords[selection][0], sPokeballCoords[selection][1]);
         gSprites[spriteId].affineAnims = &sAffineAnims_StarterPokemon;
         gSprites[spriteId].callback = SpriteCB_StarterPokemon;
 
@@ -671,7 +700,7 @@ static void Task_WaitForStarterSprite(u8 taskId)
 
 static void Task_AskConfirmStarter(u8 taskId)
 {
-    PlayCry_Normal(GetStarterPokemon(gTasks[taskId].tStarterSelection), 0);
+    PlayCry_Normal(GetDisplayedStarterPokemon(gTasks[taskId].tStarterSelection), 0);
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
     AddTextPrinterParameterized(0, FONT_NORMAL, gText_ConfirmStarterChoice, 0, 1, 0, NULL);
     ScheduleBgCopyTilemapToVram(0);
@@ -719,7 +748,7 @@ static void CreateStarterPokemonLabel(u8 selection)
     s32 width;
     u8 labelLeft, labelRight, labelTop, labelBottom;
 
-    u16 species = GetStarterPokemon(selection);
+    u16 species = GetDisplayedStarterPokemon(selection);
     CopyMonCategoryText(species, categoryText);
     speciesName = GetSpeciesName(species);
 
