@@ -165,25 +165,28 @@ dispatch consume this same resolved context.
 
 ### Regional state isolation
 
-Johto, Kanto, and Hoenn have separate badge and Champion meanings. Completing
-or resetting one region's League cannot alter another region's badges,
-Champion state, Trainers, items, NPCs, or campaign values.
+Johto, Kanto, and Hoenn have separate badge, story, Trainer, item, NPC, and
+campaign state. The shared Indigo League is the deliberate Champion exception:
+its one canonical clear establishes the Champion title recognized by both
+Kanto and Johto. That projection is one circuit result and one reward, not two
+independent regional League clears. The Sevii Masters Challenge has dedicated
+circuit state and no regional Champion or game-clear meaning.
 
-The interregional League circuit may aggregate regional badges and Champion
-results for League qualification and Trainer Rating. League results never
-limit badge collection. The circuit
-derives those facts from the isolated regional states and does not merge or
-duplicate their storage. Hoenn scripts that reveal local postgame content must
-still check Hoenn Champion or Hoenn game-clear state, not a global flag that
-Johto or Kanto can set.
+The interregional circuit aggregates regional badges and its canonical Indigo,
+Masters, and Hoenn first-clear facts for qualification and Trainer Rating.
+Circuit results never limit badge collection. Hoenn scripts that reveal local
+postgame content must still check Hoenn Champion or Hoenn game-clear state, not
+Indigo, Masters, or a generic global flag.
 
-Whiteout, Hall of Fame, daily reset, and new-game code must dispatch regional
-story cleanup to the applicable region. A whiteout in Johto cannot relocate a
-Hoenn NPC. Entering the Hoenn Hall of Fame cannot run the Johto League reset.
+Whiteout, Hall of Fame, daily reset, and new-game code must dispatch cleanup to
+the applicable venue and region. A whiteout in Johto cannot relocate a Hoenn
+NPC. The Masters Gallery cannot run a regional Hall of Fame path, and entering
+the Hoenn Hall of Fame cannot reset Indigo or Masters rooms.
 
-In Wayfarer, the fixed circuit order is Kanto, Johto, then Hoenn. A League
-clear may advance the global circuit only after its own regional completion
-has committed. It cannot synthesize another region's Champion result.
+Wayfarer's fixed circuit order is Indigo, Sevii Masters, then Hoenn. A
+first-clear result advances the circuit only after its own completion commits.
+Only Indigo may project one clear into both Kanto and Johto Champion
+recognition; no other circuit result may synthesize another region's state.
 
 ### ROM budget
 

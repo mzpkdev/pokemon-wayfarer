@@ -185,10 +185,11 @@ unfinished scenes and rewards must remain coherent after Giovanni's finale.
   Goldenrod story. Adapt exact-year references, Giovanni's recognition of the
   player, and time-travel framing. These prerequisites gate only this optional
   adventure, not either regional campaign.
-- Kanto's League lineup is Lorelei, Bruno, Agatha, Lance, then Blue. Johto keeps
-  Will, Koga, Bruno, Karen, then Lance. Retain circuit qualification, order,
-  scaling, and reward accounting. Blue follows the origin-specific progression
-  below; Koga's dual institutional roles still need their own decision.
+- The shared Kanto/Johto Indigo lineup is Lorelei, Bruno, Agatha, Lance, then
+  Blue. Will, Koga, Bruno, Karen, and Lance appear in the non-League Sevii
+  Masters Challenge. Retain circuit qualification, order, scaling, and reward
+  accounting. Blue follows the origin-specific progression below; Koga's dual
+  institutional roles still need their own decision.
 
 ### Misty's current sequence
 
@@ -333,7 +334,7 @@ persists only to keep its one-time adventure recoverable, any existing S.S.
 Ticket permits boarding, and Bill's rescue remains available independently.
 His reward still provides a route to boarding for a player without the Ticket.
 
-### Superseded transport and League requirements
+### Superseded transport and circuit requirements
 
 The following are approved future Wayfarer changes, not claims about current
 implementation. Their corresponding specifications record the same scoped
@@ -343,14 +344,14 @@ proposal.
 - **Vermilion menu extension:** The
   [S.S. Anne specification](../specs/frlg-kanto-ss-anne-adventure.md#boarding-and-return)
   owns the exact additive menu contract and the required Aqua audit changes.
-- **Separate League opponents:** Supersede the
-  [League circuit specification](../specs/wayfarer-interregional-league-circuit.md#approved-future-kanto-and-johto-lineups)'s
-  shared HNS opponent-lineup requirement. Kanto's authored Tier 1 lineup is
-  Lorelei, Bruno, Agatha, Lance, and Blue; Johto's authored Tier 2 lineup remains
-  Will, Koga, Bruno, Karen, and Lance. Preserve the shared Indigo venue, circuit
-  admission and order, scaling, regional state isolation, save/load recovery,
-  loss/retry, rewards, and Hall-of-Fame guarantees. Update affected roster
-  validation with the implementation; this proposal does not change ROM code.
+- **Circuit opponents:** Indigo is the one shared Kanto/Johto League and uses
+  the FRLG rooms with Lorelei, Bruno, Agatha, Lance, and Blue. The HNS sequence
+  of Will, Koga, Bruno, Karen, and Lance moves to the non-League Sevii Masters
+  Challenge in the existing Seven Island battle house. The
+  [circuit specification](../specs/wayfarer-interregional-league-circuit.md)
+  owns admission, order, scaling, save/load recovery, loss/retry, rewards, and
+  presentation for both stages. Update affected roster validation with the
+  implementation; this proposal does not change ROM code.
 
 The same future port explicitly supersedes the League PRD and specification's
 Blue Cinnabar invitation, initial Viridian Gym ownership, and Blue-specific
@@ -421,10 +422,10 @@ provide a valid return to the HNS world.
    Bill's family, Fuchsia leadership, and other overlapping content. Lavender's
    Tower/radio and Power Plant choices are settled above. Do not treat a
    recommendation to defer or remove content as an accepted cut.
-2. **Battle rosters and leadership:** Define Blue's Champion roster for visitors
-   and the future Kanto-origin starter branches. Resolve Koga/Janine's roles
-   alongside HNS Johto League content; no additional sanctioned badge may be
-   introduced.
+2. **Battle rosters and leadership:** Define Blue's future Kanto-origin starter
+   branches while preserving the circuit's fixed Blastoise roster for visiting
+   origins. Resolve Koga/Janine's roles alongside their Sevii Masters Challenge
+   appearances; no additional sanctioned badge may be introduced.
 3. **Bill and his grandfather:** Sharing the house is an available option;
    sequencing grandfather after the rescue is not required. Adjust his
    housesitting/Bill-in-Johto dialogue and the rescue movement space. Keep the

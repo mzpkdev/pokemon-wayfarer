@@ -146,8 +146,9 @@ Hoenn destination.
 - Hoenn-local story checks use only Hoenn badges unless another approved
   feature changes that story.
 - Hoenn badges count toward global League qualification and Trainer Rating.
-- Hoenn Champion completion is independent from Johto and Kanto completion.
-- Hoenn is the fixed Tier 3 League after the Kanto and Johto clears and all
+- Hoenn Champion completion is independent from the shared Indigo clear and
+  the Sevii Masters Challenge clear.
+- Hoenn is the fixed Tier 3 League after Indigo, the Masters Challenge, and all
   twenty-four badges. Completing it finishes the interregional circuit without
   finishing or resetting another region's local campaign.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
@@ -217,7 +218,8 @@ player may therefore meet battles much stronger or weaker than the current
 party. Wayfarer does not correct that mismatch with Trainer scaling.
 
 Wild levels continue to follow Trainer Rating. Hoenn badges raise the global
-Wayfarer rating, and clearing the Hoenn League completes it at Rating 80.
+Wayfarer rating, and clearing the Hoenn League as the third circuit stage
+completes it at Rating 80.
 Other Hoenn story milestones do not raise the rating. Rewards remain attached
 to their original Hoenn interactions.
 

@@ -2,220 +2,252 @@
 
 Implemented: Outdated
 
-The implementation still uses +15/+5/+4 League rewards and static League
-levels. This revision requires +8/+8/+8 and the separate League scaling design.
-
-## Approved future Kanto story adaptation
-
-The [FRLG Kanto story PRD](frlg-kanto-story-on-hns-maps.md#superseded-transport-and-league-requirements)
-supersedes the Blue invitation/initial Viridian badge requirements below for
-its future Wayfarer implementation. Giovanni awards the one Earth Badge through
-the specified story finale; Blue becomes Kanto's Champion opponent and serves
-as personal rival only for the planned Kanto origin. It also selects distinct
-FRLG Kanto and HNS Johto League lineups. The
-[League specification](../specs/wayfarer-interregional-league-circuit.md#approved-future-viridian-badge-ownership)
-records the scoped ownership override and validation replacement.
-
-These changes are not implemented. Blue's existing invitation and its test
-cases remain the current-runtime baseline until the story port lands. Circuit
-qualification, order, scaling, badge/reward accounting, and other Leaders'
-protections remain binding before and after that change.
-
-The independent [Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md)
-relocates Blue's one-time invitation to the Viridian Gym entrance while keeping
-him the Earth Badge giver. It does not require the future Giovanni story port;
-if that separate port later ships, its badge-ownership rule supersedes Blue's
-Gym role. References below to Blue's Cinnabar interaction describe the
-current runtime only.
+The current runtime still treats Kanto and Johto as separate League clears at
+the shared Indigo venue. The approved design below replaces that model with one
+shared Indigo League and a separate Sevii Masters Challenge.
 
 ## Intent
 
 Give Wayfarer's open world a clear long-term arc without requiring the player
 to finish one region before exploring another. Badges earned in Kanto, Johto,
-and Hoenn all advance the same career, while three fixed League destinations
-provide optional challenges unlocked by badge progress. Players can earn all
-twenty-four badges before attempting any League.
+and Hoenn advance the same career. Three fixed challenge destinations turn each
+eight-badge interval into a journey while the player remains free to choose
+their regions, available Gyms, party, and timing.
 
-## Design
+## Circuit
 
-The draft [regional start choice](wayfarer-regional-start-choice.md) defines
-the separately scoped Hoenn opening and travel entitlement. It keeps this
-document's badge, Rating, and League rules and is not implemented yet.
+The Trainer Card presents this itinerary:
 
-The Trainer Card presents the complete League itinerary on demand:
+| Career tier | Qualification | Destination |
+| --- | --- | --- |
+| Tier 1 | At least 8 total badges | Shared Kanto-Johto Indigo League |
+| Tier 2 | Indigo cleared and at least 16 total badges | Sevii Masters Challenge |
+| Tier 3 | Masters cleared and all 24 badges | Hoenn League |
+| Mastery | Indigo, Masters, and Hoenn cleared | Red at Mt. Silver |
 
-| Career tier | Qualification | League destination |
-| --- | ---: | --- |
-| Tier 1 | 8 total badges | Kanto League |
-| Tier 2 | 16 total badges and Kanto League cleared | Johto League |
-| Tier 3 | 24 total badges and Kanto and Johto Leagues cleared | Hoenn League |
+Any sanctioned Gym Badge from Kanto, Johto, or Hoenn counts. Badge origin does
+not change its value for circuit qualification. Badges are never spent or
+reset, and challenge participation never gates earning another badge. A player
+may collect all twenty-four badges before attempting any circuit stage, then
+clear the three stages consecutively.
 
-Any sanctioned Gym Badge from Kanto, Johto, or Hoenn counts toward these
-totals. A player may qualify for Kanto with four Hoenn badges and four Johto
-badges, for example. Badge origin never changes its value for League
-qualification.
+The existing Johto opening remains the sole new-game start for the current
+release. Kanto and Hoenn openings are separately scoped future features and do
+not change the circuit.
 
-These badge requirements are minimums, with no badge certification caps. League
-participation never gates earning another badge. A player with twenty-four
-badges and no clears can challenge Kanto, then Johto, then Hoenn consecutively.
-Clearing Hoenn completes the circuit. Badges remain earned and are never spent
-or reset when a League is cleared.
+### Indigo League
 
-This release has one new-game start: the existing Johto opening. It begins with
-zero badges, no League clears, and Rating 0. Kanto is the first League
-destination, not a required starting region. The itinerary supplies a directed
-career structure while the player chooses the route, regions, available Gyms,
-party, and when to attempt Leagues. Kanto and Hoenn starts
-are future features; they do not constrain this circuit release.
+Indigo Plateau is the single League authority shared by Kanto and Johto. It
+uses the FRLG room chain and this authored Tier 1 lineup:
 
-## Boundaries
+1. Lorelei
+2. Bruno
+3. Agatha
+4. Lance
+5. Blue
 
-The circuit does not gate regional travel, general exploration, or badge
-collection. Coherent regional story prerequisites may remain, including
-Jasmine's medicine errand, Misty's Power Plant sequence, and Juan's weather
-storyline. A quest may span towns or a region, provided the player can discover
-and complete its prerequisites without having missed an earlier event or
-returning merely to activate an unrelated story flag. League clears must never
-be prerequisites for an initial badge.
+Blue is the current Indigo Champion. Clearing Indigo grants the one Champion
+title recognized by both Kanto and Johto. The clear performs one Hall of Fame
+registration and one first-clear reward; it is not two circuit clears merely
+because two regions recognize the title.
 
-Regional prerequisites mean that not every Gym is immediately available in any
-order. Clair may still require Chuck, Jasmine, and Pryce's badges, and Norman
-may still require four Hoenn badges and Wally's tutorial. In the current
-runtime, Blue's Cinnabar interaction invites him back to his Gym; the coastal
-port moves this introduction to Viridian without restoring a requirement to
-earn the other fifteen Kanto/Johto badges.
+For the current Johto-origin release, Blue uses the existing FRLG first-clear
+Blastoise roster. Do not infer his team from the Johto starter. A future Kanto
+opening may select among the three FRLG starter-dependent variants from that
+opening's own origin state.
 
-Story events must recognize satisfied regional prerequisites on a revisit,
-without replaying completed events or undoing later progress. In particular,
-the Rocket takeover must not depend on a shared badge counter being exactly
-seven, or on which region supplied that badge. Its trigger must use explicit
-regional story prerequisites, rather than a replacement global badge threshold.
+The future FRLG Kanto story port owns Blue's origin-dependent rival dialogue
+and his authored party selection. Giovanni owns the initial Earth Badge through
+that port's finale. Neither decision changes Indigo's circuit position.
 
-Undefeated Leaders must remain accessible for their initial badge. Wattson's
-New Mauville relocation requires both Norman's defeat and the Dynamo Badge,
-with either completion order recognized. The
-existing initial-badge protections for Chuck, Blue, Clair, and Blaine remain.
-Only League qualification and Trainer Rating use the global badge total.
+### Sevii Masters Challenge
 
-Ordinary Trainers and Gym members follow the separate
-[Trainer-party scaling design](trainer-party-scaling.md). Initial Gym Leader
-badge battles follow the separate [Gym Leader scaling design](gym-leader-scaling.md);
-leader rematches retain authored, static parties. Each regional
-League has one authored party set for its fixed position in the itinerary:
-Kanto is Tier 1, Johto is Tier 2, and Hoenn is Tier 3. Their levels follow the
-[League scaling design](league-scaling.md), using TR locked on run admission.
-Species, party sizes, moves, held items, abilities, and AI remain authored.
+Tier 2 is an invitational challenge rather than another regional League. It
+uses Seven Island's existing two-room battle house as the public entrance. The
+elderly former Trainer operates the house and reveals its hidden basement when
+the player qualifies. The basement leads into the existing HNS room chain:
 
-The fixed order describes this campaign's interregional circuit. It does not
-establish that one region's League is universally more prestigious than
-another outside the circuit.
+1. Will
+2. Koga
+3. Bruno
+4. Karen
+5. Lance
 
-## Balance
+Lance is the final invited Master and may be presented as a former Champion.
+Blue remains the current Indigo Champion. Repeated opponents are intentional:
+the Masters Challenge is a stronger invitational appearance, not a simultaneous
+second Elite Four appointment.
 
-Players may seek easier available badges first or attempt stronger authored Gym
-teams early, subject to the retained regional prerequisites. League levels follow the
-[League scaling design](league-scaling.md), with a gradual climb through each
-run and the same authored rosters. Playtest early and postponed attempts, plus
-the training needed between successive runs after each +8 reward.
+The HNS Hall of Fame room becomes the Masters Gallery. Clearing it records a
+Masters result and the Tier 2 first-clear reward. It does not grant a regional
+Champion title, set a regional game-clear result, award a Champion Ribbon, or
+perform Hall of Fame registration.
 
-## Presentation
+Sevii travel and local adventures remain independent. The Masters Challenge
+does not require Celio's repair, Lorelei's Icefall adventure, Trainer Tower,
+the Rainbow Pass, a local quest, or another Sevii completion fact.
 
-The player presses Select on the local Trainer Card to review the circuit.
-The view shows the badge total out of twenty-four and all three Leagues, each
-with its badge minimum, prerequisite clears, and locked, available, or cleared
-state. After Hoenn, it retains the completed itinerary and reports
-`Circuit complete`. Regional badge displays retain badge identity and origin.
+### Hoenn League and Red
 
-There are no automatic circuit announcements: no opening itinerary, badge
-qualification popups, or post-clear status messages. NPCs do not duplicate the
-circuit overview. A League admission refusal may state its immediate unmet
-requirement. Dialogue must not assume the player is a Champion merely because
-they have many badges.
+The Hoenn League remains Tier 3 and retains its Emerald rooms, roster, Hall of
+Fame, regional Champion state, and cleanup. Its first clear completes the
+circuit and runs the full completion credits.
 
-## Interactions
+Red remains at the Mt. Silver summit. Defeating every Gym is already implied by
+Hoenn admission; Red becomes available after the player has also cleared
+Indigo, Masters, and Hoenn. Red is a final mastery encounter, not a fourth
+League stage, and awards no additional circuit Trainer Rating.
 
-Trainer Rating keeps its existing badge contribution. Each first-time League
-clear adds +8 TR, for +24 across the circuit. Record the reward after the
-successful run; losses, repeated completion callbacks, and repeat clears award
-no additional TR. These examples show taking each League as soon as its badge
-minimum is reached:
+## State and titles
+
+Circuit stages are not regions. Store and dispatch the three first-clear facts
+as Indigo, Masters, and Hoenn identities. In particular, do not represent the
+Masters Challenge as `REGION_JOHTO` merely because it uses HNS rooms and
+opponents. Its maps remain Sevii/Kanto for ordinary map, Pokédex, healing,
+blackout, and story systems.
+
+Indigo clear is the shared source of Kanto and Johto Champion recognition.
+Implementation may project that result into the existing regional helpers, but
+qualification and rewards must read one canonical Indigo clear so the result
+cannot count twice. Masters has dedicated circuit state and no Champion
+meaning. Hoenn retains its isolated regional Champion and game-clear state.
+
+All first-clear writes are atomic with their ceremony and reward handoff.
+Repeated completion callbacks cannot duplicate rewards, change another
+regional state, or advance the circuit twice.
+
+## Difficulty and replays
+
+Each stage has one authored roster for its fixed circuit tier. League scaling
+captures Trainer Rating at admission and applies that snapshot for the entire
+run. It changes effective levels only; authored species, party sizes, moves,
+items, abilities, AI, and battle order remain intact.
+
+Cleared stages remain replayable. A replay captures a fresh rating snapshot and
+uses the same authored tier roster, but it grants no additional circuit state,
+Trainer Rating, Hall of Fame registration, Champion Ribbon, credits, or
+first-clear unlock. Ordinary battle rewards remain unchanged.
+
+## Trainer Rating
+
+The existing badge contribution remains unchanged. First clears contribute:
+
+| Clear | Trainer Rating |
+| --- | ---: |
+| Indigo League | +8 |
+| Sevii Masters Challenge | +8 |
+| Hoenn League | +8 |
+
+The total circuit contribution is +24. Individual opponent victories, losses,
+replays, repeated ceremony callbacks, Red, and Hall of Fame revisits add
+nothing.
+
+Taking each stage at its minimum badge requirement produces:
 
 | Progress | Trainer Rating |
 | --- | ---: |
 | New game | 0 |
-| 4 total badges | 16 |
-| 8 total badges | 40 |
-| Kanto League cleared | 48 |
-| 16 total badges and Kanto cleared | 56 |
-| Johto League cleared | 64 |
-| 24 total badges and Kanto and Johto cleared | 72 |
-| Hoenn League cleared | 80 |
+| 4 badges | 16 |
+| 8 badges | 40 |
+| Indigo cleared | 48 |
+| 16 badges and Indigo cleared | 56 |
+| Masters cleared | 64 |
+| 24 badges and both earlier stages cleared | 72 |
+| Hoenn cleared | 80 |
 
-Collecting all badges first is also valid:
+Collecting all badges first remains valid:
 
 | With 24 badges | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
-| No League clears | 56 | 62 |
-| Kanto cleared | 64 | 78 |
-| Kanto and Johto cleared | 72 | 89 |
-| All three cleared | 80 | 100 |
+| No circuit clears | 56 | 62 |
+| Indigo cleared | 64 | 78 |
+| Indigo and Masters cleared | 72 | 89 |
+| Circuit complete | 80 | 100 |
 
-The rating remains a high-water mark used by ordinary wild encounter scaling
-and the party's soft level cap and obedience rules. It also drives ordinary
-Trainer and Gym-member scaling, plus the separate [initial Gym Leader badge
-battle scaling](gym-leader-scaling.md). League levels use their separate
-[scaling design](league-scaling.md); leader rematches remain static.
+Trainer Rating remains a high-water mark. It drives the existing wild,
+ordinary-Trainer, Gym, soft-cap, and obedience consumers. Circuit opponents use
+their saved run-entry snapshot through League scaling.
 
-Rating 0 must not remove a native utility catch that supplies an approved core
-route. In particular, the level-5 Chinchou available around Vermilion and
-Cinnabar must know Surf in Wayfarer so Kanto's native-Surf route remains valid.
+## Travel and discovery
 
-Every League approach must be reachable once its circuit requirements are met.
-It cannot add a local badge minimum or require completion of an unrelated
-regional story. Travel to the venue remains part of the journey.
+All twenty-four badges remain obtainable before any circuit clear. Regional
+stories may retain coherent local prerequisites, but an initial Gym challenge
+must not require a League or Masters clear.
+
+Every eligible stage must be reachable from every possible threshold-badge
+location without requiring another badge or the clear being pursued. The
+existing Johto opening and S.S. Aqua maiden voyage provide the route into the
+interregional transport network. Numbered Sevii islands remain independently
+available from Vermilion.
+
+The Trainer Card is the complete circuit overview. It shows the badge total out
+of twenty-four and every stage's locked, available, or cleared state. The game
+does not interrupt play with qualification announcements. The Seven Island
+caretaker may state the immediate Masters admission requirement, and each
+venue may state its own unmet requirement, but NPCs do not repeat the entire
+itinerary.
+
+Before Tier 2 qualification, the battle-house box remains closed. Once the
+player has 16 badges and an Indigo clear, the caretaker reveals the basement.
+The existing second room serves as an antechamber to the HNS challenge chain.
+A loss or voluntary exit returns the player to the battle house; a successful
+ceremony returns the player with access to Seven Island's harbor and the wider
+travel network.
+
+## Presentation
+
+Indigo uses its FRLG Hall of Fame and Champion presentation but does not run the
+full completion credits. The Masters Gallery recognizes the winner without
+calling them a regional Champion. Hoenn's first clear runs the full completion
+credits and leaves the completed itinerary available on the Trainer Card.
+
+Challenge names shown to the player are `Indigo League`, `Sevii Masters`, and
+`Hoenn League`. The Seven Island building may be called `Masters House`; its
+underground competition space is the `Masters Hall`.
 
 ## Constraints
 
-Johto, Kanto, and Hoenn keep separate badge and Champion state for regional
-scripts, presentation, and save isolation. The global count is derived from
-those twenty-four badge states rather than stored as a second mutable badge
-total.
-
-Interregional travel must guarantee that a player can reach an eligible League
-from any region, including after collecting all badges. After the League, the
-player must regain control with access to the wider regional travel network.
-The journey may use
-directional transport and authored routes, but it cannot depend on earning
-another badge or clearing the League that the player is trying to reach.
-
-The existing Johto opening and its S.S. Aqua maiden voyage are this release's
-entry contract. They must provide a route to Kanto, then the completed Aqua
-circuit must provide the Vermilion-to-Slateport and Slateport-to-Olivine legs.
-Future Kanto and Hoenn starts need their own approved openings when they are
-scoped; they do not gate League eligibility.
-
-Prerelease save compatibility is not required. This feature does not require
-shared systems to preserve behavior in other product builds.
+- Preserve Kanto, Johto, and Hoenn badge identity and storage. Global badge
+  count remains a derived total from the twenty-four regional badges.
+- Replace the old separate Kanto/Johto League-clear assumption wherever it
+  controls circuit order, Trainer Rating, status text, scaling, Hall of Fame,
+  transport cleanup, or regional postgame checks.
+- Preserve Sevii's independent ferry access, stories, ordinary Trainers,
+  encounters, services, and Trainer Tower.
+- Reuse the registered Seven Island battle house and HNS League rooms. Do not
+  add the excluded `SevenIsland_UnusedHouse` merely to create another entrance.
+- Standalone Emerald, FireRed, LeafGreen, and HNS behavior remains unchanged.
+- Prerelease save compatibility is not required.
+- The finished implementation must fit the standard 32 MiB ROM and active
+  reserve policy.
 
 ## Playtesting
 
-Playtesting must prove a Johto-start journey to all twenty-four badges with zero
-League clears, including mixed regional orders and recoverable story events.
-Cover deferred Whitney and Clair badge rewards, Blue's invitation at its
-selected location, and Wattson
-remaining available when Norman is defeated first. Verify that a mixed badge
-order which misses the old exact-seven Rocket trigger still reaches the story
-and Clair without replaying completed events.
-
-With all badges earned, test consecutive Kanto, Johto, and Hoenn clears,
-including the shared Indigo venue's tier reset, loss/retry, save/load, and
-return to regional travel. Check all Trainer Card states and confirm that
-opening, badge awards, and League clears produce no circuit announcements.
+- Reach Indigo with mixed sets of eight badges, clear the FRLG roster, verify
+  one Hall of Fame registration, shared Kanto/Johto Champion recognition, +8
+  Rating, wider-world return, and no full credits.
+- Reach Seven Island before qualification and verify that the ordinary island,
+  battle house, harbor, local stories, and Trainer Tower remain available while
+  the basement challenge stays closed.
+- Qualify with 16 badges and Indigo clear, traverse the battle house into every
+  HNS room, clear the authored roster, and verify the Masters Gallery, +8
+  Rating, dedicated clear, and absence of Champion/Hall of Fame side effects.
+- Reach Hoenn after all 24 badges and both prior clears, complete its native
+  League and Hall of Fame, verify Rating 80 and full credits, then reach Red at
+  Mt. Silver.
+- Exercise early and postponed attempts, all-badges-first consecutive clears,
+  save/load in every room, losses at every opponent, voluntary exits, invalid
+  run recovery, repeated ceremony callbacks, and replays of all three stages.
+- Confirm replays use fresh scaling snapshots without another clear reward or
+  first-clear side effect.
+- Confirm no opening, badge award, Hall of Fame return, or unrelated Sevii
+  interaction produces an automatic circuit announcement.
 
 ## References
 
 - [Technical specification](../specs/wayfarer-interregional-league-circuit.md)
-- [Trainer Rating wild encounter scaling](trainer-rating-wild-encounter-scaling.md)
-- [Wayfarer Hoenn integration](wayfarer-hoenn-integration.md)
-- [Native HM utility learnsets](native-hm-learnsets.md)
-- [Standard Rod fishing](standard-rod-fishing.md)
+- [League scaling](league-scaling.md)
+- [Runtime foundation](../specs/wayfarer-runtime-foundation.md)
+- [Sevii exploration](sevii-exploration-port.md)
+- [Sevii Trainer Tower](sevii-trainer-tower.md)
+- [FRLG Kanto story port](frlg-kanto-story-on-hns-maps.md)

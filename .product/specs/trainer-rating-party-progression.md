@@ -3,7 +3,7 @@
 PRD: [Trainer Rating wild encounter and party progression](../prds/trainer-rating-wild-encounter-scaling.md)
 Implemented: Outdated
 
-The progression examples require the approved +8/+8/+8 League rewards.
+The progression examples require the approved +8/+8/+8 circuit-stage rewards.
 The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
 
 ## Scope
@@ -11,9 +11,9 @@ The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
 This specification defines the Wayfarer soft level cap, numerical experience
 reduction, and obedience rules derived from Trainer Rating. The Trainer Rating
 foundation owns the shared value and persistence; the interregional League
-circuit supplies its global badge and League-clear inputs. The
+circuit supplies its global badge and circuit-clear inputs. The
 wild encounter scaling specification owns ordinary wild levels and species
-eligibility. Regional starts and League party tiers are not prerequisites for
+eligibility. Regional starts and circuit opponent tiers are not prerequisites for
 this foundation or for the party-progression mechanics.
 
 The existing missing-badge catch penalty remains active under its existing
@@ -51,21 +51,22 @@ cap = c0 + roundHalfUp((r - r0) * (c1 - c0) / (r1 - r0))
 The result is clamped to 1 through 100. The curve is monotonic and produces
 these global circuit examples. The
 [circuit](wayfarer-interregional-league-circuit.md) allows all badges before any
-League clear. The examples include the approved +8 per first-time League clear,
-which is pending implementation. The badge formula and soft-cap curve are unchanged:
+circuit-stage clear. The examples include the approved +8 per first-time stage
+clear, which is pending implementation. The badge formula and soft-cap curve
+are unchanged:
 
 | Progress | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
 | 4 total badges, no clears | 16 | 23 |
 | 8 total badges, no clears | 40 | 42 |
-| 8 total badges, Kanto cleared | 48 | 52 |
-| 16 total badges, Kanto cleared | 56 | 62 |
-| 16 total badges, Kanto and Johto cleared | 64 | 78 |
+| 8 total badges, Indigo cleared | 48 | 52 |
+| 16 total badges, Indigo cleared | 56 | 62 |
+| 16 total badges, Indigo and Masters cleared | 64 | 78 |
 | 24 total badges, no clears | 56 | 62 |
-| 24 total badges, Kanto cleared | 64 | 78 |
-| 24 total badges, Kanto and Johto cleared | 72 | 89 |
-| 24 total badges, all three Leagues cleared | 80 | 100 |
+| 24 total badges, Indigo cleared | 64 | 78 |
+| 24 total badges, Indigo and Masters cleared | 72 | 89 |
+| 24 total badges, all three circuit stages cleared | 80 | 100 |
 
 These initial values equal the current wild encounter level anchor plus 10.
 The party curve remains separate source data. Changing wild encounter anchors
@@ -212,7 +213,7 @@ Deterministic tests must cover:
 Compile the affected battle, party, item, Day Care, capture, and Trainer Rating
 objects for every supported product build. Build at least one complete Wayfarer
 ROM and exercise the Rating 0, seeded mid-curve, and Rating 80 boundaries. The
-later circuit specification owns testing its badge and League-clear inputs.
+later circuit specification owns testing its badge and circuit-clear inputs.
 
 ## References
 
