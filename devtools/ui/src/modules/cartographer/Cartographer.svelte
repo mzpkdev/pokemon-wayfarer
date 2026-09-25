@@ -12,6 +12,7 @@
   import {
     CatalogValidationError,
     loadCatalog,
+    mapsForBuild,
     type CatalogMap,
     type CatalogWarp,
     type CatalogObject,
@@ -88,9 +89,7 @@
           null)
       : null,
   )
-  let buildMaps = $derived(
-    catalog && activeBuild ? catalog.maps.filter((map) => map.builds.includes(activeBuild.id)) : [],
-  )
+  let buildMaps = $derived(catalog && activeBuild ? mapsForBuild(catalog, activeBuild.id) : [])
   let selectedCandidate = $derived(
     buildMaps.find((map) => map.name === requestedMap || map.id === requestedMap) ?? null,
   )

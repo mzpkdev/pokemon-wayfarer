@@ -1,6 +1,11 @@
 import * as path from "node:path"
 
-import type { CatalogBuild, CatalogBuildId, CatalogRegion } from "./types"
+import type {
+  CatalogBuild,
+  CatalogBuildId,
+  CatalogRegion,
+  CatalogWayfarerMembership,
+} from "./types"
 
 const kantoNamedMaps = new Set([
   "CeladonCity",
@@ -66,12 +71,18 @@ const buildsBySourceVersion: Record<string, CatalogBuildId[]> = {
 /** Resolve source metadata plus an explicit Wayfarer import into catalog build membership. */
 export const buildsForSourceVersion = (
   sourceVersion: string | undefined,
-  selectedForWayfarer = false,
+  wayfarerMembership: CatalogWayfarerMembership = "default",
 ): CatalogBuildId[] => {
   const source = sourceVersion ?? "emerald"
   const builds = buildsBySourceVersion[source]
   if (!builds) throw new Error(`Unsupported map source version ${JSON.stringify(source)}`)
-  return selectedForWayfarer && !builds.includes("wayfarer") ? [...builds, "wayfarer"] : builds
+  if (wayfarerMembership === "include" && !builds.includes("wayfarer")) {
+    return [...builds, "wayfarer"]
+  }
+  if (wayfarerMembership === "exclude") {
+    return builds.filter((build) => build !== "wayfarer")
+  }
+  return builds
 }
 
 /** Source provenance is reported independently from a map's physical region. */

@@ -223,6 +223,7 @@ export type CatalogEncounterDiagnostic =
 export type SourceMap = {
   id: string
   game_version?: MapSourceVersion
+  wayfarer_include?: boolean
   layout: string
   music?: string
   region_map_section?: string
@@ -267,9 +268,18 @@ export type CatalogRegion = {
 
 export type CatalogBuildId = "emerald" | "firered" | "leafgreen" | "hns" | "wayfarer"
 
+export type CatalogWayfarerMembership = "default" | "include" | "exclude"
+
 export type CatalogBuild = {
   id: CatalogBuildId
   label: string
+}
+
+export type CatalogConnection = {
+  direction: MapConnection["direction"]
+  offsetMetatiles: number
+  destinationMapId: string
+  destinationMap: string | null
 }
 
 export type CatalogPlacement = {
@@ -366,12 +376,8 @@ export type CatalogMap = {
     showMapName: boolean | null
     requiresFlash: boolean | null
   }
-  connections: Array<{
-    direction: MapConnection["direction"]
-    offsetMetatiles: number
-    destinationMapId: string
-    destinationMap: string | null
-  }>
+  connections: CatalogConnection[]
+  connectionOverrides?: Partial<Record<CatalogBuildId, CatalogConnection[]>>
   warps: Array<{
     warpId: string
     xMetatiles: number
@@ -410,7 +416,7 @@ export type CatalogMap = {
 }
 
 export type MapCatalog = {
-  schemaVersion: 9
+  schemaVersion: 10
   format: "pokemon-wayfarer-exterior-map-catalog"
   pixelsPerMetatile: 16
   source: {

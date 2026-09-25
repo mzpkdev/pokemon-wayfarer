@@ -71,8 +71,9 @@ describe("Cartographer map build membership", () => {
   it("includes native sources and explicit Wayfarer imports in the correct builds", () => {
     expect(buildsForSourceVersion(undefined)).toEqual(["emerald", "wayfarer"])
     expect(buildsForSourceVersion("frlg")).toEqual(["firered", "leafgreen"])
-    expect(buildsForSourceVersion("frlg", true)).toEqual(["firered", "leafgreen", "wayfarer"])
+    expect(buildsForSourceVersion("frlg", "include")).toEqual(["firered", "leafgreen", "wayfarer"])
     expect(buildsForSourceVersion("hns")).toEqual(["hns", "wayfarer"])
+    expect(buildsForSourceVersion("hns", "exclude")).toEqual(["hns"])
     expect(buildsForSourceVersion("sinnoh")).toEqual(["wayfarer"])
   })
 

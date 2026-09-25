@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 
-import { CatalogValidationError, validateCatalog } from "./catalog.js"
+import { CatalogValidationError, mapsForBuild, validateCatalog } from "./catalog.js"
 
 const projection = (): Record<string, unknown> => ({
   schemaVersion: 2,
@@ -84,7 +84,7 @@ const catalog = (overrides: Record<string, unknown> = {}): Record<string, unknow
         },
       ]
   return {
-    schemaVersion: 9,
+    schemaVersion: 10,
     pixelsPerMetatile: 16,
     wildEncounterProjection: projection(),
     builds,
@@ -228,7 +228,7 @@ const wildEncounters = (): Record<string, unknown> => {
 describe("validateCatalog", () => {
   it("rejects stale catalog schemas before the viewport can interpret their topology", () => {
     expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow(CatalogValidationError)
-    expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow("schemaVersion must be 9")
+    expect(() => validateCatalog(catalog({ schemaVersion: 1 }))).toThrow("schemaVersion must be 10")
   })
 
   it("rejects empty and dimensionally incomplete projection lookup tables", () => {
@@ -405,7 +405,7 @@ describe("validateCatalog", () => {
   })
 
   it("accepts the current empty diagnostic contract", () => {
-    expect(validateCatalog(catalog()).schemaVersion).toBe(9)
+    expect(validateCatalog(catalog()).schemaVersion).toBe(10)
   })
 
   it("rejects malformed or inconsistent build membership metadata", () => {
@@ -510,5 +510,60 @@ describe("validateCatalog", () => {
     expect(() => validateCatalog(value)).toThrow(
       "objects must contain an explicit shiny-state flag",
     )
+  })
+
+  it("projects build-specific connection overrides without changing native builds", () => {
+    const map = {
+      ...mapWithWildEncounters(wildEncounters()),
+      builds: ["hns", "wayfarer"],
+      connections: [
+        {
+          direction: "down",
+          offsetMetatiles: 0,
+          destinationMapId: "MAP_NATIVE",
+          destinationMap: "Native",
+        },
+      ],
+      connectionOverrides: {
+        wayfarer: [
+          {
+            direction: "down",
+            offsetMetatiles: 0,
+            destinationMapId: "MAP_WAYFARER",
+            destinationMap: "Wayfarer",
+          },
+        ],
+      },
+    }
+    const value = validateCatalog(
+      catalog({
+        builds: [
+          { id: "hns", label: "HNS", mapCount: 1, maps: ["Route101"] },
+          { id: "wayfarer", label: "Wayfarer", mapCount: 1, maps: ["Route101"] },
+        ],
+        regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
+        maps: [map],
+      }),
+    )
+
+    expect(mapsForBuild(value, "hns")[0]?.connections[0]?.destinationMap).toBe("Native")
+    expect(mapsForBuild(value, "wayfarer")[0]?.connections[0]?.destinationMap).toBe("Wayfarer")
+  })
+
+  it("reports malformed build membership alongside connection overrides", () => {
+    const map = {
+      ...mapWithWildEncounters(wildEncounters()),
+      builds: null,
+      connectionOverrides: { wayfarer: [] },
+    }
+
+    expect(() =>
+      validateCatalog(
+        catalog({
+          regions: [{ id: "routes", label: "Routes", mapCount: 1, maps: ["Route101"] }],
+          maps: [map],
+        }),
+      ),
+    ).toThrow(CatalogValidationError)
   })
 })
