@@ -118,6 +118,7 @@ static unsigned runners_digits = 0;
 static struct Runner *runners = NULL;
 static char rom_dir[FILENAME_MAX];
 static bool report_enabled = false;
+static bool quiet_successes = false;
 static struct Report report = { 0, 0, NULL };
 
 // TODO: Build the symbol table on demand.
@@ -525,10 +526,17 @@ static void handle_read(int i, struct Runner *runner)
 add_to_results:
                     runner->results++;
                     record_result(i, runner, soc[1], soc + 2, eol - soc - 2);
-                    soc += 2;
-                    fprintf(stdout, "[%0*d] %s: ", runners_digits, i, runner->test_name);
-                    fwrite(soc, 1, eol - soc, stdout);
-                    fprint_buffer(stdout, runner->output_buffer, runner->output_buffer_size);
+                    if (!quiet_successes || soc[1] != 'P' || runner->output_buffer_size != 0)
+                    {
+                        soc += 2;
+                        fprintf(stdout, "[%0*d] %s: ", runners_digits, i, runner->test_name);
+                        fwrite(soc, 1, eol - soc, stdout);
+                        fprint_buffer(stdout, runner->output_buffer, runner->output_buffer_size);
+                    }
+                    else if (runner->passes % 1000 == 0)
+                    {
+                        fprintf(stdout, "[%0*d] %d tests passed\n", runners_digits, i, runner->passes);
+                    }
                     strcpy(runner->test_name, "WAITING...");
                     runner->output_buffer_size = 0;
                     break;
@@ -718,6 +726,9 @@ int main(int argc, char *argv[])
         const char *v = getenv("MAKE_TERMOUT");
         tty = v && v[0] == '\0';
     }
+    // A complete machine-readable report makes one console line per passing
+    // test redundant and can exceed hosted CI log limits.
+    quiet_successes = report_enabled && !tty;
 
     if (tty)
     {
