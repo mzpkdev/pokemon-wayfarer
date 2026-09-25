@@ -275,6 +275,7 @@ struct E2ETestRequest
     u8 hmsOverwrite;
     u8 fullPocketMask;
     u8 regionalBadgeCounts[E2E_TEST_LEAGUE_COUNT];
+    // Circuit stages: Indigo, Masters, Hoenn. Badge counts remain regional.
     u8 leagueClears[E2E_TEST_LEAGUE_COUNT];
     u8 applyLeagueCircuit;
     u8 appearanceId;
@@ -373,7 +374,7 @@ struct E2ETestState
     u8 trainerRating;
     u8 trainerCardState;
     bool8 leagueRunActive;
-    u8 leagueRunRegion;
+    u8 leagueRunStage;
     u8 leagueRunRating;
     u8 originIntroStage;
     u16 startingOriginId;
@@ -404,7 +405,9 @@ struct E2ETestState
     u16 partyHp[E2E_TEST_MAX_PARTY];
     u32 partyStatus[E2E_TEST_MAX_PARTY];
     u8 secretBaseDecorationCount;
-    u8 reserved[3];
+    bool8 leagueRunReplay;
+    u8 regionalChampionMask;
+    u8 reserved;
     u32 secretBaseDecorationFingerprint;
 };
 

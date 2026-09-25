@@ -21,7 +21,7 @@ describe.sequential("Wayfarer native Littleroot household", () => {
         map: { name: "birch-lab" },
         origin: { id: 2, hoennChoice: 1, hoennReceived: true, johtoCommitted: false },
         party: [{ species: "torchic" }],
-        circuit: { badges: { total: 0 }, clears: { kanto: false, johto: false, hoenn: false } },
+        circuit: { badges: { total: 0 }, clears: { indigo: false, masters: false, hoenn: false } },
       })
       await game.saveAndReload()
       expect((await game.state.read()).party).toHaveLength(1)

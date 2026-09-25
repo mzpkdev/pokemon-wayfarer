@@ -25,11 +25,11 @@ TEST("League tiers keep authored fallback without an admitted run")
         u8 levels[PARTY_SIZE];
     } sLeagueParties[] =
     {
-        { TRAINER_WILL_1_HNS, { 48, 49, 48, 49, 50 } },
-        { TRAINER_KOGA_1_HNS, { 50, 51, 50, 51, 52 } },
-        { TRAINER_BRUNO_1_HNS, { 53, 52, 53, 53, 54 } },
-        { TRAINER_KAREN_1_HNS, { 54, 53, 53, 53, 55 } },
-        { TRAINER_LANCE_1_HNS, { 54, 55, 54, 55, 54, 56 } },
+        { TRAINER_WAYFARER_INDIGO_LORELEI, { 52, 51, 52, 54, 54 } },
+        { TRAINER_WAYFARER_INDIGO_BRUNO, { 51, 53, 53, 54, 56 } },
+        { TRAINER_WAYFARER_INDIGO_AGATHA, { 54, 54, 53, 56, 58 } },
+        { TRAINER_WAYFARER_INDIGO_LANCE, { 56, 54, 54, 58, 60 } },
+        { TRAINER_WAYFARER_INDIGO_BLUE, { 59, 57, 59, 59, 61, 63 } },
         { TRAINER_WILL_2_HNS, { 66, 67, 67, 67, 66, 68 } },
         { TRAINER_KOGA_2_HNS, { 67, 67, 67, 67, 67, 68 } },
         { TRAINER_BRUNO_2_HNS, { 67, 68, 67, 68, 67, 68 } },
@@ -92,12 +92,15 @@ TEST("League tiers keep authored fallback without an admitted run")
 }
 
 static const u16 sLeagueIds[] = {
-    TRAINER_WILL_1_HNS, TRAINER_KOGA_1_HNS, TRAINER_BRUNO_1_HNS, TRAINER_KAREN_1_HNS, TRAINER_LANCE_1_HNS,
+    TRAINER_WAYFARER_INDIGO_LORELEI, TRAINER_WAYFARER_INDIGO_BRUNO, TRAINER_WAYFARER_INDIGO_AGATHA,
+    TRAINER_WAYFARER_INDIGO_LANCE, TRAINER_WAYFARER_INDIGO_BLUE,
     TRAINER_WILL_2_HNS, TRAINER_KOGA_2_HNS, TRAINER_BRUNO_2_HNS, TRAINER_KAREN_2_HNS, TRAINER_LANCE_2_HNS,
     TRAINER_SIDNEY, TRAINER_PHOEBE, TRAINER_GLACIA, TRAINER_DRAKE, TRAINER_WALLACE,
 };
 
 static const u16 sLeagueRoomMaps[][5] = {
+    { MAP_POKEMON_LEAGUE_LORELEIS_ROOM, MAP_POKEMON_LEAGUE_BRUNOS_ROOM,
+      MAP_POKEMON_LEAGUE_AGATHAS_ROOM, MAP_POKEMON_LEAGUE_LANCES_ROOM, MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM },
     { MAP_POKEMON_LEAGUE_WILLS_ROOM_HNS, MAP_POKEMON_LEAGUE_KOGAS_ROOM_HNS,
       MAP_POKEMON_LEAGUE_BRUNOS_ROOM_HNS, MAP_POKEMON_LEAGUE_KARENS_ROOM_HNS, MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM_HNS },
     { MAP_EVER_GRANDE_CITY_SIDNEYS_ROOM, MAP_EVER_GRANDE_CITY_PHOEBES_ROOM,
@@ -106,14 +109,14 @@ static const u16 sLeagueRoomMaps[][5] = {
 
 static void PrepareLeagueConstruction(u32 row, u32 rating)
 {
-    u32 region = REGION_KANTO + row / 5;
+    enum CircuitStage stage = CIRCUIT_STAGE_INDIGO + row / 5;
     u32 room = row % 5;
-    u16 map = sLeagueRoomMaps[region == REGION_HOENN][room];
-    for (u32 i = REGION_KANTO; i <= REGION_HOENN; i++)
-        SetChampionStateForRegion(i, i < region);
+    u16 map = sLeagueRoomMaps[row / 5][room];
     gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = TRUE;
-    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.region = region;
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.stage = stage;
+    gSaveBlock3Ptr->wayfarerHoenn.leagueRun.replay = HasClearedCircuitStage(stage);
     gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry = rating;
+    gSaveBlock3Ptr->wayfarerHoenn.indigoRoomDefeats = stage == CIRCUIT_STAGE_INDIGO ? (1 << room) - 1 : 0;
     gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(map);
     gSaveBlock1Ptr->location.mapNum = MAP_NUM(map);
     VarSet(VAR_LEAGUE_STATE, room + 1);
@@ -164,6 +167,7 @@ TEST("League scaling uses its own exact rounded curve and clamps after both offs
     EXPECT_EQ(GetLeagueScalingBaseline(UINT_MAX), 100);
     EXPECT_EQ(GetLeagueScalingLevel(80, 1, -1), 100);
     EXPECT_EQ(GetLeagueScalingLevel(0, -100, -100), 1);
+    EXPECT(GetLeagueScalingRoster(TRAINER_WILL_1_HNS, TRAINER_WILL_1_HNS) == NULL);
     EXPECT(GetLeagueScalingRoster(TRAINER_LANCE_2_HNS, TRAINER_LANCE_1_HNS) == NULL);
     EXPECT(GetLeagueScalingRoster(TRAINER_LANCE_2_HNS, TRAINER_NONE) == NULL);
 }
@@ -219,24 +223,31 @@ TEST("League construction and reconstruction preserve authored identity at every
 TEST("League scaling rejects invalid roster metadata and run context")
 {
     struct Pokemon *party = AllocZeroed(PARTY_SIZE * sizeof(*party));
-    const struct Trainer *trainer = GetTrainerStructFromId(TRAINER_WILL_1_HNS);
-    const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(TRAINER_WILL_1_HNS, TRAINER_WILL_1_HNS);
+    const struct Trainer *trainer = GetTrainerStructFromId(TRAINER_WAYFARER_INDIGO_LORELEI);
+    const struct LeagueScalingRoster *roster = GetLeagueScalingRoster(TRAINER_WAYFARER_INDIGO_LORELEI, TRAINER_WAYFARER_INDIGO_LORELEI);
     struct TrainerMon changed[PARTY_SIZE];
     memcpy(changed, trainer->party, trainer->partySize * sizeof(*changed));
     EXPECT(!IsLeagueScalingRosterValid(roster, changed, trainer->partySize - 1));
     changed[0].moves[0] = MOVE_SPLASH;
     EXPECT(!IsLeagueScalingRosterValid(roster, changed, trainer->partySize));
-    for (u32 context = 0; context < 3; context++)
+    for (u32 context = 0; context < 5; context++)
     {
         PrepareLeagueConstruction(0, 0);
         if (context == 0)
             gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active = FALSE;
         else if (context == 1)
             gIsDebugBattle = TRUE;
+        else if (context == 2)
+            gSaveBlock3Ptr->wayfarerHoenn.indigoRoomDefeats = 1 << 2;
+        else if (context == 3)
+            gSaveBlock3Ptr->wayfarerHoenn.leagueRun.stage = CIRCUIT_STAGE_MASTERS;
         else
-            VarSet(VAR_LEAGUE_STATE, 3);
-        trainer = GetTrainerStructFromId(TRAINER_WILL_1_HNS);
-        EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_WILL_1_HNS, TRUE, BATTLE_TYPE_TRAINER), trainer->partySize);
+        {
+            gSaveBlock1Ptr->location.mapGroup = MAP_GROUP(MAP_POKEMON_LEAGUE_BRUNOS_ROOM);
+            gSaveBlock1Ptr->location.mapNum = MAP_NUM(MAP_POKEMON_LEAGUE_BRUNOS_ROOM);
+        }
+        trainer = GetTrainerStructFromId(TRAINER_WAYFARER_INDIGO_LORELEI);
+        EXPECT_EQ(CreateNPCTrainerPartyForOpponent(party, TRAINER_WAYFARER_INDIGO_LORELEI, TRUE, BATTLE_TYPE_TRAINER), trainer->partySize);
         EXPECT_EQ(GetMonData(&party[0], MON_DATA_LEVEL), trainer->party[0].lvl);
     }
     Free(party);

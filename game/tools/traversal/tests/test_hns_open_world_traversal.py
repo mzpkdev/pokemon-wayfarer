@@ -1091,6 +1091,35 @@ class HnsTraversalContractTest(unittest.TestCase):
         self.assertIn("goto_if_ge VAR_BLACKTHORN_CITY_STATE, 3", recovery)
         self.assertNotIn("addvar VAR_NUM_BADGES", recovery)
 
+    def test_oak_and_red_use_regional_badges_and_committed_circuit_facts(self) -> None:
+        oak = self.scripts.block("PalletTown_Lab_EventScript_OakBadgeCheck")
+        wayfarer_oak = oak.split("#else", 1)[0]
+        self.assertIn("specialvar VAR_RESULT, WayfarerGetKantoBadgeCountForScript", wayfarer_oak)
+        self.assertIn("goto_if_ge VAR_RESULT, 8, PalletTown_Lab_EventScript_Oak16Badges", wayfarer_oak)
+        self.assertIn("goto_if_ge VAR_RESULT, 1, PalletTown_Lab_EventScript_Oak9Badges", wayfarer_oak)
+        self.assertNotIn("VAR_NUM_BADGES", wayfarer_oak)
+
+        summit = read(MAPS / "MtSilver_SummitDay_hns" / "scripts.inc")
+        transition = summit.split("MtSilver_SummitDay_OnTransition:\n", 1)[1].split(
+            "MtSilver_SummitDay_EventScript_SetNight::", 1
+        )[0]
+        self.assertOrderedText(
+            transition,
+            [
+                "setflag FLAG_HIDE_MTSILVER_RED",
+                "specialvar VAR_RESULT, LeagueCircuit_IsComplete",
+                "call_if_eq VAR_RESULT, TRUE, MtSilver_SummitDay_EventScript_RevealRed",
+            ],
+            "Red is visible only after committed circuit completion",
+        )
+        encounter = self.scripts.block("MtSilver_SummitDay_EventScript_Red")
+        self.assertLess(
+            encounter.index("specialvar VAR_RESULT, LeagueCircuit_IsComplete"),
+            encounter.index("MtSilver_SummitDay_EventScript_RedStandard"),
+        )
+        self.assertIn("goto_if_eq VAR_RESULT, FALSE, MtSilver_SummitDay_EventScript_RedUnavailable", encounter)
+        self.assertNotIn("FLAG_IS_KANTO_CHAMPION", encounter.split("#if !IS_WAYFARER", 1)[0])
+
     def test_deferred_region_and_endgame_gates_are_unchanged(self) -> None:
         mahogany = load_map("Mahoganytown_hns")
         merchant = object_with_local_id(mahogany, "LOCALID_MAHOGANY_MERCHANT")

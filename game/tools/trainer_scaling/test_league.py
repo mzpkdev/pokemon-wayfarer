@@ -29,6 +29,7 @@ class LeagueScalingTests(unittest.TestCase):
         self.assertEqual(len(self.rows),15)
         for i,row in enumerate(self.rows):
             self.assertEqual(row['owner'],row['trainer'])
+            self.assertEqual(row['stage'], ('INDIGO', 'MASTERS', 'HOENN')[i//5])
             self.assertEqual(row['encounterIndex'],i%5)
             self.assertEqual(row['source']['partySize'],6 if i%5==4 or 5<=i<10 else 5)
             self.assertEqual(row['offsets'].count(0),1)
@@ -39,6 +40,8 @@ class LeagueScalingTests(unittest.TestCase):
                 self.assertEqual(levels,sorted(levels))
                 self.assertEqual(len(row['source']['slots'][slot]['moves']),4)
         self.assertEqual(self.rows[9]['source']['slots'][-1]['species'],'SPECIES_ALTARIA')
+        self.assertEqual(self.rows[4]['source']['slots'][-1]['species'],'SPECIES_BLASTOISE')
+        self.assertEqual(self.rows[4]['source']['trainerName'],'_("BLUE")')
 
     def test_examples_ties_clamp_and_champion_saturation(self):
         self.assertEqual([league.baseline(r) for r in (40,56,64,72,80)],[42,62,78,89,100])
@@ -47,7 +50,7 @@ class LeagueScalingTests(unittest.TestCase):
         self.assertEqual(league.baseline(999),100)
         for i in (4,9,14):
             self.assertEqual(self.rows[i]['levels'][80][-1],100)
-            self.assertEqual(self.rows[i]['levels'][80][1 if i==4 else 0],100)
+            self.assertEqual(self.rows[i]['levels'][80][0],100)
 
 if __name__=='__main__':
     unittest.main()

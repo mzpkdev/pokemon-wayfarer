@@ -53,7 +53,7 @@ EWRAM_DATA volatile struct E2ETestState gE2ETestState;
 
 const struct E2ETestAbi gE2ETestAbi =
 {
-    .version = 19,
+    .version = 20,
     .requestSize = sizeof(struct E2ETestRequest),
     .resultSize = sizeof(struct E2ETestResult),
     .stateSize = sizeof(struct E2ETestState),
@@ -78,6 +78,8 @@ STATIC_ASSERT(offsetof(struct E2ETestState, trainerOnlyState) == 386, E2ETestTra
 STATIC_ASSERT(offsetof(struct E2ETestState, money) == 400, E2ETestMoneyOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, partyHp) == 404, E2ETestPartyHpOffset);
 STATIC_ASSERT(offsetof(struct E2ETestState, partyStatus) == 416, E2ETestPartyStatusOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, leagueRunReplay) == 441, E2ETestLeagueRunReplayOffset);
+STATIC_ASSERT(offsetof(struct E2ETestState, regionalChampionMask) == 442, E2ETestRegionalChampionMaskOffset);
 STATIC_ASSERT(sizeof(struct E2ETestAbi) == 16, E2ETestAbiSize);
 
 enum E2ETestInternalStage
@@ -356,6 +358,12 @@ static void ApplyHMsOverwriteFixture(void)
 static void ApplyLeagueCircuitFixture(void)
 {
     u32 regionIndex;
+    static const enum CircuitStage sCircuitStages[E2E_TEST_LEAGUE_COUNT] =
+    {
+        CIRCUIT_STAGE_INDIGO,
+        CIRCUIT_STAGE_MASTERS,
+        CIRCUIT_STAGE_HOENN,
+    };
 
     for (regionIndex = 0; regionIndex < E2E_TEST_LEAGUE_COUNT; regionIndex++)
     {
@@ -366,7 +374,7 @@ static void ApplyLeagueCircuitFixture(void)
             SetBadgeStateForRegion(sCircuitRegions[regionIndex], badgeIndex,
                                    badgeIndex < sRequest.regionalBadgeCounts[regionIndex]);
         }
-        SetGameClearStateForRegion(sCircuitRegions[regionIndex], sRequest.leagueClears[regionIndex]);
+        SetCircuitClearForTesting(sCircuitStages[regionIndex], sRequest.leagueClears[regionIndex]);
     }
     GetTrainerRating();
 }
@@ -1339,8 +1347,10 @@ static void UpdateState(void)
     gE2ETestState.globalBadgeCount = 0;
     gE2ETestState.trainerRating = 0;
     gE2ETestState.leagueRunActive = FALSE;
-    gE2ETestState.leagueRunRegion = REGION_NONE;
+    gE2ETestState.leagueRunStage = CIRCUIT_STAGE_NONE;
     gE2ETestState.leagueRunRating = 0;
+    gE2ETestState.leagueRunReplay = FALSE;
+    gE2ETestState.regionalChampionMask = 0;
     gE2ETestState.trainerCardState = E2E_TEST_TRAINER_CARD_NONE;
     for (i = 0; i < E2E_TEST_LEAGUE_COUNT; i++)
     {
@@ -1397,11 +1407,15 @@ static void UpdateState(void)
         enum Region region = sCircuitRegions[i];
 
         gE2ETestState.regionalBadgeCounts[i] = GetBadgeCountForRegion(region);
-        gE2ETestState.leagueClears[i] = GetChampionStateForRegion(region);
+        enum CircuitStage stage = CIRCUIT_STAGE_INDIGO + i;
+
+        gE2ETestState.leagueClears[i] = HasClearedCircuitStage(stage);
         if (gE2ETestState.leagueClears[i])
             gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_CLEARED;
-        else if (IsEligibleForLeague(region))
+        else if (IsEligibleForCircuitStage(stage))
             gE2ETestState.leagueStatuses[i] = E2E_TEST_LEAGUE_AVAILABLE;
+        if (GetChampionStateForRegion(region))
+            gE2ETestState.regionalChampionMask |= 1 << i;
     }
     gE2ETestState.globalBadgeCount = GetGlobalBadgeCount();
     gE2ETestState.trainerRating = GetTrainerRating();
@@ -1430,8 +1444,9 @@ static void UpdateState(void)
             | (FlagGet(FLAG_SYS_POKEDEX_GET) << 1);
         gE2ETestState.littlerootTownState = VarGet(HOENN_VAR_ID(VAR_LITTLEROOT_TOWN_STATE));
         gE2ETestState.leagueRunActive = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.active;
-        gE2ETestState.leagueRunRegion = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.region;
+        gE2ETestState.leagueRunStage = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.stage;
         gE2ETestState.leagueRunRating = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
+        gE2ETestState.leagueRunReplay = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.replay;
     }
 #endif
     trainerCardState = E2ETest_GetTrainerCardState();

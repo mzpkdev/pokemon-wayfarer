@@ -8,6 +8,7 @@
 #include "load_save.h"
 #include "overworld.h"
 #include "hall_of_fame.h"
+#include "league_circuit.h"
 #include "pokemon_storage_system.h"
 #include "trainer_hill.h"
 #include "trainer_tower.h"
@@ -17,6 +18,7 @@
 #include "event_data.h"
 #include "trainer_rating.h"
 #include "wayfarer_persistence.h"
+#include "config/league_circuit.h"
 
 static u16 CalculateChecksum(void *, u16);
 static bool8 ReadFlashSector(u8, struct SaveSector *);
@@ -766,19 +768,42 @@ u8 HandleSavingData(u8 saveType)
             EraseFlashSector(i);
         // fallthrough
     case SAVE_HALL_OF_FAME:
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+        if (!TryIncrementIndigoHallOfFameSaveCount()
+         && GetGameStat(GAME_STAT_ENTERED_HOF) < 999)
+            IncrementGameStat(GAME_STAT_ENTERED_HOF);
+#else
         if (GetGameStat(GAME_STAT_ENTERED_HOF) < 999)
             IncrementGameStat(GAME_STAT_ENTERED_HOF);
+#endif
 
-        // Write the full save slot first
-        CopyPartyAndObjectsToSave();
-        WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
-
-        // Save the Hall of Fame
-        if (gHoFSaveBuffer != NULL)
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+        if (IsIndigoHallOfFameSaveTransactionActive() && gHoFSaveBuffer != NULL)
         {
             u8 *tempAddr = (void *) gHoFSaveBuffer;
+            // The canonical clear must never reach a valid full slot before
+            // its required Hall of Fame record. A retry overwrites the orphan
+            // record at the saved game-stat index if power is lost here.
             HandleWriteSectorNBytes(SECTOR_ID_HOF_1, tempAddr, SECTOR_DATA_SIZE);
             HandleWriteSectorNBytes(SECTOR_ID_HOF_2, tempAddr + SECTOR_DATA_SIZE, SECTOR_DATA_SIZE);
+            if (!gDamagedSaveSectors)
+            {
+                CopyPartyAndObjectsToSave();
+                WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+            }
+        }
+        else
+#endif
+        {
+            // Preserve the source ordering for ordinary Hall of Fame saves.
+            CopyPartyAndObjectsToSave();
+            WriteSaveSectorOrSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
+            if (gHoFSaveBuffer != NULL)
+            {
+                u8 *tempAddr = (void *) gHoFSaveBuffer;
+                HandleWriteSectorNBytes(SECTOR_ID_HOF_1, tempAddr, SECTOR_DATA_SIZE);
+                HandleWriteSectorNBytes(SECTOR_ID_HOF_2, tempAddr + SECTOR_DATA_SIZE, SECTOR_DATA_SIZE);
+            }
         }
         break;
     case SAVE_NORMAL:

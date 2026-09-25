@@ -6,6 +6,7 @@
 
 	.include "data/scripts/wayfarer_sevii/common.inc"
 	.include "data/scripts/wayfarer_sevii/environment.inc"
+	.include "data/scripts/wayfarer_sevii/masters/masters.inc"
 	.include "data/scripts/wayfarer_sevii/story/celio_network.inc"
 	.include "data/scripts/wayfarer_sevii/story/local_adventures.inc"
 	.include "data/scripts/wayfarer_sevii/story/local_services.inc"
@@ -1220,9 +1221,11 @@ SevenIsland_TanobyRuins_Frlg_MapScripts::
 	.byte 0
 
 SevenIsland_House_Room1_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, WayfarerSevii_Masters_Room1OnTransition
 	.byte 0
 
 SevenIsland_House_Room2_Frlg_MapScripts::
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, WayfarerSevii_Masters_Room2OnFrame
 	.byte 0
 
 SevenIsland_Mart_Frlg_MapScripts::

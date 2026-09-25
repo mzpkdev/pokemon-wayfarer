@@ -8,30 +8,30 @@
 #if IS_WAYFARER
 static const u8 sBadges[] = _("Badges: ");
 static const u8 sBadgeMaximum[] = _("/24\n");
-static const u8 sKanto[] = _("Kanto: ");
-static const u8 sJohto[] = _("Johto: ");
-static const u8 sHoenn[] = _("Hoenn: ");
-static const u8 sKantoRequirement[] = _("  8 badges + no prior clear");
-static const u8 sJohtoRequirement[] = _("  16 badges + Kanto clear");
-static const u8 sHoennRequirement[] = _("  24 badges + Kanto + Johto clears");
+static const u8 sIndigo[] = _("Indigo League: ");
+static const u8 sMasters[] = _("Sevii Masters: ");
+static const u8 sHoenn[] = _("Hoenn League: ");
+static const u8 sIndigoRequirement[] = _("  8 badges");
+static const u8 sMastersRequirement[] = _("  16 badges + Indigo clear");
+static const u8 sHoennRequirement[] = _("  24 badges + Masters clear");
 static const u8 sLocked[] = _("Locked");
 static const u8 sAvailable[] = _("Available");
 static const u8 sCleared[] = _("Cleared");
 static const u8 sComplete[] = _("Circuit complete");
 
-static const u8 *GetLeagueStateText(enum Region region)
+static const u8 *GetLeagueStateText(enum CircuitStage stage)
 {
-    if (GetChampionStateForRegion(region))
+    if (HasClearedCircuitStage(stage))
         return sCleared;
-    if (IsEligibleForLeague(region))
+    if (IsEligibleForCircuitStage(stage))
         return sAvailable;
     return sLocked;
 }
 
-static u8 *AppendLeagueStatus(u8 *dest, enum Region region, const u8 *name, const u8 *requirement)
+static u8 *AppendLeagueStatus(u8 *dest, enum CircuitStage stage, const u8 *name, const u8 *requirement)
 {
     dest = StringCopy(dest, name);
-    dest = StringCopy(dest, GetLeagueStateText(region));
+    dest = StringCopy(dest, GetLeagueStateText(stage));
     *dest++ = CHAR_NEWLINE;
     return StringCopy(dest, requirement);
 }
@@ -42,12 +42,14 @@ void FormatLeagueCircuitStatus(u8 *dest)
 
     ptr = ConvertIntToDecimalStringN(ptr, GetGlobalBadgeCount(), STR_CONV_MODE_LEFT_ALIGN, 2);
     ptr = StringCopy(ptr, sBadgeMaximum);
-    ptr = AppendLeagueStatus(ptr, REGION_KANTO, sKanto, sKantoRequirement);
+    ptr = AppendLeagueStatus(ptr, CIRCUIT_STAGE_INDIGO, sIndigo, sIndigoRequirement);
     *ptr++ = CHAR_NEWLINE;
-    ptr = AppendLeagueStatus(ptr, REGION_JOHTO, sJohto, sJohtoRequirement);
+    ptr = AppendLeagueStatus(ptr, CIRCUIT_STAGE_MASTERS, sMasters, sMastersRequirement);
     *ptr++ = CHAR_NEWLINE;
-    ptr = AppendLeagueStatus(ptr, REGION_HOENN, sHoenn, sHoennRequirement);
-    if (GetChampionStateForRegion(REGION_HOENN))
+    ptr = AppendLeagueStatus(ptr, CIRCUIT_STAGE_HOENN, sHoenn, sHoennRequirement);
+    if (HasClearedCircuitStage(CIRCUIT_STAGE_INDIGO)
+     && HasClearedCircuitStage(CIRCUIT_STAGE_MASTERS)
+     && HasClearedCircuitStage(CIRCUIT_STAGE_HOENN))
     {
         *ptr++ = CHAR_NEWLINE;
         StringCopy(ptr, sComplete);

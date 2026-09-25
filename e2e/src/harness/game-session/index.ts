@@ -11,6 +11,7 @@ export type {
   Hm,
   Item,
   LeagueRegion,
+  CircuitStage,
   Move,
   PartyMenuAction,
   Species,

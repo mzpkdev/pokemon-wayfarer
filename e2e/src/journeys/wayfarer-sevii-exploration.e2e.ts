@@ -93,7 +93,7 @@ describe.sequential("Wayfarer Sevii exploration", () => {
         // arrival scene. Mark that one-shot presentation complete so an on-frame
         // dialogue cannot hold the arrange mailbox open on either arrival map.
         story: { flags: { seviiRivalSceneSeen: true } },
-        circuit: { clears: { kanto: false, johto: false, hoenn: false } },
+        circuit: { clears: { indigo: false, masters: false, hoenn: false } },
         determinism: { textSpeed: "instant" },
       })
       await expect(game.state.read()).resolves.toMatchObject({

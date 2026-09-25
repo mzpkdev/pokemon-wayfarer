@@ -187,6 +187,7 @@ class WayfarerSeviiContentAuditTests(unittest.TestCase):
                 "ordinary_trainers": {"owner": "ordinary_trainer", "enabled": True, "inventory": [content_id]},
                 "story": {"owner": "story", "enabled": False, "inventory": []},
                 "trainer_tower": {"owner": "trainer_tower", "enabled": False, "inventory": []},
+                "masters": {"owner": "masters", "enabled": False, "inventory": []},
             },
             "maps": [{
                 "source_map": "TestMap", "map_id": "MAP_TEST", "retained_map_scripts": [],

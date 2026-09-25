@@ -295,6 +295,7 @@ gSpecials::
 	def_special GameClear
 #if IS_WAYFARER
 	def_special WayfarerGetCurrentRegionForScript
+	def_special WayfarerGetKantoBadgeCountForScript
 	def_special WayfarerGetHoennBadgeCountForScript
 	def_special WayfarerShouldWhiteOutToLavaridge
 	def_special WayfarerPrepareHoennEntry
@@ -743,6 +744,17 @@ gSpecials::
 	def_special LeagueCircuit_IsEligible
 	def_special LeagueCircuit_RecordClear
 	def_special LeagueCircuit_BufferAdmissionDenial
+	def_special LeagueCircuit_IsComplete
+	def_special LeagueCircuit_GetRunStage
+	def_special LeagueCircuit_ValidateRoomBattle
+	def_special LeagueCircuit_RecordRoomVictory
+	def_special LeagueCircuit_CanCompleteRun
+	def_special LeagueCircuit_CommitRunClear
+	def_special LeagueCircuit_AbandonRun
+	def_special LeagueCircuit_GetAdmissionRequirement
+	def_special LeagueCircuit_HasClearedStage
+	def_special LeagueCircuit_BeginRun
+	def_special LeagueCircuit_CommitAndRegisterIndigo
 
 #if IS_WAYFARER && WAYFARER_TR_MARTS_ENABLED
 	def_special WayfarerOpenMartProfile
@@ -791,4 +803,5 @@ gSpecials::
     def_special WayfarerSevii_IsMainlandGiovanniComplete
     def_special WayfarerSevii_IsMoltresEligible
     def_special WayfarerSevii_ResolveMoltresBattle
+    def_special WayfarerRedGameClear
 #endif

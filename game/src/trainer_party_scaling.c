@@ -4,6 +4,7 @@
 #include "config/battle.h"
 #include "trainer_rating.h"
 #include "trainer_party_scaling.h"
+#include "league_circuit.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/trainers.h"

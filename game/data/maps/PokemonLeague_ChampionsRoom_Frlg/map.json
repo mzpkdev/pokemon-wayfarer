@@ -2,6 +2,7 @@
   "id": "MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM",
   "name": "PokemonLeague_ChampionsRoom_Frlg",
   "game_version": "frlg",
+  "wayfarer_include": true,
   "layout": "LAYOUT_POKEMON_LEAGUE_CHAMPIONS_ROOM",
   "music": "MUS_RG_VICTORY_ROAD",
   "region_map_section": "MAPSEC_POKEMON_LEAGUE",
@@ -41,7 +42,8 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "0x0",
-      "flag": "FLAG_HIDE_OAK_IN_CHAMP_ROOM"
+      "flag": "FLAG_HIDE_OAK_IN_CHAMP_ROOM",
+      "wayfarer_exclude": true
     }
   ],
   "warp_events": [

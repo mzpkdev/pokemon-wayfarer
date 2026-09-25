@@ -4,7 +4,7 @@ This report checks authored source records and projected parties. It does not es
 
 | Policy | Populated IDs |
 | --- | ---: |
-| EXCLUDED | 217 |
+| EXCLUDED | 222 |
 | GYM_LEADER | 31 |
 | GYM_MEMBER | 111 |
 | ORDINARY | 1422 |
@@ -15,7 +15,7 @@ This report checks authored source records and projected parties. It does not es
 | HNS unplaced | 245 |
 | Hoenn | 854 |
 | Johto | 236 |
-| Kanto | 282 |
+| Kanto | 287 |
 | Sevii | 136 |
 | Sinjoh | 8 |
 

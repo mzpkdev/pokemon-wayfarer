@@ -1,501 +1,489 @@
 [
   {
-    "trainer": "TRAINER_WILL_1_HNS",
+    "trainer": "TRAINER_WAYFARER_INDIGO_LORELEI",
     "source": {
-      "trainerName": "_(\"WILL\")",
-      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_HNS",
-      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_WILL_HNS",
+      "trainerName": "_(\"LORELEI\")",
+      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_FRLG",
+      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_LORELEI_FRLG",
       "gender": "TRAINER_GENDER_MALE",
       "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR",
       "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
       "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
-      "aiFlags": "AI_FLAG_BASIC_TRAINER",
-      "mugshotColor": "MUGSHOT_COLOR_PINK",
-      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_WILL_HNS",
+      "aiFlags": "AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY",
+      "mugshotColor": "MUGSHOT_COLOR_PURPLE",
+      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_LORELEI_FRLG",
       "partySize": 5,
-      "source": "src/data/trainers_hns.party",
+      "source": "src/data/trainers_wayfarer_indigo.h",
       "slots": [
         {
-          "species": "SPECIES_GIRAFARIG",
+          "species": "SPECIES_DEWGONG",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 48,
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 52,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_ZEN_HEADBUTT",
-            "MOVE_NASTY_PLOT",
-            "MOVE_AGILITY",
-            "MOVE_BATON_PASS"
-          ]
-        },
-        {
-          "species": "SPECIES_SLOWKING",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 49,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_AMNESIA",
-            "MOVE_FIRE_PUNCH",
+            "MOVE_ICE_BEAM",
             "MOVE_SURF",
-            "MOVE_PSYCHIC"
+            "MOVE_HAIL",
+            "MOVE_SAFEGUARD"
           ]
         },
         {
-          "species": "SPECIES_ESPEON",
+          "species": "SPECIES_CLOYSTER",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 48,
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 51,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_PSYCHIC",
-            "MOVE_SHADOW_BALL",
-            "MOVE_REFLECT",
-            "MOVE_HEADBUTT"
+            "MOVE_SPIKES",
+            "MOVE_PROTECT",
+            "MOVE_HAIL",
+            "MOVE_DIVE"
           ]
         },
         {
           "species": "SPECIES_SLOWBRO",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_QUICK_CLAW",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 49,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_CURSE",
-            "MOVE_ROCK_SMASH",
-            "MOVE_BODY_SLAM",
-            "MOVE_ZEN_HEADBUTT"
-          ]
-        },
-        {
-          "species": "SPECIES_XATU",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_TWISTED_SPOON",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 50,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_AIR_SLASH",
-            "MOVE_RECOVER",
-            "MOVE_CONFUSE_RAY",
-            "MOVE_PSYCHIC"
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "trainer": "TRAINER_KOGA_1_HNS",
-    "source": {
-      "trainerName": "_(\"KOGA\")",
-      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_HNS",
-      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_KOGA_HNS",
-      "gender": "TRAINER_GENDER_MALE",
-      "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR",
-      "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
-      "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
-      "aiFlags": "AI_FLAG_BASIC_TRAINER",
-      "mugshotColor": "MUGSHOT_COLOR_PURPLE",
-      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_KOGA_HNS",
-      "partySize": 5,
-      "source": "src/data/trainers_hns.party",
-      "slots": [
-        {
-          "species": "SPECIES_ARIADOS",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_KINGS_ROCK",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 50,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_MEGAHORN",
-            "MOVE_GIGA_DRAIN",
-            "MOVE_DOUBLE_TEAM",
-            "MOVE_TOXIC"
-          ]
-        },
-        {
-          "species": "SPECIES_QWILFISH",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 51,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_AQUA_TAIL",
-            "MOVE_TOXIC",
-            "MOVE_PROTECT",
-            "MOVE_POISON_JAB"
-          ]
-        },
-        {
-          "species": "SPECIES_MUK",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_LEFTOVERS",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 50,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_MINIMIZE",
-            "MOVE_FIRE_BLAST",
-            "MOVE_GUNK_SHOT",
-            "MOVE_TOXIC"
-          ]
-        },
-        {
-          "species": "SPECIES_VENOMOTH",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 51,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_LEECH_LIFE",
-            "MOVE_PSYCHIC",
-            "MOVE_POISON_FANG",
-            "MOVE_SLEEP_POWDER"
-          ]
-        },
-        {
-          "species": "SPECIES_CROBAT",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_BRIGHT_POWDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
           "lvl": 52,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_DOUBLE_TEAM",
-            "MOVE_TOXIC",
-            "MOVE_BITE",
-            "MOVE_CONFUSE_RAY"
+            "MOVE_ICE_BEAM",
+            "MOVE_SURF",
+            "MOVE_AMNESIA",
+            "MOVE_YAWN"
+          ]
+        },
+        {
+          "species": "SPECIES_JYNX",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_ICE_PUNCH",
+            "MOVE_DOUBLE_SLAP",
+            "MOVE_LOVELY_KISS",
+            "MOVE_ATTRACT"
+          ]
+        },
+        {
+          "species": "SPECIES_LAPRAS",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "heldItem": "ITEM_SITRUS_BERRY",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_CONFUSE_RAY",
+            "MOVE_ICE_BEAM",
+            "MOVE_SURF",
+            "MOVE_BODY_SLAM"
           ]
         }
       ]
     }
   },
   {
-    "trainer": "TRAINER_BRUNO_1_HNS",
+    "trainer": "TRAINER_WAYFARER_INDIGO_BRUNO",
     "source": {
       "trainerName": "_(\"BRUNO\")",
-      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_HNS",
-      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_HNS",
+      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_FRLG",
+      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_FRLG",
       "gender": "TRAINER_GENDER_MALE",
       "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR",
       "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
       "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
-      "aiFlags": "AI_FLAG_BASIC_TRAINER",
-      "mugshotColor": "MUGSHOT_COLOR_ORANGE",
-      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_HNS",
+      "aiFlags": "AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY",
+      "mugshotColor": "MUGSHOT_COLOR_GREEN",
+      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_BRUNO_FRLG",
       "partySize": 5,
-      "source": "src/data/trainers_hns.party",
+      "source": "src/data/trainers_wayfarer_indigo.h",
       "slots": [
+        {
+          "species": "SPECIES_ONIX",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 51,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_EARTHQUAKE",
+            "MOVE_ROCK_TOMB",
+            "MOVE_IRON_TAIL",
+            "MOVE_ROAR"
+          ]
+        },
         {
           "species": "SPECIES_HITMONCHAN",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_SCOPE_LENS",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
           "lvl": 53,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_CLOSE_COMBAT",
-            "MOVE_PURSUIT",
-            "MOVE_DIZZY_PUNCH",
-            "MOVE_THUNDER_PUNCH"
-          ]
-        },
-        {
-          "species": "SPECIES_HERACROSS",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 52,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_CLOSE_COMBAT",
-            "MOVE_MEGAHORN",
-            "MOVE_TAKE_DOWN",
-            "MOVE_EARTHQUAKE"
+            "MOVE_SKY_UPPERCUT",
+            "MOVE_MACH_PUNCH",
+            "MOVE_ROCK_TOMB",
+            "MOVE_COUNTER"
           ]
         },
         {
           "species": "SPECIES_HITMONLEE",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_SILK_SCARF",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
           "lvl": 53,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_BLAZE_KICK",
-            "MOVE_MEDITATE",
-            "MOVE_REVERSAL",
-            "MOVE_HI_JUMP_KICK"
+            "MOVE_MEGA_KICK",
+            "MOVE_FORESIGHT",
+            "MOVE_BRICK_BREAK",
+            "MOVE_FACADE"
           ]
         },
         {
-          "species": "SPECIES_STEELIX",
+          "species": "SPECIES_ONIX",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 53,
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_CRUNCH",
+            "MOVE_DOUBLE_EDGE",
             "MOVE_EARTHQUAKE",
-            "MOVE_STONE_EDGE",
-            "MOVE_IRON_TAIL"
+            "MOVE_IRON_TAIL",
+            "MOVE_SAND_TOMB"
           ]
         },
         {
           "species": "SPECIES_MACHAMP",
           "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_BLACK_BELT",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 54,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_ROCK_SLIDE",
-            "MOVE_FIRE_PUNCH",
-            "MOVE_VITAL_THROW",
-            "MOVE_CROSS_CHOP"
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "trainer": "TRAINER_KAREN_1_HNS",
-    "source": {
-      "trainerName": "_(\"KAREN\")",
-      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_HNS",
-      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_KAREN_HNS",
-      "gender": "TRAINER_GENDER_MALE",
-      "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR",
-      "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
-      "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
-      "aiFlags": "AI_FLAG_BASIC_TRAINER",
-      "mugshotColor": "MUGSHOT_COLOR_YELLOW",
-      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_KAREN_HNS",
-      "partySize": 5,
-      "source": "src/data/trainers_hns.party",
-      "slots": [
-        {
-          "species": "SPECIES_UMBREON",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
           "heldItem": "ITEM_SITRUS_BERRY",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 54,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_FAINT_ATTACK",
-            "MOVE_DOUBLE_TEAM",
-            "MOVE_BATON_PASS",
-            "MOVE_MOONLIGHT"
-          ]
-        },
-        {
-          "species": "SPECIES_GENGAR",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 53,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_SHADOW_BALL",
-            "MOVE_HYPNOSIS",
-            "MOVE_DREAM_EATER",
-            "MOVE_CONFUSE_RAY"
-          ]
-        },
-        {
-          "species": "SPECIES_VILEPLUME",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_LEFTOVERS",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 53,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_SLEEP_POWDER",
-            "MOVE_GIGA_DRAIN",
-            "MOVE_LEECH_SEED",
-            "MOVE_SUBSTITUTE"
-          ]
-        },
-        {
-          "species": "SPECIES_HONCHKROW",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_SHARP_BEAK",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 53,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_AIR_SLASH",
-            "MOVE_FAINT_ATTACK",
-            "MOVE_STEEL_WING",
-            "MOVE_HAZE"
-          ]
-        },
-        {
-          "species": "SPECIES_HOUNDOOM",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_BLACK_GLASSES",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 55,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_FLAMETHROWER",
-            "MOVE_CRUNCH",
-            "MOVE_IRON_TAIL",
-            "MOVE_REVERSAL"
-          ]
-        }
-      ]
-    }
-  },
-  {
-    "trainer": "TRAINER_LANCE_1_HNS",
-    "source": {
-      "trainerName": "_(\"LANCE\")",
-      "trainerClass": "TRAINER_CLASS_CHAMPION_HNS",
-      "trainerPic": "TRAINER_PIC_FRONT_CHAMPION_LANCE_HNS",
-      "gender": "TRAINER_GENDER_MALE",
-      "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_HG_CHAMPION",
-      "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
-      "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
-      "aiFlags": "AI_FLAG_BASIC_TRAINER",
-      "mugshotColor": "MUGSHOT_COLOR_BLUE",
-      "trainerBackPic": "TRAINER_PIC_FRONT_CHAMPION_LANCE_HNS",
-      "partySize": 6,
-      "source": "src/data/trainers_hns.party",
-      "slots": [
-        {
-          "species": "SPECIES_GYARADOS",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_LEFTOVERS",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 54,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_WATERFALL",
-            "MOVE_DRAGON_DANCE",
-            "MOVE_HYPER_BEAM",
-            "MOVE_EARTHQUAKE"
-          ]
-        },
-        {
-          "species": "SPECIES_DRAGONITE",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_SITRUS_BERRY",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 55,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_BLIZZARD",
-            "MOVE_FIRE_BLAST",
-            "MOVE_THUNDER",
-            "MOVE_EXTREME_SPEED"
-          ]
-        },
-        {
-          "species": "SPECIES_CHARIZARD",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_CHARCOAL",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 54,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_FLAMETHROWER",
-            "MOVE_WING_ATTACK",
-            "MOVE_DOUBLE_TEAM",
-            "MOVE_STEEL_WING"
-          ]
-        },
-        {
-          "species": "SPECIES_DRAGONITE",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 55,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_BOUNCE",
-            "MOVE_DRAGON_CLAW",
-            "MOVE_WATERFALL",
-            "MOVE_DRAGON_DANCE"
-          ]
-        },
-        {
-          "species": "SPECIES_AERODACTYL",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_SILK_SCARF",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
-          "lvl": 54,
-          "ball": "POKEBALL_COUNT",
-          "nature": "NATURE_HARDY",
-          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
-          "moves": [
-            "MOVE_AERIAL_ACE",
-            "MOVE_ROCK_SLIDE",
-            "MOVE_HYPER_BEAM",
-            "MOVE_EARTHQUAKE"
-          ]
-        },
-        {
-          "species": "SPECIES_DRAGONITE",
-          "gender": "TRAINER_MON_RANDOM_GENDER",
-          "heldItem": "ITEM_SITRUS_BERRY",
-          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
           "lvl": 56,
           "ball": "POKEBALL_COUNT",
           "nature": "NATURE_HARDY",
           "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
           "moves": [
-            "MOVE_THUNDER",
+            "MOVE_CROSS_CHOP",
+            "MOVE_BULK_UP",
+            "MOVE_SCARY_FACE",
+            "MOVE_ROCK_TOMB"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "trainer": "TRAINER_WAYFARER_INDIGO_AGATHA",
+    "source": {
+      "trainerName": "_(\"AGATHA\")",
+      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_FRLG",
+      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_AGATHA_FRLG",
+      "gender": "TRAINER_GENDER_MALE",
+      "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR",
+      "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
+      "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
+      "aiFlags": "AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY",
+      "mugshotColor": "MUGSHOT_COLOR_PINK",
+      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_AGATHA_FRLG",
+      "partySize": 5,
+      "source": "src/data/trainers_wayfarer_indigo.h",
+      "slots": [
+        {
+          "species": "SPECIES_GENGAR",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_SHADOW_PUNCH",
+            "MOVE_CONFUSE_RAY",
+            "MOVE_TOXIC",
+            "MOVE_DOUBLE_TEAM"
+          ]
+        },
+        {
+          "species": "SPECIES_GOLBAT",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_CONFUSE_RAY",
+            "MOVE_POISON_FANG",
+            "MOVE_AIR_CUTTER",
+            "MOVE_BITE"
+          ]
+        },
+        {
+          "species": "SPECIES_HAUNTER",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 53,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYPNOSIS",
+            "MOVE_DREAM_EATER",
+            "MOVE_CURSE",
+            "MOVE_MEAN_LOOK"
+          ]
+        },
+        {
+          "species": "SPECIES_ARBOK",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 56,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_SLUDGE_BOMB",
+            "MOVE_SCREECH",
+            "MOVE_IRON_TAIL",
+            "MOVE_BITE"
+          ]
+        },
+        {
+          "species": "SPECIES_GENGAR",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "heldItem": "ITEM_SITRUS_BERRY",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 58,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_SHADOW_BALL",
+            "MOVE_SLUDGE_BOMB",
+            "MOVE_HYPNOSIS",
+            "MOVE_NIGHTMARE"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "trainer": "TRAINER_WAYFARER_INDIGO_LANCE",
+    "source": {
+      "trainerName": "_(\"LANCE\")",
+      "trainerClass": "TRAINER_CLASS_ELITE_FOUR_FRLG",
+      "trainerPic": "TRAINER_PIC_FRONT_ELITE_FOUR_LANCE_FRLG",
+      "gender": "TRAINER_GENDER_MALE",
+      "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_ELITE_FOUR",
+      "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
+      "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
+      "aiFlags": "AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY",
+      "mugshotColor": "MUGSHOT_COLOR_BLUE",
+      "trainerBackPic": "TRAINER_PIC_FRONT_ELITE_FOUR_LANCE_FRLG",
+      "partySize": 5,
+      "source": "src/data/trainers_wayfarer_indigo.h",
+      "slots": [
+        {
+          "species": "SPECIES_GYARADOS",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 56,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYPER_BEAM",
+            "MOVE_DRAGON_RAGE",
+            "MOVE_TWISTER",
+            "MOVE_BITE"
+          ]
+        },
+        {
+          "species": "SPECIES_DRAGONAIR",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYPER_BEAM",
+            "MOVE_SAFEGUARD",
+            "MOVE_DRAGON_RAGE",
+            "MOVE_OUTRAGE"
+          ]
+        },
+        {
+          "species": "SPECIES_DRAGONAIR",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 54,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYPER_BEAM",
+            "MOVE_SAFEGUARD",
+            "MOVE_THUNDER_WAVE",
+            "MOVE_OUTRAGE"
+          ]
+        },
+        {
+          "species": "SPECIES_AERODACTYL",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 58,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYPER_BEAM",
+            "MOVE_ANCIENT_POWER",
+            "MOVE_WING_ATTACK",
+            "MOVE_SCARY_FACE"
+          ]
+        },
+        {
+          "species": "SPECIES_DRAGONITE",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "heldItem": "ITEM_SITRUS_BERRY",
+          "iv": "TRAINER_PARTY_IVS(30, 30, 30, 30, 30, 30)",
+          "lvl": 60,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYPER_BEAM",
             "MOVE_SAFEGUARD",
             "MOVE_OUTRAGE",
-            "MOVE_HYPER_BEAM"
+            "MOVE_WING_ATTACK"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "trainer": "TRAINER_WAYFARER_INDIGO_BLUE",
+    "source": {
+      "trainerName": "_(\"BLUE\")",
+      "trainerClass": "TRAINER_CLASS_CHAMPION_FRLG",
+      "trainerPic": "TRAINER_PIC_FRONT_CHAMPION_RIVAL_FRLG",
+      "gender": "TRAINER_GENDER_MALE",
+      "encounterMusic": "TRAINER_ENCOUNTER_MUSIC_MALE",
+      "items": "{ ITEM_FULL_RESTORE, ITEM_FULL_RESTORE, ITEM_FULL_RESTORE, ITEM_FULL_RESTORE }",
+      "battleType": "TRAINER_BATTLE_TYPE_SINGLES",
+      "aiFlags": "AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY",
+      "mugshotColor": "MUGSHOT_COLOR_YELLOW",
+      "trainerBackPic": "TRAINER_PIC_FRONT_CHAMPION_RIVAL_FRLG",
+      "partySize": 6,
+      "source": "src/data/trainers_wayfarer_indigo.h",
+      "slots": [
+        {
+          "species": "SPECIES_PIDGEOT",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "lvl": 59,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_AERIAL_ACE",
+            "MOVE_FEATHER_DANCE",
+            "MOVE_SAND_ATTACK",
+            "MOVE_WHIRLWIND"
+          ]
+        },
+        {
+          "species": "SPECIES_ALAKAZAM",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "lvl": 57,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_PSYCHIC",
+            "MOVE_FUTURE_SIGHT",
+            "MOVE_RECOVER",
+            "MOVE_REFLECT"
+          ]
+        },
+        {
+          "species": "SPECIES_RHYDON",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "lvl": 59,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_TAKE_DOWN",
+            "MOVE_EARTHQUAKE",
+            "MOVE_ROCK_TOMB",
+            "MOVE_SCARY_FACE"
+          ]
+        },
+        {
+          "species": "SPECIES_ARCANINE",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "lvl": 59,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_EXTREME_SPEED",
+            "MOVE_FLAMETHROWER",
+            "MOVE_ROAR",
+            "MOVE_BITE"
+          ]
+        },
+        {
+          "species": "SPECIES_EXEGGUTOR",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "lvl": 61,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_GIGA_DRAIN",
+            "MOVE_EGG_BOMB",
+            "MOVE_SLEEP_POWDER",
+            "MOVE_LIGHT_SCREEN"
+          ]
+        },
+        {
+          "species": "SPECIES_BLASTOISE",
+          "gender": "TRAINER_MON_RANDOM_GENDER",
+          "heldItem": "ITEM_SITRUS_BERRY",
+          "iv": "TRAINER_PARTY_IVS(31, 31, 31, 31, 31, 31)",
+          "lvl": 63,
+          "ball": "POKEBALL_COUNT",
+          "nature": "NATURE_HARDY",
+          "dynamaxLevel": "MAX_DYNAMAX_LEVEL",
+          "moves": [
+            "MOVE_HYDRO_PUMP",
+            "MOVE_RAIN_DANCE",
+            "MOVE_SKULL_BASH",
+            "MOVE_BITE"
           ]
         }
       ]

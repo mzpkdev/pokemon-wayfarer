@@ -513,6 +513,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
                         "ordinary_trainers": {"owner": "ordinary_trainer", "enabled": False, "inventory": []},
                         "story": {"owner": "story", "enabled": False, "inventory": []},
                         "trainer_tower": {"owner": "trainer_tower", "enabled": False, "inventory": []},
+                        "masters": {"owner": "masters", "enabled": False, "inventory": []},
                     },
                     "maps": maps,
                     "exclusions": [],
@@ -1439,6 +1440,11 @@ class MapjsonWayfarerTest(unittest.TestCase):
             path.parent.name: json.loads(path.read_text())
             for path in maps_root.glob("*/map.json")
         }
+        sevii_manifest = json.loads((GAME_ROOT / "src/data/wayfarer_sevii_maps.json").read_text())
+        sevii_selected = {
+            row["source_map"] for row in sevii_manifest["maps"]
+            if row.get("enabled", sevii_manifest["release_link_enabled"])
+        }
         included = []
         for group_num, group_name in enumerate(groups["group_order"]):
             self.assertLessEqual(group_num, 127)
@@ -1450,8 +1456,9 @@ class MapjsonWayfarerTest(unittest.TestCase):
                         or map_data.get("wayfarer_include")):
                     included.append(map_data)
 
-        included_ids = {map_data["id"] for map_data in included}
-        self.assertEqual(len(included_ids), len(included))
+        included_ids = ({map_data["id"] for map_data in included}
+                        | {data[map_name]["id"] for map_name in sevii_selected})
+        self.assertEqual(len({map_data["id"] for map_data in included}), len(included))
         self.assertTrue(any(item.get("game_version") == "hns" for item in included))
         self.assertTrue(any(item.get("game_version", "emerald") == "emerald" for item in included))
         for map_data in included:

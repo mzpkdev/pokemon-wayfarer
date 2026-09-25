@@ -2299,7 +2299,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
                 leagueRoster = GetLeagueScalingRoster(trainerNum, ownerId);
                 if (resolved.poolSize == 0
                  && IsLeagueScalingRosterValid(leagueRoster, resolved.party, resolved.partySize)
-                 && GetLeagueRunBattleRating(leagueRoster->region, leagueRoster->encounterIndex, &entryRating))
+                 && GetCircuitRunBattleRating(leagueRoster->stage, leagueRoster->encounterIndex, &entryRating))
                 {
                     rating = entryRating;
                     policy = TRAINER_SCALING_LEAGUE;

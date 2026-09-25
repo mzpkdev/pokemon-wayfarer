@@ -43,7 +43,7 @@ TEST("Trainer Rating preserves seeded high-water values and clamps corrupt saved
 }
 
 #if WAYFARER_LEAGUE_CIRCUIT_ENABLED
-TEST("Trainer Rating derives every badge total and every regional clear combination")
+TEST("Trainer Rating derives every badge total and every canonical circuit clear combination")
 {
     static const u8 sBadgeRatings[] =
     {
@@ -59,15 +59,15 @@ TEST("Trainer Rating derives every badge total and every regional clear combinat
         for (clears = 0; clears < 8; clears++)
         {
             u8 expected = sBadgeRatings[badges];
-            SetChampionStateForRegion(REGION_KANTO, (clears & 1) != 0);
-            SetChampionStateForRegion(REGION_JOHTO, (clears & 2) != 0);
-            SetChampionStateForRegion(REGION_HOENN, (clears & 4) != 0);
+            SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, (clears & 1) != 0);
+            SetCircuitClearForTesting(CIRCUIT_STAGE_MASTERS, (clears & 2) != 0);
+            SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, (clears & 4) != 0);
             if (clears & 1)
-                expected += 15;
+                expected += 8;
             if (clears & 2)
-                expected += 5;
+                expected += 8;
             if (clears & 4)
-                expected += 4;
+                expected += 8;
             SetTrainerRating(0);
             EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), expected);
             EXPECT_EQ(GetTrainerRating(), expected);
@@ -81,17 +81,18 @@ TEST("Trainer Rating circuit milestones preserve the independent party cap curve
     static const u8 sMilestones[][4] =
     {
         { 0, 0, 0, 15 }, { 4, 0, 16, 23 }, { 8, 0, 40, 42 },
-        { 8, 1, 55, 60 }, { 16, 1, 63, 76 }, { 16, 3, 68, 84 },
-        { 24, 3, 76, 95 }, { 24, 7, 80, 100 },
+        { 8, 1, 48, 52 }, { 16, 1, 56, 62 }, { 16, 3, 64, 78 },
+        { 24, 3, 72, 89 }, { 24, 7, 80, 100 },
     };
     u8 row, index;
     for (row = 0; row < ARRAY_COUNT(sMilestones); row++)
     {
         for (index = 0; index < 24; index++)
             SetBadgeStateForRegion(REGION_KANTO + index / 8, index % 8, index < sMilestones[row][0]);
-        SetChampionStateForRegion(REGION_KANTO, (sMilestones[row][1] & 1) != 0);
-        SetChampionStateForRegion(REGION_JOHTO, (sMilestones[row][1] & 2) != 0);
-        SetChampionStateForRegion(REGION_HOENN, (sMilestones[row][1] & 4) != 0);
+        SetCircuitClearForTesting(CIRCUIT_STAGE_INDIGO, (sMilestones[row][1] & 1) != 0);
+        SetCircuitClearForTesting(CIRCUIT_STAGE_MASTERS, (sMilestones[row][1] & 2) != 0);
+        SetCircuitClearForTesting(CIRCUIT_STAGE_HOENN, (sMilestones[row][1] & 4) != 0);
+        SetTrainerRating(0);
         EXPECT_EQ(GetTrainerRating(), sMilestones[row][2]);
         EXPECT_EQ(GetTrainerRatingSoftLevelCap(), sMilestones[row][3]);
     }
@@ -104,21 +105,21 @@ TEST("Trainer Rating stays at its high-water mark after cleanup and failed Leagu
     for (index = 0; index < 8; index++)
         SetBadgeStateForRegion(REGION_HOENN, index, TRUE);
     EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
-    EXPECT_EQ(GetTrainerRating(), 55);
+    EXPECT_EQ(GetTrainerRating(), 48);
     savedRating = VarGet(VAR_TRAINER_RATING);
     for (index = 0; index < 8; index++)
         SetBadgeStateForRegion(REGION_HOENN, index, FALSE);
     SetGameClearStateForRegion(REGION_KANTO, FALSE);
-    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 0);
-    EXPECT_EQ(GetTrainerRating(), 55);
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 8);
+    EXPECT_EQ(GetTrainerRating(), 48);
     EXPECT(!TryRecordLeagueClear(REGION_JOHTO));
-    EXPECT_EQ(GetTrainerRating(), 55);
+    EXPECT_EQ(GetTrainerRating(), 48);
     VarSet(VAR_TRAINER_RATING, savedRating);
-    EXPECT_EQ(GetTrainerRating(), 55);
-    EXPECT_EQ(GetTrainerRating(), 55);
+    EXPECT_EQ(GetTrainerRating(), 48);
+    EXPECT_EQ(GetTrainerRating(), 48);
 }
 
-TEST("Trainer Rating high-water value survives production save and load after regional cleanup")
+TEST("Trainer Rating high-water value survives production save and load after title projection changes")
 {
     u8 badge;
     u8 loadStatus;
@@ -140,7 +141,7 @@ TEST("Trainer Rating high-water value survives production save and load after re
     for (badge = 0; badge < 8; badge++)
         SetBadgeStateForRegion(REGION_HOENN, badge, TRUE);
     EXPECT(Test_CompleteAndRecordLeague(REGION_KANTO));
-    EXPECT_EQ(GetTrainerRating(), 55);
+    EXPECT_EQ(GetTrainerRating(), 48);
     SetGameClearStateForRegion(REGION_KANTO, FALSE);
     HandleSavingData(SAVE_NORMAL);
     ClearSav1();
@@ -152,9 +153,10 @@ TEST("Trainer Rating high-water value survives production save and load after re
     EXPECT_EQ(loadStatus, SAVE_STATUS_OK);
     EXPECT_EQ(GetGlobalBadgeCount(), 8);
     EXPECT(!GetChampionStateForRegion(REGION_KANTO));
-    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 40);
-    EXPECT_EQ(GetTrainerRating(), 55);
-    EXPECT_EQ(VarGet(VAR_TRAINER_RATING), 55);
+    EXPECT(HasCommittedFirstIndigoVictory());
+    EXPECT_EQ(CalculateLeagueCircuitTrainerRating(), 48);
+    EXPECT_EQ(GetTrainerRating(), 48);
+    EXPECT_EQ(VarGet(VAR_TRAINER_RATING), 48);
 }
 #else
 TEST("Trainer Rating rollback preserves saved Rating without circuit badge derivation")

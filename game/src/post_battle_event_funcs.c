@@ -14,12 +14,163 @@
 #include "constants/heal_locations.h"
 #include "config/league_circuit.h"
 
+#if IS_WAYFARER
+extern void GivePartyMonChampionRibbon(void);
+#endif
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+static bool8 sUseNonCircuitGameClear;
+static bool8 sIndigoHallOfFameCommitPending;
+static bool8 sIndigoHallOfFameSaveTransaction;
+static bool8 sIndigoHallOfFameSaveCountIncremented;
+static u8 sIndigoHallOfFameRatingAtEntry;
+static u8 sIndigoHallOfFameStoredRatingBefore;
+static struct Pokemon sIndigoHallOfFamePartyBefore[PARTY_SIZE];
+static TVShow sIndigoHallOfFameTvShowsBefore[TV_SHOWS_COUNT];
+static struct WarpData sIndigoHallOfFameContinueWarpBefore;
+static u32 sIndigoHallOfFameCountBefore;
+static u32 sIndigoHallOfFameFirstPlayTimeBefore;
+static u32 sIndigoHallOfFameRibbonCountBefore;
+static u8 sIndigoHallOfFameSpecialWarpFlagsBefore;
+static bool8 sIndigoHallOfFameRibbonFlagBefore;
+static bool8 sIndigoHallOfFameGlobalClearBefore;
+static bool8 sIndigoHallOfFameKantoClearBefore;
+static bool8 sIndigoHallOfFameJohtoClearBefore;
+#endif
+
+u16 LeagueCircuit_CommitAndRegisterIndigo(void)
+{
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (!CanCompleteCircuitRun(CIRCUIT_STAGE_INDIGO)
+     || IsActiveLeagueRunReplay())
+        return FALSE;
+
+    memcpy(sIndigoHallOfFamePartyBefore, gPlayerParty, sizeof(gPlayerParty));
+    memcpy(sIndigoHallOfFameTvShowsBefore, gSaveBlock1Ptr->tvShows, sizeof(gSaveBlock1Ptr->tvShows));
+    sIndigoHallOfFameContinueWarpBefore = gSaveBlock1Ptr->continueGameWarp;
+    sIndigoHallOfFameCountBefore = GetGameStat(GAME_STAT_ENTERED_HOF);
+    sIndigoHallOfFameFirstPlayTimeBefore = GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME);
+    sIndigoHallOfFameRibbonCountBefore = GetGameStat(GAME_STAT_RECEIVED_RIBBONS);
+    sIndigoHallOfFameSpecialWarpFlagsBefore = gSaveBlock2Ptr->specialSaveWarpFlags;
+    sIndigoHallOfFameRibbonFlagBefore = FlagGet(FLAG_SYS_RIBBON_GET);
+    sIndigoHallOfFameGlobalClearBefore = FlagGet(FLAG_SYS_GAME_CLEAR);
+    sIndigoHallOfFameKantoClearBefore = GetGameClearStateForRegion(REGION_KANTO);
+    sIndigoHallOfFameJohtoClearBefore = GetGameClearStateForRegion(REGION_JOHTO);
+    HealPlayerParty();
+    GivePartyMonChampionRibbon();
+    gHasHallOfFameRecords = GetGameStat(GAME_STAT_ENTERED_HOF) != 0;
+    if (GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME) == 0)
+        SetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME,
+                    (gSaveBlock2Ptr->playTimeHours << 16)
+                  | (gSaveBlock2Ptr->playTimeMinutes << 8)
+                  | gSaveBlock2Ptr->playTimeSeconds);
+    SetContinueGameWarpStatus();
+    SetContinueGameWarpToHealLocation(HEAL_LOCATION_INDIGO_PLATEAU_HNS);
+    // Defer the canonical clear until the FRLG Hall of Fame has prepared its
+    // team buffer. The clear and its derived Rating then enter the same save
+    // operation as the required Hall of Fame registration.
+    sIndigoHallOfFameCommitPending = TRUE;
+    sIndigoHallOfFameSaveTransaction = TRUE;
+    sIndigoHallOfFameSaveCountIncremented = FALSE;
+    sIndigoHallOfFameRatingAtEntry = gSaveBlock3Ptr->wayfarerHoenn.leagueRun.ratingAtEntry;
+    sIndigoHallOfFameStoredRatingBefore = VarGet(VAR_TRAINER_RATING);
+    SetMainCallback2(CB2_DoHallOfFameScreenFrlg);
+    return TRUE;
+#else
+    return FALSE;
+#endif
+}
+
+bool8 IsIndigoHallOfFameSaveTransactionActive(void)
+{
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    return sIndigoHallOfFameSaveTransaction;
+#else
+    return FALSE;
+#endif
+}
+
+void FinishIndigoHallOfFameSaveTransaction(bool8 success)
+{
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (!sIndigoHallOfFameSaveTransaction)
+        return;
+    sIndigoHallOfFameSaveTransaction = FALSE;
+    if (!success)
+    {
+        RollbackIndigoHallOfFameCommit(sIndigoHallOfFameRatingAtEntry,
+                                      sIndigoHallOfFameStoredRatingBefore);
+        SetGameClearStateForRegion(REGION_KANTO, sIndigoHallOfFameKantoClearBefore);
+        SetGameClearStateForRegion(REGION_JOHTO, sIndigoHallOfFameJohtoClearBefore);
+        if (sIndigoHallOfFameGlobalClearBefore)
+            FlagSet(FLAG_SYS_GAME_CLEAR);
+        else
+            FlagClear(FLAG_SYS_GAME_CLEAR);
+        memcpy(gPlayerParty, sIndigoHallOfFamePartyBefore, sizeof(gPlayerParty));
+        memcpy(gSaveBlock1Ptr->tvShows, sIndigoHallOfFameTvShowsBefore, sizeof(gSaveBlock1Ptr->tvShows));
+        gSaveBlock1Ptr->continueGameWarp = sIndigoHallOfFameContinueWarpBefore;
+        gSaveBlock2Ptr->specialSaveWarpFlags = sIndigoHallOfFameSpecialWarpFlagsBefore;
+        SetGameStat(GAME_STAT_ENTERED_HOF, sIndigoHallOfFameCountBefore);
+        SetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME, sIndigoHallOfFameFirstPlayTimeBefore);
+        SetGameStat(GAME_STAT_RECEIVED_RIBBONS, sIndigoHallOfFameRibbonCountBefore);
+        if (sIndigoHallOfFameRibbonFlagBefore)
+            FlagSet(FLAG_SYS_RIBBON_GET);
+        else
+            FlagClear(FLAG_SYS_RIBBON_GET);
+    }
+#endif
+}
+
+void ResolveIndigoHallOfFameSaveAttempt(bool8 success, bool8 retryPending)
+{
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (success)
+        FinishIndigoHallOfFameSaveTransaction(TRUE);
+    else if (!retryPending)
+        FinishIndigoHallOfFameSaveTransaction(FALSE);
+#endif
+}
+
+bool8 TryIncrementIndigoHallOfFameSaveCount(void)
+{
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (!sIndigoHallOfFameSaveTransaction)
+        return FALSE;
+    if (!sIndigoHallOfFameSaveCountIncremented)
+    {
+        if (GetGameStat(GAME_STAT_ENTERED_HOF) < 999)
+            IncrementGameStat(GAME_STAT_ENTERED_HOF);
+        sIndigoHallOfFameSaveCountIncremented = TRUE;
+    }
+    return TRUE;
+#else
+    return FALSE;
+#endif
+}
+
+bool8 CommitPendingIndigoHallOfFame(void)
+{
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+    if (!sIndigoHallOfFameCommitPending)
+        return FALSE;
+    sIndigoHallOfFameCommitPending = FALSE;
+    return CommitCircuitRun(CIRCUIT_STAGE_INDIGO) == CIRCUIT_COMMIT_FIRST_CLEAR;
+#else
+    return FALSE;
+#endif
+}
+
 int GameClear(void)
 {
     int i;
     bool32 ribbonGet;
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-    enum Region currentRegion = ConsumeRecordedLeagueClearRegion();
+    bool8 nonCircuitClear = sUseNonCircuitGameClear;
+    enum Region currentRegion;
+    sUseNonCircuitGameClear = FALSE;
+    currentRegion = nonCircuitClear
+        ? WayfarerGetCurrentMapRegion()
+        : ConsumeRecordedLeagueClearRegion();
 #elif IS_WAYFARER
     enum Region currentRegion = WayfarerGetCurrentMapRegion();
 #endif
@@ -35,7 +186,10 @@ int GameClear(void)
     HealPlayerParty();
 
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-    gHasHallOfFameRecords = GetGameStat(GAME_STAT_ENTERED_HOF) != 0;
+    if (nonCircuitClear)
+        gHasHallOfFameRecords = GetGameClearStateForRegion(currentRegion);
+    else
+        gHasHallOfFameRecords = GetGameStat(GAME_STAT_ENTERED_HOF) != 0;
 #else
 #if IS_WAYFARER
     if (GetGameClearStateForRegion(currentRegion) == TRUE)
@@ -62,7 +216,9 @@ int GameClear(void)
     SetContinueGameWarpStatus();
 
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-    if (currentRegion == REGION_HOENN)
+    if (nonCircuitClear)
+        SetContinueGameWarpToHealLocation(HEAL_LOCATION_NEW_BARK_TOWN_HNS);
+    else if (currentRegion == REGION_HOENN)
         SetContinueGameWarpToHealLocation(HEAL_LOCATION_EVER_GRANDE_CITY_POKEMON_LEAGUE);
     else
         SetContinueGameWarpToHealLocation(HEAL_LOCATION_INDIGO_PLATEAU_HNS);
@@ -126,6 +282,16 @@ int GameClear(void)
     SetMainCallback2(CB2_DoHallOfFameScreen);
     return 0;
 }
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+int WayfarerRedGameClear(void)
+{
+    // Red retains the authored HNS completion presentation, but is not a
+    // circuit stage and therefore must not consume or create a circuit clear.
+    sUseNonCircuitGameClear = TRUE;
+    return GameClear();
+}
+#endif
 
 bool8 SetCB2WhiteOut(void)
 {

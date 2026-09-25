@@ -37,7 +37,7 @@ EverGrandeCity_SidneysRoom_OnFrame:
 
 EverGrandeCity_SidneysRoom_EventScript_WalkInCloseDoor::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_HOENN
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
@@ -49,8 +49,9 @@ EverGrandeCity_SidneysRoom_EventScript_WalkInCloseDoor::
 
 EverGrandeCity_SidneysRoom_EventScript_Sidney::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_HOENN
-	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 0
+	specialvar VAR_RESULT, LeagueCircuit_ValidateRoomBattle
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
 #endif
 	lock
@@ -68,6 +69,12 @@ EverGrandeCity_SidneysRoom_EventScript_PostBattleSpeech::
 	end
 
 EverGrandeCity_SidneysRoom_EventScript_Defeated::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
+	setvar VAR_0x8005, 0
+	specialvar VAR_RESULT, LeagueCircuit_RecordRoomVictory
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_HoennEntryDenied
+#endif
 	setflag FLAG_DEFEATED_ELITE_4_SIDNEY
 	call PokemonLeague_EliteFour_SetAdvanceToNextRoomMetatiles
 	msgbox EverGrandeCity_SidneysRoom_Text_PostBattleSpeech, MSGBOX_DEFAULT
@@ -94,4 +101,3 @@ EverGrandeCity_SidneysRoom_Text_PostBattleSpeech:
 	.string "You've got what it takes to go far.\n"
 	.string "Now, go on to the next room and enjoy\l"
 	.string "your next battle!$"
-

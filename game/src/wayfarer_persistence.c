@@ -401,6 +401,8 @@ void WayfarerSetSavedCurrentRegion(enum Region region)
 #if IS_WAYFARER
 enum Region WayfarerGetRegionForMap(s16 mapGroup, s16 mapNum)
 {
+    if (IsWayfarerMastersCircuitMap(mapGroup, mapNum))
+        return REGION_KANTO;
     return GetHnsMapRegionOrFallback(mapGroup, mapNum, GetSavedHnsRegionContext());
 }
 
@@ -417,6 +419,12 @@ void WayfarerUpdateHnsRegionContextForMap(s16 mapGroup, s16 mapNum)
     if (mapGroup < 0 || mapGroup >= MAP_GROUPS_COUNT
      || mapNum < 0 || mapNum >= MAP_GROUP_COUNT[mapGroup])
         return;
+
+    if (IsWayfarerMastersCircuitMap(mapGroup, mapNum))
+    {
+        WayfarerSetSavedCurrentRegion(REGION_KANTO);
+        return;
+    }
 
     if (IsWayfarerMapHoennSource(mapGroup, mapNum))
     {
@@ -710,6 +718,11 @@ u8 GetBadgeCountForRegion(enum Region region)
 }
 
 #if IS_WAYFARER
+u16 WayfarerGetKantoBadgeCountForScript(void)
+{
+    return GetBadgeCountForRegion(REGION_KANTO);
+}
+
 u16 WayfarerGetHoennBadgeCountForScript(void)
 {
     return GetBadgeCountForRegion(REGION_HOENN);

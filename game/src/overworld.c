@@ -716,6 +716,9 @@ static void LoadCurrentMapData(void)
     sLastMapSectionId = gMapHeader.regionMapSectionId;
     gMapHeader = *Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
 #if IS_WAYFARER
+    if (IsWayfarerMastersCircuitMap(gSaveBlock1Ptr->location.mapGroup,
+                                    gSaveBlock1Ptr->location.mapNum))
+        gMapHeader.regionMapSectionId = MAPSEC_SEVEN_ISLAND;
     WayfarerUpdateHnsRegionContextForMap(gSaveBlock1Ptr->location.mapGroup,
                                         gSaveBlock1Ptr->location.mapNum);
 #endif
@@ -726,6 +729,11 @@ static void LoadCurrentMapData(void)
 static void LoadSaveblockMapHeader(void)
 {
     gMapHeader = *Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum);
+#if IS_WAYFARER
+    if (IsWayfarerMastersCircuitMap(gSaveBlock1Ptr->location.mapGroup,
+                                    gSaveBlock1Ptr->location.mapNum))
+        gMapHeader.regionMapSectionId = MAPSEC_SEVEN_ISLAND;
+#endif
     gMapHeader.mapLayout = GetMapLayout(gSaveBlock1Ptr->mapLayoutId);
 }
 
@@ -807,6 +815,10 @@ static bool32 IsWhiteoutCutscene(void)
 void SetWarpDestinationToLastHealLocation(void)
 {
 #if IS_WAYFARER
+    if (SetWayfarerCircuitLobbyWarpForMap(gSaveBlock1Ptr->location.mapGroup,
+                                          gSaveBlock1Ptr->location.mapNum,
+                                          &sWarpDestination))
+        return;
     WayfarerEnsureRecoveryDestination();
 #endif
     if (IsWhiteoutCutscene())
@@ -827,6 +839,10 @@ void SetWarpDestinationToLastHealLocation(void)
 void SetWarpDestinationForTeleport(void)
 {
 #if IS_WAYFARER
+    if (SetWayfarerCircuitLobbyWarpForMap(gSaveBlock1Ptr->location.mapGroup,
+                                          gSaveBlock1Ptr->location.mapNum,
+                                          &sWarpDestination))
+        return;
     WayfarerEnsureRecoveryDestination();
 #endif
     sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
@@ -859,6 +875,12 @@ void SetEscapeWarp(s8 mapGroup, s8 mapNum, s8 warpId, s8 x, s8 y)
 
 void SetWarpDestinationToEscapeWarp(void)
 {
+#if IS_WAYFARER
+    if (SetWayfarerCircuitLobbyWarpForMap(gSaveBlock1Ptr->location.mapGroup,
+                                          gSaveBlock1Ptr->location.mapNum,
+                                          &sWarpDestination))
+        return;
+#endif
     sWarpDestination = gSaveBlock1Ptr->escapeWarp;
 }
 
@@ -1694,11 +1716,21 @@ bool8 IsMapTypeIndoors(enum MapType mapType)
 
 mapsec_u8_t GetSavedWarpRegionMapSectionId(void)
 {
+#if IS_WAYFARER
+    if (IsWayfarerMastersCircuitMap(gSaveBlock1Ptr->dynamicWarp.mapGroup,
+                                    gSaveBlock1Ptr->dynamicWarp.mapNum))
+        return MAPSEC_SEVEN_ISLAND;
+#endif
     return Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->dynamicWarp.mapGroup, gSaveBlock1Ptr->dynamicWarp.mapNum)->regionMapSectionId;
 }
 
 mapsec_u8_t GetCurrentRegionMapSectionId(void)
 {
+#if IS_WAYFARER
+    if (IsWayfarerMastersCircuitMap(gSaveBlock1Ptr->location.mapGroup,
+                                    gSaveBlock1Ptr->location.mapNum))
+        return MAPSEC_SEVEN_ISLAND;
+#endif
     return Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->regionMapSectionId;
 }
 

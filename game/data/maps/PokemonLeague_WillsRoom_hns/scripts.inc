@@ -37,11 +37,10 @@ EliteFourRoom_OnFrame::
 
 EliteFourRoom_CloseDoor::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
-	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
-	goto_if_eq VAR_0x8004, REGION_NONE, LeagueCircuit_EventScript_IndigoEntryDenied
+	specialvar VAR_0x8004, LeagueCircuit_GetRunStage
+	goto_if_ne VAR_0x8004, CIRCUIT_STAGE_MASTERS, LeagueCircuit_EventScript_MastersEntryDenied
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
-	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied
+	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_MastersEntryDenied
 #endif
 	lock
 	setflag FLAG_TEMP_2
@@ -68,6 +67,9 @@ EliteFourRoom_CloseDoor::
 	end
 
 PokemonLeague_WillsRoom_EventScript_Will::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto WayfarerMasters_EventScript_Will
+#endif
 	lock 
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED

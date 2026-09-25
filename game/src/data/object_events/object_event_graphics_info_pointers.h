@@ -1006,6 +1006,13 @@ const struct ObjectEventGraphicsInfo *const gObjectEventGraphicsInfoPointers[NUM
     [OBJ_EVENT_GFX_WOMAN_3_FRLG]             = &gObjectEventGraphicsInfo_Woman3Frlg,
 #endif // HAS_SEVII_CONTENT
 
+#if HAS_SEVII_CONTENT
+    // Additional actors selected by the shared Indigo League circuit.
+    [OBJ_EVENT_GFX_BRUNO]                    = &gObjectEventGraphicsInfo_Bruno,
+    [OBJ_EVENT_GFX_AGATHA]                   = &gObjectEventGraphicsInfo_Agatha,
+    [OBJ_EVENT_GFX_LANCE]                    = &gObjectEventGraphicsInfo_Lance,
+#endif
+
 #if IS_HNS
     [OBJ_EVENT_GFX_ATTENDANT_F_HNS] = &gObjectEventGraphicsInfo_AttendantF_hns,
     [OBJ_EVENT_GFX_ATTENDANT_M_HNS] = &gObjectEventGraphicsInfo_AttendantM_hns,

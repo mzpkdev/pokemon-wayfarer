@@ -10,6 +10,9 @@ PokemonLeague_KogasRoom_OnResume::
 	end
 
 PokemonLeague_KogasRoom_EventScript_Koga::
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto WayfarerMasters_EventScript_Koga
+#endif
 	lock 
 	faceplayer
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED

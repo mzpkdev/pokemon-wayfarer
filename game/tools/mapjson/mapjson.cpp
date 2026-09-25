@@ -522,6 +522,7 @@ void load_wayfarer_sevii_manifest() {
         {"ordinary_trainers", "ordinary_trainer"},
         {"story", "story"},
         {"trainer_tower", "trainer_tower"},
+        {"masters", "masters"},
     };
     if (domains.type() != Json::Type::OBJECT || domains.object_items().size() != domain_owners.size())
         FATAL_ERROR("Wayfarer Sevii manifest must declare every content domain.\n");
@@ -1349,7 +1350,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(obj_event, "movement_range_y") << ", "
                      << json_to_string(obj_event, "trainer_type") << ", "
                      << json_to_string(obj_event, "trainer_sight_or_berry_tree_id") << ", "
-                     << json_to_string(obj_event, "script") << ", "
+                     << get_wayfarer_override(obj_event, "script") << ", "
                      << get_wayfarer_override(obj_event, "flag") << "\n";
             } else if (type == "clone") {
                 text << "\tclone_event " << object_count << ", "
@@ -1401,7 +1402,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(coord_event, "elevation") << ", "
                      << get_wayfarer_override(coord_event, "var") << ", "
                      << json_to_string(coord_event, "var_value") << ", "
-                     << json_to_string(coord_event, "script") << "\n";
+                     << get_wayfarer_override(coord_event, "script") << "\n";
             }
             else if (type == "weather") {
                 text << "\tcoord_weather_event "
@@ -1431,7 +1432,7 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(bg_event, "y") << ", "
                      << json_to_string(bg_event, "elevation") << ", "
                      << json_to_string(bg_event, "player_facing_dir") << ", "
-                     << json_to_string(bg_event, "script") << "\n";
+                     << get_wayfarer_override(bg_event, "script") << "\n";
             }
             else if (type == "hidden_item") {
                 string quantity = json_to_string(bg_event, "quantity", true);

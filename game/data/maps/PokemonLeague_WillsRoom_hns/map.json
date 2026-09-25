@@ -34,7 +34,9 @@
       "y": 12,
       "elevation": 0,
       "dest_map": "MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS",
-      "dest_warp_id": "1"
+      "dest_warp_id": "1",
+      "wayfarer_dest_map": "MAP_SEVEN_ISLAND_HOUSE_ROOM2",
+      "wayfarer_dest_warp_id": "0"
     },
     {
       "x": 6,

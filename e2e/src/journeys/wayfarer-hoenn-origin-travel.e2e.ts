@@ -61,7 +61,10 @@ describe.sequential("Littleroot-origin regular Aqua circuit", () => {
             johtoCommitted: false,
             recovery: { map: recovery },
           },
-          circuit: { badges: { total: 0 }, clears: { kanto: false, johto: false, hoenn: false } },
+          circuit: {
+            badges: { total: 0 },
+            clears: { indigo: false, masters: false, hoenn: false },
+          },
         })
         expect(state.party).toEqual(partner)
         expect(await game.inventory.contains("ssTicket")).toBe(true)

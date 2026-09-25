@@ -2,11 +2,11 @@
 
 PRD: [Wayfarer interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
 
-Implemented: Outdated
+Implemented: Yes
 
-The current runtime still models separate Kanto and Johto League clears at
-Indigo, uses the HNS rooms for both, and derives circuit state from regional
-Champion flags. This specification replaces that implementation contract.
+The runtime now uses one persisted circuit stage identity for FRLG Indigo,
+Sevii Masters, and Hoenn. Regional Champion flags are projections of committed
+circuit clears rather than the source of circuit progression.
 
 ## Scope
 
@@ -517,6 +517,18 @@ Build Wayfarer and the affected mechanics/E2E configuration. If shared engine
 or source scripts change, compile standalone Emerald, FireRed, LeafGreen, and
 HNS and confirm their native League and Seven Island behavior remains intact.
 Run map-version builds serially because generated map files are shared.
+
+## Implementation evidence
+
+Validated on 2026-09-25 with the production Wayfarer ROM and E2E-enabled ROM.
+The live emulator circuit journey covers first clears and replays across FRLG
+Indigo, Sevii Masters, and Hoenn; save/reload recovery; loss recovery; Rating
+snapshots; the single Indigo Hall of Fame commit; and Red after circuit
+completion. A separate Hoenn-origin journey covers admission to all three
+venues without the maiden voyage. Native mechanics include a fault-injected
+Indigo Hall of Fame save rollback, Red's authored completion handoff, circuit
+admission/persistence/status tests, exact League roster and tier tests, and the
+map, traversal, Sevii-content, Trainer-scaling, and generator audits.
 
 ## References
 

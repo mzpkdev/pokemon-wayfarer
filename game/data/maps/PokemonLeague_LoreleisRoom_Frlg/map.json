@@ -2,6 +2,7 @@
   "id": "MAP_POKEMON_LEAGUE_LORELEIS_ROOM",
   "name": "PokemonLeague_LoreleisRoom_Frlg",
   "game_version": "frlg",
+  "wayfarer_include": true,
   "layout": "LAYOUT_POKEMON_LEAGUE_LORELEIS_ROOM",
   "music": "MUS_RG_GYM",
   "region": "REGION_KANTO",
@@ -29,6 +30,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonLeague_LoreleisRoom_EventScript_Lorelei",
+      "wayfarer_script": "WayfarerIndigo_EventScript_Lorelei",
       "flag": "0"
     }
   ],
@@ -38,7 +40,8 @@
       "y": 12,
       "elevation": 0,
       "dest_map": "MAP_INDIGO_PLATEAU_POKEMON_CENTER_1F",
-      "dest_warp_id": "1"
+      "dest_warp_id": "1",
+      "wayfarer_dest_map": "MAP_INDIGO_PLATEAU_POKEMON_CENTER_HNS"
     },
     {
       "x": 6,

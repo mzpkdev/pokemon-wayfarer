@@ -147,7 +147,8 @@
       "y": 2,
       "elevation": 0,
       "dest_map": "MAP_POKEMON_LEAGUE_WILLS_ROOM_HNS",
-      "dest_warp_id": "0"
+      "dest_warp_id": "0",
+      "wayfarer_dest_map": "MAP_POKEMON_LEAGUE_LORELEIS_ROOM"
     }
   ],
   "coord_events": [],

@@ -27,6 +27,14 @@ LeagueCircuit_EventScript_HoennEntryDenied::
 	releaseall
 	end
 
+LeagueCircuit_EventScript_MastersEntryDenied::
+	lockall
+	special LeagueCircuit_AbandonRun
+	warp MAP_SEVEN_ISLAND_HOUSE_ROOM1, 4, 5
+	waitstate
+	releaseall
+	end
+
 LeagueCircuit_EventScript_IndigoHallOfFame::
 	specialvar VAR_0x8004, LeagueCircuit_GetRunRegion
 	goto_if_eq VAR_0x8004, REGION_HOENN, LeagueCircuit_EventScript_IndigoEntryDenied
@@ -53,19 +61,17 @@ LeagueCircuit_EventScript_IndigoHallOfFameFinish:
 
 LeagueCircuit_Text_NeedEightBadges::
 	.string "You need at least eight BADGES\n"
-	.string "to enter the KANTO LEAGUE.$"
+	.string "to enter the INDIGO LEAGUE.$"
 
-LeagueCircuit_Text_NeedKantoClear::
-	.string "You must clear the KANTO LEAGUE\n"
-	.string "before taking this challenge.$"
+LeagueCircuit_Text_NeedIndigoClear::
+	.string "Clear the INDIGO LEAGUE first.$"
 
 LeagueCircuit_Text_NeedSixteenBadges::
 	.string "You need at least sixteen BADGES\n"
-	.string "to enter the JOHTO LEAGUE.$"
+	.string "to enter the MASTERS challenge.$"
 
-LeagueCircuit_Text_NeedJohtoClear::
-	.string "You must clear the JOHTO LEAGUE\n"
-	.string "before taking this challenge.$"
+LeagueCircuit_Text_NeedMastersClear::
+	.string "Clear the SEVII MASTERS first.$"
 
 LeagueCircuit_Text_NeedTwentyFourBadges::
 	.string "You need all twenty-four BADGES\n"

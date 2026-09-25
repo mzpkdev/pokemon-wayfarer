@@ -2,6 +2,7 @@
   "id": "MAP_POKEMON_LEAGUE_LANCES_ROOM",
   "name": "PokemonLeague_LancesRoom_Frlg",
   "game_version": "frlg",
+  "wayfarer_include": true,
   "layout": "LAYOUT_POKEMON_LEAGUE_LANCES_ROOM",
   "music": "MUS_RG_VICTORY_ROAD",
   "region_map_section": "MAPSEC_POKEMON_LEAGUE",
@@ -27,6 +28,7 @@
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PokemonLeague_LancesRoom_EventScript_Lance",
+      "wayfarer_script": "WayfarerIndigo_EventScript_Lance",
       "flag": "0"
     }
   ],

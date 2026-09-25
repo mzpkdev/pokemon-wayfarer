@@ -8,6 +8,9 @@ PokemonLeague_HallOfFame_OnFrame::
 
 PokemonLeague_HallOfFame_EventScript_Cutscene::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	goto WayfarerMasters_EventScript_Gallery
+#endif
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
 	lock
 	specialvar VAR_RESULT, LeagueCircuit_ValidateRun
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_IndigoEntryDenied

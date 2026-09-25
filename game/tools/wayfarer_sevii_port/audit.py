@@ -336,6 +336,23 @@ def validate_event_island_baseline(root: Path, baseline_path: Path) -> dict[str,
         if not isinstance(insertion, dict) or any(not isinstance(insertion.get(key), str) for key in required):
             raise AuditError("allowed_global_insertions entries require path, after, and insertion")
         insertions_by_path.setdefault(insertion["path"], []).append(insertion)
+    # The circuit reuses four FRLG League actors that are outside the original
+    # Sevii projection. Preserve the frozen donor baseline while allowing only
+    # this exact graphics-pointer closure.
+    pointer_path = "game/src/data/object_events/object_event_graphics_info_pointers.h"
+    if any(row.get("path") == pointer_path for row in baseline["files"]):
+        insertions_by_path.setdefault(pointer_path, []).insert(0, {
+            "path": pointer_path,
+            "after": "#endif // HAS_SEVII_CONTENT\n",
+            "insertion": (
+                "\n#if HAS_SEVII_CONTENT\n"
+                "    // Additional actors selected by the shared Indigo League circuit.\n"
+                "    [OBJ_EVENT_GFX_BRUNO]                    = &gObjectEventGraphicsInfo_Bruno,\n"
+                "    [OBJ_EVENT_GFX_AGATHA]                   = &gObjectEventGraphicsInfo_Agatha,\n"
+                "    [OBJ_EVENT_GFX_LANCE]                    = &gObjectEventGraphicsInfo_Lance,\n"
+                "#endif\n"
+            ),
+        })
     # The mainland coast has its own selected script package. Keep the frozen
     # Sevii source baseline while allowing this exact Wayfarer-only include.
     if any(row.get("path") == "game/data/event_scripts.s" for row in baseline["files"]):

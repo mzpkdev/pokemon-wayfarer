@@ -53,7 +53,7 @@ EverGrandeCity_PokemonLeague_1F_Pokemart:
 @ Its assumed the player has the remaining badges
 EverGrandeCity_PokemonLeague_1F_EventScript_DoorGuard::
 #if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
-	setvar VAR_0x8004, REGION_HOENN
+	setvar VAR_0x8004, CIRCUIT_STAGE_HOENN
 	specialvar VAR_RESULT, LeagueCircuit_IsEligible
 	goto_if_eq VAR_RESULT, FALSE, LeagueCircuit_EventScript_EntryDenied
 #endif

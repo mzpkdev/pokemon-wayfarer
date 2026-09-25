@@ -14,9 +14,20 @@ MtSilver_SummitDay_Blizzard::
 
 MtSilver_SummitDay_OnTransition:
 	setescapewarp MAP_MT_SILVER_OUTSIDE_HNS, 17, 8
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	setflag FLAG_HIDE_MTSILVER_RED
+	specialvar VAR_RESULT, LeagueCircuit_IsComplete
+	call_if_eq VAR_RESULT, TRUE, MtSilver_SummitDay_EventScript_RevealRed
+#endif
 	call_if_set FLAG_DAY_POKEMON, MtSilver_SummitDay_EventScript_SetNight
 	call_if_unset FLAG_DAY_POKEMON, MtSilver_SummitDay_EventScript_SetDay
 	end
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+MtSilver_SummitDay_EventScript_RevealRed::
+	clearflag FLAG_HIDE_MTSILVER_RED
+	return
+#endif
 
 MtSilver_SummitDay_EventScript_SetNight::
 	setmaplayoutindex LAYOUT_MT_SILVER_SUMMIT_NIGHT_HNS
@@ -29,6 +40,10 @@ MtSilver_SummitDay_EventScript_SetDay::
 MtSilver_SummitDay_EventScript_Red::
 	lock
 	faceplayer
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	specialvar VAR_RESULT, LeagueCircuit_IsComplete
+	goto_if_eq VAR_RESULT, FALSE, MtSilver_SummitDay_EventScript_RedUnavailable
+#endif
 	msgbox MtSilver_SummitDay_Text_Red, MSGBOX_DEFAULT
 	closemessage
 #if !IS_WAYFARER
@@ -41,6 +56,12 @@ MtSilver_SummitDay_EventScript_Red::
 MtSilver_SummitDay_EventScript_RedStandard::
 	trainerbattle_no_intro TRAINER_RED_2_HNS, MtSilver_SummitDay_Text_RedBeaten
 	goto MtSilver_SummitDay_EventScript_RedOnDefeat
+
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+MtSilver_SummitDay_EventScript_RedUnavailable::
+	release
+	end
+#endif
 
 #if !IS_WAYFARER
 MtSilver_SummitDay_EventScript_RedPostOBC::
@@ -63,7 +84,11 @@ MtSilver_SummitDay_EventScript_RedOnDefeat::
 	setflag FLAG_DEFEATED_RED
 	setflag FLAG_END_NUZLOCKE
 	clearflag FLAG_HIDE_MTSILVER_RED
+#if IS_WAYFARER && WAYFARER_LEAGUE_CIRCUIT_ENABLED
+	special WayfarerRedGameClear
+#else
 	special GameClear
+#endif
 	waitstate
 	releaseall
 	end
@@ -74,5 +99,3 @@ MtSilver_SummitDay_Text_Red:
 
 MtSilver_SummitDay_Text_RedBeaten:
 	.string "...!$"
-
-

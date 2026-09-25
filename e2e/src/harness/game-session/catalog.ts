@@ -131,6 +131,12 @@ export const maps = {
   "league-karen": { mapGroup: 21, mapNum: 4 },
   "league-lance": { mapGroup: 21, mapNum: 5 },
   "hall-of-fame": { mapGroup: 21, mapNum: 6 },
+  "indigo-lorelei": { mapGroup: 66, mapNum: 75 },
+  "indigo-bruno": { mapGroup: 66, mapNum: 76 },
+  "indigo-agatha": { mapGroup: 66, mapNum: 77 },
+  "indigo-lance": { mapGroup: 66, mapNum: 78 },
+  "indigo-blue": { mapGroup: 66, mapNum: 79 },
+  "indigo-hall-of-fame": { mapGroup: 66, mapNum: 80 },
   "league-sidney": { mapGroup: 47, mapNum: 0 },
   "league-phoebe": { mapGroup: 47, mapNum: 1 },
   "league-glacia": { mapGroup: 47, mapNum: 2 },
@@ -147,6 +153,7 @@ export const maps = {
   "reception-gate": { mapGroup: 22, mapNum: 22 },
   "mt-silver-pokemon-center": { mapGroup: 22, mapNum: 34 },
   "mt-silver-outside": { mapGroup: 24, mapNum: 76 },
+  "mt-silver-summit": { mapGroup: 24, mapNum: 84 },
   "power-plant-entrance": { mapGroup: 23, mapNum: 20 },
   "power-plant-back-room": { mapGroup: 23, mapNum: 21 },
   "saffron-route-7-gate": { mapGroup: 23, mapNum: 14 },
@@ -523,6 +530,9 @@ export const storyVars = {
 } as const
 
 export const storyFlags = {
+  hideMtSilverRed: 0x0a9,
+  defeatedRed: 0x23b,
+  endNuzlocke: 0x964,
   towerMarowakCalmed: 0x8e5,
   towerFujiRescued: 0x8e6,
   towerFluteClaimed: 0x8e7,
@@ -787,7 +797,9 @@ export const storyFlags = {
 export const species = {
   pikachu: 25,
   none: 0,
+  pidgeot: 18,
   gastly: 92,
+  gengar: 94,
   haunter: 93,
   cubone: 104,
   pidgey: 16,
@@ -797,6 +809,7 @@ export const species = {
   poliwag: 60,
   geodude: 74,
   tentacruel: 73,
+  dewgong: 87,
   onix: 95,
   hitmonchan: 107,
   krabby: 98,
@@ -966,6 +979,7 @@ export const buttons = {
 } as const satisfies Record<string, SkyEmuButton>
 
 export const leagueRegions = ["kanto", "johto", "hoenn"] as const
+export const circuitStages = ["indigo", "masters", "hoenn"] as const
 
 export const textSpeeds = {
   fast: 2,
@@ -986,3 +1000,4 @@ export type Hm = keyof typeof hms
 export type Item = keyof typeof items
 export type PartyMenuAction = keyof typeof partyMenuActions
 export type LeagueRegion = (typeof leagueRegions)[number]
+export type CircuitStage = (typeof circuitStages)[number]

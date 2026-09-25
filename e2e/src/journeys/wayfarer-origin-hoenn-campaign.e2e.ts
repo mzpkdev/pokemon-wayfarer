@@ -65,7 +65,7 @@ describe.sequential("Wayfarer Hoenn native and visitor campaign handoffs", () =>
           runningShoes: true,
         },
         party: [{ species: "torchic" }],
-        circuit: { badges: { total: 0 }, clears: { kanto: false, johto: false, hoenn: false } },
+        circuit: { badges: { total: 0 }, clears: { indigo: false, masters: false, hoenn: false } },
       })
       await game.controls.press("start")
       await game.wait.frames(60)
