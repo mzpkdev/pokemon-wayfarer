@@ -1,4 +1,4 @@
-# Johto and Hoenn starting regions
+# Johto, Hoenn, and Kanto starting regions
 
 Status: Draft design for implementation. No runtime changes are included.
 Specification: [Wayfarer regional start choice](../specs/wayfarer-regional-start-choice.md)
@@ -7,31 +7,33 @@ Specification: [Wayfarer regional start choice](../specs/wayfarer-regional-start
 
 Let the player choose where their Wayfarer journey begins. Johto starts with
 the New Bark and Elm opening; Hoenn starts with the Littleroot and Birch
-opening. These first two origins establish a home and first partner, then
-lead into the same three-region adventure.
+opening; Kanto starts in Pallet Town and follows the FRLG opening through
+delivery of Oak's Parcel, Pokédex receipt, and five Poké Balls. Each origin
+establishes a home and first partner, then hands responsibility to later
+regional and travel features.
 
 ## Design
 
 ### Independently authored origins
 
 An origin is an authored starting scenario, not a region or a fixed sequence
-of house, Mom, rival, and professor scenes. The first release offers New Bark
-and Littleroot using the region labels below. The foundation must also allow
-later Pallet or custom origins, including multiple origins in one region.
+of house, Mom, rival, and professor scenes. Wayfarer offers New Bark,
+Littleroot, and Pallet using the region labels below. The foundation must also
+allow later custom origins, including multiple origins in one region.
 
 A custom origin may begin on a ship, in the wilderness, or during an event,
 with an existing party or no Pokémon until its own acquisition scene. It may
 have no house, family, rival, professor, or conventional starter choice. Its
 author controls its opening sequence, character relationships, rewards, and
 transition into the wider world. These are examples of supported structure,
-not additional origins included in this release.
+not additional origins included here.
 
 Every origin must provide safe entry and recovery, preserve the shared player
 and save, and define its interactions with regional stories and travel. It
 must make required systems available through its own flow without borrowing
 unplayed story flags from a stock opening. Oak's questionnaire, household
-setup, and starter handoffs below are the presentation and content selected
-for the first two origins, not requirements imposed on future custom flows.
+setup, and starter handoffs below are presentation and content selected for
+these origins, not requirements imposed on future custom flows.
 
 ### Professor introduction
 
@@ -48,13 +50,15 @@ player-shrink sequence begins, so no menu interrupts that closing passage.
 > Now, tell me...
 > Where will your journey begin?
 
-Show `JOHTO` and `HOENN`, in that order, using the introduction's ordinary
-choice menu. Oak acknowledges the selected region and confirms its town:
+Show `JOHTO`, `HOENN`, and `KANTO`, in that order, using the introduction's
+ordinary choice menu. Oak acknowledges the selected region and confirms its
+town:
 
 | Choice | Oak's confirmation |
 | --- | --- |
 | Johto | "Ah, JOHTO! You'll begin in NEW BARK TOWN, then?" |
 | Hoenn | "Ah, HOENN! You'll begin in LITTLEROOT TOWN, then?" |
+| Kanto | "Ah, KANTO! You'll begin in PALLET TOWN, then?" |
 
 Yes continues the conversation. No or B returns to the region list without
 a reprimand or replaying the earlier introduction. After Yes, Oak adds:
@@ -80,24 +84,28 @@ scripts do not repeat name, appearance, or challenge setup.
 | --- | --- | --- | --- |
 | Johto | New Bark bedroom, Mom, Elm's lab, then the existing Mr. Pokémon and Silver sequence | Chikorita, Cyndaquil, or Totodile | New Bark player house |
 | Hoenn | Moving truck, Littleroot arrival and home/clock setup, local rival introduction, Birch's Route 101 rescue, then Birch's lab and the Route 103 rival sequence | Treecko, Torchic, or Mudkip | The player house selected by the existing Hoenn appearance/gender mapping |
+| Kanto | HNS Red's House, Mom, Oak's Pallet interception, Oak's Lab starter choice and first Blue battle, Route 1 and the Viridian Mart, then Parcel delivery and Oak's Pokédex/Poké Ball handoff | Bulbasaur, Charmander, or Squirtle | HNS Red's House |
 
-For these two openings, the selected first partner is required to leave
-the opening safely. The native Hoenn rescue uses the Pokémon chosen from
-Birch's bag. Birch acknowledges that same Pokémon in the lab; he does not
-give a second starter.
+For these openings, the selected first partner is required to leave the
+opening safely. The native Hoenn rescue uses the Pokémon chosen from Birch's
+bag. Birch acknowledges that same Pokémon in the lab; he does not give a
+second starter. Kanto ends this origin milestone after the player receives
+Oak's Parcel, returns it to the lab, and completes Oak's Pokédex and
+five-Poké-Ball handoff.
 
-Keep each region's authored opening scenes and rewards, subject to the
+Keep each origin's authored opening scenes and rewards, subject to the
 existing Wayfarer traversal rules. Elm's errand and the Route 103 rival remain
 available after obtaining a starter, without restoring removed roadblocks.
-The choice does not impose a requirement to finish a regional story before
-exploring or traveling.
+Kanto follows the FRLG opening order through Parcel delivery without making
+that errand a general Kanto traversal gate. The choice does not impose a
+requirement to finish a regional story before exploring or traveling.
 
-Both starts use the same initial money and challenge settings and begin at
+All starts use the same initial money and challenge settings and begin at
 Trainer Rating 0, with no badges or League clears. Existing challenge options
 may change starter species through their current rules; the chosen local
 starter slot still determines the region's rival branch.
 
-### Visiting the other starting region
+### Visiting another starting region
 
 A Johto starter visiting Hoenn keeps the existing visitor version of Birch's
 rescue: use the current party, choose a local starter branch, and optionally
@@ -110,6 +118,13 @@ choice; only story scenes that need it wait. Once chosen, the choice stays
 fixed even if the gift is declined. An unclaimed gift remains available later.
 Visiting New Bark's house never resets Elm's quest or turns its resident into
 the Hoenn player's mother.
+
+Visiting Pallet does not run the Kanto-origin bedroom, Mom, Oak interception,
+starter, lab battle, or Parcel scenes. Existing visitor-facing Pallet and
+Kanto behavior remains available. The dedicated
+[Kanto opening](wayfarer-kanto-origin-opening.md) owns the limited native flow;
+later specifications own any optional local starter or campaign entry offered
+to visitors.
 
 Choosing a second regional starter does not replace the first partner or
 change the other rival's team. The player's name, party, Bag, money, Pokédex
@@ -135,15 +150,20 @@ its separate service and requirements.
 ### Home and shared equipment
 
 The selected origin determines its home and family framing, where present.
-Hoenn keeps its Mom and Norman relationship; Johto keeps its existing household.
-Visitor dialogue avoids giving the player a second family. This is a
-targeted correction to affected scenes, not a new biography or dialogue tree.
+Hoenn keeps its Mom and Norman relationship; Johto keeps its existing
+household; Kanto uses HNS Red's House and adapts its Mom dialogue to the
+player's selected appearance and gender. "Red" identifies the player's FRLG
+story role, not a forced name, sprite, or male branch. Visitor dialogue avoids
+giving the player a second family. This is a targeted correction to affected
+scenes, not a new biography or dialogue tree.
 
 Johto's Mom retains her equipment handoff. Hoenn's Mom retains the running
 shoes handoff; Birch supplies the shared Pokégear functions when acknowledging
-the rescued starter in his lab. Native Pokédex receipt stays in each region's
-opening. A later professor interaction acknowledges an existing Pokédex
-without clearing records or downgrading unlocked modes.
+the rescued starter in his lab. Kanto's bounded opening gives the Pokédex and
+five Poké Balls with Parcel delivery but does not grant Daisy's Town Map or
+later shared equipment. Native Pokédex receipt stays where its owning origin
+specification places it. A later professor interaction acknowledges an
+existing Pokédex without clearing records or downgrading unlocked modes.
 
 Home is the initial recovery destination. After using a Pokémon Center or
 traveling between regions, recovery follows the active local heal destination.
@@ -154,9 +174,9 @@ Travel and blackouts never change the player's chosen home.
 This feature exists only in the Wayfarer build. Standalone HNS, Emerald,
 FireRed, and LeafGreen retain their current introductions and behavior.
 
-This release adds no Kanto start, custom playable origin, third choice,
-random start, origin change after starting, second player identity, new
-starter roster, or new difficulty mode.
+This change adds the Pallet Kanto origin but no custom playable origin, random
+start, origin change after starting, second player identity, new appearance
+assets, or new difficulty mode. The Kanto starter roster is the FRLG trio.
 The feature does not alter Trainer Rating, regional badge accounting, League
 eligibility or order, encounter scaling, mart stock, or the open-world field
 move rules. It adds no cross-region Fly menu or new transport destination.
@@ -175,11 +195,11 @@ script, and engine tooling to register and implement another origin.
   available? Can they correct a mistaken choice before committing?
 - Does each opening preserve its regional character and deliver exactly one
   first partner, with no empty-party battle or repeated identity setup?
-- Can both starters reach all three regions with zero badges and zero League
+- Can each origin hand off safely with zero badges and zero League
   clears, using the existing traversal tools and routes?
 - Can a player leave before finishing the local errand, return later, and
   continue it without replaying rewards or changing rival choices?
-- Do both homes, early blackouts, Pokédex handoffs, and visits to the other
+- Do all homes, early blackouts, owned Pokédex handoffs, and visits to another
   region make sense for the selected origin?
 - Can a Hoenn starter pursue the existing 24-badge journey and League circuit
   without any hidden dependency on New Bark's household or the maiden voyage?
@@ -187,6 +207,7 @@ script, and engine tooling to register and implement another origin.
 ## References
 
 - [Custom origin paper exercise](../research/custom-origin-framework-exercise.md): three hypothetical flows and the remaining authoring-contract gaps.
+- [Kanto origin opening](wayfarer-kanto-origin-opening.md)
 - [Hoenn integration](wayfarer-hoenn-integration.md)
 - [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [HNS open-world traversal](hns-open-world-region-traversal.md)

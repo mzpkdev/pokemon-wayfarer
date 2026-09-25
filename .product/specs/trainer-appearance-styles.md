@@ -89,8 +89,8 @@ confirmation, assign its value from the table. Existing dialogue substitutions,
 name suggestions, rival choices, and story branches continue to use that gender.
 The feature introduces no separate pronoun question. Appearance selection does
 not alter starter options, challenge settings, origin, map version, or regional
-progress. All four styles are available for both Johto and Hoenn origins and
-remain identical after travel through Johto, Kanto, and Hoenn.
+progress. All four styles are available for Johto, Hoenn, and Kanto origins
+and remain identical after travel through Johto, Kanto, and Hoenn.
 
 Use a dedicated pending new-game appearance context in RAM, separate from saved
 state and transient menu tasks. It contains candidate ID, confirmed ID, and
@@ -235,7 +235,7 @@ art before acceptance. A picker-only change does not satisfy this spec.
 | Field state | For every style, inspect walking/running in all directions, both bikes and Acro tricks, surf entry/exit, dive/surface, fishing, watering, field moves, and VS Seeker where reachable. Check palettes, frame bounds, reflections, transitions, and restoration to the previous state. |
 | Rendering | Verify naming icon, intro portraits, local Trainer Card, battle front/back animations, Hall of Fame and facility records against the chosen character. Explicit NPC/rival/remote records retain their own graphics. |
 | Link boundary | In a live link battle, verify all four styles for the local player while remote opponents/partners use their own legacy data. Playback of legacy recorded battles must not borrow the current save's appearance. |
-| Regions and story | Start each style in both origins, travel through Johto/Kanto/Hoenn and back, save/reload away from home, and verify appearance remains fixed. Verify existing gender-linked naming and rival/story branches for all four mappings. |
+| Regions and story | Start each style in all three origins, travel through Johto/Kanto/Hoenn and back, save/reload away from home, and verify appearance remains fixed. Verify existing gender-linked naming and rival/story branches for all four mappings. |
 | Build isolation | Build Wayfarer and supported standalone HNS/FRLG/Emerald targets serially. Native menus and rendering retain their existing behavior without references to Wayfarer-only state. |
 | Resource limits | Record ROM size and asset delta against the accepted baseline; the result must fit the 32 MiB ROM and current save-block budgets. Check intro sprite/window allocation, VRAM/palette use, and cleanup through repeated preview changes and callback returns. |
 
