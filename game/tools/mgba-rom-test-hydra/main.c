@@ -15,6 +15,7 @@
  *    output since the previous P/E/K/F/A and increment the number of
  *    passes/expected fails/known fails/assumption fails/fails.
  */
+#include <errno.h>
 #include <fcntl.h>
 #include <math.h>
 #include <poll.h>
@@ -25,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #ifndef __APPLE__
@@ -969,6 +971,12 @@ int main(int argc, char *argv[])
         pollfds[i].fd = runners[i].outfd;
         pollfds[i].events = POLLIN;
     }
+    struct timespec last_heartbeat = {0};
+    if (quiet_successes && clock_gettime(CLOCK_MONOTONIC, &last_heartbeat) == -1)
+    {
+        perror("clock_gettime failed");
+        exit(2);
+    }
     while (openfds > 0)
     {
         if (tty)
@@ -989,11 +997,34 @@ int main(int argc, char *argv[])
                 fprintf(stdout, "\e[%dF\e[J", scrollback);
         }
 
-        if (poll(pollfds, nrunners, -1) == -1)
+        int poll_result;
+        do
+            poll_result = poll(pollfds, nrunners, quiet_successes ? 1000 : -1);
+        while (poll_result == -1 && errno == EINTR);
+        if (poll_result == -1)
         {
             perror("poll failed");
             exit(2);
         }
+
+        struct timespec now;
+        if (quiet_successes && clock_gettime(CLOCK_MONOTONIC, &now) == -1)
+        {
+            perror("clock_gettime failed");
+            exit(2);
+        }
+        if (quiet_successes
+         && (now.tv_sec > last_heartbeat.tv_sec + 60
+          || (now.tv_sec == last_heartbeat.tv_sec + 60
+           && now.tv_nsec >= last_heartbeat.tv_nsec)))
+        {
+            int completed = 0;
+            for (int i = 0; i < nrunners; i++)
+                completed += runners[i].results;
+            fprintf(stdout, "Mechanics tests in progress: %d completed\n", completed);
+            last_heartbeat = now;
+        }
+
         for (int i = 0; i < nrunners; i++)
         {
             if (pollfds[i].revents & POLLIN)
