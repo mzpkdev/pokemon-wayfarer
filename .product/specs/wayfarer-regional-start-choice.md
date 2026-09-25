@@ -1,14 +1,16 @@
 # Wayfarer regional start choice
 
-PRD: [Johto and Hoenn starting regions](../prds/wayfarer-regional-start-choice.md)
+PRD: [Johto, Hoenn, and Kanto starting regions](../prds/wayfarer-regional-start-choice.md)
 Implemented: No
 
 ## Scope
 
-Implement one Wayfarer-only professor choice that dispatches to native Johto
-or Hoenn new-game initialization. This specification owns the choice, saved
-origin, opening scripts, minimum visitor adaptations, initial recovery, and
-Hoenn-origin access to the existing Aqua circuit.
+Implement one Wayfarer-only professor choice that dispatches to native Johto,
+Hoenn, or Kanto new-game initialization. This specification owns the choice,
+saved origin, shared profile launch, minimum visitor adaptations, initial
+recovery, and Hoenn-origin access to the existing Aqua circuit. The dedicated
+[Kanto opening specification](wayfarer-kanto-origin-opening.md) owns Pallet's
+authored scenes through Parcel delivery, Pokédex receipt, and five Poké Balls.
 
 The runtime foundation continues to own the composite map catalog, persistent
 namespaces, and active-region dispatch. Existing progression specifications
@@ -24,11 +26,11 @@ maiden-voyage requirement remains applicable to Johto-origin Aqua travel.
 
 ### Origin profiles and authoring boundary
 
-Store an origin identity independently of geography. Register the two initial
-profiles as `ORIGIN_NEW_BARK` and `ORIGIN_LITTLEROOT`; the first release's menu
-labels remain `JOHTO` and `HOENN`. References to Johto-origin and Hoenn-origin
-players below mean these specific profiles, not every future origin located
-in those regions.
+Store an origin identity independently of geography. Register
+`ORIGIN_NEW_BARK`, `ORIGIN_LITTLEROOT`, and `ORIGIN_PALLET`; their menu labels
+are `JOHTO`, `HOENN`, and `KANTO`. References to Johto-origin, Hoenn-origin, and
+Kanto-origin players below mean these specific profiles, not every future
+origin located in those regions.
 
 Each profile supplies the following contract through ordinary engine data,
 script entry points, and C callbacks where needed:
@@ -58,15 +60,18 @@ destination. Optional home/family identity is not the recovery contract.
 
 Persist origin-specific milestones in allocated Wayfarer-owned flags/variables
 or a declared save-state extension. They have names and ownership tied to
-that scenario; do not reuse Elm/Birch quest flags as generic opening stages.
+that scenario; do not reuse Elm/Birch quest flags, FRLG constants that resolve
+to zero in the HNS build, or HNS Pallet's late-game lab state as generic
+opening stages.
 No global `openingComplete` or `starterReceived` milestone is required to
 unlock every custom origin. Each callback checks its own actual prerequisites.
 Continue resumes saved map/script state and never reapplies profile setup.
 
 Route shared questions through profile-backed helpers, such as initial
 recovery, regional scene handling, and regular Aqua eligibility. Keep the
-concrete New Bark/Littleroot policies in their profile handlers rather than
-scattering origin-ID or starting-region comparisons across shared systems.
+concrete New Bark, Littleroot, and Pallet policies in their profile handlers
+rather than scattering origin-ID or starting-region comparisons across shared
+systems.
 Adding a future origin requires its registered profile, authored content,
 state allocation, and integration tests. It must not fall through an
 `else = Johto` or `else = Hoenn` default. This is an engine extension boundary,
@@ -109,9 +114,10 @@ speech after selecting Hoenn.
 | Step | Required behavior |
 | --- | --- |
 | Question | Print `Now, tell me...` followed by `Where will your journey begin?` in the existing speech textbox. |
-| List | Show `JOHTO`, then `HOENN`. First entry into this list highlights Johto. Up/Down select; A opens confirmation. B keeps the list open without committing. |
+| List | Show `JOHTO`, then `HOENN`, then `KANTO`. First entry into this list highlights Johto. Up/Down select; A opens confirmation. B keeps the list open without committing. |
 | Johto confirmation | Print `Ah, JOHTO! You'll begin in NEW BARK TOWN, then?` and open the existing Yes/No menu after printing finishes. |
 | Hoenn confirmation | Print `Ah, HOENN! You'll begin in LITTLEROOT TOWN, then?` and open the same Yes/No menu after printing finishes. |
+| Kanto confirmation | Print `Ah, KANTO! You'll begin in PALLET TOWN, then?` and open the same Yes/No menu after printing finishes. |
 | Reconsider | No or B restores the question and list with the candidate still highlighted; add no rejection dialogue or earlier speech replay. |
 | Commit | Yes records the confirmed pending origin, closes the menu, and prints `Perhaps your travels will take you to other regions, too!` before the existing send-off. |
 
@@ -127,6 +133,9 @@ NEW BARK TOWN, then?
 
 Ah, HOENN! You'll begin in
 LITTLEROOT TOWN, then?
+
+Ah, KANTO! You'll begin in
+PALLET TOWN, then?
 
 Perhaps your travels will take
 you to other regions, too!
@@ -156,9 +165,10 @@ save. The normal UI cannot start field initialization without confirmation.
 Test/debug new-game entry points must supply an explicit valid origin.
 
 Add a saved `u16 startingOriginId` under the Wayfarer SaveBlock3 state. Reserve
-0 as invalid/unconfirmed, assign 1 to `ORIGIN_NEW_BARK` and 2 to
-`ORIGIN_LITTLEROOT`, and append stable IDs for later origins. Never renumber
-or reuse an assigned ID. Validate saved IDs against registered profiles.
+0 as invalid/unconfirmed, assign 1 to `ORIGIN_NEW_BARK`, 2 to
+`ORIGIN_LITTLEROOT`, and 3 to `ORIGIN_PALLET`; append stable IDs for later
+origins. Never renumber or reuse an assigned ID. Validate saved IDs against
+registered profiles.
 The ID is immutable after new-game initialization. Read starting geography
 from its profile using existing `REGION_*` constants, rather than persisting
 a redundant starting-region field. Current map region, `currentRegion`, and
@@ -193,7 +203,10 @@ committed flag and a Johto starter-received flag in the Wayfarer-owned state
 or allocated Wayfarer flag namespace. `VAR_STARTER_MON` remains the Johto
 choice value used by Silver; the explicit committed flag distinguishes an
 unchosen zero from a valid first slot. Hoenn uses `VAR_HOENN_STARTER_CHOICE`
-and `FLAG_HOENN_STARTER_RECEIVED`. Region travel never edits either choice.
+and `FLAG_HOENN_STARTER_RECEIVED`. Kanto uses separately allocated choice,
+receipt, rival, and Parcel-opening state owned by its dedicated specification;
+it must not reuse `VAR_STARTER_MON` or `VAR_PALLETTOWN_LABSTATE`. Region travel
+never edits any origin's choice.
 
 ### New-game initialization order
 
@@ -204,7 +217,7 @@ where necessary so later blanket clears cannot erase regional initialization:
    save state, party, inventory, records, and event storage as today.
 2. Initialize shared Wayfarer state, Trainer Rating, money, PC items, berries,
    and other global defaults once. Preserve the current default money of 3,000.
-3. Establish the HNS world baseline once for both origins. Initialize the
+3. Establish the HNS world baseline once for all origins. Initialize the
    separate Hoenn bank as uninitialized with no starter choice or receipt.
 4. Store origin and apply the selected profile below, including the dormant
    Johto pre-Elm state for Hoenn-origin visitors. Native Hoenn baseline writes
@@ -214,7 +227,8 @@ where necessary so later blanket clears cannot erase regional initialization:
    recovery destination before any map callback can execute. Then enter the
    map and let its authored opening run.
 
-These profile values and shared starting defaults define the two v1 origins.
+These profile values and shared starting defaults define the three registered
+origins.
 They do not require future origins to begin at home or with an empty party.
 Any later profile's initial grants and regional state adjustments must be
 declared and applied once after shared defaults, never through a second reset.
@@ -226,22 +240,22 @@ the legacy wrapper. Its shared item and berry setup still executes once;
 do not also repeat it in the common initializer. No late HNS reset may
 overwrite Hoenn's home, visited bits, or opening variables.
 
-| State before first map scripts | Johto | Hoenn |
-| --- | --- | --- |
-| Initial map | `MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS`, existing warp 1 | `MAP_INSIDE_OF_TRUCK`, existing native truck entry |
-| Saved current region | Johto | Hoenn |
-| Visited regions | Johto only | Hoenn only |
-| HNS region context | Johto | Johto as a latent HNS context, without marking it visited |
-| Hoenn initialized | False | True, after its native baseline has been installed |
-| Home recovery | Existing New Bark home heal location | Existing gender-appropriate Littleroot player-house heal location |
-| Party, badges, League clears | Empty party; zero badges and clears | Empty party; zero badges and clears |
-| Starter state | Both choices uncommitted; both receipts false | Both choices uncommitted; both receipts false |
-| Aqua maiden-voyage state | Existing fresh HNS value | Same fresh value; do not write 8 |
+| State before first map scripts | Johto | Hoenn | Kanto |
+| --- | --- | --- | --- |
+| Initial map | `MAP_NEW_BARK_TOWN_PLAYERS_HOUSE_2F_HNS`, existing warp 1 | `MAP_INSIDE_OF_TRUCK`, existing native truck entry | `MAP_PALLET_TOWN_REDS_HOUSE_2F_HNS`, bedroom entry selected by the Kanto opening |
+| Saved current region | Johto | Hoenn | Kanto |
+| Visited regions | Johto only | Hoenn only | Kanto only |
+| HNS region context | Johto | Johto as a latent HNS context, without marking it visited | Kanto |
+| Hoenn initialized | False | True, after its native baseline has been installed | False |
+| Home recovery | Existing New Bark home heal location | Existing gender-appropriate Littleroot player-house heal location | Existing HNS Pallet/Red's House heal location |
+| Party, badges, League clears | Empty party; zero badges and clears | Empty party; zero badges and clears | Empty party; zero badges and clears |
+| Starter state | All choices uncommitted; all receipts false | All choices uncommitted; all receipts false | All choices uncommitted; all receipts false |
+| Aqua maiden-voyage state | Existing fresh HNS value | Same fresh value; do not write 8 | Existing fresh HNS value; Kanto travel policy is outside this opening |
 
 Use source-fixed Hoenn script operands for its baseline, as
 `WayfarerHoennEntry_EventScript_InitializeBaseline` already does. Calling the
 generic Emerald reset while the current map is HNS can write the wrong bank.
-Neither origin initializer may rerun the shared berry initializer or clear
+No origin initializer may rerun the shared berry initializer or clear
 the other region's story state later.
 
 Hoenn's native profile must establish the truck/house/rival pre-arrival state,
@@ -369,7 +383,7 @@ later sets its own gender-specific home warp. Verify the home healer and
 whiteout cutscene can execute under the HNS engine on Hoenn maps. Early loss
 or Teleport must not fall back to New Bark for a Hoenn starter. The empty
 last-heal fallback in `overworld.c` must ask the selected profile for its
-initial recovery destination (the home for these two profiles) only
+initial recovery destination (the home for these three profiles) only
 when there is no valid established local heal destination. Normal local
 recovery and the existing Hoenn whiteout exceptions remain unchanged.
 
@@ -378,7 +392,7 @@ specification already requires. A normal blackout in Hoenn after an Olivine
 or Vermilion visit still uses the established Hoenn local heal destination;
 origin is never a blanket override for a valid local heal warp.
 
-### Aqua travel for both origins
+### Aqua travel for Johto and Hoenn origins
 
 Introduce a single Wayfarer predicate for regular-circuit eligibility that
 delegates to the selected profile's policy:
@@ -390,10 +404,15 @@ New Bark policy:   HNS VAR_SSAQUA_STATE >= 8
 Littleroot policy: Hoenn starter successfully received
 ```
 
-These are the two v1 policies. A custom origin can supply a different
-eligibility condition without setting either stock opening's milestone.
+These are the two established stock travel policies. A custom origin can
+supply a different eligibility condition without setting either stock
+opening's milestone.
 Ticket acquisition is likewise selected by the profile's port interaction
 policy; the Littleroot rule below is not inferred from its entry region.
+The Kanto origin's Aqua eligibility and ticket acquisition are later travel
+work. Until that work lands, its required profile callbacks return ineligible
+for regular Aqua service and offer no Slateport Ticket grant; its bounded
+opening must not fabricate either stock milestone.
 
 Every regular leg also requires `ITEM_SS_TICKET` in the Bag. This predicate
 is derived from existing origin/receipt/voyage state; do not store another
@@ -435,16 +454,16 @@ that a mixed-region script writes the intended bank.
 
 | Area | Required evidence |
 | --- | --- |
-| Intro | Both choices, confirmation cancellation, callback round trips, fresh setup after abandoning a previous choice, fast intro, and Continue without a prompt. Oak and his Pokémon are visible during the exchange; town confirmation fits the window; the travel remark precedes one uninterrupted send-off; no input carries from list selection into confirmation. |
-| New-game state | Both origins, both appearance/gender mappings, preserved challenge settings, zero TR/badges/clears, correct visited bits, correct home, and correct initialized marker. |
+| Intro | All three choices, confirmation cancellation, callback round trips, fresh setup after abandoning a previous choice, fast intro, and Continue without a prompt. Oak and his Pokémon are visible during the exchange; each town confirmation fits the window; the travel remark precedes one uninterrupted send-off; no input carries from list selection into confirmation. |
+| New-game state | All three origins, all four appearance/gender mappings, preserved challenge settings, zero TR/badges/clears, correct visited bits, correct home, and correct initialized marker. |
 | Native starters | All three local choices in each region, exact-once delivery, native first-battle loss continuation versus visitor rescue retry, correct local rival branch, and no writes to the other starter choice. |
-| Shared services | Running shoes, Pokégear, first Pokédex, later professor receipt, and pre-Center home recovery work through the actual Wayfarer UI and scripts. |
+| Shared services | Each origin's owned running-shoes, Pokégear, Pokédex, later-professor, and pre-Center recovery behavior works through the actual Wayfarer UI and scripts. Kanto grants its Pokédex and five Poké Balls during Parcel delivery but not Daisy's deferred Town Map. |
 | Visitor stories | Johto-to-Hoenn rescue still uses the existing party; Hoenn-to-Johto Elm choice can be postponed, declined as a gift, retried with full storage, and reclaimed later without quest rewind. |
 | Persistence | Save/reload at permitted opening checkpoints, after starter choice, after local rewards, in another region, and after completing the full circuit; no opening replay or origin change. |
 | Travel | Fresh Hoenn reaches Slateport, obtains Ticket, visits Olivine and Vermilion, and returns to progressed Hoenn with zero badges/clears; Johto still completes its maiden voyage and all three regular legs. |
 | Recovery | Early first-battle loss, ordinary blackout before first Center, local blackout after each travel leg, Teleport where available, and existing Hoenn special whiteout cases. |
 | Progression | Hoenn-origin access to all 24 badges and the existing League circuit, including deferred Elm/Birch story and return journeys; no hidden Johto-origin or maiden-voyage gate. |
-| Build isolation | Wayfarer includes truck closure and both runtime profiles, fits its save-block limits and the 32 MiB ROM budget; standalone HNS/Emerald/FRLG retain their existing flow and compile without Wayfarer-only state references. |
+| Build isolation | Wayfarer includes truck closure and all three runtime profiles, fits its save-block limits and the 32 MiB ROM budget; standalone HNS/Emerald/FRLG retain their existing flow and compile without Wayfarer-only state references. |
 | Authoring boundary | A test-only custom profile in the same region as a stock profile can enter a non-house map, use its own milestones and recovery, and resume without invoking Mom, rival, professor, or stock starter setup. Its own travel predicate works with both stock starter/voyage milestones unset. Unknown IDs are rejected, and menu reordering preserves IDs. |
 
 Add targeted mechanics/state tests for origin initialization, helper predicates,
@@ -455,10 +474,10 @@ and Hoenn content/source-boundary audits serially, following the repository's
 shared-generated-map build restriction. Validate supported starter-changing
 challenge settings for both the displayed choice and the resulting rival slot.
 
-Record source/manifest validation separately from emulator acceptance. Neither
-the Hoenn start nor the PRD is implemented until both origins complete the
-required opening, travel, and return checks. Keep `Implemented: No` for this
-documentation change.
+Record source/manifest validation separately from emulator acceptance. The
+regional-start design is not complete until Johto and Hoenn pass their owned
+opening/travel checks and Kanto passes the dedicated opening specification.
+Keep `Implemented: No` for this documentation change.
 
 ## Open questions
 
@@ -472,7 +491,7 @@ status above. Emulator acceptance is recorded separately from source audits.
 - `WayfarerOriginProfile` owns entry map/warp, initial recovery, one-time
   initialization, a field opening callback, four regional scene policies, and
   Aqua eligibility and ticket predicates. Opening presentation is independent
-  of the regional rescue policy. The Oak front end maps its two menu entries
+  of the regional rescue policy. The Oak front end maps its three menu entries
   to stable IDs explicitly.
 - Scene interception points are Johto household, Johto professor, Hoenn
   household, and Hoenn rescue. `WayfarerDispatchOriginScene` reads the scene
@@ -506,8 +525,9 @@ status above. Emulator acceptance is recorded separately from source audits.
   saved fallback. New Bark's initial destination uses its actual bedroom
   heal location, rather than the legacy town heal point outside Elm's lab.
 - Stock profile initialization selects the matching initial Pokédex catalog
-  after the shared reset: Johto for New Bark, Hoenn for Littleroot. Later
-  professors, travel, and Continue preserve catalog selection and extensions.
+  after the shared reset: Johto for New Bark, Hoenn for Littleroot, and Kanto
+  for Pallet. Later professors, travel, and Continue preserve catalog selection
+  and extensions.
   This supersedes the earlier unconditional Johto default for playable starts
   in the regional Pokédex specification.
 - Shared defaults and the explicitly HNS-sourced baseline run before profile

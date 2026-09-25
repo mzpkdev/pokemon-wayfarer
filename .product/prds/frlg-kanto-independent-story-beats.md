@@ -50,9 +50,11 @@ Returning after the real prerequisite is satisfied makes it available normally.
 | Pokémon Mansion and Blaine | Explore the mansion, find the Secret Key, and unlock Blaine's Gym. | The [FRLG Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) owns this complete local adventure and its independence from unrelated campaigns. |
 | Giovanni in Viridian | Discover Giovanni as Gym Leader, confront him, and receive the Earth Badge and Earthquake TM. | For Wayfarer, [the finale specification](../specs/frlg-kanto-viridian-finale.md) requires completed Celadon Hideout and Silph liberation in either order. Tower/Fuji is independent; no badge or TR gate applies. |
 
-The opening and Oak's Parcel keep their own local sequence where included by the
-future port. They must not become unrelated prerequisites for every later adventure.
-Player origin and starter selection belong to the separate opening design.
+The [Kanto origin opening](wayfarer-kanto-origin-opening.md) keeps its local
+FRLG sequence through receiving and returning Oak's Parcel, Blue's lab arrival,
+Pokédex receipt, and five Poké Balls. Daisy's Town Map and later campaign beats
+are separate work. Neither the bounded opening nor its Parcel state becomes an
+unrelated prerequisite for every later adventure.
 
 ### Bill and the S.S. Anne
 
@@ -275,4 +277,5 @@ Giovanni's finale without a replacement plot.
 - [Johto story design and late-game reward exception](johto-independent-story-beats.md)
 - [Hoenn independent story beats](hoenn-independent-story-beats.md)
 - [FRLG open-world regional traversal](frlg-open-world-region-traversal.md)
+- [Kanto origin opening](wayfarer-kanto-origin-opening.md)
 - [FRLG traversal specification](../specs/frlg-open-world-region-traversal.md)

@@ -7,6 +7,9 @@ Seafoam, and Routes 19–21 port is owned by
 The [S.S. Anne adventure port](../specs/frlg-kanto-ss-anne-adventure.md)
 defines its permanently recoverable, one-time adventure. Selected HNS story
 adaptations are recorded below; remaining choices stay open.
+The [Kanto origin opening](wayfarer-kanto-origin-opening.md) separately owns
+the native Pallet sequence through Parcel delivery, Pokédex receipt, and five
+Poké Balls.
 
 ## Intent
 
@@ -214,9 +217,12 @@ or being told they grew up together. They keep access to the same local
 adventures, ordinary gifts, and League circuit. Other origins retain their own
 rivals; visiting Kanto does not change the player's rival identity.
 
-The Kanto opening is planned as separate work. This PRD defines how its future
-origin participates; it does not implement that opening or select its starter
-roster. Until it exists, supported visiting origins use Blue's visitor role.
+The dedicated [Kanto origin opening](wayfarer-kanto-origin-opening.md) registers
+the Pallet origin, selects the FRLG starter trio, and owns Blue's first lab
+battle. This broader PRD owns later Blue progression but does not extend the
+opening past the completed Parcel-delivery lab scene. Supported visiting
+origins continue to use Blue's visitor role and never replay native opening
+scenes.
 
 For Kanto-origin players, Blue's story moves forward when the player actually
 starts a later authored encounter with him. Retire all earlier Blue encounters
@@ -257,9 +263,10 @@ rival battle as a required visitor battle.
 - Wayfarer only. Standalone HNS and FRLG keep their existing campaigns.
 - Mainland Kanto adventures are in scope. Sevii, its transport, Celio's
   deliveries, Lostelle, and Mt. Ember are separate work.
-- Kanto origin is planned separately. This feature defines its Blue rivalry
-  contract but does not implement starter selection or the Kanto opening.
-  Visiting players do not need an Oak's Parcel opening to access Kanto stories.
+- The Kanto origin opening is separate, bounded work through Parcel delivery,
+  Pokédex receipt, and five Poké Balls. Town Map receipt and later Blue chapters
+  belong to later specifications. Visiting players do not need an Oak's Parcel
+  opening to access Kanto stories.
 - No wholesale replacement of HNS city or route layouts beyond the selected
   Cinnabar, Seafoam, and Routes 19–21 exceptions, new parallel Kanto,
   or general import of every FRLG house, gate, cave, tileset, or soundtrack.
@@ -312,7 +319,7 @@ to another port, or provide recurring services, battles, or rewards. S.S. Aqua
 and Seagallop remain the travel networks. The port must preserve their menus,
 eligibility, state, and destinations.
 
-Keep the current open-traversal behavior and supported Johto/Hoenn origins.
+Keep the current open-traversal behavior and all supported origins.
 Tower, Silph, ship, and Gym completion must not newly gate ordinary city access,
 regional return travel, or an unrelated region's adventure. Local optional
 shortcuts may retain their separately approved requirements.
@@ -394,7 +401,7 @@ provide a valid return to the HNS world.
 - Do the imported dungeons preserve exploration and puzzle progression rather
   than feeling like abbreviated reward rooms?
 - Do Mt. Moon and Safari retain their intended objectives in the HNS spaces?
-- Can both supported origins complete the adventures in varied orders,
+- Can all supported origins complete the adventures in varied orders,
   including with HMs already obtained elsewhere?
 - Does the dedicated Anne specification pass its boarding, return, one-time
   content, revisit, isolation, and no-recurring-utility acceptance checks?
@@ -424,10 +431,11 @@ provide a valid return to the HNS world.
    Bill's family, Fuchsia leadership, and other overlapping content. Lavender's
    Tower/radio and Power Plant choices are settled above. Do not treat a
    recommendation to defer or remove content as an accepted cut.
-2. **Battle rosters and leadership:** Define Blue's future Kanto-origin starter
-   branches while preserving the circuit's fixed Blastoise roster for visiting
-   origins. Resolve Koga/Janine's roles alongside their Sevii Masters Challenge
-   appearances; no additional sanctioned badge may be introduced.
+2. **Battle rosters and leadership:** Extend the opening's selected local
+   starter slot into Blue's later Kanto-origin rosters while preserving the
+   circuit's fixed Blastoise roster for visiting origins. Resolve Koga/Janine's
+   roles alongside their Sevii Masters Challenge appearances; no additional
+   sanctioned badge may be introduced.
 3. **Bill and his grandfather:** Sharing the house is an available option;
    sequencing grandfather after the rescue is not required. Adjust his
    housesitting/Bill-in-Johto dialogue and the rescue movement space. Keep the
@@ -442,6 +450,7 @@ specifications once these product choices are resolved.
 ## References
 
 - [FRLG Kanto independent story beats](frlg-kanto-independent-story-beats.md)
+- [Kanto origin opening](wayfarer-kanto-origin-opening.md)
 - [HNS open-world regional traversal](hns-open-world-region-traversal.md)
 - [Wayfarer interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Wayfarer regional start choice](wayfarer-regional-start-choice.md)
