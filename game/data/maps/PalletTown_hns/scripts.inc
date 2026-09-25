@@ -5,6 +5,15 @@ PalletTown_hns_MapScripts::
 
 PalletTown_KantoOnLoad:
 	setflag FLAG_TEMP_1
+#if IS_WAYFARER
+	setvar VAR_TEMP_2, 1
+	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
+	goto_if_eq VAR_RESULT, FALSE, PalletTown_KantoOnLoadDone
+	specialvar VAR_RESULT, WayfarerKanto_IsOpeningComplete
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_KantoOnLoadDone
+	setvar VAR_TEMP_2, 0
+PalletTown_KantoOnLoadDone:
+#endif
 	end
 
 PalletTown_EventScript_CityEnter::
