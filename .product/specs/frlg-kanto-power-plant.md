@@ -4,7 +4,7 @@ PRD: [FRLG Kanto story on HNS maps](../prds/frlg-kanto-story-on-hns-maps.md#powe
 
 Supporting requirements: [FRLG Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md#late-game-rewards) and [HNS open-world traversal](hns-open-world-region-traversal.md#magnet-train-restoration).
 
-Implemented: No. This specifies the selected Wayfarer port; current source maps and scripts do not establish a playable Wayfarer hall.
+Implemented: Yes (2026-09-24). The Wayfarer port is covered by focused source, native-state, and SkyEmu journeys described under Evidence.
 
 ## Place and content
 
@@ -45,6 +45,10 @@ Give the hall's Zapdos a dedicated persistent resolved state and visibility stat
 
 ## Evidence
 
+- [Focused SkyEmu journey](../../e2e/src/journeys/wayfarer-power-plant.e2e.ts): 16/16 cases pass, including staffed-room traversal and repair gating, a controller-only maze route, all exits and content, full-pocket recovery, successful Magneton trade, every Zapdos outcome, real blackout recovery, and save/reload.
+- [Magnet Train](../../e2e/src/journeys/hns-magnet-train-traversal.e2e.ts), [Kanto traversal](../../e2e/src/journeys/hns-kanto-traversal.e2e.ts), and [radio handoff](../../e2e/src/journeys/wayfarer-kanto-scope-handoff.e2e.ts) regressions: all 22 consumer cases pass against the implementation ROM.
+- [League circuit journey](../../e2e/src/journeys/wayfarer-league-circuit.e2e.ts): the full 13-case circuit passes and retains resolved Zapdos state through the earliest Kanto Hall of Fame route.
+- [Focused map/source tests](../../game/tools/mapjson/tests/test_power_plant.py) and [native persistence test](../../game/test/wayfarer_persistence.c): map selection/state allocation and TR 55 eligibility pass; the final strict production build passes its enforced ROM reserve check without any `map.bin` change.
 - [FRLG Power Plant map](../../game/data/maps/PowerPlant_Frlg/map.json) and [scripts](../../game/data/maps/PowerPlant_Frlg/scripts.inc)
 - [HNS entrance hall](../../game/data/maps/Route10_PowerPlantEntrance_hns/map.json), [back room](../../game/data/maps/Route10_PowerPlantBackRoom_hns/map.json), and [Route 10 Zapdos](../../game/data/maps/Route10_hns/scripts.inc)
 - [Battle return callback](../../game/src/battle_setup.c) and [Hall of Fame reset](../../game/data/maps/PokemonLeague_HallOfFame_hns/scripts.inc)

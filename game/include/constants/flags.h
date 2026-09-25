@@ -2503,6 +2503,21 @@
 #define FLAG_WAYFARER_TOWER_HIDE_5F_CLEANSE_TAG     WAYFARER_COAST_FLAG_ID(122)
 #define FLAG_WAYFARER_TOWER_HIDE_6F_RARE_CANDY      WAYFARER_COAST_FLAG_ID(123)
 #define FLAG_WAYFARER_TOWER_HIDE_6F_X_ACCURACY      WAYFARER_COAST_FLAG_ID(124)
+// The old generating hall reuses FRLG content whose source flags are zero in
+// HNS. Ordinary objects live in the Coast bank; hidden items use real 13-bit
+// HNS slots because the map-event encoding cannot carry namespaced flags.
+#define FLAG_WAYFARER_POWER_PLANT_MAX_POTION         WAYFARER_COAST_FLAG_ID(53)
+#define FLAG_WAYFARER_POWER_PLANT_TM_PROTECT         WAYFARER_COAST_FLAG_ID(54)
+#define FLAG_WAYFARER_POWER_PLANT_TM_THUNDER         WAYFARER_COAST_FLAG_ID(55)
+#define FLAG_WAYFARER_POWER_PLANT_THUNDER_STONE      WAYFARER_COAST_FLAG_ID(56)
+#define FLAG_WAYFARER_POWER_PLANT_ELIXIR             WAYFARER_COAST_FLAG_ID(57)
+#define FLAG_WAYFARER_POWER_PLANT_ELECTRODE_1        WAYFARER_COAST_FLAG_ID(58)
+#define FLAG_WAYFARER_POWER_PLANT_ELECTRODE_2        WAYFARER_COAST_FLAG_ID(59)
+#define FLAG_WAYFARER_POWER_PLANT_HIDE_ZAPDOS        WAYFARER_COAST_FLAG_ID(60)
+#define FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED    WAYFARER_COAST_FLAG_ID(61)
+#define FLAG_WAYFARER_WORLD_MAP_POWER_PLANT          WAYFARER_COAST_FLAG_ID(62)
+#define FLAG_WAYFARER_POWER_PLANT_HIDDEN_MAX_ELIXIR  0x95B
+#define FLAG_WAYFARER_POWER_PLANT_HIDDEN_THUNDER_STONE 0x95C
 // Sevii exploration state must not use the FRLG aliases that resolve to zero
 // in the HNS catalog. Icefall's nine cracked tiles are intentionally saved so
 // a reload does not silently restore a route the player has already crossed.

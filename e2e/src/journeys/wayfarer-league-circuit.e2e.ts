@@ -538,7 +538,11 @@ describe.sequential("Wayfarer League Circuit", () => {
         player: { facing: "up", position: { map: "indigo-league-lobby", x: 31, y: 4 } },
         party: [{ species: "lapras", level: 100, moves: ["surf"] }],
         circuit: { badges: route.badges, clears: route.clears },
-        story: { vars: { ssAquaState: 8 } },
+        story: {
+          flags:
+            route.name === "earliest Kanto" ? { powerPlantZapdosResolved: true } : undefined,
+          vars: { ssAquaState: 8 },
+        },
       })
       const rating = await admitIndigo(game, route.region)
       await game.saveAndReload()
@@ -548,6 +552,8 @@ describe.sequential("Wayfarer League Circuit", () => {
       if (route.region === "kanto") {
         await expect(game.story.flag("isKantoChampion")).resolves.toBe(true)
         await expect(game.story.flag("isChampion")).resolves.toBe(false)
+        if (route.name === "earliest Kanto")
+          await expect(game.story.flag("powerPlantZapdosResolved")).resolves.toBe(true)
       }
       if (route.name === "all-badges consecutive Indigo") {
         const johtoRating = await admitIndigo(game, "johto")

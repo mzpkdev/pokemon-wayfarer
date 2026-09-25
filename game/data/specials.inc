@@ -299,6 +299,7 @@ gSpecials::
 	def_special WayfarerShouldWhiteOutToLavaridge
 	def_special WayfarerPrepareHoennEntry
 	def_special WayfarerCoast_IsArticunoEligible
+	def_special WayfarerPowerPlant_IsZapdosEligible
 	def_special WayfarerGrantKantoBadge15
 #endif
 	def_special MoveElevator

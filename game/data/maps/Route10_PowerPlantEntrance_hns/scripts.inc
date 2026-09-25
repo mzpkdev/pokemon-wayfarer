@@ -38,12 +38,26 @@ Route10_PowerPlantEntrance_EventScript_Engineer1Done::
 	end
 
 Route10_PowerPlantEntrance_EventScript_Engineer2::
+	lock
+	faceplayer
 	goto_if_ge VAR_KANTO_ROCKET_STORY_STATE, 7, Route10_PowerPlantEntrance_EventScript_Engineer2Done
-	msgbox Route10_PowerPlantEntrance_Text_Engineer2PowerPlantUpAndRunning, MSGBOX_NPC
-	end
+	msgbox Route10_PowerPlantEntrance_Text_Engineer2PowerPlantUpAndRunning, MSGBOX_DEFAULT
+	goto Route10_PowerPlantEntrance_EventScript_Engineer2OfferOldHall
 
 Route10_PowerPlantEntrance_EventScript_Engineer2Done::
-	msgbox Route10_PowerPlantEntrance_Text_Engineer2GeneratorIsRunningAgain, MSGBOX_NPC
+	msgbox Route10_PowerPlantEntrance_Text_Engineer2GeneratorIsRunningAgain, MSGBOX_DEFAULT
+
+Route10_PowerPlantEntrance_EventScript_Engineer2OfferOldHall::
+	msgbox Route10_PowerPlantEntrance_Text_Engineer2VisitOldHall, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, Route10_PowerPlantEntrance_EventScript_Engineer2DeclineOldHall
+	closemessage
+	warp MAP_POWER_PLANT, 5, 36
+	waitstate
+	release
+	end
+
+Route10_PowerPlantEntrance_EventScript_Engineer2DeclineOldHall::
+	release
 	end
 
 Route10_PowerPlantEntrance_EventScript_Cop2::
@@ -144,6 +158,12 @@ Route10_PowerPlantEntrance_Text_Engineer2PowerPlantUpAndRunning:
 
 Route10_PowerPlantEntrance_Text_Engineer2GeneratorIsRunningAgain:
 	.string "The generator's running again!$"
+
+Route10_PowerPlantEntrance_Text_Engineer2VisitOldHall:
+	.string "The old generating hall is still\n"
+	.string "open behind the staffed section.\p"
+	.string "Would you like me to show you\n"
+	.string "inside?$"
 
 Route10_PowerPlantEntrance_Text_Officer2ManagerHasBeenSadAndFurious:
 	.string "The POWER PLANT's MANAGER is in\n"

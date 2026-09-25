@@ -12,7 +12,9 @@
 #include "regions.h"
 #include "save.h"
 #include "script.h"
+#include "trainer_rating.h"
 #include "wayfarer_persistence.h"
+#include "wayfarer_sevii_story.h"
 #include "wayfarer_sevii_state.h"
 #include "wayfarer_origin.h"
 #include "wayfarer_appearance.h"
@@ -26,6 +28,21 @@
 #include "config/league_circuit.h"
 
 #if IS_WAYFARER
+
+TEST("Wayfarer Power Plant Zapdos requires TR 55 and unresolved dedicated state")
+{
+    FlagClear(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED);
+    EXPECT_NE(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED, FLAG_HIDE_ZAPDOS);
+
+    SetTrainerRating(WAYFARER_BIRD_CAPTURE_TR - 1);
+    EXPECT(!WayfarerPowerPlant_IsZapdosEligible());
+
+    SetTrainerRating(WAYFARER_BIRD_CAPTURE_TR);
+    EXPECT(WayfarerPowerPlant_IsZapdosEligible());
+
+    FlagSet(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED);
+    EXPECT(!WayfarerPowerPlant_IsZapdosEligible());
+}
 
 TEST("Wayfarer new-game state hides Blue until the Anne visitor scene")
 {

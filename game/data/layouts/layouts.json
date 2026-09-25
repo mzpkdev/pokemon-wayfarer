@@ -6756,7 +6756,8 @@
       "border_height": 2,
       "border_width": 2,
       "game_version": "frlg",
-      "layout_version": "frlg"
+      "layout_version": "frlg",
+      "wayfarer_include": true
     },
     {
       "id": "LAYOUT_ROUTE25_SEA_COTTAGE",

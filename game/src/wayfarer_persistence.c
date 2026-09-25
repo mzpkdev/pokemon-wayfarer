@@ -679,6 +679,12 @@ u16 WayfarerCoast_IsArticunoEligible(void)
         && GetTrainerRating() >= WAYFARER_BIRD_CAPTURE_TR;
 }
 
+u16 WayfarerPowerPlant_IsZapdosEligible(void)
+{
+    return !FlagGet(FLAG_WAYFARER_POWER_PLANT_ZAPDOS_RESOLVED)
+        && GetTrainerRating() >= WAYFARER_BIRD_CAPTURE_TR;
+}
+
 void WayfarerGrantKantoBadge15(void)
 {
     if (GetBadgeStateForRegion(REGION_KANTO, 6))

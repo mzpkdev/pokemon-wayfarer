@@ -638,6 +638,7 @@ gStdScripts_End::
 	.include "data/wayfarer_engine_source_constants.inc"
 	.include "data/scripts/item_ball_scripts_wayfarer.inc"
 	.include "data/scripts/wayfarer_celadon_hideout.inc"
+	.include "data/scripts/wayfarer_power_plant.inc"
 	.include "data/maps/RocketHideout_B1F_Frlg/scripts.inc"
 	.include "data/maps/RocketHideout_B2F_Frlg/scripts.inc"
 	.include "data/maps/RocketHideout_B3F_Frlg/scripts.inc"

@@ -98,13 +98,26 @@ def normalized_bytes(path: Path) -> bytes:
 
 
 def restored_coast_wild_source(path: Path) -> bytes:
-    """Remove only the appended, authored mainland coast profiles for the frozen Sevii check."""
+    """Remove reviewed mainland encounter appends for the frozen Sevii check."""
     source = load_json(path)
     groups = source.get("wild_encounter_groups", [])
     group = next((row for row in groups if row.get("label") == "gWildMonHeaders"), None)
     if group is None:
         raise AuditError("coast wild source has no gWildMonHeaders group")
     encounters = group.get("encounters", [])
+    power_plant_expected = (
+        ("MAP_POWER_PLANT", "sPowerPlant_Wayfarer_Day"),
+        ("MAP_POWER_PLANT", "sPowerPlant_Wayfarer_Night"),
+    )
+    power_plant_rows = [
+        index for index, row in enumerate(encounters)
+        if row.get("base_label", "").startswith("sPowerPlant_Wayfarer_")
+        or (row.get("map") == "MAP_POWER_PLANT" and "_Wayfarer_" in row.get("base_label", ""))
+    ]
+    if (power_plant_rows != list(range(len(encounters) - len(power_plant_expected), len(encounters)))
+            or tuple((row.get("map"), row.get("base_label")) for row in encounters[-2:]) != power_plant_expected):
+        raise AuditError("Power Plant wild source append is incomplete or reordered")
+    del encounters[-len(power_plant_expected):]
     tower_maps = {f"MAP_POKEMON_TOWER_{floor}F" for floor in range(3, 8)}
     tower_expected = {(name, time) for name in tower_maps for time in ("Day", "Night")}
     if encounters and encounters[-1].get("map") in tower_maps:
