@@ -447,6 +447,13 @@ that story port lands. The independent Cinnabar/Seafoam port may retain its
 current Blue invitation until then. Neither version may add a local badge,
 story, or origin requirement to Indigo admission.
 
+The [Viridian finale specification](frlg-kanto-viridian-finale.md) selects the
+full FRLG Gym, Giovanni's permanent departure, and no Blue successor or Gym
+rematches. Blue's existing Dojo battle unlocks on the committed first Indigo
+Champion victory, including when Indigo precedes Giovanni. A battle start or
+loss does not unlock it. This reads Indigo's canonical first-clear fact and
+does not change the shared eight-global-badge admission or add a circuit reward.
+
 ## Validation
 
 ### Static and mechanics coverage

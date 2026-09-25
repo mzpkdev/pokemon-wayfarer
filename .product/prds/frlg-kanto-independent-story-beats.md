@@ -48,7 +48,7 @@ Returning after the real prerequisite is satisfied makes it available normally.
 | Silph Co. | Infiltrate the occupied company, solve its local access puzzles, defeat Giovanni, and rescue the staff. | Remove Mr. Fuji's rescue as an entrance prerequisite. Keep this adventure independently available in Saffron. |
 | Safari Zone | Reach the Secret House for Surf; find the Gold Teeth and return them to the Warden for Strength. | Keep as parallel local objectives. Neither requires the other or a distant adventure. Koga's challenge remains separate. |
 | Pokémon Mansion and Blaine | Explore the mansion, find the Secret Key, and unlock Blaine's Gym. | The [FRLG Cinnabar and Seafoam port](frlg-cinnabar-seafoam-port.md) owns this complete local adventure and its independence from unrelated campaigns. |
-| Giovanni in Viridian | Discover Giovanni as Gym Leader, confront him, and receive the Earth Badge through the existing battle/reward sequence. | Make this the shared finale of the Celadon/Lavender and Silph adventures, replacing specific-badge access requirements. No TR gate applies to the badge. |
+| Giovanni in Viridian | Discover Giovanni as Gym Leader, confront him, and receive the Earth Badge and Earthquake TM. | For Wayfarer, [the finale specification](../specs/frlg-kanto-viridian-finale.md) requires completed Celadon Hideout and Silph liberation in either order. Tower/Fuji is independent; no badge or TR gate applies. |
 
 The opening and Oak's Parcel keep their own local sequence where included by the
 future port. They must not become unrelated prerequisites for every later adventure.
@@ -89,9 +89,9 @@ independent of this sequence; Fuji's physical Flute remains its own reward.
 The proposed structure is:
 
 ```text
-Celadon Hideout -> Pokémon Tower / Fuji rescue --+
-                                               +-> Viridian Giovanni
-Silph Co. rescue ------------------------------+
+Celadon Hideout ------------------+
+                                  +-> Viridian Giovanni
+Silph Co. rescue -----------------+
 ```
 
 Either investigation can be completed first, and the player can alternate between
@@ -100,9 +100,9 @@ or completing Celadon. Giovanni's first-meeting and repeat-meeting dialogue must
 reflect the order actually played, including victory lines that currently assume
 an earlier loss.
 
-Viridian's Giovanni confrontation becomes available after both investigations
-are resolved: Celadon's Giovanni has been defeated and its Scope obtained, Fuji
-has been rescued, and Silph's occupation has been ended. Outstanding ordinary
+Viridian's Giovanni confrontation becomes available after Celadon's Giovanni
+has been defeated and its Scope obtained, and Silph's occupation has ended.
+Fuji's rescue is independent. Outstanding ordinary
 reward collection must remain recoverable; claiming a TR-gated Master Ball is
 not a finale prerequisite. Neither Snorlax encounter is required.
 
@@ -111,7 +111,7 @@ replace it with TR, a total badge count, or a League clear. This is a direct sto
 dependency preserving Giovanni's reveal and withdrawal, not a late-reward gate
 on an ordinary badge.
 
-Keep his final battle, Earth Badge, and normal reward sequence intact. The main
+Keep his final battle, Earth Badge, and Earthquake TM reward sequence intact. The main
 operations must already be resolved so he does not announce Team Rocket's end
 while still running Silph or the Celadon hideout.
 
@@ -159,8 +159,9 @@ must obey the final reward rules.
 ### Rival continuity
 
 Keep FRLG's rival scenes at their existing locations except for Blue's
-one-time Cinnabar introduction, which the coastal port moves to the Viridian
-Gym entrance. Preserve genuinely necessary
+one-time Cinnabar introduction. The delivered coastal port currently moves it
+to the Viridian Gym entrance; the [future Viridian finale](../specs/frlg-kanto-viridian-finale.md)
+removes that introduction and Blue's Gym role. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors
 are complete. Do not relocate chapters or select a different chapter dynamically
 based on where the player arrives.
