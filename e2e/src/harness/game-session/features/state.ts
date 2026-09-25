@@ -17,6 +17,7 @@ import {
   type TrainerOnlySnapshot,
   battleUiStates,
   catchSwapStates,
+  choiceKinds,
   dialogueMessages,
   gamePhases,
   leagueStatuses,
@@ -82,7 +83,29 @@ export type GameState = {
     message: (typeof dialogueMessages)[number]
     sequence: number
     text: string
+    fullText: string
+    rawText: number[]
+    fullRawText: number[]
   }
+  objects: {
+    localId: number
+    mapGroup: number
+    mapNum: number
+    x: number
+    y: number
+    movementType: number
+    movementDirection: Direction | "unknown"
+    facing: Direction | "unknown"
+    visible: boolean
+    moving: boolean
+  }[]
+  choice: {
+    kind: (typeof choiceKinds)[number]
+    cursor: number | null
+    optionCount: number
+    result: number | null
+  }
+  presentation: { displayedMonSpecies: Species | "unknown" }
   ui: {
     mode: (typeof uiModes)[number]
     trainerCard: (typeof trainerCardStates)[number]
@@ -138,6 +161,7 @@ export type GameState = {
   battle: {
     trainerOnly: TrainerOnlySnapshot
     active: boolean
+    dialogue: { sequence: number; text: string; rawText: number[] }
     ui: (typeof battleUiStates)[number]
     cursor: number | null
     enemy: {
@@ -195,24 +219,124 @@ const fieldMoveResults = ["found", "missing-item", "no-eligible-mon", "selected"
 const fieldMoveResult = (result: number): GameState["fieldMove"]["result"] =>
   fieldMoveResults[result] ?? "unknown"
 
-const decodeFieldMessageText = (bytes: number[]): string => {
+export const decodeFieldMessageText = (bytes: number[]): string => {
+  const characters: Record<number, string> = {
+    0x00: " ",
+    0x01: "À",
+    0x02: "Á",
+    0x03: "Â",
+    0x04: "Ç",
+    0x05: "È",
+    0x06: "É",
+    0x07: "Ê",
+    0x08: "Ë",
+    0x09: "Ì",
+    0x0b: "Î",
+    0x0c: "Ï",
+    0x0d: "Ò",
+    0x0e: "Ó",
+    0x0f: "Ô",
+    0x10: "Œ",
+    0x11: "Ù",
+    0x12: "Ú",
+    0x13: "Û",
+    0x14: "Ñ",
+    0x15: "ß",
+    0x16: "à",
+    0x17: "á",
+    0x19: "ç",
+    0x1a: "è",
+    0x1b: "é",
+    0x1c: "ê",
+    0x1d: "ë",
+    0x1e: "ì",
+    0x20: "î",
+    0x21: "ï",
+    0x22: "ò",
+    0x23: "ó",
+    0x24: "ô",
+    0x25: "œ",
+    0x26: "ù",
+    0x27: "ú",
+    0x28: "û",
+    0x29: "ñ",
+    0x2a: "º",
+    0x2b: "ª",
+    0x2d: "&",
+    0x2e: "+",
+    0x35: "=",
+    0x36: ";",
+    0x51: "¿",
+    0x52: "¡",
+    0x5a: "Í",
+    0x5b: "%",
+    0x5c: "(",
+    0x5d: ")",
+    0x68: "â",
+    0x6f: "í",
+    0x85: "<",
+    0x86: ">",
+    0xab: "!",
+    0xac: "?",
+    0xad: ".",
+    0xae: "-",
+    0xaf: "·",
+    0xb0: "…",
+    0xb1: "“",
+    0xb2: "”",
+    0xb3: "‘",
+    0xb4: "’",
+    0xb5: "♂",
+    0xb6: "♀",
+    0xb7: "¥",
+    0xb8: ",",
+    0xb9: "×",
+    0xba: "/",
+    0xef: "▶",
+    0xf0: ":",
+    0xf1: "Ä",
+    0xf2: "Ö",
+    0xf3: "Ü",
+    0xf4: "ä",
+    0xf5: "ö",
+    0xf6: "ü",
+    0xfa: "\n",
+    0xfb: "\n",
+    0xfe: "\n",
+  }
   let text = ""
 
-  for (const value of bytes) {
+  for (let index = 0; index < bytes.length; index++) {
+    const value = bytes[index]!
     if (value === 0xff) break
-    if (value === 0x00) text += " "
-    else if (value >= 0xa1 && value <= 0xaa) text += String(value - 0xa1)
-    else if (value === 0xab) text += "!"
-    else if (value === 0xac) text += "?"
-    else if (value === 0xad) text += "."
-    else if (value === 0xae) text += "-"
-    else if (value === 0xb8) text += ","
-    else if (value === 0xba) text += "/"
+    if (value === 0xfc) {
+      // Presentation-only extended control codes are not part of the spoken text.
+      const code = bytes[++index]
+      const argumentCount =
+        code === 0x04 || code === 0x1c
+          ? 3
+          : code === 0x0b || code === 0x10
+            ? 2
+            : code === 0x07 ||
+                code === 0x09 ||
+                code === 0x0a ||
+                code === 0x0f ||
+                code === 0x15 ||
+                code === 0x16 ||
+                code === 0x17 ||
+                code === 0x18
+              ? 0
+              : 1
+      index += argumentCount
+    } else if (value === 0x53 && bytes[index + 1] === 0x54) {
+      text += "PKMN"
+      index++
+    } else if (value >= 0xa1 && value <= 0xaa) text += String(value - 0xa1)
     else if (value >= 0xbb && value <= 0xd4)
       text += String.fromCharCode("A".charCodeAt(0) + value - 0xbb)
     else if (value >= 0xd5 && value <= 0xee)
       text += String.fromCharCode("a".charCodeAt(0) + value - 0xd5)
-    else if (value === 0xfe) text += "\n"
+    else text += characters[value] ?? `\\x${value.toString(16).padStart(2, "0")}`
   }
 
   return text
@@ -311,6 +435,23 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
         message: dialogueMessages[snapshot.dialogueMessage] ?? "unknown",
         sequence: snapshot.dialogueSequence,
         text: decodeFieldMessageText(snapshot.dialogueText),
+        fullText: decodeFieldMessageText(snapshot.fullDialogueText),
+        rawText: snapshot.dialogueText,
+        fullRawText: snapshot.fullDialogueText,
+      },
+      objects: snapshot.objectEvents.map((object) => ({
+        ...object,
+        movementDirection: facingName(object.movementDirection),
+        facing: facingName(object.facingDirection),
+      })),
+      choice: {
+        kind: choiceKinds[snapshot.choiceKind] ?? "none",
+        cursor: snapshot.choiceCursor === 0xff ? null : snapshot.choiceCursor,
+        optionCount: snapshot.choiceOptionCount,
+        result: snapshot.choiceResult === 0xffff ? null : snapshot.choiceResult,
+      },
+      presentation: {
+        displayedMonSpecies: nameByValue(species, snapshot.displayedMonSpecies),
       },
       ui: {
         mode: uiModes[snapshot.uiMode] ?? "overworld",
@@ -381,6 +522,11 @@ export const createStateApi = (runtime: SessionRuntime): StateApi => ({
       battle: {
         trainerOnly: snapshot.trainerOnly,
         active: snapshot.battleActive,
+        dialogue: {
+          sequence: snapshot.battleDialogueSequence,
+          text: decodeFieldMessageText(snapshot.battleDialogueText),
+          rawText: snapshot.battleDialogueText,
+        },
         ui: battleUiStates[snapshot.battleUiState] ?? "other",
         cursor: snapshot.battleCursor === 0xff ? null : snapshot.battleCursor,
         enemy:

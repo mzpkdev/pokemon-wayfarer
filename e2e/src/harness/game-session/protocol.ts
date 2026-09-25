@@ -13,10 +13,10 @@ export type TrainerOnlySnapshot = {
   outcome: number
 }
 
-const abiVersion = 20
+const abiVersion = 22
 const expectedRequestSize = 372
 const expectedResultSize = 16
-const expectedStateSize = 452
+const expectedStateSize = 1680
 const expectedRequestStatusOffset = 87
 const expectedResultStatusOffset = 14
 
@@ -27,6 +27,10 @@ export const maxBagItems = 8
 export const maxPcSlots = 8
 export const maxPartyMenuActions = 8
 export const maxFieldMessageTextLength = 32
+/** Finite ROM-side capture size for a complete expanded field message. */
+export const maxFullFieldMessageTextLength = 512
+export const maxBattleMessageTextLength = 512
+export const maxObjectEvents = 16
 export const leagueCount = 3
 export const totalPcBoxes = 14
 export const pcBoxCapacity = 30
@@ -50,7 +54,12 @@ export const commands = {
   observeVar: 11,
   setVar: 12,
 } as const
-export const fullPocketMasks = { items: 1 << 0, keyItems: 1 << 1, tmHm: 1 << 2, balls: 1 << 3 } as const
+export const fullPocketMasks = {
+  items: 1 << 0,
+  keyItems: 1 << 1,
+  tmHm: 1 << 2,
+  balls: 1 << 3,
+} as const
 
 export const gamePhases = ["boot", "overworld", "dialogue", "battle"] as const
 export const arrangePhases = [
@@ -146,6 +155,7 @@ export const battleUiStates = [
   "text",
   "move-menu",
 ] as const
+export const choiceKinds = ["none", "yes-no", "multichoice", "starter"] as const
 
 export type SessionAbi = {
   requestSize: number
@@ -210,6 +220,18 @@ export type ArrangeRequest = Omit<CommandRequest, "command" | "useRngSeed" | "wi
   wildMon?: MonFixtureWire
 }
 export type ObservedPcSlot = MonFixtureWire & { box: number; slot: number }
+export type ObservedObjectEvent = {
+  localId: number
+  mapGroup: number
+  mapNum: number
+  x: number
+  y: number
+  movementType: number
+  movementDirection: number
+  facingDirection: number
+  visible: boolean
+  moving: boolean
+}
 
 export type StateSnapshot = {
   frame: number
@@ -239,6 +261,15 @@ export type StateSnapshot = {
   dialogueMessage: number
   dialogueSequence: number
   dialogueText: number[]
+  fullDialogueText: number[]
+  battleDialogueSequence: number
+  battleDialogueText: number[]
+  objectEvents: ObservedObjectEvent[]
+  choiceKind: number
+  choiceCursor: number
+  choiceOptionCount: number
+  choiceResult: number
+  displayedMonSpecies: number
   partySpecies: number[]
   partyMoves: number[][]
   partyEggMask: number
@@ -765,6 +796,19 @@ const parseObservedPcSlot = (bytes: Uint8Array, offset: number): ObservedPcSlot 
   slot: bytes[offset + 13]!,
 })
 
+const parseObservedObjectEvent = (bytes: Uint8Array, offset: number): ObservedObjectEvent => ({
+  x: int16(bytes, offset),
+  y: int16(bytes, offset + 2),
+  localId: bytes[offset + 4]!,
+  mapGroup: bytes[offset + 5]!,
+  mapNum: bytes[offset + 6]!,
+  movementType: bytes[offset + 7]!,
+  movementDirection: bytes[offset + 8]!,
+  facingDirection: bytes[offset + 9]!,
+  visible: bytes[offset + 10] !== 0,
+  moving: bytes[offset + 11] !== 0,
+})
+
 export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
   const partySpecies = Array.from({ length: maxParty }, (_, index) => uint16(bytes, 18 + index * 2))
   const partyMoves = Array.from({ length: maxParty }, (_, partyIndex) =>
@@ -773,6 +817,7 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     ),
   )
   const pcSlotCount = Math.min(bytes[332]!, maxPcSlots)
+  const objectEventCount = Math.min(bytes[964]!, maxObjectEvents)
   return {
     frame: uint32(bytes, 0),
     mapGroup: uint16(bytes, 4),
@@ -811,6 +856,17 @@ export const parseStateSnapshot = (bytes: Uint8Array): StateSnapshot => {
     partyFaintedMask: bytes[111]!,
     dialogueSequence: uint32(bytes, 120),
     dialogueText: Array.from(bytes.slice(124, 124 + maxFieldMessageTextLength)),
+    fullDialogueText: Array.from(bytes.slice(452, 452 + maxFullFieldMessageTextLength)),
+    battleDialogueSequence: uint32(bytes, 1164),
+    battleDialogueText: Array.from(bytes.slice(1168, 1168 + maxBattleMessageTextLength)),
+    objectEvents: Array.from({ length: objectEventCount }, (_, index) =>
+      parseObservedObjectEvent(bytes, 972 + index * 12),
+    ),
+    choiceKind: bytes[965]!,
+    choiceCursor: bytes[966]!,
+    choiceOptionCount: bytes[967]!,
+    choiceResult: uint16(bytes, 968),
+    displayedMonSpecies: uint16(bytes, 970),
     pcSlots: Array.from({ length: pcSlotCount }, (_, index) =>
       parseObservedPcSlot(bytes, 176 + index * 16),
     ),

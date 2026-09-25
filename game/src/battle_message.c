@@ -9,6 +9,7 @@
 #include "battle_special.h"
 #include "battle_z_move.h"
 #include "data.h"
+#include "e2e_test.h"
 #include "event_data.h"
 #include "frontier_util.h"
 #include "graphics.h"
@@ -3918,6 +3919,11 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
         FillWindowPixelBuffer(windowId, textInfo[windowId].fillValue);
         copyToVram = TRUE;
     }
+
+#ifdef E2E_TESTING
+    if (windowId == B_WIN_MSG)
+        E2ETest_RecordBattleMessage(text);
+#endif
 
     printerTemplate.currentChar = text;
     printerTemplate.type = WINDOW_TEXT_PRINTER;

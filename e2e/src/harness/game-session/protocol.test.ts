@@ -17,18 +17,19 @@ import {
   type CommandRequest,
   type SessionAbi,
 } from "./protocol"
+import { decodeFieldMessageText } from "./features/state"
 
 const abi: SessionAbi = {
   requestSize: 372,
   resultSize: 16,
-  stateSize: 452,
+  stateSize: 1680,
   requestStatusOffset: 87,
   resultStatusOffset: 14,
   flagsOffset: 0x1270,
   varsOffset: 0x1340,
 }
 
-const abiBytes = (version = 20): Uint8Array => {
+const abiBytes = (version = 22): Uint8Array => {
   const bytes = new Uint8Array(16)
   const view = new DataView(bytes.buffer)
   for (const [index, value] of [
@@ -75,7 +76,13 @@ const expectNoFixtureMutations = (bytes: Uint8Array) => {
   expect(Array.from(bytes.slice(356))).toEqual(Array(16).fill(0))
 }
 
-describe("game-session v20 protocol", () => {
+describe("game-session v22 protocol", () => {
+  it("decodes canonical FRLG dialogue glyphs and page breaks for exact assertions", () => {
+    expect(
+      decodeFieldMessageText([0xca, 0xc9, 0xc5, 0x1b, 0xc7, 0xc9, 0xc8, 0xfe, 0xb4, 0xfb, 0xff]),
+    ).toBe("POKéMON\n’\n")
+  })
+
   it("encodes explicit appearance IDs separately from checkpoint defaults", () => {
     expect(encodeCommandRequest(abi, request())[369]).toBe(0)
     for (const id of [1, 2, 5, 6])
@@ -229,6 +236,62 @@ describe("game-session v20 protocol", () => {
         egg: false,
       },
     ])
+  })
+
+  it("decodes full dialogue, active map objects, and presentation state from the appended tail", () => {
+    const bytes = new Uint8Array(abi.stateSize).fill(0xff)
+    const view = new DataView(bytes.buffer)
+    bytes.set([0xbb, 0xd5, 0xfe, 0xbc, 0xff], 452)
+    bytes[964] = 1
+    bytes[965] = 3
+    bytes[966] = 2
+    bytes[967] = 3
+    view.setUint16(968, 1, true)
+    view.setUint16(970, 7, true)
+    view.setInt16(972, 12, true)
+    view.setInt16(974, -3, true)
+    bytes.set([5, 3, 4, 8, 2, 1, 1, 0], 976)
+
+    const snapshot = parseStateSnapshot(bytes)
+    expect(snapshot.fullDialogueText.slice(0, 6)).toEqual([0xbb, 0xd5, 0xfe, 0xbc, 0xff, 0xff])
+    expect(snapshot).toMatchObject({
+      choiceKind: 3,
+      choiceCursor: 2,
+      choiceOptionCount: 3,
+      choiceResult: 1,
+      displayedMonSpecies: 7,
+      objectEvents: [
+        {
+          localId: 5,
+          mapGroup: 3,
+          mapNum: 4,
+          // The wire values are already normalized map coordinates (MAP_OFFSET
+          // was removed ROM-side), so parsing must preserve them verbatim.
+          x: 12,
+          y: -3,
+          movementType: 8,
+          movementDirection: 2,
+          facingDirection: 1,
+          visible: true,
+          moving: false,
+        },
+      ],
+    })
+  })
+
+  it("decodes battle message sequence and exact expanded text independently of field dialogue", () => {
+    const bytes = new Uint8Array(abi.stateSize).fill(0xff)
+    const view = new DataView(bytes.buffer)
+    view.setUint32(120, 4, true)
+    bytes.set([0xbb, 0xbc, 0xff], 452)
+    view.setUint32(1164, 9, true)
+    bytes.set([0xbb, 0xfe, 0xd5, 0xab, 0xff], 1168)
+
+    const snapshot = parseStateSnapshot(bytes)
+    expect(snapshot.dialogueSequence).toBe(4)
+    expect(snapshot.battleDialogueSequence).toBe(9)
+    expect(decodeFieldMessageText(snapshot.fullDialogueText)).toBe("AB")
+    expect(decodeFieldMessageText(snapshot.battleDialogueText)).toBe("A\na!")
   })
 
   it("decodes the independent Pallet opening state from the snapshot tail", () => {
