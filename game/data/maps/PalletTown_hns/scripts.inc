@@ -15,8 +15,13 @@ PalletTown_EventScript_KantoNorthExit::
 #if IS_WAYFARER
 	specialvar VAR_RESULT, WayfarerKanto_IsPalletOrigin
 	goto_if_eq VAR_RESULT, FALSE, PalletTown_EventScript_KantoExitAllowed
+	specialvar VAR_RESULT, GetPlayerFacingDirection
+	goto_if_eq VAR_RESULT, DIR_SOUTH, PalletTown_EventScript_KantoExitAllowed
+	setvar VAR_0x8004, PALLET_RECEIPT_STARTER
+	specialvar VAR_RESULT, WayfarerKanto_HasReceipt
+	goto_if_eq VAR_RESULT, TRUE, PalletTown_EventScript_KantoExitAllowed
 	specialvar VAR_RESULT, WayfarerKanto_GetPhase
-	goto_if_ge VAR_RESULT, PALLET_OPENING_LAB_STARTER_CHOICE, PalletTown_EventScript_KantoExitAllowed
+	goto_if_ge VAR_RESULT, PALLET_OPENING_LAB_STARTER_CHOICE, PalletTown_EventScript_KantoReturnToLab
 	lockall
 	specialvar VAR_RESULT, WayfarerKanto_TryStageInterception
 	goto_if_eq VAR_RESULT, FALSE, PalletTown_EventScript_KantoReleaseExit
@@ -26,6 +31,12 @@ PalletTown_EventScript_KantoNorthExit::
 	waitmovement 0
 	msgbox PalletTown_Text_KantoOakWarning, MSGBOX_DEFAULT
 	msgbox PalletTown_Text_KantoOakLead, MSGBOX_DEFAULT
+	closemessage
+	warp MAP_PALLET_TOWN_LAB_HNS, 13, 14
+	waitstate
+PalletTown_EventScript_KantoReturnToLab:
+	lockall
+	msgbox PalletTown_Text_KantoChooseStarter, MSGBOX_DEFAULT
 	closemessage
 	warp MAP_PALLET_TOWN_LAB_HNS, 13, 14
 	waitstate
@@ -63,7 +74,6 @@ PalletTown_EventScript_KantoExitAllowed:
 
 PalletTown_Movement_KantoOakApproach:
 	walk_up
-	walk_up
 	step_end
 
 PalletTown_Movement_KantoStepFromCoast:
@@ -78,6 +88,10 @@ PalletTown_Text_KantoOakWarning:
 PalletTown_Text_KantoOakLead:
 	.string "OAK: Come with me to my LAB.\p"
 	.string "I have a POKéMON for you.$"
+
+PalletTown_Text_KantoChooseStarter:
+	.string "PROF. OAK is waiting in his LAB.\p"
+	.string "I should choose my partner first.$"
 
 PalletTown_Text_KantoCoastClosed:
 	.string "The southern sea can wait.\p"

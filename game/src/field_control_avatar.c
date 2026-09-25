@@ -75,8 +75,11 @@ static s8 GetWarpEventAtPosition(struct MapHeader *, u16, u16, u8);
 static const u8 *GetCoordEventScriptAtPosition(struct MapHeader *, u16, u16, u8);
 static const struct BgEvent *GetBackgroundEventAtPosition(struct MapHeader *, u16, u16, u8);
 static bool8 TryStartCoordEventScript(struct MapPosition *);
-static bool8 TryStartWarpEventScript(struct MapPosition *, u16);
+static bool8 TryStartWarpEventScript(struct MapPosition *, u16, enum Direction);
 static bool8 IsCinnabarPortWarpFallbackLayout(u16 layoutId);
+#if IS_WAYFARER
+static bool8 IsPalletOpeningWarpFallback(u16 layoutId, s8 warpEventId, enum Direction direction);
+#endif
 static bool8 TryStartMiscWalkingScripts(u16);
 static bool8 TryStartStepCountScript(u16);
 static void UpdateFriendshipStepCounter(void);
@@ -740,7 +743,7 @@ static bool8 TryStartStepBasedScript(struct MapPosition *position, u16 metatileB
 {
     if (TryStartCoordEventScript(position) == TRUE)
         return TRUE;
-    if (TryStartWarpEventScript(position, metatileBehavior) == TRUE)
+    if (TryStartWarpEventScript(position, metatileBehavior, direction) == TRUE)
         return TRUE;
     if (TryStartMiscWalkingScripts(metatileBehavior) == TRUE)
         return TRUE;
@@ -1024,7 +1027,7 @@ static bool8 TryArrowWarp(struct MapPosition *position, u16 metatileBehavior, en
     return FALSE;
 }
 
-static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileBehavior)
+static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileBehavior, enum Direction direction)
 {
     s8 warpEventId = GetWarpEventAtMapPosition(&gMapHeader, position);
 
@@ -1092,6 +1095,18 @@ static bool8 TryStartWarpEventScript(struct MapPosition *position, u16 metatileB
     }
 
 #if IS_WAYFARER
+    // These imported Pallet stair and exit events sit on metatiles whose HNS
+    // behaviors do not reach the engine's warp handlers. Preserve each
+    // event's intended approach instead of making Pallet warps unconditional.
+    if (warpEventId != WARP_ID_NONE
+     && IsPalletOpeningWarpFallback(gMapHeader.mapLayoutId, warpEventId, direction))
+    {
+        StoreInitialPlayerAvatarState();
+        SetupWarp(&gMapHeader, warpEventId, position);
+        DoWarp();
+        return TRUE;
+    }
+
     // The preview Seafoam entrances have exit events on non-warp metatiles.
     // Honor only those two declared exits; the cave's other tiles keep their
     // normal behavior requirements.
@@ -1129,6 +1144,25 @@ static bool8 IsCinnabarPortWarpFallbackLayout(u16 layoutId)
         return FALSE;
     }
 }
+
+#if IS_WAYFARER
+static bool8 IsPalletOpeningWarpFallback(u16 layoutId, s8 warpEventId, enum Direction direction)
+{
+    if (warpEventId != 0)
+        return FALSE;
+
+    switch (layoutId)
+    {
+    case LAYOUT_PALLET_TOWN_REDS_HOUSE_2F_HNS:
+        return direction == DIR_NORTH;
+    case LAYOUT_PALLET_TOWN_REDS_HOUSE_1F_HNS:
+    case LAYOUT_PALLET_TOWN_LAB_HNS:
+        return direction == DIR_SOUTH;
+    default:
+        return FALSE;
+    }
+}
+#endif
 
 static bool8 IsWarpMetatileBehavior(u16 metatileBehavior)
 {

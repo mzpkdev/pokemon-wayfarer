@@ -6657,6 +6657,10 @@ void BattleDebug_LostBattle(void)
 
     for (i = 0; i < PARTY_SIZE; i++)
         SetMonData(&gPlayerParty[i], MON_DATA_HP, &hp);
+    // The first-battle controller expects a natural faint command sequence.
+    // The E2E shortcut jumps directly to the loss end function, so hand that
+    // abbreviated path back to the standard trainer controller.
+    gBattleTypeFlags &= ~BATTLE_TYPE_FIRST_BATTLE;
     gBattleOutcome = B_OUTCOME_LOST;
     gBattleMainFunc = sEndTurnFuncsTable[B_OUTCOME_LOST];
 }

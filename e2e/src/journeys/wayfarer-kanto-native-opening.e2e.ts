@@ -1,3 +1,4 @@
+import * as fs from "node:fs"
 import { describe, expect, it } from "webanvil/test"
 
 import { GameSession } from "../harness/game-session"
@@ -24,7 +25,10 @@ for (const style of [1, 2, 3, 4] as const satisfies readonly AppearanceStyle[]) 
         const viridianBefore = await game.story.var("viridianCityState")
         await receivePalletStarter(game)
         let state = await game.state.read()
-        expect(state.origin.pallet).toMatchObject({ phase: palletPhases.starterReceived, starterSlot: 0 })
+        expect(state.origin.pallet).toMatchObject({
+          phase: palletPhases.starterReceived,
+          starterSlot: 0,
+        })
         expect(state.party).toHaveLength(1)
         expect(state.party[0]?.species).toBe("bulbasaur")
         expect(state.origin).toMatchObject({
@@ -39,18 +43,17 @@ for (const style of [1, 2, 3, 4] as const satisfies readonly AppearanceStyle[]) 
         state = await game.state.read()
         expect(state.origin.pallet.phase).toBe(palletPhases.battleResolved)
         expect(state.origin.recovery.map).toBe("reds-house-1f")
-        if (outcome === "lose")
-          expect(["reds-house-1f", "oak-lab"]).toContain(state.map.name)
+        if (outcome === "lose") expect(["reds-house-1f", "oak-lab"]).toContain(state.map.name)
         await game.saveAndReload()
         expect((await game.state.read()).origin.pallet).toEqual(state.origin.pallet)
 
         await receivePalletParcel(game)
         state = await game.state.read()
         expect(state.origin.pallet.phase).toBe(palletPhases.parcelReceived)
-        expect(state.bag.items.oaksParcel).toBe(1)
+        expect(await game.inventory.count("oaksParcel")).toBe(1)
         expect(state.origin.pokedex).toBe(false)
         await game.saveAndReload()
-        expect((await game.state.read()).bag.items.oaksParcel).toBe(1)
+        expect(await game.inventory.count("oaksParcel")).toBe(1)
         expect((await game.state.read()).origin.pallet).toEqual(state.origin.pallet)
 
         await deliverPalletParcel(game)
@@ -58,9 +61,9 @@ for (const style of [1, 2, 3, 4] as const satisfies readonly AppearanceStyle[]) 
         expect(state.map.name).toBe("oak-lab")
         expect(state.origin.pallet).toMatchObject({ phase: palletPhases.complete, starterSlot: 0 })
         expect(state.origin.pallet.receipts & 0x1ff).toBe(0x1ff)
-        expect(state.bag.items.oaksParcel).toBe(0)
-        expect(state.bag.items.pokeBall).toBe(5)
-        expect(state.bag.items.townMap).toBe(0)
+        expect(await game.inventory.count("oaksParcel")).toBe(0)
+        expect(await game.inventory.count("pokeBall")).toBe(5)
+        expect(await game.inventory.count("townMap")).toBe(0)
         expect(state.origin.pokedex).toBe(true)
         expect(state.appearance.id).toBe(appearanceStyles[style].id)
         expect(state.origin.gender).toBe(appearanceStyles[style].gender)
@@ -74,11 +77,12 @@ for (const style of [1, 2, 3, 4] as const satisfies readonly AppearanceStyle[]) 
         expect(await game.story.flag("defeatedViridianGym")).toBe(gymBefore)
         expect(await game.story.var("palletLabState")).toBe(labBefore)
         expect(await game.story.var("viridianCityState")).toBe(viridianBefore)
-
         await game.saveAndReload()
         const saved = await game.state.read()
         expect(saved.origin.pallet).toEqual(state.origin.pallet)
-        expect(saved.bag.items).toMatchObject({ oaksParcel: 0, pokeBall: 5, townMap: 0 })
+        expect(await game.inventory.count("oaksParcel")).toBe(0)
+        expect(await game.inventory.count("pokeBall")).toBe(5)
+        expect(await game.inventory.count("townMap")).toBe(0)
         expect(saved.origin.pokedex).toBe(true)
 
         await game.player.warp("viridian-city", 42, 16, "up")
@@ -86,6 +90,12 @@ for (const style of [1, 2, 3, 4] as const satisfies readonly AppearanceStyle[]) 
         expect((await game.state.read()).origin.pallet).toEqual(saved.origin.pallet)
         await game.player.warp("oak-lab", 13, 12, "up")
         expect((await game.state.read()).map.name).toBe("oak-lab")
+      } catch (error) {
+        await fs.promises.writeFile(
+          "/tmp/wayfarer-kanto-opening-failure.png",
+          await game.screenshot(),
+        )
+        throw error
       } finally {
         await game.close()
       }
