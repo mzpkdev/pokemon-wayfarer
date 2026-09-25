@@ -120,6 +120,12 @@ Cinnabar meeting, eruption, or a prerequisite set of fifteen badges. Blue's
 later Dojo and League content remains independently reachable under its own
 specifications; no step here advances an unplayed rival chapter.
 
+These Viridian Blue requirements describe the delivered coastal port. The
+[future Viridian finale](frlg-kanto-viridian-finale.md) supersedes the exterior
+introduction, Blue Gym role, and related acceptance checks when implemented.
+Blue's Dojo appearance then follows Indigo's committed first Champion victory,
+independently of Giovanni.
+
 ### Encounters, services, and release budget
 
 Update the Kanto encounter manifest and day/night source bindings for the

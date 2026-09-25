@@ -92,6 +92,11 @@ clear, or other region's story. Replace references to the eruption or to a
 Cinnabar meeting that did not occur. His later Dojo and League appearances
 must follow their own rules rather than depend on visiting Cinnabar.
 
+This Blue introduction and Gym path describe the delivered coastal port. The
+[future Viridian finale](../specs/frlg-kanto-viridian-finale.md) supersedes them:
+Giovanni takes the full FRLG Gym and Earth Badge, Blue leaves Viridian, and his
+Dojo battle follows Indigo's first committed Champion victory.
+
 Blaine's victory does not summon Bill or start a voyage. Bill's Meteorite
 delivery and all Sevii travel and stories retain their independently owned
 introduction and access rules. Visiting Cinnabar, taking the ferry, and

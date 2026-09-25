@@ -52,8 +52,9 @@ floor connections, and entrance positions belong in the implementation specs.
 ### Coastal port ownership
 
 The [FRLG coastal port](frlg-cinnabar-seafoam-port.md) owns Cinnabar, Seafoam,
-Routes 19–21, their local puzzles, services, encounters, rewards, Blue's
-Viridian introduction, and the coastal connections. Its Mansion Secret
+Routes 19–21, their local puzzles, services, encounters, rewards, the current
+coastal port's Blue Viridian introduction, and the coastal connections. The
+Viridian finale removes that introduction. The Mansion Secret
 Key leads to Blaine's Cinnabar Gym. Its Seafoam cave contains the FRLG current
 puzzle and Articuno. Bill's Sevii story remains independent, and Groudon is
 catchable through Hoenn's Terra Cave rather than the removed HNS Seafoam
@@ -74,7 +75,7 @@ eruption state.
 | Silph Co. | Extend the existing Saffron destination with the missing interior adventure. Preserve access puzzles, staff rescue, Giovanni, Lapras, and the deferred Master Ball reward. |
 | Safari Zone and Warden | Use HNS Fuchsia's existing Safari areas for the Surf destination and Gold Teeth search. Keep returning the Teeth for Strength as a separate local objective. Do not import the entire FRLG Safari merely to reproduce coordinates. |
 | Mansion and Blaine | The dedicated coastal port owns the intact town, Mansion, Secret Key, Gym, Lab, Center, Mart, and Blaine's local rewards. No broader Rocket or League prerequisite is added. |
-| Giovanni's finale | Preserve the final confrontation after the two major investigations. Giovanni owns the initial Viridian challenge and Earth Badge. Blue is the rival only for Kanto-origin players and the Kanto Champion for all origins; a later Gym takeover is future work. |
+| Giovanni's finale | After Celadon Hideout and Silph liberation, use the full FRLG Viridian Gym for Giovanni's one-time Earth Badge and Earthquake TM. Blue leaves Viridian entirely; his repeatable Dojo battle unlocks on the first committed Indigo victory. The [finale specification](../specs/frlg-kanto-viridian-finale.md) owns both roles. |
 | Legendary sites | The dedicated coastal port owns full FRLG Seafoam and Articuno. Keep the operating HNS Power Plant and add its FRLG old generating hall for the sole Zapdos encounter, as specified [here](../specs/frlg-kanto-power-plant.md). Reuse HNS Cerulean Cave where its spaces support Mewtwo; any missing puzzle space needs a named, bounded addition. Groudon belongs to Hoenn. |
 
 The coastal port owns fossil revival at Cinnabar's laboratory, independently
@@ -88,8 +89,8 @@ In particular:
 
 - Celadon Hideout leads to the Scope, then the Tower rescue and Flute.
 - Silph is independently available without requiring the Tower rescue.
-- Both major investigations lead to Giovanni's finale. Smaller Rocket
-  incidents and the Snorlax encounters are not finale prerequisites.
+- Celadon Hideout and Silph liberation lead to Giovanni's finale in either
+  order. Tower/Fuji, smaller Rocket incidents, and Snorlax are not prerequisites.
 - Bill provides a route to the S.S. Ticket and Anne boarding; an existing
   Ticket also permits boarding. The coastal port owns the Mansion's local Key
   and Blaine connection without triggering Bill's Sevii trip.
@@ -155,7 +156,8 @@ FRLG adventure presents that same event as unresolved.
 Preservation is the default. Each overlapping HNS scene must be explicitly retained, adapted, or deferred
 in a follow-up content specification. This includes the Machine Part theft,
 Misty's absence, the radio upgrade, Vermilion Snorlax, and Blue's broader story
-role. The coastal port resolves Blaine's location, Blue's introduction, and
+role. The coastal port resolves Blaine's location and Blue's current introduction;
+the Viridian finale supersedes that introduction. The coastal port also resolves
 Cinnabar and Seafoam's condition, and Routes 19–21. Unrelated HNS
 flavor, services, and side content remain available unless a named conflict
 requires a change. Dropping content requires a named conflict and a product
@@ -274,14 +276,15 @@ Use Wayfarer's established Trainer, Gym Leader, and League scaling systems.
 Importing a battle must not silently bypass them by copying a standalone FRLG
 party or progression check.
 
-Giovanni and Blue cannot each award an initial Earth Badge. Preserve one Kanto
-badge identity, one first-award contribution to TR, and normal rematch behavior.
-For this adaptation, Giovanni replaces the existing League circuit's Blue
-invitation route to the initial Earth Badge. Blue's HNS Gym scenes are
-candidates for a future succession transition, not concurrent Gym ownership. No new TR,
-badge-count, or League-clear condition is introduced for that badge.
-The separately deliverable coastal port keeps Blue as the Earth Badge giver
-until this broader story adaptation is actually implemented.
+Giovanni replaces Blue as Viridian's sole Earth Badge giver. Preserve one Kanto
+badge identity and one first-award contribution to TR; Giovanni departs after
+the Earthquake TM is delivered and has no rematch or successor. Blue's existing
+repeatable Dojo battle instead unlocks on the first committed Indigo Champion
+victory, independently of Giovanni and player origin. No new TR, badge-count,
+or League-clear condition is introduced for the Earth Badge. The delivered
+coastal port's Blue Gym remains current runtime until this story port lands;
+the [finale specification](../specs/frlg-kanto-viridian-finale.md) supersedes
+its Viridian invitation and Gym requirements then.
 
 Keep ordinary local rewards attached to their adventures even when the player
 already owns the corresponding HM or can use the field move through another
@@ -353,13 +356,12 @@ proposal.
   presentation for both stages. Update affected roster validation with the
   implementation; this proposal does not change ROM code.
 
-The same future port explicitly supersedes the League PRD and specification's
-Blue Cinnabar invitation, initial Viridian Gym ownership, and Blue-specific
-initial-badge validation. The
-[owning specification](../specs/wayfarer-interregional-league-circuit.md#approved-future-viridian-badge-ownership)
-assigns those responsibilities to Giovanni's finale while retaining a single
-Earth Badge, once-only accounting, and reward recovery. Blue's later succession
-is not required. Current runtime continues to use Blue until implementation.
+The [Viridian finale specification](../specs/frlg-kanto-viridian-finale.md)
+supersedes the coastal port's Blue invitation and Gym ownership and the League
+specification's older Blue badge path. Giovanni awards one Earth Badge and
+departs permanently after the TM handoff; Blue has no Gym succession. Indigo's
+shared admission and Champion role are unchanged. Current runtime continues to
+use Blue until implementation.
 
 Other conflicts are not implicitly resolved. The decisions below must be
 recorded here and reconciled with the affected story, League, or transport

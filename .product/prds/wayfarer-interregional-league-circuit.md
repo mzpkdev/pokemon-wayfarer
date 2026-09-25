@@ -59,6 +59,9 @@ opening's own origin state.
 The future FRLG Kanto story port owns Blue's origin-dependent rival dialogue
 and his authored party selection. Giovanni owns the initial Earth Badge through
 that port's finale. Neither decision changes Indigo's circuit position.
+The [Viridian finale specification](../specs/frlg-kanto-viridian-finale.md)
+also makes Blue's Saffron Dojo battle available after the first committed
+Indigo victory, independently of Giovanni's badge.
 
 ### Sevii Masters Challenge
 

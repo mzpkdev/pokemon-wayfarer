@@ -62,7 +62,7 @@ Layout dimensions are recorded in `game/data/layouts/layouts.json`.
 | HNS content | Conflict with the selected baseline | Options and recommendation |
 | --- | --- | --- |
 | Cinnabar eruption and Blaine at Seafoam | Treats Cinnabar's destruction and Gym relocation as completed history. | Selected: full intact FRLG island/Gym, with laboratory, Mansion, Center, and Mart. Adapt destruction dialogue and omit Blaine's Seafoam relocation. No eruption transition or alternate island is required. |
-| Blue as Viridian Leader and former Champion | Giovanni must still run the FRLG Gym finale; Blue also appears as the rival. | Giovanni awards the initial Earth Badge. Preserve Blue's leadership content for possible later succession, without a second badge. Rewrite prior-championship claims that contradict the player's story. |
+| Blue as Viridian Leader and former Champion | Giovanni must still run the FRLG Gym finale; Blue also appears as the rival. | Selected after this inventory: full FRLG Gym and Giovanni's single Earth Badge/Earthquake TM, then permanent departure without a successor. Remove Blue from Viridian; retain him as Indigo Champion and unlock his existing Dojo battle on the first committed Indigo victory. See the [finale specification](../specs/frlg-kanto-viridian-finale.md). |
 | Janine, Koga, and the League | HNS Janine awards Fuchsia's badge while Koga serves in the League; FRLG has Koga at Fuchsia. | Recommend Koga at the Gym and Janine retained as apprentice/optional challenger. Decide whether Koga also serves the League in the loose chronology, or whether a later promotion/alternate League member is required. Do not silently gate Johto behind Kanto to solve it. |
 | Machine Part theft | Grunt dialogue assumes Rocket's disbandment and a Johto return. | Preserve sabotage, pursuit, part recovery, and repair. Rewrite dialogue according to actual progress, or avoid claims about the whole organization's status. No need to delete the quest. |
 | Power Plant and Zapdos | Operating HNS facility differs from FRLG's abandoned exploration site. | Selected after this inventory: retain the HNS entrance, back room, repair, trade, and power consumers. An entrance-hall worker offers a script transition into the full FRLG old generating hall, whose exits return to the HNS lobby. Move the sole exterior Zapdos indoors; TR 55 gates its fixed level 50 battle, while the maze stays open. FRLG outcomes apply: catch/KO resolve permanently; run/teleport and blackout allow retry after return. No League respawn, exterior import, or `map.bin` edit. See the Power Plant specification. |
@@ -105,8 +105,9 @@ need verification when FRLG scenes are added to the same locations.
 - Silver's Mt. Moon encounter, sharing the cave with the fossil adventure.
 - Route 25's Trainer gauntlet as a distinct challenge from Route 24's FRLG
   Nugget Bridge; avoid duplicate one-time prize ownership.
-- Gym outings, rematch invitations, and the Fighting Dojo, adjusted for each
-  character's selected current role. Preserve Wayfarer's own rematch rosters.
+- Gym outings and the Fighting Dojo, adjusted for each character's selected
+  role. Preserve Blue's repeatable Dojo roster and BP reward after Indigo's
+  first clear; Giovanni has no Viridian rematch.
 - Oak's research and Mt. Silver access under existing Wayfarer progression.
 - Compatible gifts, trades, services, and local flavor after checking dialogue
   for references to completed adventures and fixed dates.
