@@ -38,7 +38,7 @@ seed that value to exercise its consumers. No migration from earlier prerelease
 Rating behavior is required.
 
 Once the circuit is implemented, it derives a global candidate from its badge
-and League facts, compares that candidate with the saved value, and stores the
+and circuit-clear facts, compares that candidate with the saved value, and stores the
 higher value. This is a high-water mark: circuit progression can increase the
 rating but no later read can reduce it.
 
@@ -46,9 +46,9 @@ rating but no later read can reduce it.
 
 The Trainer Rating foundation persists and exposes the shared Wayfarer Rating
 before the interregional League circuit is complete. The later circuit maps the
-global badge count and fixed League clears to that value. It starts at 0,
+global badge count and fixed circuit-stage clears to that value. It starts at 0,
 reaches 16 after four badges and 40 after eight badges, and reaches 80 after all
-twenty-four badges and all three League clears. Circuit starts and League party
+twenty-four badges and all three stage clears. Circuit starts and opponent party
 tiers are not prerequisites for the foundation, its 0 through 80 bounds, or its
 consumers.
 

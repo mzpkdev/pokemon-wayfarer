@@ -167,9 +167,10 @@ Apply the following script changes:
    remove `giveitem ITEM_SS_TICKET`, and do not clear
    `FLAG_HIDE_SSAQUA_1F_GRANDPA`. Preserve the unrelated late-story commits to
    `VAR_NEWBARKTOWN_LABSTATE` and `FLAG_HIDE_OLIVINE_PORT_OAK`.
-6. In `PokemonLeague_HallOfFame_hns`, remove the
-   `VAR_SSAQUA_STATE = 0` write from the first Johto League clear. The League
-   must not change any voyage state. Preserve the other first-clear effects.
+6. Remove the `VAR_SSAQUA_STATE = 0` write from every circuit completion path,
+   including the legacy `PokemonLeague_HallOfFame_hns` path while it exists.
+   Indigo, Masters, and Hoenn completion must not change voyage state. Preserve
+   unrelated first-clear effects until their owning circuit port replaces them.
 7. In `SSAqua_1F_hns`, delete the Kanto progress flag heap from `LeaveBoat`.
    Run the arrival announcement at state 6 and set state 7 after it finishes.
    The door sailor permits disembarkation at state 7. Disembarking sets only
@@ -395,8 +396,8 @@ The acceptance suite must cover:
   unset. Ticket absent denies repeat travel. The voyage must not change badge
   count, Rocket state, radio state, Gym completion, Snorlax state, Copycat
   state, or unrelated visited flags.
-- After completing the maiden voyage before the Johto League, finish the first
-  League clear. Confirm state 8 and direct ferry travel survive unchanged and
+- After completing the maiden voyage before Indigo, finish the shared Indigo
+  clear. Confirm state 8 and direct ferry travel survive unchanged and
   the maiden voyage does not repeat.
 - Exercise the region map before and after `FLAG_VISITED_KANTO`. Confirm the
   selected layout and location-entry table agree, every Johto and Kanto cursor

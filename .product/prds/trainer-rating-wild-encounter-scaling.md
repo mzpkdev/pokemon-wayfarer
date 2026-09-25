@@ -2,7 +2,7 @@
 
 Implemented: Outdated
 
-The progression examples require the approved +8/+8/+8 League rewards.
+The progression examples require the approved +8/+8/+8 circuit-stage rewards.
 The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
@@ -38,28 +38,28 @@ obedient.
 Wayfarer uses one global twenty-four-badge circuit across Kanto, Johto, and
 Hoenn. Badge origin does not affect League qualification or rating. The approved
 [circuit](wayfarer-interregional-league-circuit.md) allows all badges to precede
-any League clear. These examples use +8 for each first-time League clear and
-the unchanged soft-cap curve; they do not prescribe a badge or League schedule:
+any circuit-stage clear. These examples use +8 for each first-time stage clear
+and the unchanged soft-cap curve; they do not prescribe a badge schedule:
 
 | Progress | Trainer Rating | Soft level cap |
 | --- | ---: | ---: |
 | New game | 0 | 15 |
 | 4 total badges, no clears | 16 | 23 |
 | 8 total badges, no clears | 40 | 42 |
-| 8 total badges, Kanto cleared | 48 | 52 |
-| 16 total badges, Kanto cleared | 56 | 62 |
-| 16 total badges, Kanto and Johto cleared | 64 | 78 |
+| 8 total badges, Indigo cleared | 48 | 52 |
+| 16 total badges, Indigo cleared | 56 | 62 |
+| 16 total badges, Indigo and Masters cleared | 64 | 78 |
 | 24 total badges, no clears | 56 | 62 |
-| 24 total badges, Kanto cleared | 64 | 78 |
-| 24 total badges, Kanto and Johto cleared | 72 | 89 |
-| 24 total badges, all three Leagues cleared | 80 | 100 |
+| 24 total badges, Indigo cleared | 64 | 78 |
+| 24 total badges, Indigo and Masters cleared | 72 | 89 |
+| 24 total badges, all three circuit stages cleared | 80 | 100 |
 
 The interregional League circuit defines the exact badge and League
 contributions. This replaces the earlier concept of one full regional campaign
 plus smaller breadth contributions from the other regions.
 
 The Trainer Rating foundation and existing circuit already supply the shared
-0 through 80 value, high-water storage, and global badge and League-clear
+0 through 80 value, high-water storage, and global badge and circuit-clear
 contributions. The approved reward revision replaces the +15/+5/+4 clear
 contributions with +8/+8/+8; that reward change is pending implementation.
 Repeat clears add no TR. Future regional starts remain separate work; League
@@ -88,7 +88,7 @@ interregional circuit.
 Wayfarer starts at Rating 0 so the value represents an unproven Trainer before
 the first badge. Its encounter curve must still keep starter-area populations
 viable at Rating 0. The first eight badges supply 40 TR; each later badge
-supplies one. Each first-time League clear supplies +8, for +24 across the
+supplies one. Each first-time circuit-stage clear supplies +8, for +24 across the
 circuit and TR 80
 after all badges and clears. This distributes League advancement evenly,
 while the unchanged soft-cap curve determines the resulting level increases.

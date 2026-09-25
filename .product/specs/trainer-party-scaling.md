@@ -26,9 +26,13 @@ Every populated Trainer ID must have exactly one policy. `GYM_LEADER` routes
 only enrolled initial badge battles to the separate [Gym Leader scaling
 specification](gym-leader-scaling.md); it never receives this specification's
 ordinary transformation. Until that feature is enabled, its records use the
-existing `EXCLUDED` fallback. `LEAGUE` routes the fifteen enrolled circuit IDs
-to the separate [League scaling specification](league-scaling.md), including
-its run-context validation and authored fallback when scaling is disabled.
+existing `EXCLUDED` fallback. `LEAGUE` routes the fifteen enrolled circuit
+runtime IDs to the separate [League scaling specification](league-scaling.md),
+including its run-context validation and authored fallback when scaling is
+disabled. Those fifteen positions cover seventeen possible source parties:
+Blue's one Wayfarer runtime ID may resolve to any of three reviewed FRLG source
+variants. Raw FRLG IDs are provenance and must not index the active policy
+table.
 Unclassified IDs fail generation; invalid runtime
 IDs fail closed to existing unscaled behavior.
 

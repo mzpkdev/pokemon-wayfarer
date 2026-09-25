@@ -18,8 +18,9 @@ environmental scripts, completeness validation, and the implementation order.
 
 The separate [Sevii wild encounter specification](sevii-wild-encounters.md)
 owns encounter source selection and time-of-day binding. Story, Trainers,
-static encounters, and rewards remain outside this map-port baseline and are
-layered through the delivered Sevii content specifications.
+static encounters, rewards, and the Masters Challenge remain outside this
+map-port baseline and are layered through the Sevii content overlay and
+interregional circuit specifications.
 
 Birth Island and Navel Rock are preexisting Wayfarer content. This port changes
 only their ferry connection and preserves everything inside those features.
@@ -42,6 +43,12 @@ The source catalog is selected by this exact rule:
 3. Its `game_version` is `frlg`.
 4. It is not an FRLG Birth Island or Navel Rock variant, or
    `SevenIsland_UnusedHouse`.
+
+The Masters Challenge is an event-layer extension on the already registered
+`SevenIsland_House_Room1_Frlg` and `SevenIsland_House_Room2_Frlg` maps. It may
+replace the reviewed caretaker interaction and connect the hidden challenge
+route to the circuit-owned HNS room sequence without adding a map to this
+catalog. It does not make `SevenIsland_UnusedHouse` eligible.
 
 The implementation freezes the resolved list in
 `game/src/data/wayfarer_sevii_maps.json`; it does not evaluate the prefix rule

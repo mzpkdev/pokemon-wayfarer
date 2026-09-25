@@ -13,6 +13,11 @@ also layers the delivered ordinary Trainers, independent story, and Trainer
 Tower on that exploration baseline; their gameplay contracts are owned by their
 respective product and technical documents.
 
+The approved interregional circuit additionally adapts Seven Island's existing
+two-room battle house as the entrance to the Sevii Masters Challenge. That
+event-layer use preserves this port's geography, unconditional island access,
+and 135-map catalog; it does not add the excluded unused house.
+
 ## Design
 
 ### Region access

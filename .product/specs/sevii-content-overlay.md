@@ -1,10 +1,11 @@
 # Sevii content overlay
 
 PRDs: [Sevii exploration port](../prds/sevii-exploration-port.md),
-[Sevii independent story beats](../prds/sevii-independent-story-beats.md), and
-[Sevii Trainer Tower](../prds/sevii-trainer-tower.md)
+[Sevii independent story beats](../prds/sevii-independent-story-beats.md),
+[Sevii Trainer Tower](../prds/sevii-trainer-tower.md), and
+[Interregional League circuit](../prds/wayfarer-interregional-league-circuit.md)
 
-Implemented: Yes — foundation in [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101), with the ordinary Trainers, story, and Trainer Tower delivered in [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105), [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and [PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102).
+Implemented: Partial — foundation in [PR #101](https://github.com/mzpkdev/pokemon-wayfarer/pull/101), with the ordinary Trainers, story, and Trainer Tower delivered in [PR #105](https://github.com/mzpkdev/pokemon-wayfarer/pull/105), [PR #104](https://github.com/mzpkdev/pokemon-wayfarer/pull/104), and [PR #102](https://github.com/mzpkdev/pokemon-wayfarer/pull/102). The Masters domain is approved but pending.
 
 ## Scope and authority
 
@@ -12,9 +13,12 @@ This specification defines how Wayfarer restores selected FRLG Sevii actors,
 Trainers, scripts, rewards, and static encounters on the merged 135-map
 exploration port. It owns content selection, source provenance, script linkage,
 state isolation, generated audits, and delivery order. The story, ordinary
-Trainer, and Trainer Tower specifications own their gameplay behavior.
+Trainer, Trainer Tower, and interregional circuit specifications own their
+gameplay behavior.
 
-The current Wayfarer exploration port is authoritative:
+The current Wayfarer exploration port is authoritative. The interregional
+circuit may add the explicitly scoped Masters Challenge event layer described
+below without changing these access rules:
 
 - One through Seven Island remain available from Vermilion without Bill,
   Celio, a Rainbow Pass, a League clear, or another story credential.
@@ -32,7 +36,7 @@ FRLG event-script graph or make arbitrary FRLG maps available in Wayfarer.
 
 Upgrade `game/src/data/wayfarer_sevii_maps.json` to schema version 2 and keep it
 as the only map-event projection boundary. The same file continues to own the
-frozen geography and service baseline and gains three independently selectable
+frozen geography and service baseline and gains four independently selectable
 content domains:
 
 | Domain | Owner |
@@ -40,6 +44,7 @@ content domains:
 | `ordinary_trainers` | Sevii Trainer restoration specification |
 | `story` | Sevii independent story specification |
 | `trainer_tower` | Sevii Trainer Tower specification |
+| `masters` | Interregional League circuit specification |
 
 Each retained object, coordinate event, background event, or map-script handler
 records:
@@ -49,7 +54,8 @@ records:
 - the complete source event object or a canonical source hash;
 - stable local ID, graphics dependency, source script label, and replacement
   `WayfarerSevii_` script label;
-- `owner`: `exploration`, `ordinary_trainer`, `story`, or `trainer_tower`;
+- `owner`: `exploration`, `ordinary_trainer`, `story`, `trainer_tower`, or
+  `masters`;
 - a stable `content_id` that resolves exactly once in the owner's inventory;
 - visibility predicate and permanent hide or defeat flag, when applicable;
 - Trainer ID, scaling policy, battle type, and outcome policy for battles;
@@ -91,6 +97,12 @@ Allow only these Wayfarer overrides in the first content port:
 - coordinate event: `script`, `var`, and `var_value`; and
 - background event: `script`, plus `flag` for a hidden item.
 
+The later `masters` domain adds one narrow map-level override: Room 1 may
+select between its existing closed-box and open-box source layouts from the
+circuit eligibility predicate. The manifest records both source layout IDs and
+the displaced baseline selection. It does not edit layout bytes or authorize a
+general layout override for another domain.
+
 Do not override coordinates, graphics, movement, sight radius, item, quantity,
 or local ID. Do not author a new actor without exact source-event identity. A
 spatial or cast change requires a reviewed amendment to this specification.
@@ -109,6 +121,7 @@ Keep authored implementations under:
 game/data/scripts/wayfarer_sevii/story/
 game/data/scripts/wayfarer_sevii/trainers/
 game/data/scripts/wayfarer_sevii/trainer_tower/
+game/data/scripts/wayfarer_sevii/masters/
 ```
 
 The generator owns the one `SourceMap_Frlg_MapScripts` table for each map from
@@ -122,7 +135,7 @@ campaign dispatch. Do not widen `.if IS_FRLG` around source map or campaign
 scripts.
 
 Reserve the root `common.inc` for universal exploration primitives; story,
-ordinary-Trainer, and Tower modules must not be linked through it. If owner
+ordinary-Trainer, Tower, and Masters modules must not be linked through it. If owner
 subdirectories are used, derive Make dependencies from the manifest or emit a
 depfile rather than relying on the existing nonrecursive glob.
 
@@ -177,6 +190,7 @@ Every Trainer caller declares one of these policies:
 | `ordinary` | Independent sight or talk Trainer; normal defeat flag and normal blackout |
 | `objective_guard` | Victory advances a local objective; loss restores the pending scene |
 | `facility` | Trainer Tower-owned battle and facility loss routing |
+| `circuit` | Masters Challenge opponent; circuit-owned run and loss routing |
 
 Unknown or callerless battles fail the Wayfarer content audit. Scripted wild and
 static encounters declare their own completion and retry rules; they do not enter
@@ -189,7 +203,11 @@ exactly one reviewed battle and no story write or reward. A `story` entry may
 use only battles, transactions, movements, and static encounters declared by
 its objective. A `trainer_tower` entry may use only the facility command and
 state surface. Reject raw FRLG flags, scene variables, Trainer IDs, travel-pass
-state, Champion state, or National Pokédex state in every domain.
+state, Champion state, or National Pokédex state in every domain. A `masters`
+entry may replace the caretaker interaction, control the two-room battle-house
+transition, and call only the circuit-owned Masters admission, run, completion,
+and gallery surface. It must not write Champion, Hall of Fame, regional
+game-clear, travel-pass, or local Sevii story state.
 
 Selected source Trainer IDs are provenance only. Generate stable
 `TRAINER_WAYFARER_SEVII_*` IDs from an explicit fixed base chosen after a
@@ -218,7 +236,10 @@ Standalone HNS, FireRed, LeafGreen, and Emerald generation ignores the content
 manifest. Their supported behavior and ROM-category boundaries remain unchanged;
 whole-ROM byte identity is not claimed because LTO can reorder same-address
 interworking thunks. A domain can be disabled for development, but the production
-Wayfarer build enables all delivered domains together.
+Wayfarer build enables all delivered domains together. The `masters` domain
+adapts only `SevenIsland_House_Room1_Frlg` and
+`SevenIsland_House_Room2_Frlg`; it does not change the frozen 135-map catalog
+or add `SevenIsland_UnusedHouse`.
 
 ## Structural audit and delivered validation
 
@@ -247,8 +268,8 @@ The stable validation set includes:
 - manifest schema, source-drift, collision, script-closure, and state-ownership
   tests;
 - the existing Sevii map and wild-encounter audits unchanged;
-- ordinary-Trainer, story-objective, static-encounter, and Trainer Tower tests
-  named by their owning specifications;
+- ordinary-Trainer, story-objective, static-encounter, Trainer Tower, and
+  Masters Challenge tests named by their owning specifications;
 - serial Wayfarer and supported standalone builds;
 - a production-equivalent Wayfarer release with the active ROM reserve; and
 - representative emulator journeys for discovery, failure and retry, save/load,
@@ -265,4 +286,5 @@ battle outcome, or every facility format/floor combination has been exercised.
 - [Sevii independent story](sevii-independent-story-beats.md)
 - [Sevii Trainer restoration](sevii-trainer-restoration.md)
 - [Sevii Trainer Tower](sevii-trainer-tower.md)
+- [Interregional League circuit](wayfarer-interregional-league-circuit.md)
 - [Trainer party scaling](trainer-party-scaling.md)

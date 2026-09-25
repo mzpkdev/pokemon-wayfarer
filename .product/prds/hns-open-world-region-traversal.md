@@ -68,7 +68,7 @@ Route 30 requires no map or script change. Its existing east-side walking lane p
 - Turn-in: escort the granddaughter back to her grandfather. He gives the player the S.S. Ticket as a permanent travel credential and one additional Metal Coat as the existing reunion reward. Voyage state records each successful grant separately. Owning a Metal Coat before the reunion never satisfies or replaces its reward. Each item is delivered exactly once, and the reunion remains retryable until both grants succeed.
 - First arrival: the ship arrives inside Vermilion port, marks Kanto and Vermilion visited, selects the combined Johto and Kanto regional map, and leaves the Olivine return sailor active before releasing the player. The combined map uses the matching location coordinates for its cursor, player marker, Fly destinations, and Pokédex area display. Arrival sets only the maiden-voyage reunion, Ticket, and minimum region-visited state.
 - State isolation: the arrival does not return the Machine Part, upgrade the radio, wake Snorlax, repair the Magnet Train, mark another Kanto settlement visited, complete a Gym, or advance any Kanto campaign scene.
-- Repeat travel: the S.S. Ticket alone opens direct Olivine and Vermilion sailings. Remove or ignore the old Machine Part check on both ferry desks. The missing-granddaughter story never repeats, including after the player's first Johto League victory, and the Machine Part gates only the Magnet Train.
+- Repeat travel: the S.S. Ticket alone opens direct Olivine and Vermilion sailings. Remove or ignore the old Machine Part check on both ferry desks. The missing-granddaughter story never repeats, including after the player's shared Indigo victory, and the Machine Part gates only the Magnet Train.
 
 ## Inter-region shortcut story
 
@@ -115,7 +115,7 @@ A separate traversal-recovery PRD owns those softlock-prevention and emergency-r
 - Pick up the Machine Part and return it to the manager. Confirm full-pocket failures preserve the pending item, TM reward, and story state for retry. After a successful turn-in, confirm Misty appears on Route 25, her scene returns her and the Gym Trainers to Cerulean Gym, and the Power Plant rear exit is open.
 - Confirm `FLAG_RETURNED_MACHINE_PART` still enables its existing radio, Copycat, Underground Path, Magnet Train, NPC dialogue, and other power-related consumers, while repeat S.S. Aqua travel continues to require only the S.S. Ticket.
 - Complete Copycat's Lost Item exchange with success and failure cases. A failed Pass delivery must preserve the Lost Item and leave the exchange retryable.
-- After unlocking the ferry early, complete the Johto League for the first time and confirm the voyage remains complete and direct ferry service still works.
+- After unlocking the ferry early, complete Indigo for the first time and confirm the voyage remains complete and direct ferry service still works.
 - Before Kanto unlock, confirm the regional map uses the Johto layout and coordinates. After first arrival, confirm the combined Johto and Kanto layout, cursor, player marker, Fly destinations, and Pokédex area positions use the combined coordinates.
 - From Vermilion, follow the named Kanto land route to the other eight mainland settlements, then use native Surf to reach Cinnabar. Do not battle Silver, wake Snorlax, own a Bicycle, own HM03, or satisfy a Surf badge check.
 - Confirm this pass does not change Alola or Sinjoh entry, transport, visit flags, encounters, or rewards.

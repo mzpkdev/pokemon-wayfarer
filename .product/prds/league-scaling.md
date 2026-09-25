@@ -1,6 +1,6 @@
 # League scaling
 
-Status: Implementation and automated validation complete; campaign balance acceptance pending.
+Status: Scaling engine implemented; revised circuit wiring and campaign balance acceptance pending.
 Implemented: Partial
 
 See [implementation evidence](../research/league-scaling-implementation.md) for
@@ -9,24 +9,24 @@ remain separate pending work.
 
 ## Intent
 
-Keep the Kanto, Johto, and Hoenn League challenges appropriate to a player's
+Keep the Indigo League, Sevii Masters Challenge, and Hoenn League appropriate to a player's
 career whether they enter as soon as eligible or collect all twenty-four badges
 first. Preserve the existing opponents and teams, with a gradual level climb
-from the first Elite Four member to the Champion.
+from the first opponent to the final opponent.
 
 ## Design
 
 Scale opponent levels from Trainer Rating (TR), captured when the player starts
-a League run. Keep that rating and League identity for the entire run, including
+a circuit run. Keep that rating and stage identity for the entire run, including
 save/load and battle reconstruction. A fresh attempt after a loss or departure
 uses the player's current TR. Training during a run never raises its difficulty.
 
-Each League retains its existing roster, team size, source order, species and
+Each circuit stage retains its approved roster, team size, source order, species and
 forms, moves, held items, abilities, IVs, EVs, natures, trainer healing items,
-and AI. Kanto and Hoenn retain five-member Elite Four teams and six-member
-Champion teams; Johto retains six-member teams throughout. No automatic
-evolution, roster expansion, move replacement, or additional rematch access
-is part of this change. Preserve existing challenge-mode precedence.
+and AI. Indigo and Hoenn retain five-member preliminary teams and six-member
+final teams; Masters retains six-member teams throughout. No automatic
+evolution, roster expansion, or move replacement is part of this change.
+Preserve existing challenge-mode precedence.
 
 Use a separately tunable League baseline curve, initially seeded with the
 player soft-cap anchors. It must not change implicitly when the player cap or
@@ -49,11 +49,11 @@ explicit ace; the specification identifies its existing source slot.
 
 | Opponent | Ace offset from baseline |
 | --- | ---: |
-| Elite Four 1 | -4 |
-| Elite Four 2 | -3 |
-| Elite Four 3 | -2 |
-| Elite Four 4 | -1 |
-| Champion | +1 |
+| Opponent 1 | -4 |
+| Opponent 2 | -3 |
+| Opponent 3 | -2 |
+| Opponent 4 | -1 |
+| Final opponent | +1 |
 
 Other members have authored offsets of minus one or minus two from their ace.
 Clamp final levels to 1 through 100. Do not use party levels, party size, badge
@@ -65,7 +65,7 @@ does not force it to appear last.
 
 These examples use an input TR directly, independent of how the player earned it.
 
-| TR at admission | Baseline | First E4 ace | Champion ace |
+| TR at admission | Baseline | First opponent ace | Final opponent ace |
 | ---: | ---: | ---: | ---: |
 | 40 | 42 | 38 | 43 |
 | 56 | 62 | 58 | 63 |
@@ -77,30 +77,34 @@ Trainer Rating advancement belongs to the existing
 [interregional League circuit](wayfarer-interregional-league-circuit.md) and
 [player progression](../specs/trainer-rating-party-progression.md) documents.
 This feature consumes the current TR without changing badge contributions,
-League rewards, the player soft cap, XP reduction, or obedience. Progression
+circuit rewards, the player soft cap, XP reduction, or obedience. Progression
 revisions can be implemented separately; they are not prerequisites for scaling.
 
 ## Boundaries and presentation
 
-Keep the fixed Kanto to Johto to Hoenn sequence, 8/16/24 badge admission
-minimums, prerequisite clears, unrestricted badge collection, travel, healing
-rules, and Hall of Fame flow. The shared Indigo venue still hosts the existing
-Tier 1 and Tier 2 opponent identities. No new menu, TR popup, difficulty choice,
-or automatic circuit announcement is required.
+Keep the fixed Indigo to Masters to Hoenn sequence, 8/16/24 badge admission
+minimums, prerequisite clears, unrestricted badge collection, travel, and
+healing rules. Indigo uses the FRLG rooms and roster, Masters uses the HNS rooms
+and roster from Seven Island, and Hoenn retains its Emerald challenge. Indigo
+and Hoenn keep their Hall of Fame behavior; the Masters Gallery is not a Hall of
+Fame. No new menu, TR popup, difficulty choice, or automatic circuit
+announcement is required.
 
 Initial Gym battles remain governed by the Gym Leader design. Ordinary
 Trainers, Gym members, story bosses, facilities, and rematches retain their
 existing scaling policies. This design supersedes static levels for the fifteen
 circuit opponents only; it preserves their authored non-level content.
+First-clear and replay runs use the same scaling policy and roster. Replays
+take a fresh admission snapshot and do not repeat circuit progression.
 
 ## Acceptance and balance
 
 Verify both earliest-entry and all-badges-first routes, plus intermediate
-entry timings. Test full runs, loss/retry, save/load, consecutive Indigo tiers,
-and return to regional travel. Preserve the existing clear/reward handoff for
-the correct League and never change a run's opponents retroactively.
+entry timings. Test full runs, loss/retry, save/load, replay, the Seven Island
+Masters transition, and return to regional travel. Preserve the clear/reward
+handoff for the correct stage and never change a run's opponents retroactively.
 
-Playtest attrition over five battles, strong authored moves at Kanto's earliest
+Playtest attrition over five battles, strong authored moves at Indigo's earliest
 levels, and the training needed after each clear. Compare remaining Gyms before
 and after a clear. Equal TR does not guarantee equal difficulty across authored
 teams. Record roster outliers for a separate balance review; do not silently

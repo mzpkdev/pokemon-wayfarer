@@ -284,9 +284,9 @@ coincidence.
 Hoenn has eight badge results. Gym scripts award and check the corresponding
 Hoenn badge. Hoenn-local checks such as Norman's availability count only Hoenn
 badges. Hoenn League entry instead uses the global twenty-four-badge circuit
-and requires the Kanto and Johto League clears. Trainer cards or badge displays
-that show regional progress identify the region. The separate circuit summary
-shows the global total.
+and requires the shared Indigo and Sevii Masters Challenge clears. Trainer
+cards or badge displays that show regional progress identify the region. The
+separate circuit summary shows the global total and stage results.
 
 The [free badge collection revision](wayfarer-interregional-league-circuit.md)
 is pending implementation. It requires all eight Hoenn badges to remain
@@ -360,9 +360,10 @@ standalone HNS continues to present Whirlpool as HM08.
 ### Hoenn League and game clear
 
 The Hoenn League is Wayfarer's fixed Tier 3 League. Entry requires all
-twenty-four badges and prior Kanto and Johto League clears, as defined by the
-interregional League circuit. It uses a Hoenn-specific Champion and game-clear
-result. Its Tier 3 rosters remain authored and unchanged; battle levels follow
+twenty-four badges and prior shared Indigo and Sevii Masters Challenge clears,
+as defined by the interregional League circuit. It uses a Hoenn-specific
+Champion and game-clear result. Its Tier 3 rosters remain authored and
+unchanged; battle levels follow
 the [League scaling specification](league-scaling.md), using TR captured at
 run admission and retained through save/load.
 
@@ -371,14 +372,15 @@ Completing it must:
 1. record the Hoenn Hall of Fame entry;
 2. set Hoenn Champion state;
 3. run only the Hoenn League and story cleanup;
-4. preserve Johto and Kanto campaign state;
+4. preserve Kanto, Johto, Indigo, and Masters Challenge state;
 5. show the intended Hall of Fame and credits presentation; and
 6. return the player to a valid Hoenn location without creating an implicit
    route to Johto or Kanto.
 
-Completing the Johto or Kanto League before Hoenn cannot reveal Hoenn postgame
-NPCs, ferries, gifts, or encounters that require the Hoenn Champion result.
-Completing Hoenn cannot repeat or erase another region's League rewards.
+Completing Indigo or the Masters Challenge before Hoenn cannot reveal Hoenn
+postgame NPCs, ferries, gifts, or encounters that require the Hoenn Champion
+result. Completing Hoenn cannot repeat or erase another circuit stage's
+rewards.
 
 ### Optional Emerald systems
 
