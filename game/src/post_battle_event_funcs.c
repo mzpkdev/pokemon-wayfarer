@@ -5,6 +5,7 @@
 #include "hall_of_fame.h"
 #include "hall_of_fame_frlg.h"
 #include "load_save.h"
+#include "malloc.h"
 #include "league_circuit.h"
 #include "overworld.h"
 #include "regions.h"
@@ -25,8 +26,13 @@ static bool8 sIndigoHallOfFameSaveTransaction;
 static bool8 sIndigoHallOfFameSaveCountIncremented;
 static u8 sIndigoHallOfFameRatingAtEntry;
 static u8 sIndigoHallOfFameStoredRatingBefore;
-static struct Pokemon sIndigoHallOfFamePartyBefore[PARTY_SIZE];
-static TVShow sIndigoHallOfFameTvShowsBefore[TV_SHOWS_COUNT];
+// The rollback snapshot is too large for IWRAM, where it would shrink the
+// shared stack, so it lives on the heap only while a transaction is open.
+static struct IndigoHallOfFameSnapshot
+{
+    struct Pokemon party[PARTY_SIZE];
+    TVShow tvShows[TV_SHOWS_COUNT];
+} *sIndigoHallOfFameSnapshot;
 static struct WarpData sIndigoHallOfFameContinueWarpBefore;
 static u32 sIndigoHallOfFameCountBefore;
 static u32 sIndigoHallOfFameFirstPlayTimeBefore;
@@ -45,8 +51,13 @@ u16 LeagueCircuit_CommitAndRegisterIndigo(void)
      || IsActiveLeagueRunReplay())
         return FALSE;
 
-    memcpy(sIndigoHallOfFamePartyBefore, gPlayerParty, sizeof(gPlayerParty));
-    memcpy(sIndigoHallOfFameTvShowsBefore, gSaveBlock1Ptr->tvShows, sizeof(gSaveBlock1Ptr->tvShows));
+    if (sIndigoHallOfFameSnapshot == NULL)
+        sIndigoHallOfFameSnapshot = Alloc(sizeof(*sIndigoHallOfFameSnapshot));
+    if (sIndigoHallOfFameSnapshot == NULL)
+        return FALSE;
+
+    memcpy(sIndigoHallOfFameSnapshot->party, gPlayerParty, sizeof(gPlayerParty));
+    memcpy(sIndigoHallOfFameSnapshot->tvShows, gSaveBlock1Ptr->tvShows, sizeof(gSaveBlock1Ptr->tvShows));
     sIndigoHallOfFameContinueWarpBefore = gSaveBlock1Ptr->continueGameWarp;
     sIndigoHallOfFameCountBefore = GetGameStat(GAME_STAT_ENTERED_HOF);
     sIndigoHallOfFameFirstPlayTimeBefore = GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME);
@@ -106,8 +117,8 @@ void FinishIndigoHallOfFameSaveTransaction(bool8 success)
             FlagSet(FLAG_SYS_GAME_CLEAR);
         else
             FlagClear(FLAG_SYS_GAME_CLEAR);
-        memcpy(gPlayerParty, sIndigoHallOfFamePartyBefore, sizeof(gPlayerParty));
-        memcpy(gSaveBlock1Ptr->tvShows, sIndigoHallOfFameTvShowsBefore, sizeof(gSaveBlock1Ptr->tvShows));
+        memcpy(gPlayerParty, sIndigoHallOfFameSnapshot->party, sizeof(gPlayerParty));
+        memcpy(gSaveBlock1Ptr->tvShows, sIndigoHallOfFameSnapshot->tvShows, sizeof(gSaveBlock1Ptr->tvShows));
         gSaveBlock1Ptr->continueGameWarp = sIndigoHallOfFameContinueWarpBefore;
         gSaveBlock2Ptr->specialSaveWarpFlags = sIndigoHallOfFameSpecialWarpFlagsBefore;
         SetGameStat(GAME_STAT_ENTERED_HOF, sIndigoHallOfFameCountBefore);
@@ -118,6 +129,7 @@ void FinishIndigoHallOfFameSaveTransaction(bool8 success)
         else
             FlagClear(FLAG_SYS_RIBBON_GET);
     }
+    FREE_AND_SET_NULL(sIndigoHallOfFameSnapshot);
 #endif
 }
 
