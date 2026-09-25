@@ -924,9 +924,12 @@ int main(int argc, char *argv[])
                 }
             }
 #endif
-            // stdbuf is required because otherwise mgba never flushes
-            // stdout.
-            if (execlp("stdbuf", "stdbuf", "-oL", argv[1], "-l15", "-ClogLevel.gba.dma=16", "-Rr0", runners[i].rom_path, NULL) == -1)
+            // stdbuf is required because otherwise mgba never flushes stdout.
+            // Test ROMs have no GPIO cartridge, so suppress that expected warning
+            // before it overwhelms bounded CI logs.
+            if (execlp("stdbuf", "stdbuf", "-oL", argv[1], "-l15",
+                       "-ClogLevel.gba.dma=16", "-ClogLevel.gba.hardware=16",
+                       "-Rr0", runners[i].rom_path, NULL) == -1)
             {
                 perror("execl stdbuf mgba-rom-test failed");
                 _exit(2);
