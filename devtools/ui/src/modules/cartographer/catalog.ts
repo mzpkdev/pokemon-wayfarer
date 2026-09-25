@@ -318,6 +318,7 @@ export type CatalogMap = {
     requiresFlash: boolean | null
   }
   connections: CatalogConnection[]
+  connectionOverrides?: Record<string, CatalogConnection[]>
   warps: CatalogWarp[]
   objects: CatalogObject[]
   wildEncounters: CatalogWildEncounters
@@ -352,6 +353,14 @@ export type MapCatalog = {
   maps: CatalogMap[]
 }
 
+export const mapsForBuild = (catalog: MapCatalog, buildId: string): CatalogMap[] =>
+  catalog.maps
+    .filter((map) => map.builds.includes(buildId))
+    .map((map) => {
+      const connections = map.connectionOverrides?.[buildId]
+      return connections ? { ...map, connections } : map
+    })
+
 export class CatalogValidationError extends Error {
   constructor(
     readonly details: readonly string[],
@@ -377,6 +386,20 @@ const hasNumber = (value: unknown): value is number => {
 
 const hasInteger = (value: unknown): value is number => {
   return hasNumber(value) && Number.isInteger(value)
+}
+
+const connectionDirections = new Set(["up", "down", "left", "right", "dive", "emerge"])
+
+const hasCatalogConnection = (value: unknown): value is CatalogConnection => {
+  const connection = asRecord(value)
+  return (
+    !!connection &&
+    hasString(connection.direction) &&
+    connectionDirections.has(connection.direction) &&
+    hasNumber(connection.offsetMetatiles) &&
+    hasString(connection.destinationMapId) &&
+    (connection.destinationMap === null || hasString(connection.destinationMap))
+  )
 }
 
 const hasSourcePointer = (value: unknown): value is CatalogSourcePointer => {
@@ -835,9 +858,9 @@ export const validateCatalog = (value: unknown): MapCatalog => {
   if (!root) {
     throw new CatalogValidationError(["catalog must be an object."], "The map catalog is invalid.")
   }
-  if (root.schemaVersion !== 9) {
+  if (root.schemaVersion !== 10) {
     details.push(
-      "schemaVersion must be 9. Regenerate the catalog with pnpm run cartographer:catalog.",
+      "schemaVersion must be 10. Regenerate the catalog with pnpm run cartographer:catalog.",
     )
   }
   const projectionIssue = wildEncounterProjectionIssue(root.wildEncounterProjection)
@@ -923,6 +946,19 @@ export const validateCatalog = (value: unknown): MapCatalog => {
       for (const build of mapBuilds) {
         if (!builds.has(build)) {
           details.push(`${map.name} refers to undeclared build ${JSON.stringify(build)}.`)
+        }
+      }
+    }
+    const connectionOverrides = asRecord(map.connectionOverrides)
+    if (map.connectionOverrides !== undefined && !connectionOverrides) {
+      details.push(`${map.name} connectionOverrides must be an object.`)
+    } else if (connectionOverrides) {
+      for (const [build, connections] of Object.entries(connectionOverrides)) {
+        if (!builds.has(build) || !Array.isArray(map.builds) || !map.builds.includes(build)) {
+          details.push(`${map.name} has a connection override for unavailable build ${build}.`)
+        }
+        if (!Array.isArray(connections) || !connections.every(hasCatalogConnection)) {
+          details.push(`${map.name} connectionOverrides.${build} must contain valid connections.`)
         }
       }
     }

@@ -30,8 +30,13 @@ import {
   sourceLayouts,
   sourceMaps,
   sourceState,
+  sourceWayfarerConnections,
+  sourceWayfarerMembership,
+  sourceWayfarerSeviiSelection,
+  type WayfarerSeviiSelection,
 } from "./source"
 import type {
+  CatalogConnection,
   CatalogMap,
   CatalogWildEncounters,
   Layout,
@@ -52,8 +57,10 @@ const createCatalogMap = (
   namesById: Map<string, string>,
   objectTables: ObjectSourceTables,
   wildEncounters: CatalogWildEncounters,
+  wayfarerSevii: WayfarerSeviiSelection,
 ): CatalogMap => {
-  const region = regionFor(name, group, source.region_map_section, source.game_version)
+  const isSeviiMap = wayfarerSevii.maps.has(name)
+  const region = regionFor(name, group, source.region_map_section, source.game_version, isSeviiMap)
   const category = categoryFor(source.map_type)
   const paths = mapOutputPaths(output, region.id, category, name)
   fs.mkdirSync(path.dirname(paths.native), { recursive: true })
@@ -62,6 +69,17 @@ const createCatalogMap = (
   writeNearestNeighborOverview(paths.native, paths.overview)
   const widthPixels = layout.width * 16
   const heightPixels = layout.height * 16
+  const sourceConnections = Array.isArray(source.connections) ? source.connections : []
+  const catalogConnections = (connections: readonly (typeof sourceConnections)[number][]) =>
+    connections.map(
+      (connection): CatalogConnection => ({
+        direction: connection.direction,
+        offsetMetatiles: connection.offset,
+        destinationMapId: connection.map,
+        destinationMap: namesById.get(connection.map) ?? null,
+      }),
+    )
+  const wayfarerConnections = sourceWayfarerConnections(name, sourceConnections)
 
   const objects = catalogObjects(
     root,
@@ -74,7 +92,10 @@ const createCatalogMap = (
     name,
     id: source.id,
     region: region.id,
-    builds: buildsForSourceVersion(source.game_version),
+    builds: buildsForSourceVersion(
+      source.game_version,
+      sourceWayfarerMembership(name, source, wayfarerSevii),
+    ),
     category,
     sourceGroup: group,
     sourceRegion: sourceRegionFor(source.game_version),
@@ -112,14 +133,10 @@ const createCatalogMap = (
       showMapName: source.show_map_name ?? null,
       requiresFlash: source.requires_flash ?? null,
     },
-    connections: (Array.isArray(source.connections) ? source.connections : []).map(
-      (connection) => ({
-        direction: connection.direction,
-        offsetMetatiles: connection.offset,
-        destinationMapId: connection.map,
-        destinationMap: namesById.get(connection.map) ?? null,
-      }),
-    ),
+    connections: catalogConnections(sourceConnections),
+    ...(wayfarerConnections === sourceConnections
+      ? {}
+      : { connectionOverrides: { wayfarer: catalogConnections(wayfarerConnections) } }),
     warps: (Array.isArray(source.warp_events) ? source.warp_events : []).map((warp, index) => ({
       warpId: String(index),
       xMetatiles: warp.x,
@@ -139,6 +156,7 @@ const createCatalogMap = (
 export const renderCatalog = (root: string, output: string): RenderCatalogResult => {
   const layouts = sourceLayouts(root)
   const groups = sourceGroups(root)
+  const wayfarerSevii = sourceWayfarerSeviiSelection(root)
   const exteriorMaps = discoverExteriorMaps(root)
   const mapsByName = sourceMaps(root, exteriorMaps)
   const namesById = new Map([...mapsByName].map(([name, map]) => [map.id, name]))
@@ -172,12 +190,13 @@ export const renderCatalog = (root: string, output: string): RenderCatalogResult
         namesById,
         objectTables,
         wildEncountersByMap.get(name) ?? { sets: [], runtimeTimes: [], diagnostics: [] },
+        wayfarerSevii,
       ),
     )
   }
 
   const catalog: MapCatalog = {
-    schemaVersion: 9,
+    schemaVersion: 10,
     format: "pokemon-wayfarer-exterior-map-catalog",
     pixelsPerMetatile: 16,
     source: sourceState(root),

@@ -164,8 +164,8 @@ test("shows the cartographer", async ({ page }) => {
   await expect(page.getByText("Sprite", { exact: true })).toBeVisible()
 
   await mapSearch.fill("Route20")
-  await page.getByRole("option", { name: /Route20_hns/ }).click()
-  await expect(page.getByRole("heading", { name: "Route20_hns" })).toBeVisible()
+  await page.getByRole("option", { name: /Route20_Frlg/ }).click()
+  await expect(page.getByRole("heading", { name: "Route20_Frlg" })).toBeVisible()
   const route20Inspector = page.getByRole("complementary").last()
   await route20Inspector.locator('details[aria-label="Objects"] summary').click()
   await expect

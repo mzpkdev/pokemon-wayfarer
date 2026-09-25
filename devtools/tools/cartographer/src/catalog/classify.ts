@@ -1,6 +1,11 @@
 import * as path from "node:path"
 
-import type { CatalogBuild, CatalogBuildId, CatalogRegion } from "./types"
+import type {
+  CatalogBuild,
+  CatalogBuildId,
+  CatalogRegion,
+  CatalogWayfarerMembership,
+} from "./types"
 
 const kantoNamedMaps = new Set([
   "CeladonCity",
@@ -26,13 +31,15 @@ const kantoNamedMaps = new Set([
 
 const johto: CatalogRegion = { id: "johto", label: "Johto" }
 const kanto: CatalogRegion = { id: "kanto", label: "Kanto" }
+const sevii: CatalogRegion = { id: "sevii", label: "Sevii Islands" }
 const hoenn: CatalogRegion = { id: "hoenn", label: "Hoenn" }
 const alola: CatalogRegion = { id: "alola", label: "Alola" }
 export const sinnoh: CatalogRegion = { id: "sinnoh", label: "Sinnoh" }
 
-// Keep a no-Sinnoh source checkout byte-stable. Sinnoh joins generated region
-// indexes only after a map with explicit Sinnoh provenance is actually present.
-export const catalogRegions: CatalogRegion[] = [johto, kanto, hoenn, alola]
+// Sinnoh joins generated region indexes only after a map with explicit Sinnoh
+// provenance is actually present. Sevii is a standard region whose tab is
+// hidden by the UI for builds without any selected maps.
+export const catalogRegions: CatalogRegion[] = [johto, kanto, sevii, hoenn, alola]
 const allCatalogRegions: CatalogRegion[] = [...catalogRegions, sinnoh]
 
 export const catalogRegionsFor = (regionIds: Iterable<string>): CatalogRegion[] => {
@@ -61,11 +68,20 @@ const buildsBySourceVersion: Record<string, CatalogBuildId[]> = {
   sinnoh: ["wayfarer"],
 }
 
-/** Resolve source metadata into the game builds that include a map. */
-export const buildsForSourceVersion = (sourceVersion: string | undefined): CatalogBuildId[] => {
+/** Resolve source metadata plus an explicit Wayfarer import into catalog build membership. */
+export const buildsForSourceVersion = (
+  sourceVersion: string | undefined,
+  wayfarerMembership: CatalogWayfarerMembership = "default",
+): CatalogBuildId[] => {
   const source = sourceVersion ?? "emerald"
   const builds = buildsBySourceVersion[source]
   if (!builds) throw new Error(`Unsupported map source version ${JSON.stringify(source)}`)
+  if (wayfarerMembership === "include" && !builds.includes("wayfarer")) {
+    return [...builds, "wayfarer"]
+  }
+  if (wayfarerMembership === "exclude") {
+    return builds.filter((build) => build !== "wayfarer")
+  }
   return builds
 }
 
@@ -84,7 +100,9 @@ export const regionFor = (
   group: string,
   mapSection?: string,
   sourceVersion?: string,
+  isSeviiMap = false,
 ): CatalogRegion => {
+  if (isSeviiMap) return sevii
   // Provenance, not a source group's name or a map-section range, owns the
   // physical region for imported Sinnoh maps.
   if (sourceVersion === "sinnoh") return sinnoh
