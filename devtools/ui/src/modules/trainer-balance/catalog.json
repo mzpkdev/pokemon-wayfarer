@@ -2017,7 +2017,7 @@
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_ROXANNE_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_3[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_1[2] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Geodude", "Nosepass"],
     "bias": -2,
-    "allowedArcs": ["steady", "late"]
+    "allowedArcs": ["early", "late"]
   },
   {
     "id": "brawly",

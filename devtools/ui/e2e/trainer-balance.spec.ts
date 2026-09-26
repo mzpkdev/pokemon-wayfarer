@@ -185,7 +185,7 @@ test("keeps Blue a step ahead with only fast arcs and restores only his defaults
 test("reports league feasibility per venue and the Gym cap summary", async ({ page }) => {
   await page.goto("/#trainer-balance")
   await page.getByRole("button", { name: "Set 8 badges", exact: true }).click()
-  await expect(page.getByTestId("gym-gap-mean")).toHaveText("-1.2")
+  await expect(page.getByTestId("gym-gap-mean")).toHaveText("-1.0")
   await expect(page.getByTestId("gym-gap-range")).toHaveText("-2 … +1")
   const indigo = page.getByTestId("feasibility-indigo")
   await expect(indigo).toContainText("Home pool · 16 candidates")

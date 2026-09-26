@@ -51,7 +51,7 @@ ROSTER = [
     ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS', ['Indigo'], -1, ['steady', 'early', 'rival'], ['Dratini', 'Horsea']),
     ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS', ['Indigo'], 0, ['steady', 'early'], []),
     ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS', ['Indigo'], 0, ['steady', 'late'], []),
-    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', ['Hoenn'], -2, ['steady', 'late'], ['Geodude', 'Nosepass']),
+    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', ['Hoenn'], -2, ['early', 'late'], ['Geodude', 'Nosepass']),
     ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1', ['Hoenn'], -2, ['steady', 'early'], ['Machop', 'Makuhita']),
     ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1', ['Hoenn'], -2, ['steady', 'plateau'], ['Voltorb', 'Electrike']),
     ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', ['Hoenn'], -2, ['early', 'late'], ['Numel', 'Slugma']),

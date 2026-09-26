@@ -213,10 +213,11 @@ exclusion reasons, provenance, and catalog and rules versions.
   report in-window candidate counts under every allowed arc (guaranteed) and
   under some allowed arc (possible), plus the fallback rate over at least
   10,000 seeded roots. Fallbacks must be rare and documented.
-- **Content blockers (D3).** Six-member competitive profiles are missing for
-  every Elite Four member, Lance, and Giovanni, so the elite role is at
-  fallback risk until they exist, and Hoenn's contender pool is thin at 24
-  badges. Both block content enablement.
+- **Full rosters first (D3).** Feasibility depends on which trainers have
+  reviewed six-member competitive profiles. The prototype catalog lacks many,
+  so its current fallback risks are not tuning evidence. Author the full
+  rosters, then rerun feasibility. Adjust arcs, biases, or windows only for
+  gaps that remain after that.
 - **Variety.** Over at least 10,000 roots × 10 editions with wins, report
   returning/new trainers per venue, cross-venue repetition, headliner
   distribution (including Gym Leader headliners from every region at a

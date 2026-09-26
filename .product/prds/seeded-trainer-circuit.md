@@ -147,7 +147,7 @@ retrying the same frozen field, with no waiting mechanism.
 
 | ID | Open decision | Proposed default |
 | --- | --- | --- |
-| D3 | Per-trainer bias, allowed arcs, arc shapes, team stages, competitive teams, and hint lines | Balance explorer catalog defaults. Content blockers: full six-member competitive teams for every Elite Four member, Lance, and Giovanni are missing, so elite slots may fall back until they exist; Hoenn has few contenders once the player holds 24 badges |
+| D3 | Per-trainer bias, allowed arcs, arc shapes, team stages, competitive teams, and hint lines | Balance explorer catalog defaults. Author full competitive rosters first, then rerun feasibility; the prototype's gaps are not tuning evidence |
 | D4 | Signup thresholds | About 8/16/24 global badges by circuit position, plus a win at the previous venue |
 | D5 | Rotation factors and variety acceptance | Weight ×16/×4/×1 for 0/1/2 earlier venues this edition; ×2 if absent from this venue's last field; wins only |
 | D7 | Role windows (levels relative to the world's cap) | Contender −2 or lower, elite −1 to +1, headliner +2 or higher |
