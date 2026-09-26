@@ -1668,6 +1668,8 @@ static void UNUSED SetBattledTrainerFlag(void)
     SetTrainerFlag(TRAINER_BATTLE_PARAM.opponentA);
 }
 
+// Wayfarer: every Trainer ID past the fixed Hoenn range needs explicit defeat
+// storage in the three helpers below; constants/flags.h enforces the slots.
 bool8 HasTrainerBeenFought(u16 trainerId)
 {
 #if IS_WAYFARER
@@ -1703,6 +1705,12 @@ bool8 HasTrainerBeenFought(u16 trainerId)
     towerDefeatSlot = trainerId - TRAINER_WAYFARER_TOWER_FIRST;
     if (towerDefeatSlot < TRAINER_WAYFARER_TOWER_COUNT)
         return (gSaveBlock3Ptr->wayfarerTowerTrainerDefeats >> towerDefeatSlot) & 1;
+    if (trainerId >= TRAINER_WAYFARER_INDIGO_FIRST && trainerId <= TRAINER_WAYFARER_INDIGO_LAST)
+        return FlagGet(WAYFARER_INDIGO_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_INDIGO_FIRST);
+    // Only the appended HNS rematch teams use the remap below. Any other ID
+    // without explicit storage above has no defeat state.
+    if (trainerId > TRAINER_ERIKA_POSTOBC_HNS)
+        return FALSE;
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1767,6 +1775,15 @@ void SetTrainerFlag(u16 trainerId)
         gSaveBlock3Ptr->wayfarerTowerTrainerDefeats |= 1u << towerDefeatSlot;
         return;
     }
+    if (trainerId >= TRAINER_WAYFARER_INDIGO_FIRST && trainerId <= TRAINER_WAYFARER_INDIGO_LAST)
+    {
+        FlagSet(WAYFARER_INDIGO_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_INDIGO_FIRST);
+        return;
+    }
+    // Only the appended HNS rematch teams use the remap below. Any other ID
+    // without explicit storage above has no defeat state.
+    if (trainerId > TRAINER_ERIKA_POSTOBC_HNS)
+        return;
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;
@@ -1831,6 +1848,15 @@ void ClearTrainerFlag(u16 trainerId)
         gSaveBlock3Ptr->wayfarerTowerTrainerDefeats &= ~(1u << towerDefeatSlot);
         return;
     }
+    if (trainerId >= TRAINER_WAYFARER_INDIGO_FIRST && trainerId <= TRAINER_WAYFARER_INDIGO_LAST)
+    {
+        FlagClear(WAYFARER_INDIGO_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_INDIGO_FIRST);
+        return;
+    }
+    // Only the appended HNS rematch teams use the remap below. Any other ID
+    // without explicit storage above has no defeat state.
+    if (trainerId > TRAINER_ERIKA_POSTOBC_HNS)
+        return;
     // Appended HNS teams use the unused HNS defeat flags after the Dojo IDs.
     if (trainerId >= TRAINER_FALKNER_POSTOBC_HNS)
         trainerId -= TRAINERS_COUNT_EMERALD - 1;

@@ -14,6 +14,10 @@ coast = importlib.util.module_from_spec(_coast_spec)
 _coast_spec.loader.exec_module(coast)
 
 BASE = 1795
+# Trainer-flag slots 661-702 belong to local Kanto IDs and 703-711 are held
+# for the Viridian Gym. Indigo must never fall through to the appended-HNS
+# remap, which would land on system flags past TRAINER_FLAGS_END.
+DEFEAT_SLOT_FIRST = 712
 SOURCES = (
     ("LORELEI", "TRAINER_ELITE_FOUR_LORELEI"),
     ("BRUNO", "TRAINER_ELITE_FOUR_BRUNO"),
@@ -26,7 +30,7 @@ ROSTER = GAME / "src/data/trainers_wayfarer_indigo.h"
 
 
 def rows():
-    if len(SOURCES) != 5 or BASE != 1795:
+    if len(SOURCES) != 5 or BASE != 1795 or DEFEAT_SLOT_FIRST != 712:
         raise ValueError("Indigo Trainer allocation changed without collision review")
     return [dict(id=f"TRAINER_WAYFARER_INDIGO_{name}", source_trainer=source,
                  numeric_id=BASE + index)
@@ -40,6 +44,9 @@ def render_constants():
     lines += [f"#define {row['id']:<42} {row['numeric_id']}" for row in rows()]
     lines += ["", f"#define TRAINER_WAYFARER_INDIGO_FIRST {BASE}",
               f"#define TRAINER_WAYFARER_INDIGO_LAST {BASE + len(SOURCES) - 1}",
+              f"#define TRAINER_WAYFARER_INDIGO_COUNT {len(SOURCES)}",
+              f"#define WAYFARER_INDIGO_DEFEAT_SLOT_FIRST {DEFEAT_SLOT_FIRST}",
+              "#define WAYFARER_INDIGO_DEFEAT_FLAG_FIRST (TRAINER_FLAGS_START + WAYFARER_INDIGO_DEFEAT_SLOT_FIRST)",
               "#if IS_WAYFARER", "#undef TRAINERS_COUNT_WAYFARER",
               f"#define TRAINERS_COUNT_WAYFARER {BASE + len(SOURCES)}",
               "#endif", "", "#endif  // GUARD_CONSTANTS_WAYFARER_INDIGO_TRAINERS_H", ""]

@@ -2713,4 +2713,26 @@
 #endif // TESTING
 
 
+#if IS_WAYFARER
+// Every Wayfarer Trainer ID past the fixed Hoenn range needs explicit defeat
+// storage in HasTrainerBeenFought, SetTrainerFlag and ClearTrainerFlag. Only
+// the appended HNS rematch teams use the compatibility remap, and every
+// reserved trainer-flag slot must stay inside TRAINER_FLAGS_END; past it lie
+// the system flags.
+#define WAYFARER_APPENDED_HNS_DEFEAT_SLOT(id) ((id) - (TRAINERS_COUNT_EMERALD - 1))
+#if TRAINER_WAYFARER_LOCAL_LAST - TRAINER_WAYFARER_LOCAL_FIRST + 1 != TRAINER_WAYFARER_LOCAL_COUNT \
+ || TRAINER_WAYFARER_INDIGO_LAST - TRAINER_WAYFARER_INDIGO_FIRST + 1 != TRAINER_WAYFARER_INDIGO_COUNT
+#error "Wayfarer Trainer defeat slot counts must match their ID ranges"
+#endif
+#if WAYFARER_APPENDED_HNS_DEFEAT_SLOT(TRAINER_ERIKA_POSTOBC_HNS) >= WAYFARER_LOCAL_DEFEAT_SLOT_FIRST \
+ || WAYFARER_LOCAL_DEFEAT_SLOT_FIRST + TRAINER_WAYFARER_LOCAL_COUNT > WAYFARER_INDIGO_DEFEAT_SLOT_FIRST \
+ || TRAINER_FLAGS_START + WAYFARER_INDIGO_DEFEAT_SLOT_FIRST + TRAINER_WAYFARER_INDIGO_COUNT - 1 > TRAINER_FLAGS_END
+#error "Wayfarer Trainer defeat slots overlap or overflow TRAINER_FLAGS_END into system flags"
+#endif
+#if TRAINER_WAYFARER_INDIGO_LAST + 1 != TRAINERS_COUNT_WAYFARER
+#error "New Wayfarer Trainer IDs need explicit defeat storage in HasTrainerBeenFought, SetTrainerFlag and ClearTrainerFlag"
+#endif
+#undef WAYFARER_APPENDED_HNS_DEFEAT_SLOT
+#endif
+
 #endif // GUARD_CONSTANTS_FLAGS_H
