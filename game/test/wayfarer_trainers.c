@@ -1,5 +1,7 @@
 #include "global.h"
 #include "battle_setup.h"
+#include "event_data.h"
+#include "malloc.h"
 #include "pokemon.h"
 #include "test/test.h"
 #include "constants/opponents.h"
@@ -247,6 +249,94 @@ TEST("Wayfarer Sevii rematch parties share their base Trainer defeat state")
     ClearTrainerFlag(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON);
     EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON));
     EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_SEVII_CRUSH_GIRL_SHARON_2));
+}
+
+TEST("Indigo League defeats use reserved Trainer flags and leave system flags untouched")
+{
+    u32 id;
+    u8 *before = Alloc(NUM_FLAG_BYTES);
+
+    for (id = TRAINER_WAYFARER_INDIGO_FIRST; id <= TRAINER_WAYFARER_INDIGO_LAST; id++)
+        ClearTrainerFlag(id);
+    FlagClear(FLAG_SYS_TOWER_SILVER);
+    FlagClear(FLAG_SYS_TOWER_GOLD);
+    memcpy(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES);
+
+    for (id = TRAINER_WAYFARER_INDIGO_FIRST; id <= TRAINER_WAYFARER_INDIGO_LAST; id++)
+    {
+        EXPECT(!HasTrainerBeenFought(id));
+        SetTrainerFlag(id);
+        EXPECT(HasTrainerBeenFought(id));
+        EXPECT(FlagGet(WAYFARER_INDIGO_DEFEAT_FLAG_FIRST + id - TRAINER_WAYFARER_INDIGO_FIRST));
+        EXPECT(!FlagGet(FLAG_SYS_TOWER_SILVER));
+        EXPECT(!FlagGet(FLAG_SYS_TOWER_GOLD));
+        EXPECT_EQ(memcmp(&before[(TRAINER_FLAGS_END + 1) / 8],
+                         &gSaveBlock1Ptr->flags[(TRAINER_FLAGS_END + 1) / 8],
+                         NUM_FLAG_BYTES - (TRAINER_FLAGS_END + 1) / 8), 0);
+        EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, TRAINER_FLAGS_START / 8), 0);
+    }
+
+    ClearTrainerFlag(TRAINER_WAYFARER_INDIGO_LORELEI);
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_INDIGO_LORELEI));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_INDIGO_BLUE));
+    for (id = TRAINER_WAYFARER_INDIGO_FIRST; id <= TRAINER_WAYFARER_INDIGO_LAST; id++)
+        ClearTrainerFlag(id);
+    EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES), 0);
+    Free(before);
+}
+
+// Walks every Trainer ID through the real defeat helpers. A defeat may set at
+// most one SaveBlock1 flag that no other ID owns: a Trainer-flag slot, or a
+// dedicated content flag below TRAINER_FLAGS_START (S.S. Anne, Celadon
+// Hideout). Nothing past TRAINER_FLAGS_END, where the system flags start, may
+// change.
+TEST("Every Wayfarer Trainer defeat stays inside its own storage")
+{
+    u32 id, byte, bit, flag, changedFlags;
+    u8 changed;
+    u8 *savedFlags = Alloc(NUM_FLAG_BYTES);
+    u8 *before = Alloc(NUM_FLAG_BYTES);
+    u8 *claimed = AllocZeroed(NUM_FLAG_BYTES);
+    struct SaveBlock3 *savedBlock3 = Alloc(sizeof(*gSaveBlock3Ptr));
+
+    memcpy(savedFlags, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES);
+    memcpy(savedBlock3, gSaveBlock3Ptr, sizeof(*gSaveBlock3Ptr));
+    for (id = TRAINER_NONE + 1; id < TRAINERS_COUNT; id++)
+    {
+        ClearTrainerFlag(id);
+        memcpy(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES);
+        SetTrainerFlag(id);
+        // 1736 is the vacant ID between the Hideout and local Kanto ranges.
+        if (id == TRAINER_CELADON_HIDEOUT_LAST + 1)
+        {
+            EXPECT(!HasTrainerBeenFought(id));
+            EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES), 0);
+            continue;
+        }
+        EXPECT(HasTrainerBeenFought(id));
+        changedFlags = 0;
+        for (byte = 0; byte < NUM_FLAG_BYTES; byte++)
+        {
+            changed = before[byte] ^ gSaveBlock1Ptr->flags[byte];
+            for (bit = 0; changed != 0; bit++, changed >>= 1)
+            {
+                if (!(changed & 1))
+                    continue;
+                flag = byte * 8 + bit;
+                EXPECT_LE(flag, TRAINER_FLAGS_END);
+                EXPECT(!(claimed[byte] & (1 << bit)));
+                claimed[byte] |= 1 << bit;
+                changedFlags++;
+            }
+        }
+        EXPECT_LE(changedFlags, 1);
+    }
+    memcpy(gSaveBlock1Ptr->flags, savedFlags, NUM_FLAG_BYTES);
+    memcpy(gSaveBlock3Ptr, savedBlock3, sizeof(*gSaveBlock3Ptr));
+    Free(savedBlock3);
+    Free(claimed);
+    Free(before);
+    Free(savedFlags);
 }
 
 #endif

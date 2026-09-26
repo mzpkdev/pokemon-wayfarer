@@ -13,6 +13,18 @@ class IndigoTrainerTests(unittest.TestCase):
         self.assertEqual([row["numeric_id"] for row in rows], list(range(1795, 1800)))
         self.assertEqual(len({row["id"] for row in rows}), 5)
 
+    def test_defeats_use_reserved_trainer_flag_slots(self):
+        local = (generate.GAME / "include/constants/wayfarer_local_trainers.h").read_text()
+        self.assertIn("#define WAYFARER_LOCAL_DEFEAT_SLOT_FIRST 661", local)
+        self.assertIn("#define TRAINER_WAYFARER_LOCAL_COUNT 42", local)
+        constants = generate.render_constants()
+        self.assertIn("#define TRAINER_WAYFARER_INDIGO_COUNT 5", constants)
+        self.assertIn("#define WAYFARER_INDIGO_DEFEAT_SLOT_FIRST 712", constants)
+        # Slots 703-711 stay free for the Viridian Gym; the last Indigo slot
+        # must stay inside TRAINER_FLAGS_END (slot 863).
+        self.assertGreaterEqual(generate.DEFEAT_SLOT_FIRST, 661 + 42 + 9)
+        self.assertLessEqual(generate.DEFEAT_SLOT_FIRST + len(generate.SOURCES) - 1, 0x85F - 0x500)
+
     def test_compiled_roster_uses_only_wayfarer_ids_and_blastoise_default(self):
         roster = generate.render_roster()
         self.assertEqual(len(re.findall(r"\[TRAINER_WAYFARER_INDIGO_", roster)), 5)
