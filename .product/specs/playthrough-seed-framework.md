@@ -68,10 +68,10 @@ Resolve a random word through a pure function of the root and this key:
 Maintain a small checked-in registry of domain/decision constants and their
 descriptive names. Numeric IDs are explicit; adding an entry cannot renumber
 existing entries. Reject accidental duplicate definitions and never repurpose
-a retired ID for unrelated behavior. Reserve circuit domain ID 1, with ORDER
-decision ID 1, ROSTER decision ID 2, and LORE_FILTER decision ID 4, initially
-at version 1 each. Decision ID 3 is retired from the earlier visitor-quota draft
-and is not reused. This does not require support for an unshipped old algorithm.
+a retired ID for unrelated behavior. Reserve circuit domain ID 1, with active
+ORDER decision ID 1, ROSTER decision ID 2, and POOL_KIND decision ID 5, initially
+at version 1 each. IDs 3 (VISITOR_POLICY) and 4 (LORE_FILTER) are retired and
+never reused. This does not require support for unshipped old algorithms.
 
 Entity identity comes from stable authored content IDs, not pointers, table
 positions, localized text, generated map numbering, or the order in which
@@ -235,17 +235,26 @@ for all three decisions:
 | Decision | Entity / occurrence | Draw identity |
 | --- | --- | --- |
 | ORDER, ID 1 | Entity zero; occurrence = editionId | Fisher–Yates step index, 2 then 1 |
-| LORE_FILTER, ID 4 | Canonical character identity; occurrence = editionId | Venue ID: Indigo = 1, Masters = 2, Hoenn = 3; after TR eligibility, an unaffiliated candidate is dropped when `Uniform(2) == 0` |
+| POOL_KIND, ID 5 | Stable venue ID: Indigo = 1, Masters = 2, Hoenn = 3; occurrence = editionId | Battle slot 0–4; when both eligible buckets exist, `Uniform(100)` chooses home on 0–84, visitor on 85–99 |
 | ROSTER, ID 2 | Stable venue ID: Indigo = 1, Masters = 2, Hoenn = 3; occurrence = editionId | Battle slot 0–4 |
 
 The [pool spec](circuit-trainer-pool.md) owns allocation order, TR eligibility,
-authored league affiliations, rotation weights, feasibility, and final sorting.
-Use explicit ORDER, LORE_FILTER, and ROSTER rules versions. Evaluate TR first;
-a lore affiliation cannot admit a trainer whose rating is outside the band.
-Eligible affiliated trainers pass the lore step without a draw. Other eligible
-trainers face one 50% drop decision per character/venue/edition; a removed trainer
-may still survive for another venue. The gate is not a 50% appearance chance,
-a visitor quota, or a decision to remove a character globally.
+authored `homeLeagues`, rotation weights, feasibility, and final sorting.
+Use active ORDER, POOL_KIND, and ROSTER rules versions. First evaluate role TR,
+content validity, and within-venue canonical uniqueness; home membership never
+admits an unsuitable trainer. Partition the eligible candidates into home and
+visitor buckets using multi-home membership with explicit rationale. With both
+buckets nonempty, POOL_KIND selects one using the initial conditional 85/15
+tuning above. No eligible visitor means home without a POOL_KIND draw. Missing
+eligible home is an invalid catalog; content must prove home-only two-contender,
+two-elite, one-headliner feasibility for every venue.
+
+Apply the positive repeat/history-weighted ROSTER draw only inside the chosen
+bucket. Home candidates keep those penalties, and visiting does not change TR
+or battle strength. There is no visitor quota/cap or per-outsider exclusion
+draw. The 85/15 chance applies to bucket choice when both exist, not an individual
+trainer or guaranteed field share. Pure raw POOL_KIND calls remain defined even
+when fallback means generation does not need to evaluate that key.
 
 All venues use the same ordered disjoint role TR bands: contender slots 0–1,
 elite slots 2–3, headliner slot 4. Numeric endpoints remain D3 tuning. Travel
@@ -253,25 +262,30 @@ position does not choose difficulty. The pool spec allocates battle-slot
 priority `[4,2,3,0,1]`, and for each slot visits venues in saved travel order.
 Sort only within contender/elite pairs by TR then canonical ID. Headliner
 appointment is title-agnostic. Rules versions remain 1 in this unimplemented draft.
+Both POOL_KIND and ROSTER draw IDs refer to allocation slots before this sort;
+85/15 is not a per-room probability after sorting. Saved-schedule verification
+reproduces canonical allocation and sorting from the same inputs for comparison
+only, never to replace a committed result. A room index must not be compared
+directly with a POOL_KIND draw to validate its occupant's category.
 
-Feasibility checks are pure and consume no keyed draws. ORDER and a given pair's
-raw LORE_FILTER value do not depend on unrelated catalog entries or their
-versions. Changing that pair's TR eligibility or authored affiliation can
-legitimately change whether the lore draw applies. ROSTER uses the retained
-candidates, canonical scheduled-occurrence counts within this edition, and
+Feasibility checks are pure and consume no keyed draws. Raw ORDER and POOL_KIND
+values do not depend on catalog entries, their versions, or history. Changing
+eligibility or earlier allocations can change which buckets exist and whether
+fallback applies. ROSTER uses only the chosen eligible bucket,
+canonical scheduled-occurrence counts within this edition, and
 immediately prior completed-edition IDs at the same venue. Proposed D5 weight
 is base 1 times within-edition factor `[16,4,1]` for scheduled counts 0/1/2,
 times prior-venue factor 1 for a returner or 2 otherwise. Empty edition-1 history
 creates no returning penalty. Approximately two returners and three new trainers
 is a soft goal, not a quota, exclusion, or reroll condition. Choose five
 distinct canonical characters per lineup; a character selected there remains
-eligible for every other league whose TR and lore checks they pass. There is
+eligible for every other league whose role TR/content checks they pass. There is
 no global used-character exclusion, but rotation weights softly discourage
 repeat appointments. ROSTER decisions are jointly dependent through scheduled
 counts/history: changing relevant candidates at one venue can affect later
 choices elsewhere. Semantic keyed calls remain pure; there is no shared RNG
 cursor, and unrelated features cannot perturb those inputs or draws.
-Neither lore gates nor order can be redrawn to repair a roster shortage.
+Neither category selection nor order can be redrawn to repair a roster shortage.
 
 Persist edition 1 with its resolved order and fifteen role/character/profile/TR
 selections at new game through the [runtime spec](seeded-league-circuit.md).
@@ -355,10 +369,15 @@ Required implementation evidence:
   new noneligible/unrelated content does not perturb it.
 - For the circuit, test cross-feature calls before/between/after generation,
   save/load and UI queries, plus all six venue orders and existing circuit
-  acceptance. Changing unrelated roster content cannot alter ORDER or an
-  unchanged character/venue pair's LORE_FILTER draw for the same root, edition,
-  and respective rules versions. Test TR rejection before lore, affiliated bypass,
-  the 50% drop boundary, and venue-local rather than global exclusion.
+  acceptance. Changing catalog/history cannot alter raw ORDER or POOL_KIND
+  values for the same root, edition, and respective rules versions. Test role
+  TR/content/uniqueness checks before home/visitor partitioning, authored
+  multi-home membership, and category boundary draws 84/85. With no eligible
+  visitors, select home without a POOL_KIND call; with no eligible home, reject
+  content instead of substituting visitors or widening TR bands. Prove home-only
+  role feasibility, and permit multiple visitors without quotas or caps.
+  Distinguish input-dependent bucket fallback and joint roster outcomes from
+  raw-key isolation. Verify weighted choice cannot select outside its bucket.
   Permit repeated characters across qualifying leagues and reject duplicates
   within a lineup. Test positive repeat/history weights: earlier assignments
   may change later weights but cannot remove eligible people at another venue.
@@ -367,7 +386,7 @@ Required implementation evidence:
 - Exercise the circuit's actual recurring lifecycle: edition 1 at new game,
   registration for edition 2 after completion, and reloads both before and after
   registration. Pin vectors that include edition identity; verify it is mixed
-  into ORDER, LORE_FILTER, and ROSTER without requiring every output to differ.
+  into ORDER, POOL_KIND, and ROSTER without requiring every output to differ.
   Failed generation, duplicate callbacks, unfinished editions, and overflow
   cannot consume or skip an edition. Verify atomic prior-venue history updates,
   empty edition-1 history, predecessor identity, and failure preserving both

@@ -49,14 +49,15 @@ move a shared random sequence forward.
 Separate decisions also stay independent as development continues. Adding a
 new reward feature must not change existing circuit orders. Changing the
 circuit's trainer pool may change newly generated rosters, but must not change
-the independently keyed venue order or an unchanged trainer/league pair's lore
-draw within the same edition. Explicit constraints inside one lineup still
-apply: selecting a trainer removes that character from its remaining four
+the independently keyed venue order or a venue/slot's raw home-or-visitor draw
+within the same edition. Candidate availability can change whether that slot
+needs a category draw or uses a home-only fallback. Constraints inside one lineup
+still apply: selecting a trainer removes that character from its remaining four
 places. Cross-league appearances remain possible, with a soft penalty based
 on scheduled appearances elsewhere in the edition. This intentionally couples
 roster allocations; pure keys do not imply independent selection inputs. The
 previous completed edition's lineup at the same venue also affects roster weights.
-Neither constraint changes ORDER or raw trainer/venue lore draws.
+Neither constraint changes ORDER or raw venue/slot POOL_KIND draws.
 
 ### Stable outcomes and meaningful new occurrences
 
@@ -98,12 +99,15 @@ story produces the same events.
 
 ### Circuit adoption
 
-At new game, the circuit generates edition 1. Its venue order, each eligible
-unaffiliated trainer/league pair's lore filter, and roster assignment are
-separately keyed decisions under the shared seed and edition identity. TR
-eligibility is checked before the lore filter; authored league affiliations can
-overlap. Persist the complete schedule before it is exposed to gameplay. There
-is no independent saved circuit seed or cursor that other features can advance.
+At new game, the circuit generates edition 1. Its venue order, each slot's
+home-or-visitor pool choice, and roster assignment are separately keyed decisions
+under the shared seed and edition identity. Check TR eligibility first, then
+partition candidates using their authored `homeLeagues`; memberships can overlap.
+Choose home with 85% probability or visitors with 15% when both pools are
+available, then apply rotation weights within that pool. With no eligible visitors,
+use home; the catalog must supply enough home trainers for every role. Persist
+the complete schedule before it is exposed to gameplay. There is no independent
+saved circuit seed or cursor that other features can advance.
 
 After completing all three leagues, the player may register for the next edition.
 That transition generates a complete schedule using the next edition identity
@@ -114,7 +118,7 @@ preserves the completed edition and its existing history. Waiting, losing, aband
 another draw. Loading a save from before registration and registering again
 produces the same next edition for the same rules, content, and history inputs.
 
-An edition fixes its order, lore decisions, and lineups through every attempt.
+An edition fixes its order, pool choices, and lineups through every attempt.
 A later edition may produce different results; distinct keys do not guarantee
 different orders or participants. Soft weighting encourages roughly two returning
 and three different opponents per venue, without a quota or a repeat-avoidance
@@ -124,7 +128,7 @@ Future modest rating dynamics require a separate design and cannot change a
 published schedule; recurrence does not automatically increase NPC TR.
 
 All existing circuit rules remain in its PRD, including uniqueness within each
-lineup, the TR-first lore filter, shared contender/elite/headliner role bands,
+lineup, TR-first home/visitor selection, shared contender/elite/headliner role bands,
 and rotating participation. The circuit owns remaining catalog, qualification,
 and balance choices; the seed framework does not decide their values.
 

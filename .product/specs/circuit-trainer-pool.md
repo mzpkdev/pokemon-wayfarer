@@ -9,7 +9,7 @@ qualification (D4), and rotation tuning/acceptance (D5) remain under review.
 ## Scope
 
 Own the trainer registry, character uniqueness, team profiles, seeded destination
-and participant selection, lore filtering, and NPC-TR-based party strength
+and participant selection, regional pool selection, and NPC-TR-based party strength
 for each `IS_WAYFARER` circuit edition. The [runtime specification](seeded-league-circuit.md) owns
 edition registration, schedule persistence, qualification, room flow, completion, rewards, and UI.
 The [playthrough seed framework](playthrough-seed-framework.md) owns root
@@ -32,7 +32,7 @@ Author a versioned, machine-readable registry with these fields:
 | `characterId` | Stable identity for one person, independent of encounter IDs, title, party, or region. |
 | `displayName` | Existing localized name or an explicitly authored circuit name. |
 | `specialty` | Authored public type or battle-style label, including mixed-team styles; never inferred from trainer class. |
-| `leagueAffiliations` | Explicit set of Indigo, Sevii Masters, and Hoenn memberships, with lore rationale per trainer; multiple memberships are allowed. |
+| `homeLeagues` | Explicit set of Indigo, Sevii Masters, and Hoenn home leagues, with authored rationale per trainer; multiple homes are allowed. |
 | `baselineTR` | Integer 0–80; authored competitive strength, unrelated to the player's TR. |
 | `profileId` | One reviewed competitive singles profile for this initial version. |
 | `presentationId` | Audited overworld/battle graphics, introduction, defeat, and after-battle text. |
@@ -43,7 +43,7 @@ to canonical characters. Gym, rival, Champion, rematch, and regional versions of
 the same person share `characterId`. Bruno and Lance each remain one character.
 No duplicate entry, costume, or team variant can increase selection weight or
 bypass uniqueness within a lineup. The same canonical person may be selected
-in multiple leagues; each checks TR and lore eligibility, while scheduled
+in multiple leagues; each checks TR/content eligibility, while scheduled
 appearances reduce selection weight as specified below. Two people with similar
 names remain distinct.
 
@@ -53,17 +53,18 @@ have no player badge contribution or high-water state. Future modest dynamic TR
 is outside this initial contract; it must provide an edition-start rating snapshot
 for eligibility and strength, never mutate a registered edition in place. Selection
 variety comes from participation rotation rather than dramatic rating changes.
-League affiliations describe sensible competitive participation, rather than
-current map location or blanket geographic origin. Review their lore rationale
-under D3; neither appearing on a map nor needing more candidates establishes
-membership. Multiple affiliations affect each venue's filter independently.
-They never override TR eligibility or permit duplicate slots within one league.
+Home leagues describe sensible regional competitive participation, rather than
+current map location or blanket geographic origin. D3 reviews each authored
+rationale; neither appearing on a map nor needing more candidates establishes a
+home league. A character can be home at multiple venues. Home status governs
+pool classification, never TR eligibility or within-venue uniqueness. Eligible
+characters are visitors at any venue absent from their `homeLeagues`.
 
 Red is disabled for circuit selection and remains the separate mastery encounter.
-The initial pool excludes paired/double-battle profiles. Do not split Tate and
-Liza into invented solo entrants to satisfy pool size. The exact membership,
-affiliations, individual ratings, and profiles require the D3 content inventory;
-this spec does not assign unreviewed ratings to named characters.
+The initial pool excludes paired/double-battle profiles. Tate and Liza remain
+excluded by confirmed content choice for this singles-only circuit. The exact
+membership, home leagues, individual ratings, and profiles require the D3 content
+inventory; this spec does not assign unreviewed ratings to named characters.
 
 ### Competitive profiles
 
@@ -106,7 +107,7 @@ selected trainer by TR because of the ordered bands.
 A character is eligible for a role when enabled, presentation/profile validation
 passes, and their edition-start TR lies in that role's approved band. In the
 initial version this snapshot equals baseline TR. Apply this eligibility before
-league-affiliation filtering. No affiliated low-TR character bypasses a band.
+home/visitor classification. No home low-TR character bypasses a band.
 Eligibility does not inspect player TR, badges, starter, origin, story flags,
 party, or difficulty options. Ratings outside every role band are excluded, with
 an inventory reason; never adjust a rating merely to fill a vacant slot.
@@ -117,38 +118,50 @@ bands, or player-relative adaptation. The seeded venue order changes the journey
 and allocation traversal, not a venue's eligibility or championship tier. The
 runtime owner defines common qualification under D4.
 
-Before enabling the catalog, prove at least two distinct TR-qualified affiliated
-contenders, two elites, and one headliner for each venue. Disjoint role bands and
-within-venue uniqueness make those counts sufficient even when every outsider
-drops; positive rotation weights never remove a candidate. Prove variety across
-roots and editions separately. Minimum feasible headcounts do not establish
-turnover or broad participation.
+Before enabling the catalog, prove at least two distinct TR/content-qualified
+home contenders, two home elites, and one home headliner for each venue. Disjoint
+role bands and within-venue uniqueness make these counts sufficient: earlier
+slots cannot exhaust the home pool needed for any later slot, even if every
+selection uses home candidates. Positive rotation weights never remove a
+candidate. Prove variety across roots and editions separately. Minimum feasible
+headcounts do not establish turnover or broad participation.
 
 The initial catalog is not assumed to satisfy this requirement. D3 must review
-concrete affiliations/rationales, ratings, and teams before enabling it. A
-shortfall cannot restore filtered-out candidates, widen bands, invent
-memberships, or retry draws. Revise reviewed content/design if credible
-per-venue role coverage cannot be authored.
+concrete homes/rationales, ratings, and teams before enabling it. A missing home
+pool is invalid content, never a fallback to visitors. A shortfall cannot widen
+bands, invent home leagues, or retry draws. Revise reviewed content/design if
+credible per-venue role coverage cannot be authored.
 
-### TR-first lore filter and participation rotation
+### TR-first home/visitor selection and participation rotation
 
-For each venue, first form its TR/content-eligible role lists. An eligible
-character whose `leagueAffiliations` contains that venue passes the lore filter.
-Every other eligible character has exactly a 50% seeded chance of being dropped
-from that venue's lists: framework `Uniform(2) = 0` drops them, and
-`Uniform(2) = 1` retains them. Resolve this once per canonical character, venue,
-and edition; a lookup, retry, or reload cannot draw again.
+For each venue and role, first form the TR/content-eligible candidate list and
+partition it by `homeLeagues`: candidates with that venue in their set are home;
+all others are visitors. At each slot, remove characters already scheduled at
+that venue before choosing a pool. There is no per-visitor lore exclusion draw.
 
-The gate is independent of travel position, allocation traversal, other
-candidates, and pool size. Adding characters does not change existing raw
-character/venue/edition filter outcomes. Multiple sensible affiliations are
-allowed, supported by explicit lore rationale; membership bypasses that venue's
-gate without extra weight or overriding TR suitability.
+When both eligible pools are nonempty, use an independent seeded `POOL_KIND`
+draw `Uniform(100)`: values 0–84 select home, and 85–99 select visitor. This
+85%/15% category split is the initial tuning. Its probability is independent of
+the number of candidates or their weights in either pool. When the visitor pool
+is empty, use home without consuming a POOL_KIND draw. A missing home pool is a
+catalog/content failure, whether or not visitors are available; valid home-only
+role counts guarantee this cannot happen during allocation.
 
-There is no visitor quota, reserved guest slot, forced local count, home weight
-multiplier, title preference, mandatory Champion, or guaranteed named character.
-Multiple retained outsiders may appear, including as headliner. All retained
-eligible candidates start with flat `baseWeight = 1`. Proposed D5 tuning is:
+After choosing the category, select a person using strictly positive repeat and
+history weights only within that category. Home status avoids the regional
+visitor disadvantage but does not exempt a person from those penalties. A
+visitor uses the same TR eligibility, snapshotted rating, profile, and strength
+as a home participant; travel does not downgrade them.
+
+There is no visitor quota/cap, reserved guest slot, forced exact local count,
+additional home weight multiplier, title preference, mandatory Champion, or
+guaranteed named character. Several visitors, including the headliner, may
+appear at one venue. The 15% figure is a per-slot category probability when both
+pools are available, not an individual appearance probability or an exact lineup
+proportion.
+
+All eligible candidates in the chosen pool start with flat `baseWeight = 1`.
+Proposed D5 rotation tuning is:
 
 ```text
 withinEditionFactor[scheduledAppearances] = [16, 4, 1]  // counts 0, 1, 2
@@ -179,10 +192,9 @@ transaction; generation reads an immutable input snapshot.
 
 Roughly two returning and three changed opponents per venue is a soft tuning
 target where the catalog supports it. Identical consecutive fields and repeated
-entrants remain valid. Never redraw, force replacements, restore dropped
-trainers, weaken TR limits, or advance edition identity to manufacture novelty.
-A 50% outsider retention chance is not a 50% appearance chance; role pool size,
-soft weights, history, and prior allocations determine final inclusion.
+entrants remain valid. Never redraw, force replacements, weaken TR limits, or
+advance edition identity to manufacture novelty. Category availability, role pool
+size, soft weights, history, and prior allocations determine final inclusion.
 
 ### Foundation consumer protocol and deterministic generation
 
@@ -204,29 +216,29 @@ rejection index (`u32`). The foundation pins fixed little-endian encoding and
 the exact hash/mixer with golden vectors before this feature is enabled. These
 names describe the required interface, not APIs already implemented in the ROM.
 
-Use framework domain `CIRCUIT = 1`, with `ORDER = 1`, `ROSTER = 2`, and
-`LORE_FILTER = 4`, initially at rules version 1 each. `VISITOR_POLICY = 3` is
-retired; never reuse its ID. ORDER uses campaign `entityId = 0`; ROSTER uses
-the stable venue ID (Indigo = 1, Masters = 2, Hoenn = 3) as its `u64` entity.
-LORE_FILTER uses the canonical character ID as its `u64` entity. All use
+Use framework domain `CIRCUIT = 1`, with active decisions `ORDER = 1`,
+`ROSTER = 2`, and `POOL_KIND = 5`, initially at rules version 1 each.
+`VISITOR_POLICY = 3` and `LORE_FILTER = 4` are retired; never reuse either ID.
+ORDER uses campaign `entityId = 0`; ROSTER and POOL_KIND use the stable venue ID
+(Indigo = 1, Masters = 2, Hoenn = 3) as their `u64` entity. All use
 `occurrenceId = editionId`; retry/replay/abandonment never creates another
-occurrence. All three rules versions remain 1 because this draft is unimplemented;
+occurrence. Active rule versions remain 1 because this draft is unimplemented;
 no prerelease migration is required. Resolve keys independently so no
-feature-wide or global random sequence is advanced. Ordinary Pokémon RNG is neither consumed nor reseeded,
-including by root initialization. Future features opt in under their own domains.
+feature-wide or global random sequence is advanced. Ordinary Pokémon RNG is
+neither consumed nor reseeded, including by root initialization. Future features
+opt in under their own domains.
 
-Use semantic draw IDs directly. `ORDER` uses Fisher–Yates index 2 then index 1
-as its draw IDs. LORE_FILTER uses venue draw IDs Indigo = 1, Masters = 2,
-Hoenn = 3 for each character entity.
-`ROSTER` uses the allocated battle slot (0 through 4) as its semantic draw ID.
-Its venue entity keeps keys stable when travel position changes. A rejection
-required for unbiased sampling increments only the internal rejection index of
-that draw; it does
-not consume a different semantic draw or perturb later decisions. Eligibility,
-weight lookup, and feasibility checks consume no draws. Existing
-`LocalRandomSeed`/`LocalRandom32` may be used only inside one atomic decision
-when explicitly pinned by the framework; this circuit protocol does not use
-them or introduce another stateful generator.
+Use semantic draw IDs directly. ORDER uses Fisher–Yates index 2 then index 1.
+POOL_KIND and ROSTER use the allocated battle slot (0 through 4) as their draw
+ID. Venue entities keep these keys stable when travel position changes. The two
+decisions have independent keys; choosing a category does not consume or alter
+its ROSTER draw. The home-only case consumes no POOL_KIND draw or substitute
+semantic draw. A rejection required for unbiased sampling increments only that
+draw's internal rejection index; it cannot perturb later decisions. Eligibility,
+classification, weight lookup, and feasibility checks consume no draws. Existing
+`LocalRandomSeed`/`LocalRandom32` may be used only inside one atomic decision when
+explicitly pinned by the framework; this protocol does not use them or introduce
+another stateful generator.
 
 Use this fixed generation procedure:
 
@@ -235,35 +247,47 @@ Use this fixed generation procedure:
    `[Indigo, Masters, Hoenn]`. Fisher–Yates shuffle indices 2 then 1 using framework
    `Uniform(i + 1)` under the corresponding ORDER key. All six venue orders must
    be reachable without weighting by player origin or future badges.
-2. Build each venue's TR/content-eligible role lists, then resolve eligible
-   outsiders' LORE_FILTER keys. Hold the retained lists fixed throughout
-   allocation; affiliated characters pass without a filter draw.
+2. Build each venue's TR/content-eligible role lists and partition each into home
+   and visitor candidates. Hold this classification fixed throughout allocation;
+   remove already selected people from the appropriate pools at each slot.
 3. Generate the whole circuit together in battle-slot priority `[4, 2, 3, 0, 1]`.
    For each slot, visit the three venues in saved seeded order (positions 1, 2,
    then 3). Initialize one local appearance counter per canonical person to zero
    and one selected-character set per venue. Traversal is part of the contract:
    headliners are allocated first, then elites, then contenders.
-4. At each slot/venue, enumerate retained candidates eligible for that slot's
-   role and not selected at that venue, in ascending stable `characterId` order.
-   Compute each candidate's positive weight using their local scheduled count
-   and this venue's prior-edition history. A selection at another venue affects
-   the count, but cannot exclude the candidate or change their lore outcome.
-5. Sum weights using checked arithmetic, draw framework `Uniform(totalWeight)`
-   under ROSTER with `entityId = venueId`, `occurrenceId = editionId`, and
-   `drawId = battleSlot`. Choose the candidate whose cumulative half-open interval
-   contains the draw. Select their single reviewed profile, mark the person in
-   this venue's selected set, and increment their local scheduled count.
+4. At each slot/venue, remove anyone already selected at that venue from its
+   role's home and visitor pools. Reject an empty home pool. If visitors remain,
+   draw `Uniform(100)` under POOL_KIND with `entityId = venueId`,
+   `occurrenceId = editionId`, and `drawId = battleSlot`: 0–84 chooses home,
+   85–99 visitor. Otherwise choose home without a POOL_KIND draw.
+5. Enumerate the chosen pool in ascending stable `characterId` order and compute
+   each candidate's positive weight from their local scheduled count and this
+   venue's prior-edition history. Sum weights using checked arithmetic, draw
+   framework `Uniform(totalWeight)` under ROSTER with `entityId = venueId`,
+   `occurrenceId = editionId`, and `drawId = battleSlot`, and choose the candidate
+   whose cumulative half-open interval contains the draw. Select their reviewed
+   profile, mark the person in this venue's selected set, and increment their
+   local scheduled count. Other venues' assignments change weights, never home
+   classification or TR suitability.
 6. After allocation, sort the contender pair (slots 0–1) and elite pair
    (slots 2–3) by ascending snapshotted TR, breaking ties by ascending
    `characterId`. Keep the headliner in slot 4. The allocation draw IDs remain
    those used before this presentation sort; no extra draw or title-based reorder
    occurs.
-7. Return edition ID, ORDER/LORE_FILTER/ROSTER rules versions, catalog version,
+7. Return edition ID, ORDER/POOL_KIND/ROSTER rules versions, catalog version,
    shuffled venues, and each ordered battle's role, character/profile references,
    and snapshotted rating to the runtime owner. Persist the resolved whole schedule
    alongside a valid foundation root before a save or UI can consume it. Runtime
    atomically commits the new edition and its predecessor history; generation
    does not increment or consume an edition ID or mutate persistent history.
+
+POOL_KIND's 85/15 probability describes allocation slots before the pair sort,
+not each displayed room after it. Sorting may move a home entrant and visitor
+past one another. Validate a saved schedule by purely reproducing canonical
+allocation and sorting from its versioned inputs, then comparing the complete
+result; do not compare a displayed slot directly with that slot number's
+POOL_KIND draw. This verification cannot replace the saved schedule or repair
+a mismatch; the runtime's invalid-save handling owns failure.
 
 A different edition supplies different keys, not a guarantee of a different
 permutation or roster. Repeated orders/entrants are valid outcomes; never redraw
@@ -279,31 +303,33 @@ resolution, the saved schedule is authoritative; loading never redraws it.
 
 Catalog versions validate persisted references and reproduce generation inputs;
 do not put a global or catalog version into every random key. A changed roster's
-membership, eligibility, ratings, weights, or prior-edition history can legitimately
-change allocation outcomes. Because shared scheduled counts are updated in the
+membership, home assignments, eligibility, ratings, weights, or prior-edition
+history can legitimately change allocation outcomes. Because shared scheduled counts are updated in the
 canonical traversal, relevant changes at an earlier allocation can affect later
 venues, including venues whose own candidate lists are unchanged. There is no
 cross-venue roster independence guarantee and no freedom to reorder allocation.
 Unrelated features, source enumeration order, and content outside the circuit's
 semantic inputs cannot affect its outcome.
 
-ORDER and raw LORE_FILTER draws remain independent of roster catalog size and
-history. The same root, respective rule versions, and edition yield the same
-venue order and raw character/venue filter outcomes across added candidates.
-A changed affiliation changes whether a character needs the gate, not its raw key.
-Increment only the affected decision rules version when its protocol or selection
-rules change. Root derivation version remains foundation-owned; schedule schema,
-decision versions, and catalog version remain explicit. Follow prerelease save
-policy rather than rebuilding or reinterpreting registered schedules.
+Raw ORDER and POOL_KIND keyed results remain independent of catalog size,
+home assignments, and history. The same root, respective rule versions, and
+edition produce the same venue order and raw venue/slot category draws. Inputs
+can change whether the category draw is needed, the effective bucket, or the
+weighted roster outcome; raw-key independence does not guarantee identical
+fields. Increment only the affected decision rules version when its protocol or
+selection rules change. Root derivation version remains foundation-owned;
+schedule schema, active decision versions, and catalog version remain explicit.
+Follow prerelease save policy rather than rebuilding or reinterpreting registered
+schedules.
 
-A missing role candidate or invalid profile is a generation failure. Never allow
-within-venue duplicates, ignore rating limits, restore dropped outsiders, invent
-affiliations, substitute fixed lineups, or redraw ORDER/LORE_FILTER to repair
-content. Reject incomplete content in build validation. A runtime failure cannot
-commit a playable new save with a partial schedule; report initialization or
-registration failure while preserving existing committed state. Per-venue content
-validation must prove the affiliated-only role counts; seed sampling alone does
-not establish that property.
+A missing home role candidate or invalid profile is a generation failure. Never
+allow within-venue duplicates, ignore rating limits, invent home leagues,
+substitute fixed lineups, fall back to visitors for a missing home pool, or redraw
+ORDER/POOL_KIND to repair content. Reject incomplete content in build validation.
+A runtime failure cannot commit a playable new save with a partial schedule;
+report initialization or registration failure while preserving existing committed
+state. Per-venue validation must prove home-only role counts; seed sampling alone
+does not establish that property.
 
 ### NPC TR to battle strength
 
@@ -365,9 +391,10 @@ rewards belong to the runtime/progression owner.
 ### Authoring and validation
 
 The implementation deliverable includes a checked-in content inventory with
-canonical aliases, league affiliations and lore rationale, specialties, baseline TR, eligibility and
-exclusion reasons, exact profile content, graphics/text coverage, and provenance. It must also
-record the catalog and ORDER/LORE_FILTER/ROSTER rules versions. D3 approval covers
+canonical aliases, home leagues and authored rationale, specialties, baseline TR,
+eligibility and exclusion reasons, exact profile content, graphics/text coverage,
+and provenance. It must also
+record the catalog and ORDER/POOL_KIND/ROSTER rules versions. D3 approval covers
 concrete ratings and teams; titles or canonical reputation alone do not
 establish balanced values.
 
@@ -377,16 +404,28 @@ Required automated evidence:
   invalid ratings/offsets, incomplete six-member profiles, inconsistent team
   metadata, double-battle flags, overlapping/nonascending role bands, and
   out-of-band entries presented as eligible.
-- Prove affiliated-only feasibility of two contenders, two elites, and one
-  headliner per venue. Check TR-first exclusion, multiple valid affiliations,
-  exact gate outcomes 0/1, and no outsider quota. Every selected person must fit
-  the slot role; aliases cannot fill multiple slots in one venue. Insufficient
-  role catalogs must fail without partial persistence or draw retries.
+- Prove home-only feasibility of two contenders, two elites, and one headliner
+  per venue. Check TR-first exclusion, multiple valid homes, and within-venue
+  uniqueness. Insufficient home role catalogs must fail without partial
+  persistence, visitor substitution, or retries; visitors cannot hide missing
+  home coverage. Prove home candidates remain available after all valid earlier
+  same-venue selections.
+- Test POOL_KIND boundaries 0, 84, 85, and 99, plus unbiased rejection behavior.
+  With both pools present, category choice is independent of pool sizes and
+  repeat/history weights. Empty visitors select home without a category draw;
+  empty homes fail even when visitors exist. No visitor quota limits multiple
+  guest selections or a visitor headliner. Verify visitors keep their full rating
+  and strength, and home candidates still receive repeat/history penalties.
+- Cover a home/visitor pair whose TR sort reverses its allocation order. Load
+  verification must accept its saved sorted schedule while rejecting a changed
+  entrant; it must neither compare category keys to displayed slots nor replace
+  committed content.
 - Pin root vectors including all-zero (`lo = hi = 0`) and all-one
   (`lo = hi = 0xFFFFFFFF`) roots. Cover decision/entity/occurrence keys, versions,
   semantic draw IDs, rejection boundaries, weighted half-open intervals, checked
   weight sums, canonical traversal, within-pair presentation sorting, persisted
-  catalog/reference versions, and the framework golden vectors. Verify root initialization and circuit resolution do not mutate Pokémon RNG.
+  catalog/reference versions, and the framework golden vectors. Verify root
+  initialization and circuit resolution do not mutate Pokémon RNG.
 - Pin editions 1, 2, and boundary `u32` identities. Edition 1 has empty history;
   later editions require exactly the predecessor's completed venue lineups.
   Check same-venue history factor, scheduled-count factors 0/1/2, absence resetting
@@ -402,18 +441,20 @@ Required automated evidence:
   inputs and assert identical results. Verify lookups consume no semantic draws.
   Change an earlier allocation's relevant candidates/history in controlled
   fixtures and allow later rosters to change through scheduled counts. Assert
-  ORDER and existing raw LORE_FILTER keys remain identical. Do not assert that
+  ORDER and raw POOL_KIND keys remain identical. Do not assert that
   different allocation traversals or changes at another venue preserve rosters.
-- Add eligible outsiders without changing existing raw gate outcomes. Report final
-  guest share and regional composition without imposing a quota or home multiplier.
-  Use exact controlled fixtures to test flat base weights and the proposed
-  within-edition/history factors; frequency thresholds cannot substitute for those
-  deterministic tests.
+- Add eligible visitors or vary home assignments/history in controlled fixtures.
+  Assert raw category draws remain unchanged; effective category availability,
+  selected bucket, and roster may change with inputs. Do not confuse 85%/15%
+  category odds with per-person inclusion or exact field composition. Use exact
+  fixtures for flat base weights and positive within-edition/history factors,
+  applied only after selecting the bucket; frequency thresholds cannot replace
+  those deterministic tests.
 - Sweep at least 10,000 documented roots over at least ten consecutive editions
   using production content and valid predecessor history. Report order counts,
   per-venue returning/changed opponents, identical consecutive fields, shared
-  opponents within each circuit, affiliated/guest share, role/field strength,
-  per-character inclusion relative to eligible opportunities, and absence over
+  opponents within each circuit, home/visitor share, home-only fallbacks, category
+  outcomes when both pools exist, role/field strength, per-character inclusion relative to eligible opportunities, and absence over
   documented bounded edition windows. Assert deterministic replay and structural
   invariants. D5 sets quantitative acceptance after measuring these distributions;
   there is no all-current-elites or 80%-per-character attendance target within a

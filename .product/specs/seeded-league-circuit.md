@@ -19,7 +19,7 @@ This specification owns edition registration, schedule persistence, admission,
 active runs, edition-result and lifetime-clear transactions, retries and replays,
 recovery, player-facing information, regional
 integration, and journey acceptance. The sibling [trainer pool specification](circuit-trainer-pool.md)
-owns canonical trainer identity, eligible team profiles, league affiliations,
+owns canonical trainer identity, eligible team profiles, authored home leagues,
 keyed circuit order/allocation decisions, and the NPC TR-to-level calculation.
 The [shared playthrough seed framework](playthrough-seed-framework.md) owns
 the root seed, its initialization/persistence and version, pure keyed draws,
@@ -61,7 +61,7 @@ persistence. Circuit initialization must not consume or reseed Pokémon RNG.
 Save the resolved schedule alongside the valid root, with circuit metadata:
 
 - one-based `editionId` (`u32`, initialized to 1);
-- schedule schema version, separate ORDER/LORE_FILTER/ROSTER rules versions, and
+- schedule schema version, active ORDER/POOL_KIND/ROSTER rules versions, and
   trainer catalog/content version;
 - three ordered venue identities; and
 - five ordered slots per venue, each containing slot role, canonical character ID, stable
@@ -71,20 +71,35 @@ The root and derivation metadata have one shared owner; do not copy them into
 the circuit schedule or save an independent circuit seed or random cursor.
 The schedule has fifteen slots, with five distinct canonical character IDs
 within each venue. A character may recur across venues when independently
-TR-qualified and lore-admitted, using the same fixed profile/TR and therefore
+TR/content-qualified and selected from its eligible home or visitor bucket,
+using the same fixed profile/TR and therefore
 strength unless an explicit challenge override applies. Do not store full parties or
 derived levels. Stable profile references resolve into versioned authored
 content. Multiple runtime/source Trainer IDs for one person do not create
 additional characters within a lineup. Ordinary Gym, story, or Dojo appearances
 remain unaffected.
 
-The saved lineup is selected from TR-eligible candidates after the confirmed
-lore filter: affiliated characters pass, and each unaffiliated character is
-retained or dropped with exactly equal seeded probability per venue. Derive
-affiliation from the versioned `leagueAffiliations` and rationale, rather than
-map region. Multiple unaffiliated participants may be selected; there is no
-visitor quota or separately mutable visitor count. The pool specification owns
-filter keys, rotation weights, candidate constraints, and whole-circuit allocation.
+For each slot, first resolve role TR/content eligibility and remove characters
+already selected in that venue. Partition the remaining candidates by versioned
+`homeLeagues` and authored rationale: home when the set includes the venue,
+visitor otherwise. Multiple sensible home leagues are allowed; current map
+region does not establish membership. Home membership cannot override TR or
+content requirements, and visiting does not change NPC TR or strength.
+
+When both buckets are nonempty, resolve that slot's POOL_KIND `Uniform(100)`:
+0–84 selects home, 85–99 selects visitors. When no eligible visitor remains,
+use home without a POOL_KIND draw. An empty home bucket is invalid content,
+never a reason to substitute a visitor or widen eligibility. Select the trainer
+only inside the chosen bucket using strictly positive repeat/history weights.
+Home trainers receive those same penalties; category selection prevents a large
+global visitor pool from crowding out home entrants through raw pool size.
+
+The initial 85/15 tuning is a conditional category chance when both buckets
+exist, not an individual trainer probability or a guaranteed lineup composition.
+Multiple visitors may occupy a field; there is no quota, cap, separately mutable
+visitor count, or retry/redraw rule. The pool specification owns category keys,
+rotation weights, candidate
+constraints, and whole-circuit allocation.
 
 Save a bounded history record alongside the current schedule: history schema,
 the immediately previous completed edition ID, and its five canonical character
@@ -104,8 +119,10 @@ edition 1 applies no returning penalty. Cross-venue repeats remain permitted;
 the weights softly discourage repeated appointments. D5 owns numerical tuning.
 
 Generate edition 1 at new game and later schedules only through registration.
-The sibling's semantic keys use `occurrenceId = editionId` for ORDER, ROSTER,
-and LORE_FILTER; all draft rules versions remain 1. They determine the
+The sibling's semantic keys use `occurrenceId = editionId` for ORDER (ID 1),
+POOL_KIND (ID 5), and ROSTER (ID 2); all active draft rules versions remain 1.
+IDs 3 (VISITOR_POLICY) and 4 (LORE_FILTER) are retired and cannot be reused.
+The active keys determine the
 same unresolved outcome for the same root, edition, decision versions, and inputs, even
 before first resolution. Once resolved, the saved schedule is authoritative.
 Saving, loading, ordinary gameplay RNG, admission, losing, leaving, completion,
@@ -114,8 +131,10 @@ A content update cannot silently
 reinterpret an existing schedule through a different trainer-content version.
 Unrelated opted-in seeded features, their calls/content, menu opens, fights,
 and queries cannot perturb circuit outcomes. Roster catalog changes may alter
-new-edition roster draws but cannot change ORDER or existing character/venue
-LORE_FILTER draws for the same root, edition, and respective rules versions.
+new-edition roster draws but cannot change raw ORDER or POOL_KIND keys for the
+same root, edition, and respective rules versions. Effective bucket fallback
+and jointly weighted roster outcomes depend on their actual inputs; changing
+eligibility, history, or earlier allocations may change them.
 Global/catalog versions must not be added
 to every random key.
 
@@ -250,7 +269,8 @@ venue/edition. Sort only within the contender and elite pairs by TR then
 canonical character ID. The headliner is title-agnostic under resolved D2;
 there is no reserved Champion appointment. The pool spec generates in battle-slot
 priority `[4,2,3,0,1]`, visiting each venue in saved travel order for each slot.
-ROSTER keys use stable venue entities and slot draw IDs. Joint scheduled counts
+POOL_KIND and ROSTER keys use stable venue entities (Indigo 1, Masters 2, Hoenn 3)
+and battle-slot draw IDs 0–4. Joint scheduled counts
 and prior-venue history couple roster selection across the edition, even though
 keyed draws remain pure and unrelated-feature isolation still holds. Room entry
 cannot reorder or reroll slots.
@@ -334,13 +354,23 @@ Proposed stronger postgame rematches are outside scope.
 ### Load validation and damaged state
 
 Validate the shared root and its format/derivation version before circuit
-dispatch. Validate edition ID, schedule schema, ORDER/LORE_FILTER/ROSTER rules and catalog
+dispatch. Validate edition ID, schedule schema, active ORDER/POOL_KIND/ROSTER rules and catalog
 versions, venue permutation, role layout, slot/profile eligibility, five-character
-uniqueness within each venue, rating ranges, TR-first lore-filter admission,
+uniqueness within each venue, rating ranges, valid home/visitor category resolution,
 and resolvable content references. Validate
 current-clear-prefix consistency, lifetime facts, completed count, and any pending
 completion. Validate an active run against the saved edition, position, venue, mode,
 current room, actual opponent slot, and contiguous defeat progress.
+
+Verify category resolution by purely reproducing the canonical allocation and
+pair sorting from the saved root, edition, active rules/catalog versions, catalog
+baseline ratings, and validated prior-venue history. Compare the complete result
+with the saved schedule without modifying either saved inputs or outputs.
+POOL_KIND and ROSTER draw IDs identify pre-sort allocation slots; a displayed
+room can contain the other slot's selection after sorting. Never validate its
+category by comparing the room index directly with a POOL_KIND draw. Missing
+inputs or a mismatch follow invalid-save handling, never roster replacement.
+
 Every current venue result requires that venue's lifetime fact. In committed
 edition-1 state, the current and lifetime masks must match; editions after 1
 require all three lifetime facts already true. Invalid aggregate or edition
@@ -353,7 +383,8 @@ lists and `history.editionId = editionId - 1`. A character may recur across
 history's different venues. Do not demand current-role eligibility from a past
 identity or interpret IDs as battle-defeat flags. The saved versioned current
 schedule and assigned baseline TR remain authoritative; history preserves its
-generation inputs and never authorizes regenerating the current roster on load.
+generation inputs for read-only verification and never authorizes replacing the
+current roster on load.
 
 With a valid schedule and clear state, missing or invalid active-run state
 inside a challenge resets that attempt and returns to its own lobby without
@@ -464,7 +495,8 @@ that these checks have run:
    feature calls/content, menu opens, fights, and queries; assert identical
    unresolved outcomes as well as committed schedules. Change roster content
    and prove the same root, edition, and respective rules versions retain venue order
-   and existing character/venue lore-filter outcomes. Cover all-zero
+   and raw venue/slot POOL_KIND values, while allowing input-dependent fallback
+   and jointly weighted roster changes. Cover all-zero
    and all-one 64-bit roots (`lo = hi = 0` and `lo = hi = 0xFFFFFFFF`) and
    verify ordinary Pokémon RNG is untouched by root/schedule initialization.
 4. Inject wrong edition/venue/position/mode, missing records, noncontiguous defeat flags,
@@ -496,11 +528,17 @@ that these checks have run:
    qualification, during progression, and after completion.
    Validate each venue's two contenders, two elite trainers, and headliner
    against the same ordered disjoint role bands, independent of travel position.
-   Prove enough distinct affiliated candidates for every role at every venue
-   with all unaffiliated candidates dropping. Cover multi-league
-   affiliations, unsuitable affiliated TR exclusion, gate outcomes 0/1, and
-   several unaffiliated participants surviving and being selected without a
-   quota. A retry cannot introduce or remove a participant or rerun the gate.
+   Prove home-only feasibility: at least two distinct home contenders, two
+   home elites, and one home headliner per venue. Cover authored multi-home
+   membership, unsuitable home TR exclusion, no eligible visitors (home with
+   no category draw), missing home (invalid catalog), category boundaries 84/85,
+   and multiple visitors selected without a quota or cap. Apply eligibility and
+   within-venue alias deduplication before partitioning. Trainer weights may
+   select only from the chosen bucket and remain positive for home and visitors.
+   A retry cannot introduce or remove a participant or rerun category selection.
+   Cover a home/visitor pair swapping positions under TR sorting: read-only
+   canonical allocation verification accepts it and rejects tampering without
+   replacing the saved lineup.
 9. Audit deferred badge rewards, regional story branches, Hoenn cleanup,
    S.S. Aqua/ferry state, optional Sevii content, and ordinary battles for
    regressions caused by venue reordering. Shared-engine changes must preserve
@@ -538,7 +576,7 @@ that these checks have run:
     saved travel order, using ROSTER venue entities and battle-slot draw IDs.
     Verify within-edition occurrence counts and prior-same-venue history affect
     proposed weights, never battle results. A relevant roster change can affect
-    other venue selections through those counts; ORDER and each raw lore key
+    other venue selections through those counts; raw ORDER and POOL_KIND keys
     remain isolated. Soft repeated appointments and arbitrary returner counts
     are valid; never impose a two-returner/three-new quota or novelty reroll.
 

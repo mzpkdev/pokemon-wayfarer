@@ -32,10 +32,12 @@ to include every established Elite Four member and Champion.
   separate design; variety must work without it. Editions and player progress
   never automatically inflate opponents.
 - Apply TR eligibility first. An unsuitable trainer cannot qualify through
-  local affiliation, lack of alternatives, or a desire for roster turnover.
-- Then apply the existing lore filter: an affiliated trainer passes; each
-  unaffiliated trainer has exactly a 50% seeded chance of being dropped for that
-  venue and edition. Explicit, justified affiliations may include several venues.
+  home membership, lack of alternatives, or a desire for roster turnover.
+- Give each trainer an authored `homeLeagues` set with lore rationale; several
+  home leagues are allowed. After eligibility, choose a home candidate pool with
+  85% probability or a visitor pool with 15% probability for each slot, then
+  select a trainer within that pool using participation weights. If no eligible
+  visitors remain, choose home. This replaces the former outsider drop filter.
 - Five distinct canonical people appear within a league. Cross-venue appearances
   within an edition remain possible but receive a soft selection penalty.
   Alternate teams, Trainer IDs, costumes, and titles do not bypass identity.
@@ -72,9 +74,31 @@ saved TR give the same strength across eligible appearances. Initial Gym,
 story, rival, and personal rematch encounters remain separate.
 
 Initial membership is supported Kanto, Johto, and Hoenn characters under D3.
-Red remains a separate mastery encounter. Paired/double-battle characters such
-as Tate and Liza require another format decision and are excluded initially.
+Red remains a separate mastery encounter. The circuit uses single battles;
+Tate and Liza are explicitly excluded from the initial pool.
 Story availability does not remove a trainer from sanctioned competition.
+
+### Home leagues and visitors
+
+Home membership describes where a trainer is a regular competitor, rather than
+their current map location. A trainer can have several home leagues when each
+membership has a lore rationale. Other venues treat that trainer as a visitor.
+For example, a Brock entry with only Indigo in `homeLeagues` joins Hoenn's visitor
+pool only when his TR qualifies for the slot. D3 reviews the actual memberships.
+
+The initial 85% home / 15% visitor split applies when both eligible pools contain
+candidates. Pool sizes and participation weights do not change that category
+chance, so adding more distant trainers cannot overwhelm the home field. This
+is neither an individual trainer's appearance chance nor a guaranteed lineup
+ratio: a venue may draw zero, one, or several visitors. There is no visitor quota,
+reserved guest slot, or maximum guest count.
+The draw applies while allocating entrants; sorting each role pair by TR can
+then change which room a home trainer or visitor occupies.
+
+Home status removes the regional disadvantage; it does not remove penalties for
+recent participation. Visiting never reduces a trainer's TR or battle strength.
+Every venue must remain fillable from home candidates alone. Missing home
+candidates is a content error, not permission to relax TR or force a visitor.
 
 ### Rotation between and within editions
 
@@ -93,8 +117,9 @@ sharp target-proximity weighting. Under D5, initially test these integer factors
 | Appeared at this venue in the immediately previous edition | 1 |
 | Did not appear there, or this is edition 1 | 2 |
 
-Multiply the applicable factors. All retained candidates have positive weight;
-no soft preference can restore a lore-filtered trainer or override a TR band.
+Multiply the applicable factors within the selected home or visitor pool. Every
+eligible candidate there has positive weight; no preference overrides a TR band
+or changes the 85/15 pool choice.
 The pool spec pins the allocation traversal and keys. Earlier allocations can
 affect later roster weights, so individual venue rosters are intentionally coupled.
 
@@ -104,11 +129,9 @@ An identical consecutive field is still legal: never redraw or consume a new
 edition ID to force the turnover target. These weights are proposed tuning
 values, not evidence that the target has been achieved.
 
-The 50% lore rule is candidate retention, not appearance probability. There is
-no extra home multiplier, visitor quota, or forced local count. Review actual
-regional composition: a large outsider pool can overwhelm the intended local
-character even after the filter. Authored affiliations need lore rationale;
-current map location and a need to fill slots are insufficient.
+Review regional composition and turnover together. Strong home preference can
+make a small local pool repetitive even with rotation weights; catalog depth
+must support both goals. Do not invent home memberships to meet a turnover target.
 
 ### Qualification and progression
 
@@ -183,19 +206,19 @@ stay fixed until that separate design is adopted.
 
 ## Content and balance
 
-Review canonical identities/aliases, affiliations and lore rationale, ratings,
+Review canonical identities/aliases, home leagues and lore rationale, ratings,
 role bands, exact six-member profiles, presentation, and source provenance together.
 At equal preparation a higher-rated trainer should usually be harder, while
 matchups can still produce upsets. Titles alone do not establish balanced ratings.
 
 Prove every venue can fill its two contender, two elite, and one headliner slots
-with distinct TR-qualified affiliated characters even if every outsider drops.
-With the proposed disjoint bands this requires at least 2/2/1 affiliated people
+with distinct TR-qualified home characters even if no visitors are selected.
+With the proposed disjoint bands this requires at least 2/2/1 home trainers
 in the respective roles per venue. Minimum feasibility is not enough for variety:
-a lone eligible affiliated headliner will recur whenever visitors cannot fill
+a lone eligible home headliner will recur whenever the home pool is chosen for
 that role. D3 must author enough credible alternatives and measure the result.
-Never repair a shortfall by weakening TR limits, inventing affiliations,
-restoring dropped candidates, or substituting a fixed lineup.
+Never repair a shortfall by weakening TR limits, inventing home memberships,
+forcing visitors, or substituting a fixed lineup.
 
 Evaluate at least 10,000 documented roots over ten consecutive editions, including:
 
@@ -204,7 +227,8 @@ Evaluate at least 10,000 documented roots over ten consecutive editions, includi
 - same-edition cross-venue repeats and role-level variety;
 - per-character selection and eligible opportunities, plus absence runs across
   multiple editions so repeatedly overlooked characters are visible;
-- regional composition and strength distribution by venue and role;
+- regional composition and strength distribution by venue and role, separating
+  the 85/15 draws where both pools are available from home-only fallbacks;
 - each venue as the first championship at the proposed qualification point,
   and later editions after full player progression.
 
@@ -243,7 +267,7 @@ Persist a valid shared root and complete schedule before gameplay can consume
 them. The foundation proposes a 64-bit root in two u32 words plus format and
 derivation metadata. Do not copy it into circuit state or store a random cursor.
 
-Edition IDs are u32 starting at 1. ORDER, LORE_FILTER, and ROSTER use that edition
+Edition IDs are u32 starting at 1. ORDER, POOL_KIND, and ROSTER use that edition
 as occurrence identity, with distinct keys and draft rules versions 1. The
 runtime owns schedule schema, versioned profile/TR references, prior-edition
 history, and catalog metadata. The pool spec owns stable venue/slot roster keys
@@ -251,8 +275,9 @@ and canonical joint allocation. Same root, edition, decision versions, and
 content/history inputs reproduce the same unresolved schedule.
 
 Roster changes can propagate through the joint allocation, but cannot change
-ORDER or an existing character/venue's raw LORE_FILTER result. Unrelated seeded
-features, source enumeration order, queries, elapsed time, gameplay RNG, and
+ORDER or an existing venue/slot's raw POOL_KIND result. Candidate availability
+still determines whether a slot needs that draw or falls back to home. Unrelated
+seeded features, source enumeration order, queries, elapsed time, gameplay RNG, and
 save/load cannot perturb the outcome. Saved schedules remain authoritative.
 Missing, corrupt, or incompatible roots, schedules, and required history use
 invalid-save handling; loading must not erase history or generate replacements.
@@ -285,16 +310,18 @@ this proposed successor is implemented.
 D1 is resolved for the initial version: stable baseline NPC TR and no player or
 edition inflation. Future modest rating dynamics are a separate feature.
 D2 is resolved: role-qualified headliners do not require a Champion title.
-The recurring regional-championship structure and soft rotation are approved.
+The recurring regional-championship structure, soft rotation, `homeLeagues`,
+and initial 85% home / 15% visitor selection are approved. The former 50% outsider
+drop gate is removed. Regional frequency and rotation still need balance validation.
 
 | ID | Remaining decision | Proposed default |
 | --- | --- | --- |
-| D3 | Concrete catalog, affiliations, role ranges, profiles, strength balance, and sufficient alternatives? | Supported Kanto/Johto/Hoenn singles characters; three ordered disjoint TR bands shared by all venues; prove affiliated-only 2/2/1 feasibility and separately validate variety. |
+| D3 | Concrete catalog, home leagues, role ranges, profiles, strength balance, and sufficient alternatives? | Supported Kanto/Johto/Hoenn singles characters, excluding Tate and Liza; three ordered disjoint TR bands shared by all venues; prove home-only 2/2/1 feasibility and separately validate variety. |
 | D4 | Common qualification and first-entry/later-edition balance? | All 24 badges before the first championship; seeded predecessor clears thereafter; retain lifetime +8 per venue and existing player cap formula. |
 | D5 | Rotation factors and quantitative acceptance across editions? | Flat in-role weights; factors 16/4/1 for current-edition appearances and 1/2 for previous-venue participation; target roughly 2 returning/3 changed without quotas or rerolls. |
 
-Supporting defaults remain reviewable: six-member singles teams, unchanged-strength
-replays, reception registration, bounded history and aggregate records, per-edition
+Single battles are confirmed. Supporting defaults remain reviewable: six-member
+teams, unchanged-strength replays, reception registration, bounded history and aggregate records, per-edition
 Indigo/Hoenn winning-team records and Ribbons, brief later completion presentation,
 first-clear Blue Dojo access, separate Red, and advance roster disclosure.
 D3–D5 and supporting defaults must be settled before implementation.
