@@ -1,10 +1,16 @@
 # Ordinary Trainer and Gym-member scaling
 
 PRD: [Ordinary Trainer and Gym-member scaling](../prds/trainer-party-scaling.md)
-Implemented: Outdated
+Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
 
-The shared policy contract now includes separate League routing. League level
-scaling is pending implementation; ordinary transformation rules are unchanged.
+Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
+League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
+and [the circuit producer](../../game/src/league_circuit.c). The proposed
+[trainer world progression](trainer-world-progression.md) changes enrolled initial singles Gym and
+circuit opponents to personal NPC TR and authored stages. Ordinary Trainers and
+Gym members retain this document's player-TR snapshot and transformation rules;
+they never read a trainer's personal rating. Story, rival, Dojo, and rematch
+variants are not enrolled by canonical identity.
 
 ## Scope and authority
 
@@ -25,8 +31,13 @@ Use five policies: `ORDINARY`, `GYM_MEMBER`, `GYM_LEADER`, `LEAGUE`, and
 Every populated Trainer ID must have exactly one policy. `GYM_LEADER` routes
 only enrolled initial badge battles to the separate [Gym Leader scaling
 specification](gym-leader-scaling.md); it never receives this specification's
-ordinary transformation. Until that feature is enabled, its records use the
-existing `EXCLUDED` fallback. `LEAGUE` routes the fifteen enrolled circuit
+ordinary transformation. The dedicated six-slot Gym feature is disabled by
+`B_GYM_LEADER_SCALING` in the default configuration; its compiled plans would
+use player TR when enabled. Disabled paths retain existing authored behavior.
+Giovanni's initial Viridian battle separately uses a bespoke five-slot player-TR
+projection in [party construction](../../game/src/battle_main.c). Proposed
+personal NPC TR and explicit party stages belong to the world-progression and
+Gym specifications. `LEAGUE` currently routes the fifteen enrolled circuit
 runtime IDs to the separate [League scaling specification](league-scaling.md),
 including its run-context validation and authored fallback when scaling is
 disabled. Those fifteen positions cover seventeen possible source parties:

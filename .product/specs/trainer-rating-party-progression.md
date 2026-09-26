@@ -15,9 +15,13 @@ second, and third lifetime venue clears rather than a fixed Indigo/Masters/Hoenn
 order. Its proposed common 24-badge entry gate gives TR 56/64/72/80 and soft
 caps 62/78/89/100 across zero through three lifetime clears. Sub-24-badge clear
 examples below describe the current implementation only. Recurring editions
-never reset those facts or add more +8 contributions. NPC baseline TR remains
-a separate strength input, stable initially; future modest changes are outside
-this player progression contract.
+never reset those facts or add more +8 contributions. Proposed
+[trainer world progression](trainer-world-progression.md) gives each enrolled
+NPC a separate start-TR baseline, badge checkpoints at 0/8/16/24, and per-trainer
+growth for first lifetime venue clears, clamped to 80. These values select NPC
+strength and authored party stages only. The player's saved high-water TR,
+soft cap, XP reduction, obedience, wild encounters, marts, ordinary Trainers,
+and Gym members retain their existing player inputs and never read NPC TR.
 
 ## Scope
 

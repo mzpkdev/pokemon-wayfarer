@@ -161,9 +161,14 @@ must obey the final reward rules.
 ### Rival continuity
 
 Keep FRLG's rival scenes at their existing locations except for Blue's
-one-time Cinnabar introduction. The delivered coastal port currently moves it
-to the Viridian Gym entrance; the [future Viridian finale](../specs/frlg-kanto-viridian-finale.md)
-removes that introduction and Blue's Gym role. Preserve genuinely necessary
+one-time Cinnabar introduction. The historical coastal port moved it to the
+Viridian Gym entrance; the implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md)
+now removes that introduction and Blue's Gym role. Proposed
+[trainer world progression](trainer-world-progression.md) can author an
+experimental Blue Gym profile without assigning him that badge or enrolling
+rival, Dojo, or rematch variants. Giovanni's initial singles Gym may use personal
+NPC TR and distinct authored stages; his Hideout/Silph boss encounters retain
+their separately owned policies. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors
 are complete. Do not relocate chapters or select a different chapter dynamically
 based on where the player arrives.

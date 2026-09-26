@@ -71,8 +71,10 @@ prototypes: species do not automatically evolve. Several later rosters still
 contain lower evolutions or five-member Elite Four teams, making those gaps
 visible for content authoring. Stage thresholds, growth rates and checkpoint
 ratings are provisional, not approved ROM behavior. The current ROM scaler is
-unchanged. The [circuit PRD](../../.product/prds/seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
-records the new direction and the strength/snapshot decisions still to resolve.
+unchanged. The [world progression contract](../../.product/specs/trainer-world-progression.md)
+defines personal growth and the confirmed battle/edition snapshot boundaries;
+numeric production balance remains provisional. The explorer does not implement
+circuit registration, projected eligibility, or saved league schedules.
 
 Default NPC levels start at 12 at TR 0, allowing Brock's TR 2 team to match
 Geodude 12 / Onix 14. Gym leaders start with two-member prototypes and develop

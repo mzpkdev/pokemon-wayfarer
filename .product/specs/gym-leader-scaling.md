@@ -1,265 +1,170 @@
 # Gym Leader scaling
 
 PRD: [Gym Leader scaling](../prds/gym-leader-scaling.md)
-Implemented: Core implementation merged; structural acceptance and Wayfarer ROM playtesting pending.
+Implemented: No for trainer-owned world progression. The earlier player-TR
+scaler is present in code but `B_GYM_LEADER_SCALING` defaults to `FALSE`.
+Giovanni's Wayfarer finale uses a separate implemented projection.
 
-Proposed successor: [trainer world progression](../prds/seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
-would use the trainer's own baseline and personal growth for Gym battles.
-The [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer) tests
-provisional curves and party stages without changing the ROM. The player-TR
-contract below remains the implemented policy until the successor is adopted.
+## Scope and authority
 
-## Scope
+This is the target contract for initial singles badge encounters in Wayfarer.
+Use [trainer world progression](trainer-world-progression.md) for personal
+rating, milestones, stages, level calculation, and battle snapshot lifetime.
+Replace the old player-TR input and prefix-size selection only for enrolled
+encounters when the new policy is adopted. Current code remains unchanged by
+this specification update.
 
-Implement the parent PRD for `IS_WAYFARER`: explicit initial-badge coverage,
-six-slot authored rosters, deterministic selection, leader levels, and battle
-construction. Ordinary Trainer scaling, TR advancement, player caps, and
-rematch availability remain owned by their existing systems.
+Ordinary trainers, Gym members, wild encounters, player caps, TR rewards,
+rematch availability, and circuit registration retain their owning contracts.
+The shared personal rating evaluator does not authorize changes to those systems.
 
-## Behavior
+## Coverage and identity
 
-### Coverage and source authority
+Maintain a versioned inventory of actual Wayfarer initial-badge encounter IDs,
+selectable difficulty variants, roster owners, canonical character IDs, and
+stage/profile references. Exactly one battle policy may own an encounter.
+Resolve the ID, context, and selected variant before consulting trainer data;
+never infer enrollment from display name, class, region, or a party pointer.
 
-Add a distinct `GYM_LEADER` scaling policy alongside the ordinary, Gym-member,
-and excluded policies. An opposing Trainer ID must receive exactly one policy.
-Resolve the existing Trainer ID, roster owner, and difficulty variant before
-looking up leader metadata. Do not infer enrollment from trainer class, name,
-map, regional badge flags, or a party pointer alone.
+The target contains 23 singles badge identities listed in the PRD. Giovanni's
+Viridian finale is included through its actual Wayfarer trainer ID; his villain
+encounters remain excluded. The current generated six-slot inventory contains
+23 identities including Tate/Liza, with Giovanni handled separately. It is not
+the new coverage manifest and must not be copied without an explicit mapping.
 
-Maintain a versioned, machine-readable coverage inventory for the 24 initial
-badge encounters named in the PRD. Each entry records the encounter identity,
-symbolic Trainer IDs, selectable difficulty variants, resolved roster owner,
-badge-battle script references, and distinct excluded rematch or story IDs.
-Enumerate aliases and runtime roster overrides. If an ID/owner is shared with
-an excluded encounter, split or explicitly disambiguate that source before
-enrollment; do not turn the excluded encounter into a scaled fight.
+The twenty-fourth badge remains Tate/Liza's existing double battle, outside
+this singles policy. Keep its current flag-dependent construction and reward
+behavior; test both current enabled/disabled scaling paths where applicable.
+Do not convert the fight to singles or apply two-opponent party-size limits to
+its single trainer party.
 
-Every selectable initial-battle variant must resolve to exactly six authored
-members and matching metadata. Shared source rosters may share metadata only
-when all six slots and their policies match. Do not fill missing variants by
-silently substituting another difficulty's team. Author in the existing party
-source/generation pipeline; generated C output is not the editing authority.
+Blue's experimental `gymEligible` classification is content metadata, not proof
+of a current Wayfarer badge encounter. His HNS Gym ID is excluded in Wayfarer;
+opening, rival, and Dojo contexts retain their separate policies. Leader
+rematches, facilities, partners, player parties, link/recorded/external battles,
+tutorials, and other special contexts remain explicitly excluded. Raw party
+entry points cannot bypass that check.
 
-The inventory and roster content must be reviewed before enabling the feature.
-Report the exact six species/forms, move tuples or level-up policy, items,
-aces, retention order, battle order, and level offsets per resolved variant.
-Missing, duplicate, stale, or unknown IDs and unresolved script references
-fail generation. All 24 encounter identities must be covered, with Tate/Liza
-counted once. Existing rematch variants remain explicitly excluded.
+Shared source aliases must not enroll an excluded battle. Split or disambiguate
+sources when necessary, and reject missing, duplicated, stale, or unresolved
+coverage at generation time. Author in the source/generator pipeline rather
+than editing generated C output. Report the source and canonical mapping for
+every covered variant.
 
-### Per-roster data
+## Rating and stage selection
 
-Use source-array position 0 through 5 as retention order. Attach these fields
-to each source slot without conflating them with its final party index:
+After eligibility and variant resolution, capture global badge count and the
+three-venue lifetime-clear mask from the shared runtime. Evaluate the canonical
+trainer's personal curve; do not read player `GetTrainerRating()` as the NPC
+rating input. Snapshot effective TR, selected stage/profile, content versions,
+and resulting member plan before constructing the opponent.
 
-| Field | Contract |
-| --- | --- |
-| `battleOrder` | Unique integer 0 through 5; ascending construction order. |
-| `isAce` | Explicit boolean; all aces lie within the first two source slots. |
-| `levelOffset` | Zero for an ace; minus one or minus two for every other member. |
-| `movePolicy` | `AUTHORED` or `LEVEL_UP`; never inferred from scaled level. |
+Select the highest stage threshold not exceeding effective TR. Stage count,
+species, and order come from the authored profile; they do not come from the
+old 8/22/34/40 player-TR thresholds. Each supported stage and variant is a
+complete reviewed team with 2–6 members and at least one explicit ace.
+Do not fill missing variants with another difficulty's party or randomly
+sample a pool. The shared specification owns curve rounding, saturation,
+level anchors, offset validation, and monotonic transition requirements.
 
-Slot 0 must be an ace. Normally a roster has one ace; two are allowed when
-explicitly authored, with both in slots 0 and 1. Tate/Liza require Lunatone and
-Solrock in those slots, both aces, and a double-battle marker. Species/forms
-must match the reviewed roster exactly. Require a full permutation for
-`battleOrder`; require ace entries after all non-aces in that ordering. With
-two aces, their relative order is authored. Early retained prefixes inherit
-the ordering by filtering; they do not get separate randomized orders.
+All reconstruction in that battle uses the same plan. Clear transient state at
+teardown; a new attempt resolves current milestones again. At an unchanged world
+point, no new membership, level jitter, or profile choice occurs. Ordinary
+Pokémon battle RNG continues as before. Badge/first-clear rewards are committed
+after battle and affect only later world encounters.
 
-`AUTHORED` preserves the original four move positions, including empty
-positions, and requires at least one nonempty valid move. Existing custom
-tuples must be copied unchanged, without a learnset or minimum-level gate.
-`LEVEL_UP` applies to members without custom moves and generates their normal
-four-move set at the effective level using the current learnset. Require at
-least one usable move at every supported TR; report an
-invalid low-level learnset as an authoring error, not a reason to drop a slot.
+## Stage member metadata
 
-Retain the source slot identity for move tuples, abilities, items, gimmick
-metadata, and other per-member fields during reordering. Where existing code
-uses an index as a stable member input (including personality generation),
-use the original source index rather than the new output position. In
-particular, pass the source index to `GeneratePartyHash` and any retained
-per-member seeded/randomizer inputs. Audit `CustomTrainerPartyAssignMoves`
-and gimmick masks explicitly: member-data lookup uses the source index while
-party writes and active-slot references use the output index. The same
-retained member must not change authored traits when another member joins.
-Test a non-identity battle order under fixed random inputs, including
-personality-derived ability, gender, and shiny/OT behavior.
+Keep a stable source-member identity within each stage and variant, separate
+from output position. A profile supplies a complete battle-order permutation,
+ace flags, signed level offsets, exact species/forms, and `AUTHORED` or
+`LEVEL_UP` move policy. Normally place the ace after support members. Stages
+may deliberately replace species or moves; these are reviewed source changes,
+not automatic runtime evolution or move repair.
 
-### Rating and party size
+`AUTHORED` preserves the reviewed four positions, including empty positions,
+and requires at least one usable move. Do not add learnset-level filtering to
+that policy. `LEVEL_UP` uses the selected species' normal learnset at effective
+level and must yield a usable move throughout its supported range. Validate
+content rather than silently dropping an invalid member.
 
-Reuse the existing battle-wide Trainer scaling snapshot. Read
-`GetTrainerRating()` once per eligible battle setup, clamped to 0 through 80.
-Reconstruction shares the snapshot; battle teardown clears it. A retry takes
-a fresh snapshot. No scaled roster, historical rating, or level is saved.
+Copy stage-authored items, abilities, IVs, EVs, natures, gender/shiny settings,
+balls, trainer inventory, and AI through the existing constructor. TR selects
+a stage and level; it does not synthesize those fields. Move randomizers and
+other existing challenge overrides retain their explicit precedence.
 
-For snapshot `r`, select the count:
+Use source identity for member-data lookups, `GeneratePartyHash`, and retained
+randomizer/personality inputs; use output positions for party writes and active
+slots. Remap gimmick masks explicitly. Reordering must not swap moves, items,
+abilities, or traits between members. The same member in the same stage and
+variant remains stable under reconstruction. Cross-stage changes use explicitly
+authored identity, not an accidental output index.
 
-```text
-r < 8:   2
-r < 22:  3
-r < 34:  4
-r < 40:  5
-otherwise: 6
-```
+## Construction and rewards
 
-Keep source indices `[0, count)` and sort only those indices by `battleOrder`.
-Do not use Trainer party pools to sample, replace, or reorder a covered roster.
-There is no random jitter, player-party matching, regional adjustment, or
-additional badge condition.
+Build and validate the full plan before allocating opponent members. Use its
+actual count everywhere: construction, returned party size, opening slots,
+switch candidates, send-out order, and gimmick reconstruction. Clear unused
+slots; reject references to absent members. Do not return a historical six-slot
+count when a stage contains fewer members.
 
-### Level calculation
+An authored battle order does not force voluntary switches or replacement AI.
+Reject incompatible ace-lock flags during content validation rather than silently
+stripping them or promising a scripted final Pokémon. Early support dependencies
+must fit the complete opening stage.
 
-Store an independent leader baseline table:
+Preserve the existing encounter's prize-money basis, including Giovanni's
+special path, independently of newly authored stage sizes and source levels.
+Battle experience follows actual opponents normally. Badge awards, defeat flags,
+TR rewards, scripts, and access rules remain owned by their current systems.
 
-| Rating | Baseline |
-| ---: | ---: |
-| 0 | 15 |
-| 4 | 16 |
-| 8 | 18 |
-| 16 | 23 |
-| 30 | 30 |
-| 40 | 42 |
-| 55 | 60 |
-| 65 | 80 |
-| 80 | 100 |
+## Overrides and enablement
 
-For adjacent anchors `(r0, l0)` and `(r1, l1)`, let `d = r1 - r0` and
-`n = (r - r0) * (l1 - l0)`. Use integer arithmetic with enough width:
+Species randomization bypasses the complete new stage plan and retains the
+existing legacy-source inputs and constructor behavior. Preserve source species,
+indices, count, and authored levels supplied to that path. A disabled feature
+switch must also restore the existing encounter behavior, not expose a new
+competitive stage unscaled. Do not overwrite standalone or rematch authorities.
 
-```text
-baseline = l0 + floor((2 * n + d) / (2 * d))
-level = clamp(baseline + signed(levelOffset), 1, 100)
-```
-
-Exact halves round upward. Exact anchors produce their listed value. Do not
-call the player soft-cap or ordinary Trainer level resolver to obtain this
-baseline. Do not use original authored levels as an adjustment. A retained
-member's level must never decrease as TR rises. At TR 0 the allowed levels
-are 13, 14, 15; at TR 40 they are 40, 41, 42; at TR 80 they are 98, 99, 100.
-
-### Species and other battle fields
-
-Create the exact authored species/form at its effective level. Bypass numeric
-predecessor resolution, wild species floors, and automatic forward evolution.
-Run the leader move policy instead of ordinary scaling's custom-move fallback.
-Later explicit move-randomizer options keep their existing behavior; the
-unchanged-custom-move guarantee applies with move randomization off.
-
-Copy authored held items, abilities, IVs, EVs, natures, balls, gender/shiny
-settings, and other applicable member metadata through the existing constructor.
-Keep trainer AI flags and trainer-use items. TR does not alter those fields;
-existing explicit challenge options still apply in their normal order.
-
-Expanding a source roster must preserve the pre-feature prize-money basis.
-Capture each covered variant's current money inputs before editing its party,
-and retain that basis explicitly if the existing formula derives it from
-party size or authored levels. Constructed battle levels must not become
-money inputs. Calculate battle experience normally from actual opponents.
-Badge rewards, defeat flags, and reward scripts retain their current behavior.
-
-### Battle construction and exclusions
-
-Build a leader plan containing the selected source indices, effective levels,
-and actual count after roster/variant resolution and before allocating or
-constructing opponent members. Consume that plan in the existing opponent
-constructor. Use the actual count for construction, returned party size, and
-all downstream battle setup consumers; returning the original six is wrong
-for a reduced team. Clear unused party slots using the existing setup path.
-
-Audit all call sites that obtain opponent party size, initial active slots,
-switch candidates, send-out order, and gimmick-slot reconstruction. Remap
-source-indexed gimmicks to selected output positions and suppress metadata
-for omitted members. Do not leave a six-member count or an omitted-slot
-reference in a second setup path. Validate a plan fully before mutating the
-opponent party. Invalid runtime metadata falls back to the complete existing
-unscaled path using the legacy initial-party record defined below; malformed
-shipped metadata is a build failure, so fallback is
-not an acceptable production content fix.
-
-Tate/Liza use one trainer in a double battle and may bring all six members.
-The first two constructed entries are their opening pair; at count two these
-must be Lunatone and Solrock. Do not convert the fight to singles. A true
-two-opponent battle has a separate three-members-per-trainer capacity and is
-outside leader scaling in this version. Assert that no initial badge script
-uses that excluded format; do not accidentally apply its cap to Tate/Liza.
-
-Party ordering does not constrain AI replacement selection or voluntary
-switching. Do not add an ace-lock rule, battle AI tier, or scripted finale.
-Reject `AI_FLAG_ACE_POKEMON` and `AI_FLAG_DOUBLE_ACE_POKEMON` on enrolled
-rosters during generation: those existing flags reserve the last member(s)
-and conflict with this ordering contract. Do not silently strip AI flags.
-
-Exclude rematches, facilities, link/recorded/external parties, battle partners,
-player parties, tutorials, and other special contexts before ID policy. Raw
-party-pointer entry points do not authorize scaling. When trainer-species
-randomization is active, bypass the complete leader plan before selection,
-reordering, or leader-specific index changes, and preserve the
-existing species-randomizer path, including its existing size and levels.
-Select the same legacy initial-party record used by disabled-switch mode
-before entering that path. Feed the randomizer the legacy source species,
-source indices, count, and authored levels, never the expanded six-slot roster.
-Do not modify rematch parties when their initial roster has shared aliases.
-
-### Enablement and authority
-
-Provide one Wayfarer build-time switch for the whole leader transformation.
-Keep it disabled until all roster, validation, and playtest requirements are
-met. Standalone builds must retain their pre-feature party sources and behavior.
-Preserve the original initial-party records as a separate fallback authority:
-disabling the switch must restore original size, species, levels, order, moves,
-and money inputs, not expose the expanded six-slot authoring roster unscaled.
-An implementation can select between legacy and leader roster definitions
-before construction; do not overwrite a shared standalone/rematch source.
-
-This spec supersedes static initial-Gym-party statements in the League circuit
-and regional content documents only for its enrolled contexts. Ordinary
-scaling still excludes leaders from its own transformation; its inventory and
-audit tools must recognize the new policy without treating it as ordinary.
+Keep the new policy disabled until inventory, content, validation, and playtesting
+pass. Invalid shipped metadata is a build failure; runtime invalidity must fail
+preparation before partially replacing a party, rather than substituting player
+TR, another trainer, or a random stage. Existing disabled/excluded paths remain
+explicit policies, not recovery from malformed new content.
 
 ## Validation
 
-Generate an inspectable report for all 24 encounters, every selectable variant,
-and every integer TR from 0 through 80. Include exact selected source indices,
-output order, count, species/forms, levels, moves, items, aces, and money basis.
-Compare authored fields against the reviewed source inventory. Separate fatal
-structural errors from balance observations about strong species or moves.
+Produce a report for all 23 singles badge identities, every selectable variant,
+badges 0–24, and first-clear counts 0–3. Include canonical/source identity,
+effective TR, stage/profile, member identities, output order, count, species,
+levels, moves, items, ace flags, and prize-money basis.
 
-Required automated checks cover:
+Required checks cover:
 
-1. All size thresholds and adjacent values (7/8, 21/22, 33/34, 39/40), all level
-   anchors, interpolation ties, clamping, and monotonic levels and membership.
-2. Every retained prefix, ace retention, ordered construction, absent-slot
-   clearing, actual returned count, and all party-size/gimmick consumers.
-3. Exact species/forms, custom tuples above normal learning levels, held items,
-   stable source-slot identity, normal and legacy level-up moves, and abilities.
-4. Tate/Liza at two and six members, opening pairs, both aces at baseline level,
-   double-battle semantics, AI freedom to switch or select replacements, and
-   generation rejection of ace-lock AI flags.
-5. Shared snapshot and reconstruction, reset after battle, retry after a TR
-   change, and unchanged badge rewards and pre-feature money inputs.
-6. Difficulty variants, aliases, runtime overrides, excluded rematches and
-   contexts, trainer-species randomizer bypass, and move-randomizer precedence.
-   For every leader/variant, compare randomizer inputs and outputs with the
-   disabled-switch legacy path under fixed random inputs, including source
-   species, count, indices, and levels.
-7. Disabled-switch restoration and standalone build parity, including original
-   party sources, plus rejection of missing inventory or malformed metadata.
+1. Personal curve anchors, rounding ties, clamps, monotonic growth, stage
+   boundaries and adjacent values, nondecreasing default size/minimum level,
+   and unchanged player cap/ordinary trainer policies.
+2. Exact member metadata, move policies at every supported level, non-identity
+   battle ordering, gimmick remapping, actual counts, and unused-slot clearing.
+3. Repeated construction in one battle, unchanged-milestone retries, progression
+   earned elsewhere before a retry, and badge awards only after the fight.
+4. Giovanni's actual Viridian variant and excluded villain aliases; Blue's
+   excluded Wayfarer story/Dojo contexts; no enrollment by `gymEligible` alone.
+5. Tate/Liza's existing double battle and twenty-fourth badge, randomizer bypass,
+   disabled-switch behavior, and unchanged standalone/rematch parties.
+6. Early and postponed leaders, post-league growth, Gym-member comparisons,
+   strong species/moves/items, and source-faithful reward behavior in emulator
+   playtests. Structural tests and the explorer do not establish combat balance.
 
-Compile the affected engine/generator paths and run targeted battle-mechanics
-tests. Playtest the cases in the PRD on a Wayfarer ROM, including size
-transitions and remaining Gyms before and after a League clear. The core
-implementation and targeted automated validation are merged, but
-`B_GYM_LEADER_SCALING` remains disabled by default pending structural acceptance
-and Wayfarer ROM playtesting. Do not claim balance acceptance from generated
-tables alone.
+Run relevant mechanics and Gym journey tests, Wayfarer production builds, and
+standalone builds affected by shared construction changes. Record content
+review and playtest acceptance separately from implementation status.
 
 ## References
 
-- [Ordinary Trainer scaling specification](trainer-party-scaling.md)
-- [Trainer Rating and League circuit](wayfarer-interregional-league-circuit.md)
-- [Player soft-cap curve](trainer-rating-party-progression.md)
-- [Opponent construction](../../game/src/battle_main.c)
-- [Trainer scaling and snapshot](../../game/src/trainer_party_scaling.c)
-- [Trainer party selection](../../game/src/trainer_pools.c)
+- [Trainer world progression](trainer-world-progression.md)
+- [Current Gym scaler switch](../../game/include/config/trainer_party_scaling.h)
+- [Current source inventory generator](../../game/tools/trainer_scaling/gym_leaders.py)
+- [Trainer party construction](../../game/src/battle_main.c)
+- [Ordinary trainer scaling](trainer-party-scaling.md)
+- [Seeded circuit pool](circuit-trainer-pool.md)

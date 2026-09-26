@@ -1,9 +1,22 @@
 # Ordinary Trainer and Gym-member scaling
 
-Implemented: Outdated
+Implemented: Partial; runtime policies exist, campaign balance acceptance remains pending.
 
-The League policy now delegates runtime levels to the League scaling design;
-the implementation still uses static League levels.
+Current ROM routing includes [League scaling](league-scaling.md) with saved player-entry TR;
+League levels are no longer static. See [the level resolver](../../game/src/trainer_party_scaling.c)
+and [the circuit producer](../../game/src/league_circuit.c). The proposed
+[trainer world progression](trainer-world-progression.md) changes enrolled initial singles Gym and
+circuit opponents to personal NPC TR and authored stages. Ordinary Trainers and
+Gym members retain this document's player-TR snapshot and transformation rules;
+they never read a trainer's personal rating. Story, rival, Dojo, and rematch
+variants are not enrolled by canonical identity.
+
+The current shared six-slot Gym feature is disabled by default in
+[configuration](../../game/include/config/trainer_party_scaling.h); it uses
+player TR only when enabled. Giovanni's separate five-slot projection and
+other existing Gym/double-battle policies retain their own current behavior.
+Neither generated roster data nor an experimental catalog proves enrollment
+or activation of a Gym encounter.
 
 ## Intent
 
@@ -117,10 +130,10 @@ This design supersedes the interregional League circuit's static-party rule
 only for ordinary Trainers and Gym members. Initial Gym Leader badge battles
 are owned by the separate [Gym Leader scaling design](gym-leader-scaling.md),
 while leader rematches remain static. League rosters stay authored and their
-levels follow the separate [League scaling design](league-scaling.md). Trainer
-Rating advancement belongs to the circuit; this feature can be implemented and
-tested with seeded Ratings before that producer exists. It introduces no
-substitute local-badge progression.
+levels follow the separate [League scaling design](league-scaling.md). Player
+Rating advancement belongs to the implemented circuit producer. Host
+checks may still seed Ratings independently; this feature introduces no
+substitute local-badge or NPC-personal progression.
 
 ## Acceptance
 

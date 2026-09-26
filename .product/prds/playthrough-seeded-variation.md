@@ -29,6 +29,9 @@ depending on the circuit or changing its results.
 - Support recurring circuit editions under that same seed. Completing an
   edition unlocks the player's choice to start the next; retrying or reloading
   does not create another edition.
+- Resolve edition 1 order at New Game, then construct the complete field at
+  first eligible registration from projected badge/first-clear milestones. Lock
+  that edition through retries and replays; registration is the input boundary.
 - Preserve existing Pokémon randomness. Adoption is explicit for each new
   feature; this is not a replacement of the game's existing RNG systems.
 
@@ -99,39 +102,59 @@ story produces the same events.
 
 ### Circuit adoption
 
-At new game, the circuit generates edition 1. Its venue order, each slot's
-home-or-visitor pool choice, and roster assignment are separately keyed decisions
-under the shared seed and edition identity. Check TR eligibility first, then
-partition candidates using their authored `homeLeagues`; memberships can overlap.
-Choose home with 85% probability or visitors with 15% when both pools are
-available, then apply rotation weights within that pool. With no eligible visitors,
-use home; the catalog must supply enough home trainers for every role. Persist
-the complete schedule before it is exposed to gameplay. There is no independent
-saved circuit seed or cursor that other features can advance.
+The confirmed circuit lifecycle resolves the shared root and edition 1 venue
+order at New Game. Before registration, the save has a valid itinerary but no
+roster, no active run, zero results/completed count, and empty history. It can be
+saved and inspected; it cannot enter a venue or generate a lineup on inspection.
+First eligible registration generates the complete edition. D4's common
+24-global-badge threshold remains proposed rather than approved here.
 
-After completing all three leagues, the player may register for the next edition.
-That transition generates a complete schedule using the next edition identity
-and the outgoing edition's rosters as participation history. Commit the new
-identity, whole schedule, and bounded prior-venue history together. Preserve the
-root, lifetime unlocks, and first-clear progression rewards. A failed registration
-preserves the completed edition and its existing history. Waiting, losing, abandoning an attempt, or replaying cannot skip to
-another draw. Loading a save from before registration and registering again
-produces the same next edition for the same rules, content, and history inputs.
+Registration captures global badges `B_reg`, lifetime venue-clear mask `L_reg`,
+prior-edition history, and generation/content versions. At scheduled stop i,
+use `B_i = B_reg` and `C_i = popcount(L_reg union earlier scheduled venue IDs)`.
+Resolve each trainer's authored personal badge curve plus bounded first-clear
+growth, capped at TR 80, and its team stage/profile before eligibility. Badges
+and first clears intentionally affect the world; player party, player TR, XP,
+retries, and edition number do not adjust opponent strength. Numeric growth
+curves in the balance explorer are provisional.
 
-An edition fixes its order, pool choices, and lineups through every attempt.
-A later edition may produce different results; distinct keys do not guarantee
-different orders or participants. Soft weighting encourages roughly two returning
-and three different opponents per venue, without a quota or a repeat-avoidance
-reroll. Missing a venue for one edition clears its previous-participation penalty;
-trainers are never permanently excluded. The latest
-[world progression direction](seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
-uses personal badge/first-clear growth from trainer-owned baselines. Reopened D1
-must reconcile that growth with circuit selection and saved strength snapshots;
-the seed framework does not choose the growth rules. Registration alone does
-not create endless strength inflation.
+The venue order, slot home/visitor decision, and roster assignment retain their
+separate semantic keys under the shared root and edition identity. Role bands
+are authored by world point and shared across venues at the same point; D3 still
+owns their endpoints. Check projected TR/stage/content eligibility first, then
+partition using authored `homeLeagues`. Choose home with 85% probability or
+visitors with 15% when both are available, then apply positive rotation weights
+within that pool. No eligible visitors means home; missing eligible homes is
+invalid content, never permission to widen bands or substitute visitors. Prove
+home-only two-contender/two-elite/one-headliner coverage and variety at every
+supported registration/projected point, including C 0–3 and saturation.
+
+Save all fifteen identities, projected effective TR, stage/profile references
+and versions, and snapshot inputs together before revealing the field. The
+confirmed lifecycle freezes every venue through retries and replays, even after
+live progression changes. Numeric progression, role bands, profiles, and
+qualification remain provisional. Read-only
+verification reproduces plans from registration inputs, never the live world.
+Missing or corrupt roster/snapshot state cannot be repaired through regeneration.
+
+After all three current results commit, the player may register for the next
+edition. That transition captures current world progress and the outgoing
+edition's roster IDs as bounded participation history, then commits the new
+identity, complete schedule, snapshots, and history atomically. Failure preserves
+the prior edition. Loading a pre-registration save repeats the same outcome for
+identical root, next identity, versions, milestones, and history. Losses, replays,
+and waiting never create another occurrence or endless strength inflation.
+
+Later keys may yield repeated orders and entrants. Soft weights encourage
+roughly two returning and three different opponents per venue without quotas or
+novelty rerolls; missing the immediately previous venue lineup clears its return
+penalty. Preserve existing semantic IDs: ORDER/POOL_KIND rules remain version 1
+and ROSTER rules become version 2. Record an explicit changed schedule schema
+for projected snapshot inputs. The framework does not choose trainer curves, role-band numbers,
+or circuit qualification, and it does not alter ordinary Pokémon RNG.
 
 All existing circuit rules remain in its PRD, including uniqueness within each
-lineup, TR-first home/visitor selection, shared contender/elite/headliner role bands,
+lineup, TR-first home/visitor selection, world point-indexed shared contender/elite/headliner role bands,
 and rotating participation. The circuit owns remaining catalog, qualification,
 and balance choices; the seed framework does not decide their values.
 

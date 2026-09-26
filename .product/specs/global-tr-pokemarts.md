@@ -1,10 +1,14 @@
 # Global TR Poké Marts
 
 PRD: [Poké Marts across the three regions](../prds/global-tr-pokemarts.md)
-Implemented: Outdated
+Implemented: Partial; converted-counter runtime is enabled, release acceptance remains pending.
 
-The League progression example now assumes +8 per first-time clear. That
-reward change is pending implementation; the current circuit uses the old rewards.
+The current [circuit producer](../../game/src/league_circuit.c) already contributes
++8 once for each canonical venue's first clear. Replays add no player TR. The
+proposed [trainer world progression](trainer-world-progression.md) introduces
+personal NPC strength without changing the getter or stock tiers below. Mart
+openers continue to snapshot player TR; they never read an NPC rating or edition
+count.
 
 ## Scope
 

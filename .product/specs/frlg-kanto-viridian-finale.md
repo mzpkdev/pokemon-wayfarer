@@ -12,7 +12,16 @@ Keep the HNS Viridian City exterior and existing Gym doorway. Select the complet
 
 Giovanni's challenge becomes available once the Celadon Rocket Hideout is resolved **and** Silph Co. is liberated, in either order. The Hideout's Giovanni battle and Silph Scope reward, and Silph's Giovanni battle and liberation, are the two local prerequisites. Pokémon Tower/Fuji, either Snorlax, any specific badge count, Trainer Rating, an Indigo clear, and unrelated regional progress are not prerequisites. Entering early gives truthful local guidance without granting a victory or closing the Gym. A loss leaves Giovanni available to retry and does not award a badge, TM, or finale state.
 
-Use the FRLG final Gym team in source order: Rhyhorn 45, Dugtrio 42, Nidoqueen 44, Nidoking 45, Rhyhorn 50. Keep both Rhyhorn. These are source levels for Wayfarer's established Gym scaling, not fixed runtime levels. Preserve the Gym Leader battle identity and local dialogue where true; adapt claims about prior meetings to the order the player actually played.
+The current finale uses the FRLG final Gym source order: Rhyhorn 45, Dugtrio 42,
+Nidoqueen 44, Nidoking 45, Rhyhorn 50, retaining both Rhyhorn. These are source
+levels under the current bespoke five-slot player-TR projection in
+[party construction](../../game/src/battle_main.c), independent of the disabled
+shared six-slot Gym feature. Proposed [trainer world progression](trainer-world-progression.md)
+explicitly enrolls Giovanni's initial singles badge battle with personal NPC
+TR and approachable authored opening stages. This five-member source remains
+provenance, not a required early party or immutable prefix for every stage.
+Giovanni's Hideout/Silph boss variants remain independently governed. Preserve
+battle identity and truthful local dialogue in either model.
 
 ## Victory, reward, and departure
 
@@ -38,6 +47,14 @@ Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer 
 - Finish Indigo before Giovanni and Giovanni before Indigo. Shared Indigo admission still requires at least eight global badges, with no Viridian badge prerequisite. Blue's Dojo appearance follows only a committed first Indigo win in both orders; declines, losses, replays, save/reload, party choice, and BP delivery keep existing Dojo rules without bonus reward.
 - Verify no Blue object or invitation remains in Viridian or Cinnabar, while Blue still appears as Indigo Champion. Leave Tower/Fuji, Snorlax, optional Rocket scenes, and unrelated League/region state untouched by the Gym finale.
 - Generate selected maps, warps, Trainer and item dependencies, and a release ROM; inspect the rendered FRLG maze and HNS city doorway. Source assets and screenshots are not runtime proof.
+
+The proposed [trainer world progression](trainer-world-progression.md) enrolls initial singles Gym
+battles explicitly and permits approachable opening teams, including Blue's
+experimental Gym profile with faster later Champion growth. A catalog profile
+does not restore Blue as the Viridian badge owner or change Giovanni's local
+prerequisites. Blue's rival, Dojo, and rematch parties are separately governed;
+canonical identity does not enroll them. Original FRLG/HNS parties remain
+provenance references for authored stages, not mandatory opening teams.
 
 ## Source anchors
 

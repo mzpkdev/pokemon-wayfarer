@@ -41,7 +41,9 @@ Tests/debug tooling may supply both words directly. All-zero and all-one roots
 are valid. There is no required player-facing seed-entry UI. Completing new-game
 initialization commits the root and any required initial consumer records to
 one valid logical save state before the normal save path or gameplay can use
-them. Do not expose an initialized circuit under an uninitialized root.
+them. The circuit's initial record is root/order-only pre-registration state,
+not a generated roster; its runtime owns first eligible registration. Do not
+expose an initialized circuit under an uninitialized root.
 
 Loading validates the marker and supported versions. Repeated initialization
 calls on the same initialized game do not replace the seed. New Game creates a
@@ -69,9 +71,11 @@ Maintain a small checked-in registry of domain/decision constants and their
 descriptive names. Numeric IDs are explicit; adding an entry cannot renumber
 existing entries. Reject accidental duplicate definitions and never repurpose
 a retired ID for unrelated behavior. Reserve circuit domain ID 1, with active
-ORDER decision ID 1, ROSTER decision ID 2, and POOL_KIND decision ID 5, initially
-at version 1 each. IDs 3 (VISITOR_POLICY) and 4 (LORE_FILTER) are retired and
-never reused. This does not require support for unshipped old algorithms.
+ORDER decision ID 1, ROSTER decision ID 2, and POOL_KIND decision ID 5. Pin each
+consumer rules version explicitly: ORDER/POOL_KIND remain version 1 and ROSTER
+is version 2 for projected progression-aware inputs. IDs 3 (VISITOR_POLICY)
+and 4 (LORE_FILTER) are retired and never reused. This does not require support
+for unshipped old algorithms.
 
 Entity identity comes from stable authored content IDs, not pointers, table
 positions, localized text, generated map numbering, or the order in which
@@ -240,28 +244,38 @@ for all three decisions:
 
 The [pool spec](circuit-trainer-pool.md) owns allocation order, TR eligibility,
 authored `homeLeagues`, rotation weights, feasibility, and final sorting.
-Use active ORDER, POOL_KIND, and ROSTER rules versions. First evaluate role TR,
-content validity, and within-venue canonical uniqueness; home membership never
+Use active ORDER, POOL_KIND, and ROSTER rules versions. Registration captures
+`B_reg` (global badges), `L_reg` (lifetime venue-clear mask), predecessor history,
+and content/progression/band/resolver versions. For stop i, use `B_i = B_reg`
+and `C_i = popcount(L_reg union earlier scheduled venue IDs)`. Resolve each
+candidate's effective personal TR and stage/profile before world point role-band
+eligibility, content validity, and within-venue canonical uniqueness; home membership never
 admits an unsuitable trainer. Partition the eligible candidates into home and
 visitor buckets using multi-home membership with explicit rationale. With both
 buckets nonempty, POOL_KIND selects one using the initial conditional 85/15
 tuning above. No eligible visitor means home without a POOL_KIND draw. Missing
 eligible home is an invalid catalog; content must prove home-only two-contender,
-two-elite, one-headliner feasibility for every venue.
+two-elite, one-headliner feasibility for every venue at every supported point,
+including C 0–3 and TR saturation. Prove variety separately.
 
 Apply the positive repeat/history-weighted ROSTER draw only inside the chosen
 bucket. Home candidates keep those penalties, and visiting does not change TR
-or battle strength. There is no visitor quota/cap or per-outsider exclusion
+or battle strength at the same projected world point. There is no visitor quota/cap or per-outsider exclusion
 draw. The 85/15 chance applies to bucket choice when both exist, not an individual
 trainer or guaranteed field share. Pure raw POOL_KIND calls remain defined even
 when fallback means generation does not need to evaluate that key.
 
-All venues use the same ordered disjoint role TR bands: contender slots 0–1,
-elite slots 2–3, headliner slot 4. Numeric endpoints remain D3 tuning. Travel
-position does not choose difficulty. The pool spec allocates battle-slot
+All venues at the same world point use the same authored ordered disjoint role
+TR bands: contender slots 0–1, elite slots 2–3, headliner slot 4. Bands are
+indexed by badges and lifetime clear count; endpoints remain unresolved D3
+tuning. Projected first clears can change successive stop points. Travel
+position and edition identity alone do not choose difficulty. The pool spec allocates battle-slot
 priority `[4,2,3,0,1]`, and for each slot visits venues in saved travel order.
 Sort only within contender/elite pairs by TR then canonical ID. Headliner
-appointment is title-agnostic. Rules versions remain 1 in this unimplemented draft.
+appointment is title-agnostic. Preserve existing numeric domain/decision/entity
+IDs. ORDER/POOL_KIND rules remain version 1; ROSTER rules are version 2. Record
+an explicit registration/schedule schema version for progression-aware inputs;
+do not reinterpret a saved version.
 Both POOL_KIND and ROSTER draw IDs refer to allocation slots before this sort;
 85/15 is not a per-room probability after sorting. Saved-schedule verification
 reproduces canonical allocation and sorting from the same inputs for comparison
@@ -287,20 +301,26 @@ choices elsewhere. Semantic keyed calls remain pure; there is no shared RNG
 cursor, and unrelated features cannot perturb those inputs or draws.
 Neither category selection nor order can be redrawn to repair a roster shortage.
 
-Persist edition 1 with its resolved order and fifteen role/character/profile/TR
-selections at new game through the [runtime spec](seeded-league-circuit.md).
-After all three leagues are completed and no run or ceremony is pending, the
-player can register for edition `editionId + 1`. Snapshot the completed current
-edition's five character IDs by stable venue and edition ID into staged history.
-Derive the next complete schedule using that history and occurrence, then commit
-history, new edition identity, schedule, and fresh edition progress together,
-preserving completed-count invariants. If generation or registration fails,
-retain both old current state and old history without consuming an edition
-number. Reject counter overflow without wrapping or replacing the
-previous completed edition.
+At new game, resolve and persist edition 1 ORDER with the shared root and a
+valid pre-registration discriminator. There is no roster, rating snapshot, active
+run, clear result, or completed count; history is empty. The saved order may be
+shown, but admission and roster preview are unavailable. First eligible
+registration snapshots progression inputs and generates the whole field,
+including every identity, projected point, effective TR, and stage/profile with
+versions. The 24-badge first-registration threshold remains D4's proposed default.
+These constructor/registration boundaries leave the keyed RNG contract unchanged.
+
+After all three current venues complete and no run or ceremony is pending,
+registration stages edition `editionId + 1`, captures current milestone inputs,
+and snapshots the outgoing roster IDs by venue as history. Derive the next
+complete schedule from those fixed inputs, then atomically commit history,
+identity, order, field, snapshots, versions, and fresh edition progress.
+Failures preserve the previous state and consume no edition number. Reject
+counter overflow without wrapping or replacing the completed edition.
 
 Loading a save from before registration must reproduce the same next edition
-under the same root, keys, rules, content, and staged prior-venue history.
+under the same root, keys, rules/content versions, registration badge/clear
+snapshot, and staged prior-venue history.
 Losses, exits, retries, replays,
 time, and menu queries cannot advance the edition. Do not expose a separately
 generated next-edition preview or allow skipping an unfinished edition. Starting
@@ -309,20 +329,27 @@ the runtime spec owns those transactions and their recovery.
 
 The root lives once in shared persistence; the circuit stores neither another
 seed nor a draw cursor. Loading a valid schedule reads it instead of regenerating
-it. Unrelated features and ordinary gameplay RNG cannot change it. Only the
-current edition's complete schedule and immediately previous completed edition's
-five character IDs per stable venue are required in the save. History is empty
+it. Unrelated features and ordinary gameplay RNG cannot change it. A registered
+state saves the current edition's complete schedule, the immediately previous
+completed edition's five character IDs per venue, registration snapshots, and
+progression/profile/band/resolver versions alongside runtime metadata. History is empty
 for edition 1; thereafter `history.editionId = editionId - 1`. It preserves
 authoritative generation inputs, not full old schedules/parties or an unbounded
 archive. Validate its schema, canonical references, per-venue uniqueness,
 venue mapping, and edition relation; corrupt history cannot silently clear or
 redraw. Gameplay, replay, and room defeats do not mutate history. Resolved
-current slots use saved profiles/baseline TR rather than reallocating from it.
+current slots use saved projected effective TR and stage/profile versions.
+Read-only verification reproduces projection and allocation against registration
+inputs, never live world progress. A valid pre-registration state is explicit;
+an absent registered roster is corruption, never an initialization opportunity.
 
 Different edition identities may produce the same order or participants. Never
 reroll to force novelty or infer strength growth from an occurrence number.
-The three decision protocols remain version 1 in this unimplemented draft;
-no previous circuit-key version or prerelease-save migration is required.
+Keep raw ORDER and POOL_KIND semantics unchanged unless their own rules change.
+Progression-aware ROSTER version 2 and saved schemas carry their revised
+meaning explicitly. Follow prerelease save policy; no historical compatibility
+or reroll migration is required. Badge/first-clear growth is deterministic and
+uses no keyed draws; neither player party/TR/XP nor edition number adds strength.
 
 ### Existing Pokémon RNG boundary
 
@@ -375,7 +402,9 @@ Required implementation evidence:
   multi-home membership, and category boundary draws 84/85. With no eligible
   visitors, select home without a POOL_KIND call; with no eligible home, reject
   content instead of substituting visitors or widening TR bands. Prove home-only
-  role feasibility, and permit multiple visitors without quotas or caps.
+  role feasibility at every supported world point including C 0–3/saturation,
+  and permit multiple visitors without quotas or caps. Test projected milestone
+  inputs and stage/TR eligibility before classification.
   Distinguish input-dependent bucket fallback and joint roster outcomes from
   raw-key isolation. Verify weighted choice cannot select outside its bucket.
   Permit repeated characters across qualifying leagues and reject duplicates
@@ -383,15 +412,19 @@ Required implementation evidence:
   may change later weights but cannot remove eligible people at another venue.
   Pin the canonical joint traversal and role counts; do not assert cross-venue
   roster independence.
-- Exercise the circuit's actual recurring lifecycle: edition 1 at new game,
-  registration for edition 2 after completion, and reloads both before and after
+- Exercise the circuit's confirmed recurring lifecycle: root/edition 1 ORDER at
+  new game, first roster registration at the adopted gate, registration for
+  edition 2 after completion, and reloads both before and after
   registration. Pin vectors that include edition identity; verify it is mixed
   into ORDER, POOL_KIND, and ROSTER without requiring every output to differ.
   Failed generation, duplicate callbacks, unfinished editions, and overflow
   cannot consume or skip an edition. Verify atomic prior-venue history updates,
   empty edition-1 history, predecessor identity, and failure preserving both
   old schedule and old history. Verify unchanged root/global RNG state and
-  preservation of lifetime rewards and unlocks across rollover.
+  preservation of lifetime rewards and unlocks across rollover. Verify explicit
+  valid pre-registration state, snapshot-only reproduction, and frozen complete
+  editions through live badge/clear changes, retries, and replays. Corruption
+  cannot invoke generation or replace snapshot inputs.
 - Reject missing roots and unsupported versions without a reroll. Verify valid
   all-zero roots, initialized-record reuse, copied saves, and genuine New Game.
 - Measure root/consumer save size, transient RAM/stack, ROM cost, and runtime

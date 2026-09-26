@@ -85,17 +85,23 @@ Cave remains the later Kyogre capture destination under its own story rules.
 
 Move Blue's one-time Cinnabar introduction to the Viridian City exterior at
 the Gym entrance. He invites the player inside. In this standalone port, Blue
-remains Wayfarer's Viridian Gym Leader and sole Earth Badge giver; a separate
-future Kanto story may assign that role to Giovanni. Meeting Blue requires no
+was Wayfarer's Viridian Gym Leader and sole Earth Badge giver in that delivered
+port. The implemented finale now assigns both roles to Giovanni. Meeting Blue requires no
 Cinnabar visit, Blaine victory, League
 clear, or other region's story. Replace references to the eruption or to a
 Cinnabar meeting that did not occur. His later Dojo and League appearances
 must follow their own rules rather than depend on visiting Cinnabar.
 
-This Blue introduction and Gym path describe the delivered coastal port. The
-[future Viridian finale](../specs/frlg-kanto-viridian-finale.md) supersedes them:
-Giovanni takes the full FRLG Gym and Earth Badge, Blue leaves Viridian, and his
-Dojo battle follows Indigo's first committed Champion victory.
+This Blue introduction and Gym path describe the historical coastal port.
+The implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md) now
+supersedes them: Giovanni owns the FRLG Gym and Earth Badge, Blue is absent
+from Viridian, and his current Dojo unlock follows committed Indigo victory.
+Proposed [trainer world progression](trainer-world-progression.md) may include
+an experimental approachable Blue Gym profile with faster Champion growth;
+a profile does not restore him as Viridian's badge owner or enroll his rival,
+Dojo, or rematch encounters. Blaine's explicitly enrolled initial singles Gym
+uses authored personal-TR stages in that proposal; the port's source parties
+remain provenance references, not mandatory opening teams.
 
 Blaine's victory does not summon Bill or start a voyage. Bill's Meteorite
 delivery and all Sevii travel and stories retain their independently owned

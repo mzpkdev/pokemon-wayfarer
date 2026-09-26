@@ -3,16 +3,20 @@
 Status: Scaling engine and fixed circuit wiring implemented; campaign balance acceptance pending.
 Implemented: Partial
 
-Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) uses
-each selected NPC's own TR for strength instead of player-entry TR.
-Its recurring championships share contender/elite/headliner TR bands rather
-than position-based difficulty, and rotate participants with soft history weights.
-Trainer-owned baselines and personal growth from badges and first league clears
-are the accepted direction; the [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
-exercises provisional values. Growth and circuit snapshots still need a coordinated
-specification revision under reopened D1. This remains a
-proposed successor; the scaling contract below remains the
-implementation baseline until the successor is adopted.
+Proposed successor: [Trainer world progression](trainer-world-progression.md) owns
+personal NPC ratings and explicitly enrolled initial singles Gyms. Each NPC's
+baseline is its start TR; badge progression interpolates personal checkpoints
+at 0/8/16/24 badges, then adds that trainer's growth per first lifetime venue
+clear and clamps to 80. This replaces the earlier static-strength proposal.
+[Seeded circuit runtime](../specs/seeded-league-circuit.md) generates all fifteen slots at first eligible
+registration, using saved badge/first-clear inputs and projected earlier stops.
+Resolved NPC TR determines eligibility before 85/15 home/visitor selection and
+rotation. Shared world-point-indexed 2/2/1 bands replace fixed bands and room
+position offsets; concrete values remain experimental. Saved opponent TR,
+party-stage/profile identities, and versions make retries and replays unchanged
+throughout an edition. Later edition count alone grants no strength. The proposed
+24-badge gate remains a proposal. The fixed runtime contract below describes
+current ROM behavior, not this unimplemented successor.
 
 The fixed Indigo/Masters/Hoenn roster and venue wiring, stage/replay identity,
 entry-TR snapshot, and +8-per-venue progression are implemented. See the
@@ -22,7 +26,20 @@ The [original scaling evidence](../research/league-scaling-implementation.md)
 records earlier automated results and the remaining gameplay validation; its
 old progression/wiring description predates the current circuit.
 
-## Intent
+## Proposed party and registration contract
+
+Original FRLG, Emerald, and HNS parties are provenance references. Successor
+profiles may author approachable opening teams and distinct later stages; no
+automatic evolution or immutable-prefix rule applies across stages. Blue's
+experimental Gym profile starts approachable and grows rapidly toward Champion
+strength; it does not enroll him as a Wayfarer badge opponent.
+Story, rival, Dojo, and rematch variants require separate enrollment; a shared
+canonical identity grants no scaling policy. Tate and Liza retain their existing
+double-Gym policy and badge outside the singles pool, and Red is outside the
+circuit pool. Player TR, caps, XP reduction, obedience, wild populations, marts,
+ordinary Trainers, and Gym members continue to read player progression.
+
+## Current ROM intent
 
 Keep the Indigo League, Sevii Masters Challenge, and Hoenn League appropriate to a player's
 career whether they enter as soon as eligible or collect all twenty-four badges

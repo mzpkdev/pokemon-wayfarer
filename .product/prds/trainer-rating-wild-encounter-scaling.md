@@ -14,7 +14,11 @@ once, and new editions never reset TR or add further progression contributions.
 Its proposed common 24-badge entry gate gives TR 56/64/72/80 across zero through
 three lifetime clears; current sub-24-badge league-clear examples do not apply
 to that proposal. Its NPC-based circuit strength does not replace player caps
-or wild scaling.
+or wild scaling. The proposed [trainer world progression](trainer-world-progression.md)
+uses a separate personal start-TR baseline, badge checkpoints, and trainer-specific
+first-lifetime-clear growth for enrolled NPCs. Those NPC values never become the
+player's rating or an input to wild populations, caps, XP, obedience, marts,
+ordinary Trainers, or Gym members.
 
 For Wayfarer, the approved [Native HM catch windows](native-hm-catch-windows.md)
 revision supersedes named native-utility carriers and permanent-retention

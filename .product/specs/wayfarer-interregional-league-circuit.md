@@ -11,14 +11,24 @@ They use common contender/elite/headliner TR bands and rotating fields instead
 of position difficulty, with a proposed shared 24-badge entry gate replacing
 the 8/16/24 ladder. The parent
 [draft PRD](../prds/seeded-trainer-circuit.md) records confirmed requirements and
-remaining design decisions. This document remains the approved baseline until
-that successor is adopted.
+remaining design decisions. The proposed [trainer world progression](trainer-world-progression.md)
+replaces static NPC baselines with personal start TR, interpolated 0/8/16/24
+badge checkpoints, and trainer-specific first-lifetime-venue-clear growth.
+Seed the circuit root and first venue order at new game. Generate all fifteen
+slots at first eligible registration:
+save `B_reg` and `L_reg`, project each stop's clear count as
+`popcount(L_reg union earlier seeded venues)`, then resolve NPC TR before band
+eligibility, 85/15 home/visitor choice, and rotation. Bands are indexed by world point and shared
+across venues at the same point. Persist every roster, TR, stage/profile, input,
+and version for unchanged edition retries and replays. Later edition count alone
+adds no strength. The common 24-badge gate and numeric balance remain proposed.
+The current fixed circuit contract below remains the ROM implementation baseline.
 
 The runtime now uses one persisted circuit stage identity for FRLG Indigo,
 Sevii Masters, and Hoenn. Regional Champion flags are projections of committed
 circuit clears rather than the source of circuit progression.
 
-## Scope
+## Current ROM scope
 
 This specification owns:
 

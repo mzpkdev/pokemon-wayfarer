@@ -371,7 +371,7 @@ silently cut this specified content or begin unrelated optimization.
 ## References
 
 - [FRLG Kanto story conflicts](../research/frlg-hns-kanto-story-conflicts.md)
-- [FRLG Kanto implementation sequence](../research/frlg-kanto-implementation-sequence.md)
+- [Kanto independent story beats](../prds/frlg-kanto-independent-story-beats.md)
 - [Celadon Rocket Hideout on Wayfarer](frlg-kanto-celadon-hideout.md)
 - [Nugget Bridge on Wayfarer](frlg-kanto-nugget-bridge.md)
 - [HNS Silph lobby](../../game/data/maps/SaffronCity_SilphCo_hns/map.json)
