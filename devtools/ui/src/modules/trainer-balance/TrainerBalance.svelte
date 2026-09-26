@@ -1,18 +1,43 @@
 <script lang="ts">
   import { onMount } from "svelte"
+  import { ARC_CHECKPOINTS, ARC_IDS, MAX_EDITIONS } from "./engine.js"
   import { BalanceLab, catalog } from "./lab.svelte.js"
+  import type { ArcId, Role } from "./types.js"
 
   const lab = new BalanceLab()
-  const checkpoints = [0, 8, 16, 24]
   const ticks = [0, 4, 8, 12, 16, 20, 24]
   let importInput: HTMLInputElement
-  const line = (key: "ace" | "cap"): string =>
-    lab.curve.map((point) => `${24 + point.badges * 13},${140 - point[key] * 1.2}`).join(" ")
+  const signed = (value: number): string => (value > 0 ? `+${value}` : `${value}`)
+  const tone = (gap: number): string => (gap > 0 ? "above" : gap < 0 ? "below" : "even")
+  const slug = (value: string): string => value.toLowerCase().replaceAll(" ", "-")
+  const roleLabel: Record<Role, string> = {
+    contender: "Contender",
+    elite: "Elite",
+    headliner: "Headliner",
+  }
+  const windowLabel = (role: Role): string =>
+    role === "contender"
+      ? `≤ ${signed(lab.roleWindows.contenderMax)}`
+      : role === "headliner"
+        ? `≥ ${signed(lab.roleWindows.headlinerMin)}`
+        : lab.roleWindows.contenderMax + 1 === lab.roleWindows.headlinerMin - 1
+          ? signed(lab.roleWindows.contenderMax + 1)
+          : `${signed(lab.roleWindows.contenderMax + 1)} … ${signed(lab.roleWindows.headlinerMin - 1)}`
+  const x = (progress: number): number => 24 + progress * 6.5
+  const y = (level: number): number => 140 - level * 1.2
+  const capLine = (): string =>
+    lab.curve.map((point) => `${x(point.progress)},${y(point.cap)}`).join(" ")
+  const arcLine = (arc: ArcId): string =>
+    lab.curve.map((point) => `${x(point.progress)},${y(point.aces[arc] ?? 0)}`).join(" ")
+  const editionLabel = (editions: number): string =>
+    editions === MAX_EDITIONS ? `${editions}+` : `${editions}`
+  const blueStatus = (): string =>
+    !lab.gymSummary.blue?.ahead ? "No" : lab.gymSummary.blue.atCeiling ? "At ceiling" : "Yes"
   const download = (): void => {
     const url = URL.createObjectURL(new Blob([lab.exportText()], { type: "application/json" }))
     const link = document.createElement("a")
     link.href = url
-    link.download = `wayfarer-balance-${lab.badges}-badges.json`
+    link.download = `wayfarer-balance-p${lab.progress}.json`
     link.click()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
@@ -37,7 +62,8 @@
       <div class="eyebrow">Wayfarer / design tools <span class="prototype">Experimental</span></div>
       <h1>Trainer balance</h1>
       <p>
-        Move through the badge journey. See who grows, what they bring, and where the numbers drift.
+        Move through the badge journey. See where each rival stands against the world cap, and
+        whether every league can fill its field.
       </p>
     </div>
     <div class="actions">
@@ -91,21 +117,51 @@
           >{#each [0, 1, 2, 3] as clears}<option value={clears}>{clears} / 3</option>{/each}</select
         ></label
       >
+      <label title="Fully completed circuit editions. Needs 24 badges and 3 first clears."
+        >Completed editions<select
+          aria-label="Completed editions"
+          aria-describedby="editions-hint"
+          value={lab.completedEditions}
+          disabled={!lab.editionsEnabled}
+          onchange={(event) => lab.setEditions(Number(event.currentTarget.value))}
+          >{#each Array.from({ length: MAX_EDITIONS + 1 }, (_, index) => index) as editions}<option
+              value={editions}>{editionLabel(editions)}</option
+            >{/each}</select
+        ></label
+      >
+      <div>
+        <span class="eyebrow">Progress p</span><strong data-testid="progress-index"
+          >{lab.progress}</strong
+        >
+      </div>
       <div>
         <span class="eyebrow">Player TR</span><strong data-testid="player-tr">{lab.playerTR}</strong
         >
       </div>
       <div>
-        <span class="eyebrow">Player soft cap</span><strong data-testid="player-cap"
-          >Lv. {lab.cap}</strong
+        <span class="eyebrow">World cap</span><strong data-testid="player-cap">Lv. {lab.cap}</strong
+        >
+      </div>
+      <div>
+        <span class="eyebrow">Level base</span><strong
+          data-testid="level-base"
+          class:ceiling={lab.levelBase < lab.cap}>Lv. {lab.levelBase}</strong
         >
       </div>
     </div>
+    <span class="hint editions-hint" id="editions-hint"
+      >{lab.editionsEnabled
+        ? "Post-game: each completed edition adds 8 to p (up to 3, p = 48), then standings stop changing."
+        : "Completed editions unlock at 24 badges and 3 first clears, since finishing an edition needs both."}
+      Level base = min(world cap, 100 − headroom {lab.headroom}).</span
+    >
   </div>
 
   <div class="model-note">
     <span class="note-dot"></span><span
-      >Prototype growth and team stages. Source parties are shown separately. This models species,
+      >Living Rivals model: ace level = level base + standing, where standing = bias + growth arc at
+      p = badges + 8 × completed editions, and level base = min(world cap, 100 − headroom). The
+      world cap is the player soft cap from badges and first clears alone. This models species,
       party size and levels; moves, items, AI and win rates are not simulated.</span
     >
   </div>
@@ -113,11 +169,54 @@
   {#if lab.error}<div role="alert" class="message error">{lab.error}</div>{/if}
   {#if lab.notice}<div role="status" class="message">{lab.notice}</div>{/if}
 
+  <section class="summary-strip" aria-label="Gym and cap summary">
+    <div>
+      <span class="eyebrow">Gym leaders · ace − cap</span>
+      <strong class="gap-value {tone(Math.round(lab.gymSummary.mean))}" data-testid="gym-gap-mean"
+        >{lab.gymSummary.mean > 0 ? "+" : ""}{lab.gymSummary.mean.toFixed(1)}</strong
+      >
+      <span class="hint">Mean of {lab.gymSummary.count} leaders on their selected arcs</span>
+    </div>
+    <div>
+      <span class="eyebrow">Range</span>
+      <strong data-testid="gym-gap-range"
+        >{signed(lab.gymSummary.min)} … {signed(lab.gymSummary.max)}</strong
+      >
+      <span class="hint"
+        >Every allowed arc: {signed(lab.gymSummary.arcMin)} … {signed(lab.gymSummary.arcMax)}</span
+      >
+    </div>
+    {#if lab.gymSummary.blue}
+      <div>
+        <span class="eyebrow"
+          >{lab.gymSummary.blue.atCeiling
+            ? "Blue above the level base"
+            : "Blue ahead of the cap"}</span
+        >
+        <strong
+          class="gap-value {lab.gymSummary.blue.ahead ? 'above' : 'risk'}"
+          data-testid="blue-check">{blueStatus()}</strong
+        >
+        <span class="hint"
+          >{#if lab.gymSummary.blue.atCeiling}vs base Lv. {lab.gymSummary.blue.levelBase}: {lab.gymSummary.blue.gaps
+              .map(({ arc, baseGap }) => `${arc} ${signed(baseGap)}`)
+              .join(" · ")}{:else}{lab.gymSummary.blue.gaps
+              .map(({ arc, gap }) => `${arc} ${signed(gap)}`)
+              .join(" · ")}{/if}{lab.gymSummary.blue.ahead ? "" : " · needs tuning"}</span
+        >
+      </div>
+    {/if}
+  </section>
+
   <div class="workspace">
     <section class="pool-panel" aria-label="Trainer pool">
       <div class="panel-title">
         <h2>The pool <span>{catalog.length}</span></h2>
-        <span class="hint">{lab.aboveCap}/{lab.gymCount} Gym aces above player cap</span>
+        <span class="hint"
+          >Levels at world cap Lv. {lab.cap}{lab.levelBase < lab.cap
+            ? ` · base Lv. ${lab.levelBase}`
+            : ""}</span
+        >
       </div>
       <div class="filters">
         <input
@@ -140,8 +239,9 @@
         <table class="pool-table">
           <thead
             ><tr
-              ><th>Trainer</th><th>Start TR</th><th>Current TR</th><th>Party</th><th>Ace / cap</th
-              ></tr
+              ><th>Trainer</th><th>Arc</th><th>Standing</th><th>Ace</th><th>Ace − cap</th><th
+                >Role</th
+              ><th>Stage</th></tr
             ></thead
           >
           <tbody>
@@ -158,15 +258,27 @@
                     ></button
                   ></td
                 >
-                <td class="numeric muted">{lab.ratingAt(row.trainer.id, 0)}</td>
-                <td class="numeric current-tr">{row.tr}</td>
-                <td class="numeric">{row.party.length}<span class="muted"> / 6</span></td>
                 <td
-                  ><span class="level-pill" class:over-cap={row.aceLevel > lab.cap}
-                    >Lv. {row.aceLevel}</span
-                  ><span class="delta"
-                    >{row.aceLevel - lab.cap > 0 ? "+" : ""}{row.aceLevel - lab.cap}</span
+                  ><select
+                    class="arc-select"
+                    aria-label={`${row.trainer.name} arc`}
+                    value={row.arc}
+                    disabled={lab.arcsFor(row.trainer.id).length < 2}
+                    onchange={(event) => lab.setArc(row.trainer.id, event.currentTarget.value)}
+                    >{#each lab.arcsFor(row.trainer.id) as arc}<option value={arc}>{arc}</option
+                      >{/each}</select
                   ></td
+                >
+                <td class="numeric standing">{signed(row.standing)}</td>
+                <td><span class="level-pill">Lv. {row.aceLevel}</span></td>
+                <td
+                  ><span class="gap-chip {tone(row.gap)}" data-testid={`gap-${row.trainer.id}`}
+                    >{signed(row.gap)}</span
+                  ></td
+                >
+                <td><span class="role-chip {row.role}">{roleLabel[row.role]}</span></td>
+                <td class="numeric" title={row.stage}
+                  >{row.party.length}<span class="muted"> / 6</span></td
                 >
               </tr>
             {/each}
@@ -195,13 +307,42 @@
           <h2>{lab.selected.trainer.name}</h2>
         </div>
         <div class="tr-badge">
-          <span>Current TR</span><strong data-testid="selected-tr">{lab.selected.tr}</strong>
+          <span>Standing</span><strong data-testid="selected-standing"
+            >{signed(lab.selected.standing)}</strong
+          >
         </div>
       </div>
-      <div class="home-leagues">Home leagues: {lab.selected.trainer.homeLeagues.join(" · ")}</div>
+      <div class="home-leagues">
+        Home pool: {lab.selected.trainer.homeLeagues.join(" · ") || "none"} · Sevii Masters is open to
+        all
+      </div>
+      <dl class="stat-grid">
+        <div>
+          <dt>Arc</dt>
+          <dd data-testid="selected-arc">{lab.selected.arc}</dd>
+        </div>
+        <div>
+          <dt>Ace</dt>
+          <dd data-testid="selected-ace">Lv. {lab.selected.aceLevel}</dd>
+        </div>
+        <div>
+          <dt>Ace − cap</dt>
+          <dd class="gap-value {tone(lab.selected.gap)}" data-testid="selected-gap">
+            {signed(lab.selected.gap)}
+          </dd>
+        </div>
+        <div>
+          <dt>Role</dt>
+          <dd data-testid="selected-role">{roleLabel[lab.selected.role]}</dd>
+        </div>
+      </dl>
       <div class="section-label">
-        <h3>Party at {lab.badges} badges</h3>
-        <span>{lab.selected.stage}</span>
+        <h3>
+          Party at {lab.badges} badges{lab.completedEditions
+            ? ` · ${editionLabel(lab.completedEditions)} editions`
+            : ""}
+        </h3>
+        <span data-testid="selected-stage">{lab.selected.stage}</span>
       </div>
       <ol class="party" data-testid="generated-party">
         {#each lab.selected.party as member, index}<li>
@@ -217,43 +358,38 @@
         </ul>{/if}
 
       <div class="section-label">
-        <h3>Badge journey</h3>
+        <h3>Progress journey</h3>
         <div class="legend">
-          <span class="ace-key">Ace</span><span class="cap-key">Player cap</span>
+          <span class="ace-key">{lab.selected.arc}</span
+          >{#if lab.settings.allowedArcs.length > 1}<span class="alt-key">Other allowed arcs</span
+            >{/if}<span class="cap-key">World cap</span>
         </div>
       </div>
       <svg
         class="growth-chart"
         viewBox="0 0 360 163"
         role="img"
-        aria-label={`${lab.selected.trainer.name} ace level and player cap from zero to 24 badges`}
+        aria-label={`${lab.selected.trainer.name} ace level per allowed arc and the world cap from progress 0 to 48; progress 32 to 48 are completed editions at 24 badges and 3 clears`}
       >
         {#each [20, 40, 60, 80, 100] as level}<line
             x1="24"
             x2="336"
-            y1={140 - level * 1.2}
-            y2={140 - level * 1.2}
+            y1={y(level)}
+            y2={y(level)}
             class="chart-grid"
-          /><text x="2" y={144 - level * 1.2}>{level}</text>{/each}
-        <polyline points={line("cap")} class="cap-line" /><polyline
-          points={line("ace")}
-          class="ace-line"
-        />
-        <line
-          x1={24 + lab.badges * 13}
-          x2={24 + lab.badges * 13}
-          y1="18"
-          y2="140"
-          class="position-line"
-        />
-        <circle
-          cx={24 + lab.badges * 13}
-          cy={140 - lab.selected.aceLevel * 1.2}
-          r="4"
-          class="ace-dot"
-        />
-        {#each checkpoints as badge}<text x={24 + badge * 13} y="158" text-anchor="middle"
-            >{badge}</text
+          /><text x="2" y={y(level) + 4}>{level}</text>{/each}
+        <polyline points={capLine()} class="cap-line" />
+        {#each lab.settings.allowedArcs.filter((arc) => arc !== lab.selected.arc) as arc}<polyline
+            points={arcLine(arc)}
+            class="alt-line"
+          />{/each}
+        <polyline points={arcLine(lab.selected.arc)} class="ace-line" />
+        <line x1={x(24)} x2={x(24)} y1="18" y2="140" class="chart-grid" />
+        <text x={x(36)} y="14" text-anchor="middle">post-game editions</text>
+        <line x1={x(lab.progress)} x2={x(lab.progress)} y1="18" y2="140" class="position-line" />
+        <circle cx={x(lab.progress)} cy={y(lab.selected.aceLevel)} r="4" class="ace-dot" />
+        {#each ARC_CHECKPOINTS as progress}<text x={x(progress)} y="158" text-anchor="middle"
+            >{progress}</text
           >{/each}
       </svg>
 
@@ -280,49 +416,46 @@
           <form
             onsubmit={(event) => {
               event.preventDefault()
-              lab.applyRatings(event.currentTarget)
+              lab.applyTrainer(event.currentTarget)
             }}
           >
-            <div class="rating-inputs">
-              {#each checkpoints as badge, index}<label
-                  >{badge} badges<input
-                    aria-label={`TR at ${badge} badges`}
-                    name={`rating-${badge}`}
-                    type="number"
-                    min="0"
-                    max="80"
-                    step="1"
-                    required
-                    value={lab.settings.ratings[index]}
-                  /></label
-                >{/each}
-            </div>
             <div class="growth-input">
               <label
-                >TR per first league clear<input
-                  aria-label="TR per first league clear"
-                  name="league-growth"
+                >Standing bias<input
+                  aria-label="Standing bias"
+                  name="bias"
                   type="number"
-                  min="0"
-                  max="20"
+                  min="-6"
+                  max="6"
                   step="1"
                   required
-                  value={lab.settings.leagueGrowth}
+                  value={lab.settings.bias}
                 /></label
-              ><button type="submit">Apply ratings</button>
+              ><button type="submit">Apply standing</button>
             </div>
+            <fieldset class="arc-choices">
+              <legend>Allowed arcs</legend>
+              {#each ARC_IDS as arc}<label
+                  ><input
+                    type="checkbox"
+                    name={`allow-${arc}`}
+                    aria-label={`Allow ${arc} arc`}
+                    checked={lab.settings.allowedArcs.includes(arc)}
+                  />{arc}</label
+                >{/each}
+            </fieldset>
           </form>
         {/key}
         <p class="hint">
-          TR interpolates between checkpoints. Changes are saved in this browser and included in
-          exports.
+          Standing is bias plus the arc’s delta at the current progress index p. Changes are saved
+          in this browser and included in exports.
         </p>
         <button type="button" onclick={lab.resetTrainer}>Restore this trainer’s defaults</button>
         <details class="advanced">
           <summary>Edit team stages</summary>
           <p class="hint">
-            Stages unlock at their minimum TR. Edit species and offsets from the ace level; at least
-            one member must use offset 0.
+            Stages unlock at their minimum global badges. Edit species and offsets from the ace
+            level; at least one member must use offset 0. Party size must not drop.
           </p>
           <label class="visually-hidden" for="team-editor">Trainer settings JSON</label><textarea
             id="team-editor"
@@ -335,27 +468,169 @@
     </aside>
   </div>
 
-  <details class="global-settings">
-    <summary>Shared NPC level curve & experiment settings</summary>
-    <p>
-      The pairs below are [TR, ace level]. They affect every trainer. The player soft-cap curve
-      stays unchanged. League clears can be combined with any badge count here to explore balance;
-      this tool does not enforce entry requirements.
-    </p>
-    <label for="anchor-editor">NPC level anchors</label><textarea
-      id="anchor-editor"
-      rows="2"
-      spellcheck="false"
-      bind:value={lab.anchorEditor}></textarea>
-    <div class="actions">
-      <button type="button" onclick={lab.applyAnchors}>Apply level curve</button><button
-        type="button"
-        onclick={lab.reset}>Reset all trainer defaults</button
+  <section class="feasibility" aria-label="League feasibility">
+    <div class="panel-title">
+      <h2>League feasibility <span>at p = {lab.progress}</span></h2>
+      <label class="toggle"
+        ><input
+          type="checkbox"
+          bind:checked={lab.includeIncomplete}
+          aria-label="Count five-member profiles"
+        />Count five-member profiles</label
       >
     </div>
+    <p class="hint feasibility-note">
+      Guaranteed: in the role window under every allowed arc. Possible: under some allowed arc.
+      Current: under the selected arcs. League slots need a six-member competitive profile. Standing
+      depends on p (badges + 8 × completed editions) only, so league clears and headroom do not
+      change these counts.
+    </p>
+    <div class="venue-grid">
+      {#each lab.feasibility as venue (venue.venue)}
+        <div class="venue-card" data-testid={`feasibility-${slug(venue.venue)}`}>
+          <div class="venue-heading">
+            <h3>{venue.venue}</h3>
+            <span class="hint"
+              >{venue.pool === "open" ? "Open invitational" : "Home pool"} · {venue.candidates} candidates</span
+            >
+          </div>
+          <table class="feasibility-table">
+            <thead
+              ><tr
+                ><th>Role</th><th>Window</th><th>Need</th><th>Guaranteed</th><th>Possible</th><th
+                  >Current</th
+                ></tr
+              ></thead
+            >
+            <tbody>
+              {#each venue.roles as entry (entry.role)}
+                <tr
+                  class:risk={entry.fallbackRisk}
+                  data-testid={`${slug(venue.venue)}-${entry.role}`}
+                >
+                  <td
+                    >{roleLabel[entry.role]}{#if entry.fallbackRisk}<span class="risk-flag"
+                        >Fallback risk</span
+                      >{/if}</td
+                  >
+                  <td class="numeric muted">{windowLabel(entry.role)}</td>
+                  <td class="numeric">{entry.need}</td>
+                  <td class="numeric guaranteed">{entry.guaranteed}</td>
+                  <td class="numeric">{entry.possible}</td>
+                  <td class="numeric">{entry.current}</td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+          {#if venue.excluded.length}<p class="hint excluded">
+              Five-member profiles excluded: {venue.excluded.join(", ")}
+            </p>{/if}
+        </div>
+      {/each}
+    </div>
+  </section>
+
+  <details class="global-settings">
+    <summary>Growth arcs, role windows & experiment settings</summary>
+    <p>
+      Each arc is an arcDelta tuple at progress p = 0 / 8 / 16 / 24 / 32 / 40 / 48, interpolated
+      linearly and rounded half up. p is badges in edition 1 (0–24); editions 2, 3 and 4+ enter at p
+      = 32, 40 and 48, after which standings stop changing. Every arc stays 0 at p = 0, so first
+      encounters match in every save. The player cap is unchanged. League clears can be combined
+      with any badge count here; this tool does not enforce entry requirements.
+    </p>
+    {#key lab.arcs}
+      <form
+        onsubmit={(event) => {
+          event.preventDefault()
+          lab.applyWorld(event.currentTarget)
+        }}
+      >
+        <div class="arc-scroll cartographer-scrollbar">
+          <table class="arc-table">
+            <thead
+              ><tr
+                ><th>Arc</th>{#each ARC_CHECKPOINTS as progress}<th>p = {progress}</th>{/each}</tr
+              ></thead
+            >
+            <tbody>
+              {#each ARC_IDS as arc}
+                <tr>
+                  <th scope="row">{arc}</th>
+                  {#each ARC_CHECKPOINTS as progress, index}<td
+                      >{#if progress === 0}<span class="muted">0</span>{:else}<input
+                          aria-label={`${arc} arc at p ${progress}`}
+                          name={`arc-${arc}-${progress}`}
+                          type="number"
+                          min="-12"
+                          max="12"
+                          step="1"
+                          required
+                          value={lab.arcs[arc][index]}
+                        />{/if}</td
+                    >{/each}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+        <div class="window-inputs">
+          <label
+            >Contender at most<input
+              aria-label="Contender maximum standing"
+              name="contender-max"
+              type="number"
+              min="-12"
+              max="12"
+              step="1"
+              required
+              value={lab.roleWindows.contenderMax}
+            /></label
+          >
+          <label
+            >Headliner at least<input
+              aria-label="Headliner minimum standing"
+              name="headliner-min"
+              type="number"
+              min="-12"
+              max="12"
+              step="1"
+              required
+              value={lab.roleWindows.headlinerMin}
+            /></label
+          >
+          <span class="hint">Elite covers the standings in between.</span>
+        </div>
+        <div class="window-inputs">
+          <label
+            >Level headroom<input
+              aria-label="Level headroom"
+              name="headroom"
+              type="number"
+              min="0"
+              max="20"
+              step="1"
+              required
+              value={lab.headroom}
+            /></label
+          >
+          <span class="hint"
+            >Level base = min(world cap, 100 − headroom). No effect while the cap is at most {100 -
+              lab.headroom}; at the ceiling it leaves room for elites and headliners above
+            contenders. Ace − cap still compares with the player cap.</span
+          >
+        </div>
+        <div class="actions">
+          <button type="submit">Apply arcs, windows & headroom</button><button
+            type="button"
+            onclick={lab.reset}>Reset all trainer defaults</button
+          >
+        </div>
+      </form>
+    {/key}
     <p class="hint">
-      Deterministic milestone model; no seed variation or league lineup sampling yet. This is
-      separate from the ROM’s current scaler.
+      Arcs are shown for a chosen preview, not sampled from a seed. League lineup generation is not
+      implemented. This is separate from the ROM’s current scaler.
     </p>
   </details>
 </section>
@@ -497,6 +772,7 @@
   }
   .world-facts {
     display: flex;
+    flex-wrap: wrap;
     gap: 24px;
     align-items: center;
     border-left: 1px solid var(--line);
@@ -515,6 +791,17 @@
     font-weight: 500;
     margin-top: 5px;
     font-variant-numeric: tabular-nums;
+  }
+  .world-facts strong.ceiling {
+    color: var(--accent);
+  }
+  .editions-hint {
+    grid-column: 1 / -1;
+    margin-top: -14px;
+  }
+  .arc-scroll {
+    max-width: 100%;
+    overflow-x: auto;
   }
   .model-note {
     display: flex;
@@ -647,10 +934,6 @@
   .numeric {
     font-variant-numeric: tabular-nums;
   }
-  .current-tr {
-    color: var(--accent);
-    font-weight: 600;
-  }
   .muted {
     color: var(--color-cartographer-muted);
   }
@@ -660,15 +943,6 @@
     border-radius: 4px;
     padding: 4px 7px;
     font-size: 11px;
-  }
-  .level-pill.over-cap {
-    background: #403224;
-    color: #f0c887;
-  }
-  .delta {
-    color: var(--color-cartographer-muted);
-    font-size: 10px;
-    margin-left: 7px;
   }
   .pool-footer {
     border-top: 1px solid var(--line);
@@ -852,23 +1126,9 @@
     font-size: 11px;
     overflow-wrap: anywhere;
   }
-  .rating-inputs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin: 14px 0;
-  }
-  .rating-inputs label,
   .growth-input label {
     color: var(--color-cartographer-muted);
     font-size: 10px;
-  }
-  .rating-inputs input {
-    width: 100%;
-    min-width: 0;
-    margin-top: 5px;
-    padding: 8px;
-    font-size: 13px;
   }
   .growth-input label {
     display: flex;
@@ -910,6 +1170,255 @@
   .global-settings .actions {
     justify-content: flex-start;
   }
+  .summary-strip {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    margin-bottom: 24px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--line);
+  }
+  .summary-strip > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 14px 18px;
+    background: var(--surface);
+  }
+  .summary-strip strong {
+    font-size: 22px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .gap-value.above {
+    color: #f0c887;
+  }
+  .gap-value.below {
+    color: #b9d8be;
+  }
+  .gap-value.even {
+    color: var(--color-cartographer-ink);
+  }
+  .gap-value.risk {
+    color: #ffb8bc;
+  }
+  .gap-chip {
+    display: inline-block;
+    min-width: 34px;
+    text-align: center;
+    border-radius: 4px;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .gap-chip.above {
+    background: #403224;
+    color: #f0c887;
+  }
+  .gap-chip.below {
+    background: #26332c;
+    color: #b9d8be;
+  }
+  .gap-chip.even {
+    background: #2b3037;
+    color: var(--color-cartographer-ink);
+  }
+  .role-chip {
+    font-size: 11px;
+    color: var(--color-cartographer-muted);
+  }
+  .role-chip.headliner {
+    color: var(--accent);
+  }
+  .role-chip.elite {
+    color: #99adbd;
+  }
+  .standing {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .arc-select {
+    padding: 5px 24px 5px 7px;
+    font-size: 11px;
+  }
+  .arc-select:disabled {
+    opacity: 0.75;
+    cursor: default;
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 0 0 20px;
+  }
+  .stat-grid div {
+    background: var(--color-cartographer-field);
+    border: 1px solid #2d333a;
+    border-radius: 5px;
+    padding: 8px 10px;
+    min-width: 0;
+  }
+  .stat-grid dt {
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+  }
+  .stat-grid dd {
+    margin: 4px 0 0;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+  .alt-key {
+    color: #8a7a5c;
+  }
+  .alt-line {
+    fill: none;
+    stroke: #8a7a5c;
+    stroke-width: 1.25;
+    opacity: 0.8;
+  }
+  .arc-choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    border: 0;
+    padding: 0;
+    margin: 0 0 12px;
+  }
+  .arc-choices legend {
+    color: var(--color-cartographer-muted);
+    font-size: 10px;
+    margin-bottom: 6px;
+  }
+  .arc-choices label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+  }
+  .arc-choices input,
+  .toggle input {
+    accent-color: var(--accent);
+  }
+  .feasibility {
+    margin-top: 24px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    padding-bottom: 18px;
+  }
+  .toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 11px;
+    color: var(--color-cartographer-muted);
+  }
+  .feasibility-note {
+    margin: 0 18px 14px;
+  }
+  .venue-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    padding: 0 18px;
+  }
+  .venue-card {
+    min-width: 0;
+    border: 1px solid #2d333a;
+    border-radius: 6px;
+    background: var(--color-cartographer-field);
+    overflow-x: auto;
+  }
+  .venue-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 12px 12px 8px;
+  }
+  .feasibility-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .feasibility-table th {
+    position: static;
+    background: transparent;
+    padding: 6px 8px;
+  }
+  .feasibility-table td {
+    padding: 8px;
+  }
+  .feasibility-table td:first-child,
+  .feasibility-table th:first-child {
+    padding-left: 12px;
+  }
+  .guaranteed {
+    font-weight: 600;
+  }
+  tr.risk .guaranteed {
+    color: #ffb8bc;
+  }
+  .risk-flag {
+    display: block;
+    color: #ffb8bc;
+    font-size: 10px;
+    margin-top: 2px;
+  }
+  .excluded {
+    margin: 8px 12px 10px;
+  }
+  .arc-table {
+    border-collapse: collapse;
+    font-size: 12px;
+    margin: 10px 0;
+  }
+  .arc-table th {
+    position: static;
+    background: transparent;
+    padding: 6px 8px;
+    white-space: nowrap;
+  }
+  .global-settings .actions {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  .arc-table th[scope="row"] {
+    color: var(--color-cartographer-ink);
+    font-size: 12px;
+    padding-left: 0;
+  }
+  .arc-table td {
+    border-top: 0;
+    padding: 4px 8px;
+  }
+  .arc-table td:first-child {
+    padding: 4px 8px;
+  }
+  .arc-table input,
+  .window-inputs input {
+    width: 60px;
+    padding: 6px 7px;
+  }
+  .window-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+    margin: 6px 0 12px;
+  }
+  .window-inputs label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--color-cartographer-muted);
+  }
   .visually-hidden {
     position: absolute;
     width: 1px;
@@ -922,6 +1431,9 @@
     border: 0;
   }
   @media (max-width: 1150px) {
+    .venue-grid {
+      grid-template-columns: 1fr;
+    }
     .world-panel {
       gap: 18px;
       grid-template-columns: 90px minmax(150px, 1fr);
@@ -954,6 +1466,12 @@
     }
   }
   @media (max-width: 800px) {
+    .summary-strip {
+      grid-template-columns: 1fr;
+    }
+    .stat-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .workspace {
       grid-template-columns: 1fr;
     }

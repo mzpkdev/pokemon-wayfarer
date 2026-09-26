@@ -17,51 +17,54 @@ ROOT = Path(__file__).resolve().parents[2]
 GAME = ROOT / "game"
 OUTPUT = ROOT / "devtools/ui/src/modules/trainer-balance/catalog.json"
 GYMS = GAME / "src/data/trainer_scaling/gym_leaders.json"
-# name, region, role, reference family/ID, home leagues, prototype start/mature TR,
-# handwritten two-slot early species. Ratings/homes reproduce the prior trial.
+# Canonical growth-arc order (arc id = index). allowedArcs are stored in this
+# order so source reordering never changes a seeded arc choice.
+ARCS = ["steady", "early", "late", "plateau", "rival"]
+# name, region, role, reference family/ID, home leagues (Indigo/Hoenn only;
+# Sevii Masters is an open invitational), standing bias, allowed growth arcs,
+# handwritten two-slot early species. Bias/arcs are Living Rivals D3 proposals:
+# Gym -2 (strong leaders -1: Giovanni, Sabrina, Morty, Clair, Norman, Winona,
+# Juan, so each region has a Gym Leader who can headline in some saves),
+# Elite Four 0, Champion +2, Blue +1.
 ROSTER = [
-    ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', ['Indigo'], 2, 52, ['Geodude', 'Onix']),
-    ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY', ['Indigo', 'Sevii Masters'], 3, 52, ['Staryu', 'Psyduck']),
-    ('Lt. Surge', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_LT_SURGE', ['Indigo', 'Sevii Masters'], 3, 52, ['Voltorb', 'Pikachu']),
-    ('Erika', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_ERIKA', ['Indigo', 'Sevii Masters'], 3, 53, ['Oddish', 'Bellsprout']),
-    ('Janine', 'Kanto', 'Gym Leader', 'HNS', 'TRAINER_JANINE_HNS', ['Indigo', 'Sevii Masters'], 4, 53, ['Venonat', 'Koffing']),
-    ('Sabrina', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_SABRINA', ['Indigo', 'Sevii Masters'], 4, 54, ['Abra', 'Drowzee']),
-    ('Blaine', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BLAINE', ['Indigo', 'Sevii Masters'], 4, 54, ['Growlithe', 'Ponyta']),
-    ('Giovanni', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_GIOVANNI', ['Indigo'], 5, 55, ['Sandshrew', 'Rhyhorn']),
-    ('Blue', 'Kanto', 'Champion', 'FRLG', 'TRAINER_CHAMPION_FIRST_SQUIRTLE', ['Indigo', 'Sevii Masters'], 6, 59, ['Pidgey', 'Eevee']),
-    ('Lorelei', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_LORELEI', ['Indigo', 'Sevii Masters'], 50, 57, []),
-    ('Bruno', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_BRUNO', ['Indigo', 'Sevii Masters'], 52, 56, []),
-    ('Agatha', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_AGATHA', ['Indigo', 'Sevii Masters'], 53, 58, []),
-    ('Koga', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KOGA_1_HNS', ['Indigo', 'Sevii Masters'], 42, 55, []),
-    ('Lance', 'Kanto', 'Champion', 'FRLG', 'TRAINER_ELITE_FOUR_LANCE', ['Indigo', 'Sevii Masters'], 55, 60, []),
-    ('Falkner', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_FALKNER_1_HNS', ['Indigo'], 1, 52, ['Pidgey', 'Hoothoot']),
-    ('Bugsy', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_BUGSY_1_HNS', ['Indigo'], 2, 52, ['Caterpie', 'Weedle']),
-    ('Whitney', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_WHITNEY_1_HNS', ['Indigo'], 3, 52, ['Clefairy', 'Meowth']),
-    ('Morty', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_MORTY_1_HNS', ['Indigo', 'Sevii Masters'], 3, 53, ['Gastly', 'Misdreavus']),
-    ('Chuck', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CHUCK_1_HNS', ['Indigo', 'Sevii Masters'], 4, 53, ['Machop', 'Makuhita']),
-    ('Jasmine', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_JASMINE_1_HNS', ['Indigo', 'Sevii Masters'], 4, 53, ['Magnemite', 'Aron']),
-    ('Pryce', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_PRYCE_1_HNS', ['Indigo'], 4, 54, ['Seel', 'Swinub']),
-    ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS', ['Indigo'], 5, 54, ['Dratini', 'Horsea']),
-    ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS', ['Indigo'], 40, 55, []),
-    ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS', ['Indigo', 'Sevii Masters'], 44, 57, []),
-    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', ['Hoenn'], 3, 52, ['Geodude', 'Nosepass']),
-    ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1', ['Hoenn'], 3, 52, ['Machop', 'Makuhita']),
-    ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1', ['Hoenn'], 3, 53, ['Voltorb', 'Electrike']),
-    ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', ['Hoenn'], 4, 53, ['Numel', 'Slugma']),
-    ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1', ['Hoenn'], 4, 53, ['Slakoth', 'Zigzagoon']),
-    ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1', ['Hoenn'], 4, 54, ['Swablu', 'Taillow']),
-    ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1', ['Hoenn'], 5, 54, ['Horsea', 'Barboach']),
-    ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY', ['Hoenn'], 46, 55, []),
-    ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE', ['Hoenn'], 47, 56, []),
-    ('Glacia', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_GLACIA', ['Hoenn'], 49, 57, []),
-    ('Drake', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_DRAKE', ['Hoenn'], 51, 58, []),
-    ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE', ['Hoenn'], 53, 59, []),
-    ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN', ['Hoenn'], 53, 60, []),
+    ('Brock', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BROCK', ['Indigo'], -2, ['steady', 'late'], ['Geodude', 'Onix']),
+    ('Misty', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_MISTY', ['Indigo'], -2, ['steady', 'early'], ['Staryu', 'Psyduck']),
+    ('Lt. Surge', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_LT_SURGE', ['Indigo'], -2, ['steady', 'plateau'], ['Voltorb', 'Pikachu']),
+    ('Erika', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_ERIKA', ['Indigo'], -2, ['steady', 'late'], ['Oddish', 'Bellsprout']),
+    ('Janine', 'Kanto', 'Gym Leader', 'HNS', 'TRAINER_JANINE_HNS', ['Indigo'], -2, ['early', 'late'], ['Venonat', 'Koffing']),
+    ('Sabrina', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_SABRINA', ['Indigo'], -1, ['steady', 'early'], ['Abra', 'Drowzee']),
+    ('Blaine', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_BLAINE', ['Indigo'], -2, ['steady', 'plateau'], ['Growlithe', 'Ponyta']),
+    ('Giovanni', 'Kanto', 'Gym Leader', 'FRLG', 'TRAINER_LEADER_GIOVANNI', ['Indigo'], -1, ['steady', 'late'], ['Sandshrew', 'Rhyhorn']),
+    ('Blue', 'Kanto', 'Champion', 'FRLG', 'TRAINER_CHAMPION_FIRST_SQUIRTLE', ['Indigo'], 1, ['early', 'rival'], ['Pidgey', 'Eevee']),
+    ('Lorelei', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_LORELEI', ['Indigo'], 0, ['steady', 'plateau'], []),
+    ('Bruno', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_BRUNO', ['Indigo'], 0, ['steady', 'plateau'], []),
+    ('Agatha', 'Kanto', 'Elite Four', 'FRLG', 'TRAINER_ELITE_FOUR_AGATHA', ['Indigo'], 0, ['steady', 'plateau'], []),
+    ('Koga', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KOGA_1_HNS', ['Indigo'], 0, ['steady', 'late'], []),
+    ('Lance', 'Kanto', 'Champion', 'FRLG', 'TRAINER_ELITE_FOUR_LANCE', ['Indigo'], 2, ['steady', 'rival'], []),
+    ('Falkner', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_FALKNER_1_HNS', ['Indigo'], -2, ['steady', 'early'], ['Pidgey', 'Hoothoot']),
+    ('Bugsy', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_BUGSY_1_HNS', ['Indigo'], -2, ['early', 'late'], ['Caterpie', 'Weedle']),
+    ('Whitney', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_WHITNEY_1_HNS', ['Indigo'], -2, ['early', 'plateau'], ['Clefairy', 'Meowth']),
+    ('Morty', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_MORTY_1_HNS', ['Indigo'], -1, ['steady', 'late'], ['Gastly', 'Misdreavus']),
+    ('Chuck', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CHUCK_1_HNS', ['Indigo'], -2, ['steady', 'plateau'], ['Machop', 'Makuhita']),
+    ('Jasmine', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_JASMINE_1_HNS', ['Indigo'], -2, ['steady', 'late'], ['Magnemite', 'Aron']),
+    ('Pryce', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_PRYCE_1_HNS', ['Indigo'], -2, ['steady', 'plateau'], ['Seel', 'Swinub']),
+    ('Clair', 'Johto', 'Gym Leader', 'HNS', 'TRAINER_CLAIR_1_HNS', ['Indigo'], -1, ['steady', 'early', 'rival'], ['Dratini', 'Horsea']),
+    ('Will', 'Johto', 'Elite Four', 'HNS', 'TRAINER_WILL_1_HNS', ['Indigo'], 0, ['steady', 'early'], []),
+    ('Karen', 'Johto', 'Elite Four', 'HNS', 'TRAINER_KAREN_1_HNS', ['Indigo'], 0, ['steady', 'late'], []),
+    ('Roxanne', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_ROXANNE_1', ['Hoenn'], -2, ['steady', 'late'], ['Geodude', 'Nosepass']),
+    ('Brawly', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_BRAWLY_1', ['Hoenn'], -2, ['steady', 'early'], ['Machop', 'Makuhita']),
+    ('Wattson', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WATTSON_1', ['Hoenn'], -2, ['steady', 'plateau'], ['Voltorb', 'Electrike']),
+    ('Flannery', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_FLANNERY_1', ['Hoenn'], -2, ['early', 'late'], ['Numel', 'Slugma']),
+    ('Norman', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_NORMAN_1', ['Hoenn'], -1, ['steady', 'late'], ['Slakoth', 'Zigzagoon']),
+    ('Winona', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_WINONA_1', ['Hoenn'], -1, ['steady', 'early'], ['Swablu', 'Taillow']),
+    ('Juan', 'Hoenn', 'Gym Leader', 'Emerald', 'TRAINER_JUAN_1', ['Hoenn'], -1, ['steady', 'plateau'], ['Horsea', 'Barboach']),
+    ('Sidney', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_SIDNEY', ['Hoenn'], 0, ['steady', 'early'], []),
+    ('Phoebe', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_PHOEBE', ['Hoenn'], 0, ['early', 'late'], []),
+    ('Glacia', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_GLACIA', ['Hoenn'], 0, ['steady', 'plateau'], []),
+    ('Drake', 'Hoenn', 'Elite Four', 'Emerald', 'TRAINER_DRAKE', ['Hoenn'], 0, ['steady', 'plateau'], []),
+    ('Wallace', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_WALLACE', ['Hoenn'], 2, ['steady', 'late'], []),
+    ('Steven', 'Hoenn', 'Champion', 'Emerald', 'TRAINER_STEVEN', ['Hoenn'], 2, ['steady', 'early'], []),
 ]
-
-# Approachability and career growth are separate authoring decisions. Blue can
-# be an early Gym challenge while approaching Champion strength by eight badges.
-BADGE_TR_CHECKPOINTS = {"Blue": [6, 54, 57, 59]}
 
 
 def command(args, **kwargs):
@@ -131,7 +134,13 @@ def generate():
     if curated.get("version") != 1:
         raise ValueError("unsupported gym catalog")
     result = []
-    for name, region, role, family, trainer, homes, start, mature, early in ROSTER:
+    for name, region, role, family, trainer, homes, bias, arcs, early in ROSTER:
+        if not isinstance(bias, int) or not -6 <= bias <= 6:
+            raise ValueError(f"bias must be an integer from -6 to 6: {name}")
+        if not 2 <= len(arcs) <= 3 or arcs != sorted(set(arcs), key=ARCS.index):
+            raise ValueError(f"allowed arcs must be 2-3 unique arcs in canonical order: {name}")
+        if not set(homes) <= {"Indigo", "Hoenn"}:
+            raise ValueError(f"home leagues are Indigo/Hoenn only; Sevii Masters is open: {name}")
         records = sources[family]
         reference = party(records, trainer)
         note = "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams."
@@ -139,13 +148,13 @@ def generate():
             note += " HNS local variant, not a HeartGold/SoulSilver canonical party."
         if name == "Blue":
             note += " FRLG first Champion Squirtle starter branch selected explicitly; Blue remains Gym eligible in this prototype."
-            note += " His authored TR checkpoints at 0/8/16/24 badges are 6/54/57/59: an approachable opening followed by faster growth toward Champion strength."
+            note += " Standing bias +1 with only fast arcs (early, rival) keeps him a few levels above the world cap wherever it is at most 96 (all of edition 1). At the level ceiling the check is against the level base instead."
         if early:
-            note += " Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+            note += " Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
         if name in ["Koga", "Will", "Karen"]:
-            note += " Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+            note += " This stronger HNS party is comparison evidence; explorer levels follow the world cap plus standing, not these authored levels."
         if name == "Steven":
-            note += " Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Prototype start TR 53 retains the earlier RS-equivalent calibration; the stronger reference does not set the prototype baseline."
+            note += " Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Explorer levels follow the world cap plus standing, not these authored levels."
         roster = next((row for row in curated["rosters"] if row["identity"] == name), None)
         if roster:
             competitive = []
@@ -173,9 +182,7 @@ def generate():
                        "gymEligible": bool(early), "homeLeagues": homes,
                        "source": {"label": f"{family} local reference", "path": records[trainer]["source"], "trainerId": trainer, "note": note},
                        "referenceParty": reference, "competitiveParty": competitive, "competitiveSource": competitive_source,
-                       "earlyParty": early, "suggestedStartTR": start, "suggestedMatureTR": mature})
-        if name in BADGE_TR_CHECKPOINTS:
-            result[-1]["badgeTRCheckpoints"] = BADGE_TR_CHECKPOINTS[name]
+                       "earlyParty": early, "bias": bias, "allowedArcs": arcs})
     if len(result) != 37 or len({row["id"] for row in result}) != 37:
         raise ValueError("catalog must contain exactly 37 unique trainers")
     return json.dumps(result, indent=2, ensure_ascii=False) + "\n"

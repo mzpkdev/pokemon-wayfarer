@@ -1,16 +1,67 @@
 import type {
+  ArcId,
+  ArcTuple,
   Experiment,
-  LevelAnchor,
   PartyMember,
   ReferenceMember,
   ResolvedTrainer,
+  Role,
+  RoleFeasibility,
+  RoleWindows,
   TeamStage,
   TrainerRecord,
+  TrainerSettings,
+  VenueFeasibility,
+  VenueId,
   WorldPoint,
 } from "./types.js"
 
-const NPC_ANCHORS: LevelAnchor[] = [
-  [0, 12],
+type LevelAnchor = [number, number]
+
+/** Canonical arc order: the index is the arc id, so allowedArcs sort by it. */
+export const ARC_IDS: readonly ArcId[] = ["steady", "early", "late", "plateau", "rival"]
+/** Arc checkpoints on the progress index p = B + 8 * min(completedEditions, 3). */
+export const ARC_CHECKPOINTS = [0, 8, 16, 24, 32, 40, 48] as const
+export const MAX_PROGRESS = 48
+export const MAX_EDITIONS = 3
+export const DEFAULT_ARCS: Record<ArcId, ArcTuple> = {
+  steady: [0, 0, 0, 0, 0, 0, 0],
+  early: [0, 3, 2, 1, 0, 0, 0],
+  late: [0, -2, 0, 3, 3, 2, 2],
+  plateau: [0, 1, -1, -3, -3, -2, -1],
+  rival: [0, 2, 3, 3, 3, 3, 3],
+}
+/** levelBase = min(worldCap, 100 - headroom). */
+export const DEFAULT_HEADROOM = 4
+export const MAX_HEADROOM = 20
+export const DEFAULT_ROLE_WINDOWS: RoleWindows = { contenderMax: -2, headlinerMin: 2 }
+export const ROLES: readonly Role[] = ["contender", "elite", "headliner"]
+/** Slots per venue: two contenders, two elites, one headliner. */
+export const ROLE_NEED: Record<Role, number> = { contender: 2, elite: 2, headliner: 1 }
+export const VENUES: readonly { venue: VenueId; pool: "home" | "open" }[] = [
+  { venue: "Indigo", pool: "home" },
+  { venue: "Hoenn", pool: "home" },
+  { venue: "Sevii Masters", pool: "open" },
+]
+/** Gym stage schedule: minimum global badges -> party size. */
+export const GYM_STAGE_SCHEDULE: readonly [number, number][] = [
+  [0, 2],
+  [3, 3],
+  [6, 4],
+  [10, 5],
+  [16, 6],
+]
+const GYM_STAGE_LABELS = [
+  "Opening team",
+  "Developing team",
+  "Rising team",
+  "Established team",
+  "Competitive team",
+]
+
+// The player's soft-cap curve. The world cap reuses it unchanged.
+const PLAYER_ANCHORS: LevelAnchor[] = [
+  [0, 15],
   [4, 16],
   [8, 18],
   [16, 23],
@@ -20,39 +71,49 @@ const NPC_ANCHORS: LevelAnchor[] = [
   [65, 80],
   [80, 100],
 ]
-const PLAYER_ANCHORS: LevelAnchor[] = NPC_ANCHORS.map(([tr, level]) => [tr, tr === 0 ? 15 : level])
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value))
+/** Half-up integer rounding (toward +infinity on ties), without negative zero. */
+const roundHalfUp = (value: number) => Math.floor(value + 0.5) + 0
 const finite = (value: number, label: string) => {
   if (!Number.isFinite(value)) throw new Error(`${label} must be finite`)
   return value
 }
-const normalizePoint = (point: WorldPoint): WorldPoint => ({
-  badges: clamp(Math.round(finite(point.badges, "Badges")), 0, 24),
-  leagueClears: clamp(Math.round(finite(point.leagueClears, "League clears")), 0, 3),
-})
+type NormalPoint = Required<WorldPoint>
+/**
+ * Clamps badges to 0–24, clears to 0–3 and completed editions to 0–3 (3 means
+ * "3 or more"). A completed edition implies 24 badges and 3 first clears, so
+ * editions only count at that point and are 0 everywhere else.
+ */
+export const normalizePoint = (point: WorldPoint): NormalPoint => {
+  const badges = clamp(Math.round(finite(point.badges, "Badges")), 0, 24)
+  const leagueClears = clamp(Math.round(finite(point.leagueClears, "League clears")), 0, 3)
+  const editions = clamp(
+    Math.round(finite(point.completedEditions ?? 0, "Completed editions")),
+    0,
+    MAX_EDITIONS,
+  )
+  return {
+    badges,
+    leagueClears,
+    completedEditions: badges === 24 && leagueClears === 3 ? editions : 0,
+  }
+}
+
+/** Whether completed editions can be non-zero at this point (B = 24 and C = 3). */
+export const editionsAvailable = (point: WorldPoint): boolean => {
+  const { badges, leagueClears } = normalizePoint(point)
+  return badges === 24 && leagueClears === 3
+}
+
+/** The arc input: p = B + 8 * min(completedEditions, 3), from 0 to 48. */
+export const progressIndex = (point: WorldPoint): number => {
+  const { badges, completedEditions } = normalizePoint(point)
+  return badges + 8 * completedEditions
+}
 
 /** Positive, half-up interpolation, matching the ROM's integer cap rounding. */
 export const resolveLevel = (tr: number, anchors: LevelAnchor[]): number => {
   const rating = clamp(finite(tr, "Trainer rating"), 0, 80)
-  if (anchors.length < 2) throw new Error("Level anchors need at least two points")
-  if (
-    anchors[0]?.[0] !== 0 ||
-    anchors.at(-1)?.[0] !== 80 ||
-    anchors.some(([rating, level], index) => {
-      const previous = anchors[index - 1]
-      return (
-        !Number.isFinite(rating) ||
-        !Number.isFinite(level) ||
-        level < 1 ||
-        level > 100 ||
-        (index > 0 && (!previous || rating <= previous[0] || level < previous[1]))
-      )
-    })
-  ) {
-    throw new Error(
-      "Level anchors must cover 0–80 with increasing ratings and finite nondecreasing levels from 1–100",
-    )
-  }
   for (let index = 1; index < anchors.length; index += 1) {
     const lower = anchors[index - 1]
     const upper = anchors[index]
@@ -80,23 +141,72 @@ export const playerRating = (point: WorldPoint): number => {
 export const playerCap = (point: WorldPoint): number =>
   resolveLevel(playerRating(point), PLAYER_ANCHORS)
 
-const sourceParty = (party: ReferenceMember[]): PartyMember[] => {
-  const ace = Math.max(...party.map((member) => member.level))
-  return party.map((member) => ({
-    species: member.species,
-    levelOffset: clamp(member.level - ace, -30, 0),
-  }))
+/** The player soft cap computed from canonical milestones (B, C) alone. */
+export const worldCap = (point: WorldPoint): number => playerCap(point)
+
+/** min(worldCap, 100 - headroom): standing is added to this base. */
+export const levelBase = (point: WorldPoint, headroom: number): number =>
+  Math.min(worldCap(point), 100 - headroom)
+
+/** Linear interpolation of an arc tuple across p = 0/8/…/48, rounded half up. */
+export const arcDelta = (tuple: ArcTuple, progress: number): number => {
+  const p = clamp(Math.round(finite(progress, "Progress")), 0, MAX_PROGRESS)
+  const segment = Math.min(ARC_CHECKPOINTS.length - 2, Math.floor(p / 8))
+  const lower = tuple[segment]
+  const upper = tuple[segment + 1]
+  if (lower === undefined || upper === undefined)
+    throw new Error(`Arc tuples need ${ARC_CHECKPOINTS.length} values`)
+  return roundHalfUp(lower + ((p - segment * 8) * (upper - lower)) / 8)
 }
 
-// Preserve authored duplicate counts without doubling shared species when expanding.
-const expandParty = (
-  reference: ReferenceMember[],
-  competitive: ReferenceMember[],
-  size: number,
-): ReferenceMember[] => {
-  const result = reference.slice()
+export const standingAt = (
+  settings: Pick<TrainerSettings, "bias">,
+  experiment: Pick<Experiment, "arcs">,
+  arc: ArcId,
+  progress: number,
+): number => settings.bias + arcDelta(experiment.arcs[arc], progress)
+
+export const classifyRole = (standing: number, windows: RoleWindows): Role =>
+  standing <= windows.contenderMax
+    ? "contender"
+    : standing >= windows.headlinerMin
+      ? "headliner"
+      : "elite"
+
+export const sortArcs = (arcs: ArcId[]): ArcId[] =>
+  [...new Set(arcs)].toSorted((a, b) => ARC_IDS.indexOf(a) - ARC_IDS.indexOf(b))
+
+const defaultArc = (allowed: ArcId[]): ArcId =>
+  allowed.includes("steady") ? "steady" : (allowed[0] ?? "steady")
+
+type SourcedMember = ReferenceMember & { sourceAce: number }
+const sourced = (party: ReferenceMember[]): SourcedMember[] => {
+  const ace = Math.max(...party.map((member) => member.level))
+  return party.map((member) => ({ ...member, sourceAce: ace }))
+}
+const toParty = (members: SourcedMember[]): PartyMember[] =>
+  members.map((member) => ({
+    species: member.species,
+    levelOffset: clamp(member.level - member.sourceAce, -30, 0),
+  }))
+
+/**
+ * A mid-journey Gym party of `size`: the strongest reference members first,
+ * then competitive members whose species count is not already represented.
+ * Offsets stay relative to each member's own source ace.
+ */
+const mixedParty = (trainer: TrainerRecord, size: number): PartyMember[] => {
+  const reference = sourced(trainer.referenceParty)
+  const keep = new Set(
+    reference
+      .map((member, index) => ({ member, index }))
+      .toSorted((a, b) => b.member.level - a.member.level || a.index - b.index)
+      .slice(0, size)
+      .map(({ index }) => index),
+  )
+  const result = reference.filter((_, index) => keep.has(index))
   const seen = new Map<string, number>()
-  for (const member of competitive) {
+  for (const member of sourced(trainer.competitiveParty)) {
     const count = (seen.get(member.species) ?? 0) + 1
     seen.set(member.species, count)
     if (
@@ -105,110 +215,270 @@ const expandParty = (
     )
       result.push(member)
   }
-  return result
+  return toParty(result)
 }
 
-const preserveTransitionFloor = (stages: TeamStage[]): TeamStage[] => {
+/**
+ * Party size never drops by schedule; raising every offset to at least the
+ * previous stage's weakest offset keeps the weakest member's level from
+ * dropping at a stage change whenever the ace level does not drop.
+ */
+const preserveStageFloor = (stages: TeamStage[]): TeamStage[] => {
   for (let index = 1; index < stages.length; index += 1) {
     const previous = stages[index - 1]
     const current = stages[index]
     if (!previous || !current) throw new Error("Team stages must not contain missing entries")
-    const previousAce = resolveLevel(current.minTR - 1, NPC_ANCHORS)
-    const currentAce = resolveLevel(current.minTR, NPC_ANCHORS)
-    const previousFloor =
-      previousAce + Math.min(...previous.party.map((member) => member.levelOffset))
+    const floor = Math.min(...previous.party.map((member) => member.levelOffset))
     current.party = current.party.map((member) => ({
       ...member,
-      levelOffset: Math.max(member.levelOffset, previousFloor - currentAce),
+      levelOffset: Math.max(member.levelOffset, floor),
     }))
   }
   return stages
 }
 
+export const defaultStages = (trainer: TrainerRecord): TeamStage[] => {
+  const competitive = toParty(sourced(trainer.competitiveParty))
+  const stages: TeamStage[] = []
+  if (trainer.gymEligible) {
+    GYM_STAGE_SCHEDULE.forEach(([minBadges, target], index) => {
+      const size = Math.min(target, competitive.length)
+      if (stages.length && size <= (stages.at(-1)?.party.length ?? 0)) return
+      const party =
+        index === 0 && trainer.earlyParty.length
+          ? trainer.earlyParty.map((species, slot, list) => ({
+              species,
+              levelOffset: slot === list.length - 1 ? 0 : -2,
+            }))
+          : size === competitive.length
+            ? competitive
+            : mixedParty(trainer, size)
+      const label =
+        size === competitive.length ? "Competitive team" : (GYM_STAGE_LABELS[index] ?? "Team")
+      stages.push({ minBadges, label: `${label} (${party.length})`, party })
+    })
+  } else {
+    const reference = toParty(sourced(trainer.referenceParty))
+    stages.push({ minBadges: 0, label: `Reference team (${reference.length})`, party: reference })
+    if (JSON.stringify(reference) !== JSON.stringify(competitive))
+      stages.push({
+        minBadges: 8,
+        label: `Competitive team (${competitive.length})`,
+        party: competitive,
+      })
+  }
+  return preserveStageFloor(stages)
+}
+
+export const defaultTrainerSettings = (trainer: TrainerRecord): TrainerSettings => {
+  const allowedArcs = sortArcs(trainer.allowedArcs)
+  return {
+    bias: trainer.bias,
+    allowedArcs,
+    arc: defaultArc(allowedArcs),
+    stages: defaultStages(trainer),
+  }
+}
+
 export const createExperiment = (catalog: TrainerRecord[]): Experiment => {
   const trainers: Experiment["trainers"] = Object.create(null)
-  for (const trainer of catalog) {
-    const start = clamp(Math.round(trainer.suggestedStartTR), 0, 80)
-    const mature = clamp(Math.max(start, Math.round(trainer.suggestedMatureTR)), 0, 80)
-    const competitive = sourceParty(trainer.competitiveParty)
-    let stages: TeamStage[]
-    let ratings: [number, number, number, number]
-    if (trainer.gymEligible) {
-      const eight = clamp(35 + Math.round((mature - 55) / 5), start, mature)
-      const sixteen = clamp(45 + Math.round((mature - 55) / 4), eight, mature)
-      ratings = [start, eight, sixteen, mature]
-      const early = trainer.earlyParty.map((species, index, party) => ({
-        species,
-        levelOffset: index === party.length - 1 ? 0 : -2,
-      }))
-      const intermediate = sourceParty(
-        expandParty(
-          trainer.referenceParty,
-          trainer.competitiveParty,
-          Math.min(competitive.length, Math.max(early.length, 4)),
-        ),
-      )
-      stages = [
-        { minTR: 0, label: "Approachable team", party: early },
-        { minTR: 28, label: "Developing team", party: intermediate },
-        { minTR: 48, label: "Competitive team", party: competitive },
-      ]
-    } else {
-      ratings = [
-        start,
-        Math.round(start + (mature - start) / 3),
-        Math.round(start + (2 * (mature - start)) / 3),
-        mature,
-      ]
-      stages = [
-        { minTR: 0, label: "Reference team", party: sourceParty(trainer.referenceParty) },
-        {
-          minTR: Math.min(80, Math.max(48, start + 4)),
-          label: "Competitive team",
-          party: competitive,
-        },
-      ]
-    }
-    if (trainer.badgeTRCheckpoints !== undefined) ratings = trainer.badgeTRCheckpoints
-    trainers[trainer.id] = { ratings, leagueGrowth: 6, stages: preserveTransitionFloor(stages) }
-  }
-  return validateExperiment({ version: 1, levelAnchors: NPC_ANCHORS, trainers }, catalog)
+  for (const trainer of catalog) trainers[trainer.id] = defaultTrainerSettings(trainer)
+  return validateExperiment(
+    {
+      version: 3,
+      arcs: structuredClone(DEFAULT_ARCS),
+      roleWindows: { ...DEFAULT_ROLE_WINDOWS },
+      headroom: DEFAULT_HEADROOM,
+      trainers,
+    },
+    catalog,
+  )
 }
+
+const stageAt = (settings: TrainerSettings, badges: number) => {
+  const index = settings.stages.findLastIndex((entry) => entry.minBadges <= badges)
+  const stage = settings.stages[index]
+  if (!stage) throw new Error("Missing initial team stage")
+  return { stage, index }
+}
+
+const aceAt = (settings: TrainerSettings, experiment: Experiment, arc: ArcId, point: WorldPoint) =>
+  levelBase(point, experiment.headroom) +
+  standingAt(settings, experiment, arc, progressIndex(point))
+
+const minLevelAt = (
+  settings: TrainerSettings,
+  experiment: Experiment,
+  arc: ArcId,
+  point: WorldPoint,
+) => {
+  const ace = clamp(aceAt(settings, experiment, arc, point), 1, 100)
+  const { stage } = stageAt(settings, point.badges)
+  return Math.min(...stage.party.map((member) => clamp(ace + member.levelOffset, 1, 100)))
+}
+
+/** The previous step on the progress index: one badge back, or one edition back. */
+const previousPoint = (point: NormalPoint): NormalPoint | null =>
+  point.completedEditions > 0
+    ? { ...point, completedEditions: point.completedEditions - 1 }
+    : point.badges > 0
+      ? { ...point, badges: point.badges - 1 }
+      : null
 
 export const resolveTrainer = (
   trainer: TrainerRecord,
   experiment: Experiment,
   point: WorldPoint,
+  arcOverride?: ArcId,
 ): ResolvedTrainer => {
-  const { badges, leagueClears } = normalizePoint(point)
+  const world = normalizePoint(point)
   const settings = experiment.trainers[trainer.id]
   if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
-  const segment = Math.min(2, Math.floor(badges / 8))
-  const lower = settings.ratings[segment]
-  const upper = settings.ratings[segment + 1]
-  if (lower === undefined || upper === undefined)
-    throw new Error(`Missing trainer rating checkpoints: ${trainer.id}`)
-  const base = Math.round(lower + ((badges - segment * 8) * (upper - lower)) / 8)
-  const unclampedTR = base + leagueClears * settings.leagueGrowth
-  const tr = clamp(unclampedTR, 0, 80)
-  const stage = settings.stages.filter((entry) => entry.minTR <= tr).at(-1)
-  if (!stage) throw new Error(`Missing initial team stage: ${trainer.id}`)
-  const aceLevel = resolveLevel(tr, experiment.levelAnchors)
-  const cap = playerCap({ badges, leagueClears })
+  const arc = arcOverride ?? settings.arc
+  const progress = progressIndex(world)
+  const standing = standingAt(settings, experiment, arc, progress)
+  const cap = worldCap(world)
+  const base = levelBase(world, experiment.headroom)
+  const rawAce = base + standing
+  const aceLevel = clamp(rawAce, 1, 100)
+  const { stage, index } = stageAt(settings, world.badges)
   const warnings: string[] = []
-  if (unclampedTR > 80)
-    warnings.push(`Trainer rating saturation: attempted TR ${unclampedTR}, capped at 80.`)
+  if (rawAce > 100) warnings.push(`Ace level ${rawAce} clamped to 100.`)
+  if (rawAce < 1) warnings.push(`Ace level ${rawAce} clamped to 1.`)
   const party = stage.party.map((member) => {
     const rawLevel = aceLevel + member.levelOffset
     if (rawLevel < 1 || rawLevel > 100)
       warnings.push(`${member.species} level clipped to the 1–100 range.`)
     return { ...member, level: clamp(rawLevel, 1, 100) }
   })
-  if (party.some((member) => member.level > cap))
-    warnings.push(`Team exceeds the player's soft level cap (${cap}); this is informational.`)
-  if (aceLevel === 100)
-    warnings.push("Maximum level reached; further trainer rating growth cannot raise levels.")
-  return { trainer, tr, unclampedTR, aceLevel, playerCap: cap, stage: stage.label, party, warnings }
+  const before = previousPoint(world)
+  if (
+    before &&
+    minLevelAt(settings, experiment, arc, before) > Math.min(...party.map((m) => m.level))
+  )
+    warnings.push("The weakest member's level dropped since the previous progress step.")
+  return {
+    trainer,
+    arc,
+    progress,
+    standing,
+    aceLevel,
+    worldCap: cap,
+    levelBase: base,
+    gap: aceLevel - cap,
+    role: classifyRole(standing, experiment.roleWindows),
+    stage: stage.label,
+    stageIndex: index,
+    party,
+    warnings,
+  }
+}
+
+export const hasCompetitiveProfile = (trainer: TrainerRecord): boolean =>
+  trainer.competitiveParty.length === 6
+
+/**
+ * Per venue and role at progress index p: candidates in-window under every
+ * allowed arc (guaranteed), under some allowed arc (possible), and under the
+ * currently selected arc. Standing depends on p only, not on league clears
+ * or the level headroom.
+ */
+export const venueFeasibility = (
+  catalog: TrainerRecord[],
+  experiment: Experiment,
+  progress: number,
+  options: { includeIncomplete?: boolean } = {},
+): VenueFeasibility[] =>
+  VENUES.map(({ venue, pool }) => {
+    const members = catalog.filter(
+      (trainer) => pool === "open" || trainer.homeLeagues.includes(venue),
+    )
+    const candidates = members.filter(
+      (trainer) => options.includeIncomplete || hasCompetitiveProfile(trainer),
+    )
+    const roles = candidates.map((trainer) => {
+      const settings = experiment.trainers[trainer.id]
+      if (!settings) throw new Error(`Missing trainer settings: ${trainer.id}`)
+      const role = (arc: ArcId) =>
+        classifyRole(standingAt(settings, experiment, arc, progress), experiment.roleWindows)
+      return { all: settings.allowedArcs.map(role), current: role(settings.arc) }
+    })
+    return {
+      venue,
+      pool,
+      candidates: candidates.length,
+      excluded: members.filter((trainer) => !candidates.includes(trainer)).map((t) => t.name),
+      roles: ROLES.map((role): RoleFeasibility => {
+        const guaranteed = roles.filter((entry) => entry.all.every((r) => r === role)).length
+        return {
+          role,
+          need: ROLE_NEED[role],
+          guaranteed,
+          possible: roles.filter((entry) => entry.all.includes(role)).length,
+          current: roles.filter((entry) => entry.current === role).length,
+          fallbackRisk: guaranteed < ROLE_NEED[role],
+        }
+      }),
+    }
+  })
+
+export type GymCapSummary = {
+  count: number
+  mean: number
+  min: number
+  max: number
+  /** Extremes across every allowed arc, not only the selected ones. */
+  arcMin: number
+  arcMax: number
+  /**
+   * Blue is "ahead" when every allowed arc puts his ace above levelBase. Below
+   * the ceiling (worldCap <= 100 - headroom) levelBase is the cap, so this is
+   * the ace − cap > 0 check; at the ceiling it is ace > levelBase.
+   */
+  blue: {
+    gaps: { arc: ArcId; gap: number; baseGap: number }[]
+    ahead: boolean
+    atCeiling: boolean
+    levelBase: number
+  } | null
+}
+
+export const gymCapSummary = (
+  catalog: TrainerRecord[],
+  experiment: Experiment,
+  point: WorldPoint,
+): GymCapSummary => {
+  const leaders = catalog.filter((trainer) => trainer.role === "Gym Leader")
+  const gaps = leaders.map((trainer) => resolveTrainer(trainer, experiment, point).gap)
+  const arcGaps = leaders.flatMap((trainer) =>
+    (experiment.trainers[trainer.id]?.allowedArcs ?? []).map(
+      (arc) => resolveTrainer(trainer, experiment, point, arc).gap,
+    ),
+  )
+  const blueTrainer = catalog.find((trainer) => trainer.id === "blue")
+  const base = levelBase(normalizePoint(point), experiment.headroom)
+  const blueGaps = blueTrainer
+    ? (experiment.trainers.blue?.allowedArcs ?? []).map((arc) => {
+        const resolved = resolveTrainer(blueTrainer, experiment, point, arc)
+        return { arc, gap: resolved.gap, baseGap: resolved.aceLevel - resolved.levelBase }
+      })
+    : []
+  return {
+    count: leaders.length,
+    mean: gaps.length ? gaps.reduce((sum, gap) => sum + gap, 0) / gaps.length : 0,
+    min: Math.min(...gaps),
+    max: Math.max(...gaps),
+    arcMin: Math.min(...arcGaps),
+    arcMax: Math.max(...arcGaps),
+    blue: blueTrainer
+      ? {
+          gaps: blueGaps,
+          ahead: blueGaps.every(({ baseGap }) => baseGap > 0),
+          atCeiling: worldCap(point) > base,
+          levelBase: base,
+        }
+      : null,
+  }
 }
 
 const fail = (message: string): never => {
@@ -219,7 +489,7 @@ const object = (value: unknown, path: string): Record<string, unknown> => {
     fail(`${path} must be an object`)
   return value as Record<string, unknown>
 }
-const exactKeys = (value: Record<string, unknown>, keys: string[], path: string) => {
+const exactKeys = (value: Record<string, unknown>, keys: readonly string[], path: string) => {
   if (
     Object.keys(value).some((key) => !keys.includes(key)) ||
     keys.some((key) => !Object.hasOwn(value, key))
@@ -236,35 +506,49 @@ const label = (value: unknown, max: number, path: string): string => {
     fail(`${path} must be a nonempty string of at most ${max} characters`)
   return value as string
 }
+const arcId = (value: unknown, path: string): ArcId => {
+  if (typeof value !== "string" || !(ARC_IDS as readonly string[]).includes(value))
+    fail(`${path} must be one of ${ARC_IDS.join(", ")}`)
+  return value as ArcId
+}
+
+export const V1_REJECTION =
+  "Version 1 experiments use the retired trainer-rating model and cannot be imported. Start from the version 3 defaults."
+export const V2_REJECTION =
+  "Version 2 experiments predate post-game arcs (p = 0–48) and level headroom and cannot be imported. Start from the version 3 defaults."
 
 export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Experiment => {
   const input = object(value, "root")
-  exactKeys(input, ["version", "levelAnchors", "trainers"], "root")
-  if (input.version !== 1) fail("version must be 1")
-  if (
-    !Array.isArray(input.levelAnchors) ||
-    input.levelAnchors.length < 2 ||
-    input.levelAnchors.length > 81
-  )
-    fail("levelAnchors must have 2–81 points")
-  const levelAnchors: LevelAnchor[] = Array.from(
-    input.levelAnchors as unknown[],
-    (entry, index) => {
-      if (!Array.isArray(entry) || entry.length !== 2) fail(`levelAnchors[${index}] must be a pair`)
-      const pair = entry as unknown[]
-      return [
-        integer(pair[0], 0, 80, `levelAnchors[${index}].rating`),
-        integer(pair[1], 1, 100, `levelAnchors[${index}].level`),
-      ]
-    },
-  )
-  if (levelAnchors[0]?.[0] !== 0 || levelAnchors.at(-1)?.[0] !== 80)
-    fail("levelAnchors must cover TR 0 through 80")
-  levelAnchors.forEach((anchor, index) => {
-    const previous = levelAnchors[index - 1]
-    if (index && (!previous || anchor[0] <= previous[0] || anchor[1] < previous[1]))
-      fail("levelAnchors ratings must increase and levels must not decrease")
-  })
+  if (input.version === 1) fail(V1_REJECTION)
+  if (input.version === 2) fail(V2_REJECTION)
+  if (input.version !== 3) fail("version must be 3")
+  exactKeys(input, ["version", "arcs", "roleWindows", "headroom", "trainers"], "root")
+
+  const inputArcs = object(input.arcs, "arcs")
+  exactKeys(inputArcs, ARC_IDS, "arcs")
+  const arcs = Object.create(null) as Record<ArcId, ArcTuple>
+  for (const arc of ARC_IDS) {
+    const tuple = inputArcs[arc]
+    if (!Array.isArray(tuple) || tuple.length !== ARC_CHECKPOINTS.length)
+      fail(
+        `arcs.${arc} must have ${ARC_CHECKPOINTS.length} values (p = ${ARC_CHECKPOINTS.join("/")})`,
+      )
+    arcs[arc] = Array.from(tuple as unknown[], (delta, index) =>
+      integer(delta, -12, 12, `arcs.${arc}[p = ${ARC_CHECKPOINTS[index]}]`),
+    ) as ArcTuple
+    if (arcs[arc][0] !== 0) fail(`arcs.${arc} must be 0 at p = 0`)
+  }
+  const headroom = integer(input.headroom, 0, MAX_HEADROOM, "headroom")
+
+  const windows = object(input.roleWindows, "roleWindows")
+  exactKeys(windows, ["contenderMax", "headlinerMin"], "roleWindows")
+  const roleWindows: RoleWindows = {
+    contenderMax: integer(windows.contenderMax, -12, 12, "roleWindows.contenderMax"),
+    headlinerMin: integer(windows.headlinerMin, -12, 12, "roleWindows.headlinerMin"),
+  }
+  if (roleWindows.headlinerMin - roleWindows.contenderMax < 2)
+    fail("roleWindows must leave at least one elite standing between contender and headliner")
+
   const inputTrainers = object(input.trainers, "trainers")
   const ids = catalog.map((trainer) => trainer.id)
   if (new Set(ids).size !== ids.length) fail("catalog contains duplicate trainer IDs")
@@ -272,25 +556,26 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
   const trainers: Experiment["trainers"] = Object.create(null)
   for (const id of ids) {
     const settings = object(inputTrainers[id], `trainers.${id}`)
-    exactKeys(settings, ["ratings", "leagueGrowth", "stages"], `trainers.${id}`)
-    if (!Array.isArray(settings.ratings) || settings.ratings.length !== 4)
-      fail(`${id}.ratings must have four checkpoints`)
-    const ratings = Array.from(settings.ratings as unknown[], (rating, index) =>
-      integer(rating, 0, 80, `${id}.ratings[${index}]`),
-    ) as [number, number, number, number]
+    exactKeys(settings, ["bias", "allowedArcs", "arc", "stages"], `trainers.${id}`)
+    const bias = integer(settings.bias, -6, 6, `${id}.bias`)
     if (
-      ratings.some((rating, index) => {
-        const previous = ratings[index - 1]
-        return index > 0 && (previous === undefined || rating < previous)
-      })
+      !Array.isArray(settings.allowedArcs) ||
+      !settings.allowedArcs.length ||
+      settings.allowedArcs.length > ARC_IDS.length
     )
-      fail(`${id}.ratings must not decrease`)
-    const leagueGrowth = integer(settings.leagueGrowth, 0, 20, `${id}.leagueGrowth`)
-    if (!Array.isArray(settings.stages) || !settings.stages.length || settings.stages.length > 81)
-      fail(`${id}.stages must have 1–81 stages`)
+      fail(`${id}.allowedArcs must list 1–${ARC_IDS.length} arcs`)
+    const listed = Array.from(settings.allowedArcs as unknown[], (arc, index) =>
+      arcId(arc, `${id}.allowedArcs[${index}]`),
+    )
+    const allowedArcs = sortArcs(listed)
+    if (allowedArcs.length !== listed.length) fail(`${id}.allowedArcs must not repeat arcs`)
+    const arc = arcId(settings.arc, `${id}.arc`)
+    if (!allowedArcs.includes(arc)) fail(`${id}.arc must be one of its allowed arcs`)
+    if (!Array.isArray(settings.stages) || !settings.stages.length || settings.stages.length > 25)
+      fail(`${id}.stages must have 1–25 stages`)
     const stages: TeamStage[] = Array.from(settings.stages as unknown[], (entry, index) => {
       const stage = object(entry, `${id}.stages[${index}]`)
-      exactKeys(stage, ["minTR", "label", "party"], `${id}.stages[${index}]`)
+      exactKeys(stage, ["minBadges", "label", "party"], `${id}.stages[${index}]`)
       if (!Array.isArray(stage.party) || !stage.party.length || stage.party.length > 6)
         fail(`${id}.stage party must have 1–6 members`)
       const party: PartyMember[] = Array.from(stage.party as unknown[], (entry, slot) => {
@@ -304,22 +589,22 @@ export const validateExperiment = (value: unknown, catalog: TrainerRecord[]): Ex
       if (!party.some((member) => member.levelOffset === 0))
         fail(`${id}.stage party needs an ace with levelOffset 0`)
       return {
-        minTR: integer(stage.minTR, 0, 80, `${id}.minTR`),
+        minBadges: integer(stage.minBadges, 0, 24, `${id}.minBadges`),
         label: label(stage.label, 100, `${id}.label`),
         party,
       }
     })
-    if (stages[0]?.minTR !== 0) fail(`${id}.first stage must start at TR 0`)
+    if (stages[0]?.minBadges !== 0) fail(`${id}.first stage must start at 0 badges`)
     stages.forEach((stage, index) => {
       const previous = stages[index - 1]
-      if (index && (!previous || stage.minTR <= previous.minTR))
-        fail(`${id}.stages thresholds must increase uniquely`)
+      if (index && (!previous || stage.minBadges <= previous.minBadges))
+        fail(`${id}.stages badge thresholds must increase uniquely`)
       if (previous && stage.party.length < previous.party.length)
         fail(`${id}.stage party sizes must not decrease`)
     })
-    trainers[id] = { ratings, leagueGrowth, stages }
+    trainers[id] = { bias, allowedArcs, arc, stages }
   }
-  return { version: 1, levelAnchors, trainers }
+  return { version: 3, arcs, roleWindows, headroom, trainers }
 }
 
 export const serializeExperiment = (experiment: Experiment): string =>

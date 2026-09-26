@@ -10,7 +10,7 @@
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_BROCK",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -66,8 +66,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BROCK_HNS[0] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Geodude", "Onix"],
-    "suggestedStartTR": 2,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "misty",
@@ -75,12 +75,12 @@
     "region": "Kanto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_MISTY",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -136,8 +136,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MISTY_HNS[5] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Staryu", "Psyduck"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "lt-surge",
@@ -145,12 +145,12 @@
     "region": "Kanto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_LT_SURGE",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -212,8 +212,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_LTSURGE_HNS[5] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Voltorb", "Pikachu"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "erika",
@@ -221,12 +221,12 @@
     "region": "Kanto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_ERIKA",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -288,8 +288,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_ERIKA_HNS[5] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Oddish", "Bellsprout"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 53
+    "bias": -2,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "janine",
@@ -297,12 +297,12 @@
     "region": "Kanto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_JANINE_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -382,8 +382,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JANINE_HNS[4] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Venonat", "Koffing"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 53
+    "bias": -2,
+    "allowedArcs": ["early", "late"]
   },
   {
     "id": "sabrina",
@@ -391,12 +391,12 @@
     "region": "Kanto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_SABRINA",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -464,8 +464,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_SABRINA_HNS[5] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Abra", "Drowzee"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 54
+    "bias": -1,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "blaine",
@@ -473,12 +473,12 @@
     "region": "Kanto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_BLAINE",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -546,8 +546,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BLAINE_HNS[1] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Growlithe", "Ponyta"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 54
+    "bias": -2,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "giovanni",
@@ -560,7 +560,7 @@
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_LEADER_GIOVANNI",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -628,8 +628,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_LEADER_GIOVANNI; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": ["Sandshrew", "Rhyhorn"],
-    "suggestedStartTR": 5,
-    "suggestedMatureTR": 55
+    "bias": -1,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "blue",
@@ -637,12 +637,12 @@
     "region": "Kanto",
     "role": "Champion",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
       "trainerId": "TRAINER_CHAMPION_FIRST_SQUIRTLE",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. FRLG first Champion Squirtle starter branch selected explicitly; Blue remains Gym eligible in this prototype. His authored TR checkpoints at 0/8/16/24 badges are 6/54/57/59: an approachable opening followed by faster growth toward Champion strength. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. FRLG first Champion Squirtle starter branch selected explicitly; Blue remains Gym eligible in this prototype. Standing bias +1 with only fast arcs (early, rival) keeps him a few levels above the world cap wherever it is at most 96 (all of edition 1). At the level ceiling the check is against the level base instead. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -722,9 +722,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_CHAMPION_FIRST_SQUIRTLE; source species/levels/moves/items retained.",
     "earlyParty": ["Pidgey", "Eevee"],
-    "suggestedStartTR": 6,
-    "suggestedMatureTR": 59,
-    "badgeTRCheckpoints": [6, 54, 57, 59]
+    "bias": 1,
+    "allowedArcs": ["early", "rival"]
   },
   {
     "id": "lorelei",
@@ -732,7 +731,7 @@
     "region": "Kanto",
     "role": "Elite Four",
     "gymEligible": false,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -805,8 +804,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LORELEI; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 50,
-    "suggestedMatureTR": 57
+    "bias": 0,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "bruno",
@@ -814,7 +813,7 @@
     "region": "Kanto",
     "role": "Elite Four",
     "gymEligible": false,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -887,8 +886,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_BRUNO; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 52,
-    "suggestedMatureTR": 56
+    "bias": 0,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "agatha",
@@ -896,7 +895,7 @@
     "region": "Kanto",
     "role": "Elite Four",
     "gymEligible": false,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -969,8 +968,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_AGATHA; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 53,
-    "suggestedMatureTR": 58
+    "bias": 0,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "koga",
@@ -978,12 +977,12 @@
     "region": "Johto",
     "role": "Elite Four",
     "gymEligible": false,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_KOGA_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. This stronger HNS party is comparison evidence; explorer levels follow the world cap plus standing, not these authored levels."
     },
     "referenceParty": [
       {
@@ -1051,8 +1050,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_hns.party:TRAINER_KOGA_1_HNS; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 42,
-    "suggestedMatureTR": 55
+    "bias": 0,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "lance",
@@ -1060,7 +1059,7 @@
     "region": "Kanto",
     "role": "Champion",
     "gymEligible": false,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "FRLG local reference",
       "path": "game/src/data/trainers_frlg.party",
@@ -1133,8 +1132,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_frlg.party:TRAINER_ELITE_FOUR_LANCE; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 55,
-    "suggestedMatureTR": 60
+    "bias": 2,
+    "allowedArcs": ["steady", "rival"]
   },
   {
     "id": "falkner",
@@ -1147,7 +1146,7 @@
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_FALKNER_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1203,8 +1202,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_2_HNS[5] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_FALKNER_1_HNS[1] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Pidgey", "Hoothoot"],
-    "suggestedStartTR": 1,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "bugsy",
@@ -1217,7 +1216,7 @@
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_BUGSY_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1279,8 +1278,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_BUGSY_1_HNS[2] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Caterpie", "Weedle"],
-    "suggestedStartTR": 2,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["early", "late"]
   },
   {
     "id": "whitney",
@@ -1293,7 +1292,7 @@
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_WHITNEY_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1355,8 +1354,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_WHITNEY_1_HNS[2] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Clefairy", "Meowth"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["early", "plateau"]
   },
   {
     "id": "morty",
@@ -1364,12 +1363,12 @@
     "region": "Johto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_MORTY_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1437,8 +1436,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_MORTY_1_HNS[3] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Gastly", "Misdreavus"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 53
+    "bias": -1,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "chuck",
@@ -1446,12 +1445,12 @@
     "region": "Johto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_CHUCK_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1519,8 +1518,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_2_HNS[4] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CHUCK_1_HNS[3] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Machop", "Makuhita"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 53
+    "bias": -2,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "jasmine",
@@ -1528,12 +1527,12 @@
     "region": "Johto",
     "role": "Gym Leader",
     "gymEligible": true,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_JASMINE_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1607,8 +1606,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_2_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_JASMINE_1_HNS[4] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Magnemite", "Aron"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 53
+    "bias": -2,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "pryce",
@@ -1621,7 +1620,7 @@
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_PRYCE_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1689,8 +1688,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_2_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_PRYCE_1_HNS[3] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Seel", "Swinub"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 54
+    "bias": -2,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "clair",
@@ -1703,7 +1702,7 @@
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_CLAIR_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -1777,8 +1776,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[1] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[2] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_2_HNS[3] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[0] (offset -2, ace false, AUTHORED); game/src/data/trainers_hns.party:TRAINER_CLAIR_1_HNS[4] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Dratini", "Horsea"],
-    "suggestedStartTR": 5,
-    "suggestedMatureTR": 54
+    "bias": -1,
+    "allowedArcs": ["steady", "early", "rival"]
   },
   {
     "id": "will",
@@ -1791,7 +1790,7 @@
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_WILL_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. This stronger HNS party is comparison evidence; explorer levels follow the world cap plus standing, not these authored levels."
     },
     "referenceParty": [
       {
@@ -1859,8 +1858,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_hns.party:TRAINER_WILL_1_HNS; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 40,
-    "suggestedMatureTR": 55
+    "bias": 0,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "karen",
@@ -1868,12 +1867,12 @@
     "region": "Johto",
     "role": "Elite Four",
     "gymEligible": false,
-    "homeLeagues": ["Indigo", "Sevii Masters"],
+    "homeLeagues": ["Indigo"],
     "source": {
       "label": "HNS local reference",
       "path": "game/src/data/trainers_hns.party",
       "trainerId": "TRAINER_KAREN_1_HNS",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. Start TR follows the earlier canonical encounter calibration; this stronger HNS party is comparison evidence, not the prototype start-level target."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. HNS local variant, not a HeartGold/SoulSilver canonical party. This stronger HNS party is comparison evidence; explorer levels follow the world cap plus standing, not these authored levels."
     },
     "referenceParty": [
       {
@@ -1941,8 +1940,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers_hns.party:TRAINER_KAREN_1_HNS; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 44,
-    "suggestedMatureTR": 57
+    "bias": 0,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "roxanne",
@@ -1955,7 +1954,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_ROXANNE_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2017,8 +2016,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_ROXANNE_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_3[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_ROXANNE_1[2] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Geodude", "Nosepass"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "brawly",
@@ -2031,7 +2030,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_BRAWLY_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2093,8 +2092,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_BRAWLY_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_2[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_2[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_BRAWLY_1[2] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Machop", "Makuhita"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 52
+    "bias": -2,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "wattson",
@@ -2107,7 +2106,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_WATTSON_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2175,8 +2174,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_WATTSON_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_4[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WATTSON_1[3] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Voltorb", "Electrike"],
-    "suggestedStartTR": 3,
-    "suggestedMatureTR": 53
+    "bias": -2,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "flannery",
@@ -2189,7 +2188,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_FLANNERY_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2257,8 +2256,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_FLANNERY_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_2[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_2[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_FLANNERY_1[3] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Numel", "Slugma"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 53
+    "bias": -2,
+    "allowedArcs": ["early", "late"]
   },
   {
     "id": "norman",
@@ -2271,7 +2270,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_NORMAN_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2339,8 +2338,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_NORMAN_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_3[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_5[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_NORMAN_1[3] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Slakoth", "Zigzagoon"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 53
+    "bias": -1,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "winona",
@@ -2353,7 +2352,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_WINONA_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2427,8 +2426,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_WINONA_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_2[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_WINONA_1[4] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Swablu", "Taillow"],
-    "suggestedStartTR": 4,
-    "suggestedMatureTR": 54
+    "bias": -1,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "juan",
@@ -2441,7 +2440,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_JUAN_1",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE; start TR deliberately permits an approachable first Gym encounter."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Early party is a handwritten two-species PROTOTYPE for the opening two-member Gym stage."
     },
     "referenceParty": [
       {
@@ -2515,8 +2514,8 @@
     ],
     "competitiveSource": "Experimental six-slot composition from game/src/data/trainer_scaling/gym_leaders.json; authored metadata retained, including low-form species. game/src/data/trainers.party:TRAINER_JUAN_1[1] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[3] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_2[2] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[0] (offset -2, ace false, AUTHORED); game/src/data/trainers.party:TRAINER_JUAN_1[4] (offset 0, ace true, AUTHORED)",
     "earlyParty": ["Horsea", "Barboach"],
-    "suggestedStartTR": 5,
-    "suggestedMatureTR": 54
+    "bias": -1,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "sidney",
@@ -2597,8 +2596,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_SIDNEY; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 46,
-    "suggestedMatureTR": 55
+    "bias": 0,
+    "allowedArcs": ["steady", "early"]
   },
   {
     "id": "phoebe",
@@ -2679,8 +2678,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_PHOEBE; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 47,
-    "suggestedMatureTR": 56
+    "bias": 0,
+    "allowedArcs": ["early", "late"]
   },
   {
     "id": "glacia",
@@ -2761,8 +2760,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_GLACIA; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 49,
-    "suggestedMatureTR": 57
+    "bias": 0,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "drake",
@@ -2843,8 +2842,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_DRAKE; source species/levels/moves/items retained. Incomplete final circuit party: source has fewer than six members; no invented sixth slot.",
     "earlyParty": [],
-    "suggestedStartTR": 51,
-    "suggestedMatureTR": 58
+    "bias": 0,
+    "allowedArcs": ["steady", "plateau"]
   },
   {
     "id": "wallace",
@@ -2937,8 +2936,8 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_WALLACE; source species/levels/moves/items retained.",
     "earlyParty": [],
-    "suggestedStartTR": 53,
-    "suggestedMatureTR": 59
+    "bias": 2,
+    "allowedArcs": ["steady", "late"]
   },
   {
     "id": "steven",
@@ -2951,7 +2950,7 @@
       "label": "Emerald local reference",
       "path": "game/src/data/trainers.party",
       "trainerId": "TRAINER_STEVEN",
-      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Prototype start TR 53 retains the earlier RS-equivalent calibration; the stronger reference does not set the prototype baseline."
+      "note": "Local authored reference party; moves and held items are comparison metadata only. All explorer defaults are experimental, not actual ROM teams. Emerald optional late battle (levels 75–78), not the Ruby/Sapphire Champion party. Explorer levels follow the world cap plus standing, not these authored levels."
     },
     "referenceParty": [
       {
@@ -3031,7 +3030,7 @@
     ],
     "competitiveSource": "Experimental reuse of game/src/data/trainers.party:TRAINER_STEVEN; source species/levels/moves/items retained.",
     "earlyParty": [],
-    "suggestedStartTR": 53,
-    "suggestedMatureTR": 60
+    "bias": 2,
+    "allowedArcs": ["steady", "early"]
   }
 ]

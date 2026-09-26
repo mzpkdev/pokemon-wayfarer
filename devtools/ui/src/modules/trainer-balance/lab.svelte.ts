@@ -1,16 +1,28 @@
 import catalogData from "./catalog.json"
 import {
+  ARC_CHECKPOINTS,
+  ARC_IDS,
+  MAX_EDITIONS,
   createExperiment,
-  playerCap,
+  editionsAvailable,
+  gymCapSummary,
+  levelBase as baseLevel,
   playerRating,
+  progressIndex,
   resolveTrainer,
   serializeExperiment,
   validateExperiment,
+  venueFeasibility,
+  V1_REJECTION,
+  V2_REJECTION,
+  worldCap,
 } from "./engine.js"
-import type { Experiment, TrainerRecord, TrainerSettings, WorldPoint } from "./types.js"
+import type { ArcId, Experiment, TrainerRecord, TrainerSettings, WorldPoint } from "./types.js"
 
 export const catalog = catalogData as TrainerRecord[]
-const storageKey = "wayfarer-trainer-balance-v1"
+const storageKey = "wayfarer-trainer-balance-v3"
+/** Chart x positions: p = 0–24 in edition 1, then each completed edition at (24, 3). */
+const CHART_PROGRESS = [...Array.from({ length: 25 }, (_, p) => p), 32, 40, 48]
 const firstTrainer = catalog[0]
 if (!firstTrainer) throw new Error("The trainer catalog is empty.")
 const initialTrainerId = firstTrainer.id
@@ -19,18 +31,29 @@ export class BalanceLab {
   #_experiment = $state<Experiment>(createExperiment(catalog))
   badges = $state(0)
   leagueClears = $state(0)
+  completedEditions = $state(0)
   query = $state("")
   region = $state("All regions")
   role = $state("All trainers")
+  includeIncomplete = $state(false)
   selectedId = $state(initialTrainerId)
   editor = $state("")
-  anchorEditor = $state("")
   error = $state("")
   notice = $state("")
 
-  point = $derived({ badges: this.badges, leagueClears: this.leagueClears })
+  point = $derived({
+    badges: this.badges,
+    leagueClears: this.leagueClears,
+    completedEditions: this.completedEditions,
+  })
+  editionsEnabled = $derived(editionsAvailable(this.point))
+  progress = $derived(progressIndex(this.point))
   playerTR = $derived(playerRating(this.point))
-  cap = $derived(playerCap(this.point))
+  cap = $derived(worldCap(this.point))
+  levelBase = $derived(baseLevel(this.point, this.#_experiment.headroom))
+  arcs = $derived(this.#_experiment.arcs)
+  roleWindows = $derived(this.#_experiment.roleWindows)
+  headroom = $derived(this.#_experiment.headroom)
   allRows = $derived(
     catalog.map((trainer) => resolveTrainer(trainer, this.#_experiment, this.point)),
   )
@@ -55,18 +78,26 @@ export class BalanceLab {
     return row
   })
   settings = $derived(this.#_settings(this.selected.trainer.id))
-  aboveCap = $derived(
-    this.allRows.filter((row) => row.trainer.gymEligible && row.aceLevel > this.cap).length,
+  feasibility = $derived(
+    venueFeasibility(catalog, this.#_experiment, this.progress, {
+      includeIncomplete: this.includeIncomplete,
+    }),
   )
-  gymCount = catalog.filter((trainer) => trainer.gymEligible).length
+  gymSummary = $derived(gymCapSummary(catalog, this.#_experiment, this.point))
+  /** p 0–24 use the selected clears; p 32/40/48 are post-game editions at (24, 3). */
   curve = $derived(
-    Array.from({ length: 25 }, (_, badges) => {
-      const point = { badges, leagueClears: this.leagueClears }
-      return {
-        badges,
-        ace: resolveTrainer(this.selected.trainer, this.#_experiment, point).aceLevel,
-        cap: playerCap(point),
-      }
+    CHART_PROGRESS.map((progress) => {
+      const point =
+        progress <= 24
+          ? { badges: progress, leagueClears: this.leagueClears }
+          : { badges: 24, leagueClears: 3, completedEditions: (progress - 24) / 8 }
+      const aces = Object.fromEntries(
+        this.settings.allowedArcs.map((arc) => [
+          arc,
+          resolveTrainer(this.selected.trainer, this.#_experiment, point, arc).aceLevel,
+        ]),
+      ) as Partial<Record<ArcId, number>>
+      return { progress, aces, cap: worldCap(point) }
     }),
   )
 
@@ -80,9 +111,10 @@ export class BalanceLab {
     return settings
   }
 
+  arcsFor = (id: string): ArcId[] => this.#_settings(id).allowedArcs
+
   #_syncEditors = (): void => {
     this.editor = JSON.stringify(this.#_experiment.trainers[this.selectedId], null, 2)
-    this.anchorEditor = JSON.stringify(this.#_experiment.levelAnchors)
   }
 
   #_persist = (): void => {
@@ -93,6 +125,8 @@ export class BalanceLab {
     }
   }
 
+  #_clone = (): Experiment => JSON.parse(serializeExperiment(this.#_experiment)) as Experiment
+
   #_accept = (candidate: unknown, message: string): void => {
     this.#_experiment = validateExperiment(candidate, catalog)
     this.error = ""
@@ -101,7 +135,7 @@ export class BalanceLab {
     this.#_persist()
   }
 
-  #_point = (value: unknown): WorldPoint => {
+  #_point = (value: unknown): Required<WorldPoint> => {
     if (!value || typeof value !== "object") throw new Error("Missing world progression.")
     const point = value as WorldPoint
     if (
@@ -110,10 +144,22 @@ export class BalanceLab {
       point.badges > 24 ||
       !Number.isInteger(point.leagueClears) ||
       point.leagueClears < 0 ||
-      point.leagueClears > 3
+      point.leagueClears > 3 ||
+      !Number.isInteger(point.completedEditions) ||
+      (point.completedEditions ?? 0) < 0 ||
+      (point.completedEditions ?? 0) > MAX_EDITIONS
     )
-      throw new Error("Use 0–24 badges and 0–3 first league clears.")
-    return point
+      throw new Error(
+        `Use 0–24 badges, 0–3 first league clears and 0–${MAX_EDITIONS} completed editions.`,
+      )
+    if (point.completedEditions && (point.badges !== 24 || point.leagueClears !== 3))
+      throw new Error("Completed editions need 24 badges and 3 first league clears.")
+    return point as Required<WorldPoint>
+  }
+
+  /** A completed edition implies 24 badges and 3 clears; leaving that point resets it. */
+  #_syncEditions = (): void => {
+    if (this.badges !== 24 || this.leagueClears !== 3) this.completedEditions = 0
   }
 
   load = (): void => {
@@ -135,48 +181,84 @@ export class BalanceLab {
 
   setBadges = (badges: number): void => {
     this.badges = Number.isFinite(badges) ? Math.min(24, Math.max(0, Math.round(badges))) : 0
+    this.#_syncEditions()
     this.#_persist()
   }
 
   setClears = (clears: number): void => {
     this.leagueClears = Number.isFinite(clears) ? Math.min(3, Math.max(0, Math.round(clears))) : 0
+    this.#_syncEditions()
     this.#_persist()
   }
 
-  ratingAt = (id: string, index: number): number => this.#_settings(id).ratings[index] ?? 0
+  /** Clamped to 0–3 (3 = "3 or more"); only non-zero at 24 badges and 3 clears. */
+  setEditions = (editions: number): void => {
+    this.completedEditions =
+      this.editionsEnabled && Number.isFinite(editions)
+        ? Math.min(MAX_EDITIONS, Math.max(0, Math.round(editions)))
+        : 0
+    this.#_persist()
+  }
 
-  applyRatings = (form: HTMLFormElement): void => {
+  setArc = (id: string, arc: string): void => {
+    try {
+      const next = this.#_clone()
+      const settings = next.trainers[id]
+      if (!settings) throw new Error("Unknown trainer.")
+      settings.arc = arc as ArcId
+      const name = catalog.find((trainer) => trainer.id === id)?.name ?? id
+      this.#_accept(next, `${name} now follows the ${arc} arc.`)
+    } catch (error) {
+      this.error = error instanceof Error ? error.message : "Could not change the arc."
+    }
+  }
+
+  applyTrainer = (form: HTMLFormElement): void => {
     try {
       const data = new FormData(form)
-      const next = JSON.parse(serializeExperiment(this.#_experiment)) as Experiment
-      const ratings = [0, 8, 16, 24].map((badges) => Number(data.get(`rating-${badges}`)))
+      const next = this.#_clone()
       const settings = next.trainers[this.selectedId]
       if (!settings) throw new Error("Unknown selected trainer.")
-      settings.ratings = ratings as [number, number, number, number]
-      settings.leagueGrowth = Number(data.get("league-growth"))
-      this.#_accept(next, `Updated ${this.selected.trainer.name}’s growth curve.`)
+      settings.bias = Number(data.get("bias"))
+      settings.allowedArcs = ARC_IDS.filter((arc) => data.get(`allow-${arc}`) === "on")
+      const [first] = settings.allowedArcs
+      if (!first) throw new Error("Allow at least one growth arc.")
+      if (!settings.allowedArcs.includes(settings.arc)) settings.arc = first
+      this.#_accept(next, `Updated ${this.selected.trainer.name}’s standing.`)
     } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply ratings."
+      this.error = error instanceof Error ? error.message : "Could not apply the standing."
     }
   }
 
   applyTeam = (): void => {
     try {
-      const next = JSON.parse(serializeExperiment(this.#_experiment)) as Experiment
+      const next = this.#_clone()
       next.trainers[this.selectedId] = JSON.parse(this.editor)
-      this.#_accept(next, `Updated ${this.selected.trainer.name}’s team stages.`)
+      this.#_accept(next, `Updated ${this.selected.trainer.name}’s settings.`)
     } catch (error) {
       this.error = error instanceof Error ? error.message : "Could not apply team stages."
     }
   }
 
-  applyAnchors = (): void => {
+  applyWorld = (form: HTMLFormElement): void => {
     try {
-      const next = JSON.parse(serializeExperiment(this.#_experiment)) as Experiment
-      next.levelAnchors = JSON.parse(this.anchorEditor)
-      this.#_accept(next, "Updated the NPC level curve. The player cap is unchanged.")
+      const data = new FormData(form)
+      const next = this.#_clone()
+      for (const arc of ARC_IDS)
+        next.arcs[arc] = ARC_CHECKPOINTS.map((progress) =>
+          progress === 0 ? 0 : Number(data.get(`arc-${arc}-${progress}`)),
+        ) as Experiment["arcs"][ArcId]
+      next.roleWindows = {
+        contenderMax: Number(data.get("contender-max")),
+        headlinerMin: Number(data.get("headliner-min")),
+      }
+      next.headroom = Number(data.get("headroom"))
+      this.#_accept(
+        next,
+        "Updated the growth arcs, role windows and level headroom. The world cap is unchanged.",
+      )
     } catch (error) {
-      this.error = error instanceof Error ? error.message : "Could not apply the level curve."
+      this.error = error instanceof Error ? error.message : "Could not apply the arcs."
     }
   }
 
@@ -185,13 +267,13 @@ export class BalanceLab {
   }
 
   resetTrainer = (): void => {
-    const next = JSON.parse(serializeExperiment(this.#_experiment)) as Experiment
+    const next = this.#_clone()
     const defaults = createExperiment(catalog).trainers[this.selectedId]
     if (!defaults) throw new Error("Unknown selected trainer.")
     next.trainers[this.selectedId] = defaults
     this.#_accept(
       next,
-      `Restored ${this.selected.trainer.name}’s current defaults. Other trainers and the shared level curve are unchanged.`,
+      `Restored ${this.selected.trainer.name}’s current defaults. Other trainers, arcs and role windows are unchanged.`,
     )
   }
 
@@ -199,8 +281,12 @@ export class BalanceLab {
     JSON.stringify(
       {
         tool: "wayfarer-trainer-balance",
-        version: 1,
-        point: { badges: this.badges, leagueClears: this.leagueClears },
+        version: 3,
+        point: {
+          badges: this.badges,
+          leagueClears: this.leagueClears,
+          completedEditions: this.completedEditions,
+        },
         selectedTrainer: this.selectedId,
         experiment: JSON.parse(serializeExperiment(this.#_experiment)),
       },
@@ -211,8 +297,12 @@ export class BalanceLab {
   importText = (text: string, message = "Imported experiment."): void => {
     try {
       const data = JSON.parse(text)
-      if (data.tool !== "wayfarer-trainer-balance" || data.version !== 1) {
-        throw new Error("This is not a version 1 Wayfarer balance experiment.")
+      if (data?.tool === "wayfarer-trainer-balance" && data.version === 1)
+        throw new Error(V1_REJECTION)
+      if (data?.tool === "wayfarer-trainer-balance" && data.version === 2)
+        throw new Error(V2_REJECTION)
+      if (data?.tool !== "wayfarer-trainer-balance" || data.version !== 3) {
+        throw new Error("This is not a version 3 Wayfarer balance experiment.")
       }
       const experiment = validateExperiment(data.experiment, catalog)
       const point = this.#_point(data.point)
@@ -222,6 +312,7 @@ export class BalanceLab {
       this.#_experiment = experiment
       this.badges = point.badges
       this.leagueClears = point.leagueClears
+      this.completedEditions = point.completedEditions
       this.selectedId = data.selectedTrainer
       this.error = ""
       this.notice = message
