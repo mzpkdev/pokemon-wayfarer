@@ -306,29 +306,34 @@ TEST("Kanto opening specials are inert for a New Bark origin")
     EXPECT(WayfarerPersistentStateIsValid());
 }
 
-TEST("Kanto Blue trainer IDs use only the opening battle receipt")
+TEST("Kanto Blue defeats use reserved Trainer flags apart from opening progress")
 {
     u16 trainerId;
 
-    // The IDs follow the Viridian Gym range, past the ordinary trainer flags.
-    EXPECT_GT(TRAINER_FLAGS_START + TRAINER_WAYFARER_KANTO_FIRST, TRAINER_FLAGS_END);
-
     for (trainerId = TRAINER_WAYFARER_KANTO_FIRST; trainerId <= TRAINER_WAYFARER_KANTO_LAST; trainerId++)
     {
-        u8 ordinaryFlags[NUM_FLAG_BYTES];
+        u8 flagsBefore[NUM_FLAG_BYTES];
 
         StartPallet();
         StageStarter(trainerId - TRAINER_WAYFARER_KANTO_FIRST);
         EXPECT(WayfarerKanto_TryGiveStarter());
-        memcpy(ordinaryFlags, gSaveBlock1Ptr->flags, sizeof(ordinaryFlags));
+        ClearTrainerFlag(trainerId);
+        memcpy(flagsBefore, gSaveBlock1Ptr->flags, sizeof(flagsBefore));
+
         EXPECT(!HasTrainerBeenFought(trainerId));
         SetTrainerFlag(trainerId);
         EXPECT(HasTrainerBeenFought(trainerId));
-        EXPECT(WayfarerKanto_HasFirstBattleResolved());
+        EXPECT(FlagGet(WAYFARER_KANTO_DEFEAT_FLAG_FIRST + trainerId - TRAINER_WAYFARER_KANTO_FIRST));
+        // The battle's defeat flag never advances the opening; the lab script's
+        // WayfarerKanto_ResolveFirstBattle does, on a win or an ordinary loss.
+        EXPECT_EQ(WayfarerKanto_GetPhase(), PALLET_OPENING_STARTER_RECEIVED);
+        EXPECT(WayfarerKanto_ResolveFirstBattle());
         EXPECT_EQ(WayfarerKanto_GetPhase(), PALLET_OPENING_FIRST_BLUE_BATTLE_RESOLVED);
+
         ClearTrainerFlag(trainerId);
-        EXPECT(HasTrainerBeenFought(trainerId));
-        EXPECT_EQ(memcmp(ordinaryFlags, gSaveBlock1Ptr->flags, sizeof(ordinaryFlags)), 0);
+        EXPECT(!HasTrainerBeenFought(trainerId));
+        EXPECT_EQ(WayfarerKanto_GetPhase(), PALLET_OPENING_FIRST_BLUE_BATTLE_RESOLVED);
+        EXPECT_EQ(memcmp(flagsBefore, gSaveBlock1Ptr->flags, sizeof(flagsBefore)), 0);
         EXPECT(WayfarerPersistentStateIsValid());
     }
 }

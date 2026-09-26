@@ -14,7 +14,6 @@ u16 WayfarerKanto_GetSelectedStarterSpecies(void);
 void WayfarerKanto_BufferSelectedStarterType(void);
 u16 WayfarerKanto_HasReceipt(void);
 u16 WayfarerKanto_IsOpeningComplete(void);
-u16 WayfarerKanto_HasFirstBattleResolved(void);
 u16 WayfarerKanto_GetRemainingSlot(void);
 u16 WayfarerKanto_StageLab(void);
 u16 WayfarerKanto_TryStageInterception(void);

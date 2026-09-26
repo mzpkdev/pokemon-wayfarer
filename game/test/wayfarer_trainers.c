@@ -290,6 +290,38 @@ TEST("Indigo League defeats use reserved Trainer flags and leave system flags un
     Free(before);
 }
 
+TEST("Pallet-origin Blue defeats use reserved Trainer flags and leave system flags untouched")
+{
+    u32 id;
+    u8 *before = Alloc(NUM_FLAG_BYTES);
+
+    for (id = TRAINER_WAYFARER_KANTO_FIRST; id <= TRAINER_WAYFARER_KANTO_LAST; id++)
+        ClearTrainerFlag(id);
+    memcpy(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES);
+
+    for (id = TRAINER_WAYFARER_KANTO_FIRST; id <= TRAINER_WAYFARER_KANTO_LAST; id++)
+    {
+        EXPECT(!HasTrainerBeenFought(id));
+        SetTrainerFlag(id);
+        EXPECT(HasTrainerBeenFought(id));
+        EXPECT(FlagGet(WAYFARER_KANTO_DEFEAT_FLAG_FIRST + id - TRAINER_WAYFARER_KANTO_FIRST));
+        EXPECT_LE(WAYFARER_KANTO_DEFEAT_FLAG_FIRST + id - TRAINER_WAYFARER_KANTO_FIRST, TRAINER_FLAGS_END);
+        EXPECT_EQ(memcmp(&before[(TRAINER_FLAGS_END + 1) / 8],
+                         &gSaveBlock1Ptr->flags[(TRAINER_FLAGS_END + 1) / 8],
+                         NUM_FLAG_BYTES - (TRAINER_FLAGS_END + 1) / 8), 0);
+        EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, TRAINER_FLAGS_START / 8), 0);
+    }
+
+    // Each Blue counter keeps its own record.
+    ClearTrainerFlag(TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR);
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_KANTO_BLUE_SQUIRTLE));
+    for (id = TRAINER_WAYFARER_KANTO_FIRST; id <= TRAINER_WAYFARER_KANTO_LAST; id++)
+        ClearTrainerFlag(id);
+    EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES), 0);
+    Free(before);
+}
+
 // Walks every Trainer ID through the real defeat helpers. A defeat may set at
 // most one SaveBlock1 flag that no other ID owns: a Trainer-flag slot, or a
 // dedicated content flag below TRAINER_FLAGS_START (S.S. Anne, Celadon

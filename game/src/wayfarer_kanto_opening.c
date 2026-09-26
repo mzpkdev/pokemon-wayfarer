@@ -113,12 +113,6 @@ u16 WayfarerKanto_IsOpeningComplete(void)
         && (GetOpening()->receipts & PALLET_RECEIPT_COMPLETE);
 }
 
-u16 WayfarerKanto_HasFirstBattleResolved(void)
-{
-    return WayfarerKanto_IsPalletOrigin()
-        && (GetOpening()->receipts & PALLET_RECEIPT_FIRST_BATTLE);
-}
-
 // The ball neither the player nor Blue took; FRLG leaves it on the table.
 u16 WayfarerKanto_GetRemainingSlot(void)
 {
