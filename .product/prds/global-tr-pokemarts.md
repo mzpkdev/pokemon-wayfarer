@@ -14,7 +14,7 @@ The converted-counter runtime now uses the shared player-TR essentials and
 permanent local stock specified below; release acceptance remains pending in
 the implementation specification. Legacy counters outside that enrollment keep
 their existing behavior. Proposed [trainer world progression](trainer-world-progression.md)
-changes personal NPC strength without changing player TR, the mart opener's
+changes enrolled NPC strength without changing player TR, the mart opener's
 snapshot, or any stock threshold.
 
 ## Design

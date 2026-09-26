@@ -11,25 +11,13 @@ PRD: [Wayfarer Hoenn integration](../prds/wayfarer-hoenn-integration.md)
 Implemented: Partial; content and current circuit runtime exist, full content/balance acceptance remains separate.
 
 The current [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 3
-Hoenn admission and the implemented [League level resolver](../../game/src/trainer_party_scaling.c)
-uses saved player-entry TR. League levels are no longer static. Proposed
-[trainer world progression](trainer-world-progression.md) changes explicitly
-enrolled initial singles Gyms to personal NPC TR and authored stages. The
-[seeded circuit](seeded-league-circuit.md) replaces fixed Hoenn position/participants with a
-five-opponent competition roster selected at that venue's entry from live
-milestones under the shared immutable seed-derived personal growth policy.
-Snapshots retain growth percentage/policy version; aliases share their canonical
-person's curve. Future venues remain unselected; loss ends the competition and
-requires waiting for the next event at the same venue. These successors are
-not implemented by the content port; current behavior below remains identified
-separately from the proposed direction.
-
-The current shared six-slot Gym feature is disabled by default in
-[configuration](../../game/include/config/trainer_party_scaling.h); it uses
-player TR only when enabled. Giovanni's separate five-slot projection and
-other existing Gym/double-battle policies retain their own current behavior.
-Neither generated roster data nor an experimental catalog proves enrollment
-or activation of a Gym encounter.
+Hoenn admission, the [League level resolver](../../game/src/trainer_party_scaling.c)
+uses saved player-entry TR, and the shared six-slot Gym feature is disabled by
+default in [configuration](../../game/include/config/trainer_party_scaling.h).
+The [PRD](../prds/wayfarer-hoenn-integration.md) summarizes the proposed
+[trainer world progression](trainer-world-progression.md) and
+[seeded circuit](seeded-league-circuit.md) successors, which this content port
+does not implement.
 
 ## Scope
 
@@ -134,7 +122,7 @@ Trainer records follow these rules:
   creation; rivals and bosses remain excluded. Initial Gym Leader badge battles
   use the separate [Gym Leader scaling](gym-leader-scaling.md), which owns their
   current six-slot rosters and player-TR selection. Proposed enrolled singles
-  Gyms instead use personal NPC TR and independently authored party stages;
+  Gyms instead use world-cap standing and independently authored party stages;
   source Emerald parties are provenance, not mandatory opening teams. Tate and
   Liza retain their current double-Gym policy and badge outside the singles
   pool. Rival, story, Dojo, and rematch variants are separately enrolled or
@@ -319,7 +307,7 @@ now calls the [Wattson relocation helper](../../game/data/maps/MauvilleCity_Gym/
 which requires both Norman's defeat and the Dynamo Badge. An undefeated Wattson
 therefore remains in his Gym, and relocation is independent of award order.
 These source checks establish the implemented branch, not campaign playtest
-acceptance. Proposed personal NPC growth changes initial singles Gym strength
+acceptance. Proposed world-cap NPC growth changes initial singles Gym strength
 without adding a League-clear prerequisite or changing badge ownership.
 
 Hoenn badges alter Wayfarer Trainer Rating through the global badge total.
@@ -391,20 +379,12 @@ committed Indigo and Masters first clears. Its authored source rosters use
 saved player-entry TR under [League scaling](league-scaling.md). Hoenn-specific
 Champion/game-clear ownership and local cleanup remain in force.
 
-The proposed [seeded circuit](seeded-league-circuit.md) allows Hoenn at any seeded
-stop. At entry, select only the current competition's five opponents from
-live badges and first-lifetime-clear facts. Resolve personal NPC TR before
-band-eligible home/visitor selection and rotation; save TR, teams/stage/profile,
-versions, and inputs for active-event reload and reconstruction. Future venues
-remain unselected. A loss terminates the competition and releases its active
-lock; the player must wait for the next event at this same venue. The next event
-may select different opponents and strength, with lost events in rotation
-history. Winning advances the seeded order. Event sequence differs from circuit
-edition, and edition count alone adds no strength. World-point bands and NPC
-growth are owned by [trainer world progression](trainer-world-progression.md).
-Registration thresholds are undecided, with approximately 8/16/24 badges by
-stop tentative; waiting/cadence and numeric balance remain open. Exhibition
-replay design is outside this successor scope. Completion still owns this
+The proposed [seeded circuit](seeded-league-circuit.md) allows Hoenn at any
+seeded stop and owns signup, the frozen five-trainer field, and retries after a
+loss; the [circuit trainer pool](circuit-trainer-pool.md) owns Hoenn's home and
+visitor selection, and [trainer world progression](trainer-world-progression.md)
+owns NPC strength. Exhibition replay design is outside this successor scope.
+Completion still owns this
 venue's result and regional effects, independently of who was selected.
 
 Completing it must:

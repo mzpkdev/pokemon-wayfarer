@@ -38,11 +38,11 @@ that candidate with the stored rating and saves the higher value. Replays add
 no TR, and no later read lowers the high-water mark. Feature-disabled foundation
 checks can still seed a stored value; no prerelease save migration is required.
 
-The proposed [trainer world progression](trainer-world-progression.md) adds a
-separate personal NPC rating with badge checkpoints and per-trainer first-clear
-growth. Ordinary wild populations continue to read the player's global TR;
-NPC baselines, profiles, ratings, and edition counts never affect this getter
-or its wild/cap/XP/obedience/mart/ordinary-Trainer/Gym-member consumers.
+The proposed [trainer world progression](trainer-world-progression.md) sets
+enrolled NPC strength from a milestone-only world cap plus per-trainer standing
+and seeded growth arcs. Ordinary wild populations continue to read the player's
+global TR; NPC standings, arcs, profiles, and edition counts never affect this
+getter or its wild/cap/XP/obedience/mart/ordinary-Trainer/Gym-member consumers.
 
 ### Progression targets
 

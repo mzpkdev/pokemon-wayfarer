@@ -6,13 +6,11 @@ The current [circuit producer](../../game/src/league_circuit.c) uses fixed Tier 
 Hoenn admission and the implemented [League level resolver](../../game/src/trainer_party_scaling.c)
 uses saved player-entry TR. League levels are no longer static. Proposed
 [trainer world progression](trainer-world-progression.md) changes explicitly
-enrolled initial singles Gyms to personal NPC TR and authored stages. The
-[seeded circuit](../specs/seeded-league-circuit.md) replaces fixed Hoenn position/participants with a
-five-opponent competition roster selected at that venue's entry from live
-milestones under the shared immutable seed-derived personal growth policy.
-Snapshots retain growth percentage/policy version; aliases share their canonical
-person's curve. Future venues remain unselected; loss ends the competition and
-requires waiting for the next event at the same venue. These successors are
+enrolled initial singles Gyms to world-cap standing, seeded growth arcs, and
+authored stages. The [seeded circuit](../specs/seeded-league-circuit.md)
+replaces fixed Hoenn position and participants with a five-trainer field
+selected and frozen at that venue's entry; a loss retries the same field. These
+successors are
 not implemented by the content port; current behavior below remains identified
 separately from the proposed direction.
 
@@ -145,8 +143,8 @@ Gym Leader badge battles follow the separate [Gym Leader scaling design](gym-lea
 while leader rematches retain authored, static parties.
 Current Hoenn Elite Four and Champion battles use fixed Tier 3 source rosters
 and saved player-entry TR under [League scaling](league-scaling.md). Proposed
-seeded editions select participants by effective NPC TR and world-point role
-bands, then save authored party-stage/profile identities. Emerald source parties
+seeded editions select participants by standing relative to the world cap under
+the [circuit trainer pool](../specs/circuit-trainer-pool.md). Emerald source parties
 remain provenance references rather than required opening or circuit teams.
 Tate and Liza remain outside the singles pool under their current double-Gym
 policy, with their badge preserved. Rival, boss, Dojo, and rematch variants
@@ -173,10 +171,9 @@ Hoenn destination.
 - Hoenn Champion completion is independent from the shared Indigo clear and
   the Sevii Masters Challenge clear.
 - In the current ROM, Hoenn is fixed Tier 3 after Indigo, Masters, and all
-  twenty-four badges. The proposed seeded itinerary can place Hoenn at any stop;
-  registration thresholds are undecided, with approximately 8/16/24 global
-  badges by stop tentative. A loss ends that venue's competition and requires
-  waiting for the next event there; only a win advances the order. Venue-first
+  twenty-four badges. The proposed seeded itinerary can place Hoenn at any stop
+  under the [Seeded Trainer Circuit](seeded-trainer-circuit.md)'s signup rules.
+  A loss retries the same field; only a win advances the order. Venue-first
   clears retain their lifetime player rewards and local completion ownership. An
   edition never resets another region's campaign or repeats a lifetime reward.
 - Hoenn Trainers, NPCs, items, gifts, and story rewards remain consumed through
@@ -228,10 +225,9 @@ not keep a separate healing history for every region.
   static parties.
 - The current Hoenn League preserves authored non-level metadata and scales
   from player TR locked for the run under [League scaling](league-scaling.md).
-  The proposed successor resolves personal NPC TR from live milestones at
-  entry and freezes only the current competition's five opponents and teams.
-  Reload and reconstruction preserve that event; loss ends it and releases the
-  active lock. A later competition may select different opponents and strength.
+  The proposed successor freezes the current competition's five opponents,
+  teams, and levels at entry from the world cap and each trainer's standing.
+  Reload, reconstruction, and retries after a loss preserve that field.
   Its authored stage changes do not require automatic evolution or an immutable
   prefix of one Emerald roster.
 - Battle Frontier, Contests, Secret Bases, Match Call, television events,

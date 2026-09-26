@@ -1,263 +1,274 @@
 # Trainer world progression
 
 PRD: [Trainer world progression](../prds/trainer-world-progression.md)
-Implemented: No; the browser explorer implements an experimental model only.
-Design status: Target contract. Numeric catalog values and production balance
-require review. A stable seeded growth modifier per canonical trainer is approved,
-initially 90–110%; individual competition snapshots replace whole-edition locks.
+Implemented: No. The current ROM keeps its existing Gym and League scaling
+until adoption; the browser explorer is provisional tooling.
+Design status: Target contract. The standing/arc model is accepted; every
+numeric default below is provisional catalog content (D3) unless stated.
 
 ## Ownership and scope
 
-Own the personal NPC rating evaluator, world milestones, authored team stages,
-and the NPC TR-to-level resolver for enrolled Wayfarer encounters. The
-[Gym spec](gym-leader-scaling.md) owns initial-badge coverage and battle
-construction. The [pool spec](circuit-trainer-pool.md) owns circuit eligibility,
-regional weighting, rotation, and competitive profiles. The
-[circuit runtime](seeded-league-circuit.md) owns registration, saved schedules,
-transactions, admission, event termination, and waiting.
+This specification is the single owner of NPC growth for enrolled Wayfarer
+encounters: the world cap, the progress index, level headroom, per-trainer
+standing, seeded growth arcs, team stages, level resolution, and the
+Gym-encounter snapshot. Consumers link here
+rather than restating it.
 
-This is the authority for proposed NPC growth. The implemented player rating
-and soft cap remain owned by [player progression](trainer-rating-party-progression.md).
-NPC growth never calls `GetTrainerRating()` to obtain an opponent rating, never
-changes its high-water mark, and does not replace wild, shop, ordinary-trainer,
-or Gym-member policies. Standalone builds keep their existing contracts.
+- [Gym Leader scaling](gym-leader-scaling.md) owns badge-encounter coverage and
+  battle construction.
+- [Circuit trainer pool](circuit-trainer-pool.md) owns league eligibility, role
+  windows, home/visitor selection, rotation, and competitive profiles.
+- [Seeded league circuit](seeded-league-circuit.md) owns signup, competition
+  identity, entry and result transactions, and retries.
+- [Player progression](trainer-rating-party-progression.md) owns the player's
+  rating and soft cap, which this model reads only as a pure function.
 
-## World point
+The earlier NPC trainer-rating model is superseded in full: no `baselineTR`,
+badge TR checkpoints, `leagueGrowth`, NPC TR-to-level anchors, `effectiveTR`,
+90–110% growth modifier, or TR role bands. Player TR, soft cap, experience,
+obedience, wild, mart, ordinary-trainer, and Gym-member policies are unchanged.
+Standalone builds keep their existing contracts.
 
-Use `B`, the count of distinct global badges, in 0–24, and a lifetime-clear mask
-`L` keyed by Indigo, Sevii Masters, and Hoenn. Let `C = popcount(L)`, in 0–3.
-The shared runtime's canonical facts own these values. Do not infer them from
-local game-clear flags, Champion titles, room wins, current-edition results,
-encounter counts, or the player's saved TR.
+## World point and world cap
 
-Commit badges and first clears through their existing reward transactions.
-The award affects subsequent world encounters, never the fight that earned it.
-Later edition clears, losses, replays, reloads, and duplicate award requests do
-not add milestone growth. Clearing a venue already in `L` leaves `C` unchanged.
-
-## Seeded personal growth rate
-
-Each canonical trainer has one immutable `growthPercent` per save. The initial
-range is the 21 integers 90–110, uniformly sampled; 100 means the authored growth
-rate. Use the [shared seed framework](playthrough-seed-framework.md), with
-`TRAINER_GROWTH` domain 2, `GROWTH_RATE` decision 1, rules version 1,
-`entityLo = characterId`, `entityHi = 0`, `occurrenceId = 0`, and `drawId = 0`:
+`B` is the count of distinct global badges (0–24). `L` is the lifetime
+first-clear mask over Indigo, Sevii Masters, and Hoenn; `C = popcount(L)`
+(0–3). Both come from the shared runtime's canonical facts, never from local
+clear flags, titles, current-edition results, or encounter counts. A badge or
+first clear commits through its existing reward transaction and affects only
+later encounters. Replays, losses, reloads, and later edition clears add
+nothing to `B` or `C`; completed editions advance only the progress index.
 
 ```text
-growthPercent = 90 + Uniform(21, trainerGrowthKey)
+milestoneTR(B, C) = clamp(the circuit producer's candidate rating for B
+                          badges and C first clears, 0, 80)
+worldCap(B, C)    = softCap(milestoneTR(B, C))
 ```
 
-The shared root and saved growth-policy version must exist from new game, before
-any enrolled Gym encounter. Resolve a trainer's rate on demand from that root,
-stable canonical ID and pinned policy version. This is one logical assignment,
-not a fresh roll on lookup. No mutable random cursor or eager full-catalog save
-is required. All encounter aliases, Gym profiles and league appearances of one
-character use the same rate. Separate trainers draw independently; different
-saves may coincidentally assign the same rate.
+`softCap` is the player cap table and half-up interpolation in
+[player progression](trainer-rating-party-progression.md#soft-level-cap-curve);
+the candidate rating includes +8 per first clear. The resolver is pure in
+`(B, C)`. It never calls `GetTrainerRating()`, reads or updates the saved
+high-water rating, or looks at party levels, training, or play time.
 
-Never key this modifier by badge count, venue, circuit/event identity, appearance
-count, source Trainer ID, catalog ordering, party, or current TR. New trainers
-must not perturb existing rates. Loading, losing, changing region, earning a
-badge, or entering another competition cannot change the assigned rate. Use no
-ordinary Pokémon RNG. Pin the policy version for the save; changing the range or
-distribution requires a new version and cannot silently reinterpret existing
-snapshots. Follow prerelease save rejection policy rather than inventing migration.
+| (B, C) | (0,0) | (4,0) | (8,0) | (8,1) | (16,1) | (16,2) | (24,2) | (24,3) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| worldCap | 15 | 23 | 42 | 52 | 62 | 78 | 89 | 100 |
 
-Keep `baselineTR` unchanged. Apply the percentage only to authored badge and
-first-clear growth, with the integer order below. Future story/training influences
-must declare their inputs and how they interact with this modifier before being
-added; this version introduces no such events or arbitrary TR drift.
+**NPCs follow the world, not the player's party.** The world cap is the level a
+player would be capped at from milestones alone. Because it ignores the
+player's actual rating and party, grinding or under-levelling cannot move any
+NPC, while the same milestone still raises the player's cap and every trainer
+together.
 
-## Trainer records and effective TR
+### Progress index
 
-Each canonical trainer record supplies versioned identity, `baselineTR`, a
-personal `badgeTRCheckpoints` tuple at badges 0/8/16/24, `leagueGrowth`, and
-authored stage/profile references. The first checkpoint equals `baselineTR`.
-Checkpoints are integers in 0–80, nondecreasing; the initial authoring range for
-integer `leagueGrowth` is 0–20, matching the explorer. Reject invalid content at
-build time. The baseline is the starting
-rating, not the rating permanently used for eligibility or combat.
-
-For neighboring checkpoints `(b0,t0)` and `(b1,t1)` surrounding `B`:
+Arcs read a progress index `p` rather than `B`, so rivals keep developing
+through the first few circuit editions:
 
 ```text
-d = b1 - b0
-badgeTR = t0 + floor((2 * (B - b0) * (t1 - t0) + d) / (2 * d))
-authoredGrowth = (badgeTR - baselineTR) + leagueGrowth * C
-scaledGrowth = floor((authoredGrowth * growthPercent + 50) / 100)
-effectiveTR = clamp(baselineTR + scaledGrowth, 0, 80)
+E = min(completedEditions, 3)
+p = B + 8 * E                 // 0..48
 ```
 
-At 24 badges use the final authored checkpoint as `badgeTR`, then still apply
-the growth modifier. First round badge interpolation as above; then scale the
-combined nonnegative badge/first-clear growth and round once with halves upward.
-Do not round each badge reward or clear bonus separately and accumulate it.
-Use sufficiently wide integer intermediates and validate all inputs. At 100%,
-the result exactly matches the prior unmodified formula. At B=0 and C=0, every
-seed returns the authored baseline. TR never exceeds 80; not every trainer must
-reach 80, and some faster-growing trainers may saturate earlier.
+`completedEditions` is the circuit runtime's committed count of fully
+completed editions (all three venues won and ceremonies finished). Completing
+edition 1 requires 24 badges, so edition 1 spans p = 0–24, edition 2 entries
+use p = 32, edition 3 p = 40, and edition 4 onward p = 48, after which
+standings stop changing (rotation still varies fields). Gyms read the same
+`p`; in practice every Gym is beaten before edition 2, and rematches are not
+enrolled.
 
-The rating evaluator is pure given world point, authored curve and resolved
-`growthPercent`. Only immutable rate assignment uses a keyed seed decision; no
-milestone award consumes a new random draw. Runtime corruption is an error,
-not a reason to substitute player TR, a neutral modifier, or another curve.
-There is no player-party input or persistent personal random cursor.
+### Level headroom
 
-For a baseline of 10 and authored growth of 30, rates 90/100/110 produce TR
-37/40/43. Experimental Blue at 24 badges and three first clears has baseline 6
-and authored growth `(59 - 6) + 6 * 3 = 71`: the same rates produce TR 70/77/80
-(the last clamps from 84). These are examples, not accepted combat balance.
+```text
+HEADROOM        = 4                                 // provisional
+levelBase(B, C) = min(worldCap(B, C), 100 - HEADROOM)
+```
 
-The badge curve is authored per trainer. Gym eligibility, title, source Trainer
-ID, home league, current location, and original Gym order do not choose a curve
-implicitly. Aliases of one character share the same personal rating; separately
-enrolled encounter profiles can still differ in authored content.
+Every edition-1 field (entered with at most two first clears) has
+`worldCap <= 96`, where `levelBase = worldCap` and nothing changes. At (24,3), where worldCap is 100,
+the base is 96, so post-game fields stay ramped just below level 100:
+contenders at or below 94, elites 95–97, and the headliner 98–100. Standing,
+roles, and windows are unchanged because they read standing, not levels.
 
-The explorer currently uses six TR per first clear by default and Blue's
-6/54/57/59 checkpoints. Other values are catalog data. None of those numbers is
-a production acceptance claim. The current explorer applies a neutral 100%
-rate and does not yet derive or expose seeded modifiers. Saturation at 80 must
-be visible in balance reports; registering another edition must not reset or extend the growth budget.
+## Standing
+
+Each canonical trainer has an integer standing in levels relative to the cap:
+
+```text
+standing(t, p)       = t.bias + arcDelta(t.arc, p)
+aceLevel(t, B, C, p) = clamp(levelBase(B, C) + standing(t, p), 1, 100)
+```
+
+`C` enters only through `levelBase`; there is no per-trainer first-clear
+growth. `bias` is authored per trainer in -6..+6. Role defaults:
+
+| Role | Default bias | Notes |
+| --- | ---: | --- |
+| Gym Leader | -2 | Giovanni, Sabrina, Clair, Morty, Norman, Winona, and Juan default to -1 |
+| Elite Four | 0 | |
+| Champion | +2 | |
+| Blue | +1 | With fast-only arcs, "always a step ahead" |
+
+The -1 leaders give each region a Gym Leader who can headline in some saves,
+while the Gym mean stays near -2. Role and title choose only the authored
+default; runtime never derives bias from title, Gym order, home league, or
+source Trainer ID.
+
+## Growth arcs
+
+An arc is an authored integer `arcDelta` tuple at progress checkpoints
+p = 0/8/16/24/32/40/48. Arc IDs are stable and never reused:
+
+| ID | Arc | 0 | 8 | 16 | 24 | 32 | 40 | 48 | Flavour |
+| ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| 1 | steady | 0 | 0 | 0 | 0 | 0 | 0 | 0 | Keeps pace with the world |
+| 2 | early | 0 | +3 | +2 | +1 | 0 | 0 | 0 | Rises fast, then settles at the world's pace |
+| 3 | late | 0 | -2 | 0 | +3 | +3 | +2 | +2 | Slow start, strong finish |
+| 4 | plateau | 0 | +1 | -1 | -3 | -3 | -2 | -1 | Veteran who stops improving |
+| 5 | rival | 0 | +2 | +3 | +3 | +3 | +3 | +3 | Relentless climb |
+
+Every arc is 0 at p=0, so each trainer's first encounter is identical in every
+save. For neighboring checkpoints `(p0, a0)` and `(p1, a1)` around `p`, with
+floor division (halves round toward positive infinity):
+
+```text
+d = p1 - p0
+arcDelta = a0 + floor((2 * (p - p0) * (a1 - a0) + d) / (2 * d))
+```
+
+At p=48 use the final checkpoint. Examples: Brock (bias -2) at (0,0) has ace
+13. Clair (bias -1) at (8,0) has ace 44 on early, 41 on steady. Blue on rival at
+(16,1) has ace 62 + 1 + 3 = 66, and at (24,3) in edition 2 (p=32) has
+96 + 1 + 3 = 100.
+
+Each trainer authors `allowedArcs`: two or three lore-fitting arcs. Blue allows
+only {rival, early}. Veterans (for example Bruno, Agatha, Lorelei, Pryce, Chuck,
+Wattson) include plateau; rising stars (for example Whitney, Falkner, Clair,
+Winona) include early. Build validation rejects empty, duplicated, or unknown
+entries and sorts the list by arc ID, so source reordering changes nothing.
+
+### Arc seed
+
+The arc is one immutable choice per canonical trainer per save, derived from
+the [shared seed framework](playthrough-seed-framework.md):
+
+```text
+arc = allowedArcs[Uniform(len(allowedArcs), growthArcKey)]
+```
+
+| Key field | Value |
+| --- | --- |
+| `domainId` | TRAINER_GROWTH = 2 |
+| `decisionId` | GROWTH_ARC = 1 (renames GROWTH_RATE) |
+| `decisionVersion` | 2 (draw layout) |
+| `entityLo`, `entityHi` | canonical `characterId`, 0 |
+| `occurrenceId`, `drawId` | 0, 0 |
+
+The key's `decisionVersion` describes only the draw layout. It is separate
+from the **growth-policy version**, which covers arc tuples, allowed-arc
+lists, bias, and headroom. Pin the growth-policy version at new game, before
+any enrolled encounter.
+Derive lazily and without side effects; asking again returns the same arc.
+Aliases, Gym profiles, and league appearances of one character share it. It
+never rerolls on a badge, clear, loss, reload, region change, or edition. The
+key contains no badge count, venue, edition, history, catalog position, party,
+or player rating, so adding trainers cannot perturb existing arcs. Ordinary
+Pokémon RNG is never used. Tuple, bias, or headroom changes bump only the
+growth-policy version. Allowed-list changes bump the policy version too; the
+draw key stays unchanged, so a changed list changes the outcome by design. A
+save pinned to an unsupported policy follows prerelease save rejection rather
+than migration.
+
+### Arc hints
+
+Arcs are presentation-visible only through hint lines keyed by
+`(characterId, arc, phase)`, where `phase` is the arc segment containing `p`:
+0–7, 8–15, 16–23, 24–31, 32–39, 40–47, or 48. Gym dialogue, NPC gossip, and league lineup previews select
+from these lines. No UI shows arc names, bias, standing, or the cap gap. Hint
+text is D3 content; a missing line falls back to the encounter's ordinary text.
 
 ## Stages and levels
 
-Select the stage with the greatest authored `minTR <= effectiveTR`. Stage
-thresholds are unique and increasing, cover TR 0, and stay within 0–80. Each
-stage references a complete authored profile with 2–6 members, explicit
-species/forms, ace designation, battle order, signed level offsets, moves
-policy, held items, abilities, stats, and trainer AI/inventory. Each consumer
-adds its own eligibility requirements; the circuit currently proposes reviewed
-six-member competitive profiles. A valid opening Gym stage is not automatically
-a valid championship entry.
+Stages are selected by global badges: use the stage with the greatest authored
+`minB <= B`. Thresholds are unique, increasing, within 0–24, and include 0.
+Each stage references a complete authored profile with 2–6 members, explicit
+species/forms, ace designation, battle order, level offsets, move policy,
+items, abilities, stats, and AI/inventory. Proposed Gym defaults:
 
-Preserve stable source-member identity through ordering and profile selection.
-Author changes between stages explicitly. Do not infer evolution from level,
-reverse species, pad a team, sample new members, or copy incomplete source
-parties as a production fallback. Each stage and encounter variant must be
-complete independently. Stage changes can alter species and count; one immutable
-six-member roster filtered by player TR is not the target selection rule.
+| Minimum B | 0 | 3 | 6 | 10 | 16 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Party size | 2 | 3 | 4 | 5 | 6 |
 
-The NPC level curve is separate from the player cap and ordinary trainer curve.
-The current experimental anchors are:
+League slots always use the trainer's reviewed six-member competitive profile,
+whatever their Gym stage.
 
 ```text
-(0,12), (4,16), (8,18), (16,23), (30,30),
-(40,42), (55,60), (65,80), (80,100)
-```
-
-For adjacent level anchors `(r0,l0)` and `(r1,l1)`, resolve:
-
-```text
-d = r1 - r0
-aceLevel = l0 + floor((2 * (effectiveTR - r0) * (l1 - l0) + d) / (2 * d))
 memberLevel = clamp(aceLevel + member.levelOffset, 1, 100)
 ```
 
-Use exact endpoints and wide signed intermediates. Curves cover 0–80 with
-strictly increasing rating anchors and nondecreasing levels in 1–100. Require
-at least one ace with offset 0 and support offsets in the initial range -30–0.
-Review source
-level gaps rather than imposing the old universal minus-one/minus-two rule.
-Within stages, levels cannot decrease as TR rises. Across default stage changes,
-party size and the minimum member level must not decrease. Validate authored
-offsets against those rules; do not silently repair production content.
+Offsets are integers in -30..0 with at least one ace at 0. Review source level
+gaps rather than applying a universal rule. Author species and member changes
+between stages explicitly: never infer evolution, pad a team, sample members,
+or filter one six-member roster. Source parties are provenance and balance
+references; their absolute levels never override this resolver.
 
-The lower NPC starting anchor allows the experimental Brock TR 2 profile to
-produce Geodude 12 / Onix 14. It does not lower the player's TR-0 cap of 15.
-Source parties are provenance and balance references; their absolute levels
-do not override the selected curve at runtime.
+For every arc and `C`, as `B` increases, party size and the lowest member level
+must not drop. Validate authored content against this; never repair it at
+runtime. Once `levelBase` stops rising at the headroom ceiling (post-game),
+levels follow the arc alone and may fall between editions by design: a fading
+early bloomer or a veteran past their peak is part of the living-rivals story.
+Party size still never shrinks.
 
 ## Snapshot boundaries
 
-### World Gym encounters
+### Gym encounters
 
-After resolving canonical encounter identity and variant, derive its saved-policy
-growth rate. Capture `(B,L)`, `growthPercent`, growth-policy version, personal TR,
-stage/profile IDs, and content versions before constructing the opponent. Keep
-the complete plan for battle reconstruction. Clear the transient plan at teardown.
-At unchanged milestones, subsequent attempts resolve identical authored
-membership and levels; existing battle RNG may still differ. An intervening
-badge or first clear legitimately changes the next encounter's plan.
+After resolving encounter identity and variant, capture `(B, L)`, `p`, the
+pinned growth-policy version, the derived arc, standing, worldCap and
+levelBase, stage/profile IDs,
+content versions, and the member level plan before constructing the opponent.
+Reconstruction within the battle reuses that plan; teardown clears it. A retry
+at unchanged milestones produces identical membership and levels (battle RNG
+may still differ). A badge or first clear earned before the retry legitimately
+advances the plan. The badge is awarded after the battle. Invalid content or a
+failed derivation fails preparation; never substitute player TR, a default arc,
+or another trainer.
 
-### Individual league competitions
+### League competitions
 
-New game creates the root and first circuit travel order, with no registered
-trainer lineup. A circuit edition describes the three-venue traversal; a
-competition is one event at one venue. Only entry into an available competition
-captures the actual world point:
+Entry into a competition freezes, for that `(edition, venue)`, the world point,
+`p_event`, worldCap and levelBase, every candidate's arc and standing, and the
+resulting levels. A trainer fights at `levelBase_event + standing`, with no
+per-role adjustment. A
+loss retries the same frozen field; only a win advances. The
+[seeded league circuit](seeded-league-circuit.md) and
+[circuit trainer pool](circuit-trainer-pool.md) own that lifecycle, the role
+windows on standing, and selection.
 
-```text
-B_event = current global badge count
-L_event = current lifetime venue-clear mask
-C_event = popcount(L_event)
-```
+## Validation
 
-Capture catalog/growth/band/resolver versions, the saved growth-policy version,
-and required participation history. Derive each candidate’s immutable modifier
-from its canonical ID. Resolve candidates at `(B_event,C_event)` before role eligibility and home/visitor
-selection. Generate only this competition's five slots. Do not select future
-venues, assume future clears, or hold the badge count fixed across the circuit.
-Home status never changes effective TR. The same character may appear in later
-competitions with a higher rating after actual world progression.
+- For every trainer × p 0–48 × C 0–3 × each allowed arc: arc interpolation
+  and rounding at every checkpoint and adjacent value, clamps, headroom at
+  (24,3), non-dropping party size and minimum level, profile completeness, and
+  identical p=0 encounters across arcs.
+- worldCap equals `softCap(milestoneTR)` at all 100 world points, including the
+  reference table, and is independent of saved player TR and party.
+- Arc derivation: key vectors, `Uniform` boundaries, canonical list ordering,
+  stability across reloads, aliases, and editions, and independence from
+  lookup order, catalog additions, and ordinary battle RNG.
+- Gym/cap report: the ace-minus-cap distribution per B across all arcs. Target a
+  Gym mean near -2 with spread within about ±3, no widening as `C` grows, and
+  Blue always above 0. Where worldCap exceeds 96 (only (24,3)), the Blue and
+  headliner checks compare against `levelBase` instead of worldCap, including
+  the explorer's (24,3) Blue check.
+- League role feasibility, fallback rate, and variety are owned by the
+  [pool specification](circuit-trainer-pool.md), using standings from here.
 
-Persist this event's entry inputs, selected effective TR, growth percentages,
-stage/profile IDs, and versions, including growth-policy version. Verification
-checks each rate against the saved root and policy before checking TR/eligibility. While the event is active, battle reconstruction, saves, reloads,
-and departures retain that plan. A changed live world point never mutates an
-active event. World Gym opponents separately use live milestones at battle setup.
-
-A loss terminates the competition and releases its active participant/strength
-lock. It grants no venue clear or milestone growth. Preserve the event identity,
-result, and bounded participation history so reopening registration cannot revive
-or reroll it. The player must wait for a later available competition, whose
-entry captures then-current milestones. A win commits the venue result and any
-first-lifetime-clear growth before a later competition can capture its inputs.
-The five-person lineup is fixed within an event, not for all three venues or all
-attempts at one venue.
-
-The circuit runtime owns stable competition ordinals, availability, atomic entry
-and result commits. Repeated entry requests for the same event do not consume a
-new identity. A new competition is permitted only by the adopted availability
-rule, not by loading, previewing, or cancelling registration. The waiting rule
-and exact signup thresholds remain unresolved. Around 8/16/24 badges for circuit
-positions is tentative guidance; the former all-24-badges prerequisite is removed.
-Neither a failed entry transaction nor a corrupt snapshot authorizes regeneration
-from live progress. Exhibition replays are outside this revised lifecycle.
-
-Role bands are authored for world point `(B,C)` and shared by all venues at the
-same point. Use actual effective TR for admission to those bands, not baseline
-TR, historical title, or a player's cap. Bounds must remain ordered and disjoint
-through TR saturation. The catalog must prove home-only 2/2/1 feasibility at all
-supported entry world points and allowed per-trainer modifier combinations before
-shipping; empty roles block content enablement rather than widening bands,
-forcing visitors, or rerolling growth rates. Checking all trainers at 90% and
-then all at 110% is insufficient: different trainers have different rates, and
-interior rates can cross role or stage boundaries. Establish a conservative
-coverage proof (for example sufficient home candidates whose role/profile
-eligibility survives every allowed rate), or an exhaustive equivalent. Sampled
-seeds establish variety, not universal feasibility.
-
-## Validation and adoption
-
-Validate all approved production records × 25 badge counts × four first-clear
-counts × 21 growth percentages. Extend the explorer before using it as evidence
-for seeded variation; its current 37 prototypes cover only the neutral rate. Check
-rounding, clamps, monotonic growth, stage boundaries, profile completeness,
-source provenance, baseline invariance, 100% equivalence, and explicit encounter
-enrollment. Check immutable rate derivation across reloads/aliases/events,
-independence from lookup order/catalog additions/other domains, and distinct
-seed examples without requiring every seed to give different rates. Add fixtures for Blue's
-distinct curve, unchanged player caps, and Tate/Liza's unenrolled double battle.
-
-Test world-Gym retries at unchanged milestones, active-event snapshot reuse,
-all six circuit orders, entry rollback, loss termination and waiting, duplicate
-result recovery, and genuine milestone progression before the next competition.
-Check that future stops remain unlocked, first-clear rewards affect only later
-events, and event counts do not inflate TR. Test seed isolation separately from
-ordinary battle RNG.
-
-The browser tool cannot establish production moves/items/AI balance or ROM
-integration. Finalize personal curves, stage content, NPC anchors, circuit bands,
-qualification, and playtest evidence before enabling the proposed policies.
-The existing Gym and League implementations remain active until that adoption;
-their current policy descriptions are not alternative target requirements.
+The [explorer](../../devtools/ui/README.md#trainer-balance-explorer) is being
+reworked to model arcs, the cap gap, and venue feasibility; until then it is
+provisional evidence. It predicts species, sizes, and levels only. Playtesting
+owns combat balance (moves, items, AI). Finalize catalog content, hint lines,
+and playtest evidence before enabling this policy; the existing Gym and League
+implementations remain active until then and are not alternative targets.

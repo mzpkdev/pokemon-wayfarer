@@ -17,8 +17,8 @@ Nidoqueen 44, Nidoking 45, Rhyhorn 50, retaining both Rhyhorn. These are source
 levels under the current bespoke five-slot player-TR projection in
 [party construction](../../game/src/battle_main.c), independent of the disabled
 shared six-slot Gym feature. Proposed [trainer world progression](trainer-world-progression.md)
-explicitly enrolls Giovanni's initial singles badge battle with personal NPC
-TR and approachable authored opening stages. This five-member source remains
+explicitly enrolls Giovanni's initial singles badge battle with world-cap
+standing, a seeded growth arc, and approachable authored opening stages. This five-member source remains
 provenance, not a required early party or immutable prefix for every stage.
 Giovanni's Hideout/Silph boss variants remain independently governed. Preserve
 battle identity and truthful local dialogue in either model.
@@ -48,11 +48,11 @@ Keep Blue's existing repeatable Saffron Fighting Dojo battle, authored Wayfarer 
 - Verify no Blue object or invitation remains in Viridian or Cinnabar, while Blue still appears as Indigo Champion. Leave Tower/Fuji, Snorlax, optional Rocket scenes, and unrelated League/region state untouched by the Gym finale.
 - Generate selected maps, warps, Trainer and item dependencies, and a release ROM; inspect the rendered FRLG maze and HNS city doorway. Source assets and screenshots are not runtime proof.
 
-The proposed [trainer world progression](trainer-world-progression.md) enrolls initial singles Gym
-battles explicitly and permits approachable opening teams, including Blue's
-experimental Gym profile with faster later Champion growth. A catalog profile
-does not restore Blue as the Viridian badge owner or change Giovanni's local
-prerequisites. Blue's rival, Dojo, and rematch parties are separately governed;
+The proposed [trainer world progression](trainer-world-progression.md)
+enrolls initial singles Gym battles explicitly and permits approachable opening
+teams. Blue's growth there applies only to his league appearances; it does not
+restore Blue as the Viridian badge owner or change Giovanni's local
+prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
 canonical identity does not enroll them. Original FRLG/HNS parties remain
 provenance references for authored stages, not mandatory opening teams.
 

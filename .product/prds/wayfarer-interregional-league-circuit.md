@@ -2,31 +2,19 @@
 
 Implemented: Yes
 
-Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces the fixed
-order and lineups with recurring circuit editions and a rated trainer pool.
-Seed the root and full venue order at new game; future venues have no selected
-participants or strength snapshots. Each current league competition selects
-its five opponents only at entry, using live global badges and lifetime venue
-clears under [trainer world progression](trainer-world-progression.md), including
-that canonical person's immutable seed-derived growth percentage. Resolve NPC
-TR before world-point role eligibility, 85/15 home/visitor selection, and rotation.
-Save the selected TR, growth percentage/policy version, teams/stage/profile
-references, inputs, and versions for
-that competition only; reconstruction and reload retain the active event.
-
-A loss ends the competition and releases its active lock. The player must wait
-for the next competition at the same venue; winning advances the seeded order.
-That next event may select different opponents and strength from current
-milestones. Lost events contribute to rotation history. Event sequence and
-circuit edition are separate identities. Edition count alone adds no strength,
-and recurring circuits do not reset lifetime unlocks or repeat +8 player-TR
-first-clear rewards. Exhibition replays are outside the successor scope.
-
-Registration thresholds remain undecided; approximately 8/16/24 global badges
-by scheduled stop is tentative. Waiting duration and availability rules remain
-open. The [seeded runtime](../specs/seeded-league-circuit.md) owns these event boundaries;
-numeric growth and role-band balance remain provisional. The current fixed
-circuit contract below remains the ROM implementation baseline.
+Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
+the fixed order and lineups with recurring circuit editions and a seeded trainer
+pool. Each edition visits Indigo, Sevii Masters, and Hoenn in a seeded order,
+and each (edition, venue) holds one competition whose five-trainer field is
+selected and frozen at entry. A loss retries the same field; only a win
+advances. Trainer strength follows
+[trainer world progression](trainer-world-progression.md): the world cap for
+canonical badges and first clears plus each trainer's standing and seeded growth
+arc, never player TR. Recurring editions do not reset lifetime unlocks or repeat
++8 player-TR first-clear rewards; exhibition replays are outside the successor
+scope. The [seeded runtime](../specs/seeded-league-circuit.md) owns signup,
+entry, retry, and win. The current fixed circuit contract below remains the ROM
+implementation baseline.
 
 The current runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit
 with canonical stage clears, one shared Indigo result projected to Kanto/Johto,
@@ -197,13 +185,14 @@ Collecting all badges first remains valid:
 | Indigo and Masters cleared | 72 | 89 |
 | Circuit complete | 80 | 100 |
 
-Trainer Rating remains a high-water mark. It drives wild, mart, ordinary-Trainer,
-Gym-member, soft-cap, and obedience consumers, plus Giovanni's current five-slot
-projection. The shared six-slot Gym feature reads player TR when enabled and is
-disabled by default. Proposed enrolled singles Gym opponents move to personal
-NPC TR; the other consumers continue to read player TR. Current fixed circuit
-opponents use
-their saved run-entry snapshot through League scaling.
+Trainer Rating remains a high-water mark. It drives wild, mart,
+ordinary-Trainer, Gym-member, soft-cap, and obedience consumers, plus Giovanni's
+current five-slot projection. The shared six-slot Gym feature reads player TR
+when enabled and is disabled by default. Proposed enrolled singles Gym opponents
+instead follow the world cap under
+[trainer world progression](trainer-world-progression.md); the other consumers
+continue to read player TR. Current fixed circuit opponents use their saved
+run-entry snapshot through League scaling.
 
 ## Travel and discovery
 

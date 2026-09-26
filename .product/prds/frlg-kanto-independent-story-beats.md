@@ -164,10 +164,10 @@ Keep FRLG's rival scenes at their existing locations except for Blue's
 one-time Cinnabar introduction. The historical coastal port moved it to the
 Viridian Gym entrance; the implemented [Viridian finale](../specs/frlg-kanto-viridian-finale.md)
 now removes that introduction and Blue's Gym role. Proposed
-[trainer world progression](trainer-world-progression.md) can author an
-experimental Blue Gym profile without assigning him that badge or enrolling
-rival, Dojo, or rematch variants. Giovanni's initial singles Gym may use personal
-NPC TR and distinct authored stages; his Hideout/Silph boss encounters retain
+[trainer world progression](trainer-world-progression.md) enrolls Blue only
+in league slots; it assigns him no badge, and his rival, Dojo, and rematch
+variants keep their policies. Giovanni's initial singles Gym may use world-cap
+standing and distinct authored stages; his Hideout/Silph boss encounters retain
 their separately owned policies. Preserve genuinely necessary
 character-development order by withholding later scenes until their predecessors
 are complete. Do not relocate chapters or select a different chapter dynamically

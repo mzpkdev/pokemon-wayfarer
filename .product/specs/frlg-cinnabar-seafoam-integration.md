@@ -5,11 +5,11 @@ Implemented: Yes
 
 Implemented in [PR #112](https://github.com/mzpkdev/pokemon-wayfarer/pull/112).
 
-The proposed [trainer world progression](trainer-world-progression.md) enrolls initial singles Gym
-battles explicitly and permits approachable opening teams, including Blue's
-experimental Gym profile with faster later Champion growth. A catalog profile
-does not restore Blue as the Viridian badge owner or change Giovanni's local
-prerequisites. Blue's rival, Dojo, and rematch parties are separately governed;
+The proposed [trainer world progression](trainer-world-progression.md)
+enrolls initial singles Gym battles explicitly and permits approachable opening
+teams. Blue's growth there applies only to his league appearances; it does not
+restore Blue as the Viridian badge owner or change Giovanni's local
+prerequisites. Blue's rival, Dojo, and Gym-ID battles keep their own policies;
 canonical identity does not enroll them. Original FRLG/HNS parties remain
 provenance references for authored stages, not mandatory opening teams.
 

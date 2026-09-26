@@ -12,19 +12,18 @@ and cross-build acceptance listed below.
 The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) retains
 this player TR and cap contract. If adopted, progression examples refer to first,
 second, and third lifetime venue clears rather than a fixed Indigo/Masters/Hoenn
-order. Registration thresholds remain undecided; approximately 8/16/24 global
-badges by scheduled stop is tentative. Player TR and caps use actual badge and
-committed first-lifetime-clear facts; sub-24-badge clears remain relevant balance
-cases. Losing a competition grants no clear or TR contribution. Recurring
-editions never reset those facts or add more +8 contributions. Proposed
-[trainer world progression](trainer-world-progression.md) gives each enrolled
-NPC a separate start-TR baseline, badge checkpoints at 0/8/16/24, and per-trainer
-growth for first lifetime venue clears, scaled by its immutable seed-derived
-personal growth percentage and clamped to 80 under the linked authority. This
-leaves its starting baseline unchanged. These values select NPC
-strength and authored party stages only. The player's saved high-water TR,
-soft cap, XP reduction, obedience, wild encounters, marts, ordinary Trainers,
-and Gym members retain their existing player inputs and never read NPC TR.
+order. Signup thresholds remain provisional (about 8/16/24 global badges by
+circuit position plus a predecessor win). Player TR and caps use actual badge
+and committed first-lifetime-clear facts; sub-24-badge clears remain relevant
+balance cases. Losing a competition grants no clear or TR contribution.
+Recurring editions never reset those facts or add more +8 contributions.
+Proposed [trainer world progression](trainer-world-progression.md) derives
+enrolled NPC strength from a world cap: this document's soft cap evaluated
+purely from canonical badges and first clears, never from the saved TR, party,
+or training, plus each trainer's standing and seeded growth arc. It changes
+nothing here: the player's saved high-water TR, soft cap, XP reduction,
+obedience, wild encounters, marts, ordinary Trainers, and Gym members retain
+their existing player inputs.
 
 ## Scope
 

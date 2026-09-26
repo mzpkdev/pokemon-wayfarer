@@ -58,20 +58,17 @@ cannot substitute for a story completion flag or League admission rule.
 
 Each consumer declares when it samples changing state. A mart resolves its stock
 when opened. Ordinary Trainers and Gym members snapshot player TR at battle
-setup. The existing six-slot Gym scaler is disabled by default; when enabled
-it uses player TR, while Giovanni has a separate five-slot player-TR projection.
-Current fixed Leagues use their saved admission Rating and sample again on
-new admission. Under proposed
-[trainer world progression](trainer-world-progression.md), enrolled initial singles
-Gyms snapshot personal NPC TR, while each [seeded league competition](../specs/seeded-league-circuit.md)
-selects and saves only its five opponents at entry from live badge and
-first-lifetime-clear facts under the immutable seed-derived personal growth
-policy. Enrolled aliases share a canonical person's fixed percentage, and
-snapshots retain percentage/policy version alongside TR and teams. Reload and reconstruction retain that active event's
-TR/teams; a loss terminates it and releases the active lock. A next competition
-requires waiting and resamples live milestones. Future venues remain unselected;
-event sequence differs from circuit edition, and edition count adds no TR.
-The shared curve evaluator accepts an explicit input and never produces Rating.
+setup. The existing six-slot Gym scaler is disabled by default; when enabled it
+uses player TR, while Giovanni has a separate five-slot player-TR projection.
+Current fixed Leagues use their saved admission Rating and sample again on new
+admission. Under proposed
+[trainer world progression](trainer-world-progression.md), enrolled initial
+singles Gyms snapshot a level plan derived from the world cap for canonical
+badge and first-clear milestones, never player TR, and each
+[seeded league competition](../specs/seeded-league-circuit.md) freezes its
+five-trainer field at entry and keeps it through reload and retries after a
+loss. The shared curve evaluator accepts an explicit input and never produces
+Rating.
 
 ### Adding content
 

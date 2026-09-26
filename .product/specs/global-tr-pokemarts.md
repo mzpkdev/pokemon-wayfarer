@@ -6,9 +6,9 @@ Implemented: Partial; converted-counter runtime is enabled, release acceptance r
 The current [circuit producer](../../game/src/league_circuit.c) already contributes
 +8 once for each canonical venue's first clear. Replays add no player TR. The
 proposed [trainer world progression](trainer-world-progression.md) introduces
-personal NPC strength without changing the getter or stock tiers below. Mart
-openers continue to snapshot player TR; they never read an NPC rating or edition
-count.
+world-cap NPC strength without changing the getter or stock tiers below. Mart
+openers continue to snapshot player TR; they never read NPC standing, arcs, or
+edition count.
 
 ## Scope
 

@@ -55,9 +55,9 @@ Seafoam Gym or Secret Cave path grants another Blaine or Groudon encounter.
 This Blue introduction records the historical coastal port. The implemented
 [Viridian finale](frlg-kanto-viridian-finale.md) now removes Blue from the exterior
 and Gym; its acceptance checks supersede this document's Blue check. Proposed
-[trainer world progression](trainer-world-progression.md) may author a separate
-Blue Gym profile, but that does not restore Viridian actors or enroll his rival,
-Dojo, or rematch variants. The retirement boundary remains unchanged.
+[trainer world progression](trainer-world-progression.md) enrolls Blue only in
+league slots; it does not restore Viridian actors or enroll his rival, Dojo, or
+rematch variants. The retirement boundary remains unchanged.
 
 The Wayfarer release link map contains no layout, event, script, or wild
 encounter payload for the seven retired HNS maps. The generated standalone HNS

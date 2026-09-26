@@ -3,28 +3,12 @@
 PRD: [League scaling](../prds/league-scaling.md)
 Implemented: Partial
 
-Proposed successor: [Trainer world progression](trainer-world-progression.md) owns
-personal NPC ratings and explicitly enrolled initial singles Gyms. Each NPC's
-baseline is its unchanged start TR. The shared world-progression authority
-interpolates personal badge checkpoints and scales combined badge/first-clear
-growth by an immutable seed-derived personal percentage (90–110%). The same
-canonical person uses that curve across enrolled Gym and league aliases;
-percent and growth-policy version are fixed for the save, never rerolled per
-event or badge. This replaces the earlier static-strength proposal.
-[Seeded circuit runtime](seeded-league-circuit.md) selects only the current league
-competition's five opponents at entry, using live badge/first-clear inputs.
-Resolved NPC TR determines eligibility before 85/15 home/visitor selection and
-rotation. Shared world-point-indexed 2/2/1 bands replace fixed bands and room
-position offsets; concrete values remain experimental. Save selected opponent
-TR, teams/stage/profile identities, inputs, and versions for the active event.
-Reload and reconstruction preserve it; future venues remain unselected.
-A loss ends that competition, releases the active lock, and requires waiting
-for the next event at the same venue. New competitions resample live milestones
-and include lost events in rotation history. Winning advances the seeded order.
-Later edition count alone grants no strength. Registration thresholds are
-undecided, with approximately 8/16/24 badges by stop tentative; waiting/cadence
-and exhibition replay design remain open. The fixed runtime contract below
-describes current ROM behavior, not this unimplemented successor.
+Proposed successor: the [PRD](../prds/league-scaling.md) summarizes the
+seeded circuit, world-cap growth, and successor party and registration
+contract that replace this contract upon adoption;
+[trainer world progression](trainer-world-progression.md) and the
+[seeded runtime](seeded-league-circuit.md) own them. Everything below describes
+current ROM behavior.
 
 The scaling engine, fixed Indigo/Masters/Hoenn roster and venue wiring,
 persisted stage/replay/entry-TR identity, and +8-per-venue progression are
@@ -33,21 +17,7 @@ implemented. Campaign balance acceptance remains pending. See the
 [runtime producer](../../game/src/league_circuit.c).
 The [original scaling evidence](../research/league-scaling-implementation.md)
 records earlier automated results; its prior progression/wiring description
-does not describe the current circuit. Seeded/recurring NPC-TR scaling remains
-a proposed successor, not implemented behavior.
-
-## Proposed party and registration contract
-
-Original FRLG, Emerald, and HNS parties are provenance references. Successor
-profiles may author approachable opening teams and distinct later stages; no
-automatic evolution or immutable-prefix rule applies across stages. Blue's
-experimental Gym profile starts approachable and grows rapidly toward Champion
-strength; it does not enroll him as a Wayfarer badge opponent.
-Story, rival, Dojo, and rematch variants require separate enrollment; a shared
-canonical identity grants no scaling policy. Tate and Liza retain their existing
-double-Gym policy and badge outside the singles pool, and Red is outside the
-circuit pool. Player TR, caps, XP reduction, obedience, wild populations, marts,
-ordinary Trainers, and Gym members continue to read player progression.
+does not describe the current circuit.
 
 ## Current ROM scope and code
 

@@ -1,103 +1,84 @@
 # Gym Leader scaling
 
-Implemented: No for trainer-owned world progression. The earlier player-TR
-scaler exists in code but its general build switch is disabled by default;
-Giovanni's Wayfarer finale has a separate runtime path.
+Implemented: No. The earlier player-rating Gym scaler exists in code but is
+disabled by default, and Giovanni's Wayfarer finale has its own path. The ROM
+keeps that behavior until this design is adopted.
+Design status: Accepted direction under the living-rivals model; team content
+and numbers are provisional.
 
 ## Intent
 
-Let players challenge the supported singles Gym Leaders in different orders.
-Each leader starts with an approachable authored team and develops through a
-personal curve as the world gains badges and first league clears. Their
-strength comes from their own effective TR, independently of player TR and
-party levels.
+Let players take the Gyms in any order and always find a fair, recognizable
+fight. A leader challenged first opens with a small, approachable team; a
+leader postponed until late has grown with the world and fields a full team
+near the player's cap. Leaders feel like living rivals: in one save Whitney
+shot ahead early, in another she is still finding her feet, and townsfolk and
+the leader's own dialogue hint at which.
 
 ## Design
 
-Use the shared [trainer world progression](trainer-world-progression.md)
-contract. Each canonical trainer has a starting `baselineTR`, personal badge
-checkpoints, first-clear growth, and authored party stages. A seed-derived
-personal growth percentage (90–110%) scales growth while leaving the baseline
-unchanged; it is fixed per save and canonical person across enrolled aliases.
-Resolve current global milestones through that shared growth policy when
-preparing a battle, select the stage, and convert effective TR through the NPC
-level curve. The shared root must exist at new game before Gym preparation.
+Gym Leaders use [trainer world progression](trainer-world-progression.md): a
+leader's strength follows the world's badges and first league clears, never
+the player's party or training. Each leader sits a little under the cap on
+average, then follows a growth arc chosen once per save from a few that suit
+them. Fast arcs put a leader a little above the cap, slow arcs a little below,
+and the gap never widens as the journey goes on. A few strong leaders in each
+region (Giovanni, Sabrina, Clair, Morty, Norman, Winona, and Juan) sit closer
+to the cap, so in some saves one of them can headline a championship.
 
-The baseline is not a permanent battle rating. Do not reuse the previous
-player-TR party-size thresholds or select a prefix from one immutable team.
-Author complete opening, developing, and competitive stages. Species changes
-between stages are explicit content; there is no automatic evolution or
-predecessor substitution. Teams keep recognizable aces and valid support at
-every supported world point.
+Teams grow in hand-authored stages as the world earns badges: two Pokémon at
+the start, three by around three badges, four by around six, and five or six
+later. Each stage is a complete reviewed team with a recognizable ace.
+Evolutions and new teammates appear only where authored; a team never shrinks
+and its weakest member never gets weaker. Original FRLG, Emerald, and HNS
+parties are references, not required opening teams.
 
-Original FRLG, Emerald, and repository HNS parties are references, not mandatory
-opening difficulty. Later Gym Leaders need low starting ratings too. Blue's
-personal curve reaches Champion strength sooner while retaining an approachable
-opening; that experiment does not create a new Blue badge encounter.
-
-Freeze the selected rating and profile for the battle and any reconstruction.
-A retry at unchanged milestones has the same authored party and levels. If the
-player earns another badge or first league clear before retrying, the leader
-uses the new world point. Award the challenged Gym's badge after its battle,
-so that award never strengthens the opponent during the fight.
+The team is set when the battle starts and kept for the whole fight. Retrying
+without new progress brings the same team at the same levels; a badge or
+first league clear earned elsewhere first means the leader has grown. The
+challenged Gym's badge is awarded after the battle.
 
 ## Coverage
 
-Wayfarer still has 24 badge encounters. The proposed singles policy covers
-23 canonical badge opponents: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina,
-Blaine, Giovanni; Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce, Clair;
-Roxanne, Brawly, Wattson, Flannery, Norman, Winona, and Juan. The inventory must
-map actual Wayfarer battle IDs and selectable variants, including Giovanni's
-bespoke Viridian finale.
+Wayfarer has 24 badge encounters. This policy covers the 23 singles badge
+opponents: Brock, Misty, Lt. Surge, Erika, Janine, Sabrina, Blaine, Giovanni
+(his Viridian finale); Falkner, Bugsy, Whitney, Morty, Chuck, Jasmine, Pryce,
+Clair; Roxanne, Brawly, Wattson, Flannery, Norman, Winona, and Juan.
 
-Tate and Liza remain outside the singles pool. Their double Gym battle and its
-badge retain the existing policy; this proposal neither removes that badge
-nor converts the battle to singles. The explorer's 24 `gymEligible` records
-include Blue and must not be mistaken for the 24 badge encounter inventory.
-
-Canonical pool membership never enrolls all of a character's encounters.
-Blue's opening/rival/Dojo battles, leader rematches, Giovanni's villain scenes,
-facilities, partners, and story battles keep their separate policies unless
-explicitly added to the coverage inventory. Standalone builds remain unchanged.
+Tate and Liza's double battle keeps its existing policy and badge; it is not
+converted to singles. Blue's growth applies only to his league appearances;
+Wayfarer has no Blue badge encounter. Rematches, Giovanni's villain
+scenes, Blue's rival and Dojo battles, facilities, and story battles keep their
+own policies unless explicitly added.
 
 ## Teams and construction
 
-Each stage supplies its exact species/forms, move policies, held items,
-abilities, IVs, EVs, natures, aces, battle order, and level offsets. Review new
-stage content deliberately rather than retaining an inappropriate endgame
-moveset on an opening Pokémon. `AUTHORED` moves keep their exact reviewed tuples;
-`LEVEL_UP` moves use the selected species' normal learnset at its effective level.
+Each stage supplies exact species, moves, items, abilities, stats, ace, and
+battle order, reviewed for its stage rather than inheriting an endgame moveset.
+Moves, items, and abilities stay attached to the right Pokémon when a team is
+reordered. Rewards, prize money, badge scripts, and AI are preserved unless a
+stage deliberately changes them. Trainer-species randomization keeps its
+existing path; other randomizer and challenge options keep their precedence.
 
-Keep original source-member identity when constructing in battle order, so
-moves, items, abilities, and gimmicks remain attached to the correct member.
-An authored ace-last order does not force AI replacement or switching behavior.
-Preserve encounter rewards, prize-money basis, badge scripts, and AI unless
-reviewed stage content explicitly changes the relevant battle field.
+## Boundaries
 
-Trainer-species randomization keeps its existing complete construction path;
-it bypasses the new stage transformation. Other explicit challenge and move
-randomizer options keep their current precedence.
+- Gym members, ordinary trainers, wild encounters, and the player's cap keep
+  their existing policies.
+- Standalone builds are unchanged.
 
-## Balance and acceptance
+## Balance
 
-Use the NPC growth/level rules in the shared specification. The explorer's
-TR-0 level-12 anchor, stage thresholds, and personal checkpoints remain
-provisional. The player's cap stays separate. Historical Gym order, current
-party size, and training do not supply hidden difficulty adjustments.
-
-Exhaust badges 0–24 and first clears 0–3 for every enrolled variant. Check
-approachable opening parties, every stage transition, postponed leaders,
-source metadata, battle reconstruction, and explicit randomizer bypass.
-Check that Gym members under their ordinary player-TR policy do not consistently
-outclass their leader. Validate the exceptional Tate/Liza battle separately.
-
-The new policy requires reviewed content and ROM playtesting before enablement.
-The browser explorer predicts parties and levels; it does not establish combat
-balance or replace the production encounter inventory.
+Target: leaders average a couple of levels under the cap, spread within a few
+levels either side. The
+[explorer](../../devtools/ui/README.md#trainer-balance-explorer) is being
+reworked to show arcs and each leader's gap to the cap; it predicts species,
+team size, and levels only. Combat balance needs reviewed content and ROM
+playtesting before enablement, including checks that Gym members do not
+routinely outclass their leader.
 
 ## References
 
 - [Gym Leader scaling specification](../specs/gym-leader-scaling.md)
-- [Trainer world progression specification](../specs/trainer-world-progression.md)
+- [Trainer world progression](trainer-world-progression.md)
 - [Ordinary Trainer and Gym-member scaling](trainer-party-scaling.md)
 - [Player party progression](../specs/trainer-rating-party-progression.md)
