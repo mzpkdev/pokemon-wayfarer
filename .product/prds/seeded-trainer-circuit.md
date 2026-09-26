@@ -285,12 +285,25 @@ Use existing venue layouts and respect the normal ROM reserve and RAM budgets.
 No direct `map.bin` editing is part of this feature. Existing prerelease saves
 need no migration; use the repository's save-version policy when implementing.
 
-This is a proposed successor to the fixed
-[interregional circuit](wayfarer-interregional-league-circuit.md) and
-[League scaling](league-scaling.md) designs. Until this draft is adopted, those
-remain the approved baseline. Once adopted, the two linked specifications below
-take precedence for changed behavior; their integration audit identifies the
-remaining documents and story consumers that must be reconciled.
+### Adoption and related contracts
+
+The fixed circuit is implemented; seeded selection and recurring editions are
+proposed changes. Until this draft is adopted, the existing contracts below
+remain the implementation baseline. Adoption gives the new pool, circuit
+runtime, and shared seed specifications precedence only for the changed rules
+listed here. Their content and balance gates still apply before implementation.
+
+| Existing contract | Proposed replacement | Behavior retained |
+| --- | --- | --- |
+| Interregional circuit [PRD](wayfarer-interregional-league-circuit.md) and [spec](../specs/wayfarer-interregional-league-circuit.md) | Fixed venue order and named lineups become seeded editions; current results are separate from lifetime clears; edition and story completion have distinct ceremonies. | Three venues, shared Kanto/Johto Indigo recognition, regional cleanup ownership, and independent travel. |
+| League scaling [PRD](league-scaling.md) and [spec](../specs/league-scaling.md) | Player-entry TR, room offsets, and fixed encounter membership give way to selected NPC baseline TR and authored circuit profiles. | Ordinary trainer/Gym policies and explicit randomizer overrides. |
+| Player TR [PRD](trainer-rating-wild-encounter-scaling.md) and [party-progression spec](../specs/trainer-rating-party-progression.md) | Clear examples refer to the first three lifetime venue clears in seeded order; later editions grant no further progression TR. | Badge contribution, one +8 award per venue, high-water rule, ceiling 80, and player cap/obedience formulas. |
+| [Runtime foundation](../specs/wayfarer-runtime-foundation.md) | Add the shared playthrough root and edition-owned schedule/results; first-clear facts remain lifetime state. | Shared save ownership, regional projections, and prerelease save policy. |
+| [Viridian finale and Blue Dojo](../specs/frlg-kanto-viridian-finale.md) | Proposed Dojo access follows the first committed lifetime circuit clear, regardless of venue or Blue's participation. | Giovanni's local finale, Blue's authored Dojo encounter, and its existing reward rules. |
+| [Kanto story PRD](frlg-kanto-story-on-hns-maps.md) and [Cinnabar/Seafoam integration](../specs/frlg-cinnabar-seafoam-integration.md) | References to guaranteed Indigo opponents, Blue's fixed Champion party, and Indigo-only Dojo access defer to the selected circuit profiles and proposed unlock above. | Local quest ownership, rival encounters outside the circuit, Gym roles, and coast content. |
+
+Historical implementation reports remain evidence for the builds they tested;
+they do not establish that this proposed successor has been implemented.
 
 ## Playtesting
 

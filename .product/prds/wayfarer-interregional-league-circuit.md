@@ -1,6 +1,6 @@
 # Wayfarer interregional League circuit
 
-Implemented: Outdated
+Implemented: Yes
 
 Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) replaces
 the fixed order and lineups with recurring editions, each with a seeded
@@ -9,9 +9,13 @@ later editions provide another competition without resetting unlocks.
 That draft separates confirmed requirements from proposed defaults. This document
 remains the approved baseline until the successor is adopted.
 
-The current runtime still treats Kanto and Johto as separate League clears at
-the shared Indigo venue. The approved design below replaces that model with one
-shared Indigo League and a separate Sevii Masters Challenge.
+The current runtime implements the fixed Indigo → Sevii Masters → Hoenn circuit
+with canonical stage clears, one shared Indigo result projected to Kanto/Johto,
+and +8 player TR per first-clear venue. Opponents remain fixed and scale from
+the player's saved entry TR; seeded/recurring behavior is not implemented.
+See the [implemented circuit contract](../specs/wayfarer-interregional-league-circuit.md)
+and [current producer](../../game/src/league_circuit.c). Campaign balance
+acceptance remains pending under [League scaling](league-scaling.md).
 
 ## Intent
 

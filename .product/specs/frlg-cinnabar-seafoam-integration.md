@@ -126,6 +126,14 @@ introduction, Blue Gym role, and related acceptance checks when implemented.
 Blue's Dojo appearance then follows Indigo's committed first Champion victory,
 independently of Giovanni.
 
+The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) selects
+League participants/profiles rather than guaranteeing Blue as Indigo finalist.
+Its [runtime contract](seeded-league-circuit.md) proposes Dojo access after the
+first lifetime scheduled venue clear. If adopted, that circuit contract takes
+precedence over the Indigo-only unlock above. The delivered coastal port's
+Viridian behavior and unrelated local/rival story interactions remain current
+until their own successor is implemented.
+
 ### Encounters, services, and release budget
 
 Update the Kanto encounter manifest and day/night source bindings for the

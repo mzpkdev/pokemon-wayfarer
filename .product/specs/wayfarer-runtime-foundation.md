@@ -195,6 +195,14 @@ first-clear result advances the circuit only after its own completion commits.
 Only Indigo may project one clear into both Kanto and Johto Champion
 recognition; no other circuit result may synthesize another region's state.
 
+These are the current implemented completion facts. The proposed
+[seeded circuit runtime](seeded-league-circuit.md) separates current-edition
+results from lifetime first clears, using lifetime facts for TR, regional
+recognition/cleanup, and persistent unlocks. If that draft is adopted, its
+edition/lifetime contract replaces the fixed-order progression above; shared
+Indigo recognition and regional state isolation remain. The separate
+playthrough-root storage proposal does not itself implement those changes.
+
 ### ROM budget
 
 The final ROM must fit the standard 32 MiB GBA address space. Wayfarer must not

@@ -1,10 +1,13 @@
 # Trainer Rating party progression
 
 PRD: [Trainer Rating wild encounter and party progression](../prds/trainer-rating-wild-encounter-scaling.md)
-Implemented: Outdated
+Implemented: Partial
 
-The progression examples require the approved +8/+8/+8 circuit-stage rewards.
-The implementation still uses +15/+5/+4; the soft-cap anchors are unchanged.
+The current [circuit producer](../../game/src/league_circuit.c) implements
++8/+8/+8 first-clear contributions for Indigo, Masters, and Hoenn. The badge
+formula and soft-cap anchors are unchanged. These circuit inputs are current;
+the Partial marker does not certify completion of all experience, obedience,
+and cross-build acceptance listed below.
 
 The proposed [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md) retains
 this player TR and cap contract. If adopted, progression examples refer to first,
@@ -58,7 +61,7 @@ The result is clamped to 1 through 100. The curve is monotonic and produces
 these global circuit examples. The
 [circuit](wayfarer-interregional-league-circuit.md) allows all badges before any
 circuit-stage clear. The examples include the approved +8 per first-time stage
-clear, which is pending implementation. The badge formula and soft-cap curve
+clear, already implemented by the current circuit producer. The badge formula and soft-cap curve
 are unchanged:
 
 | Progress | Trainer Rating | Soft level cap |

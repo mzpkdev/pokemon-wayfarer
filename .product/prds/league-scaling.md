@@ -1,6 +1,6 @@
 # League scaling
 
-Status: Scaling engine implemented; revised circuit wiring and campaign balance acceptance pending.
+Status: Scaling engine and fixed circuit wiring implemented; campaign balance acceptance pending.
 Implemented: Partial
 
 Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) uses
@@ -9,9 +9,13 @@ Its recurring editions retain authored NPC ratings without automatic increases.
 The fixed-NPC direction is confirmed; this scaling contract remains the
 implementation baseline until the successor is adopted.
 
-See [implementation evidence](../research/league-scaling-implementation.md) for
-test results and the remaining gameplay validation. TR progression revisions
-remain separate pending work.
+The fixed Indigo/Masters/Hoenn roster and venue wiring, stage/replay identity,
+entry-TR snapshot, and +8-per-venue progression are implemented. See the
+[current circuit contract](../specs/wayfarer-interregional-league-circuit.md)
+and [runtime producer](../../game/src/league_circuit.c).
+The [original scaling evidence](../research/league-scaling-implementation.md)
+records earlier automated results and the remaining gameplay validation; its
+old progression/wiring description predates the current circuit.
 
 ## Intent
 
@@ -84,7 +88,8 @@ Trainer Rating advancement belongs to the existing
 [player progression](../specs/trainer-rating-party-progression.md) documents.
 This feature consumes the current TR without changing badge contributions,
 circuit rewards, the player soft cap, XP reduction, or obedience. Progression
-revisions can be implemented separately; they are not prerequisites for scaling.
+changes remain outside scaling; the current producer already awards +8 for each
+of the three canonical first clears.
 
 ## Boundaries and presentation
 
