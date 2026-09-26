@@ -1,5 +1,12 @@
 # Gym Leader scaling
 
+Proposed successor: [trainer world progression](seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
+would give Gym Leaders their own baseline TR and personal badge/first-clear
+growth instead of using player TR. The [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
+tests approachable opening parties and later development. Its numeric curves and
+team stages remain provisional; this document retains the current scaling policy
+until the successor's contract is reconciled and adopted.
+
 ## Intent
 
 Let players challenge the 24 Gym Leaders across Kanto, Johto, and Hoenn in

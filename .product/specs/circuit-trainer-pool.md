@@ -2,9 +2,16 @@
 
 PRD: [Seeded Trainer Circuit](../prds/seeded-trainer-circuit.md)
 Implemented: No
-Design status: Draft; recurring regional championships, stable initial strength (D1),
-and title-agnostic finals (D2) are approved. Content/bands (D3), common
+Design status: Draft; recurring regional championships and title-agnostic finals
+(D2) are approved. D1 is reopened for trainer-owned world progression. Content/bands (D3), common
 qualification (D4), and rotation tuning/acceptance (D5) remain under review.
+
+The parent PRD's [world progression revision](../prds/seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
+supersedes this draft's static baseline, fixed-profile, and snapshot assumptions.
+Those detailed clauses remain the earlier proposal pending a coordinated
+D1/D3/D4 revision; they are not approved implementation requirements.
+The [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
+tests personal growth and team stages without implementing this selection protocol.
 
 ## Scope
 
@@ -47,7 +54,7 @@ in multiple leagues; each checks TR/content eligibility, while scheduled
 appearances reduce selection weight as specified below. Two people with similar
 names remain distinct.
 
-The initial version uses static authored baseline TR. No player encounter
+The earlier D1 proposal uses static authored baseline TR. No player encounter
 changes it, and new editions do not inflate NPC TR or effective strength. NPCs
 have no player badge contribution or high-water state. Future modest dynamic TR
 is outside this initial contract; it must provide an edition-start rating snapshot
@@ -333,7 +340,7 @@ does not establish that property.
 
 ### NPC TR to battle strength
 
-Under resolved D1, use the selected trainer's saved edition-start TR snapshot as
+Under the earlier D1 proposal, use the selected trainer's saved edition-start TR snapshot as
 the only rating input to the circuit level resolver. It equals baseline TR in
 the initial version. Proposed independent anchor data:
 
@@ -477,12 +484,13 @@ reserve policy. Report balance playtesting separately from structural validation
 
 ## Open questions
 
-D1–D5 and supporting defaults are centralized in the parent PRD. Stable initial
-NPC strength (D1), title-agnostic finals (D2), and recurring regional championship
-structure are approved. D3 owns exact content, role bands, and battle balance;
+D1–D5 and supporting defaults are centralized in the parent PRD. D1 is reopened
+for personal growth and snapshot rules; the static-strength clauses above are
+superseded design material. Title-agnostic finals (D2) and recurring regional
+championship structure are approved. D3 owns exact content, role bands, and battle balance;
 D4 owns common qualification/progression; D5 owns rotation factors and quantitative
-variety acceptance. These remain prerequisites for enabling generation. Future
-dynamic TR, more regions, Champion-only finals, or doubles require an explicit
+variety acceptance. These remain prerequisites for enabling generation. More
+regions, Champion-only finals, or doubles require an explicit
 revision rather than undocumented selection exceptions.
 
 ## References

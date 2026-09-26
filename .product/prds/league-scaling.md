@@ -4,11 +4,13 @@ Status: Scaling engine and fixed circuit wiring implemented; campaign balance ac
 Implemented: Partial
 
 Proposed successor: [Seeded Trainer Circuit](seeded-trainer-circuit.md) uses
-each selected NPC's baseline TR for strength instead of player-entry TR.
+each selected NPC's own TR for strength instead of player-entry TR.
 Its recurring championships share contender/elite/headliner TR bands rather
 than position-based difficulty, and rotate participants with soft history weights.
-Initial baseline ratings remain stable; future modest rating dynamics need a
-separate design, and editions never automatically increase strength. This remains a
+Trainer-owned baselines and personal growth from badges and first league clears
+are the accepted direction; the [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
+exercises provisional values. Growth and circuit snapshots still need a coordinated
+specification revision under reopened D1. This remains a
 proposed successor; the scaling contract below remains the
 implementation baseline until the successor is adopted.
 

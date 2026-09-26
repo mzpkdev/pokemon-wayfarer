@@ -1,8 +1,33 @@
 # Seeded Trainer Circuit
 
 Implemented: No
-Design status: Draft; the regional-championship direction is approved. Numeric
-balance, qualification, and supporting implementation defaults remain under review.
+Design status: Draft; recurring regional championships and trainer-owned world
+progression are approved directions. D1 is reopened for the growth and snapshot
+contract. Numeric balance, qualification, and supporting defaults remain under review.
+
+## World progression revision and balance explorer
+
+The latest direction supersedes the earlier static-strength D1 decision:
+trainers have their own starting TR and personal growth as global badges and
+first league clears accumulate. Gym battles should use the trainer's TR rather
+than the player's TR. Late Gym Leaders also need approachable starting teams;
+their original parties inform identity and later targets, not mandatory opening
+strength. Blue stays approachable early but reaches Champion strength sooner.
+
+The [trainer balance explorer](../../devtools/ui/README.md#trainer-balance-explorer)
+ships with this draft to exercise that direction. It exposes 37 trainers, badge
+and first-clear controls, editable growth checkpoints and team stages, original
+party references, and saved/exportable experiments. Its curves, level anchors,
+party stages, and league-growth amounts are provisional. It models species,
+party size, and levels; it does not simulate combat outcomes or generate leagues.
+
+The detailed circuit strength, profile, and edition-snapshot clauses below and
+in the companion specs still describe the earlier proposal and need a coordinated
+D1/D3/D4 revision before implementation. In particular, resolve when advancing
+the world can change a scheduled opponent's strength while retries and reloads
+remain deterministic. The explorer does not settle that lifecycle or implement
+ROM behavior. Seed keys, home/visitor selection, and soft rotation retain their
+approved direction.
 
 ## Intent
 
@@ -28,9 +53,9 @@ to include every established Elite Four member and Champion.
   competitors, and one headliner. Roles depend on TR, not historical titles.
   A qualified Gym Leader may be a headliner. Seeded travel order remains mandatory
   for edition results but does not change the role bands or opponent strength.
-- Keep ratings stable in the initial version. Future modest dynamic TR is a
-  separate design; variety must work without it. Editions and player progress
-  never automatically inflate opponents.
+- Give trainers personal growth from world milestones. Rotation must still
+  provide variety when ratings change slowly or reach their mature values;
+  merely registering another edition must not create endless strength inflation.
 - Apply TR eligibility first. An unsuitable trainer cannot qualify through
   home membership, lack of alternatives, or a desire for roster turnover.
 - Give each trainer an authored `homeLeagues` set with lore rationale; several
@@ -307,8 +332,9 @@ this proposed successor is implemented.
 
 ## Decisions before implementation
 
-D1 is resolved for the initial version: stable baseline NPC TR and no player or
-edition inflation. Future modest rating dynamics are a separate feature.
+D1 is reopened: trainer-owned baseline and world progression replace the earlier
+static-strength direction. The balance explorer supplies experiments, not final
+growth, party-stage, or edition-snapshot contracts.
 D2 is resolved: role-qualified headliners do not require a Champion title.
 The recurring regional-championship structure, soft rotation, `homeLeagues`,
 and initial 85% home / 15% visitor selection are approved. The former 50% outsider
@@ -316,6 +342,7 @@ drop gate is removed. Regional frequency and rotation still need balance validat
 
 | ID | Remaining decision | Proposed default |
 | --- | --- | --- |
+| D1 | Personal growth, Gym adoption, and strength snapshots during world progression? | Exercise badge checkpoints and first-clear growth in the explorer; reconcile circuit registration, retries, replays, and party stages before implementation. |
 | D3 | Concrete catalog, home leagues, role ranges, profiles, strength balance, and sufficient alternatives? | Supported Kanto/Johto/Hoenn singles characters, excluding Tate and Liza; three ordered disjoint TR bands shared by all venues; prove home-only 2/2/1 feasibility and separately validate variety. |
 | D4 | Common qualification and first-entry/later-edition balance? | All 24 badges before the first championship; seeded predecessor clears thereafter; retain lifetime +8 per venue and existing player cap formula. |
 | D5 | Rotation factors and quantitative acceptance across editions? | Flat in-role weights; factors 16/4/1 for current-edition appearances and 1/2 for previous-venue participation; target roughly 2 returning/3 changed without quotas or rerolls. |
@@ -324,7 +351,8 @@ Single battles are confirmed. Supporting defaults remain reviewable: six-member
 teams, unchanged-strength replays, reception registration, bounded history and aggregate records, per-edition
 Indigo/Hoenn winning-team records and Ribbons, brief later completion presentation,
 first-clear Blue Dojo access, separate Red, and advance roster disclosure.
-D3–D5 and supporting defaults must be settled before implementation.
+D1 and D3–D5, including the superseded strength clauses identified above, must
+be reconciled before implementation.
 
 ## References
 

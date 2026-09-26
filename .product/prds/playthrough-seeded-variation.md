@@ -123,9 +123,12 @@ A later edition may produce different results; distinct keys do not guarantee
 different orders or participants. Soft weighting encourages roughly two returning
 and three different opponents per venue, without a quota or a repeat-avoidance
 reroll. Missing a venue for one edition clears its previous-participation penalty;
-trainers are never permanently excluded. Initial baseline TR remains stable.
-Future modest rating dynamics require a separate design and cannot change a
-published schedule; recurrence does not automatically increase NPC TR.
+trainers are never permanently excluded. The latest
+[world progression direction](seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
+uses personal badge/first-clear growth from trainer-owned baselines. Reopened D1
+must reconcile that growth with circuit selection and saved strength snapshots;
+the seed framework does not choose the growth rules. Registration alone does
+not create endless strength inflation.
 
 All existing circuit rules remain in its PRD, including uniqueness within each
 lineup, TR-first home/visitor selection, shared contender/elite/headliner role bands,

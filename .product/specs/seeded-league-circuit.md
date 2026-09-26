@@ -6,12 +6,20 @@ Implemented: No
 
 Draft successor to the fixed-order [interregional circuit](wayfarer-interregional-league-circuit.md).
 The parent PRD distinguishes confirmed requirements from proposed defaults and
-owns resolved initial fixed strength (D1) and title-agnostic headliner (D2),
+owns reopened world progression (D1), resolved title-agnostic headliner (D2),
 unresolved D3–D5, and supporting defaults.
 The recurring championship and rotation direction is approved; the registration
 interface, bounded history layout, aggregate record storage,
 ceremony rewards, and presentation defaults below remain proposed. This document
 does not authorize implementation of unresolved defaults.
+
+The parent PRD's [world progression revision](../prds/seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
+supersedes the fixed-strength D1 assumptions below. Edition-start snapshots,
+replay strength, registration timing, and qualification must be reconciled with
+personal badge/first-clear growth before implementation. These sections retain
+the earlier proposal for that review; the experimental
+[balance explorer](../../devtools/ui/README.md#trainer-balance-explorer) does not
+implement or settle the runtime lifecycle.
 
 ## Scope
 
@@ -240,7 +248,7 @@ league cannot skip this slot, complete this run, or grant this venue's clear/rew
 
 There is no difficulty input from player `ratingAtEntry`. If retained for
 diagnostics, it must not affect team selection or effective opponent levels.
-Under resolved D1, the saved NPC baseline TR and selected profile determine
+Under the earlier D1 proposal, the saved NPC baseline TR and selected profile determine
 strength through the sibling specification, including on replays and party
 reconstruction. Reusing a map or changing live player TR cannot change them.
 Future modest dynamic NPC TR is outside this initial contract and requires
@@ -595,13 +603,13 @@ travel, presentation, and journey evidence. Emulator playtesting must assess
 actual battle attrition for every venue first against cap 62, later-edition
 challenge against cap 100, and rotation variety under proposed D5 weights.
 This balance requirement is conditional on D4's proposed 24-badge admission.
-NPC strength stays fixed under initial D1; structural
+Reopened D1 must replace the earlier fixed-strength assumptions; structural
 checks alone do not establish balance.
 
 ## Open questions
 
-See resolved parent PRD D1 for initial fixed player-independent strength and D2
-for title-agnostic headliners; open D3 for catalog/role bands, D4 for common
+See reopened parent PRD D1 for world progression and strength snapshots, resolved
+D2 for title-agnostic headliners, and open D3 for catalog/role bands, D4 for common
 qualification, and D5 for rotation weights. The parent
 also owns review of supplementary defaults: edition fixation of all slots,
 admission thresholds, replay policy, Blue unlock, regional

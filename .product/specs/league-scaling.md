@@ -5,9 +5,11 @@ Implemented: Partial
 
 Proposed successor: [Circuit trainer pool and strength](circuit-trainer-pool.md)
 replaces the fixed allowlist and player-entry-TR calculation with each NPC's
-authored baseline TR. Shared contender/elite/headliner bands replace
-position-based difficulty, with soft rotation between editions. Baselines stay
-stable initially; future modest rating dynamics require a separate design.
+own TR. Shared contender/elite/headliner bands replace
+position-based difficulty, with soft rotation between editions. Trainer-owned
+baselines and personal badge/first-clear growth supersede the earlier static
+strength direction. Reopened D1 must reconcile the growth and snapshot contract;
+the [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer) is experimental.
 [Seeded circuit runtime](seeded-league-circuit.md) owns the proposed edition and
 run lifecycle, including a common 24-badge qualification proposal.
 This document remains the implementation baseline until adoption.

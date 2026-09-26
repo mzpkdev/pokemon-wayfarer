@@ -3,6 +3,12 @@
 PRD: [Gym Leader scaling](../prds/gym-leader-scaling.md)
 Implemented: Core implementation merged; structural acceptance and Wayfarer ROM playtesting pending.
 
+Proposed successor: [trainer world progression](../prds/seeded-trainer-circuit.md#world-progression-revision-and-balance-explorer)
+would use the trainer's own baseline and personal growth for Gym battles.
+The [balance explorer](../../devtools/ui/README.md#trainer-balance-explorer) tests
+provisional curves and party stages without changing the ROM. The player-TR
+contract below remains the implemented policy until the successor is adopted.
+
 ## Scope
 
 Implement the parent PRD for `IS_WAYFARER`: explicit initial-badge coverage,
