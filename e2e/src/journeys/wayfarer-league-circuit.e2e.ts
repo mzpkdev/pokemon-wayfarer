@@ -45,6 +45,7 @@ const finishVictoryScript = async (game: GameSession, description: string): Prom
     } else if (
       state.dialogueOpen ||
       state.scriptActive ||
+      state.controlsLocked ||
       state.battle.ui === "text" ||
       state.battle.ui === "other"
     ) {
@@ -55,6 +56,31 @@ const finishVictoryScript = async (game: GameSession, description: string): Prom
   throw new Error(
     `${description} did not return to the overworld: ${JSON.stringify(await game.state.read())}`,
   )
+}
+
+const declineDojoBattle = async (game: GameSession): Promise<void> => {
+  await game.player.interact()
+  await game.wait.until((state) => state.controlsLocked || state.dialogueOpen, "Blue Dojo prompt")
+  for (let attempt = 0; attempt < 360; attempt++) {
+    const state = await game.state.read()
+    if (state.battle.active) throw new Error("Declining Blue unexpectedly started a battle")
+    if (state.ready) return
+    await game.controls.press("b")
+    await game.wait.frames(10)
+  }
+  throw new Error(`Blue Dojo decline did not finish: ${JSON.stringify(await game.state.read())}`)
+}
+
+const finishDojoWin = async (game: GameSession): Promise<void> => {
+  const before = await game.inventory.battlePoints()
+  await game.battle.win()
+  await finishVictoryScript(game, "Blue Dojo victory and BP")
+  await expect(game.inventory.battlePoints()).resolves.toBe(before + 10)
+}
+
+const enterDojo = async (game: GameSession): Promise<void> => {
+  await game.player.warp("fighting-dojo-vip", 18, 21, "up")
+  await game.wait.forMap("fighting-dojo-vip")
 }
 
 const finishPendingArrange = async (
@@ -103,6 +129,27 @@ const startTrainerBattle = async (
     else await game.wait.frames(10)
   }
   throw new Error(`${description} did not start: ${JSON.stringify(await game.state.read())}`)
+}
+
+const finishGiovanniFinale = async (game: GameSession): Promise<void> => {
+  for (const flag of [
+    "celadonHideoutGiovanniTrainerDefeated",
+    "celadonHideoutScopeReceived",
+    "silphGiovanniDefeated",
+    "silphLiberated",
+  ] as const)
+    await game.story.setFlag(flag, true)
+  await game.player.warp("viridian-gym", 2, 3, "up")
+  await game.wait.forMap("viridian-gym")
+  await startTrainerBattle(game, "Viridian Giovanni finale")
+  await expect(game.state.read()).resolves.toMatchObject({
+    battle: { enemy: { species: "rhyhorn" } },
+  })
+  await game.battle.win()
+  await finishVictoryScript(game, "Viridian Giovanni finale")
+  await expect(game.story.flag("badge16")).resolves.toBe(true)
+  await expect(game.story.flag("viridianGiovanniDeparted")).resolves.toBe(true)
+  await expect(game.inventory.count("tmEarthquake")).resolves.toBe(1)
 }
 
 const leagueBaseline = (rating: number): number => {
@@ -225,6 +272,7 @@ const finishRoomChain = async (
   stage: "indigo" | "masters",
   rating: number,
   replay = false,
+  champion: "win" | "lose" = "win",
 ): Promise<void> => {
   for (const [index, map] of rooms[stage].entries()) {
     await expect(game.state.read()).resolves.toMatchObject({
@@ -245,6 +293,21 @@ const finishRoomChain = async (
       battle: { enemy: { species: leads[stage][index] } },
       circuit: { run: { active: true, stage, replay, ratingAtEntry: rating } },
     })
+    // Starting the Champion battle is not a committed Indigo victory.
+    if (stage === "indigo" && index === 4 && !replay)
+      await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
+    if (index === 4 && champion === "lose") {
+      await game.battle.lose()
+      for (let attempt = 0; attempt < 900; attempt++) {
+        const state = await game.state.read()
+        if (state.ready && state.map.name === "indigo-league-lobby") return
+        await game.wait.frames(30)
+        await game.controls.press("a")
+      }
+      throw new Error(
+        `Lost ${stage} Champion did not return: ${JSON.stringify(await game.state.read())}`,
+      )
+    }
     await game.battle.win()
     if (index === 4) break
     await finishVictoryScript(game, `${stage} ${map} victory`)
@@ -300,29 +363,65 @@ describe.sequential("Wayfarer League Circuit", () => {
     await game.close()
   })
 
-  it("introduces Blue in Viridian when the Gym is visited before the exterior", async () => {
+  it("keeps Dojo Blue hidden until the committed Indigo clear", async () => {
+    const dojoFixture = {
+      checkpoint: "new-bark-after-intro",
+      player: { position: { map: "fighting-dojo-vip", x: 18, y: 21 }, facing: "up" },
+    } as const
+    const earthBadgeFlags = {
+      badge16: true,
+      defeatedViridianGym: true,
+      viridianGiovanniDeparted: true,
+    } as const
+    // Badges, Giovanni, and a regional title projection are not a committed
+    // Indigo victory.
+    await game.arrange({
+      ...dojoFixture,
+      story: { flags: { ...earthBadgeFlags, isKantoChampion: true, hideDojoBlue: false } },
+      circuit: { badges: { kanto: 8 } },
+    })
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
+    await game.saveAndReload()
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
+
+    await game.arrange({
+      ...dojoFixture,
+      story: { flags: { ...earthBadgeFlags, hideDojoBlue: true } },
+      circuit: { badges: { kanto: 8 }, clears: { indigo: true } },
+    })
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+    await game.saveAndReload()
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+  })
+
+  it("keeps Blue hidden after Giovanni, then unlocks him on the first Indigo commit", async () => {
     await game.arrange({
       checkpoint: "new-bark-after-intro",
-      player: { facing: "up", position: { map: "viridian-gym", x: 5, y: 3 } },
-      story: {
-        flags: {
-          viridianBlueIntroduced: false,
-          hideViridianBlueIntro: false,
-          hideViridianBlue: false,
-        },
-      },
+      player: { position: { map: "viridian-gym", x: 2, y: 3 }, facing: "up" },
+      party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+      circuit: { badges: { johto: 4, hoenn: 4 } },
       determinism: { textSpeed: "instant" },
     })
+    await finishGiovanniFinale(game)
+    await enterDojo(game)
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
+    await game.saveAndReload()
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
 
-    await game.player.interact()
-    await game.wait.until(
-      (state) => state.dialogueOpen && state.dialogue.text.includes("First time here"),
-      "Blue's first meeting in Viridian Gym",
-    )
-    await expect(game.story.flag("viridianBlueIntroduced")).resolves.toBe(true)
-    await expect(game.story.flag("hideViridianBlueIntro")).resolves.toBe(true)
-    await expect(game.story.flag("hideViridianBlue")).resolves.toBe(false)
-  })
+    await game.player.warp("indigo-league-lobby", 32, 4, "up")
+    await game.wait.forMap("indigo-league-lobby")
+    const rating = await admitIndigo(game)
+    await finishRoomChain(game, "indigo", rating)
+    await expect(game.story.flag("badge16")).resolves.toBe(true)
+    await expect(game.inventory.battlePoints()).resolves.toBe(0)
+    await enterDojo(game)
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+    await startTrainerBattle(game, "Blue Dojo after Giovanni then Indigo")
+    await expect(game.state.read()).resolves.toMatchObject({
+      battle: { enemy: { species: "rhyperior" } },
+    })
+    await finishDojoWin(game)
+  }, 600_000)
 
   it("keeps badge collection independent and enforces the ordered 8/16/24 itinerary", async () => {
     await expect(circuitState(game, { johto: 3, hoenn: 4 })).resolves.toMatchObject({
@@ -481,7 +580,7 @@ describe.sequential("Wayfarer League Circuit", () => {
     })
   }, 600_000)
 
-  it("recovers mixed-order Rocket, Blue, Wattson, Whitney, and Clair states", async () => {
+  it("recovers mixed-order Rocket, Wattson, Whitney, and Clair states", async () => {
     await finishPendingArrange(
       game,
       game.arrange({
@@ -519,25 +618,6 @@ describe.sequential("Wayfarer League Circuit", () => {
     await expect(game.story.var("triggerElmRocketCall")).resolves.toBe(2)
     await expect(game.story.var("goldenrodCityState")).resolves.toBe(8)
     await expect(game.story.var("mahoganyTownState")).resolves.toBe(17)
-
-    await game.arrange({
-      checkpoint: "new-bark-after-intro",
-      player: { facing: "up", position: { map: "viridian-city", x: 42, y: 16 } },
-      story: {
-        vars: { numBadges: 4 },
-        flags: {
-          viridianBlueIntroduced: false,
-          hideViridianBlueIntro: false,
-          hideViridianBlue: false,
-        },
-      },
-      circuit: { badges: { hoenn: 4 } },
-    })
-    await game.player.interact()
-    await finishFieldScript(game, "Blue invitation")
-    await expect(game.story.flag("viridianBlueIntroduced")).resolves.toBe(true)
-    await expect(game.story.flag("hideViridianBlueIntro")).resolves.toBe(true)
-    await expect(game.story.flag("hideViridianBlue")).resolves.toBe(false)
 
     await game.arrange({
       checkpoint: "new-bark-after-intro",
@@ -620,6 +700,44 @@ describe.sequential("Wayfarer League Circuit", () => {
           run: { active: false },
         },
       })
+      await expect(game.inventory.battlePoints()).resolves.toBe(0)
+      if (route.name === "mixed eight badges") {
+        // This route has no Earth Badge or Giovanni victory. The committed
+        // Indigo clear alone makes Blue available for a repeatable match.
+        await expect(game.story.flag("badge16")).resolves.toBe(false)
+        // Dojo entry projects the committed victory onto Blue's visibility.
+        await enterDojo(game)
+        await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+        await declineDojoBattle(game)
+        await expect(game.inventory.battlePoints()).resolves.toBe(0)
+        await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+        await startTrainerBattle(game, "Blue Dojo loss after Indigo")
+        await game.battle.lose()
+        await finishVictoryScript(game, "Blue Dojo loss")
+        await expect(game.inventory.battlePoints()).resolves.toBe(0)
+        await enterDojo(game)
+        await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+        await startTrainerBattle(game, "Blue Dojo battle after Indigo")
+        await expect(game.state.read()).resolves.toMatchObject({
+          battle: { enemy: { species: "rhyperior" } },
+        })
+        await finishDojoWin(game)
+        await game.saveAndReload()
+        await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+        await expect(game.inventory.battlePoints()).resolves.toBe(10)
+        await startTrainerBattle(game, "Blue Dojo repeat battle")
+        await expect(game.state.read()).resolves.toMatchObject({
+          battle: { enemy: { species: "rhyperior" } },
+        })
+        await finishDojoWin(game)
+        await expect(game.inventory.battlePoints()).resolves.toBe(20)
+        await finishGiovanniFinale(game)
+        await enterDojo(game)
+        await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+        await game.saveAndReload()
+        await expect(game.story.flag("hideDojoBlue")).resolves.toBe(false)
+        await expect(game.inventory.battlePoints()).resolves.toBe(20)
+      }
     }, 600_000)
   }
 
@@ -784,6 +902,24 @@ describe.sequential("Wayfarer League Circuit", () => {
     expect(await admitIndigo(game)).toBe(rating)
     await expect(game.story.var("leagueState")).resolves.toBe(1)
   }, 240_000)
+
+  it("does not unlock Dojo Blue when the Indigo Champion battle starts or is lost", async () => {
+    await game.arrange({
+      checkpoint: "new-bark-after-intro",
+      player: { facing: "up", position: { map: "indigo-league-lobby", x: 32, y: 4 } },
+      party: [{ species: "lapras", level: 100, moves: ["surf"] }],
+      circuit: { badges: { johto: 8 } },
+    })
+    const rating = await admitIndigo(game)
+    await finishRoomChain(game, "indigo", rating, false, "lose")
+    await expect(game.state.read()).resolves.toMatchObject({
+      map: { name: "indigo-league-lobby" },
+      circuit: { trainerRating: rating, clears: { indigo: false }, run: { active: false } },
+    })
+    await game.saveAndReload()
+    await enterDojo(game)
+    await expect(game.story.flag("hideDojoBlue")).resolves.toBe(true)
+  }, 600_000)
 
   it("recovers inconsistent saved room progression without awarding a clear", async () => {
     await game.arrange({

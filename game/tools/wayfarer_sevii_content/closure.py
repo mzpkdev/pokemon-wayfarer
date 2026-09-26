@@ -385,7 +385,21 @@ def _external_rows(root: Path, module: str, rows: list[Any]) -> dict[str, dict[s
         path = _resolved_under_root(root, source_path, field=f"script module {module} external {row['label']} path")
         if not path.is_file():
             raise ClosureError(f"script module {module} external source is missing: {row['path']}")
-        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        source_bytes = path.read_bytes()
+        insertion = row.get("allowed_insertion")
+        if insertion is not None:
+            if (not isinstance(insertion, dict)
+                    or any(not isinstance(insertion.get(key), str) or not insertion[key].endswith("\n")
+                           for key in ("after", "text"))):
+                raise ClosureError(f"script module {module} external {row['label']} has an invalid allowed insertion")
+            anchor = insertion["after"].encode("utf-8")
+            added = insertion["text"].encode("utf-8")
+            if source_bytes.count(anchor + added) != 1:
+                raise ClosureError(f"script module {module} external source drifted: {row['label']}")
+            # Compare the untouched source against its original pin. Only this
+            # exact adjacent insertion is exempt from the full-file digest.
+            source_bytes = source_bytes.replace(anchor + added, anchor, 1)
+        actual = hashlib.sha256(source_bytes).hexdigest()
         if actual != row["sha256"]:
             raise ClosureError(f"script module {module} external source drifted: {row['label']}")
         source = path.read_text(encoding="utf-8", errors="ignore")

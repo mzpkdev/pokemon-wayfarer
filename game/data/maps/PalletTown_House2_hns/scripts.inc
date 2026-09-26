@@ -4,9 +4,7 @@ PalletTown_House2_hns_MapScripts::
 PalletTown_House2_EventScript_Daisy::
 	lock
 	faceplayer
-#if IS_WAYFARER
-	goto_if_unset FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, PalletTown_House2_EventScript_Blue
-#else
+#if !IS_WAYFARER
 	goto_if_unset FLAG_HIDE_CINNABAR_BLUE, PalletTown_House2_EventScript_Blue
 #endif
 	goto_if_unset FLAG_DAILY_DAISY_GROOMED, PalletTown_House2_EventScript_DaisyGrooming
@@ -61,10 +59,8 @@ PalletTown_House2_EventScript_DaisyGrooming::
 
 PalletTown_House2_Text_Hello:
 #if IS_WAYFARER
-	.string "DAISY: My kid brother BLUE leads\n"
-	.string "the VIRIDIAN CITY GYM.\p"
-	.string "If you're looking for him, you\n"
-	.string "should head there.$"
+	.string "DAISY: My kid brother BLUE is\n"
+	.string "always looking for a battle.$"
 #else
 	.string "DAISY: Hi! My kid brother is the\n"
 	.string "GYM LEADER in VIRIDIAN CITY.\p"

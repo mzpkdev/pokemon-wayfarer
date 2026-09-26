@@ -8,8 +8,7 @@ ViridianCity_PokemonCenter_OnTransition::
 
 ViridianCity_PokemonCenter_EventScript_CooltrainerM::
 #if IS_WAYFARER
-	goto_if_set FLAG_WAYFARER_VIRIDIAN_BLUE_INTRODUCED_COAST, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
-	goto_if_set FLAG_DEFEATED_VIRIDIAN_GYM, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
+	goto_if_set FLAG_VIRIDIAN_GIOVANNI_DEPARTED_HNS, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
 #else
 	goto_if_set FLAG_HIDE_CINNABAR_BLUE, ViridianCity_PokemonCenter_EventScript_CooltrainerMBlue
 #endif
@@ -30,19 +29,24 @@ ViridianCity_PokemonCenter_EventScript_BugCatcher::
 
 ViridianCity_PokemonCenter_Text_1FCooltrainerM:
 #if IS_WAYFARER
-	.string "BLUE runs VIRIDIAN's GYM.\p"
-	.string "I hear he's looking for a new\n"
-	.string "challenger.$"
+	.string "VIRIDIAN's GYM has a strange\n"
+	.string "floor full of moving arrows.\p"
+	.string "I hear GIOVANNI leads it.$"
 #else
 	.string "Where in the world is VIRIDIAN's GYM\n"
 	.string "LEADER? I wanted to challenge him.$"
 #endif
 
 ViridianCity_PokemonCenter_Text_1FCooltrainerM_BlueReturned:
+#if IS_WAYFARER
+	.string "GIOVANNI left the GYM, but the\n"
+	.string "Trainers are still there.$"
+#else
 	.string "There are no GYM TRAINERS at the\n"
 	.string "VIRIDIAN GYM.\p"
 	.string "The LEADER claims his policy is to\n"
 	.string "win without having any underlings.$"
+#endif
 
 ViridianCity_PokemonCenter_Text_1FCooltrainerF:
 #if IS_WAYFARER

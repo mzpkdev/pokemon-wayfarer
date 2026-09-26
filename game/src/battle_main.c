@@ -2257,6 +2257,9 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
     bool32 reconstructGimmickSlots = FALSE;
     u16 ownerId = trainerNum;
     const struct GymLeaderScalingRoster *leaderRoster = NULL;
+#if IS_WAYFARER
+    struct GymLeaderScalingRoster viridianRoster;
+#endif
     struct GymLeaderScalingPlan leaderPlan;
     const struct LeagueScalingRoster *leagueRoster = NULL;
 
@@ -2285,6 +2288,37 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
     {
         reconstructGimmickSlots = TRUE;
         policy = GetTrainerScalingPolicy(trainerNum);
+        if (trainerNum == TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS)
+        {
+            bool32 randomizedTrainerSpecies = FALSE;
+            static const s8 levelOffsets[5] = {-1, -2, -2, -1, 0};
+            u32 i;
+#if RANDOMIZER_AVAILABLE
+            randomizedTrainerSpecies = RandomizerFeatureEnabled(RANDOMIZE_TRAINER_MON);
+#endif
+            // A malformed, randomized, or multi-opponent encounter uses the
+            // authored source party without a partial Gym projection.
+            policy = TRAINER_SCALING_EXCLUDED;
+            if (resolved.partySize == 5 && resolved.poolSize == 0
+             && !(battleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+             && !randomizedTrainerSpecies)
+            {
+                // This finale keeps FRLG's five source slots and source order.
+                // The shared six-slot Gym roster feature remains disabled.
+                viridianRoster = (struct GymLeaderScalingRoster){0};
+                viridianRoster.party = resolved.party;
+                leaderRoster = &viridianRoster;
+                leaderPlan.count = 5;
+                rating = GetTrainerScalingSnapshot();
+                for (i = 0; i < 5; i++)
+                {
+                    leaderPlan.sourceIndices[i] = i;
+                    leaderPlan.levels[i] = GetGymLeaderScalingLevel(rating, levelOffsets[i]);
+                    viridianRoster.slots[i].movePolicy = GYM_LEADER_MOVE_AUTHORED;
+                }
+                policy = TRAINER_SCALING_GYM_LEADER;
+            }
+        }
         if (policy == TRAINER_SCALING_LEAGUE)
         {
             policy = TRAINER_SCALING_EXCLUDED;
@@ -2310,7 +2344,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
 #endif
         }
 #if B_GYM_LEADER_SCALING
-        if (policy == TRAINER_SCALING_GYM_LEADER)
+        if (policy == TRAINER_SCALING_GYM_LEADER && trainerNum != TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS)
         {
             bool32 randomizedTrainerSpecies = FALSE;
 #if RANDOMIZER_AVAILABLE
@@ -2348,7 +2382,7 @@ u8 CreateNPCTrainerPartyForOpponent(struct Pokemon *party, u16 trainerNum, bool3
             }
         }
 #else
-        if (policy == TRAINER_SCALING_GYM_LEADER)
+        if (policy == TRAINER_SCALING_GYM_LEADER && trainerNum != TRAINER_VIRIDIAN_GYM_GIOVANNI_HNS)
             policy = TRAINER_SCALING_EXCLUDED;
 #endif
 #if B_TRAINER_PARTY_SCALING

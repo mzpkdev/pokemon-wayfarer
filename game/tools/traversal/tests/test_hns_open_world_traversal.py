@@ -1048,13 +1048,6 @@ class HnsTraversalContractTest(unittest.TestCase):
         ):
             self.assertIn("MahoganyTown_Gym_EventScript_TryArmRocketTakeover", self.scripts.block(label))
 
-        blue = self.scripts.block("CinnabarIsland_EventScript_Blue").split("#else", 1)[0]
-        self.assertNotIn("VAR_NUM_BADGES", blue)
-        self.assertIn("goto CinnabarIsland_EventScript_BlueActive", blue)
-        invitation = self.scripts.block("CinnabarIsland_EventScript_BlueActive")
-        self.assertIn("setflag FLAG_HIDE_CINNABAR_BLUE", invitation)
-        self.assertIn("clearflag FLAG_HIDE_VIRIDIAN_BLUE", invitation)
-
         wattson = self.scripts.block("MauvilleCity_Gym_EventScript_TryRelocateWattson")
         self.assertOrderedText(
             wattson,

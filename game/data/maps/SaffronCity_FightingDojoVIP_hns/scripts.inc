@@ -1,5 +1,14 @@
 SaffronCity_FightingDojoVIP_hns_MapScripts::
+#if IS_WAYFARER
+	map_script MAP_SCRIPT_ON_TRANSITION, SaffronCity_FightingDojoVIP_OnTransition
+#endif
 	.byte 0
+
+#if IS_WAYFARER
+SaffronCity_FightingDojoVIP_OnTransition::
+	callnative SyncBlueDojoVisibility
+	end
+#endif
 
 SaffronCity_FightingDojoVIP_EventScript_Nurse::
 	lock
@@ -1042,10 +1051,10 @@ SaffronCity_FightingDojoVIP_Text_Blaine_RematchDefeat:
 
 SaffronCity_FightingDojoVIP_Text_Blue_Rematch:
 #if IS_WAYFARER
-	.string "BLUE: Back for another match?\p"
-	.string "I remember our VIRIDIAN battle.\p"
-	.string "I won't go easy on you this time.\p"
-	.string "Want a rematch?$"
+	.string "BLUE: So you made it through\n"
+	.string "the INDIGO LEAGUE.\p"
+	.string "I won't go easy on you here.\p"
+	.string "Want to battle?$"
 #else
 	.string "BLUE: Well, well. CHAMPION!\p"
 	.string "Looks like you've come a long way.\p"

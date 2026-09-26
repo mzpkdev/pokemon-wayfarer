@@ -883,6 +883,7 @@
 #include "constants/wayfarer_local_trainers.h"
 #include "constants/wayfarer_tower_trainers.h"
 #include "constants/wayfarer_indigo_trainers.h"
+#include "constants/wayfarer_viridian_trainers.h"
 #else
 #define TRAINERS_COUNT_WAYFARER     (TRAINERS_COUNT_HNS + TRAINERS_COUNT_EMERALD - 1)
 #endif
@@ -892,7 +893,8 @@
                  || TRAINER_CELADON_HIDEOUT_LAST + 2 != TRAINER_WAYFARER_LOCAL_FIRST \
                  || TRAINER_WAYFARER_LOCAL_LAST + 1 != TRAINER_WAYFARER_TOWER_FIRST \
                  || TRAINER_WAYFARER_TOWER_LAST + 1 != TRAINER_WAYFARER_INDIGO_FIRST \
-                 || TRAINER_WAYFARER_INDIGO_LAST + 1 != TRAINERS_COUNT_WAYFARER)
+                 || TRAINER_WAYFARER_INDIGO_LAST + 1 != TRAINER_VIRIDIAN_GYM_FIRST \
+                 || TRAINER_VIRIDIAN_GYM_LAST + 1 != TRAINERS_COUNT_WAYFARER)
 #error "Wayfarer Hideout, local, and Tower Trainer ranges must remain distinct and ordered"
 #endif
 
