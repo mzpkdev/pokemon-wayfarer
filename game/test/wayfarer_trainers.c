@@ -45,7 +45,12 @@ TEST("Wayfarer Trainer IDs keep HNS stable and map Hoenn after it")
     EXPECT_EQ(TRAINER_WAYFARER_INDIGO_LAST, 1799);
     EXPECT_EQ(TRAINER_VIRIDIAN_GYM_FIRST, 1800);
     EXPECT_EQ(TRAINER_VIRIDIAN_GYM_LAST, 1808);
-    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1809);
+    EXPECT_EQ(TRAINER_WAYFARER_KANTO_FIRST, 1809);
+    EXPECT_EQ(TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR, 1809);
+    EXPECT_EQ(TRAINER_WAYFARER_KANTO_BLUE_CHARMANDER, 1810);
+    EXPECT_EQ(TRAINER_WAYFARER_KANTO_BLUE_SQUIRTLE, 1811);
+    EXPECT_EQ(TRAINER_WAYFARER_KANTO_LAST, 1811);
+    EXPECT_EQ(TRAINERS_COUNT_WAYFARER, 1812);
     EXPECT_EQ(TRAINER_CELADON_HIDEOUT_FIRST, 1723);
     EXPECT_EQ(TRAINER_CELADON_HIDEOUT_LAST, 1735);
     EXPECT_EQ(TRAINER_SILPH_GRUNT_23_HNS, 1737);
@@ -280,6 +285,38 @@ TEST("Indigo League defeats use reserved Trainer flags and leave system flags un
     EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_INDIGO_LORELEI));
     EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_INDIGO_BLUE));
     for (id = TRAINER_WAYFARER_INDIGO_FIRST; id <= TRAINER_WAYFARER_INDIGO_LAST; id++)
+        ClearTrainerFlag(id);
+    EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES), 0);
+    Free(before);
+}
+
+TEST("Pallet-origin Blue defeats use reserved Trainer flags and leave system flags untouched")
+{
+    u32 id;
+    u8 *before = Alloc(NUM_FLAG_BYTES);
+
+    for (id = TRAINER_WAYFARER_KANTO_FIRST; id <= TRAINER_WAYFARER_KANTO_LAST; id++)
+        ClearTrainerFlag(id);
+    memcpy(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES);
+
+    for (id = TRAINER_WAYFARER_KANTO_FIRST; id <= TRAINER_WAYFARER_KANTO_LAST; id++)
+    {
+        EXPECT(!HasTrainerBeenFought(id));
+        SetTrainerFlag(id);
+        EXPECT(HasTrainerBeenFought(id));
+        EXPECT(FlagGet(WAYFARER_KANTO_DEFEAT_FLAG_FIRST + id - TRAINER_WAYFARER_KANTO_FIRST));
+        EXPECT_LE(WAYFARER_KANTO_DEFEAT_FLAG_FIRST + id - TRAINER_WAYFARER_KANTO_FIRST, TRAINER_FLAGS_END);
+        EXPECT_EQ(memcmp(&before[(TRAINER_FLAGS_END + 1) / 8],
+                         &gSaveBlock1Ptr->flags[(TRAINER_FLAGS_END + 1) / 8],
+                         NUM_FLAG_BYTES - (TRAINER_FLAGS_END + 1) / 8), 0);
+        EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, TRAINER_FLAGS_START / 8), 0);
+    }
+
+    // Each Blue counter keeps its own record.
+    ClearTrainerFlag(TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR);
+    EXPECT(!HasTrainerBeenFought(TRAINER_WAYFARER_KANTO_BLUE_BULBASAUR));
+    EXPECT(HasTrainerBeenFought(TRAINER_WAYFARER_KANTO_BLUE_SQUIRTLE));
+    for (id = TRAINER_WAYFARER_KANTO_FIRST; id <= TRAINER_WAYFARER_KANTO_LAST; id++)
         ClearTrainerFlag(id);
     EXPECT_EQ(memcmp(before, gSaveBlock1Ptr->flags, NUM_FLAG_BYTES), 0);
     Free(before);

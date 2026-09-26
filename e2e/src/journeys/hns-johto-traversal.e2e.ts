@@ -379,7 +379,7 @@ describe.sequential("HNS Johto traversal bypasses", () => {
         defeatedVioletGym: false,
         receivedTogepiEgg: false,
       },
-      text: "POKMON GY",
+      text: "POKéMON GY",
     },
     {
       name: "Togepi Egg",

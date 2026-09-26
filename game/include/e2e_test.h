@@ -13,6 +13,12 @@
 #define E2E_TEST_MAX_PARTY_MENU_ACTIONS 8
 #define E2E_TEST_LEAGUE_COUNT 3
 #define E2E_TEST_FIELD_MESSAGE_TEXT_LENGTH 32
+// Expanded field messages can span several text boxes. Keep the original short
+// observation for ABI consumers that only need a prefix and expose this larger,
+// finite buffer for exact dialogue contract tests.
+#define E2E_TEST_FULL_FIELD_MESSAGE_TEXT_LENGTH 512
+#define E2E_TEST_BATTLE_MESSAGE_TEXT_LENGTH 512
+#define E2E_TEST_MAX_OBJECT_EVENTS OBJECT_EVENTS_COUNT
 #define E2E_TEST_KEEP_MAP 0xFFFF
 #define E2E_TEST_KEEP_COORDINATE INT16_MIN
 #define E2E_TEST_KEEP_TEXT_SPEED 0xFF
@@ -204,6 +210,14 @@ enum E2ETestBattleUiState
     E2E_TEST_BATTLE_UI_MOVE_MENU,
 };
 
+enum E2ETestChoiceKind
+{
+    E2E_TEST_CHOICE_NONE,
+    E2E_TEST_CHOICE_YES_NO,
+    E2E_TEST_CHOICE_MULTICHOICE,
+    E2E_TEST_CHOICE_STARTER,
+};
+
 struct E2ETestVarPatch
 {
     u16 id;
@@ -292,6 +306,20 @@ struct E2ETestObservedPcSlot
     u8 boxId;
     u8 boxPosition;
     u16 reserved;
+};
+
+struct E2ETestObservedObjectEvent
+{
+    s16 x;
+    s16 y;
+    u8 localId;
+    u8 mapGroup;
+    u8 mapNum;
+    u8 movementType;
+    u8 movementDirection;
+    u8 facingDirection;
+    u8 visible;
+    u8 moving;
 };
 
 struct E2ETestResult
@@ -409,6 +437,23 @@ struct E2ETestState
     u8 regionalChampionMask;
     u8 reserved;
     u32 secretBaseDecorationFingerprint;
+    u8 palletOpeningPhase;
+    u8 palletStarterSlot;
+    u16 palletOpeningReceipts;
+    u8 fullDialogueText[E2E_TEST_FULL_FIELD_MESSAGE_TEXT_LENGTH];
+    u8 objectEventCount;
+    u8 choiceKind;
+    u8 choiceCursor;
+    u8 choiceOptionCount;
+    u16 choiceResult;
+    u16 displayedMonSpecies;
+    struct E2ETestObservedObjectEvent objectEvents[E2E_TEST_MAX_OBJECT_EVENTS];
+    u32 battleDialogueSequence;
+    u8 battleDialogueText[E2E_TEST_BATTLE_MESSAGE_TEXT_LENGTH];
+    // A finished message box still waits here for A/B before its script
+    // continues; dialogueOpen alone cannot distinguish that from "done".
+    u8 awaitingButton;
+    u8 reserved2[3];
 };
 
 struct E2ETestAbi
@@ -432,9 +477,15 @@ void E2ETest_Update(void);
 void E2ETest_RecordFieldMove(enum Move move, u8 partyIndex, u8 result);
 void E2ETest_RecordFieldMessage(const u8 *str);
 void E2ETest_RecordExpandedFieldMessage(const u8 *str);
+void E2ETest_RecordBattleMessage(const u8 *str);
+bool8 E2ETest_IsScriptWaitingForButton(void);
 void E2ETest_RecordCapture(u16 species);
 void E2ETest_RecordCatchSwap(u8 state, u8 cursor, u8 selectedParty, u8 boxId, u8 boxPosition);
 void E2ETest_RecordNicknamePrompt(bool32 active, u8 cursor);
+void E2ETest_RecordChoice(u8 kind, u8 cursor, u8 optionCount);
+void E2ETest_RecordChoiceResult(u16 result);
+void E2ETest_ClearChoice(void);
+void E2ETest_RecordDisplayedMonPic(u16 species);
 bool32 E2ETest_IsPartyMenuOpen(void);
 void E2ETest_GetPartyMenuActions(u8 *actions, u8 *count);
 bool32 E2ETest_IsSummaryScreenOpen(void);

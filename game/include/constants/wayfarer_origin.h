@@ -1,9 +1,12 @@
 #ifndef GUARD_CONSTANTS_WAYFARER_ORIGIN_H
 #define GUARD_CONSTANTS_WAYFARER_ORIGIN_H
 
+#include "constants/wayfarer_kanto_opening.h"
+
 #define ORIGIN_NONE 0
 #define ORIGIN_NEW_BARK 1
 #define ORIGIN_LITTLEROOT 2
+#define ORIGIN_PALLET 3
 
 #define ORIGIN_SCENE_JOHTO_HOUSEHOLD 0
 #define ORIGIN_SCENE_JOHTO_PROFESSOR 1

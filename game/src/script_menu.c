@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "main.h"
 #include "event_data.h"
 #include "field_effect.h"
@@ -21,6 +24,7 @@
 #include "decompress.h"
 #include "constants/field_specials.h"
 #include "constants/items.h"
+#include "constants/species.h"
 #include "constants/script_menu.h"
 #include "constants/seagallop.h"
 #include "constants/songs.h"
@@ -92,6 +96,9 @@ static EWRAM_DATA u8 sProcessInputDelay = 0;
 static EWRAM_DATA u8 sDynamicMenuEventId = 0;
 static EWRAM_DATA struct DynamicMultichoiceStack *sDynamicMultiChoiceStack = NULL;
 static EWRAM_DATA u16 *sDynamicMenuEventScratchPad = NULL;
+#ifdef E2E_TESTING
+static EWRAM_DATA u8 sE2EChoiceOptionCount = 0;
+#endif
 
 static u8 sLilycoveSSTidalSelections[SSTIDAL_SELECTION_COUNT];
 
@@ -449,6 +456,9 @@ static void DrawMultichoiceMenuDynamic(u8 left, u8 top, u8 argc, struct ListMenu
         sDynamicListMenuEventCollections[sDynamicMenuEventId].OnSelectionChanged(&eventArgs);
     }
     ListMenuGetScrollAndRow(gTasks[taskId].data[0], &gScrollableMultichoice_ScrollOffset, NULL);
+#ifdef E2E_TESTING
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, initialRow, argc);
+#endif
     if (argc > maxBeforeScroll)
     {
         // Create Scrolling Arrows
@@ -532,12 +542,22 @@ static void InitMultichoiceCheckWrap(bool8 ignoreBPress, u8 count, u8 windowId, 
     gTasks[taskId].tMultichoiceId = multichoiceId;
 
     DrawLinkServicesMultichoiceMenu(multichoiceId);
+#ifdef E2E_TESTING
+    sE2EChoiceOptionCount = count;
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, Menu_GetCursorPos(), count);
+#endif
 }
 
 static void Task_HandleScrollingMultichoiceInput(u8 taskId)
 {
     bool32 done = FALSE;
     s32 input = ListMenu_ProcessInput(gTasks[taskId].data[0]);
+#ifdef E2E_TESTING
+    u16 cursor;
+
+    ListMenuGetCurrentItemArrayId(gTasks[taskId].data[0], &cursor);
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, cursor, gTasks[taskId].data[5]);
+#endif
 
     switch (input)
     {
@@ -561,6 +581,10 @@ static void Task_HandleScrollingMultichoiceInput(u8 taskId)
     {
         struct ListMenuItem *items;
 
+#ifdef E2E_TESTING
+        E2ETest_RecordChoiceResult(gSpecialVar_Result);
+        E2ETest_ClearChoice();
+#endif
         PlaySE(SE_SELECT);
 
         if (sDynamicMenuEventId != DYN_MULTICHOICE_CB_NONE && sDynamicListMenuEventCollections[sDynamicMenuEventId].OnDestroy)
@@ -605,6 +629,10 @@ static void Task_HandleMultichoiceInput(u8 taskId)
             else
                 selection = Menu_ProcessInput();
 
+#ifdef E2E_TESTING
+            E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, Menu_GetCursorPos(),
+                                 sE2EChoiceOptionCount);
+#endif
             if (JOY_NEW(DPAD_UP | DPAD_DOWN))
             {
                 DrawLinkServicesMultichoiceMenu(tMultichoiceId);
@@ -623,6 +651,10 @@ static void Task_HandleMultichoiceInput(u8 taskId)
                 {
                     gSpecialVar_Result = selection;
                 }
+#ifdef E2E_TESTING
+                E2ETest_RecordChoiceResult(gSpecialVar_Result);
+                E2ETest_ClearChoice();
+#endif
                 ClearToTransparentAndRemoveWindow(tWindowId);
                 DestroyTask(taskId);
                 ScriptContext_Enable();
@@ -642,6 +674,9 @@ bool8 ScriptMenu_YesNo(u8 left, u8 top)
         gSpecialVar_Result = 0xFF;
         DisplayYesNoMenuDefaultYes();
         CreateTask(Task_HandleYesNoInput, 0x50);
+#ifdef E2E_TESTING
+        E2ETest_RecordChoice(E2E_TEST_CHOICE_YES_NO, 0, 2);
+#endif
         return TRUE;
     }
 }
@@ -657,13 +692,19 @@ bool8 IsScriptActive(void)
 
 static void Task_HandleYesNoInput(u8 taskId)
 {
+    s8 selection;
+
     if (gTasks[taskId].tRight < 5)
     {
         gTasks[taskId].tRight++;
         return;
     }
 
-    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    selection = Menu_ProcessInputNoWrapClearOnChoose();
+#ifdef E2E_TESTING
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_YES_NO, Menu_GetCursorPos(), 2);
+#endif
+    switch (selection)
     {
     case MENU_NOTHING_CHOSEN:
         return;
@@ -677,6 +718,10 @@ static void Task_HandleYesNoInput(u8 taskId)
         break;
     }
 
+#ifdef E2E_TESTING
+    E2ETest_RecordChoiceResult(gSpecialVar_Result);
+    E2ETest_ClearChoice();
+#endif
     DestroyTask(taskId);
     ScriptContext_Enable();
 }
@@ -710,10 +755,17 @@ bool8 ScriptMenu_MultichoiceGrid(u8 left, u8 top, u8 multichoiceId, bool8 ignore
 
         gTasks[taskId].tIgnoreBPress = ignoreBPress;
         gTasks[taskId].tWindowId = CreateWindowFromRect(left, top, columnCount * newWidth, rowCount * 2);
+#ifdef E2E_TESTING
+        sE2EChoiceOptionCount = sMultichoiceLists[multichoiceId].count;
+#endif
         SetStandardWindowBorderStyle(gTasks[taskId].tWindowId, FALSE);
         PrintMenuGridTable(gTasks[taskId].tWindowId, newWidth * 8, columnCount, rowCount, sMultichoiceLists[multichoiceId].list);
         InitMenuActionGrid(gTasks[taskId].tWindowId, newWidth * 8, columnCount, rowCount, 0);
         CopyWindowToVram(gTasks[taskId].tWindowId, COPYWIN_FULL);
+#ifdef E2E_TESTING
+        E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, 0,
+                             sMultichoiceLists[multichoiceId].count);
+#endif
         return TRUE;
     }
 }
@@ -723,6 +775,10 @@ static void Task_HandleMultichoiceGridInput(u8 taskId)
     s16 *data = gTasks[taskId].data;
     s8 selection = Menu_ProcessGridInput();
 
+#ifdef E2E_TESTING
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, Menu_GetCursorPos(),
+                         sE2EChoiceOptionCount);
+#endif
     switch (selection)
     {
     case MENU_NOTHING_CHOSEN:
@@ -738,6 +794,10 @@ static void Task_HandleMultichoiceGridInput(u8 taskId)
         break;
     }
 
+#ifdef E2E_TESTING
+    E2ETest_RecordChoiceResult(gSpecialVar_Result);
+    E2ETest_ClearChoice();
+#endif
     ClearToTransparentAndRemoveWindow(tWindowId);
     DestroyTask(taskId);
     ScriptContext_Enable();
@@ -1048,6 +1108,9 @@ bool8 ScriptMenu_ShowPokemonPic(u16 species, u8 x, u8 y)
         gSprites[spriteId].oam.priority = 0;
         SetStandardWindowBorderStyle(gTasks[taskId].tWindowId, TRUE);
         ScheduleBgCopyTilemapToVram(0);
+#ifdef E2E_TESTING
+        E2ETest_RecordDisplayedMonPic(species);
+#endif
         return TRUE;
     }
 }
@@ -1110,6 +1173,9 @@ bool8 ScriptMenu_ShowShinyPokemonPic(u16 species, u8 x, u8 y)
 
         SetStandardWindowBorderStyle(gTasks[taskId].tWindowId, TRUE);
         ScheduleBgCopyTilemapToVram(0);
+#ifdef E2E_TESTING
+        E2ETest_RecordDisplayedMonPic(species);
+#endif
         return TRUE;
     }
 }
@@ -1120,6 +1186,9 @@ bool8 (*ScriptMenu_HidePokemonPic(void))(void)
 
     if (taskId == TASK_NONE)
         return NULL;
+#ifdef E2E_TESTING
+    E2ETest_RecordDisplayedMonPic(SPECIES_NONE);
+#endif
     gTasks[taskId].tState++;
     return IsPicboxClosed;
 }
@@ -1226,6 +1295,10 @@ static void InitMultichoiceNoWrap(bool8 ignoreBPress, u8 unusedCount, u8 windowI
     gTasks[taskId].tDoWrap = 0;
     gTasks[taskId].tWindowId = windowId;
     gTasks[taskId].tMultichoiceId = multichoiceId;
+#ifdef E2E_TESTING
+    sE2EChoiceOptionCount = unusedCount;
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_MULTICHOICE, Menu_GetCursorPos(), unusedCount);
+#endif
 }
 
 #undef tLeft

@@ -9,6 +9,7 @@
 #include "battle_special.h"
 #include "battle_z_move.h"
 #include "data.h"
+#include "e2e_test.h"
 #include "event_data.h"
 #include "frontier_util.h"
 #include "graphics.h"
@@ -2471,7 +2472,8 @@ void BufferStringBattle(enum StringID stringID, enum BattlerId battler)
         break;
     case STRINGID_INTROSENDOUT: // poke first send-out
         if (BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))
-         || BattlerIsWally(battler) || BattlerIsWally(BATTLE_PARTNER(battler)))
+         || BattlerIsWally(battler) || BattlerIsWally(BATTLE_PARTNER(battler))
+         || (IsOakBattleTutorial() && IsOnPlayerSide(battler)))
         {
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
             {
@@ -3005,7 +3007,10 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     {
         enum TrainerClassID trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
 
-        if (trainerClass == TRAINER_CLASS_RIVAL_EARLY_FRLG || trainerClass == TRAINER_CLASS_RIVAL_LATE_FRLG || trainerClass == TRAINER_CLASS_CHAMPION_FRLG)
+        // Wayfarer's only FRLG-rival-class trainers are its Kanto Blue, whose
+        // party-file name (BLUE) is shown; the rival placeholder is Johto's.
+        if (!IS_WAYFARER
+         && (trainerClass == TRAINER_CLASS_RIVAL_EARLY_FRLG || trainerClass == TRAINER_CLASS_RIVAL_LATE_FRLG || trainerClass == TRAINER_CLASS_CHAMPION_FRLG))
             toCpy = GetExpandedPlaceholder(PLACEHOLDER_ID_RIVAL);
         else
         {
@@ -3918,6 +3923,11 @@ void BattlePutTextOnWindow(const u8 *text, u8 windowId)
         FillWindowPixelBuffer(windowId, textInfo[windowId].fillValue);
         copyToVram = TRUE;
     }
+
+#ifdef E2E_TESTING
+    if (windowId == B_WIN_MSG || windowId == B_WIN_OAK_OLD_MAN)
+        E2ETest_RecordBattleMessage(text);
+#endif
 
     printerTemplate.currentChar = text;
     printerTemplate.type = WINDOW_TEXT_PRINTER;

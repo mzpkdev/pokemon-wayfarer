@@ -1,3 +1,5 @@
+const maxReadBytesPerRequest = 448
+
 export type SkyEmuStatus = {
   "rom-loaded"?: boolean
   inputs?: Record<string, number>
@@ -75,20 +77,24 @@ export class SkyEmuClient {
       throw new Error("SkyEmu memory reads require a valid address and positive length")
     }
 
-    const parameters = new URLSearchParams()
-    for (let offset = 0; offset < length; offset++) {
-      parameters.append("addr", (address + offset).toString(16).padStart(8, "0"))
-    }
-    const response = await fetch(`${this.baseUrl}/read_byte?${parameters}`)
-    if (!response.ok) throw new Error(`SkyEmu memory read failed with HTTP ${response.status}`)
-    const hex = (await response.text()).replaceAll("\0", "")
-    if (!new RegExp(`^[0-9a-f]{${length * 2}}$`, "i").test(hex)) {
-      throw new Error(`SkyEmu returned an invalid memory response: ${hex}`)
-    }
-
     const bytes = new Uint8Array(length)
-    for (let index = 0; index < length; index++) {
-      bytes[index] = Number.parseInt(hex.slice(index * 2, index * 2 + 2), 16)
+    // Each byte is a separate query parameter, so large reads are split to
+    // stay below SkyEmu's request-line limit.
+    for (let start = 0; start < length; start += maxReadBytesPerRequest) {
+      const count = Math.min(maxReadBytesPerRequest, length - start)
+      const parameters = new URLSearchParams()
+      for (let offset = 0; offset < count; offset++) {
+        parameters.append("addr", (address + start + offset).toString(16).padStart(8, "0"))
+      }
+      const response = await fetch(`${this.baseUrl}/read_byte?${parameters}`)
+      if (!response.ok) throw new Error(`SkyEmu memory read failed with HTTP ${response.status}`)
+      const hex = (await response.text()).replaceAll("\0", "")
+      if (!new RegExp(`^[0-9a-f]{${count * 2}}$`, "i").test(hex)) {
+        throw new Error(`SkyEmu returned an invalid memory response: ${hex}`)
+      }
+      for (let index = 0; index < count; index++) {
+        bytes[start + index] = Number.parseInt(hex.slice(index * 2, index * 2 + 2), 16)
+      }
     }
     return bytes
   }

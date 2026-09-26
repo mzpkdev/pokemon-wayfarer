@@ -791,6 +791,11 @@
 #define OBJ_EVENT_PAL_TAG_KRIS_HNS                0x119A
 #define OBJ_EVENT_PAL_TAG_KRIS_REFLECTION_HNS     0x119B
 #define OBJ_EVENT_PAL_TAG_ALOLA_OAK_HNS           0x119C
+#if IS_WAYFARER
+// FRLG's own NPC blue colors for imported FRLG props (the generic NPC_BLUE
+// alias above maps to Wayfarer's NPC_1 palette instead).
+#define OBJ_EVENT_PAL_TAG_NPC_BLUE_FRLG           0x119D
+#endif
 
 #if OW_FOLLOWERS_POKEBALLS
 // Vanilla

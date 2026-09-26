@@ -1,4 +1,7 @@
 #include "global.h"
+#ifdef E2E_TESTING
+#include "e2e_test.h"
+#endif
 #include "bg.h"
 #include "challenge_menu.h"
 #include "data.h"
@@ -17,6 +20,7 @@
 #include "sprite.h"
 #include "starter_choose.h"
 #include "wayfarer_origin.h"
+#include "wayfarer_kanto_opening.h"
 #include "strings.h"
 #include "task.h"
 #include "text.h"
@@ -497,7 +501,35 @@ u16 GetJohtoStarterPokemon(u16 chosenStarterId)
 #endif
     return species;
 }
+
+u16 GetKantoStarterPokemon(u16 chosenStarterId)
+{
+    static const u16 starters[] = {SPECIES_BULBASAUR, SPECIES_CHARMANDER, SPECIES_SQUIRTLE};
+    u16 species;
+
+    if (chosenStarterId >= ARRAY_COUNT(starters))
+        chosenStarterId = 0;
+    if (IsOneTypeChallengeActive())
+        return GetStarterPokemon(chosenStarterId);
+    species = starters[chosenStarterId];
+#if RANDOMIZER_AVAILABLE
+    if (RandomizerFeatureEnabled(RANDOMIZE_STARTER_AND_GIFT_MON))
+        species = RandomizeMon(RANDOMIZER_REASON_STARTER_AND_GIFT_MON,
+                               GetRandomizerOption(RANDOMIZER_OPTION_SPECIES_MODE),
+                               GetRandomizerSeed() ^ species, species);
 #endif
+    return species;
+}
+#endif
+
+static u16 GetDisplayedStarterPokemon(u16 selection)
+{
+#if IS_WAYFARER
+    if (WayfarerKanto_IsPalletOrigin() && WayfarerKanto_GetPhase() == PALLET_OPENING_LAB_STARTER_CHOICE)
+        return GetKantoStarterPokemon(selection);
+#endif
+    return GetStarterPokemon(selection);
+}
 
 static void VblankCB_StarterChoose(void)
 {
@@ -617,6 +649,9 @@ static void CB2_StarterChoose(void)
 
 static void Task_StarterChoose(u8 taskId)
 {
+#ifdef E2E_TESTING
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_STARTER, gTasks[taskId].tStarterSelection, STARTER_MON_COUNT);
+#endif
     CreateStarterPokemonLabel(gTasks[taskId].tStarterSelection);
     DrawStdFrameWithCustomTileAndPalette(0, FALSE, 0x2A8, 0xD);
     AddTextPrinterParameterized(0, FONT_NORMAL, gText_BirchInTrouble, 0, 1, 0, NULL);
@@ -640,7 +675,10 @@ static void Task_HandleStarterChooseInput(u8 taskId)
         gTasks[taskId].tCircleSpriteId = spriteId;
 
         // Create Pokémon sprite
-        spriteId = CreatePokemonFrontSprite(GetStarterPokemon(gTasks[taskId].tStarterSelection), sPokeballCoords[selection][0], sPokeballCoords[selection][1]);
+        spriteId = CreatePokemonFrontSprite(GetDisplayedStarterPokemon(gTasks[taskId].tStarterSelection), sPokeballCoords[selection][0], sPokeballCoords[selection][1]);
+#ifdef E2E_TESTING
+        E2ETest_RecordDisplayedMonPic(GetDisplayedStarterPokemon(gTasks[taskId].tStarterSelection));
+#endif
         gSprites[spriteId].affineAnims = &sAffineAnims_StarterPokemon;
         gSprites[spriteId].callback = SpriteCB_StarterPokemon;
 
@@ -650,11 +688,17 @@ static void Task_HandleStarterChooseInput(u8 taskId)
     else if (JOY_NEW(DPAD_LEFT) && selection > 0)
     {
         gTasks[taskId].tStarterSelection--;
+#ifdef E2E_TESTING
+        E2ETest_RecordChoice(E2E_TEST_CHOICE_STARTER, gTasks[taskId].tStarterSelection, STARTER_MON_COUNT);
+#endif
         gTasks[taskId].func = Task_MoveStarterChooseCursor;
     }
     else if (JOY_NEW(DPAD_RIGHT) && selection < STARTER_MON_COUNT - 1)
     {
         gTasks[taskId].tStarterSelection++;
+#ifdef E2E_TESTING
+        E2ETest_RecordChoice(E2E_TEST_CHOICE_STARTER, gTasks[taskId].tStarterSelection, STARTER_MON_COUNT);
+#endif
         gTasks[taskId].func = Task_MoveStarterChooseCursor;
     }
 }
@@ -671,29 +715,46 @@ static void Task_WaitForStarterSprite(u8 taskId)
 
 static void Task_AskConfirmStarter(u8 taskId)
 {
-    PlayCry_Normal(GetStarterPokemon(gTasks[taskId].tStarterSelection), 0);
+    PlayCry_Normal(GetDisplayedStarterPokemon(gTasks[taskId].tStarterSelection), 0);
     FillWindowPixelBuffer(0, PIXEL_FILL(1));
     AddTextPrinterParameterized(0, FONT_NORMAL, gText_ConfirmStarterChoice, 0, 1, 0, NULL);
     ScheduleBgCopyTilemapToVram(0);
     CreateYesNoMenu(&sWindowTemplate_ConfirmStarter, 0x2A8, 0xD, 0);
+#ifdef E2E_TESTING
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_YES_NO, 0, 2);
+#endif
     gTasks[taskId].func = Task_HandleConfirmStarterInput;
 }
 
 static void Task_HandleConfirmStarterInput(u8 taskId)
 {
     u8 spriteId;
+    s8 input = Menu_ProcessInputNoWrapClearOnChoose();
 
-    switch (Menu_ProcessInputNoWrapClearOnChoose())
+#ifdef E2E_TESTING
+    E2ETest_RecordChoice(E2E_TEST_CHOICE_YES_NO, Menu_GetCursorPos(), 2);
+#endif
+    switch (input)
     {
     case 0:  // YES
         // Return the starter choice and exit.
         gSpecialVar_Result = gTasks[taskId].tStarterSelection;
+#ifdef E2E_TESTING
+        E2ETest_RecordChoiceResult(input);
+        E2ETest_ClearChoice();
+        E2ETest_RecordDisplayedMonPic(SPECIES_NONE);
+#endif
         ResetAllPicSprites();
         SetMainCallback2(gMain.savedCallback);
         break;
     case 1:  // NO
     case MENU_B_PRESSED:
         PlaySE(SE_SELECT);
+#ifdef E2E_TESTING
+        E2ETest_RecordChoiceResult(1);
+        E2ETest_ClearChoice();
+        E2ETest_RecordDisplayedMonPic(SPECIES_NONE);
+#endif
         spriteId = gTasks[taskId].tPkmnSpriteId;
         FreeOamMatrix(gSprites[spriteId].oam.matrixNum);
         FreeAndDestroyMonPicSprite(spriteId);
@@ -719,7 +780,7 @@ static void CreateStarterPokemonLabel(u8 selection)
     s32 width;
     u8 labelLeft, labelRight, labelTop, labelBottom;
 
-    u16 species = GetStarterPokemon(selection);
+    u16 species = GetDisplayedStarterPokemon(selection);
     CopyMonCategoryText(species, categoryText);
     speciesName = GetSpeciesName(species);
 

@@ -77,7 +77,14 @@ export const maps = {
   "route-25": { mapGroup: 0, mapNum: 66 },
   "route25-bills-house": { mapGroup: 23, mapNum: 27 },
   "pallet-town": { mapGroup: 0, mapNum: 31 },
+  "route-1": { mapGroup: 0, mapNum: 41 },
+  "reds-house-1f": { mapGroup: 11, mapNum: 0 },
+  "reds-house-2f": { mapGroup: 11, mapNum: 1 },
+  "blues-house": { mapGroup: 11, mapNum: 2 },
+  "oak-lab": { mapGroup: 11, mapNum: 4 },
   "viridian-city": { mapGroup: 0, mapNum: 32 },
+  "viridian-pokemon-center": { mapGroup: 12, mapNum: 0 },
+  "viridian-mart": { mapGroup: 12, mapNum: 1 },
   "viridian-gym": { mapGroup: 70, mapNum: 1 },
   "cerulean-city": { mapGroup: 0, mapNum: 34 },
   "vermilion-city": { mapGroup: 0, mapNum: 35 },
@@ -521,6 +528,8 @@ export const storyVars = {
   saffronCityState: 0x40bd,
   ssAquaState: 0x408b,
   starterMon: 0x4023,
+  palletLabState: 0x4078,
+  viridianCityState: 0x40c1,
   train: 0x408e,
   triggerElmRocketCall: 0x40b3,
   blackthornCityState: 0x4056,
@@ -811,6 +820,9 @@ export const storyFlags = {
 } as const
 
 export const species = {
+  bulbasaur: 1,
+  charmander: 4,
+  squirtle: 7,
   pikachu: 25,
   none: 0,
   pidgeot: 18,
@@ -900,6 +912,8 @@ export const hms = {
 } as const
 
 export const items = {
+  oaksParcel: 746,
+  townMap: 713,
   escapeRope: 120,
   pokeFlute: 724,
   silphCardKey: 902,
@@ -911,6 +925,7 @@ export const items = {
   nugget: 135,
   bigNugget: 136,
   leftovers: 472,
+  potion: 28,
   hyperPotion: 30,
   maxPotion: 31,
   revive: 33,

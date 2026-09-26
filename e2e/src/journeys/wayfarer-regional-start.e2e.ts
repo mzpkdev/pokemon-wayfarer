@@ -8,7 +8,7 @@ import {
   waitForOriginStage,
 } from "../playbooks/new-game-intro"
 
-for (const origin of ["johto", "hoenn"] as const) {
+for (const origin of ["johto", "hoenn", "kanto"] as const) {
   describe.sequential(`Wayfarer ${origin} new game`, () => {
     it("initializes the selected opening and preserves it through Continue", async () => {
       const game = await GameSession.launch()
@@ -17,16 +17,26 @@ for (const origin of ["johto", "hoenn"] as const) {
         const before = await game.state.read()
         expect(before).toMatchObject({
           ready: true,
-          map: { name: origin === "johto" ? "players-bedroom" : "inside-of-truck" },
+          map: {
+            name:
+              origin === "johto"
+                ? "players-bedroom"
+                : origin === "hoenn"
+                  ? "inside-of-truck"
+                  : "reds-house-2f",
+          },
           party: [],
           origin: {
-            id: origin === "johto" ? 1 : 2,
-            currentRegion: origin === "johto" ? 2 : 3,
-            visitedRegions: origin === "johto" ? 2 : 4,
+            id: origin === "johto" ? 1 : origin === "hoenn" ? 2 : 3,
+            currentRegion: origin === "johto" ? 2 : origin === "hoenn" ? 3 : 1,
+            visitedRegions: origin === "johto" ? 2 : origin === "hoenn" ? 4 : 1,
             hoennInitialized: origin === "hoenn",
             johtoCommitted: false,
             johtoReceived: false,
             hoennReceived: false,
+            ...(origin === "kanto"
+              ? { pallet: { phase: 0, starterSlot: 3, receipts: 0 } }
+              : {}),
             maidenVoyageState: 0,
             runningShoes: false,
             pokedex: false,
@@ -34,7 +44,9 @@ for (const origin of ["johto", "hoenn"] as const) {
               map:
                 origin === "johto"
                   ? "players-bedroom"
-                  : before.origin.gender === 0
+                  : origin === "kanto"
+                    ? "reds-house-1f"
+                    : before.origin.gender === 0
                     ? "brendans-house-2f"
                     : "mays-house-2f",
             },

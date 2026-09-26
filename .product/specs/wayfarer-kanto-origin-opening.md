@@ -21,6 +21,18 @@ beat.
 
 ## Behavior
 
+### FRLG dialogue fidelity
+
+Every opening line, branch, and interaction the FRLG opening shows between the
+bedroom and Oak's Pokédex and Poké Ball handoff appears verbatim on its HNS
+host, in FRLG order, for the Pallet origin. The
+[FRLG Pallet opening inventory](../research/frlg-pallet-opening-inventory.md)
+is the oracle. Ambient lines a player meets on that path, Oak's in-battle
+tutorial for the first Blue battle, and the Viridian Mart Parcel scene are
+included. FRLG `{RIVAL}` is shown as `BLUE`, because HNS `{RIVAL}` names the
+Johto rival. Only paths FRLG never reaches, such as a full Bag, a failed gift,
+or HNS geometry with no FRLG counterpart, keep Wayfarer text.
+
 ### Origin profile and build boundary
 
 Register stable origin ID 3 as `ORIGIN_PALLET`. Do not derive this ID from menu
@@ -390,6 +402,7 @@ include:
 | Parcel delivery | Eligible Oak interaction consumes the one Parcel, stages Blue's non-battle arrival once, enables or preserves the Pokédex, and grants exactly five Poké Balls. Save/reload and failure at every step resume without loss or duplication and never write HNS late-game lab state. |
 | Terminal boundary | The player finishes in Oak's lab with the Parcel removed, Pokédex available, and five Poké Balls received. Town Map, later Blue progress, badges, and campaign flags remain untouched. |
 | State isolation | No Johto/Hoenn starter state, `VAR_PALLETTOWN_LABSTATE`, HNS late-game Oak state, absent FRLG alias, or unrelated origin profile changes. |
+| Dialogue | A full on-foot playthrough on every supported appearance asserts every field message verbatim and in order, with no unasserted message, and every first-battle message, including Oak's tutorial on the win, loss, and naturally fought paths. |
 | Build isolation | Wayfarer compiles and passes map/script validation with the new profile. Standalone HNS, Emerald, FireRed, and LeafGreen compile with their existing opening behavior and no Wayfarer-only state reference. |
 
 Run ROM builds that share generated map outputs serially. Record source/manifest
@@ -407,6 +420,7 @@ behavior lands on the main branch and all required validation passes.
 - [HNS Route 1 scripts](../../game/data/maps/Route1_hns/scripts.inc)
 - [HNS Viridian scripts](../../game/data/maps/ViridianCity_hns/scripts.inc)
 - [HNS Viridian Mart scripts](../../game/data/maps/ViridianCity_Mart_hns/scripts.inc)
+- [FRLG Pallet opening inventory](../research/frlg-pallet-opening-inventory.md)
 - [FRLG Pallet source sequence](../../game/data/maps/PalletTown_Frlg/scripts.inc)
 - [FRLG Oak lab source sequence](../../game/data/maps/PalletTown_ProfessorOaksLab_Frlg/scripts.inc)
 - [FRLG Viridian Mart Parcel source](../../game/data/maps/ViridianCity_Mart_Frlg/scripts.inc)

@@ -2416,6 +2416,13 @@ static bool8 WaitForAorBPress(void)
     return FALSE;
 }
 
+#ifdef E2E_TESTING
+bool8 E2ETest_IsScriptWaitingForButton(void)
+{
+    return ScriptContext_IsWaitingOnNative(WaitForAorBPress);
+}
+#endif
+
 bool8 ScrCmd_waitbuttonpress(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);

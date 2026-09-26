@@ -1480,7 +1480,7 @@ class MapjsonWayfarerTest(unittest.TestCase):
         )["heal_locations"]
         self.assertEqual(
             [item["source"] for item in heal_locations],
-            ["EMERALD"] * 22 + ["FRLG"] * 20 + ["HNS"] * 32,
+            ["EMERALD"] * 22 + ["FRLG"] * 20 + ["HNS"] * 33,
         )
         for item in heal_locations:
             if item["source"] in {"EMERALD", "HNS"}:
